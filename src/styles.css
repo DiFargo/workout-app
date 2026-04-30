@@ -237,4 +237,20 @@ body {
   .workoutTitle {
     font-size: 30px;
   }
+}.finishBtn {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  border: none;
+  background: #27ae60;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.finishBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

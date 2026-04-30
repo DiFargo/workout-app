@@ -3,6 +3,8 @@ import "./styles.css";
 
 const STORAGE_KEY = "workout_tracker_v1";
 const AUTH_KEY = "workout_tracker_logged_in";
+const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycby9cdVvcQ1MOu94jzNWIDxR4ONrKT_WF4mcGmRm8Eyx8b9787ohY6tZhls7eE4Slhjz/exec";
 
 const starterPlan = {
   workouts: [
@@ -10,48 +12,13 @@ const starterPlan = {
       id: "w1",
       name: "Тренировка 1",
       exercises: [
-        {
-          id: "e1",
-          name: "Жим ногами",
-          video: "/videos/1. Жим ногами.MOV",
-          sets: [{ reps: 8, weight: "" }]
-        },
-        {
-          id: "e2",
-          name: "Тяга верхнего блока",
-          video: "/videos/Тяга верхнего блока.MOV",
-          sets: [{ reps: 8, weight: "" }]
-        },
-        {
-          id: "e3",
-          name: "Жим лежа с гантелями",
-          video: "/videos/Жим лежа с гантелями.MOV",
-          sets: [{ reps: 8, weight: "" }]
-        },
-        {
-          id: "e4",
-          name: "Отведение рук в сторону с гантелями",
-          video: "/videos/Отведение рук в сторону с гантелями.MP4",
-          sets: [{ reps: 8, weight: "" }]
-        },
-        {
-          id: "e5",
-          name: "Разгибание рук в кроссовере",
-          video: "/videos/Разгибание рук в кроссовере.MOV",
-          sets: [{ reps: 8, weight: "" }]
-        },
-        {
-          id: "e6",
-          name: "Сгибание рук с гантелями",
-          video: "/videos/Сгибание рук с гантелями.MOV",
-          sets: [{ reps: 8, weight: "" }]
-        },
-        {
-          id: "e7",
-          name: "Пресс (скручивания обычные)",
-          video: "/videos/Пресс (скручивания обычные).MOV",
-          sets: [{ reps: 15, weight: "" }]
-        }
+        { id: "e1", name: "Жим ногами", video: "/videos/1. Жим ногами.MOV", sets: [{ reps: 8, weight: "" }] },
+        { id: "e2", name: "Тяга верхнего блока", video: "/videos/Тяга верхнего блока.MOV", sets: [{ reps: 8, weight: "" }] },
+        { id: "e3", name: "Жим лежа с гантелями", video: "/videos/Жим лежа с гантелями.MOV", sets: [{ reps: 8, weight: "" }] },
+        { id: "e4", name: "Отведение рук в сторону с гантелями", video: "/videos/Отведение рук в сторону с гантелями.MP4", sets: [{ reps: 8, weight: "" }] },
+        { id: "e5", name: "Разгибание рук в кроссовере", video: "/videos/Разгибание рук в кроссовере.MOV", sets: [{ reps: 8, weight: "" }] },
+        { id: "e6", name: "Сгибание рук с гантелями", video: "/videos/Сгибание рук с гантелями.MOV", sets: [{ reps: 8, weight: "" }] },
+        { id: "e7", name: "Пресс (скручивания обычные)", video: "/videos/Пресс (скручивания обычные).MOV", sets: [{ reps: 15, weight: "" }] }
       ]
     },
     {
@@ -74,25 +41,25 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-
   const [plan, setPlan] = useState(starterPlan);
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [openVideoId, setOpenVideoId] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem(AUTH_KEY) === "true") {
-      setIsLoggedIn(true);
-    }
+    if (localStorage.getItem(AUTH_KEY) === "true") setIsLoggedIn(true);
 
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      setPlan(JSON.parse(saved));
-    }
+    if (saved) setPlan(JSON.parse(saved));
   }, []);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(plan));
   }, [plan]);
+
+  const workout = useMemo(() => {
+    return plan.workouts.find((w) => w.id === selectedWorkoutId);
+  }, [selectedWorkoutId, plan]);
 
   function handleLogin(e) {
     e.preventDefault();
@@ -109,16 +76,10 @@ export default function App() {
     setSelectedWorkoutId(null);
   }
 
-  const workout = useMemo(() => {
-    return plan.workouts.find((w) => w.id === selectedWorkoutId);
-  }, [selectedWorkoutId, plan]);
-
   function updateWorkout(cb) {
     setPlan((p) => ({
       ...p,
-      workouts: p.workouts.map((w) =>
-        w.id === workout.id ? cb(w) : w
-      )
+      workouts: p.workouts.map((w) => (w.id === workout.id ? cb(w) : w))
     }));
   }
 
@@ -147,6 +108,40 @@ export default function App() {
           : e
       )
     }));
+  }
+
+  async function saveWorkoutToGoogle() {
+    if (!workout) return;
+
+    setIsSaving(true);
+
+    try {
+      const rows = [];
+
+      workout.exercises.forEach((exercise) => {
+        exercise.sets.forEach((set, index) => {
+          rows.push({
+            workout: workout.name,
+            exercise: exercise.name,
+            set: index + 1,
+            reps: set.reps,
+            weight: set.weight
+          });
+        });
+      });
+
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({ rows })
+      });
+
+      alert("Тренировка отправлена в Google Таблицу ✅");
+    } catch (error) {
+      alert("Ошибка сохранения. Проверь ссылку Apps Script.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   if (!isLoggedIn) {
@@ -207,6 +202,14 @@ export default function App() {
         <h1 className="workoutTitle">{workout.name}</h1>
       </div>
 
+      <button
+        className="finishBtn"
+        onClick={saveWorkoutToGoogle}
+        disabled={isSaving}
+      >
+        {isSaving ? "Сохраняю..." : "✅ Завершить тренировку"}
+      </button>
+
       {workout.exercises.map((e) => (
         <div key={e.id} className="exercise">
           <h3>{e.name}</h3>
@@ -234,25 +237,19 @@ export default function App() {
                 type="number"
                 placeholder="повторы"
                 value={s.reps}
-                onChange={(ev) =>
-                  updateSet(e.id, i, "reps", ev.target.value)
-                }
+                onChange={(ev) => updateSet(e.id, i, "reps", ev.target.value)}
               />
 
               <input
                 type="number"
                 placeholder="вес"
                 value={s.weight}
-                onChange={(ev) =>
-                  updateSet(e.id, i, "weight", ev.target.value)
-                }
+                onChange={(ev) => updateSet(e.id, i, "weight", ev.target.value)}
               />
             </div>
           ))}
 
-          <button onClick={() => addSet(e.id)}>
-            + подход
-          </button>
+          <button onClick={() => addSet(e.id)}>+ подход</button>
         </div>
       ))}
     </div>
