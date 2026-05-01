@@ -723,4 +723,11 @@ input {
 .passwordBox button {
   width: 100%;
   padding: 14px;
+}.previousInfo {
+  margin: 6px 0;
+  font-size: 13px;
+
+  color: #888;           
+
+  white-space: nowrap;   
 }
