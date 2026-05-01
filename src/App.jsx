@@ -1,8 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./styles.css";
 
+import { auth, db } from "./firebase";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "firebase/auth";
+import { collection, getDocs, doc, setDoc } from "firebase/firestore";
+
 const STORAGE_KEY = "workout_tracker_v1";
-const AUTH_KEY = "workout_tracker_logged_in";
+const ADMIN_EMAIL = "work.kriptonit.il@gmail.com";
 
 const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycby9cdVvcQ1MOu94jzNWIDxR4ONrKT_WF4mcGmRm8Eyx8b9787ohY6tZhls7eE4Slhjz/exec";
@@ -103,6 +112,8 @@ const starterPlan = {
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -119,16 +130,24 @@ export default function App() {
   const [openHistoryKey, setOpenHistoryKey] = useState(null);
 
   useEffect(() => {
-    if (localStorage.getItem(AUTH_KEY) === "true") {
-      setIsLoggedIn(true);
-    }
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setIsLoggedIn(!!u);
+    });
 
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
-      setPlan(JSON.parse(saved));
+      try {
+        setPlan(JSON.parse(saved));
+      } catch {
+        setPlan(starterPlan);
+      }
     }
 
     loadHistory();
+    loadWorkoutsFromFirebase();
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -186,23 +205,47 @@ export default function App() {
     return `Прошлый раз: ${last.reps} × ${last.weight || "без веса"}`;
   }
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
 
-    if (login === "admin" && password === "admin") {
-      localStorage.setItem(AUTH_KEY, "true");
-      setIsLoggedIn(true);
+    try {
+      await signInWithEmailAndPassword(auth, login, password);
       setPage("main");
       setLoginError("");
       loadHistory();
-    } else {
-      setLoginError("Неверный логин или пароль");
+      loadWorkoutsFromFirebase();
+    } catch {
+      setLoginError("Неверный email или пароль");
+    }
+  }
+
+  async function handleRegister() {
+    try {
+      await createUserWithEmailAndPassword(auth, login, password);
+      setLoginError("");
+      setPage("main");
+      loadHistory();
+      loadWorkoutsFromFirebase();
+    } catch (err) {
+      console.log(err);
+
+      if (err.code === "auth/email-already-in-use") {
+        setLoginError("Этот email уже зарегистрирован");
+      } else if (err.code === "auth/invalid-email") {
+        setLoginError("Неверный формат email");
+      } else if (err.code === "auth/weak-password") {
+        setLoginError("Пароль должен быть минимум 6 символов");
+      } else {
+        setLoginError("Ошибка регистрации");
+      }
     }
   }
 
   function logout() {
-    localStorage.removeItem(AUTH_KEY);
+    signOut(auth);
+
     setIsLoggedIn(false);
+    setUser(null);
     setPage("main");
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
@@ -315,6 +358,56 @@ export default function App() {
     }
   }
 
+  async function loadWorkoutsFromFirebase() {
+    try {
+      const querySnapshot = await getDocs(collection(db, "workouts"));
+
+      const workoutsFromDb = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        workoutsFromDb.push({
+          id: doc.id,
+          name: data.name || "Без названия",
+          exercises: (data.exercises || []).map((exercise) => ({
+            ...exercise,
+            sets: exercise.sets || [
+              {
+                reps: exercise.name?.includes("Пресс") ? 15 : 8,
+                weight: ""
+              }
+            ]
+          }))
+        });
+      });
+
+      if (workoutsFromDb.length > 0) {
+        setPlan({ workouts: workoutsFromDb });
+      }
+    } catch (err) {
+      console.log("Ошибка загрузки тренировок:", err);
+    }
+  }
+   async function saveWorkoutsToFirebase() {
+  try {
+    for (const workout of plan.workouts) {
+      await setDoc(doc(db, "workouts", workout.id), {
+        name: workout.name,
+        exercises: workout.exercises.map((exercise) => ({
+          id: exercise.id,
+          name: exercise.name,
+          video: exercise.video || ""
+        }))
+      });
+    }
+
+    alert("Тренировки сохранены в Firebase ✅");
+  } catch (err) {
+    console.log("Ошибка сохранения тренировок:", err);
+    alert("Не получилось сохранить тренировки");
+  }
+}
   function loadHistory() {
     setHistoryLoading(true);
 
@@ -377,7 +470,7 @@ export default function App() {
           <input
             value={login}
             onChange={(e) => setLogin(e.target.value)}
-            placeholder="Логин"
+            placeholder="Email"
           />
 
           <div className="passwordBox">
@@ -400,7 +493,15 @@ export default function App() {
 
           <button className="loginBtn">Войти</button>
 
-          <p className="loginHint">Тестовый доступ: admin / admin</p>
+          <button
+            className="loginBtn"
+            type="button"
+            onClick={handleRegister}
+          >
+            Регистрация
+          </button>
+
+          <p className="loginHint">Вход через email и пароль</p>
         </form>
       </div>
     );
@@ -419,6 +520,12 @@ export default function App() {
           <button className="bigButton" onClick={() => setPage("nutrition")}>
             🍽️ Питание
           </button>
+
+          {user?.email === ADMIN_EMAIL && (
+            <button className="bigButton" onClick={() => setPage("admin")}>
+              ⚙️ Админ-панель
+            </button>
+          )}
         </div>
 
         <button className="logoutSmall" onClick={logout}>
@@ -531,19 +638,218 @@ export default function App() {
     );
   }
 
+  if (page === "admin") {
+    return (
+      <div className="app">
+        <div className="workoutHeader">
+          <button className="backBtn" onClick={() => setPage("main")}>
+            ← Назад
+          </button>
+
+          <h1 className="workoutTitle">Админ-панель</h1>
+        </div>
+
+        <div className="exercise">
+          <h3>Управление</h3>
+
+          <p style={{ textAlign: "center", color: "#aaa" }}>
+            Здесь ты будешь управлять приложением
+          </p>
+
+          <button className="bigButton">👥 Пользователи</button>
+
+          <button className="bigButton" onClick={() => setPage("adminWorkouts")}>
+            🏋️ Управление тренировками
+          </button>
+
+          <button className="bigButton">📊 Статистика</button>
+        </div>
+      </div>
+    );
+  }
+
+  if (page === "adminWorkouts") {
+    return (
+      <div className="app">
+        <div className="workoutHeader">
+          <button className="backBtn" onClick={() => setPage("admin")}>
+            ← Назад
+          </button>
+
+          <h1 className="workoutTitle">Управление тренировками</h1>
+        </div>
+
+        {plan.workouts.map((workout) => (
+          <div className="exercise" key={workout.id}>
+            <input
+  value={workout.name}
+  onChange={(e) => {
+    const newName = e.target.value;
+
+    setPlan((prev) => ({
+      ...prev,
+      workouts: prev.workouts.map((w) =>
+        w.id === workout.id ? { ...w, name: newName } : w
+      )
+    }));
+  }}
+/>
+
+<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+  <input
+    value={workout.name}
+    onChange={(e) => {
+      const newName = e.target.value;
+
+      setPlan((prev) => ({
+        ...prev,
+        workouts: prev.workouts.map((w) =>
+          w.id === workout.id ? { ...w, name: newName } : w
+        )
+      }));
+    }}
+  />
+
+  <button
+    onClick={() => {
+      setPlan((prev) => ({
+        ...prev,
+        workouts: prev.workouts.filter((w) => w.id !== workout.id)
+      }));
+    }}
+  >
+    ❌
+  </button>
+</div>
+
+{workout.exercises.map((exercise) => (
+  <div
+    key={exercise.id}
+    style={{
+      display: "flex",
+      gap: "10px",
+      alignItems: "center",
+      marginBottom: "10px"
+    }}
+  >
+    <input
+      style={{
+        flex: 1,
+        minWidth: 0,
+        padding: "10px",
+        borderRadius: "8px"
+      }}
+      value={exercise.name}
+      onChange={(e) => {
+        const newName = e.target.value;
+
+        setPlan((prev) => ({
+          ...prev,
+          workouts: prev.workouts.map((w) =>
+            w.id === workout.id
+              ? {
+                  ...w,
+                  exercises: w.exercises.map((ex) =>
+                    ex.id === exercise.id ? { ...ex, name: newName } : ex
+                  )
+                }
+              : w
+          )
+        }));
+      }}
+    />
+
+    <button
+      style={{
+        width: "40px",
+        height: "40px",
+        minWidth: "40px",
+        padding: 0,
+        borderRadius: "8px",
+        background: "#ff4d4f",
+        color: "white",
+        border: "none"
+      }}
+      onClick={() => {
+        setPlan((prev) => ({
+          ...prev,
+          workouts: prev.workouts.map((w) =>
+            w.id === workout.id
+              ? {
+                  ...w,
+                  exercises: w.exercises.filter((ex) => ex.id !== exercise.id)
+                }
+              : w
+          )
+        }));
+      }}
+    >
+      ✕
+    </button>
+  </div>
+))}
+<button
+  onClick={() => {
+    const newExercise = {
+      id: "e" + Date.now(),
+      name: "Новое упражнение",
+      video: "",
+      sets: [{ reps: 8, weight: "" }]
+    };
+
+    setPlan((prev) => ({
+      ...prev,
+      workouts: prev.workouts.map((w) =>
+        w.id === workout.id
+          ? { ...w, exercises: [...w.exercises, newExercise] }
+          : w
+      )
+    }));
+  }}
+>
+  ➕ Добавить упражнение
+</button>
+          </div>
+        ))}
+        <button
+  className="bigButton"
+  onClick={() => {
+    const newWorkout = {
+      id: "w" + Date.now(),
+      name: "Новая тренировка",
+      exercises: []
+    };
+
+    setPlan((prev) => ({
+      ...prev,
+      workouts: [...prev.workouts, newWorkout]
+    }));
+  }}
+>
+  ➕ Добавить тренировку
+</button>
+        <button className="bigButton" onClick={saveWorkoutsToFirebase}>
+  💾 Сохранить изменения
+</button>
+      </div>
+    );
+  }
+
   if (page === "workouts" && !selectedWorkoutId) {
     return (
       <div className="menuPage">
         <h1 className="menuTitle">Выбери тренировку</h1>
 
         <div className="menuButtons">
-          <button className="bigButton" onClick={() => openWorkout("w1")}>
-            🏋️ Тренировка 1
-          </button>
-
-          <button className="bigButton" onClick={() => openWorkout("w2")}>
-            🏋️ Тренировка 2
-          </button>
+          {plan.workouts.map((w) => (
+            <button
+              className="bigButton"
+              key={w.id}
+              onClick={() => openWorkout(w.id)}
+            >
+              🏋️ {w.name}
+            </button>
+          ))}
 
           <button className="bigButton" onClick={openHistory}>
             📊 История
@@ -553,6 +859,20 @@ export default function App() {
         <button className="logoutSmall" onClick={goBackToMain}>
           ← Назад
         </button>
+      </div>
+    );
+  }
+
+  if (!workout) {
+    return (
+      <div className="app">
+        <div className="workoutHeader">
+          <button className="backBtn" onClick={() => setSelectedWorkoutId(null)}>
+            ← Назад
+          </button>
+
+          <h1 className="workoutTitle">Тренировка не найдена</h1>
+        </div>
       </div>
     );
   }
