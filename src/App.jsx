@@ -15,7 +15,7 @@ const starterPlan = {
       exercises: [
         { id: "e1", name: "Жим ногами", video: "/videos/1. Жим ногами.MOV", sets: [{ reps: 8, weight: "" }] },
         { id: "e2", name: "Тяга верхнего блока", video: "/videos/Тяга верхнего блока.MOV", sets: [{ reps: 8, weight: "" }] },
-        { id: "e3", name: "Жим лежа с гантелями", video: "/videos/Жим лежа с гантелями.MOV", sets: [{ reps: 8, weight: "" }] },
+        { id: "e3", name: "Жим лежа с гантелями", video: "/videos/Жим лежа с гантелями.mp4", sets: [{ reps: 8, weight: "" }] },
         { id: "e4", name: "Отведение рук в сторону с гантелями", video: "/videos/Отведение рук в сторону с гантелями.MP4", sets: [{ reps: 8, weight: "" }] },
         { id: "e5", name: "Разгибание рук в кроссовере", video: "/videos/Разгибание рук в кроссовере.MOV", sets: [{ reps: 8, weight: "" }] },
         { id: "e6", name: "Сгибание рук с гантелями", video: "/videos/Сгибание рук с гантелями.MOV", sets: [{ reps: 8, weight: "" }] },
