@@ -42,6 +42,8 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
   const [plan, setPlan] = useState(starterPlan);
   const [page, setPage] = useState("main");
@@ -93,6 +95,9 @@ export default function App() {
       localStorage.setItem(AUTH_KEY, "true");
       setIsLoggedIn(true);
       setPage("main");
+      setLoginError("");
+    } else {
+      setLoginError("Неверный логин или пароль");
     }
   }
 
@@ -101,12 +106,18 @@ export default function App() {
     setIsLoggedIn(false);
     setPage("main");
     setSelectedWorkoutId(null);
+    setOpenVideoId(null);
+    setOpenHistoryKey(null);
+    setLogin("");
+    setPassword("");
+    setLoginError("");
   }
 
   function goBackToMain() {
     setPage("main");
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
+    setOpenHistoryKey(null);
   }
 
   function updateWorkout(cb) {
@@ -221,14 +232,42 @@ export default function App() {
   if (!isLoggedIn) {
     return (
       <div className="loginPage">
+        <div className="loginHero">
+          <div className="appLogo">W</div>
+          <h1>Workout</h1>
+          <p>Твой дневник тренировок</p>
+        </div>
+
         <form className="loginCard" onSubmit={handleLogin}>
-          <h1>Вход</h1>
-          <p>admin / admin</p>
+          <h2>Вход</h2>
 
-          <input value={login} onChange={(e) => setLogin(e.target.value)} placeholder="Логин" />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Пароль" />
+          <input
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+            placeholder="Логин"
+          />
 
-          <button>Войти</button>
+          <div className="passwordBox">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Пароль"
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Скрыть" : "Показать"}
+            </button>
+          </div>
+
+          {loginError && <div className="loginError">{loginError}</div>}
+
+          <button className="loginBtn">Войти</button>
+
+          <p className="loginHint">Тестовый доступ: admin / admin</p>
         </form>
       </div>
     );
@@ -260,7 +299,10 @@ export default function App() {
     return (
       <div className="app">
         <div className="workoutHeader">
-          <button className="backBtn" onClick={goBackToMain}>← Назад</button>
+          <button className="backBtn" onClick={goBackToMain}>
+            ← Назад
+          </button>
+
           <h1 className="workoutTitle">Питание</h1>
         </div>
 
@@ -278,7 +320,10 @@ export default function App() {
     return (
       <div className="app">
         <div className="workoutHeader">
-          <button className="backBtn" onClick={() => setPage("workouts")}>← Назад</button>
+          <button className="backBtn" onClick={() => setPage("workouts")}>
+            ← Назад
+          </button>
+
           <h1 className="workoutTitle">История</h1>
         </div>
 

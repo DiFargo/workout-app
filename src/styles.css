@@ -569,4 +569,158 @@ input {
 .historySet strong {
   color: #2f80ed;
   white-space: nowrap;
+}.loginPage {
+  min-height: 100vh;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+.loginHero {
+  text-align: center;
+}
+
+.appLogo {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 16px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #2f80ed, #56ccf2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 900;
+  color: white;
+  box-shadow: 0 0 30px rgba(47, 128, 237, 0.45);
+}
+
+.loginHero h1 {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 900;
+}
+
+.loginHero p {
+  margin: 8px 0 0;
+  color: #aaa;
+  font-size: 16px;
+}
+
+.loginCard h2 {
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: 24px;
+}
+
+.passwordBox {
+  display: flex;
+  gap: 8px;
+}
+
+.passwordBox input {
+  flex: 1;
+}
+
+.passwordBox button {
+  width: auto;
+  padding: 0 12px;
+  background: #242424;
+  border: 1px solid #333;
+  color: #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.loginBtn {
+  margin-top: 4px;
+}
+
+.loginError {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 80, 80, 0.12);
+  color: #ff6b6b;
+  font-size: 14px;
+  text-align: center;
+}
+
+.loginHint {
+  margin: 0;
+  text-align: center;
+  color: #777;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  .loginHero h1 {
+    font-size: 36px;
+  }
+
+  .appLogo {
+    width: 68px;
+    height: 68px;
+  }
+}
+.loginPage {
+  min-height: 100vh !important;
+  width: 100% !important;
+  padding: 32px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 28px !important;
+  overflow-x: hidden !important;
+}
+
+.loginHero {
+  width: 100%;
+  text-align: center;
+}
+
+.loginHero h1 {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 900;
+  color: #2f80ed;
+  text-shadow: 0 0 20px rgba(47, 128, 237, 0.45);
+}
+
+.loginHero p {
+  margin: 8px 0 0;
+  color: #aaa;
+}
+
+.appLogo {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 16px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #2f80ed, #56ccf2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 900;
+  color: white;
+}
+
+.loginCard {
+  width: 100% !important;
+  max-width: 380px !important;
+}
+
+.passwordBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.passwordBox button {
+  width: 100%;
+  padding: 14px;
 }
