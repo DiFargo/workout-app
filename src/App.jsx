@@ -13,26 +13,89 @@ const starterPlan = {
       id: "w1",
       name: "Тренировка 1",
       exercises: [
-        { id: "e1", name: "Жим ногами", video: "/videos/1. Жим ногами.MOV", sets: [{ reps: 8, weight: "" }] },
-        { id: "e2", name: "Тяга верхнего блока", video: "/videos/Тяга верхнего блока.MOV", sets: [{ reps: 8, weight: "" }] },
-        { id: "e3", name: "Жим лежа с гантелями", video: "/videos/Жим лежа с гантелями.mp4", sets: [{ reps: 8, weight: "" }] },
-        { id: "e4", name: "Отведение рук в сторону с гантелями", video: "/videos/Отведение рук в сторону с гантелями.MP4", sets: [{ reps: 8, weight: "" }] },
-        { id: "e5", name: "Разгибание рук в кроссовере", video: "/videos/Разгибание рук в кроссовере.MOV", sets: [{ reps: 8, weight: "" }] },
-        { id: "e6", name: "Сгибание рук с гантелями", video: "/videos/Сгибание рук с гантелями.MOV", sets: [{ reps: 8, weight: "" }] },
-        { id: "e7", name: "Пресс (скручивания обычные)", video: "/videos/Пресс (скручивания обычные).MOV", sets: [{ reps: 15, weight: "" }] }
+        {
+          id: "e1",
+          name: "Жим ногами",
+          video: "/videos/1. Жим ногами.MOV",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e2",
+          name: "Тяга верхнего блока",
+          video: "/videos/Тяга верхнего блока.MOV",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e3",
+          name: "Жим лежа с гантелями",
+          video: "/videos/Жим лежа с гантелями.mp4",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e4",
+          name: "Отведение рук в сторону с гантелями",
+          video: "/videos/Отведение рук в сторону с гантелями.MP4",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e5",
+          name: "Разгибание рук в кроссовере",
+          video: "/videos/Разгибание рук в кроссовере.MOV",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e6",
+          name: "Сгибание рук с гантелями",
+          video: "/videos/Сгибание рук с гантелями.MOV",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e7",
+          name: "Пресс (скручивания обычные)",
+          video: "/videos/Пресс (скручивания обычные).MOV",
+          sets: [{ reps: 15, weight: "" }]
+        }
       ]
     },
     {
       id: "w2",
       name: "Тренировка 2",
       exercises: [
-        { id: "e8", name: "Приседания с гантелью", sets: [{ reps: 8, weight: "" }] },
-        { id: "e9", name: "Тяга нижнего блока", sets: [{ reps: 8, weight: "" }] },
-        { id: "e10", name: "Жим лежа в тренажере", sets: [{ reps: 8, weight: "" }] },
-        { id: "e11", name: "Вертикальный жим с гантелями", sets: [{ reps: 8, weight: "" }] },
-        { id: "e12", name: "Разгибание рук в тренажере", sets: [{ reps: 8, weight: "" }] },
-        { id: "e13", name: "Сгибание рук в кроссовере", sets: [{ reps: 8, weight: "" }] },
-        { id: "e14", name: "Пресс", sets: [{ reps: 15, weight: "" }] }
+        {
+          id: "e8",
+          name: "Приседания с гантелью",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e9",
+          name: "Тяга нижнего блока",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e10",
+          name: "Жим лежа в тренажере",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e11",
+          name: "Вертикальный жим с гантелями",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e12",
+          name: "Разгибание рук в тренажере",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e13",
+          name: "Сгибание рук в кроссовере",
+          sets: [{ reps: 8, weight: "" }]
+        },
+        {
+          id: "e14",
+          name: "Пресс",
+          sets: [{ reps: 15, weight: "" }]
+        }
       ]
     }
   ]
@@ -64,6 +127,8 @@ export default function App() {
     if (saved) {
       setPlan(JSON.parse(saved));
     }
+
+    loadHistory();
   }, []);
 
   useEffect(() => {
@@ -81,12 +146,45 @@ export default function App() {
       const date = new Date(row.date).toLocaleDateString("ru-RU");
       const key = `${date} — ${row.workout}`;
 
-      if (!groups[key]) groups[key] = [];
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+
       groups[key].push(row);
     });
 
     return Object.entries(groups);
   }, [history]);
+
+  const lastExerciseResults = useMemo(() => {
+    const result = {};
+
+    history.forEach((row) => {
+      if (!row.exercise) return;
+
+      const exerciseName = row.exercise;
+
+      if (!result[exerciseName]) {
+        result[exerciseName] = {
+          reps: row.reps,
+          weight: row.weight,
+          date: row.date
+        };
+      }
+    });
+
+    return result;
+  }, [history]);
+
+  function getLastExerciseText(exerciseName) {
+    const last = lastExerciseResults[exerciseName];
+
+    if (!last) {
+      return "Прошлый раз: нет данных";
+    }
+
+    return `Прошлый раз: ${last.reps} × ${last.weight || "без веса"}`;
+  }
 
   function handleLogin(e) {
     e.preventDefault();
@@ -96,6 +194,7 @@ export default function App() {
       setIsLoggedIn(true);
       setPage("main");
       setLoginError("");
+      loadHistory();
     } else {
       setLoginError("Неверный логин или пароль");
     }
@@ -157,66 +256,67 @@ export default function App() {
   }
 
   function resetWorkout() {
-  if (!workout) return;
+    if (!workout) return;
 
-  setPlan((p) => ({
-    ...p,
-    workouts: p.workouts.map((w) =>
-      w.id === workout.id
-        ? {
-            ...w,
-            exercises: w.exercises.map((exercise) => ({
-              ...exercise,
-              sets: [
-                {
-                  reps: exercise.name.includes("Пресс") ? 15 : 8,
-                  weight: ""
-                }
-              ]
-            }))
-          }
-        : w
-    )
-  }));
-}
+    setPlan((p) => ({
+      ...p,
+      workouts: p.workouts.map((w) =>
+        w.id === workout.id
+          ? {
+              ...w,
+              exercises: w.exercises.map((exercise) => ({
+                ...exercise,
+                sets: [
+                  {
+                    reps: exercise.name.includes("Пресс") ? 15 : 8,
+                    weight: ""
+                  }
+                ]
+              }))
+            }
+          : w
+      )
+    }));
+  }
 
-async function saveWorkoutToGoogle() {
-  if (!workout) return;
+  async function saveWorkoutToGoogle() {
+    if (!workout) return;
 
-  setIsSaving(true);
+    setIsSaving(true);
 
-  try {
-    const rows = [];
+    try {
+      const rows = [];
 
-    workout.exercises.forEach((exercise) => {
-      exercise.sets.forEach((set, index) => {
-        rows.push({
-          workout: workout.name,
-          exercise: exercise.name,
-          set: index + 1,
-          reps: set.reps,
-          weight: set.weight
+      workout.exercises.forEach((exercise) => {
+        exercise.sets.forEach((set, index) => {
+          rows.push({
+            workout: workout.name,
+            exercise: exercise.name,
+            set: index + 1,
+            reps: set.reps,
+            weight: set.weight
+          });
         });
       });
-    });
 
-    await fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify({ rows })
-    });
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({ rows })
+      });
 
-    alert("Тренировка отправлена в Google Таблицу ✅");
-    resetWorkout();
-  } catch {
-    alert("Ошибка сохранения. Проверь Apps Script.");
-  } finally {
-    setIsSaving(false);
+      alert("Тренировка отправлена в Google Таблицу ✅");
+      resetWorkout();
+      loadHistory();
+    } catch {
+      alert("Ошибка сохранения. Проверь Apps Script.");
+    } finally {
+      setIsSaving(false);
+    }
   }
-}
 
-function loadHistory() {
-  setHistoryLoading(true);
+  function loadHistory() {
+    setHistoryLoading(true);
 
     const callbackName = "historyCallback_" + Date.now();
     const script = document.createElement("script");
@@ -226,6 +326,7 @@ function loadHistory() {
       setHistoryLoading(false);
 
       delete window[callbackName];
+
       if (document.body.contains(script)) {
         document.body.removeChild(script);
       }
@@ -238,6 +339,7 @@ function loadHistory() {
       alert("Не получилось загрузить историю");
 
       delete window[callbackName];
+
       if (document.body.contains(script)) {
         document.body.removeChild(script);
       }
@@ -251,6 +353,12 @@ function loadHistory() {
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
     setOpenHistoryKey(null);
+    loadHistory();
+  }
+
+  function openWorkout(id) {
+    setSelectedWorkoutId(id);
+    setOpenVideoId(null);
     loadHistory();
   }
 
@@ -389,7 +497,10 @@ function loadHistory() {
                   <div className="historyCardBody">
                     {Object.entries(
                       rows.reduce((acc, row) => {
-                        if (!acc[row.exercise]) acc[row.exercise] = [];
+                        if (!acc[row.exercise]) {
+                          acc[row.exercise] = [];
+                        }
+
                         acc[row.exercise].push(row);
                         return acc;
                       }, {})
@@ -426,11 +537,11 @@ function loadHistory() {
         <h1 className="menuTitle">Выбери тренировку</h1>
 
         <div className="menuButtons">
-          <button className="bigButton" onClick={() => setSelectedWorkoutId("w1")}>
+          <button className="bigButton" onClick={() => openWorkout("w1")}>
             🏋️ Тренировка 1
           </button>
 
-          <button className="bigButton" onClick={() => setSelectedWorkoutId("w2")}>
+          <button className="bigButton" onClick={() => openWorkout("w2")}>
             🏋️ Тренировка 2
           </button>
 
@@ -470,7 +581,9 @@ function loadHistory() {
             <>
               <button
                 className="showVideoBtn"
-                onClick={() => setOpenVideoId(openVideoId === e.id ? null : e.id)}
+                onClick={() =>
+                  setOpenVideoId(openVideoId === e.id ? null : e.id)
+                }
               >
                 🎥 {openVideoId === e.id ? "Скрыть технику" : "Показать технику"}
               </button>
@@ -498,6 +611,10 @@ function loadHistory() {
               />
             </div>
           ))}
+
+          <div className="previousInfo subtle">
+            {getLastExerciseText(e.name)}
+          </div>
 
           <button onClick={() => addSet(e.id)}>+ подход</button>
         </div>

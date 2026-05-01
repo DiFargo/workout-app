@@ -1,726 +1,188 @@
-* {
-  box-sizing: border-box;
-}
-
+/* === BASE === */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #0f0f0f;
+  background: #0f1115;
   color: white;
-  overflow-x: hidden;
 }
 
-button,
-input {
-  font-family: inherit;
-}
-
-/* LOGIN */
-.loginPage {
-  min-height: 100vh;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.loginCard {
-  width: 100%;
-  max-width: 360px;
-  background: #1b1b1b;
-  border: 1px solid #333;
-  border-radius: 22px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.loginCard h1 {
-  text-align: center;
-  margin: 0 0 10px;
-}
-
-.loginCard p {
-  text-align: center;
-  color: #aaa;
-  margin: 0 0 8px;
-}
-
-.loginCard input {
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #333;
-  background: #111;
-  color: white;
-  font-size: 16px;
-}
-
-.loginCard button {
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: #2f80ed;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* MENU */
-.menuPage {
-  min-height: 100vh;
-  padding: 40px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.menuTitle {
-  font-size: 42px;
-  font-weight: 900;
-  text-align: center;
-  margin: 0 0 40px;
-  color: #2f80ed;
-  line-height: 1.25;
-  padding-bottom: 12px;
-  text-shadow: 0 0 20px rgba(47, 128, 237, 0.55);
-}
-
-.menuButtons {
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.bigButton {
-  width: 100%;
-  min-height: 110px;
-  font-size: 26px;
-  font-weight: bold;
-  border-radius: 24px;
-  border: 1px solid #333;
-  background: #1b1b1b;
-  color: white;
-  cursor: pointer;
-}
-
-.logoutSmall {
-  margin-top: 30px;
-  background: transparent;
-  border: 1px solid #333;
-  color: #aaa;
-  padding: 12px 22px;
-  border-radius: 14px;
-  cursor: pointer;
-}
-
-/* WORKOUT PAGE */
+/* === APP === */
 .app {
-  max-width: 560px;
+  max-width: 500px;
   margin: 0 auto;
-  padding: 28px 18px 110px;
+  padding: 16px;
 }
 
+/* === HEADER === */
 .workoutHeader {
   text-align: center;
-  margin-bottom: 28px;
-}
-
-.backBtn {
-  background: #1b1b1b;
-  border: 1px solid #333;
-  color: #ddd;
-  padding: 12px 22px;
-  border-radius: 18px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .workoutTitle {
-  font-size: 38px;
-  font-weight: 900;
-  margin: 0;
-  text-align: center;
-  color: #2f80ed;
-  line-height: 1.25;
-  padding-bottom: 8px;
-  text-shadow: 0 0 18px rgba(47, 128, 237, 0.45);
+  font-size: 28px;
+  font-weight: bold;
+  color: #4ea1ff;
 }
 
-/* EXERCISE CARD */
+.backBtn {
+  margin-bottom: 10px;
+  background: #1c1f26;
+  border: 1px solid #2f80ed;
+  color: #ccc;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+/* === EXERCISE CARD === */
 .exercise {
-  background: #1b1b1b;
-  border: 1px solid #333;
-  border-radius: 26px;
-  padding: 24px;
-  margin-bottom: 28px;
+  background: #171a21;
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #2a2f3a;
 }
 
 .exercise h3 {
   text-align: center;
-  font-size: 26px;
-  margin: 8px 0 24px;
-}
-
-.showVideoBtn {
-  width: 100%;
-  margin-bottom: 18px;
-  background: #2f80ed;
-  border: none;
-  color: white;
-  padding: 16px;
-  border-radius: 18px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.exerciseVideo {
-  width: 100%;
-  max-height: 420px;
-  border-radius: 18px;
-  margin-bottom: 18px;
-  background: #000;
-}
-
-.exercise div {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
   margin-bottom: 12px;
 }
 
-.exercise input {
-  width: 100%;
-  min-width: 0;
-  padding: 16px;
-  border-radius: 16px;
-  border: 1px solid #333;
-  background: #0f0f0f;
-  color: white;
-  font-size: 22px;
-}
-
-.exercise input::placeholder {
-  color: #888;
-}
-
-.exercise button {
-  width: 100%;
-  padding: 16px;
-  border-radius: 18px;
-  border: none;
-  background: #2f80ed;
-  color: white;
-  cursor: pointer;
-  font-size: 17px;
-  font-weight: bold;
-}
-
-/* FIXED FINISH BUTTON */
-.bottomBar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
+/* === VIDEO BUTTON === */
+.showVideoBtn {
   width: 100%;
   padding: 12px;
-  background: rgba(15, 15, 15, 0.92);
-  backdrop-filter: blur(10px);
-  z-index: 50;
-}
-
-.finishBtn.fixed {
-  width: 100%;
-  max-width: 560px;
-  display: block;
-  margin: 0 auto;
-  padding: 18px;
-  border-radius: 18px;
+  margin-bottom: 12px;
+  background: #2f80ed;
   border: none;
-  background: #27ae60;
+  border-radius: 14px;
   color: white;
-  font-size: 19px;
-  font-weight: 900;
-  cursor: pointer;
+  font-size: 16px;
 }
 
-.finishBtn.fixed:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* === INPUTS === */
+.exercise input {
+  width: 45%;
+  padding: 12px;
+  margin: 5px 2%;
+  border-radius: 12px;
+  border: 1px solid #2f80ed;
+  background: #0f1115;
+  color: white;
+  text-align: center;
+  font-size: 16px;
 }
 
-/* MOBILE */
-@media (max-width: 700px) {
-  .app {
-    max-width: 100%;
-    padding: 24px 16px 110px;
-  }
-
-  .menuTitle {
-    font-size: 34px;
-  }
-
-  .bigButton {
-    min-height: 120px;
-    font-size: 26px;
-  }
-
-  .workoutTitle {
-    font-size: 34px;
-  }
-
-  .exercise {
-    padding: 20px;
-  }
-
-  .exercise h3 {
-    font-size: 24px;
-  }
-
-  .exercise input {
-    font-size: 22px;
-    padding: 16px;
-  }
-}.historyList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.historyRow {
+/* === SET ROW === */
+.exercise > div {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 16px;
+}
+
+/* === PREVIOUS RESULT (как у тебя было, но аккуратнее) === */
+.previousInfo.subtle {
+  margin: 8px 0;
+  padding: 10px;
+
+  border-radius: 14px;
+
+  background: rgba(47, 128, 237, 0.08);
+  border: 1px solid rgba(47, 128, 237, 0.3);
+
+  text-align: center;
+  font-size: 14px;
+  color: #9cc7ff;
+
+  white-space: nowrap;
+}
+
+/* === ADD SET === */
+.exercise button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  background: #2f80ed;
+  border: none;
+  border-radius: 14px;
+  color: white;
+  font-size: 16px;
+}
+
+/* === BOTTOM BUTTON === */
+.bottomBar {
+  margin-top: 20px;
+}
+
+.finishBtn {
+  width: 100%;
   padding: 14px;
-}
-
-.historyRow strong {
-  display: block;
-  font-size: 16px;
-  color: white;
-}
-
-.historyRow span {
-  display: block;
-  margin-top: 4px;
-  font-size: 14px;
-  color: #888;
-}
-
-.historyResult {
-  white-space: nowrap;
-  font-size: 16px;
-  font-weight: 900;
-  color: #2f80ed;
-}
-
-@media (max-width: 700px) {
-  .historyRow {
-    align-items: flex-start;
-  }
-
-  .historyResult {
-    font-size: 15px;
-  }
-}.historyExercise {
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 18px;
-  padding: 16px;
-}
-
-.historyExercise h4 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  color: white;
-}
-
-.historySets {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.historySet {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 0;
-  border-top: 1px solid #262626;
-}
-
-.historySet span {
-  color: #888;
-}
-
-.historySet strong {
-  color: #2f80ed;
-}.historyList,
-.historyExercise,
-.historySets,
-.historySet {
-  display: block;
-}
-
-.historyList {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.historyExercise {
-  width: 100%;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 18px;
-  padding: 16px;
-}
-
-.historyExercise h4 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  color: white;
-  text-align: left;
-}
-
-.historySets {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.historySet {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-top: 1px solid #262626;
-}
-
-.historySet span {
-  color: #888;
-}
-
-.historySet strong {
-  color: #2f80ed;
-  white-space: nowrap;
-}
-
-@media (max-width: 700px) {
-  .historySet {
-    flex-direction: row;
-  }
-}.exercise .historyList {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 14px !important;
-  margin-bottom: 0 !important;
-}
-
-.exercise .historyExercise {
-  display: block !important;
-  width: 100% !important;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 0 !important;
-}
-
-.exercise .historyExercise h4 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  text-align: left;
-}
-
-.exercise .historySets {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-  margin-bottom: 0 !important;
-}
-
-.exercise .historySet {
-  display: flex !important;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-top: 1px solid #262626;
-  margin-bottom: 0 !important;
-}
-
-.exercise .historySet span {
-  color: #888;
-}
-
-.exercise .historySet strong {
-  color: #2f80ed;
-  white-space: nowrap;
-}.historyCard {
-  background: #1b1b1b;
-  border: 1px solid #333;
-  border-radius: 22px;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-
-.historyCardHeader {
-  width: 100%;
-  padding: 18px;
-  background: #1b1b1b;
+  border-radius: 16px;
+  background: #27ae60;
   border: none;
+  font-size: 16px;
   color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: left;
-  font-size: 18px;
-  font-weight: 900;
-  cursor: pointer;
 }
 
-.historyCardHeader strong {
-  font-size: 28px;
-  color: #2f80ed;
-}
-
-.historyCardBody {
-  padding: 0 14px 14px;
-}
-.historyCard {
-  width: 100%;
-  background: #1b1b1b;
-  border: 1px solid #333;
-  border-radius: 22px;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-
-.historyCardHeader {
-  width: 100%;
+/* === MENU === */
+.menuPage {
+  text-align: center;
   padding: 20px;
-  background: #1b1b1b;
-  border: none;
-  color: white;
+}
+
+.menuTitle {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #4ea1ff;
+}
+
+.menuButtons {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: left;
-  font-size: 20px;
-  font-weight: 900;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.historyCardHeader span {
-  line-height: 1.3;
-}
-
-.historyCardHeader strong {
-  font-size: 30px;
-  color: #2f80ed;
-}
-
-.historyCardBody {
-  padding: 0 16px 16px;
-}
-
-.historyExercise {
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 18px;
+.bigButton {
   padding: 16px;
-  margin-top: 12px;
-}
-
-.historyExercise h4 {
-  margin: 0 0 12px;
+  border-radius: 20px;
+  background: #171a21;
+  border: 1px solid #2f80ed;
+  color: white;
   font-size: 18px;
-  color: white;
 }
 
-.historySets {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.historySet {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid #292929;
-  padding-top: 10px;
-}
-
-.historySet span {
-  color: #999;
-}
-
-.historySet strong {
-  color: #2f80ed;
-  white-space: nowrap;
-}.loginPage {
-  min-height: 100vh;
-  padding: 32px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 28px;
-}
-
-.loginHero {
-  text-align: center;
-}
-
-.appLogo {
-  width: 76px;
-  height: 76px;
-  margin: 0 auto 16px;
-  border-radius: 24px;
-  background: linear-gradient(135deg, #2f80ed, #56ccf2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 34px;
-  font-weight: 900;
-  color: white;
-  box-shadow: 0 0 30px rgba(47, 128, 237, 0.45);
-}
-
-.loginHero h1 {
-  margin: 0;
-  font-size: 42px;
-  font-weight: 900;
-}
-
-.loginHero p {
-  margin: 8px 0 0;
-  color: #aaa;
-  font-size: 16px;
-}
-
-.loginCard h2 {
-  margin: 0 0 8px;
-  text-align: center;
-  font-size: 24px;
-}
-
-.passwordBox {
-  display: flex;
-  gap: 8px;
-}
-
-.passwordBox input {
-  flex: 1;
-}
-
-.passwordBox button {
-  width: auto;
-  padding: 0 12px;
-  background: #242424;
-  border: 1px solid #333;
-  color: #ddd;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.loginBtn {
-  margin-top: 4px;
-}
-
-.loginError {
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(255, 80, 80, 0.12);
-  color: #ff6b6b;
-  font-size: 14px;
-  text-align: center;
-}
-
-.loginHint {
-  margin: 0;
-  text-align: center;
-  color: #777;
-  font-size: 13px;
-}
-
-@media (max-width: 700px) {
-  .loginHero h1 {
-    font-size: 36px;
-  }
-
-  .appLogo {
-    width: 68px;
-    height: 68px;
-  }
-}
+/* === LOGIN === */
 .loginPage {
-  min-height: 100vh !important;
-  width: 100% !important;
-  padding: 32px 20px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 28px !important;
-  overflow-x: hidden !important;
-}
-
-.loginHero {
-  width: 100%;
-  text-align: center;
-}
-
-.loginHero h1 {
-  margin: 0;
-  font-size: 42px;
-  font-weight: 900;
-  color: #2f80ed;
-  text-shadow: 0 0 20px rgba(47, 128, 237, 0.45);
-}
-
-.loginHero p {
-  margin: 8px 0 0;
-  color: #aaa;
-}
-
-.appLogo {
-  width: 76px;
-  height: 76px;
-  margin: 0 auto 16px;
-  border-radius: 24px;
-  background: linear-gradient(135deg, #2f80ed, #56ccf2);
+  height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 34px;
-  font-weight: 900;
-  color: white;
+  align-items: center;
 }
 
 .loginCard {
-  width: 100% !important;
-  max-width: 380px !important;
+  background: #171a21;
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid #2f80ed;
+  width: 90%;
+  max-width: 350px;
 }
 
-.passwordBox {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.passwordBox button {
+.loginCard input {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  border: 1px solid #2f80ed;
+  background: #0f1115;
+  color: white;
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  background: #2f80ed;
+  border: none;
+  color: white;
+  font-size: 16px;
 }
