@@ -420,4 +420,7 @@ body {
 
 .passwordBox {
   box-sizing: border-box !important;
+}.loginCard {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
 }
