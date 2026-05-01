@@ -1,443 +1,726 @@
-/* === BASE === */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #0d0f14;
+  background: #0f0f0f;
   color: white;
+  overflow-x: hidden;
 }
 
-/* === APP === */
-.app {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 16px;
+button,
+input {
+  font-family: inherit;
 }
 
-/* === HEADER === */
-.workoutHeader {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.workoutTitle {
-  font-size: 30px;
-  font-weight: bold;
-  color: #4ea1ff;
-  text-shadow: 0 0 20px rgba(78, 161, 255, 0.6);
-}
-
-.backBtn {
-  background: #1c1f26;
-  border: none;
-  color: #ccc;
-  padding: 10px 18px;
-  border-radius: 25px;
-  margin-bottom: 10px;
-}
-
-/* === CARD === */
-.exercise {
-  background: #171a21;
-  border-radius: 22px;
-  padding: 18px;
-  margin-bottom: 16px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
-}
-
-.exercise h3 {
-  text-align: center;
-  margin-bottom: 14px;
-  font-size: 20px;
-}
-
-/* === VIDEO BUTTON === */
-.showVideoBtn {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 14px;
-  background: #3b82f6;
-  border: none;
-  border-radius: 16px;
-  color: white;
-  font-size: 16px;
-}
-
-/* === INPUT ROW === */
-.exercise > div {
-  display: flex;
-  justify-content: space-between;
-}
-
-/* === INPUTS === */
-.exercise input {
-  width: 48%;
-  padding: 14px;
-  margin-bottom: 10px;
-  border-radius: 14px;
-  border: none;
-  background: #0d0f14;
-  color: white;
-  text-align: center;
-  font-size: 18px;
-}
-
-/* === PREVIOUS RESULT (сделали аккуратно) === */
-.previousInfo.subtle {
-  margin: 6px 0;
-  font-size: 13px;
-  color: #777;
-  text-align: center;
-  white-space: nowrap;
-}
-
-/* === ADD SET === */
-.exercise button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 8px;
-  background: #3b82f6;
-  border: none;
-  border-radius: 16px;
-  color: white;
-  font-size: 16px;
-}
-
-/* === FINISH BUTTON === */
-.bottomBar {
-  position: sticky;
-  bottom: 0;
-  margin-top: 10px;
-}
-
-.finishBtn {
-  width: 100%;
-  padding: 16px;
-  border-radius: 20px;
-  background: #27ae60;
-  border: none;
-  font-size: 16px;
-  color: white;
-}
-
-/* === MENU === */
-.menuPage {
-  text-align: center;
+/* LOGIN */
+.loginPage {
+  min-height: 100vh;
   padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 360px;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  border-radius: 22px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.loginCard h1 {
+  text-align: center;
+  margin: 0 0 10px;
+}
+
+.loginCard p {
+  text-align: center;
+  color: #aaa;
+  margin: 0 0 8px;
+}
+
+.loginCard input {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  background: #111;
+  color: white;
+  font-size: 16px;
+}
+
+.loginCard button {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #2f80ed;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* MENU */
+.menuPage {
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .menuTitle {
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #4ea1ff;
+  font-size: 42px;
+  font-weight: 900;
+  text-align: center;
+  margin: 0 0 40px;
+  color: #2f80ed;
+  line-height: 1.25;
+  padding-bottom: 12px;
+  text-shadow: 0 0 20px rgba(47, 128, 237, 0.55);
+}
+
+.menuButtons {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .bigButton {
   width: 100%;
-  padding: 16px;
-  margin-bottom: 12px;
-  border-radius: 20px;
-  background: #171a21;
-  border: none;
+  min-height: 110px;
+  font-size: 26px;
+  font-weight: bold;
+  border-radius: 24px;
+  border: 1px solid #333;
+  background: #1b1b1b;
   color: white;
-  font-size: 18px;
+  cursor: pointer;
 }
 
-/* === LOGIN === */
-.loginPage {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.loginCard {
-  background: #171a21;
-  padding: 20px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 350px;
-}
-
-.loginCard input {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 10px;
+.logoutSmall {
+  margin-top: 30px;
+  background: transparent;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 12px 22px;
   border-radius: 14px;
-  border: none;
-  background: #0d0f14;
-  color: white;
+  cursor: pointer;
 }
 
-.loginBtn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 16px;
-  background: #3b82f6;
-  border: none;
-  color: white;
-  font-size: 16px;
-}.menuPage .logoutSmall {
-  margin-top: 20px;
+/* WORKOUT PAGE */
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 28px 18px 110px;
+}
+
+.workoutHeader {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.backBtn {
+  background: #1b1b1b;
+  border: 1px solid #333;
+  color: #ddd;
   padding: 12px 22px;
   border-radius: 18px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+.workoutTitle {
+  font-size: 38px;
+  font-weight: 900;
+  margin: 0;
+  text-align: center;
+  color: #2f80ed;
+  line-height: 1.25;
+  padding-bottom: 8px;
+  text-shadow: 0 0 18px rgba(47, 128, 237, 0.45);
+}
+
+/* EXERCISE CARD */
+.exercise {
+  background: #1b1b1b;
   border: 1px solid #333;
-  background: #1c1f26;
-  color: #ccc;
-  font-size: 16px;
+  border-radius: 26px;
+  padding: 24px;
+  margin-bottom: 28px;
 }
 
-.menuPage .bigButton {
-  background: #171a21;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.03);
+.exercise h3 {
+  text-align: center;
+  font-size: 26px;
+  margin: 8px 0 24px;
 }
 
-.menuPage .bigButton:hover {
-  background: #1d212a;
+.showVideoBtn {
+  width: 100%;
+  margin-bottom: 18px;
+  background: #2f80ed;
+  border: none;
+  color: white;
+  padding: 16px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-.menuPage .menuTitle {
-  text-shadow: 0 0 20px rgba(78, 161, 255, 0.55);
-}.menuPage {
-  height: 100vh;
+.exerciseVideo {
+  width: 100%;
+  max-height: 420px;
+  border-radius: 18px;
+  margin-bottom: 18px;
+  background: #000;
+}
 
+.exercise div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.exercise input {
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #333;
+  background: #0f0f0f;
+  color: white;
+  font-size: 22px;
+}
+
+.exercise input::placeholder {
+  color: #888;
+}
+
+.exercise button {
+  width: 100%;
+  padding: 16px;
+  border-radius: 18px;
+  border: none;
+  background: #2f80ed;
+  color: white;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+/* FIXED FINISH BUTTON */
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  background: rgba(15, 15, 15, 0.92);
+  backdrop-filter: blur(10px);
+  z-index: 50;
+}
+
+.finishBtn.fixed {
+  width: 100%;
+  max-width: 560px;
+  display: block;
+  margin: 0 auto;
+  padding: 18px;
+  border-radius: 18px;
+  border: none;
+  background: #27ae60;
+  color: white;
+  font-size: 19px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.finishBtn.fixed:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+  .app {
+    max-width: 100%;
+    padding: 24px 16px 110px;
+  }
+
+  .menuTitle {
+    font-size: 34px;
+  }
+
+  .bigButton {
+    min-height: 120px;
+    font-size: 26px;
+  }
+
+  .workoutTitle {
+    font-size: 34px;
+  }
+
+  .exercise {
+    padding: 20px;
+  }
+
+  .exercise h3 {
+    font-size: 24px;
+  }
+
+  .exercise input {
+    font-size: 22px;
+    padding: 16px;
+  }
+}.historyList {
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* центр по вертикали */
-  align-items: center;      /* центр по горизонтали */
-
-  padding: 20px;
-  text-align: center;
+  gap: 10px;
 }
-.loginPage {
-  min-height: 100vh !important;
-  width: 100% !important;
-  padding: 24px !important;
 
+.historyRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.historyRow strong {
+  display: block;
+  font-size: 16px;
+  color: white;
+}
+
+.historyRow span {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  color: #888;
+}
+
+.historyResult {
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 900;
+  color: #2f80ed;
+}
+
+@media (max-width: 700px) {
+  .historyRow {
+    align-items: flex-start;
+  }
+
+  .historyResult {
+    font-size: 15px;
+  }
+}.historyExercise {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.historyExercise h4 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: white;
+}
+
+.historySets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historySet {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #262626;
+}
+
+.historySet span {
+  color: #888;
+}
+
+.historySet strong {
+  color: #2f80ed;
+}.historyList,
+.historyExercise,
+.historySets,
+.historySet {
+  display: block;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.historyExercise {
+  width: 100%;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.historyExercise h4 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: white;
+  text-align: left;
+}
+
+.historySets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historySet {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #262626;
+}
+
+.historySet span {
+  color: #888;
+}
+
+.historySet strong {
+  color: #2f80ed;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .historySet {
+    flex-direction: row;
+  }
+}.exercise .historyList {
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
+  gap: 14px !important;
+  margin-bottom: 0 !important;
+}
 
-  gap: 24px !important;
-  overflow: hidden !important;
+.exercise .historyExercise {
+  display: block !important;
+  width: 100% !important;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 0 !important;
+}
+
+.exercise .historyExercise h4 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  text-align: left;
+}
+
+.exercise .historySets {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  margin-bottom: 0 !important;
+}
+
+.exercise .historySet {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #262626;
+  margin-bottom: 0 !important;
+}
+
+.exercise .historySet span {
+  color: #888;
+}
+
+.exercise .historySet strong {
+  color: #2f80ed;
+  white-space: nowrap;
+}.historyCard {
+  background: #1b1b1b;
+  border: 1px solid #333;
+  border-radius: 22px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.historyCardHeader {
+  width: 100%;
+  padding: 18px;
+  background: #1b1b1b;
+  border: none;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.historyCardHeader strong {
+  font-size: 28px;
+  color: #2f80ed;
+}
+
+.historyCardBody {
+  padding: 0 14px 14px;
+}
+.historyCard {
+  width: 100%;
+  background: #1b1b1b;
+  border: 1px solid #333;
+  border-radius: 22px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.historyCardHeader {
+  width: 100%;
+  padding: 20px;
+  background: #1b1b1b;
+  border: none;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.historyCardHeader span {
+  line-height: 1.3;
+}
+
+.historyCardHeader strong {
+  font-size: 30px;
+  color: #2f80ed;
+}
+
+.historyCardBody {
+  padding: 0 16px 16px;
+}
+
+.historyExercise {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.historyExercise h4 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: white;
+}
+
+.historySets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historySet {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #292929;
+  padding-top: 10px;
+}
+
+.historySet span {
+  color: #999;
+}
+
+.historySet strong {
+  color: #2f80ed;
+  white-space: nowrap;
+}.loginPage {
+  min-height: 100vh;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
 }
 
 .loginHero {
-  width: 100% !important;
-  max-width: 380px !important;
-  text-align: center !important;
+  text-align: center;
+}
+
+.appLogo {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 16px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #2f80ed, #56ccf2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 900;
+  color: white;
+  box-shadow: 0 0 30px rgba(47, 128, 237, 0.45);
 }
 
 .loginHero h1 {
-  color: #4ea1ff !important;
-  font-size: 42px !important;
-  text-shadow: 0 0 20px rgba(78, 161, 255, 0.55);
+  margin: 0;
+  font-size: 42px;
+  font-weight: 900;
 }
 
-.loginCard {
-  width: 100% !important;
-  max-width: 380px !important;
-  padding: 24px !important;
+.loginHero p {
+  margin: 8px 0 0;
+  color: #aaa;
+  font-size: 16px;
+}
+
+.loginCard h2 {
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: 24px;
 }
 
 .passwordBox {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 10px !important;
+  display: flex;
+  gap: 8px;
+}
+
+.passwordBox input {
+  flex: 1;
 }
 
 .passwordBox button {
-  width: 100% !important;
-  padding: 12px !important;
-  border-radius: 14px !important;
-  background: #1c1f26 !important;
-  color: #ccc !important;
-  border: 1px solid #333 !important;
-}/* === BEAUTIFUL LOGIN SCREEN FIX === */
+  width: auto;
+  padding: 0 12px;
+  background: #242424;
+  border: 1px solid #333;
+  color: #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+}
 
+.loginBtn {
+  margin-top: 4px;
+}
+
+.loginError {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 80, 80, 0.12);
+  color: #ff6b6b;
+  font-size: 14px;
+  text-align: center;
+}
+
+.loginHint {
+  margin: 0;
+  text-align: center;
+  color: #777;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  .loginHero h1 {
+    font-size: 36px;
+  }
+
+  .appLogo {
+    width: 68px;
+    height: 68px;
+  }
+}
 .loginPage {
   min-height: 100vh !important;
   width: 100% !important;
-  padding: 28px 20px !important;
-
+  padding: 32px 20px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-
   gap: 28px !important;
-  background: #0d0f14 !important;
   overflow-x: hidden !important;
 }
 
 .loginHero {
-  width: 100% !important;
-  max-width: 360px !important;
-  text-align: center !important;
-}
-
-.appLogo {
-  width: 64px !important;
-  height: 64px !important;
-  margin: 0 auto 14px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  border-radius: 20px !important;
-  background: #171a21 !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-
-  color: #4ea1ff !important;
-  font-size: 28px !important;
-  font-weight: 900 !important;
-
-  box-shadow: 0 0 22px rgba(78, 161, 255, 0.25) !important;
+  width: 100%;
+  text-align: center;
 }
 
 .loginHero h1 {
-  margin: 0 !important;
-  font-size: 44px !important;
-  font-weight: 900 !important;
-  color: #4ea1ff !important;
-  text-shadow: 0 0 22px rgba(78, 161, 255, 0.45) !important;
+  margin: 0;
+  font-size: 42px;
+  font-weight: 900;
+  color: #2f80ed;
+  text-shadow: 0 0 20px rgba(47, 128, 237, 0.45);
 }
 
 .loginHero p {
-  margin: 8px 0 0 !important;
-  color: #d6d6d6 !important;
-  font-size: 18px !important;
+  margin: 8px 0 0;
+  color: #aaa;
+}
+
+.appLogo {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 16px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #2f80ed, #56ccf2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 900;
+  color: white;
 }
 
 .loginCard {
   width: 100% !important;
-  max-width: 360px !important;
-  padding: 24px !important;
-
-  background: #171a21 !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-  border-radius: 28px !important;
-
-  box-shadow: 0 18px 50px rgba(0,0,0,0.45) !important;
-}
-
-.loginCard h2 {
-  margin: 0 0 20px !important;
-  text-align: center !important;
-  color: white !important;
-  font-size: 28px !important;
-  font-weight: 900 !important;
-}
-
-.loginCard input {
-  width: 100% !important;
-  height: 58px !important;
-  margin: 0 0 14px !important;
-  padding: 0 18px !important;
-
-  border-radius: 18px !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-
-  background: #0d0f14 !important;
-  color: white !important;
-
-  font-size: 18px !important;
-  outline: none !important;
+  max-width: 380px !important;
 }
 
 .passwordBox {
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .passwordBox button {
-  width: 100% !important;
-  height: 52px !important;
-  margin: 0 0 14px !important;
-
-  border-radius: 18px !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-
-  background: #1c1f26 !important;
-  color: #d0d0d0 !important;
-
-  font-size: 16px !important;
-  font-weight: 700 !important;
-}
-
-.loginBtn {
-  width: 100% !important;
-  height: 58px !important;
-  margin-top: 4px !important;
-
-  border: none !important;
-  border-radius: 20px !important;
-
-  background: #3b82f6 !important;
-  color: white !important;
-
-  font-size: 20px !important;
-  font-weight: 900 !important;
-
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.28) !important;
-}
-
-.loginHint {
-  margin: 18px 0 0 !important;
-  text-align: center !important;
-  color: #aaa !important;
-  font-size: 15px !important;
-}
-
-.loginError {
-  margin-bottom: 12px !important;
-  padding: 12px !important;
-  border-radius: 14px !important;
-
-  background: rgba(255, 80, 80, 0.12) !important;
-  color: #ff7777 !important;
-  text-align: center !important;
-}.loginCard {
-  overflow: hidden !important;
-}
-
-.loginCard input,
-.passwordBox,
-.passwordBox input,
-.passwordBox button,
-.loginBtn {
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-.loginCard input {
-  box-sizing: border-box !important;
-}
-
-.passwordBox {
-  box-sizing: border-box !important;
-}.loginCard {
-  padding-left: 20px !important;
-  padding-right: 20px !important;
-}.loginPage {
-  justify-content: center !important;
-}.loginPage {
-  justify-content: center !important;
-  align-items: center !important;
-  padding-top: 24px !important;
-  padding-bottom: 24px !important;
-}
-
-.loginCard {
-  margin: 0 auto !important;
-  transform: translateY(-20px);
-}
-
-.loginHero {
-  margin-bottom: 10px !important;
-  transform: translateY(-20px);
+  width: 100%;
+  padding: 14px;
 }
