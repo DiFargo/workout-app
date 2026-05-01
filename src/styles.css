@@ -253,4 +253,19 @@ body {
 .finishBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  background: rgba(15, 15, 15, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.finishBtn.fixed {
+  width: 100%;
+  padding: 18px;
+  border-radius: 16px;
+  font-size: 18px;
 }

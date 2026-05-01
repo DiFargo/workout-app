@@ -254,9 +254,7 @@ export default function App() {
         <h1 className="workoutTitle">{workout.name}</h1>
       </div>
 
-      <button className="finishBtn" onClick={saveWorkoutToGoogle} disabled={isSaving}>
-        {isSaving ? "Сохраняю..." : "✅ Завершить тренировку"}
-      </button>
+    
 
       {workout.exercises.map((e) => (
         <div key={e.id} className="exercise">
@@ -300,4 +298,12 @@ export default function App() {
       ))}
     </div>
   );
-}
+}<div className="bottomBar">
+  <button
+    className="finishBtn fixed"
+    onClick={saveWorkoutToGoogle}
+    disabled={isSaving}
+  >
+    {isSaving ? "Сохраняю..." : "✅ Завершить тренировку"}
+  </button>
+</div>
