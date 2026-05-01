@@ -48,15 +48,14 @@ export default function App() {
   const [openVideoId, setOpenVideoId] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  const [history, setHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
   useEffect(() => {
-    if (localStorage.getItem(AUTH_KEY) === "true") {
-      setIsLoggedIn(true);
-    }
+    if (localStorage.getItem(AUTH_KEY) === "true") setIsLoggedIn(true);
 
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      setPlan(JSON.parse(saved));
-    }
+    if (saved) setPlan(JSON.parse(saved));
   }, []);
 
   useEffect(() => {
@@ -156,6 +155,43 @@ export default function App() {
     }
   }
 
+  async function loadHistory() {
+    setHistoryLoading(true);
+
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL);
+      const data = await response.json();
+      setHistory(data.reverse());
+    } catch {
+      alert("Не получилось загрузить историю");
+    } finally {
+      setHistoryLoading(false);
+    }
+  }
+
+  function openHistory() {
+    setPage("history");
+    setSelectedWorkoutId(null);
+    loadHistory();
+  }
+
+  const groupedHistory = useMemo(() => {
+    const groups = {};
+
+    history.forEach((row) => {
+      const date = new Date(row.date).toLocaleDateString("ru-RU");
+      const key = `${date} — ${row.workout}`;
+
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+
+      groups[key].push(row);
+    });
+
+    return Object.entries(groups);
+  }, [history]);
+
   if (!isLoggedIn) {
     return (
       <div className="loginPage">
@@ -163,18 +199,8 @@ export default function App() {
           <h1>Вход</h1>
           <p>admin / admin</p>
 
-          <input
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
-            placeholder="Логин"
-          />
-
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Пароль"
-          />
+          <input value={login} onChange={(e) => setLogin(e.target.value)} placeholder="Логин" />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Пароль" />
 
           <button>Войти</button>
         </form>
@@ -188,23 +214,11 @@ export default function App() {
         <h1 className="menuTitle">Главное меню</h1>
 
         <div className="menuButtons">
-          <button
-            className="bigButton"
-            onClick={() => {
-              setPage("workouts");
-              setSelectedWorkoutId(null);
-            }}
-          >
+          <button className="bigButton" onClick={() => setPage("workouts")}>
             🏋️ Тренировки
           </button>
 
-          <button
-            className="bigButton"
-            onClick={() => {
-              setPage("nutrition");
-              setSelectedWorkoutId(null);
-            }}
-          >
+          <button className="bigButton" onClick={() => setPage("nutrition")}>
             🍽️ Питание
           </button>
         </div>
@@ -220,10 +234,7 @@ export default function App() {
     return (
       <div className="app">
         <div className="workoutHeader">
-          <button className="backBtn" onClick={goBackToMain}>
-            ← Назад
-          </button>
-
+          <button className="backBtn" onClick={goBackToMain}>← Назад</button>
           <h1 className="workoutTitle">Питание</h1>
         </div>
 
@@ -237,30 +248,65 @@ export default function App() {
     );
   }
 
+  if (page === "history") {
+    return (
+      <div className="app">
+        <div className="workoutHeader">
+          <button className="backBtn" onClick={() => setPage("workouts")}>← Назад</button>
+          <h1 className="workoutTitle">История</h1>
+        </div>
+
+        <button className="finishBtn fixed" onClick={loadHistory}>
+          🔄 Обновить историю
+        </button>
+
+        {historyLoading && (
+          <div className="exercise">
+            <h3>Загрузка...</h3>
+          </div>
+        )}
+
+        {!historyLoading && groupedHistory.length === 0 && (
+          <div className="exercise">
+            <h3>История пустая</h3>
+            <p style={{ textAlign: "center", color: "#aaa" }}>
+              Заверши тренировку, и она появится здесь.
+            </p>
+          </div>
+        )}
+
+        {!historyLoading &&
+          groupedHistory.map(([title, rows]) => (
+            <div className="exercise" key={title}>
+              <h3>{title}</h3>
+
+              {rows.map((row, index) => (
+                <p key={index} style={{ color: "#ddd", fontSize: "16px" }}>
+                  {row.exercise} — подход {row.set}: {row.reps} × {row.weight || "без веса"}
+                </p>
+              ))}
+            </div>
+          ))}
+      </div>
+    );
+  }
+
   if (page === "workouts" && !selectedWorkoutId) {
     return (
       <div className="menuPage">
         <h1 className="menuTitle">Выбери тренировку</h1>
 
         <div className="menuButtons">
-          <button
-            className="bigButton"
-            onClick={() => {
-              setSelectedWorkoutId("w1");
-              setOpenVideoId(null);
-            }}
-          >
+          <button className="bigButton" onClick={() => setSelectedWorkoutId("w1")}>
             🏋️ Тренировка 1
           </button>
 
-          <button
-            className="bigButton"
-            onClick={() => {
-              setSelectedWorkoutId("w2");
-              setOpenVideoId(null);
-            }}
-          >
+          <button className="bigButton" onClick={() => setSelectedWorkoutId("w2")}>
             🏋️ Тренировка 2
+          </button>
+
+          <button className="bigButton" onClick={openHistory}>
+            📊 История
           </button>
         </div>
 
