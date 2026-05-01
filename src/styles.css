@@ -425,4 +425,19 @@ body {
   padding-right: 20px !important;
 }.loginPage {
   justify-content: center !important;
+}.loginPage {
+  justify-content: center !important;
+  align-items: center !important;
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+}
+
+.loginCard {
+  margin: 0 auto !important;
+  transform: translateY(-20px);
+}
+
+.loginHero {
+  margin-bottom: 10px !important;
+  transform: translateY(-20px);
 }
