@@ -156,42 +156,67 @@ export default function App() {
     }));
   }
 
-  async function saveWorkoutToGoogle() {
-    if (!workout) return;
+  function resetWorkout() {
+  if (!workout) return;
 
-    setIsSaving(true);
+  setPlan((p) => ({
+    ...p,
+    workouts: p.workouts.map((w) =>
+      w.id === workout.id
+        ? {
+            ...w,
+            exercises: w.exercises.map((exercise) => ({
+              ...exercise,
+              sets: [
+                {
+                  reps: exercise.name.includes("Пресс") ? 15 : 8,
+                  weight: ""
+                }
+              ]
+            }))
+          }
+        : w
+    )
+  }));
+}
 
-    try {
-      const rows = [];
+async function saveWorkoutToGoogle() {
+  if (!workout) return;
 
-      workout.exercises.forEach((exercise) => {
-        exercise.sets.forEach((set, index) => {
-          rows.push({
-            workout: workout.name,
-            exercise: exercise.name,
-            set: index + 1,
-            reps: set.reps,
-            weight: set.weight
-          });
+  setIsSaving(true);
+
+  try {
+    const rows = [];
+
+    workout.exercises.forEach((exercise) => {
+      exercise.sets.forEach((set, index) => {
+        rows.push({
+          workout: workout.name,
+          exercise: exercise.name,
+          set: index + 1,
+          reps: set.reps,
+          weight: set.weight
         });
       });
+    });
 
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({ rows })
-      });
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify({ rows })
+    });
 
-      alert("Тренировка отправлена в Google Таблицу ✅");
-    } catch {
-      alert("Ошибка сохранения. Проверь Apps Script.");
-    } finally {
-      setIsSaving(false);
-    }
+    alert("Тренировка отправлена в Google Таблицу ✅");
+    resetWorkout();
+  } catch {
+    alert("Ошибка сохранения. Проверь Apps Script.");
+  } finally {
+    setIsSaving(false);
   }
+}
 
-  function loadHistory() {
-    setHistoryLoading(true);
+function loadHistory() {
+  setHistoryLoading(true);
 
     const callbackName = "historyCallback_" + Date.now();
     const script = document.createElement("script");
