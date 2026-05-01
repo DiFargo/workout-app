@@ -2,13 +2,13 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #0f1115;
+  background: #0d0f14;
   color: white;
 }
 
 /* === APP === */
 .app {
-  max-width: 500px;
+  max-width: 480px;
   margin: 0 auto;
   padding: 16px;
 }
@@ -20,103 +20,99 @@ body {
 }
 
 .workoutTitle {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
   color: #4ea1ff;
+  text-shadow: 0 0 20px rgba(78, 161, 255, 0.6);
 }
 
 .backBtn {
-  margin-bottom: 10px;
   background: #1c1f26;
-  border: 1px solid #2f80ed;
+  border: none;
   color: #ccc;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 10px 18px;
+  border-radius: 25px;
+  margin-bottom: 10px;
 }
 
-/* === EXERCISE CARD === */
+/* === CARD === */
 .exercise {
   background: #171a21;
-  border-radius: 20px;
-  padding: 16px;
+  border-radius: 22px;
+  padding: 18px;
   margin-bottom: 16px;
-  border: 1px solid #2a2f3a;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
 }
 
 .exercise h3 {
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  font-size: 20px;
 }
 
 /* === VIDEO BUTTON === */
 .showVideoBtn {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-  background: #2f80ed;
+  padding: 14px;
+  margin-bottom: 14px;
+  background: #3b82f6;
   border: none;
-  border-radius: 14px;
+  border-radius: 16px;
   color: white;
   font-size: 16px;
 }
 
-/* === INPUTS === */
-.exercise input {
-  width: 45%;
-  padding: 12px;
-  margin: 5px 2%;
-  border-radius: 12px;
-  border: 1px solid #2f80ed;
-  background: #0f1115;
-  color: white;
-  text-align: center;
-  font-size: 16px;
-}
-
-/* === SET ROW === */
+/* === INPUT ROW === */
 .exercise > div {
   display: flex;
   justify-content: space-between;
 }
 
-/* === PREVIOUS RESULT (как у тебя было, но аккуратнее) === */
-.previousInfo.subtle {
-  margin: 8px 0;
-  padding: 10px;
-
+/* === INPUTS === */
+.exercise input {
+  width: 48%;
+  padding: 14px;
+  margin-bottom: 10px;
   border-radius: 14px;
-
-  background: rgba(47, 128, 237, 0.08);
-  border: 1px solid rgba(47, 128, 237, 0.3);
-
+  border: none;
+  background: #0d0f14;
+  color: white;
   text-align: center;
-  font-size: 14px;
-  color: #9cc7ff;
+  font-size: 18px;
+}
 
+/* === PREVIOUS RESULT (сделали аккуратно) === */
+.previousInfo.subtle {
+  margin: 6px 0;
+  font-size: 13px;
+  color: #777;
+  text-align: center;
   white-space: nowrap;
 }
 
 /* === ADD SET === */
 .exercise button {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   margin-top: 8px;
-  background: #2f80ed;
+  background: #3b82f6;
   border: none;
-  border-radius: 14px;
+  border-radius: 16px;
   color: white;
   font-size: 16px;
 }
 
-/* === BOTTOM BUTTON === */
+/* === FINISH BUTTON === */
 .bottomBar {
-  margin-top: 20px;
+  position: sticky;
+  bottom: 0;
+  margin-top: 10px;
 }
 
 .finishBtn {
   width: 100%;
-  padding: 14px;
-  border-radius: 16px;
+  padding: 16px;
+  border-radius: 20px;
   background: #27ae60;
   border: none;
   font-size: 16px;
@@ -135,17 +131,13 @@ body {
   color: #4ea1ff;
 }
 
-.menuButtons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .bigButton {
+  width: 100%;
   padding: 16px;
+  margin-bottom: 12px;
   border-radius: 20px;
   background: #171a21;
-  border: 1px solid #2f80ed;
+  border: none;
   color: white;
   font-size: 18px;
 }
@@ -162,27 +154,270 @@ body {
   background: #171a21;
   padding: 20px;
   border-radius: 20px;
-  border: 1px solid #2f80ed;
   width: 90%;
   max-width: 350px;
 }
 
 .loginCard input {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   margin-bottom: 10px;
-  border-radius: 12px;
-  border: 1px solid #2f80ed;
-  background: #0f1115;
+  border-radius: 14px;
+  border: none;
+  background: #0d0f14;
   color: white;
 }
 
 .loginBtn {
   width: 100%;
-  padding: 12px;
-  border-radius: 14px;
-  background: #2f80ed;
+  padding: 14px;
+  border-radius: 16px;
+  background: #3b82f6;
   border: none;
   color: white;
   font-size: 16px;
+}.menuPage .logoutSmall {
+  margin-top: 20px;
+  padding: 12px 22px;
+  border-radius: 18px;
+  border: 1px solid #333;
+  background: #1c1f26;
+  color: #ccc;
+  font-size: 16px;
+}
+
+.menuPage .bigButton {
+  background: #171a21;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+.menuPage .bigButton:hover {
+  background: #1d212a;
+}
+
+.menuPage .menuTitle {
+  text-shadow: 0 0 20px rgba(78, 161, 255, 0.55);
+}.menuPage {
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* центр по вертикали */
+  align-items: center;      /* центр по горизонтали */
+
+  padding: 20px;
+  text-align: center;
+}
+.loginPage {
+  min-height: 100vh !important;
+  width: 100% !important;
+  padding: 24px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 24px !important;
+  overflow: hidden !important;
+}
+
+.loginHero {
+  width: 100% !important;
+  max-width: 380px !important;
+  text-align: center !important;
+}
+
+.loginHero h1 {
+  color: #4ea1ff !important;
+  font-size: 42px !important;
+  text-shadow: 0 0 20px rgba(78, 161, 255, 0.55);
+}
+
+.loginCard {
+  width: 100% !important;
+  max-width: 380px !important;
+  padding: 24px !important;
+}
+
+.passwordBox {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.passwordBox button {
+  width: 100% !important;
+  padding: 12px !important;
+  border-radius: 14px !important;
+  background: #1c1f26 !important;
+  color: #ccc !important;
+  border: 1px solid #333 !important;
+}/* === BEAUTIFUL LOGIN SCREEN FIX === */
+
+.loginPage {
+  min-height: 100vh !important;
+  width: 100% !important;
+  padding: 28px 20px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 28px !important;
+  background: #0d0f14 !important;
+  overflow-x: hidden !important;
+}
+
+.loginHero {
+  width: 100% !important;
+  max-width: 360px !important;
+  text-align: center !important;
+}
+
+.appLogo {
+  width: 64px !important;
+  height: 64px !important;
+  margin: 0 auto 14px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 20px !important;
+  background: #171a21 !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  color: #4ea1ff !important;
+  font-size: 28px !important;
+  font-weight: 900 !important;
+
+  box-shadow: 0 0 22px rgba(78, 161, 255, 0.25) !important;
+}
+
+.loginHero h1 {
+  margin: 0 !important;
+  font-size: 44px !important;
+  font-weight: 900 !important;
+  color: #4ea1ff !important;
+  text-shadow: 0 0 22px rgba(78, 161, 255, 0.45) !important;
+}
+
+.loginHero p {
+  margin: 8px 0 0 !important;
+  color: #d6d6d6 !important;
+  font-size: 18px !important;
+}
+
+.loginCard {
+  width: 100% !important;
+  max-width: 360px !important;
+  padding: 24px !important;
+
+  background: #171a21 !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 28px !important;
+
+  box-shadow: 0 18px 50px rgba(0,0,0,0.45) !important;
+}
+
+.loginCard h2 {
+  margin: 0 0 20px !important;
+  text-align: center !important;
+  color: white !important;
+  font-size: 28px !important;
+  font-weight: 900 !important;
+}
+
+.loginCard input {
+  width: 100% !important;
+  height: 58px !important;
+  margin: 0 0 14px !important;
+  padding: 0 18px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  background: #0d0f14 !important;
+  color: white !important;
+
+  font-size: 18px !important;
+  outline: none !important;
+}
+
+.passwordBox {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+.passwordBox button {
+  width: 100% !important;
+  height: 52px !important;
+  margin: 0 0 14px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+
+  background: #1c1f26 !important;
+  color: #d0d0d0 !important;
+
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+.loginBtn {
+  width: 100% !important;
+  height: 58px !important;
+  margin-top: 4px !important;
+
+  border: none !important;
+  border-radius: 20px !important;
+
+  background: #3b82f6 !important;
+  color: white !important;
+
+  font-size: 20px !important;
+  font-weight: 900 !important;
+
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.28) !important;
+}
+
+.loginHint {
+  margin: 18px 0 0 !important;
+  text-align: center !important;
+  color: #aaa !important;
+  font-size: 15px !important;
+}
+
+.loginError {
+  margin-bottom: 12px !important;
+  padding: 12px !important;
+  border-radius: 14px !important;
+
+  background: rgba(255, 80, 80, 0.12) !important;
+  color: #ff7777 !important;
+  text-align: center !important;
+}.loginCard {
+  overflow: hidden !important;
+}
+
+.loginCard input,
+.passwordBox,
+.passwordBox input,
+.passwordBox button,
+.loginBtn {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.loginCard input {
+  box-sizing: border-box !important;
+}
+
+.passwordBox {
+  box-sizing: border-box !important;
 }
