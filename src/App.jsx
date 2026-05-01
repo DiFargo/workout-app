@@ -3,6 +3,7 @@ import "./styles.css";
 
 const STORAGE_KEY = "workout_tracker_v1";
 const AUTH_KEY = "workout_tracker_logged_in";
+
 const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycby9cdVvcQ1MOu94jzNWIDxR4ONrKT_WF4mcGmRm8Eyx8b9787ohY6tZhls7eE4Slhjz/exec";
 
@@ -52,10 +53,14 @@ export default function App() {
   const [historyLoading, setHistoryLoading] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem(AUTH_KEY) === "true") setIsLoggedIn(true);
+    if (localStorage.getItem(AUTH_KEY) === "true") {
+      setIsLoggedIn(true);
+    }
 
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) setPlan(JSON.parse(saved));
+    if (saved) {
+      setPlan(JSON.parse(saved));
+    }
   }, []);
 
   useEffect(() => {
@@ -90,6 +95,8 @@ export default function App() {
   }
 
   function updateWorkout(cb) {
+    if (!workout) return;
+
     setPlan((p) => ({
       ...p,
       workouts: p.workouts.map((w) => (w.id === workout.id ? cb(w) : w))
@@ -100,7 +107,9 @@ export default function App() {
     updateWorkout((w) => ({
       ...w,
       exercises: w.exercises.map((e) =>
-        e.id === id ? { ...e, sets: [...e.sets, { reps: 8, weight: "" }] } : e
+        e.id === id
+          ? { ...e, sets: [...e.sets, { reps: 8, weight: "" }] }
+          : e
       )
     }));
   }
@@ -149,29 +158,48 @@ export default function App() {
 
       alert("Тренировка отправлена в Google Таблицу ✅");
     } catch {
-      alert("Ошибка сохранения. Проверь ссылку Apps Script.");
+      alert("Ошибка сохранения. Проверь Apps Script.");
     } finally {
       setIsSaving(false);
     }
   }
 
-  async function loadHistory() {
+  function loadHistory() {
     setHistoryLoading(true);
 
-    try {
-      const response = await fetch(GOOGLE_SCRIPT_URL);
-      const data = await response.json();
-      setHistory(data.reverse());
-    } catch {
-      alert("Не получилось загрузить историю");
-    } finally {
+    const callbackName = "historyCallback_" + Date.now();
+
+    const script = document.createElement("script");
+
+    window[callbackName] = function (data) {
+      setHistory([...data].reverse());
       setHistoryLoading(false);
-    }
+
+      delete window[callbackName];
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+
+    script.src = `${GOOGLE_SCRIPT_URL}?callback=${callbackName}&t=${Date.now()}`;
+
+    script.onerror = function () {
+      setHistoryLoading(false);
+      alert("Не получилось загрузить историю");
+
+      delete window[callbackName];
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+
+    document.body.appendChild(script);
   }
 
   function openHistory() {
     setPage("history");
     setSelectedWorkoutId(null);
+    setOpenVideoId(null);
     loadHistory();
   }
 
@@ -182,10 +210,7 @@ export default function App() {
       const date = new Date(row.date).toLocaleDateString("ru-RU");
       const key = `${date} — ${row.workout}`;
 
-      if (!groups[key]) {
-        groups[key] = [];
-      }
-
+      if (!groups[key]) groups[key] = [];
       groups[key].push(row);
     });
 
