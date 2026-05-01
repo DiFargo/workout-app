@@ -43,16 +43,20 @@ export default function App() {
   const [password, setPassword] = useState("");
 
   const [plan, setPlan] = useState(starterPlan);
-  const [page, setPage] = useState("main"); // main | workouts | nutrition
+  const [page, setPage] = useState("main");
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [openVideoId, setOpenVideoId] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem(AUTH_KEY) === "true") setIsLoggedIn(true);
+    if (localStorage.getItem(AUTH_KEY) === "true") {
+      setIsLoggedIn(true);
+    }
 
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) setPlan(JSON.parse(saved));
+    if (saved) {
+      setPlan(JSON.parse(saved));
+    }
   }, []);
 
   useEffect(() => {
@@ -76,13 +80,14 @@ export default function App() {
   function logout() {
     localStorage.removeItem(AUTH_KEY);
     setIsLoggedIn(false);
-    setSelectedWorkoutId(null);
     setPage("main");
+    setSelectedWorkoutId(null);
   }
 
   function goBackToMain() {
-    setSelectedWorkoutId(null);
     setPage("main");
+    setSelectedWorkoutId(null);
+    setOpenVideoId(null);
   }
 
   function updateWorkout(cb) {
@@ -158,8 +163,18 @@ export default function App() {
           <h1>Вход</h1>
           <p>admin / admin</p>
 
-          <input value={login} onChange={(e) => setLogin(e.target.value)} placeholder="Логин" />
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Пароль" />
+          <input
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+            placeholder="Логин"
+          />
+
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Пароль"
+          />
 
           <button>Войти</button>
         </form>
@@ -228,11 +243,23 @@ export default function App() {
         <h1 className="menuTitle">Выбери тренировку</h1>
 
         <div className="menuButtons">
-          <button className="bigButton" onClick={() => setSelectedWorkoutId("w1")}>
+          <button
+            className="bigButton"
+            onClick={() => {
+              setSelectedWorkoutId("w1");
+              setOpenVideoId(null);
+            }}
+          >
             🏋️ Тренировка 1
           </button>
 
-          <button className="bigButton" onClick={() => setSelectedWorkoutId("w2")}>
+          <button
+            className="bigButton"
+            onClick={() => {
+              setSelectedWorkoutId("w2");
+              setOpenVideoId(null);
+            }}
+          >
             🏋️ Тренировка 2
           </button>
         </div>
@@ -247,14 +274,18 @@ export default function App() {
   return (
     <div className="app">
       <div className="workoutHeader">
-        <button className="backBtn" onClick={() => setSelectedWorkoutId(null)}>
+        <button
+          className="backBtn"
+          onClick={() => {
+            setSelectedWorkoutId(null);
+            setOpenVideoId(null);
+          }}
+        >
           ← Назад
         </button>
 
         <h1 className="workoutTitle">{workout.name}</h1>
       </div>
-
-    
 
       {workout.exercises.map((e) => (
         <div key={e.id} className="exercise">
@@ -296,14 +327,16 @@ export default function App() {
           <button onClick={() => addSet(e.id)}>+ подход</button>
         </div>
       ))}
+
+      <div className="bottomBar">
+        <button
+          className="finishBtn fixed"
+          onClick={saveWorkoutToGoogle}
+          disabled={isSaving}
+        >
+          {isSaving ? "Сохраняю..." : "✅ Завершить тренировку"}
+        </button>
+      </div>
     </div>
   );
-}<div className="bottomBar">
-  <button
-    className="finishBtn fixed"
-    onClick={saveWorkoutToGoogle}
-    disabled={isSaving}
-  >
-    {isSaving ? "Сохраняю..." : "✅ Завершить тренировку"}
-  </button>
-</div>
+}
