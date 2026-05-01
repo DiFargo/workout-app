@@ -51,6 +51,7 @@ export default function App() {
 
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [openHistoryKey, setOpenHistoryKey] = useState(null);
 
   useEffect(() => {
     if (localStorage.getItem(AUTH_KEY) === "true") {
@@ -70,6 +71,20 @@ export default function App() {
   const workout = useMemo(() => {
     return plan.workouts.find((w) => w.id === selectedWorkoutId);
   }, [selectedWorkoutId, plan]);
+
+  const groupedHistory = useMemo(() => {
+    const groups = {};
+
+    history.forEach((row) => {
+      const date = new Date(row.date).toLocaleDateString("ru-RU");
+      const key = `${date} — ${row.workout}`;
+
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(row);
+    });
+
+    return Object.entries(groups);
+  }, [history]);
 
   function handleLogin(e) {
     e.preventDefault();
@@ -168,7 +183,6 @@ export default function App() {
     setHistoryLoading(true);
 
     const callbackName = "historyCallback_" + Date.now();
-
     const script = document.createElement("script");
 
     window[callbackName] = function (data) {
@@ -200,22 +214,9 @@ export default function App() {
     setPage("history");
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
+    setOpenHistoryKey(null);
     loadHistory();
   }
-
-  const groupedHistory = useMemo(() => {
-    const groups = {};
-
-    history.forEach((row) => {
-      const date = new Date(row.date).toLocaleDateString("ru-RU");
-      const key = `${date} — ${row.workout}`;
-
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(row);
-    });
-
-    return Object.entries(groups);
-  }, [history]);
 
   if (!isLoggedIn) {
     return (
@@ -301,38 +302,50 @@ export default function App() {
         )}
 
         {!historyLoading &&
-          groupedHistory.map(([title, rows]) => (
-            <div className="exercise" key={title}>
-              <h3>{title}</h3>
+          groupedHistory.map(([title, rows]) => {
+            const isOpen = openHistoryKey === title;
 
-<div className="historyList">
-  {Object.entries(
-    rows.reduce((acc, row) => {
-      if (!acc[row.exercise]) acc[row.exercise] = [];
-      acc[row.exercise].push(row);
-      return acc;
-    }, {})
-  ).map(([exerciseName, sets]) => (
-    <div className="historyExercise" key={exerciseName}>
-      <h4>{exerciseName}</h4>
+            return (
+              <div className="historyCard" key={title}>
+                <button
+                  className="historyCardHeader"
+                  onClick={() => setOpenHistoryKey(isOpen ? null : title)}
+                >
+                  <span>{title}</span>
+                  <strong>{isOpen ? "−" : "+"}</strong>
+                </button>
 
-      <div className="historySets">
-        {sets
-          .sort((a, b) => Number(a.set) - Number(b.set))
-          .map((set, index) => (
-            <div className="historySet" key={index}>
-              <span>Подход {set.set}</span>
-              <strong>
-                {set.reps} × {set.weight || "без веса"}
-              </strong>
-            </div>
-          ))}
-      </div>
-    </div>
-  ))}
-</div>
-            </div>
-          ))}
+                {isOpen && (
+                  <div className="historyCardBody">
+                    {Object.entries(
+                      rows.reduce((acc, row) => {
+                        if (!acc[row.exercise]) acc[row.exercise] = [];
+                        acc[row.exercise].push(row);
+                        return acc;
+                      }, {})
+                    ).map(([exerciseName, sets]) => (
+                      <div className="historyExercise" key={exerciseName}>
+                        <h4>{exerciseName}</h4>
+
+                        <div className="historySets">
+                          {sets
+                            .sort((a, b) => Number(a.set) - Number(b.set))
+                            .map((set, index) => (
+                              <div className="historySet" key={index}>
+                                <span>Подход {set.set}</span>
+                                <strong>
+                                  {set.reps} × {set.weight || "без веса"}
+                                </strong>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
       </div>
     );
   }
