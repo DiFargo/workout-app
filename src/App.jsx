@@ -41,7 +41,9 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+
   const [plan, setPlan] = useState(starterPlan);
+  const [page, setPage] = useState("main"); // main | workouts | nutrition
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [openVideoId, setOpenVideoId] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -67,6 +69,7 @@ export default function App() {
     if (login === "admin" && password === "admin") {
       localStorage.setItem(AUTH_KEY, "true");
       setIsLoggedIn(true);
+      setPage("main");
     }
   }
 
@@ -74,6 +77,12 @@ export default function App() {
     localStorage.removeItem(AUTH_KEY);
     setIsLoggedIn(false);
     setSelectedWorkoutId(null);
+    setPage("main");
+  }
+
+  function goBackToMain() {
+    setSelectedWorkoutId(null);
+    setPage("main");
   }
 
   function updateWorkout(cb) {
@@ -87,9 +96,7 @@ export default function App() {
     updateWorkout((w) => ({
       ...w,
       exercises: w.exercises.map((e) =>
-        e.id === id
-          ? { ...e, sets: [...e.sets, { reps: 8, weight: "" }] }
-          : e
+        e.id === id ? { ...e, sets: [...e.sets, { reps: 8, weight: "" }] } : e
       )
     }));
   }
@@ -137,7 +144,7 @@ export default function App() {
       });
 
       alert("Тренировка отправлена в Google Таблицу ✅");
-    } catch (error) {
+    } catch {
       alert("Ошибка сохранения. Проверь ссылку Apps Script.");
     } finally {
       setIsSaving(false);
@@ -151,18 +158,8 @@ export default function App() {
           <h1>Вход</h1>
           <p>admin / admin</p>
 
-          <input
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
-            placeholder="Логин"
-          />
-
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Пароль"
-          />
+          <input value={login} onChange={(e) => setLogin(e.target.value)} placeholder="Логин" />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Пароль" />
 
           <button>Войти</button>
         </form>
@@ -170,7 +167,62 @@ export default function App() {
     );
   }
 
-  if (!selectedWorkoutId) {
+  if (page === "main") {
+    return (
+      <div className="menuPage">
+        <h1 className="menuTitle">Главное меню</h1>
+
+        <div className="menuButtons">
+          <button
+            className="bigButton"
+            onClick={() => {
+              setPage("workouts");
+              setSelectedWorkoutId(null);
+            }}
+          >
+            🏋️ Тренировки
+          </button>
+
+          <button
+            className="bigButton"
+            onClick={() => {
+              setPage("nutrition");
+              setSelectedWorkoutId(null);
+            }}
+          >
+            🍽️ Питание
+          </button>
+        </div>
+
+        <button className="logoutSmall" onClick={logout}>
+          ⬅ Выйти
+        </button>
+      </div>
+    );
+  }
+
+  if (page === "nutrition") {
+    return (
+      <div className="app">
+        <div className="workoutHeader">
+          <button className="backBtn" onClick={goBackToMain}>
+            ← Назад
+          </button>
+
+          <h1 className="workoutTitle">Питание</h1>
+        </div>
+
+        <div className="exercise">
+          <h3>Раздел в разработке</h3>
+          <p style={{ textAlign: "center", color: "#aaa" }}>
+            Здесь позже добавим питание, калории, белки, жиры и углеводы.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (page === "workouts" && !selectedWorkoutId) {
     return (
       <div className="menuPage">
         <h1 className="menuTitle">Выбери тренировку</h1>
@@ -185,8 +237,8 @@ export default function App() {
           </button>
         </div>
 
-        <button className="logoutSmall" onClick={logout}>
-          ⬅ Выйти
+        <button className="logoutSmall" onClick={goBackToMain}>
+          ← Назад
         </button>
       </div>
     );
@@ -202,11 +254,7 @@ export default function App() {
         <h1 className="workoutTitle">{workout.name}</h1>
       </div>
 
-      <button
-        className="finishBtn"
-        onClick={saveWorkoutToGoogle}
-        disabled={isSaving}
-      >
+      <button className="finishBtn" onClick={saveWorkoutToGoogle} disabled={isSaving}>
         {isSaving ? "Сохраняю..." : "✅ Завершить тренировку"}
       </button>
 
@@ -218,9 +266,7 @@ export default function App() {
             <>
               <button
                 className="showVideoBtn"
-                onClick={() =>
-                  setOpenVideoId(openVideoId === e.id ? null : e.id)
-                }
+                onClick={() => setOpenVideoId(openVideoId === e.id ? null : e.id)}
               >
                 🎥 {openVideoId === e.id ? "Скрыть технику" : "Показать технику"}
               </button>
