@@ -285,4 +285,185 @@ input {
     font-size: 22px;
     padding: 16px;
   }
+}.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.historyRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.historyRow strong {
+  display: block;
+  font-size: 16px;
+  color: white;
+}
+
+.historyRow span {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  color: #888;
+}
+
+.historyResult {
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 900;
+  color: #2f80ed;
+}
+
+@media (max-width: 700px) {
+  .historyRow {
+    align-items: flex-start;
+  }
+
+  .historyResult {
+    font-size: 15px;
+  }
+}.historyExercise {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.historyExercise h4 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: white;
+}
+
+.historySets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historySet {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #262626;
+}
+
+.historySet span {
+  color: #888;
+}
+
+.historySet strong {
+  color: #2f80ed;
+}.historyList,
+.historyExercise,
+.historySets,
+.historySet {
+  display: block;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.historyExercise {
+  width: 100%;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.historyExercise h4 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: white;
+  text-align: left;
+}
+
+.historySets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historySet {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #262626;
+}
+
+.historySet span {
+  color: #888;
+}
+
+.historySet strong {
+  color: #2f80ed;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .historySet {
+    flex-direction: row;
+  }
+}.exercise .historyList {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  margin-bottom: 0 !important;
+}
+
+.exercise .historyExercise {
+  display: block !important;
+  width: 100% !important;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 0 !important;
+}
+
+.exercise .historyExercise h4 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  text-align: left;
+}
+
+.exercise .historySets {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  margin-bottom: 0 !important;
+}
+
+.exercise .historySet {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #262626;
+  margin-bottom: 0 !important;
+}
+
+.exercise .historySet span {
+  color: #888;
+}
+
+.exercise .historySet strong {
+  color: #2f80ed;
+  white-space: nowrap;
 }

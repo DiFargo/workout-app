@@ -305,11 +305,32 @@ export default function App() {
             <div className="exercise" key={title}>
               <h3>{title}</h3>
 
-              {rows.map((row, index) => (
-                <p key={index} style={{ color: "#ddd", fontSize: "16px" }}>
-                  {row.exercise} — подход {row.set}: {row.reps} × {row.weight || "без веса"}
-                </p>
-              ))}
+<div className="historyList">
+  {Object.entries(
+    rows.reduce((acc, row) => {
+      if (!acc[row.exercise]) acc[row.exercise] = [];
+      acc[row.exercise].push(row);
+      return acc;
+    }, {})
+  ).map(([exerciseName, sets]) => (
+    <div className="historyExercise" key={exerciseName}>
+      <h4>{exerciseName}</h4>
+
+      <div className="historySets">
+        {sets
+          .sort((a, b) => Number(a.set) - Number(b.set))
+          .map((set, index) => (
+            <div className="historySet" key={index}>
+              <span>Подход {set.set}</span>
+              <strong>
+                {set.reps} × {set.weight || "без веса"}
+              </strong>
+            </div>
+          ))}
+      </div>
+    </div>
+  ))}
+</div>
             </div>
           ))}
       </div>
