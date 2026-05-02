@@ -529,32 +529,27 @@ export default function App() {
           />
 
           <div className="passwordBox">
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Пароль"
-            />
+  <input
+    type={showPassword ? "text" : "password"}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    placeholder="Пароль"
+  />
 
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? "Скрыть" : "Показать"}
-            </button>
-          </div>
+  <button
+    type="button"
+    className="eyeBtn"
+    onClick={() => setShowPassword(!showPassword)}
+  >
+    {showPassword ? "👁️" : "🙈"}
+  </button>
+</div>
 
           {loginError && <div className="loginError">{loginError}</div>}
 
           <button className="loginBtn">Войти</button>
 
-          <button
-            className="loginBtn"
-            type="button"
-            onClick={handleRegister}
-          >
-            Регистрация
-          </button>
+         
 
           <p className="loginHint">Вход через email и пароль</p>
         </form>
