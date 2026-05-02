@@ -1,20 +1,20 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./styles.css";
 
-import { auth, db } from "./firebase";
+import { auth, db, storage } from "./firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut
 } from "firebase/auth";
-import { collection, getDocs, doc, setDoc } from "firebase/firestore";
+
+import { collection, getDocs, doc, setDoc, addDoc } from "firebase/firestore";
 
 const STORAGE_KEY = "workout_tracker_v1";
 const ADMIN_EMAIL = "work.kriptonit.il@gmail.com";
-
-const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycby9cdVvcQ1MOu94jzNWIDxR4ONrKT_WF4mcGmRm8Eyx8b9787ohY6tZhls7eE4Slhjz/exec";
 
 const starterPlan = {
   workouts: [
@@ -73,36 +73,43 @@ const starterPlan = {
         {
           id: "e8",
           name: "Приседания с гантелью",
+          video: "",
           sets: [{ reps: 8, weight: "" }]
         },
         {
           id: "e9",
           name: "Тяга нижнего блока",
+          video: "",
           sets: [{ reps: 8, weight: "" }]
         },
         {
           id: "e10",
           name: "Жим лежа в тренажере",
+          video: "",
           sets: [{ reps: 8, weight: "" }]
         },
         {
           id: "e11",
           name: "Вертикальный жим с гантелями",
+          video: "",
           sets: [{ reps: 8, weight: "" }]
         },
         {
           id: "e12",
           name: "Разгибание рук в тренажере",
+          video: "",
           sets: [{ reps: 8, weight: "" }]
         },
         {
           id: "e13",
           name: "Сгибание рук в кроссовере",
+          video: "",
           sets: [{ reps: 8, weight: "" }]
         },
         {
           id: "e14",
           name: "Пресс",
+          video: "",
           sets: [{ reps: 15, weight: "" }]
         }
       ]
@@ -123,6 +130,11 @@ export default function App() {
   const [page, setPage] = useState("main");
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [openVideoId, setOpenVideoId] = useState(null);
+  const [fullscreenVideo, setFullscreenVideo] = useState(null);
+
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [usersList, setUsersList] = useState([]);
+
   const [isSaving, setIsSaving] = useState(false);
 
   const [history, setHistory] = useState([]);
@@ -133,19 +145,12 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
       setIsLoggedIn(!!u);
-    });
 
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        setPlan(JSON.parse(saved));
-      } catch {
-        setPlan(starterPlan);
+      if (u) {
+        loadHistory();
+        loadWorkoutsFromFirebase(u.uid);
       }
-    }
-
-    loadHistory();
-    loadWorkoutsFromFirebase();
+    });
 
     return () => unsubscribe();
   }, []);
@@ -154,42 +159,33 @@ export default function App() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(plan));
   }, [plan]);
 
+  useEffect(() => {
+    if (page === "admin") {
+      loadUsers();
+    }
+  }, [page]);
+
   const workout = useMemo(() => {
     return plan.workouts.find((w) => w.id === selectedWorkoutId);
   }, [selectedWorkoutId, plan]);
 
-  const groupedHistory = useMemo(() => {
-    const groups = {};
-
-    history.forEach((row) => {
-      const date = new Date(row.date).toLocaleDateString("ru-RU");
-      const key = `${date} — ${row.workout}`;
-
-      if (!groups[key]) {
-        groups[key] = [];
-      }
-
-      groups[key].push(row);
-    });
-
-    return Object.entries(groups);
-  }, [history]);
-
   const lastExerciseResults = useMemo(() => {
     const result = {};
 
-    history.forEach((row) => {
-      if (!row.exercise) return;
+    history.forEach((historyWorkout) => {
+      if (!historyWorkout.exercises) return;
 
-      const exerciseName = row.exercise;
+      historyWorkout.exercises.forEach((exercise) => {
+        if (!exercise.name || result[exercise.name]) return;
 
-      if (!result[exerciseName]) {
-        result[exerciseName] = {
-          reps: row.reps,
-          weight: row.weight,
-          date: row.date
+        const lastSet = exercise.sets?.[exercise.sets.length - 1];
+
+        result[exercise.name] = {
+          reps: lastSet?.reps || "",
+          weight: lastSet?.weight || "",
+          date: historyWorkout.date
         };
-      }
+      });
     });
 
     return result;
@@ -209,11 +205,14 @@ export default function App() {
     e.preventDefault();
 
     try {
-      await signInWithEmailAndPassword(auth, login, password);
+      const result = await signInWithEmailAndPassword(auth, login, password);
+
       setPage("main");
       setLoginError("");
+      setSelectedUserId(null);
+
       loadHistory();
-      loadWorkoutsFromFirebase();
+      loadWorkoutsFromFirebase(result.user.uid);
     } catch {
       setLoginError("Неверный email или пароль");
     }
@@ -221,11 +220,19 @@ export default function App() {
 
   async function handleRegister() {
     try {
-      await createUserWithEmailAndPassword(auth, login, password);
+      const result = await createUserWithEmailAndPassword(auth, login, password);
+
+      await setDoc(doc(db, "users", result.user.uid), {
+        email: login,
+        role: login === ADMIN_EMAIL ? "admin" : "client"
+      });
+
       setLoginError("");
       setPage("main");
+      setSelectedUserId(null);
+
       loadHistory();
-      loadWorkoutsFromFirebase();
+      loadWorkoutsFromFirebase(result.user.uid);
     } catch (err) {
       console.log(err);
 
@@ -249,16 +256,20 @@ export default function App() {
     setPage("main");
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
+    setFullscreenVideo(null);
     setOpenHistoryKey(null);
+    setSelectedUserId(null);
     setLogin("");
     setPassword("");
     setLoginError("");
+    setHistory([]);
   }
 
   function goBackToMain() {
     setPage("main");
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
+    setFullscreenVideo(null);
     setOpenHistoryKey(null);
   }
 
@@ -322,45 +333,54 @@ export default function App() {
     }));
   }
 
-  async function saveWorkoutToGoogle() {
+  async function saveWorkoutToFirebase() {
     if (!workout) return;
+
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      alert("Пользователь не найден");
+      return;
+    }
 
     setIsSaving(true);
 
     try {
-      const rows = [];
-
-      workout.exercises.forEach((exercise) => {
-        exercise.sets.forEach((set, index) => {
-          rows.push({
-            workout: workout.name,
-            exercise: exercise.name,
+      await addDoc(collection(db, "users", currentUser.uid, "history"), {
+        date: new Date().toISOString(),
+        userEmail: currentUser.email || "",
+        workout: workout.name,
+        exercises: workout.exercises.map((exercise) => ({
+          name: exercise.name,
+          video: exercise.video || "",
+          sets: exercise.sets.map((set, index) => ({
             set: index + 1,
             reps: set.reps,
             weight: set.weight
-          });
-        });
+          }))
+        }))
       });
 
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({ rows })
-      });
-
-      alert("Тренировка отправлена в Google Таблицу ✅");
+      alert("Тренировка сохранена в Firebase ✅");
       resetWorkout();
       loadHistory();
-    } catch {
-      alert("Ошибка сохранения. Проверь Apps Script.");
+    } catch (e) {
+      console.log(e);
+      alert("Ошибка сохранения");
     } finally {
       setIsSaving(false);
     }
   }
 
-  async function loadWorkoutsFromFirebase() {
+  async function loadWorkoutsFromFirebase(userIdFromClick) {
     try {
-      const querySnapshot = await getDocs(collection(db, "workouts"));
+      const userId = userIdFromClick || selectedUserId || auth.currentUser?.uid;
+
+      if (!userId) return;
+
+      const querySnapshot = await getDocs(
+        collection(db, "users", userId, "workouts")
+      );
 
       const workoutsFromDb = [];
 
@@ -384,67 +404,101 @@ export default function App() {
 
       if (workoutsFromDb.length > 0) {
         setPlan({ workouts: workoutsFromDb });
+      } else {
+        setPlan(starterPlan);
       }
     } catch (err) {
       console.log("Ошибка загрузки тренировок:", err);
     }
   }
-   async function saveWorkoutsToFirebase() {
-  try {
-    for (const workout of plan.workouts) {
-      await setDoc(doc(db, "workouts", workout.id), {
-        name: workout.name,
-        exercises: workout.exercises.map((exercise) => ({
-          id: exercise.id,
-          name: exercise.name,
-          video: exercise.video || ""
-        }))
+
+  async function saveWorkoutsToFirebase() {
+    try {
+      const userId = selectedUserId || auth.currentUser?.uid;
+
+      if (!userId) {
+        alert("Пользователь не найден");
+        return;
+      }
+
+      for (const workout of plan.workouts) {
+        await setDoc(doc(db, "users", userId, "workouts", workout.id), {
+          name: workout.name,
+          exercises: workout.exercises.map((exercise) => ({
+            id: exercise.id,
+            name: exercise.name,
+            video: exercise.video || "",
+            sets: exercise.sets || [{ reps: 8, weight: "" }]
+          }))
+        });
+      }
+
+      alert("Тренировки пользователя сохранены в Firebase ✅");
+    } catch (err) {
+      console.log("Ошибка сохранения тренировок:", err);
+      alert("Не получилось сохранить тренировки");
+    }
+  }
+
+  async function loadUsers() {
+    try {
+      const snapshot = await getDocs(collection(db, "users"));
+
+      const users = [];
+
+      snapshot.forEach((doc) => {
+        users.push({
+          id: doc.id,
+          ...doc.data()
+        });
       });
+
+      setUsersList(users);
+    } catch (err) {
+      console.log("Ошибка загрузки пользователей:", err);
+    }
+  }
+
+  async function loadHistory() {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      console.log("Пользователь ещё не загружен");
+      return;
     }
 
-    alert("Тренировки сохранены в Firebase ✅");
-  } catch (err) {
-    console.log("Ошибка сохранения тренировок:", err);
-    alert("Не получилось сохранить тренировки");
-  }
-}
-  function loadHistory() {
     setHistoryLoading(true);
 
-    const callbackName = "historyCallback_" + Date.now();
-    const script = document.createElement("script");
+    try {
+      const snapshot = await getDocs(
+        collection(db, "users", currentUser.uid, "history")
+      );
 
-    window[callbackName] = function (data) {
-      setHistory([...data].reverse());
-      setHistoryLoading(false);
+      const workouts = [];
 
-      delete window[callbackName];
+      snapshot.forEach((doc) => {
+        workouts.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
 
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
+      workouts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    script.src = `${GOOGLE_SCRIPT_URL}?callback=${callbackName}&t=${Date.now()}`;
-
-    script.onerror = function () {
-      setHistoryLoading(false);
+      setHistory(workouts);
+    } catch (err) {
+      console.log("Ошибка загрузки истории:", err);
       alert("Не получилось загрузить историю");
-
-      delete window[callbackName];
-
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
-
-    document.body.appendChild(script);
+    } finally {
+      setHistoryLoading(false);
+    }
   }
 
   function openHistory() {
     setPage("history");
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
+    setFullscreenVideo(null);
     setOpenHistoryKey(null);
     loadHistory();
   }
@@ -452,6 +506,7 @@ export default function App() {
   function openWorkout(id) {
     setSelectedWorkoutId(id);
     setOpenVideoId(null);
+    setFullscreenVideo(null);
     loadHistory();
   }
 
@@ -521,8 +576,24 @@ export default function App() {
             🍽️ Питание
           </button>
 
+          <button
+            className="bigButton"
+            onClick={() => {
+              loadHistory();
+              setPage("profile");
+            }}
+          >
+            👤 Личный кабинет
+          </button>
+
           {user?.email === ADMIN_EMAIL && (
-            <button className="bigButton" onClick={() => setPage("admin")}>
+            <button
+              className="bigButton"
+              onClick={() => {
+                setSelectedUserId(null);
+                setPage("admin");
+              }}
+            >
               ⚙️ Админ-панель
             </button>
           )}
@@ -556,6 +627,136 @@ export default function App() {
     );
   }
 
+  if (page === "profile") {
+    const totalWorkouts = history.length;
+    const lastWorkout = history[0];
+    const exerciseStats = {};
+
+    [...history].reverse().forEach((historyWorkout) => {
+      historyWorkout.exercises?.forEach((exercise) => {
+        if (!exerciseStats[exercise.name]) {
+          exerciseStats[exercise.name] = {
+            count: 0,
+            bestWeight: 0,
+            firstWeight: null,
+            lastWeight: 0,
+            lastResult: ""
+          };
+        }
+
+        exercise.sets?.forEach((set) => {
+          const weight = Number(set.weight) || 0;
+          const reps = Number(set.reps) || 0;
+
+          exerciseStats[exercise.name].count += 1;
+
+          if (exerciseStats[exercise.name].firstWeight === null && weight > 0) {
+            exerciseStats[exercise.name].firstWeight = weight;
+          }
+
+          if (weight > exerciseStats[exercise.name].bestWeight) {
+            exerciseStats[exercise.name].bestWeight = weight;
+          }
+
+          exerciseStats[exercise.name].lastWeight = weight;
+          exerciseStats[exercise.name].lastResult = `${reps} × ${
+            set.weight || "без веса"
+          }`;
+        });
+      });
+    });
+
+    return (
+      <div className="app">
+        <div className="workoutHeader">
+          <button className="backBtn" onClick={goBackToMain}>
+            ← Назад
+          </button>
+
+          <h1 className="workoutTitle">Личный кабинет</h1>
+        </div>
+
+        <div className="exercise">
+          <h3>Профиль</h3>
+
+          <p style={{ textAlign: "center", color: "#aaa" }}>
+            {auth.currentUser?.email}
+          </p>
+
+          <div className="historySets">
+            <div className="historySet">
+              <span>Всего тренировок</span>
+              <strong>{totalWorkouts}</strong>
+            </div>
+
+            <div className="historySet">
+              <span>Последняя тренировка</span>
+              <strong>
+                {lastWorkout
+                  ? new Date(lastWorkout.date).toLocaleDateString("ru-RU")
+                  : "нет данных"}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div className="exercise">
+          <h3>Прогресс по упражнениям</h3>
+
+          {Object.keys(exerciseStats).length === 0 && (
+            <p style={{ textAlign: "center", color: "#aaa" }}>
+              Пока нет данных для прогресса
+            </p>
+          )}
+
+          {Object.entries(exerciseStats).map(([name, stat]) => {
+            const progress =
+              stat.firstWeight && stat.lastWeight
+                ? Math.round(
+                    ((stat.lastWeight - stat.firstWeight) / stat.firstWeight) *
+                      100
+                  )
+                : 0;
+
+            return (
+              <div className="historyExercise" key={name}>
+                <h4>{name}</h4>
+
+                <div className="historySets">
+                  <div className="historySet">
+                    <span>Лучший вес</span>
+                    <strong>{stat.bestWeight || "нет"} кг</strong>
+                  </div>
+
+                  <div className="historySet">
+                    <span>Прогресс</span>
+                    <strong>
+                      {progress > 0
+                        ? `+${progress}%`
+                        : progress < 0
+                        ? `${progress}%`
+                        : "0%"}
+                    </strong>
+                  </div>
+
+                  <div className="historySet">
+                    <span>Последний результат</span>
+                    <strong>{stat.lastResult}</strong>
+                  </div>
+
+                  <div className="historySet">
+                    <span>Всего подходов</span>
+                    <strong>{stat.count}</strong>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   if (page === "history") {
     return (
       <div className="app">
@@ -577,7 +778,7 @@ export default function App() {
           </div>
         )}
 
-        {!historyLoading && groupedHistory.length === 0 && (
+        {!historyLoading && history.length === 0 && (
           <div className="exercise">
             <h3>История пустая</h3>
             <p style={{ textAlign: "center", color: "#aaa" }}>
@@ -587,45 +788,37 @@ export default function App() {
         )}
 
         {!historyLoading &&
-          groupedHistory.map(([title, rows]) => {
-            const isOpen = openHistoryKey === title;
+          history.map((item) => {
+            const isOpen = openHistoryKey === item.id;
+            const date = new Date(item.date).toLocaleDateString("ru-RU");
 
             return (
-              <div className="historyCard" key={title}>
+              <div className="historyCard" key={item.id}>
                 <button
                   className="historyCardHeader"
-                  onClick={() => setOpenHistoryKey(isOpen ? null : title)}
+                  onClick={() => setOpenHistoryKey(isOpen ? null : item.id)}
                 >
-                  <span>{title}</span>
+                  <span>
+                    {date} — {item.workout}
+                  </span>
                   <strong>{isOpen ? "−" : "+"}</strong>
                 </button>
 
                 {isOpen && (
                   <div className="historyCardBody">
-                    {Object.entries(
-                      rows.reduce((acc, row) => {
-                        if (!acc[row.exercise]) {
-                          acc[row.exercise] = [];
-                        }
-
-                        acc[row.exercise].push(row);
-                        return acc;
-                      }, {})
-                    ).map(([exerciseName, sets]) => (
-                      <div className="historyExercise" key={exerciseName}>
-                        <h4>{exerciseName}</h4>
+                    {item.exercises?.map((exercise, index) => (
+                      <div className="historyExercise" key={index}>
+                        <h4>{exercise.name}</h4>
 
                         <div className="historySets">
-                          {sets
-                            .sort((a, b) => Number(a.set) - Number(b.set))
-                            .map((set, index) => (
-                              <div className="historySet" key={index}>
-                                <span>Подход {set.set}</span>
-                                <strong>
-                                  {set.reps} × {set.weight || "без веса"}
-                                </strong>
-                              </div>
-                            ))}
+                          {exercise.sets?.map((set, setIndex) => (
+                            <div className="historySet" key={setIndex}>
+                              <span>Подход {set.set || setIndex + 1}</span>
+                              <strong>
+                                {set.reps} × {set.weight || "без веса"}
+                              </strong>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     ))}
@@ -653,22 +846,81 @@ export default function App() {
           <h3>Управление</h3>
 
           <p style={{ textAlign: "center", color: "#aaa" }}>
-            Здесь ты будешь управлять приложением
+            Здесь ты управляешь клиентами и тренировками
           </p>
 
-          <button className="bigButton">👥 Пользователи</button>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <button
+              className="bigButton"
+              onClick={() => {
+                loadUsers();
+                setPage("adminUsers");
+              }}
+            >
+              👥 Пользователи
+            </button>
 
-          <button className="bigButton" onClick={() => setPage("adminWorkouts")}>
-            🏋️ Управление тренировками
+            <button
+              className="bigButton"
+              onClick={() => {
+                setSelectedUserId(auth.currentUser?.uid || null);
+                loadWorkoutsFromFirebase(auth.currentUser?.uid);
+                setPage("adminWorkouts");
+              }}
+            >
+              🏋️ Мои тренировки
+            </button>
+
+            <button className="bigButton">📊 Статистика</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (page === "adminUsers") {
+    return (
+      <div className="app">
+        <div className="workoutHeader">
+          <button className="backBtn" onClick={() => setPage("admin")}>
+            ← Назад
           </button>
 
-          <button className="bigButton">📊 Статистика</button>
+          <h1 className="workoutTitle">Пользователи</h1>
+        </div>
+
+        <div className="exercise">
+          <h3>Список пользователей</h3>
+
+          {usersList.length === 0 && (
+            <p style={{ textAlign: "center", color: "#aaa" }}>
+              Пользователей пока нет
+            </p>
+          )}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {usersList.map((u) => (
+              <button
+                key={u.id}
+                className="bigButton"
+                onClick={() => {
+                  setSelectedUserId(u.id);
+                  loadWorkoutsFromFirebase(u.id);
+                  setPage("adminWorkouts");
+                }}
+              >
+                👤 {u.email || u.id}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
   if (page === "adminWorkouts") {
+    const selectedUser = usersList.find((u) => u.id === selectedUserId);
+
     return (
       <div className="app">
         <div className="workoutHeader">
@@ -679,158 +931,260 @@ export default function App() {
           <h1 className="workoutTitle">Управление тренировками</h1>
         </div>
 
+        {selectedUserId && (
+          <p style={{ textAlign: "center", color: "#aaa" }}>
+            Клиент: {selectedUser?.email || selectedUserId}
+          </p>
+        )}
+
         {plan.workouts.map((workout) => (
           <div className="exercise" key={workout.id}>
-            <input
-  value={workout.name}
-  onChange={(e) => {
-    const newName = e.target.value;
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <input
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  padding: "10px",
+                  borderRadius: "8px"
+                }}
+                value={workout.name}
+                placeholder="Название тренировки"
+                onChange={(e) => {
+                  const newName = e.target.value;
 
-    setPlan((prev) => ({
-      ...prev,
-      workouts: prev.workouts.map((w) =>
-        w.id === workout.id ? { ...w, name: newName } : w
-      )
-    }));
-  }}
-/>
+                  setPlan((prev) => ({
+                    ...prev,
+                    workouts: prev.workouts.map((w) =>
+                      w.id === workout.id ? { ...w, name: newName } : w
+                    )
+                  }));
+                }}
+              />
 
-<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-  <input
-    value={workout.name}
-    onChange={(e) => {
-      const newName = e.target.value;
+              <button
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  minWidth: "40px",
+                  padding: 0,
+                  borderRadius: "8px",
+                  background: "#ff4d4f",
+                  color: "white",
+                  border: "none"
+                }}
+                onClick={() => {
+                  setPlan((prev) => ({
+                    ...prev,
+                    workouts: prev.workouts.filter((w) => w.id !== workout.id)
+                  }));
+                }}
+              >
+                ✕
+              </button>
+            </div>
 
-      setPlan((prev) => ({
-        ...prev,
-        workouts: prev.workouts.map((w) =>
-          w.id === workout.id ? { ...w, name: newName } : w
-        )
-      }));
-    }}
-  />
+            {workout.exercises.map((exercise) => (
+              <div
+                key={exercise.id}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                  marginBottom: "14px",
+                  marginTop: "14px"
+                }}
+              >
+                <div
+                  style={{ display: "flex", gap: "10px", alignItems: "center" }}
+                >
+                  <input
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      padding: "10px",
+                      borderRadius: "8px"
+                    }}
+                    value={exercise.name}
+                    placeholder="Название упражнения"
+                    onChange={(e) => {
+                      const newName = e.target.value;
 
-  <button
-    onClick={() => {
-      setPlan((prev) => ({
-        ...prev,
-        workouts: prev.workouts.filter((w) => w.id !== workout.id)
-      }));
-    }}
-  >
-    ❌
-  </button>
-</div>
+                      setPlan((prev) => ({
+                        ...prev,
+                        workouts: prev.workouts.map((w) =>
+                          w.id === workout.id
+                            ? {
+                                ...w,
+                                exercises: w.exercises.map((ex) =>
+                                  ex.id === exercise.id
+                                    ? { ...ex, name: newName }
+                                    : ex
+                                )
+                              }
+                            : w
+                        )
+                      }));
+                    }}
+                  />
 
-{workout.exercises.map((exercise) => (
-  <div
-    key={exercise.id}
-    style={{
-      display: "flex",
-      gap: "10px",
-      alignItems: "center",
-      marginBottom: "10px"
-    }}
-  >
-    <input
-      style={{
-        flex: 1,
-        minWidth: 0,
-        padding: "10px",
-        borderRadius: "8px"
-      }}
-      value={exercise.name}
-      onChange={(e) => {
-        const newName = e.target.value;
+                  <button
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      minWidth: "40px",
+                      padding: 0,
+                      borderRadius: "8px",
+                      background: "#ff4d4f",
+                      color: "white",
+                      border: "none"
+                    }}
+                    onClick={() => {
+                      setPlan((prev) => ({
+                        ...prev,
+                        workouts: prev.workouts.map((w) =>
+                          w.id === workout.id
+                            ? {
+                                ...w,
+                                exercises: w.exercises.filter(
+                                  (ex) => ex.id !== exercise.id
+                                )
+                              }
+                            : w
+                        )
+                      }));
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
 
-        setPlan((prev) => ({
-          ...prev,
-          workouts: prev.workouts.map((w) =>
-            w.id === workout.id
-              ? {
-                  ...w,
-                  exercises: w.exercises.map((ex) =>
-                    ex.id === exercise.id ? { ...ex, name: newName } : ex
+                <input
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "8px",
+                    opacity: 0.85
+                  }}
+                  value={exercise.video || ""}
+                  placeholder="Путь к видео или Firebase URL"
+                  onChange={(e) => {
+                    const newVideo = e.target.value;
+
+                    setPlan((prev) => ({
+                      ...prev,
+                      workouts: prev.workouts.map((w) =>
+                        w.id === workout.id
+                          ? {
+                              ...w,
+                              exercises: w.exercises.map((ex) =>
+                                ex.id === exercise.id
+                                  ? { ...ex, video: newVideo }
+                                  : ex
+                              )
+                            }
+                          : w
+                      )
+                    }));
+                  }}
+                />
+
+                <input
+                  type="file"
+                  accept="video/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const storageRef = ref(
+                      storage,
+                      "videos/" + Date.now() + "-" + file.name
+                    );
+
+                    await uploadBytes(storageRef, file);
+
+                    const url = await getDownloadURL(storageRef);
+
+                    setPlan((prev) => ({
+                      ...prev,
+                      workouts: prev.workouts.map((w) =>
+                        w.id === workout.id
+                          ? {
+                              ...w,
+                              exercises: w.exercises.map((ex) =>
+                                ex.id === exercise.id
+                                  ? { ...ex, video: url }
+                                  : ex
+                              )
+                            }
+                          : w
+                      )
+                    }));
+
+                    alert("Видео загружено ✅");
+                  }}
+                />
+
+                {exercise.video && (
+                  <video
+                    src={exercise.video}
+                    controls
+                    style={{
+                      width: "100%",
+                      maxHeight: "220px",
+                      borderRadius: "10px",
+                      marginTop: "8px",
+                      background: "#000"
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+
+            <button
+              onClick={() => {
+                const newExercise = {
+                  id: "e" + Date.now(),
+                  name: "Новое упражнение",
+                  video: "",
+                  sets: [{ reps: 8, weight: "" }]
+                };
+
+                setPlan((prev) => ({
+                  ...prev,
+                  workouts: prev.workouts.map((w) =>
+                    w.id === workout.id
+                      ? { ...w, exercises: [...w.exercises, newExercise] }
+                      : w
                   )
-                }
-              : w
-          )
-        }));
-      }}
-    />
-
-    <button
-      style={{
-        width: "40px",
-        height: "40px",
-        minWidth: "40px",
-        padding: 0,
-        borderRadius: "8px",
-        background: "#ff4d4f",
-        color: "white",
-        border: "none"
-      }}
-      onClick={() => {
-        setPlan((prev) => ({
-          ...prev,
-          workouts: prev.workouts.map((w) =>
-            w.id === workout.id
-              ? {
-                  ...w,
-                  exercises: w.exercises.filter((ex) => ex.id !== exercise.id)
-                }
-              : w
-          )
-        }));
-      }}
-    >
-      ✕
-    </button>
-  </div>
-))}
-<button
-  onClick={() => {
-    const newExercise = {
-      id: "e" + Date.now(),
-      name: "Новое упражнение",
-      video: "",
-      sets: [{ reps: 8, weight: "" }]
-    };
-
-    setPlan((prev) => ({
-      ...prev,
-      workouts: prev.workouts.map((w) =>
-        w.id === workout.id
-          ? { ...w, exercises: [...w.exercises, newExercise] }
-          : w
-      )
-    }));
-  }}
->
-  ➕ Добавить упражнение
-</button>
+                }));
+              }}
+            >
+              ➕ Добавить упражнение
+            </button>
           </div>
         ))}
-        <button
-  className="bigButton"
-  onClick={() => {
-    const newWorkout = {
-      id: "w" + Date.now(),
-      name: "Новая тренировка",
-      exercises: []
-    };
 
-    setPlan((prev) => ({
-      ...prev,
-      workouts: [...prev.workouts, newWorkout]
-    }));
-  }}
->
-  ➕ Добавить тренировку
-</button>
+        <button
+          className="bigButton"
+          onClick={() => {
+            const newWorkout = {
+              id: "w" + Date.now(),
+              name: "Новая тренировка",
+              exercises: []
+            };
+
+            setPlan((prev) => ({
+              ...prev,
+              workouts: [...prev.workouts, newWorkout]
+            }));
+          }}
+        >
+          ➕ Добавить тренировку
+        </button>
+
         <button className="bigButton" onClick={saveWorkoutsToFirebase}>
-  💾 Сохранить изменения
-</button>
+          💾 Сохранить изменения
+        </button>
       </div>
     );
   }
@@ -909,7 +1263,12 @@ export default function App() {
               </button>
 
               {openVideoId === e.id && (
-                <video className="exerciseVideo" src={e.video} controls />
+                <div
+                  onClick={() => setFullscreenVideo(e.video)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <video className="exerciseVideo" src={e.video} controls />
+                </div>
               )}
             </>
           )}
@@ -943,12 +1302,58 @@ export default function App() {
       <div className="bottomBar">
         <button
           className="finishBtn fixed"
-          onClick={saveWorkoutToGoogle}
+          onClick={saveWorkoutToFirebase}
           disabled={isSaving}
         >
           {isSaving ? "Сохраняю..." : "✅ Завершить тренировку"}
         </button>
       </div>
+
+      {fullscreenVideo && (
+        <div
+          onClick={() => setFullscreenVideo(null)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.95)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999
+          }}
+        >
+          <button
+            onClick={() => setFullscreenVideo(null)}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              fontSize: "28px",
+              background: "none",
+              color: "white",
+              border: "none",
+              cursor: "pointer"
+            }}
+          >
+            ✕
+          </button>
+
+          <video
+            src={fullscreenVideo}
+            controls
+            autoPlay
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%",
+              maxWidth: "900px",
+              borderRadius: "12px"
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
