@@ -1,0 +1,89 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function isOwnerOrAdmin(uid) {
+      return isOwner(uid) || isAdmin();
+    }
+
+    match /users/{uid} {
+      allow create: if isOwner(uid) || isAdmin();
+      allow read: if isOwnerOrAdmin(uid);
+      allow update: if isOwnerOrAdmin(uid);
+      allow delete: if isAdmin();
+
+      match /workouts/{workoutId} {
+        allow read, write: if isOwnerOrAdmin(uid);
+      }
+
+      match /history/{historyId} {
+        allow read, write: if isOwnerOrAdmin(uid);
+      }
+
+      match /nutrition/{docId} {
+        allow read, write: if isOwnerOrAdmin(uid);
+      }
+
+      match /nutrition/{docId}/{subPath=**} {
+        allow read, write: if isOwnerOrAdmin(uid);
+      }
+
+      match /measurements/{measurementId} {
+        allow read, write: if isOwnerOrAdmin(uid);
+      }
+
+      match /{subPath=**} {
+        allow read, write: if isOwnerOrAdmin(uid);
+      }
+    }
+
+    // Общая база продуктов: читать могут авторизованные, писать только admin.
+    match /nutritionGlobal/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /nutritionGlobal/{docId}/{subPath=**} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Админские системные документы.
+    match /admin/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /admin/{docId}/{subPath=**} {
+      allow read, write: if isAdmin();
+    }
+
+
+    // Библиотека программ тренировок
+    match /trainingTemplates/{templateId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /trainingTemplates/{templateId}/{subPath=**} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // По умолчанию всё закрыто.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

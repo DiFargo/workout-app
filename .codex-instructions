@@ -1,0 +1,19 @@
+Always read AGENTS.md before making any changes.
+
+Rules:
+
+1. Work only from the latest stable version.
+2. Never rollback functionality.
+3. Never rewrite App.jsx unless absolutely necessary.
+4. Use minimal diffs.
+5. Preserve Firebase.
+6. Preserve Auth.
+7. Preserve Trainer Dashboard.
+8. Preserve Admin Panel.
+9. Preserve Nutrition.
+10. Preserve Measurements.
+11. Preserve Telegram Integration.
+12. Run build validation before completing.
+13. Increment APP_VERSION after every completed task.
+14. Return ready-to-use files.
+15. Never remove existing features without explicit approval.

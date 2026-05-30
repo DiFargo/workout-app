@@ -1,0 +1,77 @@
+[
+  {
+    "id": "fruits",
+    "name": "Фрукты",
+    "emoji": "🍌"
+  },
+  {
+    "id": "vegetables",
+    "name": "Овощи",
+    "emoji": "🥦"
+  },
+  {
+    "id": "cereals",
+    "name": "Крупы и каши",
+    "emoji": "🌾"
+  },
+  {
+    "id": "meat",
+    "name": "Мясо и птица",
+    "emoji": "🍗"
+  },
+  {
+    "id": "fish",
+    "name": "Рыба и морепродукты",
+    "emoji": "🐟"
+  },
+  {
+    "id": "dairy",
+    "name": "Молочные продукты",
+    "emoji": "🥛"
+  },
+  {
+    "id": "bakery",
+    "name": "Хлеб и выпечка",
+    "emoji": "🍞"
+  },
+  {
+    "id": "ready_meals",
+    "name": "Готовые блюда CIS",
+    "emoji": "🍽️"
+  },
+  {
+    "id": "sausages",
+    "name": "Колбасы и мясные изделия",
+    "emoji": "🥓"
+  },
+  {
+    "id": "sweets",
+    "name": "Сладости",
+    "emoji": "🍫"
+  },
+  {
+    "id": "drinks",
+    "name": "Напитки",
+    "emoji": "🥤"
+  },
+  {
+    "id": "sports",
+    "name": "Спортивное питание",
+    "emoji": "💪"
+  },
+  {
+    "id": "sauces",
+    "name": "Соусы",
+    "emoji": "🥫"
+  },
+  {
+    "id": "nuts",
+    "name": "Орехи и семечки",
+    "emoji": "🥜"
+  },
+  {
+    "id": "frozen",
+    "name": "Замороженные продукты",
+    "emoji": "❄️"
+  }
+]

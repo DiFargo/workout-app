@@ -8,9 +8,76 @@
     ],
     "rewrites": [
       {
+        "source": "/api/fatsecret/search",
+        "function": {
+          "functionId": "fatsecretSearch",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/nutrition/search",
+        "function": {
+          "functionId": "nutritionSearch",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/open-food-facts/search",
+        "function": {
+          "functionId": "openFoodFactsSearch",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/ai-food-photo",
+        "function": {
+          "functionId": "aiFoodPhoto",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/telegram/login-verify",
+        "function": {
+          "functionId": "telegramLoginVerify",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/send-message",
+        "function": {
+          "functionId": "telegramSendMessage",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/test-workout-reminder",
+        "function": {
+          "functionId": "telegramTestWorkoutReminder",
+          "region": "europe-west1"
+        }
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
     ]
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ],
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }
