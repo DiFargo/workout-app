@@ -1,13 +1,29 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./styles.css";
 
-import localNutritionFoods from "./data/nutrition-catalog/foods.compact.json";
-import localNutritionPrefixIndex from "./data/nutrition-catalog/alias-prefix-index.json";
-import localNutritionExactIndex from "./data/nutrition-catalog/alias-exact-index.json";
+import { searchLazyNutritionCatalog } from "./data/nutrition-catalog/lazyCatalog";
 import {
-  searchLocalNutritionCatalog,
-  mapAiFoodToLocalCatalog
-} from "./data/nutrition-catalog/catalogSearch";
+  createClientResourceId,
+  getClientPaymentAttention,
+  getClientPlateauInfo,
+  getClientTrainerTaskDestination,
+  getTrainerTaskStatus
+} from "./domain/clientInsights";
+import {
+  formatCompactTimer,
+  getDefaultWorkoutModePreference,
+  getEstimatedWorkoutDuration,
+  getExerciseTechniqueHint,
+  getWorkoutCover,
+  getWorkoutWarmupSteps
+} from "./domain/workoutPresentation";
+import { compressProgressPhoto } from "./utils/imageCompression";
+import { useModalFocusTrap } from "./hooks/useModalFocusTrap";
+import {
+  PostWorkoutFeedbackDialog,
+  WorkoutExitDialog,
+  WorkoutIncompleteDialog
+} from "./components/workout/WorkoutDialogs";
 import {
   exerciseUsesExternalWeight,
   getWorkoutCompletion,
@@ -33,7 +49,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v453";
+const APP_VERSION = "v457";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -60,219 +76,6 @@ const TELEGRAM_BOT_USERNAME = "tren_ai_coach_bot";
 const TELEGRAM_PROFILE_STORAGE_KEY = "workout_telegram_profile_v1";
 
 const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
-
-function getWorkoutCover(workout) {
-  const coverRules = [
-    { file: "/workout-covers/legs.webp", patterns: [/жим\s+ног/] },
-    { file: "/workout-covers/lunges.webp", patterns: [/выпад/] },
-    { file: "/workout-covers/tbar_row.webp", patterns: [/т[-\s]?гриф|t[-\s]?bar/] },
-    { file: "/workout-covers/bent.webp", patterns: [/тяг.{0,30}(?:в\s+наклон|наклон)|bent\s*row/] },
-    { file: "/workout-covers/incline_smith_press.webp", patterns: [/жим.{0,30}(?:в\s+смит|смит)|наклонн.{0,30}жим|smith\s*press/] },
-    { file: "/workout-covers/chest.webp", patterns: [/жим.{0,30}леж/] },
-    { file: "/workout-covers/shoulders.webp", patterns: [/вертикальн.{0,30}жим|жим.{0,30}гантел.{0,30}вверх|жим\s+сидя/] },
-    { file: "/workout-covers/arms.webp", patterns: [/сгибан.{0,30}рук|разгибан.{0,30}рук|бицепс|трицепс/] }
-  ];
-  const getRuleScore = (value, rule) => {
-    const content = String(value || "").toLowerCase().replace(/ё/g, "е");
-    return rule.patterns.some((pattern) => pattern.test(content)) ? 1 : 0;
-  };
-  const scoredRules = coverRules.map((rule, ruleIndex) => {
-    const exerciseScore = (workout?.exercises || []).reduce(
-      (score, exercise) => score + getRuleScore(exercise?.name, rule) * 3,
-      0
-    );
-    const workoutScore = getRuleScore(
-      [workout?.name, workout?.title, workout?.description].filter(Boolean).join(" "),
-      rule
-    );
-
-    return { ...rule, ruleIndex, score: exerciseScore + workoutScore };
-  });
-  const bestMatch = scoredRules
-    .filter((rule) => rule.score > 0)
-    .sort((first, second) => second.score - first.score || first.ruleIndex - second.ruleIndex)[0];
-
-  return bestMatch?.file || "";
-}
-
-function getEstimatedWorkoutDuration(workout = {}) {
-  const explicitMinutes = Number(workout.durationMinutes || workout.estimatedMinutes);
-  if (Number.isFinite(explicitMinutes) && explicitMinutes > 0) {
-    return `≈ ${Math.round(explicitMinutes)} мин`;
-  }
-
-  const exercises = Array.isArray(workout.exercises) ? workout.exercises : [];
-  const setCount = exercises.reduce(
-    (total, exercise) => total + (Array.isArray(exercise?.sets) ? exercise.sets.length : 0),
-    0
-  );
-  const estimatedMinutes = Math.max(20, Math.round((setCount * 2.1 + exercises.length * 1.5 + 5) / 5) * 5);
-  const rangeStart = Math.max(15, estimatedMinutes - 5);
-  const rangeEnd = estimatedMinutes + 5;
-
-  return `≈ ${rangeStart}–${rangeEnd} мин`;
-}
-
-function getWorkoutWarmupSteps(workout = {}) {
-  const content = [
-    workout.name,
-    workout.title,
-    ...(workout.exercises || []).map((exercise) => exercise?.name)
-  ].filter(Boolean).join(" ").toLowerCase();
-  const jointText = /ног|присед|выпад|ягод|бедр/.test(content)
-    ? "Таз, колени и голеностоп"
-    : /спин|груд|плеч|тяг|жим|бицеп|трицеп/.test(content)
-      ? "Плечи, локти и лопатки"
-      : "Плечи, локти, таз, колени и голеностоп";
-  const firstExerciseName = workout.exercises?.[0]?.name || "первого упражнения";
-
-  return [
-    {
-      title: "Кардио · 2–3 минуты",
-      description: "Дорожка, велосипед или быстрая ходьба"
-    },
-    {
-      title: "Суставная разминка",
-      description: jointText
-    },
-    {
-      title: "Лёгкий разминочный подход",
-      description: `Подготовься к упражнению «${firstExerciseName}» с меньшим весом`
-    }
-  ];
-}
-
-function getExerciseTechniqueHint(exerciseName = "") {
-  const content = String(exerciseName).toLowerCase();
-
-  if (/тяг|спин/.test(content)) return "Сохраняй нейтральную спину и веди движение локтями.";
-  if (/жим|груд|плеч/.test(content)) return "Контролируй опускание и не теряй устойчивое положение корпуса.";
-  if (/присед|ног|выпад/.test(content)) return "Держи колени по линии стоп и выполняй движение без рывков.";
-
-  return "Двигайся контролируемо и сохраняй устойчивую технику во всём диапазоне.";
-}
-
-function formatCompactTimer(totalSeconds = 0) {
-  const safeSeconds = Math.max(0, Number(totalSeconds) || 0);
-  const minutes = Math.floor(safeSeconds / 60);
-  const seconds = safeSeconds % 60;
-
-  return `${minutes}:${String(seconds).padStart(2, "0")}`;
-}
-
-function createClientResourceId(prefix = "item") {
-  const randomPart = globalThis.crypto?.randomUUID?.() || Math.random().toString(36).slice(2);
-  return `${prefix}_${Date.now()}_${randomPart}`;
-}
-
-function getTrainerTaskStatus(task = {}) {
-  if (task.status === "completed" || task.completedAt) {
-    return { id: "completed", label: "Выполнено" };
-  }
-
-  const dueAt = task.dueDate ? new Date(`${task.dueDate}T23:59:59`).getTime() : 0;
-  if (dueAt && dueAt < Date.now()) {
-    return { id: "overdue", label: "Просрочено" };
-  }
-
-  return { id: "progress", label: "В процессе" };
-}
-
-function getClientTrainerTaskDestination(task = {}) {
-  const content = [
-    task.target,
-    task.section,
-    task.type,
-    task.title,
-    task.description
-  ].filter(Boolean).join(" ").toLowerCase();
-
-  if (/фото|photo/.test(content)) return "progressPhotos";
-  if (/замер|объ[её]м|талия|бедр|груд|бицепс|взвес|вес тела/.test(content)) return "measurements";
-  if (/питан|кбжу|ккал|калори|белок|жир|углевод|при[её]м пищи|завтрак|обед|ужин|перекус|вода/.test(content)) return "nutrition";
-  if (/трениров|упражнен|программ|подход|повтор|кардио|разминк/.test(content)) return "workouts";
-  if (/профил|параметр|рост|возраст|активност/.test(content)) return "profile";
-  if (/прогресс|результат|истори/.test(content)) return "progress";
-
-  return "";
-}
-
-function getMeasurementWeightValue(measurement = {}) {
-  const value = Number(String(measurement?.weight || measurement?.values?.weight || "").replace(",", "."));
-  return Number.isFinite(value) && value > 0 ? value : null;
-}
-
-function getClientPlateauInfo(measurements = []) {
-  const points = (Array.isArray(measurements) ? measurements : [])
-    .map((measurement) => ({
-      weight: getMeasurementWeightValue(measurement),
-      timestamp: (() => {
-        const rawDate = measurement?.date || measurement?.createdAt || measurement?.savedAt || "";
-        const timestamp = rawDate ? new Date(rawDate).getTime() : 0;
-        return Number.isFinite(timestamp) ? timestamp : 0;
-      })()
-    }))
-    .filter((point) => point.weight && point.timestamp)
-    .sort((a, b) => b.timestamp - a.timestamp);
-
-  if (points.length < 2) return { isPlateau: false, days: 0, delta: null };
-
-  const latest = points[0];
-  const comparison = points.find((point) => latest.timestamp - point.timestamp >= 14 * 24 * 60 * 60 * 1000);
-  if (!comparison) return { isPlateau: false, days: 0, delta: null };
-
-  const delta = Math.round((latest.weight - comparison.weight) * 10) / 10;
-  const days = Math.max(14, Math.round((latest.timestamp - comparison.timestamp) / (24 * 60 * 60 * 1000)));
-  return { isPlateau: Math.abs(delta) < 0.4, days, delta };
-}
-
-function getClientPaymentAttention(payment = null) {
-  if (!payment) return { id: "missing", label: "Период не указан", days: null };
-  if (payment.status === "paused") {
-    return { id: "overdue", label: "Программа приостановлена", days: null };
-  }
-  if (payment.status === "review") {
-    return { id: "soon", label: "Требует проверки", days: null };
-  }
-
-  const targetValue = payment.controlUntil || payment.nextPaymentAt || payment.paidUntil || "";
-  const targetTimestamp = targetValue ? new Date(`${targetValue}T12:00:00`).getTime() : 0;
-  if (!targetTimestamp) return { id: "missing", label: "Период не указан", days: null };
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const days = Math.ceil((targetTimestamp - today.getTime()) / (24 * 60 * 60 * 1000));
-
-  if (days < 0) return { id: "overdue", label: `Контроль просрочен на ${Math.abs(days)} дн.`, days };
-  if (days <= 3) return { id: "soon", label: days === 0 ? "Контроль сегодня" : `Контроль через ${days} дн.`, days };
-  return { id: "paid", label: `Активна до ${new Date(targetTimestamp).toLocaleDateString("ru-RU")}`, days };
-}
-
-async function compressProgressPhoto(file) {
-  if (!file) return null;
-  const imageUrl = URL.createObjectURL(file);
-
-  try {
-    const image = await new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = imageUrl;
-    });
-    const maxSide = 1400;
-    const ratio = Math.min(1, maxSide / Math.max(image.width, image.height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.max(1, Math.round(image.width * ratio));
-    canvas.height = Math.max(1, Math.round(image.height * ratio));
-    canvas.getContext("2d")?.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-    return await new Promise((resolve) => {
-      canvas.toBlob((blob) => resolve(blob || file), "image/webp", 0.78);
-    });
-  } finally {
-    URL.revokeObjectURL(imageUrl);
-  }
-}
 
 const BASIC_WORKOUT_PLANS = {
   beginner: {
@@ -381,13 +184,6 @@ const BASIC_WORKOUT_PLANS = {
     ]
   }
 };
-
-function getDefaultWorkoutModePreference() {
-  return {
-    mode: "",
-    remember: false
-  };
-}
 
 function safeReadJsonStorage(key, fallback = null) {
   try {
@@ -777,23 +573,9 @@ function normalizeLocalCatalogFood(food = {}) {
   };
 }
 
-function searchLocalNutritionFoods(query, limit = LOCAL_NUTRITION_SEARCH_LIMIT) {
-  return searchLocalNutritionCatalog(
-    query,
-    localNutritionFoods,
-    localNutritionPrefixIndex,
-    localNutritionExactIndex,
-    limit
-  ).map(normalizeLocalCatalogFood);
-}
-
-function mapNutritionAiResultToLocalFoods(aiFood, limit = 8) {
-  return mapAiFoodToLocalCatalog(
-    aiFood,
-    localNutritionFoods,
-    localNutritionPrefixIndex,
-    localNutritionExactIndex
-  ).slice(0, limit).map(normalizeLocalCatalogFood);
+async function searchLocalNutritionFoods(query, limit = LOCAL_NUTRITION_SEARCH_LIMIT) {
+  const foods = await searchLazyNutritionCatalog(query, limit);
+  return foods.map(normalizeLocalCatalogFood);
 }
 
 function mergeNutritionFoodResults(primary = [], secondary = [], limit = 40) {
@@ -2569,108 +2351,7 @@ const starterPlan = {
 };
 
 export default function App() {
-  useEffect(() => {
-    let activeDialog = null;
-    let previousFocus = null;
-    let restoreBackground = [];
-    let removeKeyHandler = null;
-
-    const deactivateDialog = () => {
-      removeKeyHandler?.();
-      removeKeyHandler = null;
-      restoreBackground.forEach(({ element, inert, ariaHidden }) => {
-        element.inert = inert;
-        if (ariaHidden === null) element.removeAttribute("aria-hidden");
-        else element.setAttribute("aria-hidden", ariaHidden);
-      });
-      restoreBackground = [];
-
-      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) {
-        previousFocus.focus({ preventScroll: true });
-      }
-
-      previousFocus = null;
-      activeDialog = null;
-    };
-
-    const activateDialog = () => {
-      const dialogs = [...document.querySelectorAll('[role="dialog"][aria-modal="true"]')]
-        .filter((dialog) => (
-          dialog instanceof HTMLElement &&
-          !dialog.hidden &&
-          dialog.getAttribute("aria-hidden") !== "true"
-        ));
-      const dialog = dialogs.at(-1) || null;
-
-      if (dialog === activeDialog) return;
-      deactivateDialog();
-      if (!dialog) return;
-
-      activeDialog = dialog;
-      previousFocus = document.activeElement;
-
-      let current = dialog;
-      while (current.parentElement && current.parentElement.id !== "root") {
-        const parent = current.parentElement;
-        [...parent.children].forEach((sibling) => {
-          if (sibling === current || !(sibling instanceof HTMLElement)) return;
-          restoreBackground.push({
-            element: sibling,
-            inert: sibling.inert,
-            ariaHidden: sibling.getAttribute("aria-hidden")
-          });
-          sibling.inert = true;
-          sibling.setAttribute("aria-hidden", "true");
-        });
-        current = parent;
-      }
-
-      if (!dialog.hasAttribute("tabindex")) dialog.setAttribute("tabindex", "-1");
-      const getFocusable = () => [...dialog.querySelectorAll(
-        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      )].filter((element) => element instanceof HTMLElement && element.offsetParent !== null);
-      const closeButton = dialog.querySelector(
-        '[aria-label*="Закрыть"]:not([aria-label*="фону"]), [aria-label*="закрыть"]:not([aria-label*="фону"]), .modalCloseButton, .profileModalClose'
-      );
-
-      window.requestAnimationFrame(() => {
-        const focusTarget = closeButton instanceof HTMLElement ? closeButton : getFocusable()[0] || dialog;
-        focusTarget.focus({ preventScroll: true });
-      });
-
-      const onKeyDown = (event) => {
-        if (event.key !== "Tab") return;
-        const focusable = getFocusable();
-        if (!focusable.length) {
-          event.preventDefault();
-          dialog.focus({ preventScroll: true });
-          return;
-        }
-
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
-      };
-
-      document.addEventListener("keydown", onKeyDown);
-      removeKeyHandler = () => document.removeEventListener("keydown", onKeyDown);
-    };
-
-    const observer = new MutationObserver(activateDialog);
-    observer.observe(document.body, { childList: true, subtree: true });
-    activateDialog();
-
-    return () => {
-      observer.disconnect();
-      deactivateDialog();
-    };
-  }, []);
+  useModalFocusTrap();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -3587,58 +3268,77 @@ export default function App() {
       return undefined;
     }
 
-    startPerformanceCheck("Local catalog search", { query });
-    const localResults = searchLocalNutritionFoods(query);
-    setFatSecretFoods(localResults);
-    setFatSecretError("");
-    setNutritionFallbackSuggestions([]);
-    endPerformanceCheck("Local catalog search", { query, results: localResults.length });
-
     const controller = new AbortController();
+    let timer;
+    let cancelled = false;
+    setFatSecretLoading(true);
 
-    const timer = setTimeout(async () => {
+    const runSearch = async () => {
       try {
+        startPerformanceCheck("Local catalog search", { query });
+        const localResults = await searchLocalNutritionFoods(query);
+        if (cancelled) return;
+
+        setFatSecretFoods(localResults);
+        setFatSecretError("");
+        setNutritionFallbackSuggestions([]);
+        endPerformanceCheck("Local catalog search", { query, results: localResults.length });
+
         if (localResults.length >= 8) {
           setFatSecretLoading(false);
           return;
         }
 
-        setFatSecretLoading(true);
-        startPerformanceCheck("Food search · nutrition API", { query, localResults: localResults.length });
+        setFatSecretLoading(false);
+        timer = window.setTimeout(async () => {
+          try {
+            setFatSecretLoading(true);
+            startPerformanceCheck("Food search · nutrition API", { query, localResults: localResults.length });
 
-        const response = await fetchWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
-          signal: controller.signal
-        }, 12000);
+            const response = await fetchWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
+              signal: controller.signal
+            }, 12000);
 
-        if (!response.ok) {
-          throw new Error(`Nutrition search API error: ${response.status}`);
-        }
+            if (!response.ok) {
+              throw new Error(`Nutrition search API error: ${response.status}`);
+            }
 
-        const data = await response.json();
-        const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
+            const data = await response.json();
+            const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
 
-        setFatSecretFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
-        setNutritionFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
-        endPerformanceCheck("Food search · nutrition API", { query, results: remoteFoods.length });
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          console.error(error);
+            setFatSecretFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
+            setNutritionFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
+            endPerformanceCheck("Food search · nutrition API", { query, results: remoteFoods.length });
+          } catch (error) {
+            if (error.name !== "AbortError") {
+              console.error(error);
 
-          if (!localResults.length) {
-            setNutritionFallbackSuggestions(["Фото продукта", "Попробуй штрихкод", "Создать продукт"]);
-            setFatSecretError("Локально не найдено. ИИ-поиск временно недоступен.");
-            showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "api", "Поиск еды сейчас недоступен.");
+              if (!localResults.length) {
+                setNutritionFallbackSuggestions(["Фото продукта", "Попробуй штрихкод", "Создать продукт"]);
+                setFatSecretError("Локально не найдено. ИИ-поиск временно недоступен.");
+                showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "api", "Поиск еды сейчас недоступен.");
+              }
+            }
+          } finally {
+            if (!controller.signal.aborted) {
+              setFatSecretLoading(false);
+            }
           }
-        }
-      } finally {
-        if (!controller.signal.aborted) {
+        }, localResults.length ? 900 : 250);
+      } catch (error) {
+        if (!cancelled && error.name !== "AbortError") {
+          console.error(error);
           setFatSecretLoading(false);
+          setFatSecretError("Локальный каталог временно недоступен.");
         }
       }
-    }, localResults.length ? 900 : 250);
+    };
+
+    runSearch();
 
     return () => {
-      clearTimeout(timer);
+      cancelled = true;
+      if (timer) clearTimeout(timer);
       controller.abort();
     };
   }, [nutritionPickerOpen, nutritionSearchTab, nutritionSearch, nutrition.myFoods]);
@@ -3653,52 +3353,71 @@ export default function App() {
       return undefined;
     }
 
-    startPerformanceCheck("Local dish ingredient search", { query });
-    const localResults = searchLocalNutritionFoods(query, 20);
-    setDishIngredientExternalFoods(localResults);
-    setDishIngredientFallbackSuggestions([]);
-    endPerformanceCheck("Local dish ingredient search", { query, results: localResults.length });
-
     const controller = new AbortController();
-    const timer = setTimeout(async () => {
+    let timer;
+    let cancelled = false;
+    setDishIngredientLoading(true);
+
+    const runSearch = async () => {
       try {
+        startPerformanceCheck("Local dish ingredient search", { query });
+        const localResults = await searchLocalNutritionFoods(query, 20);
+        if (cancelled) return;
+
+        setDishIngredientExternalFoods(localResults);
+        setDishIngredientFallbackSuggestions([]);
+        endPerformanceCheck("Local dish ingredient search", { query, results: localResults.length });
+
         if (localResults.length >= 8) {
           setDishIngredientLoading(false);
           return;
         }
 
-        setDishIngredientLoading(true);
-        startPerformanceCheck("Food search · dish ingredient API", { query, localResults: localResults.length });
+        setDishIngredientLoading(false);
+        timer = window.setTimeout(async () => {
+          try {
+            setDishIngredientLoading(true);
+            startPerformanceCheck("Food search · dish ingredient API", { query, localResults: localResults.length });
 
-        const response = await fetchWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
-          signal: controller.signal
-        }, 12000);
+            const response = await fetchWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
+              signal: controller.signal
+            }, 12000);
 
-        if (!response.ok) {
-          throw new Error(`Dish ingredient search API error: ${response.status}`);
-        }
+            if (!response.ok) {
+              throw new Error(`Dish ingredient search API error: ${response.status}`);
+            }
 
-        const data = await response.json();
-        const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
-        setDishIngredientExternalFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
-        setDishIngredientFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
-        endPerformanceCheck("Food search · dish ingredient API", { query, results: remoteFoods.length });
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          console.error(error);
-          if (!localResults.length) {
-            setDishIngredientFallbackSuggestions([]);
+            const data = await response.json();
+            const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
+            setDishIngredientExternalFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
+            setDishIngredientFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
+            endPerformanceCheck("Food search · dish ingredient API", { query, results: remoteFoods.length });
+          } catch (error) {
+            if (error.name !== "AbortError") {
+              console.error(error);
+              if (!localResults.length) {
+                setDishIngredientFallbackSuggestions([]);
+              }
+            }
+          } finally {
+            if (!controller.signal.aborted) {
+              setDishIngredientLoading(false);
+            }
           }
-        }
-      } finally {
-        if (!controller.signal.aborted) {
+        }, localResults.length ? 900 : 250);
+      } catch (error) {
+        if (!cancelled && error.name !== "AbortError") {
+          console.error(error);
           setDishIngredientLoading(false);
         }
       }
-    }, localResults.length ? 900 : 250);
+    };
+
+    runSearch();
 
     return () => {
-      clearTimeout(timer);
+      cancelled = true;
+      if (timer) clearTimeout(timer);
       controller.abort();
     };
   }, [dishIngredientPickerOpen, dishIngredientSearch]);
@@ -6377,117 +6096,6 @@ export default function App() {
             >
               Восстановить
             </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  function renderWorkoutExitModal() {
-    if (!workoutExitPromptOpen || workoutDraftRestorePrompt || fullscreenVideo) return null;
-
-    return (
-      <div className="workoutExitOverlay">
-        <div className="workoutExitCard" role="dialog" aria-modal="true">
-          <span className="workoutExitIcon" aria-hidden="true">↩</span>
-          <h2>Выйти из тренировки?</h2>
-          <p>Введённые данные сохранены в черновике. Ты сможешь продолжить позже.</p>
-          <div className="workoutExitActions">
-            <button type="button" onClick={() => setWorkoutExitPromptOpen(false)}>
-              Остаться
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setWorkoutExitPromptOpen(false);
-                leaveWorkoutToPlan();
-              }}
-            >
-              Выйти
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  function renderWorkoutIncompleteConfirmModal() {
-    if (!workoutIncompleteConfirmOpen || fullscreenVideo) return null;
-
-    const completion = getWorkoutCompletion(workout);
-
-    return (
-      <div className="workoutExitOverlay">
-        <div className="workoutExitCard" role="dialog" aria-modal="true" aria-labelledby="workout-incomplete-title">
-          <span className="workoutExitIcon" aria-hidden="true">!</span>
-          <h2 id="workout-incomplete-title">Сохранить неполную тренировку?</h2>
-          <p>
-            Выполнено подходов: {completion.completedSets} из {completion.totalSets}.
-            Остальные подходы будут отмечены как невыполненные.
-          </p>
-          <div className="workoutExitActions">
-            <button
-              type="button"
-              onClick={() => {
-                setWorkoutIncompleteConfirmOpen(false);
-                setPendingWorkoutFeedback(null);
-              }}
-            >
-              Продолжить тренировку
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                const feedback = pendingWorkoutFeedback;
-                setWorkoutIncompleteConfirmOpen(false);
-                setPendingWorkoutFeedback(null);
-                saveWorkoutToFirebase(feedback, true);
-              }}
-            >
-              Сохранить неполную
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  function renderPostWorkoutFeedbackModal() {
-    if (!postWorkoutFeedbackOpen) return null;
-
-    return (
-      <div className="postWorkoutOverlay">
-        <div
-          className="postWorkoutCard"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="post-workout-feedback-title"
-        >
-          <span className="postWorkoutBadge">AI feedback</span>
-
-          <h2 id="post-workout-feedback-title">Как прошла тренировка?</h2>
-
-          <p>
-            AI учтёт это для восстановления и следующих рекомендаций.
-          </p>
-
-          <div className="postWorkoutGrid">
-            {POST_WORKOUT_FEEDBACK_OPTIONS.map((option) => (
-              <button
-                type="button"
-                key={option.id}
-                disabled={isSaving}
-                onClick={async () => {
-                  setPostWorkoutFeedback(option);
-                  setPostWorkoutFeedbackOpen(false);
-                  await saveWorkoutToFirebase(option);
-                }}
-              >
-                <span>{option.emoji}</span>
-                <strong>{option.title}</strong>
-                <small>{option.subtitle}</small>
-              </button>
-            ))}
           </div>
         </div>
       </div>
@@ -13658,6 +13266,22 @@ function normalizeTelegramUsername(value = "") {
             {!canUseTrainerFeatures() && (
               <button
                 type="button"
+                className="progressHubCard measurements"
+                onClick={() => setProfileMeasurementsModalOpen(true)}
+              >
+                <span className="progressHubCardIcon">📏</span>
+                <span className="progressHubCardText">
+                  <small>КОНТРОЛЬ ТЕЛА</small>
+                  <strong>Замеры</strong>
+                  <em>{latestProfileMeasurement ? formatProfileMeasurementDate(latestProfileMeasurement) : "Замеров пока нет"}</em>
+                </span>
+                <i>›</i>
+              </button>
+            )}
+
+            {!canUseTrainerFeatures() && (
+              <button
+                type="button"
                 className="progressHubCard nutrition"
                 onClick={() => {
                   setProfileNutritionSaveStatus("");
@@ -13688,7 +13312,7 @@ function normalizeTelegramUsername(value = "") {
                 <span className="progressHubCardText">
                   <small>РЕЗУЛЬТАТЫ</small>
                   <strong>Прогресс</strong>
-                  <em>Замеры и история тренировок</em>
+                  <em>История тренировок</em>
                 </span>
                 <i>›</i>
               </button>
@@ -13719,20 +13343,10 @@ function normalizeTelegramUsername(value = "") {
             <header className="profileProgressTabHeader">
               <span>ЛИЧНЫЙ ПРОГРЕСС</span>
               <h1>Прогресс</h1>
-              <p>Замеры тела и история тренировок в одном месте.</p>
+              <p>История выполненных тренировок и результатов.</p>
             </header>
 
             <div className="progressHubOverview profileProgressTabOverview">
-              <button type="button" className="progressHubCard measurements" onClick={openProgressMeasurements}>
-                <span className="progressHubCardIcon">📏</span>
-                <span className="progressHubCardText">
-                  <small>КОНТРОЛЬ ТЕЛА</small>
-                  <strong>Замеры</strong>
-                  <em>{latestProfileMeasurement ? formatProfileMeasurementDate(latestProfileMeasurement) : "Замеров пока нет"}</em>
-                </span>
-                <i>›</i>
-              </button>
-
               <button type="button" className="progressHubCard history" onClick={openProgressHistory}>
                 <span className="progressHubCardIcon">🗓️</span>
                 <span className="progressHubCardText">
@@ -14395,27 +14009,10 @@ function normalizeTelegramUsername(value = "") {
 
               <div className="cabinetUtilityModalBody">
                 <p className="cabinetUtilityModalIntro">
-                  Замеры тела и история тренировок в одном месте.
+                  История выполненных тренировок и результатов.
                 </p>
 
                 <div className="progressHubOverview profileProgressTabOverview">
-                  <button
-                    type="button"
-                    className="progressHubCard measurements"
-                    onClick={() => {
-                      setProfileProgressModalOpen(false);
-                      setProfileMeasurementsModalOpen(true);
-                    }}
-                  >
-                    <span className="progressHubCardIcon">📏</span>
-                    <span className="progressHubCardText">
-                      <small>КОНТРОЛЬ ТЕЛА</small>
-                      <strong>Замеры</strong>
-                      <em>{latestProfileMeasurement ? formatProfileMeasurementDate(latestProfileMeasurement) : "Замеров пока нет"}</em>
-                    </span>
-                    <i>›</i>
-                  </button>
-
                   <button
                     type="button"
                     className="progressHubCard history"
@@ -15174,9 +14771,6 @@ function normalizeTelegramUsername(value = "") {
   }
 
   if (page === "progress") {
-    const latestProgressMeasurement = Array.isArray(profileMeasurements) && profileMeasurements.length
-      ? profileMeasurements[0]
-      : null;
     const latestProgressWorkout = history[0] || null;
 
     return (
@@ -15185,20 +14779,10 @@ function normalizeTelegramUsername(value = "") {
           <header className="progressHubHeader">
             <span>ЛИЧНЫЙ ПРОГРЕСС</span>
             <h1>Прогресс</h1>
-            <p>Замеры тела и история тренировок в одном месте.</p>
+            <p>История выполненных тренировок и результатов.</p>
           </header>
 
           <section className="progressHubOverview">
-            <button type="button" className="progressHubCard measurements" onClick={openProgressMeasurements}>
-              <span className="progressHubCardIcon">📏</span>
-              <span className="progressHubCardText">
-                <small>КОНТРОЛЬ ТЕЛА</small>
-                <strong>Замеры</strong>
-                <em>{latestProgressMeasurement ? formatProfileMeasurementDate(latestProgressMeasurement) : "Замеров пока нет"}</em>
-              </span>
-              <i>›</i>
-            </button>
-
             <button type="button" className="progressHubCard history" onClick={openProgressHistory}>
               <span className="progressHubCardIcon">🗓️</span>
               <span className="progressHubCardText">
@@ -20538,7 +20122,7 @@ function normalizeTelegramUsername(value = "") {
               aria-label="Выбрать режим запуска тренировки"
               onClick={() => setWorkoutModeModalOpen(true)}
             >
-              ⚙
+              📎
             </button>
           )}
 
@@ -21636,11 +21220,40 @@ function normalizeTelegramUsername(value = "") {
 
       {renderWorkoutReadinessModal()}
 
-      {renderWorkoutExitModal()}
+      <WorkoutExitDialog
+        open={Boolean(workoutExitPromptOpen && !workoutDraftRestorePrompt && !fullscreenVideo)}
+        onStay={() => setWorkoutExitPromptOpen(false)}
+        onLeave={() => {
+          setWorkoutExitPromptOpen(false);
+          leaveWorkoutToPlan();
+        }}
+      />
 
-      {renderWorkoutIncompleteConfirmModal()}
+      <WorkoutIncompleteDialog
+        open={Boolean(workoutIncompleteConfirmOpen && !fullscreenVideo)}
+        completion={getWorkoutCompletion(workout)}
+        onContinue={() => {
+          setWorkoutIncompleteConfirmOpen(false);
+          setPendingWorkoutFeedback(null);
+        }}
+        onSave={() => {
+          const feedback = pendingWorkoutFeedback;
+          setWorkoutIncompleteConfirmOpen(false);
+          setPendingWorkoutFeedback(null);
+          saveWorkoutToFirebase(feedback, true);
+        }}
+      />
 
-      {renderPostWorkoutFeedbackModal()}
+      <PostWorkoutFeedbackDialog
+        open={postWorkoutFeedbackOpen}
+        options={POST_WORKOUT_FEEDBACK_OPTIONS}
+        isSaving={isSaving}
+        onSelect={(option) => {
+          setPostWorkoutFeedback(option);
+          setPostWorkoutFeedbackOpen(false);
+          saveWorkoutToFirebase(option);
+        }}
+      />
 
       {renderFirstSetupOnboarding()}
 

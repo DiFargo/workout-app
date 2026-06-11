@@ -1,4 +1,4 @@
-const CACHE_NAME = "workout-app-v453";
+const CACHE_NAME = "workout-app-v457";
 const APP_SHELL = ["/", "/index.html", "/manifest.json"];
 
 self.addEventListener("install", (event) => {
