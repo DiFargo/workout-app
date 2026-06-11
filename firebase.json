@@ -6,6 +6,17 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "headers": [
+      {
+        "source": "/workout-covers/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=2592000,stale-while-revalidate=604800"
+          }
+        ]
+      }
+    ],
     "rewrites": [
       {
         "source": "/api/fatsecret/search",
@@ -39,6 +50,13 @@
         "source": "/api/telegram/login-verify",
         "function": {
           "functionId": "telegramLoginVerify",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/refresh-avatar",
+        "function": {
+          "functionId": "telegramRefreshAvatar",
           "region": "europe-west1"
         }
       },

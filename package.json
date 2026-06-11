@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test": "node --test tests/*.test.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "firebase": "^12.12.1",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "read-excel-file": "^9.0.10"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -14,12 +14,34 @@ service firebase.storage {
       return signedIn() && request.auth.token.admin == true;
     }
 
+    function isTrainer() {
+      return signedIn() &&
+        firestore.exists(/databases/(default)/documents/users/$(request.auth.uid)) &&
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == "trainer";
+    }
+
     function isOwnerOrAdmin(uid) {
       return isOwner(uid) || isAdmin();
     }
 
+    function isAssignedTrainer(uid) {
+      return signedIn() &&
+        firestore.exists(/databases/(default)/documents/users/$(uid)) &&
+        (
+          firestore.get(/databases/(default)/documents/users/$(uid)).data.trainerId == request.auth.uid ||
+          firestore.get(/databases/(default)/documents/users/$(uid)).data.assignedTrainerId == request.auth.uid ||
+          firestore.get(/databases/(default)/documents/users/$(uid)).data.coachId == request.auth.uid ||
+          firestore.get(/databases/(default)/documents/users/$(uid)).data.createdByUid == request.auth.uid
+        );
+    }
+
     match /users/{uid}/{allPaths=**} {
       allow read, write: if isOwnerOrAdmin(uid);
+    }
+
+    match /progress-photos/{uid}/{allPaths=**} {
+      allow read: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
+      allow write: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
     }
 
     // Общие видео/материалы тренировок: читать можно авторизованным, менять только admin.
@@ -28,6 +50,12 @@ service firebase.storage {
       allow write: if isAdmin();
     }
 
+    match /exercise-videos/{ownerUid}/{programId}/{allPaths=**} {
+      allow read: if signedIn();
+      allow write: if isAdmin() || (isTrainer() && isOwner(ownerUid));
+    }
+
+    // Старые общие пути остаются читаемыми, но менять их может только admin.
     match /exercise-videos/{allPaths=**} {
       allow read: if signedIn();
       allow write: if isAdmin();

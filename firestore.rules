@@ -14,39 +14,158 @@ service cloud.firestore {
       return signedIn() && request.auth.token.admin == true;
     }
 
+    function isTrainer() {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "trainer";
+    }
+
     function isOwnerOrAdmin(uid) {
       return isOwner(uid) || isAdmin();
     }
 
+    function isAssignedTrainerData(data) {
+      return signedIn() && (
+        data.trainerId == request.auth.uid ||
+        data.assignedTrainerId == request.auth.uid ||
+        data.coachId == request.auth.uid ||
+        data.createdByUid == request.auth.uid
+      );
+    }
+
+    function isAssignedTrainer(uid) {
+      return isAssignedTrainerData(get(/databases/$(database)/documents/users/$(uid)).data);
+    }
+
+    function isOwnedTrainingTemplate(templateId) {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/trainingTemplates/$(templateId)) &&
+        get(/databases/$(database)/documents/trainingTemplates/$(templateId)).data.ownerUid == request.auth.uid;
+    }
+
+    function isTrainerProgramAssignment() {
+      return isTrainer() &&
+        isAssignedTrainerData(resource.data) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "assignedProgramId",
+          "assignedProgramName",
+          "assignedProgramAt",
+          "assignedProgramUpdatedAt",
+          "assignedWorkoutCount"
+        ]) &&
+        request.resource.data.assignedProgramUpdatedAt is string &&
+        (
+          (
+            request.resource.data.assignedProgramId == "" &&
+            request.resource.data.assignedProgramName == "" &&
+            request.resource.data.assignedWorkoutCount == 0
+          ) ||
+          (
+            isOwnedTrainingTemplate(request.resource.data.assignedProgramId) &&
+            request.resource.data.assignedProgramName ==
+              get(/databases/$(database)/documents/trainingTemplates/$(request.resource.data.assignedProgramId)).data.name
+          )
+        );
+    }
+
+    function isTrainerOwnedProgramWorkout(uid) {
+      return isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.assignedBy == request.auth.uid &&
+        isOwnedTrainingTemplate(request.resource.data.assignedProgramId) &&
+        request.resource.data.assignedProgramName ==
+          get(/databases/$(database)/documents/trainingTemplates/$(request.resource.data.assignedProgramId)).data.name;
+    }
+
     match /users/{uid} {
       allow create: if isOwner(uid) || isAdmin();
-      allow read: if isOwnerOrAdmin(uid);
-      allow update: if isOwnerOrAdmin(uid);
-      allow delete: if isAdmin();
+      allow read: if isOwnerOrAdmin(uid) || isAssignedTrainerData(resource.data);
+      allow update: if isOwnerOrAdmin(uid) || isTrainerProgramAssignment();
+      allow delete: if isAdmin() || (
+        isTrainer() &&
+        resource.data.role == "client" &&
+        isAssignedTrainerData(resource.data)
+      );
 
       match /workouts/{workoutId} {
-        allow read, write: if isOwnerOrAdmin(uid);
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow create, update: if isOwnerOrAdmin(uid) || isTrainerOwnedProgramWorkout(uid);
+        allow delete: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
       }
 
       match /history/{historyId} {
-        allow read, write: if isOwnerOrAdmin(uid);
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isOwnerOrAdmin(uid);
       }
 
       match /nutrition/{docId} {
-        allow read, write: if isOwnerOrAdmin(uid);
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isOwnerOrAdmin(uid);
       }
 
       match /nutrition/{docId}/{subPath=**} {
-        allow read, write: if isOwnerOrAdmin(uid);
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isOwnerOrAdmin(uid);
       }
 
       match /measurements/{measurementId} {
-        allow read, write: if isOwnerOrAdmin(uid);
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isOwnerOrAdmin(uid);
+      }
+
+      match /trainerTasks/{taskId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow create, delete: if isAdmin() || (isTrainer() && isAssignedTrainer(uid));
+        allow update: if isAdmin() ||
+          (isTrainer() && isAssignedTrainer(uid)) ||
+          (
+            isOwner(uid) &&
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              "status",
+              "completedAt",
+              "updatedAt"
+            ])
+          );
+      }
+
+      match /progressPhotos/{photoId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
+      }
+
+      match /trainerEvents/{eventId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow create: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
+        allow update, delete: if isAdmin() || (isTrainer() && isAssignedTrainer(uid));
+      }
+
+      match /payments/{paymentId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isAdmin() || (isTrainer() && isAssignedTrainer(uid));
       }
 
       match /{subPath=**} {
         allow read, write: if isOwnerOrAdmin(uid);
       }
+    }
+
+    match /trainerNotes/{noteId} {
+      allow read: if isAdmin() || (
+        isTrainer() &&
+        noteId.matches("^" + request.auth.uid + "_.*$")
+      );
+      allow create: if isAdmin() || (
+        isTrainer() &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        isAssignedTrainer(request.resource.data.clientId)
+      );
+      allow update, delete: if isAdmin() || (
+        isTrainer() &&
+        resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.clientId == resource.data.clientId &&
+        isAssignedTrainer(resource.data.clientId)
+      );
     }
 
     // Общая база продуктов: читать могут авторизованные, писать только admin.
@@ -72,13 +191,45 @@ service cloud.firestore {
 
     // Библиотека программ тренировок
     match /trainingTemplates/{templateId} {
-      allow read: if signedIn();
-      allow write: if isAdmin();
+      allow read: if isAdmin() || (
+        isTrainer() &&
+        resource.data.ownerUid == request.auth.uid
+      );
+      allow create: if (
+        isAdmin() &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.ownerRole == "admin" &&
+        request.resource.data.createdByUid == request.auth.uid &&
+        request.resource.data.updatedByUid == request.auth.uid
+      ) || (
+        isTrainer() &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.ownerRole == "trainer" &&
+        request.resource.data.createdByUid == request.auth.uid &&
+        request.resource.data.updatedByUid == request.auth.uid
+      );
+      allow update: if isAdmin() || (
+        isTrainer() &&
+        resource.data.ownerUid == request.auth.uid &&
+        resource.data.ownerRole == "trainer" &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.ownerRole == "trainer" &&
+        request.resource.data.createdByUid == resource.data.createdByUid &&
+        request.resource.data.updatedByUid == request.auth.uid
+      );
+      allow delete: if isAdmin() || (
+        isTrainer() &&
+        resource.data.ownerUid == request.auth.uid &&
+        resource.data.ownerRole == "trainer"
+      );
     }
 
     match /trainingTemplates/{templateId}/{subPath=**} {
-      allow read: if signedIn();
-      allow write: if isAdmin();
+      allow read, write: if isAdmin() || (
+        isTrainer() &&
+        exists(/databases/$(database)/documents/trainingTemplates/$(templateId)) &&
+        get(/databases/$(database)/documents/trainingTemplates/$(templateId)).data.ownerUid == request.auth.uid
+      );
     }
 
     // По умолчанию всё закрыто.

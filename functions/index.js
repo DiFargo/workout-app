@@ -51,8 +51,20 @@ async function sendTelegramMessage({ chatId, telegramUserId, username, text, tok
   return data;
 }
 
-async function getTelegramAvatarUrl(userId, token) {
-  if (!userId) return "";
+async function getAuthenticatedUid(req) {
+  const authorization = String(req.headers.authorization || "");
+  const idToken = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+
+  if (!idToken) {
+    throw new Error("Missing Firebase ID token");
+  }
+
+  const decodedToken = await admin.auth().verifyIdToken(idToken);
+  return decodedToken.uid;
+}
+
+async function saveTelegramAvatar(uid, userId, token) {
+  if (!uid || !userId) return "";
 
   try {
     const photosResponse = await fetch(`https://api.telegram.org/bot${token}/getUserProfilePhotos`, {
@@ -75,7 +87,29 @@ async function getTelegramAvatarUrl(userId, token) {
 
     if (!fileData.ok || !fileData.result?.file_path) return "";
 
-    return `https://api.telegram.org/file/bot${token}/${fileData.result.file_path}`;
+    const telegramFileResponse = await fetch(`https://api.telegram.org/file/bot${token}/${fileData.result.file_path}`);
+
+    if (!telegramFileResponse.ok) return "";
+
+    const contentType = telegramFileResponse.headers.get("content-type") || "image/jpeg";
+    const extension = String(fileData.result.file_path).split(".").pop()?.replace(/[^a-z0-9]/gi, "") || "jpg";
+    const downloadToken = crypto.randomUUID();
+    const storagePath = `telegram-avatars/${uid}/avatar.${extension}`;
+    const bucket = admin.storage().bucket("tren-85720.firebasestorage.app");
+    const avatarFile = bucket.file(storagePath);
+
+    await avatarFile.save(Buffer.from(await telegramFileResponse.arrayBuffer()), {
+      resumable: false,
+      metadata: {
+        contentType,
+        cacheControl: "public,max-age=86400",
+        metadata: {
+          firebaseStorageDownloadTokens: downloadToken
+        }
+      }
+    });
+
+    return `https://firebasestorage.googleapis.com/v0/b/${encodeURIComponent(bucket.name)}/o/${encodeURIComponent(storagePath)}?alt=media&token=${downloadToken}`;
   } catch (error) {
     console.error("Telegram avatar fetch failed:", error);
     return "";
@@ -206,15 +240,16 @@ export const telegramLoginVerify = onRequest(
     if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed" });
 
     try {
-      const { uid, telegramUser } = req.body || {};
-      if (!uid || !telegramUser) return json(res, 400, { ok: false, error: "Missing uid or telegramUser" });
+      const { telegramUser } = req.body || {};
+      const uid = await getAuthenticatedUid(req);
+      if (!telegramUser) return json(res, 400, { ok: false, error: "Missing telegramUser" });
 
       const token = TELEGRAM_BOT_TOKEN.value();
       if (!verifyTelegramLoginPayload(telegramUser, token)) {
         return json(res, 401, { ok: false, error: "Invalid Telegram signature" });
       }
 
-      const avatarUrl = await getTelegramAvatarUrl(telegramUser.id, token);
+      const avatarUrl = await saveTelegramAvatar(uid, telegramUser.id, token);
 
       const telegramProfile = {
         connected: true,
@@ -246,7 +281,65 @@ export const telegramLoginVerify = onRequest(
       return json(res, 200, { ok: true, telegram: telegramProfile });
     } catch (error) {
       console.error("telegramLoginVerify error:", error);
-      return json(res, 500, { ok: false, error: error.message });
+      const status = /Firebase ID token|auth\/argument-error|auth\/id-token/i.test(error.message) ? 401 : 500;
+      return json(res, status, { ok: false, error: error.message });
+    }
+  }
+);
+
+export const telegramRefreshAvatar = onRequest(
+  {
+    region: "europe-west1",
+    secrets: [TELEGRAM_BOT_TOKEN],
+    cors: true
+  },
+  async (req, res) => {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed" });
+
+    try {
+      const uid = await getAuthenticatedUid(req);
+      const userRef = admin.firestore().collection("users").doc(uid);
+      const userSnap = await userRef.get();
+
+      if (!userSnap.exists) return json(res, 404, { ok: false, error: "User not found" });
+
+      const userData = userSnap.data() || {};
+      const savedTelegram = userData.telegram || {};
+      const telegramUserId = savedTelegram.telegramUserId || userData.telegramUserId || "";
+
+      if (!telegramUserId) {
+        return json(res, 400, { ok: false, error: "Telegram user is not connected" });
+      }
+
+      const avatarUrl = await saveTelegramAvatar(uid, telegramUserId, TELEGRAM_BOT_TOKEN.value());
+
+      if (!avatarUrl) {
+        return json(res, 404, { ok: false, error: "Telegram avatar is unavailable" });
+      }
+
+      const nextTelegram = {
+        ...savedTelegram,
+        connected: savedTelegram.connected !== false,
+        avatarUrl,
+        avatarUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
+      };
+
+      await userRef.set({
+        telegram: nextTelegram,
+        telegramAvatarUrl: avatarUrl
+      }, { merge: true });
+
+      return json(res, 200, {
+        ok: true,
+        telegram: {
+          ...nextTelegram,
+          avatarUpdatedAt: new Date().toISOString()
+        }
+      });
+    } catch (error) {
+      console.error("telegramRefreshAvatar error:", error);
+      const status = /Firebase ID token|auth\/argument-error|auth\/id-token/i.test(error.message) ? 401 : 500;
+      return json(res, status, { ok: false, error: error.message });
     }
   }
 );
@@ -551,55 +644,73 @@ export const aiFoodPhoto = onRequest(
     cors: true
   },
   async (req, res) => {
-    if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed" });
+    const apiVersion = "aiFoodPhoto-v3";
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed", apiVersion });
 
     try {
       const { imageData, mimeType = "image/jpeg", fileName = "food-photo" } = req.body || {};
 
       if (!imageData || typeof imageData !== "string") {
-        return json(res, 400, { ok: false, error: "Missing imageData" });
+        return json(res, 400, { ok: false, error: "Missing imageData", apiVersion });
       }
 
       const cleanImageData = imageData.includes(",") ? imageData.split(",").pop() : imageData;
+      const imageUrl = imageData.startsWith("data:")
+        ? imageData
+        : `data:image/jpeg;base64,${cleanImageData}`;
       const apiKey = OPENAI_API_KEY.value();
 
       if (!apiKey) {
-        return json(res, 500, { ok: false, error: "OPENAI_API_KEY is not configured" });
+        return json(res, 500, { ok: false, error: "OPENAI_API_KEY is not configured", apiVersion });
       }
 
       const systemPrompt = [
-        "You are a strict food package OCR and nutrition-label extraction system.",
-        "Do not guess a generic food if a package or nutrition label is visible.",
-        "The package text has priority over common products and local database matches.",
-        "If the label shows brand, flavor, additives or product line, include them in the product name.",
+        "You are a food photo nutrition estimation system for a fitness app.",
+        "If a package or nutrition label is visible, extract exact label data. If plated food is visible, identify the most likely dish.",
+        "Package text has priority over common products and local database matches.",
+        "Return name in Russian unless it is a visible brand/package name.",
+        "Keep name short, 2-4 words maximum.",
+        "For packaged food preserve only the visible brand and short product name.",
+        "For homemade or plated food use a short Russian dish name without a brand.",
+        "Do not use filler words such as Homemade, Fresh, Traditional or long descriptions.",
+        "Do not add a brand unless it is clearly visible in the photo.",
         "If the product is TEOS Greek yogurt with cereals and flax fiber, return that exact product meaning, not plain Greek yogurt.",
         "Nutrition values from the label are the highest priority.",
-        "If values are per 100 g, return calories/protein/fat/carbs per 100 g.",
+        "Always return calories/protein/fat/carbs per 100 grams.",
+        "Never return 0 unless that nutrient is truly zero.",
+        "For homemade or plated food estimate typical nutrition values.",
+        "If unsure, use realistic approximate nutrition values instead of zero.",
+        "For unclear homemade food still return a useful editable draft, not an empty product.",
+        "Estimate the visible product weight in grams. For a package or label use its serving/net weight or 100 g basis; for plated food estimate the visible mass. If unsure return 100.",
         "If you can read text partially, preserve the exact visible words instead of simplifying.",
         "Return JSON only."
       ].join("\n");
 
       const userPrompt = [
-        "Analyze this food package/nutrition label photo.",
-        "Extract exact product name, brand, additives/flavor and KBJU.",
-        "Prefer OCR label values. Do not replace this with a generic database item.",
+        "Analyze this food package, nutrition label, or plated food photo.",
+        "Return the best editable food draft for a nutrition diary.",
+        "For labels: extract the visible brand, a short product name and KBJU.",
+        "For plated food: identify the likely dish and estimate KBJU realistically.",
+        'Examples: "Homemade Cottage Cheese Pancakes with Raisins" -> "Сырники с изюмом"; "Chicken with Rice and Vegetables" -> "Курица с рисом"; "Oatmeal with Banana" -> "Овсянка с бананом"; "Greek Yogurt with Cereal" -> "Греческий йогурт".',
+        "Prefer OCR label values. Do not replace visible package data with a generic database item.",
         "Return this JSON shape:",
         "{",
         '  "ok": true,',
-        '  "name": "full product name from package",',
+        '  "name": "short Russian product or dish name, 2-4 words",',
         '  "brand": "brand if visible",',
         '  "query": "search/exact product query",',
         '  "calories": number_per_100g,',
         '  "protein": number_per_100g,',
         '  "fat": number_per_100g,',
         '  "carbs": number_per_100g,',
+        '  "estimatedGrams": estimated_visible_weight_in_grams_or_100,',
         '  "portion": "100 г",',
         '  "servingSize": "visible serving size if any",',
         '  "ingredients": ["visible important additives/flavor"],',
         '  "detectedIngredients": ["visible important additives/flavor"],',
         '  "confidence": "high|medium|low",',
         '  "candidates": [',
-        '    {"name":"same exact product", "brand":"", "calories":0, "protein":0, "fat":0, "carbs":0, "portion":"100 г", "source":"label"}',
+        '    {"name":"same exact product", "brand":"brand if visible", "portion":"100 г", "source":"label"}',
         "  ]",
         "}"
       ].join("\n");
@@ -621,7 +732,7 @@ export const aiFoodPhoto = onRequest(
               role: "user",
               content: [
                 { type: "input_text", text: `${userPrompt}\nFile name: ${fileName}` },
-                { type: "input_image", image_url: `data:${mimeType};base64,${cleanImageData}` }
+                { type: "input_image", image_url: imageUrl }
               ]
             }
           ],
@@ -631,7 +742,7 @@ export const aiFoodPhoto = onRequest(
               name: "food_label_ocr",
               schema: {
                 type: "object",
-                additionalProperties: true,
+                additionalProperties: false,
                 properties: {
                   ok: { type: "boolean" },
                   name: { type: "string" },
@@ -641,6 +752,7 @@ export const aiFoodPhoto = onRequest(
                   protein: { type: "number" },
                   fat: { type: "number" },
                   carbs: { type: "number" },
+                  estimatedGrams: { type: "number" },
                   portion: { type: "string" },
                   servingSize: { type: "string" },
                   ingredients: { type: "array", items: { type: "string" } },
@@ -650,7 +762,7 @@ export const aiFoodPhoto = onRequest(
                     type: "array",
                     items: {
                       type: "object",
-                      additionalProperties: true,
+                      additionalProperties: false,
                       properties: {
                         name: { type: "string" },
                         brand: { type: "string" },
@@ -658,13 +770,15 @@ export const aiFoodPhoto = onRequest(
                         protein: { type: "number" },
                         fat: { type: "number" },
                         carbs: { type: "number" },
+                        estimatedGrams: { type: "number" },
                         portion: { type: "string" },
                         source: { type: "string" }
-                      }
+                      },
+                      required: ["name", "brand", "calories", "protein", "fat", "carbs", "estimatedGrams", "portion", "source"]
                     }
                   }
                 },
-                required: ["ok", "name", "query", "confidence", "candidates"]
+                required: ["ok", "name", "brand", "query", "calories", "protein", "fat", "carbs", "estimatedGrams", "portion", "servingSize", "ingredients", "detectedIngredients", "confidence", "candidates"]
               }
             }
           },
@@ -676,7 +790,7 @@ export const aiFoodPhoto = onRequest(
 
       if (!openAiResponse.ok) {
         console.error("OpenAI aiFoodPhoto error:", raw);
-        return json(res, 500, { ok: false, error: "OpenAI request failed", details: raw.slice(0, 800) });
+        return json(res, 500, { ok: false, error: "OpenAI request failed", details: raw.slice(0, 800), apiVersion });
       }
 
       let parsed = null;
@@ -689,52 +803,96 @@ export const aiFoodPhoto = onRequest(
         parsed = JSON.parse(outputText);
       } catch (error) {
         console.error("aiFoodPhoto parse error:", error, raw);
-        return json(res, 500, { ok: false, error: "AI response parse failed" });
+        return json(res, 500, { ok: false, error: "AI response parse failed", apiVersion });
       }
 
-      const name = String(parsed.name || parsed.query || "Новый продукт").trim();
-      const brand = String(parsed.brand || "").trim();
+      const firstAiCandidate = Array.isArray(parsed.candidates) && parsed.candidates.length
+        ? parsed.candidates[0] || {}
+        : {};
+
+      const normalizeText = (value = "") => String(value || "").trim();
+      const getPositiveNumber = (primary, fallback, defaultValue = 0) => {
+        const primaryNumber = Number(primary);
+        if (Number.isFinite(primaryNumber) && primaryNumber > 0) return primaryNumber;
+        const fallbackNumber = Number(fallback);
+        if (Number.isFinite(fallbackNumber) && fallbackNumber > 0) return fallbackNumber;
+        return defaultValue;
+      };
+
+      const name = normalizeText(parsed.name || parsed.query || firstAiCandidate.name || firstAiCandidate.query);
+      const query = normalizeText(parsed.query || parsed.name || firstAiCandidate.query || firstAiCandidate.name || name);
+      const brand = normalizeText(parsed.brand || firstAiCandidate.brand);
       const detectedIngredients = Array.isArray(parsed.detectedIngredients)
         ? parsed.detectedIngredients
         : Array.isArray(parsed.ingredients)
           ? parsed.ingredients
           : [];
 
-      const exactName = [brand, name, ...detectedIngredients].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+      const exactName = [brand, name]
+        .filter(Boolean)
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
 
-      const candidate = {
-        name: exactName || name,
+      const estimatedGrams = getPositiveNumber(parsed.estimatedGrams, firstAiCandidate.estimatedGrams, 100);
+      const recognizedFood = Boolean(exactName || name || query);
+      let calories = getPositiveNumber(parsed.calories, firstAiCandidate.calories, 0);
+      let protein = getPositiveNumber(parsed.protein, firstAiCandidate.protein, 0);
+      let fat = getPositiveNumber(parsed.fat, firstAiCandidate.fat, 0);
+      let carbs = getPositiveNumber(parsed.carbs, firstAiCandidate.carbs, 0);
+
+      if (recognizedFood && (calories <= 0 || (protein <= 0 && fat <= 0 && carbs <= 0))) {
+        calories = 200;
+        protein = 8;
+        fat = 8;
+        carbs = 22;
+      }
+
+      if (!recognizedFood) {
+        calories = 200;
+        protein = 8;
+        fat = 8;
+        carbs = 22;
+      }
+
+      const productName = exactName || name || query || "Продукт по фото";
+      const product = {
+        name: productName,
+        query: query || productName,
         brand,
-        calories: Number(parsed.calories) || 0,
-        protein: Number(parsed.protein) || 0,
-        fat: Number(parsed.fat) || 0,
-        carbs: Number(parsed.carbs) || 0,
-        portion: parsed.portion || "100 г",
+        calories,
+        protein,
+        fat,
+        carbs,
+        estimatedGrams,
+        portion: parsed.portion || firstAiCandidate.portion || "100 г",
         portionAmount: 100,
-        source: "AI этикетка",
-        confidence: parsed.confidence || "medium"
+        source: recognizedFood ? "AI фото" : "AI фото · примерная оценка",
+        confidence: parsed.confidence || firstAiCandidate.confidence || (recognizedFood ? "medium" : "low")
       };
 
       return json(res, 200, {
         ok: true,
-        name: candidate.name,
-        query: candidate.name,
+        apiVersion,
+        product,
+        name: product.name,
+        query: product.query,
         brand,
-        calories: candidate.calories,
-        protein: candidate.protein,
-        fat: candidate.fat,
-        carbs: candidate.carbs,
-        portion: candidate.portion,
+        calories: product.calories,
+        protein: product.protein,
+        fat: product.fat,
+        carbs: product.carbs,
+        estimatedGrams,
+        portion: product.portion,
         servingSize: parsed.servingSize || "",
         ingredients: detectedIngredients,
         detectedIngredients,
         confidence: parsed.confidence || "medium",
-        candidates: [candidate]
+        candidates: [product]
       });
     } catch (error) {
       console.error("aiFoodPhoto fatal error:", error);
-      return json(res, 500, { ok: false, error: error.message || String(error) });
+      return json(res, 500, { ok: false, error: error.message || String(error), apiVersion });
     }
   }
 );
-

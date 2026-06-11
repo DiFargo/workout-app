@@ -1,22 +1,462 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./styles.css";
 
+import localNutritionFoods from "./data/nutrition-catalog/foods.compact.json";
+import localNutritionPrefixIndex from "./data/nutrition-catalog/alias-prefix-index.json";
+import localNutritionExactIndex from "./data/nutrition-catalog/alias-exact-index.json";
+import {
+  searchLocalNutritionCatalog,
+  mapAiFoodToLocalCatalog
+} from "./data/nutrition-catalog/catalogSearch";
+
 import { auth, db, storage } from "./firebase";
+import { initializeApp, deleteApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
-  signOut
+  signOut,
+  getIdTokenResult
 } from "firebase/auth";
 
-import { collection, getDocs, doc, setDoc, addDoc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch } from "firebase/firestore";
 
+const APP_VERSION = "v221";
+const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
 const ADMIN_EMAIL = "work.kriptonit.il@gmail.com";
 
 const NUTRITION_STORAGE_KEY = "workout_nutrition_v1";
+const NUTRITION_BACKUP_STORAGE_KEY = "workout_nutrition_backup_v1";
+const WORKOUT_HISTORY_BACKUP_STORAGE_KEY = "workout_history_pending_backup_v1";
+const WORKOUT_FAILED_HISTORY_QUEUE_KEY = "workout_history_failed_queue_v1";
+const WORKOUT_DRAFT_STORAGE_KEY = "workout_active_draft_v1";
+const WORKOUT_PLAN_BACKUP_STORAGE_KEY = "workout_plan_backup_v1";
+const WORKOUT_ASSIGNMENT_STORAGE_KEY = "workout_assignment_version_v1";
+const INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY = "individual_workout_swipe_hint_seen_v1";
+const GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY = "workout_global_my_foods_backup_v1";
+const DATA_SAFETY_MAX_BACKUPS = 25;
+const APP_THEME_STORAGE_KEY = "workout_app_theme_v1";
+const GLOBAL_MY_FOODS_DOC_ID = "shared";
+const FIRST_SETUP_DONE_USER_STORAGE_KEY = "workout_first_setup_done_user_uid";
+const FIRST_SETUP_REQUIRED_VERSION = "v2";
+const TELEGRAM_BOT_USERNAME = "tren_ai_coach_bot";
+
+const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
+
+function getWorkoutCover(workout) {
+  const resolveCover = (value) => {
+    const content = String(value || "").toLowerCase().replace(/ё/g, "е");
+
+    if (/жим\s+ног/.test(content)) return "/workout-covers/legs.webp";
+    if (/выпад/.test(content)) return "/workout-covers/lunges.webp";
+    if (/т[-\s]?гриф|t[-\s]?bar/.test(content)) return "/workout-covers/tbar_row.webp";
+    if (/тяг.{0,30}(?:в\s+наклон|наклон)|bent\s*row/.test(content)) return "/workout-covers/bent.webp";
+    if (/жим.{0,30}(?:в\s+смит|смит)|наклонн.{0,30}жим|smith\s*press/.test(content)) {
+      return "/workout-covers/incline_smith_press.webp";
+    }
+    if (/жим.{0,30}леж/.test(content)) return "/workout-covers/chest.webp";
+    if (/вертикальн.{0,30}жим|жим.{0,30}гантел.{0,30}вверх|жим\s+сидя/.test(content)) {
+      return "/workout-covers/shoulders.webp";
+    }
+    if (/сгибан.{0,30}рук|разгибан.{0,30}рук|бицепс|трицепс/.test(content)) {
+      return "/workout-covers/arms.webp";
+    }
+
+    return "";
+  };
+
+  for (const exercise of workout?.exercises || []) {
+    const exerciseCover = resolveCover(exercise?.name);
+    if (exerciseCover) return exerciseCover;
+  }
+
+  return resolveCover([workout?.name, workout?.title, workout?.description].filter(Boolean).join(" "));
+}
+
+const BASIC_WORKOUT_PLANS = {
+  beginner: {
+    id: "basic_beginner_3days",
+    name: "Базовый план · Старт",
+    description: "Лёгкий вход в тренировки: техника, умеренный объём, 3 тренировки.",
+    workouts: [
+      {
+        id: "basic_beginner_day1",
+        name: "Базовая — День 1 · Всё тело",
+        order: 1,
+        sortOrder: 1,
+        exercises: [
+          { id: "bb1_leg_press", name: "Жим ногами", video: "/videos/1. Жим ногами.MOV", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bb1_row", name: "Тяга верхнего блока", video: "/videos/Тяга верхнего блока.MOV", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bb1_db_press", name: "Жим гантелей лёжа", video: "/videos/Жим лежа с гантелями.mp4", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bb1_side_raise", name: "Отведение рук с гантелями", video: "/videos/Отведение рук в сторону с гантелями.MP4", sets: [{ reps: 15, weight: "" }, { reps: 15, weight: "" }] },
+          { id: "bb1_abs", name: "Пресс", video: "/videos/Пресс (скручивания обычные).MOV", sets: [{ reps: 15, weight: "" }, { reps: 15, weight: "" }] }
+        ]
+      },
+      {
+        id: "basic_beginner_day2",
+        name: "Базовая — День 2 · Верх",
+        order: 2,
+        sortOrder: 2,
+        exercises: [
+          { id: "bb2_bench", name: "Жим лёжа со штангой", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bb2_db_row", name: "Тяга гантели к поясу", video: "", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bb2_machine_press", name: "Вертикальный жим в тренажёре", video: "", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bb2_curl", name: "Сгибание рук в кроссовере", video: "/videos/Сгибание рук с гантелями.MOV", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bb2_abs", name: "Пресс", video: "/videos/Пресс (скручивания обычные).MOV", sets: [{ reps: 15, weight: "" }, { reps: 15, weight: "" }] }
+        ]
+      },
+      {
+        id: "basic_beginner_day3",
+        name: "Базовая — День 3 · Ноги / спина",
+        order: 3,
+        sortOrder: 3,
+        exercises: [
+          { id: "bb3_extension", name: "Разгибание ног", video: "", sets: [{ reps: 15, weight: "" }, { reps: 15, weight: "" }] },
+          { id: "bb3_rdl", name: "Румынская тяга", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bb3_hammer", name: "Тяга верхнего блока (хаммер)", video: "/videos/Тяга верхнего блока.MOV", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bb3_triceps", name: "Разгибание рук в кроссовере", video: "/videos/Разгибание рук в кроссовере.MOV", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bb3_abs", name: "Пресс", video: "/videos/Пресс (скручивания обычные).MOV", sets: [{ reps: 15, weight: "" }, { reps: 15, weight: "" }] }
+        ]
+      }
+    ]
+  },
+  muscle: {
+    id: "basic_muscle_4days",
+    name: "Базовый план · Масса",
+    description: "4 тренировки: больше объёма, базовые движения и изоляция.",
+    workouts: [
+      {
+        id: "basic_muscle_day1",
+        name: "Базовая — День 1 · Спина / плечи",
+        order: 1,
+        sortOrder: 1,
+        exercises: [
+          { id: "bm1_leg_press", name: "Жим ногами", video: "/videos/1. Жим ногами.MOV", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm1_row", name: "Тяга в наклоне", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm1_tbar", name: "Тяга Т-грифа", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm1_press", name: "Вертикальный жим с гантелями", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm1_abs", name: "Пресс", video: "/videos/Пресс (скручивания обычные).MOV", sets: [{ reps: 15, weight: "" }, { reps: 15, weight: "" }, { reps: 15, weight: "" }] }
+        ]
+      },
+      {
+        id: "basic_muscle_day2",
+        name: "Базовая — День 2 · Грудь / руки",
+        order: 2,
+        sortOrder: 2,
+        exercises: [
+          { id: "bm2_bench", name: "Жим лёжа со штангой", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm2_smith", name: "Жим в Смите (наклон)", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm2_raise", name: "Отведение рук с гантелями (с опорой)", video: "", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bm2_curl", name: "Сгибание рук в кроссовере", video: "/videos/Сгибание рук с гантелями.MOV", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bm2_abs", name: "Пресс", video: "/videos/Пресс (скручивания обычные).MOV", sets: [{ reps: 15, weight: "" }, { reps: 15, weight: "" }, { reps: 15, weight: "" }] }
+        ]
+      },
+      {
+        id: "basic_muscle_day3",
+        name: "Базовая — День 3 · Спина / плечи",
+        order: 3,
+        sortOrder: 3,
+        exercises: [
+          { id: "bm3_rdl", name: "Румынская тяга", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm3_db_row", name: "Тяга гантели к поясу", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm3_hammer", name: "Тяга верхнего блока (хаммер)", video: "/videos/Тяга верхнего блока.MOV", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bm3_machine_press", name: "Вертикальный жим в тренажёре", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm3_abs", name: "Пресс", video: "/videos/Пресс (скручивания обычные).MOV", sets: [{ reps: 15, weight: "" }, { reps: 15, weight: "" }, { reps: 15, weight: "" }] }
+        ]
+      },
+      {
+        id: "basic_muscle_day4",
+        name: "Базовая — День 4 · Грудь / руки",
+        order: 4,
+        sortOrder: 4,
+        exercises: [
+          { id: "bm4_lunge", name: "Выпады с гантелями", video: "", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm4_db_bench", name: "Жим гантелей лёжа", video: "/videos/Жим лежа с гантелями.mp4", sets: [{ reps: 10, weight: "" }, { reps: 10, weight: "" }, { reps: 10, weight: "" }] },
+          { id: "bm4_fly", name: "Сведение гантелей (наклон)", video: "", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bm4_rear", name: "Задняя дельта в кроссовере", video: "", sets: [{ reps: 12, weight: "" }, { reps: 12, weight: "" }, { reps: 12, weight: "" }] },
+          { id: "bm4_abs", name: "Пресс", video: "/videos/Пресс (скручивания обычные).MOV", sets: [{ reps: 15, weight: "" }, { reps: 15, weight: "" }, { reps: 15, weight: "" }] }
+        ]
+      }
+    ]
+  }
+};
+
+function getDefaultWorkoutModePreference() {
+  return {
+    mode: "",
+    remember: false
+  };
+}
+
+function safeReadJsonStorage(key, fallback = null) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
+function safeWriteJsonStorage(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    console.error(`Local backup write failed: ${key}`, error);
+    return false;
+  }
+}
+
+function addLocalBackup(key, item, limit = DATA_SAFETY_MAX_BACKUPS) {
+  const current = safeReadJsonStorage(key, []);
+  const next = [
+    {
+      id: item?.id || `${Date.now()}_${Math.random().toString(36).slice(2)}`,
+      savedAt: new Date().toISOString(),
+      ...item
+    },
+    ...(Array.isArray(current) ? current : [])
+  ].slice(0, limit);
+
+  safeWriteJsonStorage(key, next);
+  return next;
+}
+
+function removeLocalBackup(key, backupId) {
+  const current = safeReadJsonStorage(key, []);
+  if (!Array.isArray(current)) return;
+  safeWriteJsonStorage(key, current.filter((item) => item.id !== backupId));
+}
+
+function getUserScopedStorageKey(baseKey, uid = auth.currentUser?.uid) {
+  return uid ? `${baseKey}:${uid}` : baseKey;
+}
+
+function safeReadUserJsonStorage(baseKey, uid, fallback = null) {
+  return safeReadJsonStorage(getUserScopedStorageKey(baseKey, uid), fallback);
+}
+
+function safeWriteUserJsonStorage(baseKey, uid, value) {
+  return safeWriteJsonStorage(getUserScopedStorageKey(baseKey, uid), value);
+}
+
+function addUserLocalBackup(baseKey, uid, item, limit = DATA_SAFETY_MAX_BACKUPS) {
+  return addLocalBackup(getUserScopedStorageKey(baseKey, uid), item, limit);
+}
+
+function removeUserLocalBackup(baseKey, uid, backupId) {
+  return removeLocalBackup(getUserScopedStorageKey(baseKey, uid), backupId);
+}
+
+function removePendingHistoryBackups(uid, clientSaveId) {
+  if (!uid || !clientSaveId) return;
+
+  const storageKey = getUserScopedStorageKey(WORKOUT_HISTORY_BACKUP_STORAGE_KEY, uid);
+  const current = safeReadJsonStorage(storageKey, []);
+  if (!Array.isArray(current)) return;
+
+  safeWriteJsonStorage(
+    storageKey,
+    current.filter((item) => (
+      item?.id !== clientSaveId &&
+      item?.entry?.clientSaveId !== clientSaveId
+    ))
+  );
+}
+
+function getFailedHistoryQueue(uid = auth.currentUser?.uid) {
+  return safeReadUserJsonStorage(WORKOUT_FAILED_HISTORY_QUEUE_KEY, uid, []);
+}
+
+function setFailedHistoryQueue(uid, queue = []) {
+  return safeWriteUserJsonStorage(WORKOUT_FAILED_HISTORY_QUEUE_KEY, uid, Array.isArray(queue) ? queue : []);
+}
+
+function getPersonalMyFoodsDocRef(uid) {
+  return doc(db, "users", uid, "nutrition", "myFoods");
+}
+
+function getPersonalMyFoodsFromState(nutritionState = {}) {
+  return nutritionState?.myFoods || {};
+}
+
+function enqueueFailedHistorySave(uid, entry, reason = "failed_save") {
+  const queue = getFailedHistoryQueue(uid);
+  const saveId = entry?.clientSaveId || "";
+
+  if (saveId && queue.some((item) => item?.entry?.clientSaveId === saveId)) {
+    return queue;
+  }
+
+  const nextItem = {
+    id: saveId || entry?.id || `${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    entry,
+    reason,
+    createdAt: new Date().toISOString()
+  };
+
+  setFailedHistoryQueue(uid, [nextItem, ...queue].slice(0, 25));
+}
+
+function getWorkoutDraftKey(uid, workoutId) {
+  return `${WORKOUT_DRAFT_STORAGE_KEY}:${uid || "unknown"}:${workoutId || "unknown"}`;
+}
+
+function clearWorkoutDraft(uid, workoutId) {
+  try {
+    localStorage.removeItem(getWorkoutDraftKey(uid, workoutId));
+  } catch (_) {
+    // ignore localStorage errors
+  }
+}
+
+function clearStaleWorkoutCaches(uid, assignedProgramUpdatedAt) {
+  if (!uid || !assignedProgramUpdatedAt) return;
+
+  const savedAssignmentVersion = safeReadUserJsonStorage(WORKOUT_ASSIGNMENT_STORAGE_KEY, uid, "");
+  if (savedAssignmentVersion === assignedProgramUpdatedAt) return;
+
+  try {
+    const draftPrefix = `${WORKOUT_DRAFT_STORAGE_KEY}:${uid}:`;
+    const draftKeys = [];
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (key?.startsWith(draftPrefix)) draftKeys.push(key);
+    }
+    draftKeys.forEach((key) => localStorage.removeItem(key));
+    localStorage.removeItem(getUserScopedStorageKey(STORAGE_KEY, uid));
+    localStorage.removeItem(getUserScopedStorageKey(WORKOUT_PLAN_BACKUP_STORAGE_KEY, uid));
+  } catch (_) {
+    // ignore localStorage errors
+  }
+
+  safeWriteUserJsonStorage(WORKOUT_ASSIGNMENT_STORAGE_KEY, uid, assignedProgramUpdatedAt);
+}
+
+function makeTimeoutSignal(timeoutMs = 16000, externalSignal = null) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(new DOMException("Timeout", "AbortError")), timeoutMs);
+
+  if (externalSignal) {
+    if (externalSignal.aborted) {
+      controller.abort(externalSignal.reason);
+    } else {
+      externalSignal.addEventListener("abort", () => controller.abort(externalSignal.reason), { once: true });
+    }
+  }
+
+  return {
+    signal: controller.signal,
+    clear: () => clearTimeout(timeoutId)
+  };
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = 16000) {
+  const timeout = makeTimeoutSignal(timeoutMs, options.signal);
+
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: timeout.signal
+    });
+  } finally {
+    timeout.clear();
+  }
+}
+
+function getAppErrorPreset(type = "api") {
+  const presets = {
+    offline: {
+      title: "Нет интернета",
+      text: "Проверь подключение. Данные останутся локально."
+    },
+    firebase: {
+      title: "Firebase временно недоступен",
+      text: "Изменения сохранены локально и не потеряются."
+    },
+    api: {
+      title: "Сервер временно недоступен",
+      text: "Попробуй ещё раз через несколько секунд."
+    },
+    timeout: {
+      title: "Слишком долго",
+      text: "Сервер отвечает дольше обычного. Попробуй позже."
+    },
+    savedLocal: {
+      title: "Сохранено локально",
+      text: "Данные не потеряются и синхронизируются позже."
+    },
+    load: {
+      title: "Не удалось загрузить данные",
+      text: "Проверь интернет или попробуй обновить страницу."
+    }
+  };
+
+  return presets[type] || presets.api;
+}
+
+function showAppError(type = "api", customText = "") {
+  if (typeof document === "undefined") return;
+
+  const preset = getAppErrorPreset(type);
+  const existing = document.querySelector(".appErrorToast");
+  if (existing) existing.remove();
+
+  const toast = document.createElement("div");
+  toast.className = `appErrorToast appErrorToast--${type}`;
+  toast.innerHTML = `
+    <div class="appErrorToastTitle">${preset.title}</div>
+    <div class="appErrorToastText">${customText || preset.text}</div>
+  `;
+
+  document.body.appendChild(toast);
+
+  window.clearTimeout(window.__workoutAppErrorToastTimer);
+  window.__workoutAppErrorToastTimer = window.setTimeout(() => {
+    toast.classList.add("appErrorToastOut");
+    window.setTimeout(() => toast.remove(), 220);
+  }, 4200);
+}
+
+function mergeNutritionStates(localState = {}, cloudState = {}, personalMyFoods = {}) {
+  const mergedDays = {
+    ...(cloudState.days || {}),
+    ...(localState.days || {})
+  };
+
+  return {
+    ...defaultNutritionState,
+    ...cloudState,
+    ...localState,
+    goals: {
+      ...defaultNutritionState.goals,
+      ...(cloudState.goals || {}),
+      ...(localState.goals || {})
+    },
+    days: mergedDays,
+    favorites: [
+      ...new Set([
+        ...(cloudState.favorites || []),
+        ...(localState.favorites || defaultNutritionState.favorites)
+      ])
+    ],
+    recent: [
+      ...new Set([
+        ...(localState.recent || []),
+        ...(cloudState.recent || [])
+      ])
+    ].slice(0, 80),
+    myFoods: {
+      ...(personalMyFoods || {}),
+      ...(cloudState.myFoods || {}),
+      ...(localState.myFoods || {})
+    }
+  };
+}
 
 const nutritionFoodDatabase = [
   { id: "food_chicken", name: "Куриная грудка", portion: "100 г", calories: 165, protein: 31, fat: 3.6, carbs: 0, barcode: "4810000000011" },
@@ -37,7 +477,8 @@ const defaultNutritionState = {
   goals: { calories: 2400, protein: 160, fat: 75, carbs: 260, water: 2500 },
   days: {},
   favorites: ["food_chicken", "food_rice", "food_curd", "food_protein"],
-  recent: []
+  recent: [],
+  myFoods: {}
 };
 
 const nutritionMeals = [
@@ -46,6 +487,1018 @@ const nutritionMeals = [
   { id: "dinner", name: "Ужин", icon: "🌇" },
   { id: "snack", name: "Перекус/Другое", icon: "🌙" }
 ];
+
+const NUTRITION_ICON_PRESETS = ["🍗", "🥩", "🐟", "🥚", "🥛", "🧀", "🍚", "🥔", "🍞", "🥣", "🍌", "🍎", "🍓", "🥦", "🥗", "🍲", "☕", "🥤", "🍫", "🍽️"];
+
+const LOCAL_NUTRITION_SEARCH_LIMIT = 24;
+
+function normalizeLocalCatalogFood(food = {}) {
+  const portionAmount = Number(food.defaultGram || food.defaultAmount || 100) || 100;
+  const basisUnit = food.basisUnit || "g";
+
+  return {
+    id: food.id || `local_${String(food.name || "").toLowerCase().replace(/\s+/g, "_")}`,
+    foodId: food.id || "",
+    name: food.name || "Продукт",
+    aliases: food.aliases || [],
+    brand: food.brand || "",
+    category: food.category || "",
+    source: food.source || "Локальная база",
+    sourceType: "local_catalog",
+    basisUnit,
+    portion: basisUnit === "ml" ? `${portionAmount} мл` : `${portionAmount} г`,
+    portionAmount,
+    defaultGram: portionAmount,
+    calories: Number(food.calories) || 0,
+    protein: Number(food.protein) || 0,
+    fat: Number(food.fat) || 0,
+    carbs: Number(food.carbs) || 0,
+    icon: food.emoji || food.icon || "🍽️",
+    emoji: food.emoji || food.icon || "🍽️",
+    portionTypes: food.portionTypes || []
+  };
+}
+
+function searchLocalNutritionFoods(query, limit = LOCAL_NUTRITION_SEARCH_LIMIT) {
+  return searchLocalNutritionCatalog(
+    query,
+    localNutritionFoods,
+    localNutritionPrefixIndex,
+    localNutritionExactIndex,
+    limit
+  ).map(normalizeLocalCatalogFood);
+}
+
+function mapNutritionAiResultToLocalFoods(aiFood, limit = 8) {
+  return mapAiFoodToLocalCatalog(
+    aiFood,
+    localNutritionFoods,
+    localNutritionPrefixIndex,
+    localNutritionExactIndex
+  ).slice(0, limit).map(normalizeLocalCatalogFood);
+}
+
+function mergeNutritionFoodResults(primary = [], secondary = [], limit = 40) {
+  const map = new Map();
+
+  [...primary, ...secondary].forEach((food) => {
+    const normalizedFood = normalizeNutritionFood(food);
+    const key = normalizedFood.id || normalizedFood.foodId || normalizedFood.name;
+    if (key && !map.has(key)) {
+      map.set(key, normalizedFood);
+    }
+  });
+
+  return Array.from(map.values()).slice(0, limit);
+}
+
+const WORKOUT_READINESS_OPTIONS = [
+  {
+    id: "excellent",
+    emoji: "😤",
+    title: "Отлично",
+    subtitle: "Можно добавить вес",
+    weightFactor: 1,
+    volumeText: "следующий шаг веса вверх"
+  },
+  {
+    id: "good",
+    emoji: "🙂",
+    title: "Нормально",
+    subtitle: "Работаем по плану",
+    weightFactor: 1,
+    volumeText: "вес без изменений"
+  },
+  {
+    id: "bad",
+    emoji: "😵",
+    title: "Плохо",
+    subtitle: "Снизим нагрузку",
+    weightFactor: 0.85,
+    volumeText: "минус 15% с шагом веса"
+  }
+];
+
+const STANDARD_GYM_WEIGHTS = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+  12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
+  32, 34, 36, 38, 40,
+  42.5, 45, 47.5, 50, 52.5, 55, 57.5, 60,
+  62.5, 65, 67.5, 70, 72.5, 75, 77.5, 80,
+  82.5, 85, 87.5, 90, 92.5, 95, 97.5, 100,
+  105, 110, 115, 120, 125, 130, 135, 140,
+  145, 150, 160, 170, 180, 190, 200
+];
+
+function getWorkoutReadinessOption(id) {
+  return WORKOUT_READINESS_OPTIONS.find((item) => item.id === id) || WORKOUT_READINESS_OPTIONS[1];
+}
+
+function roundToStandardGymWeight(value, direction = "nearest") {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue) || numericValue <= 0) return "";
+
+  const weights = STANDARD_GYM_WEIGHTS;
+  if (direction === "up") {
+    return weights.find((weight) => weight > numericValue) || weights[weights.length - 1];
+  }
+
+  if (direction === "down") {
+    return [...weights].reverse().find((weight) => weight <= numericValue) || weights[0];
+  }
+
+  return weights.reduce((closest, current) => (
+    Math.abs(current - numericValue) < Math.abs(closest - numericValue) ? current : closest
+  ), weights[0]);
+}
+
+function getAdjustedWorkoutWeight(weight, readinessId) {
+  const numericWeight = Number(String(weight || "").replace(",", "."));
+  if (!Number.isFinite(numericWeight) || numericWeight <= 0) return "";
+
+  const readiness = getWorkoutReadinessOption(readinessId);
+
+  if (readiness.id === "excellent") {
+    // Отлично: не проценты, а ровно следующий доступный шаг веса.
+    return roundToStandardGymWeight(numericWeight, "up");
+  }
+
+  if (readiness.id === "bad") {
+    // Плохо: минус 15% и округление вниз под доступный шаг веса.
+    return roundToStandardGymWeight(numericWeight * 0.85, "down");
+  }
+
+  // Нормально: сохраняем плановый вес без округления.
+  return String(weight).trim();
+}
+
+function parseWorkoutWeightValue(value) {
+  const numeric = Number(String(value || "").replace(",", "."));
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : 0;
+}
+
+function getBestProgressiveSetWeight(exerciseName, setIndex, history = []) {
+  let best = 0;
+
+  getAiHistoryItems(history).forEach((historyWorkout) => {
+    const exercise = (historyWorkout.exercises || []).find((item) => item.name === exerciseName);
+    if (!exercise?.sets?.length) return;
+
+    const set = exercise.sets[setIndex] || exercise.sets[exercise.sets.length - 1];
+    const actualWeight = parseWorkoutWeightValue(set?.weight);
+    const originalWeight = parseWorkoutWeightValue(set?.aiOriginalWeight);
+    const suggestedWeight = parseWorkoutWeightValue(set?.aiSuggestedWeight);
+    const protectedBase = Math.max(originalWeight, suggestedWeight);
+
+    // Only saved/completed workouts are in history. If workout was adapted down and actual weight is lower, do not let it reduce future suggestions.
+    const candidate = Math.max(actualWeight, protectedBase);
+
+    if (candidate > best) best = candidate;
+  });
+
+  return best;
+}
+
+function getAiWorkoutBaseWeight(exerciseName, set, setIndex, history = [], useHistoryWeight = true) {
+  const programWeight = parseWorkoutWeightValue(set?.aiOriginalWeight || set?.weight);
+  if (!useHistoryWeight) return programWeight;
+
+  const bestHistoryWeight = getBestProgressiveSetWeight(exerciseName, setIndex, history);
+
+  return Math.max(programWeight, bestHistoryWeight);
+}
+
+const POST_WORKOUT_FEEDBACK_OPTIONS = [
+  {
+    id: "good",
+    emoji: "🔥",
+    title: "Хорошо",
+    subtitle: "Можно прогрессировать",
+    advice: "Отличная работа. Продолжай в том же духе — AI сможет постепенно повышать нагрузку."
+  },
+  {
+    id: "normal",
+    emoji: "🙂",
+    title: "Нормально",
+    subtitle: "Стабильная тренировка",
+    advice: "Хорошая стабильная работа. Не обязательно прогрессировать каждую тренировку."
+  },
+  {
+    id: "bad",
+    emoji: "😵",
+    title: "Плохо",
+    subtitle: "Нужно восстановление",
+    advice: "Сделай акцент на сне, воде, углеводах и восстановлении. Следующую тренировку начни легче."
+  }
+];
+
+const AI_COACH_FEATURES = [
+  {
+    id: "liveCoach",
+    icon: "⚡",
+    title: "AI-помощник тренировки",
+    subtitle: "Подсказки перед и во время тренировки"
+  },
+  {
+    id: "recovery",
+    icon: "🧘",
+    title: "Восстановление",
+    subtitle: "Оценка отдыха и готовности"
+  },
+  {
+    id: "muscleProgram",
+    icon: "🎯",
+    title: "Программа под мышцы",
+    subtitle: "Что качать следующим"
+  },
+  {
+    id: "nutritionPlan",
+    icon: "🍽️",
+    title: "План питания",
+    subtitle: "Калории, белки и фокус дня"
+  },
+  {
+    id: "motivation",
+    icon: "🔥",
+    title: "Мотивация",
+    subtitle: "Короткий настрой перед залом"
+  },
+  {
+    id: "progress",
+    icon: "📈",
+    title: "Прогресс",
+    subtitle: "Анализ истории тренировок"
+  },
+  {
+    id: "overload",
+    icon: "🛡️",
+    title: "Перегрузка мышц",
+    subtitle: "Где стоит снизить нагрузку"
+  },
+  {
+    id: "swap",
+    icon: "🔁",
+    title: "Автозамена упражнений",
+    subtitle: "Замены без потери смысла"
+  }
+];
+
+const AI_MUSCLE_RULES = [
+  { muscle: "Ноги", keywords: ["ног", "жим ног", "выпад", "румын", "разгибание ног", "присед", "тяга"] },
+  { muscle: "Спина", keywords: ["тяга", "спин", "верхнего блока", "т-грифа", "греб", "поясу"] },
+  { muscle: "Грудь", keywords: ["груд", "жим лёжа", "жим лежа", "сведение", "гантелей лёжа", "смит"] },
+  { muscle: "Плечи", keywords: ["плеч", "дельт", "отведение", "вертикальный жим", "жим в тренаж"] },
+  { muscle: "Руки", keywords: ["сгибание", "разгибание рук", "бицеп", "трицеп", "скотт", "кроссовер"] },
+  { muscle: "Пресс", keywords: ["пресс", "скручив"] }
+];
+
+function getAiExerciseMuscles(name = "") {
+  const lowerName = String(name).toLowerCase();
+  const muscles = AI_MUSCLE_RULES
+    .filter((rule) => rule.keywords.some((keyword) => lowerName.includes(keyword)))
+    .map((rule) => rule.muscle);
+
+  return muscles.length ? [...new Set(muscles)] : ["Общая нагрузка"];
+}
+
+function getExerciseMovementHint(name = "") {
+  const lowerName = String(name).toLowerCase();
+
+  if (/(тяга|греб|подтяг)/.test(lowerName)) return "тяговое движение";
+  if (/(жим|отжим)/.test(lowerName)) return "жимовое движение";
+  if (/(присед|выпад|разгибание ног|сгибание ног)/.test(lowerName)) return "движение для ног";
+  if (/(сгибание|разгибание рук|бицеп|трицеп)/.test(lowerName)) return "изолированное движение";
+  if (/(скручив|пресс|планк)/.test(lowerName)) return "упражнение для корпуса";
+
+  return "рабочий подход";
+}
+
+function getAiHistoryItems(history = []) {
+  return (Array.isArray(history) ? history : [])
+    .map((item) => ({
+      ...item,
+      parsedDate: new Date(item.date || item.createdAt || Date.now())
+    }))
+    .filter((item) => !Number.isNaN(item.parsedDate.getTime()))
+    .sort((a, b) => b.parsedDate - a.parsedDate);
+}
+
+function getAiMuscleLoad(history = [], days = 14) {
+  const now = Date.now();
+  const dayMs = 24 * 60 * 60 * 1000;
+  const load = {};
+
+  getAiHistoryItems(history).forEach((workout) => {
+    const ageDays = Math.max(0, Math.round((now - workout.parsedDate.getTime()) / dayMs));
+    if (ageDays > days) return;
+
+    (workout.exercises || []).forEach((exercise) => {
+      const setCount = Array.isArray(exercise.sets) ? exercise.sets.length : 0;
+      getAiExerciseMuscles(exercise.name).forEach((muscle) => {
+        load[muscle] = (load[muscle] || 0) + Math.max(1, setCount);
+      });
+    });
+  });
+
+  return load;
+}
+
+function getAiNutritionTotalsForToday(nutrition = {}) {
+  const day = nutrition.days?.[todayNutritionKey()] || makeEmptyNutritionDay();
+  return (day.foods || []).reduce(
+    (sum, item) => ({
+      calories: sum.calories + (Number(item.calories) || 0),
+      protein: sum.protein + (Number(item.protein) || 0),
+      fat: sum.fat + (Number(item.fat) || 0),
+      carbs: sum.carbs + (Number(item.carbs) || 0)
+    }),
+    { calories: 0, protein: 0, fat: 0, carbs: 0 }
+  );
+}
+
+function buildAiCoachResult(featureId, { history = [], nutrition = defaultNutritionState, plan = starterPlan } = {}) {
+  const historyItems = getAiHistoryItems(history);
+  const lastWorkout = historyItems[0];
+  const load14 = getAiMuscleLoad(historyItems, 14);
+  const load7 = getAiMuscleLoad(historyItems, 7);
+  const sortedLoad = Object.entries(load14).sort((a, b) => b[1] - a[1]);
+  const heavyMuscle = sortedLoad[0]?.[0] || "нет данных";
+  const lightMuscle = sortedLoad.at(-1)?.[0] || "нет данных";
+  const lastWorkoutDays = lastWorkout
+    ? Math.max(0, Math.round((Date.now() - lastWorkout.parsedDate.getTime()) / (24 * 60 * 60 * 1000)))
+    : null;
+  const todayTotals = getAiNutritionTotalsForToday(nutrition);
+  const goals = nutrition.goals || defaultNutritionState.goals;
+  const aiNutritionDayModel = buildAiNutritionDayModel(nutrition, null, history);
+  const aiNutritionBaseline = getAiNutritionHistoryBaseline();
+  const proteinLeft = Math.max(0, Math.round((Number(goals.protein) || 0) - todayTotals.protein));
+  const caloriesLeft = Math.max(0, Math.round((Number(goals.calories) || 0) - todayTotals.calories));
+  const workoutsCount = historyItems.length;
+  const plannedExercises = (plan.workouts || []).flatMap((workout) => workout.exercises || []);
+  const swapBase = plannedExercises.find((exercise) => getAiExerciseMuscles(exercise.name).includes(heavyMuscle)) || plannedExercises[0];
+
+  const baseStats = {
+    workoutsCount,
+    lastWorkoutText: lastWorkoutDays === null ? "нет истории" : `${lastWorkoutDays} дн. назад`,
+    heavyMuscle,
+    caloriesLeft
+  };
+
+  const results = {
+    liveCoach: {
+      title: "AI-помощник на сегодня",
+      status: lastWorkoutDays === null ? "Нужна первая история" : lastWorkoutDays <= 1 ? "Лёгкий контроль" : "Можно работать",
+      score: lastWorkoutDays === null ? 45 : lastWorkoutDays <= 1 ? 68 : 86,
+      bullets: [
+        lastWorkoutDays === null
+          ? "После 1–2 сохранённых тренировок подсказки станут точнее."
+          : `Последняя тренировка была ${baseStats.lastWorkoutText}.`,
+        heavyMuscle !== "нет данных"
+          ? `Самая нагруженная зона за 14 дней: ${heavyMuscle}.`
+          : "Пока мало данных по мышечным группам.",
+        "Во время тренировки держи 1–2 повтора в запасе и не гонись за весом в первом подходе."
+      ],
+      actions: [
+        "Начни с разминочного подхода 50–60% от рабочего веса.",
+        "Если техника плывёт — снизь вес на 5–10%.",
+        "Фиксируй реальные веса, чтобы AI точнее считал прогресс."
+      ]
+    },
+    recovery: {
+      title: "AI-анализ восстановления",
+      status: lastWorkoutDays === null ? "Нет данных" : lastWorkoutDays <= 1 ? "Низкое восстановление" : lastWorkoutDays <= 3 ? "Нормально" : "Готов к нагрузке",
+      score: lastWorkoutDays === null ? 40 : lastWorkoutDays <= 1 ? 58 : lastWorkoutDays <= 3 ? 78 : 90,
+      bullets: [
+        lastWorkoutDays === null ? "История тренировок пока пустая." : `Последняя тренировка: ${baseStats.lastWorkoutText}.`,
+        Object.keys(load7).length ? `За 7 дней больше всего работали: ${Object.entries(load7).sort((a, b) => b[1] - a[1])[0][0]}.` : "За неделю нагрузка не найдена.",
+        proteinLeft > 0 ? `По белку сегодня осталось примерно ${proteinLeft} г.` : "Белок сегодня выглядит закрытым."
+      ],
+      actions: [
+        lastWorkoutDays !== null && lastWorkoutDays <= 1 ? "Сегодня не делай отказные подходы." : "Можно планировать обычную силовую работу.",
+        "Добавь 7–10 минут разминки и 1 лёгкий подход на первое упражнение.",
+        "Если сон/энергия плохие — оставь RPE около 7/10."
+      ]
+    },
+    muscleProgram: {
+      title: "AI-подбор программы под мышцы",
+      status: lightMuscle !== "нет данных" ? `Фокус: ${lightMuscle}` : "Нужна история",
+      score: workoutsCount ? 82 : 46,
+      bullets: [
+        lightMuscle !== "нет данных" ? `Меньше всего нагрузки за 14 дней получила зона: ${lightMuscle}.` : "Пока мало сохранённых тренировок для точного выбора.",
+        heavyMuscle !== "нет данных" ? `${heavyMuscle} лучше не перегружать в следующей тренировке.` : "После истории AI будет сравнивать мышцы.",
+        `В текущем плане найдено упражнений: ${plannedExercises.length}.`
+      ],
+      actions: [
+        lightMuscle !== "нет данных" ? `Следующую тренировку начни с акцента на ${lightMuscle}.` : "Сохрани 2–3 тренировки для персонального подбора.",
+        "Оставь 4–6 рабочих упражнений без лишнего объёма.",
+        "На отстающую группу дай 1 дополнительный качественный подход."
+      ]
+    },
+    nutritionPlan: {
+      title: "AI-план питания",
+      status: `${aiNutritionDayModel.score}/10 · база ${aiNutritionBaseline.average.calories} ккал`,
+      score: Math.round(aiNutritionDayModel.score * 10),
+      bullets: [
+        aiNutritionDayModel.summary,
+        `Твоя база март–апрель: ${aiNutritionBaseline.average.calories} ккал · Б ${Math.round(aiNutritionBaseline.average.protein)} · Ж ${Math.round(aiNutritionBaseline.average.fat)} · У ${Math.round(aiNutritionBaseline.average.carbs)}.`,
+        `Сегодня получено: ${Math.round(todayTotals.calories)} ккал из ${goals.calories}.`
+      ],
+      actions: [
+        aiNutritionDayModel.adaptiveAdvice,
+        aiNutritionDayModel.weeklyText,
+        proteinLeft > 0 ? `Добери белок: примерно ${proteinLeft} г.` : "Белок закрыт — держи баланс по жирам и углеводам."
+      ]
+    },
+    motivation: {
+      title: "AI-мотивация перед тренировкой",
+      status: "Готов к залу",
+      score: 92,
+      bullets: [
+        "Сегодня задача не доказать всем, а сделать свою работу чисто.",
+        "Три качественных подхода лучше, чем хаотичная гонка за весом.",
+        "Запиши каждый рабочий вес — это топливо для прогресса."
+      ],
+      actions: [
+        "Разминка → первый рабочий подход → контроль техники.",
+        "Не пропускай последнее упражнение, но не доводи технику до развала.",
+        "После тренировки сохрани результат сразу."
+      ]
+    },
+    progress: {
+      title: "AI-анализ прогресса",
+      status: workoutsCount ? `${workoutsCount} тренировок в истории` : "Нет истории",
+      score: Math.min(94, 42 + workoutsCount * 8),
+      bullets: [
+        workoutsCount ? `Сохранённых тренировок: ${workoutsCount}.` : "История пока пустая.",
+        lastWorkout ? `Последняя тренировка: ${lastWorkout.workout || "тренировка"}.` : "Сохрани тренировку, чтобы увидеть динамику.",
+        sortedLoad.length ? `Главный объём сейчас идёт в: ${heavyMuscle}.` : "AI пока не видит распределение нагрузки."
+      ],
+      actions: [
+        "Следи за ростом веса только при сохранении техники.",
+        "Если 2 тренировки подряд легко — добавь 2,5–5 кг или 1–2 повтора.",
+        "Не меняй программу слишком часто: дай ей 3–4 недели данных."
+      ]
+    },
+    overload: {
+      title: "AI-оценка перегрузки мышц",
+      status: sortedLoad[0]?.[1] >= 18 ? `Риск: ${heavyMuscle}` : "Риск умеренный",
+      score: sortedLoad[0]?.[1] >= 18 ? 62 : 84,
+      bullets: [
+        sortedLoad.length ? `${heavyMuscle}: ${sortedLoad[0][1]} подходов за 14 дней.` : "Нет данных для оценки перегрузки.",
+        sortedLoad[1] ? `${sortedLoad[1][0]}: ${sortedLoad[1][1]} подходов.` : "Нужно больше истории для сравнения.",
+        "AI считает риск по частоте и объёму, без медицинской диагностики."
+      ],
+      actions: [
+        sortedLoad[0]?.[1] >= 18 ? `На ${heavyMuscle} сегодня убери 1–2 подхода.` : "Текущий объём выглядит адекватно.",
+        "Боль в суставе — сигнал заменить упражнение, не терпеть.",
+        "Сохраняй веса и подходы, чтобы оценка была точнее."
+      ]
+    },
+    swap: {
+      title: "AI-автозамена упражнений",
+      status: swapBase ? "Замены готовы" : "Нет упражнений",
+      score: swapBase ? 80 : 40,
+      bullets: [
+        swapBase ? `Базовое упражнение для замены: ${swapBase.name}.` : "В плане не найдены упражнения.",
+        heavyMuscle !== "нет данных" ? `Если устала зона ${heavyMuscle}, выбирай более лёгкий аналог.` : "После истории замены будут точнее.",
+        "Замена должна сохранять мышечную группу, но снижать риск и дискомфорт."
+      ],
+      actions: [
+        "Жим → тренажёр/гантели с меньшим весом.",
+        "Тяга → вариант с опорой грудью или блочный тренажёр.",
+        "Ноги → тренажёр вместо свободного веса, если устала поясница."
+      ]
+    }
+  };
+
+  return results[featureId] || results.liveCoach;
+}
+
+const AI_NUTRITION_HISTORY_BASELINE = {
+  source: "FatSecret · март–апрель 2026",
+  months: [
+    {
+      id: "2026-03",
+      label: "Март 2026",
+      days: 31,
+      average: { calories: 2419, fat: 67.42, carbs: 244.52, protein: 212.15 },
+      meals: {
+        breakfast: { calories: 926, fat: 32.31, carbs: 88.08, protein: 73.98 },
+        lunch: { calories: 675, fat: 16.61, carbs: 75.43, protein: 56.74 },
+        dinner: { calories: 528, fat: 14.26, carbs: 51.44, protein: 47.24 },
+        snack: { calories: 290, fat: 4.24, carbs: 29.57, protein: 34.2 }
+      }
+    },
+    {
+      id: "2026-04",
+      label: "Апрель 2026",
+      days: 30,
+      average: { calories: 2329, fat: 65.27, carbs: 234.86, protein: 208.26 },
+      meals: {
+        breakfast: { calories: 951, fat: 31.74, carbs: 87.94, protein: 81.41 },
+        lunch: { calories: 777, fat: 20.94, carbs: 81.72, protein: 68.38 },
+        dinner: { calories: 442, fat: 9.74, carbs: 47.52, protein: 42.52 },
+        snack: { calories: 159, fat: 2.84, carbs: 17.68, protein: 15.96 }
+      }
+    }
+  ],
+  average: { calories: 2374, fat: 66.35, carbs: 239.69, protein: 210.21 },
+  meals: {
+    breakfast: { calories: 939, fat: 32.03, carbs: 88.01, protein: 77.7 },
+    lunch: { calories: 726, fat: 18.78, carbs: 78.58, protein: 62.56 },
+    dinner: { calories: 485, fat: 12.0, carbs: 49.48, protein: 44.88 },
+    snack: { calories: 225, fat: 3.54, carbs: 23.63, protein: 25.08 }
+  },
+  patterns: [
+    "Белок исторически высокий: около 210 г/день.",
+    "Калории в среднем держались около 2370 ккал/день.",
+    "Самый плотный приём пищи — завтрак, дальше идёт обед.",
+    "Ужин обычно легче завтрака и обеда.",
+    "Частые продукты: творог, яйца, Флэт Уайт, Exponenta/High-Pro, бананы, хлеб fitness, лёгкий сыр, индейка/вырезка, овощи."
+  ]
+};
+
+function getAiNutritionHistoryBaseline() {
+  return AI_NUTRITION_HISTORY_BASELINE;
+}
+
+function getAiNutritionTargetFromHistory(nutrition = defaultNutritionState) {
+  const goals = nutrition.goals || defaultNutritionState.goals;
+  const historyAverage = getAiNutritionHistoryBaseline().average;
+
+  return {
+    calories: Number(goals.calories) || historyAverage.calories,
+    protein: Math.max(Number(goals.protein) || 0, Math.round(historyAverage.protein * 0.82)),
+    fat: Number(goals.fat) || Math.round(historyAverage.fat),
+    carbs: Number(goals.carbs) || Math.round(historyAverage.carbs)
+  };
+}
+
+function buildAiNutritionDayModel(nutrition = defaultNutritionState, selectedDay = null, history = []) {
+  const day = selectedDay || nutrition.days?.[todayNutritionKey()] || makeEmptyNutritionDay();
+  const goals = nutrition.goals || defaultNutritionState.goals;
+  const baseline = getAiNutritionHistoryBaseline();
+  const totals = (day.foods || []).reduce(
+    (sum, item) => ({
+      calories: sum.calories + (Number(item.calories) || 0),
+      protein: sum.protein + (Number(item.protein) || 0),
+      fat: sum.fat + (Number(item.fat) || 0),
+      carbs: sum.carbs + (Number(item.carbs) || 0)
+    }),
+    { calories: 0, protein: 0, fat: 0, carbs: 0 }
+  );
+
+  const left = {
+    calories: Math.round((Number(goals.calories) || baseline.average.calories) - totals.calories),
+    protein: Math.round((Number(goals.protein) || baseline.average.protein) - totals.protein),
+    fat: Math.round((Number(goals.fat) || baseline.average.fat) - totals.fat),
+    carbs: Math.round((Number(goals.carbs) || baseline.average.carbs) - totals.carbs)
+  };
+
+  const calorieProgress = (totals.calories / Math.max(1, Number(goals.calories) || baseline.average.calories)) * 100;
+  const proteinProgress = (totals.protein / Math.max(1, Number(goals.protein) || baseline.average.protein)) * 100;
+  const fatProgress = (totals.fat / Math.max(1, Number(goals.fat) || baseline.average.fat)) * 100;
+  const carbsProgress = (totals.carbs / Math.max(1, Number(goals.carbs) || baseline.average.carbs)) * 100;
+
+  let score = 10;
+  if (totals.calories === 0) score = 6.2;
+  if (calorieProgress > 110) score -= 1.4;
+  if (calorieProgress < 65 && totals.calories > 0) score -= 1.0;
+  if (proteinProgress < 70) score -= 1.2;
+  if (fatProgress > 115) score -= 1.0;
+  if (carbsProgress < 55 && totals.calories > 0) score -= 0.7;
+  score = Math.max(4.8, Math.min(9.6, Math.round(score * 10) / 10));
+
+  const badges = [];
+  if (proteinProgress < 75) badges.push({ type: "warning", icon: "⚠️", text: "Мало" });
+  else badges.push({ type: "good", icon: "💪", text: "Белок хорошо" });
+
+  if (fatProgress > 110) badges.push({ type: "warning", icon: "🧈", text: "Перебор жиров" });
+  if (calorieProgress >= 78 && calorieProgress <= 98) badges.push({ type: "good", icon: "🔥", text: "Хороший дефицит" });
+  if (carbsProgress < 58) badges.push({ type: "info", icon: "🍚", text: "Мало еды до тренировки" });
+  if (totals.calories === 0) badges.push({ type: "info", icon: "📊", text: "Жду первый приём" });
+
+  const baselineDelta = Math.round(totals.calories - baseline.average.calories);
+  const weeklyText = baselineDelta < -250
+    ? "Ты заметно ниже своей базы марта–апреля. Если вес падает слишком быстро — добавь 100–150 ккал."
+    : baselineDelta > 250
+      ? "Сегодня выше твоей базы марта–апреля. Если цель похудение — остаток дня лучше сделать легче."
+      : "Сегодня близко к твоей реальной базе марта–апреля. Коррекцию калорий можно делать плавно.";
+
+  const adaptiveAdvice = fatProgress > 110
+    ? "На остаток дня меньше сыра, орехов, масла и жирного мяса. Лучше белок + углеводы: творог/курица + рис/картофель/овощи."
+    : proteinProgress < 75
+      ? "На остаток дня добери белок: творог, Exponenta/High-Pro, курица, рыба или индейка."
+      : carbsProgress < 58
+        ? "Перед тренировкой добавь лёгкие углеводы: банан, рис, овсянка или хлеб fitness."
+        : "День идёт ровно. Дальше держи простую еду и не перегружай жиры вечером.";
+
+  return {
+    score,
+    badges: badges.slice(0, 4),
+    totals,
+    left,
+    baseline,
+    baselineDelta,
+    weeklyText,
+    adaptiveAdvice,
+    summary: `${score}/10 — ${proteinProgress >= 75 ? "белок хорошо" : "белка мало"}, ${fatProgress > 110 ? "жиров много" : carbsProgress < 58 ? "углеводов мало" : "баланс нормальный"}.`,
+    target: getAiNutritionTargetFromHistory(nutrition),
+    hasHistoryData: true
+  };
+}
+
+function hasRequiredAiNutritionProfileFields(profile = {}) {
+  const weight = Number(String(profile?.weight || "").replace(",", "."));
+  const height = Number(String(profile?.height || "").replace(",", "."));
+  const age = Number(String(profile?.age || "").replace(",", "."));
+  const sex = String(profile?.sex || "").trim();
+
+  return (
+    Number.isFinite(weight) &&
+    weight > 0 &&
+    Number.isFinite(height) &&
+    height > 0 &&
+    Number.isFinite(age) &&
+    age > 0 &&
+    (sex === "male" || sex === "female")
+  );
+}
+
+function getAiNutritionGoalLabel(goal) {
+  if (goal === "mass") return "Набор массы";
+  if (goal === "cut") return "Похудение";
+  if (goal === "dry") return "Сушка";
+  if (goal === "maintain") return "Поддержка";
+  if (goal === "recomp") return "Рекомп.";
+  return "Рекомпозиция";
+}
+
+function getAiNutritionGoalShort(goal) {
+  if (goal === "mass") return "набор";
+  if (goal === "cut") return "похудение";
+  if (goal === "dry") return "сушка";
+  if (goal === "maintain") return "поддержка";
+  if (goal === "recomp") return "рекомпозиция";
+  return "рекомпозиция";
+}
+
+function collectAiNutritionFoodStats(nutrition = defaultNutritionState) {
+  const counts = {};
+  Object.values(nutrition.days || {}).forEach((day) => {
+    (day.foods || []).forEach((food) => {
+      const name = getShortFoodName(food.name || "");
+      if (!name) return;
+      counts[name] = (counts[name] || 0) + 1;
+    });
+  });
+
+  Object.values(nutrition.myFoods || {}).forEach((food) => {
+    const name = getShortFoodName(food.name || "");
+    if (!name) return;
+    counts[name] = Math.max(counts[name] || 0, Number(food.useCount) || 1);
+  });
+
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8)
+    .map(([name]) => name);
+}
+
+function getAiNutritionWeightTrend(nutrition = defaultNutritionState) {
+  const weights = Object.entries(nutrition.days || {})
+    .map(([key, day]) => ({ key, weight: Number(String(day?.weight || "").replace(",", ".")) }))
+    .filter((item) => Number.isFinite(item.weight) && item.weight > 0)
+    .sort((a, b) => a.key.localeCompare(b.key));
+
+  if (weights.length < 2) {
+    return { status: "нет данных", delta: 0, text: "Добавь 2–3 замера веса, и AI начнёт делать недельную коррекцию." };
+  }
+
+  const first = weights[0];
+  const last = weights[weights.length - 1];
+  const delta = Math.round((last.weight - first.weight) * 10) / 10;
+  const status = delta > 0.4 ? "растёт" : delta < -0.4 ? "падает" : "стоит";
+
+  return {
+    status,
+    delta,
+    text: `Вес ${status}: ${delta > 0 ? "+" : ""}${delta} кг за период записей.`
+  };
+}
+
+function getAiNutritionCurrentWeek(plan) {
+  if (!plan?.createdAt) return 1;
+  const created = new Date(plan.createdAt);
+  if (Number.isNaN(created.getTime())) return 1;
+  const diffDays = Math.max(0, Math.floor((Date.now() - created.getTime()) / (24 * 60 * 60 * 1000)));
+  return Math.min(4, Math.floor(diffDays / 7) + 1);
+}
+
+const AI_NUTRITION_WEEK_DAYS = [
+  { id: "mon", short: "Пн", label: "Понедельник" },
+  { id: "tue", short: "Вт", label: "Вторник" },
+  { id: "wed", short: "Ср", label: "Среда" },
+  { id: "thu", short: "Чт", label: "Четверг" },
+  { id: "fri", short: "Пт", label: "Пятница" },
+  { id: "sat", short: "Сб", label: "Суббота" },
+  { id: "sun", short: "Вс", label: "Воскресенье" }
+];
+
+function getTodayAiNutritionWeekDayId(date = new Date()) {
+  const jsDay = date.getDay();
+  return AI_NUTRITION_WEEK_DAYS[jsDay === 0 ? 6 : jsDay - 1]?.id || "mon";
+}
+
+function getAiNutritionTrainingDays(profile = {}) {
+  return Array.isArray(profile?.trainingDays) ? profile.trainingDays : [];
+}
+
+function isAiNutritionTrainingDay(profile = {}, date = new Date()) {
+  return getAiNutritionTrainingDays(profile).includes(getTodayAiNutritionWeekDayId(date));
+}
+
+function getAiNutritionDayMacros(baseMacros, profile = {}, date = new Date()) {
+  const macros = {
+    calories: Math.round(Number(baseMacros?.calories) || 0),
+    protein: Math.round(Number(baseMacros?.protein) || 0),
+    fat: Math.round(Number(baseMacros?.fat) || 0),
+    carbs: Math.round(Number(baseMacros?.carbs) || 0)
+  };
+
+  if (!isAiNutritionTrainingDay(profile, date)) {
+    return { ...macros, isTrainingDay: false };
+  }
+
+  const goal = profile?.goal || "recomp";
+  const calorieBoost = goal === "mass" ? 180 : goal === "dry" ? 90 : goal === "cut" ? 80 : goal === "maintain" ? 70 : 130;
+  const carbsBoost = goal === "dry" ? 25 : goal === "cut" ? 20 : goal === "maintain" ? 18 : 35;
+
+  return {
+    ...macros,
+    isTrainingDay: true,
+    calories: macros.calories + calorieBoost,
+    carbs: macros.carbs + carbsBoost
+  };
+}
+
+function getAiNutritionTrainingDayAdvice(isTrainingDay, goal = "recomp") {
+  if (!isTrainingDay) {
+    return "День без тренировки: держи обычные КБЖУ, не перегружай жиры вечером и оставь питание ровным.";
+  }
+
+  if (goal === "dry") {
+    return "Тренировочный день на сушке: белок держим высоким, углеводы лучше поставить до/после тренировки, жиры не повышать.";
+  }
+
+  if (goal === "cut") {
+    return "Тренировочный день в дефиците: добавь часть углеводов до/после зала, чтобы тренировка не просела.";
+  }
+
+  if (goal === "mass") {
+    return "Тренировочный день на наборе: держи небольшой профицит и добавь углеводы вокруг тренировки.";
+  }
+
+  if (goal === "maintain") {
+    return "Тренировочный день на поддержке: держи калории ровно, небольшой углеводный акцент до/после зала без общего профицита.";
+  }
+
+  return "Тренировочный день на рекомпозиции: белок выше, углеводы вокруг тренировки, лёгкий дефицит в дни отдыха.";
+}
+
+function calculateAiNutritionMacros(calories, weight, goal = "recomp") {
+  const safeCalories = Math.max(1400, Math.round(Number(calories) || 2200));
+  const safeWeight = Math.max(45, Number(weight) || 80);
+  const proteinMultiplier = goal === "dry" ? 2.35 : goal === "cut" ? 2.15 : goal === "mass" ? 1.9 : goal === "maintain" ? 1.8 : 2.15;
+  const fatMultiplier = goal === "dry" ? 0.72 : goal === "cut" ? 0.75 : goal === "mass" ? 0.85 : goal === "maintain" ? 0.85 : 0.78;
+  const protein = Math.round(safeWeight * proteinMultiplier);
+  const fat = Math.round(safeWeight * fatMultiplier);
+  const carbs = Math.max(goal === "dry" ? 100 : 80, Math.round((safeCalories - protein * 4 - fat * 9) / 4));
+
+  return { calories: safeCalories, protein, fat, carbs };
+}
+
+function getAiNutritionActivityMultiplier(activity = "medium") {
+  if (activity === "low") return 1.32;
+  if (activity === "high") return 1.62;
+  return 1.48;
+}
+
+function calculateAiNutritionBmr({ weight = 80, height = 180, age = 30, sex = "male" } = {}) {
+  const safeWeight = Math.max(35, Number(weight) || 80);
+  const safeHeight = Math.max(120, Number(height) || 180);
+  const safeAge = Math.max(14, Number(age) || 30);
+
+  return Math.round(10 * safeWeight + 6.25 * safeHeight - 5 * safeAge + (sex === "female" ? -161 : 5));
+}
+
+function calculatePersonalAiNutritionCalories(profile = {}, nutrition = defaultNutritionState) {
+  const baseline = getAiNutritionHistoryBaseline();
+  const weight = Number(profile?.weight) || 80;
+  const height = Number(profile?.height) || 180;
+  const age = Number(profile?.age) || 30;
+  const sex = profile?.sex || "male";
+  const activity = profile?.activity || "medium";
+  const goal = profile?.goal || "recomp";
+
+  const bmr = calculateAiNutritionBmr({ weight, height, age, sex });
+  const maintenance = Math.round(bmr * getAiNutritionActivityMultiplier(activity));
+  const historyAverage = Number(baseline.average.calories) || maintenance;
+
+  // History is useful, but personal body data should be the main base for new users.
+  const personalizedBase = Math.round(maintenance * 0.72 + historyAverage * 0.28);
+
+  if (goal === "mass") return Math.round(personalizedBase + 220);
+  if (goal === "cut") return Math.round(personalizedBase - 320);
+  if (goal === "dry") return Math.round(personalizedBase - 180);
+  if (goal === "maintain") return Math.round(personalizedBase);
+  return Math.round(personalizedBase - 120);
+}
+
+function getAiNutritionActivityLabel(activity = "medium") {
+  if (activity === "low") return "низкая активность";
+  if (activity === "high") return "высокая активность";
+  return "средняя активность";
+}
+
+function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, profile = null, history = [], previousPlan = null) {
+  const baseline = getAiNutritionHistoryBaseline();
+  const goals = nutrition.goals || defaultNutritionState.goals;
+  const weight = Number(profile?.weight) || 80;
+  const height = Number(profile?.height) || 180;
+  const age = Number(profile?.age) || 30;
+  const sex = profile?.sex || "male";
+  const goal = profile?.goal || "recomp";
+  const trainingDays = getAiNutritionTrainingDays(profile);
+  const activity = profile?.activity || "medium";
+  const baseFromHistory = Number(baseline.average.calories) || 2374;
+  const bmr = calculateAiNutritionBmr({ weight, height, age, sex });
+  const estimatedMaintenance = Math.round(bmr * getAiNutritionActivityMultiplier(activity));
+  const personalStartCalories = calculatePersonalAiNutritionCalories(profile, nutrition);
+  const previousStartCalories = Number(previousPlan?.start?.calories || previousPlan?.weeks?.[0]?.calories);
+  const sameGoalAsPrevious = previousPlan?.profile?.goal === goal;
+
+  // Personalized plan: body metrics + activity + goal are the source of truth.
+  // Old nutrition.goals / old calorieAnchor must not keep all users on the same calories.
+  const currentGoal = personalStartCalories;
+
+  let startCalories = personalStartCalories;
+
+  // Only protect against accidental repeated cuts on refresh.
+  // If profile data changed, the personal calculation wins.
+  const sameBodyProfile =
+    String(previousPlan?.profile?.weight || "") === String(profile?.weight || "") &&
+    String(previousPlan?.profile?.height || "") === String(profile?.height || "") &&
+    String(previousPlan?.profile?.age || "") === String(profile?.age || "") &&
+    String(previousPlan?.profile?.sex || "") === String(sex) &&
+    String(previousPlan?.profile?.activity || "medium") === String(activity);
+
+  if (sameGoalAsPrevious && sameBodyProfile && previousStartCalories > 0 && goal !== "mass") {
+    startCalories = Math.max(startCalories, previousStartCalories);
+  }
+
+  startCalories = Math.max(goal === "dry" ? 1800 : 1600, startCalories);
+
+  // Protection: refresh must not use already AI-reduced calories as a new base.
+  // If the goal did not change, do not auto-cut below the previous week-1 plan.
+  if (sameGoalAsPrevious && previousStartCalories > 0 && goal !== "mass") {
+    startCalories = Math.max(startCalories, previousStartCalories);
+  }
+
+  const weekSteps = goal === "mass"
+    ? [0, 100, 200, 250]
+    : goal === "cut"
+      ? [0, -75, -125, -150]
+      : goal === "dry"
+        ? [0, -50, -75, -100]
+        : goal === "maintain"
+          ? [0, 0, 0, 0]
+          : [0, -25, -50, -50];
+  const weeks = weekSteps.map((step, index) => {
+    const macros = calculateAiNutritionMacros(startCalories + step, weight, goal);
+    const trainingMacros = getAiNutritionDayMacros(macros, { goal, trainingDays }, new Date());
+    return {
+      week: index + 1,
+      label: `${index + 1} неделя`,
+      ...macros,
+      trainingDay: {
+        calories: trainingMacros.calories,
+        protein: trainingMacros.protein,
+        fat: trainingMacros.fat,
+        carbs: trainingMacros.carbs
+      },
+      focus: index === 0
+        ? "закрепить стартовые КБЖУ"
+        : index === 1
+          ? "сравнить вес и среднюю калорийность"
+          : index === 2
+            ? "мягко скорректировать калории"
+            : "оценить прогресс и обновить план"
+    };
+  });
+
+  const weightTrend = getAiNutritionWeightTrend(nutrition);
+  const frequentFoods = collectAiNutritionFoodStats(nutrition);
+  const workoutsCount = getAiHistoryItems(history).length;
+  const currentWeek = weeks[0];
+
+  return {
+    id: `ai_nutrition_${Date.now()}`,
+    version: 1,
+    createdAt: new Date().toISOString(),
+    calorieAnchor: currentGoal,
+    personalMaintenance: estimatedMaintenance,
+    personalBmr: bmr,
+    activityLabel: getAiNutritionActivityLabel(activity),
+    profile: {
+      weight: String(profile?.weight || ""),
+      height: String(profile?.height || ""),
+      age: String(profile?.age || ""),
+      sex,
+      activity,
+      goal,
+      trainingDays
+    },
+    goalLabel: getAiNutritionGoalLabel(goal),
+    start: currentWeek,
+    weeks,
+    baseline,
+    frequentFoods,
+    workoutsCount,
+    weightTrend,
+    warnings: [
+      goal === "dry"
+        ? "Сушка: дефицит мягкий, белок выше, жиры не режем в ноль, углеводы держим вокруг тренировки."
+        : goal === "cut"
+          ? "Не режь калории резко: белок держим высоким, жиры не опускаем слишком низко."
+          : "Не повышай калории слишком быстро: лучше +100–150 ккал и контроль веса.",
+      "Обновление и пересоздание плана не режут калории повторно: снижение только после реального плато веса.",
+      "Если тренировки тяжёлые — углеводы лучше держать вокруг тренировки."
+    ],
+    comment: goal === "mass"
+      ? "План построен индивидуально по весу, росту, возрасту, полу, активности и цели: плавный профицит для набора."
+      : goal === "dry"
+        ? "План построен индивидуально под сушку: умеренный дефицит, высокий белок и энергия для тренировок."
+        : goal === "cut"
+          ? "План построен индивидуально: аккуратный дефицит без провала и резкого среза калорий."
+          : "План построен индивидуально для поддержки/рекомпозиции: калории близко к личной норме и акцент на стабильность."
+  };
+}
+
+const NUTRITION_QUICK_SEARCHES = [
+  "молоко",
+  "творог",
+  "куриная грудка",
+  "овсянка",
+  "гречка",
+  "яйца",
+  "банан",
+  "кефир"
+];
+
+const RECENT_NUTRITION_SEARCHES_KEY = "nutrition_recent_foods_v1";
+const AI_NUTRITION_PROFILE_STORAGE_KEY = "ai_nutrition_profile_v1";
+const AI_NUTRITION_PLAN_STORAGE_KEY = "ai_nutrition_plan_v1";
+
+// HARDER DELETE SWIPE
+const NUTRITION_DELETE_THRESHOLD = -135;
+
+function loadRecentNutritionFoods() {
+  try {
+    const raw = localStorage.getItem(RECENT_NUTRITION_SEARCHES_KEY);
+    const value = JSON.parse(raw || "[]");
+    return Array.isArray(value) ? value.slice(0, 8) : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function saveRecentNutritionFood(food) {
+  try {
+    if (!food?.name) return;
+
+    const current = loadRecentNutritionFoods();
+    const next = [
+      food,
+      ...current.filter((item) => item?.name !== food.name)
+    ].slice(0, 8);
+
+    localStorage.setItem(RECENT_NUTRITION_SEARCHES_KEY, JSON.stringify(next));
+  } catch (_) {
+    // ignore localStorage errors
+  }
+}
+
+function getSearchHistoryName(food) {
+  const rawName = String(food?.name || "").trim();
+
+  return rawName
+    .replace(/\s+[—–-]\s+.*$/u, "")
+    .replace(/\s*\(.*?\)\s*$/u, "")
+    .replace(/[,;:]\s*.*$/u, "")
+    .replace(/\s+\d+[,.]?\d*\s*(г|гр|g|мл|ml|ккал|кал|шт)\b.*$/iu, "")
+    .trim();
+}
 
 function todayNutritionKey() {
   return dateToNutritionKey(new Date());
@@ -89,23 +1542,491 @@ function normalizeNutritionFood(food) {
     foodId: String(foodId),
     name: food.name || "Продукт",
     portion: food.portion || "100 г",
-    calories: Number(food.calories) || 0,
-    protein: Number(food.protein) || 0,
-    fat: Number(food.fat) || 0,
-    carbs: Number(food.carbs) || 0,
+    calories: parseNutritionNumber(food.calories, 0),
+    protein: parseNutritionNumber(food.protein, 0),
+    fat: parseNutritionNumber(food.fat, 0),
+    carbs: parseNutritionNumber(food.carbs, 0),
+    brand: food.brand || "",
+    note: food.note || food.description || "",
+    description: food.description || food.note || "",
     barcode: food.barcode || "",
-    source: food.source || "Локальная база"
+    source: food.source || "Локальная база",
+    icon: food.icon || getFoodIcon(food),
+    portionAmount: parseNutritionNumber(food.portionAmount, 0),
+    lastAmount: parseNutritionNumber(food.lastAmount, 0),
+    amountMode: food.amountMode || "",
+    type: food.type || "",
+    ingredients: Array.isArray(food.ingredients) ? food.ingredients : [],
+    totalWeight: parseNutritionNumber(food.totalWeight, 0) || parseNutritionNumber(food.portionAmount, 0) || 0
   };
 }
 
-function getFoodScale(amount) {
+function getNutritionFoodSearchText(food) {
+  return [food?.name, food?.brand, food?.note, food?.description]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function getFoodScale(amount, food = null, mode = "grams") {
   const parsedAmount = Number(String(amount).replace(",", "."));
   if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) return 1;
+
+  if (food?.type === "dish") {
+    const dishBase = Number(food.totalWeight) || Number(food.portionAmount) || getFoodPortionAmount(food) || 100;
+    return parsedAmount / (dishBase > 0 ? dishBase : 100);
+  }
+
+  if (mode === "portion") {
+    const portionText = String(food?.portion || "").toLowerCase();
+    const isPieceBased = portionText.includes("шт") || String(food?.name || "").toLowerCase().includes("яйц");
+    const portionBase = Number(food?.portionAmount) || getFoodPortionAmount(food) || (isPieceBased ? parsedAmount : 100);
+
+    if (isPieceBased) {
+      return parsedAmount / (portionBase > 0 ? portionBase : parsedAmount);
+    }
+
+    return parsedAmount / (portionBase > 0 ? portionBase : 100);
+  }
+
   return parsedAmount / 100;
+}
+
+function getFoodPortionAmount(food) {
+  const explicitAmount = Number(String(food?.portionAmount || "").replace(",", "."));
+  if (Number.isFinite(explicitAmount) && explicitAmount > 0) return explicitAmount;
+
+  const portion = String(food?.portion || "").toLowerCase();
+  const match = portion.match(/(\d+[,.]?\d*)\s*(г|гр|g|мл|ml)/i);
+
+  if (match) {
+    const parsed = Number(String(match[1]).replace(",", "."));
+    if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  }
+
+  const savedAmount = Number(String(food?.lastAmount || "").replace(",", "."));
+  if (Number.isFinite(savedAmount) && savedAmount > 0) return savedAmount;
+
+  return 100;
+}
+
+function getPieceProductSizeProfile(food = {}) {
+  const name = String(food?.name || "").toLowerCase();
+  const portionText = String(food?.portion || "").toLowerCase();
+
+  const isEgg = name.includes("яйц");
+  if (isEgg) {
+    return {
+      type: "egg",
+      defaultId: "medium",
+      sizes: [
+        { id: "small", label: "Мал.", hint: "≈45 г", amount: 45, portion: "1 маленькое яйцо" },
+        { id: "medium", label: "Сред.", hint: "≈55 г", amount: 55, portion: "1 среднее яйцо" },
+        { id: "large", label: "Бол.", hint: "≈65 г", amount: 65, portion: "1 большое яйцо" }
+      ]
+    };
+  }
+
+  const pieceKeywords = [
+    "банан", "яблок", "апельсин", "мандарин", "груш",
+    "персик", "киви", "помидор", "томат", "огурец",
+    "картоф", "авокад", "лимон", "лайм", "лук",
+    "морков", "сырник", "драник", "котлет", "блин",
+    "булоч", "круассан", "сосиск", "колбаск",
+    "бургер", "наггетс", "крылыш", "печень", "конфет"
+  ];
+
+  const fruitProfiles = [
+    { keys: ["банан"], sizes: [["small", "Мал.", "60–90 г", 75, "1 маленький банан"], ["medium", "Сред.", "90–130 г", 110, "1 средний банан"], ["large", "Бол.", "160–200 г", 180, "1 большой банан"]] },
+    { keys: ["яблок"], sizes: [["small", "Мал.", "90–130 г", 110, "1 маленькое яблоко"], ["medium", "Сред.", "130–180 г", 155, "1 среднее яблоко"], ["large", "Бол.", "180–240 г", 210, "1 большое яблоко"]] },
+    { keys: ["апельсин"], sizes: [["small", "Мал.", "100–140 г", 120, "1 маленький апельсин"], ["medium", "Сред.", "140–190 г", 165, "1 средний апельсин"], ["large", "Бол.", "190–260 г", 220, "1 большой апельсин"]] },
+    { keys: ["мандарин"], sizes: [["small", "Мал.", "40–60 г", 50, "1 маленький мандарин"], ["medium", "Сред.", "60–90 г", 75, "1 средний мандарин"], ["large", "Бол.", "90–120 г", 105, "1 большой мандарин"]] },
+    { keys: ["груш"], sizes: [["small", "Мал.", "100–140 г", 120, "1 маленькая груша"], ["medium", "Сред.", "140–190 г", 165, "1 средняя груша"], ["large", "Бол.", "190–260 г", 220, "1 большая груша"]] },
+    { keys: ["персик"], sizes: [["small", "Мал.", "90–130 г", 110, "1 маленький персик"], ["medium", "Сред.", "130–180 г", 155, "1 средний персик"], ["large", "Бол.", "180–230 г", 205, "1 большой персик"]] },
+    { keys: ["киви"], sizes: [["small", "Мал.", "50–70 г", 60, "1 маленький киви"], ["medium", "Сред.", "70–100 г", 85, "1 средний киви"], ["large", "Бол.", "100–130 г", 115, "1 большой киви"]] },
+    { keys: ["помидор", "томат"], sizes: [["small", "Мал.", "60–90 г", 75, "1 маленький помидор"], ["medium", "Сред.", "90–130 г", 110, "1 средний помидор"], ["large", "Бол.", "130–180 г", 155, "1 большой помидор"]] },
+    { keys: ["огурец"], sizes: [["small", "Мал.", "80–120 г", 100, "1 маленький огурец"], ["medium", "Сред.", "120–180 г", 150, "1 средний огурец"], ["large", "Бол.", "180–250 г", 215, "1 большой огурец"]] },
+    { keys: ["картоф"], sizes: [["small", "Мал.", "60–90 г", 75, "1 маленькая картофелина"], ["medium", "Сред.", "90–150 г", 120, "1 средняя картофелина"], ["large", "Бол.", "150–220 г", 185, "1 большая картофелина"]] }
+  ];
+
+  const profile = fruitProfiles.find((item) => item.keys.some((key) => name.includes(key)));
+  if (profile) {
+    return {
+      type: "piece",
+      defaultId: "medium",
+      sizes: profile.sizes.map(([id, label, hint, amount, portion]) => ({ id, label, hint, amount, portion }))
+    };
+  }
+
+  if (portionText.includes("шт")) {
+    const amount = getFoodPortionAmount(food) || 100;
+    return {
+      type: "piece",
+      defaultId: "medium",
+      sizes: [
+        { id: "piece", label: "1 шт.", hint: `≈${Math.round(amount)} г`, amount, portion: "1 шт" }
+      ]
+    };
+  }
+
+  // AI-like heuristic for unknown CIS piece products
+  const looksLikePieceProduct =
+    pieceKeywords.some((keyword) => name.includes(keyword)) ||
+    /(шт|шт\.|piece|pieces)/i.test(portionText);
+
+  if (looksLikePieceProduct) {
+    return {
+      type: "piece",
+      defaultId: "medium",
+      sizes: [
+        { id: "small", label: "Мал.", hint: "≈70 г", amount: 70, portion: "1 маленькая порция" },
+        { id: "medium", label: "Сред.", hint: "≈120 г", amount: 120, portion: "1 средняя порция" },
+        { id: "large", label: "Бол.", hint: "≈180 г", amount: 180, portion: "1 большая порция" }
+      ]
+    };
+  }
+
+  return null;
+}
+
+function getNutritionSmartUnits(food = {}) {
+  const normalizedFood = normalizeNutritionFood(food);
+  const portionText = String(normalizedFood.portion || "").toLowerCase();
+  const portionAmount = getFoodPortionAmount(normalizedFood);
+  const pieceProfile = getPieceProductSizeProfile(normalizedFood);
+
+  const units = [
+    {
+      id: "grams",
+      label: "Граммы",
+      shortLabel: "Граммы",
+      hint: "вручную",
+      amount: 100,
+      mode: "grams"
+    }
+  ];
+
+  if (pieceProfile?.sizes?.length) {
+    pieceProfile.sizes.forEach((size) => {
+      units.push({
+        id: `${pieceProfile.type}-${size.id}`,
+        label: `${size.label} ${size.hint}`,
+        shortLabel: `${size.label} ${size.hint}`,
+        hint: size.hint,
+        amount: size.amount,
+        mode: "portion",
+        portion: size.portion,
+        portionAmount: size.amount,
+        default: size.id === pieceProfile.defaultId
+      });
+    });
+  } else if (normalizedFood.type === "dish") {
+    const dishBase = Number(normalizedFood.totalWeight) || Number(normalizedFood.portionAmount) || portionAmount || 100;
+    units.push({
+      id: "dish-portion",
+      label: `Порция ≈${Math.round(dishBase)} г`,
+      shortLabel: `Порция ≈${Math.round(dishBase)} г`,
+      hint: `≈${Math.round(dishBase)} г`,
+      amount: dishBase,
+      mode: "portion",
+      portion: "1 порция блюда",
+      portionAmount: dishBase,
+      default: true
+    });
+  } else if (portionText && !portionText.includes("100 г")) {
+    units.push({
+      id: "portion",
+      label: `${normalizedFood.portion || "Порция"} ≈${Math.round(portionAmount)} г`,
+      shortLabel: `${normalizedFood.portion || "Порция"}`,
+      hint: `≈${Math.round(portionAmount)} г`,
+      amount: portionAmount,
+      mode: "portion",
+      portion: normalizedFood.portion || "1 порция",
+      portionAmount,
+      default: true
+    });
+  } else {
+    units.push({
+      id: "portion",
+      label: `Порция ≈${Math.round(portionAmount || 100)} г`,
+      shortLabel: `Порция`,
+      hint: `≈${Math.round(portionAmount || 100)} г`,
+      amount: portionAmount || 100,
+      mode: "portion",
+      portion: normalizedFood.portion || "1 порция",
+      portionAmount: portionAmount || 100
+    });
+  }
+
+  return units;
+}
+
+function getDefaultNutritionSmartUnit(food = {}) {
+  const units = getNutritionSmartUnits(food);
+  return units.find((unit) => unit.default) || units[0];
+}
+
+function getNutritionUnitStorageKey(food = {}) {
+  return `nutrition_unit_${String(food?.name || "").trim().toLowerCase()}`;
+}
+
+function saveNutritionPreferredUnit(food = {}, unitId = "") {
+  try {
+    if (!food?.name || !unitId) return;
+    localStorage.setItem(getNutritionUnitStorageKey(food), unitId);
+  } catch (_) {
+    // ignore storage errors
+  }
+}
+
+function loadNutritionPreferredUnit(food = {}) {
+  try {
+    if (!food?.name) return "";
+    return localStorage.getItem(getNutritionUnitStorageKey(food)) || "";
+  } catch (_) {
+    return "";
+  }
+}
+
+function getNutritionSmartUnitId(food = {}, amount = 100, mode = "grams") {
+  const units = getNutritionSmartUnits(food);
+  const numericAmount = parseNutritionNumber(amount, 0);
+
+  const matched = units.find((unit) => (
+    unit.mode === mode &&
+    Math.abs((Number(unit.amount) || 0) - numericAmount) < 0.01
+  ));
+
+  if (matched) return matched.id;
+  return mode === "portion" ? "custom-portion" : "grams";
+}
+
+function detectNutritionAmountMode(food, amount, savedMode = "") {
+  if (savedMode === "portion" || savedMode === "grams") return savedMode;
+
+  const currentAmount = Number(String(amount).replace(",", "."));
+  const portionAmount = getFoodPortionAmount(food);
+
+  if (
+    Number.isFinite(currentAmount) &&
+    Number.isFinite(portionAmount) &&
+    portionAmount > 0 &&
+    Math.abs(currentAmount - portionAmount) < 0.001
+  ) {
+    const portionText = String(food?.portion || "").trim().toLowerCase();
+    if (portionText && !portionText.startsWith("100 г")) return "portion";
+  }
+
+  return "grams";
+}
+
+function isPortionModeSelected(food, amount, mode = "") {
+  return mode === "portion";
 }
 
 function roundMacro(value) {
   return Math.round((Number(value) || 0) * 10) / 10;
+}
+
+function parseNutritionNumber(value, fallback = 0) {
+  const parsed = Number(String(value ?? "").replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function getNutritionBaseMacroFood(food, amount = 100, mode = "grams") {
+  const normalizedFood = normalizeNutritionFood(food);
+  const safeAmount = parseNutritionNumber(amount, 100) || 100;
+  const savedMode = mode || normalizedFood.amountMode || "grams";
+  const savedScale = getFoodScale(safeAmount, normalizedFood, savedMode) || 1;
+  const safeScale = savedScale > 0 ? savedScale : 1;
+
+  return {
+    ...normalizedFood,
+    calories: roundMacro((Number(food?.calories) || 0) / safeScale),
+    protein: roundMacro((Number(food?.protein) || 0) / safeScale),
+    fat: roundMacro((Number(food?.fat) || 0) / safeScale),
+    carbs: roundMacro((Number(food?.carbs) || 0) / safeScale),
+    amountMode: savedMode,
+    lastAmount: safeAmount,
+    portionAmount: Number(food?.portionAmount) || normalizedFood.portionAmount || getFoodPortionAmount(normalizedFood),
+    totalWeight: Number(food?.totalWeight) || normalizedFood.totalWeight || Number(food?.portionAmount) || 0,
+    type: food?.type || normalizedFood.type || "",
+    ingredients: Array.isArray(food?.ingredients) ? food.ingredients : normalizedFood.ingredients
+  };
+}
+
+function getFoodIcon(foodOrName = "") {
+  const raw = typeof foodOrName === "string"
+    ? foodOrName
+    : `${foodOrName?.name || ""} ${foodOrName?.brand || ""} ${foodOrName?.source || ""} ${foodOrName?.portion || ""}`;
+
+  const name = raw.toLowerCase().trim();
+
+  const iconRules = [
+    { icon: "🍌", keywords: ["банан", "banana"] },
+    { icon: "🍎", keywords: ["яблок", "apple", "груш", "pear", "персик", "peach", "мандар", "апельс", "orange", "киви", "виноград", "ананас", "melon", "дын", "арбуз"] },
+    { icon: "🍓", keywords: ["клубник", "малина", "ежев", "berry", "черник", "голубик"] },
+    { icon: "🥑", keywords: ["авокад"] },
+    { icon: "🥦", keywords: ["брокк", "овощ", "салат", "огур", "томат", "помид", "капуст", "морков", "зелень", "шпинат"] },
+    { icon: "🥔", keywords: ["карто", "potato", "пюре"] },
+    { icon: "🌽", keywords: ["кукуруз"] },
+    { icon: "🍗", keywords: ["кур", "chicken", "индей", "наггет", "крыл", "грудк"] },
+    { icon: "🥩", keywords: ["стейк", "говяд", "говя", "beef", "свин", "мяс", "котлет", "шашл"] },
+    { icon: "🐟", keywords: ["рыб", "лосос", "семг", "тунец", "форел", "селед", "икра"] },
+    { icon: "🍤", keywords: ["кревет", "shrimp", "морепр", "кальмар", "мидии"] },
+    { icon: "🥚", keywords: ["яйц", "egg", "омлет"] },
+    { icon: "🧀", keywords: ["сыр", "cheese", "моцар", "пармез", "гауда"] },
+    { icon: "🥛", keywords: ["молок", "milk", "кефир", "йогур", "творог", "сырок", "сметан"] },
+    { icon: "🧈", keywords: ["масло", "butter"] },
+    { icon: "🍚", keywords: ["рис", "rice", "греч", "булгур", "перлов", "круп"] },
+    { icon: "🥣", keywords: ["овся", "каша", "мюсли", "хлоп"] },
+    { icon: "🍝", keywords: ["макарон", "паста", "спагет", "лапша", "noodle"] },
+    { icon: "🍞", keywords: ["хлеб", "батон", "тост", "лаваш", "булоч"] },
+    { icon: "🥐", keywords: ["круас", "croissant"] },
+    { icon: "🍕", keywords: ["пицц", "pizza"] },
+    { icon: "🍔", keywords: ["бургер", "burger", "шаур", "донер", "хот дог", "fast"] },
+    { icon: "🌮", keywords: ["тако", "taco", "буррито"] },
+    { icon: "🍣", keywords: ["суш", "ролл", "sushi"] },
+    { icon: "🍲", keywords: ["суп", "борщ", "щи", "рагу"] },
+    { icon: "🥗", keywords: ["цезарь", "салат"] },
+    { icon: "🍰", keywords: ["торт", "cake", "пирож", "десерт"] },
+    { icon: "🍪", keywords: ["печень", "cookie"] },
+    { icon: "🍫", keywords: ["шокол", "snickers", "twix", "bounty"] },
+    { icon: "🍦", keywords: ["морож", "ice cream"] },
+    { icon: "🥜", keywords: ["орех", "арахис", "миндаль", "фисташ"] },
+    { icon: "☕", keywords: ["кофе", "coffee", "латте", "капуч", "эспрессо"] },
+    { icon: "🍵", keywords: ["чай", "tea", "matcha"] },
+    { icon: "🥤", keywords: ["cola", "кола", "лимонад", "напит", "сок", "juice"] },
+    { icon: "💧", keywords: ["вода", "water"] },
+    { icon: "🍺", keywords: ["пиво", "beer"] },
+    { icon: "🍷", keywords: ["вино", "wine"] },
+    { icon: "💪", keywords: ["протеин", "protein", "гейнер", "bcaa"] }
+  ];
+
+  let bestMatch = null;
+  let bestScore = 0;
+
+  iconRules.forEach((rule) => {
+    let score = 0;
+
+    rule.keywords.forEach((keyword) => {
+      if (name.includes(keyword)) {
+        score += keyword.length;
+      }
+    });
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = rule.icon;
+    }
+  });
+
+  return bestMatch || "🍽️";
+}
+
+function enrichNutritionFoodIcon(food) {
+  const normalizedFood = normalizeNutritionFood(food);
+  return {
+    ...normalizedFood,
+    icon: food?.icon || normalizedFood.icon || getFoodIcon(normalizedFood)
+  };
+}
+
+function getFoodDisplayPortion(food) {
+  const portion = String(food?.portion || "100 г").trim();
+  const lower = portion.toLowerCase();
+
+  if (lower.includes("250") && lower.includes("мл")) return "250 мл (1 порция)";
+  if (lower.includes("1 порц")) return "1 порция";
+  if (lower.includes("100") && lower.includes("мл")) return "100 мл";
+  if (lower.includes("мл")) return "100 мл";
+  if (lower.includes("шт")) return "1 шт";
+  return "100 г";
+}
+
+function getFoodRskPercent(food, goals = {}) {
+  const calories = Number(food?.calories) || 0;
+  const goalCalories = Number(goals?.calories) || 2400;
+  if (!goalCalories) return 0;
+  return Math.max(1, Math.round((calories / goalCalories) * 100));
+}
+
+function getShortFoodName(name) {
+  return String(name || "Продукт")
+    .replace(/\s+—\s+.*$/u, "")
+    .replace(/\s+-\s+.*$/u, "")
+    .replace(/\s*\(на\s+основе.*?\)\s*/iu, "")
+    .replace(/\s*\(безлактозный.*?\)\s*/iu, "")
+    .replace(/\s*\(упаковка.*?\)\s*/iu, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function makePersonalFoodKey(food) {
+  const raw = String(food?.name || food?.id || "food")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "_")
+    .replace(/[^\p{L}\p{N}_-]+/gu, "")
+    .slice(0, 80);
+
+  return `my_${raw || Date.now()}`;
+}
+
+function normalizeMyFoodRecord(food, amount = 100, previous = null) {
+  const sourceFood = normalizeNutritionFood(food);
+  const numericAmount = parseNutritionNumber(amount, 100) || 100;
+  const key = previous?.id || sourceFood.foodId || sourceFood.id || makePersonalFoodKey(sourceFood);
+
+  return {
+    id: String(key).startsWith("my_") ? String(key) : makePersonalFoodKey(sourceFood),
+    foodId: String(key).startsWith("my_") ? String(key) : makePersonalFoodKey(sourceFood),
+    name: sourceFood.name,
+    portion: sourceFood.portion || "100 г",
+    calories: Number(sourceFood.calories) || 0,
+    protein: Number(sourceFood.protein) || 0,
+    fat: Number(sourceFood.fat) || 0,
+    carbs: Number(sourceFood.carbs) || 0,
+    brand: food.brand ?? previous?.brand ?? "",
+    note: food.note ?? food.description ?? previous?.note ?? previous?.description ?? "",
+    description: food.description ?? food.note ?? previous?.description ?? previous?.note ?? "",
+    barcode: sourceFood.barcode || "",
+    source: "Моя база",
+    icon: sourceFood.icon || getFoodIcon(sourceFood),
+    lastAmount: numericAmount,
+    portionAmount: Number(sourceFood.portionAmount) || Number(previous?.portionAmount) || numericAmount,
+    amountMode: sourceFood.amountMode || previous?.amountMode || "grams",
+    type: sourceFood.type || previous?.type || "",
+    ingredients: Array.isArray(sourceFood.ingredients) ? sourceFood.ingredients : (previous?.ingredients || []),
+    totalWeight: Number(sourceFood.totalWeight) || Number(sourceFood.portionAmount) || Number(previous?.totalWeight) || numericAmount,
+    useCount: (Number(previous?.useCount) || 0) + 1,
+    createdAt: previous?.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+}
+
+function getMyFoodsArray(nutritionState) {
+  return Object.values(nutritionState?.myFoods || {})
+    .map(normalizeNutritionFood)
+    .sort((a, b) => {
+      const aRaw = nutritionState?.myFoods?.[a.id] || {};
+      const bRaw = nutritionState?.myFoods?.[b.id] || {};
+      return (Number(bRaw.useCount) || 0) - (Number(aRaw.useCount) || 0);
+    });
+}
+
+function searchMyFoods(nutritionState, query) {
+  const cleanQuery = String(query || "").trim().toLowerCase();
+  if (cleanQuery.length < 1) return [];
+
+  return Object.values(nutritionState?.myFoods || {})
+    .map(normalizeNutritionFood)
+    .filter((food) => getNutritionFoodSearchText(food).includes(cleanQuery))
+    .sort((a, b) => {
+      const aRaw = nutritionState?.myFoods?.[a.id] || {};
+      const bRaw = nutritionState?.myFoods?.[b.id] || {};
+      return (Number(bRaw.useCount) || 0) - (Number(aRaw.useCount) || 0);
+    });
 }
 
 function makeThreeSets(sets = [], defaultReps = 8) {
@@ -119,11 +2040,10 @@ function makeThreeSets(sets = [], defaultReps = 8) {
     enteredWeight: set?.enteredWeight || ""
   });
 
-  return [
-    buildSet(cleanSets[0]),
-    buildSet(cleanSets[1]),
-    buildSet(cleanSets[2])
-  ];
+  return Array.from(
+    { length: Math.max(cleanSets.length, 3) },
+    (_, index) => buildSet(cleanSets[index])
+  );
 }
 
 function normalizeExercise(exercise) {
@@ -131,6 +2051,7 @@ function normalizeExercise(exercise) {
 
   return {
     ...exercise,
+    video: exercise?.video || exercise?.videoUrl || exercise?.videoURL || "",
     sets: makeThreeSets(exercise?.sets, defaultReps)
   };
 }
@@ -143,7 +2064,6 @@ function normalizePlan(plan) {
     }))
   };
 }
-
 
 const starterPlan = {
   workouts: [
@@ -345,23 +2265,142 @@ const starterPlan = {
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [isAdminClaim, setIsAdminClaim] = useState(false);
+  const [currentUserRole, setCurrentUserRole] = useState("client");
   const [appLoading, setAppLoading] = useState(true);
+  const [appTheme, setAppTheme] = useState(() => {
+    try {
+      return localStorage.getItem(APP_THEME_STORAGE_KEY) || "dark-green";
+    } catch {
+      return "dark-green";
+    }
+  });
 
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [profileActiveTab, setProfileActiveTab] = useState("cabinet");
 
-  const [plan, setPlan] = useState(() => normalizePlan(starterPlan));
+  function canUseAdminFeatures() {
+    return Boolean(isAdminClaim);
+  }
+
+  function canUseTrainerFeatures() {
+    return Boolean(isAdminClaim || currentUserRole === "trainer");
+  }
+
+  function getCurrentProgramOwner() {
+    return {
+      uid: auth.currentUser?.uid || user?.uid || "",
+      role: canUseAdminFeatures() ? "admin" : "trainer"
+    };
+  }
+
+  function canManageTrainingTemplate(template) {
+    if (canUseAdminFeatures()) return true;
+    const currentUid = auth.currentUser?.uid || user?.uid || "";
+    return currentUserRole === "trainer" && Boolean(currentUid) && template?.ownerUid === currentUid;
+  }
+
+  function canManageClientProgram(client) {
+    if (canUseAdminFeatures()) return true;
+    const currentUid = auth.currentUser?.uid || user?.uid || "";
+    return currentUserRole === "trainer" && Boolean(currentUid) && [
+      client?.trainerId,
+      client?.assignedTrainerId,
+      client?.coachId,
+      client?.createdByUid
+    ].includes(currentUid);
+  }
+
+  const historyReplayInProgressRef = useRef(false);
+
+  useEffect(() => {
+    const handleOffline = () => {
+      showAppError("offline");
+    };
+
+    const handleOnline = () => {
+      showAppError("savedLocal", "Соединение восстановлено.");
+      replayFailedHistorySaves(auth.currentUser?.uid);
+    };
+
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      handleOffline();
+    }
+
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, []);
+
+  const [plan, setPlan] = useState(() => ({ workouts: [] }));
+  const [workoutModePreference, setWorkoutModePreference] = useState(() => getDefaultWorkoutModePreference());
+  const [workoutModeRemember, setWorkoutModeRemember] = useState(false);
+  const [basicWorkoutQuiz, setBasicWorkoutQuiz] = useState({
+    goal: "muscle",
+    level: "beginner",
+    days: "4"
+  });
+
   const [page, setPage] = useState("main");
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
+  const [individualWorkoutIndex, setIndividualWorkoutIndex] = useState(0);
+  const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(false);
+  const [individualWorkoutSwipeHintVisible, setIndividualWorkoutSwipeHintVisible] = useState(
+    () => safeReadJsonStorage(INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY, true) !== false
+  );
+  const individualWorkoutSwipeStartRef = useRef(null);
+  const individualWorkoutSwipeSuppressClickRef = useRef(false);
   const [openVideoId, setOpenVideoId] = useState(null);
   const [fullscreenVideo, setFullscreenVideo] = useState(null);
+  const [inlinePlayingVideoId, setInlinePlayingVideoId] = useState("");
+  const [inlineVideoControlsVisible, setInlineVideoControlsVisible] = useState(true);
+  const inlineVideoControlsTimerRef = useRef(null);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [workoutStarted, setWorkoutStarted] = useState(false);
   const [workoutStartedAt, setWorkoutStartedAt] = useState(null);
   const [workoutFinishedAt, setWorkoutFinishedAt] = useState(null);
+  const [workoutDraftRestorePrompt, setWorkoutDraftRestorePrompt] = useState(null);
+  const [workoutReadinessOpen, setWorkoutReadinessOpen] = useState(false);
+  const [workoutReadiness, setWorkoutReadiness] = useState(null);
+  const [postWorkoutFeedbackOpen, setPostWorkoutFeedbackOpen] = useState(false);
+  const [postWorkoutFeedback, setPostWorkoutFeedback] = useState(null);
   const [timerTick, setTimerTick] = useState(Date.now());
+
+  useEffect(() => {
+    if (inlineVideoControlsTimerRef.current) {
+      window.clearTimeout(inlineVideoControlsTimerRef.current);
+      inlineVideoControlsTimerRef.current = null;
+    }
+    setInlinePlayingVideoId("");
+    setInlineVideoControlsVisible(true);
+
+    return () => {
+      if (inlineVideoControlsTimerRef.current) {
+        window.clearTimeout(inlineVideoControlsTimerRef.current);
+        inlineVideoControlsTimerRef.current = null;
+      }
+    };
+  }, [selectedWorkoutId, currentExerciseIndex]);
+
+  function showInlineVideoControlsTemporarily() {
+    if (inlineVideoControlsTimerRef.current) {
+      window.clearTimeout(inlineVideoControlsTimerRef.current);
+    }
+    setInlineVideoControlsVisible(true);
+    inlineVideoControlsTimerRef.current = window.setTimeout(() => {
+      setInlineVideoControlsVisible(false);
+      inlineVideoControlsTimerRef.current = null;
+    }, INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS);
+  }
+
+  const timerTickRef = useRef(Date.now());
   const touchStartY = useRef(null);
   const deckRef = useRef(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
@@ -369,14 +2408,180 @@ export default function App() {
 
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [usersList, setUsersList] = useState([]);
+  const [adminAllUsersList, setAdminAllUsersList] = useState([]);
+  const [adminNewUserName, setAdminNewUserName] = useState("");
+  const [adminNewUserEmail, setAdminNewUserEmail] = useState("");
+  const [adminNewUserPassword, setAdminNewUserPassword] = useState("");
+  const [adminCreateUserLoading, setAdminCreateUserLoading] = useState(false);
+  const [adminCreateUserStatus, setAdminCreateUserStatus] = useState("");
+  const [adminCreatedCredentials, setAdminCreatedCredentials] = useState(null);
+  const [adminSelectedClient, setAdminSelectedClient] = useState(null);
+  const [adminClientPageOpen, setAdminClientPageOpen] = useState(false);
+  const [adminClientHistory, setAdminClientHistory] = useState([]);
+  const [adminClientNutrition, setAdminClientNutrition] = useState(null);
+  const [adminClientMeasurements, setAdminClientMeasurements] = useState([]);
+  const [adminClientLoading, setAdminClientLoading] = useState(false);
+  const [adminClientStatus, setAdminClientStatus] = useState("");
+  const [adminClientFilter, setAdminClientFilter] = useState("all");
+  const [adminClientTab, setAdminClientTab] = useState("overview");
+  const [adminTrainerNote, setAdminTrainerNote] = useState("");
+  const [adminTrainingTemplates, setAdminTrainingTemplates] = useState([]);
+  const [adminTemplateName, setAdminTemplateName] = useState("");
+  const [adminSelectedTemplateId, setAdminSelectedTemplateId] = useState("");
+  const [adminSelectedNutritionPreset, setAdminSelectedNutritionPreset] = useState("balanced");
+  const [adminCopyTargetUserId, setAdminCopyTargetUserId] = useState("");
+  const [adminTransferFromUid, setAdminTransferFromUid] = useState("");
+  const [adminTransferToUid, setAdminTransferToUid] = useState("");
+  const [adminTransferStatus, setAdminTransferStatus] = useState("");
+  const [adminTransferLoading, setAdminTransferLoading] = useState(false);
+  const [adminUsersSearch, setAdminUsersSearch] = useState("");
+  const [adminUsersFilter, setAdminUsersFilter] = useState("all");
+  const [adminUsersSelectedTab, setAdminUsersSelectedTab] = useState("overview");
+  const [adminTelegramMessage, setAdminTelegramMessage] = useState("");
+  const [adminTelegramSending, setAdminTelegramSending] = useState(false);
+  const [adminCalendarDraft, setAdminCalendarDraft] = useState({
+    enabled: true,
+    reminderEnabled: true,
+    reminderTime: "19:00",
+    workoutTime: "13:00",
+    hourReminderEnabled: false,
+    trainingDays: [],
+    daySettings: {}
+  });
+  const [adminCalendarSaving, setAdminCalendarSaving] = useState(false);
+  const [adminCalendarTesting, setAdminCalendarTesting] = useState(false);
+  const [adminDeletingWorkoutId, setAdminDeletingWorkoutId] = useState("");
+  const [adminSelectedHistoryIds, setAdminSelectedHistoryIds] = useState([]);
+
+  const [adminCreateClientModalOpen, setAdminCreateClientModalOpen] = useState(false);
+  const [adminActiveWorkoutId, setAdminActiveWorkoutId] = useState("");
+  const [adminSelectedExerciseId, setAdminSelectedExerciseId] = useState("");
+  const [adminExerciseVideoUploadingId, setAdminExerciseVideoUploadingId] = useState("");
+  const [adminVideoPreview, setAdminVideoPreview] = useState(null);
+  const adminProgramImportInputRef = useRef(null);
+  const [adminOpenWorkoutId, setAdminOpenWorkoutId] = useState("");
+  const [adminOpenProgramBlocks, setAdminOpenProgramBlocks] = useState({});
+  const [adminOpenProgramWeeks, setAdminOpenProgramWeeks] = useState({});
+  const [adminProgramCopyTarget, setAdminProgramCopyTarget] = useState(null);
+  const [adminProgramSwipeOpenKey, setAdminProgramSwipeOpenKey] = useState("");
+  const [adminExerciseSearch, setAdminExerciseSearch] = useState("");
+  const adminExerciseEditSnapshotRef = useRef(null);
+  const adminProgramSwipeStartRef = useRef(null);
+  const adminProgramSwipeSuppressClickRef = useRef(false);
+  const [adminProgramEditorMode, setAdminProgramEditorMode] = useState("create");
+  const [adminProgramLibraryTab, setAdminProgramLibraryTab] = useState("overview");
+  const [adminInspectorTab, setAdminInspectorTab] = useState("main");
+  const [adminProgramGroups, setAdminProgramGroups] = useState([]);
+  const [adminActiveProgramId, setAdminActiveProgramId] = useState("");
+  const [adminActiveDayId, setAdminActiveDayId] = useState("");
 
   const [isSaving, setIsSaving] = useState(false);
   const [isWorkoutSaved, setIsWorkoutSaved] = useState(false);
+  const [showWorkoutSavedCard, setShowWorkoutSavedCard] = useState(false);
 
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyDeletingId, setHistoryDeletingId] = useState("");
+  const [historySwipeId, setHistorySwipeId] = useState("");
+  const [historyTouchStartX, setHistoryTouchStartX] = useState(null);
+  const [historyDeleteCandidate, setHistoryDeleteCandidate] = useState(null);
   const [openHistoryKey, setOpenHistoryKey] = useState(null);
+  const [selectedAiFeatureId, setSelectedAiFeatureId] = useState("nutritionPlan");
+  const [showFirstSetupOnboarding, setShowFirstSetupOnboarding] = useState(false);
+  const [onboardingStep, setOnboardingStep] = useState(0);
+  const [firstSetupCompletedInSession, setFirstSetupCompletedInSession] = useState(false);
 
+  const [aiNutritionProfileDraft, setAiNutritionProfileDraft] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(AI_NUTRITION_PROFILE_STORAGE_KEY) || "null");
+      return { weight: "", height: "", age: "", sex: "male", activity: "medium", goal: "recomp", trainingDays: [], ...(saved || {}) };
+    } catch (_) {
+      return { weight: "", height: "", age: "", sex: "male", activity: "medium", goal: "recomp", trainingDays: [] };
+    }
+  });
+  const [aiNutritionProfile, setAiNutritionProfile] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(AI_NUTRITION_PROFILE_STORAGE_KEY) || "null");
+    } catch (_) {
+      return null;
+    }
+  });
+  const [aiNutritionSavedPlan, setAiNutritionSavedPlan] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(AI_NUTRITION_PLAN_STORAGE_KEY) || "null");
+    } catch (_) {
+      return null;
+    }
+  });
+  const [aiNutritionAdaptedToday, setAiNutritionAdaptedToday] = useState(false);
+  const [isAiNutritionPlanExpanded, setIsAiNutritionPlanExpanded] = useState(false);
+  const [profileBodyMetricsOpen, setProfileBodyMetricsOpen] = useState(false);
+  const [profileNutritionGoalOpen, setProfileNutritionGoalOpen] = useState(false);
+  const [profileProgressAnalysisOpen, setProfileProgressAnalysisOpen] = useState(false);
+const [profileWorkoutModeOpen, setProfileWorkoutModeOpen] = useState(false);
+  const [profileMeasurementOpen, setProfileMeasurementOpen] = useState(false);
+  const [profileMeasurementSaving, setProfileMeasurementSaving] = useState(false);
+  const [profileMeasurementStatus, setProfileMeasurementStatus] = useState("");
+  const [profileMeasurements, setProfileMeasurements] = useState([]);
+  const [profileMeasurementWizardStep, setProfileMeasurementWizardStep] = useState(0);
+  const [profileMeasurementDraft, setProfileMeasurementDraft] = useState({
+    weight: "",
+    neck: "",
+    shoulders: "",
+    chest: "",
+    biceps: "",
+    forearm: "",
+    wrist: "",
+    belly: "",
+    pelvis: "",
+    thigh: "",
+    calf: "",
+    ankle: "",
+    note: ""
+  });
+
+  const [telegramProfile, setTelegramProfile] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("workout_telegram_profile_v1") || "null") || {
+        connected: false,
+        username: "",
+        displayName: "",
+        avatarUrl: "",
+        chatId: "",
+        notificationsEnabled: true
+      };
+    } catch (_) {
+      return {
+        connected: false,
+        username: "",
+        displayName: "",
+        avatarUrl: "",
+        chatId: "",
+        notificationsEnabled: true
+      };
+    }
+  });
+  const [telegramDraft, setTelegramDraft] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("workout_telegram_profile_v1") || "null") || {
+        username: "",
+        displayName: "",
+        notificationsEnabled: true
+      };
+    } catch (_) {
+      return {
+        username: "",
+        displayName: "",
+        notificationsEnabled: true
+      };
+    }
+  });
+  const [telegramConnectOpen, setTelegramConnectOpen] = useState(false);
+  const [telegramLinkCode, setTelegramLinkCode] = useState("");
+  const [telegramLinking, setTelegramLinking] = useState(false);
+  const telegramLoginContainerRef = useRef(null);
+  const [telegramLoginWidgetReady, setTelegramLoginWidgetReady] = useState(false);
+  const [telegramStatus, setTelegramStatus] = useState("");
 
   const [nutrition, setNutrition] = useState(() => {
     try {
@@ -390,7 +2595,8 @@ export default function App() {
         goals: { ...defaultNutritionState.goals, ...(parsed.goals || {}) },
         days: parsed.days || {},
         favorites: parsed.favorites || defaultNutritionState.favorites,
-        recent: parsed.recent || []
+        recent: parsed.recent || [],
+        myFoods: parsed.myFoods || {}
       };
     } catch {
       return defaultNutritionState;
@@ -399,37 +2605,168 @@ export default function App() {
   const [nutritionSearch, setNutritionSearch] = useState("");
   const [nutritionMeal, setNutritionMeal] = useState("breakfast");
   const [nutritionMealMenuOpen, setNutritionMealMenuOpen] = useState(false);
+  const [nutritionProductUnitMenuOpen, setNutritionProductUnitMenuOpen] = useState(false);
   const [nutritionAmount, setNutritionAmount] = useState("100");
+  const [nutritionAmountMode, setNutritionAmountMode] = useState("grams");
+  const [nutritionEditNote, setNutritionEditNote] = useState("");
+  const [nutritionEditDetailsOpen, setNutritionEditDetailsOpen] = useState(false);
+  const [nutritionEditPageOpen, setNutritionEditPageOpen] = useState(false);
+  const [nutritionEditOriginalFood, setNutritionEditOriginalFood] = useState(null);
+  const [nutritionEditOriginalNote, setNutritionEditOriginalNote] = useState("");
+  const [nutritionCreateChoiceOpen, setNutritionCreateChoiceOpen] = useState(false);
+  const [selectedNutritionFood, setSelectedNutritionFood] = useState(null);
+  const [dishIngredientPickerOpen, setDishIngredientPickerOpen] = useState(false);
+  const [dishIngredientSearch, setDishIngredientSearch] = useState("");
+  const [pendingDishIngredient, setPendingDishIngredient] = useState(null);
+  const [pendingDishIngredientGrams, setPendingDishIngredientGrams] = useState("100");
+  const [dishIngredientExternalFoods, setDishIngredientExternalFoods] = useState([]);
+  const [dishIngredientLoading, setDishIngredientLoading] = useState(false);
+  const [dishIngredientFallbackSuggestions, setDishIngredientFallbackSuggestions] = useState([]);
+  const [editingNutritionItemId, setEditingNutritionItemId] = useState(null);
+  const nutritionFoodSwipeStartX = useRef({});
+  const nutritionFoodSwipeMoved = useRef({});
+  const [nutritionFoodSwipeOffsets, setNutritionFoodSwipeOffsets] = useState({});
+  const [deletingNutritionFoodId, setDeletingNutritionFoodId] = useState(null);
   const [nutritionBarcode, setNutritionBarcode] = useState("");
   const [nutritionPhotoName, setNutritionPhotoName] = useState("");
+  const [nutritionPhotoPreview, setNutritionPhotoPreview] = useState("");
+  const [nutritionPhotoAnalyzing, setNutritionPhotoAnalyzing] = useState(false);
+  const [nutritionPhotoAiResult, setNutritionPhotoAiResult] = useState("");
+  const [nutritionPhotoAiCandidates, setNutritionPhotoAiCandidates] = useState([]);
+  const [nutritionPhotoAiConfidence, setNutritionPhotoAiConfidence] = useState("");
   const [nutritionAnalysisOpen, setNutritionAnalysisOpen] = useState(true);
   const [nutritionPickerOpen, setNutritionPickerOpen] = useState(false);
   const [nutritionSearchTab, setNutritionSearchTab] = useState("food");
   const [selectedNutritionDateKey, setSelectedNutritionDateKey] = useState(todayNutritionKey());
+  const [nutritionCalendarOpen, setNutritionCalendarOpen] = useState(false);
+  const [nutritionCalendarMonthKey, setNutritionCalendarMonthKey] = useState(() => todayNutritionKey().slice(0, 7));
   const [expandedNutritionMeals, setExpandedNutritionMeals] = useState({});
   const [fatSecretFoods, setFatSecretFoods] = useState([]);
   const [fatSecretLoading, setFatSecretLoading] = useState(false);
   const [fatSecretError, setFatSecretError] = useState("");
+  const [nutritionFallbackSuggestions, setNutritionFallbackSuggestions] = useState([]);
+  const [recentNutritionFoods, setRecentNutritionFoods] = useState(() => loadRecentNutritionFoods());
+  const [showRecentNutritionFoods, setShowRecentNutritionFoods] = useState(false);
   const [barcodeScannerOpen, setBarcodeScannerOpen] = useState(false);
   const [barcodeScannerError, setBarcodeScannerError] = useState("");
   const [nutritionCloudReady, setNutritionCloudReady] = useState(false);
   const barcodeVideoRef = useRef(null);
-  const nutritionDateInputRef = useRef(null);
+  const nutritionPhotoInputRef = useRef(null);
+  const nutritionPhotoLastFileRef = useRef(null);
+  const performanceMarksRef = useRef({});
+
+  function perfNow() {
+    return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+  }
+
+  function startPerformanceCheck(label, meta = {}) {
+    performanceMarksRef.current[label] = perfNow();
+    console.log(`⏱️ PERF START · ${label}`, meta);
+  }
+
+  function endPerformanceCheck(label, meta = {}) {
+    const startedAt = performanceMarksRef.current[label];
+
+    if (!startedAt) return 0;
+
+    const ms = Math.round(perfNow() - startedAt);
+    delete performanceMarksRef.current[label];
+
+    const payload = {
+      label,
+      ms,
+      seconds: Math.round((ms / 1000) * 10) / 10,
+      at: new Date().toISOString(),
+      ...meta
+    };
+
+    console.log(`⏱️ PERF · ${label}: ${ms} ms`, payload);
+
+    try {
+      const key = "workout_app_perf_logs_v1";
+      const current = JSON.parse(localStorage.getItem(key) || "[]");
+      localStorage.setItem(key, JSON.stringify([payload, ...current].slice(0, 50)));
+    } catch (_) {
+      // ignore localStorage errors
+    }
+
+    return ms;
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
       const startedAt = Date.now();
+      startPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
 
       setUser(u);
       setIsLoggedIn(!!u);
+      if (u?.uid) {
+        const savedWorkoutModePreference = safeReadUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, u.uid, getDefaultWorkoutModePreference());
+        setWorkoutModePreference(savedWorkoutModePreference || getDefaultWorkoutModePreference());
+        setWorkoutModeRemember(Boolean(savedWorkoutModePreference?.remember));
+      } else {
+        setWorkoutModePreference(getDefaultWorkoutModePreference());
+        setWorkoutModeRemember(false);
+      }
 
       if (u) {
+        let nextIsAdmin = false;
+
+        try {
+          const token = await getIdTokenResult(u, true);
+          nextIsAdmin = Boolean(token.claims?.admin);
+          setIsAdminClaim(nextIsAdmin);
+        } catch (error) {
+          console.error("Admin claim check error", error);
+          setIsAdminClaim(false);
+        }
+
+        try {
+          const roleDoc = await getDoc(doc(db, "users", u.uid));
+          const roleData = roleDoc.exists() ? roleDoc.data() : {};
+          setCurrentUserRole(nextIsAdmin ? "admin" : (roleData.role || "client"));
+        } catch (error) {
+          console.error("User role check error", error);
+          setCurrentUserRole(nextIsAdmin ? "admin" : "client");
+        }
+
         await loadWorkoutsFromFirebase(u.uid);
         await loadHistory();
+        await replayFailedHistorySaves(u.uid);
         await loadNutritionFromFirebase(u.uid);
+        await loadProfileMeasurements(u.uid);
+
+        try {
+          const profileDoc = await getDoc(doc(db, "users", u.uid));
+          const savedTelegram = profileDoc.exists() ? profileDoc.data()?.telegram : null;
+          if (savedTelegram) {
+            const nextTelegram = {
+              ...savedTelegram,
+              connected: savedTelegram.connected !== false,
+              username: savedTelegram.username || profileDoc.data()?.telegramUsername || "",
+              displayName: savedTelegram.displayName || profileDoc.data()?.telegramDisplayName || savedTelegram.username || "",
+              avatarUrl: savedTelegram.avatarUrl || profileDoc.data()?.telegramAvatarUrl || ""
+            };
+            setTelegramProfile(nextTelegram);
+            setTelegramDraft(nextTelegram);
+            localStorage.setItem("workout_telegram_profile_v1", JSON.stringify(nextTelegram));
+          }
+        } catch (_) {
+          // ignore Telegram profile loading errors
+        }
       } else {
+        setCurrentUserRole("client");
         setNutritionCloudReady(false);
+        setProfileMeasurements([]);
+        setPlan({ workouts: [] });
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ workouts: [] }));
+        } catch (_) {
+          // ignore localStorage errors
+        }
       }
+
+      endPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
 
       const elapsed = Date.now() - startedAt;
       const minimumSplashTime = 900;
@@ -443,13 +2780,149 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(plan));
-  }, [plan]);
+    const safeTheme = appTheme === "warm-light" ? "warm-light" : "dark-green";
+    document.documentElement.dataset.appTheme = safeTheme;
+    document.body.dataset.appTheme = safeTheme;
 
+    try {
+      localStorage.setItem(APP_THEME_STORAGE_KEY, safeTheme);
+    } catch (_) {
+      // ignore localStorage errors
+    }
+  }, [appTheme]);
 
   useEffect(() => {
-    localStorage.setItem(NUTRITION_STORAGE_KEY, JSON.stringify(nutrition));
-  }, [nutrition]);
+    if (!user?.uid) return;
+
+    safeWriteUserJsonStorage(STORAGE_KEY, user.uid, plan);
+    addUserLocalBackup(WORKOUT_PLAN_BACKUP_STORAGE_KEY, user.uid, { plan }, 10);
+  }, [plan, user?.uid]);
+
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    safeWriteUserJsonStorage(NUTRITION_STORAGE_KEY, user.uid, nutrition);
+    addUserLocalBackup(NUTRITION_BACKUP_STORAGE_KEY, user.uid, { nutrition }, 12);
+  }, [nutrition, user?.uid]);
+
+  useEffect(() => {
+    const currentUser = auth.currentUser || user;
+
+    if (!currentUser?.uid || !selectedWorkoutId || !workoutStarted) return;
+
+    const draftAssignmentVersion =
+      plan.workouts.find((workoutItem) => workoutItem.id === selectedWorkoutId)
+        ?.assignedProgramUpdatedAt ||
+      plan.assignedProgramUpdatedAt ||
+      "";
+    const draft = {
+      uid: currentUser.uid,
+      workoutId: selectedWorkoutId,
+      selectedWorkoutId,
+      currentExerciseIndex,
+      workoutStartedAt,
+      workoutFinishedAt,
+      assignedProgramUpdatedAt: draftAssignmentVersion,
+      assignmentVersion: draftAssignmentVersion,
+      selectedReadiness: workoutReadiness,
+      plan,
+      savedAt: new Date().toISOString()
+    };
+
+    safeWriteJsonStorage(getWorkoutDraftKey(currentUser.uid, selectedWorkoutId), draft);
+  }, [user?.uid, selectedWorkoutId, currentExerciseIndex, workoutStarted, workoutStartedAt, workoutFinishedAt, workoutReadiness, plan]);
+
+  useEffect(() => {
+    if (!isLoggedIn || appLoading || !user?.uid || firstSetupCompletedInSession) return;
+
+    let completedForThisUser = false;
+
+    try {
+      completedForThisUser =
+        localStorage.getItem(FIRST_SETUP_DONE_USER_STORAGE_KEY) === `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}` ||
+        localStorage.getItem(`${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${user.uid}`) === FIRST_SETUP_REQUIRED_VERSION;
+    } catch (_) {
+      completedForThisUser = false;
+    }
+
+    const profileHasRequiredFields =
+      hasRequiredAiNutritionProfileFields(aiNutritionProfile) ||
+      hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft);
+
+    if (profileHasRequiredFields) {
+      try {
+        localStorage.setItem(FIRST_SETUP_DONE_USER_STORAGE_KEY, `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}`);
+        localStorage.setItem(`${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${user.uid}`, FIRST_SETUP_REQUIRED_VERSION);
+      } catch (_) {
+        // ignore localStorage errors
+      }
+
+      setShowFirstSetupOnboarding(false);
+      return;
+    }
+
+    if (!completedForThisUser) {
+      setShowFirstSetupOnboarding(true);
+      setTimeout(() => setShowFirstSetupOnboarding(true), 120);
+      setTimeout(() => setShowFirstSetupOnboarding(true), 600);
+    }
+  }, [
+    isLoggedIn,
+    appLoading,
+    user?.uid,
+    aiNutritionProfile,
+    aiNutritionProfileDraft,
+    firstSetupCompletedInSession
+  ]);
+
+  useEffect(() => {
+    if (!isLoggedIn || appLoading) return;
+
+    const shouldTrapAndroidBack =
+      page !== "main" ||
+      Boolean(selectedWorkoutId) ||
+      Boolean(fullscreenVideo) ||
+      nutritionPickerOpen ||
+      nutritionEditPageOpen ||
+      dishIngredientPickerOpen ||
+      nutritionCreateChoiceOpen ||
+      barcodeScannerOpen;
+
+    if (!shouldTrapAndroidBack) return;
+
+    if (!window.history.state?.workoutAppBackTrap) {
+      window.history.pushState({ workoutAppBackTrap: true }, "");
+    }
+
+    const onAndroidBack = () => {
+      const handled = handleAppBackNavigation();
+
+      if (handled) {
+        setTimeout(() => {
+          if (!window.history.state?.workoutAppBackTrap) {
+            window.history.pushState({ workoutAppBackTrap: true }, "");
+          }
+        }, 0);
+      }
+    };
+
+    window.addEventListener("popstate", onAndroidBack);
+
+    return () => {
+      window.removeEventListener("popstate", onAndroidBack);
+    };
+  }, [
+    isLoggedIn,
+    appLoading,
+    page,
+    selectedWorkoutId,
+    fullscreenVideo,
+    nutritionPickerOpen,
+    nutritionEditPageOpen,
+    dishIngredientPickerOpen,
+    nutritionCreateChoiceOpen,
+    barcodeScannerOpen
+  ]);
 
   useEffect(() => {
     const query = nutritionSearch.trim();
@@ -458,43 +2931,125 @@ export default function App() {
       setFatSecretFoods([]);
       setFatSecretLoading(false);
       setFatSecretError("");
+      setNutritionFallbackSuggestions([]);
       return undefined;
     }
 
+    startPerformanceCheck("Local catalog search", { query });
+    const localResults = searchLocalNutritionFoods(query);
+    setFatSecretFoods(localResults);
+    setFatSecretError("");
+    setNutritionFallbackSuggestions([]);
+    endPerformanceCheck("Local catalog search", { query, results: localResults.length });
+
     const controller = new AbortController();
+
     const timer = setTimeout(async () => {
       try {
-        setFatSecretLoading(true);
-        setFatSecretError("");
+        if (localResults.length >= 8) {
+          setFatSecretLoading(false);
+          return;
+        }
 
-        const response = await fetch(`/api/fatsecret/search?q=${encodeURIComponent(query)}`, {
+        setFatSecretLoading(true);
+        startPerformanceCheck("Food search · nutrition API", { query, localResults: localResults.length });
+
+        const response = await fetchWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
           signal: controller.signal
-        });
+        }, 12000);
 
         if (!response.ok) {
-          throw new Error(`FatSecret API error: ${response.status}`);
+          throw new Error(`Nutrition search API error: ${response.status}`);
         }
 
         const data = await response.json();
-        setFatSecretFoods(Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : []);
+        const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
+
+        setFatSecretFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
+        setNutritionFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
+        endPerformanceCheck("Food search · nutrition API", { query, results: remoteFoods.length });
       } catch (error) {
         if (error.name !== "AbortError") {
           console.error(error);
-          setFatSecretFoods([]);
-          setFatSecretError("Не удалось загрузить продукты из FatSecret. Показана локальная база.");
+
+          if (!localResults.length) {
+            setNutritionFallbackSuggestions(["Фото продукта", "Попробуй штрихкод", "Создать продукт"]);
+            setFatSecretError("Локально не найдено. ИИ-поиск временно недоступен.");
+            showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "api", "Поиск еды сейчас недоступен.");
+          }
         }
       } finally {
         if (!controller.signal.aborted) {
           setFatSecretLoading(false);
         }
       }
-    }, 350);
+    }, localResults.length ? 900 : 250);
 
     return () => {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [nutritionPickerOpen, nutritionSearchTab, nutritionSearch]);
+  }, [nutritionPickerOpen, nutritionSearchTab, nutritionSearch, nutrition.myFoods]);
+
+  useEffect(() => {
+    const query = dishIngredientSearch.trim();
+
+    if (!dishIngredientPickerOpen || query.length < 2) {
+      setDishIngredientExternalFoods([]);
+      setDishIngredientFallbackSuggestions([]);
+      setDishIngredientLoading(false);
+      return undefined;
+    }
+
+    startPerformanceCheck("Local dish ingredient search", { query });
+    const localResults = searchLocalNutritionFoods(query, 20);
+    setDishIngredientExternalFoods(localResults);
+    setDishIngredientFallbackSuggestions([]);
+    endPerformanceCheck("Local dish ingredient search", { query, results: localResults.length });
+
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      try {
+        if (localResults.length >= 8) {
+          setDishIngredientLoading(false);
+          return;
+        }
+
+        setDishIngredientLoading(true);
+        startPerformanceCheck("Food search · dish ingredient API", { query, localResults: localResults.length });
+
+        const response = await fetchWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
+          signal: controller.signal
+        }, 12000);
+
+        if (!response.ok) {
+          throw new Error(`Dish ingredient search API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
+        setDishIngredientExternalFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
+        setDishIngredientFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
+        endPerformanceCheck("Food search · dish ingredient API", { query, results: remoteFoods.length });
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error(error);
+          if (!localResults.length) {
+            setDishIngredientFallbackSuggestions([]);
+          }
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setDishIngredientLoading(false);
+        }
+      }
+    }, localResults.length ? 900 : 250);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [dishIngredientPickerOpen, dishIngredientSearch]);
 
   useEffect(() => {
     if (!barcodeScannerOpen) return undefined;
@@ -566,30 +3121,50 @@ export default function App() {
     if (!currentUser || !nutritionCloudReady) return undefined;
 
     const timer = setTimeout(() => {
+      const { myFoods, ...userNutritionState } = nutrition;
+      const backupId = `nutrition_${Date.now()}`;
+
+      addUserLocalBackup(NUTRITION_BACKUP_STORAGE_KEY, currentUser.uid, {
+        id: backupId,
+        nutrition,
+        reason: "before_cloud_save"
+      });
+
       setDoc(doc(db, "users", currentUser.uid, "nutrition", "state"), {
-        ...nutrition,
+        ...userNutritionState,
         updatedAt: new Date().toISOString()
-      }, { merge: true }).catch((error) => console.error("Nutrition save error", error));
-    }, 500);
+      }, { merge: true })
+        .then(() => removeUserLocalBackup(NUTRITION_BACKUP_STORAGE_KEY, currentUser.uid, backupId))
+        .catch((error) => {
+          console.error("Nutrition save error", error);
+          showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "firebase");
+          addUserLocalBackup(NUTRITION_BACKUP_STORAGE_KEY, currentUser.uid, {
+            nutrition,
+            reason: "cloud_save_failed",
+            error: error.message || String(error)
+          });
+        });
+    }, 650);
 
     return () => clearTimeout(timer);
   }, [nutrition, nutritionCloudReady]);
 
   useEffect(() => {
-    if (page === "admin") {
+    if (["admin", "adminUsers", "adminWorkouts"].includes(page) && canUseTrainerFeatures()) {
       loadUsers();
+      loadAdminTrainingTemplates();
     }
-  }, [page]);
+  }, [page, isAdminClaim, currentUserRole, user?.uid, user?.email]);
 
   useEffect(() => {
     if (!workoutStartedAt || workoutFinishedAt) return undefined;
 
     const timer = setInterval(() => {
-      setTimerTick(Date.now());
+      timerTickRef.current = Date.now();
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [workoutStartedAt, workoutFinishedAt, timerTick]);
+  }, [workoutStartedAt, workoutFinishedAt]);
 
   const workout = useMemo(() => {
     return plan.workouts.find((w) => w.id === selectedWorkoutId);
@@ -598,7 +3173,7 @@ export default function App() {
   const workoutDurationText = useMemo(() => {
     if (!workoutStartedAt) return "—";
 
-    const endTime = workoutFinishedAt || timerTick;
+    const endTime = workoutFinishedAt || timerTickRef.current || timerTick;
     const totalSeconds = Math.max(0, Math.floor((endTime - workoutStartedAt) / 1000));
 
     const hours = Math.floor(totalSeconds / 3600);
@@ -615,7 +3190,6 @@ export default function App() {
 
     return `${seconds} сек`;
   }, [workoutStartedAt, workoutFinishedAt]);
-
 
   const workoutMenuItems = [
     {
@@ -640,7 +3214,6 @@ export default function App() {
     }
   ];
 
-
   useEffect(() => {
     if (!workout) return;
 
@@ -651,34 +3224,73 @@ export default function App() {
 
   const lastExerciseResults = useMemo(() => {
     const result = {};
+    const currentAssignmentVersion = String(
+      workout?.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || ""
+    ).trim();
+    const sortedHistory = [...history].sort(
+      (a, b) => new Date(b?.date || 0).getTime() - new Date(a?.date || 0).getTime()
+    );
 
-    history.forEach((historyWorkout) => {
+    sortedHistory.forEach((historyWorkout) => {
+      if (
+        currentAssignmentVersion &&
+        String(historyWorkout?.assignedProgramUpdatedAt || "").trim() !== currentAssignmentVersion
+      ) {
+        return;
+      }
       if (!historyWorkout.exercises) return;
 
       historyWorkout.exercises.forEach((exercise) => {
-        if (!exercise.name || result[exercise.name]) return;
+        const exerciseKey = exercise?.id
+          ? `id:${exercise.id}`
+          : exercise?.name
+            ? `name:${getCompletedWorkoutKey(exercise.name)}`
+            : "";
+        if (!exerciseKey || result[exerciseKey]) return;
 
-        const lastSet = exercise.sets?.[exercise.sets.length - 1];
+        const completedSets = (exercise.sets || []).filter((set) => (
+          Number(set?.reps) > 0 || parseWorkoutWeightValue(set?.weight) > 0
+        ));
+        if (!completedSets.length) return;
 
-        result[exercise.name] = {
-          reps: lastSet?.reps || "",
-          weight: lastSet?.weight || "",
-          date: historyWorkout.date
-        };
+        const lastSet = completedSets[completedSets.length - 1];
+        const reps = Number(lastSet?.reps) || 0;
+        const weight = parseWorkoutWeightValue(lastSet?.weight);
+        const sameReps = reps > 0 && completedSets.every((set) => Number(set?.reps) === reps);
+        const sameWeight = weight > 0 && completedSets.every(
+          (set) => parseWorkoutWeightValue(set?.weight) === weight
+        );
+
+        if (weight > 0) {
+          result[exerciseKey] = sameReps && sameWeight
+            ? `${completedSets.length}×${reps} · ${weight} кг`
+            : `${completedSets.length} подх. · ${reps || "—"} повт. · ${weight} кг`;
+          return;
+        }
+
+        const totalReps = completedSets.reduce((sum, set) => sum + (Number(set?.reps) || 0), 0);
+        result[exerciseKey] = sameReps
+          ? `${completedSets.length}×${reps}`
+          : `${completedSets.length} подх. · ${totalReps} повторов`;
       });
     });
 
     return result;
-  }, [history]);
+  }, [history, workout?.assignedProgramUpdatedAt, plan.assignedProgramUpdatedAt]);
 
-  function getLastExerciseText(exerciseName) {
-    const last = lastExerciseResults[exerciseName];
+  function getLastExerciseText(exerciseItem) {
+    const exerciseKey = exerciseItem?.id
+      ? `id:${exerciseItem.id}`
+      : exerciseItem?.name
+        ? `name:${getCompletedWorkoutKey(exerciseItem.name)}`
+        : "";
+    const last = lastExerciseResults[exerciseKey];
 
     if (!last) {
       return "Прошлый раз: нет данных";
     }
 
-    return `Прошлый раз: ${last.reps} × ${last.weight || "без веса"}`;
+    return `Прошлый раз: ${last}`;
   }
 
   async function handleLogin(e) {
@@ -704,7 +3316,7 @@ export default function App() {
 
       await setDoc(doc(db, "users", result.user.uid), {
         email: login,
-        role: login === ADMIN_EMAIL ? "admin" : "client"
+        role: false ? "admin" : "client"
       });
 
       setLoginError("");
@@ -727,7 +3339,6 @@ export default function App() {
       }
     }
   }
-
 
   const nutritionDateKey = selectedNutritionDateKey;
   const isNutritionToday = nutritionDateKey === todayNutritionKey();
@@ -767,15 +3378,38 @@ export default function App() {
       .slice(0, 7);
   }, [nutrition.days]);
 
+  const myNutritionFoods = useMemo(() => {
+    return Object.values(nutrition.myFoods || {})
+      .sort((a, b) => (Number(b.useCount) || 0) - (Number(a.useCount) || 0))
+      .map(normalizeNutritionFood);
+  }, [nutrition.myFoods]);
+
   const nutritionSearchResults = useMemo(() => {
     const query = nutritionSearch.trim().toLowerCase();
     const recentIds = nutrition.recent || [];
     const favoriteIds = nutrition.favorites || [];
     const localFoods = nutritionFoodDatabase.map(normalizeNutritionFood);
+    const myFoods = Object.values(nutrition.myFoods || {})
+      .sort((a, b) => (Number(b.useCount) || 0) - (Number(a.useCount) || 0))
+      .map(normalizeNutritionFood);
+
+    if (nutritionSearchTab === "my") {
+      if (query.length >= 2) {
+        return myFoods
+          .filter((food) => getNutritionFoodSearchText(food).includes(query))
+          .slice(0, 30);
+      }
+
+      return myFoods.slice(0, 30);
+    }
 
     if (nutritionSearchTab === "recent") {
       return recentIds
-        .map((id) => localFoods.find((food) => food.id === id) || (nutritionToday.foods || []).find((food) => food.foodId === id || food.id === id))
+        .map((id) =>
+          myFoods.find((food) => food.id === id || food.foodId === id) ||
+          localFoods.find((food) => food.id === id) ||
+          (nutritionToday.foods || []).find((food) => food.foodId === id || food.id === id)
+        )
         .filter(Boolean)
         .map(normalizeNutritionFood)
         .slice(0, 20);
@@ -783,22 +3417,39 @@ export default function App() {
 
     if (nutritionSearchTab === "favorites") {
       return favoriteIds
-        .map((id) => localFoods.find((food) => food.id === id) || (nutritionToday.foods || []).find((food) => food.foodId === id || food.id === id))
+        .map((id) =>
+          myFoods.find((food) => food.id === id || food.foodId === id) ||
+          localFoods.find((food) => food.id === id) ||
+          (nutritionToday.foods || []).find((food) => food.foodId === id || food.id === id)
+        )
         .filter(Boolean)
         .map(normalizeNutritionFood)
         .slice(0, 20);
     }
 
-    if (query.length >= 2 && fatSecretFoods.length > 0) {
-      return fatSecretFoods.slice(0, 30);
+    if (query.length >= 1) {
+      const personalMatches = myFoods
+        .filter((food) => getNutritionFoodSearchText(food).includes(query))
+        .slice(0, 20);
+
+      if (query.length >= 2 && fatSecretFoods.length > 0) {
+        const personalKeys = new Set(
+          personalMatches.map((food) => String(food.name || "").trim().toLowerCase())
+        );
+
+        const externalMatches = fatSecretFoods
+          .map(normalizeNutritionFood)
+          .filter((food) => !personalKeys.has(String(food.name || "").trim().toLowerCase()))
+          .slice(0, 30);
+
+        return [...personalMatches, ...externalMatches];
+      }
+
+      return personalMatches;
     }
 
-    const list = query
-      ? localFoods.filter((food) => food.name.toLowerCase().includes(query))
-      : localFoods.filter((food) => favoriteIds.includes(food.id));
-
-    return list.slice(0, 20);
-  }, [nutritionSearch, nutritionSearchTab, nutrition.favorites, nutrition.recent, nutritionToday.foods, fatSecretFoods]);
+    return [];
+  }, [nutritionSearch, nutritionSearchTab, nutrition.favorites, nutrition.recent, nutrition.myFoods, nutritionToday.foods, fatSecretFoods]);
 
   const nutritionAdvice = useMemo(() => {
     const calorieLeft = nutrition.goals.calories - nutritionTotals.calories;
@@ -841,7 +3492,6 @@ export default function App() {
     });
   }
 
-
   function getNutritionCurrentStreak() {
     const days = nutrition.days || {};
     let streak = 0;
@@ -864,7 +3514,67 @@ export default function App() {
 
   function selectNutritionDate(key) {
     setSelectedNutritionDateKey(key);
+    setNutritionCalendarMonthKey(String(key || todayNutritionKey()).slice(0, 7));
+    setNutritionCalendarOpen(false);
     setExpandedNutritionMeals({});
+  }
+
+  function openNutritionCalendar() {
+    setNutritionCalendarMonthKey(String(nutritionDateKey || todayNutritionKey()).slice(0, 7));
+    setNutritionCalendarOpen(true);
+  }
+
+  function shiftNutritionCalendarMonth(offset) {
+    setNutritionCalendarMonthKey((current) => {
+      const [year, month] = String(current || todayNutritionKey().slice(0, 7)).split("-").map(Number);
+      const date = new Date(year || new Date().getFullYear(), (month || 1) - 1 + offset, 1);
+      return dateToNutritionKey(date).slice(0, 7);
+    });
+  }
+
+  function getNutritionCalendarDays() {
+    const [year, month] = String(nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7)).split("-").map(Number);
+    const firstDay = new Date(year || new Date().getFullYear(), (month || 1) - 1, 1);
+    const start = new Date(firstDay);
+    const mondayOffset = (firstDay.getDay() + 6) % 7;
+    start.setDate(firstDay.getDate() - mondayOffset);
+
+    return Array.from({ length: 42 }).map((_, index) => {
+      const date = new Date(start);
+      date.setDate(start.getDate() + index);
+      const key = dateToNutritionKey(date);
+      const day = nutrition.days?.[key] || makeEmptyNutritionDay();
+      const totals = (day.foods || []).reduce(
+        (sum, item) => ({
+          calories: sum.calories + (Number(item.calories) || 0),
+          protein: sum.protein + (Number(item.protein) || 0),
+          fat: sum.fat + (Number(item.fat) || 0),
+          carbs: sum.carbs + (Number(item.carbs) || 0)
+        }),
+        { calories: 0, protein: 0, fat: 0, carbs: 0 }
+      );
+
+      return {
+        key,
+        date,
+        dayNumber: date.getDate(),
+        isCurrentMonth: date.getMonth() === firstDay.getMonth(),
+        isToday: key === todayNutritionKey(),
+        isSelected: key === nutritionDateKey,
+        hasFood: Boolean(day.foods?.length),
+        foodCount: day.foods?.length || 0,
+        calories: Math.round(totals.calories || 0),
+        isOverGoal: totals.calories > (Number(nutrition.goals?.calories) || 0)
+      };
+    });
+  }
+
+  function getNutritionCalendarMonthLabel() {
+    const [year, month] = String(nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7)).split("-").map(Number);
+    return new Date(year || new Date().getFullYear(), (month || 1) - 1, 1).toLocaleDateString("ru-RU", {
+      month: "long",
+      year: "numeric"
+    });
   }
 
   function updateNutritionDay(updater) {
@@ -882,8 +3592,8 @@ export default function App() {
 
   function addNutritionFood(food, mealId = nutritionMeal, amount = nutritionAmount) {
     const sourceFood = normalizeNutritionFood(food);
-    const scale = getFoodScale(amount);
-    const numericAmount = Number(String(amount).replace(",", ".")) || 100;
+    const scale = getFoodScale(amount, sourceFood, nutritionAmountMode);
+    const numericAmount = parseNutritionNumber(amount, 100) || 100;
     const item = {
       id: `${sourceFood.id}_${Date.now()}`,
       foodId: sourceFood.id,
@@ -891,12 +3601,19 @@ export default function App() {
       name: sourceFood.name,
       mealId,
       amount: numericAmount,
+      amountMode: nutritionAmountMode,
       portion: sourceFood.portion,
+      portionAmount: nutritionAmountMode === "portion" ? numericAmount : (Number(sourceFood.portionAmount) || getFoodPortionAmount(sourceFood)),
       calories: Math.round(sourceFood.calories * scale),
       protein: roundMacro(sourceFood.protein * scale),
       fat: roundMacro(sourceFood.fat * scale),
       carbs: roundMacro(sourceFood.carbs * scale),
       source: sourceFood.source,
+      icon: sourceFood.icon || getFoodIcon(sourceFood),
+      type: sourceFood.type || "",
+      totalWeight: parseNutritionNumber(sourceFood.totalWeight, 0) || parseNutritionNumber(sourceFood.portionAmount, 0) || 0,
+      ingredients: Array.isArray(sourceFood.ingredients) ? sourceFood.ingredients : [],
+      note: nutritionEditNote.trim(),
       addedAt: new Date().toISOString()
     };
 
@@ -905,10 +3622,36 @@ export default function App() {
       foods: [item, ...(day.foods || [])]
     }));
 
-    setNutrition((prev) => ({
-      ...prev,
-      recent: [sourceFood.id, ...(prev.recent || []).filter((id) => id !== sourceFood.id)].slice(0, 20)
-    }));
+    setNutrition((prev) => {
+      const myFoodId = makePersonalFoodKey(sourceFood);
+      const existing = prev.myFoods?.[myFoodId];
+      const personalFood = normalizeMyFoodRecord(
+        {
+          ...sourceFood,
+          id: myFoodId,
+          foodId: myFoodId,
+          note: nutritionEditNote.trim(),
+          description: nutritionEditNote.trim(),
+          amountMode: nutritionAmountMode,
+          portionAmount: nutritionAmountMode === "portion" ? numericAmount : (Number(sourceFood.portionAmount) || getFoodPortionAmount(sourceFood))
+        },
+        numericAmount,
+        existing
+      );
+
+      const nextMyFoods = {
+        ...(prev.myFoods || {}),
+        [myFoodId]: personalFood
+      };
+
+      savePersonalMyFoodsToFirebase(nextMyFoods);
+
+      return {
+        ...prev,
+        myFoods: nextMyFoods,
+        recent: [myFoodId, ...(prev.recent || []).filter((id) => id !== myFoodId && id !== sourceFood.id)].slice(0, 20)
+      };
+    });
 
     setExpandedNutritionMeals((prev) => ({
       ...prev,
@@ -916,16 +3659,876 @@ export default function App() {
     }));
   }
 
+  function openNutritionCreateProductFromPhoto(aiFood = {}, fallbackName = "") {
+    const getPositiveNumber = (primary, fallback, defaultValue = 0) => {
+      const primaryNumber = Number(primary);
+      if (Number.isFinite(primaryNumber) && primaryNumber > 0) return primaryNumber;
+      const fallbackNumber = Number(fallback);
+      return Number.isFinite(fallbackNumber) && fallbackNumber > 0 ? fallbackNumber : defaultValue;
+    };
+    const candidate = aiFood.candidates?.[0] || {};
+    const rawAiResponse = aiFood.rawAiResponse || {};
+    const brand = String(aiFood.brand || candidate.brand || rawAiResponse.brand || "").trim();
+    const productName = String(aiFood.name || candidate.name || fallbackName || "Новый продукт").trim();
+    const cleanName = brand && !productName.toLowerCase().includes(brand.toLowerCase())
+      ? `${brand} ${productName}`
+      : productName;
+    const calories = getPositiveNumber(aiFood.calories, candidate.calories);
+    const protein = getPositiveNumber(aiFood.protein, candidate.protein);
+    const fat = getPositiveNumber(aiFood.fat, candidate.fat);
+    const carbs = getPositiveNumber(aiFood.carbs, candidate.carbs);
+    const estimatedGrams = getPositiveNumber(aiFood.estimatedGrams, candidate.estimatedGrams, 100);
+    const labelText = String(
+      aiFood.labelText || aiFood.fullText || aiFood.ocrText ||
+      rawAiResponse.labelText || rawAiResponse.fullText || rawAiResponse.ocrText || ""
+    ).trim();
+    const ingredients = aiFood.ingredients || aiFood.detectedIngredients ||
+      candidate.ingredients || candidate.detectedIngredients ||
+      rawAiResponse.ingredients || rawAiResponse.detectedIngredients || [];
+    const ingredientsText = Array.isArray(ingredients) ? ingredients.filter(Boolean).join(", ") : String(ingredients || "").trim();
+    const netWeight = String(aiFood.netWeight || aiFood.servingSize || rawAiResponse.netWeight || rawAiResponse.servingSize || "").trim();
+    const aiDescription = [
+      brand ? `Бренд: ${brand}` : "",
+      labelText ? `Текст с этикетки: ${labelText}` : "",
+      ingredientsText ? `Состав: ${ingredientsText}` : "",
+      netWeight ? `Масса нетто: ${netWeight}` : "",
+      `Пищевая ценность на 100 г: ${calories} ккал; белки ${protein} г; жиры ${fat} г; углеводы ${carbs} г.`,
+      aiFood.query ? `Данные AI: ${aiFood.query}` : "",
+      aiFood.confidence ? `Уверенность AI: ${aiFood.confidence}` : "",
+      estimatedGrams ? `Оценочный вес порции: ${estimatedGrams} г.` : ""
+    ].filter(Boolean).join("\n");
+
+    const draftFood = normalizeNutritionFood({
+      id: `photo_${Date.now()}`,
+      foodId: `photo_${Date.now()}`,
+      name: cleanName || "Новый продукт",
+      brand,
+      note: aiDescription,
+      description: aiDescription,
+      portion: "100 г",
+      portionAmount: 100,
+      calories,
+      protein,
+      fat,
+      carbs,
+      source: "AI фото",
+      amountMode: "grams",
+      lastAmount: estimatedGrams,
+      icon: getFoodIcon({ name: cleanName }) || "🍽️"
+    });
+
+    setFatSecretError("");
+    setNutritionFallbackSuggestions([]);
+    setNutritionPhotoAiCandidates([]);
+    setNutritionPhotoAiConfidence("");
+    setNutritionPhotoAiResult(`ИИ распознал этикетку: ${draftFood.name}. Проверь КБЖУ и сохрани продукт.`);
+    setNutritionSearch(draftFood.name);
+    setEditingNutritionItemId(null);
+    setNutritionMealMenuOpen(false);
+    setNutritionCreateChoiceOpen(false);
+    setSelectedNutritionFood(draftFood);
+    setNutritionAmount(String(estimatedGrams));
+    setNutritionAmountMode("grams");
+    setNutritionEditNote(aiDescription);
+    setNutritionEditDetailsOpen(true);
+    setNutritionEditPageOpen(true);
+  }
+
+  function createCustomNutritionFood() {
+    const cleanName = nutritionSearch.trim();
+    const draftFood = normalizeNutritionFood({
+      id: `custom_${Date.now()}`,
+      foodId: `custom_${Date.now()}`,
+      name: cleanName || "Новый продукт",
+      portion: "100 г",
+      portionAmount: 100,
+      calories: 0,
+      protein: 0,
+      fat: 0,
+      carbs: 0,
+      source: "Моя база",
+      amountMode: "grams",
+      lastAmount: 100,
+      icon: "🍽️"
+    });
+
+    setFatSecretError("");
+    setNutritionFallbackSuggestions([]);
+    setEditingNutritionItemId(null);
+    setNutritionMealMenuOpen(false);
+    setNutritionCreateChoiceOpen(false);
+    setSelectedNutritionFood(draftFood);
+    setNutritionAmount("100");
+    setNutritionAmountMode("grams");
+    setNutritionEditNote("");
+    setNutritionEditDetailsOpen(false);
+    setNutritionEditPageOpen(true);
+  }
+
+  function createCustomNutritionDish() {
+    const cleanName = nutritionSearch.trim();
+    const draftDish = normalizeNutritionFood({
+      id: `dish_${Date.now()}`,
+      foodId: `dish_${Date.now()}`,
+      name: cleanName || "Новое блюдо",
+      portion: "100 г",
+      portionAmount: 100,
+      totalWeight: 100,
+      calories: 0,
+      protein: 0,
+      fat: 0,
+      carbs: 0,
+      source: "Моя база",
+      amountMode: "grams",
+      lastAmount: 100,
+      icon: "🍲",
+      type: "dish",
+      ingredients: []
+    });
+
+    setFatSecretError("");
+    setNutritionFallbackSuggestions([]);
+    setEditingNutritionItemId(null);
+    setNutritionMealMenuOpen(false);
+    setNutritionCreateChoiceOpen(false);
+    setSelectedNutritionFood(draftDish);
+    setNutritionAmount("100");
+    setNutritionAmountMode("grams");
+    setNutritionEditNote("");
+    setNutritionEditDetailsOpen(false);
+    setNutritionEditPageOpen(true);
+  }
+
   function addNutritionFoodFromPicker(food) {
-    addNutritionFood(food);
+    const normalizedFood = normalizeNutritionFood(food);
+    const storedFood = nutrition.myFoods?.[normalizedFood.id] || nutrition.myFoods?.[normalizedFood.foodId];
+
+    const foodForPicker = {
+      ...normalizedFood,
+      portionAmount: storedFood?.portionAmount || normalizedFood.portionAmount || 0,
+      amountMode: storedFood?.amountMode || normalizedFood.amountMode || "",
+      icon: storedFood?.icon || normalizedFood.icon || getFoodIcon(normalizedFood)
+    };
+
+    const savedMode = storedFood?.amountMode || normalizedFood.amountMode || "";
+    const savedAmount = storedFood?.lastAmount || normalizedFood.lastAmount;
+    const preferredUnitId = loadNutritionPreferredUnit(foodForPicker);
+    const defaultUnit =
+      getNutritionSmartUnits(foodForPicker).find((unit) => unit.id === preferredUnitId) ||
+      getDefaultNutritionSmartUnit(foodForPicker);
+    const nextAmount = savedAmount || defaultUnit.amount || 100;
+    const nextMode = savedMode || defaultUnit.mode || detectNutritionAmountMode(foodForPicker, nextAmount, savedMode);
+
+    if (!savedAmount && defaultUnit.mode === "portion") {
+      foodForPicker.portion = defaultUnit.portion || defaultUnit.label || foodForPicker.portion;
+      foodForPicker.portionAmount = defaultUnit.portionAmount || defaultUnit.amount || foodForPicker.portionAmount;
+    }
+
+    setEditingNutritionItemId(null);
+    setSelectedNutritionFood(foodForPicker);
+    setNutritionAmount(String(nextAmount));
+    setNutritionAmountMode(nextMode);
+    setNutritionEditNote(foodForPicker.description || foodForPicker.note || "");
+  }
+
+  function updateNutritionFood(itemId, food, amount = nutritionAmount) {
+    const sourceFood = normalizeNutritionFood(food);
+    const scale = getFoodScale(amount, sourceFood, nutritionAmountMode);
+    const numericAmount = parseNutritionNumber(amount, 100) || 100;
+
+    updateNutritionDay((day) => ({
+      ...day,
+      foods: (day.foods || []).map((item) => (
+        item.id === itemId
+          ? {
+              ...item,
+              foodId: sourceFood.id,
+              fatSecretId: sourceFood.fatSecretId || item.fatSecretId || "",
+              name: sourceFood.name,
+              amount: numericAmount,
+              amountMode: nutritionAmountMode,
+              portion: sourceFood.portion,
+              portionAmount: nutritionAmountMode === "portion" ? numericAmount : (Number(sourceFood.portionAmount) || getFoodPortionAmount(sourceFood)),
+              calories: Math.round(sourceFood.calories * scale),
+              protein: roundMacro(sourceFood.protein * scale),
+              fat: roundMacro(sourceFood.fat * scale),
+              carbs: roundMacro(sourceFood.carbs * scale),
+              source: sourceFood.source,
+              icon: sourceFood.icon || getFoodIcon(sourceFood),
+              type: sourceFood.type || "",
+              totalWeight: parseNutritionNumber(sourceFood.totalWeight, 0) || parseNutritionNumber(sourceFood.portionAmount, 0) || 0,
+              ingredients: Array.isArray(sourceFood.ingredients) ? sourceFood.ingredients : [],
+              note: nutritionEditNote.trim(),
+              updatedAt: new Date().toISOString()
+            }
+          : item
+      ))
+    }));
+
+    setNutrition((prev) => {
+      const myFoodId = makePersonalFoodKey(sourceFood);
+      const existing = prev.myFoods?.[myFoodId];
+      const personalFood = normalizeMyFoodRecord(
+        {
+          ...sourceFood,
+          id: myFoodId,
+          foodId: myFoodId,
+          note: nutritionEditNote.trim(),
+          description: nutritionEditNote.trim(),
+          amountMode: nutritionAmountMode,
+          portionAmount: nutritionAmountMode === "portion" ? numericAmount : (Number(sourceFood.portionAmount) || getFoodPortionAmount(sourceFood))
+        },
+        numericAmount,
+        existing
+      );
+
+      const nextMyFoods = {
+        ...(prev.myFoods || {}),
+        [myFoodId]: personalFood
+      };
+
+      savePersonalMyFoodsToFirebase(nextMyFoods);
+
+      return {
+        ...prev,
+        myFoods: nextMyFoods,
+        recent: [myFoodId, ...(prev.recent || []).filter((id) => id !== myFoodId && id !== sourceFood.id)].slice(0, 20)
+      };
+    });
+  }
+
+  function updateSelectedNutritionFoodField(field, value) {
+    setSelectedNutritionFood((prev) => {
+      if (!prev) return prev;
+
+      const numericFields = ["calories", "protein", "fat", "carbs", "portionAmount", "lastAmount"];
+      if (numericFields.includes(field)) {
+        return {
+          ...prev,
+          // Keep the raw input while editing so deleting digits or using comma does not cause visual lag.
+          [field]: value
+        };
+      }
+
+      return {
+        ...prev,
+        [field]: value
+      };
+    });
+  }
+
+  function updateSelectedNutritionPortionUnit(unit) {
+    setSelectedNutritionFood((prev) => {
+      if (!prev) return prev;
+
+      const currentPortion = String(prev.portion || "").trim();
+      const match = currentPortion.match(/(\d+[,.]?\d*)/);
+      const amount = match?.[1] || String(prev.portionAmount || prev.lastAmount || "100");
+
+      return {
+        ...prev,
+        portion: `${amount} ${unit}`,
+        portionAmount: parseNutritionNumber(amount, 0) || prev.portionAmount || 100
+      };
+    });
+  }
+
+  function updateSelectedDishTotalWeight(value) {
+    const numericWeight = parseNutritionNumber(value, 0);
+    const cleanValue = String(value ?? "");
+
+    setSelectedNutritionFood((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        totalWeight: cleanValue,
+        portionAmount: cleanValue,
+        portion: `${numericWeight > 0 ? cleanValue : ""} г`
+      };
+    });
+  }
+
+  function recalcDishFromIngredients(ingredients) {
+    return (ingredients || []).reduce((sum, ingredient) => {
+      const scale = parseNutritionNumber(ingredient.grams, 0) / (parseNutritionNumber(ingredient.baseAmount, 100) || 100);
+
+      return {
+        calories: sum.calories + (Number(ingredient.baseCalories) || 0) * scale,
+        protein: sum.protein + (Number(ingredient.baseProtein) || 0) * scale,
+        fat: sum.fat + (Number(ingredient.baseFat) || 0) * scale,
+        carbs: sum.carbs + (Number(ingredient.baseCarbs) || 0) * scale
+      };
+    }, { calories: 0, protein: 0, fat: 0, carbs: 0 });
+  }
+
+  function openDishIngredientPicker() {
+    setDishIngredientSearch("");
+    setDishIngredientPickerOpen(true);
+  }
+
+  function addSelectedDishIngredientFromFood(food, gramsValue = 100) {
+    const normalizedFood = normalizeNutritionFood(food);
+    const grams = parseNutritionNumber(gramsValue, 100) || 100;
+    const baseAmount = normalizedFood.type === "dish"
+      ? (Number(normalizedFood.totalWeight) || Number(normalizedFood.portionAmount) || getFoodPortionAmount(normalizedFood) || 100)
+      : 100;
+
+    setSelectedNutritionFood((prev) => {
+      if (!prev) return prev;
+
+      const ingredients = Array.isArray(prev.ingredients) ? prev.ingredients : [];
+
+      const nextIngredients = [
+        ...ingredients,
+        {
+          id: `ingredient_${Date.now()}`,
+          foodId: normalizedFood.foodId || normalizedFood.id,
+          name: normalizedFood.name,
+          grams,
+          icon: normalizedFood.icon || getFoodIcon(normalizedFood),
+          baseAmount,
+          baseCalories: Number(normalizedFood.calories) || 0,
+          baseProtein: Number(normalizedFood.protein) || 0,
+          baseFat: Number(normalizedFood.fat) || 0,
+          baseCarbs: Number(normalizedFood.carbs) || 0
+        }
+      ];
+
+      const totals = recalcDishFromIngredients(nextIngredients);
+      const totalWeight = nextIngredients.reduce((sum, item) => sum + parseNutritionNumber(item.grams, 0), 0);
+
+      return {
+        ...prev,
+        ingredients: nextIngredients,
+        totalWeight: totalWeight || prev.totalWeight || prev.portionAmount || 100,
+        portionAmount: totalWeight || prev.portionAmount || 100,
+        portion: `${totalWeight || prev.portionAmount || 100} г`,
+        calories: Math.round(totals.calories),
+        protein: roundMacro(totals.protein),
+        fat: roundMacro(totals.fat),
+        carbs: roundMacro(totals.carbs)
+      };
+    });
+
+    setDishIngredientPickerOpen(false);
+    setDishIngredientSearch("");
+  }
+
+  function removeSelectedDishIngredient(ingredientId) {
+    setSelectedNutritionFood((prev) => {
+      if (!prev) return prev;
+
+      const nextIngredients = (prev.ingredients || []).filter((item) => item.id !== ingredientId);
+      const totals = recalcDishFromIngredients(nextIngredients);
+      const totalWeight = nextIngredients.reduce((sum, item) => sum + parseNutritionNumber(item.grams, 0), 0);
+
+      return {
+        ...prev,
+        ingredients: nextIngredients,
+        totalWeight: totalWeight || 0,
+        portionAmount: totalWeight || 0,
+        portion: `${totalWeight || ""} г`,
+        calories: Math.round(totals.calories),
+        protein: roundMacro(totals.protein),
+        fat: roundMacro(totals.fat),
+        carbs: roundMacro(totals.carbs)
+      };
+    });
+  }
+
+  function cloneNutritionFoodForEdit(food) {
+    if (!food) return null;
+
+    try {
+      return JSON.parse(JSON.stringify(food));
+    } catch (_) {
+      return { ...food };
+    }
+  }
+
+  function openNutritionEditPage() {
+    setNutritionEditOriginalFood(cloneNutritionFoodForEdit(selectedNutritionFood));
+    setNutritionEditOriginalNote(nutritionEditNote);
+    setNutritionEditPageOpen(true);
+  }
+
+  function cancelNutritionEditPage() {
+    const originalFood = cloneNutritionFoodForEdit(nutritionEditOriginalFood);
+
+    if (originalFood) {
+      setSelectedNutritionFood(originalFood);
+    }
+
+    setNutritionEditNote(nutritionEditOriginalNote || "");
+    setNutritionEditOriginalFood(null);
+    setNutritionEditOriginalNote("");
+    setNutritionEditPageOpen(false);
+  }
+
+  function confirmNutritionEditPage() {
+    setNutritionEditOriginalFood(null);
+    setNutritionEditOriginalNote("");
+    setNutritionEditPageOpen(false);
+  }
+
+  function confirmNutritionFoodFromPicker() {
+    if (!selectedNutritionFood) return;
+
+    if (editingNutritionItemId && String(editingNutritionItemId).startsWith("my:")) {
+      const myFoodId = String(editingNutritionItemId).replace("my:", "");
+      const numericAmount = parseNutritionNumber(nutritionAmount, 100) || 100;
+
+      const foodToAdd = normalizeNutritionFood({
+        ...selectedNutritionFood,
+        id: myFoodId,
+        foodId: myFoodId,
+        source: "Моя база",
+        note: nutritionEditNote.trim(),
+        description: nutritionEditNote.trim(),
+        lastAmount: numericAmount,
+        amountMode: nutritionAmountMode,
+        portionAmount: nutritionAmountMode === "portion"
+          ? numericAmount
+          : (Number(selectedNutritionFood.portionAmount) || getFoodPortionAmount(selectedNutritionFood))
+      });
+
+      setNutrition((prev) => {
+        const current = prev.myFoods?.[myFoodId] || {};
+        const updatedFood = normalizeMyFoodRecord(foodToAdd, numericAmount, current);
+
+        const nextMyFoods = {
+          ...(prev.myFoods || {}),
+          [myFoodId]: updatedFood
+        };
+
+        savePersonalMyFoodsToFirebase(nextMyFoods);
+
+        return {
+          ...prev,
+          myFoods: nextMyFoods,
+          recent: [myFoodId, ...(prev.recent || []).filter((id) => id !== myFoodId)].slice(0, 20)
+        };
+      });
+
+      addNutritionFood(foodToAdd, nutritionMeal, numericAmount);
+
+      setRecentNutritionFoods(loadRecentNutritionFoods());
+      setEditingNutritionItemId(null);
+      setSelectedNutritionFood(null);
+      setNutritionEditDetailsOpen(false);
+      setNutritionEditPageOpen(false);
+      setNutritionEditNote("");
+      setNutritionSearch("");
+      setNutritionSearchTab("food");
+      resetNutritionPhotoAiState();
+      setNutritionPickerOpen(false);
+      return;
+    }
+
+    if (editingNutritionItemId) {
+      updateNutritionFood(editingNutritionItemId, selectedNutritionFood);
+      setEditingNutritionItemId(null);
+    } else {
+      addNutritionFood(selectedNutritionFood);
+    }
+
+    setSelectedNutritionFood(null);
+    setNutritionEditDetailsOpen(false);
+    setNutritionEditPageOpen(false);
+    setNutritionEditNote("");
+    resetNutritionPhotoAiState();
     setNutritionPickerOpen(false);
   }
 
   function openNutritionPicker(mealId) {
+    resetNutritionPhotoAiState();
     setNutritionMeal(mealId);
     setNutritionSearch("");
     setNutritionSearchTab("food");
+    setNutritionAmount("100");
+    setNutritionAmountMode("grams");
+    setNutritionEditNote("");
+    setNutritionEditDetailsOpen(false);
+    setNutritionCreateChoiceOpen(false);
+    setEditingNutritionItemId(null);
+    setSelectedNutritionFood(null);
+    setNutritionFallbackSuggestions([]);
+    setRecentNutritionFoods(loadRecentNutritionFoods());
+    setShowRecentNutritionFoods(false);
     setNutritionPickerOpen(true);
+  }
+
+  function openNutritionFoodEditor(item) {
+    const numericAmount = parseNutritionNumber(item.amount, 100) || 100;
+    const foodForEdit = getNutritionBaseMacroFood(
+      {
+        ...item,
+        id: item.foodId || item.id,
+        foodId: item.foodId || item.id,
+        source: item.source || "Дневник",
+        portionAmount: Number(item.portionAmount) || (item.amountMode === "portion" ? numericAmount : getFoodPortionAmount(item)),
+        totalWeight: Number(item.totalWeight) || Number(item.portionAmount) || 0,
+        amountMode: item.amountMode || ""
+      },
+      numericAmount,
+      item.amountMode || "grams"
+    );
+
+    const detectedAmountMode = detectNutritionAmountMode(foodForEdit, numericAmount, item.amountMode);
+
+    setNutritionMeal(item.mealId || "breakfast");
+    setNutritionAmount(String(numericAmount));
+    setNutritionAmountMode(detectedAmountMode);
+    setNutritionEditNote(item.note || "");
+    setNutritionEditDetailsOpen(false);
+    setEditingNutritionItemId(item.id);
+    setSelectedNutritionFood(foodForEdit);
+    setNutritionMealMenuOpen(false);
+    setNutritionPickerOpen(true);
+  }
+
+  function handleNutritionFoodSwipeStart(itemId, event) {
+    const touch = event.touches?.[0];
+    nutritionFoodSwipeStartX.current[itemId] = {
+      x: touch?.clientX || 0,
+      y: touch?.clientY || 0,
+      time: Date.now()
+    };
+    nutritionFoodSwipeMoved.current[itemId] = false;
+  }
+
+  function handleNutritionFoodSwipeMove(itemId, event) {
+    const start = nutritionFoodSwipeStartX.current[itemId];
+    const touch = event.touches?.[0];
+    if (!start || !touch || deletingNutritionFoodId === itemId) return;
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+
+    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.15) return;
+
+    if (deltaX < -8) {
+      event.preventDefault();
+      const nextOffset = Math.max(-135, Math.min(0, deltaX));
+      nutritionFoodSwipeMoved.current[itemId] = Math.abs(nextOffset) > 14;
+      setNutritionFoodSwipeOffsets((prev) => ({ ...prev, [itemId]: nextOffset }));
+    }
+  }
+
+  function handleNutritionFoodSwipeEnd(itemId, event) {
+    const start = nutritionFoodSwipeStartX.current[itemId];
+    const touch = event.changedTouches?.[0];
+    delete nutritionFoodSwipeStartX.current[itemId];
+
+    if (!start || !touch) {
+      setNutritionFoodSwipeOffsets((prev) => ({ ...prev, [itemId]: 0 }));
+      return;
+    }
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    const elapsed = Math.max(1, Date.now() - start.time);
+    const velocity = Math.abs(deltaX) / elapsed;
+    const isIntentionalDelete =
+      deltaX < -135 &&
+      Math.abs(deltaX) > Math.abs(deltaY) * 1.35 &&
+      (velocity > 0.16 || Math.abs(deltaX) > 170);
+
+    if (isIntentionalDelete) {
+      nutritionFoodSwipeMoved.current[itemId] = true;
+      setDeletingNutritionFoodId(itemId);
+      setNutritionFoodSwipeOffsets((prev) => ({ ...prev, [itemId]: -420 }));
+
+      window.setTimeout(() => {
+        removeNutritionFood(itemId);
+        setDeletingNutritionFoodId(null);
+        setNutritionFoodSwipeOffsets((prev) => {
+          const next = { ...prev };
+          delete next[itemId];
+          return next;
+        });
+        delete nutritionFoodSwipeMoved.current[itemId];
+      }, 240);
+    } else {
+      setNutritionFoodSwipeOffsets((prev) => ({ ...prev, [itemId]: 0 }));
+      window.setTimeout(() => {
+        delete nutritionFoodSwipeMoved.current[itemId];
+      }, 180);
+    }
+  }
+
+  function handleNutritionFoodSwipeCancel(itemId) {
+    delete nutritionFoodSwipeStartX.current[itemId];
+    setNutritionFoodSwipeOffsets((prev) => ({ ...prev, [itemId]: 0 }));
+    window.setTimeout(() => {
+      delete nutritionFoodSwipeMoved.current[itemId];
+    }, 180);
+  }
+
+  function resetNutritionPhotoAiSearch() {
+    setNutritionPhotoName("");
+    setNutritionPhotoPreview((currentPreview) => {
+      if (currentPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(currentPreview);
+      }
+      return "";
+    });
+    setNutritionPhotoAiResult("");
+    setNutritionPhotoAiCandidates([]);
+    setNutritionPhotoAiConfidence("");
+    setNutritionPhotoAnalyzing(false);
+    nutritionPhotoLastFileRef.current = null;
+    if (nutritionPhotoInputRef.current) {
+      nutritionPhotoInputRef.current.value = "";
+    }
+  }
+
+  function getNutritionPhotoAiConfidenceText(confidence) {
+    const numericConfidence = Number(confidence);
+    if (Number.isFinite(numericConfidence) && numericConfidence > 0) {
+      const percent = numericConfidence <= 1 ? Math.round(numericConfidence * 100) : Math.round(numericConfidence);
+      return `${Math.min(100, percent)}% уверенности`;
+    }
+
+    const textConfidence = String(confidence || "").trim();
+    return textConfidence ? textConfidence : "";
+  }
+
+  function getNutritionPhotoAiCandidateFoods(data = {}) {
+    const rawCandidates = [
+      data.food,
+      ...(Array.isArray(data.candidates) ? data.candidates : []),
+      ...(Array.isArray(data.foods) ? data.foods : []),
+      ...(Array.isArray(data.results) ? data.results : [])
+    ].filter(Boolean);
+
+    const uniqueCandidates = new Map();
+    rawCandidates.forEach((candidate) => {
+      const normalized = normalizeNutritionFood({
+        ...candidate,
+        source: candidate.source || "ИИ фото",
+        icon: candidate.icon || getFoodIcon(candidate)
+      });
+      const key = String(normalized.name || "").toLowerCase().trim();
+      if (key && !uniqueCandidates.has(key)) {
+        uniqueCandidates.set(key, normalized);
+      }
+    });
+
+    return Array.from(uniqueCandidates.values()).slice(0, 4);
+  }
+
+  function selectNutritionPhotoAiCandidate(food) {
+    const normalizedFood = normalizeNutritionFood({
+      ...food,
+      source: food.source || "ИИ фото"
+    });
+    const preferredUnitId = loadNutritionPreferredUnit(normalizedFood);
+    const defaultUnit =
+      getNutritionSmartUnits(normalizedFood).find((unit) => unit.id === preferredUnitId) ||
+      getDefaultNutritionSmartUnit(normalizedFood);
+    const fallbackAmount = normalizedFood.lastAmount || defaultUnit.amount || 100;
+
+    const foodForPicker = {
+      ...normalizedFood,
+      portion: defaultUnit.mode === "portion" ? (defaultUnit.portion || defaultUnit.label || normalizedFood.portion) : normalizedFood.portion,
+      portionAmount: defaultUnit.mode === "portion" ? (defaultUnit.portionAmount || defaultUnit.amount || normalizedFood.portionAmount) : normalizedFood.portionAmount
+    };
+
+    setSelectedNutritionFood(foodForPicker);
+    setNutritionAmount(String(fallbackAmount));
+    setNutritionAmountMode(defaultUnit.mode || "grams");
+    setNutritionEditDetailsOpen(false);
+    setNutritionEditPageOpen(false);
+    setNutritionEditOriginalFood(null);
+    setNutritionEditOriginalNote("");
+    setEditingNutritionItemId(null);
+    setNutritionPhotoAiResult(`Выбрано: ${normalizedFood.name}`);
+  }
+
+  function inferNutritionQueryFromPhotoName(fileName = "") {
+    const name = fileName.toLowerCase();
+    const hints = [
+      { keys: ["chicken", "кур", "grud", "груд"], query: "Куриная грудка" },
+      { keys: ["rice", "рис"], query: "Рис" },
+      { keys: ["buckwheat", "греч", "grech"], query: "Гречка" },
+      { keys: ["egg", "яйц"], query: "Яйцо" },
+      { keys: ["curd", "твор"], query: "Творог" },
+      { keys: ["oat", "овся"], query: "Овсянка" },
+      { keys: ["banana", "банан"], query: "Банан" },
+      { keys: ["salmon", "лосос", "рыб"], query: "Лосось" },
+      { keys: ["yogurt", "йогурт"], query: "Греческий йогурт" },
+      { keys: ["protein", "протеин"], query: "Протеин" },
+      { keys: ["apple", "яблок"], query: "Яблоко" },
+      { keys: ["potato", "карто"], query: "Картофель" }
+    ];
+
+    return hints.find((item) => item.keys.some((key) => name.includes(key)))?.query || "";
+  }
+
+  async function prepareNutritionPhotoForAi(file) {
+    const imageUrl = URL.createObjectURL(file);
+
+    try {
+      const image = await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = imageUrl;
+      });
+
+      const maxSide = 1280;
+      const ratio = Math.min(1, maxSide / Math.max(image.width, image.height));
+      const width = Math.max(1, Math.round(image.width * ratio));
+      const height = Math.max(1, Math.round(image.height * ratio));
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(image, 0, 0, width, height);
+
+      return canvas.toDataURL("image/jpeg", 0.82);
+    } finally {
+      URL.revokeObjectURL(imageUrl);
+    }
+  }
+
+  function resetNutritionPhotoAiState() {
+    setNutritionPhotoPreview((currentPreview) => {
+      if (currentPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(currentPreview);
+      }
+      return "";
+    });
+    setNutritionPhotoName("");
+    setNutritionPhotoAiResult("");
+    setNutritionPhotoAiCandidates([]);
+    setNutritionPhotoAiConfidence("");
+    setNutritionPhotoAnalyzing(false);
+    nutritionPhotoLastFileRef.current = null;
+
+    if (nutritionPhotoInputRef.current) {
+      nutritionPhotoInputRef.current.value = "";
+    }
+  }
+
+  async function runNutritionPhotoAiSearch(file) {
+    if (!file) return;
+
+    if (!String(file.type || "").startsWith("image/")) {
+      setNutritionPhotoAiResult("Нужна фотография продукта или этикетки в формате изображения.");
+      setNutritionPhotoAiCandidates([]);
+      setNutritionPhotoAiConfidence("");
+      return;
+    }
+
+    if (file.size > 25 * 1024 * 1024) {
+      setNutritionPhotoAiResult("Фото слишком большое. Сделай снимок ближе или выбери изображение до 25 МБ.");
+      setNutritionPhotoAiCandidates([]);
+      setNutritionPhotoAiConfidence("");
+      return;
+    }
+
+    nutritionPhotoLastFileRef.current = file;
+    setNutritionPhotoName(file.name || "Фото продукта");
+    setNutritionPhotoPreview((currentPreview) => {
+      if (currentPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(currentPreview);
+      }
+      return URL.createObjectURL(file);
+    });
+    setNutritionPhotoAiResult("");
+    setNutritionPhotoAiCandidates([]);
+    setNutritionPhotoAiConfidence("");
+    setNutritionPhotoAnalyzing(true);
+    setFatSecretError("");
+    setNutritionSearchTab("food");
+    setShowRecentNutritionFoods(false);
+
+    try {
+      startPerformanceCheck("AI photo · total", { fileSizeMb: Math.round((file.size / 1024 / 1024) * 10) / 10 });
+      startPerformanceCheck("AI photo · prepare image");
+      const imageData = await prepareNutritionPhotoForAi(file);
+      endPerformanceCheck("AI photo · prepare image", { imageLengthKb: Math.round((imageData.length / 1024) * 10) / 10 });
+
+      startPerformanceCheck("AI photo · function request");
+      const response = await fetchWithTimeout("/api/ai-food-photo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          imageData,
+          mimeType: "image/jpeg",
+          fileName: file.name || "food-photo"
+        })
+      }, 45000);
+
+      const data = await response.json().catch(() => ({}));
+      endPerformanceCheck("AI photo · function request", { status: response.status, apiVersion: data.apiVersion || "" });
+
+      if (!response.ok) {
+        console.log("[AI PHOTO] request failed", { status: response.status, apiVersion: data.apiVersion || "", code: data.code || "" });
+        setNutritionPhotoAiCandidates([]);
+        setNutritionPhotoAiConfidence("");
+        setNutritionPhotoAiResult(data.message || "Не удалось распознать продукт на фото. Попробуй другое изображение.");
+        return;
+      }
+
+      const product = data.product;
+      const validProduct = Boolean(String(product?.name || "").trim())
+        && String(product.name).trim().toLowerCase() !== "новый продукт"
+        && Number(product.calories) > 0
+        && [product.protein, product.fat, product.carbs].some((value) => Number(value) > 0);
+
+      if (!validProduct) {
+        console.log("[AI PHOTO] invalid product", { apiVersion: data.apiVersion || "", product });
+        setNutritionPhotoAiCandidates([]);
+        setNutritionPhotoAiConfidence("");
+        setNutritionPhotoAiResult("Не удалось распознать продукт на фото. Попробуй другое изображение.");
+        return;
+      }
+
+      setNutritionPhotoAiConfidence(getNutritionPhotoAiConfidenceText(product.confidence));
+      openNutritionCreateProductFromPhoto({ ...product, rawAiResponse: data }, product.name);
+    } catch (error) {
+      console.error(error);
+      showAppError(
+        error.name === "AbortError"
+          ? "timeout"
+          : typeof navigator !== "undefined" && !navigator.onLine
+            ? "offline"
+            : "api",
+        "AI-фото сейчас недоступно. Можно ввести продукт вручную."
+      );
+      setNutritionPhotoAiCandidates([]);
+      setNutritionPhotoAiConfidence("");
+      setNutritionPhotoAiResult(
+        error.name === "AbortError"
+          ? "Анализ фото занял слишком много времени. Попробуй ещё раз."
+          : "AI-фото сейчас недоступно. Попробуй ещё раз или создай продукт вручную."
+      );
+    } finally {
+      endPerformanceCheck("AI photo · total");
+      setNutritionPhotoAnalyzing(false);
+    }
+  }
+
+  async function handleNutritionPhotoAiSearch(event) {
+    const file = event.target.files?.[0];
+    await runNutritionPhotoAiSearch(file);
+    if (event.target) {
+      event.target.value = "";
+    }
+  }
+
+  function retryNutritionPhotoAiSearch() {
+    if (nutritionPhotoLastFileRef.current) {
+      runNutritionPhotoAiSearch(nutritionPhotoLastFileRef.current);
+    } else {
+      nutritionPhotoInputRef.current?.click();
+    }
   }
 
   function addFoodByBarcodeFromPicker() {
@@ -942,11 +4545,169 @@ export default function App() {
     setFatSecretError("Штрихкод пока не найден. Попробуй найти продукт по названию.");
   }
 
+  function savePersonalMyFoodsToFirebase(myFoods) {
+    const currentUser = auth.currentUser || user;
+    const uid = currentUser?.uid;
+
+    if (!uid) {
+      showAppError("savedLocal", "Моя база сохранена локально. Войди в аккаунт для синхронизации.");
+      return;
+    }
+
+    const backupId = `my_foods_${Date.now()}`;
+    addUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, {
+      id: backupId,
+      myFoods: myFoods || {},
+      reason: "before_personal_my_foods_save"
+    }, 12);
+
+    setDoc(getPersonalMyFoodsDocRef(uid), {
+      myFoods: myFoods || {},
+      updatedAt: new Date().toISOString(),
+      ownerUid: uid
+    }, { merge: true })
+      .then(() => removeUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, backupId))
+      .catch((error) => {
+        console.error("Personal my foods save error", error);
+        showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "firebase", "Моя база сохранена локально.");
+        addUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, {
+          myFoods: myFoods || {},
+          reason: "personal_my_foods_save_failed",
+          error: error.message || String(error)
+        }, 12);
+      });
+  }
+
   function removeNutritionFood(itemId) {
+    addLocalBackup(NUTRITION_BACKUP_STORAGE_KEY, {
+      nutrition,
+      reason: "before_remove_food",
+      itemId
+    });
+
     updateNutritionDay((day) => ({
       ...day,
       foods: (day.foods || []).filter((item) => item.id !== itemId)
     }));
+  }
+
+  function removeMyNutritionFood(foodId, foodName = "") {
+    const cleanFoodId = String(foodId || "").replace(/^my:/, "");
+    const cleanFoodName = String(foodName || "").trim().toLowerCase();
+
+    setNutrition((prev) => {
+      const currentMyFoods = prev.myFoods || {};
+      const idsToRemove = new Set();
+
+      Object.entries(currentMyFoods).forEach(([key, value]) => {
+        const valueId = String(value?.id || "");
+        const valueFoodId = String(value?.foodId || "");
+        const valueName = String(value?.name || "").trim().toLowerCase();
+
+        if (
+          key === cleanFoodId ||
+          valueId === cleanFoodId ||
+          valueFoodId === cleanFoodId ||
+          (cleanFoodName && valueName === cleanFoodName)
+        ) {
+          idsToRemove.add(key);
+          if (valueId) idsToRemove.add(valueId);
+          if (valueFoodId) idsToRemove.add(valueFoodId);
+        }
+      });
+
+      if (cleanFoodId) idsToRemove.add(cleanFoodId);
+
+      if (cleanFoodName) {
+        idsToRemove.add(makePersonalFoodKey({ name: cleanFoodName }));
+      }
+
+      const nextMyFoods = { ...currentMyFoods };
+      idsToRemove.forEach((id) => {
+        delete nextMyFoods[id];
+      });
+
+      const nextRecent = (prev.recent || []).filter((id) => !idsToRemove.has(id));
+      const nextFavorites = (prev.favorites || []).filter((id) => !idsToRemove.has(id));
+
+      const nextDays = Object.fromEntries(
+        Object.entries(prev.days || {}).map(([dayKey, day]) => [
+          dayKey,
+          {
+            ...day,
+            foods: (day.foods || []).filter((item) => {
+              const itemFoodId = String(item?.foodId || "");
+              const itemId = String(item?.id || "");
+              const itemName = String(item?.name || "").trim().toLowerCase();
+
+              return !(
+                idsToRemove.has(itemFoodId) ||
+                idsToRemove.has(itemId) ||
+                (cleanFoodName && itemName === cleanFoodName && item?.source === "Моя база")
+              );
+            })
+          }
+        ])
+      );
+
+      const nextState = {
+        ...prev,
+        myFoods: nextMyFoods,
+        recent: nextRecent,
+        favorites: nextFavorites,
+        days: nextDays
+      };
+
+      const currentUserForLocal = auth.currentUser || user;
+      if (currentUserForLocal?.uid) {
+        safeWriteUserJsonStorage(NUTRITION_STORAGE_KEY, currentUserForLocal.uid, nextState);
+      }
+
+      savePersonalMyFoodsToFirebase(nextMyFoods);
+
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const { myFoods, ...userNutritionState } = nextState;
+
+        setDoc(doc(db, "users", currentUser.uid, "nutrition", "state"), {
+          ...userNutritionState,
+          updatedAt: new Date().toISOString()
+        }, { merge: true }).catch((error) => {
+          console.error("Nutrition delete save error", error);
+          addUserLocalBackup(NUTRITION_BACKUP_STORAGE_KEY, currentUser.uid, {
+            nutrition: nextState,
+            reason: "delete_save_failed",
+            error: error.message || String(error)
+          });
+        });
+      }
+
+      return nextState;
+    });
+
+    setRecentNutritionFoods((prev) => (
+      (prev || []).filter((food) => {
+        const id = String(food?.id || "");
+        const foodIdValue = String(food?.foodId || "");
+        const name = String(food?.name || "").trim().toLowerCase();
+
+        return id !== cleanFoodId && foodIdValue !== cleanFoodId && (!cleanFoodName || name !== cleanFoodName);
+      })
+    ));
+
+    try {
+      const current = loadRecentNutritionFoods();
+      const next = current.filter((food) => {
+        const id = String(food?.id || "");
+        const foodIdValue = String(food?.foodId || "");
+        const name = String(food?.name || "").trim().toLowerCase();
+
+        return id !== cleanFoodId && foodIdValue !== cleanFoodId && (!cleanFoodName || name !== cleanFoodName);
+      });
+      localStorage.setItem(RECENT_NUTRITION_SEARCHES_KEY, JSON.stringify(next));
+    } catch (_) {
+      // ignore localStorage errors
+    }
   }
 
   function toggleNutritionFavorite(foodId) {
@@ -997,8 +4758,569 @@ export default function App() {
     if (fallback) addNutritionFood(fallback);
   }
 
+  function getProfileMeasurementFields(goal = "recomp") {
+    return [
+      {
+        id: "weight",
+        label: "Вес",
+        unit: "кг",
+        placeholder: "82.5",
+        icon: "⚖️",
+        zone: "Вес",
+        hint: "Взвешивайся утром, после туалета, до еды и воды."
+      },
+      {
+        id: "neck",
+        label: "Шея",
+        unit: "см",
+        placeholder: "40",
+        icon: "🧍",
+        zone: "ШЕЯ",
+        hint: "Лента проходит вокруг шеи по середине, без сильного натяжения."
+      },
+      {
+        id: "shoulders",
+        label: "Плечевой пояс",
+        unit: "см",
+        placeholder: "122",
+        icon: "↔️",
+        zone: "ПЛЕЧИ",
+        hint: "Мерь по самой широкой линии плечевого пояса, ровно вокруг тела."
+      },
+      {
+        id: "chest",
+        label: "Грудь",
+        unit: "см",
+        placeholder: "105",
+        icon: "📏",
+        zone: "ГРУДЬ",
+        hint: "Лента проходит по самой широкой части груди, дыхание спокойное."
+      },
+      {
+        id: "biceps",
+        label: "Бицепс",
+        unit: "см",
+        placeholder: "38",
+        icon: "💪",
+        zone: "БИЦЕПС",
+        hint: "Мерь середину плеча. Всегда одинаково: расслабленно или напряжённо."
+      },
+      {
+        id: "forearm",
+        label: "Предплечье",
+        unit: "см",
+        placeholder: "31",
+        icon: "🦾",
+        zone: "ПРЕДПЛЕЧЬЕ",
+        hint: "Лента по самой широкой части предплечья."
+      },
+      {
+        id: "wrist",
+        label: "Запястье",
+        unit: "см",
+        placeholder: "18",
+        icon: "⌚",
+        zone: "ЗАПЯСТЬЕ",
+        hint: "Мерь над косточкой запястья, лента прилегает мягко."
+      },
+      {
+        id: "belly",
+        label: "Живот",
+        unit: "см",
+        placeholder: "88",
+        icon: "⭕",
+        zone: "ЖИВОТ",
+        hint: "Мерь на уровне пупка, живот не втягивать."
+      },
+      {
+        id: "pelvis",
+        label: "Таз",
+        unit: "см",
+        placeholder: "98",
+        icon: "⬭",
+        zone: "ТАЗ",
+        hint: "Лента проходит по самой широкой части таза/ягодиц."
+      },
+      {
+        id: "thigh",
+        label: "Бедро",
+        unit: "см",
+        placeholder: "58",
+        icon: "🦵",
+        zone: "БЕДРО",
+        hint: "Мерь самую широкую часть бедра, нога расслаблена."
+      },
+      {
+        id: "calf",
+        label: "Голень",
+        unit: "см",
+        placeholder: "39",
+        icon: "🦶",
+        zone: "ГОЛЕНЬ",
+        hint: "Мерь самую широкую часть икры."
+      },
+      {
+        id: "ankle",
+        label: "Лодыжка",
+        unit: "см",
+        placeholder: "23",
+        icon: "🦶",
+        zone: "ЛОДЫЖКА",
+        hint: "Мерь самую узкую часть над стопой, лента прилегает мягко."
+      }
+    ];
+  }
+
+  function getProfileMeasurementGoalText(goal = "recomp") {
+    if (goal === "mass") return "Для набора важно видеть рост веса и объёмов без резкого набора талии.";
+    if (goal === "cut" || goal === "dry") return "Для похудения и сушки важны вес, талия и объёмы — так видно, уходит ли жир.";
+    if (goal === "maintain") return "Для поддержки важно, чтобы вес и талия оставались стабильными.";
+    return "Для рекомпозиции важны вес, талия и объёмы: вес может стоять, но форма должна меняться.";
+  }
+
+  function getMeasurementTimestampValue(measurement = {}) {
+    const rawDate = measurement.date || measurement.createdAt || measurement.savedAt || "";
+    const timestamp = rawDate ? new Date(rawDate).getTime() : 0;
+    return Number.isFinite(timestamp) ? timestamp : 0;
+  }
+
+  function formatProfileMeasurementDate(measurement = null) {
+    if (!measurement) return "Замеров пока нет";
+    const rawDate = measurement.date || measurement.createdAt || "";
+    if (!rawDate) return "Дата не указана";
+
+    const parsedDate = new Date(rawDate);
+    if (Number.isNaN(parsedDate.getTime())) return "Дата не указана";
+
+    return parsedDate.toLocaleDateString("ru-RU");
+  }
+
+  function getProfileMeasurementValue(measurement = null, field = {}) {
+    if (!field?.id) return "—";
+    const value = measurement?.[field.id];
+
+    if (value === 0 || value === "0") return "0";
+    if (value === null || value === undefined || String(value).trim() === "") return "—";
+
+    return String(value).trim();
+  }
+
+  async function loadProfileMeasurements(uid = auth.currentUser?.uid) {
+    if (!uid) {
+      setProfileMeasurements([]);
+      return [];
+    }
+
+    try {
+      const snapshot = await getDocs(collection(db, "users", uid, "measurements"));
+      const measurements = snapshot.docs
+        .map((item) => ({ id: item.id, ...item.data() }))
+        .sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
+
+      setProfileMeasurements(measurements);
+      return measurements;
+    } catch (error) {
+      console.error("Ошибка загрузки замеров:", error);
+      setProfileMeasurements([]);
+      return [];
+    }
+  }
+
+  async function saveProfileMeasurement() {
+    if (!auth.currentUser?.uid) return;
+
+    const activeGoal = aiNutritionProfileDraft.goal || aiNutritionProfile?.goal || "recomp";
+    const fields = getProfileMeasurementFields(activeGoal);
+    const hasAnyValue = fields.some((field) => String(profileMeasurementDraft[field.id] || "").trim());
+
+    if (!hasAnyValue) {
+      setProfileMeasurementStatus("Заполни хотя бы один замер.");
+      return;
+    }
+
+    setProfileMeasurementSaving(true);
+    setProfileMeasurementStatus("");
+
+    try {
+      const measurement = {
+        ...profileMeasurementDraft,
+        goal: activeGoal,
+        goalLabel: getAiNutritionGoalLabel(activeGoal),
+        date: new Date().toISOString(),
+        createdAt: new Date().toISOString()
+      };
+
+      const savedMeasurementRef = await addDoc(collection(db, "users", auth.currentUser.uid, "measurements"), measurement);
+      setProfileMeasurements((prev) => [
+        { id: savedMeasurementRef.id, ...measurement },
+        ...(Array.isArray(prev) ? prev : [])
+      ].sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a)));
+
+      if (profileMeasurementDraft.weight) {
+        await setDoc(doc(db, "users", auth.currentUser.uid), {
+          aiNutritionProfile: {
+            ...(aiNutritionProfile || {}),
+            ...(aiNutritionProfileDraft || {}),
+            weight: profileMeasurementDraft.weight
+          },
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+
+        setAiNutritionProfileDraft((prev) => ({ ...prev, weight: profileMeasurementDraft.weight }));
+        setAiNutritionProfile((prev) => ({ ...(prev || {}), ...(aiNutritionProfileDraft || {}), weight: profileMeasurementDraft.weight }));
+      }
+
+      setProfileMeasurementStatus("Замер сохранён. Эти данные можно использовать для коррекции плана.");
+      setProfileMeasurementDraft({
+        weight: "",
+        neck: "",
+        shoulders: "",
+        chest: "",
+        biceps: "",
+        forearm: "",
+        wrist: "",
+        belly: "",
+        pelvis: "",
+        thigh: "",
+        calf: "",
+        ankle: "",
+        note: ""
+      });
+      setProfileMeasurementWizardStep(0);
+      setProfileMeasurementOpen(false);
+      setProfileActiveTab("measurements");
+      setPage("profile");
+    } catch (error) {
+      console.error("Ошибка сохранения замера:", error);
+      setProfileMeasurementStatus("Не получилось сохранить замер.");
+    } finally {
+      setProfileMeasurementSaving(false);
+    }
+  }
+
+  function renderFirstSetupOnboarding() {
+    if (!showFirstSetupOnboarding) return null;
+
+    return (
+      <div className="firstSetupOverlay">
+        <div className="firstSetupCard">
+          <div className="firstSetupStep">
+            Шаг {onboardingStep + 1}/7
+          </div>
+
+          <h2>
+            {["Пол", "Возраст", "Рост", "Вес", "Цель", "Тренировки", "Активность"][onboardingStep]}
+          </h2>
+
+          <p>
+            AI построит персональный план питания и КБЖУ.
+          </p>
+
+          <div className="firstSetupBody">
+            {onboardingStep === 0 && (
+              <div className="firstSetupChoiceGrid">
+                <button
+                  type="button"
+                  className={aiNutritionProfileDraft.sex === "male" ? "active" : ""}
+                  onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, sex: "male" }))}
+                >
+                  👨 Мужчина
+                </button>
+
+                <button
+                  type="button"
+                  className={aiNutritionProfileDraft.sex === "female" ? "active" : ""}
+                  onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, sex: "female" }))}
+                >
+                  👩 Женщина
+                </button>
+              </div>
+            )}
+
+            {onboardingStep === 1 && (
+              <input
+                className="firstSetupInput"
+                placeholder="Возраст"
+                type="number"
+                value={aiNutritionProfileDraft.age || ""}
+                onChange={(e) => setAiNutritionProfileDraft((prev) => ({ ...prev, age: e.target.value }))}
+              />
+            )}
+
+            {onboardingStep === 2 && (
+              <input
+                className="firstSetupInput"
+                placeholder="Рост"
+                type="number"
+                value={aiNutritionProfileDraft.height || ""}
+                onChange={(e) => setAiNutritionProfileDraft((prev) => ({ ...prev, height: e.target.value }))}
+              />
+            )}
+
+            {onboardingStep === 3 && (
+              <input
+                className="firstSetupInput"
+                placeholder="Вес"
+                type="number"
+                value={aiNutritionProfileDraft.weight || ""}
+                onChange={(e) => setAiNutritionProfileDraft((prev) => ({ ...prev, weight: e.target.value }))}
+              />
+            )}
+
+            {onboardingStep === 4 && (
+              <div className="firstSetupGoalGrid">
+                {[
+                  ["maintain", "Поддержка"],
+                  ["recomp", "Рекомпозиция"],
+                  ["mass", "Набор"],
+                  ["cut", "Похудение"],
+                  ["dry", "Сушка"]
+                ].map(([id, label]) => (
+                  <button
+                    type="button"
+                    key={id}
+                    className={aiNutritionProfileDraft.goal === id ? "active" : ""}
+                    onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, goal: id }))}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {onboardingStep === 5 && (
+              <div className="firstSetupDays">
+                {AI_NUTRITION_WEEK_DAYS.map((day) => {
+                  const active = (aiNutritionProfileDraft.trainingDays || []).includes(day.id);
+
+                  return (
+                    <button
+                      type="button"
+                      key={day.id}
+                      className={active ? "active" : ""}
+                      onClick={() => {
+                        const current = aiNutritionProfileDraft.trainingDays || [];
+                        const next = active
+                          ? current.filter((item) => item !== day.id)
+                          : [...current, day.id];
+
+                        setAiNutritionProfileDraft((prev) => ({
+                          ...prev,
+                          trainingDays: next
+                        }));
+                      }}
+                    >
+                      {day.short}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {onboardingStep === 6 && (
+              <div className="firstSetupGoalGrid">
+                {[
+                  ["low", "Низкая"],
+                  ["medium", "Средняя"],
+                  ["high", "Высокая"]
+                ].map(([id, label]) => (
+                  <button
+                    type="button"
+                    key={id}
+                    className={aiNutritionProfileDraft.activity === id ? "active" : ""}
+                    onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, activity: id }))}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="firstSetupBottom">
+            {onboardingStep > 0 && (
+              <button
+                type="button"
+                className="firstSetupSecondary"
+                onClick={() => setOnboardingStep((prev) => prev - 1)}
+              >
+                Назад
+              </button>
+            )}
+
+            {onboardingStep < 6 ? (
+              <button
+                type="button"
+                className="firstSetupPrimary"
+                onClick={() => setOnboardingStep((prev) => prev + 1)}
+              >
+                Далее
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="firstSetupPrimary"
+                disabled={!hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft)}
+                onClick={async () => {
+                  if (!hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft)) return;
+
+                  await saveAiNutritionPlan(aiNutritionProfileDraft);
+
+                  try {
+                    if (user?.uid && hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft)) {
+                      localStorage.setItem(FIRST_SETUP_DONE_USER_STORAGE_KEY, `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}`);
+                      localStorage.setItem(`${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${user.uid}`, FIRST_SETUP_REQUIRED_VERSION);
+                    }
+                  } catch (_) {
+                    // ignore localStorage errors
+                  }
+
+                  setFirstSetupCompletedInSession(true);
+                  setShowFirstSetupOnboarding(false);
+                  setOnboardingStep(0);
+                  setPage("main");
+                }}
+              >
+                Создать AI-план
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderWorkoutReadinessModal() {
+    if (!workoutReadinessOpen || !selectedWorkoutId || workoutStarted) return null;
+
+    return (
+      <div className="workoutReadinessOverlay">
+        <div className="workoutReadinessCard">
+          <span className="workoutReadinessBadge">AI readiness check</span>
+          <h2>Как ты себя чувствуешь?</h2>
+          <p>AI адаптирует тренировку под твоё состояние и предлагает вес из стандартных шагов зала.</p>
+
+          <div className="workoutReadinessGrid">
+            {WORKOUT_READINESS_OPTIONS.map((option) => (
+              <button
+                type="button"
+                key={option.id}
+                className={workoutReadiness?.id === option.id ? "active" : ""}
+                onClick={() => {
+                  applyWorkoutReadiness(option);
+                }}
+              >
+                <span>{option.emoji}</span>
+                <strong>{option.title}</strong>
+                <small>{option.volumeText}</small>
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="workoutReadinessSkip"
+            onClick={() => {
+              applyWorkoutReadiness(getWorkoutReadinessOption("good"));
+            }}
+          >
+            Пропустить и начать обычно
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  function renderWorkoutDraftRestoreModal() {
+    if (
+      !workoutDraftRestorePrompt ||
+      workoutReadinessOpen ||
+      postWorkoutFeedbackOpen ||
+      fullscreenVideo ||
+      showFirstSetupOnboarding
+    ) {
+      return null;
+    }
+
+    return (
+      <div className="workoutDraftRestoreOverlay">
+        <div
+          className="workoutDraftRestoreCard"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="workoutDraftRestoreTitle"
+          aria-describedby="workoutDraftRestoreDescription"
+        >
+          <span className="workoutDraftRestoreIcon" aria-hidden="true">↩</span>
+          <h2 id="workoutDraftRestoreTitle">Продолжить тренировку?</h2>
+          <p id="workoutDraftRestoreDescription">
+            Найден незавершённый черновик. Можно восстановить прогресс или начать заново.
+          </p>
+
+          <div className="workoutDraftRestoreActions">
+            <button
+              type="button"
+              className="workoutDraftRestartButton"
+              onClick={() => handleWorkoutDraftChoice(false)}
+            >
+              Начать заново
+            </button>
+            <button
+              type="button"
+              className="workoutDraftRestoreButton"
+              onClick={() => handleWorkoutDraftChoice(true)}
+            >
+              Восстановить
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderPostWorkoutFeedbackModal() {
+    if (!postWorkoutFeedbackOpen) return null;
+
+    return (
+      <div className="postWorkoutOverlay">
+        <div className="postWorkoutCard">
+          <span className="postWorkoutBadge">AI feedback</span>
+
+          <h2>Как прошла тренировка?</h2>
+
+          <p>
+            AI учтёт это для восстановления и следующих рекомендаций.
+          </p>
+
+          <div className="postWorkoutGrid">
+            {POST_WORKOUT_FEEDBACK_OPTIONS.map((option) => (
+              <button
+                type="button"
+                key={option.id}
+                disabled={isSaving}
+                onClick={async () => {
+                  setPostWorkoutFeedback(option);
+                  setPostWorkoutFeedbackOpen(false);
+                  await saveWorkoutToFirebase(option);
+                }}
+              >
+                <span>{option.emoji}</span>
+                <strong>{option.title}</strong>
+                <small>{option.subtitle}</small>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   function refreshPage() {
     window.location.reload();
+  }
+
+  function toggleAppTheme() {
+    setAppTheme((currentTheme) => currentTheme === "warm-light" ? "dark-green" : "warm-light");
   }
 
   function logout() {
@@ -1006,7 +5328,10 @@ export default function App() {
 
     setIsLoggedIn(false);
     setUser(null);
+    setIsAdminClaim(false);
+    setCurrentUserRole("client");
     setPage("main");
+    setPlan({ workouts: [] });
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
     setFullscreenVideo(null);
@@ -1014,12 +5339,23 @@ export default function App() {
     setWorkoutStarted(false);
     setWorkoutStartedAt(null);
     setWorkoutFinishedAt(null);
+    setIndividualWorkoutIndexInitialized(false);
+    setWorkoutReadinessOpen(false);
+    setWorkoutReadiness(null);
+                  setPostWorkoutFeedback(null);
+                  setPostWorkoutFeedbackOpen(false);
     setOpenHistoryKey(null);
     setSelectedUserId(null);
     setLogin("");
     setPassword("");
     setLoginError("");
     setHistory([]);
+    setNutrition(defaultNutritionState);
+    setNutritionCloudReady(false);
+    setWorkoutReadiness(null);
+    setPostWorkoutFeedback(null);
+    setPostWorkoutFeedbackOpen(false);
+    setFirstSetupCompletedInSession(false);
   }
 
   function goBackToMain() {
@@ -1031,7 +5367,56 @@ export default function App() {
     setWorkoutStarted(false);
     setWorkoutStartedAt(null);
     setWorkoutFinishedAt(null);
+    setWorkoutReadinessOpen(false);
+    setWorkoutReadiness(null);
+                  setPostWorkoutFeedback(null);
+                  setPostWorkoutFeedbackOpen(false);
     setOpenHistoryKey(null);
+  }
+
+  function handleAppBackNavigation() {
+    if (fullscreenVideo) {
+      setFullscreenVideo(null);
+      return true;
+    }
+
+    if (barcodeScannerOpen) {
+      setBarcodeScannerOpen(false);
+      return true;
+    }
+
+    if (nutritionEditPageOpen) {
+      cancelNutritionEditPage();
+      return true;
+    }
+
+    if (dishIngredientPickerOpen) {
+      setDishIngredientPickerOpen(false);
+      return true;
+    }
+
+    if (nutritionCreateChoiceOpen) {
+      setNutritionCreateChoiceOpen(false);
+      return true;
+    }
+
+    if (nutritionPickerOpen) {
+      setNutritionPickerOpen(false);
+      setSelectedNutritionFood(null);
+      setEditingNutritionItemId(null);
+      setNutritionEditDetailsOpen(false);
+      setNutritionEditPageOpen(false);
+      setNutritionMealMenuOpen(false);
+      setBarcodeScannerOpen(false);
+      return true;
+    }
+
+    if (page !== "main" || selectedWorkoutId) {
+      goBackToMain();
+      return true;
+    }
+
+    return false;
   }
 
   function updateWorkout(cb) {
@@ -1100,87 +5485,413 @@ export default function App() {
     }));
   }
 
-  async function saveWorkoutToFirebase() {
+  async function replayFailedHistorySaves(uid = auth.currentUser?.uid) {
+    if (!uid || historyReplayInProgressRef.current) return;
+
+    const queue = getFailedHistoryQueue(uid);
+    if (!Array.isArray(queue) || !queue.length) return;
+
+    historyReplayInProgressRef.current = true;
+    const remaining = [];
+    let syncedCount = 0;
+
+    try {
+      for (const item of queue) {
+        try {
+          if (!item?.entry) continue;
+          const saveId = item.entry.clientSaveId || item.id;
+
+          if (saveId) {
+            await setDoc(doc(db, "users", uid, "history", saveId), item.entry);
+            removePendingHistoryBackups(uid, saveId);
+          } else {
+            await addDoc(collection(db, "users", uid, "history"), item.entry);
+          }
+          syncedCount += 1;
+        } catch (error) {
+          remaining.push(item);
+        }
+      }
+
+      setFailedHistoryQueue(uid, remaining);
+
+      if (syncedCount > 0) {
+        await loadHistory();
+        showAppError("savedLocal", "Локальные тренировки синхронизированы.");
+      }
+    } finally {
+      historyReplayInProgressRef.current = false;
+    }
+  }
+
+  async function saveWorkoutToFirebase(feedbackOverride = null) {
     if (!workout || isSaving || isWorkoutSaved) return;
 
     const currentUser = auth.currentUser;
 
     if (!currentUser) {
-      alert("Пользователь не найден");
+      showAppError("load", "Пользователь не найден. Перезайди в аккаунт.");
       return;
     }
 
     const finishedAt = Date.now();
     const startedAt = workoutStartedAt || finishedAt;
     const durationSeconds = Math.max(0, Math.floor((finishedAt - startedAt) / 1000));
+    const historySaveId = `workout_${workout.id}_${finishedAt}`;
 
     setWorkoutFinishedAt(finishedAt);
     setTimerTick(finishedAt);
+    timerTickRef.current = finishedAt;
     setIsSaving(true);
     setIsWorkoutSaved(false);
+                    setShowWorkoutSavedCard(false);
 
-    try {
-      await addDoc(collection(db, "users", currentUser.uid, "history"), {
-        date: new Date().toISOString(),
+    const historyEntry = {
+      clientSaveId: historySaveId,
+      date: new Date().toISOString(),
         userEmail: currentUser.email || "",
         workout: workout.name,
+        workoutName: workout.name,
+        workoutId: workout.id,
+        assignedProgramId: workout.assignedProgramId || plan.assignedProgramId || "",
+        assignedProgramName: workout.assignedProgramName || plan.assignedProgramName || "",
+        assignedProgramUpdatedAt: workout.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || "",
         durationSeconds,
         startedAt: new Date(startedAt).toISOString(),
         finishedAt: new Date(finishedAt).toISOString(),
+        readiness: workoutReadiness ? {
+          id: workoutReadiness.id,
+          title: workoutReadiness.title,
+          emoji: workoutReadiness.emoji,
+          weightFactor: workoutReadiness.weightFactor
+        } : null,
+        postWorkoutFeedback: feedbackOverride ? {
+          id: feedbackOverride.id,
+          title: feedbackOverride.title,
+          emoji: feedbackOverride.emoji,
+          advice: feedbackOverride.advice
+        } : null,
         exercises: workout.exercises.map((exercise) => ({
+          id: exercise.id || "",
           name: exercise.name,
           video: exercise.video || "",
           sets: exercise.sets.map((set, index) => {
             const weight = set.enteredWeight || "";
+            const enteredReps = set.enteredReps || "";
+            const completed = Number(weight) > 0 || Number(enteredReps) > 0;
 
             return {
               set: index + 1,
-              reps: weight ? set.enteredReps || set.reps || 8 : "",
-              weight
+              reps: completed ? enteredReps || set.reps || 8 : "",
+              weight,
+              aiSuggestedWeight: set.weight || "",
+              aiOriginalWeight: set.aiOriginalWeight || "",
+              aiReadinessId: set.aiReadinessId || ""
             };
           })
         }))
-      });
+      };
+
+    const backupId = historySaveId;
+
+    addUserLocalBackup(WORKOUT_HISTORY_BACKUP_STORAGE_KEY, currentUser.uid, {
+      id: backupId,
+      entry: historyEntry,
+      reason: "before_history_save"
+    });
+
+    try {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        throw new Error("workout_history_offline");
+      }
+
+      await setDoc(doc(db, "users", currentUser.uid, "history", historySaveId), historyEntry);
+      removePendingHistoryBackups(currentUser.uid, backupId);
 
       await loadHistory();
+      clearWorkoutDraft(currentUser.uid, workout.id);
       setIsWorkoutSaved(true);
+      setShowWorkoutSavedCard(true);
+
+      setTimeout(() => {
+        setShowWorkoutSavedCard(false);
+      }, 1800);
     } catch (e) {
       console.log(e);
-      alert("Ошибка сохранения");
+      enqueueFailedHistorySave(currentUser.uid, historyEntry, "history_save_failed");
+      setHistory((prev) => [
+        { id: historySaveId, ...historyEntry, pendingSync: true },
+        ...prev.filter((item) => (item?.clientSaveId || item?.id) !== historySaveId)
+      ]);
+      clearWorkoutDraft(currentUser.uid, workout.id);
+      setIsWorkoutSaved(true);
+      setShowWorkoutSavedCard(true);
+      showAppError("savedLocal", "Тренировка сохранена локально и будет синхронизирована позже.");
     } finally {
       setIsSaving(false);
     }
   }
 
+  function getWorkoutOrderIndex(workoutItem = {}, fallbackIndex = 0) {
+    // For monthly programs order/sortOrder is the source of truth:
+    // Week 1 Day 1, Week 1 Day 2... Week 4 Day 4.
+    // Do not sort by "День 1" first, otherwise all Day 1 workouts from different weeks group together.
+    if (Number.isFinite(Number(workoutItem.order))) return Number(workoutItem.order);
+    if (Number.isFinite(Number(workoutItem.sortOrder))) return Number(workoutItem.sortOrder);
+
+    const idMatch = String(workoutItem.id || "").match(/week[_-]?(\d+).*day[_-]?(\d+)|w[_-]?(\d+).*d[_-]?(\d+)/i);
+    const weekFromId = Number(idMatch?.[1] || idMatch?.[3]);
+    const dayFromId = Number(idMatch?.[2] || idMatch?.[4]);
+
+    if (Number.isFinite(weekFromId) && weekFromId > 0 && Number.isFinite(dayFromId) && dayFromId > 0) {
+      return weekFromId * 100 + dayFromId;
+    }
+
+    const nameMatch = String(workoutItem.name || "").match(/неделя\s*(\d+).*день\s*(\d+)|день\s*(\d+)/i);
+    const weekFromName = Number(nameMatch?.[1]);
+    const dayFromName = Number(nameMatch?.[2] || nameMatch?.[3]);
+
+    if (Number.isFinite(weekFromName) && weekFromName > 0 && Number.isFinite(dayFromName) && dayFromName > 0) {
+      return weekFromName * 100 + dayFromName;
+    }
+
+    if (Number.isFinite(dayFromName) && dayFromName > 0) return dayFromName;
+
+    return fallbackIndex + 1;
+  }
+
+  function getCompletedWorkoutKey(value = "") {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function getCompletedWorkoutSet(
+    historyItems = [],
+    currentAssignmentVersion = plan.assignedProgramUpdatedAt || ""
+  ) {
+    const completed = new Set();
+    const assignmentVersion = String(currentAssignmentVersion || "").trim();
+
+    (Array.isArray(historyItems) ? historyItems : []).forEach((item) => {
+      if (assignmentVersion) {
+        if (
+          String(item?.assignedProgramUpdatedAt || "").trim() === assignmentVersion &&
+          item?.workoutId
+        ) {
+          completed.add(`id:${getCompletedWorkoutKey(item.workoutId)}`);
+        }
+        return;
+      }
+
+      const workoutName = item?.workoutName || item?.workout;
+      if (workoutName) completed.add(`name:${getCompletedWorkoutKey(workoutName)}`);
+      if (item?.workoutId) completed.add(`id:${getCompletedWorkoutKey(item.workoutId)}`);
+    });
+
+    return completed;
+  }
+
+  function isWorkoutCompletedByHistory(
+    workoutItem,
+    completedSet = getCompletedWorkoutSet(history)
+  ) {
+    if (!workoutItem) return false;
+
+    const currentAssignmentVersion = String(
+      workoutItem.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || ""
+    ).trim();
+    const workoutIdKey = `id:${getCompletedWorkoutKey(workoutItem.id)}`;
+
+    if (currentAssignmentVersion) {
+      return completedSet.has(workoutIdKey);
+    }
+
+    return completedSet.has(workoutIdKey) ||
+      completedSet.has(`name:${getCompletedWorkoutKey(workoutItem.name)}`);
+  }
+
+  function getNextUncompletedWorkoutIndex(workouts = [], completedSet = getCompletedWorkoutSet(history)) {
+    const index = workouts.findIndex((workoutItem) => !isWorkoutCompletedByHistory(workoutItem, completedSet));
+    return index >= 0 ? index : 0;
+  }
+
+  function sortWorkoutDays(workouts = []) {
+    return [...workouts].sort((a, b) => {
+      const orderA = getWorkoutOrderIndex(a);
+      const orderB = getWorkoutOrderIndex(b);
+
+      if (orderA !== orderB) return orderA - orderB;
+
+      return String(a.name || a.id || "").localeCompare(String(b.name || b.id || ""), "ru");
+    });
+  }
+
+  function getWorkoutPresentationTitle(workoutItem, dayNumber) {
+    const rawName = String(workoutItem?.title || workoutItem?.name || "").trim();
+    const explicitName = rawName
+      .split(/[·—–|]/)
+      .map((part) => part.trim())
+      .reverse()
+      .find((part) => (
+        part &&
+        !/^(?:неделя|день|тренировка|базовая)(?:\s+\d+)?$/i.test(part)
+      ));
+
+    if (explicitName) {
+      const cleanName = explicitName
+        .replace(/^(?:неделя|день|тренировка)\s*\d+\s*[:/+-]?\s*/i, "")
+        .replace(/\s*[+/]\s*/g, " и ")
+        .trim();
+
+      if (cleanName && !/^(?:неделя|день|тренировка)(?:\s+\d+)?$/i.test(cleanName)) {
+        return cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+      }
+    }
+
+    const exerciseNames = (workoutItem?.exercises || []).map((exercise) => (
+      String(exercise?.name || "").toLowerCase()
+    ));
+    const groupRules = [
+      { label: "Ноги", patterns: [/ног/, /присед/, /выпад/, /бедр/, /икр/] },
+      { label: "Ягодицы", patterns: [/ягод/, /тазобед/, /глют/] },
+      { label: "Спина", patterns: [/спин/, /подтяг/, /тяга верх/, /тяга ниж/, /тяга гантел/, /тяга штанг/, /т-гриф/, /гиперэкст/] },
+      { label: "Грудь", patterns: [/груд/, /жим леж/, /жим гантел.*л[её]ж/, /сведен/, /развод/, /отжим/] },
+      { label: "Плечи", patterns: [/плеч/, /дельт/, /вертикальн.*жим/, /армейск/, /отведен.*рук/, /мах/] },
+      { label: "Руки", patterns: [/бицеп/, /трицеп/, /сгибан.*рук/, /разгибан.*рук/, /француз/] },
+      { label: "Пресс", patterns: [/пресс/, /скручив/, /планк/] }
+    ];
+    const detectedGroups = groupRules
+      .map((group) => ({
+        label: group.label,
+        score: exerciseNames.reduce((total, exerciseName) => (
+          total + (group.patterns.some((pattern) => pattern.test(exerciseName)) ? 1 : 0)
+        ), 0)
+      }))
+      .filter((group) => group.score > 0)
+      .sort((first, second) => second.score - first.score)
+      .slice(0, 2)
+      .map((group) => group.label);
+
+    return detectedGroups.length > 1
+      ? `${detectedGroups[0]} и ${detectedGroups[1].toLowerCase()}`
+      : detectedGroups[0] || `День ${dayNumber}`;
+  }
+
+  function getWorkoutPresentationImage(workoutItem, workoutTitle) {
+    const exerciseImage = (workoutItem?.exercises || [])
+      .flatMap((exercise) => [exercise?.image, exercise?.thumbnail, exercise?.poster])
+      .find((image) => typeof image === "string" && image.trim());
+    const directImage =
+      workoutItem?.image ||
+      workoutItem?.thumbnail ||
+      workoutItem?.poster ||
+      exerciseImage;
+
+    if (directImage) return directImage;
+
+    const content = `${workoutTitle} ${(workoutItem?.exercises || []).map((exercise) => exercise?.name || "").join(" ")}`.toLowerCase();
+    if (/спин|плеч|тяга|подтяг|дельт/.test(content)) return workoutMenuItems[0]?.image || "";
+    if (/груд|рук|бицеп|трицеп|жим леж|сведен/.test(content)) return workoutMenuItems[1]?.image || "";
+    return "";
+  }
+
+  function getWorkoutPresentation(workoutItem, fallbackIndex = 0) {
+    const weekNumber =
+      String(workoutItem?.name || "").match(/неделя\s*(\d+)/i)?.[1] ||
+      String(workoutItem?.weekName || "").match(/неделя\s*(\d+)/i)?.[1] ||
+      String(workoutItem?.id || "").match(/week[_-]?(\d+)/i)?.[1];
+    const dayNumber =
+      String(workoutItem?.name || "").match(/день\s*(\d+)/i)?.[1] ||
+      String(workoutItem?.id || "").match(/day[_-]?(\d+)/i)?.[1] ||
+      fallbackIndex + 1;
+    const title = getWorkoutPresentationTitle(workoutItem, dayNumber);
+
+    return {
+      day: weekNumber ? `Неделя ${weekNumber} · День ${dayNumber}` : `День ${dayNumber}`,
+      title,
+      image: getWorkoutPresentationImage(workoutItem, title),
+      trainerTip:
+        String(workoutItem?.trainerNote || workoutItem?.coachNote || workoutItem?.note || workoutItem?.description || "").trim() ||
+        "Следи за техникой и оставляй 1–2 повтора в запасе.",
+      exerciseCount: (workoutItem?.exercises || []).length,
+      setCount: (workoutItem?.exercises || []).flatMap((exercise) => exercise.sets || []).length,
+      duration: "≈ 60–75 мин"
+    };
+  }
+
   async function loadWorkoutsFromFirebase(userIdFromClick) {
     try {
-      const userId = userIdFromClick || selectedUserId || auth.currentUser?.uid;
+      const currentUser = auth.currentUser;
+      const targetUserId = userIdFromClick || selectedUserId || currentUser?.uid;
 
-      if (!userId) return;
+      if (!targetUserId) {
+        setPlan({ workouts: [] });
+        return;
+      }
 
-      const querySnapshot = await getDocs(
-        collection(db, "users", userId, "workouts")
-      );
+      const isOwnPlan = currentUser?.uid === targetUserId;
+      const isAdminLoadingClient = Boolean(userIdFromClick || selectedUserId) && canUseAdminFeatures();
+
+      startPerformanceCheck("Firebase · workouts load", {
+        userId: String(targetUserId).slice(0, 6),
+        ownPlan: isOwnPlan,
+        admin: isAdminLoadingClient
+      });
+
+      // Client must only see workouts that trainer assigned in:
+      // users/{uid}/workouts/{workoutId}
+      // No starter/default/local fallback here.
+      const [querySnapshot, profileSnapshot] = await Promise.all([
+        getDocs(collection(db, "users", targetUserId, "workouts")),
+        getDoc(doc(db, "users", targetUserId))
+      ]);
+      const profileData = profileSnapshot.exists() ? profileSnapshot.data() : {};
+      const assignedProgramUpdatedAt = profileData.assignedProgramUpdatedAt || profileData.assignedProgramAt || "";
 
       const workoutsFromDb = [];
 
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
+      querySnapshot.forEach((workoutDoc) => {
+        const data = workoutDoc.data();
 
         workoutsFromDb.push({
-          id: doc.id,
+          id: workoutDoc.id,
           name: data.name || "Без названия",
+          order: data.order,
+          sortOrder: data.sortOrder,
+          assignedBy: data.assignedBy || "",
+          assignedAt: data.assignedAt || "",
+          assignedProgramId: data.assignedProgramId || profileData.assignedProgramId || "",
+          assignedProgramName: data.assignedProgramName || profileData.assignedProgramName || "",
+          assignedProgramUpdatedAt: data.assignedProgramUpdatedAt || assignedProgramUpdatedAt,
           exercises: (data.exercises || []).map(normalizeExercise)
         });
       });
 
-      if (workoutsFromDb.length > 0) {
-        setPlan({ workouts: workoutsFromDb });
-      } else {
-        setPlan(normalizePlan(starterPlan));
+      const nextPlan = {
+        assignedProgramId: profileData.assignedProgramId || "",
+        assignedProgramName: profileData.assignedProgramName || "",
+        assignedProgramUpdatedAt,
+        workouts: sortWorkoutDays(workoutsFromDb)
+      };
+
+      if (isOwnPlan && currentUser?.uid) {
+        clearStaleWorkoutCaches(currentUser.uid, assignedProgramUpdatedAt);
       }
+      setPlan(nextPlan);
+
+      if (isOwnPlan && currentUser?.uid) {
+        safeWriteUserJsonStorage(STORAGE_KEY, currentUser.uid, nextPlan);
+      }
+
+      endPerformanceCheck("Firebase · workouts load", {
+        workouts: workoutsFromDb.length
+      });
     } catch (err) {
       console.log("Ошибка загрузки тренировок:", err);
+      setPlan({ workouts: [] });
+      showAppError("firebase", "Не получилось загрузить назначенные тренировки.");
     }
   }
 
@@ -1193,9 +5904,19 @@ export default function App() {
         return;
       }
 
-      for (const workout of plan.workouts) {
+      addLocalBackup(WORKOUT_PLAN_BACKUP_STORAGE_KEY, {
+        plan,
+        reason: "before_workouts_cloud_save",
+        userId
+      }, 10);
+
+      for (const [workoutIndex, workout] of plan.workouts.entries()) {
         await setDoc(doc(db, "users", userId, "workouts", workout.id), {
           name: workout.name,
+          order: workoutIndex + 1,
+          sortOrder: workoutIndex + 1,
+          assignedBy: auth.currentUser?.uid || "",
+          assignedAt: new Date().toISOString(),
           exercises: workout.exercises.map((exercise) => ({
             id: exercise.id,
             name: exercise.name,
@@ -1205,7 +5926,7 @@ export default function App() {
               exercise.name?.includes("Пресс") ? 15 : 8
             )
           }))
-        });
+        }, { merge: true });
       }
 
       alert("Тренировки пользователя сохранены в Firebase ✅");
@@ -1215,22 +5936,1611 @@ export default function App() {
     }
   }
 
-  async function loadUsers() {
-    try {
-      const snapshot = await getDocs(collection(db, "users"));
+  async function sendAdminTelegramMessage(client = adminSelectedClient) {
+    const telegram = getClientTelegramProfile(client);
+    const text = String(adminTelegramMessage || "").trim();
 
+    if (!client?.id) {
+      setAdminClientStatus("Сначала выбери клиента.");
+      return;
+    }
+
+    if (!telegram.connected || !telegram.username) {
+      setAdminClientStatus("У клиента не привязан Telegram.");
+      return;
+    }
+
+    if (!text) {
+      setAdminClientStatus("Напиши сообщение для клиента.");
+      return;
+    }
+
+    setAdminTelegramSending(true);
+
+    try {
+      const response = await fetch("/api/telegram/send-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          clientId: client.id,
+          username: telegram.username,
+          chatId: telegram.chatId || "",
+          text
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Telegram backend error");
+      }
+
+      setAdminTelegramMessage("");
+      setAdminClientStatus("Telegram-сообщение отправлено.");
+    } catch (error) {
+      console.error("Ошибка отправки Telegram:", error);
+      setAdminClientStatus("Backend Telegram ещё не подключён или сообщение не отправилось.");
+    } finally {
+      setAdminTelegramSending(false);
+    }
+  }
+
+  function getClientTelegramProfile(client = {}) {
+    return client.telegram || {
+      connected: Boolean(client.telegramConnected || client.telegramUsername),
+      username: client.telegramUsername || "",
+      displayName: client.telegramDisplayName || client.telegramUsername || "",
+      notificationsEnabled: client.telegramNotificationsEnabled !== false
+    };
+  }
+
+  function openTelegramChat(username = "") {
+    const cleanUsername = normalizeTelegramUsername(username);
+    if (!cleanUsername) {
+      setAdminClientStatus("У клиента не указан Telegram username.");
+      return;
+    }
+
+    window.open(`https://t.me/${cleanUsername}`, "_blank", "noopener,noreferrer");
+  }
+
+  async function toggleClientTelegramNotifications(client, enabled) {
+    if (!client?.id) return;
+
+    const currentTelegram = getClientTelegramProfile(client);
+    const nextTelegram = {
+      ...currentTelegram,
+      notificationsEnabled: enabled
+    };
+
+    try {
+      await setDoc(doc(db, "users", client.id), {
+        telegram: nextTelegram,
+        telegramNotificationsEnabled: enabled
+      }, { merge: true });
+
+      setAdminSelectedClient((prev) => prev?.id === client.id ? { ...prev, telegram: nextTelegram, telegramNotificationsEnabled: enabled } : prev);
+      setUsersList((prev) => prev.map((item) => (
+        item.id === client.id ? { ...item, telegram: nextTelegram, telegramNotificationsEnabled: enabled } : item
+      )));
+      setAdminClientStatus(enabled ? "Telegram-уведомления включены." : "Telegram-уведомления выключены.");
+    } catch (error) {
+      console.error("Ошибка Telegram notifications:", error);
+      setAdminClientStatus("Не получилось обновить Telegram-уведомления.");
+    }
+  }
+
+  function getAdminClientProfile(client = {}) {
+    return client.profile || client.aiNutritionProfile || client.bodyMetrics || client;
+  }
+
+  function getAdminClientGoalLabel(goal = "") {
+    return getAiNutritionGoalLabel(goal || "recomp");
+  }
+
+  function getAdminClientTrainingDaysText(profile = {}) {
+    const selected = getAiNutritionTrainingDays(profile);
+    if (!selected.length) return "—";
+
+    return AI_NUTRITION_WEEK_DAYS
+      .filter((day) => selected.includes(day.id))
+      .map((day) => day.short)
+      .join(", ");
+  }
+
+  function getAdminNutritionDaysList(nutritionState = null) {
+    return Object.entries(nutritionState?.days || {})
+      .map(([date, day]) => {
+        const totals = (day.foods || []).reduce(
+          (sum, item) => ({
+            calories: sum.calories + (Number(item.calories) || 0),
+            protein: sum.protein + (Number(item.protein) || 0),
+            fat: sum.fat + (Number(item.fat) || 0),
+            carbs: sum.carbs + (Number(item.carbs) || 0)
+          }),
+          { calories: 0, protein: 0, fat: 0, carbs: 0 }
+        );
+
+        return {
+          date,
+          foods: day.foods || [],
+          totals,
+          score: buildAiNutritionDayModel({ ...defaultNutritionState, ...(nutritionState || {}) }, day, adminClientHistory).score
+        };
+      })
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
+
+  function getAdminWorkoutProgressList(historyList = []) {
+    const map = {};
+
+    historyList.forEach((item) => {
+      (item.exercises || []).forEach((exercise) => {
+        const bestWeight = (exercise.sets || []).reduce((best, set) => {
+          const weight = parseWorkoutWeightValue(set.weight || set.aiSuggestedWeight);
+          return Math.max(best, weight);
+        }, 0);
+
+        if (!bestWeight) return;
+
+        if (!map[exercise.name]) {
+          map[exercise.name] = [];
+        }
+
+        map[exercise.name].push({
+          date: item.date,
+          weight: bestWeight
+        });
+      });
+    });
+
+    return Object.entries(map)
+      .map(([name, points]) => ({
+        name,
+        points: points.slice(0, 8).reverse(),
+        max: Math.max(...points.map((point) => point.weight))
+      }))
+      .sort((a, b) => b.max - a.max)
+      .slice(0, 6);
+  }
+
+  function getAdminWeightPoints(client = {}) {
+    const profile = getAdminClientProfile(client);
+    const currentWeight = Number(profile?.weight || client?.weight || 0);
+    const historyPoints = Array.isArray(client?.weightHistory) ? client.weightHistory : [];
+
+    if (historyPoints.length) {
+      return historyPoints
+        .map((item) => ({ date: item.date || "", weight: Number(item.weight) || 0 }))
+        .filter((item) => item.weight > 0)
+        .slice(-8);
+    }
+
+    return currentWeight > 0 ? [{ date: "сейчас", weight: currentWeight }] : [];
+  }
+
+  function getAdminRecommendations(client, historyList, nutritionState) {
+    const profile = getAdminClientProfile(client);
+    const days = getAdminNutritionDaysList(nutritionState);
+    const today = days[0];
+    const badFeedback = historyList.filter((item) => item.postWorkoutFeedback?.id === "bad").length;
+    const lastWorkoutDate = historyList[0]?.date ? new Date(historyList[0].date) : null;
+    const daysSinceWorkout = lastWorkoutDate ? Math.round((Date.now() - lastWorkoutDate.getTime()) / (24 * 60 * 60 * 1000)) : null;
+    const proteinGoal = Number(nutritionState?.goals?.protein || defaultNutritionState.goals.protein);
+    const proteinToday = Number(today?.totals?.protein || 0);
+
+    const recommendations = [];
+
+    if (badFeedback >= 2) {
+      recommendations.push("Снизить нагрузку на 1 неделю: у клиента несколько плохих feedback.");
+    }
+
+    if (proteinToday > 0 && proteinToday < proteinGoal * 0.7) {
+      recommendations.push("Добавить белок: сегодня заметно меньше цели.");
+    }
+
+    if (daysSinceWorkout !== null && daysSinceWorkout >= 5) {
+      recommendations.push("Клиент давно не тренировался — стоит написать и упростить вход в тренировку.");
+    }
+
+    if (!profile?.goal) {
+      recommendations.push("Обновить анкету/AI-план: не заполнена цель клиента.");
+    }
+
+    if (!recommendations.length) {
+      recommendations.push("Клиент выглядит стабильно: можно продолжать текущий план.");
+    }
+
+    return recommendations;
+  }
+
+  function exportAdminClientCsv() {
+    if (!adminSelectedClient) {
+      setAdminClientStatus("Сначала выбери клиента.");
+      return;
+    }
+
+    const nutritionDays = getAdminNutritionDaysList(adminClientNutrition);
+    const rows = [
+      ["type", "date", "name", "calories", "protein", "fat", "carbs", "duration", "feedback"].join(",")
+    ];
+
+    adminClientHistory.forEach((item) => {
+      rows.push([
+        "workout",
+        item.date || "",
+        `"${String(item.workout || "Тренировка").replaceAll('"', '""')}"`,
+        "",
+        "",
+        "",
+        "",
+        item.durationSeconds || "",
+        item.postWorkoutFeedback?.title || item.readiness?.title || ""
+      ].join(","));
+    });
+
+    nutritionDays.forEach((day) => {
+      rows.push([
+        "nutrition",
+        day.date,
+        '"day totals"',
+        Math.round(day.totals.calories),
+        Math.round(day.totals.protein),
+        Math.round(day.totals.fat),
+        Math.round(day.totals.carbs),
+        "",
+        `score ${day.score}`
+      ].join(","));
+    });
+
+    const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${adminSelectedClient.email || adminSelectedClient.name || "client"}-report.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function loadAdminTrainingTemplates() {
+    try {
+      const templatesRef = collection(db, "trainingTemplates");
+      const currentUid = auth.currentUser?.uid || user?.uid || "";
+      const templatesQuery = canUseAdminFeatures()
+        ? templatesRef
+        : query(templatesRef, where("ownerUid", "==", currentUid));
+      const snapshot = await getDocs(templatesQuery);
+      const templates = [];
+      snapshot.forEach((templateDoc) => {
+        templates.push({ id: templateDoc.id, ...templateDoc.data() });
+      });
+      templates.sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "ru"));
+      setAdminTrainingTemplates(templates);
+      setAdminSelectedTemplateId((current) =>
+        current && !templates.some((template) => template.id === current) ? "" : current
+      );
+    } catch (error) {
+      console.error("Ошибка загрузки шаблонов:", error);
+      setAdminTrainingTemplates([]);
+    }
+  }
+
+  function openAdminProgramsOverview() {
+    setAdminOpenWorkoutId("");
+    setAdminProgramLibraryTab("overview");
+    setPage("adminWorkouts");
+  }
+
+  function openAdminClientsWithFilter(filter = "all") {
+    setAdminClientFilter(filter);
+    setAdminClientPageOpen(false);
+    setPage("adminUsers");
+  }
+
+  async function createAdminTemplateFromCurrentPlan() {
+    const name = adminTemplateName.trim() || `Шаблон ${new Date().toLocaleDateString("ru-RU")}`;
+    const id = `template_${Date.now()}`;
+    const owner = getCurrentProgramOwner();
+    const now = new Date().toISOString();
+
+    try {
+      await setDoc(doc(db, "trainingTemplates", id), {
+        name,
+        ownerUid: owner.uid,
+        ownerRole: owner.role,
+        createdByUid: owner.uid,
+        updatedByUid: owner.uid,
+        createdAt: now,
+        updatedAt: now,
+        createdBy: user?.email || ADMIN_EMAIL,
+        workouts: plan.workouts || []
+      });
+
+      setAdminTemplateName("");
+      setAdminSelectedTemplateId(id);
+      await loadAdminTrainingTemplates();
+      setAdminClientStatus("Шаблон программы создан.");
+    } catch (error) {
+      console.error("Ошибка создания шаблона:", error);
+      setAdminClientStatus("Не получилось создать шаблон.");
+    }
+  }
+
+  async function clearClientAssignedWorkouts(clientId) {
+    if (!clientId) return 0;
+
+    let deletedCount = 0;
+
+    // Hard replace: remove every old workout document before assigning a new program.
+    // We intentionally do this in two passes to avoid stale leftovers after previous editor versions.
+    for (let pass = 0; pass < 2; pass += 1) {
+      const currentWorkoutsSnapshot = await getDocs(collection(db, "users", clientId, "workouts"));
+
+      if (currentWorkoutsSnapshot.empty) break;
+
+      for (const workoutDoc of currentWorkoutsSnapshot.docs) {
+        await deleteDoc(doc(db, "users", clientId, "workouts", workoutDoc.id));
+        deletedCount += 1;
+      }
+    }
+
+    return deletedCount;
+  }
+
+  async function replaceClientAssignedWorkouts(
+    clientId,
+    nextWorkouts,
+    template,
+    assignedProgramUpdatedAt
+  ) {
+    const currentWorkoutsSnapshot = await getDocs(collection(db, "users", clientId, "workouts"));
+    const nextWorkoutIds = new Set(nextWorkouts.map((workoutItem) => workoutItem.id));
+    const staleWorkoutDocs = currentWorkoutsSnapshot.docs.filter(
+      (workoutDoc) => !nextWorkoutIds.has(workoutDoc.id)
+    );
+    const operationCount = staleWorkoutDocs.length + nextWorkouts.length + 1;
+
+    if (operationCount > 500) {
+      const error = new Error(
+        `Программа слишком большая для атомарного назначения: ${operationCount} операций из 500.`
+      );
+      error.code = "workout-assignment-batch-limit";
+      throw error;
+    }
+
+    const batch = writeBatch(db);
+
+    staleWorkoutDocs.forEach((workoutDoc) => {
+      batch.delete(workoutDoc.ref);
+    });
+
+    nextWorkouts.forEach((workoutItem) => {
+      batch.set(doc(db, "users", clientId, "workouts", workoutItem.id), {
+        ...workoutItem,
+        assignedProgramId: template.id,
+        assignedProgramName: template.name,
+        assignedAt: assignedProgramUpdatedAt,
+        assignedProgramUpdatedAt,
+        assignedBy: auth.currentUser?.uid || ""
+      });
+    });
+
+    batch.set(doc(db, "users", clientId), {
+      assignedProgramId: template.id,
+      assignedProgramName: template.name,
+      assignedProgramAt: assignedProgramUpdatedAt,
+      assignedProgramUpdatedAt,
+      assignedWorkoutCount: nextWorkouts.length
+    }, { merge: true });
+
+    await batch.commit();
+    return currentWorkoutsSnapshot.size;
+  }
+
+  function buildClientWorkoutsFromTemplate(template = {}) {
+    const structuredMicrocycles = Array.isArray(template.blocks) && template.blocks.length
+      ? template.blocks
+      : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);
+    const structuredWorkouts = structuredMicrocycles.flatMap((microcycle) =>
+      (microcycle.weeks || []).flatMap((week) => week.workouts || [])
+    );
+    const sourceWorkouts = structuredWorkouts.length ? structuredWorkouts : (template.workouts || []);
+
+    return sourceWorkouts.map((workoutItem, workoutIndex) => ({
+      id: workoutItem.id || `assigned_workout_${workoutIndex + 1}_${Date.now()}`,
+      name: workoutItem.name || `Тренировка ${workoutIndex + 1}`,
+      blockId: workoutItem.blockId || "",
+      blockName: workoutItem.blockName || "",
+      weekId: workoutItem.weekId || "",
+      weekName: workoutItem.weekName || "",
+      order: Number(workoutItem.order || workoutItem.sortOrder || workoutIndex + 1),
+      sortOrder: Number(workoutItem.sortOrder || workoutItem.order || workoutIndex + 1),
+      exercises: (workoutItem.exercises || []).map((exercise, exerciseIndex) => ({
+        id: exercise.id || `exercise_${workoutIndex + 1}_${exerciseIndex + 1}`,
+        name: exercise.name || "Упражнение",
+        video: exercise.video || exercise.videoUrl || exercise.videoURL || "",
+        sets: Array.isArray(exercise.sets) && exercise.sets.length
+          ? exercise.sets.map((set) => ({
+              reps: Number(set.reps) || 8,
+              weight: String(set.weight ?? "")
+            }))
+          : [{ reps: exercise.name?.includes("Пресс") ? 15 : 8, weight: "" }]
+      }))
+    }));
+  }
+
+  async function assignAdminTemplateToClient(clientId = selectedUserId, templateId = adminSelectedTemplateId) {
+    const template = adminTrainingTemplates.find((item) => item.id === templateId);
+    const client = adminSelectedClient?.id === clientId
+      ? adminSelectedClient
+      : usersList.find((item) => item.id === clientId);
+
+    if (!clientId || !template) {
+      setAdminClientStatus("Выбери клиента и шаблон.");
+      return;
+    }
+    if (!canManageTrainingTemplate(template) || !canManageClientProgram(client)) {
+      setAdminClientStatus("Можно назначать только свои программы своим клиентам.");
+      return;
+    }
+
+    try {
+      const assignedProgramUpdatedAt = new Date().toISOString();
+      const nextWorkouts = buildClientWorkoutsFromTemplate(template);
+      const deletedCount = await replaceClientAssignedWorkouts(
+        clientId,
+        nextWorkouts,
+        template,
+        assignedProgramUpdatedAt
+      );
+
+      if (clientId === selectedUserId || clientId === adminSelectedClient?.id) {
+        setPlan({ workouts: sortWorkoutDays(nextWorkouts) });
+      }
+
+      setAdminClientStatus(`Назначено ${nextWorkouts.length} тренировок. Старые удалены: ${deletedCount}.`);
+    } catch (error) {
+      console.error("Ошибка назначения шаблона:", error);
+      setAdminClientStatus(
+        error?.code === "workout-assignment-batch-limit"
+          ? error.message
+          : "Не получилось назначить шаблон."
+      );
+    }
+  }
+
+  async function clearClientProgram(clientId = selectedUserId) {
+    if (!clientId) {
+      setAdminClientStatus("Выбери клиента.");
+      return;
+    }
+
+    const confirmed = window.confirm("Сбросить все назначенные тренировки клиента? У клиента будет пустая программа.");
+
+    if (!confirmed) return;
+
+    try {
+      const assignedProgramUpdatedAt = new Date().toISOString();
+      await clearClientAssignedWorkouts(clientId);
+      await setDoc(doc(db, "users", clientId), {
+        assignedProgramId: "",
+        assignedProgramName: "",
+        assignedProgramAt: assignedProgramUpdatedAt,
+        assignedProgramUpdatedAt,
+        assignedWorkoutCount: 0
+      }, { merge: true });
+
+      setPlan({ workouts: [] });
+      setAdminClientStatus("Программа клиента сброшена.");
+    } catch (error) {
+      console.error("Ошибка сброса программы клиента:", error);
+      setAdminClientStatus("Не получилось сбросить программу клиента.");
+    }
+  }
+
+  async function assignSavedProgramToClient(clientId = selectedUserId, templateId = adminSelectedTemplateId) {
+    const selectedTemplate = adminTrainingTemplates.find((item) => item.id === templateId);
+    const client = adminSelectedClient?.id === clientId
+      ? adminSelectedClient
+      : usersList.find((item) => item.id === clientId);
+
+    if (!clientId || !selectedTemplate) {
+      setAdminClientStatus("Выбери клиента и сохранённую программу.");
+      return;
+    }
+    if (!canManageTrainingTemplate(selectedTemplate) || !canManageClientProgram(client)) {
+      setAdminClientStatus("Можно назначать только свои программы своим клиентам.");
+      return;
+    }
+
+    try {
+      const templateSnapshot = await getDoc(doc(db, "trainingTemplates", templateId));
+      if (!templateSnapshot.exists()) {
+        setAdminClientStatus("Сохранённая программа не найдена.");
+        return;
+      }
+
+      const template = { id: templateSnapshot.id, ...templateSnapshot.data() };
+      if (!canManageTrainingTemplate(template)) {
+        setAdminClientStatus("Можно назначать только свои программы своим клиентам.");
+        return;
+      }
+
+      const nextWorkouts = buildClientWorkoutsFromTemplate(template);
+      const confirmed = window.confirm(
+        `Назначить клиенту программу “${template.name}”? Старые тренировки будут полностью удалены, будет назначено ${nextWorkouts.length} тренировок.`
+      );
+      if (!confirmed) return;
+
+      const assignedProgramUpdatedAt = new Date().toISOString();
+      const deletedCount = await replaceClientAssignedWorkouts(
+        clientId,
+        nextWorkouts,
+        template,
+        assignedProgramUpdatedAt
+      );
+
+      setAdminClientStatus(`Программа “${template.name}” назначена: ${nextWorkouts.length} тренировок. Старые удалены: ${deletedCount}.`);
+
+      setAdminSelectedClient((prev) => prev?.id === clientId ? {
+        ...prev,
+        assignedProgramId: template.id,
+        assignedProgramName: template.name,
+        assignedProgramAt: assignedProgramUpdatedAt,
+        assignedProgramUpdatedAt,
+        assignedWorkoutCount: nextWorkouts.length
+      } : prev);
+
+      setUsersList((prev) => prev.map((client) => (
+        client.id === clientId ? {
+          ...client,
+          assignedProgramId: template.id,
+          assignedProgramName: template.name,
+          assignedProgramAt: assignedProgramUpdatedAt,
+          assignedProgramUpdatedAt,
+          assignedWorkoutCount: nextWorkouts.length
+        } : client
+      )));
+
+      if (clientId === selectedUserId || clientId === adminSelectedClient?.id) {
+        setPlan({ workouts: sortWorkoutDays(nextWorkouts) });
+      }
+    } catch (error) {
+      console.error("Ошибка назначения сохранённой программы:", error);
+      setAdminClientStatus(
+        error?.code === "workout-assignment-batch-limit"
+          ? error.message
+          : "Не получилось назначить сохранённую программу."
+      );
+    }
+  }
+
+  async function copyCurrentProgramToClient() {
+    if (!adminCopyTargetUserId) {
+      setAdminClientStatus("Выбери клиента для копирования.");
+      return;
+    }
+
+    try {
+      for (const workoutItem of plan.workouts || []) {
+        await setDoc(doc(db, "users", adminCopyTargetUserId, "workouts", workoutItem.id), {
+          name: workoutItem.name,
+          exercises: (workoutItem.exercises || []).map((exercise) => ({
+            id: exercise.id,
+            name: exercise.name,
+            video: exercise.video || "",
+            sets: makeThreeSets(exercise.sets, exercise.name?.includes("Пресс") ? 15 : 8)
+          }))
+        }, { merge: true });
+      }
+
+      setAdminClientStatus("Программа скопирована другому клиенту.");
+    } catch (error) {
+      console.error("Ошибка копирования программы:", error);
+      setAdminClientStatus("Не получилось скопировать программу.");
+    }
+  }
+
+  async function saveAdminTrainerNote() {
+    if (!adminSelectedClient?.id) {
+      setAdminClientStatus("Сначала выбери клиента.");
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, "users", adminSelectedClient.id), {
+        trainerNote: adminTrainerNote,
+        trainerNoteUpdatedAt: new Date().toISOString()
+      }, { merge: true });
+
+      setAdminSelectedClient((prev) => prev ? { ...prev, trainerNote: adminTrainerNote } : prev);
+      setUsersList((prev) => prev.map((client) => (
+        client.id === adminSelectedClient.id ? { ...client, trainerNote: adminTrainerNote } : client
+      )));
+      setAdminClientStatus("Заметка тренера сохранена.");
+    } catch (error) {
+      console.error("Ошибка сохранения заметки:", error);
+      setAdminClientStatus("Не получилось сохранить заметку.");
+    }
+  }
+
+  async function deleteClientEverywhereFromAdminPanel(client) {
+    if (!client?.id) return;
+
+    const confirmed = window.confirm(`Полностью удалить клиента ${client.email || client.name || client.id}? Будет попытка удалить Auth через Cloud Function и профиль из Firestore.`);
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch("/api/admin/deleteUser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uid: client.id })
+      });
+
+      if (!response.ok) {
+        throw new Error("Cloud Function deleteUser недоступна");
+      }
+
+      await deleteDoc(doc(db, "users", client.id));
+      setAdminClientStatus("Клиент удалён из Firebase Auth и Firestore.");
+      await loadUsers();
+    } catch (error) {
+      console.error("Полное удаление Auth недоступно:", error);
+      await deleteClientFromAdminPanel(client);
+      setAdminClientStatus("Auth-удаление требует Cloud Function. Профиль Firestore удалён, Auth мог остаться.");
+    }
+  }
+
+  async function copyAdminSubcollection(sourceUid, targetUid, collectionName) {
+    const snapshot = await getDocs(collection(db, "users", sourceUid, collectionName));
+
+    for (const sourceDoc of snapshot.docs) {
+      await setDoc(
+        doc(db, "users", targetUid, collectionName, sourceDoc.id),
+        {
+          ...sourceDoc.data(),
+          migratedFrom: sourceUid,
+          migratedAt: new Date().toISOString()
+        },
+        { merge: true }
+      );
+    }
+
+    return snapshot.size;
+  }
+
+  async function transferClientDataBetweenAccounts(fromUidOverride = null, toUidOverride = null) {
+    if (!canUseTrainerFeatures()) {
+      setAdminTransferStatus("Перенос может делать только админ.");
+      return;
+    }
+
+    const transferFromUid = fromUidOverride || adminTransferFromUid;
+    const transferToUid = toUidOverride || adminTransferToUid;
+
+    if (!transferFromUid || !transferToUid) {
+      setAdminTransferStatus("Выбери источник и клиента-получателя.");
+      return;
+    }
+
+    if (transferFromUid === transferToUid) {
+      setAdminTransferStatus("Источник и получатель не должны совпадать.");
+      return;
+    }
+
+    const sourceUser = adminAllUsersList.find((item) => item.id === transferFromUid);
+    const targetUser = usersList.find((item) => item.id === transferToUid);
+
+    const confirmed = window.confirm(
+      `Перенести данные с ${sourceUser?.email || transferFromUid} на ${targetUser?.email || adminTransferToUid}? Данные получателя будут дополнены/обновлены.`
+    );
+
+    if (!confirmed) return;
+
+    setAdminTransferLoading(true);
+    setAdminTransferStatus("Переношу данные...");
+
+    try {
+      const [sourceSnap, targetSnap] = await Promise.all([
+        getDoc(doc(db, "users", transferFromUid)),
+        getDoc(doc(db, "users", transferToUid))
+      ]);
+
+      if (!sourceSnap.exists()) {
+        setAdminTransferStatus("Источник не найден в Firestore.");
+        setAdminTransferLoading(false);
+        return;
+      }
+
+      const sourceData = sourceSnap.data() || {};
+      const targetData = targetSnap.exists() ? targetSnap.data() || {} : {};
+      const {
+        role: _sourceRole,
+        createdBy: _sourceCreatedBy,
+        createdAt: _sourceCreatedAt,
+        email: _sourceEmail,
+        ...safeSourceData
+      } = sourceData;
+
+      await setDoc(doc(db, "users", transferToUid), {
+        ...safeSourceData,
+        email: targetData.email || targetUser?.email || "",
+        name: targetData.name || targetUser?.name || safeSourceData.name || "",
+        role: "client",
+        migratedFromUid: transferFromUid,
+        migratedFromEmail: sourceData.email || sourceUser?.email || "",
+        migratedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+
+      const copied = {
+        workouts: await copyAdminSubcollection(transferFromUid, transferToUid, "workouts"),
+        history: await copyAdminSubcollection(transferFromUid, transferToUid, "history"),
+        nutrition: await copyAdminSubcollection(transferFromUid, transferToUid, "nutrition")
+      };
+
+      if (transferFromUid === auth.currentUser?.uid) {
+        await setDoc(doc(db, "users", transferFromUid), {
+          role: "admin",
+          email: auth.currentUser?.email || ADMIN_EMAIL,
+          adminOnly: true,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+      }
+
+      await loadUsers();
+
+      const freshTarget = {
+        ...(targetUser || {}),
+        id: transferToUid,
+        email: targetData.email || targetUser?.email || ""
+      };
+
+      await loadAdminClientOverview(freshTarget);
+
+      setAdminTransferStatus(
+        `Готово: тренировки ${copied.workouts}, история ${copied.history}, питание ${copied.nutrition}. Получатель остался client.`
+      );
+    } catch (error) {
+      console.error("Ошибка переноса данных:", error);
+      setAdminTransferStatus("Не получилось перенести данные. Проверь Firestore rules и выбранные аккаунты.");
+    } finally {
+      setAdminTransferLoading(false);
+    }
+  }
+
+  
+  async function updateUserTrainerRole(targetUser, makeTrainer = true) {
+    if (!canUseAdminFeatures() || !targetUser?.id) {
+      setAdminClientStatus("Только админ может назначать роль тренера.");
+      return;
+    }
+
+    const nextRole = makeTrainer ? "trainer" : "client";
+
+    try {
+      await setDoc(doc(db, "users", targetUser.id), {
+        role: nextRole,
+        trainerRoleUpdatedAt: new Date().toISOString()
+      }, { merge: true });
+
+      setUsersList((prev) => prev.map((item) => item.id === targetUser.id ? { ...item, role: nextRole } : item));
+      setAdminAllUsersList((prev) => prev.map((item) => item.id === targetUser.id ? { ...item, role: nextRole } : item));
+      setAdminSelectedClient((prev) => prev?.id === targetUser.id ? { ...prev, role: nextRole } : prev);
+      setAdminClientStatus(makeTrainer ? "Роль тренера назначена." : "Роль тренера снята.");
+    } catch (error) {
+      console.error("Trainer role update error:", error);
+      setAdminClientStatus("Не удалось изменить роль тренера. Проверь права Firestore.");
+    }
+  }
+
+async function loadUsers() {
+    if (!canUseTrainerFeatures()) return;
+
+    const sortUsers = (items = []) => [...items].sort((a, b) =>
+      String(a.name || a.email || "").localeCompare(String(b.name || b.email || ""), "ru")
+    );
+
+    const normalizeTrainerClient = (item = {}) => ({
+      ...item,
+      role: item.role || "client"
+    });
+
+    const applyUsers = (items = []) => {
+      const uniqueUsers = new Map();
+      items.forEach((item) => {
+        if (!item?.id) return;
+        uniqueUsers.set(item.id, normalizeTrainerClient(item));
+      });
+
+      const users = sortUsers(Array.from(uniqueUsers.values()));
+      const clients = users.filter((item) => (
+        canUseAdminFeatures()
+          ? ["client", "trainer"].includes(item.role || "client") && item.email !== ADMIN_EMAIL
+          : (item.role || "client") === "client" && item.email !== ADMIN_EMAIL
+      ));
+
+      setAdminAllUsersList(users);
+      setUsersList(clients);
+
+      if (!adminSelectedClient && clients.length) {
+        setSelectedUserId(clients[0].id);
+        setAdminSelectedClient(clients[0]);
+      }
+
+      return clients;
+    };
+
+    try {
+      if (canUseAdminFeatures()) {
+        const snapshot = await getDocs(collection(db, "users"));
+        const users = [];
+
+        snapshot.forEach((userDoc) => {
+          users.push({
+            id: userDoc.id,
+            ...userDoc.data()
+          });
+        });
+
+        applyUsers(users);
+        return;
+      }
+
+      const trainerUid = auth.currentUser?.uid || user?.uid || "";
+      const trainerEmail = String(auth.currentUser?.email || user?.email || "").toLowerCase();
       const users = [];
 
-      snapshot.forEach((doc) => {
-        users.push({
-          id: doc.id,
-          ...doc.data()
+      const trainerQueries = [
+        trainerUid ? query(collection(db, "users"), where("role", "==", "client"), where("trainerId", "==", trainerUid)) : null,
+        trainerUid ? query(collection(db, "users"), where("role", "==", "client"), where("assignedTrainerId", "==", trainerUid)) : null,
+        trainerUid ? query(collection(db, "users"), where("role", "==", "client"), where("coachId", "==", trainerUid)) : null,
+        trainerUid ? query(collection(db, "users"), where("role", "==", "client"), where("createdByUid", "==", trainerUid)) : null,
+        trainerEmail ? query(collection(db, "users"), where("role", "==", "client"), where("trainerEmail", "==", trainerEmail)) : null,
+        trainerEmail ? query(collection(db, "users"), where("role", "==", "client"), where("assignedTrainerEmail", "==", trainerEmail)) : null,
+        trainerEmail ? query(collection(db, "users"), where("role", "==", "client"), where("coachEmail", "==", trainerEmail)) : null,
+        trainerEmail ? query(collection(db, "users"), where("role", "==", "client"), where("createdByEmail", "==", trainerEmail)) : null,
+        trainerEmail ? query(collection(db, "users"), where("role", "==", "client"), where("createdBy", "==", trainerEmail)) : null
+      ].filter(Boolean);
+
+      const queryResults = await Promise.allSettled(trainerQueries.map((trainerQuery) => getDocs(trainerQuery)));
+      queryResults.forEach((result) => {
+        if (result.status !== "fulfilled") return;
+        result.value.forEach((userDoc) => {
+          users.push({
+            id: userDoc.id,
+            ...userDoc.data()
+          });
         });
       });
 
-      setUsersList(users);
+      // Надёжный fallback: если Firestore rules не разрешают trainer-запросы по общей коллекции users,
+      // читаем личный индекс тренера users/{trainerUid}/trainerClients и показываем клиентов оттуда.
+      if (trainerUid) {
+        const linkedClientsSnap = await getDocs(collection(db, "users", trainerUid, "trainerClients"));
+        const linkedClientDocs = [];
+
+        linkedClientsSnap.forEach((linkDoc) => {
+          linkedClientDocs.push({ id: linkDoc.id, ...linkDoc.data() });
+        });
+
+        const linkedProfiles = await Promise.allSettled(linkedClientDocs.map(async (linkedClient) => {
+          const clientId = linkedClient.clientId || linkedClient.uid || linkedClient.id;
+          if (!clientId) return null;
+
+          try {
+            const clientDoc = await getDoc(doc(db, "users", clientId));
+            if (clientDoc.exists()) {
+              return { id: clientDoc.id, ...clientDoc.data() };
+            }
+          } catch (profileReadError) {
+            console.warn("Trainer linked client profile read failed:", profileReadError);
+          }
+
+          return {
+            ...linkedClient,
+            id: clientId,
+            uid: clientId,
+            clientId,
+            role: linkedClient.role || "client",
+            name: linkedClient.name || linkedClient.email || "Клиент",
+            email: linkedClient.email || "",
+            trainerId: linkedClient.trainerId || trainerUid,
+            trainerEmail: linkedClient.trainerEmail || trainerEmail
+          };
+        }));
+
+        linkedProfiles.forEach((result) => {
+          if (result.status === "fulfilled" && result.value?.id) {
+            users.push(result.value);
+          }
+        });
+      }
+
+      applyUsers(users);
     } catch (err) {
       console.log("Ошибка загрузки пользователей:", err);
+      setAdminClientStatus("Не получилось загрузить клиентов. Проверь права Firestore для роли тренера.");
+    }
+  }
+
+  function buildAdminClientNutritionStateFromRoot(clientData = {}, nutritionState = null) {
+    const rootGoals = clientData?.nutritionGoals || clientData?.nutritionPlan || {};
+    const aiPlan = clientData?.aiNutritionPlan || nutritionState?.aiNutritionPlan || null;
+    const aiStart = aiPlan?.start || aiPlan?.trainingDay || aiPlan?.weeks?.[0] || {};
+    const mirroredNutrition = clientData?.nutritionState || clientData?.adminClientNutrition || null;
+    const nutritionDays = nutritionState?.days || mirroredNutrition?.days || clientData?.nutrition?.days || clientData?.nutritionDays || {};
+
+    return {
+      ...(mirroredNutrition || {}),
+      ...(nutritionState || {}),
+      goals: {
+        ...defaultNutritionState.goals,
+        ...(mirroredNutrition?.goals || {}),
+        ...(nutritionState?.goals || {}),
+        ...rootGoals,
+        calories: Number(rootGoals.calories || nutritionState?.goals?.calories || mirroredNutrition?.goals?.calories || aiStart.calories || defaultNutritionState.goals.calories) || defaultNutritionState.goals.calories,
+        protein: Number(rootGoals.protein || nutritionState?.goals?.protein || mirroredNutrition?.goals?.protein || aiStart.protein || defaultNutritionState.goals.protein) || defaultNutritionState.goals.protein,
+        fat: Number(rootGoals.fat || nutritionState?.goals?.fat || mirroredNutrition?.goals?.fat || aiStart.fat || defaultNutritionState.goals.fat) || defaultNutritionState.goals.fat,
+        carbs: Number(rootGoals.carbs || nutritionState?.goals?.carbs || mirroredNutrition?.goals?.carbs || aiStart.carbs || defaultNutritionState.goals.carbs) || defaultNutritionState.goals.carbs
+      },
+      days: nutritionDays,
+      aiNutritionPlan: aiPlan || null,
+      nutritionPlan: clientData?.nutritionPlan || nutritionState?.nutritionPlan || mirroredNutrition?.nutritionPlan || null
+    };
+  }
+
+  function getTrainerClientMirrorPayload(clientData = {}, nutritionState = null) {
+    const clientId = clientData?.id || clientData?.uid || clientData?.clientId || "";
+    const trainerId = clientData?.trainerId || clientData?.assignedTrainerId || clientData?.coachId || "";
+    const trainerEmail = String(clientData?.trainerEmail || clientData?.assignedTrainerEmail || clientData?.coachEmail || "").toLowerCase();
+    const mirroredNutrition = buildAdminClientNutritionStateFromRoot(clientData, nutritionState);
+
+    return {
+      clientId,
+      uid: clientId,
+      id: clientId,
+      email: clientData?.email || "",
+      name: clientData?.name || clientData?.email || "Клиент",
+      role: "client",
+      trainerId,
+      assignedTrainerId: clientData?.assignedTrainerId || trainerId,
+      coachId: clientData?.coachId || trainerId,
+      trainerEmail,
+      assignedTrainerEmail: String(clientData?.assignedTrainerEmail || trainerEmail || "").toLowerCase(),
+      coachEmail: String(clientData?.coachEmail || trainerEmail || "").toLowerCase(),
+      createdBy: clientData?.createdBy || clientData?.createdByEmail || "",
+      createdByEmail: clientData?.createdByEmail || clientData?.createdBy || "",
+      createdByUid: clientData?.createdByUid || "",
+      profile: clientData?.profile || {},
+      aiNutritionProfile: clientData?.aiNutritionProfile || clientData?.profile || {},
+      aiNutritionPlan: clientData?.aiNutritionPlan || null,
+      nutritionPlan: clientData?.nutritionPlan || null,
+      nutritionGoals: clientData?.nutritionGoals || mirroredNutrition?.goals || null,
+      nutritionState: mirroredNutrition,
+      assignedProgramId: clientData?.assignedProgramId || "",
+      assignedProgramName: clientData?.assignedProgramName || "",
+      assignedProgramUpdatedAt: clientData?.assignedProgramUpdatedAt || clientData?.assignedProgramAt || "",
+      assignedWorkoutCount: clientData?.assignedWorkoutCount || 0,
+      workoutCalendar: clientData?.workoutCalendar || null,
+      trainingDays: clientData?.trainingDays || clientData?.workoutCalendar?.trainingDays || [],
+      workoutTime: clientData?.workoutTime || clientData?.workoutCalendar?.workoutTime || "",
+      trainerNote: clientData?.trainerNote || "",
+      telegram: clientData?.telegram || null,
+      telegramConnected: clientData?.telegramConnected || false,
+      telegramUsername: clientData?.telegramUsername || "",
+      telegramDisplayName: clientData?.telegramDisplayName || "",
+      telegramNotificationsEnabled: clientData?.telegramNotificationsEnabled || false,
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  async function mirrorClientForTrainer(clientData = {}, nutritionState = null) {
+    const clientId = clientData?.id || clientData?.uid || "";
+    const trainerId = clientData?.trainerId || clientData?.assignedTrainerId || clientData?.coachId || "";
+    if (!clientId || !trainerId) return;
+
+    try {
+      await setDoc(
+        doc(db, "users", trainerId, "trainerClients", clientId),
+        getTrainerClientMirrorPayload({ ...clientData, id: clientId }, nutritionState),
+        { merge: true }
+      );
+    } catch (mirrorError) {
+      console.warn("Trainer client mirror write failed:", mirrorError);
+    }
+  }
+
+  async function loadAdminClientOverview(client, openClientPage = false) {
+    if (!client?.id) return;
+
+    setSelectedUserId(client.id);
+    setAdminSelectedClient(client);
+    setAdminClientTab("overview");
+    if (openClientPage) {
+      setAdminClientPageOpen(true);
+      setAdminUsersSelectedTab("overview");
+    }
+    setAdminClientLoading(true);
+    setAdminClientStatus("");
+
+    try {
+      let freshClient = { ...client };
+      const currentTrainerUid = auth.currentUser?.uid || user?.uid || "";
+
+      try {
+        const clientDocSnap = await getDoc(doc(db, "users", client.id));
+        if (clientDocSnap.exists()) {
+          freshClient = { id: clientDocSnap.id, ...client, ...clientDocSnap.data() };
+        }
+      } catch (clientDocError) {
+        console.warn("Полный документ клиента недоступен, пробую trainerClients mirror:", clientDocError);
+
+        if (currentTrainerUid) {
+          try {
+            const linkedClientSnap = await getDoc(doc(db, "users", currentTrainerUid, "trainerClients", client.id));
+            if (linkedClientSnap.exists()) {
+              freshClient = {
+                ...client,
+                ...linkedClientSnap.data(),
+                id: client.id,
+                uid: client.id,
+                clientId: client.id,
+                role: "client"
+              };
+            }
+          } catch (linkedClientReadError) {
+            console.warn("Trainer client mirror read failed:", linkedClientReadError);
+          }
+        }
+      }
+
+      setAdminSelectedClient(freshClient);
+      setUsersList((prev) => prev.map((item) => item.id === freshClient.id ? { ...item, ...freshClient } : item));
+      setAdminAllUsersList((prev) => prev.map((item) => item.id === freshClient.id ? { ...item, ...freshClient } : item));
+
+      let historySnap = null;
+      let nutritionSnap = null;
+      let measurementsSnap = null;
+
+      try {
+        historySnap = await getDocs(collection(db, "users", client.id, "history"));
+      } catch (historyError) {
+        console.error("Ошибка загрузки истории клиента:", historyError);
+        historySnap = null;
+      }
+
+      try {
+        nutritionSnap = await getDoc(doc(db, "users", client.id, "nutrition", "state"));
+      } catch (nutritionError) {
+        console.error("Ошибка загрузки питания клиента:", nutritionError);
+        nutritionSnap = null;
+      }
+
+      try {
+        measurementsSnap = await getDocs(collection(db, "users", client.id, "measurements"));
+      } catch (measurementError) {
+        console.error("Ошибка загрузки замеров клиента:", measurementError);
+        measurementsSnap = null;
+      }
+
+      const clientHistory = [];
+      if (historySnap?.forEach) {
+        historySnap.forEach((historyDoc) => {
+          clientHistory.push({ id: historyDoc.id, ...historyDoc.data() });
+        });
+      }
+
+      clientHistory.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+      const clientMeasurements = [];
+      if (measurementsSnap?.forEach) {
+        measurementsSnap.forEach((measurementDoc) => {
+          clientMeasurements.push({ id: measurementDoc.id, ...measurementDoc.data() });
+        });
+      }
+      clientMeasurements.sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
+
+      const nutritionState = nutritionSnap?.exists?.() ? nutritionSnap.data() : null;
+      const mergedNutritionState = buildAdminClientNutritionStateFromRoot(freshClient, nutritionState);
+      const fullClientForView = {
+        ...freshClient,
+        nutritionGoals: freshClient.nutritionGoals || mergedNutritionState.goals,
+        nutritionPlan: freshClient.nutritionPlan || mergedNutritionState.nutritionPlan,
+        aiNutritionPlan: freshClient.aiNutritionPlan || mergedNutritionState.aiNutritionPlan
+      };
+
+      setAdminSelectedClient(fullClientForView);
+      setUsersList((prev) => prev.map((item) => item.id === fullClientForView.id ? { ...item, ...fullClientForView } : item));
+      setAdminAllUsersList((prev) => prev.map((item) => item.id === fullClientForView.id ? { ...item, ...fullClientForView } : item));
+      await mirrorClientForTrainer(fullClientForView, mergedNutritionState);
+
+      setAdminClientHistory(clientHistory);
+      setAdminSelectedHistoryIds([]);
+      setAdminClientNutrition(mergedNutritionState);
+      setAdminClientMeasurements(clientMeasurements);
+      setAdminTrainerNote(freshClient.trainerNote || "");
+      setAdminCalendarDraft(getDefaultAdminCalendar(freshClient));
+      await loadAdminTrainingTemplates();
+    } catch (error) {
+      console.error("Ошибка загрузки данных клиента:", error);
+      setAdminClientStatus("Не получилось загрузить данные клиента.");
+    } finally {
+      setAdminClientLoading(false);
+    }
+  }
+
+  function toggleAdminSelectedHistoryId(workoutId) {
+    setAdminSelectedHistoryIds((prev) => (
+      prev.includes(workoutId)
+        ? prev.filter((id) => id !== workoutId)
+        : [...prev, workoutId]
+    ));
+  }
+
+  function toggleAdminSelectAllHistory() {
+    const visibleIds = adminClientHistory.slice(0, 20).map((item) => item.id).filter(Boolean);
+
+    setAdminSelectedHistoryIds((prev) => (
+      visibleIds.every((id) => prev.includes(id))
+        ? prev.filter((id) => !visibleIds.includes(id))
+        : [...new Set([...prev, ...visibleIds])]
+    ));
+  }
+
+  async function deleteSelectedAdminClientHistory(client = adminSelectedClient) {
+    if (!client?.id || !adminSelectedHistoryIds.length) {
+      setAdminClientStatus("Выбери тренировки для удаления.");
+      return;
+    }
+
+    const confirmed = window.confirm(`Удалить выбранные тренировки: ${adminSelectedHistoryIds.length}? Это действие нельзя отменить.`);
+    if (!confirmed) return;
+
+    setAdminDeletingWorkoutId("bulk");
+    setAdminClientStatus("");
+
+    try {
+      await Promise.all(
+        adminSelectedHistoryIds.map((workoutId) => deleteDoc(doc(db, "users", client.id, "history", workoutId)))
+      );
+
+      setAdminClientHistory((prev) => prev.filter((item) => !adminSelectedHistoryIds.includes(item.id)));
+
+      if (selectedUserId === client.id) {
+        setHistory((prev) => prev.filter((item) => !adminSelectedHistoryIds.includes(item.id)));
+      }
+
+      setAdminSelectedHistoryIds([]);
+      setAdminClientStatus("Выбранные тренировки удалены.");
+    } catch (error) {
+      console.error("Ошибка удаления выбранных тренировок:", error);
+      setAdminClientStatus("Не получилось удалить выбранные тренировки. Проверь права Firestore.");
+    } finally {
+      setAdminDeletingWorkoutId("");
+    }
+  }
+
+  async function deleteAdminClientWorkoutHistory(workoutItem, client = adminSelectedClient) {
+    if (!client?.id || !workoutItem?.id) {
+      setAdminClientStatus("Не выбрана тренировка для удаления.");
+      return;
+    }
+
+    const workoutName = workoutItem.workout || "тренировку";
+    const confirmed = window.confirm(`Удалить "${workoutName}" из истории клиента? Это действие нельзя отменить.`);
+
+    if (!confirmed) return;
+
+    setAdminDeletingWorkoutId(workoutItem.id);
+    setAdminClientStatus("");
+
+    try {
+      await deleteDoc(doc(db, "users", client.id, "history", workoutItem.id));
+
+      setAdminClientHistory((prev) => prev.filter((item) => item.id !== workoutItem.id));
+
+      if (selectedUserId === client.id) {
+        setHistory((prev) => prev.filter((item) => item.id !== workoutItem.id));
+      }
+
+      setAdminClientStatus("Тренировка удалена из истории клиента.");
+    } catch (error) {
+      console.error("Ошибка удаления тренировки:", error);
+      setAdminClientStatus("Не получилось удалить тренировку. Проверь права Firestore.");
+    } finally {
+      setAdminDeletingWorkoutId("");
+    }
+  }
+
+  const ADMIN_CALENDAR_DAYS = [
+    { id: "mon", title: "Пн", full: "Понедельник" },
+    { id: "tue", title: "Вт", full: "Вторник" },
+    { id: "wed", title: "Ср", full: "Среда" },
+    { id: "thu", title: "Чт", full: "Четверг" },
+    { id: "fri", title: "Пт", full: "Пятница" },
+    { id: "sat", title: "Сб", full: "Суббота" },
+    { id: "sun", title: "Вс", full: "Воскресенье" }
+  ];
+
+  function formatProfileWorkoutDate(dateValue) {
+    if (!dateValue) return "Нет данных";
+
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return "Нет данных";
+
+    return date.toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "long"
+    });
+  }
+
+  function getProfileNextTrainingText(profile = {}, userData = {}) {
+    const sourceCalendar = userData?.workoutCalendar || userData?.calendar || {};
+    const trainingDays = Array.isArray(sourceCalendar.trainingDays) && sourceCalendar.trainingDays.length
+      ? sourceCalendar.trainingDays
+      : getAiNutritionTrainingDays(profile);
+
+    const workoutTime = sourceCalendar.workoutTime || userData?.workoutTime || profile?.workoutTime || "13:00";
+
+    if (!trainingDays.length) return `Не выбрано`;
+
+    const dayOrder = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+    const todayIndex = new Date().getDay();
+
+    let bestOffset = 8;
+    let bestDayId = trainingDays[0];
+
+    trainingDays.forEach((dayId) => {
+      const targetIndex = dayOrder.indexOf(dayId);
+      if (targetIndex === -1) return;
+
+      let offset = targetIndex - todayIndex;
+      if (offset <= 0) offset += 7;
+
+      if (offset < bestOffset) {
+        bestOffset = offset;
+        bestDayId = dayId;
+      }
+    });
+
+    const day = ADMIN_CALENDAR_DAYS.find((item) => item.id === bestDayId);
+    return `${day?.title || bestDayId} · ${workoutTime}`;
+  }
+
+  function getDefaultAdminCalendar(client = {}) {
+    const source = client.workoutCalendar || client.calendar || {};
+    const profile = getAdminClientProfile(client);
+
+    return {
+      enabled: source.enabled !== false,
+      reminderEnabled: source.reminderEnabled !== false,
+      reminderTime: source.reminderTime || "19:00",
+      workoutTime: source.workoutTime || client.workoutTime || profile?.workoutTime || "13:00",
+      hourReminderEnabled: source.hourReminderEnabled === true,
+      trainingDays: Array.isArray(source.trainingDays) && source.trainingDays.length
+        ? source.trainingDays
+        : Array.isArray(profile?.trainingDays) ? profile.trainingDays : [],
+      daySettings: source.daySettings || source.scheduleByDay || {}
+    };
+  }
+
+  function toggleAdminCalendarDay(dayId) {
+    setAdminCalendarDraft((prev) => {
+      const current = Array.isArray(prev.trainingDays) ? prev.trainingDays : [];
+      const exists = current.includes(dayId);
+      const nextTrainingDays = exists ? current.filter((item) => item !== dayId) : [...current, dayId];
+      const nextDaySettings = { ...(prev.daySettings || {}) };
+
+      if (!exists && !nextDaySettings[dayId]) {
+        nextDaySettings[dayId] = {
+          workoutTime: prev.workoutTime || "13:00",
+          reminderTime: "19:00",
+          hourReminderEnabled: prev.hourReminderEnabled === true
+        };
+      }
+
+      return {
+        ...prev,
+        trainingDays: nextTrainingDays,
+        daySettings: nextDaySettings
+      };
+    });
+  }
+
+  function updateAdminCalendarDaySetting(dayId, field, value) {
+    setAdminCalendarDraft((prev) => ({
+      ...prev,
+      daySettings: {
+        ...(prev.daySettings || {}),
+        [dayId]: {
+          workoutTime: prev.workoutTime || "13:00",
+          reminderTime: "19:00",
+          hourReminderEnabled: prev.hourReminderEnabled === true,
+          ...((prev.daySettings || {})[dayId] || {}),
+          [field]: value
+        }
+      }
+    }));
+  }
+
+  async function saveAdminClientCalendar(client = adminSelectedClient) {
+    if (!client?.id) return;
+
+    setAdminCalendarSaving(true);
+    setAdminClientStatus("");
+
+    try {
+      const nextCalendar = {
+        enabled: adminCalendarDraft.enabled !== false,
+        reminderEnabled: adminCalendarDraft.reminderEnabled !== false,
+        reminderTime: adminCalendarDraft.reminderTime || "19:00",
+        workoutTime: adminCalendarDraft.workoutTime || "13:00",
+        hourReminderEnabled: adminCalendarDraft.hourReminderEnabled === true,
+        trainingDays: Array.isArray(adminCalendarDraft.trainingDays) ? adminCalendarDraft.trainingDays : [],
+        daySettings: Object.fromEntries(
+          (Array.isArray(adminCalendarDraft.trainingDays) ? adminCalendarDraft.trainingDays : []).map((dayId) => [
+            dayId,
+            {
+              workoutTime: adminCalendarDraft.daySettings?.[dayId]?.workoutTime || adminCalendarDraft.workoutTime || "13:00",
+              reminderTime: "19:00",
+              reminderBefore: adminCalendarDraft.daySettings?.[dayId]?.reminderBefore || adminCalendarDraft.daySettings?.[dayId]?.reminderTime || "1 день",
+              hourReminderEnabled: adminCalendarDraft.daySettings?.[dayId]?.hourReminderEnabled === true
+            }
+          ])
+        ),
+        updatedAt: new Date().toISOString()
+      };
+
+      await setDoc(doc(db, "users", client.id), {
+        workoutCalendar: nextCalendar,
+        trainingDays: nextCalendar.trainingDays,
+        workoutTime: nextCalendar.workoutTime,
+        telegramNotificationsEnabled: nextCalendar.reminderEnabled,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+
+      setAdminSelectedClient((prev) => prev?.id === client.id ? {
+        ...prev,
+        workoutCalendar: nextCalendar,
+        trainingDays: nextCalendar.trainingDays,
+        workoutTime: nextCalendar.workoutTime,
+        telegramNotificationsEnabled: nextCalendar.reminderEnabled
+      } : prev);
+
+      setUsersList((prev) => prev.map((item) => (
+        item.id === client.id ? {
+          ...item,
+          workoutCalendar: nextCalendar,
+          trainingDays: nextCalendar.trainingDays,
+          workoutTime: nextCalendar.workoutTime,
+          telegramNotificationsEnabled: nextCalendar.reminderEnabled
+        } : item
+      )));
+
+      setAdminClientStatus("Календарь и Telegram-напоминания сохранены.");
+    } catch (error) {
+      console.error("Ошибка сохранения календаря:", error);
+      setAdminClientStatus("Не получилось сохранить календарь.");
+    } finally {
+      setAdminCalendarSaving(false);
+    }
+  }
+
+  async function sendAdminTestWorkoutReminder(client = adminSelectedClient) {
+    if (!client?.id) {
+      setAdminClientStatus("Сначала выбери клиента.");
+      return;
+    }
+
+    setAdminCalendarTesting(true);
+    setAdminClientStatus("Отправляю тестовое Telegram-напоминание...");
+
+    try {
+      const response = await fetch("/api/telegram/test-workout-reminder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          clientId: client.id
+        })
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Test reminder failed");
+      }
+
+      setAdminClientStatus("Тестовое Telegram-напоминание отправлено.");
+    } catch (error) {
+      console.error("Ошибка тестового Telegram-напоминания:", error);
+      setAdminClientStatus("Не получилось отправить тестовое напоминание.");
+    } finally {
+      setAdminCalendarTesting(false);
+    }
+  }
+
+  async function deleteClientFromAdminPanel(client) {
+    if (!canUseTrainerFeatures()) {
+      setAdminClientStatus("Удалять клиентов может только админ.");
+      return;
+    }
+
+    if (!client?.id) return;
+
+    const confirmed = window.confirm(`Удалить клиента ${client.email || client.name || client.id} из базы приложения? Аккаунт Firebase Auth может остаться активным.`);
+    if (!confirmed) return;
+
+    try {
+      await deleteDoc(doc(db, "users", client.id));
+
+      if (selectedUserId === client.id) {
+        setSelectedUserId(null);
+        setAdminSelectedClient(null);
+        setAdminClientHistory([]);
+        setAdminClientNutrition(null);
+      }
+
+      await loadUsers();
+      setAdminClientStatus("Клиент удалён из базы приложения.");
+    } catch (error) {
+      console.error("Ошибка удаления клиента:", error);
+      setAdminClientStatus("Не получилось удалить клиента.");
+    }
+  }
+
+  function generateAdminPassword() {
+    const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+    const chars = Array.from({ length: 10 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]);
+    const password = `${chars.join("")}!7`;
+    setAdminNewUserPassword(password);
+    return password;
+  }
+
+  async function createUserFromAdminPanel(event) {
+    event?.preventDefault?.();
+
+    if (!canUseTrainerFeatures()) {
+      setAdminCreateUserStatus("Создавать клиентов может только админ или тренер.");
+      return;
+    }
+
+    const email = adminNewUserEmail.trim().toLowerCase();
+    const password = adminNewUserPassword.trim();
+    const displayName = adminNewUserName.trim();
+
+    if (!email || !email.includes("@")) {
+      setAdminCreateUserStatus("Введи корректный email пользователя.");
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      setAdminCreateUserStatus("Пароль должен быть минимум 6 символов.");
+      return;
+    }
+
+    setAdminCreateUserLoading(true);
+    setAdminCreateUserStatus("");
+    setAdminCreatedCredentials(null);
+
+    let secondaryApp = null;
+
+    try {
+      secondaryApp = initializeApp(auth.app.options, `admin-create-user-${Date.now()}`);
+      const secondaryAuth = getAuth(secondaryApp);
+      const secondaryDb = getFirestore(secondaryApp);
+      const credential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+      const createdUser = credential.user;
+
+      const currentTrainerEmail = String(auth.currentUser?.email || user?.email || "").toLowerCase();
+      const currentTrainerId = auth.currentUser?.uid || user?.uid || "";
+      const createdAt = new Date().toISOString();
+      const isTrainerCreator = currentUserRole === "trainer" && !canUseAdminFeatures();
+
+      const clientPayload = {
+        email,
+        name: displayName || email.split("@")[0],
+        role: "client",
+        assignedProgramId: "",
+        assignedProgramName: "",
+        createdAt,
+        updatedAt: createdAt,
+        createdBy: currentTrainerEmail || ADMIN_EMAIL,
+        createdByEmail: currentTrainerEmail || ADMIN_EMAIL,
+        createdByUid: currentTrainerId || "",
+        ...(isTrainerCreator ? {
+          trainerId: currentTrainerId,
+          assignedTrainerId: currentTrainerId,
+          coachId: currentTrainerId,
+          trainerEmail: currentTrainerEmail,
+          assignedTrainerEmail: currentTrainerEmail,
+          coachEmail: currentTrainerEmail
+        } : {})
+      };
+
+      let savedClientProfile = false;
+
+      try {
+        await setDoc(doc(db, "users", createdUser.uid), clientPayload, { merge: true });
+        savedClientProfile = true;
+      } catch (primaryWriteError) {
+        console.warn("Primary user profile write failed, trying secondary user context:", primaryWriteError);
+      }
+
+      if (!savedClientProfile) {
+        await setDoc(doc(secondaryDb, "users", createdUser.uid), clientPayload, { merge: true });
+      }
+
+      if (currentTrainerId) {
+        const trainerClientLink = {
+          clientId: createdUser.uid,
+          uid: createdUser.uid,
+          email,
+          name: displayName || email.split("@")[0],
+          role: "client",
+          trainerId: currentTrainerId,
+          trainerEmail: currentTrainerEmail,
+          assignedTrainerId: currentTrainerId,
+          assignedTrainerEmail: currentTrainerEmail,
+          createdAt,
+          updatedAt: createdAt
+        };
+
+        try {
+          await setDoc(doc(db, "users", currentTrainerId, "trainerClients", createdUser.uid), trainerClientLink, { merge: true });
+        } catch (trainerLinkError) {
+          console.warn("Trainer client link write failed:", trainerLinkError);
+        }
+      }
+
+      await signOut(secondaryAuth);
+
+      const createdClient = {
+        id: createdUser.uid,
+        ...clientPayload
+      };
+
+      setAdminCreatedCredentials({
+        email,
+        password,
+        name: displayName || email.split("@")[0]
+      });
+
+      setAdminNewUserName("");
+      setAdminNewUserEmail("");
+      setAdminNewUserPassword("");
+      setAdminCreateUserStatus(isTrainerCreator ? "Клиент создан и привязан к тренеру ✅" : "Клиент создан ✅");
+      setAdminCreateClientModalOpen(false);
+      setUsersList((prev) => [createdClient, ...prev.filter((item) => item.id !== createdClient.id)]);
+      setAdminAllUsersList((prev) => [createdClient, ...prev.filter((item) => item.id !== createdClient.id)]);
+      setSelectedUserId(createdClient.id);
+      setAdminSelectedClient(createdClient);
+
+      if (canUseAdminFeatures()) {
+        await loadUsers();
+      }
+    } catch (error) {
+      console.error("Ошибка создания пользователя:", error);
+
+      const message = error?.code === "auth/email-already-in-use"
+        ? "Пользователь с таким email уже существует."
+        : error?.code === "auth/weak-password"
+          ? "Пароль слишком слабый. Нужно минимум 6 символов."
+          : error?.code === "permission-denied"
+            ? "Клиент создан в Auth, но профиль не записался в Firestore. Нужно разрешить тренеру запись users/{clientId}."
+            : "Не получилось создать пользователя. Проверь email/пароль и Firebase Auth.";
+
+      setAdminCreateUserStatus(message);
+    } finally {
+      if (secondaryApp) {
+        try {
+          await deleteApp(secondaryApp);
+        } catch (_) {
+          // ignore secondary app cleanup
+        }
+      }
+
+      setAdminCreateUserLoading(false);
     }
   }
 
@@ -1243,6 +7553,7 @@ export default function App() {
     }
 
     setHistoryLoading(true);
+    startPerformanceCheck("Firebase · history load");
 
     try {
       const snapshot = await getDocs(
@@ -1261,31 +7572,122 @@ export default function App() {
       workouts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       setHistory(workouts);
+      endPerformanceCheck("Firebase · history load", { records: workouts.length });
     } catch (err) {
       console.log("Ошибка загрузки истории:", err);
-      alert("Не получилось загрузить историю");
+      showAppError("load", "Не получилось загрузить историю тренировок.");
     } finally {
       setHistoryLoading(false);
     }
   }
 
-  async function loadNutritionFromFirebase(uid) {
-    try {
-      const snap = await getDoc(doc(db, "users", uid, "nutrition", "state"));
+  function requestDeleteOwnHistoryWorkout(workoutItem) {
+    if (!workoutItem?.id) {
+      showAppError("load", "Не выбрана тренировка для удаления.");
+      return;
+    }
 
-      if (snap.exists()) {
-        const data = snap.data();
-        setNutrition({
-          ...defaultNutritionState,
-          ...data,
-          goals: { ...defaultNutritionState.goals, ...(data.goals || {}) },
-          days: data.days || {},
-          favorites: data.favorites || defaultNutritionState.favorites,
-          recent: data.recent || []
-        });
-      }
+    setHistorySwipeId("");
+    setHistoryDeleteCandidate(workoutItem);
+  }
+
+  function closeHistoryDeleteConfirm() {
+    if (historyDeletingId) return;
+    setHistoryDeleteCandidate(null);
+  }
+
+  async function confirmDeleteOwnHistoryWorkout() {
+    const workoutItem = historyDeleteCandidate;
+    const currentUser = auth.currentUser;
+
+    if (!currentUser || !workoutItem?.id) {
+      showAppError("load", "Не выбрана тренировка для удаления.");
+      setHistoryDeleteCandidate(null);
+      return;
+    }
+
+    setHistoryDeletingId(workoutItem.id);
+
+    try {
+      await deleteDoc(doc(db, "users", currentUser.uid, "history", workoutItem.id));
+      setHistory((prev) => prev.filter((item) => item.id !== workoutItem.id));
+      setOpenHistoryKey((prev) => (prev === workoutItem.id ? null : prev));
+      setHistoryDeleteCandidate(null);
+      showAppError("savedLocal", "Тренировка удалена из истории.");
+    } catch (error) {
+      console.error("Ошибка удаления тренировки из истории:", error);
+      showAppError("firebase", "Не получилось удалить тренировку. Проверь интернет или права Firebase.");
+    } finally {
+      setHistoryDeletingId("");
+    }
+  }
+
+  function handleHistoryTouchStart(event, itemId) {
+    setHistoryTouchStartX(event.touches?.[0]?.clientX ?? null);
+
+    if (historySwipeId && historySwipeId !== itemId) {
+      setHistorySwipeId("");
+    }
+  }
+
+  function handleHistoryTouchEnd(event, item) {
+    if (historyTouchStartX === null) return;
+
+    const endX = event.changedTouches?.[0]?.clientX ?? historyTouchStartX;
+    const diffX = endX - historyTouchStartX;
+
+    setHistoryTouchStartX(null);
+
+    if (diffX < -56) {
+      setHistorySwipeId(item.id);
+      return;
+    }
+
+    if (diffX > 38 && historySwipeId === item.id) {
+      setHistorySwipeId("");
+    }
+  }
+
+  async function loadNutritionFromFirebase(uid) {
+    startPerformanceCheck("Firebase · nutrition load", { userId: String(uid || "").slice(0, 6) });
+
+    try {
+      const [userSnap, personalMyFoodsSnap] = await Promise.all([
+        getDoc(doc(db, "users", uid, "nutrition", "state")),
+        getDoc(getPersonalMyFoodsDocRef(uid))
+      ]);
+
+      const userData = userSnap.exists() ? userSnap.data() : {};
+      const personalMyFoodsData = personalMyFoodsSnap.exists() ? personalMyFoodsSnap.data() : {};
+      const localNutrition = safeReadUserJsonStorage(NUTRITION_STORAGE_KEY, uid, {});
+      const localUid = localNutrition?.__uid;
+
+      const safeLocalNutrition =
+        !localUid || localUid === uid
+          ? localNutrition
+          : {};
+
+      const mergedNutrition = mergeNutritionStates(
+        safeLocalNutrition,
+        userData,
+        personalMyFoodsData.myFoods || {}
+      );
+
+      const scopedNutrition = {
+        ...mergedNutrition,
+        __uid: uid
+      };
+
+      setNutrition(scopedNutrition);
+      safeWriteUserJsonStorage(NUTRITION_STORAGE_KEY, uid, scopedNutrition);
+
+      endPerformanceCheck("Firebase · nutrition load", {
+        days: Object.keys(mergedNutrition.days || {}).length,
+        myFoods: Object.keys(mergedNutrition.myFoods || {}).length
+      });
     } catch (error) {
       console.error("Nutrition load error", error);
+      showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "firebase", "Не получилось загрузить питание из Firebase. Показываю локальные данные.");
     } finally {
       setNutritionCloudReady(true);
     }
@@ -1306,7 +7708,9 @@ export default function App() {
     if (!workout) return;
 
     setOpenVideoId(null);
+    setInlinePlayingVideoId("");
     setIsWorkoutSaved(false);
+                    setShowWorkoutSavedCard(false);
     setSwipeDirection("down");
 
     if (workoutStarted && currentExerciseIndex === 0) {
@@ -1319,14 +7723,16 @@ export default function App() {
 
     setTimeout(() => {
       setSwipeDirection("");
-    }, 360);
+    }, 560);
   }
 
   function goToNextExercise() {
     if (!workout) return;
 
     setOpenVideoId(null);
+    setInlinePlayingVideoId("");
     setIsWorkoutSaved(false);
+                    setShowWorkoutSavedCard(false);
     setSwipeDirection("up");
 
     if (!workoutStarted) {
@@ -1342,7 +7748,7 @@ export default function App() {
 
     setTimeout(() => {
       setSwipeDirection("");
-    }, 360);
+    }, 560);
   }
 
   function isInteractiveTarget(target) {
@@ -1379,16 +7785,612 @@ export default function App() {
     loadHistory();
   }
 
-  function openWorkout(id) {
+  function saveWorkoutModePreference(mode, remember = workoutModeRemember) {
+    const currentUser = auth.currentUser || user;
+    const nextPreference = {
+      mode,
+      remember: Boolean(remember)
+    };
+
+    setWorkoutModePreference(nextPreference);
+    setWorkoutModeRemember(Boolean(remember));
+
+    if (currentUser?.uid) {
+      safeWriteUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, currentUser.uid, nextPreference);
+    }
+  }
+
+  function openTrainingEntry() {
+    const currentUser = auth.currentUser || user;
+    const savedPreference = currentUser?.uid
+      ? safeReadUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, currentUser.uid, workoutModePreference)
+      : workoutModePreference;
+
+    if (savedPreference?.remember && savedPreference?.mode === "basic") {
+      openBasicWorkoutQuiz();
+      return;
+    }
+
+    if (savedPreference?.remember && savedPreference?.mode === "individual") {
+      openIndividualWorkouts();
+      return;
+    }
+
+    setSelectedWorkoutId(null);
+    setPage("workoutMode");
+  }
+
+  async function openIndividualWorkouts() {
+    saveWorkoutModePreference("individual", workoutModeRemember);
+    setSelectedWorkoutId(null);
+    setIndividualWorkoutIndex(0);
+    setIndividualWorkoutIndexInitialized(false);
+    await loadWorkoutsFromFirebase((auth.currentUser || user)?.uid);
+    setPage("workouts");
+  }
+
+  function buildBasicPlanFromQuiz(quiz = basicWorkoutQuiz) {
+    const planKey = quiz.goal === "muscle" || quiz.days === "4" ? "muscle" : "beginner";
+    const basePlan = BASIC_WORKOUT_PLANS[planKey] || BASIC_WORKOUT_PLANS.beginner;
+    const daysLimit = Number(quiz.days) || basePlan.workouts.length;
+
+    return {
+      id: basePlan.id,
+      name: basePlan.name,
+      description: basePlan.description,
+      workouts: sortWorkoutDays(basePlan.workouts.slice(0, Math.min(daysLimit, basePlan.workouts.length)))
+    };
+  }
+
+  function openBasicWorkoutQuiz() {
+    saveWorkoutModePreference("basic", workoutModeRemember);
+    setSelectedWorkoutId(null);
+    setPage("basicWorkoutQuiz");
+  }
+
+  function applyBasicWorkoutPlan() {
+    const nextPlan = buildBasicPlanFromQuiz(basicWorkoutQuiz);
+    setPlan({ workouts: nextPlan.workouts });
+    setSelectedWorkoutId(null);
+    setPage("workouts");
+  }
+
+  function openWorkoutWithDraftChoice(id, savedDraft, shouldRestoreDraft) {
+    const restoredReadiness = shouldRestoreDraft && savedDraft?.selectedReadiness?.id
+      ? getWorkoutReadinessOption(savedDraft.selectedReadiness.id)
+      : null;
+
+    if (shouldRestoreDraft) {
+      setPlan(savedDraft.plan);
+    }
+
     setSelectedWorkoutId(id);
     setOpenVideoId(null);
     setFullscreenVideo(null);
-    setCurrentExerciseIndex(0);
-    setWorkoutStarted(false);
-    setWorkoutStartedAt(null);
-    setWorkoutFinishedAt(null);
+    setCurrentExerciseIndex(shouldRestoreDraft ? Number(savedDraft.currentExerciseIndex) || 0 : 0);
+    setWorkoutStarted(Boolean(shouldRestoreDraft));
+    setWorkoutStartedAt(shouldRestoreDraft ? savedDraft.workoutStartedAt || Date.now() : null);
+    setWorkoutFinishedAt(shouldRestoreDraft ? savedDraft.workoutFinishedAt || null : null);
+    setWorkoutReadiness(restoredReadiness);
+                  setPostWorkoutFeedback(null);
+                  setPostWorkoutFeedbackOpen(false);
+    setWorkoutReadinessOpen(!shouldRestoreDraft);
     setIsWorkoutSaved(false);
+    setShowWorkoutSavedCard(false);
     loadHistory();
+  }
+
+  function openWorkout(id) {
+    const currentUser = auth.currentUser || user;
+    const savedDraft = currentUser?.uid ? safeReadJsonStorage(getWorkoutDraftKey(currentUser.uid, id), null) : null;
+    const selectedPlanWorkout = plan.workouts.find((workoutItem) => workoutItem.id === id);
+    const currentAssignmentVersion =
+      selectedPlanWorkout?.assignedProgramUpdatedAt ||
+      plan.assignedProgramUpdatedAt ||
+      "";
+    const draftAssignmentVersion =
+      savedDraft?.assignmentVersion ||
+      savedDraft?.assignedProgramUpdatedAt ||
+      savedDraft?.plan?.assignedProgramUpdatedAt ||
+      "";
+    const draftMatchesCurrentProgram =
+      currentAssignmentVersion
+        ? draftAssignmentVersion === currentAssignmentVersion
+        : true;
+    if (savedDraft && !draftMatchesCurrentProgram && currentUser?.uid) {
+      clearWorkoutDraft(currentUser.uid, id);
+    }
+    const canRestoreDraft =
+      draftMatchesCurrentProgram &&
+      savedDraft?.workoutId === id &&
+      savedDraft?.plan;
+
+    if (canRestoreDraft) {
+      setWorkoutDraftRestorePrompt({ workoutId: id, savedDraft });
+      return;
+    }
+
+    openWorkoutWithDraftChoice(id, savedDraft, false);
+  }
+
+  function handleWorkoutDraftChoice(shouldRestoreDraft) {
+    const pendingDraft = workoutDraftRestorePrompt;
+    if (!pendingDraft) return;
+
+    setWorkoutDraftRestorePrompt(null);
+    openWorkoutWithDraftChoice(
+      pendingDraft.workoutId,
+      pendingDraft.savedDraft,
+      shouldRestoreDraft
+    );
+  }
+
+  function applyWorkoutReadiness(option) {
+    const readiness = option || getWorkoutReadinessOption("good");
+
+    setWorkoutReadiness(readiness);
+    setWorkoutReadinessOpen(false);
+
+    if (!selectedWorkoutId) return;
+
+    setPlan((prev) => ({
+      ...prev,
+      workouts: prev.workouts.map((workoutItem) => {
+        if (workoutItem.id !== selectedWorkoutId) return workoutItem;
+
+        return {
+          ...workoutItem,
+          exercises: workoutItem.exercises.map((exercise) => ({
+            ...exercise,
+            sets: exercise.sets.map((set, index) => {
+              if (readiness.id === "good") return set;
+
+              const isAssignedProgramWorkout = Boolean(
+                workoutItem.assignedProgramId || workoutItem.assignedProgramUpdatedAt
+              );
+              const baseWeight = getAiWorkoutBaseWeight(
+                exercise.name,
+                set,
+                index,
+                history,
+                !isAssignedProgramWorkout
+              );
+              const adjustedWeight = getAdjustedWorkoutWeight(baseWeight, readiness.id);
+
+              if (!adjustedWeight) return set;
+
+              return {
+                ...set,
+                weight: String(adjustedWeight),
+                aiOriginalWeight: baseWeight ? String(baseWeight) : "",
+                aiReadinessId: readiness.id,
+                aiReadinessTitle: readiness.title
+              };
+            })
+          }))
+        };
+      })
+    }));
+
+    const startedAt = Date.now();
+    setWorkoutStarted(true);
+    setWorkoutStartedAt(startedAt);
+    setTimerTick(startedAt);
+    timerTickRef.current = startedAt;
+    setWorkoutFinishedAt(null);
+    setCurrentExerciseIndex(0);
+    setSwipeDirection("up");
+    centerExerciseDeck();
+    setTimeout(() => setSwipeDirection(""), 560);
+  }
+
+  function saveAiNutritionPlan(profileOverride = aiNutritionProfileDraft) {
+    const profile = {
+      weight: String(profileOverride.weight || "").trim(),
+      height: String(profileOverride.height || "").trim(),
+      age: String(profileOverride.age || "").trim(),
+      sex: profileOverride.sex || "male",
+      activity: profileOverride.activity || "medium",
+      goal: profileOverride.goal || "recomp",
+      trainingDays: getAiNutritionTrainingDays(profileOverride)
+    };
+
+    const nextPlan = buildAiNutritionMonthlyPlan(nutrition, profile, history, aiNutritionSavedPlan);
+    setAiNutritionProfile(profile);
+    setAiNutritionProfileDraft(profile);
+    setAiNutritionSavedPlan(nextPlan);
+
+    try {
+      localStorage.setItem(AI_NUTRITION_PROFILE_STORAGE_KEY, JSON.stringify(profile));
+      localStorage.setItem(AI_NUTRITION_PLAN_STORAGE_KEY, JSON.stringify(nextPlan));
+
+      if (auth.currentUser?.uid) {
+        setDoc(doc(db, "users", auth.currentUser.uid), {
+          profile,
+          aiNutritionProfile: profile,
+          aiNutritionPlan: nextPlan,
+          updatedAt: new Date().toISOString()
+        }, { merge: true }).catch((error) => console.error("Profile save error", error));
+      }
+
+      if (user?.uid && hasRequiredAiNutritionProfileFields(profile)) {
+        localStorage.setItem(FIRST_SETUP_DONE_USER_STORAGE_KEY, `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}`);
+      }
+    } catch (_) {
+      // ignore localStorage errors
+    }
+
+    const weekOne = nextPlan.weeks?.[0];
+    if (weekOne) {
+      setNutrition((prev) => ({
+        ...prev,
+        goals: {
+          ...prev.goals,
+          calories: weekOne.calories,
+          protein: weekOne.protein,
+          fat: weekOne.fat,
+          carbs: weekOne.carbs
+        }
+      }));
+    }
+  }
+
+  function resetAiNutritionPlan() {
+    const preservedAnchor = Number(aiNutritionSavedPlan?.calorieAnchor || aiNutritionProfile?.calorieAnchor || getAiNutritionHistoryBaseline().average.calories) || 2374;
+    const nextDraft = {
+      weight: "",
+      height: "",
+      age: "",
+      sex: aiNutritionProfile?.sex || "male",
+      activity: aiNutritionProfile?.activity || "medium",
+      goal: aiNutritionProfile?.goal || "recomp",
+      trainingDays: getAiNutritionTrainingDays(aiNutritionProfile)
+    };
+
+    setAiNutritionProfile(null);
+    setAiNutritionSavedPlan(null);
+    setAiNutritionProfileDraft(nextDraft);
+
+    try {
+      localStorage.removeItem(AI_NUTRITION_PROFILE_STORAGE_KEY);
+      localStorage.removeItem(AI_NUTRITION_PLAN_STORAGE_KEY);
+    } catch (_) {
+      // ignore localStorage errors
+    }
+  }
+
+  
+function normalizeTelegramUsername(value = "") {
+    return String(value || "").trim().replace(/^@+/, "");
+  }
+
+  function createTelegramLinkCode() {
+    return Math.random().toString(36).slice(2, 8).toUpperCase();
+  }
+
+  function parseTelegramAuthResultFromHash() {
+    try {
+      const hash = window.location.hash || "";
+      const params = new URLSearchParams(hash.replace(/^#/, ""));
+      const rawResult = params.get("tgAuthResult");
+
+      if (!rawResult) return null;
+
+      const base64 = rawResult.replace(/-/g, "+").replace(/_/g, "/");
+      const paddedBase64 = base64 + "=".repeat((4 - base64.length % 4) % 4);
+      const decoded = decodeURIComponent(escape(window.atob(paddedBase64)));
+
+      return JSON.parse(decoded);
+    } catch (error) {
+      console.error("Telegram tgAuthResult parse error:", error);
+      return null;
+    }
+  }
+
+  async function handleTelegramLoginAuth(telegramUser) {
+    if (!auth.currentUser?.uid) {
+      setTelegramStatus("Сначала войди в аккаунт.");
+      return;
+    }
+
+    setTelegramLinking(true);
+    setTelegramStatus("Проверяю данные Telegram...");
+
+    try {
+      const response = await fetch("/api/telegram/login-verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          uid: auth.currentUser.uid,
+          telegramUser
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Telegram authorization failed");
+      }
+
+      const nextTelegram = {
+        connected: true,
+        ...(data.telegram || {}),
+        notificationsEnabled: data.telegram?.notificationsEnabled !== false
+      };
+
+      setTelegramProfile(nextTelegram);
+      setTelegramDraft(nextTelegram);
+      setTelegramStatus("Telegram успешно привязан ✅");
+      setTelegramConnectOpen(false);
+
+      try {
+        localStorage.setItem("workout_telegram_profile_v1", JSON.stringify(nextTelegram));
+      } catch (_) {
+        // ignore localStorage errors
+      }
+    } catch (error) {
+      console.error("Telegram login auth error:", error);
+      setTelegramStatus("Не получилось авторизоваться через Telegram.");
+    } finally {
+      setTelegramLinking(false);
+    }
+  }
+
+  async function startTelegramBotLink() {
+    if (!auth.currentUser?.uid) {
+      setTelegramStatus("Сначала войди в аккаунт.");
+      return;
+    }
+
+    const code = createTelegramLinkCode();
+    setTelegramLinkCode(code);
+    setTelegramLinking(true);
+    setTelegramStatus("Код создан. Открой бота и нажми START.");
+
+    try {
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
+        telegramLinkCode: code,
+        telegramLinkCodeCreatedAt: new Date().toISOString(),
+        telegramConnected: false
+      }, { merge: true });
+
+      window.open(`https://t.me/${TELEGRAM_BOT_USERNAME}?start=${code}`, "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("Ошибка создания Telegram link code:", error);
+      setTelegramStatus("Не получилось создать код привязки.");
+    } finally {
+      setTelegramLinking(false);
+    }
+  }
+
+  async function checkTelegramLoginResult() {
+    setTelegramStatus("Проверяю, сохранился ли Telegram в профиле...");
+    await refreshTelegramConnection();
+  }
+
+  async function refreshTelegramConnection() {
+    if (!auth.currentUser?.uid) return;
+
+    try {
+      const profileDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+      const savedTelegram = profileDoc.exists() ? profileDoc.data()?.telegram : null;
+
+      if (savedTelegram?.connected || profileDoc.data()?.telegramConnected) {
+        const nextTelegram = {
+          connected: true,
+          username: savedTelegram?.username || profileDoc.data()?.telegramUsername || telegramDraft.username || "",
+          displayName: savedTelegram?.displayName || profileDoc.data()?.telegramDisplayName || savedTelegram?.firstName || savedTelegram?.username || telegramDraft.displayName || "",
+          firstName: savedTelegram?.firstName || "",
+          lastName: savedTelegram?.lastName || "",
+          avatarUrl: savedTelegram?.avatarUrl || profileDoc.data()?.telegramAvatarUrl || "",
+          chatId: savedTelegram?.chatId || "",
+          telegramUserId: savedTelegram?.telegramUserId || profileDoc.data()?.telegramUserId || "",
+          notificationsEnabled: savedTelegram?.notificationsEnabled !== false,
+          connectedAt: savedTelegram?.connectedAt || new Date().toISOString()
+        };
+
+        setTelegramProfile(nextTelegram);
+        setTelegramDraft(nextTelegram);
+        setTelegramStatus("Telegram успешно привязан ✅");
+
+        try {
+          localStorage.setItem("workout_telegram_profile_v1", JSON.stringify(nextTelegram));
+        } catch (_) {
+          // ignore localStorage errors
+        }
+      } else {
+        setTelegramStatus("Пока не привязан. Открой бота и нажми START.");
+      }
+    } catch (error) {
+      console.error("Ошибка проверки Telegram:", error);
+      setTelegramStatus("Не получилось проверить привязку Telegram.");
+    }
+  }
+
+  async function saveTelegramConnection() {
+    const username = normalizeTelegramUsername(telegramDraft.username);
+
+    if (!username) {
+      setTelegramStatus("Введи Telegram username.");
+      return;
+    }
+
+    const nextTelegramProfile = {
+      connected: true,
+      username,
+      displayName: telegramDraft.displayName || username,
+      avatarUrl: telegramDraft.avatarUrl || "",
+      chatId: telegramDraft.chatId || "",
+      notificationsEnabled: telegramDraft.notificationsEnabled !== false,
+      connectedAt: new Date().toISOString(),
+      reminderMode: "day_before_workout"
+    };
+
+    setTelegramProfile(nextTelegramProfile);
+    setTelegramDraft(nextTelegramProfile);
+    setTelegramConnectOpen(false);
+    setTelegramStatus("Telegram подключён ✅");
+
+    try {
+      localStorage.setItem("workout_telegram_profile_v1", JSON.stringify(nextTelegramProfile));
+    } catch (_) {
+      // ignore localStorage errors
+    }
+
+    try {
+      if (auth.currentUser?.uid) {
+        await setDoc(doc(db, "users", auth.currentUser.uid), {
+          telegram: nextTelegramProfile,
+          telegramConnected: true,
+          telegramUsername: username,
+          telegramNotificationsEnabled: nextTelegramProfile.notificationsEnabled
+        }, { merge: true });
+      }
+    } catch (error) {
+      console.error("Ошибка сохранения Telegram:", error);
+      setTelegramStatus("Telegram сохранён локально, но не записался в Firebase.");
+    }
+  }
+
+  async function disconnectTelegram() {
+    const nextTelegramProfile = {
+      connected: false,
+      username: "",
+      displayName: "",
+      avatarUrl: "",
+      chatId: "",
+      notificationsEnabled: true
+    };
+
+    setTelegramProfile(nextTelegramProfile);
+    setTelegramDraft(nextTelegramProfile);
+    setTelegramStatus("Telegram отключён.");
+
+    try {
+      localStorage.setItem("workout_telegram_profile_v1", JSON.stringify(nextTelegramProfile));
+    } catch (_) {
+      // ignore localStorage errors
+    }
+
+    try {
+      if (auth.currentUser?.uid) {
+        await setDoc(doc(db, "users", auth.currentUser.uid), {
+          telegram: nextTelegramProfile,
+          telegramConnected: false,
+          telegramUsername: "",
+          telegramNotificationsEnabled: false
+        }, { merge: true });
+      }
+    } catch (error) {
+      console.error("Ошибка отключения Telegram:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (!telegramConnectOpen) return;
+
+    window.onTelegramAuthForWorkoutApp = async (telegramUser) => {
+      console.log("TELEGRAM CALLBACK WORKS:", telegramUser);
+      setTelegramStatus("Telegram подтвердил вход. Проверяю данные...");
+      await handleTelegramLoginAuth(telegramUser);
+    };
+
+    const container = telegramLoginContainerRef.current;
+    if (!container) return;
+
+    container.innerHTML = "";
+    setTelegramLoginWidgetReady(false);
+
+    const script = document.createElement("script");
+    script.src = "https://telegram.org/js/telegram-widget.js?22";
+    script.async = true;
+    script.setAttribute("data-telegram-login", TELEGRAM_BOT_USERNAME);
+    script.setAttribute("data-size", "large");
+    script.setAttribute("data-radius", "14");
+    script.setAttribute("data-userpic", "true");
+    script.setAttribute("data-request-access", "write");
+    script.setAttribute("data-onauth", "onTelegramAuthForWorkoutApp(user)");
+    script.onload = () => setTelegramLoginWidgetReady(true);
+
+    container.appendChild(script);
+
+    return () => {
+      if (window.onTelegramAuthForWorkoutApp) {
+        delete window.onTelegramAuthForWorkoutApp;
+      }
+    };
+  }, [telegramConnectOpen]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const telegramAuthResult = parseTelegramAuthResultFromHash();
+
+    if (telegramAuthResult) {
+      setPage("profile");
+      setTelegramConnectOpen(false);
+      handleTelegramLoginAuth(telegramAuthResult);
+
+      const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+      window.history.replaceState({}, "", cleanUrl);
+      return;
+    }
+
+    if (params.get("telegramLinked") === "1") {
+      setPage("profile");
+      setTelegramConnectOpen(false);
+      refreshTelegramConnection();
+
+      const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+      window.history.replaceState({}, "", cleanUrl);
+      return;
+    }
+
+    if (params.get("telegramError")) {
+      setPage("profile");
+      setTelegramConnectOpen(true);
+      setTelegramStatus("Telegram вернул ошибку. Попробуй войти ещё раз.");
+      const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+      window.history.replaceState({}, "", cleanUrl);
+    }
+  }, []);
+
+  function saveAiBodyMetrics() {
+    const nextProfile = {
+      ...(aiNutritionProfile || {}),
+      ...aiNutritionProfileDraft,
+      weight: String(aiNutritionProfileDraft.weight || "").trim(),
+      height: String(aiNutritionProfileDraft.height || "").trim(),
+      age: String(aiNutritionProfileDraft.age || "").trim(),
+      sex: aiNutritionProfileDraft.sex || "male",
+      activity: aiNutritionProfileDraft.activity || "medium",
+      goal: aiNutritionProfileDraft.goal || "recomp",
+      trainingDays: Array.isArray(aiNutritionProfileDraft.trainingDays) ? aiNutritionProfileDraft.trainingDays : []
+    };
+
+    const nextPlan = buildAiNutritionMonthlyPlan(nutrition, nextProfile, history, null);
+    const nextWeek = nextPlan?.weeks?.[0] || nextPlan?.start || nutrition.goals;
+    const nextMacros = getAiNutritionDayMacros(nextWeek, nextProfile);
+
+    setAiNutritionProfileDraft(nextProfile);
+    setAiNutritionProfile(nextProfile);
+    setAiNutritionSavedPlan(nextPlan);
+    setNutrition((prev) => ({
+      ...prev,
+      goals: {
+        ...(prev.goals || defaultNutritionState.goals),
+        calories: Math.round(nextMacros.calories || nextWeek.calories || prev.goals?.calories || 0),
+        protein: Math.round(nextMacros.protein || nextWeek.protein || prev.goals?.protein || 0),
+        fat: Math.round(nextMacros.fat || nextWeek.fat || prev.goals?.fat || 0),
+        carbs: Math.round(nextMacros.carbs || nextWeek.carbs || prev.goals?.carbs || 0)
+      }
+    }));
+
+    try {
+      localStorage.setItem(AI_NUTRITION_PROFILE_STORAGE_KEY, JSON.stringify(nextProfile));
+      localStorage.setItem(AI_NUTRITION_PLAN_STORAGE_KEY, JSON.stringify(nextPlan));
+    } catch (_) {
+      // ignore localStorage errors
+    }
   }
 
   if (appLoading) {
@@ -1409,6 +8411,10 @@ export default function App() {
         </div>
       </div>
     );
+  }
+
+  if (showFirstSetupOnboarding && isLoggedIn && !appLoading) {
+    return renderFirstSetupOnboarding();
   }
 
   if (!isLoggedIn) {
@@ -1444,6 +8450,8 @@ export default function App() {
             >
               {showPassword ? "👁️" : "🙈"}
             </button>
+
+    
           </div>
 
           {loginError && <div className="loginError">{loginError}</div>}
@@ -1461,10 +8469,21 @@ export default function App() {
   if (page === "main") {
     return (
       <div className="menuPage">
+      <div className="appVersionBadge">{APP_VERSION}</div>
+        <button
+          type="button"
+          className="menuRefreshIconBtn"
+          onClick={refreshPage}
+          aria-label="Обновить страницу"
+          title="Обновить страницу"
+        >
+          🔄
+        </button>
+
         <h1 className="menuTitle">Главное меню</h1>
 
         <div className="menuButtons">
-          <button className="bigButton" onClick={() => setPage("workouts")}>
+          <button className="bigButton" onClick={openTrainingEntry}>
             🏋️ Тренировки
           </button>
 
@@ -1482,7 +8501,7 @@ export default function App() {
             👤 Личный кабинет
           </button>
 
-          {user?.email === ADMIN_EMAIL && (
+          {canUseTrainerFeatures() && (
             <button
               className="bigButton"
               onClick={() => {
@@ -1490,30 +8509,482 @@ export default function App() {
                 setPage("admin");
               }}
             >
-              ⚙️ Админ-панель
+              ⚙️ Тренерская
+            </button>
+          )}
+
+          {canUseAdminFeatures() && (
+            <button
+              className="bigButton adminPanelMenuButton"
+              onClick={() => {
+                setSelectedUserId(null);
+                setPage("adminPanel");
+              }}
+            >
+              🛠️ Админ-панель
             </button>
           )}
         </div>
+      </div>
+    );
+  }
 
-        <button type="button" className="logoutSmall" onClick={refreshPage}>
-          🔄 Обновить страницу
+  if (page === "adminPanel") {
+    if (!canUseAdminFeatures()) {
+      return (
+        <div className="app">
+          <button className="backBtn" onClick={() => setPage("main")}>← Главное меню</button>
+          <div className="historyEmptyCard">
+            <h3>Доступ закрыт</h3>
+            <p>Админ-панель доступна только главному администратору.</p>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="adminPanelHubPage">
+        <button
+          className="adminFixedMainBack"
+          onClick={() => setPage("main")}
+          aria-label="Главное меню"
+        >
+          <span>←</span>
+          <b>Главное меню</b>
         </button>
 
-        <button type="button" className="logoutSmall" onClick={logout}>
-          ⬅ Выйти
+        <section className="adminPanelHubHero">
+          <span>ADMIN CONTROL</span>
+          <h1>Админ-панель</h1>
+          <p>Отдельный раздел для управления ролями, клиентами и системными настройками.</p>
+        </section>
+
+        <section className="adminPanelHubGrid">
+          <button
+            type="button"
+            className="adminPanelHubCard"
+            onClick={() => setPage("adminUsers")}
+          >
+            <i>👥</i>
+            <strong>Клиенты и роли</strong>
+            <small>Назначение тренеров, карточки клиентов, доступы.</small>
+          </button>
+
+          <button
+            type="button"
+            className="adminPanelHubCard"
+            onClick={openAdminProgramsOverview}
+          >
+            <i>🏋️</i>
+            <strong>Программы</strong>
+            <small>Библиотека программ и назначение тренировок.</small>
+          </button>
+
+          <button
+            type="button"
+            className="adminPanelHubCard"
+            onClick={() => setPage("admin")}
+          >
+            <i>📊</i>
+            <strong>Тренерская CRM</strong>
+            <small>Обзор, статистика, управление тренировочным процессом.</small>
+          </button>
+        </section>
+      </div>
+    );
+  }
+
+  if (page === "workoutMode") {
+    return (
+      <div className="workoutModePage">
+        <button className="workoutModeBack" onClick={goBackToMain}>←</button>
+
+        <section className="workoutModeHero">
+          <span>TRAINING MODE</span>
+          <h1>Выбери формат</h1>
+          <p>Можно тренироваться по базовой программе или по индивидуальному плану от тренера.</p>
+        </section>
+
+        <section className="workoutModeCards">
+          <button className="workoutModeCard" onClick={openBasicWorkoutQuiz}>
+            <span className="workoutModeIcon">🧭</span>
+            <strong>Базовые тренировки</strong>
+            <small>Короткий опрос и готовый план из базы приложения.</small>
+          </button>
+
+          <button className="workoutModeCard premium" onClick={openIndividualWorkouts}>
+            <span className="workoutModeIcon">🎯</span>
+            <strong>Индивидуальный план</strong>
+            <small>Тренировки, которые создал и назначил тренер.</small>
+          </button>
+        </section>
+
+        <label className="workoutModeRemember">
+          <input
+            type="checkbox"
+            checked={workoutModeRemember}
+            onChange={(event) => setWorkoutModeRemember(event.target.checked)}
+          />
+          <span>Запомнить выбор и больше не спрашивать</span>
+        </label>
+      </div>
+    );
+  }
+
+  if (page === "basicWorkoutQuiz") {
+    const previewPlan = buildBasicPlanFromQuiz(basicWorkoutQuiz);
+
+    return (
+      <div className="basicQuizPage">
+        <button className="workoutModeBack" onClick={() => setPage("workoutMode")}>←</button>
+
+        <section className="workoutModeHero">
+          <span>BASIC PLAN</span>
+          <h1>Базовый подбор</h1>
+          <p>Ответь на 3 вопроса — приложение предложит стартовый план тренировок.</p>
+        </section>
+
+        <section className="basicQuizCard">
+          <label>
+            <span>Цель</span>
+            <select
+              value={basicWorkoutQuiz.goal}
+              onChange={(event) => setBasicWorkoutQuiz((prev) => ({ ...prev, goal: event.target.value }))}
+            >
+              <option value="muscle">Набрать мышцы</option>
+              <option value="beginner">Начать тренироваться</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Опыт</span>
+            <select
+              value={basicWorkoutQuiz.level}
+              onChange={(event) => setBasicWorkoutQuiz((prev) => ({ ...prev, level: event.target.value }))}
+            >
+              <option value="beginner">Новичок</option>
+              <option value="middle">Уже тренировался</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Сколько тренировок в неделю</span>
+            <select
+              value={basicWorkoutQuiz.days}
+              onChange={(event) => setBasicWorkoutQuiz((prev) => ({ ...prev, days: event.target.value }))}
+            >
+              <option value="3">3 тренировки</option>
+              <option value="4">4 тренировки</option>
+            </select>
+          </label>
+        </section>
+
+        <section className="basicQuizPreview">
+          <span>Рекомендуемый план</span>
+          <strong>{previewPlan.name}</strong>
+          <p>{previewPlan.description}</p>
+          <div>
+            <b>{previewPlan.workouts.length}</b>
+            <small>тренировки</small>
+            <b>{previewPlan.workouts.reduce((sum, workout) => sum + (workout.exercises?.length || 0), 0)}</b>
+            <small>упражнений</small>
+          </div>
+        </section>
+
+        <button className="basicQuizStartBtn" onClick={applyBasicWorkoutPlan}>
+          Подобрать план
         </button>
       </div>
     );
   }
 
+  if (page === "aiCoach") {
+    const activeAiFeature = AI_COACH_FEATURES.find((feature) => feature.id === selectedAiFeatureId) || AI_COACH_FEATURES[0];
+    const aiResult = buildAiCoachResult(activeAiFeature.id, { history, nutrition, plan });
+    const isNutritionPlanFeature = activeAiFeature.id === "nutritionPlan";
+    const aiNutritionDay = buildAiNutritionDayModel(nutrition, nutrition.days?.[nutritionDateKey], history);
+    const activeAiNutritionPlan = aiNutritionSavedPlan || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
+    const activeAiNutritionWeekNumber = getAiNutritionCurrentWeek(activeAiNutritionPlan);
+    const activeAiNutritionWeek = activeAiNutritionPlan?.weeks?.[activeAiNutritionWeekNumber - 1] || activeAiNutritionPlan?.weeks?.[0];
+    const activeAiNutritionProfile = activeAiNutritionPlan?.profile || aiNutritionProfile || aiNutritionProfileDraft;
+    const isAiTrainingDayToday = isAiNutritionTrainingDay(activeAiNutritionProfile);
+    const activeAiNutritionTodayMacros = getAiNutritionDayMacros(activeAiNutritionWeek || nutrition.goals, activeAiNutritionProfile);
+    const aiNutritionTrainingAdvice = getAiNutritionTrainingDayAdvice(isAiTrainingDayToday, activeAiNutritionProfile?.goal);
+
+    return (
+      <div className="aiCoachPage">
+        <button className="backBtn universalFixedBackPointer aiCoachBackBtn" onClick={goBackToMain}>←</button>
+
+        <section className="aiCoachHero">
+          <div className="aiCoachBadge">AI ASSISTANT CORE</div>
+          <h1>AI-помощник</h1>
+          <p>Умные подсказки по питанию, тренировкам, восстановлению и прогрессу на основе твоей истории.</p>
+        </section>
+
+        {isNutritionPlanFeature ? (
+          <section className="aiNutritionPlanShell">
+            {!activeAiNutritionPlan ? (
+              <div className="aiNutritionOnboardingCard">
+                <div className="aiNutritionOnboardingHead">
+                  <span>AI-план питания v1</span>
+                  <h2>Создадим месячный план КБЖУ</h2>
+                  <p>AI возьмёт твой вес, рост, возраст, цель, текущие КБЖУ, питание за всё время, частые продукты и историю тренировок.</p>
+                </div>
+
+                <div className="aiNutritionBodyReadOnlyCard">
+                  <div className="aiNutritionBodyReadOnlyHead">
+                    <strong>Данные из личного кабинета</strong>
+                    <small>Редактируются только в профиле</small>
+                  </div>
+                  <div className="aiNutritionBodyReadOnlyGrid">
+                    <span><i>Вес</i><b>{aiNutritionProfileDraft.weight || "—"}</b></span>
+                    <span><i>Рост</i><b>{aiNutritionProfileDraft.height || "—"}</b></span>
+                    <span><i>Возраст</i><b>{aiNutritionProfileDraft.age || "—"}</b></span>
+                    <span><i>Пол</i><b>{aiNutritionProfileDraft.sex === "female" ? "Ж" : "М"}</b></span>
+                  </div>
+                  <button
+                    type="button"
+                    className="aiNutritionProfileLinkBtn"
+                    onClick={() => setPage("profile")}
+                  >
+                    Изменить в личном кабинете
+                  </button>
+                </div>
+
+                <div className="aiNutritionTrainingDaysPicker">
+                  <div className="aiNutritionTrainingDaysHead">
+                    <strong>Дни тренировок</strong>
+                    <small>Можно выбрать несколько дней</small>
+                  </div>
+                  <div className="aiNutritionTrainingDaysGrid">
+                    {AI_NUTRITION_WEEK_DAYS.map((day) => {
+                      const selected = getAiNutritionTrainingDays(aiNutritionProfileDraft).includes(day.id);
+                      return (
+                        <button
+                          type="button"
+                          key={day.id}
+                          className={selected ? "active" : ""}
+                          title={day.label}
+                          onClick={() => setAiNutritionProfileDraft((prev) => {
+                            const current = getAiNutritionTrainingDays(prev);
+                            const next = current.includes(day.id)
+                              ? current.filter((item) => item !== day.id)
+                              : [...current, day.id];
+                            return { ...prev, trainingDays: next };
+                          })}
+                        >
+                          {day.short}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="aiNutritionGoalPicker">
+                  {[
+                    { id: "maintain", title: "Поддержка", text: "ровный вес и стабильная энергия" },
+                    { id: "recomp", title: "Рекомпозиция", text: "больше и лёгкий дефицит" },
+                    { id: "mass", title: "Набор массы", text: "плавно + калории" },
+                    { id: "cut", title: "Похудение", text: "комфортный дефицит" },
+                    { id: "dry", title: "Сушка", text: "дефицит + сохранить мышцы" }
+                  ].map((goal) => (
+                    <button
+                      type="button"
+                      key={goal.id}
+                      className={aiNutritionProfileDraft.goal === goal.id ? "active" : ""}
+                      onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, goal: goal.id }))}
+                    >
+                      <strong>{goal.title}</strong>
+                      <small>{goal.text}</small>
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  className="aiNutritionPrimaryBtn"
+                  onClick={() => saveAiNutritionPlan()}
+                >
+                  Создать AI-план
+                </button>
+              </div>
+            ) : (
+              <div className="aiNutritionPlanCardFull">
+                <div className="aiNutritionPlanHero">
+                  <div>
+                    <span>Твой AI-план питания</span>
+                    <h2>{activeAiNutritionPlan.goalLabel}</h2>
+                    <p>{activeAiNutritionPlan.comment}</p>
+                  </div>
+                  <strong>{aiNutritionDay.score}/10</strong>
+                </div>
+
+                <div className="aiNutritionTodayMacros">
+                  <div>
+                    <span>Сегодня</span>
+                    <strong>{activeAiNutritionTodayMacros?.calories || nutrition.goals.calories}</strong>
+                    <small>ккал</small>
+                  </div>
+                  <div>
+                    <span>Белки</span>
+                    <strong>{activeAiNutritionTodayMacros?.protein || nutrition.goals.protein}</strong>
+                    <small>г</small>
+                  </div>
+                  <div>
+                    <span>Жиры</span>
+                    <strong>{activeAiNutritionTodayMacros?.fat || nutrition.goals.fat}</strong>
+                    <small>г</small>
+                  </div>
+                  <div>
+                    <span>Углеводы</span>
+                    <strong>{activeAiNutritionTodayMacros?.carbs || nutrition.goals.carbs}</strong>
+                    <small>г</small>
+                  </div>
+                </div>
+
+                <div className="aiNutritionPlanInsight">
+                  <span>Краткий AI-комментарий</span>
+                  <p>{aiNutritionDay.summary} {aiNutritionTrainingAdvice}</p>
+                </div>
+
+                <div className="aiNutritionBadgesRow">
+                  {aiNutritionDay.badges.map((badge) => (
+                    <span key={badge.text} className={badge.type}>
+                      <i>{badge.icon}</i>{badge.text}
+                    </span>
+                  ))}
+                </div>
+
+                <div className={`aiNutritionTrainingDayInfo ${isAiTrainingDayToday ? "active" : ""}`}>
+                  <span>{isAiTrainingDayToday ? "Сегодня тренировка" : "Сегодня без тренировки"}</span>
+                  <p>{aiNutritionTrainingAdvice}</p>
+                </div>
+
+                <button
+                  type="button"
+                  className="aiNutritionAdaptBtn"
+                  onClick={() => setAiNutritionAdaptedToday((value) => !value)}
+                >
+                  Адаптировать под сегодня
+                </button>
+
+                {aiNutritionAdaptedToday && (
+                  <div className="aiNutritionPlanInsight aiNutritionAdaptResult">
+                    <span>Совет на остаток дня</span>
+                    <p>{aiNutritionDay.adaptiveAdvice}</p>
+                  </div>
+                )}
+
+                <div className="aiNutritionWeeksGrid">
+                  {activeAiNutritionPlan.weeks.map((week) => (
+                    <div key={week.week} className={week.week === activeAiNutritionWeekNumber ? "active" : ""}>
+                      <span>{week.label}</span>
+                      <strong>{week.calories} ккал</strong>
+                      <small>Б {week.protein} · Ж {week.fat} · У {week.carbs}</small>
+                      <p>{week.focus}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="aiNutritionTwoCol">
+                  <div>
+                    <span>Прогресс недели</span>
+                    <p>Сейчас активна {activeAiNutritionWeekNumber} неделя. {activeAiNutritionPlan.weightTrend?.text}</p>
+                  </div>
+                  <div>
+                    <span>Частые продукты</span>
+                    <p>{activeAiNutritionPlan.frequentFoods?.length ? activeAiNutritionPlan.frequentFoods.join(", ") : "AI будет собирать список по истории питания."}</p>
+                  </div>
+                </div>
+
+                <div className="aiNutritionImproveBox">
+                  <span>Что улучшить сегодня</span>
+                  <p>{aiNutritionDay.left.protein > 20 ? "1. Добрать белок простыми продуктами." : "1. Белок держится хорошо."}</p>
+                  <p>{aiNutritionDay.left.carbs > 80 ? "2. Добавить углеводы вокруг тренировки." : "2. Углеводы близко к цели."}</p>
+                  <p>{aiNutritionDay.left.fat < 0 ? "3. Остаток дня сделать менее жирным." : "3. Не перегружать жиры вечером."}</p>
+                </div>
+
+                <div className="aiNutritionPlanActions">
+                  <button type="button" onClick={() => saveAiNutritionPlan(aiNutritionProfile)}>Обновить план</button>
+                  <button type="button" className="ghost" onClick={resetAiNutritionPlan}>Пересоздать анкету</button>
+                </div>
+              </div>
+            )}
+          </section>
+        ) : (
+          <section className="aiCoachResultCard">
+            <div className="aiCoachResultTop">
+              <div>
+                <span>{activeAiFeature.icon}</span>
+                <h2>{aiResult.title}</h2>
+                <p>{aiResult.status}</p>
+              </div>
+              <strong>{aiResult.score}%</strong>
+            </div>
+
+            <div className="aiCoachMeter" aria-hidden="true">
+              <i style={{ width: `${Math.min(100, Math.max(4, aiResult.score))}%` }} />
+            </div>
+
+            <div className="aiCoachBlocks">
+              <div className="aiCoachMiniBlock">
+                <h3>Анализ</h3>
+                {aiResult.bullets.map((item) => (
+                  <p key={item}>{item}</p>
+                ))}
+              </div>
+
+              <div className="aiCoachMiniBlock accent">
+                <h3>Что сделать</h3>
+                {aiResult.actions.map((item) => (
+                  <p key={item}>{item}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        <section className="aiCoachGrid">
+          {AI_COACH_FEATURES.map((feature) => (
+            <button
+              type="button"
+              key={feature.id}
+              className={`aiCoachFeatureCard ${feature.id === activeAiFeature.id ? "active" : ""}`}
+              onClick={() => setSelectedAiFeatureId(feature.id)}
+            >
+              <span>{feature.icon}</span>
+              <strong>{feature.title}</strong>
+              <small>{feature.subtitle}</small>
+            </button>
+          ))}
+        </section>
+      </div>
+    );
+  }
+
   if (page === "nutrition") {
-    const caloriePercent = Math.min(100, Math.round((nutritionTotals.calories / nutrition.goals.calories) * 100));
+    const preliminaryAiNutritionPlan = aiNutritionSavedPlan || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
+    const preliminaryAiNutritionWeekNumber = getAiNutritionCurrentWeek(preliminaryAiNutritionPlan);
+    const preliminaryAiNutritionProfile = preliminaryAiNutritionPlan?.profile || aiNutritionProfile || aiNutritionProfileDraft;
+    const preliminaryAiNutritionWeek = preliminaryAiNutritionPlan?.weeks?.[preliminaryAiNutritionWeekNumber - 1] || preliminaryAiNutritionPlan?.weeks?.[0];
+    const preliminaryAiNutritionTodayMacros = getAiNutritionDayMacros(preliminaryAiNutritionWeek || nutrition.goals, preliminaryAiNutritionProfile);
+    const effectiveNutritionGoals = {
+      ...nutrition.goals,
+      calories: Math.round(Number(preliminaryAiNutritionTodayMacros?.calories) || nutrition.goals.calories),
+      protein: Math.round(Number(preliminaryAiNutritionTodayMacros?.protein) || nutrition.goals.protein),
+      fat: Math.round(Number(preliminaryAiNutritionTodayMacros?.fat) || nutrition.goals.fat),
+      carbs: Math.round(Number(preliminaryAiNutritionTodayMacros?.carbs) || nutrition.goals.carbs)
+    };
+
+    const caloriePercentRaw = Math.round((nutritionTotals.calories / Math.max(1, effectiveNutritionGoals.calories)) * 100);
+    const caloriePercent = Math.min(100, caloriePercentRaw);
+    const isCaloriesOverGoal = nutritionTotals.calories > effectiveNutritionGoals.calories;
     const waterPercent = Math.min(100, Math.round(((nutritionToday.water || 0) / nutrition.goals.water) * 100));
-    const caloriesLeft = Math.max(0, Math.round(nutrition.goals.calories - nutritionTotals.calories));
+    const caloriesLeft = Math.max(0, Math.round(effectiveNutritionGoals.calories - nutritionTotals.calories));
     const caloriesConsumed = Math.round(nutritionTotals.calories);
-    const proteinPercent = Math.min(100, Math.round((nutritionTotals.protein / nutrition.goals.protein) * 100));
-    const fatPercent = Math.min(100, Math.round((nutritionTotals.fat / nutrition.goals.fat) * 100));
-    const carbsPercent = Math.min(100, Math.round((nutritionTotals.carbs / nutrition.goals.carbs) * 100));
+    const proteinPercent = Math.min(100, Math.round((nutritionTotals.protein / effectiveNutritionGoals.protein) * 100));
+    const fatPercent = Math.min(100, Math.round((nutritionTotals.fat / effectiveNutritionGoals.fat) * 100));
+    const carbsPercent = Math.min(100, Math.round((nutritionTotals.carbs / effectiveNutritionGoals.carbs) * 100));
     const macroTotal = Math.max(1, nutritionTotals.protein + nutritionTotals.fat + nutritionTotals.carbs);
     const carbsAngle = (nutritionTotals.carbs / macroTotal) * 360;
     const fatAngle = (nutritionTotals.fat / macroTotal) * 360;
@@ -1541,26 +9012,38 @@ export default function App() {
       );
       return acc;
     }, {});
+    const aiNutritionDay = buildAiNutritionDayModel({ ...nutrition, goals: effectiveNutritionGoals }, nutritionToday, history);
+    const aiNutritionActivePlan = preliminaryAiNutritionPlan || buildAiNutritionMonthlyPlan(nutrition);
+    const aiNutritionBaseline = aiNutritionDay.baseline;
+    const aiNutritionGoalText = getAiNutritionGoalLabel(aiNutritionActivePlan?.profile?.goal || aiNutritionProfile?.goal || "recomp");
+    const aiNutritionCurrentWeek = preliminaryAiNutritionWeekNumber;
+    const aiNutritionPageProfile = preliminaryAiNutritionProfile;
+    const isNutritionTrainingDayToday = isAiNutritionTrainingDay(aiNutritionPageProfile);
+    const aiNutritionPageWeek = preliminaryAiNutritionWeek;
+    const aiNutritionTodayPlanMacros = preliminaryAiNutritionTodayMacros;
+    const aiNutritionPageTrainingAdvice = getAiNutritionTrainingDayAdvice(isNutritionTrainingDayToday, aiNutritionPageProfile?.goal);
+    const aiNutritionScorePercent = Math.min(96, Math.max(8, Math.round((aiNutritionDay.score || 0) * 10)));
+    const macroCaloriesProtein = Math.max(0, Number(nutritionTotals.protein) || 0) * 4;
+    const macroCaloriesFat = Math.max(0, Number(nutritionTotals.fat) || 0) * 9;
+    const macroCaloriesCarbs = Math.max(0, Number(nutritionTotals.carbs) || 0) * 4;
+    const macroCaloriesTotal = Math.max(1, macroCaloriesProtein + macroCaloriesFat + macroCaloriesCarbs);
+    const proteinCircleEnd = Math.round((macroCaloriesProtein / macroCaloriesTotal) * 100);
+    const fatCircleEnd = Math.round(((macroCaloriesProtein + macroCaloriesFat) / macroCaloriesTotal) * 100);
+    const aiNutritionScoreStyle = {
+      background: `conic-gradient(#ff7d7d 0% ${proteinCircleEnd}%, #ffd15a ${proteinCircleEnd}% ${fatCircleEnd}%, #70cde3 ${fatCircleEnd}% 100%)`
+    };
 
     return (
-      <div className="fatSecretPage">
-        <button className="backBtn universalFixedBackPointer" onClick={goBackToMain}>←</button>
+      <div className="fatSecretPage nutritionFixedHeaderV3">
+        <button className="backBtn universalFixedBackPointer nutritionBackTopLeftV3" onClick={goBackToMain}>←</button>
 
-        <section className="fatTodayPanel">
-          <div className="fatStreakLine fatStreakLineTop">
-            <span>{nutritionStreakText}</span>
+        <section className="nutritionHeroV4">
+          <div className="nutritionHeroTitleV4">
+            <h1>{nutritionDateTitle}</h1>
+
           </div>
 
-          <div className="fatDateHeader fatDateHeaderNoArrows">
-            <div className="fatDateTitle">
-              <h1>{nutritionDateTitle}</h1>
-              {!isNutritionToday && (
-                <button type="button" onClick={() => selectNutritionDate(todayNutritionKey())}>Сегодня</button>
-              )}
-            </div>
-          </div>
-
-          <div className="fatWeekRow">
+          <div className="nutritionWeekV4">
             {weekDates.map((day) => {
               const dayHasFood = Boolean(nutrition.days?.[day.key]?.foods?.length);
               const isSelectedDay = day.key === nutritionDateKey;
@@ -1568,40 +9051,127 @@ export default function App() {
               return (
                 <button
                   type="button"
-                  className={`fatDayCell ${isSelectedDay ? "selected" : ""} ${dayHasFood ? "hasFood" : ""}`}
+                  className={`nutritionDayV4 ${isSelectedDay ? "selected" : ""} ${dayHasFood ? "hasFood" : ""} ${isTodayDay ? "today" : ""}`}
                   key={day.key}
                   onClick={() => selectNutritionDate(day.key)}
                 >
-                  <span className={dayHasFood ? "done" : ""}>{dayHasFood ? "✓" : ""}</span>
+                  <span aria-hidden="true">{dayHasFood || isSelectedDay ? "✓" : ""}</span>
                   <small>{day.label}</small>
                 </button>
               );
             })}
           </div>
 
-          <div className="fatQuickActions">
-            <button type="button" onClick={() => openNutritionPicker(nutritionMeal)}>🔎 Поиск еды</button>
-            <button type="button" onClick={() => nutritionDateInputRef.current?.showPicker?.() || nutritionDateInputRef.current?.click()}>📅 Календарь</button>
-            <input
-              ref={nutritionDateInputRef}
-              type="date"
-              value={nutritionDateKey}
-              onChange={(e) => e.target.value && selectNutritionDate(e.target.value)}
-              aria-label="Выбрать дату питания"
-            />
+          <div className="nutritionStreakV4">
+            <span>{nutritionStreakText}</span>
+          </div>
+          <div className="nutritionQuickActionsExact">
+            <button
+              className="nutritionQuickActionExact"
+              type="button"
+              onClick={() => openNutritionPicker(nutritionMeal)}
+            >
+              <span className="nutritionQuickSearchIcon" aria-hidden="true" />
+              <span>Поиск еды</span>
+            </button>
+
+            <div className="nutritionQuickActionsDivider" aria-hidden="true" />
+
+            <button
+              className="nutritionQuickActionExact"
+              type="button"
+              onClick={openNutritionCalendar}
+            >
+              <span className="nutritionQuickCalendarIcon" aria-hidden="true">🗓️</span>
+              <span>Календарь</span>
+            </button>
           </div>
         </section>
 
-        <section className="fatCaloriesCard">
-          <div className="fatPixelMeter" aria-hidden="true">
-            {Array.from({ length: 56 }).map((_, index) => (
-              <span key={index} className={index < Math.round((caloriePercent / 100) * 56) ? "on" : ""} />
+        {nutritionCalendarOpen && (
+          <div className="nutritionCalendarOverlay" role="dialog" aria-modal="true" aria-label="Календарь">
+            <button
+              type="button"
+              className="nutritionCalendarBackdrop"
+              onClick={() => setNutritionCalendarOpen(false)}
+              aria-label="Закрыть календарь"
+            />
+
+            <div className="nutritionCalendarSheet">
+              <div className="nutritionCalendarGrabber" aria-hidden="true" />
+
+              <div className="nutritionCalendarHeader">
+                <button type="button" onClick={() => shiftNutritionCalendarMonth(-1)} aria-label="Предыдущий месяц">‹</button>
+                <div>
+                  <span>Календарь питания</span>
+                  <strong>{getNutritionCalendarMonthLabel()}</strong>
+                </div>
+                <button type="button" onClick={() => shiftNutritionCalendarMonth(1)} aria-label="Следующий месяц">›</button>
+              </div>
+
+              <div className="nutritionCalendarWeekdays" aria-hidden="true">
+                {["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((day) => (
+                  <span key={day}>{day}</span>
+                ))}
+              </div>
+
+              <div className="nutritionCalendarGrid">
+                {getNutritionCalendarDays().map((day) => (
+                  <button
+                    type="button"
+                    key={day.key}
+                    className={[
+                      "nutritionCalendarDay",
+                      day.isCurrentMonth ? "" : "muted",
+                      day.isToday ? "today" : "",
+                      day.isSelected ? "selected" : "",
+                      day.hasFood ? "hasFood" : "",
+                      day.isOverGoal ? "overGoal" : ""
+                    ].filter(Boolean).join(" ")}
+                    onClick={() => selectNutritionDate(day.key)}
+                  >
+                    <strong>{day.dayNumber}</strong>
+                    {day.hasFood && (
+                      <small>{day.calories} ккал</small>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              <div className="nutritionCalendarFooter">
+                <button type="button" onClick={() => selectNutritionDate(todayNutritionKey())}>Сегодня</button>
+                <button type="button" onClick={() => setNutritionCalendarOpen(false)}>Готово</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <section className={`nutritionCaloriesRenderCard ${isCaloriesOverGoal ? "overLimit" : ""} ${isNutritionTrainingDayToday ? "trainingDay" : ""}`}>
+          <div className="nutritionCaloriesRenderGrid" aria-hidden="true">
+            {Array.from({ length: 25 }).map((_, index) => (
+              <span
+                key={index}
+                className={
+                  index < Math.round((caloriePercent / 100) * 25)
+                    ? "isActive"
+                    : ""
+                }
+              />
             ))}
           </div>
 
-          <div className="fatCalorieRows">
-            <div><span>Осталось Калорий</span><strong>{caloriesLeft}</strong></div>
-            <div><span>Употреблено Калорий</span><strong>{caloriesConsumed}</strong></div>
+          <div className="nutritionCaloriesRenderDivider" aria-hidden="true" />
+
+          <div className="nutritionCaloriesRenderCol nutritionCaloriesRenderLeft">
+            <span>Осталось Калорий</span>
+            <strong>{caloriesLeft}</strong>
+          </div>
+
+          <div className="nutritionCaloriesRenderDivider" aria-hidden="true" />
+
+          <div className="nutritionCaloriesRenderCol nutritionCaloriesRenderRight">
+            <span>Получено</span>
+            <strong>{caloriesConsumed}</strong>
           </div>
         </section>
 
@@ -1616,7 +9186,7 @@ export default function App() {
                 key={meal.id}
               >
                 <div
-                  className="fatMealMain"
+                  className="fatMealMain mealRowExact"
                   role="button"
                   tabIndex={0}
                   onClick={(e) => {
@@ -1644,34 +9214,18 @@ export default function App() {
                     }
                   }}
                 >
-                  <div className="fatMealIcon">{meal.icon}</div>
-                  <div className="fatMealTitle">
+                  <div className="fatMealIcon mealIconExact">{meal.icon}</div>
+                  <div className="fatMealTitle mealTitleExact">
                     <strong>{meal.name}</strong>
                     {hasFoods && <span>{stats.count} шт</span>}
-                  </div>
-                  {hasFoods && (
-                    <div className="fatMealKcal">
-                      <strong>{Math.round(stats.calories)}</strong>
-                      <span>Калории</span>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    className="fatPlusBtn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openNutritionPicker(meal.id);
-                    }}
-                  >
-                    +
-                  </button>
-                  {hasFoods && (
                     <button
                       type="button"
-                      className="fatMealToggle"
+                      className={`fatMealToggle mealToggleUnderCount ${!hasFoods ? "disabled" : ""}`}
                       aria-label={isExpanded ? "Свернуть список" : "Раскрыть список"}
+                      disabled={!hasFoods}
                       onClick={(e) => {
                         e.stopPropagation();
+                        if (!hasFoods) return;
                         setExpandedNutritionMeals((prev) => ({
                           ...prev,
                           [meal.id]: !prev[meal.id]
@@ -1680,28 +9234,86 @@ export default function App() {
                     >
                       {isExpanded ? "⌃" : "⌄"}
                     </button>
-                  )}
+                  </div>
+                  <div className="fatMealKcal">
+                    <strong>{Math.round(stats.calories)}</strong>
+                    <span>Калории</span>
+
+                  </div>
+
+                  <div className="fatMealActions mealActionsExact">
+                    <button
+                      type="button"
+                      className="fatPlusBtn mealPlusExact"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openNutritionPicker(meal.id);
+                      }}
+                      aria-label={`Добавить еду: ${meal.name}`}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
 
                 {hasFoods && isExpanded && (
-                  <div className="fatMealItems">
+                  <div className="fatMealItems productListExact productListWideFinal">
                     {(nutritionToday.foods || [])
                       .filter((item) => item.mealId === meal.id)
                       .map((item) => (
-                        <div className="fatFoodItem" key={item.id}>
-                          <div>
-                            <strong>{item.name}</strong>
-                            <span>{item.amount} г · Б {item.protein} / Ж {item.fat} / У {item.carbs}</span>
+                        <div
+                          className={`productSwipeShell ${deletingNutritionFoodId === item.id ? "deleting" : ""}`}
+                          key={item.id}
+                        >
+                          <div className="productDeleteBg">
+                            <span>🗑️</span>
                           </div>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              removeNutritionFood(item.id);
+
+                          <div
+                            className={`productRowExact ${deletingNutritionFoodId === item.id ? "deleting" : ""}`}
+                            style={{
+                              width: "100%",
+                              paddingLeft: "24px",
+                              paddingRight: "24px",
+                              transform: `translateX(${nutritionFoodSwipeOffsets[item.id] || 0}px)`,
+                              opacity: deletingNutritionFoodId === item.id ? 0 : 1
                             }}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => {
+                              if (nutritionFoodSwipeMoved.current[item.id]) return;
+                              openNutritionFoodEditor(item);
+                              setNutritionSearchTab("food");
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key !== "Enter" && event.key !== " ") return;
+                              event.preventDefault();
+                              openNutritionFoodEditor(item);
+                              setNutritionSearchTab("food");
+                            }}
+                            onTouchStart={(event) => handleNutritionFoodSwipeStart(item.id, event)}
+                            onTouchMove={(event) => handleNutritionFoodSwipeMove(item.id, event)}
+                            onTouchEnd={(event) => handleNutritionFoodSwipeEnd(item.id, event)}
+                            onTouchCancel={() => handleNutritionFoodSwipeCancel(item.id)}
                           >
-                            ×
-                          </button>
+                            <div className="productFoodIconWrap">
+                              <span className="productFoodIcon" aria-hidden="true">
+                                {item.icon || getFoodIcon(item)}
+                              </span>
+
+                              <span className="productFoodCaloriesUnder">
+                                {Math.round(Number(item.calories) || 0)}
+                                <small>ккал</small>
+                              </span>
+                            </div>
+
+                            <div className="productInfoExact">
+                              <strong>{item.name}</strong>
+                              <span>{item.amount} г</span>
+                            </div>
+
+                            <div className="productArrowExact">›</div>
+                          </div>
                         </div>
                       ))}
                   </div>
@@ -1711,25 +9323,184 @@ export default function App() {
           })}
         </section>
 
+        <section className={`nutritionAiPlanDashboard ${isAiNutritionPlanExpanded ? "expanded" : "collapsed"} ${isCaloriesOverGoal ? "overLimit" : ""}`}>
+          <div className="nutritionAiPlanHeader">
+            <div className="nutritionAiPlanTitleBox">
+              <span>AI-План питания</span>
+              <h2>{aiNutritionGoalText}</h2>
+            </div>
+            <button
+              type="button"
+              className="nutritionAiPlanToggleBtn"
+              aria-label={isAiNutritionPlanExpanded ? "Свернуть AI-план питания" : "Развернуть AI-план питания"}
+              onClick={() => setIsAiNutritionPlanExpanded((expanded) => !expanded)}
+            >
+              {isAiNutritionPlanExpanded ? "⌃" : "⌄"}
+            </button>
+          </div>
+
+          <div className={`nutritionAiTrainingDayPill ${isNutritionTrainingDayToday ? "active" : ""}`}>
+            <span>{isNutritionTrainingDayToday ? "Тренировочный день" : "Обычный день"}</span>
+            <small>{isNutritionTrainingDayToday ? `Сегодня: ${aiNutritionTodayPlanMacros.calories} ккал · У ${aiNutritionTodayPlanMacros.carbs} г` : "КБЖУ без тренировочной надбавки"}</small>
+          </div>
+
+          {!isAiNutritionPlanExpanded ? (
+            <button
+              type="button"
+              className="nutritionAiPlanCollapsedCard"
+              onClick={() => setIsAiNutritionPlanExpanded(true)}
+              aria-label="Развернуть AI-план питания"
+            >
+              <div className="nutritionAiPlanCollapsedTop">
+                <div>
+                  <span>Осталось</span>
+                  <strong>{caloriesLeft}</strong>
+                </div>
+                <div>
+                  <span>Получено</span>
+                  <strong>{caloriesConsumed}</strong>
+                </div>
+                <div className="score">
+                  <span>Score</span>
+                  <strong>{aiNutritionDay.score}</strong>
+                </div>
+              </div>
+
+              <div className="nutritionAiPlanCollapsedMacros">
+                <span>Б {roundMacro(nutritionTotals.protein)} / {effectiveNutritionGoals.protein} г</span>
+                <span>Ж {roundMacro(nutritionTotals.fat)} / {effectiveNutritionGoals.fat} г</span>
+                <span>У {roundMacro(nutritionTotals.carbs)} / {effectiveNutritionGoals.carbs} г</span>
+              </div>
+
+              <p>{isNutritionTrainingDayToday ? aiNutritionPageTrainingAdvice : aiNutritionDay.summary}</p>
+            </button>
+          ) : (
+            <>
+              <div className="nutritionAiPlanBody">
+                <div className="nutritionAiPlanRsk">
+                  <div className="nutritionAiPlanGrid" aria-hidden="true">
+                    {Array.from({ length: 25 }).map((_, index) => (
+                      <span
+                        key={index}
+                        className={index < Math.round((caloriePercent / 100) * 25) ? "active" : ""}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="nutritionAiPlanRskRight">
+                    <div className="nutritionAiPlanRskInfo">
+                      <div>
+                        <span>Осталось</span>
+                        <strong>{caloriesLeft}</strong>
+                      </div>
+                      <i aria-hidden="true" />
+                      <div>
+                        <span>Получено</span>
+                        <strong>{caloriesConsumed}</strong>
+                      </div>
+                    </div>
+
+                    <div className="nutritionAiPlanRskFoot">
+                      <span>{caloriePercent}% от РСК</span>
+                      <strong>{effectiveNutritionGoals.calories} ккал</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="nutritionAiPlanScoreBlock">
+                  <span>Score питания</span>
+                  <div className="nutritionAiPlanScore" style={aiNutritionScoreStyle}>
+                    <div>
+                      <strong>{aiNutritionDay.score}</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="nutritionAiPlanMacroPercent">
+                <span><i className="protein" />Б {proteinPercent}%</span>
+                <span><i className="fat" />Ж {fatPercent}%</span>
+                <span><i className="carbs" />У {carbsPercent}%</span>
+              </div>
+
+              <div className="nutritionAiPlanMacros">
+                <div>
+                  <span>Белки</span>
+                  <strong>{roundMacro(nutritionTotals.protein)} г</strong>
+                  <small>/ {effectiveNutritionGoals.protein} г</small>
+                </div>
+                <div>
+                  <span>Жиры</span>
+                  <strong>{roundMacro(nutritionTotals.fat)} г</strong>
+                  <small>/ {effectiveNutritionGoals.fat} г</small>
+                </div>
+                <div>
+                  <span>Углеводы</span>
+                  <strong>{roundMacro(nutritionTotals.carbs)} г</strong>
+                  <small>/ {effectiveNutritionGoals.carbs} г</small>
+                </div>
+              </div>
+
+              <div className="nutritionAiPlanConclusion">
+                <span>Короткий вывод</span>
+                <p>{aiNutritionDay.summary} {aiNutritionDay.adaptiveAdvice}</p>
+              </div>
+
+              <div className="nutritionAiPlanBadges">
+                {aiNutritionDay.badges.map((badge) => (
+                  <span className={badge.type} key={badge.text}>
+                    <i>{badge.icon}</i>{badge.text}
+                  </span>
+                ))}
+                <span className="info"><i>📅</i>Неделя {aiNutritionCurrentWeek}/4</span>
+              </div>
+
+              <div className="nutritionAiPlanWater">
+                <div>
+                  <span>Вода</span>
+                  <strong>{waterPercent}%</strong>
+                </div>
+                <div>
+                  <button type="button" onClick={() => addWater(250)}>+250 мл</button>
+                  <button type="button" onClick={() => addWater(-250)}>−250 мл</button>
+                </div>
+              </div>
+            </>
+          )}
+        </section>
+
         {nutritionPickerOpen && (
           <div className="fatFoodSearchOverlay">
-            <section className="fatFoodSearchScreen">
-              <div className="fatSearchTop fatSearchTopCloseRight">
-                <div className="fatSearchTopSpacer" aria-hidden="true" />
+            <section className="fatFoodSearchScreen fatFoodSearchScreenPremium">
+              <div className="fatSearchTopPremium">
+                {!selectedNutritionFood && (
+                  <button
+                    type="button"
+                    className="fatSearchBackMini addFoodBackOnly"
+                    onClick={() => {
+                      setNutritionMealMenuOpen(false);
+                      setSelectedNutritionFood(null);
+                      setEditingNutritionItemId(null);
+                      setNutritionPickerOpen(false);
+                    }}
+                    aria-label="Назад к питанию"
+                  >
+                    ←
+                  </button>
+                )}
 
                 <div className="fatSearchTitleWrap">
                   <button
                     type="button"
-                    className="fatSearchTitleButton"
+                    className="fatSearchTitleButtonPremium"
                     onClick={() => setNutritionMealMenuOpen((open) => !open)}
                   >
+                    <span>Добавить в</span>
                     <strong>{nutritionMeals.find((meal) => meal.id === nutritionMeal)?.name}</strong>
-                    <span>⌄</span>
                   </button>
-                  <small>{formatNutritionDateLabel(selectedNutritionDate)}</small>
 
                   {nutritionMealMenuOpen && (
-                    <div className="fatMealDropdown">
+                    <div className="fatMealDropdown fatMealDropdownCentered">
                       {nutritionMeals.map((meal) => (
                         <button
                           type="button"
@@ -1744,106 +9515,1028 @@ export default function App() {
                           <strong>{meal.name}</strong>
                         </button>
                       ))}
+                      <button
+                        type="button"
+                        className="fatMealDropdownCollapse"
+                        onClick={() => setNutritionMealMenuOpen(false)}
+                        aria-label="Свернуть выбор приёма пищи"
+                      >
+                        ↑
+                      </button>
                     </div>
                   )}
                 </div>
 
-                <button
-                  type="button"
-                  className="fatSearchClose"
-                  onClick={() => {
-                    setNutritionMealMenuOpen(false);
-                    setNutritionPickerOpen(false);
-                  }}
-                  aria-label="Закрыть поиск еды"
-                >
-                  ×
-                </button>
-              </div>
-
-              <div className="fatSearchTabs">
-                <button type="button" className={nutritionSearchTab === "favorites" ? "active" : ""} onClick={() => setNutritionSearchTab("favorites")}>ИЗБРАННОЕ</button>
-                <button type="button" className={nutritionSearchTab === "food" ? "active" : ""} onClick={() => setNutritionSearchTab("food")}>ЕДА</button>
-                <button type="button" className={nutritionSearchTab === "recent" ? "active" : ""} onClick={() => setNutritionSearchTab("recent")}>НЕДАВНО</button>
-              </div>
-
-              <div className="fatSearchInputWrap">
-                <span>⌕</span>
-                <input
-                  autoFocus
-                  value={nutritionSearch}
-                  onChange={(e) => setNutritionSearch(e.target.value)}
-                  placeholder="Поиск Еды"
-                />
-              </div>
-
-              <div className="fatSearchAmountRow">
-                <input
-                  value={nutritionAmount}
-                  onChange={(e) => setNutritionAmount(e.target.value)}
-                  placeholder="100 г"
-                  inputMode="decimal"
-                />
-                <input
-                  value={nutritionBarcode}
-                  onChange={(e) => setNutritionBarcode(e.target.value)}
-                  placeholder="Штрихкод"
-                  inputMode="numeric"
-                />
-                <button type="button" className="fatBarcodeAddMini" onClick={addFoodByBarcodeFromPicker} title="Добавить по штрихкоду">+</button>
-                <button type="button" className="fatBarcodeScanMini" onClick={() => setBarcodeScannerOpen(true)} title="Сканер штрихкода">📷</button>
-              </div>
-
-              <div className="fatSearchList">
-                {fatSecretLoading && (
-                  <div className="fatSearchStatus">Ищу продукты в FatSecret...</div>
+                {selectedNutritionFood && (
+                  <button
+                    type="button"
+                    className="fatSearchClosePremium"
+                    onClick={() => {
+                      setNutritionMealMenuOpen(false);
+                      setSelectedNutritionFood(null);
+                      setEditingNutritionItemId(null);
+                      setNutritionPickerOpen(false);
+                    }}
+                    aria-label="Закрыть поиск еды"
+                  >
+                    ×
+                  </button>
                 )}
+              </div>
 
-                {fatSecretError && (
-                  <div className="fatSearchStatus error">{fatSecretError}</div>
-                )}
+              {selectedNutritionFood ? (
+                <div className="fatFoodAmountScreen foodEditRenderScreen">
+                  {!nutritionEditPageOpen && (
+                    <button
+                      type="button"
+                      className="foodEditBackOnly"
+                      onClick={() => {
+                        setNutritionMealMenuOpen(false);
+                        setNutritionEditNote("");
 
-                {!fatSecretLoading && nutritionSearch.trim().length >= 2 && nutritionSearchResults.length === 0 && (
-                  <div className="fatSearchStatus">Ничего не найдено</div>
-                )}
+                        if (editingNutritionItemId) {
+                          setSelectedNutritionFood(null);
+                          setEditingNutritionItemId(null);
+                          setNutritionPickerOpen(false);
+                          return;
+                        }
 
-                {nutritionSearchResults.map((food) => {
-                  const normalizedFood = normalizeNutritionFood(food);
-                  const isFavorite = nutrition.favorites.includes(normalizedFood.id);
-                  return (
-                    <div className="fatSearchItem" key={normalizedFood.id}>
+                        setSelectedNutritionFood(null);
+                        setNutritionEditDetailsOpen(false);
+                        setNutritionEditOriginalFood(null);
+                        setNutritionEditOriginalNote("");
+                        setEditingNutritionItemId(null);
+                        setNutritionSearchTab("food");
+                      }}
+                      aria-label={editingNutritionItemId ? "Назад к питанию" : "Назад к поиску еды"}
+                    >
+                      ←
+                    </button>
+                  )}
+
+                  {!nutritionEditPageOpen && (
+                    <div className="foodEditInlineMealHeader">
+                      <span className="foodEditInlineMealLabel">Добавить в</span>
+
                       <button
                         type="button"
-                        className="fatSearchFavorite"
-                        onClick={() => toggleNutritionFavorite(normalizedFood.id)}
+                        className="foodEditInlineMealButton"
+                        onClick={() => setNutritionMealMenuOpen((open) => !open)}
                       >
-                        {isFavorite ? "★" : "☆"}
+                        {nutritionMeals.find((meal) => meal.id === nutritionMeal)?.name}
                       </button>
-                      <button
-                        type="button"
-                        className="fatSearchFoodName"
-                        onClick={() => addNutritionFoodFromPicker(normalizedFood)}
-                      >
-                        <strong>{normalizedFood.name}</strong>
-                        <span>{normalizedFood.portion} · {normalizedFood.calories} ккал · Б {normalizedFood.protein} / Ж {normalizedFood.fat} / У {normalizedFood.carbs}</span>
-                      </button>
-                      <button
-                        type="button"
-                        className="fatSearchAdd"
-                        onClick={() => addNutritionFoodFromPicker(normalizedFood)}
-                      >
-                        +
-                      </button>
+
+                      {nutritionMealMenuOpen && (
+                        <div className="foodEditMealPickerDropdown foodEditMealPickerDropdownInline">
+                          {nutritionMeals.map((meal) => (
+                            <button
+                              type="button"
+                              key={meal.id}
+                              className={nutritionMeal === meal.id ? "active" : ""}
+                              onClick={() => {
+                                setNutritionMeal(meal.id);
+                                setNutritionMealMenuOpen(false);
+                              }}
+                            >
+                              <span>{meal.icon}</span>
+                              <strong>{meal.name}</strong>
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  );
-                })}
-              </div>
+                  )}
 
-              <div className="fatSearchBottomTools">
-                <button type="button" onClick={() => setNutritionSearchTab("food")}>🔎</button>
-                <button type="button" onClick={() => setNutritionSearchTab("favorites")}>★</button>
-                <button type="button" onClick={() => setNutritionSearchTab("recent")}>↺</button>
-              </div>
+                  {!nutritionEditPageOpen && (
+                    <button
+                      type="button"
+                      className="foodEditPencilButton foodEditPencilTopRight"
+                      onClick={openNutritionEditPage}
+                      aria-label="Редактировать продукт"
+                    >
+                      ✎
+                    </button>
+                  )}
+
+                  <div className="foodEditHeroRender foodEditHeroEditable">
+                    <div className="foodEditIconSourceStack">
+                      <span className="foodEditIconRender">{selectedNutritionFood.icon || getFoodIcon(selectedNutritionFood)}</span>
+                      <small>{selectedNutritionFood.source || selectedNutritionFood.portion || "Продукт"}</small>
+                    </div>
+                    <strong>{selectedNutritionFood.name}</strong>
+                  </div>
+
+                  <div className="foodEditSegmentRow">
+                    <button
+                      type="button"
+                      className={nutritionAmountMode === "grams" ? "active weightModeButton" : "weightModeButton"}
+                      onClick={() => {
+                        saveNutritionPreferredUnit(selectedNutritionFood, "grams");
+                        setNutritionProductUnitMenuOpen(false);
+                        setNutritionAmountMode("grams");
+                        setNutritionAmount("100");
+                      }}
+                    >
+                      <span className="weightModeIcon">⚖</span>
+                    </button>
+
+                    <div className="foodEditPortionDropdown">
+                      {(() => {
+                        const unitOptions = getNutritionSmartUnits(selectedNutritionFood).filter((unit) => unit.id !== "grams");
+                        const selectedUnitId = getNutritionSmartUnitId(selectedNutritionFood, nutritionAmount, nutritionAmountMode);
+                        const selectedUnit = unitOptions.find((unit) => unit.id === selectedUnitId) || unitOptions[0];
+
+                        return (
+                          <>
+                            <button
+                              type="button"
+                              className="foodEditPortionDropdownButton"
+                              onClick={() => setNutritionProductUnitMenuOpen((open) => !open)}
+                            >
+                              <strong>{selectedUnit?.shortLabel || selectedUnit?.label || "Порция"}</strong>
+                              <em>{nutritionProductUnitMenuOpen ? "⌃" : "⌄"}</em>
+                            </button>
+
+                            {nutritionProductUnitMenuOpen && (
+                              <div className="foodEditPortionDropdownMenu">
+                                {unitOptions.map((unit) => (
+                                  <button
+                                    type="button"
+                                    key={unit.id}
+                                    className={selectedUnitId === unit.id ? "active" : ""}
+                                    onClick={() => {
+                                      setNutritionAmountMode(unit.mode || "portion");
+                                      setNutritionAmount(String(unit.amount || 100));
+                                      saveNutritionPreferredUnit(selectedNutritionFood, unit.id);
+                                      setNutritionProductUnitMenuOpen(false);
+
+                                      if (unit.mode === "portion") {
+                                        updateSelectedNutritionFoodField("portion", unit.portion || unit.label || "1 порция");
+                                        updateSelectedNutritionFoodField("portionAmount", unit.portionAmount || unit.amount || 100);
+                                      }
+                                    }}
+                                  >
+                                    <span>{unit.shortLabel || unit.label}</span>
+                                    {unit.hint && <small>{unit.hint}</small>}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </div>
+
+                  <label className="foodEditAmountCard">
+                    <span>{nutritionAmountMode === "portion" ? `${selectedNutritionFood.portion || "Порция"}` : "Граммы"}</span>
+                    <input
+                      value={nutritionAmount}
+                      onChange={(e) => setNutritionAmount(e.target.value)}
+                      placeholder={nutritionAmountMode === "portion" ? "1" : "100"}
+                      inputMode="decimal"
+                    />
+                  </label>
+
+                  {(() => {
+                    const scale = getFoodScale(nutritionAmount, selectedNutritionFood, nutritionAmountMode);
+                    return (
+                      <>
+                        <div className="foodEditMacrosCards">
+                          <div className="foodEditCaloriesMacroCard">
+                            <span>Калории</span>
+                            <strong>{Math.round(selectedNutritionFood.calories * scale)}</strong>
+                            <small>ккал</small>
+                          </div>
+                          <div>
+                            <span>Белки</span>
+                            <strong>{roundMacro(selectedNutritionFood.protein * scale)}</strong>
+                            <small>г</small>
+                          </div>
+                          <div>
+                            <span>Жиры</span>
+                            <strong>{roundMacro(selectedNutritionFood.fat * scale)}</strong>
+                            <small>г</small>
+                          </div>
+                          <div>
+                            <span>Углеводы</span>
+                            <strong>{roundMacro(selectedNutritionFood.carbs * scale)}</strong>
+                            <small>г</small>
+                          </div>
+                        </div>
+
+                        <div className="foodEditRowsCard">
+                          <button
+                            type="button"
+                            className={`foodEditRow ${nutritionEditNote ? "" : "muted"}`}
+                            onClick={openNutritionEditPage}
+                          >
+                            <span className="foodEditRowIcon">▤</span>
+                            <span className="foodEditRowLabel">Описание продукта</span>
+                            <strong>{nutritionEditNote.trim() || "Не добавлено"}</strong>
+                            <em>›</em>
+                          </button>
+</div>
+                      </>
+                    );
+                  })()}
+
+                  {nutritionEditPageOpen && (
+                    <div className="foodEditPageOverlay">
+                      <div className="foodEditPageSheet">
+                        <div className="foodEditPageHeader">
+                          <button
+                            type="button"
+                            className="foodEditPageBack"
+                            onClick={cancelNutritionEditPage}
+                          >
+                            ←
+                          </button>
+
+                          <strong className="foodEditPageTitleCenter">{selectedNutritionFood?.type === "dish" ? "Редактирование блюда" : "Редактирование продукта"}</strong>
+
+<div className="foodEditHeaderSpacer" aria-hidden="true" />
+                        </div>
+
+                        <div className="foodEditPageContent">
+                          <label>
+                            <span>{selectedNutritionFood?.type === "dish" ? "Название блюда" : "Краткое название продукта"}</span>
+                            <input
+                              value={selectedNutritionFood.name}
+                              onChange={(event) => updateSelectedNutritionFoodField("name", event.target.value)}
+                              placeholder="Название"
+                            />
+                          </label>
+
+                          <div className="foodEditIconManualBox">
+                            <div className="foodEditIconPreviewManual">
+                              <span>{selectedNutritionFood.icon || getFoodIcon(selectedNutritionFood)}</span>
+                            </div>
+
+                            <label>
+                              <span>Иконка</span>
+                              <input
+                                value={selectedNutritionFood.icon || ""}
+                                onChange={(event) => updateSelectedNutritionFoodField("icon", event.target.value.slice(0, 4))}
+                                placeholder="🍗"
+                                maxLength={4}
+                              />
+                            </label>
+                          </div>
+
+                          <div className="foodEditIconPresetRow">
+                            {NUTRITION_ICON_PRESETS.map((icon) => (
+                              <button
+                                type="button"
+                                key={icon}
+                                className={selectedNutritionFood.icon === icon ? "active" : ""}
+                                onClick={() => updateSelectedNutritionFoodField("icon", icon)}
+                                aria-label={`Выбрать иконку ${icon}`}
+                              >
+                                {icon}
+                              </button>
+                            ))}
+                          </div>
+
+                          <div className="foodEditPageGrid">
+                            <label>
+                              <span>{selectedNutritionFood?.type === "dish" ? "Ккал всего" : "Ккал"}</span>
+                              <input
+                                value={selectedNutritionFood.calories}
+                                onChange={(event) => updateSelectedNutritionFoodField("calories", event.target.value)}
+                                inputMode="decimal"
+                              />
+                            </label>
+
+                            <label>
+                              <span>{selectedNutritionFood?.type === "dish" ? "Белки всего" : "Белки"}</span>
+                              <input
+                                value={selectedNutritionFood.protein}
+                                onChange={(event) => updateSelectedNutritionFoodField("protein", event.target.value)}
+                                inputMode="decimal"
+                              />
+                            </label>
+
+                            <label>
+                              <span>{selectedNutritionFood?.type === "dish" ? "Жиры всего" : "Жиры"}</span>
+                              <input
+                                value={selectedNutritionFood.fat}
+                                onChange={(event) => updateSelectedNutritionFoodField("fat", event.target.value)}
+                                inputMode="decimal"
+                              />
+                            </label>
+
+                            <label>
+                              <span>{selectedNutritionFood?.type === "dish" ? "Углеводы всего" : "Углеводы"}</span>
+                              <input
+                                value={selectedNutritionFood.carbs}
+                                onChange={(event) => updateSelectedNutritionFoodField("carbs", event.target.value)}
+                                inputMode="decimal"
+                              />
+                            </label>
+                          </div>
+
+                          <label className="foodEditPortionLabel">
+                            <span>{selectedNutritionFood?.type === "dish" ? "Итоговый вес блюда" : "Порция"}</span>
+                            <div className="foodEditPortionUnitRow foodEditPortionInlineUnit">
+                              <input
+                                value={String(selectedNutritionFood?.type === "dish" ? (selectedNutritionFood.totalWeight || selectedNutritionFood.portionAmount || "") : selectedNutritionFood.portion || "").replace(/\s?(г|гр|g|мл|ml)$/iu, "").trim()}
+                                onChange={(event) => {
+                                  if (selectedNutritionFood?.type === "dish") {
+                                    updateSelectedDishTotalWeight(event.target.value);
+                                    return;
+                                  }
+
+                                  const unit = String(selectedNutritionFood.portion || "").toLowerCase().includes("мл") ? "мл" : "г";
+                                  updateSelectedNutritionFoodField("portion", `${event.target.value} ${unit}`);
+                                  updateSelectedNutritionFoodField("portionAmount", event.target.value);
+                                }}
+                                placeholder="100"
+                              />
+                              <button
+                                type="button"
+                                className="foodEditPortionUnitToggle"
+                                onClick={() => {
+                                  const currentUnit = String(selectedNutritionFood.portion || "").toLowerCase().includes("мл") ? "мл" : "г";
+                                  updateSelectedNutritionPortionUnit(currentUnit === "г" ? "мл" : "г");
+                                }}
+                                aria-label="Сменить единицу порции"
+                              >
+                                {String(selectedNutritionFood.portion || "").toLowerCase().includes("мл") ? "мл" : "г"}
+                              </button>
+                            </div>
+                          </label>
+
+                          {selectedNutritionFood?.type === "dish" && (
+                            <div className="dishEditIngredientsBox">
+                              <div className="dishEditIngredientsHeader">
+                                <div>
+                                  <strong>Ингредиенты</strong>
+                                  <span>{(selectedNutritionFood.ingredients || []).length} шт</span>
+                                </div>
+
+                                <button type="button" onClick={openDishIngredientPicker}>
+                                  + ингредиент
+                                </button>
+                              </div>
+
+                              {(selectedNutritionFood.ingredients || []).length === 0 ? (
+                                <div className="dishEditIngredientsEmpty">
+                                  Добавь продукты, из которых состоит блюдо
+                                </div>
+                              ) : (
+                                <div className="dishEditIngredientsList">
+                                  {(selectedNutritionFood.ingredients || []).map((ingredient) => (
+                                    <div className="dishEditIngredientRow" key={ingredient.id}>
+                                      <em>{ingredient.icon || getFoodIcon(ingredient.name)}</em>
+                                      <span>{ingredient.name}</span>
+                                      <strong>
+                                        {ingredient.grams || 0} г
+                                        <small>{Math.round(parseNutritionNumber(ingredient.baseCalories, 0) * (parseNutritionNumber(ingredient.grams, 0) / (parseNutritionNumber(ingredient.baseAmount, 100) || 100)))} ккал</small>
+                                      </strong>
+                                      <button type="button" onClick={() => removeSelectedDishIngredient(ingredient.id)}>
+                                        ×
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {dishIngredientPickerOpen && (
+                            <div className="dishIngredientPickerOverlay" onClick={() => setDishIngredientPickerOpen(false)}>
+                              <div className="dishIngredientPickerSheet" tabIndex={-1} onClick={(event) => event.stopPropagation()}>
+                                <div className="dishIngredientPickerHeader">
+                                  <button type="button" onClick={() => setDishIngredientPickerOpen(false)}>×</button>
+                                  <strong>Добавить ингредиент</strong>
+                                </div>
+
+                                <div className="dishIngredientSearchBox">
+                                  <span>⌕</span>
+                                  <input
+                                    value={dishIngredientSearch}
+                                    onChange={(event) => setDishIngredientSearch(event.target.value)}
+                                    placeholder="Поиск продукта..."
+                                    enterKeyHint="done"
+                                    onKeyDown={(event) => {
+                                      if (event.key === "Enter") {
+                                        event.preventDefault();
+                                        event.currentTarget.blur();
+                                      }
+                                    }}
+                                  />
+                                </div>
+
+                                <div className="dishIngredientResults">
+                                  {(() => {
+                                    const cleanQuery = dishIngredientSearch.trim().toLowerCase();
+                                    const myFoodsList = getMyFoodsArray(nutrition);
+                                    const recentFoodsList = (recentNutritionFoods || []).map(normalizeNutritionFood);
+
+                                    const externalFoodsList = (dishIngredientExternalFoods || []).map(normalizeNutritionFood);
+
+                                    const allFoods = [
+                                      ...myFoodsList,
+                                      ...recentFoodsList,
+                                      ...externalFoodsList,
+                                      ...nutritionFoodDatabase.map(normalizeNutritionFood),
+                                      ...dishIngredientFallbackSuggestions.map((name) => normalizeNutritionFood({
+                                        id: `suggestion_${name}`,
+                                        foodId: `suggestion_${name}`,
+                                        name,
+                                        portion: "100 г",
+                                        portionAmount: 100,
+                                        calories: 0,
+                                        protein: 0,
+                                        fat: 0,
+                                        carbs: 0,
+                                        source: "AI/FatSecret",
+                                        icon: getFoodIcon(name)
+                                      }))
+                                    ];
+
+                                    const uniqueFoods = [];
+                                    const seenFoodIds = new Set();
+
+                                    allFoods.forEach((food) => {
+                                      const normalizedFood = normalizeNutritionFood(food);
+                                      const key = normalizedFood.foodId || normalizedFood.id || normalizedFood.name;
+                                      if (seenFoodIds.has(key)) return;
+                                      seenFoodIds.add(key);
+                                      uniqueFoods.push(normalizedFood);
+                                    });
+
+                                    const results = uniqueFoods
+                                      .filter((food) => {
+                                        if (!cleanQuery) return true;
+                                        const foodName = getNutritionFoodSearchText(food);
+                                        const shortName = getSearchHistoryName(food).toLowerCase();
+                                        return foodName.includes(cleanQuery) || shortName.includes(cleanQuery);
+                                      })
+                                      .slice(0, 18);
+
+                                    if (results.length === 0) {
+                                      if (dishIngredientLoading) {
+                                        return (
+                                          <div className="dishIngredientEmpty">
+                                            Ищу через AI/FatSecret...
+                                          </div>
+                                        );
+                                      }
+
+                                      if (cleanQuery.length >= 2) {
+                                        const manualFood = normalizeNutritionFood({
+                                          id: `manual_${cleanQuery}`,
+                                          foodId: `manual_${cleanQuery}`,
+                                          name: dishIngredientSearch.trim(),
+                                          portion: "100 г",
+                                          portionAmount: 100,
+                                          calories: 0,
+                                          protein: 0,
+                                          fat: 0,
+                                          carbs: 0,
+                                          source: "Вручную",
+                                          icon: getFoodIcon(dishIngredientSearch)
+                                        });
+
+                                        return (
+                                          <button
+                                            type="button"
+                                            className="dishIngredientResultCard dishIngredientManualCard"
+                                            onClick={() => {
+                                              setPendingDishIngredient(manualFood);
+                                              setPendingDishIngredientGrams("100");
+                                            }}
+                                          >
+                                            <span>{manualFood.icon}</span>
+                                            <div>
+                                              <strong>{manualFood.name}</strong>
+                                              <small>Добавить вручную · КБЖУ можно уточнить позже</small>
+                                            </div>
+                                            <em>＋</em>
+                                          </button>
+                                        );
+                                      }
+
+                                      return (
+                                        <div className="dishIngredientEmpty">
+                                          Ничего не найдено
+                                        </div>
+                                      );
+                                    }
+
+                                    return (
+                                      <>
+                                        {dishIngredientLoading && (
+                                          <div className="dishIngredientSearchLoading">
+                                            Ищу ещё варианты через AI/FatSecret…
+                                          </div>
+                                        )}
+
+                                        {results.map((food) => (
+                                      <button
+                                        type="button"
+                                        key={`dish_ing_${food.id}_${food.name}`}
+                                        className="dishIngredientResultCard"
+                                        onClick={() => {
+                                          setPendingDishIngredient(food);
+                                          setPendingDishIngredientGrams(String(getFoodPortionAmount(food) || 100));
+                                        }}
+                                      >
+                                        <span>{food.icon || getFoodIcon(food)}</span>
+                                        <div>
+                                          <strong>{food.name}</strong>
+                                          <small>{food.source || "Продукт"} · {Math.round(Number(food.calories) || 0)} ккал</small>
+                                        </div>
+                                        <em>＋</em>
+                                      </button>
+                                        ))}
+                                      </>
+                                    );
+                                  })()}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {pendingDishIngredient && (
+                            <div className="dishIngredientConfirmOverlay">
+                              <div className="dishIngredientConfirmCard">
+                                <div className="dishIngredientConfirmTop">
+                                  <div className="dishIngredientConfirmIcon">
+                                    {pendingDishIngredient.icon || getFoodIcon(pendingDishIngredient)}
+                                  </div>
+
+                                  <div className="dishIngredientConfirmInfo">
+                                    <strong>{pendingDishIngredient.name}</strong>
+                                    <span>
+                                      {pendingDishIngredient.source || "Продукт"} · {Math.round(Number(pendingDishIngredient.calories) || 0)} ккал
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <label className="dishIngredientConfirmInput">
+                                  <span>Сколько грамм добавить?</span>
+
+                                  <div>
+                                    <input
+                                      value={pendingDishIngredientGrams}
+                                      onChange={(event) => setPendingDishIngredientGrams(event.target.value)}
+                                      placeholder="100"
+                                      inputMode="decimal"
+                                      enterKeyHint="done"
+                                      onKeyDown={(event) => {
+                                        if (event.key === "Enter") {
+                                          event.preventDefault();
+                                          event.currentTarget.blur();
+                                        }
+                                      }}
+                                    />
+
+                                    <em>г</em>
+                                  </div>
+                                </label>
+
+                                <div className="dishIngredientConfirmActions">
+                                  <button
+                                    type="button"
+                                    className="dishIngredientConfirmCancel"
+                                    onClick={() => {
+                                      setPendingDishIngredient(null);
+                                      setPendingDishIngredientGrams("100");
+                                    }}
+                                  >
+                                    Отмена
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    className="dishIngredientConfirmAdd"
+                                    onClick={() => {
+                                      addSelectedDishIngredientFromFood(
+                                        pendingDishIngredient,
+                                        pendingDishIngredientGrams
+                                      );
+
+                                      setPendingDishIngredient(null);
+                                      setPendingDishIngredientGrams("100");
+                                    }}
+                                  >
+                                    Добавить
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          <label>
+                            <span>{selectedNutritionFood?.type === "dish" ? "Заметка" : "Описание продукта"}</span>
+                            <textarea
+                              value={nutritionEditNote}
+                              onChange={(event) => setNutritionEditNote(event.target.value)}
+                              rows={5}
+                              placeholder={selectedNutritionFood?.type === "dish" ? "Например: рецепт, способ приготовления, порции" : "Бренд, текст с этикетки, состав, масса нетто и пищевая ценность"}
+                            />
+                          </label>
+
+                          <button
+                            type="button"
+                            className="foodEditPageSave foodEditPageSaveBottom"
+                            onClick={confirmNutritionEditPage}
+                          >
+                            <span className="foodEditSaveIcon">💾</span>
+                            <span>Готово</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="foodEditBottomActions">
+                    <button
+                      type="button"
+                      className="foodEditDeleteButton"
+                      onClick={() => {
+                        const editId = String(editingNutritionItemId || "");
+                        const selectedId = String(selectedNutritionFood?.id || selectedNutritionFood?.foodId || "");
+                        const selectedSource = String(selectedNutritionFood?.source || "");
+                        const isMyProduct =
+                          editId.startsWith("my:") ||
+                          selectedId.startsWith("my_") ||
+                          selectedSource === "Моя база" ||
+                          nutrition.myFoods?.[selectedId];
+
+                        if (isMyProduct) {
+                          const myFoodId = editId.startsWith("my:")
+                            ? editId.replace("my:", "")
+                            : (nutrition.myFoods?.[selectedId] ? selectedId : makePersonalFoodKey(selectedNutritionFood));
+
+                          removeMyNutritionFood(myFoodId, selectedNutritionFood?.name || "");
+                          setSelectedNutritionFood(null);
+                          setEditingNutritionItemId(null);
+                          setNutritionEditDetailsOpen(false);
+                          setNutritionEditPageOpen(false);
+                          setNutritionEditNote("");
+                          setNutritionAmount("100");
+                          setNutritionSearch("");
+                          setNutritionSearchTab("my");
+                          setShowRecentNutritionFoods(false);
+                          setNutritionMealMenuOpen(false);
+                          setNutritionPickerOpen(true);
+                          return;
+                        }
+
+                        if (!editingNutritionItemId) return;
+
+                        removeNutritionFood(editingNutritionItemId);
+                        setSelectedNutritionFood(null);
+                        setEditingNutritionItemId(null);
+                        setNutritionEditDetailsOpen(false);
+                        setNutritionEditPageOpen(false);
+                        setNutritionEditNote("");
+                        setNutritionPickerOpen(false);
+                      }}
+                    >
+                      <span className="foodEditDeleteIcon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false">
+                          <path d="M9 4h6l1 2h4" />
+                          <path d="M4 7h16" />
+                          <path d="M7 7l1 13h8l1-13" />
+                          <path d="M10 11v6" />
+                          <path d="M14 11v6" />
+                        </svg>
+                      </span>
+                      <span>Удалить</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="fatAmountAddButton foodEditSaveRender"
+                      onClick={confirmNutritionFoodFromPicker}
+                    >
+                      {editingNutritionItemId ? "Сохранить" : "Добавить"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="fatSearchInputWrapPremium">
+                    <span>⌕</span>
+                    <input
+                      type="search"
+                      inputMode="search"
+                      enterKeyHint="search"
+                      value={nutritionSearch}
+                      onChange={(e) => {
+                        setNutritionSearch(e.target.value);
+                        setNutritionSearchTab("food");
+                        setShowRecentNutritionFoods(false);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          e.currentTarget.blur();
+                        }
+                      }}
+                      placeholder="Поиск еды, бренда или блюда..."
+                    />
+                    {nutritionSearch && (
+                      <button type="button" onClick={() => {
+                        setNutritionSearch("");
+                        setNutritionFallbackSuggestions([]);
+                      }} aria-label="Сбросить поиск">×</button>
+                    )}
+                  </div>
+
+{nutritionPhotoAnalyzing && nutritionSearchTab !== "my" && nutritionSearchTab !== "recent" && (
+                    <div className="fatPhotoAiSearchProcess">
+                      <div className="fatPhotoAiSearchOrbit" aria-hidden="true">
+                        <i />
+                        <span />
+                      </div>
+                      <div>
+                        <strong>ИИ ищет продукт по фото</strong>
+                        <p>Анализирую изображение, название, этикетку и порцию.</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {!nutritionPhotoAnalyzing && nutritionSearchTab !== "my" && nutritionSearchTab !== "recent" && !showRecentNutritionFoods && nutritionSearch.trim().length < 2 && recentNutritionFoods.length > 0 && (
+                    <div className="fatSearchHistoryNames">
+                      <div className="fatSearchHistoryNamesTitle">История поиска</div>
+                      <div className="fatSearchHistoryNamesList">
+                        {recentNutritionFoods.slice(0, 8).map((food, index) => {
+                          const foodName = getSearchHistoryName(food);
+                          if (!foodName) return null;
+
+                          return (
+                            <button
+                              type="button"
+                              key={`search_history_name_only_${foodName}_${index}`}
+                              className="fatSearchHistoryNameButton"
+                              data-history-name-only="true"
+                              title={foodName}
+                              onClick={() => {
+                                setNutritionSearch(foodName);
+                                setNutritionSearchTab("food");
+                                setShowRecentNutritionFoods(false);
+                              }}
+                            >
+                              <span>{foodName}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="fatSearchListPremium">
+                    {nutritionSearchTab === "recent" && showRecentNutritionFoods && recentNutritionFoods.length > 0 && (
+                      <div className="fatRecentFoods">
+                        <div className="fatRecentFoodsTitle">Недавние продукты</div>
+                        {recentNutritionFoods.map((food) => (
+                          <button
+                            type="button"
+                            key={`${food.name}_${food.calories}_${food.source}`}
+                            className="fatRecentFoodButton"
+                            onClick={() => {
+                              setNutritionSearch(food.name.split(" — ")[0]);
+                              saveRecentNutritionFood(food);
+                              setSelectedNutritionFood(food);
+                            }}
+                          >
+                            <span>{food.name}</span>
+                            <strong>{food.calories} ккал</strong>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {!nutritionPhotoAnalyzing && fatSecretError && <div className="fatSearchStatus error">{fatSecretError}</div>}
+                    {!fatSecretLoading && nutritionSearch.trim().length >= 2 && nutritionSearchResults.length === 0 && (
+                      <div className="fatSearchStatus">
+                        <strong>В моей базе нет — ищу через AI/FatSecret</strong>
+                        {nutritionFallbackSuggestions.length > 0 && (
+                          <div className="fatFallbackSuggestions">
+                            {nutritionFallbackSuggestions.map((suggestion) => (
+                              <button
+                                type="button"
+                                key={suggestion}
+                                onClick={() => {
+                                  if (suggestion.includes("фото")) {
+                                    nutritionPhotoInputRef.current?.click();
+                                  } else if (suggestion.includes("штрихкод")) {
+                                    setFatSecretError("");
+                                    setBarcodeScannerOpen(true);
+                                  } else {
+                                    setNutritionCreateChoiceOpen(true);
+                                  }
+                                }}
+                              >
+                                {suggestion}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {nutritionSearchTab === "my" && nutritionSearchResults.length === 0 && (
+                      <div className="fatSearchStatus myProductsEmptyState">
+                        <strong>Пока нет своих продуктов</strong>
+                        <span>Создай продукт или блюдо — они появятся здесь.</span>
+                      </div>
+                    )}
+
+                    {nutritionSearchResults.map((food) => {
+                      const normalizedFood = normalizeNutritionFood(food);
+                      return (
+                        <button
+                          type="button"
+                          className="fatSearchResultCard"
+                          key={normalizedFood.id}
+                          onClick={() => {
+                            const isMyFoodResult =
+                              nutritionSearchTab === "my" ||
+                              Boolean(nutrition.myFoods?.[normalizedFood.id] || nutrition.myFoods?.[normalizedFood.foodId]);
+
+                            if (isMyFoodResult) {
+                              const myFoodId = normalizedFood.id || normalizedFood.foodId;
+                              saveRecentNutritionFood(normalizedFood);
+                              setSelectedNutritionFood({
+                                ...normalizedFood,
+                                id: myFoodId,
+                                foodId: myFoodId,
+                                source: "Моя база",
+                                icon: normalizedFood.icon || getFoodIcon(normalizedFood)
+                              });
+                              setEditingNutritionItemId(`my:${myFoodId}`);
+                              setNutritionAmount(String(normalizedFood.lastAmount || normalizedFood.portionAmount || 100));
+                              setNutritionAmountMode(normalizedFood.amountMode || "grams");
+                              setNutritionEditNote("");
+                              setNutritionEditDetailsOpen(false);
+                              setNutritionEditPageOpen(false);
+                              setNutritionMealMenuOpen(false);
+                              setShowRecentNutritionFoods(false);
+                              return;
+                            }
+
+                            addNutritionFoodFromPicker(normalizedFood);
+                          }}
+                        >
+                          <span className="fatSearchResultIcon" aria-hidden="true">{normalizedFood.icon || getFoodIcon(normalizedFood)}</span>
+                          <div className="fatSearchResultInfo">
+                            <strong>{getShortFoodName(normalizedFood.name)}</strong>
+                            <span>
+                              <em>{getFoodDisplayPortion(normalizedFood)}</em>
+                              <small>
+                                {(nutrition.myFoods?.[normalizedFood.id] || nutrition.myFoods?.[normalizedFood.foodId]) ? "Моя база · " : "AI/FatSecret · "}
+                                РСК {getFoodRskPercent(normalizedFood, nutrition.goals)}% · {Math.round(Number(normalizedFood.calories) || 0)} ккал
+                              </small>
+                            </span>
+                          </div>
+                          <span className="fatSearchResultCheck" aria-hidden="true" />
+                        </button>
+                      );
+                    })}
+
+                    {fatSecretLoading && nutritionSearch.trim().length >= 2 && (
+                      <div className="fatAiLoadingBelow">
+                        <span />
+                        <strong>Ищу ещё варианты через AI/FatSecret…</strong>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="fatSearchBottomBar">
+                    <button
+                      type="button"
+                      onClick={() => nutritionPhotoInputRef.current?.click()}
+                    >
+                      <span>📷</span>
+                      <strong>ИИ фото</strong>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setNutritionCreateChoiceOpen(true)}
+                    >
+                      <span>＋</span>
+                      <strong>Создать</strong>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFatSecretError("");
+                        setBarcodeScannerOpen(true);
+                      }}
+                    >
+                      <span>▦</span>
+                      <strong>Штрихкод</strong>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNutritionSearch("");
+                        setNutritionSearchTab("my");
+                        setShowRecentNutritionFoods(false);
+                      }}
+                    >
+                      <span>💾</span>
+                      <strong>Мои продукты</strong>
+                    </button>
+                  </div>
+
+                  {nutritionCreateChoiceOpen && (
+                    <div className="nutritionCreateChoiceOverlay" onClick={() => setNutritionCreateChoiceOpen(false)}>
+                      <div className="nutritionCreateChoiceSheet" onClick={(event) => event.stopPropagation()}>
+                        <button
+                          type="button"
+                          className="nutritionCreateChoiceClose"
+                          onClick={() => setNutritionCreateChoiceOpen(false)}
+                          aria-label="Закрыть выбор создания"
+                        >
+                          ×
+                        </button>
+
+                        <h3>Что создать?</h3>
+                        <p>Выбери обычный продукт или блюдо из нескольких продуктов.</p>
+
+                        <div className="nutritionCreateChoiceGrid">
+                          <button type="button" onClick={createCustomNutritionFood}>
+                            <span>＋</span>
+                            <strong>Продукт</strong>
+                            <small>КБЖУ на 100 г или порцию</small>
+                          </button>
+
+                          <button type="button" onClick={createCustomNutritionDish}>
+                            <span>🍲</span>
+                            <strong>Блюдо</strong>
+                            <small>Итоговый вес и КБЖУ блюда</small>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <input
+                    ref={nutritionPhotoInputRef}
+                    className="fatPhotoAiInput"
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={handleNutritionPhotoAiSearch}
+                  />
+
+                  {nutritionPhotoPreview && (
+                    <div className={`fatPhotoAiFloatingPreview ${nutritionPhotoAnalyzing ? "isAnalyzing" : ""}`}>
+                      <div className="fatPhotoAiPreviewImage">
+                        <img src={nutritionPhotoPreview} alt="Фото продукта" />
+                        {nutritionPhotoAnalyzing && <span className="fatPhotoAiScanLine" aria-hidden="true" />}
+                      </div>
+
+                      <div className="fatPhotoAiPreviewText">
+                        <div className="fatPhotoAiPreviewTop">
+                          <strong>{nutritionPhotoAnalyzing ? "Анализирую фото" : "Распознано"}</strong>
+                          {nutritionPhotoAiConfidence && <em>{nutritionPhotoAiConfidence}</em>}
+                        </div>
+
+                        <span>
+                          {nutritionPhotoAnalyzing
+                            ? "Анализирую фото и создаю продукт"
+                            : selectedNutritionFood?.name || nutritionPhotoAiResult?.replace(/^ИИ распознал:\s*/i, "").replace(/^Ниже показаны варианты из базы\.?$/i, "") || "Выбери вариант из списка"}
+                        </span>
+
+                        {nutritionPhotoAiCandidates.length > 1 && !nutritionPhotoAnalyzing && (
+                          <div className="fatPhotoAiCandidates">
+                            {nutritionPhotoAiCandidates.slice(0, 3).map((candidate) => (
+                              <button
+                                type="button"
+                                key={`${candidate.id}-${candidate.name}`}
+                                onClick={() => selectNutritionPhotoAiCandidate(candidate)}
+                              >
+                                <span>{candidate.icon || getFoodIcon(candidate)}</span>
+                                <strong>{getShortFoodName(candidate.name)}</strong>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {nutritionPhotoAnalyzing && (
+                          <div className="fatPhotoAiAnalyzeDots" aria-hidden="true">
+                            <i /><i /><i />
+                          </div>
+                        )}
+                      </div>
+
+                      <button type="button" className="fatPhotoAiClear" onClick={resetNutritionPhotoAiSearch} aria-label="Убрать фото">×</button>
+                    </div>
+                  )}
+                </>
+              )}
 
               {barcodeScannerOpen && (
                 <div className="fatBarcodeOverlay">
@@ -1859,72 +10552,169 @@ export default function App() {
           </div>
         )}
 
-        <section className="fatMacroPanel">
-          <div className="fatMacroTop">
-            <div>
-              <h2>Сегодня</h2>
-              <span>{caloriePercent}% от РСК</span>
-            </div>
-            <strong>{nutrition.goals.calories}</strong>
-            <div className="fatPixelMeter small" aria-hidden="true">
-              {Array.from({ length: 24 }).map((_, index) => (
-                <span key={index} className={index < Math.round((caloriePercent / 100) * 24) ? "on" : ""} />
-              ))}
-            </div>
-          </div>
+</div>
+    );
+  }
 
-          <div className="fatMacroContent">
-            <div className="fatMacroLegend">
-              <span><i className="carbs" />Углеводы: {carbsPercent}%</span>
-              <span><i className="fat" />Жир: {fatPercent}%</span>
-              <span><i className="protein" />Белок: {proteinPercent}%</span>
-            </div>
-            <div className="fatDonut" style={macroDonutStyle}><span /></div>
-          </div>
 
-          <div className="fatNutrients">
-            <p>Всего Жиров: <strong>{roundMacro(nutritionTotals.fat)}г</strong></p>
-            <p>Холестерин: <strong>0мг</strong></p>
-            <p>Натрий: <strong>0мг</strong></p>
-            <p>Всего Углеводов: <strong>{roundMacro(nutritionTotals.carbs)}г</strong></p>
-            <p>Диетическая Клетчатка: <strong>0,0г</strong></p>
-            <p>Сахар: <strong>0,00г</strong></p>
-            <p>Белок: <strong>{roundMacro(nutritionTotals.protein)}г</strong></p>
-            <p>Вода: <strong>{nutritionToday.water || 0} мл</strong></p>
-          </div>
+  if (page === "measurementWizard") {
+    const activeProfile = {
+      ...(aiNutritionProfile || {}),
+      ...aiNutritionProfileDraft
+    };
+    const latestProfileMeasurement = Array.isArray(profileMeasurements) && profileMeasurements.length
+      ? profileMeasurements[0]
+      : null;
+    const measurementFields = getProfileMeasurementFields(activeProfile?.goal || "recomp");
+    const totalWizardScreens = measurementFields.length + 2;
+    const isIntroStep = profileMeasurementWizardStep === 0;
+    const isReviewStep = profileMeasurementWizardStep === totalWizardScreens - 1;
+    const activeField = !isIntroStep && !isReviewStep ? measurementFields[profileMeasurementWizardStep - 1] : null;
+    const progressPercent = Math.max(4, Math.round(((profileMeasurementWizardStep + 1) / totalWizardScreens) * 100));
 
-          <div className="fatWaterBox">
-            <div><span>💧 Вода</span><strong>{waterPercent}%</strong></div>
-            <div className="fatWaterActions">
-              <button type="button" onClick={() => addWater(250)}>+250 мл</button>
-              <button type="button" onClick={() => addWater(-250)}>−250 мл</button>
-            </div>
-          </div>
-        </section>
+    const closeMeasurementWizard = () => {
+      setProfileMeasurementWizardStep(0);
+      setProfileMeasurementOpen(false);
+      setProfileActiveTab("measurements");
+      setPage("profile");
+    };
 
-        <section className="fatNutritionHistory">
-          <div className="fatPanelHead">
-            <div>
-              <span>История питания</span>
-              <h2>Последние дни</h2>
-            </div>
-            <strong>{nutritionHistoryDays.length}</strong>
+    return (
+      <div className="measurementFullscreenPage">
+        <div className="measurementFullscreenHeader">
+          <button type="button" className="measurementFullscreenBack" onClick={closeMeasurementWizard}>←</button>
+          <div className="measurementFullscreenProgress">
+            <span>Шаг {profileMeasurementWizardStep + 1} из {totalWizardScreens}</span>
+            <i><em style={{ width: `${progressPercent}%` }} /></i>
           </div>
+          <button type="button" className="measurementFullscreenClose" onClick={closeMeasurementWizard}>×</button>
+        </div>
 
-          {nutritionHistoryDays.length === 0 && (
-            <p className="fatHistoryEmpty">Добавь еду — и здесь появится история питания.</p>
+        <main className="measurementFullscreenBody">
+          {isIntroStep && (
+            <section className="measurementFullscreenCard intro">
+              <div className="profileMeasurementWizardVisual measurementIntroVisual">
+                <div className="profileMeasurementMiniHuman">
+                  <i />
+                  <b />
+                  <em />
+                </div>
+              </div>
+
+              <h2>Как выполнять замеры</h2>
+              <p>Мерь утром, одной и той же лентой, в спокойном состоянии. Не втягивай живот и не затягивай ленту слишком сильно.</p>
+
+              <div className="profileMeasurementTips">
+                <span>Одинаковое время</span>
+                <span>Одна лента</span>
+                <span>Без натяжения</span>
+                <span>Фото можно делать отдельно</span>
+              </div>
+            </section>
           )}
 
-          {nutritionHistoryDays.map(({ date, totals }) => (
-            <div className="fatHistoryDay" key={date}>
-              <div>
-                <strong>{new Date(date).toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}</strong>
-                <span>{totals.count} продуктов · Б {roundMacro(totals.protein)} / Ж {roundMacro(totals.fat)} / У {roundMacro(totals.carbs)}</span>
+          {activeField && (
+            <section className="measurementFullscreenCard measurement">
+              <div className={`measurementFullscreenImageFrame zone-${activeField.id}`}>
+                <img
+                  src={`/measurements/${activeField.id}.png`}
+                  alt={activeField.label}
+                  className="measurementFullscreenImage"
+                  loading="eager"
+                />
               </div>
-              <b>{Math.round(totals.calories)} ккал</b>
-            </div>
-          ))}
-        </section>
+
+              <div className="measurementFullscreenText">
+                <h2>{activeField.label}</h2>
+                <p>{activeField.hint}</p>
+              </div>
+
+              <label className="measurementFullscreenInput">
+                <div>
+                  <input
+                    inputMode="decimal"
+                    value={profileMeasurementDraft[activeField.id] || ""}
+                    placeholder={activeField.placeholder}
+                    onChange={(event) => setProfileMeasurementDraft((prev) => ({ ...prev, [activeField.id]: event.target.value }))}
+                  />
+                  <em>{activeField.unit}</em>
+                </div>
+              </label>
+
+              <small className="measurementFullscreenPrevious">
+                Прошлый раз: {getProfileMeasurementValue(latestProfileMeasurement, activeField)} {activeField.unit}
+              </small>
+            </section>
+          )}
+
+          {isReviewStep && (
+            <section className="measurementFullscreenCard review">
+              <h2>Проверь данные</h2>
+              <p>Если всё верно — сохрани контрольный замер. Пустые поля можно оставить пустыми.</p>
+
+              <div className="measurementFullscreenReviewGrid">
+                {measurementFields.map((field) => (
+                  <div key={field.id}>
+                    <span>{field.label}</span>
+                    <strong>{profileMeasurementDraft[field.id] || "—"}</strong>
+                    <small>{field.unit}</small>
+                  </div>
+                ))}
+              </div>
+
+              <label className="profileMeasurementNote wizardNote">
+                <span>Заметка</span>
+                <textarea
+                  value={profileMeasurementDraft.note || ""}
+                  placeholder="Например: утром, после тренировки, самочувствие..."
+                  onChange={(event) => setProfileMeasurementDraft((prev) => ({ ...prev, note: event.target.value }))}
+                />
+              </label>
+
+              <button
+                type="button"
+                className="measurementFullscreenSave"
+                disabled={profileMeasurementSaving}
+                onClick={saveProfileMeasurement}
+              >
+                {profileMeasurementSaving ? "Сохраняю..." : "Сохранить замер"}
+              </button>
+            </section>
+          )}
+        </main>
+
+        {profileMeasurementStatus && (
+          <p className="measurementFullscreenStatus">{profileMeasurementStatus}</p>
+        )}
+
+        <div className="measurementFullscreenNav">
+          <button
+            type="button"
+            disabled={profileMeasurementWizardStep === 0}
+            onClick={() => setProfileMeasurementWizardStep((step) => Math.max(0, step - 1))}
+          >
+            ← Назад
+          </button>
+
+          {!isReviewStep ? (
+            <button
+              type="button"
+              className="next"
+              onClick={() => setProfileMeasurementWizardStep((step) => Math.min(totalWizardScreens - 1, step + 1))}
+            >
+              Вперёд →
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="next"
+              disabled={profileMeasurementSaving}
+              onClick={saveProfileMeasurement}
+            >
+              Сохранить
+            </button>
+          )}
+        </div>
       </div>
     );
   }
@@ -1932,92 +10722,926 @@ export default function App() {
   if (page === "profile") {
     const totalWorkouts = history.length;
     const lastWorkout = history[0];
-    const exerciseStats = {};
+    const activeProfile = {
+      ...(aiNutritionProfile || {}),
+      ...aiNutritionProfileDraft
+    };
+    const latestProfileMeasurement = Array.isArray(profileMeasurements) && profileMeasurements.length
+      ? profileMeasurements[0]
+      : null;
+    const activeGoalLabel = getAiNutritionGoalLabel(activeProfile?.goal || "recomp");
+    const activeActivityLabel = getAiNutritionActivityLabel(activeProfile?.activity || "medium");
+    const assignedProgramName = user?.assignedProgramName || aiNutritionProfile?.assignedProgramName || "";
+    const trainingDaysText = getAiNutritionTrainingDays(activeProfile).length
+      ? AI_NUTRITION_WEEK_DAYS
+          .filter((day) => getAiNutritionTrainingDays(activeProfile).includes(day.id))
+          .map((day) => day.short)
+          .join(", ")
+      : "не выбраны";
+    const todayTotals = getAiNutritionTotalsForToday(nutrition);
+    const liveNutritionPreviewPlan = buildAiNutritionMonthlyPlan(nutrition, activeProfile, history, null);
+    const activePlan = liveNutritionPreviewPlan || aiNutritionSavedPlan || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
+    const activeWeek = activePlan?.weeks?.[getAiNutritionCurrentWeek(activePlan) - 1] || activePlan?.weeks?.[0];
+    const profileMacros = getAiNutritionDayMacros(activeWeek || nutrition.goals, activeProfile);
 
-    [...history].reverse().forEach((historyWorkout) => {
-      historyWorkout.exercises?.forEach((exercise) => {
-        if (!exerciseStats[exercise.name]) {
-          exerciseStats[exercise.name] = {
-            count: 0,
-            bestWeight: 0,
-            firstWeight: null,
-            lastWeight: 0,
-            lastResult: ""
-          };
-        }
+    const profileAiNutritionPlan = activePlan;
+    const profileAiNutritionDay = buildAiNutritionDayModel(nutrition, nutrition.days?.[nutritionDateKey], history);
+    const profileAiNutritionWeekNumber = getAiNutritionCurrentWeek(profileAiNutritionPlan);
+    const profileAiNutritionWeek = profileAiNutritionPlan?.weeks?.[profileAiNutritionWeekNumber - 1] || profileAiNutritionPlan?.weeks?.[0];
+    const profileAiNutritionActiveProfile = profileAiNutritionPlan?.profile || activeProfile;
+    const profileIsAiTrainingDayToday = isAiNutritionTrainingDay(profileAiNutritionActiveProfile);
+    const profileAiNutritionTodayMacros = getAiNutritionDayMacros(profileAiNutritionWeek || nutrition.goals, profileAiNutritionActiveProfile);
+    const profileAiNutritionTrainingAdvice = getAiNutritionTrainingDayAdvice(profileIsAiTrainingDayToday, profileAiNutritionActiveProfile?.goal);
+    const lastWorkoutDate = formatProfileWorkoutDate(lastWorkout?.date);
+    const nextTrainingText = getProfileNextTrainingText(activeProfile, user);
+    const currentGoalId = activeProfile?.goal || "recomp";
+    const progressTone = currentGoalId === "mass"
+      ? "Набираем массу аккуратно"
+      : currentGoalId === "cut" || currentGoalId === "dry"
+        ? "Снижаем вес без потери мышц"
+        : currentGoalId === "maintain"
+          ? "Держим форму стабильно"
+          : "Рекомпозиция идёт по плану";
+    const greetingName = telegramProfile.displayName || auth.currentUser?.email?.split("@")?.[0] || "спортсмен";
+    const profileStreak = Math.min(30, Math.max(0, totalWorkouts));
+    const aiProgressScore = Math.min(92, 58 + totalWorkouts * 4);
+    const aiCoachSummary = currentGoalId === "maintain"
+      ? "Вес и режим держим ровно. Контрольные замеры помогут не пропустить скрытый откат."
+      : currentGoalId === "recomp"
+        ? "Вес может стоять, но талия и объёмы должны меняться. Следи за замерами раз в неделю."
+        : currentGoalId === "mass"
+          ? "Рост веса должен идти плавно. Если талия растёт быстрее силы — снизим профицит."
+          : "Главный фокус — талия, вес и восстановление. Слишком резкий спад может просадить тренировки.";
+    const aiCoachStatuses = [
+      {
+        icon: totalWorkouts >= 8 ? "⚡" : "🏁",
+        title: totalWorkouts >= 8 ? "Ритм" : "Старт",
+        text: totalWorkouts >= 8 ? "хороший" : "набираем"
+      },
+      {
+        icon: currentGoalId === "mass" ? "📈" : currentGoalId === "maintain" ? "⚖️" : "🔥",
+        title: currentGoalId === "mass" ? "Масса" : currentGoalId === "maintain" ? "Вес" : "Форма",
+        text: currentGoalId === "maintain" ? "стабильно" : "контроль"
+      },
+      {
+        icon: "📏",
+        title: "Замер",
+        text: "раз в неделю"
+      }
+    ];
 
-        exercise.sets?.forEach((set) => {
-          const weight = Number(set.weight) || 0;
-          const reps = Number(set.reps) || 0;
-
-          exerciseStats[exercise.name].count += 1;
-
-          if (exerciseStats[exercise.name].firstWeight === null && weight > 0) {
-            exerciseStats[exercise.name].firstWeight = weight;
-          }
-
-          if (weight > exerciseStats[exercise.name].bestWeight) {
-            exerciseStats[exercise.name].bestWeight = weight;
-          }
-
-          exerciseStats[exercise.name].lastWeight = weight;
-          exerciseStats[exercise.name].lastResult = `${reps} × ${
-            set.weight || "без веса"
-          }`;
-        });
-      });
-    });
+    const profileTabs = [
+      { id: "cabinet", label: "Кабинет", icon: "👤" },
+      { id: "measurements", label: "Замеры", icon: "📏" },
+      { id: "nutrition", label: "Питание", icon: "🍽️" },
+      { id: "settings", label: "Настройки", icon: "⚙️" }
+    ];
 
     return (
-      <div className="app">
-        <div className="workoutHeader">
-          <button className="backBtn universalFixedBackPointer" onClick={goBackToMain}>
-            ← Назад
-          </button>
+      <div className="profileDashboardPage profileTabbedPage" data-profile-tab={profileActiveTab}>
+        <button className="backBtn universalFixedBackPointer profileDashboardBack" onClick={goBackToMain}>
+          ←
+        </button>
 
-          <h1 className="workoutTitle">Личный кабинет</h1>
-        </div>
+        <nav className="profileBottomTabBar" aria-label="Разделы личного кабинета">
+          {profileTabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              className={profileActiveTab === tab.id ? "active" : ""}
+              onClick={() => {
+                setProfileActiveTab(tab.id);
+                window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
+              }}
+            >
+              <span>{tab.icon}</span>
+              <strong>{tab.label}</strong>
+            </button>
+          ))}
+        </nav>
 
-        <div className="exercise">
-          <h3>Профиль</h3>
-
-          <p style={{ textAlign: "center", color: "#aaa" }}>
-            {auth.currentUser?.email}
-          </p>
-
-          <div className="historySets">
-            <div className="historySet">
-              <span>Всего тренировок</span>
-              <strong>{totalWorkouts}</strong>
+        <section className="profileUnifiedCard profileAiDashboardCard profileCabinetSection">
+          {profileActiveTab === "cabinet" && (
+          <div className="profileAiHero">
+            <div className="profileAiAvatarWrap">
+              <div className={telegramProfile.connected ? "profileAvatarBig telegram profileUnifiedAvatar profileAiAvatar" : "profileAvatarBig profileUnifiedAvatar profileAiAvatar"}>
+                {telegramProfile.avatarUrl ? (
+                  <img src={telegramProfile.avatarUrl} alt="" />
+                ) : (
+                  <span>{telegramProfile.connected ? "✈️" : "👤"}</span>
+                )}
+              </div>
+              <div className="profileAiAvatarRing">
+                <strong>{aiProgressScore}%</strong>
+              </div>
             </div>
 
-            <div className="historySet">
-              <span>Последняя тренировка</span>
-              <strong>
-                {lastWorkout
-                  ? new Date(lastWorkout.date).toLocaleDateString("ru-RU")
-                  : "нет данных"}
-              </strong>
+            <div className="profileAiHeroText">
+              <span>ЛИЧНЫЙ КАБИНЕТ</span>
+              <h1>Добрый день, {greetingName} 👋</h1>
+
+            </div>
+
+          </div>
+          )}
+
+          {profileActiveTab === "cabinet" && (
+          <div className="profileAiStatsRow">
+            <div className="goal">
+              <span>Твоя цель</span>
+              <strong>{activeGoalLabel}</strong>
+              <small>&nbsp;</small>
+            </div>
+
+            <div>
+              <span>Текущий вес</span>
+              <strong>{activeProfile?.weight || "—"} кг</strong>
+              <small>&nbsp;</small>
+            </div>
+
+            <div>
+              <span>Тренировок</span>
+              <strong>{totalWorkouts}</strong>
+              <small>&nbsp;</small>
+            </div>
+          </div>
+          )}
+
+          {profileActiveTab === "cabinet" && (
+          <div className="profileAiSplitCards">
+            <div className="profileAiMiniCard">
+              <span>📅 Последняя тренировка</span>
+              <strong>{lastWorkoutDate || "Нет данных"}</strong>
+            </div>
+
+            <div className="profileAiMiniCard">
+              <span>⚡ Следующая тренировка</span>
+              <strong>{nextTrainingText}</strong>
+            </div>
+          </div>
+          )}
+
+          {profileActiveTab === "cabinet" && (
+          <div className={profileProgressAnalysisOpen ? "profileAiCoachInsight open" : "profileAiCoachInsight"}>
+            <button
+              type="button"
+              className="profileAiCoachToggle"
+              onClick={() => setProfileProgressAnalysisOpen((prev) => !prev)}
+            >
+              <div>
+                <span>Оценка прогресса</span>
+                <h2>{totalWorkouts ? "Ты на правильном пути 💪" : "Пора создать историю прогресса"}</h2>
+                <p>{profileProgressAnalysisOpen ? aiCoachSummary : "Краткая оценка прогресса, замеров и регулярности."}</p>
+              </div>
+
+              <em>{profileProgressAnalysisOpen ? "−" : "+"}</em>
+            </button>
+
+            {!profileProgressAnalysisOpen && (
+              <div className="profileAiCoachPreview">
+                {aiCoachStatuses.slice(0, 2).map((status) => (
+                  <span key={status.title}>{status.icon} {status.title}: {status.text}</span>
+                ))}
+              </div>
+            )}
+
+            {profileProgressAnalysisOpen && (
+              <div className="profileAiCoachExpanded">
+                <div className="profileAiCoachStatusRow insideProgress">
+                  {aiCoachStatuses.map((status) => (
+                    <div key={status.title}>
+                      <span>{status.icon}</span>
+                      <strong>{status.title}</strong>
+                      <small>{status.text}</small>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="profileAiCoachMetrics">
+                  <div><span>Жир</span><strong>{currentGoalId === "mass" ? "контроль" : "↓"}</strong></div>
+                  <div><span>Мышцы</span><strong>{currentGoalId === "cut" || currentGoalId === "dry" ? "сохранить" : "↑"}</strong></div>
+                  <div><span>Сила</span><strong>{totalWorkouts ? "+": "—"}</strong></div>
+                </div>
+              </div>
+            )}
+          </div>
+          )}
+
+          {profileActiveTab === "measurements" && (
+          <div className="profileMeasurementPanel profileAiMeasurementPanel profileMeasurementWizardPanel">
+            <button
+              type="button"
+              className={profileMeasurementOpen ? "profileMeasurementToggle open" : "profileMeasurementToggle"}
+              onClick={() => {
+                setProfileMeasurementOpen((prev) => !prev);
+                setProfileMeasurementWizardStep(0);
+              }}
+            >
+              <span>
+                <strong>Контрольный замер</strong>
+                <small>{profileMeasurementOpen ? `Мастер замеров · ${getProfileMeasurementFields(activeProfile?.goal || "recomp").length + 2} шагов` : "Последний замер и быстрый старт"}</small>
+              </span>
+              <em>{profileMeasurementOpen ? "−" : "+"}</em>
+            </button>
+
+            {!profileMeasurementOpen && (
+              <div className="profileMeasurementPreview">
+                <div className="profileMeasurementDashboardCard">
+                  <div className="profileMeasurementDashboardTop">
+                    <span>Контрольный замер</span>
+                    <strong>Последний замер</strong>
+                    <small>{formatProfileMeasurementDate(latestProfileMeasurement)}</small>
+                  </div>
+
+                  <div className="profileMeasurementDashboardIconWrap">
+                    <div className="profileMeasurementDashboardIcon">⚖️</div>
+                    <p>Быстрый контроль веса и объёмов тела</p>
+                  </div>
+                </div>
+
+                <div className="profileMeasurementLastGrid">
+                  {getProfileMeasurementFields(activeProfile?.goal || "recomp").slice(0, 6).map((field) => (
+                    <div key={field.id}>
+                      <span>{field.label}</span>
+                      <strong>{getProfileMeasurementValue(latestProfileMeasurement, field)}</strong>
+                      <small>{field.unit}</small>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  className="profileMeasurementStartBtn"
+                  onClick={() => {
+                    setProfileMeasurementOpen(false);
+                    setProfileMeasurementWizardStep(0);
+                    setProfileMeasurementStatus("");
+                    setPage("measurementWizard");
+                  }}
+                >
+                  📏 Начать замер
+                </button>
+              </div>
+            )}
+
+            {profileMeasurementOpen && (() => {
+              const measurementFields = getProfileMeasurementFields(activeProfile?.goal || "recomp");
+              const totalWizardScreens = measurementFields.length + 2;
+              const isIntroStep = profileMeasurementWizardStep === 0;
+              const isReviewStep = profileMeasurementWizardStep === totalWizardScreens - 1;
+              const activeField = !isIntroStep && !isReviewStep ? measurementFields[profileMeasurementWizardStep - 1] : null;
+              const progressPercent = Math.max(4, Math.round(((profileMeasurementWizardStep + 1) / totalWizardScreens) * 100));
+
+              return (
+                <div className="profileMeasurementWizard">
+                  <div className="profileMeasurementWizardProgress">
+                    <span>Шаг {profileMeasurementWizardStep + 1} из {totalWizardScreens}</span>
+                    <i><em style={{ width: `${progressPercent}%` }} /></i>
+                  </div>
+
+                  {isIntroStep && (
+                    <div className="profileMeasurementWizardCard intro">
+                      <button
+                        type="button"
+                        className="profileMeasurementWizardClose"
+                        aria-label="Закрыть замер"
+                        onClick={() => {
+                          setProfileMeasurementOpen(false);
+                          setProfileMeasurementWizardStep(0);
+                        }}
+                      >
+                        ×
+                      </button>
+                      <div className="profileMeasurementWizardVisual">
+                        <div className="profileMeasurementMiniHuman">
+                          <i />
+                          <b />
+                          <em />
+                        </div>
+                      </div>
+
+                      <h3>Как выполнять замеры</h3>
+                      <p>Мерь утром, одной и той же лентой, в спокойном состоянии. Не втягивай живот и не затягивай ленту слишком сильно.</p>
+
+                      <div className="profileMeasurementTips">
+                        <span>Одинаковое время</span>
+                        <span>Одна лента</span>
+                        <span>Без натяжения</span>
+                        <span>Фото можно делать отдельно</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeField && (
+                    <div className="profileMeasurementWizardCard measurementStepCard">
+                      <button
+                        type="button"
+                        className="profileMeasurementWizardClose"
+                        aria-label="Закрыть замер"
+                        onClick={() => {
+                          setProfileMeasurementOpen(false);
+                          setProfileMeasurementWizardStep(0);
+                        }}
+                      >
+                        ×
+                      </button>
+                      <div className={`profileMeasurementImageFrame zone-${activeField.id}`}>
+                        <img
+                          src={`/measurements/${activeField.id}.png`}
+                          alt={activeField.label}
+                          className="profileMeasurementImage"
+                          loading="eager"
+                        />
+                      </div>
+
+                      <h3>{activeField.label}</h3>
+                      <p>{activeField.hint}</p>
+
+                      <label className="profileMeasurementWizardInput">
+                        <span className="profileMeasurementInputLabelHidden">{activeField.label}</span>
+                        <div>
+                          <input
+                            inputMode="decimal"
+                            value={profileMeasurementDraft[activeField.id] || ""}
+                            placeholder={activeField.placeholder}
+                            onChange={(event) => setProfileMeasurementDraft((prev) => ({ ...prev, [activeField.id]: event.target.value }))}
+                          />
+                          <em>{activeField.unit}</em>
+                        </div>
+                      </label>
+
+                      <small className="profileMeasurementPreviousValue">
+                        Прошлый раз: {getProfileMeasurementValue(latestProfileMeasurement, activeField)} {activeField.unit}
+                      </small>
+                    </div>
+                  )}
+
+                  {isReviewStep && (
+                    <div className="profileMeasurementWizardCard review">
+                      <button
+                        type="button"
+                        className="profileMeasurementWizardClose"
+                        aria-label="Закрыть замер"
+                        onClick={() => {
+                          setProfileMeasurementOpen(false);
+                          setProfileMeasurementWizardStep(0);
+                        }}
+                      >
+                        ×
+                      </button>
+                      <h3>Проверь данные</h3>
+                      <p>Если всё верно — сохрани контрольный замер. Пустые поля можно оставить пустыми.</p>
+
+                      <div className="profileMeasurementReviewGrid">
+                        {measurementFields.map((field) => (
+                          <div key={field.id}>
+                            <span>{field.label}</span>
+                            <strong>{profileMeasurementDraft[field.id] || "—"}</strong>
+                            <small>{field.unit}</small>
+                          </div>
+                        ))}
+                      </div>
+
+                      <label className="profileMeasurementNote wizardNote">
+                        <span>Заметка</span>
+                        <textarea
+                          value={profileMeasurementDraft.note || ""}
+                          placeholder="Например: утром, после тренировки, самочувствие..."
+                          onChange={(event) => setProfileMeasurementDraft((prev) => ({ ...prev, note: event.target.value }))}
+                        />
+                      </label>
+
+                      <button
+                        type="button"
+                        className="profileMeasurementSave"
+                        disabled={profileMeasurementSaving}
+                        onClick={saveProfileMeasurement}
+                      >
+                        {profileMeasurementSaving ? "Сохраняю..." : "Сохранить замер"}
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="profileMeasurementWizardNav">
+                    <button
+                      type="button"
+                      disabled={profileMeasurementWizardStep === 0}
+                      onClick={() => setProfileMeasurementWizardStep((step) => Math.max(0, step - 1))}
+                    >
+                      ← Назад
+                    </button>
+
+                    {!isReviewStep ? (
+                      <button
+                        type="button"
+                        className="next"
+                        onClick={() => setProfileMeasurementWizardStep((step) => Math.min(totalWizardScreens - 1, step + 1))}
+                      >
+                        Вперёд →
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="next"
+                        disabled={profileMeasurementSaving}
+                        onClick={saveProfileMeasurement}
+                      >
+                        Сохранить
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {profileMeasurementStatus && (
+              <p className="profileMeasurementStatus">{profileMeasurementStatus}</p>
+            )}
+          </div>
+          )}
+
+          {profileActiveTab === "settings" && (
+          <div className={profileWorkoutModeOpen ? "profileWorkoutModeCard profileWorkoutModeSettingsSection open" : "profileWorkoutModeCard profileWorkoutModeSettingsSection"}>
+            <button
+              type="button"
+              className="profileWorkoutModeToggle"
+              onClick={() => setProfileWorkoutModeOpen((prev) => !prev)}
+            >
+              <div>
+                <span>Режим тренировок</span>
+                <strong>
+                  {workoutModePreference.mode === "basic"
+                    ? "Базовые тренировки"
+                    : workoutModePreference.mode === "individual"
+                      ? "Индивидуальный план"
+                      : "Выбор при входе"}
+                </strong>
+                <small>Выбор режима тренировок и поведения приложения.</small>
+              </div>
+
+              <em>{profileWorkoutModeOpen ? "−" : "+"}</em>
+            </button>
+
+            {profileWorkoutModeOpen && (
+              <div className="profileWorkoutModeExpanded">
+                <div className="profileWorkoutModeActions">
+                  <button
+                    type="button"
+                    className={workoutModePreference.mode === "basic" ? "active" : ""}
+                    onClick={() => saveWorkoutModePreference("basic", true)}
+                  >
+                    Базовые
+                  </button>
+
+                  <button
+                    type="button"
+                    className={workoutModePreference.mode === "individual" ? "active" : ""}
+                    onClick={() => saveWorkoutModePreference("individual", true)}
+                  >
+                    Индивидуальные
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => saveWorkoutModePreference("", false)}
+                  >
+                    Спрашивать
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+          )}
+
+          {profileActiveTab === "cabinet" && (
+          <button className="profileAiHistoryButton" onClick={() => {
+            loadHistory();
+            setPage("history");
+          }}>
+            История тренировок
+            <span>›</span>
+          </button>
+          )}
+        </section>
+
+        {profileActiveTab === "nutrition" && (
+        <section className="profileDashboardGrid profileNutritionSection">
+          <div className="profileDashboardCard profileNutritionGoalCard">
+            <button
+              type="button"
+              className={profileNutritionGoalOpen ? "profileAccordionHead profileNutritionAccordionHead open" : "profileAccordionHead profileNutritionAccordionHead"}
+              onClick={() => setProfileNutritionGoalOpen((prev) => !prev)}
+            >
+              <div>
+                <span>NUTRITION GOAL</span>
+                <strong>Питание</strong>
+                <small>Текущая цель: {activeGoalLabel}</small>
+              </div>
+              <em>{profileNutritionGoalOpen ? "−" : "+"}</em>
+            </button>
+
+            <div className="profileNutritionCollapsedInfo">
+              <div>
+                <span>Выбрано</span>
+                <strong>{activeGoalLabel}</strong>
+              </div>
+              <div>
+                <span>Ккал</span>
+                <strong>{Math.round(profileMacros.calories || nutrition.goals.calories)}</strong>
+              </div>
+            </div>
+
+            {profileNutritionGoalOpen && (
+              <div className="profileNutritionGoalExpanded">
+                <p className="profileNutritionGoalHint">
+                  Выбери цель питания. После сохранения AI-план и КБЖУ будут пересчитаны под новую цель.
+                </p>
+
+                <div className="profileGoalPicker">
+                  {[
+                    { id: "maintain", title: "Поддержка" },
+                    { id: "recomp", title: "Рекомпозиция" },
+                    { id: "cut", title: "Похудение" },
+                    { id: "dry", title: "Сушка" },
+                    { id: "mass", title: "Набор" }
+                  ].map((goal) => (
+                    <button
+                      key={goal.id}
+                      type="button"
+                      className={aiNutritionProfileDraft.goal === goal.id ? "active" : ""}
+                      onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, goal: goal.id }))}
+                    >
+                      {goal.title}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="profileGoalModeHint">
+                  {aiNutritionProfileDraft.goal === "maintain"
+                    ? "Поддержка: калории около нормы, белок умеренный, задача — стабильный вес и энергия."
+                    : aiNutritionProfileDraft.goal === "recomp"
+                      ? "Рекомпозиция: небольшой дефицит, белок выше, цель — постепенно снижать жир и сохранять/растить мышцы."
+                      : "AI пересчитает КБЖУ под выбранную цель."}
+                </div>
+
+                <div className="profileMacroGrid">
+                  <div><span>Ккал</span><strong>{Math.round(profileMacros.calories || nutrition.goals.calories)}</strong></div>
+                  <div><span>Белки</span><strong>{Math.round(profileMacros.protein || nutrition.goals.protein)} г</strong></div>
+                  <div><span>Жиры</span><strong>{Math.round(profileMacros.fat || nutrition.goals.fat)} г</strong></div>
+                  <div><span>Угл.</span><strong>{Math.round(profileMacros.carbs || nutrition.goals.carbs)} г</strong></div>
+                </div>
+
+                <button className="profileDashboardButton" onClick={saveAiBodyMetrics}>
+                  Сохранить цель питания
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="profileDashboardCard profileAiNutritionPlanCard">
+            {!profileAiNutritionPlan ? (
+              <div className="profileAiNutritionEmpty">
+                <span>AI-ПЛАН ПИТАНИЯ</span>
+                <h3>План ещё не создан</h3>
+                <p>Создай персональный AI-план по КБЖУ, цели, весу, росту и тренировочным дням.</p>
+                <button
+                  type="button"
+                  className="profileDashboardButton"
+                  disabled={!hasRequiredAiNutritionProfileFields(activeProfile)}
+                  onClick={() => saveAiNutritionPlan(activeProfile)}
+                >
+                  Создать AI-план
+                </button>
+              </div>
+            ) : (
+              <div className="aiNutritionPlanCardFull profileAiNutritionPlanFull">
+                <div className="aiNutritionPlanHero">
+                  <div>
+                    <span>Твой AI-план питания</span>
+                    <h2>{profileAiNutritionPlan.goalLabel}</h2>
+                    <p>{profileAiNutritionPlan.comment}</p>
+                  </div>
+                  <strong>{profileAiNutritionDay.score}/10</strong>
+                </div>
+
+                <div className="aiNutritionTodayMacros">
+                  <div>
+                    <span>Сегодня</span>
+                    <strong>{profileAiNutritionTodayMacros?.calories || nutrition.goals.calories}</strong>
+                    <small>ккал</small>
+                  </div>
+                  <div>
+                    <span>Белки</span>
+                    <strong>{profileAiNutritionTodayMacros?.protein || nutrition.goals.protein}</strong>
+                    <small>г</small>
+                  </div>
+                  <div>
+                    <span>Жиры</span>
+                    <strong>{profileAiNutritionTodayMacros?.fat || nutrition.goals.fat}</strong>
+                    <small>г</small>
+                  </div>
+                  <div>
+                    <span>Углеводы</span>
+                    <strong>{profileAiNutritionTodayMacros?.carbs || nutrition.goals.carbs}</strong>
+                    <small>г</small>
+                  </div>
+                </div>
+
+                <div className="aiNutritionPlanInsight">
+                  <span>Краткий AI-комментарий</span>
+                  <p>{profileAiNutritionDay.summary} {profileAiNutritionTrainingAdvice}</p>
+                </div>
+
+                <div className="aiNutritionBadgesRow">
+                  {profileAiNutritionDay.badges.map((badge) => (
+                    <span key={badge.text} className={badge.type}>
+                      <i>{badge.icon}</i>{badge.text}
+                    </span>
+                  ))}
+                </div>
+
+                <div className={`aiNutritionTrainingDayInfo ${profileIsAiTrainingDayToday ? "active" : ""}`}>
+                  <span>{profileIsAiTrainingDayToday ? "Сегодня тренировка" : "Сегодня без тренировки"}</span>
+                  <p>{profileAiNutritionTrainingAdvice}</p>
+                </div>
+
+                <button
+                  type="button"
+                  className="aiNutritionAdaptBtn"
+                  onClick={() => setAiNutritionAdaptedToday((value) => !value)}
+                >
+                  Адаптировать под сегодня
+                </button>
+
+                {aiNutritionAdaptedToday && (
+                  <div className="aiNutritionPlanInsight aiNutritionAdaptResult">
+                    <span>Совет на остаток дня</span>
+                    <p>{profileAiNutritionDay.adaptiveAdvice}</p>
+                  </div>
+                )}
+
+                <div className="aiNutritionWeeksGrid">
+                  {profileAiNutritionPlan.weeks.map((week) => (
+                    <div key={week.week} className={week.week === profileAiNutritionWeekNumber ? "active" : ""}>
+                      <span>{week.label}</span>
+                      <strong>{week.calories} ккал</strong>
+                      <small>Б {week.protein} · Ж {week.fat} · У {week.carbs}</small>
+                      <p>{week.focus}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="aiNutritionTwoCol">
+                  <div>
+                    <span>Прогресс недели</span>
+                    <p>Сейчас активна {profileAiNutritionWeekNumber} неделя. {profileAiNutritionPlan.weightTrend?.text}</p>
+                  </div>
+                  <div>
+                    <span>Частые продукты</span>
+                    <p>{profileAiNutritionPlan.frequentFoods?.length ? profileAiNutritionPlan.frequentFoods.join(", ") : "AI будет собирать список по истории питания."}</p>
+                  </div>
+                </div>
+
+                <div className="aiNutritionImproveBox">
+                  <span>Что улучшить сегодня</span>
+                  <p>{profileAiNutritionDay.left.protein > 20 ? "1. Добрать белок простыми продуктами." : "1. Белок держится хорошо."}</p>
+                  <p>{profileAiNutritionDay.left.carbs > 80 ? "2. Добавить углеводы вокруг тренировки." : "2. Углеводы близко к цели."}</p>
+                  <p>{profileAiNutritionDay.left.fat < 0 ? "3. Остаток дня сделать менее жирным." : "3. Не перегружать жиры вечером."}</p>
+                </div>
+
+                <div className="aiNutritionPlanActions">
+                  <button type="button" onClick={() => saveAiNutritionPlan(profileAiNutritionActiveProfile)}>Обновить план</button>
+                  <button type="button" className="ghost" onClick={resetAiNutritionPlan}>Пересоздать анкету</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+        )}
+
+        {telegramConnectOpen && (
+          <div className="profileTelegramModalOverlay">
+            <div className="profileTelegramModal profileTelegramManageModal">
+              <button type="button" className="profileTelegramModalClose" onClick={() => setTelegramConnectOpen(false)}>×</button>
+
+              <div className="profileTelegramManageHead">
+                <div className="profileTelegramManageAvatar">
+                  {telegramProfile.avatarUrl ? <img src={telegramProfile.avatarUrl} alt="" /> : <span>✈️</span>}
+                </div>
+                <div>
+                  <span>TELEGRAM</span>
+                  <h3>{telegramProfile.connected ? "Telegram подключён" : "Привязать Telegram"}</h3>
+                  <p>
+                    {telegramProfile.connected
+                      ? `${telegramProfile.displayName || `@${telegramProfile.username || "telegram"}`} ${telegramProfile.username ? `· @${telegramProfile.username}` : ""}`
+                      : "Войди через Telegram, чтобы получать уведомления от тренера."}
+                  </p>
+                </div>
+              </div>
+
+              {!telegramProfile.connected && (
+                <>
+                  <div className="profileTelegramAuthPreview">
+                    <div className="profileTelegramAuthIcon">✈️</div>
+                    <div>
+                      <strong>Tren AI Coach</strong>
+                      <span>Без ручного ввода username. Всё привяжется через Telegram.</span>
+                    </div>
+                  </div>
+
+                  <div className="profileTelegramLoginWidgetCard">
+                    <div ref={telegramLoginContainerRef} className="profileTelegramLoginWidget" />
+                    {!telegramLoginWidgetReady && (
+                      <div className="profileTelegramWidgetLoading">
+                        Загружаю Telegram Login...
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    className="profileTelegramCheckButton"
+                    onClick={checkTelegramLoginResult}
+                    disabled={telegramLinking}
+                  >
+                    {telegramLinking ? "Проверяю..." : "Проверить подключение"}
+                  </button>
+                </>
+              )}
+
+              {telegramProfile.connected && (
+                <div className="profileTelegramManageActions">
+                  <button type="button" onClick={() => {
+                    setTelegramProfile((prev) => ({ ...prev, connected: false }));
+                    setTelegramStatus("");
+                  }}>
+                    Изменить Telegram
+                  </button>
+
+                  <button type="button" className="danger" onClick={disconnectTelegram}>
+                    Отключить
+                  </button>
+                </div>
+              )}
+
+              {telegramStatus && (
+                <div className="profileTelegramAuthStatus">
+                  <span>{telegramStatus}</span>
+                </div>
+              )}
+
+              <button type="button" className="profileTelegramSave ghost" onClick={() => setTelegramConnectOpen(false)}>
+                Закрыть
+              </button>
+            </div>
+          </div>
+        )}
+
+        {profileActiveTab === "settings" && (
+        <section className="profileDashboardCard profileBodyMetricsSettingsSection">
+          <button
+            type="button"
+            className={profileBodyMetricsOpen ? "profileAccordionHead open" : "profileAccordionHead"}
+            onClick={() => setProfileBodyMetricsOpen((prev) => !prev)}
+          >
+            <div>
+              <span>ПАРАМЕТРЫ ПРОФИЛЯ</span>
+              <strong>Анкета и параметры тела</strong>
+              <small>Возраст, пол, рост, вес, активность, цель и тренировочные дни</small>
+            </div>
+            <em>{profileBodyMetricsOpen ? "−" : "+"}</em>
+          </button>
+
+          {profileBodyMetricsOpen && (
+            <div className="profileBodyMetricsAccordion">
+              <div className="profileBodyMetricsGrid">
+                <label>
+                  <span>Текущий вес</span>
+                  <input
+                    inputMode="decimal"
+                    value={aiNutritionProfileDraft.weight}
+                    onChange={(event) => setAiNutritionProfileDraft((prev) => ({ ...prev, weight: event.target.value }))}
+                    placeholder="80 кг"
+                  />
+                </label>
+
+                <label>
+                  <span>Рост</span>
+                  <input
+                    inputMode="decimal"
+                    value={aiNutritionProfileDraft.height}
+                    onChange={(event) => setAiNutritionProfileDraft((prev) => ({ ...prev, height: event.target.value }))}
+                    placeholder="180 см"
+                  />
+                </label>
+
+                <label>
+                  <span>Возраст</span>
+                  <input
+                    inputMode="numeric"
+                                    className="adminReminderTimeInput"
+                    value={aiNutritionProfileDraft.age}
+                    onChange={(event) => setAiNutritionProfileDraft((prev) => ({ ...prev, age: event.target.value }))}
+                    placeholder="31"
+                  />
+                </label>
+              </div>
+
+              <div className="profileSexPicker">
+                {[
+                  { id: "male", title: "Мужчина" },
+                  { id: "female", title: "Женщина" }
+                ].map((sex) => (
+                  <button
+                    type="button"
+                    key={sex.id}
+                    className={aiNutritionProfileDraft.sex === sex.id ? "active" : ""}
+                    onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, sex: sex.id }))}
+                  >
+                    {sex.title}
+                  </button>
+                ))}
+              </div>
+
+              <div className="profileBodyMetricsGrid profileBodyMetricsGridTwo">
+                <label className="profileGoalReadonly">
+                  <span>Твоя цель</span>
+                  <div className="profileGoalReadonlyValue">
+                    {activeGoalLabel}
+                  </div>
+                </label>
+
+                <label>
+                  <span>Активность</span>
+                  <select
+                    value={aiNutritionProfileDraft.activity}
+                    onChange={(event) => setAiNutritionProfileDraft((prev) => ({ ...prev, activity: event.target.value }))}
+                  >
+                    <option value="low">Низкая</option>
+                    <option value="medium">Средняя</option>
+                    <option value="high">Высокая</option>
+                  </select>
+                </label>
+              </div>
+
+              <button type="button" className="profileBodySaveBtn" onClick={saveAiBodyMetrics}>
+                Сохранить анкету
+              </button>
+            </div>
+          )}
+        </section>
+        )}
+
+        {profileActiveTab === "settings" && (
+        <section className="profileDashboardCard profileAppSettingsSection">
+          <div className="profileCardHead">
+            <div>
+              <span>НАСТРОЙКИ ПРИЛОЖЕНИЯ</span>
+              <h2>Настройки</h2>
+              <p>Тема приложения и выход из аккаунта</p>
             </div>
           </div>
 
-          <button
-            className="bigButton"
-            style={{ marginTop: "16px" }}
-            onClick={() => {
-              loadHistory();
-              setPage("history");
-            }}
-          >
-            📊 История тренировок
-          </button>
-        </div>
+          <div className="profileSettingsActions">
+            <button
+              type="button"
+              className="profileThemeSwitchBtn"
+              onClick={toggleAppTheme}
+            >
+              <span className="profileThemeIcon">{appTheme === "warm-light" ? "🌙" : "☀️"}</span>
+              <span className="profileThemeText">
+                {appTheme === "warm-light" ? "Тёмно-зелёный стиль" : "Светло-жёлтый стиль"}
+              </span>
+            </button>
 
-        <div className="exercise">
-          <button className="bigButton" onClick={() => setPage("progress")}>
-            📈 Прогресс по упражнениям
-          </button>
-        </div>
+            <button
+              type="button"
+              className={telegramProfile.connected ? "profileSettingsTelegramItem connected" : "profileSettingsTelegramItem"}
+              onClick={() => { setTelegramStatus(""); setTelegramConnectOpen(true); }}
+            >
+              <span className="profileSettingsTelegramAvatar">
+                {telegramProfile.avatarUrl ? <img src={telegramProfile.avatarUrl} alt="" /> : "✈️"}
+              </span>
+
+              <span className="profileSettingsTelegramText">
+                <strong>Telegram</strong>
+                <small>
+                  {telegramProfile.connected
+                    ? `@${telegramProfile.username || "telegram"} · подключён`
+                    : "Не подключён · нажми, чтобы привязать"}
+                </small>
+              </span>
+
+              <em>{telegramProfile.connected ? "Подключен" : "Подключить"}</em>
+              <i>›</i>
+            </button>
+
+            <button type="button" className="profileLogoutBtn" onClick={logout}>
+              Выйти из аккаунта
+            </button>
+          </div>
+        </section>
+        )}
       </div>
     );
   }
@@ -2063,7 +11687,7 @@ export default function App() {
       <div className="app">
         <div className="workoutHeader">
           <button className="backBtn universalFixedBackPointer" onClick={() => setPage("profile")}>
-            ← Назад
+            ← Главное меню
           </button>
 
           <h1 className="workoutTitle">Прогресс</h1>
@@ -2126,482 +11750,4470 @@ export default function App() {
   }
 
   if (page === "history") {
+    const historyItems = getAiHistoryItems(history);
+    const totalHistorySets = historyItems.reduce((sum, item) => (
+      sum + (item.exercises || []).reduce((exerciseSum, exercise) => exerciseSum + (exercise.sets?.length || 0), 0)
+    ), 0);
+    const totalHistoryExercises = historyItems.reduce((sum, item) => sum + (item.exercises?.length || 0), 0);
+    const latestHistoryWorkout = historyItems[0];
+
+    function formatHistoryCardDate(dateValue, withYear = false) {
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return "без даты";
+
+      return date.toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "short",
+        ...(withYear ? { year: "numeric" } : {})
+      }).replace(".", "");
+    }
+
+    function formatHistoryTime(dateValue) {
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return "";
+
+      return date.toLocaleTimeString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function getHistoryWorkoutParts(workoutName = "") {
+      const parts = String(workoutName || "Тренировка").split("—").map((part) => part.trim()).filter(Boolean);
+      if (parts.length >= 2) {
+        return {
+          day: parts[0],
+          title: parts.slice(1).join(" • ")
+        };
+      }
+
+      return {
+        day: "Тренировка",
+        title: workoutName || "Без названия"
+      };
+    }
+
+    function getHistorySetCount(item = {}) {
+      return (item.exercises || []).reduce((sum, exercise) => sum + (exercise.sets?.length || 0), 0);
+    }
+
+    function getHistoryVolume(item = {}) {
+      return (item.exercises || []).reduce((sum, exercise) => (
+        sum + (exercise.sets || []).reduce((setSum, set) => {
+          const reps = Number(set.reps) || 0;
+          const weight = Number(String(set.weight || "").replace(",", ".")) || 0;
+          return setSum + reps * weight;
+        }, 0)
+      ), 0);
+    }
+
+    function getHistoryTopExercise(item = {}) {
+      const exercises = item.exercises || [];
+      const first = exercises.find((exercise) => exercise?.name);
+      return first?.name || "Без упражнений";
+    }
+
     return (
-      <div className="app">
-        <div className="workoutHeader">
-          <button className="backBtn universalFixedBackPointer" onClick={() => setPage("profile")}>
-            ← Назад
+      <div className="app historyPagePremium historyPageCompact">
+        <button className="backIconBtn universalFixedBackPointer historyPremiumBack" onClick={() => setPage("profile")} aria-label="Назад" />
+
+        <section className="historyCompactHero">
+          <div>
+            <span>История</span>
+            <h1>Тренировки</h1>
+            <p>{historyItems.length ? `Последняя: ${formatHistoryCardDate(latestHistoryWorkout?.date, true)}` : "Сохраняй тренировки — здесь будет прогресс."}</p>
+          </div>
+
+          <button className="historyRefreshBtn historyCompactRefresh" onClick={loadHistory}>
+            🔄
           </button>
+        </section>
 
-          <h1 className="workoutTitle">История</h1>
-        </div>
+        <section className="historyCompactStats">
+          <div>
+            <strong>{historyItems.length}</strong>
+            <span>трен.</span>
+          </div>
+          <div>
+            <strong>{totalHistorySets}</strong>
+            <span>подходов</span>
+          </div>
+          <div>
+            <strong>{totalHistoryExercises}</strong>
+            <span>упр.</span>
+          </div>
+        </section>
 
-        <button className="finishBtn fixed" onClick={loadHistory}>
-          🔄 Обновить историю
-        </button>
+        {latestHistoryWorkout && (
+          <section className="historyCompactLast">
+            <span>Последняя</span>
+            <strong>{getHistoryWorkoutParts(latestHistoryWorkout.workout).title}</strong>
+            <small>{formatHistoryCardDate(latestHistoryWorkout.date)} · {getHistorySetCount(latestHistoryWorkout)} подходов · {getHistoryTopExercise(latestHistoryWorkout)}</small>
+          </section>
+        )}
 
         {historyLoading && (
-          <div className="exercise">
-            <h3>Загрузка...</h3>
+          <div className="historyEmptyCard historyCompactEmpty">
+            <h3>Загрузка истории...</h3>
           </div>
         )}
 
-        {!historyLoading && history.length === 0 && (
-          <div className="exercise">
+        {!historyLoading && historyItems.length === 0 && (
+          <div className="historyEmptyCard historyCompactEmpty">
             <h3>История пустая</h3>
-            <p style={{ textAlign: "center", color: "#aaa" }}>
-              Заверши тренировку, и она появится здесь.
-            </p>
+            <p>Заверши тренировку, и она появится здесь.</p>
           </div>
         )}
 
-        {!historyLoading &&
-          history.map((item) => {
-            const isOpen = openHistoryKey === item.id;
-            const date = new Date(item.date).toLocaleDateString("ru-RU");
+        {!historyLoading && historyItems.length > 0 && (
+          <div className="historyCompactList">
+            {historyItems.map((item) => {
+              const isOpen = openHistoryKey === item.id;
+              const date = formatHistoryCardDate(item.date);
+              const time = formatHistoryTime(item.date);
+              const parts = getHistoryWorkoutParts(item.workout);
+              const setCount = getHistorySetCount(item);
+              const volume = getHistoryVolume(item);
+              const exerciseCount = item.exercises?.length || 0;
+              const isDeleting = historyDeletingId === item.id;
+              const isSwiped = historySwipeId === item.id;
 
-            return (
-              <div className="historyCard" key={item.id}>
-                <button
-                  className="historyCardHeader"
-                  onClick={() => setOpenHistoryKey(isOpen ? null : item.id)}
+              return (
+                <article
+                  className={`${isOpen ? "historyCompactCard open" : "historyCompactCard"}${isSwiped ? " swiped" : ""}`}
+                  key={item.id}
+                  onTouchStart={(event) => handleHistoryTouchStart(event, item.id)}
+                  onTouchEnd={(event) => handleHistoryTouchEnd(event, item)}
                 >
-                  <span>
-                    {date} — {item.workout}
-                  </span>
-                  <strong>{isOpen ? "−" : "+"}</strong>
-                </button>
-
-                {isOpen && (
-                  <div className="historyCardBody">
-                    {item.exercises?.map((exercise, index) => (
-                      <div className="historyExercise" key={index}>
-                        <h4>{exercise.name}</h4>
-
-                        <div className="historySets">
-                          {exercise.sets?.map((set, setIndex) => (
-                            <div className="historySet" key={setIndex}>
-                              <span>Подход {set.set || setIndex + 1}</span>
-                              <strong>
-                                {set.reps} × {set.weight || "без веса"}
-                              </strong>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                  <div className="historySwipeDeleteAction" onClick={() => requestDeleteOwnHistoryWorkout(item)}>
+                    {isDeleting ? "Удаляю..." : "Удалить"}
                   </div>
-                )}
+
+                  <div className="historyCompactCardInner">
+                    <div className="historyCompactCardTop">
+                    <button
+                      type="button"
+                      className="historyCompactMain"
+                      onClick={() => setOpenHistoryKey(isOpen ? null : item.id)}
+                    >
+                      <span>{date}{time ? ` · ${time}` : ""}</span>
+                      <strong>{parts.title}</strong>
+                      <small>{parts.day} · {exerciseCount} упр. · {setCount} подходов</small>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="historyCompactToggle"
+                      onClick={() => setOpenHistoryKey(isOpen ? null : item.id)}
+                      aria-label={isOpen ? "Свернуть" : "Развернуть"}
+                    >
+                      {isOpen ? "⏫" : "⏬"}
+                    </button>
+                  </div>
+
+                  <div className="historyCompactMeta">
+                    <span>{volume > 0 ? `${Math.round(volume)} кг объём` : "объём —"}</span>
+                    {item.postWorkoutFeedback?.title && (
+                      <span>{item.postWorkoutFeedback.emoji || "💬"} {item.postWorkoutFeedback.title}</span>
+                    )}
+                  </div>
+
+                    {isOpen && (
+                      <div className="historyCompactBody">
+                      {(item.exercises || []).map((exercise, index) => (
+                        <div className="historyCompactExercise" key={`${exercise.name}_${index}`}>
+                          <div className="historyCompactExerciseHead">
+                            <strong>{exercise.name}</strong>
+                            <span>{exercise.sets?.length || 0} подх.</span>
+                          </div>
+
+                          <div className="historyCompactSets">
+                            {(exercise.sets || []).map((set, setIndex) => (
+                              <span key={setIndex}>
+                                {set.set || setIndex + 1}: {set.reps || "—"}×{set.weight || "без веса"}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+
+        {historyDeleteCandidate && (
+          <div className="historyDeleteOverlay" onClick={closeHistoryDeleteConfirm}>
+            <div className="historyDeleteModal" onClick={(event) => event.stopPropagation()}>
+              <div className="historyDeleteIcon">⌫</div>
+              <h3>Удалить тренировку?</h3>
+              <p>
+                {getHistoryWorkoutParts(historyDeleteCandidate.workout).title}
+                <span>{formatHistoryCardDate(historyDeleteCandidate.date, true)} · действие нельзя отменить</span>
+              </p>
+
+              <div className="historyDeleteActions">
+                <button type="button" onClick={closeHistoryDeleteConfirm} disabled={Boolean(historyDeletingId)}>
+                  Отмена
+                </button>
+                <button
+                  type="button"
+                  className="danger"
+                  onClick={confirmDeleteOwnHistoryWorkout}
+                  disabled={Boolean(historyDeletingId)}
+                >
+                  {historyDeletingId ? "Удаляю..." : "Удалить"}
+                </button>
               </div>
-            );
-          })}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 
   if (page === "admin") {
-    return (
-      <div className="app">
-        <div className="workoutHeader">
-          <button className="backBtn universalFixedBackPointer" onClick={() => setPage("main")}>
-            ← Назад
-          </button>
-
-          <h1 className="workoutTitle">Админ-панель</h1>
-        </div>
-
-        <div className="exercise">
-          <h3>Управление</h3>
-
-          <p style={{ textAlign: "center", color: "#aaa" }}>
-            Здесь ты управляешь клиентами и тренировками
-          </p>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <button
-              className="bigButton"
-              onClick={() => {
-                loadUsers();
-                setPage("adminUsers");
-              }}
-            >
-              👥 Пользователи
-            </button>
-
-            <button
-              className="bigButton"
-              onClick={() => {
-                setSelectedUserId(auth.currentUser?.uid || null);
-                loadWorkoutsFromFirebase(auth.currentUser?.uid);
-                setPage("adminWorkouts");
-              }}
-            >
-              🏋️ Мои тренировки
-            </button>
-
-            <button className="bigButton">📊 Статистика</button>
+    if (!canUseTrainerFeatures()) {
+      return (
+        <div className="app">
+          <button className="backBtn" onClick={() => setPage("main")}>← Главное меню</button>
+          <div className="historyEmptyCard">
+            <h3>Доступ закрыт</h3>
+            <p>Тренерская доступна админам и пользователям с ролью тренера.</p>
           </div>
         </div>
+      );
+    }
+
+    const filteredUsers = usersList.filter((client) => {
+      const profile = getAdminClientProfile(client);
+      const goal = String(profile?.goal || "").toLowerCase();
+      const clientHistory = adminSelectedClient?.id === client.id ? adminClientHistory : [];
+      const lastWorkoutDate = clientHistory[0]?.date ? new Date(clientHistory[0].date) : null;
+      const daysSinceWorkout = lastWorkoutDate ? Math.round((Date.now() - lastWorkoutDate.getTime()) / (24 * 60 * 60 * 1000)) : null;
+      const badCount = clientHistory.filter((item) => item.postWorkoutFeedback?.id === "bad").length;
+
+      if (adminClientFilter === "all") return true;
+      if (adminClientFilter === "active") return daysSinceWorkout === null || daysSinceWorkout <= 7;
+      if (adminClientFilter === "attention") return badCount >= 2 || daysSinceWorkout >= 5;
+      if (adminClientFilter === "inactive") return daysSinceWorkout !== null && daysSinceWorkout >= 7;
+      return goal === adminClientFilter;
+    });
+
+    const selectedClient = adminSelectedClient || usersList.find((client) => client.id === selectedUserId) || filteredUsers[0] || usersList[0] || null;
+    const selectedProfile = getAdminClientProfile(selectedClient || {});
+    const selectedLatestMeasurement = Array.isArray(adminClientMeasurements) && adminClientMeasurements.length
+      ? adminClientMeasurements[0]
+      : null;
+    const selectedPreviousMeasurement = Array.isArray(adminClientMeasurements) && adminClientMeasurements.length > 1
+      ? adminClientMeasurements[1]
+      : null;
+    const adminMeasurementFields = getProfileMeasurementFields(selectedProfile?.goal || "recomp");
+    const adminMeasurementPreviewFields = adminMeasurementFields.filter((field) => ["weight", "neck", "shoulders", "chest", "biceps", "forearm", "belly", "pelvis", "thigh", "calf", "ankle"].includes(field.id));
+    const clientNutritionDays = getAdminNutritionDaysList(adminClientNutrition);
+    const clientToday = clientNutritionDays[0] || { totals: { calories: 0, protein: 0, fat: 0, carbs: 0 }, foods: [], score: "—" };
+    const workoutProgress = getAdminWorkoutProgressList(adminClientHistory);
+    const weightPoints = getAdminWeightPoints(selectedClient || {});
+    const badFeedbackCount = adminClientHistory.filter((item) => item.postWorkoutFeedback?.id === "bad").length;
+    const recommendations = getAdminRecommendations(selectedClient || {}, adminClientHistory, adminClientNutrition);
+    const aiPlan = selectedClient?.aiNutritionPlan || selectedClient?.nutritionPlan || null;
+    const aiWeek = aiPlan?.weeks?.[0] || null;
+    const maxCalories = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.calories));
+    const maxProtein = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.protein));
+    const maxWeight = Math.max(1, ...weightPoints.map((point) => point.weight));
+    const averageAiScore = clientNutritionDays.length
+      ? Math.round(clientNutritionDays.slice(0, 7).reduce((sum, day) => sum + (Number(day.score) || 0), 0) / Math.min(7, clientNutritionDays.length) * 10) / 10
+      : "—";
+    const lastWorkoutDate = adminClientHistory[0]?.date ? new Date(adminClientHistory[0].date) : null;
+    const daysSinceWorkout = lastWorkoutDate ? Math.round((Date.now() - lastWorkoutDate.getTime()) / (24 * 60 * 60 * 1000)) : null;
+    const attentionCount = badFeedbackCount + (daysSinceWorkout !== null && daysSinceWorkout >= 5 ? 1 : 0);
+
+    return (
+      <div className="adminV3Shell">
+        <aside className="adminV3Sidebar">
+          <button className="adminFixedMainBack" onClick={() => setPage("main")} aria-label="Главное меню"><span>←</span><b>Главное меню</b></button>
+
+          <div className="adminV3Brand">
+            <span>⚙️</span>
+            <strong>Trainer CRM</strong>
+            <small>Admin Panel v3</small>
+          </div>
+
+          <nav className="adminV3Nav adminV3BottomBar" aria-label="Админ меню">
+            <button className={page === "admin" ? "active" : ""} type="button" onClick={() => setPage("admin")}>
+              <span className="adminV3NavIcon">📊</span>
+              <span className="adminV3NavLabel">Дашборд</span>
+            </button>
+            <button className={page === "adminUsers" ? "active" : ""} type="button" onClick={() => setPage("adminUsers")}>
+              <span className="adminV3NavIcon">👥</span>
+              <span className="adminV3NavLabel">Клиенты</span>
+            </button>
+            <button className={page === "adminWorkouts" ? "active" : ""} type="button" onClick={openAdminProgramsOverview}>
+              <span className="adminV3NavIcon">🏋️</span>
+              <span className="adminV3NavLabel">Программы</span>
+            </button>
+            <button className={page === "adminStats" ? "active" : ""} type="button" onClick={exportAdminClientCsv}>
+              <span className="adminV3NavIcon">📈</span>
+              <span className="adminV3NavLabel">Отчёты</span>
+            </button>
+          </nav>
+
+          
+        </aside>
+
+        <main className="adminV3Main">
+          <header className="adminV3Header">
+            <div>
+              <span>TRAINER CONTROL CENTER</span>
+              <h1>Тренерская</h1>
+              <p>Клиенты, питание, тренировки и AI-контроль в одном рабочем пространстве.</p>
+
+<div className="adminFocusGrid">
+  <button className="adminFocusCard adminSummaryLink" type="button" onClick={() => openAdminClientsWithFilter("all")}>
+    <div className="adminFocusLabel">Клиенты</div>
+    <div className="adminFocusValue">{usersList.length}</div>
+  </button>
+
+  <button className="adminFocusCard adminSummaryLink" type="button" onClick={() => openAdminClientsWithFilter("active")}>
+    <div className="adminFocusLabel">Активные</div>
+    <div className="adminFocusValue">{filteredUsers.length}</div>
+  </button>
+
+  <button className="adminFocusCard adminSummaryLink" type="button" onClick={() => openAdminClientsWithFilter("attention")}>
+    <div className="adminFocusLabel">Требуют внимания</div>
+    <div className="adminFocusValue">{attentionCount}</div>
+  </button>
+
+  <div className="adminFocusCard">
+    <div className="adminFocusLabel">AI-score</div>
+    <div className="adminFocusValue">{averageAiScore}</div>
+  </div>
+</div>
+
+<div className="adminDashboardSection">
+  <div className="adminDashboardSectionTitle">Клиенты тренера</div>
+
+  <div className="adminDashboardMiniList">
+    {usersList.length ? usersList.slice(0, 3).map((client) => (
+      <div className="adminDashboardMiniItem" key={client.id}>
+        <div className="adminDashboardMiniTop">
+          <div className="adminDashboardMiniName">{client.name || client.email || "Клиент"}</div>
+          <div className="adminDashboardMiniStatus">{client.assignedProgramName || "Без программы"}</div>
+        </div>
+        <div className="adminDashboardMiniDesc">
+          {client.email || "Email не указан"}
+        </div>
+      </div>
+    )) : (
+      <div className="adminDashboardMiniItem">
+        <div className="adminDashboardMiniTop">
+          <div className="adminDashboardMiniName">Нет клиентов</div>
+          <div className="adminDashboardMiniStatus">0</div>
+        </div>
+        <div className="adminDashboardMiniDesc">
+          Здесь будут отображаться только клиенты, привязанные к текущему тренеру.
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
+<div className="adminDashboardSection">
+  <div className="adminDashboardSectionTitle">AI Focus</div>
+
+  <div className="adminDashboardMiniItem">
+    <div className="adminDashboardMiniTop">
+      <div className="adminDashboardMiniName">{selectedClient?.name || selectedClient?.email || "Выбери клиента"}</div>
+      <div className="adminDashboardMiniStatus">AI</div>
+    </div>
+
+    <div className="adminDashboardMiniDesc">
+      {recommendations[0] || "AI-подсказки появятся после загрузки истории, питания и замеров выбранного клиента."}
+    </div>
+  </div>
+</div>
+
+<div className="adminDashboardSection">
+  <div className="adminDashboardSectionTitle">Последние события</div>
+
+  <div className="adminDashboardTimeline">
+    {adminClientHistory.length ? adminClientHistory.slice(0, 3).map((entry, index) => (
+      <div className="adminDashboardTimelineItem" key={entry.id || entry.date || index}>
+        ✅ {selectedClient?.name || selectedClient?.email || "Клиент"}: {entry.workout || "тренировка"}
+      </div>
+    )) : (
+      <div className="adminDashboardTimelineItem">
+        Нет событий по выбранному клиенту.
+      </div>
+    )}
+  </div>
+</div>
+
+            </div>
+
+            
+          </header>
+
+          <section className="adminV3KpiGrid">
+            <button className="adminSummaryLink" type="button" onClick={() => openAdminClientsWithFilter("all")}><span>Клиенты</span><strong>{usersList.length}</strong><small>в базе</small></button>
+            <button className="adminSummaryLink" type="button" onClick={() => openAdminClientsWithFilter("active")}><span>Активные</span><strong>{filteredUsers.length}</strong><small>по фильтру</small></button>
+            <button className="adminSummaryLink" type="button" onClick={() => openAdminClientsWithFilter("attention")}><span>Требуют внимания</span><strong>{attentionCount}</strong><small>по выбранному</small></button>
+            <div><span>Средний AI-score</span><strong>{averageAiScore}</strong><small>питание</small></div>
+          </section>
+
+          <section className="adminV3Filters">
+            {[
+              ["all", "Все"],
+              ["active", "Активные"],
+              ["attention", "Внимание"],
+              ["inactive", "Давно не тренировались"],
+              ["dry", "Сушка"],
+              ["mass", "Набор"],
+              ["cut", "Похудение"],
+              ["maintain", "Поддержка"],
+              ["recomp", "Рекомпозиция"]
+            ].map(([id, label]) => (
+              <button
+                key={id}
+                className={adminClientFilter === id ? "active" : ""}
+                onClick={() => setAdminClientFilter(id)}
+              >
+                {label}
+              </button>
+            ))}
+          </section>
+
+          <section className="adminV3DashboardGrid">
+            <div className="adminV3Panel adminV3ClientsPanel">
+              <div className="adminV3PanelHead">
+                <div>
+                  <h2>Клиенты</h2>
+                  <p>Выбери клиента, чтобы открыть workspace.</p>
+                </div>
+                <button onClick={() => setPage("adminUsers")}>Создать</button>
+              </div>
+
+              <div className="adminV3ClientTable">
+                <div className="adminV3ClientTableHead">
+                  <span>Клиент</span>
+                  <span>Твоя цель</span>
+                  <span>Анализ прогресса</span>
+                  <span>Статус</span>
+                </div>
+
+                {filteredUsers.map((client) => {
+                  const profile = getAdminClientProfile(client);
+                  const isActive = selectedClient?.id === client.id;
+
+                  return (
+                    <button
+                      key={client.id}
+                      className={isActive ? "active" : ""}
+                      onClick={() => loadAdminClientOverview(client, true)}
+                    >
+                      <span>
+                        <strong>{client.name || client.email || "Клиент"}</strong>
+                        <small>{client.email || client.id}</small>
+                      </span>
+                      <em>{getAdminClientGoalLabel(profile.goal)}</em>
+                      <em>{isActive ? averageAiScore : "—"}</em>
+                      <i>{isActive && attentionCount > 0 ? "Внимание" : "OK"}</i>
+                    </button>
+                  );
+                })}
+
+                {!filteredUsers.length && <p className="adminV3Empty">Нет клиентов под этот фильтр.</p>}
+              </div>
+            </div>
+
+            <div className="adminV3Panel adminV3AlertsPanel">
+              <div className="adminV3PanelHead">
+                <div>
+                  <h2>AI Alerts</h2>
+                  <p>Главные сигналы по выбранному клиенту.</p>
+                </div>
+              </div>
+
+              <div className="adminV3Alerts">
+                {recommendations.slice(0, 5).map((item) => (
+                  <div key={item}>
+                    <span>✨</span>
+                    <p>{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {selectedClient && (
+            <section className="adminV3Workspace">
+              <div className="adminV3WorkspaceHead">
+                <div>
+                  <span>CLIENT WORKSPACE</span>
+                  <h2>{selectedClient.name || selectedClient.email || "Клиент"}</h2>
+                  <p>{selectedClient.email || selectedClient.id}</p>
+                </div>
+
+                <div className="adminV3WorkspaceActions">
+</div>
+              </div>
+
+              <div className="adminV3Tabs">
+                {[
+                  ["overview", "Overview"],
+                  ["nutrition", "Питание"],
+                  ["training", "Тренировки"],
+                  ["calendar", "Календарь"],
+                  ["program", "Программа"],
+                  ["notes", "Заметки"],
+                  ["transfer", "Transfer"]
+                ].map(([id, label]) => (
+                  <button
+                    key={id}
+                    className={adminClientTab === id ? "active" : ""}
+                    onClick={() => setAdminClientTab(id)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {adminClientTab === "overview" && (
+                <div className="adminV3TabGrid">
+                  <div className="adminV3ProfileCard">
+                    <h3>Профиль</h3>
+                    <div className="adminV3ProfileGrid">
+                      <div><span>Текущий вес</span><strong>{selectedProfile?.weight || "—"} кг</strong></div>
+                      <div><span>Рост</span><strong>{selectedProfile?.height || "—"} см</strong></div>
+                      <div><span>Возраст</span><strong>{selectedProfile?.age || "—"}</strong></div>
+                      <div><span>Пол</span><strong>{selectedProfile?.sex === "female" ? "Женщина" : selectedProfile?.sex === "male" ? "Мужчина" : "—"}</strong></div>
+                      <div><span>Твоя цель</span><strong>{getAdminClientGoalLabel(selectedProfile?.goal)}</strong></div>
+                      <div><span>Активность</span><strong>{getAiNutritionActivityLabel(selectedProfile?.activity || "medium")}</strong></div>
+                      <div><span>Дни</span><strong>{getAdminClientTrainingDaysText(selectedProfile)}</strong></div>
+                      <div><span>AI-план</span><strong>{aiWeek ? `${aiWeek.calories} ккал` : "—"}</strong></div>
+                    </div>
+                  </div>
+
+                  <div className="adminV3ProfileCard">
+                    <h3>Вес</h3>
+                    <div className="adminV3MiniChart">
+                      {weightPoints.length ? weightPoints.map((point, index) => (
+                        <span key={`${point.date}_${index}`} style={{ height: `${Math.max(12, (point.weight / maxWeight) * 100)}%` }}>
+                          <em>{point.weight}</em>
+                        </span>
+                      )) : <p>нет данных</p>}
+                    </div>
+                  </div>
+
+                  <div className="adminV3ProfileCard adminV3Wide">
+                    <h3>AI-рекомендации</h3>
+                    <div className="adminV3Alerts compact">
+                      {recommendations.map((item) => (
+                        <div key={item}><span>✨</span><p>{item}</p></div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {adminClientTab === "nutrition" && (
+                <div className="adminV3TabGrid">
+                  <div className="adminV3ProfileCard">
+                    <h3>Калории</h3>
+                    <div className="adminV3MiniChart">
+                      {clientNutritionDays.slice(0, 7).reverse().map((day) => (
+                        <span key={day.date} style={{ height: `${Math.max(10, (day.totals.calories / maxCalories) * 100)}%` }}>
+                          <em>{Math.round(day.totals.calories)}</em>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="adminV3ProfileCard">
+                    <h3>Белок</h3>
+                    <div className="adminV3MiniChart">
+                      {clientNutritionDays.slice(0, 7).reverse().map((day) => (
+                        <span key={day.date} style={{ height: `${Math.max(10, (day.totals.protein / maxProtein) * 100)}%` }}>
+                          <em>{Math.round(day.totals.protein)}</em>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="adminV3ProfileCard adminV3Wide">
+                    <h3>Дни питания</h3>
+                    <div className="adminV3NutritionList">
+                      {clientNutritionDays.slice(0, 8).map((day) => (
+                        <details key={day.date}>
+                          <summary>
+                            <strong>{new Date(day.date).toLocaleDateString("ru-RU")}</strong>
+                            <span>{Math.round(day.totals.calories)} ккал · Б {Math.round(day.totals.protein)} · score {day.score}</span>
+                          </summary>
+                          <div>
+                            {day.foods.map((food, index) => (
+                              <p key={`${food.id || food.name}_${index}`}>
+                                <span>{food.icon || getFoodIcon(food)} {food.name}</span>
+                                <strong>{Math.round(Number(food.calories) || 0)} ккал</strong>
+                              </p>
+                            ))}
+                            {!day.foods.length && <p>Еды нет</p>}
+                          </div>
+                        </details>
+                      ))}
+                      {!clientNutritionDays.length && <p className="adminV3Empty">Питания пока нет.</p>}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {adminClientTab === "training" && (
+                <div className="adminV3TabGrid">
+                  <div className="adminV3ProfileCard adminV3Wide">
+                    <h3>Прогресс упражнений</h3>
+                    <div className="adminV3ExerciseProgress">
+                      {workoutProgress.map((item) => (
+                        <div key={item.name}>
+                          <span>{item.name}</span>
+                          <strong>{item.max} кг</strong>
+                          <i style={{ width: `${Math.min(100, (item.max / 120) * 100)}%` }} />
+                        </div>
+                      ))}
+                      {!workoutProgress.length && <p className="adminV3Empty">Нет данных</p>}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {adminClientTab === "history" && (
+                <div className="adminV3TabGrid">
+                  <div className="adminV3ProfileCard adminV3Wide">
+                    <h3>История тренировок</h3>
+
+                    <div className="adminHistoryDeleteHint">Отметь нужные тренировки и удали только выбранные.</div>
+
+                    <div className="adminHistorySelectBar">
+                      <button type="button" onClick={toggleAdminSelectAllHistory}>
+                        {adminClientHistory.slice(0, 20).every((item) => adminSelectedHistoryIds.includes(item.id)) && adminClientHistory.length ? "Снять выбор" : "Выбрать видимые"}
+                      </button>
+
+                      <button
+                        type="button"
+                        className="danger"
+                        disabled={!adminSelectedHistoryIds.length || adminDeletingWorkoutId === "bulk"}
+                        onClick={() => deleteSelectedAdminClientHistory(selectedClient)}
+                      >
+                        {adminDeletingWorkoutId === "bulk" ? "Удаляю..." : `Удалить выбранные${adminSelectedHistoryIds.length ? ` (${adminSelectedHistoryIds.length})` : ""}`}
+                      </button>
+                    </div>
+
+                    <div className="adminV3Timeline">
+                      {adminClientHistory.slice(0, 20).map((item) => (
+                        <div key={item.id} className={adminSelectedHistoryIds.includes(item.id) ? "adminV3TimelineWorkoutItem selected" : "adminV3TimelineWorkoutItem"}>
+                          <label className="adminHistoryCheck">
+                            <input
+                              type="checkbox"
+                              checked={adminSelectedHistoryIds.includes(item.id)}
+                              onChange={() => toggleAdminSelectedHistoryId(item.id)}
+                            />
+                            <i />
+                          </label>
+
+                          <span>{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
+                          <strong>{item.workout || "Тренировка"}</strong>
+                          <small>{item.date ? new Date(item.date).toLocaleDateString("ru-RU") : "без даты"}{item.durationSeconds ? ` · ${Math.round(item.durationSeconds / 60)} мин` : ""}</small>
+                          <em>{item.postWorkoutFeedback?.title || item.readiness?.title || "—"}</em>
+                        </div>
+                      ))}
+                      {!adminClientHistory.length && <p className="adminV3Empty">Истории пока нет.</p>}
+                    </div>
+                  </div>
+
+                </div>
+              )}
+
+              {adminClientTab === "program" && (
+                <div className="adminV3TabGrid">
+                  <div className="adminV3ProfileCard adminV3Wide">
+                    <h3>Шаблоны и программа</h3>
+                    <div className="adminV3TemplateControls">
+                      <input value={adminTemplateName} onChange={(event) => setAdminTemplateName(event.target.value)} placeholder="Название шаблона" />
+                      <button onClick={createAdminTemplateFromCurrentPlan}>Создать из текущей программы</button>
+                      <select value={adminSelectedTemplateId} onChange={(event) => setAdminSelectedTemplateId(event.target.value)}>
+                        <option value="">Выбери шаблон</option>
+                        {adminTrainingTemplates.map((template) => (
+                          <option key={template.id} value={template.id}>{template.name}</option>
+                        ))}
+                      </select>
+                      <button onClick={() => selectedClient && assignAdminTemplateToClient(selectedClient.id)}>Назначить выбранному</button>
+                      <button onClick={() => selectedClient && clearClientProgram(selectedClient.id)}>Сбросить программу клиента</button>
+                      <select value={adminCopyTargetUserId} onChange={(event) => setAdminCopyTargetUserId(event.target.value)}>
+                        <option value="">Копировать программу клиенту</option>
+                        {usersList.filter((client) => client.id !== selectedClient?.id).map((client) => (
+                          <option key={client.id} value={client.id}>{client.name || client.email}</option>
+                        ))}
+                      </select>
+                      <button onClick={copyCurrentProgramToClient}>Копировать</button>
+                    </div>
+
+                    <button className="adminV3OpenEditor" onClick={() => {
+                      setSelectedUserId(selectedClient.id);
+                      loadWorkoutsFromFirebase(selectedClient.id);
+                      setPage("adminWorkouts");
+                    }}>
+                      Открыть desktop-редактор программы
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {adminClientTab === "calendar" && (
+                <div className="adminClientTabContent">
+                  <div className="adminCalendarPanel">
+                    <div className="adminCalendarHead">
+                      <div>
+                        <span>TRAINING CALENDAR</span>
+                        <h3>Напоминания</h3>
+</div>
+                      <div className={getClientTelegramProfile(selectedClient).connected ? "adminCalendarTelegram connected" : "adminCalendarTelegram"}>
+                        Telegram
+                      </div>
+                    </div>
+
+                    <div className="adminCalendarDays">
+                      {ADMIN_CALENDAR_DAYS.map((day) => (
+                        <button
+                          key={day.id}
+                          type="button"
+                          className={adminCalendarDraft.trainingDays?.includes(day.id) ? "active" : ""}
+                          onClick={() => toggleAdminCalendarDay(day.id)}
+                        >
+                          <strong>{day.title}</strong>
+                          <span>{day.full}</span>
+                        </button>
+                      ))}
+                    </div>
+
+                    <p className="adminCalendarDaysHintText">
+                      Настройте время тренировок и напоминания<br />для выбранных дней
+                    </p>
+
+                    <div className="adminCalendarSettingsGrid adminCalendarPerDaySettings">
+                      {(adminCalendarDraft.trainingDays || []).length ? (
+                        (adminCalendarDraft.trainingDays || []).map((dayId) => {
+                          const day = ADMIN_CALENDAR_DAYS.find((item) => item.id === dayId);
+                          const daySettings = adminCalendarDraft.daySettings?.[dayId] || {};
+
+                          return (
+                            <div className="adminCalendarDaySettingsRow" key={dayId}>
+                              <div className="adminCalendarDaySettingsHeader">
+                                <div className="adminCalendarDaySettingsTitle">
+                                  {day?.title || dayId}
+                                </div>
+                                <div className="adminCalendarDaySettingsName">
+                                  {day?.full || dayId}
+                                </div>
+                              </div>
+
+                              <div className="adminCalendarDayTimeGrid">
+                                <label className="adminCalendarWorkoutTimeField">
+                                  <span>Время тренировки</span>
+                                  <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    placeholder="13:00"
+                                    maxLength={5}
+                                    className="adminReminderTimeInput adminReminderTimeManualInput"
+                                    value={daySettings.workoutTime || adminCalendarDraft.workoutTime || "13:00"}
+                                    onChange={(event) => {
+                                      let value = event.target.value.replace(/[^0-9:]/g, "");
+
+                                      if (value.length === 2 && !value.includes(":")) {
+                                        value = `${value}:`;
+                                      }
+
+                                      updateAdminCalendarDaySetting(dayId, "workoutTime", value);
+                                    }}
+                                  />
+                                </label>
+
+                                <label className="adminCalendarReminderBeforeField">
+                                  <span>Напомнить за</span>
+                                  <select
+                                    className="adminReminderBeforeSelect"
+                                    value={daySettings.reminderBefore || daySettings.reminderTime || "1 день"}
+                                    onChange={(event) => updateAdminCalendarDaySetting(dayId, "reminderBefore", event.target.value)}
+                                  >
+                                    <option value="1 день">1 день</option>
+                                    <option value="2 дня">2 дня</option>
+                                  </select>
+                                </label>
+                              </div>
+
+                              <button
+                                type="button"
+                                className={daySettings.hourReminderEnabled === true ? "adminCalendarHourReminder active" : "adminCalendarHourReminder"}
+                                onClick={() => updateAdminCalendarDaySetting(dayId, "hourReminderEnabled", daySettings.hourReminderEnabled !== true)}
+                              >
+                                <span>Напомнить за час</span>
+                                <i aria-hidden="true"></i>
+                              </button>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="adminCalendarNoDaysHint">Выбери дни тренировок выше</div>
+                      )}
+                    </div>
+
+                    <div className="adminCalendarToggles adminCalendarEqualButtonsWrap">
+                      <button
+                        type="button"
+                        className={adminCalendarDraft.enabled !== false ? "adminCalendarEqualButton adminCalendarReminderButton active" : "adminCalendarEqualButton adminCalendarReminderButton"}
+                        onClick={() => setAdminCalendarDraft((prev) => ({ ...prev, enabled: prev.enabled === false }))}
+                      >
+                        {adminCalendarDraft.enabled !== false ? "Напоминания вкл" : "Напоминания выкл"}
+                      </button>
+
+                      <button
+                        type="button"
+                        className={adminCalendarDraft.reminderEnabled !== false ? "active" : ""}
+                        onClick={() => setAdminCalendarDraft((prev) => ({ ...prev, reminderEnabled: prev.reminderEnabled === false }))}
+                      >
+                        {adminCalendarDraft.reminderEnabled !== false ? "" : ""}
+                      </button>
+                    </div>
+
+                    <div className="adminCalendarPreview">
+                      <span></span>
+                      <p>Завтра тренировка в {adminCalendarDraft.workoutTime || "13:00"} — следующая тренировка клиента.</p>
+                    </div>
+
+                    <button
+                      className="adminV3OpenEditor adminCalendarEqualButton adminCalendarSaveButton"
+                      disabled={adminCalendarSaving}
+                      onClick={() => saveAdminClientCalendar(selectedClient)}
+                    >
+                      {adminCalendarSaving ? "Сохраняю..." : "Сохранить расписание"}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="adminCalendarTestButton adminCalendarEqualButton"
+                      disabled={adminCalendarTesting}
+                      onClick={() => sendAdminTestWorkoutReminder(selectedClient)}
+                    >
+                      {adminCalendarTesting ? "Отправляю..." : "Тестовое сообщение"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {adminClientTab === "notes" && (
+                <div className="adminV3TabGrid">
+                  <div className="adminV3ProfileCard adminV3Wide">
+                    <h3>Заметки тренера</h3>
+                    <textarea className="adminV3Note" value={adminTrainerNote} onChange={(event) => setAdminTrainerNote(event.target.value)} placeholder="Например: следить за белком, не повышать объём ног..." />
+                    <button className="adminV3OpenEditor" onClick={saveAdminTrainerNote}>Сохранить заметку</button>
+                  </div>
+                </div>
+              )}
+
+              {adminClientTab === "transfer" && (
+                <div className="adminV3TabGrid">
+                  <div className="adminV3ProfileCard adminV3Wide adminTransferCard">
+                    <h3>Transfer Client Data</h3>
+                    <p className="adminV3TransferText">
+                      Переносит данные питания, истории, тренировок и AI-плана с одного UID на другой.
+                      Получатель остаётся обычным клиентом, а admin-профиль не становится клиентом.
+                    </p>
+
+                    <div className="adminTransferGrid">
+                      <label>
+                        <span>Источник данных</span>
+                        <select value={adminTransferFromUid} onChange={(event) => setAdminTransferFromUid(event.target.value)}>
+                          <option value="">Выбери источник: клиент или admin</option>
+                          {adminAllUsersList.map((client) => (
+                            <option key={client.id} value={client.id}>
+                              {client.email || client.name || client.id}{client.role === "admin" || client.email === ADMIN_EMAIL ? " · ADMIN" : ""}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      <label>
+                        <span>Клиент-получатель</span>
+                        <select value={adminTransferToUid} onChange={(event) => setAdminTransferToUid(event.target.value)}>
+                          <option value="">Выбери клиента-получателя</option>
+                          {usersList.map((client) => (
+                            <option key={client.id} value={client.id}>
+                              {client.email || client.name || client.id}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
+
+                    <div className="adminTransferPreview">
+                      <div>
+                        <span>Источник</span>
+                        <strong>{adminAllUsersList.find((item) => item.id === adminTransferFromUid)?.email || "—"}</strong>
+                      </div>
+                      <div>
+                        <span>Получатель</span>
+                        <strong>{usersList.find((item) => item.id === adminTransferToUid)?.email || "—"}</strong>
+                      </div>
+                      <div>
+                        <span>Что переносим</span>
+                        <strong>workouts · history · nutrition · profile · AI-plan</strong>
+                      </div>
+                    </div>
+
+                    <button
+                      className="adminV3OpenEditor"
+                      disabled={adminTransferLoading}
+                      onClick={transferClientDataBetweenAccounts}
+                    >
+                      {adminTransferLoading ? "Переношу..." : "Перенести данные клиенту"}
+                    </button>
+
+                    {adminTransferStatus && (
+                      <p className="adminV3Status">{adminTransferStatus}</p>
+                    )}
+
+                    <p className="adminV3TransferWarning">
+                      Важно: перенос копирует Firestore-данные. Firebase Auth аккаунты не объединяются.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="adminClientDangerZoneBottom">
+                <div>
+                  <span>DANGER ZONE</span>
+                  <strong>Удаление клиента</strong>
+                  <p>Кнопка перенесена вниз, чтобы не мешать работе с программой и календарём.</p>
+                </div>
+                <button className="danger" onClick={() => deleteClientEverywhereFromAdminPanel(selectedClient)}>Удалить клиента</button>
+              </div>
+
+              {adminClientStatus && <p className="adminV3Status">{adminClientStatus}</p>}
+            </section>
+          )}
+        </main>
       </div>
     );
   }
 
   if (page === "adminUsers") {
-    return (
-      <div className="app">
-        <div className="workoutHeader">
-          <button className="backBtn universalFixedBackPointer" onClick={() => setPage("admin")}>
-            ← Назад
-          </button>
-
-          <h1 className="workoutTitle">Пользователи</h1>
-        </div>
-
-        <div className="exercise">
-          <h3>Список пользователей</h3>
-
-          {usersList.length === 0 && (
-            <p style={{ textAlign: "center", color: "#aaa" }}>
-              Пользователей пока нет
-            </p>
-          )}
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {usersList.map((u) => (
-              <button
-                key={u.id}
-                className="bigButton"
-                onClick={() => {
-                  setSelectedUserId(u.id);
-                  loadWorkoutsFromFirebase(u.id);
-                  setPage("adminWorkouts");
-                }}
-              >
-                👤 {u.email || u.id}
-              </button>
-            ))}
+    if (!canUseTrainerFeatures()) {
+      return (
+        <div className="app">
+          <button className="backBtn" onClick={() => setPage("main")}>← Главное меню</button>
+          <div className="historyEmptyCard">
+            <h3>Доступ закрыт</h3>
+            <p>Тренерская доступна админам и пользователям с ролью тренера.</p>
           </div>
         </div>
-      </div>
+      );
+    }
+
+    const credentialsText = adminCreatedCredentials
+      ? `Логин: ${adminCreatedCredentials.email}\nПароль: ${adminCreatedCredentials.password}`
+      : "";
+
+    const adminUsersFilteredClients = usersList.filter((client) => {
+      const profile = getAdminClientProfile(client);
+      const search = adminUsersSearch.trim().toLowerCase();
+      const matchesSearch = !search ||
+        String(client.name || "").toLowerCase().includes(search) ||
+        String(client.email || "").toLowerCase().includes(search);
+
+      if (!matchesSearch) return false;
+
+      const clientHistory = adminSelectedClient?.id === client.id ? adminClientHistory : [];
+      const lastWorkoutDate = clientHistory[0]?.date ? new Date(clientHistory[0].date) : null;
+      const daysSinceWorkout = lastWorkoutDate ? Math.round((Date.now() - lastWorkoutDate.getTime()) / (24 * 60 * 60 * 1000)) : null;
+      const badCount = clientHistory.filter((item) => item.postWorkoutFeedback?.id === "bad").length;
+
+      if (adminClientFilter === "active") return daysSinceWorkout === null || daysSinceWorkout <= 7;
+      if (adminClientFilter === "attention") return badCount >= 2 || daysSinceWorkout >= 5;
+      return true;
+    });
+
+    const selectedClient = adminSelectedClient || usersList.find((client) => client.id === selectedUserId) || adminUsersFilteredClients[0] || null;
+    const selectedProfile = getAdminClientProfile(selectedClient || {});
+    const selectedLatestMeasurement = Array.isArray(adminClientMeasurements) && adminClientMeasurements.length
+      ? adminClientMeasurements[0]
+      : null;
+    const selectedPreviousMeasurement = Array.isArray(adminClientMeasurements) && adminClientMeasurements.length > 1
+      ? adminClientMeasurements[1]
+      : null;
+    const adminMeasurementFields = getProfileMeasurementFields(selectedProfile?.goal || "recomp");
+    const adminMeasurementPreviewFields = adminMeasurementFields.filter((field) => ["weight", "neck", "shoulders", "chest", "biceps", "forearm", "belly", "pelvis", "thigh", "calf", "ankle"].includes(field.id));
+    const clientNutritionDays = getAdminNutritionDaysList(adminClientNutrition);
+    const clientToday = clientNutritionDays[0] || { totals: { calories: 0, protein: 0, fat: 0, carbs: 0 }, foods: [], score: "—" };
+    const workoutProgress = getAdminWorkoutProgressList(adminClientHistory);
+    const recommendations = getAdminRecommendations(selectedClient || {}, adminClientHistory, adminClientNutrition);
+    const aiPlan = selectedClient?.aiNutritionPlan || selectedClient?.nutritionPlan || null;
+    const aiWeek = aiPlan?.weeks?.[0] || null;
+    const lastWorkout = adminClientHistory[0];
+    const maxCalories = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.calories));
+    const maxProtein = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.protein));
+
+    const nutritionMonthBaseDate = clientNutritionDays[0]?.date ? new Date(`${clientNutritionDays[0].date}T12:00:00`) : new Date();
+    const nutritionMonthStart = new Date(nutritionMonthBaseDate.getFullYear(), nutritionMonthBaseDate.getMonth(), 1);
+    const nutritionMonthGridStart = new Date(nutritionMonthStart);
+    const nutritionMonthStartOffset = (nutritionMonthGridStart.getDay() + 6) % 7;
+    nutritionMonthGridStart.setDate(nutritionMonthGridStart.getDate() - nutritionMonthStartOffset);
+    const nutritionByDate = new Map(clientNutritionDays.map((day) => [day.date, day]));
+    const nutritionMonthDays = Array.from({ length: 42 }, (_, index) => {
+      const date = new Date(nutritionMonthGridStart);
+      date.setDate(nutritionMonthGridStart.getDate() + index);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      const day = nutritionByDate.get(key) || { date: key, totals: { calories: 0, protein: 0, fat: 0, carbs: 0 }, foods: [] };
+      return {
+        key,
+        date,
+        day,
+        inMonth: date.getMonth() === nutritionMonthStart.getMonth(),
+        isToday: key === new Date().toISOString().slice(0, 10)
+      };
+    });
+    const nutritionMonthLabel = nutritionMonthStart.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+    const nutritionMonthDaysInPlan = nutritionMonthDays.filter((item) => item.inMonth && nutritionByDate.has(item.key));
+    const nutritionMonthCalories = nutritionMonthDaysInPlan.reduce((sum, item) => sum + (Number(item.day.totals.calories) || 0), 0);
+    const nutritionMonthProtein = nutritionMonthDaysInPlan.reduce((sum, item) => sum + (Number(item.day.totals.protein) || 0), 0);
+    const nutritionMonthAverageDays = Math.max(1, nutritionMonthDaysInPlan.length);
+    const nutritionMonthAverageCalories = nutritionMonthCalories / nutritionMonthAverageDays;
+    const nutritionMonthAverageProtein = nutritionMonthProtein / nutritionMonthAverageDays;
+    const dailyCalorieGoal = Number(aiWeek?.calories || selectedClient?.nutritionGoals?.calories || adminClientNutrition?.goals?.calories || defaultNutritionState.goals.calories) || 2400;
+    const dailyProteinGoal = Number(aiWeek?.protein || selectedClient?.nutritionGoals?.protein || adminClientNutrition?.goals?.protein || defaultNutritionState.goals.protein) || 160;
+    const currentMonthTrainingDays = ADMIN_CALENDAR_DAYS.filter((day) => adminCalendarDraft.trainingDays?.includes(day.id)).map((day) => day.title).join(", ") || "не выбраны";
+    const trainingDayIdByJsDay = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+
+    return (
+      <div className="adminUsersCrmPage">
+        <aside className="adminUsersCrmSidebar">
+          <button className="adminFixedMainBack" onClick={() => setPage("main")} aria-label="Главное меню"><span>←</span><b>Главное меню</b></button>
+</aside>
+
+        <main className={adminClientPageOpen ? "adminUsersCrmMain adminUsersCrmMainClientPage" : "adminUsersCrmMain"}>
+          {!adminClientPageOpen && (
+            <header className="adminUsersCrmHeader">
+            <div>
+              <span>CLIENT MANAGEMENT</span>
+              <h1>Клиенты</h1>
+              <p>Создание клиентов, карточки, программы, питание, история и заметки.</p>
+            </div>
+
+            <div className="adminUsersTopActions">
+              </div>
+            </header>
+          )}
+
+          {!adminClientPageOpen && (
+            <section className="adminUsersFilterPills" aria-label="Фильтр клиентов">
+              {[
+                ["all", "Все"],
+                ["active", "Активные"],
+                ["attention", "Внимание"]
+              ].map(([id, label]) => (
+                <button
+                  key={id}
+                  type="button"
+                  className={adminClientFilter === id ? "active" : ""}
+                  onClick={() => setAdminClientFilter(id)}
+                >
+                  {label}
+                </button>
+              ))}
+            </section>
+          )}
+
+          {!adminClientPageOpen && (
+            <section className="adminUsersCrmGrid adminUsersCrmGridCardsOnly">
+            <div className="adminUsersClientsPanel adminUsersClientsPanelFull">
+              <div className="adminUsersToolbar">
+                <div>
+                  <h2>Карточки клиентов</h2>
+                  <p>{adminUsersFilteredClients.length} клиентов</p>
+                </div>
+
+                <div className="adminUsersToolbarActions">
+                  <input
+                    value={adminUsersSearch}
+                    onChange={(event) => setAdminUsersSearch(event.target.value)}
+                    placeholder="Поиск клиента..."
+                  />
+                </div>
+              </div>
+
+              <div className="adminClientCardsGrid adminClientCardsGridFive">
+                {adminUsersFilteredClients.map((client) => {
+                  const profile = getAdminClientProfile(client);
+                  const active = selectedClient?.id === client.id;
+
+                  return (
+                    <button
+                      key={client.id}
+                      className={active ? "adminClientCard adminClientCardRect adminClientCardWide active" : "adminClientCard adminClientCardRect adminClientCardWide"}
+                      onClick={() => loadAdminClientOverview(client, true)}
+                    >
+                      <span className="adminClientAvatar">👤</span>
+
+                      <div className="adminClientCardMain">
+                        <strong>{client.name || client.email || "Клиент"}</strong>
+                        <small>{client.email || client.id}</small>
+                      </div>
+
+                      <em>{getAdminClientGoalLabel(profile.goal)}</em>
+
+                      <div className="adminClientCardMeta">
+                        <span>{profile?.weight ? `${profile.weight} кг` : "вес —"}</span>
+                        <span>{profile?.activity ? getAiNutritionActivityLabel(profile.activity) : "активность —"}</span>
+                      </div>
+
+                      <div className="adminClientCardBottom">
+                        <i>{active ? "Открыт" : "Открыть"}</i>
+                        <b>{client.role === "trainer" ? "🟣 тренер" : active ? "🟢 активен" : "⚪ клиент"}</b>
+                      </div>
+                    </button>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  className="adminClientCard adminClientCardRect adminClientAddCard"
+                  onClick={() => setAdminCreateClientModalOpen(true)}
+                >
+                  <span className="adminClientAddIcon">＋</span>
+                  <div>
+                    <strong>Добавить клиента</strong>
+                    <small>Создать логин и пароль</small>
+                  </div>
+                  <em>Новый клиент</em>
+                  <i>Создать</i>
+                </button>
+
+                {!adminUsersFilteredClients.length && <p className="adminV3Empty">Нет клиентов под этот фильтр.</p>}
+              </div>
+            </div>
+            </section>
+          )}
+
+          {adminCreateClientModalOpen && (
+            <div className="adminCreateClientModalOverlay">
+              <div className="adminCreateClientModal">
+                <button
+                  type="button"
+                  className="adminCreateClientModalClose"
+                  onClick={() => setAdminCreateClientModalOpen(false)}
+                >
+                  ×
+                </button>
+
+                <h2>Создать клиента</h2>
+                <p>Создай логин, пароль и стартовую программу для нового клиента.</p>
+
+                <form className="adminCreateUserForm" onSubmit={createUserFromAdminPanel}>
+                  <label>
+                    <span>Имя клиента</span>
+                    <input
+                      value={adminNewUserName}
+                      onChange={(event) => setAdminNewUserName(event.target.value)}
+                      placeholder="Например: Иван"
+                    />
+                  </label>
+
+                  <label>
+                    <span>Логин / email</span>
+                    <input
+                      value={adminNewUserEmail}
+                      onChange={(event) => setAdminNewUserEmail(event.target.value)}
+                      placeholder="client@email.com"
+                      type="email"
+                      autoComplete="off"
+                    />
+                  </label>
+
+                  <label>
+                    <span>Пароль</span>
+                    <div className="adminPasswordRow">
+                      <input
+                        value={adminNewUserPassword}
+                        onChange={(event) => setAdminNewUserPassword(event.target.value)}
+                        placeholder="Минимум 6 символов"
+                        type="text"
+                        autoComplete="new-password"
+                      />
+                      <button type="button" onClick={generateAdminPassword}>Сген.</button>
+                    </div>
+                  </label>
+
+                  <button type="submit" className="adminCreateUserSubmit" disabled={adminCreateUserLoading}>
+                    {adminCreateUserLoading ? "Создаю..." : "Создать клиента"}
+                  </button>
+                </form>
+
+                {adminCreateUserStatus && <p className="adminCreateUserStatus">{adminCreateUserStatus}</p>}
+
+                {adminCreatedCredentials && (
+                  <div className="adminCredentialsBox">
+                    <span>Данные для клиента</span>
+                    <pre>{credentialsText}</pre>
+                    <button type="button" onClick={() => navigator.clipboard?.writeText(credentialsText)}>
+                      Скопировать логин и пароль
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {adminClientPageOpen && selectedClient && (
+            <section className="adminClientWorkspaceCrm adminClientWorkspaceCrmPage">
+              <div className="adminClientRenderTopbar">
+                <button
+                  type="button"
+                  className="adminClientBackToList"
+                  onClick={() => setAdminClientPageOpen(false)}
+                >
+                  ← К списку клиентов
+                </button>
+              </div>
+
+              <div className="adminClientWorkspaceHeader adminClientWorkspaceHeaderRender">
+                <div className="adminClientIdentityRender">
+                  <div className="adminClientInitialsRender">
+                    {String(selectedClient.name || selectedClient.email || "К").split(/[\s@._-]+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase()}
+                  </div>
+
+                  <div>
+                    <h2>{selectedClient.name || selectedClient.email || "Клиент"}</h2>
+                    <p>{selectedClient.email || selectedClient.id}</p>
+                  </div>
+
+                  <div className="adminClientStatusRender">
+                    <i /> {selectedClient.role === "trainer" ? "Тренер" : "Активен"}
+                  </div>
+
+                  {canUseAdminFeatures() && selectedClient.email !== ADMIN_EMAIL && (
+                    <button
+                      type="button"
+                      className={selectedClient.role === "trainer" ? "adminTrainerRoleButton active" : "adminTrainerRoleButton"}
+                      onClick={() => updateUserTrainerRole(selectedClient, selectedClient.role !== "trainer")}
+                    >
+                      {selectedClient.role === "trainer" ? "Убрать тренера" : "Назначить тренером"}
+                    </button>
+                  )}
+                </div>
+</div>
+
+              <div className="adminClientTabsCrm adminClientTabsFoodBar" role="tablist" aria-label="Меню клиента">
+                {[
+                  ["overview", "👤", "Обзор"],
+                  ["training", "📋", "Программа"],
+                  ["calendarNutrition", "🗓️", "Календарь"],
+                  ["telegram", "💬", "Telegram"]
+                ].map(([id, icon, label]) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className={adminUsersSelectedTab === id ? "active" : ""}
+                    onClick={() => {
+                      setAdminUsersSelectedTab(id);
+                      window.requestAnimationFrame(() => {
+                        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                        document.querySelector(".adminUsersCrmMain")?.scrollTo?.({ top: 0, left: 0, behavior: "smooth" });
+                      });
+                    }}
+                  >
+                    <span className="adminClientTabIcon">{icon}</span>
+                    <span className="adminClientTabLabel">{label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {adminUsersSelectedTab === "overview" && (
+                <div className="adminClientTabContent adminClientTabContentRender">
+                  <div className="adminClientMetricGrid adminClientMetricGridRender">
+                    <div className="adminClientMetricCardRender"><i>▣</i><span>Вес</span><strong>{selectedProfile?.weight || "—"} кг</strong></div>
+                    <div className="adminClientMetricCardRender"><i>↕</i><span>Рост</span><strong>{selectedProfile?.height || "—"} см</strong></div>
+                    <div className="adminClientMetricCardRender"><i>♙</i><span>Возраст</span><strong>{selectedProfile?.age || "—"}</strong></div>
+                    <div className="adminClientMetricCardRender"><i>◎</i><span>Твоя цель</span><strong>{getAdminClientGoalLabel(selectedProfile?.goal)}</strong></div>
+                    <div className="adminClientMetricCardRender adminClientMetricCardWideRender"><i>🔥</i><span>Активность</span><strong>{String(getAiNutritionActivityLabel(selectedProfile?.activity || "medium")).replace(" активность", "")}</strong></div>
+                    <div className="adminClientMetricCardRender adminClientMetricCardWideRender"><i>⌁</i><span>Тренировочные дни</span><strong>{getAdminClientTrainingDaysText(selectedProfile)}</strong></div>
+                    <div className="adminClientMetricCardRender adminClientMetricCardWideRender"><i>▣</i><span>Последняя тренировка</span><strong>{lastWorkout?.date ? new Date(lastWorkout.date).toLocaleDateString("ru-RU") : "—"}</strong></div>
+                    <div className="adminClientMetricCardRender adminClientMetricCardWideRender"><i>🧠</i><span>AI-план</span><strong>{aiWeek ? `${aiWeek.calories} ккал` : "—"}</strong></div>
+                    <div className="adminClientMetricCardRender adminClientMetricCardWideRender"><i>✈️</i><span>Telegram</span><strong>{getClientTelegramProfile(selectedClient).connected ? `@${getClientTelegramProfile(selectedClient).username}` : "не привязан"}</strong></div>
+                  </div>
+
+                  <div className="adminClientMeasurementsBlock">
+                    <div className="adminClientMeasurementsHead">
+                      <div>
+                        <span>BODY MEASUREMENTS</span>
+                        <h3>Данные замеров</h3>
+                        <p>{selectedLatestMeasurement ? `Последний замер: ${formatProfileMeasurementDate(selectedLatestMeasurement)}` : "Замеров пока нет или доступ к ним закрыт."}</p>
+                      </div>
+                      <strong>{selectedLatestMeasurement ? `${adminClientMeasurements.length}` : "—"}</strong>
+                    </div>
+
+                    {selectedLatestMeasurement ? (
+                      <div className="adminClientMeasurementsGrid">
+                        {adminMeasurementPreviewFields.map((field) => {
+                          const value = getProfileMeasurementValue(selectedLatestMeasurement || {}, field);
+                          const previousValue = getProfileMeasurementValue(selectedPreviousMeasurement || {}, field);
+                          const numericValue = Number(String(value || "").replace(",", "."));
+                          const numericPrevious = Number(String(previousValue || "").replace(",", "."));
+                          const delta = Number.isFinite(numericValue) && Number.isFinite(numericPrevious)
+                            ? Math.round((numericValue - numericPrevious) * 10) / 10
+                            : null;
+
+                          return (
+                            <div key={field.id} className="adminClientMeasurementItem">
+                              <span>{field.label}</span>
+                              <strong>{value}<small>{field.unit}</small></strong>
+                              <em className={delta === null ? "" : delta > 0 ? "up" : delta < 0 ? "down" : ""}>
+                                {delta === null ? "—" : delta > 0 ? `+${delta}` : String(delta)}
+                              </em>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="adminClientMeasurementsEmpty">
+                        <span>📏</span>
+                        <p>После первого контрольного замера здесь появятся вес, шея, плечевой пояс, грудь, бицепс, предплечье и остальные объёмы.</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="adminNutritionMonthPanel adminOverviewNutritionMonthPanel">
+                    <div className="adminNutritionMonthHead">
+                      <div>
+                        <span>MONTH OVERVIEW</span>
+                        <h3>Календарь активности</h3>
+                        <p>Месяц по питанию и тренировкам: калории, белок и тренировочные дни клиента.</p>
+                      </div>
+                    </div>
+
+                    <div className="adminNutritionCalendarLegend">
+                      <span><i className="calorieOk" /> Калории в плане</span>
+                      <span><i className="calorieHigh" /> Калорий много</span>
+                      <span><i className="proteinFill" /> Белок</span>
+                      <span><i className="trainingFill" /> Тренировка</span>
+                    </div>
+
+                    <div className="adminNutritionCalendarMonthTitle">
+                      <strong>{nutritionMonthLabel}</strong>
+                      <span>Тренировочные дни: {currentMonthTrainingDays}</span>
+                    </div>
+
+                    <div className="adminNutritionMonthGrid">
+                      {["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((dayLabel) => (
+                        <div key={dayLabel} className="adminNutritionWeekday">{dayLabel}</div>
+                      ))}
+
+                      {nutritionMonthDays.map(({ key, date, day, inMonth, isToday }) => {
+                        const calories = Number(day.totals.calories) || 0;
+                        const protein = Number(day.totals.protein) || 0;
+                        const caloriePercent = Math.min(100, Math.round((calories / dailyCalorieGoal) * 100));
+                        const proteinPercent = Math.min(100, Math.round((protein / dailyProteinGoal) * 100));
+                        const isHighCalories = calories > dailyCalorieGoal;
+                        const hasFood = calories > 0 || protein > 0;
+                        const isTrainingDay = adminClientHistory?.some((workout) => {
+                          const workoutDateKey = workout?.date ? new Date(workout.date).toISOString().slice(0, 10) : "";
+                          return workoutDateKey === key;
+                        });
+
+                        return (
+                          <div
+                            key={key}
+                            className={[
+                              "adminNutritionDayCell",
+                              inMonth ? "" : "muted",
+                              hasFood ? "filled" : "",
+                              isTrainingDay ? "trainingDay" : "",
+                              isHighCalories ? "highCalories" : "",
+                              isToday ? "today" : ""
+                            ].filter(Boolean).join(" ")}
+                          >
+                            <div
+                              className="adminNutritionDayCalorieFill"
+                              style={{ height: `${hasFood ? Math.max(8, caloriePercent) : 0}%` }}
+                            />
+                            <div
+                              className="adminNutritionDayProteinFill"
+                              style={{ height: `${hasFood ? Math.max(5, proteinPercent) : 0}%` }}
+                            />
+                            <div className="adminNutritionDayContent">
+                              <span>{date.getDate()}</span>
+                              {isTrainingDay && <b className="adminNutritionTrainingMark">⚡️</b>}
+                              {hasFood ? (
+                                <>
+                                  <strong>{Math.round(calories)}</strong>
+                                  <small>{Math.round(protein)}г</small>
+                                </>
+                              ) : (
+                                <em>—</em>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="adminNutritionMonthSummary adminNutritionMonthSummaryBelow">
+                      <div>
+                        <span>План</span>
+                        <strong>{dailyCalorieGoal} ккал</strong>
+                        <small>{dailyProteinGoal} г</small>
+                      </div>
+                      <div>
+                        <span>Ср. за день</span>
+                        <strong>{Math.round(nutritionMonthAverageCalories)} ккал</strong>
+                        <small>{Math.round(nutritionMonthAverageProtein)} г</small>
+                      </div>
+                    </div>
+                  </div>
+
+<div className="adminProgressDiagramsPanel">
+                    <div className="adminProgressDiagramsHead">
+                      <div>
+                        <span>PROGRESS DIAGRAMS</span>
+                        <h3>Диаграммы прогресса</h3>
+                        <p>Тренировки, калории и белок за последние дни.</p>
+                      </div>
+                    </div>
+
+                    <div className="adminProgressDiagramGrid">
+                      <div className="adminProgressDiagramCard">
+                        <span>Силовой прогресс</span>
+                        <div className="adminProgressBarsChart">
+                          {workoutProgress.slice(0, 5).map((item) => (
+                            <div key={item.name}>
+                              <small>{item.name}</small>
+                              <i><b style={{ width: `${Math.min(100, (item.max / 120) * 100)}%` }} /></i>
+                              <strong>{item.max} кг</strong>
+                            </div>
+                          ))}
+                          {!workoutProgress.length && <em>Нет данных по упражнениям</em>}
+                        </div>
+                      </div>
+
+                      <div className="adminProgressDiagramCard">
+                        <span>Калории</span>
+                        <div className="adminProgressMiniColumns">
+                          {clientNutritionDays.slice(0, 7).reverse().map((day) => (
+                            <div key={day.date}>
+                              <i style={{ height: `${Math.min(100, Math.max(8, ((Number(day.totals.calories) || 0) / dailyCalorieGoal) * 100))}%` }} />
+                              <small>{new Date(`${day.date}T12:00:00`).toLocaleDateString("ru-RU", { day: "2-digit" })}</small>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="adminProgressDiagramCard">
+                        <span>Белок</span>
+                        <div className="adminProgressMiniColumns adminProgressMiniColumnsProtein">
+                          {clientNutritionDays.slice(0, 7).reverse().map((day) => (
+                            <div key={day.date}>
+                              <i style={{ height: `${Math.min(100, Math.max(8, ((Number(day.totals.protein) || 0) / dailyProteinGoal) * 100))}%` }} />
+                              <small>{new Date(`${day.date}T12:00:00`).toLocaleDateString("ru-RU", { day: "2-digit" })}</small>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  
+
+                  <div className="adminClientRecommendations adminClientRecommendationsRender">
+                    {recommendations.slice(0, 1).map((item) => (
+                      <div key={item}>
+                        <span>☆</span>
+                        <p>{item}</p>
+                        <button type="button" onClick={() => document.querySelector(".adminClientNotesBlock textarea")?.focus()}>Добавить заметку</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {adminUsersSelectedTab === "training" && (
+                <div className="adminClientTabContent adminProgramClientTab">
+                  <div className="adminProgramAssignGrid">
+                    <div className="adminAssignProgramPanel adminProgramAssignCard">
+                      <div className="adminAssignProgramHead">
+                        <div>
+                          <span>TRAINING PROGRAM</span>
+                          <h3>Программа тренировок</h3>
+                          <p>Выбери готовую программу из библиотеки и назначь её клиенту.</p>
+                        </div>
+
+                        <button onClick={() => {
+                          setSelectedUserId(selectedClient.id);
+                          loadWorkoutsFromFirebase(selectedClient.id);
+                          setPage("adminWorkouts");
+                        }}>
+                          Редактор
+                        </button>
+                      </div>
+
+                      <div className="adminCurrentProgramBadge">
+                        <span>Сейчас назначено</span>
+                        <strong>{selectedClient.assignedProgramName || "Не назначено"}</strong>
+                      </div>
+
+                      <div className="adminSavedProgramsGrid adminSavedProgramsGridCompact">
+                        {adminTrainingTemplates.map((template) => {
+                          const isSelected = adminSelectedTemplateId === template.id;
+                          const isAssigned = selectedClient.assignedProgramId === template.id;
+
+                          return (
+                            <button
+                              key={template.id}
+                              className={isSelected || isAssigned ? "adminSavedProgramCard active" : "adminSavedProgramCard"}
+                              onClick={() => setAdminSelectedTemplateId(template.id)}
+                            >
+                              <span>{isAssigned ? "Назначена" : "Готовая программа"}</span>
+                              <strong>{template.name}</strong>
+                              <small>{template.workouts?.length || 0} трен. · {(template.workouts || []).reduce((sum, workout) => sum + (workout.exercises?.length || 0), 0)} упр.</small>
+                              <em>{isSelected ? "Выбрана" : "Выбрать"}</em>
+                            </button>
+                          );
+                        })}
+
+                        {!adminTrainingTemplates.length && (
+                          <div className="adminNoSavedPrograms">
+                            <strong>Сохранённых программ пока нет</strong>
+                            <p>Открой редактор программы, создай программу и сохрани её как шаблон.</p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="adminAssignProgramActions adminAssignProgramActionsCompact">
+                        <select value={adminSelectedTemplateId} onChange={(event) => setAdminSelectedTemplateId(event.target.value)}>
+                          <option value="">Выбери сохранённую программу</option>
+                          {adminTrainingTemplates.map((template) => (
+                            <option key={template.id} value={template.id}>{template.name}</option>
+                          ))}
+                        </select>
+
+                        <div className="adminVisibleAssignActions">
+                          <button onClick={() => assignSavedProgramToClient(selectedClient.id)}>
+                            Назначить программу
+                          </button>
+
+                          <button
+                            type="button"
+                            className="adminClearTemplateButtonVisible"
+                            onClick={() => clearClientProgram(selectedClient.id)}
+                          >
+                            Сбросить
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="adminAssignProgramPanel adminNutritionAssignCard">
+                      <div className="adminAssignProgramHead">
+                        <div>
+                          <span>NUTRITION PLAN</span>
+                          <h3>План питания</h3>
+                          <p>Назначь клиенту целевые калории и белок. Эти данные используются в календаре питания.</p>
+                        </div>
+                      </div>
+
+                      <label className="adminNutritionPlanSelect">
+                        <span>Вариант плана</span>
+                        <select
+                          value={adminSelectedNutritionPreset}
+                          onChange={(event) => setAdminSelectedNutritionPreset(event.target.value)}
+                        >
+                          <option value="balanced">Баланс · 2400 ккал · Б 160</option>
+                          <option value="fat_loss">Снижение веса · 2100 ккал · Б 170</option>
+                          <option value="muscle_gain">Набор массы · 2850 ккал · Б 180</option>
+                        </select>
+                      </label>
+
+                      <button
+                        type="button"
+                        className="adminNutritionAssignButton"
+                        onClick={async () => {
+                          try {
+                            const nutritionPresetMap = {
+                              balanced: { name: "Баланс", calories: 2400, protein: 160, fat: 75, carbs: 260 },
+                              fat_loss: { name: "Снижение веса", calories: 2100, protein: 170, fat: 65, carbs: 190 },
+                              muscle_gain: { name: "Набор массы", calories: 2850, protein: 180, fat: 85, carbs: 340 }
+                            };
+                            const selectedNutritionPreset = nutritionPresetMap[adminSelectedNutritionPreset] || nutritionPresetMap.balanced;
+                            const nextNutritionGoals = {
+                              ...(selectedClient.nutritionGoals || {}),
+                              calories: selectedNutritionPreset.calories,
+                              protein: selectedNutritionPreset.protein,
+                              fat: selectedNutritionPreset.fat,
+                              carbs: selectedNutritionPreset.carbs
+                            };
+
+                            await setDoc(doc(db, "users", selectedClient.id), {
+                              nutritionGoals: nextNutritionGoals,
+                              nutritionPlan: {
+                                name: selectedNutritionPreset.name,
+                                calories: nextNutritionGoals.calories,
+                                protein: nextNutritionGoals.protein,
+                                updatedAt: new Date().toISOString()
+                              }
+                            }, { merge: true });
+
+                            setAdminSelectedClient((prev) => prev?.id === selectedClient.id ? {
+                              ...prev,
+                              nutritionGoals: nextNutritionGoals,
+                              nutritionPlan: {
+                                ...(prev.nutritionPlan || {}),
+                                name: selectedNutritionPreset.name,
+                                calories: nextNutritionGoals.calories,
+                                protein: nextNutritionGoals.protein,
+                                updatedAt: new Date().toISOString()
+                              }
+                            } : prev);
+
+                            setUsersList((prev) => prev.map((client) => client.id === selectedClient.id ? {
+                              ...client,
+                              nutritionGoals: nextNutritionGoals,
+                              nutritionPlan: {
+                                ...(client.nutritionPlan || {}),
+                                name: aiPlan?.title || aiPlan?.name || "План питания",
+                                calories: nextNutritionGoals.calories,
+                                protein: nextNutritionGoals.protein,
+                                updatedAt: new Date().toISOString()
+                              }
+                            } : client));
+
+                            setAdminClientStatus("План питания назначен клиенту.");
+                          } catch (error) {
+                            console.error("Nutrition plan assign error:", error);
+                            setAdminClientStatus("Не получилось назначить план питания.");
+                          }
+                        }}
+                      >
+                        Назначить план питания
+                      </button>
+
+                      <button
+                        type="button"
+                        className="adminNutritionAssignButton ghost"
+                        onClick={async () => {
+                          const confirmed = window.confirm("Сбросить назначенный план питания клиента?");
+                          if (!confirmed) return;
+
+                          try {
+                            const defaultGoals = {
+                              calories: defaultNutritionState.goals.calories,
+                              protein: defaultNutritionState.goals.protein,
+                              fat: defaultNutritionState.goals.fat,
+                              carbs: defaultNutritionState.goals.carbs
+                            };
+
+                            await setDoc(doc(db, "users", selectedClient.id), {
+                              nutritionGoals: defaultGoals,
+                              nutritionPlan: null,
+                              aiNutritionPlan: null
+                            }, { merge: true });
+
+                            setAdminSelectedClient((prev) => prev?.id === selectedClient.id ? {
+                              ...prev,
+                              nutritionGoals: defaultGoals,
+                              nutritionPlan: null,
+                              aiNutritionPlan: null
+                            } : prev);
+
+                            setUsersList((prev) => prev.map((client) => client.id === selectedClient.id ? {
+                              ...client,
+                              nutritionGoals: defaultGoals,
+                              nutritionPlan: null,
+                              aiNutritionPlan: null
+                            } : client));
+
+                            setAdminClientStatus("План питания сброшен.");
+                          } catch (error) {
+                            console.error("Nutrition plan reset error:", error);
+                            setAdminClientStatus("Не получилось сбросить план питания.");
+                          }
+                        }}
+                      >
+                        Сбросить
+                      </button>
+                    </div>
+                  </div>
+
+                  
+
+                </div>
+              )}
+
+              {(adminUsersSelectedTab === "calendarNutrition" || adminUsersSelectedTab === "nutrition" || adminUsersSelectedTab === "calendar") && (
+                <div className="adminClientTabContent adminClientNutritionCalendarContent">
+                  <div className="adminTrainingMonthPanel">
+                    <div className="adminTrainingMonthHead">
+                      <div>
+                        <span>TRAINING CALENDAR</span>
+                        <h3>Календарь тренировок</h3>
+                        <p>Только тренировочные дни без молний, калорий, белка и питания.</p>
+                      </div>
+                    </div>
+
+                    <div className="adminTrainingMonthTitle">
+                      <strong>{nutritionMonthLabel}</strong>
+                      <span>Тренировочные дни: {currentMonthTrainingDays}</span>
+                    </div>
+
+                    <div className="adminTrainingMonthGrid">
+                      {["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((day) => (
+                        <div key={day} className="adminTrainingWeekday">{day}</div>
+                      ))}
+
+                      {nutritionMonthDays.map(({ key, date, inMonth, isToday }) => {
+                        const isTrainingDay = adminCalendarDraft.trainingDays?.includes(trainingDayIdByJsDay[date.getDay()]);
+
+                        return (
+                          <div
+                            key={key}
+                            className={[
+                              "adminTrainingDayCell",
+                              inMonth ? "" : "muted",
+                              isTrainingDay ? "trainingDay" : "",
+                              isToday ? "today" : ""
+                            ].filter(Boolean).join(" ")}
+                          >
+                            <span>{date.getDate()}</span>
+                            {isTrainingDay && <i>тренировка</i>}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="adminCalendarPanel adminCalendarPanelMerged">
+<div className="adminCalendarHead">
+                      <div>
+                        <span>TRAINING REMINDERS</span>
+                        <h3>Напоминания</h3>
+                        
+                      </div>
+                      <div className={getClientTelegramProfile(selectedClient).connected ? "adminCalendarTelegram connected" : "adminCalendarTelegram"}>
+                        Telegram
+                      </div>
+                    </div>
+
+<div className="adminCalendarDays">
+                      {ADMIN_CALENDAR_DAYS.map((day) => (
+                        <button
+                          key={day.id}
+                          type="button"
+                          className={adminCalendarDraft.trainingDays?.includes(day.id) ? "active" : ""}
+                          onClick={() => toggleAdminCalendarDay(day.id)}
+                        >
+                          <strong>{day.title}</strong>
+                          <span>{day.full}</span>
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="adminCalendarSettingsGrid adminCalendarPerDaySettings">
+                      {(adminCalendarDraft.trainingDays || []).length ? (
+                        (adminCalendarDraft.trainingDays || []).map((dayId) => {
+                          const day = ADMIN_CALENDAR_DAYS.find((item) => item.id === dayId);
+                          const daySettings = adminCalendarDraft.daySettings?.[dayId] || {};
+
+                          return (
+                            <div className="adminCalendarDaySettingsRow" key={dayId}>
+                              <div className="adminCalendarDaySettingsTitle">{day?.title || dayId}</div>
+
+                              <div className="adminCalendarDayTimeGrid">
+                                <label className="adminCalendarWorkoutTimeField">
+                                  <span>Время тренировки</span>
+                                  <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    placeholder="13:00"
+                                    maxLength={5}
+                                    className="adminReminderTimeInput adminReminderTimeManualInput"
+                                    value={daySettings.workoutTime || adminCalendarDraft.workoutTime || "13:00"}
+                                    onChange={(event) => {
+                                      let value = event.target.value.replace(/[^0-9:]/g, "");
+
+                                      if (value.length === 2 && !value.includes(":")) {
+                                        value = `${value}:`;
+                                      }
+
+                                      updateAdminCalendarDaySetting(dayId, "workoutTime", value);
+                                    }}
+                                  />
+                                </label>
+
+                                <label className="adminCalendarReminderBeforeField">
+                                  <span>Напомнить за</span>
+                                  <select
+                                    className="adminReminderBeforeSelect"
+                                    value={daySettings.reminderBefore || daySettings.reminderTime || "1 день"}
+                                    onChange={(event) => updateAdminCalendarDaySetting(dayId, "reminderBefore", event.target.value)}
+                                  >
+                                    <option value="1 день">1 день</option>
+                                    <option value="2 дня">2 дня</option>
+                                  </select>
+                                </label>
+                              </div>
+
+                              <button
+                                type="button"
+                                className={daySettings.hourReminderEnabled === true ? "adminCalendarHourReminder active" : "adminCalendarHourReminder"}
+                                onClick={() => updateAdminCalendarDaySetting(dayId, "hourReminderEnabled", daySettings.hourReminderEnabled !== true)}
+                              >
+                                <span>Напомнить за час</span>
+                                <i aria-hidden="true"></i>
+                              </button>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="adminCalendarNoDaysHint">Выбери дни тренировок выше</div>
+                      )}
+                    </div>
+
+
+
+<div className="adminCalendarToggles">
+                      <button
+                        type="button"
+                        className={adminCalendarDraft.enabled !== false ? "active" : ""}
+                        onClick={() => setAdminCalendarDraft((prev) => ({ ...prev, enabled: prev.enabled === false }))}
+                      >
+                        {adminCalendarDraft.enabled !== false ? "Напоминания вкл" : "Напоминания выкл"}
+                      </button>
+
+                      <button
+                        type="button"
+                        className={adminCalendarDraft.reminderEnabled !== false ? "active" : ""}
+                        onClick={() => setAdminCalendarDraft((prev) => ({ ...prev, reminderEnabled: prev.reminderEnabled === false }))}
+                      >
+                        {adminCalendarDraft.reminderEnabled !== false ? "" : ""}
+                      </button>
+                    </div>
+<button
+                      className="adminV3OpenEditor"
+                      disabled={adminCalendarSaving}
+                      onClick={() => saveAdminClientCalendar(selectedClient)}
+                    >
+                      {adminCalendarSaving ? "Сохраняю..." : "Сохранить расписание"}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="adminCalendarTestButton"
+                      disabled={adminCalendarTesting}
+                      onClick={() => sendAdminTestWorkoutReminder(selectedClient)}
+                    >
+                      {adminCalendarTesting ? "Отправляю..." : "Тестовое сообщение"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {adminUsersSelectedTab === "telegram" && (
+                <div className="adminClientTabContent adminClientTelegramOnlyTab">
+<div className="adminClientTelegramPanel adminClientTelegramPanelRender">
+                    <div className="adminClientTelegramHead adminClientTelegramHeadRender">
+                      <div className="adminClientTelegramTitleRender">
+                        <div className="adminClientTelegramLogoRender">✈️</div>
+                        <div>
+                          <h3>Telegram</h3>
+                          <p>Уведомления тренера</p>
+                        </div>
+                      </div>
+
+                      <div className={getClientTelegramProfile(selectedClient).connected ? "adminClientTelegramBadge connected" : "adminClientTelegramBadge"}>
+                        {getClientTelegramProfile(selectedClient).connected ? "Подключен" : "Не подключен"}
+                      </div>
+                    </div>
+
+                    <p className="adminClientTelegramDescriptionRender">Напоминания за день до тренировки и быстрые сообщения клиенту.</p>
+
+                    <div className="adminClientTelegramBody adminClientTelegramBodyRender">
+                      <div className="adminClientTelegramAvatar adminClientTelegramAvatarRender">
+                        {getClientTelegramProfile(selectedClient).avatarUrl ? (
+                          <img src={getClientTelegramProfile(selectedClient).avatarUrl} alt="" />
+                        ) : (
+                          <span>
+                            {String(selectedClient.name || selectedClient.email || "К").split(/[\s@._-]+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="adminClientTelegramUserRender">
+                        <strong>
+                          {getClientTelegramProfile(selectedClient).connected
+                            ? (getClientTelegramProfile(selectedClient).displayName || selectedClient.name || `@${getClientTelegramProfile(selectedClient).username}`)
+                            : "Telegram не привязан"}
+                        </strong>
+                        <small>
+                          {getClientTelegramProfile(selectedClient).connected
+                            ? `@${getClientTelegramProfile(selectedClient).username || "telegram"}`
+                            : "Клиент должен привязать Telegram в личном кабинете."}
+                        </small>
+                      </div>
+
+                      <div className="adminClientTelegramActions adminClientTelegramActionsRender">
+                        <button
+                          type="button"
+                          disabled={!getClientTelegramProfile(selectedClient).connected}
+                          onClick={() => openTelegramChat(getClientTelegramProfile(selectedClient).username)}
+                        >
+                          Открыть чат
+                        </button>
+
+                        <button
+                          type="button"
+                          className="danger"
+                          disabled={!getClientTelegramProfile(selectedClient).connected}
+                          onClick={() => toggleClientTelegramNotifications(selectedClient, !getClientTelegramProfile(selectedClient).notificationsEnabled)}
+                        >
+                          {getClientTelegramProfile(selectedClient).notificationsEnabled ? "Отключить" : "Включить"}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="adminTelegramComposer adminTelegramComposerRender">
+                      <div className="adminTelegramTextareaWrapRender">
+                        <textarea
+                          value={adminTelegramMessage}
+                          onChange={(event) => setAdminTelegramMessage(event.target.value)}
+                          placeholder="Сообщение клиенту в Telegram..."
+                          disabled={!getClientTelegramProfile(selectedClient).connected}
+                        />
+                        <span>0/4096</span>
+                        <button
+                          type="button"
+                          className="adminTelegramSendButton"
+                          disabled={!getClientTelegramProfile(selectedClient).connected || adminTelegramSending}
+                          onClick={() => sendAdminTelegramMessage(selectedClient)}
+                        >
+                          {adminTelegramSending ? "Отправляю..." : "✈ Отправить"}
+                        </button>
+                      </div>
+
+                      <div className="adminTelegramQuickMessages adminTelegramQuickMessagesRender">
+                        <strong>Быстрые сообщения</strong>
+                        <div>
+                          {[
+                            ["⚡", "Завтра тренировка 💪", "Не забудь выспаться"],
+                            ["⚡", "Сегодня держи технику", "И не гонись за весом"],
+                            ["⚡", "Отличная работа 👏", "Продолжай в том же духе"]
+                          ].map(([icon, title, subtitle]) => {
+                            const message = `${title}. ${subtitle}.`;
+                            return (
+                              <button
+                                key={title}
+                                type="button"
+                                disabled={!getClientTelegramProfile(selectedClient).connected}
+                                onClick={() => setAdminTelegramMessage(message)}
+                              >
+                                <span>{icon}</span>
+                                <b>{title}</b>
+                                <small>{subtitle}</small>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <button type="button" className="adminClientTelegramSavedRender" onClick={() => setAdminUsersSelectedTab("calendarNutrition")}>
+                        <span>▣</span>
+                        <strong>Календарь и Telegram-напоминания сохранены.</strong>
+                        <i>›</i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+{adminUsersSelectedTab === "overview" && (
+                <div className="adminClientOverviewOnlyBlocks">
+<div className="adminClientBottomTools">
+                <div className="adminClientTabContent adminClientNotesBlock">
+                  <div className="adminClientBottomBlockHead">
+                    <span>NOTES</span>
+                    <h3>Заметка тренера</h3>
+                  </div>
+                  <textarea
+                    className="adminV3Note"
+                    value={adminTrainerNote}
+                    onChange={(event) => setAdminTrainerNote(event.target.value)}
+                    placeholder="Заметки тренера по клиенту..."
+                  />
+                  <button className="adminV3OpenEditor" onClick={saveAdminTrainerNote}>Сохранить заметку</button>
+                </div>
+
+                <div className="adminClientTabContent adminClientTransferBlock">
+                  <div className="adminClientBottomBlockHead">
+                    <span>TRANSFER</span>
+                    <h3>Перенос данных</h3>
+                  </div>
+                  <div className="adminTransferGrid">
+                    <label>
+                      <span>Источник данных</span>
+                      <select value={adminTransferFromUid} onChange={(event) => setAdminTransferFromUid(event.target.value)}>
+                        <option value="">Выбери источник</option>
+                        {adminAllUsersList.map((client) => (
+                          <option key={client.id} value={client.id}>
+                            {client.email || client.name || client.id}{client.role === "admin" || client.email === ADMIN_EMAIL ? " · ADMIN" : ""}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label>
+                      <span>Клиент-получатель</span>
+                      <select value={adminTransferToUid || selectedClient.id} onChange={(event) => setAdminTransferToUid(event.target.value)}>
+                        <option value="">Выбери клиента</option>
+                        {usersList.map((client) => (
+                          <option key={client.id} value={client.id}>{client.email || client.name || client.id}</option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+
+                  <button
+                    className="adminV3OpenEditor"
+                    disabled={adminTransferLoading}
+                    onClick={() => {
+                      transferClientDataBetweenAccounts(adminTransferFromUid, adminTransferToUid || selectedClient.id);
+                    }}
+                  >
+                    {adminTransferLoading ? "Переношу..." : "Перенести данные"}
+                  </button>
+                  {adminTransferStatus && <p className="adminV3Status">{adminTransferStatus}</p>}
+                </div>
+              </div>
+
+              <div className="adminClientDangerZoneBottom">
+                <div>
+                  <span>DANGER ZONE</span>
+                  <strong>Удаление клиента</strong>
+                  <p>Кнопка перенесена вниз, чтобы не мешать работе с программой и календарём.</p>
+                </div>
+                <button className="danger" onClick={() => deleteClientEverywhereFromAdminPanel(selectedClient)}>Удалить клиента</button>
+              </div>
+                </div>
+              )}
+
+              {adminClientStatus && <p className="adminV3Status">{adminClientStatus}</p>}
+            </section>
+          )}
+</main>
+{!adminClientPageOpen && (
+          <nav className="adminV3Nav adminV3BottomBar" aria-label="Админ меню">
+            <button className={page === "admin" ? "active" : ""} type="button" onClick={() => setPage("admin")}>
+              <span className="adminV3NavIcon">📊</span>
+              <span className="adminV3NavLabel">Дашборд</span>
+            </button>
+            <button className={page === "adminUsers" ? "active" : ""} type="button" onClick={() => setPage("adminUsers")}>
+              <span className="adminV3NavIcon">👥</span>
+              <span className="adminV3NavLabel">Клиенты</span>
+            </button>
+            <button className={page === "adminWorkouts" ? "active" : ""} type="button" onClick={openAdminProgramsOverview}>
+              <span className="adminV3NavIcon">🏋️</span>
+              <span className="adminV3NavLabel">Программы</span>
+            </button>
+            <button className={page === "adminStats" ? "active" : ""} type="button" onClick={exportAdminClientCsv}>
+              <span className="adminV3NavIcon">📈</span>
+              <span className="adminV3NavLabel">Отчёты</span>
+            </button>
+          </nav>
+)}
+</div>
     );
   }
 
   if (page === "adminWorkouts") {
-    const selectedUser = usersList.find((u) => u.id === selectedUserId);
-
-    return (
-      <div className="app">
-        <div className="workoutHeader">
-          <button className="backBtn universalFixedBackPointer" onClick={() => setPage("admin")}>
-            ← Назад
-          </button>
-
-          <h1 className="workoutTitle">Управление тренировками</h1>
-        </div>
-
-        {selectedUserId && (
-          <p style={{ textAlign: "center", color: "#aaa" }}>
-            Клиент: {selectedUser?.email || selectedUserId}
-          </p>
-        )}
-
-        {plan.workouts.map((workout) => (
-          <div className="exercise" key={workout.id}>
-            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <input
-                style={{
-                  flex: 1,
-                  minWidth: 0,
-                  padding: "10px",
-                  borderRadius: "8px"
-                }}
-                value={workout.name}
-                placeholder="Название тренировки"
-                onChange={(e) => {
-                  const newName = e.target.value;
-
-                  setPlan((prev) => ({
-                    ...prev,
-                    workouts: prev.workouts.map((w) =>
-                      w.id === workout.id ? { ...w, name: newName } : w
-                    )
-                  }));
-                }}
-              />
-
-              <button
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  minWidth: "40px",
-                  padding: 0,
-                  borderRadius: "8px",
-                  background: "#ff4d4f",
-                  color: "white",
-                  border: "none"
-                }}
-                onClick={() => {
-                  setPlan((prev) => ({
-                    ...prev,
-                    workouts: prev.workouts.filter((w) => w.id !== workout.id)
-                  }));
-                }}
-              >
-                ✕
-              </button>
-            </div>
-
-            {workout.exercises.map((exercise) => (
-<div
-  key={exercise.id}
-  className={`exercise exerciseSlideCard ${
-    swipeDirection === "up"
-      ? "slideFromBottom"
-      : swipeDirection === "down"
-      ? "slideFromTop"
-      : ""
-  }`}
->
-                <div
-                  style={{ display: "flex", gap: "10px", alignItems: "center" }}
-                >
-                  <input
-                    style={{
-                      flex: 1,
-                      minWidth: 0,
-                      padding: "10px",
-                      borderRadius: "8px"
-                    }}
-                    value={exercise.name}
-                    placeholder="Название упражнения"
-                    onChange={(e) => {
-                      const newName = e.target.value;
-
-                      setPlan((prev) => ({
-                        ...prev,
-                        workouts: prev.workouts.map((w) =>
-                          w.id === workout.id
-                            ? {
-                                ...w,
-                                exercises: w.exercises.map((ex) =>
-                                  ex.id === exercise.id
-                                    ? { ...ex, name: newName }
-                                    : ex
-                                )
-                              }
-                            : w
-                        )
-                      }));
-                    }}
-                  />
-
-                  <button
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      minWidth: "40px",
-                      padding: 0,
-                      borderRadius: "8px",
-                      background: "#ff4d4f",
-                      color: "white",
-                      border: "none"
-                    }}
-                    onClick={() => {
-                      setPlan((prev) => ({
-                        ...prev,
-                        workouts: prev.workouts.map((w) =>
-                          w.id === workout.id
-                            ? {
-                                ...w,
-                                exercises: w.exercises.filter(
-                                  (ex) => ex.id !== exercise.id
-                                )
-                              }
-                            : w
-                        )
-                      }));
-                    }}
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <input
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    borderRadius: "8px",
-                    opacity: 0.85
-                  }}
-                  value={exercise.video || ""}
-                  placeholder="Путь к видео или Firebase URL"
-                  onChange={(e) => {
-                    const newVideo = e.target.value;
-
-                    setPlan((prev) => ({
-                      ...prev,
-                      workouts: prev.workouts.map((w) =>
-                        w.id === workout.id
-                          ? {
-                              ...w,
-                              exercises: w.exercises.map((ex) =>
-                                ex.id === exercise.id
-                                  ? { ...ex, video: newVideo }
-                                  : ex
-                              )
-                            }
-                          : w
-                      )
-                    }));
-                  }}
-                />
-
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-
-                    const storageRef = ref(
-                      storage,
-                      "videos/" + Date.now() + "-" + file.name
-                    );
-
-                    await uploadBytes(storageRef, file);
-
-                    const url = await getDownloadURL(storageRef);
-
-                    setPlan((prev) => ({
-                      ...prev,
-                      workouts: prev.workouts.map((w) =>
-                        w.id === workout.id
-                          ? {
-                              ...w,
-                              exercises: w.exercises.map((ex) =>
-                                ex.id === exercise.id
-                                  ? { ...ex, video: url }
-                                  : ex
-                              )
-                            }
-                          : w
-                      )
-                    }));
-
-                    alert("Видео загружено ✅");
-                  }}
-                />
-
-                {exercise.video && (
-                  <video
-                    src={exercise.video}
-                    controls
-                    style={{
-                      width: "100%",
-                      maxHeight: "220px",
-                      borderRadius: "10px",
-                      marginTop: "8px",
-                      background: "#000"
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-
-            <button
-              onClick={() => {
-                const newExercise = {
-                  id: "e" + Date.now(),
-                  name: "Новое упражнение",
-                  video: "",
-                  sets: makeThreeSets([], 8)
-                };
-
-                setPlan((prev) => ({
-                  ...prev,
-                  workouts: prev.workouts.map((w) =>
-                    w.id === workout.id
-                      ? { ...w, exercises: [...w.exercises, newExercise] }
-                      : w
-                  )
-                }));
-              }}
-            >
-              ➕ Добавить упражнение
-            </button>
+    if (!canUseTrainerFeatures()) {
+      return (
+        <div className="app">
+          <button className="backBtn" onClick={() => setPage("main")}>← Главное меню</button>
+          <div className="historyEmptyCard">
+            <h3>Доступ закрыт</h3>
+            <p>Тренерская доступна админам и пользователям с ролью тренера.</p>
           </div>
-        ))}
+        </div>
+      );
+    }
 
-        <button
-          className="bigButton"
-          onClick={() => {
-            const newWorkout = {
-              id: "w" + Date.now(),
-              name: "Новая тренировка",
+    const selectedUser = usersList.find((u) => u.id === selectedUserId);
+    const monthProgram = adminProgramGroups?.[0] || {
+      id: `month_${Date.now()}`,
+      name: "Программа на месяц",
+      blocks: [
+        { id: "microcycle_1", name: "Микроцикл 1", weeks: [{ id: "week_1", name: "Неделя 1", workouts: [] }, { id: "week_2", name: "Неделя 2", workouts: [] }] },
+        { id: "microcycle_2", name: "Микроцикл 2", weeks: [{ id: "week_3", name: "Неделя 3", workouts: [] }, { id: "week_4", name: "Неделя 4", workouts: [] }] },
+        { id: "microcycle_3", name: "Микроцикл 3", weeks: [{ id: "week_5", name: "Неделя 5", workouts: [] }, { id: "week_6", name: "Неделя 6", workouts: [] }] },
+        { id: "microcycle_4", name: "Микроцикл 4", weeks: [{ id: "week_7", name: "Неделя 7", workouts: [] }, { id: "week_8", name: "Неделя 8", workouts: [] }] }
+      ]
+    };
+
+    const normalizedMonthProgram = normalizeMonthProgram(monthProgram);
+    const monthBlocks = normalizedMonthProgram.blocks || [];
+    const monthGroups = normalizedMonthProgram.months || [];
+    const monthWorkouts = monthBlocks.flatMap((block) =>
+      (block.weeks || []).flatMap((week) =>
+        (week.workouts || []).map((workout) => ({ ...workout, blockName: block.name, weekName: week.name }))
+      )
+    );
+    const monthExercises = monthWorkouts.reduce((sum, workout) => sum + (workout.exercises?.length || 0), 0);
+    const adminExerciseLibrary = Array.from(new Map(
+      [
+        ...monthWorkouts.flatMap((workout) => workout.exercises || []),
+        ...adminTrainingTemplates.flatMap((template) => {
+          const templateMicrocycles = Array.isArray(template.blocks)
+            ? template.blocks
+            : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);
+          return [
+            ...(template.workouts || []),
+            ...templateMicrocycles.flatMap((microcycle) =>
+              (microcycle.weeks || []).flatMap((week) => week.workouts || [])
+            )
+          ].flatMap((workout) => workout.exercises || []);
+        })
+      ]
+        .filter((exercise) => String(exercise?.name || "").trim())
+        .map((exercise) => [String(exercise.name).trim().toLocaleLowerCase("ru"), exercise])
+    ).values());
+    const openMonthWorkoutContext = monthBlocks.flatMap((block) =>
+      (block.weeks || []).flatMap((week) =>
+        (week.workouts || []).map((workout) => ({ block, week, workout }))
+      )
+    ).find(({ workout }) => workout.id === adminOpenWorkoutId);
+
+    function normalizeMonthProgram(program = monthProgram) {
+      const sourceMonths = Array.isArray(program.months) ? program.months : [];
+      const nestedMicrocycles = sourceMonths.flatMap((month, monthIndex) =>
+        (Array.isArray(month.microcycles) ? month.microcycles : (month.blocks || [])).map((microcycle) => ({
+          ...microcycle,
+          monthId: microcycle.monthId || month.id || `month_${monthIndex + 1}`
+        }))
+      );
+      const sourceBlocks = Array.isArray(program.blocks)
+        ? program.blocks
+        : nestedMicrocycles;
+      const hasStructuredHierarchy = sourceMonths.some((month) =>
+        Array.isArray(month.microcycles) || Array.isArray(month.blocks)
+      ) || (Array.isArray(program.months) && Array.isArray(program.blocks));
+      const blockCount = sourceBlocks.length || (hasStructuredHierarchy ? 0 : 4);
+      const blocks = Array.from({ length: blockCount }, (_, blockIndex) => {
+        const sourceBlock = sourceBlocks[blockIndex] || {};
+        const sourceWeeks = Array.isArray(sourceBlock.weeks)
+          ? sourceBlock.weeks
+          : [{}, {}];
+        const sourceName = String(sourceBlock.name || "").trim();
+
+        return {
+          id: sourceBlock.id || `microcycle_${blockIndex + 1}`,
+          name: sourceName
+            ? sourceName.replace(/^Блок(?=\s*\d)/i, "Микроцикл")
+            : `Микроцикл ${blockIndex + 1}`,
+          monthId: sourceBlock.monthId || `month_${Math.floor(blockIndex / 2) + 1}`,
+          weeks: Array.from({ length: sourceWeeks.length }, (_, weekOffset) => {
+            const sourceWeek = sourceWeeks[weekOffset] || {};
+            const absoluteWeek = blockIndex * 2 + weekOffset + 1;
+            return {
+              id: sourceWeek.id || `week_${absoluteWeek}`,
+              name: sourceWeek.name || `Неделя ${absoluteWeek}`,
+              workouts: sourceWeek.workouts || []
+            };
+          })
+        };
+      });
+      const sourceMonthIds = sourceMonths.map((month, monthIndex) => month.id || `month_${monthIndex + 1}`);
+      const monthIds = [
+        ...sourceMonthIds,
+        ...blocks.map((block) => block.monthId).filter((monthId) => !sourceMonthIds.includes(monthId))
+      ].filter((monthId, index, items) => monthId && items.indexOf(monthId) === index);
+      const months = monthIds.map((monthId, monthIndex) => {
+        const sourceMonth = sourceMonths.find((month, sourceMonthIndex) =>
+          (month.id || `month_${sourceMonthIndex + 1}`) === monthId
+        );
+        const sourceName = String(sourceMonth?.name || "").trim();
+
+        return {
+          id: monthId,
+          name: sourceName
+            ? sourceName.replace(/^Блок\s+Месяц/i, "Месяц")
+            : `Месяц ${monthIndex + 1}`,
+          microcycles: blocks.filter((block) => block.monthId === monthId)
+        };
+      });
+
+      return {
+        id: program.id || `month_${Date.now()}`,
+        name: program.name || "Программа на месяц",
+        description: program.description || "",
+        ownerUid: program.ownerUid || "",
+        ownerRole: program.ownerRole || "",
+        createdByUid: program.createdByUid || "",
+        updatedByUid: program.updatedByUid || "",
+        createdAt: program.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        blocks,
+        months
+      };
+    }
+
+    function setMonthProgram(updater) {
+      setAdminProgramGroups((prev) => {
+        const base = normalizeMonthProgram(prev?.[0] || monthProgram);
+        const nextProgram = normalizeMonthProgram(typeof updater === "function" ? updater(base) : updater);
+        const flatWorkouts = nextProgram.blocks.flatMap((block) =>
+          block.weeks.flatMap((week) =>
+            (week.workouts || []).map((workout) => ({
+              ...workout,
+              name: workout.name || `${week.name} — тренировка`,
+              blockName: block.name,
+              weekName: week.name
+            }))
+          )
+        );
+        setPlan({ workouts: flatWorkouts });
+        return [nextProgram];
+      });
+    }
+
+    function updateMonthProgramName(name) {
+      setMonthProgram((program) => ({ ...program, name }));
+    }
+
+    function updateMonthProgramDescription(description) {
+      setMonthProgram((program) => ({ ...program, description }));
+    }
+
+    function addMonthBlock(monthId = "month_1") {
+      setMonthProgram((program) => {
+        const nextBlockNumber = program.blocks.reduce((maxNumber, block) => {
+          const blockNumber = Number(String(block.name || "").match(/^(?:Микроцикл|Блок)\s+(\d+)/i)?.[1]) || 0;
+          return Math.max(maxNumber, blockNumber);
+        }, 0) + 1;
+
+        return {
+          ...program,
+          blocks: [
+            ...program.blocks,
+            {
+              id: `microcycle_${Date.now()}`,
+              name: `Микроцикл ${nextBlockNumber}`,
+              monthId,
+              weeks: []
+            }
+          ]
+        };
+      });
+    }
+
+    function addMonthWeek(blockId) {
+      setMonthProgram((program) => {
+        const nextWeekNumber = program.blocks.reduce((maxNumber, block) =>
+          (block.weeks || []).reduce((weekMax, week) => {
+            const weekNumber = Number(String(week.name || "").match(/^Неделя\s+(\d+)/i)?.[1]) || 0;
+            return Math.max(weekMax, weekNumber);
+          }, maxNumber), 0) + 1;
+        return {
+          ...program,
+          blocks: program.blocks.map((block) => block.id !== blockId ? block : {
+            ...block,
+            weeks: [
+              ...(block.weeks || []),
+              { id: `week_${Date.now()}`, name: `Неделя ${nextWeekNumber}`, workouts: [] }
+            ]
+          })
+        };
+      });
+      setAdminOpenProgramBlocks((current) => ({ ...current, [blockId]: true }));
+    }
+
+    function openCopyMonthProgramBlock(blockId) {
+      const sourceBlock = monthBlocks.find((block) => block.id === blockId);
+      if (!sourceBlock) return;
+
+      setAdminProgramCopyTarget({
+        blockId
+      });
+    }
+
+    function copyMonthProgramBlock(blockId, targetMonthId, afterBlockId = "") {
+      setMonthProgram((program) => {
+        const sourceBlock = program.blocks.find((block) => block.id === blockId);
+        if (!sourceBlock) return program;
+
+        const stamp = Date.now();
+        const copiedBlock = {
+          ...sourceBlock,
+          id: `microcycle_${stamp}`,
+          name: `${sourceBlock.name || "Микроцикл"} — копия`,
+          monthId: targetMonthId,
+          weeks: (sourceBlock.weeks || []).map((week, weekIndex) => ({
+            ...week,
+            id: `week_${stamp}_${weekIndex}`,
+            workouts: (week.workouts || []).map((workout, workoutIndex) => ({
+              ...workout,
+              id: `workout_${stamp}_${weekIndex}_${workoutIndex}`,
+              exercises: (workout.exercises || []).map((exercise, exerciseIndex) => ({
+                ...exercise,
+                id: `exercise_${stamp}_${weekIndex}_${workoutIndex}_${exerciseIndex}`,
+                sets: (exercise.sets || []).map((set, setIndex) => ({
+                  ...set,
+                  ...(set?.id ? { id: `set_${stamp}_${weekIndex}_${workoutIndex}_${exerciseIndex}_${setIndex}` } : {})
+                }))
+              }))
+            }))
+          }))
+        };
+        const nextBlocks = [...program.blocks];
+        const targetIndex = afterBlockId
+          ? nextBlocks.findIndex((block) => block.id === afterBlockId)
+          : nextBlocks.findIndex((block) => block.monthId === targetMonthId) - 1;
+        nextBlocks.splice(Math.max(0, targetIndex + 1), 0, copiedBlock);
+        return { ...program, blocks: nextBlocks };
+      });
+      setAdminProgramCopyTarget(null);
+    }
+
+    function removeMonthBlock(blockId) {
+      const block = monthBlocks.find((item) => item.id === blockId);
+      if (!block) return;
+      if (!window.confirm(`Удалить микроцикл “${block.name || "Без названия"}” со всеми неделями и тренировками?`)) {
+        setAdminProgramSwipeOpenKey("");
+        return;
+      }
+
+      const removedWeekIds = new Set((block.weeks || []).map((week) => week.id));
+      const removedWorkoutIds = new Set(
+        (block.weeks || []).flatMap((week) => (week.workouts || []).map((workout) => workout.id))
+      );
+      setMonthProgram((program) => ({
+        ...program,
+        blocks: program.blocks.filter((item) => item.id !== blockId)
+      }));
+      setAdminOpenProgramBlocks((current) => {
+        const next = { ...current };
+        delete next[blockId];
+        return next;
+      });
+      setAdminOpenProgramWeeks((current) => Object.fromEntries(
+        Object.entries(current).filter(([weekId]) => !removedWeekIds.has(weekId))
+      ));
+      if (removedWorkoutIds.has(adminOpenWorkoutId)) {
+        setAdminOpenWorkoutId("");
+        setAdminSelectedExerciseId("");
+      }
+      if (removedWorkoutIds.has(adminActiveDayId)) {
+        setAdminActiveDayId("");
+      }
+      if (adminProgramCopyTarget?.blockId === blockId) {
+        setAdminProgramCopyTarget(null);
+      }
+      setAdminProgramSwipeOpenKey("");
+    }
+
+    function removeMonthWeek(blockId, weekId) {
+      const block = monthBlocks.find((item) => item.id === blockId);
+      const week = block?.weeks?.find((item) => item.id === weekId);
+      if (!week) return;
+      if (!window.confirm(`Удалить “${week.name || "Неделя"}” со всеми днями?`)) {
+        setAdminProgramSwipeOpenKey("");
+        return;
+      }
+
+      const removedWorkoutIds = new Set((week.workouts || []).map((workout) => workout.id));
+      setMonthProgram((program) => ({
+        ...program,
+        blocks: program.blocks.map((item) => item.id !== blockId ? item : {
+          ...item,
+          weeks: (item.weeks || []).filter((entry) => entry.id !== weekId)
+        })
+      }));
+      setAdminOpenProgramWeeks((current) => {
+        const next = { ...current };
+        delete next[weekId];
+        return next;
+      });
+      if (removedWorkoutIds.has(adminOpenWorkoutId)) {
+        setAdminOpenWorkoutId("");
+        setAdminSelectedExerciseId("");
+      }
+      if (removedWorkoutIds.has(adminActiveDayId)) {
+        setAdminActiveDayId("");
+      }
+      setAdminProgramSwipeOpenKey("");
+    }
+
+    function confirmRemoveMonthWorkout(blockId, weekId, workoutId) {
+      const workout = monthWorkouts.find((item) => item.id === workoutId);
+      if (!workout) return;
+      if (!window.confirm(`Удалить тренировку “${workout.name || "Без названия"}”?`)) {
+        setAdminProgramSwipeOpenKey("");
+        return;
+      }
+
+      removeMonthWorkout(blockId, weekId, workoutId);
+      setAdminProgramSwipeOpenKey("");
+    }
+
+    function handleAdminProgramSwipeStart(key, event) {
+      event.stopPropagation();
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      adminProgramSwipeStartRef.current = { key, x: event.clientX, y: event.clientY };
+    }
+
+    function handleAdminProgramSwipeEnd(key, event) {
+      event.stopPropagation();
+      const start = adminProgramSwipeStartRef.current;
+      adminProgramSwipeStartRef.current = null;
+      if (!start || start.key !== key) return;
+
+      const deltaX = event.clientX - start.x;
+      const deltaY = event.clientY - start.y;
+      if (Math.abs(deltaX) < 45 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.25) return;
+
+      event.preventDefault();
+      adminProgramSwipeSuppressClickRef.current = true;
+      window.setTimeout(() => {
+        adminProgramSwipeSuppressClickRef.current = false;
+      }, 0);
+      setAdminProgramSwipeOpenKey(deltaX < 0 ? key : "");
+    }
+
+    function handleAdminProgramSwipeCancel(key, event) {
+      event.stopPropagation();
+      if (adminProgramSwipeStartRef.current?.key === key) {
+        adminProgramSwipeStartRef.current = null;
+      }
+    }
+
+    function handleAdminProgramSwipeClick(event) {
+      if (!adminProgramSwipeSuppressClickRef.current) return;
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    function updateMonthBlock(blockId, patch) {
+      setMonthProgram((program) => ({
+        ...program,
+        blocks: program.blocks.map((block) => block.id === blockId ? { ...block, ...patch } : block)
+      }));
+    }
+
+    function toggleMonthProgramBlock(blockId) {
+      setAdminOpenProgramBlocks((current) => ({
+        ...current,
+        [blockId]: !current[blockId]
+      }));
+    }
+
+    function toggleMonthProgramWeek(weekId) {
+      setAdminOpenProgramWeeks((current) => ({
+        ...current,
+        [weekId]: !current[weekId]
+      }));
+    }
+
+    function addMonthWorkout(blockId, weekId) {
+      const newWorkoutId = `workout_${Date.now()}`;
+
+      setMonthProgram((program) => ({
+        ...program,
+        blocks: program.blocks.map((block) => block.id !== blockId ? block : {
+          ...block,
+          weeks: block.weeks.map((week) => {
+            if (week.id !== weekId) return week;
+            const nextWorkoutNumber = (week.workouts || []).reduce((maxNumber, workout) => {
+              const workoutNumber = Number(String(workout.name || "").match(/Тренировка\s+(\d+)/i)?.[1]) || 0;
+              return Math.max(maxNumber, workoutNumber);
+            }, 0) + 1;
+            return {
+              ...week,
+              workouts: [
+                ...(week.workouts || []),
+                {
+                  id: newWorkoutId,
+                  name: `${week.name} — Тренировка ${nextWorkoutNumber}`,
+                  exercises: []
+                }
+              ]
+            };
+          })
+        })
+      }));
+
+      setAdminOpenProgramBlocks((current) => ({ ...current, [blockId]: true }));
+      setAdminOpenProgramWeeks((current) => ({ ...current, [weekId]: true }));
+    }
+
+    function updateMonthWorkout(blockId, weekId, workoutId, patch) {
+      setMonthProgram((program) => ({
+        ...program,
+        blocks: program.blocks.map((block) => block.id !== blockId ? block : {
+          ...block,
+          weeks: block.weeks.map((week) => week.id !== weekId ? week : {
+            ...week,
+            workouts: (week.workouts || []).map((workout) =>
+              workout.id === workoutId ? { ...workout, ...patch } : workout
+            )
+          })
+        })
+      }));
+    }
+
+    function removeMonthWorkout(blockId, weekId, workoutId) {
+      setMonthProgram((program) => ({
+        ...program,
+        blocks: program.blocks.map((block) => block.id !== blockId ? block : {
+          ...block,
+          weeks: block.weeks.map((week) => week.id !== weekId ? week : {
+            ...week,
+            workouts: (week.workouts || []).filter((workout) => workout.id !== workoutId)
+          })
+        })
+      }));
+      if (adminOpenWorkoutId === workoutId) {
+        setAdminOpenWorkoutId("");
+        setAdminSelectedExerciseId("");
+      }
+      if (adminActiveDayId === workoutId) {
+        setAdminActiveDayId("");
+      }
+    }
+
+    function addMonthExercise(blockId, weekId, workoutId, sourceExercise = null) {
+      const newExerciseId = `exercise_${Date.now()}`;
+      const exerciseName = String(sourceExercise?.name || adminExerciseSearch || "Новое упражнение").trim() || "Новое упражнение";
+      updateMonthWorkout(blockId, weekId, workoutId, {
+        exercises: [
+          ...((monthWorkouts.find((workout) => workout.id === workoutId)?.exercises) || []),
+          {
+            id: newExerciseId,
+            name: exerciseName,
+            video: sourceExercise?.video || "",
+            sets: Array.from({ length: 3 }, () => ({ reps: 8, weight: "" }))
+          }
+        ]
+      });
+      adminExerciseEditSnapshotRef.current = {
+        isNew: true,
+        blockId,
+        weekId,
+        workoutId,
+        exerciseId: newExerciseId,
+        exercise: null
+      };
+      setAdminSelectedExerciseId(newExerciseId);
+      setAdminExerciseSearch("");
+      window.requestAnimationFrame(() => {
+        document.querySelector(`[data-month-exercise-id="${newExerciseId}"]`)?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      });
+    }
+
+    function openMonthExerciseEditor(blockId, weekId, workoutId, exercise) {
+      adminExerciseEditSnapshotRef.current = {
+        isNew: false,
+        blockId,
+        weekId,
+        workoutId,
+        exerciseId: exercise.id,
+        exercise: {
+          ...exercise,
+          sets: (exercise.sets || []).map((set) => ({ ...set }))
+        }
+      };
+      setAdminSelectedExerciseId(exercise.id);
+    }
+
+    function cancelMonthExerciseEdit() {
+      const snapshot = adminExerciseEditSnapshotRef.current;
+      if (!snapshot) {
+        setAdminSelectedExerciseId("");
+        return;
+      }
+
+      if (snapshot.isNew) {
+        removeMonthExercise(snapshot.blockId, snapshot.weekId, snapshot.workoutId, snapshot.exerciseId);
+      } else {
+        updateMonthExercise(
+          snapshot.blockId,
+          snapshot.weekId,
+          snapshot.workoutId,
+          snapshot.exerciseId,
+          snapshot.exercise
+        );
+      }
+
+      adminExerciseEditSnapshotRef.current = null;
+      setAdminSelectedExerciseId("");
+    }
+
+    async function saveMonthExerciseEdit() {
+      const saved = await saveMonthProgramToLibrary();
+      if (!saved) return;
+      adminExerciseEditSnapshotRef.current = null;
+      setAdminSelectedExerciseId("");
+    }
+
+    function updateMonthExerciseSet(blockId, weekId, workoutId, exerciseId, setIndex, patch) {
+      const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
+      updateMonthWorkout(blockId, weekId, workoutId, {
+        exercises: (sourceWorkout?.exercises || []).map((exercise) => {
+          if (exercise.id !== exerciseId) return exercise;
+
+          const nextSets = Array.isArray(exercise.sets) && exercise.sets.length
+            ? [...exercise.sets]
+            : [{ reps: 8, weight: "" }];
+
+          nextSets[setIndex] = {
+            ...(nextSets[setIndex] || { reps: 8, weight: "" }),
+            ...patch
+          };
+
+          return {
+            ...exercise,
+            sets: nextSets
+          };
+        })
+      });
+    }
+
+    function addMonthExerciseSet(blockId, weekId, workoutId, exerciseId) {
+      const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
+      updateMonthWorkout(blockId, weekId, workoutId, {
+        exercises: (sourceWorkout?.exercises || []).map((exercise) => {
+          if (exercise.id !== exerciseId) return exercise;
+
+          return {
+            ...exercise,
+            sets: [
+              ...(Array.isArray(exercise.sets) && exercise.sets.length ? exercise.sets : [{ reps: 8, weight: "" }]),
+              { reps: 8, weight: "" }
+            ]
+          };
+        })
+      });
+    }
+
+    function removeMonthExerciseSet(blockId, weekId, workoutId, exerciseId, setIndex) {
+      const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
+      updateMonthWorkout(blockId, weekId, workoutId, {
+        exercises: (sourceWorkout?.exercises || []).map((exercise) => {
+          if (exercise.id !== exerciseId) return exercise;
+
+          const currentSets = Array.isArray(exercise.sets) && exercise.sets.length
+            ? exercise.sets
+            : [{ reps: 8, weight: "" }];
+
+          if (currentSets.length <= 1) return exercise;
+
+          return {
+            ...exercise,
+            sets: currentSets.filter((_, index) => index !== setIndex)
+          };
+        })
+      });
+    }
+
+    function updateMonthExercise(blockId, weekId, workoutId, exerciseId, patch) {
+      const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
+      updateMonthWorkout(blockId, weekId, workoutId, {
+        exercises: (sourceWorkout?.exercises || []).map((exercise) =>
+          exercise.id === exerciseId ? { ...exercise, ...patch } : exercise
+        )
+      });
+    }
+
+    function removeMonthExercise(blockId, weekId, workoutId, exerciseId) {
+      const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
+      updateMonthWorkout(blockId, weekId, workoutId, {
+        exercises: (sourceWorkout?.exercises || []).filter((exercise) => exercise.id !== exerciseId)
+      });
+    }
+
+    async function uploadMonthExerciseVideo(blockId, weekId, workoutId, exerciseId, file) {
+      if (!file) return;
+
+      setAdminExerciseVideoUploadingId(exerciseId);
+      try {
+        const owner = getCurrentProgramOwner();
+        const existingTemplate = adminTrainingTemplates.find((template) => template.id === monthProgram.id);
+        if (!owner.uid || (existingTemplate && !canManageTrainingTemplate(existingTemplate))) {
+          showAppError("load", "У вас нет прав на изменение этой программы.");
+          return;
+        }
+        const safeName = String(file.name || "exercise-video").replace(/[^\wа-яА-ЯёЁ.\-]+/g, "_");
+        const storageRef = ref(storage, `exercise-videos/${owner.uid}/${monthProgram.id || "draft"}/${Date.now()}-${safeName}`);
+
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+
+        const programWithVideo = normalizeMonthProgram({
+          ...monthProgram,
+          blocks: monthProgram.blocks.map((block) => block.id !== blockId ? block : {
+            ...block,
+            weeks: block.weeks.map((week) => week.id !== weekId ? week : {
+              ...week,
+              workouts: (week.workouts || []).map((workout) => workout.id !== workoutId ? workout : {
+                ...workout,
+                exercises: (workout.exercises || []).map((exercise) =>
+                  exercise.id === exerciseId ? { ...exercise, video: url } : exercise
+                )
+              })
+            })
+          })
+        });
+
+        setMonthProgram(programWithVideo);
+        const saved = await saveMonthProgramToLibrary(programWithVideo);
+        if (saved) {
+          showAppError("savedLocal", "Видео загружено и сохранено в программе.");
+        }
+      } catch (error) {
+        console.error("Month exercise video upload error:", error);
+        showAppError("firebase", "Не получилось загрузить видео.");
+      } finally {
+        setAdminExerciseVideoUploadingId("");
+      }
+    }
+
+    async function saveMonthProgramToLibrary(programOverride = null) {
+      const program = normalizeMonthProgram(programOverride || monthProgram);
+      const owner = getCurrentProgramOwner();
+      const existingTemplate = adminTrainingTemplates.find((template) => template.id === program.id);
+      if (!owner.uid) {
+        showAppError("load", "Не удалось определить владельца программы.");
+        return false;
+      }
+      if (!canUseAdminFeatures() && (
+        (existingTemplate && !canManageTrainingTemplate(existingTemplate)) ||
+        (program.ownerUid && program.ownerUid !== owner.uid)
+      )) {
+        showAppError("load", "Тренер может изменять только свои программы.");
+        return false;
+      }
+      const ownerUid = canUseAdminFeatures()
+        ? (existingTemplate?.ownerUid || program.ownerUid || owner.uid)
+        : owner.uid;
+      const ownerRole = canUseAdminFeatures()
+        ? (existingTemplate?.ownerRole || program.ownerRole || "admin")
+        : "trainer";
+      const createdByUid = existingTemplate?.createdByUid || program.createdByUid || ownerUid;
+      const workoutsToSave = program.blocks.flatMap((block, blockIndex) =>
+        block.weeks.flatMap((week, weekIndex) =>
+          (week.workouts || []).map((workout, workoutIndex) => ({
+            ...workout,
+            microcycleId: block.id,
+            microcycleName: block.name,
+            blockId: block.id,
+            blockName: block.name,
+            weekId: week.id,
+            weekName: week.name,
+            order: blockIndex * 100 + weekIndex * 20 + workoutIndex + 1
+          }))
+        )
+      );
+
+      try {
+        await setDoc(doc(db, "trainingTemplates", program.id), {
+          id: program.id,
+          name: program.name,
+          description: program.description || "",
+          type: "monthly_program",
+          source: "program_library",
+          ownerUid,
+          ownerRole,
+          createdByUid,
+          updatedByUid: owner.uid,
+          months: program.months,
+          blocks: program.blocks,
+          workouts: workoutsToSave,
+          createdAt: program.createdAt || new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: createdByUid,
+          createdByEmail: user?.email || ""
+        }, { merge: true });
+
+        setAdminTemplateName(program.name || "");
+        setAdminSelectedTemplateId(program.id);
+        await loadAdminTrainingTemplates();
+
+        showAppError("savedLocal", "Программа сохранена в библиотеку.");
+        return true;
+      } catch (error) {
+        console.error("Save month program to library error:", error);
+        showAppError("firebase", "Не получилось сохранить программу в библиотеку.");
+        return false;
+      }
+    }
+
+    async function saveMonthWorkoutAndReturnToBlock() {
+      const saved = await saveMonthProgramToLibrary();
+      if (saved) handleMonthProgramBack();
+    }
+
+    async function saveMonthProgramAndOpenOverview() {
+      const saved = await saveMonthProgramToLibrary();
+      if (saved) openAdminProgramsOverview();
+    }
+
+    function normalizeImportedMonthlyProgram(rawProgram = {}) {
+      if (rawProgram.schema && !["tren-monthly-program-v1", "tren-monthly-program-v2"].includes(rawProgram.schema)) {
+        throw new Error("Неверный формат файла программы.");
+      }
+
+      const importedMonths = Array.isArray(rawProgram.months) ? rawProgram.months : [];
+      const nestedMicrocycles = importedMonths.flatMap((month, monthIndex) =>
+        (Array.isArray(month.microcycles) ? month.microcycles : (month.blocks || [])).map((microcycle) => ({
+          ...microcycle,
+          monthId: microcycle.monthId || month.id || `month_${monthIndex + 1}`
+        }))
+      );
+      let importedMicrocycles = nestedMicrocycles.length
+        ? nestedMicrocycles
+        : (Array.isArray(rawProgram.blocks) ? rawProgram.blocks : []);
+
+      if (!importedMicrocycles.length && Array.isArray(rawProgram.weeks)) {
+        importedMicrocycles = Array.from(
+          { length: Math.ceil(rawProgram.weeks.length / 2) },
+          (_, microcycleIndex) => ({
+            id: `microcycle_${microcycleIndex + 1}`,
+            name: `Микроцикл ${microcycleIndex + 1}`,
+            weeks: rawProgram.weeks.slice(microcycleIndex * 2, microcycleIndex * 2 + 2)
+          })
+        );
+      }
+
+      if (!importedMicrocycles.length) {
+        throw new Error("В файле не найдены микроциклы или недели.");
+      }
+
+      const importStamp = Date.now();
+      const normalizedBlocks = importedMicrocycles.map((microcycle, microcycleIndex) => {
+        const weeks = Array.isArray(microcycle.weeks) ? microcycle.weeks : [];
+        return {
+          id: microcycle.id || `microcycle_${importStamp}_${microcycleIndex}`,
+          name: String(microcycle.name || `Микроцикл ${microcycleIndex + 1}`)
+            .replace(/^Блок(?=\s*\d)/i, "Микроцикл"),
+          monthId: microcycle.monthId || `month_${Math.floor(microcycleIndex / 2) + 1}`,
+          weeks: weeks.map((week, weekIndex) => ({
+            id: week.id || `week_${importStamp}_${microcycleIndex}_${weekIndex}`,
+            name: week.name || `Неделя ${microcycleIndex * 2 + weekIndex + 1}`,
+            workouts: (Array.isArray(week.workouts) ? week.workouts : []).map((workout, workoutIndex) => ({
+              id: workout.id || `workout_${importStamp}_${microcycleIndex}_${weekIndex}_${workoutIndex}`,
+              name: workout.name || `${week.name || `Неделя ${microcycleIndex * 2 + weekIndex + 1}`} — Тренировка ${workoutIndex + 1}`,
+              exercises: (Array.isArray(workout.exercises) ? workout.exercises : []).map((exercise, exerciseIndex) => ({
+                id: exercise.id || `exercise_${importStamp}_${microcycleIndex}_${weekIndex}_${workoutIndex}_${exerciseIndex}`,
+                name: exercise.name || "Упражнение",
+                video: exercise.video || "",
+                sets: Array.isArray(exercise.sets) && exercise.sets.length
+                  ? exercise.sets.map((set) => ({
+                      reps: set.reps ?? 8,
+                      weight: String(set.weight ?? "")
+                    }))
+                  : [{ reps: 8, weight: "" }]
+              }))
+            }))
+          }))
+        };
+      });
+      const monthIds = normalizedBlocks
+        .map((microcycle) => microcycle.monthId)
+        .filter((monthId, index, items) => items.indexOf(monthId) === index);
+      const months = monthIds.map((monthId, monthIndex) => {
+        const sourceMonth = importedMonths.find((month, sourceMonthIndex) =>
+          (month.id || `month_${sourceMonthIndex + 1}`) === monthId
+        );
+
+        return {
+          id: monthId,
+          name: String(sourceMonth?.name || `Месяц ${monthIndex + 1}`)
+            .replace(/^Блок\s+Месяц/i, "Месяц"),
+          microcycles: normalizedBlocks.filter((microcycle) => microcycle.monthId === monthId)
+        };
+      });
+
+      return normalizeMonthProgram({
+        id: rawProgram.id || `imported_${Date.now()}`,
+        name: rawProgram.name || "Импортированная программа",
+        description: rawProgram.description || "",
+        rules: rawProgram.rules || {},
+        months,
+        blocks: normalizedBlocks
+      });
+    }
+
+    function normalizeImportedExcelProgram(sheets = [], fileName = "Программа") {
+      const importStamp = Date.now();
+      const importedMicrocycles = [];
+      const cleanCell = (value) => String(value ?? "").trim();
+      const readNumber = (value, fallback) => {
+        const match = cleanCell(value).replace(",", ".").match(/\d+(?:\.\d+)?/);
+        const parsed = Number(match?.[0]);
+        return Number.isFinite(parsed) ? parsed : fallback;
+      };
+
+      sheets.forEach((sheetEntry, sheetIndex) => {
+        const sheetName = cleanCell(sheetEntry.sheet || `Лист ${sheetIndex + 1}`);
+        const rows = Array.isArray(sheetEntry.data) ? sheetEntry.data : [];
+        const sheetMicrocycleMatch = sheetName.match(/микроцикл\s*(\d+)/i);
+        const sheetMonthMatch = sheetName.match(/месяц\s*(\d+)/i);
+        const sheetWeekRangeMatch = sheetName.match(/недел(?:я|и)\s*(\d+)\s*[-–—]\s*(\d+)/i);
+        const sheetWeekMatch = sheetName.match(/недел(?:я|и)\s*(\d+)/i);
+        let microcycleNumber = Number(sheetMicrocycleMatch?.[1]) || 0;
+        let monthNumber = Number(sheetMonthMatch?.[1]) || 0;
+        let explicitWeekNumber = sheetWeekRangeMatch ? 0 : (Number(sheetWeekMatch?.[1]) || 0);
+        let exerciseColumn = 0;
+        let setsColumn = 1;
+        let repsColumn = 2;
+        let weightColumn = 3;
+        let currentWorkout = null;
+        const sharedWorkouts = [];
+        const workoutsByWeek = new Map();
+
+        rows.forEach((row) => {
+          const cells = Array.isArray(row) ? row : [];
+          const firstValue = cleanCell(cells.find((cell) => cleanCell(cell)));
+          if (!firstValue) {
+            currentWorkout = null;
+            return;
+          }
+
+          const headerCells = cells.map((cell) => cleanCell(cell).toLocaleLowerCase("ru"));
+          const exerciseHeader = headerCells.findIndex((value) => value.includes("упражнен"));
+          if (exerciseHeader >= 0) {
+            exerciseColumn = exerciseHeader;
+            const nextSetsColumn = headerCells.findIndex((value) => value.includes("подход"));
+            const nextRepsColumn = headerCells.findIndex((value) => value.includes("повтор"));
+            const nextWeightColumn = headerCells.findIndex((value) => value.includes("вес"));
+            if (nextSetsColumn >= 0) setsColumn = nextSetsColumn;
+            if (nextRepsColumn >= 0) repsColumn = nextRepsColumn;
+            if (nextWeightColumn >= 0) weightColumn = nextWeightColumn;
+            return;
+          }
+
+          const monthMatch = firstValue.match(/^месяц\s*(\d+)/i);
+          if (monthMatch) {
+            monthNumber = Number(monthMatch[1]);
+            currentWorkout = null;
+            return;
+          }
+
+          const microcycleMatch = firstValue.match(/^микроцикл\s*(\d+)/i);
+          if (microcycleMatch) {
+            microcycleNumber = Number(microcycleMatch[1]);
+            currentWorkout = null;
+            return;
+          }
+
+          const weekMatch = firstValue.match(/^недел(?:я|и)\s*(\d+)/i);
+          if (weekMatch) {
+            explicitWeekNumber = Number(weekMatch[1]);
+            currentWorkout = null;
+            return;
+          }
+
+          const workoutMatch = firstValue.match(/^(?:день|тренировка)\s*(\d+)/i);
+          if (workoutMatch) {
+            currentWorkout = {
+              dayNumber: Number(workoutMatch[1]),
+              name: firstValue,
               exercises: []
             };
+            if (explicitWeekNumber) {
+              const weekWorkouts = workoutsByWeek.get(explicitWeekNumber) || [];
+              weekWorkouts.push(currentWorkout);
+              workoutsByWeek.set(explicitWeekNumber, weekWorkouts);
+            } else {
+              sharedWorkouts.push(currentWorkout);
+            }
+            return;
+          }
 
-            setPlan((prev) => ({
-              ...prev,
-              workouts: [...prev.workouts, newWorkout]
-            }));
-          }}
-        >
-          ➕ Добавить тренировку
-        </button>
+          if (!currentWorkout) return;
+          const exerciseName = cleanCell(cells[exerciseColumn]);
+          if (!exerciseName) return;
+          const setsCount = Math.max(1, Math.round(readNumber(cells[setsColumn], 3)));
+          const reps = cleanCell(cells[repsColumn]) || "8";
+          const weight = cleanCell(cells[weightColumn]);
+          currentWorkout.exercises.push({
+            name: exerciseName,
+            video: "",
+            sets: Array.from({ length: setsCount }, () => ({ reps, weight }))
+          });
+        });
 
-        <button className="bigButton" onClick={saveWorkoutsToFirebase}>
-          💾 Сохранить изменения
-        </button>
+        const fallbackWeekStart = Math.max(1, microcycleNumber * 2 - 1 || sheetIndex * 2 + 1);
+        const weekNumbers = workoutsByWeek.size
+          ? [...workoutsByWeek.keys()].sort((a, b) => a - b)
+          : sheetWeekRangeMatch
+            ? Array.from(
+                { length: Number(sheetWeekRangeMatch[2]) - Number(sheetWeekRangeMatch[1]) + 1 },
+                (_, offset) => Number(sheetWeekRangeMatch[1]) + offset
+              )
+            : [explicitWeekNumber || fallbackWeekStart, explicitWeekNumber ? null : fallbackWeekStart + 1].filter(Boolean);
+
+        if (!microcycleNumber) {
+          microcycleNumber = Math.ceil((weekNumbers[0] || fallbackWeekStart) / 2);
+        }
+        if (!monthNumber) {
+          monthNumber = Math.ceil(microcycleNumber / 2);
+        }
+
+        const weeks = weekNumbers.map((weekNumber, weekIndex) => {
+          const workoutTemplates = workoutsByWeek.get(weekNumber) || sharedWorkouts;
+          return {
+            id: `week_${importStamp}_${microcycleNumber}_${weekNumber}`,
+            name: `Неделя ${weekNumber}`,
+            workouts: workoutTemplates.map((workout, workoutIndex) => ({
+              id: `workout_${importStamp}_${microcycleNumber}_${weekNumber}_${workoutIndex}`,
+              name: `Неделя ${weekNumber} — День ${workout.dayNumber || workoutIndex + 1}`,
+              exercises: workout.exercises.map((exercise, exerciseIndex) => ({
+                ...exercise,
+                id: `exercise_${importStamp}_${microcycleNumber}_${weekNumber}_${workoutIndex}_${exerciseIndex}`,
+                sets: exercise.sets.map((set, setIndex) => ({
+                  ...set,
+                  id: `set_${importStamp}_${microcycleNumber}_${weekNumber}_${workoutIndex}_${exerciseIndex}_${setIndex}`
+                }))
+              }))
+            }))
+          };
+        });
+
+        if (weeks.some((week) => week.workouts.length)) {
+          importedMicrocycles.push({
+            id: `microcycle_${importStamp}_${microcycleNumber}`,
+            name: `Микроцикл ${microcycleNumber}`,
+            monthId: `month_${monthNumber}`,
+            weeks
+          });
+        }
+      });
+
+      if (!importedMicrocycles.length) {
+        throw new Error("В Excel не найдены тренировки и упражнения.");
+      }
+
+      const monthIds = importedMicrocycles
+        .map((microcycle) => microcycle.monthId)
+        .filter((monthId, index, items) => items.indexOf(monthId) === index);
+      const months = monthIds.map((monthId) => {
+        const monthNumber = Number(String(monthId).match(/\d+/)?.[0]) || 1;
+        return {
+          id: monthId,
+          name: `Месяц ${monthNumber}`,
+          microcycles: importedMicrocycles.filter((microcycle) => microcycle.monthId === monthId)
+        };
+      });
+
+      return normalizeMonthProgram({
+        id: `excel_${importStamp}`,
+        name: fileName.replace(/\.xlsx$/i, "") || "Импортированная программа",
+        description: "Импортировано из Excel",
+        months,
+        blocks: importedMicrocycles
+      });
+    }
+
+    async function importMonthProgramFromFile(file) {
+      if (!file) return;
+
+      try {
+        const isExcel = /\.xlsx$/i.test(file.name || "");
+        let nextProgram;
+
+        if (isExcel) {
+          const { default: readExcelFile } = await import("read-excel-file/browser");
+          const sheets = await readExcelFile(file);
+          nextProgram = normalizeImportedExcelProgram(sheets, file.name);
+        } else {
+          const text = await file.text();
+          const parsed = JSON.parse(text);
+          nextProgram = normalizeImportedMonthlyProgram(parsed);
+        }
+        const owner = getCurrentProgramOwner();
+        const importStamp = Date.now();
+        nextProgram = normalizeMonthProgram({
+          ...nextProgram,
+          id: `imported_${importStamp}`,
+          ownerUid: owner.uid,
+          ownerRole: owner.role,
+          createdByUid: owner.uid,
+          updatedByUid: owner.uid,
+          createdAt: new Date(importStamp).toISOString()
+        });
+
+        setAdminProgramEditorMode("create");
+        setAdminProgramLibraryTab("editor");
+        setAdminOpenWorkoutId("");
+        setAdminSelectedExerciseId("");
+        setAdminExerciseSearch("");
+        adminExerciseEditSnapshotRef.current = null;
+        setAdminOpenProgramBlocks({});
+        setAdminOpenProgramWeeks({});
+        setAdminActiveProgramId(nextProgram.id);
+        setAdminSelectedTemplateId(nextProgram.id);
+        setAdminProgramGroups([nextProgram]);
+
+        const flatWorkouts = nextProgram.blocks.flatMap((block) =>
+          block.weeks.flatMap((week) =>
+            (week.workouts || []).map((workout) => ({
+              ...workout,
+              blockName: block.name,
+              weekName: week.name
+            }))
+          )
+        );
+
+        setPlan({ workouts: flatWorkouts });
+        setAdminTrainingTemplates((current) => [
+          { ...nextProgram, workouts: flatWorkouts },
+          ...current.filter((template) => template.id !== nextProgram.id)
+        ]);
+        const saved = await saveMonthProgramToLibrary(nextProgram);
+        if (saved) {
+          showAppError("savedLocal", `${isExcel ? "Excel" : "JSON"} импортирован в ваши программы.`);
+        }
+      } catch (error) {
+        console.error("Program import error:", error);
+        showAppError("load", error.message || "Не получилось импортировать программу.");
+      }
+    }
+
+    function createNewMonthProgramDraft() {
+      const owner = getCurrentProgramOwner();
+      const nextProgram = normalizeMonthProgram({
+        id: `month_${Date.now()}`,
+        name: "Новая программа на месяц",
+        ownerUid: owner.uid,
+        ownerRole: owner.role,
+        createdByUid: owner.uid,
+        updatedByUid: owner.uid,
+        blocks: [
+          { id: "microcycle_1", name: "Микроцикл 1", weeks: [{ id: "week_1", name: "Неделя 1", workouts: [] }, { id: "week_2", name: "Неделя 2", workouts: [] }] },
+          { id: "microcycle_2", name: "Микроцикл 2", weeks: [{ id: "week_3", name: "Неделя 3", workouts: [] }, { id: "week_4", name: "Неделя 4", workouts: [] }] },
+          { id: "microcycle_3", name: "Микроцикл 3", weeks: [{ id: "week_5", name: "Неделя 5", workouts: [] }, { id: "week_6", name: "Неделя 6", workouts: [] }] },
+          { id: "microcycle_4", name: "Микроцикл 4", weeks: [{ id: "week_7", name: "Неделя 7", workouts: [] }, { id: "week_8", name: "Неделя 8", workouts: [] }] }
+        ]
+      });
+
+      setAdminProgramEditorMode("create");
+      setAdminProgramLibraryTab("editor");
+      setAdminOpenWorkoutId("");
+      setAdminOpenProgramBlocks({});
+      setAdminOpenProgramWeeks({});
+      setAdminActiveProgramId(nextProgram.id);
+      setAdminSelectedTemplateId("");
+      setAdminProgramGroups([nextProgram]);
+      setPlan({ workouts: [] });
+    }
+
+    function editExistingMonthProgram(templateId) {
+      const template = adminTrainingTemplates.find((item) => item.id === templateId);
+
+      if (!template) return;
+      if (!canManageTrainingTemplate(template)) {
+        showAppError("load", "У вас нет прав на редактирование этой программы.");
+        return;
+      }
+
+      const templateMonths = Array.isArray(template.months) ? template.months : [];
+      const nestedMicrocycles = templateMonths.flatMap((month, monthIndex) =>
+        (Array.isArray(month.microcycles) ? month.microcycles : (month.blocks || [])).map((microcycle) => ({
+          ...microcycle,
+          monthId: microcycle.monthId || month.id || `month_${monthIndex + 1}`
+        }))
+      );
+      const hasStructuredHierarchy = templateMonths.some((month) =>
+        Array.isArray(month.microcycles) || Array.isArray(month.blocks)
+      ) || (templateMonths.length > 0 && Array.isArray(template.blocks));
+      const templateBlocks = nestedMicrocycles.length
+        ? nestedMicrocycles
+        : Array.isArray(template.blocks) && (template.blocks.length || hasStructuredHierarchy)
+          ? template.blocks
+          : hasStructuredHierarchy
+            ? []
+            : [
+            {
+              id: "microcycle_1",
+              name: "Микроцикл 1",
+              weeks: [
+                { id: "week_1", name: "Неделя 1", workouts: template.workouts || [] },
+                { id: "week_2", name: "Неделя 2", workouts: [] }
+              ]
+            },
+            {
+              id: "microcycle_2",
+              name: "Микроцикл 2",
+              weeks: [
+                { id: "week_3", name: "Неделя 3", workouts: [] },
+                { id: "week_4", name: "Неделя 4", workouts: [] }
+              ]
+            }
+          ];
+
+      const nextProgram = normalizeMonthProgram({
+        id: template.id,
+        name: template.name || "Программа на месяц",
+        description: template.description || "",
+        ownerUid: template.ownerUid || "",
+        ownerRole: template.ownerRole || "",
+        createdByUid: template.createdByUid || "",
+        updatedByUid: template.updatedByUid || "",
+        createdAt: template.createdAt,
+        months: hasStructuredHierarchy ? templateMonths : undefined,
+        blocks: templateBlocks
+      });
+
+      setAdminProgramEditorMode("edit");
+      setAdminSelectedTemplateId(template.id);
+      setAdminActiveProgramId(template.id);
+      setAdminOpenWorkoutId("");
+      setAdminSelectedExerciseId("");
+      setAdminExerciseSearch("");
+      adminExerciseEditSnapshotRef.current = null;
+      setAdminOpenProgramBlocks({});
+      setAdminOpenProgramWeeks({});
+      setAdminProgramGroups([nextProgram]);
+
+      const flatWorkouts = nextProgram.blocks.flatMap((block) =>
+        block.weeks.flatMap((week) =>
+          (week.workouts || []).map((workout) => ({
+            ...workout,
+            blockName: block.name,
+            weekName: week.name
+          }))
+        )
+      );
+
+      setPlan({ workouts: flatWorkouts });
+    }
+
+    async function refreshCurrentMonthProgram() {
+      const templateId = adminActiveProgramId || adminSelectedTemplateId;
+      const openWorkoutId = adminOpenWorkoutId;
+      const scrollPosition = { x: window.scrollX, y: window.scrollY };
+      if (!templateId) {
+        showAppError("load", "Сначала сохраните программу.");
+        return;
+      }
+
+      try {
+        const templateSnapshot = await getDoc(doc(db, "trainingTemplates", templateId));
+        if (!templateSnapshot.exists()) {
+          showAppError("load", "Сохранённая программа не найдена.");
+          return;
+        }
+
+        const template = { id: templateSnapshot.id, ...templateSnapshot.data() };
+        const nextProgram = normalizeMonthProgram({
+          id: template.id,
+          name: template.name || "Программа на месяц",
+          description: template.description || "",
+          ownerUid: template.ownerUid || "",
+          ownerRole: template.ownerRole || "",
+          createdByUid: template.createdByUid || "",
+          updatedByUid: template.updatedByUid || "",
+          createdAt: template.createdAt,
+          months: Array.isArray(template.months) ? template.months : undefined,
+          blocks: Array.isArray(template.blocks) ? template.blocks : undefined
+        });
+        const flatWorkouts = nextProgram.blocks.flatMap((block) =>
+          block.weeks.flatMap((week) =>
+            (week.workouts || []).map((workout) => ({
+              ...workout,
+              blockName: block.name,
+              weekName: week.name
+            }))
+          )
+        );
+
+        const refreshedOpenWorkout = openWorkoutId
+          ? flatWorkouts.find((workout) => workout.id === openWorkoutId)
+          : null;
+        const selectedExerciseExists = refreshedOpenWorkout?.exercises?.some(
+          (exercise) => exercise.id === adminSelectedExerciseId
+        );
+
+        setAdminProgramGroups([nextProgram]);
+        setPlan({ workouts: flatWorkouts });
+        setAdminTrainingTemplates((current) => current.map((item) =>
+          item.id === template.id ? template : item
+        ));
+        setAdminOpenWorkoutId(refreshedOpenWorkout ? openWorkoutId : "");
+        if (!refreshedOpenWorkout || (adminSelectedExerciseId && !selectedExerciseExists)) {
+          setAdminSelectedExerciseId("");
+          setAdminExerciseSearch("");
+          adminExerciseEditSnapshotRef.current = null;
+        }
+        window.requestAnimationFrame(() => {
+          window.scrollTo(scrollPosition.x, scrollPosition.y);
+        });
+        showAppError("savedLocal", "Данные программы обновлены.");
+      } catch (error) {
+        console.error("Refresh current program error:", error);
+        showAppError("firebase", "Не получилось обновить данные программы.");
+      }
+    }
+
+    function getTemplateStats(template = {}) {
+      const workouts = Array.isArray(template.workouts)
+        ? template.workouts
+        : (
+            (template.blocks || []).length
+              ? template.blocks
+              : (template.months || []).flatMap((month) => month.microcycles || month.blocks || [])
+          ).flatMap((block) =>
+            (block.weeks || []).flatMap((week) => week.workouts || [])
+          );
+      const templateMicrocycles = (template.blocks || []).length
+        ? template.blocks
+        : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);
+
+      const exercisesCount = workouts.reduce((sum, workout) => sum + ((workout.exercises || []).length), 0);
+      const weeksCount = templateMicrocycles.reduce((sum, block) => sum + ((block.weeks || []).length), 0);
+
+      return {
+        workoutsCount: workouts.length,
+        exercisesCount,
+        weeksCount: weeksCount || 4,
+        blocksCount: templateMicrocycles.length || 1
+      };
+    }
+
+    function openProgramFromLibrary(templateId) {
+      if (!templateId) return;
+      const template = adminTrainingTemplates.find((item) => item.id === templateId);
+      if (!template || !canManageTrainingTemplate(template)) {
+        showAppError("load", "У вас нет прав на редактирование этой программы.");
+        return;
+      }
+
+      editExistingMonthProgram(templateId);
+      setAdminProgramLibraryTab("editor");
+      setAdminProgramEditorMode("edit");
+    }
+
+    async function deleteProgramFromLibrary(templateId) {
+      const template = adminTrainingTemplates.find((item) => item.id === templateId);
+
+      if (!template) return false;
+      if (!canManageTrainingTemplate(template)) {
+        showAppError("load", "Тренер может удалять только свои программы.");
+        return false;
+      }
+
+      const confirmed = window.confirm(`Удалить программу “${template.name}” из библиотеки? Это не удалит уже назначенные клиентам тренировки.`);
+
+      if (!confirmed) return false;
+
+      try {
+        await deleteDoc(doc(db, "trainingTemplates", templateId));
+
+        if (adminSelectedTemplateId === templateId) {
+          setAdminSelectedTemplateId("");
+        }
+
+        await loadAdminTrainingTemplates();
+        showAppError("savedLocal", "Программа удалена из библиотеки.");
+        return true;
+      } catch (error) {
+        console.error("Delete program from library error:", error);
+        showAppError("firebase", "Не получилось удалить программу.");
+        return false;
+      }
+    }
+
+    async function deleteSelectedProgramFromLibrary() {
+      if (!adminSelectedTemplateId) {
+        showAppError("load", "Сначала выберите программу.");
+        return;
+      }
+
+      const deleted = await deleteProgramFromLibrary(adminSelectedTemplateId);
+      if (deleted) {
+        setAdminOpenWorkoutId("");
+        setAdminProgramLibraryTab("overview");
+      }
+    }
+
+    function handleMonthProgramBack() {
+      if (adminSelectedExerciseId) {
+        cancelMonthExerciseEdit();
+        return;
+      }
+
+      if (adminOpenWorkoutId) {
+        setAdminOpenWorkoutId("");
+        setAdminExerciseSearch("");
+        return;
+      }
+
+      if (Object.values(adminOpenProgramBlocks).some(Boolean)) {
+        setAdminOpenProgramBlocks({});
+        return;
+      }
+
+      openAdminProgramsOverview();
+    }
+
+    function deleteSelectedMonthExercise() {
+      if (!openMonthWorkoutContext || !adminSelectedExerciseId) {
+        showAppError("load", "Сначала выберите упражнение.");
+        return;
+      }
+
+      const exercise = (openMonthWorkoutContext.workout.exercises || [])
+        .find((item) => item.id === adminSelectedExerciseId);
+      if (!exercise) {
+        showAppError("load", "Выбранное упражнение не найдено.");
+        return;
+      }
+
+      if (!window.confirm(`Удалить упражнение “${exercise.name || "Без названия"}”?`)) return;
+
+      removeMonthExercise(
+        openMonthWorkoutContext.block.id,
+        openMonthWorkoutContext.week.id,
+        openMonthWorkoutContext.workout.id,
+        exercise.id
+      );
+      adminExerciseEditSnapshotRef.current = null;
+      setAdminSelectedExerciseId("");
+    }
+
+    async function refreshSelectedMonthExercise() {
+      if (!openMonthWorkoutContext || !adminSelectedExerciseId) return;
+
+      const templateId = adminActiveProgramId || adminSelectedTemplateId;
+      if (!templateId) {
+        showAppError("load", "Сначала сохраните программу.");
+        return;
+      }
+
+      try {
+        const templateSnapshot = await getDoc(doc(db, "trainingTemplates", templateId));
+        if (!templateSnapshot.exists()) {
+          showAppError("load", "Сохранённая программа не найдена.");
+          return;
+        }
+
+        const template = templateSnapshot.data();
+        const templateMicrocycles = Array.isArray(template.blocks)
+          ? template.blocks
+          : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);
+        const savedWorkouts = [
+          ...(template.workouts || []),
+          ...templateMicrocycles.flatMap((microcycle) =>
+            (microcycle.weeks || []).flatMap((week) => week.workouts || [])
+          )
+        ];
+        const savedExercise = savedWorkouts
+          .find((workout) => workout.id === openMonthWorkoutContext.workout.id)
+          ?.exercises?.find((exercise) => exercise.id === adminSelectedExerciseId);
+
+        if (!savedExercise) {
+          showAppError("load", "Упражнение ещё не сохранено.");
+          return;
+        }
+
+        updateMonthExercise(
+          openMonthWorkoutContext.block.id,
+          openMonthWorkoutContext.week.id,
+          openMonthWorkoutContext.workout.id,
+          adminSelectedExerciseId,
+          savedExercise
+        );
+        showAppError("savedLocal", "Данные упражнения обновлены.");
+      } catch (error) {
+        console.error("Refresh selected exercise error:", error);
+        showAppError("firebase", "Не получилось обновить упражнение.");
+      }
+    }
+
+    return (
+      <div className={`monthProgramEditorPage monthProgramPremium${adminProgramLibraryTab === "overview" ? " monthProgramOverviewMode" : ""}${adminOpenWorkoutId ? " monthProgramPremiumDayMode" : ""}`}>
+        <header className="programsCompactHeader">
+          <button
+            className="adminFixedMainBack"
+            onClick={() => adminProgramLibraryTab === "editor" ? handleMonthProgramBack() : setPage("main")}
+            aria-label={
+              adminProgramLibraryTab !== "editor"
+                ? "Главное меню"
+                : adminOpenWorkoutId
+                  ? "Назад к микроциклу"
+                  : Object.values(adminOpenProgramBlocks).some(Boolean)
+                    ? "К списку микроциклов"
+                    : "К программам"
+            }
+          >
+            <span>←</span>
+            <b>
+              {adminProgramLibraryTab !== "editor"
+                ? "Главное меню"
+                : adminOpenWorkoutId
+                  ? "К микроциклу"
+                  : Object.values(adminOpenProgramBlocks).some(Boolean)
+                    ? "К микроциклам"
+                    : "К программам"}
+            </b>
+          </button>
+          <h1>{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Программы"}</h1>
+        </header>
+
+        {adminProgramLibraryTab === "overview" ? (() => {
+          const selectedTemplate = adminTrainingTemplates.find((template) => template.id === adminSelectedTemplateId);
+
+          return (
+            <main className="programsOverviewPage">
+              <section className="programsOverviewSection">
+                <div className="programsOverviewSectionHead">
+                  <div>
+                    <span>БИБЛИОТЕКА</span>
+                    <h2>Готовые программы</h2>
+                  </div>
+                  <button type="button" onClick={loadAdminTrainingTemplates} aria-label="Обновить программы">↻</button>
+                </div>
+
+                {adminTrainingTemplates.length === 0 ? (
+                  <div className="programsOverviewEmpty">
+                    <strong>{canUseAdminFeatures() ? "Пока нет готовых программ" : "У вас пока нет программ"}</strong>
+                    <p>Создайте первую программу или загрузите Excel/JSON.</p>
+                    <div className="programsOverviewConstructorActions">
+                      <button type="button" onClick={createNewMonthProgramDraft}>Создать</button>
+                      <button type="button" onClick={() => adminProgramImportInputRef.current?.click()}>Загрузить</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="programsOverviewGrid">
+                    {adminTrainingTemplates.map((template) => {
+                      const stats = getTemplateStats(template);
+                      const isSelected = adminSelectedTemplateId === template.id;
+
+                      return (
+                        <button
+                          className={isSelected ? "programsOverviewCard selected" : "programsOverviewCard"}
+                          type="button"
+                          key={template.id}
+                          onClick={() => setAdminSelectedTemplateId(template.id)}
+                        >
+                          <div className="programsOverviewCardTitle">
+                            <strong>{template.name || "Без названия"}</strong>
+                            {isSelected && <span>Выбрана</span>}
+                          </div>
+                          <p>{template.description || "Готовая тренировочная программа из библиотеки."}</p>
+                          <div className="programsOverviewCardStats">
+                            <span><b>{stats.weeksCount}</b> недель</span>
+                            <span><b>{stats.workoutsCount}</b> тренировок</span>
+                            <span><b>{stats.blocksCount}</b> микроциклов</span>
+                            <span><b>{stats.exercisesCount}</b> упражнений</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+              </section>
+
+            </main>
+          );
+        })() : (
+          <>
+            <label className="monthProgramEditorNameField">
+              <span>Название программы</span>
+              <input
+                value={monthProgram.name || ""}
+                onChange={(event) => updateMonthProgramName(event.target.value)}
+                placeholder="Название программы"
+              />
+            </label>
+
+            <div className="monthProgramMonths">
+              {monthGroups.map((month, monthIndex) => {
+                const monthHasActiveWorkout = (month.microcycles || month.blocks || []).some((block) =>
+                  (block.weeks || []).some((week) =>
+                    (week.workouts || []).some((workout) => workout.id === adminOpenWorkoutId)
+                  )
+                );
+
+                return (
+                  <section
+                    className={`monthProgramMonth${monthHasActiveWorkout ? " active" : ""}`}
+                    key={month.id}
+                  >
+                    <div className="monthProgramMonthHead">
+                      <div>
+                        <span>Месяц {monthIndex + 1}</span>
+                        <h2>{month.name || `Месяц ${monthIndex + 1}`}</h2>
+                      </div>
+                    </div>
+
+                    <div className="monthProgramBlocks monthProgramPremiumBlocks">
+              {(month.microcycles || month.blocks || []).map((block) => {
+                const blockIndex = monthBlocks.findIndex((item) => item.id === block.id);
+                const blockWorkouts = (block.weeks || []).flatMap((week) =>
+                  (week.workouts || []).map((workout) => ({ workout, week }))
+                );
+                const activeWorkoutContext = blockWorkouts.find(({ workout }) => workout.id === adminOpenWorkoutId);
+                const isBlockOpen = Boolean(adminOpenProgramBlocks[block.id]);
+                return (
+                  <div
+                    className={`programEditorSwipeRow${activeWorkoutContext ? " active" : ""}${adminProgramSwipeOpenKey === `block:${block.id}` ? " delete-open" : ""}`}
+                    key={block.id}
+                    onPointerDown={(event) => handleAdminProgramSwipeStart(`block:${block.id}`, event)}
+                    onPointerUp={(event) => handleAdminProgramSwipeEnd(`block:${block.id}`, event)}
+                    onPointerCancel={(event) => handleAdminProgramSwipeCancel(`block:${block.id}`, event)}
+                    onClickCapture={handleAdminProgramSwipeClick}
+                  >
+                    <button
+                      className="programEditorSwipeDelete"
+                      type="button"
+                      onClick={() => removeMonthBlock(block.id)}
+                      aria-label="Удалить микроцикл"
+                      title="Удалить микроцикл"
+                    >
+                      <span aria-hidden="true">🗑</span>
+                    </button>
+                  <section
+                    className={`programEditorSwipeContent monthProgramBlock monthProgramPremiumBlock monthProgramAccordionBlock${isBlockOpen ? " expanded" : ""}${activeWorkoutContext ? " active" : ""}`}
+                  >
+                    <div className="monthProgramBlockHeaderRow">
+                      <button
+                        className="monthProgramAccordionHead"
+                        type="button"
+                        aria-expanded={isBlockOpen}
+                        onClick={() => toggleMonthProgramBlock(block.id)}
+                      >
+                        <div>
+                          <strong>{block.name || `Микроцикл ${blockIndex + 1}`}</strong>
+                          <span>{(block.weeks || []).length} нед.</span>
+                        </div>
+                        <small>{blockWorkouts.length} трен.</small>
+                      </button>
+                      <div className="monthProgramBlockControls">
+                        <button
+                          className="monthProgramCopyIcon"
+                          type="button"
+                          onClick={() => openCopyMonthProgramBlock(block.id)}
+                          aria-label="Копировать микроцикл"
+                          title="Копировать микроцикл"
+                        >
+                          ⧉
+                        </button>
+                        {isBlockOpen && (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              addMonthWeek(block.id);
+                            }}
+                          >
+                            + Неделя
+                          </button>
+                        )}
+                        <button
+                          className="monthProgramHeaderToggle"
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            toggleMonthProgramBlock(block.id);
+                          }}
+                        >
+                          {isBlockOpen ? "Свернуть" : "Раскрыть"}
+                        </button>
+                      </div>
+                    </div>
+
+                    {isBlockOpen && (
+                      <div className="monthProgramPremiumWeeks">
+                        {(block.weeks || []).map((week) => {
+                          const isWeekOpen = Boolean(adminOpenProgramWeeks[week.id]);
+
+                          return (
+                          <div
+                            className={`programEditorSwipeRow${adminProgramSwipeOpenKey === `week:${week.id}` ? " delete-open" : ""}`}
+                            key={week.id}
+                            onPointerDown={(event) => handleAdminProgramSwipeStart(`week:${week.id}`, event)}
+                            onPointerUp={(event) => handleAdminProgramSwipeEnd(`week:${week.id}`, event)}
+                            onPointerCancel={(event) => handleAdminProgramSwipeCancel(`week:${week.id}`, event)}
+                            onClickCapture={handleAdminProgramSwipeClick}
+                          >
+                            <button
+                              className="programEditorSwipeDelete"
+                              type="button"
+                              onClick={() => removeMonthWeek(block.id, week.id)}
+                              aria-label="Удалить неделю"
+                              title="Удалить неделю"
+                            >
+                              <span aria-hidden="true">🗑</span>
+                            </button>
+                          <article className={`programEditorSwipeContent monthProgramPremiumWeek${isWeekOpen ? " expanded" : ""}`}>
+                            <div className="monthProgramPremiumWeekHead">
+                              <button
+                                className="weekEditorToggle"
+                                type="button"
+                                aria-expanded={isWeekOpen}
+                                onClick={() => toggleMonthProgramWeek(week.id)}
+                              >
+                                <span>
+                                  <strong>{week.name}</strong>
+                                  <small>{(week.workouts || []).length} тренировок</small>
+                                </span>
+                              </button>
+                              <div className="weekEditorHeadActions">
+                                {isWeekOpen && (
+                                  <button
+                                    className="weekEditorAddDay"
+                                    type="button"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      addMonthWorkout(block.id, week.id);
+                                    }}
+                                  >
+                                    + Трен
+                                  </button>
+                                )}
+                                <button
+                                  className="weekEditorHeaderToggle"
+                                  type="button"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    toggleMonthProgramWeek(week.id);
+                                  }}
+                                >
+                                  {isWeekOpen ? "Свернуть" : "Раскрыть"}
+                                </button>
+                              </div>
+                            </div>
+                            {isWeekOpen && (
+                              <div className="monthProgramPremiumDays weekEditorDayList">
+                                {(week.workouts || []).map((workout, workoutIndex) => (
+                                  <div
+                                    className={`programEditorSwipeRow${adminProgramSwipeOpenKey === `workout:${workout.id}` ? " delete-open" : ""}`}
+                                    key={workout.id}
+                                    onPointerDown={(event) => handleAdminProgramSwipeStart(`workout:${workout.id}`, event)}
+                                    onPointerUp={(event) => handleAdminProgramSwipeEnd(`workout:${workout.id}`, event)}
+                                    onPointerCancel={(event) => handleAdminProgramSwipeCancel(`workout:${workout.id}`, event)}
+                                    onClickCapture={handleAdminProgramSwipeClick}
+                                  >
+                                    <button
+                                      className="programEditorSwipeDelete"
+                                      type="button"
+                                      onClick={() => confirmRemoveMonthWorkout(block.id, week.id, workout.id)}
+                                      aria-label="Удалить день"
+                                      title="Удалить день"
+                                    >
+                                      <span aria-hidden="true">🗑</span>
+                                    </button>
+                                  <article className="programEditorSwipeContent weekEditorDayCard">
+                                    <button
+                                      className="weekEditorDayOpen"
+                                      type="button"
+                                      onClick={() => {
+                                        setAdminSelectedExerciseId("");
+                                        setAdminExerciseSearch("");
+                                        setAdminOpenWorkoutId(workout.id);
+                                      }}
+                                    >
+                                      <strong>{workout.name || `День ${workoutIndex + 1}`}</strong>
+                                      <span>{(workout.exercises || []).length} упражнений</span>
+                                    </button>
+                                  </article>
+                                  </div>
+                                ))}
+                                {(week.workouts || []).length === 0 && <span>Добавьте первый день тренировки</span>}
+                              </div>
+                            )}
+                          </article>
+                          </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {activeWorkoutContext && (() => {
+                      const { workout, week } = activeWorkoutContext;
+                      const workoutExercises = workout.exercises || [];
+                      const selectedWorkoutExercise = workoutExercises.find(
+                        (exercise) => exercise.id === adminSelectedExerciseId
+                      );
+                      const normalizedExerciseSearch = adminExerciseSearch.trim().toLocaleLowerCase("ru");
+                      const exerciseSearchResults = normalizedExerciseSearch
+                        ? adminExerciseLibrary
+                            .filter((exercise) =>
+                              String(exercise.name || "").toLocaleLowerCase("ru").includes(normalizedExerciseSearch)
+                            )
+                            .slice(0, 8)
+                        : [];
+                      const workoutDayNumber = Math.max(
+                        1,
+                        (week.workouts || []).findIndex((item) => item.id === workout.id) + 1
+                      );
+
+                      return (
+                        <div className={`monthProgramPremiumDayEditor${selectedWorkoutExercise ? " exercise-fullscreen-open" : ""}`}>
+                          <button
+                            className="monthProgramPremiumBackToOverview"
+                            type="button"
+                            onClick={handleMonthProgramBack}
+                          >
+                            ← Назад к микроциклу
+                          </button>
+                          <div className="monthProgramPremiumDayHead">
+                            <label>
+                              <span>{week.name} — День {workoutDayNumber}</span>
+                              <input
+                                value={workout.name || ""}
+                                onChange={(event) => updateMonthWorkout(block.id, week.id, workout.id, { name: event.target.value })}
+                              />
+                            </label>
+                          </div>
+
+                          <div className="monthExerciseSearch">
+                            <input
+                              value={adminExerciseSearch}
+                              onChange={(event) => setAdminExerciseSearch(event.target.value)}
+                              placeholder="Поиск упражнения"
+                              aria-label="Поиск упражнения"
+                            />
+                            {normalizedExerciseSearch && (
+                              <div className="monthExerciseSearchResults">
+                                {exerciseSearchResults.map((exercise) => (
+                                  <button
+                                    type="button"
+                                    key={`${exercise.name}-${exercise.video || ""}`}
+                                    onClick={() => addMonthExercise(block.id, week.id, workout.id, exercise)}
+                                  >
+                                    <strong>{exercise.name}</strong>
+                                    <span>{exercise.video ? "Видео добавлено" : "Добавить в тренировку"}</span>
+                                  </button>
+                                ))}
+                                {exerciseSearchResults.length === 0 && (
+                                  <span>Упражнение не найдено. Добавьте его кнопкой внизу.</span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="monthExerciseList compact monthProgramPremiumExerciseList">
+                            {workoutExercises.map((exercise, exerciseIndex) => {
+                              const exerciseSets = Array.isArray(exercise.sets) && exercise.sets.length
+                                ? exercise.sets
+                                : [{ reps: 8, weight: "" }];
+                              const isExerciseSelected = adminSelectedExerciseId === exercise.id;
+
+                              return (
+                                <div
+                                  className={`monthExerciseCard compact monthProgramPremiumExercise${isExerciseSelected ? " selected" : ""}`}
+                                  key={exercise.id}
+                                  data-month-exercise-id={exercise.id}
+                                >
+                                  {!isExerciseSelected ? (
+                                    <button
+                                      className="monthExerciseListItem"
+                                      type="button"
+                                      onClick={() => openMonthExerciseEditor(block.id, week.id, workout.id, exercise)}
+                                    >
+                                      <strong>{exercise.name || "Упражнение"}</strong>
+                                      <span>{exerciseSets.length} подхода</span>
+                                    </button>
+                                  ) : (
+                                    <>
+                                    <nav className="exerciseEditBar" aria-label="Редактирование упражнения">
+                                      <button
+                                        type="button"
+                                        onClick={(event) => {
+                                          event.stopPropagation();
+                                          cancelMonthExerciseEdit();
+                                        }}
+                                      >
+                                        <span>←</span>
+                                        <small>Назад</small>
+                                      </button>
+                                      <button className="empty" type="button" disabled aria-hidden="true" />
+                                      <button className="empty" type="button" disabled aria-hidden="true" />
+                                      <button
+                                        className="save"
+                                        type="button"
+                                        disabled={adminExerciseVideoUploadingId === exercise.id}
+                                        onClick={(event) => {
+                                          event.stopPropagation();
+                                          saveMonthExerciseEdit();
+                                        }}
+                                      >
+                                        <span>💾</span>
+                                        <small>Сохранить</small>
+                                      </button>
+                                    </nav>
+
+                                    <h2 className="monthExerciseFullscreenTitle">{exercise.name || "Упражнение"}</h2>
+
+                                    <div className="monthExerciseVideoBlock">
+                                      {exercise.video ? (
+                                        <video src={exercise.video} controls playsInline preload="metadata" />
+                                      ) : (
+                                        <span>Видео пока не загружено</span>
+                                      )}
+                                      <label className={exercise.video ? "monthVideoUploadBtn added" : "monthVideoUploadBtn"}>
+                                        <input
+                                          type="file"
+                                          accept="video/*"
+                                          disabled={adminExerciseVideoUploadingId === exercise.id}
+                                          onChange={(event) => uploadMonthExerciseVideo(block.id, week.id, workout.id, exercise.id, event.target.files?.[0])}
+                                        />
+                                        {adminExerciseVideoUploadingId === exercise.id
+                                          ? "Загружаю видео..."
+                                          : exercise.video
+                                            ? "Заменить видео"
+                                            : "Загрузить видео"}
+                                      </label>
+                                    </div>
+
+                                  <div className="monthProgramPremiumExerciseNumber">{exerciseIndex + 1}</div>
+                                  <div className="monthExerciseRow compact">
+                                    <input
+                                      value={exercise.name || ""}
+                                      onChange={(event) => updateMonthExercise(block.id, week.id, workout.id, exercise.id, { name: event.target.value })}
+                                      placeholder="Название упражнения"
+                                    />
+                                  </div>
+
+                                  <div className="monthProgramPremiumSetLegend">
+                                    <span>Подход</span><span>Повторы</span><span>Вес, кг</span><span />
+                                  </div>
+                                  <div className="monthExerciseSets compact">
+                                    {exerciseSets.map((set, setIndex) => (
+                                      <div className="monthExerciseSetRow compact" key={setIndex}>
+                                        <span>{setIndex + 1}</span>
+                                        <input
+                                          value={set.reps || ""}
+                                          onChange={(event) => updateMonthExerciseSet(block.id, week.id, workout.id, exercise.id, setIndex, { reps: event.target.value })}
+                                          placeholder="8"
+                                          inputMode="numeric"
+                                          aria-label={`Повторы, подход ${setIndex + 1}`}
+                                        />
+                                        <input
+                                          value={set.weight || ""}
+                                          onChange={(event) => updateMonthExerciseSet(block.id, week.id, workout.id, exercise.id, setIndex, { weight: event.target.value })}
+                                          placeholder="60"
+                                          inputMode="decimal"
+                                          aria-label={`Вес, подход ${setIndex + 1}`}
+                                        />
+                                        <button
+                                          type="button"
+                                          disabled={exerciseSets.length <= 1}
+                                          onClick={() => removeMonthExerciseSet(block.id, week.id, workout.id, exercise.id, setIndex)}
+                                        >
+                                          −
+                                        </button>
+                                      </div>
+                                    ))}
+                                  </div>
+
+                                  <button
+                                    className="monthAddSetBtn compact"
+                                    type="button"
+                                    onClick={() => addMonthExerciseSet(block.id, week.id, workout.id, exercise.id)}
+                                  >
+                                    + подход
+                                  </button>
+
+                                  </>
+                                  )}
+                                </div>
+                              );
+                            })}
+
+                            {workoutExercises.length === 0 && (
+                              <div className="monthProgramEmpty compact">В этой тренировке пока нет упражнений</div>
+                            )}
+                          </div>
+
+                          <button className="monthAddExerciseBtn" onClick={() => addMonthExercise(block.id, week.id, workout.id)}>
+                            + Добавить упражнение
+                          </button>
+                        </div>
+                      );
+                    })()}
+                  </section>
+                  </div>
+                );
+              })}
+                    </div>
+                    <button
+                      className="monthProgramMonthAddBlock"
+                      type="button"
+                      onClick={() => addMonthBlock(month.id)}
+                    >
+                      + Микроцикл
+                    </button>
+                  </section>
+                );
+              })}
+            </div>
+
+          </>
+        )}
+
+          {adminProgramCopyTarget && (
+            <div className="programCopySheetBackdrop" onClick={() => setAdminProgramCopyTarget(null)}>
+              <section
+                className="programCopySheet"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="program-copy-sheet-title"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="programCopySheetHandle" />
+                <h2 id="program-copy-sheet-title">Куда вставить копию микроцикла?</h2>
+
+                <div className="programCopyTargetList">
+                  {monthGroups.map((month, monthIndex) => (
+                    <section className="programCopyTargetMonth" key={month.id}>
+                      <h3>Месяц {monthIndex + 1}</h3>
+                      <button
+                        type="button"
+                        onClick={() => copyMonthProgramBlock(adminProgramCopyTarget.blockId, month.id)}
+                      >
+                        В начало месяца
+                      </button>
+                      {(month.microcycles || month.blocks || []).map((block, blockIndex) => (
+                        <button
+                          type="button"
+                          key={block.id}
+                          onClick={() => copyMonthProgramBlock(
+                            adminProgramCopyTarget.blockId,
+                            month.id,
+                            block.id
+                          )}
+                        >
+                          После {block.name || `Микроцикла ${blockIndex + 1}`}
+                        </button>
+                      ))}
+                    </section>
+                  ))}
+                </div>
+
+                <div className="programCopySheetActions">
+                  <button type="button" onClick={() => setAdminProgramCopyTarget(null)}>Отмена</button>
+                </div>
+              </section>
+            </div>
+          )}
+
+          <input
+            ref={adminProgramImportInputRef}
+            className="programsBottomBarImportInput"
+            type="file"
+            accept="application/json,.json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.xlsx"
+            onChange={(event) => {
+              importMonthProgramFromFile(event.target.files?.[0]);
+              event.target.value = "";
+            }}
+          />
+          {adminSelectedExerciseId ? null : adminOpenWorkoutId && openMonthWorkoutContext ? (
+            <nav className="adminV3Nav adminV3BottomBar workoutEditorBottomBar" aria-label="Редактор тренировки">
+              <button type="button" onClick={handleMonthProgramBack}>
+                <span className="adminV3NavIcon">←</span>
+                <span className="adminV3NavLabel">К микроциклу</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => addMonthExercise(
+                  openMonthWorkoutContext.block.id,
+                  openMonthWorkoutContext.week.id,
+                  openMonthWorkoutContext.workout.id
+                )}
+              >
+                <span className="adminV3NavIcon">＋</span>
+                <span className="adminV3NavLabel">Упражнение</span>
+              </button>
+              <button className="workoutEditorBottomBarDelete" type="button" onClick={deleteSelectedMonthExercise}>
+                <span className="adminV3NavIcon">×</span>
+                <span className="adminV3NavLabel">Удалить</span>
+              </button>
+              <button type="button" onClick={saveMonthWorkoutAndReturnToBlock}>
+                <span className="adminV3NavIcon">💾</span>
+                <span className="adminV3NavLabel">Сохранить</span>
+              </button>
+            </nav>
+          ) : adminProgramLibraryTab === "editor" ? (
+            <nav className="adminV3Nav adminV3BottomBar programEditorBottomBar" aria-label="Редактор программы">
+              <button type="button" onClick={openAdminProgramsOverview}>
+                <span className="adminV3NavIcon">←</span>
+                <span className="adminV3NavLabel">Назад</span>
+              </button>
+              <button type="button" onClick={refreshCurrentMonthProgram}>
+                <span className="adminV3NavIcon">↻</span>
+                <span className="adminV3NavLabel">Обновить</span>
+              </button>
+              <button className="programEditorBottomBarDelete" type="button" onClick={deleteSelectedProgramFromLibrary}>
+                <span className="adminV3NavIcon">×</span>
+                <span className="adminV3NavLabel">Удалить</span>
+              </button>
+              <button className="programEditorBottomBarSave" type="button" onClick={saveMonthProgramAndOpenOverview}>
+                <span className="adminV3NavIcon">💾</span>
+                <span className="adminV3NavLabel">Сохранить</span>
+              </button>
+            </nav>
+          ) : (
+            <nav className="adminV3Nav adminV3BottomBar programsBottomBar" aria-label="Меню программ">
+              <button
+                type="button"
+                onClick={() => setPage("admin")}
+              >
+                <span className="adminV3NavIcon">←</span>
+                <span className="adminV3NavLabel">Назад</span>
+              </button>
+              <button type="button" onClick={createNewMonthProgramDraft}>
+                <span className="adminV3NavIcon">＋</span>
+                <span className="adminV3NavLabel">Создать</span>
+              </button>
+              <button type="button" onClick={() => openProgramFromLibrary(adminSelectedTemplateId)}>
+                <span className="adminV3NavIcon">✎</span>
+                <span className="adminV3NavLabel">Редактировать</span>
+              </button>
+              <button type="button" onClick={() => adminProgramImportInputRef.current?.click()}>
+                <span className="adminV3NavIcon">↑</span>
+                <span className="adminV3NavLabel">Загрузить</span>
+              </button>
+            </nav>
+          )}
       </div>
     );
   }
 
   if (page === "workouts" && !selectedWorkoutId) {
+    const sortedWorkouts = sortWorkoutDays(plan.workouts || []);
+    const completedWorkoutSet = getCompletedWorkoutSet(history);
+    const isIndividualWorkoutMode = workoutModePreference.mode === "individual";
+    const nextUncompletedWorkoutIndex = isIndividualWorkoutMode
+      ? getNextUncompletedWorkoutIndex(sortedWorkouts, completedWorkoutSet)
+      : 0;
+    const activeWorkoutIndex = isIndividualWorkoutMode
+      ? Math.min(
+          Math.max(
+            individualWorkoutIndexInitialized
+              ? (Number.isFinite(Number(individualWorkoutIndex)) ? Number(individualWorkoutIndex) : nextUncompletedWorkoutIndex)
+              : nextUncompletedWorkoutIndex,
+            0
+          ),
+          Math.max(sortedWorkouts.length - 1, 0)
+        )
+      : 0;
+    const activeIndividualWorkout = sortedWorkouts[activeWorkoutIndex];
+    const completedWorkoutCount = sortedWorkouts.filter((workoutItem) => (
+      isWorkoutCompletedByHistory(workoutItem, completedWorkoutSet)
+    )).length;
+    const activeIndividualWorkoutCompleted = isWorkoutCompletedByHistory(
+      activeIndividualWorkout,
+      completedWorkoutSet
+    );
+    const currentWorkoutUserId = (auth.currentUser || user)?.uid || "";
+    const activeWorkoutDraft = currentWorkoutUserId && activeIndividualWorkout?.id
+      ? safeReadJsonStorage(getWorkoutDraftKey(currentWorkoutUserId, activeIndividualWorkout.id), null)
+      : null;
+    const activeDraftAssignmentVersion =
+      activeWorkoutDraft?.assignmentVersion ||
+      activeWorkoutDraft?.assignedProgramUpdatedAt ||
+      activeWorkoutDraft?.plan?.assignedProgramUpdatedAt ||
+      "";
+    const hasActiveWorkoutDraft = Boolean(
+      activeWorkoutDraft?.workoutId === activeIndividualWorkout?.id &&
+      (
+        !plan.assignedProgramUpdatedAt ||
+        activeDraftAssignmentVersion === plan.assignedProgramUpdatedAt
+      )
+    );
+    const activeWorkoutActionLabel = hasActiveWorkoutDraft
+      ? "Продолжить тренировку"
+      : activeIndividualWorkoutCompleted
+        ? "Повторить тренировку"
+        : "Начать тренировку";
+
+    function openWorkoutByIndex(index) {
+      const nextWorkout = sortedWorkouts[index];
+
+      if (nextWorkout) {
+        openWorkout(nextWorkout.id);
+      }
+    }
+
+    function moveIndividualWorkout(direction) {
+      if (!sortedWorkouts.length) return;
+
+      const currentIndex = Math.max(0, activeWorkoutIndex);
+      const nextIndex =
+        direction === "previous"
+          ? (currentIndex - 1 + sortedWorkouts.length) % sortedWorkouts.length
+          : (currentIndex + 1) % sortedWorkouts.length;
+
+      setIndividualWorkoutIndex(nextIndex);
+      setIndividualWorkoutIndexInitialized(true);
+    }
+
+    function dismissIndividualWorkoutSwipeHint() {
+      if (!individualWorkoutSwipeHintVisible) return;
+      setIndividualWorkoutSwipeHintVisible(false);
+      safeWriteJsonStorage(INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY, false);
+    }
+
+    function handleIndividualWorkoutSwipeStart(event) {
+      if (event.pointerType === "mouse" || sortedWorkouts.length < 2) return;
+
+      individualWorkoutSwipeStartRef.current = {
+        x: event.clientX,
+        y: event.clientY
+      };
+    }
+
+    function handleIndividualWorkoutSwipeEnd(event) {
+      const start = individualWorkoutSwipeStartRef.current;
+      individualWorkoutSwipeStartRef.current = null;
+      if (!start) return;
+
+      const deltaX = event.clientX - start.x;
+      const deltaY = event.clientY - start.y;
+      if (Math.abs(deltaX) < 44 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return;
+
+      individualWorkoutSwipeSuppressClickRef.current = true;
+      dismissIndividualWorkoutSwipeHint();
+      moveIndividualWorkout(deltaX < 0 ? "next" : "previous");
+      window.setTimeout(() => {
+        individualWorkoutSwipeSuppressClickRef.current = false;
+      }, 180);
+    }
+
     return (
-      <div className="workoutSelectPage">
+      <div className={isIndividualWorkoutMode ? "workoutSelectPage individualWorkoutSelectPage" : "workoutSelectPage"}>
         <div className="workoutSelectHero">
           <h1 className="workoutSelectTitle">
-            <span>Выбери</span>
-            <strong>свою тренировку</strong>
+            <span>{isIndividualWorkoutMode ? "Индивидуальный" : "Выбери"}</span>
+            <strong>{isIndividualWorkoutMode ? "план тренера" : "свою тренировку"}</strong>
           </h1>
 
-          <p>Подбери план на сегодня и двигайся к цели</p>
+          <p>
+            {isIndividualWorkoutMode
+              ? "Листай тренировки и выбирай нужную"
+              : "Подбери план на сегодня и двигайся к цели"}
+          </p>
           <div className="workoutSelectLine" />
         </div>
 
-        <div className="workoutSelectList">
-          {plan.workouts.map((w, index) => {
-            const item = workoutMenuItems[index] || {
-              day: `День ${index + 1}`,
-              title: w.name.replace(/^День\s*\d+\s*[—-]\s*/i, ""),
-              image: workoutMenuItems[0].image
-            };
+        <div className={isIndividualWorkoutMode ? "workoutSelectList individualWorkoutDeck" : "workoutSelectList"}>
+          {sortedWorkouts.length === 0 ? (
+            <div className="workoutProgramEmptyState">
+              <div className="workoutProgramEmptyIcon">⏳</div>
+              <h2>Тренировка ещё не назначена</h2>
+              <p>Тренер пока не назначил тебе программу. Как только тренировка появится в твоём профиле, она отобразится здесь.</p>
+              <button onClick={goBackToMain}>Вернуться в меню</button>
+            </div>
+          ) : isIndividualWorkoutMode && activeIndividualWorkout ? (
+            (() => {
+              const w = activeIndividualWorkout;
+              const index = activeWorkoutIndex;
+              const completed = activeIndividualWorkoutCompleted;
+              const activeNext = index === nextUncompletedWorkoutIndex;
+              const item = getWorkoutPresentation(w, index);
+              const fallbackImage =
+                item.image ||
+                workoutMenuItems[index % workoutMenuItems.length]?.image ||
+                workoutMenuItems[0]?.image ||
+                "";
+              const coverImage = getWorkoutCover(w);
 
-            return (
-              <button
-                className="workoutSelectCard"
-                key={w.id}
-                onClick={() => openWorkout(w.id)}
-              >
-                <span className="workoutSelectImageWrap">
-                  <img src={item.image} alt="" className="workoutSelectImage" />
-                </span>
+              return (
+                <button
+                  className={`workoutSelectCard individualWorkoutCardPro ${completed ? "completed" : ""} ${activeNext ? "activeNext" : ""}`}
+                  key={w.id}
+                  data-workout-card-id={w.id}
+                  onPointerDown={handleIndividualWorkoutSwipeStart}
+                  onPointerUp={handleIndividualWorkoutSwipeEnd}
+                  onPointerCancel={() => {
+                    individualWorkoutSwipeStartRef.current = null;
+                  }}
+                  onClick={(event) => {
+                    if (individualWorkoutSwipeSuppressClickRef.current) {
+                      event.preventDefault();
+                      return;
+                    }
+                    openWorkout(w.id);
+                  }}
+                >
+                  <span className="individualWorkoutProTop">
+                    <span className="individualWorkoutBadges">
+                      {completed && <span className="individualWorkoutCompletedBadge">✓ Выполнена</span>}
+                      {activeNext && !completed && <span className="individualWorkoutNextBadge">Следующая</span>}
+                    </span>
+                    <span className="individualWorkoutWeek">{item.day}</span>
+                  </span>
 
-                <span className="workoutSelectText">
-                  <span className="workoutSelectDay">{item.day}</span>
-                  <span className="workoutSelectName">{item.title}</span>
-                </span>
+                  <span className="individualWorkoutProBody">
+                    <span className="individualWorkoutProInfo">
+                      <span className="individualWorkoutTitle">{item.title}</span>
+                      <span className="individualWorkoutAccentLine" />
 
-                <span className="workoutSelectArrow">›</span>
-              </button>
-            );
-          })}
+                      <span className="individualWorkoutStats">
+                        <span><b>🏋️</b>{item.exerciseCount} упражнений</span>
+                        <span><b>▰</b>{item.setCount} подходов</span>
+                        <span><b>⏱</b>{item.duration}</span>
+                      </span>
+                    </span>
+
+                    <span className="individualWorkoutProImage">
+                      {coverImage || fallbackImage ? (
+                        <img
+                          src={coverImage || fallbackImage}
+                          alt=""
+                          onError={(event) => {
+                            if (!fallbackImage || event.currentTarget.dataset.fallbackApplied === "true") return;
+                            event.currentTarget.dataset.fallbackApplied = "true";
+                            event.currentTarget.src = fallbackImage;
+                          }}
+                        />
+                      ) : (
+                        <span className="individualWorkoutImageFallback">
+                          <b>{item.title}</b>
+                          <small>{w.exercises?.[0]?.name || "Персональная тренировка"}</small>
+                        </span>
+                      )}
+                    </span>
+                  </span>
+
+                  <span className="individualWorkoutTrainerTip">
+                    <b>i</b>
+                    <span>
+                      <strong>Совет тренера</strong>
+                      <small>{item.trainerTip}</small>
+                    </span>
+                  </span>
+
+                </button>
+              );
+            })()
+          ) : (
+            sortedWorkouts.map((w, index) => {
+              const weekNumber =
+                String(w.name || "").match(/неделя\s*(\d+)/i)?.[1] ||
+                String(w.weekName || "").match(/неделя\s*(\d+)/i)?.[1] ||
+                String(w.id || "").match(/week[_-]?(\d+)/i)?.[1];
+
+              const workoutDayNumber =
+                String(w.name || "").match(/день\s*(\d+)/i)?.[1] ||
+                String(w.id || "").match(/day[_-]?(\d+)/i)?.[1] ||
+                index + 1;
+
+              const fallbackItem = workoutMenuItems[index % workoutMenuItems.length] || workoutMenuItems[0];
+
+              const item = {
+                day: weekNumber ? `Неделя ${weekNumber} · День ${workoutDayNumber}` : `День ${workoutDayNumber}`,
+                title: String(w.name || `День ${workoutDayNumber}`)
+                  .replace(/^Неделя\s*\d+\s*[—-]\s*/i, "")
+                  .replace(/^День\s*\d+\s*[—-]\s*/i, ""),
+                image: fallbackItem?.image || workoutMenuItems[0].image
+              };
+
+              return (
+                <button
+                  className="workoutSelectCard"
+                  key={w.id}
+                  onClick={() => openWorkout(w.id)}
+                >
+                  <span className="workoutSelectImageWrap">
+                    <img src={item.image} alt="" className="workoutSelectImage" />
+                  </span>
+
+                  <span className="workoutSelectText">
+                    <span className="workoutSelectDay">{item.day}</span>
+                    <span className="workoutSelectName">{item.title}</span>
+                  </span>
+
+                  <span className="workoutSelectArrow">›</span>
+                </button>
+              );
+            })
+          )}
         </div>
 
-        <button className="workoutSelectBack universalFixedBackPointer" onClick={goBackToMain}>
-          ← Назад
-        </button>
+        {isIndividualWorkoutMode && sortedWorkouts.length > 1 && (
+          <div className="individualWorkoutNav">
+            <button
+              type="button"
+              aria-label="Предыдущая тренировка"
+              onClick={() => {
+                dismissIndividualWorkoutSwipeHint();
+                moveIndividualWorkout("previous");
+              }}
+            >
+              ←
+            </button>
+
+            <div className="individualWorkoutCenterNav">
+              {individualWorkoutSwipeHintVisible && (
+                <small className="individualWorkoutSwipeHint">
+                  Свайпни, чтобы выбрать тренировку
+                </small>
+              )}
+            </div>
+
+            <button
+              type="button"
+              aria-label="Следующая тренировка"
+              onClick={() => {
+                dismissIndividualWorkoutSwipeHint();
+                moveIndividualWorkout("next");
+              }}
+            >
+              →
+            </button>
+          </div>
+        )}
+
+        {isIndividualWorkoutMode && sortedWorkouts.length > 0 && (
+          <div className="individualWorkoutBottomPanel">
+            <div className="individualWorkoutBottomProgress">
+              <span>{activeWorkoutIndex + 1} из {sortedWorkouts.length}</span>
+              <span>Выполнено {completedWorkoutCount} из {sortedWorkouts.length}</span>
+            </div>
+
+            <div className="individualWorkoutActionRow">
+              <button
+                type="button"
+                className="individualWorkoutBackButton"
+                onClick={goBackToMain}
+              >
+                Назад
+              </button>
+
+              <button
+                type="button"
+                className="individualWorkoutStartButton"
+                onClick={() => openWorkoutByIndex(activeWorkoutIndex)}
+              >
+                {activeWorkoutActionLabel}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {renderWorkoutDraftRestoreModal()}
       </div>
     );
   }
@@ -2611,7 +16223,7 @@ export default function App() {
       <div className="app">
         <div className="workoutHeader">
           <button className="backBtn universalFixedBackPointer" onClick={() => setSelectedWorkoutId(null)}>
-            ← Назад
+            ← Главное меню
           </button>
 
           <h1 className="workoutTitle">Тренировка не найдена</h1>
@@ -2623,12 +16235,12 @@ export default function App() {
   const isFinishSlideActive =
     workoutStarted && currentExerciseIndex === workout.exercises.length + 1;
 
-  const shouldShowTopBackButton = !isFinishSlideActive || isWorkoutSaved;
+  const shouldShowTopBackButton = isWorkoutSaved === true && !isFinishSlideActive;
 
   return (
-    <div className="app workoutRunPage">
+    <div className={`app workoutRunPage ${workoutStarted && !isWorkoutSaved ? "workoutRunPageNoHeader" : ""}`}>
       <div className="workoutHeader workoutHeaderCompact">
-        {shouldShowTopBackButton && (
+        {shouldShowTopBackButton && isWorkoutSaved && (
           <button
             className="backIconBtn universalFixedBackPointer"
             onClick={() => {
@@ -2638,6 +16250,8 @@ export default function App() {
               setWorkoutStarted(false);
               setWorkoutStartedAt(null);
               setWorkoutFinishedAt(null);
+              setIsWorkoutSaved(false);
+                    setShowWorkoutSavedCard(false);
             }}
             aria-label="Вернуться назад"
           >
@@ -2666,27 +16280,42 @@ export default function App() {
             : normalizeExercise(workout.exercises[currentExerciseIndex - 1]);
 
         const isFirstSlide = workoutStarted && currentExerciseIndex === 0;
+        const exerciseVideoFailed = exercise?.id && openVideoId === `error:${exercise.id}`;
+        const exerciseAiWeightAdjustments = exercise?.id && exercise.id !== "warmup"
+          ? exercise.sets
+              .filter((set) =>
+                set.aiOriginalWeight &&
+                String(set.aiOriginalWeight) !== String(set.weight)
+              )
+              .map((set) => `${set.aiOriginalWeight} → ${set.weight} кг`)
+          : [];
+        const sharedExerciseAiWeightAdjustment =
+          exerciseAiWeightAdjustments.length === exercise?.sets?.length &&
+          new Set(exerciseAiWeightAdjustments).size === 1
+            ? exerciseAiWeightAdjustments[0]
+            : "";
 
         const currentWorkoutSets = workout.exercises.flatMap((item) =>
           item.sets.map((set) => {
             const weight = Number(set.enteredWeight) || 0;
-            const reps = weight > 0 ? Number(set.enteredReps || set.reps || 8) || 0 : 0;
+            const enteredReps = Number(set.enteredReps) || 0;
+            const reps = enteredReps > 0
+              ? enteredReps
+              : weight > 0
+                ? Number(set.reps || 8) || 0
+                : 0;
 
             return {
               reps,
-              weight
+              weight,
+              completed: weight > 0 || enteredReps > 0
             };
           })
         );
 
         const totalSetsDone = currentWorkoutSets.filter(
-          (set) => set.weight > 0
+          (set) => set.completed
         ).length;
-
-        const totalRepsDone = currentWorkoutSets.reduce(
-          (sum, set) => sum + (set.weight > 0 ? set.reps : 0),
-          0
-        );
 
         const totalVolumeDone = currentWorkoutSets.reduce(
           (sum, set) => sum + (set.weight > 0 ? set.reps * set.weight : 0),
@@ -2694,7 +16323,13 @@ export default function App() {
         );
 
         const previousSameWorkout = history.find(
-          (item) => item.workout === workout.name
+          (item) => (
+            (item.workoutId === workout.id || item.workout === workout.name) &&
+            (
+              !workoutFinishedAt ||
+              new Date(item.date).getTime() < workoutFinishedAt - 1000
+            )
+          )
         );
 
         const previousVolume = previousSameWorkout
@@ -2716,29 +16351,44 @@ export default function App() {
 
         const completedExercisesCount = workout.exercises.filter((item) =>
           item.sets?.some(
-            (set) => Number(set.enteredWeight) > 0
+            (set) => Number(set.enteredWeight) > 0 || Number(set.enteredReps) > 0
           )
         ).length;
 
-        const finishPraiseText =
-          totalSetsDone > 0
-            ? "Красава. Ты не просто открыл тренировку — ты её сделал."
-            : "Хороший старт. Даже лёгкая тренировка лучше, чем пропустить.";
-
-        const finishMoodText =
-          volumeProgress === null
-            ? "Первая точка прогресса зафиксирована."
-            : volumeProgress > 0
-            ? "Сегодня ты прибавил к прошлому результату."
-            : volumeProgress === 0
-            ? "Стабильность тоже прогресс."
-            : "Сегодня был спокойный день — главное, что работа сделана.";
-
-        const nextWorkoutText =
+        const sortedPlanWorkouts = sortWorkoutDays(plan.workouts || []);
+        const workoutPosition = sortedPlanWorkouts.findIndex((item) => item.id === workout.id);
+        const finishPresentation = getWorkoutPresentation(
+          workout,
+          workoutPosition >= 0 ? workoutPosition : 0
+        );
+        const finishDurationText =
+          workoutDurationText === "0 сек"
+            ? "меньше минуты"
+            : workoutDurationText === "—"
+              ? ""
+              : workoutDurationText;
+        const finishStats = [
+          finishDurationText ? { label: "Время", value: finishDurationText } : null,
+          completedExercisesCount > 0
+            ? { label: "Упражнения", value: completedExercisesCount }
+            : null,
+          totalSetsDone > 0 ? { label: "Подходы", value: totalSetsDone } : null,
           totalVolumeDone > 0
-            ? "На следующей тренировке попробуй повторить этот объём или добавить 1–2 повтора."
-            : "На следующей тренировке заполни вес и повторы, чтобы видеть прогресс.";
-
+            ? { label: "Объём", value: `${Math.round(totalVolumeDone).toLocaleString("ru-RU")} кг` }
+            : null
+        ].filter(Boolean);
+        const finishProgressText =
+          totalSetsDone === 0 || volumeProgress === null
+            ? "Первая точка прогресса сохранена."
+            : volumeProgress > 0
+              ? `Новый результат: объём +${volumeProgress}% к прошлой тренировке.`
+              : volumeProgress === 0
+                ? "Объём совпал с прошлой тренировкой."
+                : `Объём ${volumeProgress}% к прошлой тренировке.`;
+        const finishAdviceText =
+          totalSetsDone > 0
+            ? "Восстановись и оставь 1–2 повтора в запасе на следующей тренировке."
+            : "В следующий раз заполни вес и повторы, чтобы видеть прогресс.";
         if (!exercise && !isFinishSlide && !isStartSlide) {
           return (
             <div className="exercise">
@@ -2750,7 +16400,7 @@ export default function App() {
         return (
           <div
             ref={deckRef}
-            className="exerciseDeck"
+            className="exerciseDeck workoutStageDeck"
             onTouchStart={handleExerciseTouchStart}
             onTouchMove={handleExerciseTouchMove}
             onTouchEnd={handleExerciseTouchEnd}
@@ -2763,108 +16413,25 @@ export default function App() {
               </div>
             )}
 
-            {isStartSlide ? (
-              <div
-                key="start-slide"
-                className={`exercise exerciseSlideCard startWorkoutSlide ${
-                  swipeDirection === "up"
-                    ? "slideFromBottom"
-                    : swipeDirection === "down"
-                    ? "slideFromTop"
-                    : ""
-                }`}
-                style={{
-                  transform: swipeOffset
-                    ? `translateY(${swipeOffset}px)`
-                    : undefined
-                }}
-              >
-                <div className="startWorkoutTop">
-                  <div className="workoutIntroBadge">🔥 Тренировка</div>
-
-                  <span className="startWorkoutIcon">🏋️</span>
-
-                  <h2 className="startWorkoutTitle">
-                    {workout.name.includes("—") ? (
-                      <>
-                        <span>{workout.name.split("—")[0].trim()}</span>
-                        <span>
-                          {workout.name
-                            .split("—")[1]
-                            .trim()
-                            .replace("/", " / ")}
-                        </span>
-                      </>
-                    ) : (
-                      <span>{workout.name}</span>
-                    )}
-                  </h2>
-
-                  <p className="startWorkoutText">
-                    {workout.exercises.length} упражнений · заполни подходы по ходу тренировки
-                  </p>
-                </div>
-
-                <div className="startWorkoutStats">
-                  <div className="startWorkoutStat">
-                    <span className="startWorkoutStatIcon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none">
-                        <path d="M5 9v6M19 9v6M3 10.5v3M21 10.5v3M7 12h10" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/>
-                      </svg>
-                    </span>
-                    <strong>{workout.exercises.length}</strong>
-                    <span>упражнений</span>
-                  </div>
-
-                  <div className="startWorkoutStat">
-                    <span className="startWorkoutStatIcon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none">
-                        <path d="M5 8.5L12 5l7 3.5-7 3.5-7-3.5Z" fill="currentColor" opacity="0.95"/>
-                        <path d="M6 13l6 3 6-3M6 17l6 3 6-3" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </span>
-                    <strong>3</strong>
-                    <span>подхода</span>
-                  </div>
-
-                  <div className="startWorkoutStat">
-                    <span className="startWorkoutStatIcon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="7.5" stroke="currentColor" strokeWidth="2.3"/>
-                        <path d="M12 7.8v4.6l3.2 1.9" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </span>
-                    <strong>~60</strong>
-                    <span>мин</span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  className="startWorkoutButton"
-                  onClick={() => {
-                    const startedAt = Date.now();
-                    setWorkoutStarted(true);
-                    setWorkoutStartedAt(startedAt);
-                    setTimerTick(startedAt);
-                    setWorkoutFinishedAt(null);
-                    setIsWorkoutSaved(false);
-                    setCurrentExerciseIndex(0);
-                    setSwipeDirection("up");
-                    centerExerciseDeck();
-
-                    setTimeout(() => {
-                      setSwipeDirection("");
-                    }, 360);
-                  }}
-                >
-                  Начать тренировку
-                </button>
+            {!isStartSlide && (
+              <div className="workoutStageTitle">
+                <span>{isFinishSlide ? "Тренировка завершена" : exercise?.name}</span>
               </div>
-            ) : isFinishSlide ? (
-              <div
-                key="finish-slide"
-                className={`finishSlideWrap ${
+            )}
+
+            {isStartSlide ? null : isFinishSlide ? (
+              <>
+                {showWorkoutSavedCard && (
+                  <div className="workoutSavedFloatingCard">
+                    <div className="workoutSavedCheck">✓</div>
+                    <strong>Тренировка сохранена</strong>
+                    <span>{postWorkoutFeedback?.advice || "Отличная работа"}</span>
+                  </div>
+                )}
+
+                <div
+                  key="finish-slide"
+                className={`finishSlideWrap workoutFinishScreen ${
                   swipeDirection === "up"
                     ? "slideFromBottom"
                     : swipeDirection === "down"
@@ -2877,110 +16444,77 @@ export default function App() {
                     : undefined
                 }}
               >
-                <div className="exercise exerciseSlideCard finishSummaryCard finishSummaryCardPremium">
-                  <div className="finishHero">
-                    <span className="finishWorkoutIcon">🏆</span>
-
-                    <div className="finishHeroText">
-                      <span className="finishEyebrow">
-                        {isWorkoutSaved ? "Сохранено" : "Тренировка выполнена"}
-                      </span>
-
-                      <h3>Отличная работа</h3>
-
-                      <p>{finishPraiseText}</p>
-                    </div>
+                <div className="exercise exerciseSlideCard finishSummaryCard workoutFinishCard workoutStageCard">
+                  <div className="workoutFinishTop">
+                    <span>Выполнена</span>
+                    <span>{finishPresentation.day}</span>
                   </div>
 
-                  <div className="finishBigTime">
-                    <span>Время тренировки</span>
-                    <strong>{workoutDurationText}</strong>
-                  </div>
-
-                  <div className="finishStatsGrid finishStatsGridPremium">
-                    <div className="finishStatBox">
-                      <span>Объём</span>
-                      <strong>
-                        {totalVolumeDone > 0 ? `${totalVolumeDone} кг` : "—"}
-                      </strong>
-                    </div>
-
-                    <div className="finishStatBox">
-                      <span>Подходы</span>
-                      <strong>{totalSetsDone || "—"}</strong>
-                    </div>
-
-                    <div className="finishStatBox">
-                      <span>Повторы</span>
-                      <strong>{totalRepsDone || "—"}</strong>
-                    </div>
-
-                    <div className="finishStatBox">
-                      <span>Упражнения</span>
-                      <strong>{completedExercisesCount || "—"}</strong>
-                    </div>
-                  </div>
-
-                  <div className="finishProgressCard">
+                  <div className="workoutFinishResult">
+                    <span className="workoutFinishTrophy" aria-hidden="true">🏆</span>
                     <div>
-                      <span>Прогресс</span>
-                      <strong>
-                        {volumeProgress === null
-                          ? "Новая база"
-                          : volumeProgress > 0
-                          ? `+${volumeProgress}%`
-                          : `${volumeProgress}%`}
-                      </strong>
+                      <p>Отличная работа</p>
                     </div>
-                    <p>{finishMoodText}</p>
                   </div>
 
-                  <div className="finishNextTip">
-                    <span>💡</span>
-                    <p>{nextWorkoutText}</p>
-                  </div>
-                </div>
-
-                <div className="finishNavigationRow">
-                  {!isWorkoutSaved && (
-                    <button
-                      type="button"
-                      className="finishBackButton"
-                      onClick={() => {
-                        setCurrentExerciseIndex(workout.exercises.length);
-                        setWorkoutFinishedAt(null);
-                        setSwipeDirection("down");
-                        centerExerciseDeck();
-
-                        setTimeout(() => {
-                          setSwipeDirection("");
-                        }, 360);
-                      }}
-                      aria-label="Вернуться к упражнениям"
-                    >
-                      ←
-                    </button>
+                  {finishStats.length > 0 && (
+                    <div className="workoutFinishStats">
+                      {finishStats.map((stat) => (
+                        <div key={stat.label}>
+                          <span>{stat.label}</span>
+                          <strong>{stat.value}</strong>
+                        </div>
+                      ))}
+                    </div>
                   )}
 
-                  <button
-                    type="button"
-                    className="finishWorkoutButton"
-                    onClick={saveWorkoutToFirebase}
-                    disabled={isSaving || isWorkoutSaved}
-                  >
-                    {isSaving
-                      ? "Сохраняю..."
-                      : isWorkoutSaved
-                      ? "Сохранено ✅"
-                      : "Завершить тренировку"}
-                  </button>
+                  <div className="workoutFinishProgress">
+                    <span>Прогресс</span>
+                    <strong>
+                      Выполнено {completedExercisesCount} из {workout.exercises.length} упражнений
+                    </strong>
+                    <p>{finishProgressText}</p>
+                  </div>
+
+                  <div className="workoutFinishTip">
+                    <span aria-hidden="true">💡</span>
+                    <p>{finishAdviceText}</p>
+                  </div>
                 </div>
               </div>
+
+              <div className="workoutFinishActionPanel workoutStageActionPanel">
+                <button
+                  type="button"
+                  className="finishWorkoutButton"
+                  onClick={() => {
+                    if (isWorkoutSaved) {
+                      setIsWorkoutSaved(false);
+                      setShowWorkoutSavedCard(false);
+                      goBackToMain();
+                      return;
+                    }
+
+                    setPostWorkoutFeedbackOpen(true);
+                  }}
+                  disabled={isSaving}
+                >
+                  {isSaving
+                    ? "Сохраняю..."
+                    : isWorkoutSaved
+                    ? "Вернуться в меню"
+                    : "Сохранить и завершить"}
+                </button>
+              </div>
+              </>
             ) : (
+              <>
               <div
                 key={exercise.id}
-                className={`exercise exerciseSlideCard ${
+                className={`exercise exerciseSlideCard workoutStageCard ${
                   exercise.id === "warmup" ? "warmupExerciseCard" : ""
+                } ${
+                  exercise.id !== "warmup" ? "workoutExerciseCard" : ""
                 } ${
                   openVideoId === exercise.id ? "videoOpenCard" : ""
                 } ${
@@ -2996,66 +16530,283 @@ export default function App() {
                     : undefined
                 }}
               >
-                <h3 className={exercise.id === "warmup" ? "warmupExerciseTitle" : ""}>
-                  {exercise.name}
-                </h3>
-
-                {exercise.video && (
+                {exercise.id === "warmup" ? (
+                  <header className="warmupPlanHeader">
+                    <div className="warmupPlanMeta">
+                      <span className="warmupPlanBadge">Подготовка</span>
+                      <span className="warmupPlanWorkout">{workout.name}</span>
+                    </div>
+                    <span className="warmupPlanAccent" aria-hidden="true" />
+                    <span className="warmupPlanSummary">3 шага · около 5 минут</span>
+                  </header>
+                ) : (
                   <>
-                    <button
-                      type="button"
-                      className="showVideoBtn"
-                      onClick={() =>
-                        setOpenVideoId(openVideoId === exercise.id ? null : exercise.id)
-                      }
-                    >
-                      🎥 {openVideoId === exercise.id ? "Скрыть технику" : "Показать технику"}
-                    </button>
+                    <div className="workoutExerciseMeta">
+                      <span>Упражнение {currentExerciseIndex} из {workout.exercises.length}</span>
+                      <b>{String(currentExerciseIndex).padStart(2, "0")}</b>
+                    </div>
 
-                    {openVideoId === exercise.id && (
-                      <div
-                        onClick={() => setFullscreenVideo(exercise.video)}
-                        style={{ cursor: "pointer" }}
-                      >
-                        <video className="exerciseVideo" src={exercise.video} controls />
-                      </div>
-                    )}
+                    <div
+                      className={`workoutExerciseVideoFrame ${!exercise.video || exerciseVideoFailed ? "fallback" : ""}`}
+                    >
+                      {exercise.video && !exerciseVideoFailed ? (
+                        <>
+                          <video
+                            className="exerciseVideo"
+                            src={exercise.video}
+                            playsInline
+                            preload="metadata"
+                            onPointerDown={(event) => event.stopPropagation()}
+                            onTouchStart={(event) => event.stopPropagation()}
+                            onTouchMove={(event) => event.stopPropagation()}
+                            onTouchEnd={(event) => event.stopPropagation()}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              if (event.currentTarget.paused) {
+                                event.currentTarget.play().catch(() => {
+                                  showAppError("load", "Не получилось запустить видео упражнения.");
+                                });
+                              } else {
+                                event.currentTarget.pause();
+                              }
+                            }}
+                            onPlay={() => {
+                              setInlinePlayingVideoId(exercise.id);
+                              showInlineVideoControlsTemporarily();
+                            }}
+                            onPause={() => {
+                              setInlinePlayingVideoId("");
+                              showInlineVideoControlsTemporarily();
+                            }}
+                            onEnded={() => {
+                              if (inlineVideoControlsTimerRef.current) {
+                                window.clearTimeout(inlineVideoControlsTimerRef.current);
+                                inlineVideoControlsTimerRef.current = null;
+                              }
+                              setInlinePlayingVideoId("");
+                              setInlineVideoControlsVisible(true);
+                            }}
+                            onLoadStart={() => startPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video })}
+                            onLoadedMetadata={(event) => endPerformanceCheck(`Video · ${exercise.name}`, {
+                              src: exercise.video,
+                              duration: Math.round(Number(event.currentTarget.duration) || 0)
+                            })}
+                            onError={() => {
+                              endPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video, error: true });
+                              if (inlineVideoControlsTimerRef.current) {
+                                window.clearTimeout(inlineVideoControlsTimerRef.current);
+                                inlineVideoControlsTimerRef.current = null;
+                              }
+                              setInlinePlayingVideoId("");
+                              setInlineVideoControlsVisible(true);
+                              setOpenVideoId(`error:${exercise.id}`);
+                            }}
+                          />
+                          {inlinePlayingVideoId !== exercise.id && (
+                            <button
+                              type="button"
+                              className={`workoutExerciseInlinePlayButton ${inlineVideoControlsVisible ? "" : "is-hidden"}`}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                const video = event.currentTarget.parentElement?.querySelector("video");
+                                video?.play().catch(() => {
+                                  showAppError("load", "Не получилось запустить видео упражнения.");
+                                });
+                              }}
+                              aria-label="Воспроизвести видео упражнения"
+                            >
+                              <span aria-hidden="true">▶</span>
+                            </button>
+                          )}
+                          {inlinePlayingVideoId === exercise.id && (
+                            <button
+                              type="button"
+                              className={`workoutExerciseInlinePauseButton ${inlineVideoControlsVisible ? "" : "is-hidden"}`}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                event.currentTarget.parentElement?.querySelector("video")?.pause();
+                              }}
+                              aria-label="Поставить видео на паузу"
+                            >
+                              <span aria-hidden="true">Ⅱ</span>
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            className="workoutExerciseFullscreenButton"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              event.currentTarget.parentElement?.querySelector("video")?.pause();
+                              setFullscreenVideo(exercise.video);
+                            }}
+                            aria-label="Развернуть видео на весь экран"
+                            title="На весь экран"
+                          >
+                            <span aria-hidden="true">⛶</span>
+                          </button>
+                        </>
+                      ) : (
+                        <div className="workoutExerciseVideoFallback">
+                          <strong>Видео техники недоступно</strong>
+                          <small>Следуй описанию упражнения</small>
+                        </div>
+                      )}
+                    </div>
                   </>
                 )}
 
                 {exercise.id === "warmup" ? (
+                  <>
                   <div className="warmupExerciseHero">
                     <div className="warmupExerciseIntro">
-                      <span>🔥</span>
-                      <p>
-                        Сделай короткую разминку перед рабочими подходами.
-                        Это поможет разогреть суставы и лучше почувствовать технику.
-                      </p>
-                    </div>
-
-                    <div className="warmupExerciseItem">
-                      <span>🚶</span>
+                      <span aria-hidden="true">i</span>
                       <div>
-                        <strong>2–3 минуты лёгкого кардио</strong>
-                        <small>Дорожка, велосипед или быстрая ходьба</small>
+                        <strong>Подготовь тело к нагрузке</strong>
+                        <p>Разогрей суставы и подготовься к рабочим подходам.</p>
                       </div>
                     </div>
 
-                    <div className="warmupExerciseItem">
-                      <span>🦾</span>
-                      <div>
-                        <strong>Суставная разминка</strong>
-                        <small>Плечи, локти, кисти, таз и поясница</small>
+                    <div className="warmupExerciseSteps">
+                      <div className="warmupExerciseItem">
+                        <span aria-hidden="true">01</span>
+                        <div>
+                          <strong>Кардио · 2–3 минуты</strong>
+                          <small>Дорожка, велосипед или быстрая ходьба</small>
+                        </div>
+                      </div>
+
+                      <div className="warmupExerciseItem">
+                        <span aria-hidden="true">02</span>
+                        <div>
+                          <strong>Суставная разминка</strong>
+                          <small>Плечи, локти, таз, колени и голеностоп</small>
+                        </div>
+                      </div>
+
+                      <div className="warmupExerciseItem">
+                        <span aria-hidden="true">03</span>
+                        <div>
+                          <strong>Лёгкий разминочный подход</strong>
+                          <small>Выполни первый подход с меньшим весом</small>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="warmupExerciseItem">
-                      <span>🏋️</span>
-                      <div>
-                        <strong>1 лёгкий разминочный подход</strong>
-                        <small>Перед первым упражнением, без отказа</small>
-                      </div>
+                  </div>
+                  </>
+                ) : (
+                  <section className="workoutExerciseSets">
+                    <div className="workoutExerciseSetsList">
+                      {exercise.sets.map((set, index) => (
+                        <div className="setRow" key={index}>
+                          <span className="workoutExerciseSetNumber">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <label>
+                            <small>Повторы</small>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              aria-label={`Повторы, подход ${index + 1}`}
+                              placeholder={set.reps ? `${set.reps}` : "повторы"}
+                              value={set.enteredReps ?? "8"}
+                              onPointerDown={(event) => event.stopPropagation()}
+                              onTouchStart={(event) => event.stopPropagation()}
+                              onTouchMove={(event) => event.stopPropagation()}
+                              onTouchEnd={(event) => event.stopPropagation()}
+                              onChange={(event) =>
+                                updateSet(
+                                  exercise.id,
+                                  index,
+                                  "enteredReps",
+                                  event.target.value.replace(/[^0-9]/g, "")
+                                )
+                              }
+                            />
+                          </label>
+                          <label>
+                            <small className="workoutExerciseWeightLabel">
+                              <span>Вес, кг</span>
+                              {!sharedExerciseAiWeightAdjustment &&
+                                set.aiOriginalWeight &&
+                                String(set.aiOriginalWeight) !== String(set.weight) && (
+                                  <span className="workoutAiSetWeightNote">
+                                    {set.aiOriginalWeight} → {set.weight} кг
+                                  </span>
+                                )}
+                            </small>
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              aria-label={`Вес, подход ${index + 1}`}
+                              placeholder={set.weight ? `${set.weight}` : "вес"}
+                              value={set.enteredWeight ?? ""}
+                              onPointerDown={(event) => event.stopPropagation()}
+                              onTouchStart={(event) => event.stopPropagation()}
+                              onTouchMove={(event) => event.stopPropagation()}
+                              onTouchEnd={(event) => event.stopPropagation()}
+                              onChange={(event) =>
+                                updateSet(
+                                  exercise.id,
+                                  index,
+                                  "enteredWeight",
+                                  event.target.value
+                                    .replace(/[^0-9.,]/g, "")
+                                    .replace(",", ".")
+                                )
+                              }
+                            />
+                          </label>
+                        </div>
+                      ))}
                     </div>
+                    {sharedExerciseAiWeightAdjustment && (
+                      <small className="workoutAiSharedWeightNote">
+                        AI: {sharedExerciseAiWeightAdjustment}
+                      </small>
+                    )}
+                  </section>
+                )}
+
+                {exercise.id !== "warmup" && (
+                  <div className="workoutExerciseSupport">
+                    <div className="previousInfo subtle">
+                      {getLastExerciseText(exercise)}
+                    </div>
+
+                    {workoutReadiness && workoutReadiness.id !== "excellent" && (
+                      <div className="workoutAiAdjustHint">
+                        AI адаптация · {workoutReadiness.volumeText}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {exercise.id === "warmup" && (
+                <div className="warmupBottomPanel workoutStageActionPanel">
+                  <div className="warmupNavigationRow">
+                    <button
+                      type="button"
+                      className="warmupPreviousButton"
+                      onClick={() => {
+                        setSelectedWorkoutId(null);
+                        setOpenVideoId(null);
+                        setCurrentExerciseIndex(0);
+                        setWorkoutStarted(false);
+                        setWorkoutStartedAt(null);
+                        setWorkoutFinishedAt(null);
+                        setWorkoutReadinessOpen(false);
+                        setWorkoutReadiness(null);
+                        setPostWorkoutFeedback(null);
+                        setPostWorkoutFeedbackOpen(false);
+                        setIsWorkoutSaved(false);
+                        setShowWorkoutSavedCard(false);
+                      }}
+                    >
+                      Назад
+                    </button>
 
                     <button
                       type="button"
@@ -3064,100 +16815,51 @@ export default function App() {
                         goToNextExercise();
                       }}
                     >
-                      ✓ Готово →
+                      Начать тренировку
                     </button>
                   </div>
-                ) : (
-                  <>
-                {exercise.sets.map((set, index) => (
-                  <div className="setRow" key={index}>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      aria-label="Повторы"
-                      placeholder={set.reps ? `${set.reps}` : "повторы"}
-                      value={set.enteredReps ?? "8"}
-                      onPointerDown={(event) => event.stopPropagation()}
-                      onTouchStart={(event) => event.stopPropagation()}
-                      onTouchMove={(event) => event.stopPropagation()}
-                      onTouchEnd={(event) => event.stopPropagation()}
-                      onChange={(event) =>
-                        updateSet(
-                          exercise.id,
-                          index,
-                          "enteredReps",
-                          event.target.value.replace(/[^0-9]/g, "")
-                        )
-                      }
-                    />
-
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      aria-label="Вес"
-                      placeholder={set.weight ? `${set.weight} кг` : "вес"}
-                      value={set.enteredWeight ?? ""}
-                      onPointerDown={(event) => event.stopPropagation()}
-                      onTouchStart={(event) => event.stopPropagation()}
-                      onTouchMove={(event) => event.stopPropagation()}
-                      onTouchEnd={(event) => event.stopPropagation()}
-                      onChange={(event) =>
-                        updateSet(
-                          exercise.id,
-                          index,
-                          "enteredWeight",
-                          event.target.value
-                            .replace(/[^0-9.,]/g, "")
-                            .replace(",", ".")
-                        )
-                      }
-                    />
-                  </div>
-                ))}
-                  </>
-                )}
-
-                {exercise.id !== "warmup" && (
-                  <>
-                    <div className="previousInfo subtle">
-                  {getLastExerciseText(exercise.name)}
                 </div>
+              )}
 
-                    <div className="exerciseNavigationRow">
-                      {currentExerciseIndex > 1 && (
-                        <button
-                          type="button"
-                          className="exerciseBackButton"
-                          onClick={() => {
-                            goToPreviousExercise();
-                          }}
-                        >
-                          ←
-                        </button>
-                      )}
+              {exercise.id !== "warmup" && (
+                <div className="exerciseActionPanel workoutStageActionPanel">
+                  <div className="exerciseNavigationRow">
+                    <button
+                      type="button"
+                      className="exercisePrevButton"
+                      onClick={() => {
+                        goToPreviousExercise();
+                      }}
+                    >
+                      Назад
+                    </button>
 
-                      <button
-                        type="button"
-                        className="exerciseNextButton"
-                        onClick={() => {
-                          goToNextExercise();
-                        }}
-                      >
-                        {currentExerciseIndex >= workout.exercises.length
-                          ? "К итогам →"
-                          : "Вперёд →"}
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
+                    <button
+                      type="button"
+                      className="exerciseNextButton"
+                      onClick={() => {
+                        goToNextExercise();
+                      }}
+                    >
+                      {currentExerciseIndex >= workout.exercises.length
+                        ? "К итогам"
+                        : "Далее"}
+                    </button>
+                  </div>
+                </div>
+              )}
+              </>
             )}
-
 
           </div>
         );
       })()}
+
+      {renderWorkoutReadinessModal()}
+
+      {renderPostWorkoutFeedbackModal()}
+
+      {renderFirstSetupOnboarding()}
 
       {fullscreenVideo && (
         <div
@@ -3167,7 +16869,7 @@ export default function App() {
             top: 0,
             left: 0,
             width: "100vw",
-            height: "100vh",
+            height: "100dvh",
             background: "rgba(0,0,0,0.95)",
             display: "flex",
             alignItems: "center",
@@ -3195,6 +16897,11 @@ export default function App() {
             src={fullscreenVideo}
             controls
             autoPlay
+            playsInline
+            onError={() => {
+              setFullscreenVideo(null);
+              showAppError("load", "Видео упражнения не поддерживается или временно недоступно.");
+            }}
             onClick={(e) => e.stopPropagation()}
             style={{
               width: "100%",
@@ -3204,6 +16911,7 @@ export default function App() {
           />
         </div>
       )}
-    </div>
+    
+</div>
   );
 }
