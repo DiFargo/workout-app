@@ -3471,6 +3471,7 @@ button:active {
   box-sizing: border-box;
   display: grid;
   place-items: center;
+  overflow: hidden;
   padding:
     max(12px, env(safe-area-inset-top))
     12px
@@ -3481,6 +3482,7 @@ button:active {
 }
 
 .cabinetUtilityModal {
+  position: relative;
   box-sizing: border-box;
   width: min(100%, 430px);
   max-height: calc(100dvh - 24px);
@@ -3510,6 +3512,8 @@ button:active {
 }
 
 .cabinetUtilityModalHead {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -43624,6 +43628,14 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   color: var(--text);
 }
 
+.workoutModePage,
+.basicQuizPage {
+  max-width: 430px;
+  padding: max(22px, env(safe-area-inset-top)) 16px calc(112px + env(safe-area-inset-bottom));
+  background: #0d1017;
+  color: #f7f8fc;
+}
+
 .workoutModeBack {
   width: 48px;
   height: 48px;
@@ -43635,9 +43647,26 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   font-weight: 900;
 }
 
+.workoutModePage .workoutModeBack,
+.basicQuizPage .workoutModeBack {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  font-size: 22px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+}
+
 .workoutModeHero {
   margin: 18px 0 18px;
   text-align: center;
+}
+
+.workoutModePage .workoutModeHero,
+.basicQuizPage .workoutModeHero {
+  margin: 24px 0 20px;
+  text-align: left;
 }
 
 .workoutModeHero span {
@@ -43645,6 +43674,14 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   font-size: 12px;
   font-weight: 950;
   letter-spacing: 0.7px;
+}
+
+.workoutModePage .workoutModeHero span,
+.basicQuizPage .workoutModeHero span {
+  color: #8d83ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
 }
 
 .workoutModeHero h1 {
@@ -43656,12 +43693,31 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   letter-spacing: -1px;
 }
 
+.workoutModePage .workoutModeHero h1,
+.basicQuizPage .workoutModeHero h1 {
+  margin: 5px 0 8px;
+  color: inherit;
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
 .workoutModeHero p {
   max-width: 360px;
   margin: 0 auto;
   color: rgba(255, 255, 255, 0.52);
   font-size: 15px;
   font-weight: 800;
+  line-height: 1.4;
+}
+
+.workoutModePage .workoutModeHero p,
+.basicQuizPage .workoutModeHero p {
+  max-width: 380px;
+  margin: 0;
+  color: rgba(247, 248, 252, 0.58);
+  font-size: 13px;
+  font-weight: 700;
   line-height: 1.4;
 }
 
@@ -43687,8 +43743,26 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   gap: 8px;
 }
 
+.workoutModePage .workoutModeCard {
+  min-height: 82px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+}
+
 .workoutModeCard.premium {
   border-color: rgba(127, 159, 58, 0.23);
+}
+
+.workoutModePage .workoutModeCard.premium {
+  border-color: rgba(107, 92, 255, 0.34);
+  background: rgba(107, 92, 255, 0.1);
 }
 
 .workoutModeIcon {
@@ -43702,10 +43776,30 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   font-size: 28px;
 }
 
+.workoutModePage .workoutModeIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: rgba(107, 92, 255, 0.14);
+  color: #aaa2ff;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.workoutModePage .workoutModeCard > div {
+  min-width: 0;
+}
+
 .workoutModeCard strong {
   font-size: 24px;
   font-weight: 950;
   line-height: 1.06;
+}
+
+.workoutModePage .workoutModeCard strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.15;
 }
 
 .workoutModeCard small {
@@ -43713,6 +43807,22 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   font-size: 14px;
   font-weight: 800;
   line-height: 1.35;
+}
+
+.workoutModePage .workoutModeCard small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(247, 248, 252, 0.58);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.workoutModePage .workoutModeCard > i {
+  color: rgba(247, 248, 252, 0.62);
+  font-size: 20px;
+  font-style: normal;
+  text-align: center;
 }
 
 .workoutModeRemember {
@@ -43728,18 +43838,57 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   font-weight: 850;
 }
 
+.workoutModePage .workoutModeRemember {
+  margin-top: 12px;
+  padding: 12px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(247, 248, 252, 0.68);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .workoutModeRemember input {
   width: 20px;
   height: 20px;
   accent-color: var(--accent);
 }
 
+:root[data-app-theme="warm-light"] .workoutModePage {
+  background: #f7f8fc;
+  color: #171923;
+}
+
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeBack,
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeCard,
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeRemember {
+  border-color: #e1e4ee;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(69, 74, 105, 0.08);
+}
+
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeCard.premium {
+  border-color: rgba(91, 77, 221, 0.3);
+  background: #f2f0ff;
+}
+
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeHero p,
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeCard small,
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeRemember {
+  color: #73798b;
+}
+
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeCard > i {
+  color: #8a91a3;
+}
+
 .basicQuizCard,
 .basicQuizPreview {
   padding: 16px;
-  border-radius: 26px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.09);
 }
 
 .basicQuizCard {
@@ -43756,10 +43905,10 @@ button.foodEditPencilButton.foodEditPencilTopRight {
 
 .basicQuizCard span,
 .basicQuizPreview span {
-  color: rgba(145, 173, 78, 0.9);
-  font-size: 11px;
-  font-weight: 950;
-  letter-spacing: 0.4px;
+  color: #8d83ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -43767,12 +43916,12 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   width: 100%;
   min-height: 52px;
   padding: 0 14px;
-  border-radius: 17px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.22);
-  color: #fff;
-  font-size: 15px;
-  font-weight: 850;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: #11141d;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .basicQuizPreview {
@@ -43782,15 +43931,16 @@ button.foodEditPencilButton.foodEditPencilTopRight {
 .basicQuizPreview strong {
   display: block;
   margin-top: 5px;
-  color: #fff;
-  font-size: 23px;
-  font-weight: 950;
+  color: inherit;
+  font-size: 20px;
+  font-weight: 900;
 }
 
 .basicQuizPreview p {
   margin: 8px 0 12px;
-  color: rgba(255, 255, 255, 0.52);
-  font-weight: 800;
+  color: rgba(247, 248, 252, 0.58);
+  font-size: 13px;
+  font-weight: 700;
   line-height: 1.35;
 }
 
@@ -43803,28 +43953,205 @@ button.foodEditPencilButton.foodEditPencilTopRight {
 
 .basicQuizPreview b {
   padding: 10px;
-  border-radius: 14px;
-  background: rgba(127, 159, 58, 0.13);
-  color: rgba(217, 242, 154, 0.95);
+  border-radius: 12px;
+  background: rgba(107, 92, 255, 0.14);
+  color: #aaa2ff;
   text-align: center;
   font-size: 22px;
 }
 
 .basicQuizPreview small {
-  color: rgba(255, 255, 255, 0.48);
-  font-weight: 850;
+  color: rgba(247, 248, 252, 0.55);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .basicQuizStartBtn {
   width: 100%;
-  min-height: 62px;
+  min-height: 52px;
   margin-top: 14px;
   border: none;
-  border-radius: 22px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #10120f;
-  font-size: 20px;
-  font-weight: 950;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.workoutModeBottomBar {
+  z-index: 12000;
+}
+
+.basicWorkoutSelectPage {
+  width: min(100%, 430px);
+  min-height: 100dvh;
+  padding: max(72px, calc(env(safe-area-inset-top) + 58px)) 16px calc(118px + env(safe-area-inset-bottom));
+  justify-content: flex-start;
+  background: #0d1017;
+  color: #f7f8fc;
+  overflow: visible;
+}
+
+.basicWorkoutSelectPage .workoutSelectHero {
+  position: relative;
+  padding: 0 54px 0 0 !important;
+  text-align: left;
+}
+
+.basicWorkoutSelectPage .workoutSelectTitle {
+  align-items: flex-start;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
+.basicWorkoutSelectPage .workoutSelectTitle span,
+.basicWorkoutSelectPage .workoutSelectTitle strong {
+  color: inherit;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.basicWorkoutSelectPage .workoutSelectTitle strong {
+  color: #8d83ff;
+}
+
+.basicWorkoutSelectPage .workoutSelectHero p {
+  margin: 10px 0 12px;
+  color: rgba(247, 248, 252, 0.58);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.basicWorkoutSelectPage .workoutSelectLine {
+  width: 54px;
+  height: 4px;
+  margin: 0 0 18px;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+}
+
+.basicWorkoutSelectPage .workoutHeaderActions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.basicWorkoutSelectPage .workoutModeHeaderButton {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  font-size: 21px;
+  line-height: 1;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+}
+
+.basicWorkoutSelectPage .workoutSelectList {
+  max-width: none;
+  gap: 10px;
+}
+
+.basicWorkoutSelectPage .workoutSelectCard {
+  min-height: 88px;
+  padding: 10px 12px;
+  grid-template-columns: 64px minmax(0, 1fr) 36px;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  box-shadow: none;
+}
+
+.basicWorkoutSelectPage .workoutSelectImageWrap {
+  width: 64px;
+  height: 64px;
+  border: 0;
+  border-radius: 13px;
+  background: rgba(107, 92, 255, 0.12);
+}
+
+.basicWorkoutSelectPage .workoutSelectText {
+  gap: 5px;
+}
+
+.basicWorkoutSelectPage .workoutSelectDay {
+  color: #8d83ff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.basicWorkoutSelectPage .workoutSelectName {
+  color: inherit;
+  font-size: 16px;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.basicWorkoutSelectPage .workoutSelectArrow {
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(247, 248, 252, 0.65);
+  font-size: 24px;
+}
+
+:root[data-app-theme="warm-light"] .basicWorkoutSelectPage {
+  background: #f7f8fc !important;
+  color: #171923 !important;
+}
+
+:root[data-app-theme="warm-light"] .basicWorkoutSelectPage .workoutModeHeaderButton,
+:root[data-app-theme="warm-light"] .basicWorkoutSelectPage .workoutSelectCard {
+  border-color: #e1e4ee !important;
+  background: #fff !important;
+  color: #171923 !important;
+  box-shadow: 0 8px 22px rgba(69, 74, 105, 0.08) !important;
+}
+
+:root[data-app-theme="warm-light"] .basicWorkoutSelectPage .workoutSelectHero p {
+  color: #73798b;
+}
+
+:root[data-app-theme="warm-light"] .basicWorkoutSelectPage .workoutSelectDay,
+:root[data-app-theme="warm-light"] .basicWorkoutSelectPage .workoutSelectTitle strong {
+  color: #5a49df !important;
+}
+
+:root[data-app-theme="warm-light"] .basicWorkoutSelectPage .workoutSelectArrow {
+  background: #f4f5fa;
+  color: #8a91a3;
+}
+
+:root[data-app-theme="warm-light"] .basicQuizPage {
+  background: #f7f8fc;
+  color: #171923;
+}
+
+:root[data-app-theme="warm-light"] .basicQuizPage .workoutModeBack,
+:root[data-app-theme="warm-light"] .basicQuizCard,
+:root[data-app-theme="warm-light"] .basicQuizPreview {
+  border-color: #e1e4ee;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(69, 74, 105, 0.08);
+}
+
+:root[data-app-theme="warm-light"] .basicQuizCard select {
+  border-color: #e1e4ee;
+  background: #f7f8fc;
+  color: #171923;
+}
+
+:root[data-app-theme="warm-light"] .basicQuizPreview p,
+:root[data-app-theme="warm-light"] .basicQuizPreview small {
+  color: #73798b;
 }
 
 .profileWorkoutModeCard {
@@ -61569,12 +61896,14 @@ nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button.workoutEditorBot
 }
 
 .workoutRunPage .workoutExerciseVideoFrame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: rgba(2, 5, 3, 0.12);
+  content: none !important;
+  display: none !important;
+}
+
+.workoutRunPage .workoutExerciseVideoFrame .exerciseVideo {
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
 }
 
 .workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton,
@@ -73875,6 +74204,13 @@ html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty 
 
 /* DESKTOP EXERCISE EDITOR V357 */
 @media (min-width: 900px) {
+  .monthExerciseEditorPortal {
+    position: fixed;
+    inset: 0;
+    z-index: 10040;
+    pointer-events: none;
+  }
+
   .monthProgramPremiumDayEditor.exercise-fullscreen-open::before {
     content: "";
     position: fixed;
@@ -73887,10 +74223,10 @@ html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty 
   }
 
   .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected {
-    inset: clamp(18px, 3vh, 32px) auto 104px 50% !important;
+    inset: clamp(18px, 3vh, 32px) auto auto 50% !important;
     width: min(calc(100vw - 64px), 1040px) !important;
-    height: auto !important;
-    max-height: calc(100dvh - 128px);
+    height: min(760px, calc(100dvh - 36px)) !important;
+    max-height: calc(100dvh - 36px);
     padding: 22px !important;
     display: grid !important;
     grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
@@ -73899,14 +74235,16 @@ html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty 
       "video name"
       "video legend"
       "video sets"
-      "video add";
-    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+      "video add"
+      "actions actions";
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto 64px;
     align-content: start;
     gap: 12px 18px;
     overflow: hidden !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     border-radius: 24px !important;
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34) !important;
+    pointer-events: auto;
   }
 
   .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseFullscreenTitle {
@@ -73919,7 +74257,7 @@ html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty 
     grid-area: video;
     min-width: 0;
     height: 100%;
-    max-height: calc(100dvh - 214px);
+    max-height: none;
     margin: 0;
     align-self: stretch;
     grid-template-rows: minmax(0, 1fr) auto;
@@ -73933,6 +74271,10 @@ html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty 
     min-height: 0;
     max-height: none;
     object-fit: contain;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseVideoBlock .monthVideoUploadBtn {
+    flex: 0 0 auto;
   }
 
   .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseRow.compact {
@@ -73959,15 +74301,21 @@ html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty 
   }
 
   .monthProgramPremiumDayEditor.exercise-fullscreen-open .exerciseEditBar {
-    width: min(calc(100vw - 64px), 760px);
+    position: static;
+    grid-area: actions;
+    width: 100%;
+    min-height: 64px;
+    transform: none;
+    align-self: end;
   }
 }
 
 @media (min-width: 900px) and (max-height: 720px) {
   .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected {
     top: 12px !important;
-    bottom: 92px !important;
-    max-height: calc(100dvh - 112px);
+    bottom: auto !important;
+    height: calc(100dvh - 24px) !important;
+    max-height: calc(100dvh - 24px);
     padding: 16px !important;
   }
 
@@ -75093,6 +75441,7 @@ html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsEm
 .cabinetProgressPhotosBody {
   min-height: 0;
   display: grid;
+  grid-auto-rows: max-content;
   align-content: start;
   gap: 10px;
   overflow-y: auto;
@@ -78935,6 +79284,7 @@ html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .
   grid-column: 1 !important;
   width: 100% !important;
   min-width: 0 !important;
+  max-width: none !important;
   margin: 0 !important;
   padding: 0 !important;
   justify-content: flex-start !important;
@@ -78950,13 +79300,20 @@ html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .
 
 .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero {
   position: relative !important;
-  padding-right: 50px !important;
+  padding-right: 98px !important;
 }
 
-.clientCorePageWorkout.individualWorkoutSelectPage .workoutModeHeaderButton {
+.clientCorePageWorkout.individualWorkoutSelectPage .workoutHeaderActions {
   position: absolute;
   top: 0;
   right: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage .workoutModeHeaderButton,
+.clientCorePageWorkout.individualWorkoutSelectPage .workoutHistoryHeaderButton {
   width: 42px;
   height: 42px;
   min-width: 42px;
@@ -78969,6 +79326,10 @@ html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .
   font-size: 21px;
   line-height: 1;
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage .workoutHistoryHeaderButton {
+  font-size: 18px;
 }
 
 .workoutModeModalOverlay {
@@ -79096,7 +79457,8 @@ html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .
   text-align: center;
 }
 
-:root[data-app-theme="warm-light"] .clientCorePageWorkout.individualWorkoutSelectPage .workoutModeHeaderButton {
+:root[data-app-theme="warm-light"] .clientCorePageWorkout.individualWorkoutSelectPage .workoutModeHeaderButton,
+:root[data-app-theme="warm-light"] .clientCorePageWorkout.individualWorkoutSelectPage .workoutHistoryHeaderButton {
   border-color: #e0e3ed;
   background: rgba(255, 255, 255, 0.92);
   color: #5e594b;
@@ -79129,13 +79491,363 @@ html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .
   color: #73798b;
 }
 
+.workoutHistoryModal {
+  width: min(100%, 370px);
+  max-height: min(680px, calc(100dvh - 28px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
+.workoutHistoryModalList {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.workoutHistoryModalList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.workoutHistoryModalList::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(126, 132, 151, 0.38);
+}
+
+.workoutHistoryModalList > button,
+.workoutHistoryModalItem {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 60px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.085);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  text-align: left;
+}
+
+.workoutHistoryModalItem {
+  grid-template-columns: 38px minmax(0, 1fr);
+}
+
+.workoutHistoryModalList > button > span,
+.workoutHistoryModalItem > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: rgba(107, 92, 255, 0.14);
+  font-size: 18px;
+}
+
+.workoutHistoryModalList > button div,
+.workoutHistoryModalItem > div {
+  min-width: 0;
+}
+
+.workoutHistoryModalList strong,
+.workoutHistoryModalList small {
+  display: block;
+}
+
+.workoutHistoryModalList strong {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workoutHistoryModalList small {
+  margin-top: 4px;
+  color: rgba(247, 248, 252, 0.56);
+  font-size: 10px;
+}
+
+.workoutHistoryModalList i {
+  color: rgba(247, 248, 252, 0.5);
+  font-size: 19px;
+  font-style: normal;
+}
+
+.workoutHistoryModalList > p {
+  margin: 16px 4px;
+  color: rgba(247, 248, 252, 0.58);
+  font-size: 12px;
+  text-align: center;
+}
+
+.workoutHistoryModalAll {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 10px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+:root[data-app-theme="warm-light"] .workoutHistoryModalList > button,
+:root[data-app-theme="warm-light"] .workoutHistoryModalItem {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #171923;
+}
+
+:root[data-app-theme="warm-light"] .workoutHistoryModalList small,
+:root[data-app-theme="warm-light"] .workoutHistoryModalList > p {
+  color: #73798b;
+}
+
+:root[data-app-theme="warm-light"] .workoutHistoryModalList i {
+  color: #8a91a3;
+}
+
+:root[data-app-theme="warm-light"] .workoutHistoryModalAll {
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+}
+
+.cabinetWorkoutHistoryItem {
+  min-height: 60px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.085);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.cabinetWorkoutHistoryItem.open {
+  border-color: rgba(107, 92, 255, 0.34);
+}
+
+.cabinetWorkoutHistoryItem > button {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 60px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.cabinetWorkoutHistoryItem > button > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: rgba(107, 92, 255, 0.14);
+  font-size: 18px;
+}
+
+.cabinetWorkoutHistoryItem > button div {
+  min-width: 0;
+}
+
+.cabinetWorkoutHistoryItem > button strong,
+.cabinetWorkoutHistoryItem > button small {
+  display: block;
+}
+
+.cabinetWorkoutHistoryItem > button strong {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cabinetWorkoutHistoryItem > button small {
+  margin-top: 4px;
+  color: rgba(247, 248, 252, 0.56);
+  font-size: 10px;
+}
+
+.cabinetWorkoutHistoryItem > button > i {
+  color: rgba(247, 248, 252, 0.5);
+  font-size: 18px;
+  font-style: normal;
+}
+
+.cabinetWorkoutHistoryDetails {
+  min-width: 0;
+  padding: 2px 10px 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.cabinetWorkoutHistoryExercise {
+  min-width: 0;
+  padding: 8px;
+  display: grid;
+  gap: 7px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.cabinetWorkoutHistoryExerciseHead {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cabinetWorkoutHistoryExerciseHead strong {
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.cabinetWorkoutHistoryExerciseHead small,
+.cabinetWorkoutHistoryDetails p {
+  color: rgba(247, 248, 252, 0.5);
+  font-size: 9px;
+}
+
+.cabinetWorkoutHistoryExerciseHead small {
+  flex: 0 0 auto;
+}
+
+.cabinetWorkoutHistorySets {
+  display: grid;
+  gap: 4px;
+}
+
+.cabinetWorkoutHistorySets > span {
+  min-width: 0;
+  min-height: 28px;
+  padding: 0 8px;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(247, 248, 252, 0.72);
+  font-size: 9px;
+}
+
+.cabinetWorkoutHistorySets b {
+  color: #8f82ff;
+  font-size: 9px;
+}
+
+.cabinetWorkoutHistorySets i {
+  color: rgba(247, 248, 252, 0.55);
+  font-size: 9px;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.cabinetWorkoutHistoryDetails p {
+  margin: 4px;
+  text-align: center;
+}
+
+.cabinetWorkoutHistoryDelete {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(226, 84, 102, 0.28);
+  border-radius: 10px;
+  background: rgba(226, 84, 102, 0.1);
+  color: #ff9aa7;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.cabinetWorkoutHistoryDelete:disabled {
+  opacity: 0.55;
+}
+
+:root[data-app-theme="warm-light"] .cabinetWorkoutHistoryItem {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #171923;
+}
+
+:root[data-app-theme="warm-light"] .cabinetWorkoutHistoryItem > button small,
+:root[data-app-theme="warm-light"] .cabinetWorkoutHistoryItem > button > i,
+:root[data-app-theme="warm-light"] .cabinetWorkoutHistoryExerciseHead small,
+:root[data-app-theme="warm-light"] .cabinetWorkoutHistoryDetails p {
+  color: #73798b;
+}
+
+:root[data-app-theme="warm-light"] .cabinetWorkoutHistoryExercise {
+  background: #f7f8fc;
+}
+
+:root[data-app-theme="warm-light"] .cabinetWorkoutHistorySets > span {
+  background: #eef0f6;
+  color: #4f5567;
+}
+
+:root[data-app-theme="warm-light"] .cabinetWorkoutHistorySets i {
+  color: #73798b;
+}
+
+:root[data-app-theme="warm-light"] .cabinetWorkoutHistoryDelete {
+  border-color: rgba(207, 61, 82, 0.2);
+  background: rgba(207, 61, 82, 0.07);
+  color: #c83e52;
+}
+
 html body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div.goal strong {
   max-width: 100%;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
+  font-size: clamp(12px, 3.6vw, 15px) !important;
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
   word-break: normal !important;
   line-height: 1.05 !important;
   text-align: center !important;
+}
+
+@media (max-width: 430px) {
+  .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero {
+    box-sizing: border-box !important;
+    padding-right: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    gap: 4px !important;
+    overflow: hidden !important;
+    font-size: clamp(15px, 4.4vw, 17px) !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .workoutHeaderActions {
+    position: static !important;
+    grid-column: 2 !important;
+    flex: 0 0 auto !important;
+  }
 }
 
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealMain {
@@ -79368,62 +80080,181 @@ html body #root .workoutRunPage .warmupBottomPanel.workoutStageActionPanel {
 }
 
 .cabinetProgressPhotosCompare {
-  padding: 12px;
-  display: grid;
-  gap: 10px;
-  border: 1px solid rgba(159, 202, 71, 0.16);
+  min-height: max-content;
+  padding: 0;
+  border: 1px solid rgba(107, 92, 255, 0.22);
   border-radius: 18px;
-  background: rgba(159, 202, 71, 0.045);
+  background: rgba(107, 92, 255, 0.06);
+  overflow: hidden;
 }
 
 .cabinetProgressPhotosCompareHead {
+  min-height: 58px;
+  padding: 10px 12px;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.cabinetProgressPhotosCompareHead::-webkit-details-marker {
+  display: none;
+}
+
+.cabinetProgressPhotosCompareHead > span {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
 }
 
 .cabinetProgressPhotosCompareHead strong {
+  display: block;
   color: #fff;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .cabinetProgressPhotosCompareHead small {
+  display: block;
   color: rgba(255, 255, 255, 0.56);
   font-size: 10px;
+  font-weight: 700;
+}
+
+.cabinetProgressPhotosCompareHead > i {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(247, 248, 252, 0.68);
+  font-size: 18px;
+  font-style: normal;
+  transition: transform 0.18s ease;
+}
+
+.cabinetProgressPhotosCompare[open] .cabinetProgressPhotosCompareHead > i {
+  transform: rotate(180deg);
+}
+
+.cabinetProgressPhotosCompareContent {
+  padding: 0 12px 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.cabinetProgressPhotosCompareControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.cabinetProgressPhotosCompareControls label {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.cabinetProgressPhotosCompareControls span {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.cabinetProgressPhotosCompareControls select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 28px 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: #11141d;
+  color: #f7f8fc;
+  font-size: 11px;
   font-weight: 800;
 }
 
-.cabinetProgressPhotosCompareGrid {
+.cabinetProgressPhotosCompareTabs {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.cabinetProgressPhotosCompareTabs button {
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 7px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(247, 248, 252, 0.64);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.cabinetProgressPhotosCompareTabs button.active {
+  border-color: rgba(107, 92, 255, 0.48);
+  background: rgba(107, 92, 255, 0.18);
+  color: #fff;
+}
+
+.cabinetProgressPhotosCompareStage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;
 }
 
-.cabinetProgressPhotosCompareGrid figure {
+.cabinetProgressPhotosCompareStage figure {
   min-width: 0;
   margin: 0;
 }
 
-.cabinetProgressPhotosCompareGrid figcaption {
-  margin-bottom: 5px;
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 9px;
-  font-weight: 900;
+.cabinetProgressPhotosCompareStage figcaption {
+  min-height: 32px;
+  margin-bottom: 6px;
+  display: grid;
+  gap: 1px;
   text-align: center;
 }
 
-.cabinetProgressPhotosCompareGrid figure > div {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3px;
+.cabinetProgressPhotosCompareStage figcaption span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 8px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-.cabinetProgressPhotosCompareGrid img {
+.cabinetProgressPhotosCompareStage figcaption strong {
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 10px;
+}
+
+.cabinetProgressPhotosCompareStage img,
+.cabinetProgressPhotosCompareMissing {
   width: 100%;
-  aspect-ratio: 3 / 4;
-  border-radius: 8px;
+  aspect-ratio: 3 / 4.15;
+  border-radius: 12px;
+}
+
+.cabinetProgressPhotosCompareStage img {
+  display: block;
   object-fit: cover;
+  object-position: center top;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.cabinetProgressPhotosCompareMissing {
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 11px;
 }
 
 .cabinetProgressPhotosSave:disabled {
@@ -79441,8 +80272,47 @@ html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareH
 }
 
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareHead small,
-html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareGrid figcaption {
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareControls span,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareStage figcaption span {
   color: #687086;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareControls select,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareTabs button {
+  border-color: #e1e4ef;
+  background: #fff;
+  color: #596176;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareHead > i {
+  border-color: #e1e4ef;
+  background: #fff;
+  color: #737b91;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareTabs button.active {
+  border-color: rgba(91, 73, 223, 0.32);
+  background: #efedff;
+  color: #5542d8;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareStage figcaption strong {
+  color: #242938;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareMissing {
+  border-color: #dfe3ed;
+  color: #8a91a3;
+}
+
+@media (min-width: 620px) {
+  .cabinetProgressPhotosModal {
+    width: min(100%, 620px);
+  }
+
+  .cabinetProgressPhotosCompareStage {
+    gap: 12px;
+  }
 }
 
 @media (min-width: 900px) {
@@ -79572,5 +80442,2362 @@ html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosCompareG
 
   .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealList {
     gap: 16px !important;
+  }
+}
+
+/* Workout flow polish V458 */
+.workoutRunPage .workoutCloseButton {
+  top: max(12px, calc(env(safe-area-inset-top) + 10px)) !important;
+  right: max(12px, calc(env(safe-area-inset-right) + 12px)) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: rgba(15, 18, 24, 0.92) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.workoutRunPage .workoutStageTitle {
+  padding-right: 58px !important;
+  padding-left: 58px !important;
+}
+
+.workoutRunPage .workoutStageCard,
+.workoutRunPage .startWorkoutSlide {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: linear-gradient(180deg, rgba(23, 27, 33, 0.98), rgba(9, 12, 16, 0.99)) !important;
+  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.workoutReadinessConfirmation {
+  min-height: 30px;
+}
+
+.workoutReadinessConfirmation.empty {
+  visibility: hidden;
+}
+
+.workoutExerciseValidation {
+  margin: 7px 2px 0;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(244, 112, 112, 0.24);
+  border-radius: 12px;
+  background: rgba(244, 112, 112, 0.08);
+  color: #ffb0b0;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.workoutExerciseValidation > span {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(244, 112, 112, 0.16);
+}
+
+.workoutRunPage .workoutExerciseTools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.workoutRunPage .workoutExerciseTools button {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
+.workoutRunPage .workoutExerciseTools button.active {
+  border-color: rgba(117, 101, 232, 0.5) !important;
+  background: rgba(117, 101, 232, 0.16) !important;
+  color: #c9c2ff !important;
+}
+
+.workoutExerciseNote,
+.workoutExerciseTechniqueHint {
+  width: 100%;
+  flex: 1 0 100%;
+}
+
+.workoutExerciseNote {
+  display: grid;
+  gap: 6px;
+}
+
+.workoutExerciseNote > span {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.workoutExerciseNote textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 68px;
+  padding: 10px 11px;
+  resize: vertical;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.94);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.workoutExerciseTechniqueHint {
+  padding: 9px 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.workoutExerciseTechniqueHint > span {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(117, 101, 232, 0.18);
+  color: #c9c2ff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.workoutExerciseTechniqueHint p {
+  margin: 1px 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.workoutFinishComment > span {
+  color: rgba(255, 255, 255, 0.64) !important;
+}
+
+.workoutFinishComment textarea {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: none !important;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow {
+  display: grid !important;
+  grid-template-columns: minmax(92px, 0.8fr) minmax(0, 2.2fr) !important;
+  gap: 8px !important;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishBackButton {
+  position: static !important;
+  inset: auto !important;
+  grid-column: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishBackButton::before {
+  content: none !important;
+  display: none !important;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishBackButton > span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  color: inherit !important;
+  -webkit-text-fill-color: currentColor !important;
+  font: inherit;
+  line-height: 1;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishWorkoutButton {
+  grid-column: 2 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutCloseButton {
+  border-color: #dfe3ef !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #4f5668 !important;
+  -webkit-text-fill-color: #4f5668 !important;
+  box-shadow: 0 8px 22px rgba(50, 59, 104, 0.12) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseValidation {
+  border-color: #f2caca;
+  background: #fff4f4;
+  color: #a13f3f;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseTools button {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseTools button.active {
+  border-color: #7565e8 !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseNote > span,
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseTechniqueHint p,
+html:root[data-app-theme="warm-light"] body #root .workoutFinishComment > span {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseNote textarea,
+html:root[data-app-theme="warm-light"] body #root .workoutFinishComment textarea {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseTechniqueHint {
+  border-color: #e1e4ef;
+  background: #f7f8fc;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseCard button.previousInfo:not(.showVideoBtn) {
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishBackButton {
+  border-color: #e1e4ef !important;
+  background: #f4f6fc !important;
+  color: #596176 !important;
+}
+
+/* Workout exercise help and notes V459 */
+.workoutRunPage .workoutStageTitle.withTechniqueButton {
+  gap: 8px;
+}
+
+.workoutRunPage .workoutStageTitle.withTechniqueButton > span {
+  width: auto;
+  max-width: calc(100% - 36px);
+}
+
+.workoutRunPage .workoutTechniqueButton {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  flex: 0 0 28px;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
+.workoutRunPage .workoutExerciseNoteButton {
+  width: auto !important;
+  min-width: 92px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  padding: 0 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
+.workoutRunPage .workoutExerciseNoteButton span:last-child {
+  font-size: 15px;
+}
+
+.workoutExerciseModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 17000;
+  box-sizing: border-box;
+  padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
+  display: grid;
+  place-items: center;
+  background: rgba(3, 5, 10, 0.76);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.workoutExerciseModal {
+  box-sizing: border-box;
+  width: min(100%, 360px);
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  background: #11141d;
+  color: #f7f8fc;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.48);
+}
+
+.workoutExerciseModal > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.workoutExerciseModal > header div {
+  min-width: 0;
+}
+
+.workoutExerciseModal > header small {
+  display: block;
+  margin-bottom: 4px;
+  overflow: hidden;
+  color: rgba(247, 248, 252, 0.56);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workoutExerciseModal > header h2 {
+  margin: 0;
+  color: inherit;
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.workoutExerciseModal > header > button {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 13px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: inherit !important;
+  font-size: 24px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
+.workoutExerciseModal > textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 120px;
+  max-height: 38dvh;
+  padding: 12px;
+  resize: vertical;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.94);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.workoutExerciseModal > textarea:focus {
+  border-color: rgba(117, 101, 232, 0.72);
+  box-shadow: 0 0 0 3px rgba(117, 101, 232, 0.14);
+}
+
+.workoutExerciseModal .workoutExerciseModalDone {
+  width: 100% !important;
+  min-height: 44px !important;
+  padding: 0 16px !important;
+  border: 0 !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  box-shadow: none !important;
+}
+
+.workoutTechniqueModalContent {
+  padding: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.workoutTechniqueModalContent > span {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(117, 101, 232, 0.18);
+  color: #c9c2ff;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.workoutTechniqueModalContent p {
+  margin: 2px 0 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutTechniqueButton,
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseNoteButton {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body .workoutExerciseModalOverlay {
+  background: rgba(35, 39, 55, 0.34);
+}
+
+html:root[data-app-theme="warm-light"] body .workoutExerciseModal {
+  border-color: #e0e3ed;
+  background: #fbfbfe;
+  color: #171923;
+  box-shadow: 0 26px 70px rgba(50, 55, 82, 0.22);
+}
+
+html:root[data-app-theme="warm-light"] body .workoutExerciseModal > header small,
+html:root[data-app-theme="warm-light"] body .workoutTechniqueModalContent p {
+  color: #73798b;
+}
+
+html:root[data-app-theme="warm-light"] body .workoutExerciseModal > header > button,
+html:root[data-app-theme="warm-light"] body .workoutExerciseModal > textarea,
+html:root[data-app-theme="warm-light"] body .workoutTechniqueModalContent {
+  border-color: #e1e4ee !important;
+  background: #fff !important;
+  color: #171923 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body .workoutExerciseModal .workoutExerciseModalDone {
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+/* Compact workout title and note action V464 */
+.workoutRunPage .workoutStageTitle.withTechniqueButton > span {
+  display: block !important;
+  max-height: none !important;
+  overflow: visible !important;
+  font-size: 15px !important;
+  line-height: 1.05 !important;
+  text-overflow: clip !important;
+  -webkit-box-orient: initial !important;
+  -webkit-line-clamp: unset !important;
+}
+
+html body #root .workoutRunPage .workoutExerciseCard button.workoutExerciseNoteButton:not(.showVideoBtn) {
+  width: auto !important;
+  min-width: 76px !important;
+  max-width: 88px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  flex: 0 0 auto !important;
+  align-self: center !important;
+  padding: 0 9px !important;
+  gap: 5px !important;
+  border-radius: 11px !important;
+  font-size: 10px !important;
+}
+
+html body #root .workoutRunPage .workoutExerciseCard button.workoutExerciseNoteButton:not(.showVideoBtn) span:last-child {
+  font-size: 13px !important;
+}
+
+/* Cabinet workout calendar V465 */
+.cabinetProgressModal {
+  width: min(100%, 430px);
+}
+
+.cabinetWorkoutCalendar {
+  display: grid;
+  gap: 11px;
+  padding: 12px;
+  border: 1px solid #eceaf3;
+  border-radius: 16px;
+  background: #fbfbfe;
+}
+
+.cabinetWorkoutCalendarNav {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 38px;
+  align-items: center;
+  gap: 8px;
+}
+
+.cabinetWorkoutCalendarNav strong {
+  color: #171923;
+  font-size: 14px;
+  font-weight: 900;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.cabinetWorkoutCalendarNav button {
+  width: 38px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0;
+  border: 1px solid #e3e6ef;
+  border-radius: 999px;
+  background: #fff;
+  color: #6f7788;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.cabinetWorkoutCalendarPlanner {
+  min-height: 54px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #eceaf3;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.cabinetWorkoutCalendarPlanner > div {
+  min-width: 0;
+}
+
+.cabinetWorkoutCalendarPlanner strong,
+.cabinetWorkoutCalendarPlanner small {
+  display: block;
+}
+
+.cabinetWorkoutCalendarPlanner strong {
+  color: #171923;
+  font-size: 12px;
+}
+
+.cabinetWorkoutCalendarPlanner small {
+  margin-top: 3px;
+  color: #868b98;
+  font-size: 9px;
+}
+
+.cabinetWorkoutCalendarPlanner > button {
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid #ddd9fa;
+  border-radius: 10px;
+  background: #efedff;
+  color: #5542d8;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.cabinetWorkoutCalendarWeekdays,
+.cabinetWorkoutCalendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.cabinetWorkoutCalendarWeekdays span {
+  padding: 3px 0;
+  color: #7f7a70;
+  font-size: 9px;
+  font-weight: 850;
+  text-align: center;
+}
+
+.cabinetWorkoutCalendarGrid > button {
+  aspect-ratio: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  place-items: center;
+  border: 1px solid #edf0f7;
+  border-radius: 10px;
+  background: #fff;
+  color: #9aa0ad;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.cabinetWorkoutCalendarGrid > button.outside {
+  opacity: 0.3;
+}
+
+.cabinetWorkoutCalendarGrid > button.today {
+  border-color: #b9aaff;
+  box-shadow: 0 0 0 3px rgba(100, 55, 245, 0.08);
+}
+
+.cabinetWorkoutCalendarGrid > button.hasWorkout {
+  border-color: #d8ccff;
+  background: #f6f2ff;
+  color: #5e38e8;
+}
+
+.cabinetWorkoutCalendarGrid > button.scheduled {
+  border-color: #d8ccff;
+  background: #f6f2ff;
+  color: #5e38e8;
+}
+
+.cabinetWorkoutCalendarGrid > button.completed {
+  border-color: #ccebd6;
+  background: #f2fbf5;
+  color: #16813d;
+}
+
+.cabinetWorkoutCalendarGrid > button.historyCompleted {
+  border-color: #ccebd6;
+  background: #f2fbf5;
+  color: #16813d;
+}
+
+.cabinetWorkoutCalendarGrid > button.completedOffDate {
+  border-color: #cfc6ff;
+  background: #f6f3ff;
+  color: #5e38e8;
+}
+
+.cabinetWorkoutCalendarGrid > button.missed {
+  border-color: #ffd6d6;
+  background: #fff6f6;
+  color: #d53838;
+}
+
+.cabinetWorkoutCalendarGrid > button.shifted {
+  border-color: #f5dfa4;
+  background: #fffaf0;
+  color: #9b6d12;
+}
+
+.cabinetWorkoutCalendarGrid > button.editing:not(.outside) {
+  cursor: pointer;
+}
+
+.cabinetWorkoutCalendarGrid > button.selected {
+  border-color: #7565e8;
+  box-shadow: 0 0 0 3px rgba(117, 101, 232, 0.14);
+}
+
+.cabinetWorkoutCalendarGrid > button i {
+  position: static;
+  min-width: 22px;
+  min-height: 13px;
+  padding: 1px 5px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #ebe5ff;
+  color: #5e38e8;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.cabinetWorkoutCalendarGrid > button.completed i {
+  background: #e5f8eb;
+  color: #16813d;
+}
+
+.cabinetWorkoutCalendarGrid > button.historyCompleted i {
+  background: #e5f8eb;
+  color: #16813d;
+}
+
+.cabinetWorkoutCalendarGrid > button.completedOffDate i {
+  background: #ece6ff;
+  color: #5e38e8;
+}
+
+.cabinetWorkoutCalendarGrid > button.missed i {
+  background: #fff0f0;
+  color: #d53838;
+}
+
+.cabinetWorkoutCalendarGrid > button.shifted i {
+  background: #fff2d4;
+  color: #9b6d12;
+}
+
+.cabinetWorkoutCalendarLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 10px;
+  color: #7f7a70;
+  font-size: 8px;
+  font-weight: 850;
+}
+
+.cabinetWorkoutCalendarLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cabinetWorkoutCalendarLegend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #5e38e8;
+}
+
+.cabinetWorkoutCalendarLegend i.completed {
+  background: #1fad54;
+}
+
+.cabinetWorkoutCalendarLegend i.historyCompleted {
+  background: #1fad54;
+}
+
+.cabinetWorkoutCalendarLegend i.completedOffDate {
+  background: #7b61ff;
+}
+
+.cabinetWorkoutCalendarLegend i.missed {
+  background: #ff5c5c;
+}
+
+.cabinetWorkoutCalendarLegend i.shifted {
+  background: #d99a22;
+}
+
+.cabinetWorkoutCalendarEditActions {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 8px;
+}
+
+.cabinetWorkoutCalendarEditActions button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.cabinetWorkoutCalendarEditActions button.secondary {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.cabinetWorkoutCalendarEditActions button:disabled {
+  opacity: 0.56;
+}
+
+.cabinetWorkoutCalendarStatus {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 123, 114, 0.2);
+  border-radius: 11px;
+  background: rgba(255, 123, 114, 0.07);
+  color: #ff9b95;
+  font-size: 10px;
+  text-align: center;
+}
+
+.cabinetWorkoutCalendarStatus.success {
+  border-color: rgba(70, 184, 124, 0.24);
+  background: rgba(70, 184, 124, 0.08);
+  color: #9be4bd;
+}
+
+.cabinetWorkoutCalendarDay {
+  padding: 11px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cabinetWorkoutCalendarDay > div:first-child span,
+.cabinetWorkoutCalendarDay > div:first-child strong {
+  display: block;
+}
+
+.cabinetWorkoutCalendarDay > div:first-child em {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  background: rgba(70, 184, 124, 0.12);
+  color: #9be4bd;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.cabinetWorkoutCalendarDay > div:first-child span {
+  margin-bottom: 3px;
+  color: rgba(255, 255, 255, 0.44);
+  font-size: 9px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.cabinetWorkoutCalendarDay > div:first-child strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+}
+
+.cabinetWorkoutCalendarDay > button {
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 9px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  text-align: left;
+}
+
+.cabinetWorkoutCalendarDay > button > span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(117, 101, 232, 0.14);
+}
+
+.cabinetWorkoutCalendarDay > button div {
+  min-width: 0;
+}
+
+.cabinetWorkoutCalendarDay > button strong,
+.cabinetWorkoutCalendarDay > button small {
+  display: block;
+}
+
+.cabinetWorkoutCalendarDay > button strong {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cabinetWorkoutCalendarDay > button small,
+.cabinetWorkoutCalendarDay > p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+}
+
+.cabinetWorkoutCalendarDay > button small {
+  margin-top: 3px;
+}
+
+.cabinetWorkoutCalendarDay > button > i {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 18px;
+  font-style: normal;
+}
+
+.cabinetWorkoutCalendarDay > p {
+  margin: 2px 0;
+  text-align: center;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarNav strong,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarPlanner strong,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > div:first-child strong,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > button strong {
+  color: #171923;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarNav button,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarPlanner,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > button {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #596176;
+  box-shadow: none;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarPlanner > button {
+  border-color: #ddd9fa;
+  background: #efedff;
+  color: #5542d8;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.hasWorkout {
+  border-color: #d8ccff;
+  background: #f6f2ff;
+  color: #5e38e8;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.scheduled {
+  border-color: #d8ccff;
+  background: #f6f2ff;
+  color: #5e38e8;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.completed {
+  border-color: #ccebd6;
+  background: #f2fbf5;
+  color: #16813d;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.historyCompleted {
+  border-color: #ccebd6;
+  background: #f2fbf5;
+  color: #16813d;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.completedOffDate {
+  border-color: #cfc6ff;
+  background: #f6f3ff;
+  color: #5e38e8;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.missed {
+  border-color: #ffd6d6;
+  background: #fff6f6;
+  color: #d53838;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.shifted {
+  border-color: #f5dfa4;
+  background: #fffaf0;
+  color: #9b6d12;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.selected {
+  border-color: #6552e6;
+  box-shadow: 0 0 0 3px rgba(117, 101, 232, 0.14);
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarWeekdays span,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarPlanner small,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > div:first-child span,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > button small,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > p {
+  color: #73798b;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarEditActions button.secondary {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #596176;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > div:first-child em {
+  background: #edf9f2;
+  color: #278756;
+}
+
+/* Keep the main metrics as one segmented panel in the light theme. */
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
+  border: 1px solid #e3e6f1 !important;
+  border-radius: 0 0 17px 17px !important;
+  background: #fff !important;
+  box-shadow: 0 10px 28px rgba(55, 64, 112, 0.08) !important;
+  overflow: hidden !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero {
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div:not(:last-child)::after {
+  background: #e3e6f1 !important;
+}
+
+/* Dynamic progress insight states. */
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight.positive {
+  border-color: rgba(87, 176, 126, 0.28) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight.supportive {
+  border-color: rgba(206, 151, 83, 0.3) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight {
+  height: 150px !important;
+  min-height: 150px !important;
+  flex-basis: 150px !important;
+  max-height: 150px !important;
+  padding: 12px !important;
+  gap: 8px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle h2 {
+  margin: 5px 0 3px !important;
+  font-size: 17px !important;
+  line-height: 1.08 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle p {
+  max-width: none !important;
+  font-size: 10px !important;
+  line-height: 1.3 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.positive {
+  border-color: #cde8d8 !important;
+  background: #fbfefc !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.supportive {
+  border-color: #eadbc8 !important;
+  background: #fffdf9 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview span {
+  min-width: 0 !important;
+  min-height: 36px !important;
+  padding: 5px 3px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  overflow: hidden !important;
+  line-height: 1.05 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview b,
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview small {
+  display: block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview b {
+  font-size: 8px !important;
+  font-weight: 850 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview small {
+  color: inherit !important;
+  font-size: 8px !important;
+  opacity: 0.72 !important;
+}
+
+/* Cabinet account editor. */
+.profileAccountSection {
+  display: grid;
+  gap: 12px;
+}
+
+.profileAccountAvatarEditor {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.profileAccountAvatarPreview {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(117, 101, 232, 0.3);
+  border-radius: 18px;
+  background: rgba(117, 101, 232, 0.12);
+  font-size: 28px;
+}
+
+.profileAccountAvatarPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileAccountAvatarEditor label {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.profileAccountAvatarEditor label strong,
+.profileAccountAvatarEditor label small {
+  display: block;
+}
+
+.profileAccountAvatarEditor label strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+}
+
+.profileAccountAvatarEditor label small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 9px;
+}
+
+.profileAccountAvatarEditor input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.profileAccountFields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.profileAccountFields label {
+  display: grid;
+  gap: 5px;
+}
+
+.profileAccountFields label > span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.profileAccountFields input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.94);
+  font: inherit;
+  font-size: 13px;
+}
+
+.profileAccountFields input:focus {
+  border-color: rgba(117, 101, 232, 0.62);
+  box-shadow: 0 0 0 3px rgba(117, 101, 232, 0.12);
+}
+
+.profileAccountPasswordButton {
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  text-align: left;
+}
+
+.profileAccountPasswordButton > span:first-child {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(117, 101, 232, 0.14);
+}
+
+.profileAccountPasswordButton strong,
+.profileAccountPasswordButton small {
+  display: block;
+}
+
+.profileAccountPasswordButton strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+}
+
+.profileAccountPasswordButton small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 9px;
+}
+
+.profileAccountPasswordButton i {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 19px;
+  font-style: normal;
+}
+
+.profileAccountStatus {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 123, 114, 0.2);
+  border-radius: 11px;
+  background: rgba(255, 123, 114, 0.07);
+  color: #ff9b95;
+  font-size: 10px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.profileAccountStatus.success {
+  border-color: rgba(70, 184, 124, 0.24);
+  background: rgba(70, 184, 124, 0.08);
+  color: #9be4bd;
+}
+
+.profileAccountLogout {
+  width: 100% !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor,
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label,
+html:root[data-app-theme="warm-light"] body #root .profileAccountFields input,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #171923;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label strong,
+html:root[data-app-theme="warm-light"] body #root .profileAccountFields label > span,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton strong {
+  color: #171923;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label small,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton small,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton i {
+  color: #73798b;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountFields input {
+  background: #f7f8fc;
+}
+
+/* Circular avatar crop editor. */
+.profileAvatarCropOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 19000;
+  padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
+  display: grid;
+  place-items: center;
+  background: rgba(3, 5, 10, 0.76);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.profileAvatarCropModal {
+  width: min(100%, 350px);
+  padding: 15px;
+  display: grid;
+  gap: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  background: #11141d;
+  color: #f7f8fc;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.48);
+}
+
+.profileAvatarCropModal > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profileAvatarCropModal > header span {
+  color: #8f80f4;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.profileAvatarCropModal > header h2 {
+  margin: 4px 0 0;
+  color: inherit;
+  font-size: 19px;
+  line-height: 1.15;
+}
+
+.profileAvatarCropModal > header button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font-size: 22px;
+}
+
+.profileAvatarCropViewport {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #07090d;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.profileAvatarCropViewport:active {
+  cursor: grabbing;
+}
+
+.profileAvatarCropViewport > img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.profileAvatarCropMask {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 238px;
+  height: 238px;
+  border: 2px solid rgba(255, 255, 255, 0.94);
+  border-radius: 50%;
+  box-shadow: 0 0 0 120px rgba(3, 5, 10, 0.58);
+  pointer-events: none;
+}
+
+.profileAvatarCropZoom {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 18px;
+  text-align: center;
+}
+
+.profileAvatarCropZoom input {
+  width: 100%;
+  accent-color: #7565e8;
+}
+
+.profileAvatarCropModal > p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 10px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.profileAvatarCropActions {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 8px;
+}
+
+.profileAvatarCropActions button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.profileAvatarCropActions button.secondary {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropOverlay {
+  background: rgba(35, 39, 55, 0.34);
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropModal {
+  border-color: #e0e3ed;
+  background: #fbfbfe;
+  color: #171923;
+  box-shadow: 0 26px 70px rgba(50, 55, 82, 0.22);
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropModal > header button,
+html:root[data-app-theme="warm-light"] body .profileAvatarCropActions button.secondary {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #596176;
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropZoom {
+  color: #596176;
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropModal > p {
+  color: #73798b;
+}
+
+/* V491: readable measurement review values and branded review scrolling. */
+.measurementFullscreenCard.review,
+.measurementFullscreenReviewGrid,
+.profileMeasurementWizardCard.review,
+.profileMeasurementReviewGrid {
+  scrollbar-width: thin !important;
+  scrollbar-color: #6552e6 rgba(101, 82, 230, 0.12) !important;
+}
+
+.measurementFullscreenCard.review::-webkit-scrollbar,
+.measurementFullscreenReviewGrid::-webkit-scrollbar,
+.profileMeasurementWizardCard.review::-webkit-scrollbar,
+.profileMeasurementReviewGrid::-webkit-scrollbar {
+  display: block !important;
+  width: 5px !important;
+}
+
+.measurementFullscreenCard.review::-webkit-scrollbar-track,
+.measurementFullscreenReviewGrid::-webkit-scrollbar-track,
+.profileMeasurementWizardCard.review::-webkit-scrollbar-track,
+.profileMeasurementReviewGrid::-webkit-scrollbar-track {
+  border-radius: 999px !important;
+  background: rgba(101, 82, 230, 0.12) !important;
+}
+
+.measurementFullscreenCard.review::-webkit-scrollbar-thumb,
+.measurementFullscreenReviewGrid::-webkit-scrollbar-thumb,
+.profileMeasurementWizardCard.review::-webkit-scrollbar-thumb,
+.profileMeasurementReviewGrid::-webkit-scrollbar-thumb {
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, #7b68ee, #5542d8) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .measurementFullscreenReviewGrid strong,
+html:root[data-app-theme="warm-light"] body #root .profileMeasurementReviewGrid strong {
+  color: #151824 !important;
+}
+
+/* V499: trainer and client share the same exercise weight mode. */
+.monthExerciseWeightMode {
+  width: 100% !important;
+  min-height: 42px !important;
+  padding: 7px 10px !important;
+  display: grid !important;
+  grid-template-columns: 28px minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  color: rgba(255, 255, 255, 0.68) !important;
+  text-align: left !important;
+}
+
+.monthExerciseWeightMode > span {
+  width: 28px !important;
+  height: 28px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 9px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  font-size: 15px !important;
+}
+
+.monthExerciseWeightMode strong {
+  font-size: 11px !important;
+  font-weight: 900 !important;
+}
+
+.monthExerciseWeightMode i {
+  min-width: 68px !important;
+  padding: 5px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-size: 9px !important;
+  font-style: normal !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.monthExerciseWeightMode.active {
+  border-color: rgba(139, 120, 240, 0.34) !important;
+  background: rgba(117, 101, 232, 0.1) !important;
+}
+
+.monthExerciseWeightMode.active i {
+  background: rgba(117, 101, 232, 0.18) !important;
+  color: #b7adff !important;
+}
+
+.monthProgramPremiumSetLegend.withoutWeight,
+.monthExerciseSetRow.withoutWeight,
+.monthExerciseSetRow.compact.withoutWeight {
+  grid-template-columns: 30px minmax(0, 1fr) 36px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode {
+  border-color: #e1e4ee !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode > span,
+html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode i {
+  background: #ffffff !important;
+  color: #73798b !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode.active {
+  border-color: #d8d2fb !important;
+  background: #f0edff !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode.active i {
+  background: #e2ddff !important;
+  color: #5542d8 !important;
+}
+
+@media (min-width: 900px) {
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected {
+    grid-template-areas:
+      "title title"
+      "video name"
+      "video mode"
+      "video legend"
+      "video sets"
+      "video add"
+      "actions actions" !important;
+    grid-template-rows: auto auto auto auto minmax(0, 1fr) auto 64px !important;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseWeightMode {
+    grid-area: mode !important;
+  }
+}
+
+/* AI photo: explicit not-found state without creating a fake product. */
+.nutritionPhotoNotFoundOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 18000 !important;
+  padding: 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  background: rgba(2, 6, 4, 0.72) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.nutritionPhotoNotFoundModal {
+  position: relative !important;
+  width: min(100%, 340px) !important;
+  padding: 24px 18px 18px !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 22px !important;
+  background: #111712 !important;
+  color: #f5f7f3 !important;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.46) !important;
+  text-align: center !important;
+}
+
+.nutritionPhotoNotFoundClose {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 11px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(245, 247, 243, 0.68) !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+}
+
+.nutritionPhotoNotFoundIcon {
+  width: 52px !important;
+  height: 52px !important;
+  margin: 0 auto 12px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 16px !important;
+  background: rgba(117, 101, 232, 0.14) !important;
+  color: #988bf3 !important;
+  font-size: 28px !important;
+}
+
+.nutritionPhotoNotFoundModal h3 {
+  margin: 0 !important;
+  color: inherit !important;
+  font-size: 20px !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0 !important;
+}
+
+.nutritionPhotoNotFoundModal p {
+  margin: 8px auto 17px !important;
+  max-width: 280px !important;
+  color: rgba(245, 247, 243, 0.58) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+}
+
+.nutritionPhotoNotFoundActions {
+  display: grid !important;
+  gap: 8px !important;
+}
+
+.nutritionPhotoNotFoundActions button {
+  min-height: 46px !important;
+  padding: 0 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(245, 247, 243, 0.82) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.nutritionPhotoNotFoundActions button.primary {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundOverlay {
+  background: rgba(38, 42, 64, 0.32) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundModal {
+  border-color: #e0e3ed !important;
+  background: #ffffff !important;
+  color: #171923 !important;
+  box-shadow: 0 26px 70px rgba(50, 55, 82, 0.22) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundModal p {
+  color: #73798b !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundClose,
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundActions button:not(.primary) {
+  border-color: #e1e4ee !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+}
+
+/* V492: weighted progress score speedometer. */
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle {
+  display: block !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachSummary {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: 82px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachHeadline {
+  min-width: 0 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachHeadline h2 {
+  margin: 3px 0 !important;
+  font-size: 16px !important;
+  letter-spacing: 0 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachHeadline p {
+  display: -webkit-box !important;
+  max-width: none !important;
+  overflow: hidden !important;
+  font-size: 9.5px !important;
+  line-height: 1.25 !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+}
+
+.profileProgressGauge {
+  width: 82px !important;
+  display: grid !important;
+  justify-items: center !important;
+  align-content: center !important;
+  color: #f5f7f2 !important;
+}
+
+.profileProgressGaugeDial {
+  position: relative !important;
+  width: 76px !important;
+  height: 43px !important;
+  overflow: hidden !important;
+}
+
+.profileProgressGaugeDial::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 50% !important;
+  background: conic-gradient(
+    from 270deg,
+    #d96a72 0deg 55deg,
+    #d8a94f 55deg 108deg,
+    #63b985 108deg 180deg,
+    rgba(255, 255, 255, 0.07) 180deg 360deg
+  ) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+.profileProgressGaugeDial::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 8px !important;
+  top: 8px !important;
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  background: #111811 !important;
+}
+
+.profileProgressGaugeDial i {
+  position: absolute !important;
+  left: 38px !important;
+  bottom: 4px !important;
+  z-index: 2 !important;
+  width: 28px !important;
+  height: 3px !important;
+  border-radius: 999px !important;
+  background: #8b78f0 !important;
+  box-shadow: 0 0 8px rgba(139, 120, 240, 0.5) !important;
+  transform: rotate(var(--progress-angle)) !important;
+  transform-origin: 0 50% !important;
+  transition: transform 360ms ease !important;
+}
+
+.profileProgressGaugeDial i::after {
+  content: "" !important;
+  position: absolute !important;
+  left: -4px !important;
+  top: -3px !important;
+  width: 9px !important;
+  height: 9px !important;
+  border-radius: 50% !important;
+  background: #8b78f0 !important;
+}
+
+.profileProgressGaugeDial strong {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 13px !important;
+  z-index: 3 !important;
+  color: rgba(245, 247, 242, 0.84) !important;
+  font-size: 15px !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.profileProgressGauge > small {
+  margin-top: 2px !important;
+  color: rgba(232, 236, 229, 0.52) !important;
+  font-size: 8px !important;
+  font-weight: 850 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileProgressGaugeDial::after {
+  background: #ffffff !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileProgressGaugeDial strong {
+  color: #535a6d !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileProgressGauge > small {
+  color: #737b91 !important;
+}
+
+/* V503: final visual rhythm for the four primary client screens. */
+@media (max-width: 430px) {
+  .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero {
+    gap: 6px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
+    gap: 2px !important;
+    font-size: clamp(16.5px, 4.8vw, 18px) !important;
+  }
+}
+
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHeroText h1 {
+  max-width: 100% !important;
+  font-size: clamp(15px, 4.25vw, 16px) !important;
+  line-height: 1.18 !important;
+  letter-spacing: 0 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview span {
+  min-height: 40px !important;
+  padding: 5px 4px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview b,
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview small {
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  line-height: 1.05 !important;
+  text-align: center !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+/* V504: consistent vertical rhythm between primary content sections. */
+.profileDashboardPage.clientCorePageMain .profileAiSplitCards,
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight,
+.profileDashboardPage.clientCorePageMain .mainMeasurementSnapshot {
+  margin-top: 2px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanDashboard {
+  margin-top: 10px !important;
+}
+
+/* V505: center the active nutrition day highlight vertically. */
+:root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
+  padding: 3px 5px !important;
+  align-items: center !important;
+}
+
+/* V507: P1 validation, recovery actions and narrow-screen polish. */
+.loginField {
+  display: grid;
+  gap: 6px;
+}
+
+.loginField > span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.loginCard input[aria-invalid="true"],
+.foodEditAmountCard input[aria-invalid="true"] {
+  border-color: rgba(220, 74, 74, 0.72) !important;
+  box-shadow: 0 0 0 3px rgba(220, 74, 74, 0.1) !important;
+}
+
+.loginFieldError,
+.nutritionInlineError,
+.nutritionProductValidation {
+  color: #dc6767;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.loginNotice {
+  padding: 10px 12px;
+  border: 1px solid rgba(111, 196, 130, 0.22);
+  border-radius: 14px;
+  background: rgba(111, 196, 130, 0.1);
+  color: #8fd49f;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.loginBtn:disabled,
+.loginResetBtn:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.loginResetBtn {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+:root[data-app-theme="warm-light"] .loginNotice {
+  border-color: rgba(39, 135, 86, 0.2);
+  background: #eef9f3;
+  color: #278756;
+}
+
+.foodEditAmountCard {
+  position: relative;
+}
+
+.foodEditAmountCard .nutritionInlineError {
+  display: block;
+  margin-top: 5px;
+}
+
+.nutritionProductValidation {
+  padding: 8px 10px;
+  border: 1px solid rgba(220, 74, 74, 0.2);
+  border-radius: 10px;
+  background: rgba(220, 74, 74, 0.08);
+}
+
+.nutritionDeleteConfirmOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10020;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.nutritionDeleteConfirmBackdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  background: rgba(3, 6, 5, 0.68);
+  backdrop-filter: blur(8px);
+}
+
+.nutritionDeleteConfirmCard {
+  position: relative;
+  z-index: 1;
+  width: min(360px, 100%);
+  padding: 24px 18px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  background: #111811;
+  color: #f4f7f1;
+  text-align: center;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+}
+
+.nutritionDeleteConfirmCard > span {
+  display: block;
+  font-size: 28px;
+}
+
+.nutritionDeleteConfirmCard h2 {
+  margin: 8px 0 6px;
+  font-size: 19px;
+}
+
+.nutritionDeleteConfirmCard p {
+  margin: 0;
+  color: rgba(244, 247, 241, 0.65);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.nutritionDeleteConfirmCard > div {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.nutritionDeleteConfirmCard > div button {
+  min-height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font-weight: 850;
+}
+
+.nutritionDeleteConfirmCard > div button.danger {
+  border-color: rgba(220, 74, 74, 0.25);
+  background: rgba(220, 74, 74, 0.12);
+  color: #ef8585;
+}
+
+.nutritionDeleteConfirmClose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: rgba(244, 247, 241, 0.65);
+  font-size: 24px;
+}
+
+:root[data-app-theme="warm-light"] .nutritionDeleteConfirmBackdrop {
+  background: rgba(38, 42, 64, 0.32);
+}
+
+:root[data-app-theme="warm-light"] .nutritionDeleteConfirmCard {
+  border-color: #e0e3ed;
+  background: #fff;
+  color: #171923;
+}
+
+:root[data-app-theme="warm-light"] .nutritionDeleteConfirmCard p {
+  color: #73798b;
+}
+
+:root[data-app-theme="warm-light"] .nutritionDeleteConfirmCard > div button {
+  border-color: #e1e4ee;
+  background: #f7f8fc;
+}
+
+.nutritionUndoToast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(104px + env(safe-area-inset-bottom));
+  z-index: 10005;
+  width: min(340px, calc(100vw - 28px));
+  min-height: 48px;
+  padding: 7px 8px 7px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(17, 24, 17, 0.96);
+  color: #f4f7f1;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
+  transform: translateX(-50%);
+}
+
+.nutritionUndoToast span {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.nutritionUndoToast button {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(139, 120, 240, 0.16);
+  color: #b8aafb;
+  font-weight: 900;
+}
+
+:root[data-app-theme="warm-light"] .nutritionUndoToast {
+  border-color: #e0e3ed;
+  background: rgba(255, 255, 255, 0.98);
+  color: #171923;
+}
+
+.cabinetProgressPhotosCompare:not([open]) > .cabinetProgressPhotosCompareContent {
+  display: none !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealToggle {
+  position: relative !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4::after,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealToggle::after {
+  content: "" !important;
+  position: absolute !important;
+  display: block !important;
+  inset: -8px -3px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconActions button,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .mealPlusExact,
+.nutritionCalendarClose,
+.nutritionCalendarHeader button {
+  min-width: 44px !important;
+  min-height: 44px !important;
+}
+
+@media (max-width: 360px) {
+  html body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div.goal strong {
+    display: block !important;
+    font-size: 12px !important;
+    line-height: 1.1 !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    white-space: normal !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    font-size: 15px !important;
+    line-height: 1.12 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .workoutHeaderActions button {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealMain {
+    grid-template-columns: 38px minmax(0, 1fr) 44px 44px !important;
+    gap: 4px !important;
+    padding-inline: 6px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealIcon {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealTitle strong {
+    font-size: 15px !important;
+    line-height: 1.08 !important;
+    overflow: visible !important;
+    overflow-wrap: anywhere !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealTitle {
+    overflow: visible !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealKcal {
+    min-width: 0 !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealKcal span {
+    font-size: 8.5px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCol span {
+    font-size: 7px !important;
+    line-height: 1.05 !important;
+    white-space: normal !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanDashboard.collapsed .nutritionAiPlanCollapsedMacros {
+    grid-template-columns: repeat(3, minmax(0, 58px)) !important;
+    gap: 5px !important;
+  }
+
+  .mainMenuBottomBar button strong,
+  .profileBottomTabBar button strong,
+  .individualWorkoutMenuBar button strong {
+    max-width: 100% !important;
+    overflow: visible !important;
+    font-size: 9px !important;
+    line-height: 1.05 !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+}
+.monthProgramMonthTitleEditor {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 4px;
+}
+
+.monthProgramMonthTitleEditor input {
+  width: min(360px, 100%);
+  height: 38px;
+  padding: 0 11px;
+  border: 1px solid #e4e5eb;
+  border-radius: 7px;
+  outline: none;
+  background: #fff;
+  color: #171821;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.monthProgramMonthTitleEditor input:focus {
+  border-color: #6844f5;
+}
+
+.monthProgramRemoveMonth {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #f0dcdc;
+  border-radius: 7px;
+  background: #fff;
+  color: #c95454;
+  font-size: 20px;
+}
+
+.monthProgramAddMonth {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+  border: 1px dashed #aa9cf2;
+  border-radius: 8px;
+  background: #fbfaff;
+  color: #6341e8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.trainerProgramManager {
+  --trainer-program-purple: #6844f5;
+}
+
+.trainerProgramManager .programsCompactHeader,
+.trainerProgramManager .programsOverviewPage,
+.trainerProgramManager .monthProgramEditorNameField,
+.trainerProgramManager .monthProgramMonths {
+  width: min(1180px, calc(100% - 32px));
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.trainerProgramManager .programsTopActionBar {
+  border-color: #e4e5eb;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.trainerProgramManager .programsOverviewCard,
+.trainerProgramManager .monthProgramMonth,
+.trainerProgramManager .monthProgramBlock,
+.trainerProgramManager .monthProgramPremiumWeek {
+  border-radius: 8px;
+}
+
+@media (max-width: 700px) {
+  .monthProgramMonthTitleEditor input {
+    height: 36px;
+    font-size: 15px;
+  }
+
+  .trainerProgramManager .programsCompactHeader,
+  .trainerProgramManager .programsOverviewPage,
+  .trainerProgramManager .monthProgramEditorNameField,
+  .trainerProgramManager .monthProgramMonths {
+    width: calc(100% - 24px);
   }
 }

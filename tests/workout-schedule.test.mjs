@@ -1,0 +1,56 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {
+  buildPlannedWorkoutSlots,
+  buildWorkoutScheduleCalendarEntries,
+  buildWorkoutScheduleDraft
+} from "../src/utils/workoutSchedule.js";
+
+const workouts = [
+  { id: "w1", name: "Тренировка 1" },
+  { id: "w2", name: "Тренировка 2" },
+  { id: "w3", name: "Тренировка 3" }
+];
+
+test("workout schedule draft binds selected dates to workout order", () => {
+  const draft = buildWorkoutScheduleDraft(["2026-06-20", "2026-06-18", "2026-06-22"], workouts);
+
+  assert.deepEqual(draft.map((item) => item.date), ["2026-06-18", "2026-06-20", "2026-06-22"]);
+  assert.deepEqual(draft.map((item) => item.workoutId), ["w1", "w2", "w3"]);
+});
+
+test("completed workout on another day gets a distinct calendar status", () => {
+  const slots = buildPlannedWorkoutSlots({
+    workouts,
+    calendar: {
+      plannedWorkouts: buildWorkoutScheduleDraft(["2026-06-18", "2026-06-20", "2026-06-22"], workouts)
+    },
+    history: [{ workoutId: "w2", date: "2026-06-21T10:00:00.000Z" }],
+    now: new Date("2026-06-21T12:00:00.000Z")
+  });
+
+  assert.equal(slots[1].status, "completed_off_date");
+  assert.equal(slots[1].completedDate, "2026-06-21");
+
+  const entries = buildWorkoutScheduleCalendarEntries(slots);
+  assert.ok(entries.some((item) => item.date === "2026-06-21" && item.status === "completed_off_date"));
+});
+
+test("missed planned workout is marked and projected forward", () => {
+  const slots = buildPlannedWorkoutSlots({
+    workouts,
+    calendar: {
+      plannedWorkouts: buildWorkoutScheduleDraft(["2026-06-10", "2026-06-12", "2026-06-14"], workouts)
+    },
+    history: [{ workoutId: "w1", date: "2026-06-10T10:00:00.000Z" }],
+    now: new Date("2026-06-16T12:00:00.000Z")
+  });
+
+  assert.equal(slots[0].status, "completed");
+  assert.equal(slots[1].status, "missed");
+  assert.equal(slots[1].shiftedDate, "2026-06-18");
+
+  const entries = buildWorkoutScheduleCalendarEntries(slots);
+  assert.ok(entries.some((item) => item.date === "2026-06-12" && item.status === "missed"));
+  assert.ok(entries.some((item) => item.date === "2026-06-18" && item.status === "shifted"));
+});

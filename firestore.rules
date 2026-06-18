@@ -24,6 +24,47 @@ service cloud.firestore {
       return isOwner(uid) || isAdmin();
     }
 
+    function protectedUserFields() {
+      return [
+        "role",
+        "trainerId",
+        "assignedTrainerId",
+        "coachId",
+        "createdByUid",
+        "assignedProgramId",
+        "assignedProgramName",
+        "assignedProgramAt",
+        "assignedProgramUpdatedAt",
+        "assignedWorkoutCount",
+        "adminClaimUpdatedAt",
+        "trainerRoleUpdatedAt"
+      ];
+    }
+
+    function isSafeOwnerCreate(uid) {
+      return isOwner(uid) &&
+        (!request.resource.data.keys().hasAny(protectedUserFields()) ||
+          request.resource.data.role == "client") &&
+        !request.resource.data.keys().hasAny([
+          "trainerId",
+          "assignedTrainerId",
+          "coachId",
+          "createdByUid",
+          "assignedProgramId",
+          "assignedProgramName",
+          "assignedProgramAt",
+          "assignedProgramUpdatedAt",
+          "assignedWorkoutCount",
+          "adminClaimUpdatedAt",
+          "trainerRoleUpdatedAt"
+        ]);
+    }
+
+    function isSafeOwnerUpdate(uid) {
+      return isOwner(uid) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedUserFields());
+    }
+
     function isAssignedTrainerData(data) {
       return signedIn() && (
         data.trainerId == request.auth.uid ||
@@ -51,7 +92,8 @@ service cloud.firestore {
           "assignedProgramName",
           "assignedProgramAt",
           "assignedProgramUpdatedAt",
-          "assignedWorkoutCount"
+          "assignedWorkoutCount",
+          "workoutCalendar"
         ]) &&
         request.resource.data.assignedProgramUpdatedAt is string &&
         (
@@ -68,6 +110,59 @@ service cloud.firestore {
         );
     }
 
+    function isTrainerClientScheduleUpdate() {
+      return isTrainer() &&
+        isAssignedTrainerData(resource.data) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "workoutCalendar",
+          "trainingDays",
+          "workoutTime",
+          "telegram",
+          "telegramNotificationsEnabled",
+          "updatedAt"
+        ]);
+    }
+
+    function isTrainerNutritionPlanUpdate() {
+      return isTrainer() &&
+        isAssignedTrainerData(resource.data) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "nutritionGoals",
+          "nutritionPlan",
+          "nutritionPlanUpdatedAt",
+          "updatedAt"
+        ]);
+    }
+
+    function trainerNutritionStateFields() {
+      return [
+        "goals",
+        "nutritionPlan",
+        "updatedAt"
+      ];
+    }
+
+    function isTrainerNutritionStatePlanCreate(uid, docId) {
+      return docId == "state" &&
+        isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.keys().hasOnly(trainerNutritionStateFields());
+    }
+
+    function isTrainerNutritionStatePlanUpdate(uid, docId) {
+      return docId == "state" &&
+        isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(trainerNutritionStateFields());
+    }
+
+    function isTrainerCreatingAssignedClient() {
+      return isTrainer() &&
+        request.resource.data.role == "client" &&
+        request.resource.data.createdByUid == request.auth.uid &&
+        isAssignedTrainerData(request.resource.data);
+    }
+
     function isTrainerOwnedProgramWorkout(uid) {
       return isTrainer() &&
         isAssignedTrainer(uid) &&
@@ -77,10 +172,25 @@ service cloud.firestore {
           get(/databases/$(database)/documents/trainingTemplates/$(request.resource.data.assignedProgramId)).data.name;
     }
 
+    function isTrainerWorkoutScheduleUpdate(uid) {
+      return isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "scheduledDate",
+          "plannedDate",
+          "scheduleOrder",
+          "status",
+          "statusUpdatedAt",
+          "completedAt",
+          "movedToDate",
+          "updatedAt"
+        ]);
+    }
+
     match /users/{uid} {
-      allow create: if isOwner(uid) || isAdmin();
+      allow create: if isAdmin() || isSafeOwnerCreate(uid) || isTrainerCreatingAssignedClient();
       allow read: if isOwnerOrAdmin(uid) || isAssignedTrainerData(resource.data);
-      allow update: if isOwnerOrAdmin(uid) || isTrainerProgramAssignment();
+      allow update: if isAdmin() || isSafeOwnerUpdate(uid) || isTrainerProgramAssignment() || isTrainerClientScheduleUpdate() || isTrainerNutritionPlanUpdate();
       allow delete: if isAdmin() || (
         isTrainer() &&
         resource.data.role == "client" &&
@@ -89,7 +199,8 @@ service cloud.firestore {
 
       match /workouts/{workoutId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
-        allow create, update: if isOwnerOrAdmin(uid) || isTrainerOwnedProgramWorkout(uid);
+        allow create: if isOwnerOrAdmin(uid) || isTrainerOwnedProgramWorkout(uid);
+        allow update: if isOwnerOrAdmin(uid) || isTrainerOwnedProgramWorkout(uid) || isTrainerWorkoutScheduleUpdate(uid);
         allow delete: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
       }
 
@@ -100,7 +211,9 @@ service cloud.firestore {
 
       match /nutrition/{docId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
-        allow write: if isOwnerOrAdmin(uid);
+        allow create: if isOwnerOrAdmin(uid) || isTrainerNutritionStatePlanCreate(uid, docId);
+        allow update: if isOwnerOrAdmin(uid) || isTrainerNutritionStatePlanUpdate(uid, docId);
+        allow delete: if isOwnerOrAdmin(uid);
       }
 
       match /nutrition/{docId}/{subPath=**} {

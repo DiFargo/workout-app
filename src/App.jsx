@@ -1,4 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import {
+  CalendarDays as ProgramCalendarIcon,
+  Dumbbell as ProgramDumbbellIcon,
+  ListChecks as ProgramListIcon,
+  Pencil as ProgramEditIcon,
+  Plus as ProgramPlusIcon,
+  RefreshCw as ProgramRefreshIcon,
+  Repeat2 as ProgramCycleIcon,
+  Trash2 as ProgramTrashIcon,
+  Upload as ProgramUploadIcon
+} from "lucide-react";
 import "./styles.css";
 
 import { searchLazyNutritionCatalog } from "./data/nutrition-catalog/lazyCatalog";
@@ -18,16 +30,40 @@ import {
   getWorkoutWarmupSteps
 } from "./domain/workoutPresentation";
 import { compressProgressPhoto } from "./utils/imageCompression";
+import { buildProgressInsight } from "./utils/progressInsight";
+import {
+  buildPlannedWorkoutSlots,
+  buildWorkoutScheduleCalendarEntries,
+  buildWorkoutScheduleDraft
+} from "./utils/workoutSchedule";
+import { buildTrainerNutritionPlanUpdate } from "./utils/trainerNutritionPlan";
+import {
+  CLIENT_PRIMARY_PAGES,
+  mapLoginAuthError,
+  normalizeClientPrimaryPage,
+  validateLoginFields,
+  validateNutritionAmount,
+  validateNutritionFoodDraft
+} from "./utils/clientUx";
 import { useModalFocusTrap } from "./hooks/useModalFocusTrap";
 import {
   PostWorkoutFeedbackDialog,
   WorkoutExitDialog,
   WorkoutIncompleteDialog
 } from "./components/workout/WorkoutDialogs";
+import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
 import {
+  applyExerciseLibraryDefaults,
+  createFourWeekWorkoutProgramBlocks,
+  distributeMicrocycleWorkouts,
   exerciseUsesExternalWeight,
+  findExerciseLibraryMatch,
+  findExistingPhotoFood,
+  getMicrocycleWeekNumbers,
   getWorkoutCompletion,
   getTimestampValue,
+  hasWorkoutSetEntry,
+  isReliablePhotoFood,
   isWorkoutSetCompleted,
   limitSimilarNutritionFoods,
   mergeNutritionDays,
@@ -44,12 +80,15 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  getIdTokenResult
+  getIdTokenResult,
+  updateEmail,
+  updateProfile,
+  sendPasswordResetEmail
 } from "firebase/auth";
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v457";
+const APP_VERSION = "v581";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -76,6 +115,8 @@ const TELEGRAM_BOT_USERNAME = "tren_ai_coach_bot";
 const TELEGRAM_PROFILE_STORAGE_KEY = "workout_telegram_profile_v1";
 
 const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
+const WORKOUT_CALENDAR_STORAGE_KEY = "workout_calendar_v1";
+const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
 
 const BASIC_WORKOUT_PLANS = {
   beginner: {
@@ -391,6 +432,32 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 16000) {
   }
 }
 
+async function getAuthorizedApiHeaders(headers = {}) {
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    throw new Error("Authentication required");
+  }
+
+  return {
+    ...headers,
+    "Authorization": `Bearer ${await currentUser.getIdToken()}`
+  };
+}
+
+async function fetchAuthorized(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    headers: await getAuthorizedApiHeaders(options.headers)
+  });
+}
+
+async function fetchAuthorizedWithTimeout(url, options = {}, timeoutMs = 16000) {
+  return fetchWithTimeout(url, {
+    ...options,
+    headers: await getAuthorizedApiHeaders(options.headers)
+  }, timeoutMs);
+}
+
 function getAppErrorPreset(type = "api") {
   const presets = {
     offline: {
@@ -453,11 +520,34 @@ function getNutritionUpdatedAt(state = {}) {
   return getTimestampValue(state?.updatedAt);
 }
 
+function pickNutritionGoalNumbers(source = {}) {
+  return ["calories", "protein", "fat", "carbs", "water"].reduce((result, key) => {
+    const value = Number(source?.[key]);
+    if (Number.isFinite(value) && value >= 0) {
+      result[key] = value;
+    }
+    return result;
+  }, {});
+}
+
 function mergeNutritionStates(localState = {}, cloudState = {}, personalMyFoods = {}) {
   const localIsNewer =
     getNutritionUpdatedAt(localState) > getNutritionUpdatedAt(cloudState);
   const primaryState = localIsNewer ? localState : cloudState;
   const secondaryState = localIsNewer ? cloudState : localState;
+  const localPlanUpdatedAt = getNutritionUpdatedAt(localState?.nutritionPlan || {});
+  const cloudPlanUpdatedAt = getNutritionUpdatedAt(cloudState?.nutritionPlan || {});
+  const planPrimaryState =
+    cloudPlanUpdatedAt > localPlanUpdatedAt
+      ? cloudState
+      : localPlanUpdatedAt > cloudPlanUpdatedAt
+        ? localState
+        : primaryState;
+  const planSecondaryState = planPrimaryState === cloudState ? localState : cloudState;
+  const preferredNutritionPlan =
+    planPrimaryState?.nutritionPlan ||
+    planSecondaryState?.nutritionPlan ||
+    null;
   const mergedDays = mergeNutritionDays(
     localState.days || {},
     cloudState.days || {},
@@ -472,8 +562,10 @@ function mergeNutritionStates(localState = {}, cloudState = {}, personalMyFoods 
     goals: {
       ...defaultNutritionState.goals,
       ...(secondaryState.goals || {}),
-      ...(primaryState.goals || {})
+      ...(primaryState.goals || {}),
+      ...pickNutritionGoalNumbers(preferredNutritionPlan)
     },
+    nutritionPlan: preferredNutritionPlan,
     days: mergedDays,
     favorites: [
       ...new Set([
@@ -821,6 +913,31 @@ function getAiHistoryItems(history = []) {
     }))
     .filter((item) => !Number.isNaN(item.parsedDate.getTime()))
     .sort((a, b) => b.parsedDate - a.parsedDate);
+}
+
+function getProgramHistoryItems(history = [], scope = null) {
+  const items = getAiHistoryItems(history);
+  if (!scope) return items;
+
+  const programId = String(scope.assignedProgramId || "").trim();
+  const assignmentVersion = String(scope.assignedProgramUpdatedAt || "").trim();
+  const workoutIds = new Set((scope.workoutIds || []).map((id) => String(id || "").trim()).filter(Boolean));
+
+  return items.filter((item) => {
+    const itemProgramId = String(item?.assignedProgramId || "").trim();
+    const itemAssignmentVersion = String(item?.assignedProgramUpdatedAt || "").trim();
+
+    if (assignmentVersion && itemAssignmentVersion) {
+      return itemAssignmentVersion === assignmentVersion;
+    }
+    if (programId && itemProgramId) {
+      return itemProgramId === programId;
+    }
+
+    return !itemProgramId &&
+      !itemAssignmentVersion &&
+      workoutIds.has(String(item?.workoutId || "").trim());
+  });
 }
 
 function getAiMuscleLoad(history = [], days = 14) {
@@ -1297,6 +1414,108 @@ function getAiNutritionDayMacros(baseMacros, profile = {}, date = new Date()) {
   };
 }
 
+function getNutritionPlanTimestamp(plan = {}) {
+  return getTimestampValue(plan?.updatedAt || plan?.createdAt || plan?.assignedAt || "");
+}
+
+function getNutritionPresetGoalId(plan = {}, fallbackProfile = {}) {
+  const value = String(plan?.presetId || plan?.preset || plan?.goalId || fallbackProfile?.goal || "").trim();
+  if (value === "maintenance" || value === "maintain") return "maintain";
+  if (value === "recomposition" || value === "recomp") return "recomp";
+  if (value === "fat_loss" || value === "cut") return "cut";
+  if (value === "cutting" || value === "dry") return "dry";
+  if (value === "mass_gain" || value === "mass" || value === "muscle_gain") return "mass";
+  return fallbackProfile?.goal || "recomp";
+}
+
+function getNutritionPlanMacroNumbers(plan = {}, fallbackGoals = {}) {
+  const source = plan?.start || plan?.weeks?.[0] || plan || {};
+  return {
+    calories: Math.round(Number(source.calories || fallbackGoals.calories) || defaultNutritionState.goals.calories),
+    protein: Math.round(Number(source.protein || fallbackGoals.protein) || defaultNutritionState.goals.protein),
+    fat: Math.round(Number(source.fat || fallbackGoals.fat) || defaultNutritionState.goals.fat),
+    carbs: Math.round(Number(source.carbs || fallbackGoals.carbs) || defaultNutritionState.goals.carbs)
+  };
+}
+
+function normalizeSimpleNutritionPlanForDisplay(plan = null, fallbackProfile = {}, fallbackGoals = {}) {
+  if (!plan) return null;
+  if (Array.isArray(plan.weeks) && plan.weeks.length) return plan;
+
+  const macros = getNutritionPlanMacroNumbers(plan, fallbackGoals);
+  if (!macros.calories || !macros.protein) return null;
+
+  const goal = getNutritionPresetGoalId(plan, fallbackProfile);
+  const updatedAt = plan.updatedAt || plan.createdAt || new Date().toISOString();
+  const week = {
+    week: 1,
+    label: "Текущий план",
+    ...macros,
+    trainingDay: { ...macros },
+    focus: plan.goal || "держать назначенные КБЖУ"
+  };
+
+  return {
+    id: plan.id || `nutrition_plan_${updatedAt}`,
+    version: 1,
+    source: plan.source || "trainer",
+    createdAt: plan.createdAt || updatedAt,
+    updatedAt,
+    profile: {
+      ...(fallbackProfile || {}),
+      goal,
+      // Trainer-assigned simple plans are exact daily targets, so the client
+      // and trainer must not add an extra training-day boost on top of them.
+      trainingDays: Array.isArray(plan.trainingDays) ? plan.trainingDays : []
+    },
+    goalLabel: plan.name || getAiNutritionGoalLabel(goal),
+    start: week,
+    weeks: [week, { ...week, week: 2 }, { ...week, week: 3 }, { ...week, week: 4 }],
+    comment: plan.goal || "План назначен тренером."
+  };
+}
+
+function getClientNutritionDisplayPlan(client = {}, nutritionState = null, fallbackGoals = {}) {
+  const assignedPlan = client?.nutritionPlan || nutritionState?.nutritionPlan || null;
+  const aiPlan = client?.aiNutritionPlan || nutritionState?.aiNutritionPlan || null;
+  const profile = client?.aiNutritionProfile || client?.profile || aiPlan?.profile || {};
+  const assignedDisplayPlan = normalizeSimpleNutritionPlanForDisplay(
+    assignedPlan,
+    profile,
+    fallbackGoals
+  );
+
+  if (!assignedDisplayPlan) return aiPlan || null;
+  if (!aiPlan) return assignedDisplayPlan;
+
+  const assignedTime = getNutritionPlanTimestamp(assignedDisplayPlan);
+  const aiTime = getNutritionPlanTimestamp(aiPlan);
+
+  return assignedTime >= aiTime ? assignedDisplayPlan : aiPlan;
+}
+
+function getClientEffectiveNutritionGoals(client = {}, nutritionState = null, fallbackGoals = {}, date = new Date()) {
+  const plan = getClientNutritionDisplayPlan(client, nutritionState, fallbackGoals);
+  if (!plan) {
+    return {
+      ...defaultNutritionState.goals,
+      ...getNutritionPlanMacroNumbers(fallbackGoals, fallbackGoals)
+    };
+  }
+
+  const week = getAiNutritionWeekForDate(plan, date) || plan.start || plan.weeks?.[0] || fallbackGoals;
+  const profile = plan.profile || client?.aiNutritionProfile || client?.profile || {};
+  const macros = getAiNutritionDayMacros(week, profile, date);
+
+  return {
+    ...defaultNutritionState.goals,
+    calories: Math.round(Number(macros.calories) || defaultNutritionState.goals.calories),
+    protein: Math.round(Number(macros.protein) || defaultNutritionState.goals.protein),
+    fat: Math.round(Number(macros.fat) || defaultNutritionState.goals.fat),
+    carbs: Math.round(Number(macros.carbs) || defaultNutritionState.goals.carbs)
+  };
+}
+
 function getAiNutritionTrainingDayAdvice(isTrainingDay, goal = "recomp") {
   if (!isTrainingDay) {
     return "День без тренировки: держи обычные КБЖУ, не перегружай жиры вечером и оставь питание ровным.";
@@ -1500,6 +1719,48 @@ function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, profile 
           ? "План построен индивидуально: аккуратный дефицит без провала и резкого среза калорий."
           : "План построен индивидуально для поддержки/рекомпозиции: калории близко к личной норме и акцент на стабильность."
   };
+}
+
+const TRAINER_NUTRITION_GOAL_PRESETS = [
+  { id: "maintain", name: "Поддержка", goal: "Поддержание веса и формы" },
+  { id: "recomp", name: "Рекомпозиция", goal: "Снижение жира и сохранение мышц" },
+  { id: "cut", name: "Похудение", goal: "Плавное снижение веса" },
+  { id: "dry", name: "Сушка", goal: "Снижение процента жира" },
+  { id: "mass", name: "Набор", goal: "Набор мышечной массы" }
+];
+
+function buildClientNutritionPresetOptions(client = {}, nutritionState = null, history = []) {
+  const sourceProfile = client?.aiNutritionProfile || client?.profile || {};
+  const nutritionForCalculation = {
+    ...defaultNutritionState,
+    ...(nutritionState || {}),
+    goals: {
+      ...defaultNutritionState.goals,
+      ...(nutritionState?.goals || {}),
+      ...(client?.nutritionGoals || {})
+    }
+  };
+
+  return TRAINER_NUTRITION_GOAL_PRESETS.map((preset) => {
+    const profile = {
+      ...sourceProfile,
+      goal: preset.id,
+      trainingDays: getAiNutritionTrainingDays(sourceProfile)
+    };
+    const plan = buildAiNutritionMonthlyPlan(nutritionForCalculation, profile, history, null);
+    const week = plan?.weeks?.[0] || plan?.start || nutritionForCalculation.goals;
+    const macros = getAiNutritionDayMacros(week, profile);
+
+    return {
+      id: preset.id,
+      name: preset.name,
+      goal: preset.goal,
+      calories: Math.round(Number(macros.calories || week.calories) || defaultNutritionState.goals.calories),
+      protein: Math.round(Number(macros.protein || week.protein) || defaultNutritionState.goals.protein),
+      fat: Math.round(Number(macros.fat || week.fat) || defaultNutritionState.goals.fat),
+      carbs: Math.round(Number(macros.carbs || week.carbs) || defaultNutritionState.goals.carbs)
+    };
+  });
 }
 
 const NUTRITION_QUICK_SEARCHES = [
@@ -2350,8 +2611,255 @@ const starterPlan = {
   ]
 };
 
+function isTrainerE2EHarnessEnabled() {
+  return import.meta.env.DEV &&
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("trainerHarness") === "1";
+}
+
+function TrainerE2EHarness() {
+  const [mode, setMode] = useState("dashboard");
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const [activeClientTab, setActiveClientTab] = useState("overview");
+  const [selectedProgramId, setSelectedProgramId] = useState("program_tren_plus");
+  const [selectedClient, setSelectedClient] = useState({
+    id: "client_e2e",
+    name: "Germes",
+    email: "germes@example.com",
+    goalDescription: "Рекомпозиция",
+    assignedProgramId: "program_tren_plus",
+    assignedProgramName: "tren+",
+    assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
+    assignedWorkoutCount: 4,
+    workoutCalendar: {
+      enabled: true,
+      scheduledDates: ["2026-06-15", "2026-06-18", "2026-06-22", "2026-06-25"],
+      reminderEnabled: true,
+      reminderOffsetsHours: [24, 3],
+      progressReminderSettings: {
+        photoEnabled: true,
+        measurementsEnabled: true,
+        photoIntervalDays: 14,
+        measurementsIntervalDays: 14
+      }
+    },
+    telegram: { connected: true, username: "germes" },
+    telegramNotificationsEnabled: true
+  });
+  const clients = [selectedClient];
+  const history = [
+    {
+      id: "history_1",
+      workoutId: "e2e_day_1",
+      workoutName: "Тренировка 1",
+      date: "2026-06-15T18:00:00.000Z",
+      completedAt: "2026-06-15T18:00:00.000Z",
+      assignedProgramId: "program_tren_plus",
+      assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
+      exercises: [
+        { name: "Жим ногами", sets: [{ reps: 12, weight: 90 }, { reps: 12, weight: 90 }] }
+      ]
+    }
+  ];
+  const measurements = [
+    { id: "m2", date: "2026-06-16", weight: 88.8, values: { weight: 88.8, belly: 88, chest: 104 } },
+    { id: "m1", date: "2026-06-01", weight: 89.5, values: { weight: 89.5, belly: 90, chest: 103 } }
+  ];
+  const nutritionDays = [
+    { date: "2026-06-17", totals: { calories: 2210, protein: 172, fat: 66, carbs: 228 }, foods: [] },
+    { date: "2026-06-16", totals: { calories: 2290, protein: 181, fat: 69, carbs: 236 }, foods: [] }
+  ];
+  const workouts = [
+    {
+      id: "e2e_day_1",
+      name: "Тренировка 1",
+      scheduledDate: "2026-06-15",
+      assignedProgramId: "program_tren_plus",
+      assignedProgramName: "tren+",
+      assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
+      exercises: [
+        { id: "e1", name: "Жим ногами", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "90" }, { reps: "12", weight: "90" }] },
+        { id: "e2", name: "Тяга нижнего блока", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "35" }] }
+      ]
+    },
+    {
+      id: "e2e_day_2",
+      name: "Тренировка 2",
+      scheduledDate: "2026-06-18",
+      assignedProgramId: "program_tren_plus",
+      assignedProgramName: "tren+",
+      assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
+      exercises: [
+        { id: "e3", name: "Жим лёжа с гантелями", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "20" }] }
+      ]
+    }
+  ];
+  const clientSummaries = {
+    client_e2e: {
+      assignedProgramId: "program_tren_plus",
+      assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
+      assignedWorkoutCount: 4,
+      completedWorkoutCount: 1,
+      programCompletionPercent: 25,
+      workouts7: 1,
+      nutritionDays7: 2,
+      lastWorkoutAt: "2026-06-15T18:00:00.000Z",
+      lastNutritionAt: "2026-06-17T12:00:00.000Z",
+      lastMeasurementAt: "2026-06-16",
+      workoutDateKeysCurrentWeek: ["2026-06-15"]
+    }
+  };
+  const programTemplates = [
+    { id: "program_tren_plus", name: "tren+", workoutsCount: 4 },
+    { id: "program_support", name: "Поддержка", workoutsCount: 3 }
+  ];
+  const nutritionPlanOptions = [
+    { id: "maintain", name: "Поддержка", calories: 2400, protein: 160, fat: 75, carbs: 260 },
+    { id: "recomp", name: "Рекомпозиция", calories: 2300, protein: 180, fat: 70, carbs: 235 }
+  ];
+
+  function navigate(nextSection) {
+    if (nextSection === "more") {
+      setMode("cabinet");
+      setActiveSection("more");
+      return;
+    }
+    setMode(nextSection);
+    setActiveSection(nextSection);
+  }
+
+  return (
+    <TrainerWorkspace
+      appVersion={APP_VERSION}
+      mode={mode}
+      activeSection={mode === "client" ? "clients" : activeSection}
+      onNavigate={navigate}
+      onRefresh={() => {}}
+      trainerName="Beta"
+      clients={clients}
+      clientSummaries={clientSummaries}
+      counts={{ active: 1, attention: 0 }}
+      selectedClient={selectedClient}
+      selectedProfile={{ goalLabel: "Рекомпозиция", weight: 88.8, height: 180, age: 28 }}
+      selectedSummary={clientSummaries.client_e2e}
+      activeClientTab={activeClientTab}
+      onClientTabChange={(tab) => {
+        setActiveClientTab(tab);
+        setMode("client");
+      }}
+      onOpenClient={(client) => {
+        setSelectedClient(client);
+        setMode("client");
+        setActiveSection("clients");
+      }}
+      onCloseClient={() => {
+        setMode("clients");
+        setActiveSection("clients");
+      }}
+      onCreateClient={() => {}}
+      createClientState={{
+        open: false,
+        name: "",
+        email: "",
+        password: "",
+        status: "",
+        credentials: null,
+        loading: false,
+        onClose: () => {},
+        onSubmit: () => {},
+        onNameChange: () => {},
+        onEmailChange: () => {},
+        onPasswordChange: () => {},
+        onGeneratePassword: () => {}
+      }}
+      measurements={measurements}
+      history={history}
+      nutritionDays={nutritionDays}
+      nutritionGoals={{ calories: 2300, protein: 180, fat: 70, carbs: 235 }}
+      nutritionPlanOptions={nutritionPlanOptions}
+      photos={[{ id: "p1", date: "2026-06-01", frontUrl: "" }]}
+      tasks={[]}
+      trainerNote="Тестовая заметка"
+      onGenerateNutritionPlan={() => {}}
+      onSaveNutritionPlan={() => true}
+      onSaveNotifications={() => true}
+      onTestNotification={() => true}
+      onConnectTelegram={() => {}}
+      onSendMessage={() => true}
+      onClientAction={() => true}
+      workouts={workouts}
+      exerciseLibrary={workouts.flatMap((workout) => workout.exercises)}
+      programTemplates={programTemplates}
+      selectedProgramId={selectedProgramId}
+      onSelectProgram={setSelectedProgramId}
+      onAssignProgram={() => true}
+      onSaveWorkoutSchedule={(dates) => {
+        setSelectedClient((current) => ({
+          ...current,
+          workoutCalendar: {
+            ...(current.workoutCalendar || {}),
+            scheduledDates: dates,
+            monthlyTrainingDates: dates,
+            updatedAt: new Date().toISOString()
+          }
+        }));
+        return true;
+      }}
+      programStatus=""
+      onUpdateWorkout={() => {}}
+      onUpdateExercise={() => {}}
+      onUpdateExerciseSet={() => {}}
+      onAddExerciseSet={() => {}}
+      onRemoveExerciseSet={() => {}}
+      onAddExercise={() => {}}
+      onRemoveExercise={() => {}}
+      onDuplicateExercise={() => {}}
+      onMoveExercise={() => {}}
+      onUploadExerciseVideo={() => {}}
+      onAddDay={() => {}}
+      onDuplicateDay={() => {}}
+      onRemoveDay={() => {}}
+      onSaveWorkouts={() => {}}
+      onLogout={() => {}}
+    />
+  );
+}
+
 export default function App() {
   useModalFocusTrap();
+
+  if (isTrainerE2EHarnessEnabled()) {
+    return <TrainerE2EHarness />;
+  }
+
+  useEffect(() => {
+    const preventGestureZoom = (event) => event.preventDefault();
+    const preventMultiTouchZoom = (event) => {
+      if (event.touches?.length > 1) event.preventDefault();
+    };
+    const isTouchDevice = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches;
+    const lockPortraitOrientation = () => {
+      if (!isTouchDevice || !window.screen?.orientation?.lock) return;
+      window.screen.orientation.lock("portrait-primary").catch(() => {
+        // Mobile browsers allow orientation lock only in some contexts.
+      });
+    };
+
+    document.addEventListener("gesturestart", preventGestureZoom, { passive: false });
+    document.addEventListener("gesturechange", preventGestureZoom, { passive: false });
+    document.addEventListener("gestureend", preventGestureZoom, { passive: false });
+    document.addEventListener("touchmove", preventMultiTouchZoom, { passive: false });
+    document.addEventListener("visibilitychange", lockPortraitOrientation);
+    lockPortraitOrientation();
+
+    return () => {
+      document.removeEventListener("gesturestart", preventGestureZoom);
+      document.removeEventListener("gesturechange", preventGestureZoom);
+      document.removeEventListener("gestureend", preventGestureZoom);
+      document.removeEventListener("touchmove", preventMultiTouchZoom);
+      document.removeEventListener("visibilitychange", lockPortraitOrientation);
+    };
+  }, []);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -2371,6 +2879,10 @@ export default function App() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [loginFieldErrors, setLoginFieldErrors] = useState({});
+  const [loginSubmitting, setLoginSubmitting] = useState(false);
+  const [passwordResetSending, setPasswordResetSending] = useState(false);
+  const [loginNotice, setLoginNotice] = useState("");
   const [profileActiveTab, setProfileActiveTab] = useState("cabinet");
 
   function canUseAdminFeatures() {
@@ -2438,6 +2950,7 @@ export default function App() {
   const [workoutModePreference, setWorkoutModePreference] = useState(() => getDefaultWorkoutModePreference());
   const [workoutModeRemember, setWorkoutModeRemember] = useState(false);
   const [workoutModeModalOpen, setWorkoutModeModalOpen] = useState(false);
+  const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
   const [basicWorkoutQuiz, setBasicWorkoutQuiz] = useState({
     goal: "muscle",
     level: "beginner",
@@ -2477,6 +2990,9 @@ export default function App() {
   const [restTimerSeconds, setRestTimerSeconds] = useState(0);
   const [restTimerRunning, setRestTimerRunning] = useState(false);
   const [exerciseHistoryOpenId, setExerciseHistoryOpenId] = useState("");
+  const [exerciseNoteOpenId, setExerciseNoteOpenId] = useState("");
+  const [exerciseTechniqueOpenId, setExerciseTechniqueOpenId] = useState("");
+  const [exerciseValidationMessage, setExerciseValidationMessage] = useState("");
   const [videoLoadingId, setVideoLoadingId] = useState("");
   const [videoRetryToken, setVideoRetryToken] = useState(0);
   const [workoutHistorySyncState, setWorkoutHistorySyncState] = useState("idle");
@@ -2485,6 +3001,7 @@ export default function App() {
   const [workoutClientComment, setWorkoutClientComment] = useState("");
   const [timerTick, setTimerTick] = useState(Date.now());
   const setRepsInputRefs = useRef({});
+  const setWeightInputRefs = useRef({});
 
   useEffect(() => {
     if (inlineVideoControlsTimerRef.current) {
@@ -2495,6 +3012,9 @@ export default function App() {
     setInlineVideoControlsVisible(true);
     setVideoLoadingId("");
     setExerciseHistoryOpenId("");
+    setExerciseNoteOpenId("");
+    setExerciseTechniqueOpenId("");
+    setExerciseValidationMessage("");
 
     return () => {
       if (inlineVideoControlsTimerRef.current) {
@@ -2576,6 +3096,9 @@ export default function App() {
   const [adminClientLoading, setAdminClientLoading] = useState(false);
   const [adminClientStatus, setAdminClientStatus] = useState("");
   const [adminClientFilter, setAdminClientFilter] = useState("all");
+  const [trainerNextSection, setTrainerNextSection] = useState("dashboard");
+  const [trainerProgramManagerOpen, setTrainerProgramManagerOpen] = useState(false);
+  const [trainerWorkoutTab, setTrainerWorkoutTab] = useState("programs");
   const [trainerClientSummaries, setTrainerClientSummaries] = useState({});
   const [trainerClientSummariesLoading, setTrainerClientSummariesLoading] = useState(false);
   const trainerClientSummaryRequestRef = useRef(0);
@@ -2606,7 +3129,7 @@ export default function App() {
   const [adminTrainingTemplates, setAdminTrainingTemplates] = useState([]);
   const [adminTemplateName, setAdminTemplateName] = useState("");
   const [adminSelectedTemplateId, setAdminSelectedTemplateId] = useState("");
-  const [adminSelectedNutritionPreset, setAdminSelectedNutritionPreset] = useState("balanced");
+  const [adminSelectedNutritionPreset, setAdminSelectedNutritionPreset] = useState("maintenance");
   const [adminCopyTargetUserId, setAdminCopyTargetUserId] = useState("");
   const [adminTransferFromUid, setAdminTransferFromUid] = useState("");
   const [adminTransferToUid, setAdminTransferToUid] = useState("");
@@ -2620,6 +3143,7 @@ export default function App() {
   const [adminCalendarDraft, setAdminCalendarDraft] = useState({
     enabled: true,
     reminderEnabled: true,
+    reminderOffsetsHours: [24],
     reminderTime: "19:00",
     workoutTime: "13:00",
     hourReminderEnabled: false,
@@ -2648,10 +3172,22 @@ export default function App() {
   const adminProgramSwipeSuppressClickRef = useRef(false);
   const [adminProgramEditorMode, setAdminProgramEditorMode] = useState("create");
   const [adminProgramLibraryTab, setAdminProgramLibraryTab] = useState("overview");
+  const [adminProgramCreateChoiceOpen, setAdminProgramCreateChoiceOpen] = useState(false);
   const [adminInspectorTab, setAdminInspectorTab] = useState("main");
   const [adminProgramGroups, setAdminProgramGroups] = useState([]);
   const [adminActiveProgramId, setAdminActiveProgramId] = useState("");
   const [adminActiveDayId, setAdminActiveDayId] = useState("");
+
+  useEffect(() => {
+    if (!adminSelectedExerciseId) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [adminSelectedExerciseId]);
 
   const [isSaving, setIsSaving] = useState(false);
   const [isWorkoutSaved, setIsWorkoutSaved] = useState(false);
@@ -2664,6 +3200,7 @@ export default function App() {
   const [historyTouchStartX, setHistoryTouchStartX] = useState(null);
   const [historyDeleteCandidate, setHistoryDeleteCandidate] = useState(null);
   const [openHistoryKey, setOpenHistoryKey] = useState(null);
+  const cabinetWorkoutHistoryItemRefs = useRef(new Map());
   const [selectedAiFeatureId, setSelectedAiFeatureId] = useState("nutritionPlan");
   const [showFirstSetupOnboarding, setShowFirstSetupOnboarding] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState(0);
@@ -2681,11 +3218,52 @@ export default function App() {
   const [profileNutritionModalOpen, setProfileNutritionModalOpen] = useState(false);
   const [profileNutritionSaveStatus, setProfileNutritionSaveStatus] = useState("");
   const [profileProgressModalOpen, setProfileProgressModalOpen] = useState(false);
+  const [profileWorkoutHistoryModalOpen, setProfileWorkoutHistoryModalOpen] = useState(false);
+  const [profileWorkoutHistoryProgramScope, setProfileWorkoutHistoryProgramScope] = useState(null);
+  useEffect(() => {
+    if (!profileWorkoutHistoryModalOpen || !openHistoryKey || historyLoading) return undefined;
+
+    const frameId = window.requestAnimationFrame(() => {
+      cabinetWorkoutHistoryItemRefs.current.get(openHistoryKey)?.scrollIntoView({
+        block: "start",
+        behavior: "smooth"
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [profileWorkoutHistoryModalOpen, openHistoryKey, historyLoading, history.length]);
+  const [profileWorkoutCalendarMonth, setProfileWorkoutCalendarMonth] = useState(() => {
+    const date = new Date();
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+  });
+  const [profileWorkoutCalendarDate, setProfileWorkoutCalendarDate] = useState(() => {
+    const date = new Date();
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  });
+  const [profileWorkoutCalendarData, setProfileWorkoutCalendarData] = useState({});
+  const [profileWorkoutScheduledDates, setProfileWorkoutScheduledDates] = useState([]);
+  const [profileWorkoutCalendarDraftDates, setProfileWorkoutCalendarDraftDates] = useState([]);
+  const [profileWorkoutCalendarEditing, setProfileWorkoutCalendarEditing] = useState(false);
+  const [profileWorkoutCalendarSaving, setProfileWorkoutCalendarSaving] = useState(false);
+  const [profileWorkoutCalendarStatus, setProfileWorkoutCalendarStatus] = useState("");
   const [profileSettingsModalOpen, setProfileSettingsModalOpen] = useState(false);
   const [profileTrainerNotificationsOpen, setProfileTrainerNotificationsOpen] = useState(false);
   const [profileSettingsModalSection, setProfileSettingsModalSection] = useState("settings");
+  const [profileAccount, setProfileAccount] = useState({ displayName: "", avatarUrl: "", email: "" });
+  const [profileAccountDraft, setProfileAccountDraft] = useState({ displayName: "", email: "" });
+  const [profileAccountAvatarFile, setProfileAccountAvatarFile] = useState(null);
+  const [profileAccountAvatarPreview, setProfileAccountAvatarPreview] = useState("");
+  const [profileAvatarCropOpen, setProfileAvatarCropOpen] = useState(false);
+  const [profileAvatarCropSource, setProfileAvatarCropSource] = useState("");
+  const [profileAvatarCropZoom, setProfileAvatarCropZoom] = useState(1);
+  const [profileAvatarCropOffset, setProfileAvatarCropOffset] = useState({ x: 0, y: 0 });
+  const [profileAvatarCropSize, setProfileAvatarCropSize] = useState({ width: 0, height: 0 });
+  const profileAvatarCropImageRef = useRef(null);
+  const profileAvatarCropDragRef = useRef(null);
+  const [profileAccountSaving, setProfileAccountSaving] = useState(false);
+  const [profileAccountStatus, setProfileAccountStatus] = useState("");
+  const profileSettingsModalBodyRef = useRef(null);
   const [profileProgressAnalysisOpen, setProfileProgressAnalysisOpen] = useState(false);
-  const [profileWorkoutModeOpen, setProfileWorkoutModeOpen] = useState(false);
   const [profileMeasurementOpen, setProfileMeasurementOpen] = useState(false);
   const [profileMeasurementsModalOpen, setProfileMeasurementsModalOpen] = useState(false);
   const [profileMeasurementReturnTab, setProfileMeasurementReturnTab] = useState("measurements");
@@ -2694,6 +3272,8 @@ export default function App() {
   const [profileMeasurements, setProfileMeasurements] = useState([]);
   const [clientProgressPhotos, setClientProgressPhotos] = useState([]);
   const [profileProgressPhotosModalOpen, setProfileProgressPhotosModalOpen] = useState(false);
+  const [profileProgressPhotoCompareIds, setProfileProgressPhotoCompareIds] = useState(["", ""]);
+  const [profileProgressPhotoCompareView, setProfileProgressPhotoCompareView] = useState("front");
   const [profileProgressPhotoFiles, setProfileProgressPhotoFiles] = useState({
     front: null,
     side: null,
@@ -2706,6 +3286,36 @@ export default function App() {
   });
   const [profileProgressPhotoUploading, setProfileProgressPhotoUploading] = useState(false);
   const [profileProgressPhotoStatus, setProfileProgressPhotoStatus] = useState("");
+
+  useEffect(() => {
+    if (!profileSettingsModalOpen && !profileAvatarCropOpen) return undefined;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
+  }, [profileSettingsModalOpen, profileAvatarCropOpen]);
+
+  useEffect(() => {
+    if (!profileProgressPhotosModalOpen || clientProgressPhotos.length < 2) return;
+
+    setProfileProgressPhotoCompareIds((current) => {
+      const availableIds = new Set(clientProgressPhotos.map((photo) => photo.id));
+      const firstId = availableIds.has(current[0]) ? current[0] : clientProgressPhotos[1]?.id || "";
+      let secondId = availableIds.has(current[1]) ? current[1] : clientProgressPhotos[0]?.id || "";
+
+      if (firstId === secondId) {
+        secondId = clientProgressPhotos.find((photo) => photo.id !== firstId)?.id || "";
+      }
+
+      return [firstId, secondId];
+    });
+  }, [profileProgressPhotosModalOpen, clientProgressPhotos]);
   const [profileMeasurementWizardStep, setProfileMeasurementWizardStep] = useState(0);
   const [profileMeasurementDraft, setProfileMeasurementDraft] = useState({
     weight: "",
@@ -2740,6 +3350,8 @@ export default function App() {
   const [nutritionProductUnitMenuOpen, setNutritionProductUnitMenuOpen] = useState(false);
   const [nutritionAmount, setNutritionAmount] = useState("100");
   const [nutritionAmountMode, setNutritionAmountMode] = useState("grams");
+  const [nutritionAmountError, setNutritionAmountError] = useState("");
+  const [nutritionProductErrors, setNutritionProductErrors] = useState({});
   const [nutritionEditNote, setNutritionEditNote] = useState("");
   const [nutritionEditDetailsOpen, setNutritionEditDetailsOpen] = useState(false);
   const [nutritionEditPageOpen, setNutritionEditPageOpen] = useState(false);
@@ -2759,6 +3371,9 @@ export default function App() {
   const nutritionFoodSwipeMoved = useRef({});
   const [nutritionFoodSwipeOffsets, setNutritionFoodSwipeOffsets] = useState({});
   const [deletingNutritionFoodId, setDeletingNutritionFoodId] = useState(null);
+  const [nutritionUndoDelete, setNutritionUndoDelete] = useState(null);
+  const nutritionUndoTimerRef = useRef(null);
+  const [nutritionDeleteConfirmOpen, setNutritionDeleteConfirmOpen] = useState(false);
   const [nutritionBarcode, setNutritionBarcode] = useState("");
   const [nutritionPhotoName, setNutritionPhotoName] = useState("");
   const [nutritionPhotoPreview, setNutritionPhotoPreview] = useState("");
@@ -2766,6 +3381,7 @@ export default function App() {
   const [nutritionPhotoAiResult, setNutritionPhotoAiResult] = useState("");
   const [nutritionPhotoAiCandidates, setNutritionPhotoAiCandidates] = useState([]);
   const [nutritionPhotoAiConfidence, setNutritionPhotoAiConfidence] = useState("");
+  const [nutritionPhotoNotFoundOpen, setNutritionPhotoNotFoundOpen] = useState(false);
   const [nutritionAnalysisOpen, setNutritionAnalysisOpen] = useState(true);
   const [nutritionPickerOpen, setNutritionPickerOpen] = useState(false);
   const [nutritionSearchTab, setNutritionSearchTab] = useState("food");
@@ -2847,6 +3463,18 @@ export default function App() {
       setTelegramDraft(createEmptyTelegramProfile());
       setTelegramStatus("");
       setTelegramConnectOpen(false);
+      setProfileAccount({
+        displayName: u?.displayName || "",
+        avatarUrl: u?.photoURL || "",
+        email: u?.email || ""
+      });
+      setProfileAccountDraft({
+        displayName: u?.displayName || "",
+        email: u?.email || ""
+      });
+      setProfileAccountAvatarFile(null);
+      setProfileAccountAvatarPreview("");
+      setProfileAccountStatus("");
       setNutritionCloudReady(false);
       setNutrition(defaultNutritionState);
       setRecentNutritionFoods([]);
@@ -2873,6 +3501,7 @@ export default function App() {
         const cachedProfile = safeReadUserJsonStorage(AI_NUTRITION_PROFILE_STORAGE_KEY, u.uid, null);
         const cachedPlan = safeReadUserJsonStorage(AI_NUTRITION_PLAN_STORAGE_KEY, u.uid, null);
         const cachedTelegram = safeReadUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, u.uid, null);
+        const cachedWorkoutCalendar = safeReadUserJsonStorage(WORKOUT_CALENDAR_STORAGE_KEY, u.uid, null);
 
         if (hasRequiredAiNutritionProfileFields(cachedProfile)) {
           setAiNutritionProfile(cachedProfile);
@@ -2883,6 +3512,11 @@ export default function App() {
           setTelegramProfile({ ...createEmptyTelegramProfile(), ...cachedTelegram });
           setTelegramDraft({ ...createEmptyTelegramProfile(), ...cachedTelegram });
         }
+        if (Array.isArray(cachedWorkoutCalendar?.scheduledDates)) {
+          setProfileWorkoutCalendarData(cachedWorkoutCalendar);
+          setProfileWorkoutScheduledDates(cachedWorkoutCalendar.scheduledDates);
+          setProfileWorkoutCalendarDraftDates(cachedWorkoutCalendar.scheduledDates);
+        }
 
         const savedWorkoutModePreference = safeReadUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, u.uid, getDefaultWorkoutModePreference());
         setWorkoutModePreference(savedWorkoutModePreference || getDefaultWorkoutModePreference());
@@ -2890,6 +3524,11 @@ export default function App() {
       } else {
         setWorkoutModePreference(getDefaultWorkoutModePreference());
         setWorkoutModeRemember(false);
+        setProfileWorkoutCalendarData({});
+        setProfileWorkoutScheduledDates([]);
+        setProfileWorkoutCalendarDraftDates([]);
+        setProfileWorkoutCalendarEditing(false);
+        setProfileWorkoutCalendarStatus("");
         setRecentNutritionFoods([]);
       }
 
@@ -2912,8 +3551,29 @@ export default function App() {
           const remotePlan = roleData.aiNutritionPlan || null;
           const remoteProfileCompleted = hasRequiredAiNutritionProfileFields(remoteProfile);
           const remoteTheme = roleData.appTheme;
+          const remoteScheduledDates = Array.isArray(roleData.workoutCalendar?.scheduledDates)
+            ? roleData.workoutCalendar.scheduledDates
+            : Array.isArray(roleData.workoutCalendar?.monthlyTrainingDates)
+              ? roleData.workoutCalendar.monthlyTrainingDates
+              : [];
+          const remoteAccount = {
+            displayName: roleData.accountProfile?.displayName || roleData.name || u.displayName || "",
+            avatarUrl: roleData.accountProfile?.avatarUrl || roleData.avatarUrl || u.photoURL || "",
+            email: u.email || roleData.email || ""
+          };
 
-          setCurrentUserRole(nextIsAdmin ? "admin" : (roleData.role || "client"));
+          const resolvedRole = nextIsAdmin ? "admin" : (roleData.role || "client");
+          setCurrentUserRole(resolvedRole);
+          if (resolvedRole === "client") {
+            setPage(normalizeClientPrimaryPage(
+              safeReadUserJsonStorage(CLIENT_LAST_PAGE_STORAGE_KEY, u.uid, "main")
+            ));
+          }
+          setProfileAccount(remoteAccount);
+          setProfileAccountDraft({
+            displayName: remoteAccount.displayName,
+            email: remoteAccount.email
+          });
 
           if (remoteTheme === "warm-light" || remoteTheme === "dark-green") {
             setAppTheme(remoteTheme);
@@ -2933,6 +3593,13 @@ export default function App() {
             setAiNutritionSavedPlan(remotePlan);
             safeWriteUserJsonStorage(AI_NUTRITION_PLAN_STORAGE_KEY, u.uid, remotePlan);
           }
+          setProfileWorkoutCalendarData(roleData.workoutCalendar || {});
+          setProfileWorkoutScheduledDates(remoteScheduledDates);
+          setProfileWorkoutCalendarDraftDates(remoteScheduledDates);
+          safeWriteUserJsonStorage(WORKOUT_CALENDAR_STORAGE_KEY, u.uid, {
+            ...(roleData.workoutCalendar || {}),
+            scheduledDates: remoteScheduledDates
+          });
 
           setFirstSetupCompletedInCloud(
             roleData.firstSetupCompleted === true ||
@@ -3065,6 +3732,37 @@ export default function App() {
       setPage("admin");
     }
   }, [appLoading, currentUserRole, isAdminClaim, isLoggedIn, page]);
+
+  useEffect(() => {
+    if (
+      !isLoggedIn ||
+      appLoading ||
+      !user?.uid ||
+      currentUserRole !== "client" ||
+      !CLIENT_PRIMARY_PAGES.includes(page)
+    ) return;
+
+    safeWriteUserJsonStorage(CLIENT_LAST_PAGE_STORAGE_KEY, user.uid, page);
+
+    const currentHistoryPage = window.history.state?.workoutAppPage;
+    if (!currentHistoryPage) {
+      window.history.replaceState(
+        { ...(window.history.state || {}), workoutAppPage: page },
+        ""
+      );
+    } else if (currentHistoryPage !== page) {
+      window.history.pushState(
+        { ...(window.history.state || {}), workoutAppPage: page },
+        ""
+      );
+    }
+  }, [appLoading, currentUserRole, isLoggedIn, page, user?.uid]);
+
+  useEffect(() => () => {
+    if (nutritionUndoTimerRef.current) {
+      window.clearTimeout(nutritionUndoTimerRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -3203,8 +3901,7 @@ export default function App() {
   useEffect(() => {
     if (!isLoggedIn || appLoading) return;
 
-    const shouldTrapAndroidBack =
-      page !== "main" ||
+    const hasTransientScreen =
       Boolean(selectedWorkoutId) ||
       Boolean(fullscreenVideo) ||
       workoutIncompleteConfirmOpen ||
@@ -3212,21 +3909,49 @@ export default function App() {
       nutritionEditPageOpen ||
       dishIngredientPickerOpen ||
       nutritionCreateChoiceOpen ||
-      barcodeScannerOpen;
+      nutritionDeleteConfirmOpen ||
+      barcodeScannerOpen ||
+      Object.values(expandedNutritionMeals || {}).some(Boolean);
+    const shouldTrapAndroidBack =
+      page !== "main" ||
+      hasTransientScreen;
 
     if (!shouldTrapAndroidBack) return;
 
-    if (!window.history.state?.workoutAppBackTrap) {
-      window.history.pushState({ workoutAppBackTrap: true }, "");
+    const needsSyntheticBackEntry =
+      hasTransientScreen ||
+      !CLIENT_PRIMARY_PAGES.includes(page);
+
+    if (needsSyntheticBackEntry && !window.history.state?.workoutAppBackTrap) {
+      window.history.pushState({
+        ...(window.history.state || {}),
+        workoutAppBackTrap: true,
+        workoutAppPage: CLIENT_PRIMARY_PAGES.includes(page) ? page : undefined
+      }, "");
     }
 
-    const onAndroidBack = () => {
+    const onAndroidBack = (event) => {
+      const targetPage = event.state?.workoutAppPage;
+      if (
+        !hasTransientScreen &&
+        CLIENT_PRIMARY_PAGES.includes(targetPage) &&
+        targetPage !== page
+      ) {
+        setPage(targetPage);
+        window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0 }));
+        return;
+      }
+
       const handled = handleAppBackNavigation();
 
-      if (handled) {
+      if (handled && hasTransientScreen) {
         setTimeout(() => {
           if (!window.history.state?.workoutAppBackTrap) {
-            window.history.pushState({ workoutAppBackTrap: true }, "");
+            window.history.pushState({
+              ...(window.history.state || {}),
+              workoutAppBackTrap: true,
+              workoutAppPage: CLIENT_PRIMARY_PAGES.includes(page) ? page : undefined
+            }, "");
           }
         }, 0);
       }
@@ -3254,7 +3979,9 @@ export default function App() {
     nutritionEditPageOpen,
     dishIngredientPickerOpen,
     nutritionCreateChoiceOpen,
-    barcodeScannerOpen
+    nutritionDeleteConfirmOpen,
+    barcodeScannerOpen,
+    expandedNutritionMeals
   ]);
 
   useEffect(() => {
@@ -3295,7 +4022,7 @@ export default function App() {
             setFatSecretLoading(true);
             startPerformanceCheck("Food search · nutrition API", { query, localResults: localResults.length });
 
-            const response = await fetchWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
+            const response = await fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
               signal: controller.signal
             }, 12000);
 
@@ -3379,7 +4106,7 @@ export default function App() {
             setDishIngredientLoading(true);
             startPerformanceCheck("Food search · dish ingredient API", { query, localResults: localResults.length });
 
-            const response = await fetchWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
+            const response = await fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
               signal: controller.signal
             }, 12000);
 
@@ -3549,6 +4276,29 @@ export default function App() {
     return plan.workouts.find((w) => w.id === selectedWorkoutId);
   }, [selectedWorkoutId, plan]);
 
+  const workoutVideoUrls = useMemo(() => [...new Set(
+    (workout?.exercises || [])
+      .map((exercise) => exercise?.video || exercise?.videoUrl || exercise?.videoURL || "")
+      .filter(Boolean)
+  )], [workout]);
+  const workoutVideoCacheKey = workoutVideoUrls.join("|");
+
+  useEffect(() => {
+    if (!workoutVideoCacheKey || !("serviceWorker" in navigator)) return;
+
+    navigator.serviceWorker.ready
+      .then((registration) => {
+        const worker = navigator.serviceWorker.controller || registration.active;
+        worker?.postMessage({
+          type: "PREFETCH_WORKOUT_VIDEOS",
+          urls: workoutVideoCacheKey.split("|")
+        });
+      })
+      .catch((error) => {
+        console.warn("Workout video prefetch unavailable:", error);
+      });
+  }, [workout?.id, workoutVideoCacheKey]);
+
   const workoutDurationText = useMemo(() => {
     if (!workoutStartedAt) return "—";
 
@@ -3674,18 +4424,59 @@ export default function App() {
 
   async function handleLogin(e) {
     e.preventDefault();
+    if (loginSubmitting) return;
 
+    const validation = validateLoginFields(login, password);
+    setLoginFieldErrors(validation.errors);
+    setLoginError("");
+    setLoginNotice("");
+    if (!validation.valid) return;
+
+    setLoginSubmitting(true);
     try {
-      const result = await signInWithEmailAndPassword(auth, login, password);
+      const result = await signInWithEmailAndPassword(
+        auth,
+        validation.email,
+        validation.password
+      );
 
       setPage("main");
       setLoginError("");
+      setLoginFieldErrors({});
       setSelectedUserId(null);
 
       loadHistory();
       loadWorkoutsFromFirebase(result.user.uid);
-    } catch {
-      setLoginError("Неверный email или пароль");
+    } catch (error) {
+      setLoginError(mapLoginAuthError(error));
+    } finally {
+      setLoginSubmitting(false);
+    }
+  }
+
+  async function handleLoginPasswordReset() {
+    if (passwordResetSending) return;
+
+    const validation = validateLoginFields(login, "", { passwordRequired: false });
+    setLoginFieldErrors(validation.errors);
+    setLoginError("");
+    setLoginNotice("");
+    if (!validation.valid) return;
+
+    setPasswordResetSending(true);
+    try {
+      await sendPasswordResetEmail(auth, validation.email);
+      setLoginNotice("Если аккаунт существует, ссылка для смены пароля отправлена на почту.");
+    } catch (error) {
+      setLoginError(
+        error?.code === "auth/too-many-requests"
+          ? "Слишком много запросов. Попробуй немного позже."
+          : error?.code === "auth/network-request-failed"
+            ? "Нет связи с сервером. Проверь интернет."
+            : "Не удалось отправить ссылку. Попробуй ещё раз."
+      );
+    } finally {
+      setPasswordResetSending(false);
     }
   }
 
@@ -3986,9 +4777,15 @@ export default function App() {
   }
 
   function addNutritionFood(food, mealId = nutritionMeal, amount = nutritionAmount) {
+    const amountValidation = validateNutritionAmount(amount);
+    if (!amountValidation.valid) {
+      setNutritionAmountError(amountValidation.error);
+      return false;
+    }
+
     const sourceFood = normalizeNutritionFood(food);
-    const scale = getFoodScale(amount, sourceFood, nutritionAmountMode);
-    const numericAmount = parseNutritionNumber(amount, 100) || 100;
+    const numericAmount = amountValidation.amount;
+    const scale = getFoodScale(numericAmount, sourceFood, nutritionAmountMode);
     const item = {
       id: `${sourceFood.id}_${Date.now()}`,
       foodId: sourceFood.id,
@@ -4052,6 +4849,8 @@ export default function App() {
       ...prev,
       [mealId]: true
     }));
+    setNutritionAmountError("");
+    return true;
   }
 
   function openNutritionCreateProductFromPhoto(aiFood = {}, fallbackName = "") {
@@ -4157,6 +4956,8 @@ export default function App() {
     setSelectedNutritionFood(draftFood);
     setNutritionAmount("100");
     setNutritionAmountMode("grams");
+    setNutritionAmountError("");
+    setNutritionProductErrors({});
     setNutritionEditNote("");
     setNutritionEditDetailsOpen(false);
     setNutritionEditPageOpen(true);
@@ -4193,6 +4994,8 @@ export default function App() {
     setSelectedNutritionFood(draftDish);
     setNutritionAmount("100");
     setNutritionAmountMode("grams");
+    setNutritionAmountError("");
+    setNutritionProductErrors({});
     setNutritionEditNote("");
     setNutritionEditDetailsOpen(false);
     setNutritionEditPageOpen(true);
@@ -4227,13 +5030,21 @@ export default function App() {
     setSelectedNutritionFood(foodForPicker);
     setNutritionAmount(String(nextAmount));
     setNutritionAmountMode(nextMode);
+    setNutritionAmountError("");
+    setNutritionProductErrors({});
     setNutritionEditNote(foodForPicker.description || foodForPicker.note || "");
   }
 
   function updateNutritionFood(itemId, food, amount = nutritionAmount) {
+    const amountValidation = validateNutritionAmount(amount);
+    if (!amountValidation.valid) {
+      setNutritionAmountError(amountValidation.error);
+      return false;
+    }
+
     const sourceFood = normalizeNutritionFood(food);
-    const scale = getFoodScale(amount, sourceFood, nutritionAmountMode);
-    const numericAmount = parseNutritionNumber(amount, 100) || 100;
+    const numericAmount = amountValidation.amount;
+    const scale = getFoodScale(numericAmount, sourceFood, nutritionAmountMode);
 
     updateNutritionDay((day) => ({
       ...day,
@@ -4294,9 +5105,12 @@ export default function App() {
         recent: [myFoodId, ...(prev.recent || []).filter((id) => id !== myFoodId && id !== sourceFood.id)].slice(0, 20)
       };
     });
+    setNutritionAmountError("");
+    return true;
   }
 
   function updateSelectedNutritionFoodField(field, value) {
+    setNutritionProductErrors((current) => ({ ...current, [field]: "" }));
     setSelectedNutritionFood((prev) => {
       if (!prev) return prev;
 
@@ -4335,6 +5149,7 @@ export default function App() {
   function updateSelectedDishTotalWeight(value) {
     const numericWeight = parseNutritionNumber(value, 0);
     const cleanValue = String(value ?? "");
+    setNutritionProductErrors((current) => ({ ...current, portionAmount: "" }));
 
     setSelectedNutritionFood((prev) => {
       if (!prev) return prev;
@@ -4449,6 +5264,7 @@ export default function App() {
   function openNutritionEditPage() {
     setNutritionEditOriginalFood(cloneNutritionFoodForEdit(selectedNutritionFood));
     setNutritionEditOriginalNote(nutritionEditNote);
+    setNutritionProductErrors({});
     setNutritionEditPageOpen(true);
   }
 
@@ -4462,24 +5278,34 @@ export default function App() {
     setNutritionEditNote(nutritionEditOriginalNote || "");
     setNutritionEditOriginalFood(null);
     setNutritionEditOriginalNote("");
+    setNutritionProductErrors({});
     setNutritionEditPageOpen(false);
   }
 
   function confirmNutritionEditPage() {
-    const cleanName = String(selectedNutritionFood?.name || "").trim();
-    if (!cleanName) {
+    const validation = validateNutritionFoodDraft(selectedNutritionFood);
+    setNutritionProductErrors(validation.errors);
+    if (!validation.valid) {
       showAppError(
         "validation",
-        selectedNutritionFood?.type === "dish"
-          ? "Укажи название блюда."
-          : "Укажи название продукта."
+        Object.values(validation.errors)[0] || "Проверь данные продукта."
       );
       return;
     }
 
-    setSelectedNutritionFood((current) => current ? { ...current, name: cleanName } : current);
+    setSelectedNutritionFood((current) => current ? {
+      ...current,
+      name: validation.values.name,
+      calories: validation.values.calories,
+      protein: validation.values.protein,
+      fat: validation.values.fat,
+      carbs: validation.values.carbs,
+      portionAmount: validation.values.portionAmount,
+      ...(current.type === "dish" ? { totalWeight: validation.values.portionAmount } : {})
+    } : current);
     setNutritionEditOriginalFood(null);
     setNutritionEditOriginalNote("");
+    setNutritionProductErrors({});
     setNutritionEditPageOpen(false);
   }
 
@@ -4491,6 +5317,8 @@ export default function App() {
     setNutritionEditPageOpen(false);
     setNutritionEditOriginalFood(null);
     setNutritionEditOriginalNote("");
+    setNutritionAmountError("");
+    setNutritionProductErrors({});
     setEditingNutritionItemId(null);
     setNutritionSearchTab("food");
     setShowRecentNutritionFoods(false);
@@ -4532,7 +5360,7 @@ export default function App() {
     );
   }
 
-  function deleteSelectedNutritionFood() {
+  function deleteSelectedNutritionFood(confirmed = false) {
     if (!selectedNutritionFood) return;
 
     const editId = String(editingNutritionItemId || "");
@@ -4545,11 +5373,17 @@ export default function App() {
       nutrition.myFoods?.[selectedId];
 
     if (isMyProduct) {
+      if (!confirmed) {
+        setNutritionDeleteConfirmOpen(true);
+        return;
+      }
+
       const myFoodId = editId.startsWith("my:")
         ? editId.replace("my:", "")
         : (nutrition.myFoods?.[selectedId] ? selectedId : makePersonalFoodKey(selectedNutritionFood));
 
       removeMyNutritionFood(myFoodId, selectedNutritionFood.name || "");
+      setNutritionDeleteConfirmOpen(false);
       setSelectedNutritionFood(null);
       setEditingNutritionItemId(null);
       setNutritionEditDetailsOpen(false);
@@ -4578,9 +5412,16 @@ export default function App() {
   function confirmNutritionFoodFromPicker() {
     if (!selectedNutritionFood) return;
 
+    const amountValidation = validateNutritionAmount(nutritionAmount);
+    setNutritionAmountError(amountValidation.error);
+    if (!amountValidation.valid) {
+      showAppError("validation", amountValidation.error);
+      return;
+    }
+
     if (editingNutritionItemId && String(editingNutritionItemId).startsWith("my:")) {
       const myFoodId = String(editingNutritionItemId).replace("my:", "");
-      const numericAmount = parseNutritionNumber(nutritionAmount, 100) || 100;
+      const numericAmount = amountValidation.amount;
 
       const foodToAdd = normalizeNutritionFood({
         ...selectedNutritionFood,
@@ -4614,7 +5455,7 @@ export default function App() {
         };
       });
 
-      addNutritionFood(foodToAdd, nutritionMeal, numericAmount);
+      if (!addNutritionFood(foodToAdd, nutritionMeal, numericAmount)) return;
 
       setRecentNutritionFoods(loadRecentNutritionFoods());
       setNutritionEditNote("");
@@ -4623,10 +5464,10 @@ export default function App() {
     }
 
     if (editingNutritionItemId) {
-      updateNutritionFood(editingNutritionItemId, selectedNutritionFood);
+      if (!updateNutritionFood(editingNutritionItemId, selectedNutritionFood, amountValidation.amount)) return;
       setEditingNutritionItemId(null);
     } else {
-      addNutritionFood(selectedNutritionFood);
+      if (!addNutritionFood(selectedNutritionFood, nutritionMeal, amountValidation.amount)) return;
     }
 
     setNutritionEditNote("");
@@ -4640,6 +5481,8 @@ export default function App() {
     setNutritionSearchTab("food");
     setNutritionAmount("100");
     setNutritionAmountMode("grams");
+    setNutritionAmountError("");
+    setNutritionProductErrors({});
     setNutritionEditNote("");
     setNutritionEditDetailsOpen(false);
     setNutritionCreateChoiceOpen(false);
@@ -4770,6 +5613,7 @@ export default function App() {
     setNutritionPhotoAiCandidates([]);
     setNutritionPhotoAiConfidence("");
     setNutritionPhotoAnalyzing(false);
+    setNutritionPhotoNotFoundOpen(false);
     nutritionPhotoLastFileRef.current = null;
     if (nutritionPhotoInputRef.current) {
       nutritionPhotoInputRef.current.value = "";
@@ -4809,6 +5653,39 @@ export default function App() {
     });
 
     return Array.from(uniqueCandidates.values()).slice(0, 4);
+  }
+
+  async function findExistingNutritionFoodFromPhoto(product = {}) {
+    const query = String(product.query || product.name || "").trim();
+    const currentFoods = [
+      ...Object.values(nutrition.myFoods || {}),
+      ...nutritionFoodDatabase,
+      ...fatSecretFoods
+    ].map(normalizeNutritionFood);
+    let existingFood = findExistingPhotoFood(currentFoods, product);
+    if (existingFood || query.length < 2) return existingFood;
+
+    try {
+      const localFoods = await searchLocalNutritionFoods(query, 24);
+      existingFood = findExistingPhotoFood(localFoods, product);
+      if (existingFood) return existingFood;
+
+      const response = await fetchAuthorizedWithTimeout(
+        `/api/nutrition/search?q=${encodeURIComponent(query)}`,
+        {},
+        12000
+      );
+      if (!response.ok) return null;
+
+      const data = await response.json().catch(() => ({}));
+      return findExistingPhotoFood(
+        Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [],
+        product
+      );
+    } catch (error) {
+      console.warn("[AI PHOTO] existing product lookup failed", error);
+      return null;
+    }
   }
 
   function selectNutritionPhotoAiCandidate(food) {
@@ -4898,6 +5775,7 @@ export default function App() {
     setNutritionPhotoAiCandidates([]);
     setNutritionPhotoAiConfidence("");
     setNutritionPhotoAnalyzing(false);
+    setNutritionPhotoNotFoundOpen(false);
     nutritionPhotoLastFileRef.current = null;
 
     if (nutritionPhotoInputRef.current) {
@@ -4933,6 +5811,7 @@ export default function App() {
     setNutritionPhotoAiResult("");
     setNutritionPhotoAiCandidates([]);
     setNutritionPhotoAiConfidence("");
+    setNutritionPhotoNotFoundOpen(false);
     setNutritionPhotoAnalyzing(true);
     setFatSecretError("");
     setNutritionSearchTab("food");
@@ -4945,7 +5824,7 @@ export default function App() {
       endPerformanceCheck("AI photo · prepare image", { imageLengthKb: Math.round((imageData.length / 1024) * 10) / 10 });
 
       startPerformanceCheck("AI photo · function request");
-      const response = await fetchWithTimeout("/api/ai-food-photo", {
+      const response = await fetchAuthorizedWithTimeout("/api/ai-food-photo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -4969,20 +5848,32 @@ export default function App() {
       }
 
       const product = data.product;
-      const validProduct = Boolean(String(product?.name || "").trim())
-        && String(product.name).trim().toLowerCase() !== "новый продукт"
-        && Number(product.calories) > 0
-        && [product.protein, product.fat, product.carbs].some((value) => Number(value) > 0);
+      const validProduct = isReliablePhotoFood(product, data);
 
-      if (!validProduct) {
+      if (data.found === false || !validProduct) {
         console.log("[AI PHOTO] invalid product", { apiVersion: data.apiVersion || "", product });
         setNutritionPhotoAiCandidates([]);
         setNutritionPhotoAiConfidence("");
-        setNutritionPhotoAiResult("Не удалось распознать продукт на фото. Попробуй другое изображение.");
+        setNutritionPhotoAiResult("");
+        setNutritionPhotoNotFoundOpen(true);
         return;
       }
 
       setNutritionPhotoAiConfidence(getNutritionPhotoAiConfidenceText(product.confidence));
+      const existingFood = await findExistingNutritionFoodFromPhoto(product);
+      if (existingFood) {
+        resetNutritionPhotoAiState();
+        setNutritionSearch(existingFood.name || product.name);
+        setNutritionSearchTab("food");
+        setNutritionEditPageOpen(false);
+        setNutritionEditDetailsOpen(false);
+        setNutritionMealMenuOpen(false);
+        setNutritionCreateChoiceOpen(false);
+        saveRecentNutritionFood(existingFood);
+        addNutritionFoodFromPicker(existingFood);
+        return;
+      }
+
       openNutritionCreateProductFromPhoto({ ...product, rawAiResponse: data }, product.name);
     } catch (error) {
       console.error(error);
@@ -5021,6 +5912,18 @@ export default function App() {
     } else {
       nutritionPhotoInputRef.current?.click();
     }
+  }
+
+  function retryNutritionPhotoFromNotFound() {
+    setNutritionPhotoNotFoundOpen(false);
+    resetNutritionPhotoAiState();
+    window.setTimeout(() => nutritionPhotoInputRef.current?.click(), 0);
+  }
+
+  function addNutritionProductManuallyFromPhoto() {
+    setNutritionPhotoNotFoundOpen(false);
+    resetNutritionPhotoAiState();
+    createCustomNutritionFood();
   }
 
   function addFoodByBarcodeFromPicker() {
@@ -5072,7 +5975,14 @@ export default function App() {
       });
   }
 
-  function removeNutritionFood(itemId) {
+  function removeNutritionFood(itemId, options = {}) {
+    const { offerUndo = true } = options;
+    const dateKey = nutritionDateKey;
+    const currentFoods = nutrition.days?.[dateKey]?.foods || [];
+    const removedIndex = currentFoods.findIndex((item) => item.id === itemId);
+    const removedItem = removedIndex >= 0 ? currentFoods[removedIndex] : null;
+    if (!removedItem) return false;
+
     const currentUid = auth.currentUser?.uid || user?.uid;
     if (currentUid) {
       addUserLocalBackup(NUTRITION_BACKUP_STORAGE_KEY, currentUid, {
@@ -5086,6 +5996,56 @@ export default function App() {
       ...day,
       foods: (day.foods || []).filter((item) => item.id !== itemId)
     }));
+
+    if (offerUndo) {
+      if (nutritionUndoTimerRef.current) {
+        window.clearTimeout(nutritionUndoTimerRef.current);
+      }
+
+      setNutritionUndoDelete({
+        dateKey,
+        item: removedItem,
+        index: removedIndex
+      });
+      nutritionUndoTimerRef.current = window.setTimeout(() => {
+        setNutritionUndoDelete(null);
+        nutritionUndoTimerRef.current = null;
+      }, 6000);
+    }
+
+    return true;
+  }
+
+  function restoreNutritionFood() {
+    if (!nutritionUndoDelete?.item || !nutritionUndoDelete.dateKey) return;
+
+    const { dateKey, item, index } = nutritionUndoDelete;
+    setNutrition((prev) => {
+      const currentDay = prev.days?.[dateKey] || makeEmptyNutritionDay();
+      const currentFoods = currentDay.foods || [];
+      if (currentFoods.some((food) => food.id === item.id)) return prev;
+
+      const nextFoods = [...currentFoods];
+      nextFoods.splice(Math.min(Math.max(index, 0), nextFoods.length), 0, item);
+
+      return {
+        ...prev,
+        days: {
+          ...prev.days,
+          [dateKey]: {
+            ...currentDay,
+            foods: nextFoods,
+            updatedAt: new Date().toISOString()
+          }
+        }
+      };
+    });
+
+    if (nutritionUndoTimerRef.current) {
+      window.clearTimeout(nutritionUndoTimerRef.current);
+      nutritionUndoTimerRef.current = null;
+    }
+    setNutritionUndoDelete(null);
   }
 
   function removeMyNutritionFood(foodId, foodName = "") {
@@ -6029,13 +6989,13 @@ export default function App() {
               ))}
             </div>
 
-            {workoutReadinessPending && (
-              <p className="workoutReadinessConfirmation">
-                {workoutReadinessPending.id === "good"
+            <p className={`workoutReadinessConfirmation ${workoutReadinessPending ? "" : "empty"}`}>
+              {workoutReadinessPending
+                ? workoutReadinessPending.id === "good"
                   ? "Плановые веса тренера останутся без изменений."
-                  : `Будет применена корректировка: ${workoutReadinessPending.volumeText}.`}
-              </p>
-            )}
+                  : `Будет применена корректировка: ${workoutReadinessPending.volumeText}.`
+                : "Выберите вариант самочувствия."}
+            </p>
           </div>
 
           <div className="workoutReadinessActions">
@@ -6110,9 +7070,219 @@ export default function App() {
     setAppTheme((currentTheme) => currentTheme === "warm-light" ? "dark-green" : "warm-light");
   }
 
+  function openProfileAccount() {
+    const currentUser = auth.currentUser;
+    setProfileAccountDraft({
+      displayName: profileAccount.displayName || currentUser?.displayName || "",
+      email: profileAccount.email || currentUser?.email || ""
+    });
+    setProfileAccountAvatarFile(null);
+    setProfileAccountAvatarPreview("");
+    setProfileAccountStatus("");
+    setProfileSettingsModalSection("account");
+    setProfileSettingsModalOpen(true);
+  }
+
+  function openProfileAvatarCrop(file) {
+    if (!file) return;
+    if (profileAvatarCropSource) URL.revokeObjectURL(profileAvatarCropSource);
+    setProfileAvatarCropSource(URL.createObjectURL(file));
+    setProfileAvatarCropZoom(1);
+    setProfileAvatarCropOffset({ x: 0, y: 0 });
+    setProfileAvatarCropSize({ width: 0, height: 0 });
+    setProfileAvatarCropOpen(true);
+  }
+
+  function closeProfileAvatarCrop() {
+    setProfileAvatarCropOpen(false);
+    profileAvatarCropDragRef.current = null;
+  }
+
+  function clampProfileAvatarCropOffset(offset, zoom = profileAvatarCropZoom) {
+    const viewportSize = 240;
+    const { width, height } = profileAvatarCropSize;
+    if (!width || !height) return { x: 0, y: 0 };
+
+    const baseScale = Math.max(viewportSize / width, viewportSize / height);
+    const displayWidth = width * baseScale * zoom;
+    const displayHeight = height * baseScale * zoom;
+    const maxX = Math.max(0, (displayWidth - viewportSize) / 2);
+    const maxY = Math.max(0, (displayHeight - viewportSize) / 2);
+    return {
+      x: Math.max(-maxX, Math.min(maxX, offset.x)),
+      y: Math.max(-maxY, Math.min(maxY, offset.y))
+    };
+  }
+
+  function changeProfileAvatarCropZoom(value) {
+    const zoom = Math.max(1, Math.min(3, Number(value) || 1));
+    setProfileAvatarCropZoom(zoom);
+    setProfileAvatarCropOffset((current) => clampProfileAvatarCropOffset(current, zoom));
+  }
+
+  function startProfileAvatarCropDrag(event) {
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    profileAvatarCropDragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      offsetX: profileAvatarCropOffset.x,
+      offsetY: profileAvatarCropOffset.y
+    };
+  }
+
+  function moveProfileAvatarCrop(event) {
+    const drag = profileAvatarCropDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    setProfileAvatarCropOffset(clampProfileAvatarCropOffset({
+      x: drag.offsetX + event.clientX - drag.startX,
+      y: drag.offsetY + event.clientY - drag.startY
+    }));
+  }
+
+  function endProfileAvatarCropDrag(event) {
+    if (profileAvatarCropDragRef.current?.pointerId === event.pointerId) {
+      profileAvatarCropDragRef.current = null;
+    }
+  }
+
+  async function applyProfileAvatarCrop() {
+    const image = profileAvatarCropImageRef.current;
+    if (!image || !profileAvatarCropSize.width || !profileAvatarCropSize.height) return;
+
+    const viewportSize = 240;
+    const outputSize = 512;
+    const baseScale = Math.max(
+      viewportSize / profileAvatarCropSize.width,
+      viewportSize / profileAvatarCropSize.height
+    );
+    const displayScale = baseScale * profileAvatarCropZoom;
+    const displayWidth = profileAvatarCropSize.width * displayScale;
+    const displayHeight = profileAvatarCropSize.height * displayScale;
+    const drawX = viewportSize / 2 + profileAvatarCropOffset.x - displayWidth / 2;
+    const drawY = viewportSize / 2 + profileAvatarCropOffset.y - displayHeight / 2;
+    const outputRatio = outputSize / viewportSize;
+    const canvas = document.createElement("canvas");
+    canvas.width = outputSize;
+    canvas.height = outputSize;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+    context.drawImage(
+      image,
+      drawX * outputRatio,
+      drawY * outputRatio,
+      displayWidth * outputRatio,
+      displayHeight * outputRatio
+    );
+
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.9));
+    if (!blob) return;
+
+    const croppedFile = new File([blob], "avatar.jpg", { type: "image/jpeg" });
+    setProfileAccountAvatarFile(croppedFile);
+    setProfileAccountAvatarPreview(canvas.toDataURL("image/jpeg", 0.9));
+    setProfileAccountStatus("");
+    closeProfileAvatarCrop();
+  }
+
+  async function saveProfileAccount() {
+    const currentUser = auth.currentUser;
+    if (!currentUser || profileAccountSaving) return;
+
+    const displayName = profileAccountDraft.displayName.trim();
+    const nextEmail = profileAccountDraft.email.trim().toLowerCase();
+    if (!displayName) {
+      setProfileAccountStatus("Укажи имя.");
+      return;
+    }
+    if (!nextEmail || !nextEmail.includes("@")) {
+      setProfileAccountStatus("Укажи корректную почту.");
+      return;
+    }
+
+    setProfileAccountSaving(true);
+    setProfileAccountStatus("");
+
+    try {
+      let avatarUrl = profileAccount.avatarUrl || currentUser.photoURL || "";
+      if (profileAccountAvatarFile) {
+        const extension = profileAccountAvatarFile.name.split(".").pop() || "jpg";
+        const avatarRef = ref(storage, `users/${currentUser.uid}/profile/avatar.${extension}`);
+        await uploadBytes(avatarRef, profileAccountAvatarFile, {
+          contentType: profileAccountAvatarFile.type || "image/jpeg"
+        });
+        avatarUrl = await getDownloadURL(avatarRef);
+      }
+
+      if (nextEmail !== String(currentUser.email || "").toLowerCase()) {
+        await updateEmail(currentUser, nextEmail);
+      }
+      await updateProfile(currentUser, { displayName, photoURL: avatarUrl || null });
+
+      const accountProfile = {
+        displayName,
+        avatarUrl,
+        email: nextEmail,
+        updatedAt: new Date().toISOString()
+      };
+      await setDoc(doc(db, "users", currentUser.uid), {
+        name: displayName,
+        email: nextEmail,
+        avatarUrl,
+        accountProfile,
+        updatedAt: accountProfile.updatedAt
+      }, { merge: true });
+
+      setProfileAccount(accountProfile);
+      setProfileAccountAvatarFile(null);
+      setProfileAccountAvatarPreview("");
+      setProfileAccountStatus("Данные аккаунта сохранены.");
+      document.activeElement?.blur?.();
+      profileSettingsModalBodyRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      window.setTimeout(() => {
+        setProfileSettingsModalOpen(false);
+        setProfileAccountStatus("");
+      }, 650);
+    } catch (error) {
+      console.error("Profile account save failed:", error);
+      setProfileAccountStatus(
+        error?.code === "auth/requires-recent-login"
+          ? "Для смены почты нужно выйти и войти в аккаунт заново."
+          : error?.code === "auth/email-already-in-use"
+            ? "Эта почта уже используется другим аккаунтом."
+            : "Не получилось сохранить данные. Проверь соединение."
+      );
+    } finally {
+      setProfileAccountSaving(false);
+    }
+  }
+
+  async function sendProfilePasswordReset() {
+    const email = profileAccountDraft.email.trim() || auth.currentUser?.email || "";
+    if (!email) {
+      setProfileAccountStatus("Сначала укажи почту аккаунта.");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setProfileAccountStatus(`Ссылка для смены пароля отправлена на ${email}.`);
+    } catch (error) {
+      console.error("Password reset failed:", error);
+      setProfileAccountStatus("Не получилось отправить ссылку для смены пароля.");
+    }
+  }
+
   function logout() {
     signOut(auth);
 
+    setProfileSettingsModalOpen(false);
+    setProfileSettingsModalSection("settings");
+    setProfileAvatarCropOpen(false);
+    setProfileAccountStatus("");
     setIsLoggedIn(false);
     setUser(null);
     setIsAdminClaim(false);
@@ -6274,6 +7444,16 @@ export default function App() {
       return true;
     }
 
+    if (nutritionDeleteConfirmOpen) {
+      setNutritionDeleteConfirmOpen(false);
+      return true;
+    }
+
+    if (Object.values(expandedNutritionMeals || {}).some(Boolean)) {
+      setExpandedNutritionMeals({});
+      return true;
+    }
+
     if (nutritionPickerOpen) {
       setNutritionPickerOpen(false);
       setSelectedNutritionFood(null);
@@ -6349,21 +7529,60 @@ export default function App() {
         e.id === id
           ? {
               ...e,
-              sets: e.sets.map((s, idx) =>
-                idx === i
-                  ? {
-                      ...s,
-                      [field]: val,
-                      ...(field === "enteredWeight"
-                        ? { completed: Number(val) > 0 }
-                        : {})
-                    }
-                  : s
-              )
+              sets: e.sets.map((s, idx) => {
+                if (idx !== i) return s;
+
+                const nextSet = { ...s, [field]: val };
+                if (field === "enteredWeight" || field === "enteredReps") {
+                  nextSet.completed = Boolean(
+                    hasWorkoutSetEntry(nextSet.enteredWeight) ||
+                    hasWorkoutSetEntry(nextSet.enteredReps)
+                  );
+                }
+
+                return nextSet;
+              })
             }
           : e
       )
     }));
+
+    if (field === "enteredWeight" && hasWorkoutSetEntry(val)) {
+      setExerciseValidationMessage("");
+    }
+  }
+
+  function updateExerciseNote(exerciseId, note) {
+    updateWorkout((currentWorkout) => ({
+      ...currentWorkout,
+      exercises: currentWorkout.exercises.map((exercise) => (
+        exercise.id === exerciseId
+          ? { ...exercise, clientNote: note }
+          : exercise
+      ))
+    }));
+  }
+
+  function openWorkoutExerciseModal(setModalId, exerciseId, triggerElement) {
+    triggerElement?.blur();
+    if (deckRef.current) {
+      deckRef.current.scrollTop = 0;
+    }
+    setModalId(exerciseId);
+  }
+
+  function closeWorkoutExerciseModal(setModalId) {
+    setModalId("");
+    const restoreScroll = () => {
+      if (deckRef.current) {
+        deckRef.current.scrollTop = 0;
+      }
+    };
+    window.requestAnimationFrame(() => {
+      restoreScroll();
+      window.requestAnimationFrame(restoreScroll);
+    });
+    window.setTimeout(restoreScroll, 100);
   }
 
   function startRestTimer(duration = restTimerDuration) {
@@ -6596,6 +7815,7 @@ export default function App() {
           id: exercise.id || "",
           name: exercise.name,
           video: exercise.video || "",
+          clientNote: String(exercise.clientNote || "").trim(),
           sets: exercise.sets.map((set, index) => {
             const completed = isWorkoutSetCompleted(set);
             const weight = set.enteredWeight || (set.completed ? set.weight : "") || "";
@@ -6604,6 +7824,7 @@ export default function App() {
             return {
               set: index + 1,
               reps: completed ? enteredReps || set.reps || 8 : "",
+              targetReps: set.reps || "",
               weight,
               completed,
               aiSuggestedWeight: set.weight || "",
@@ -6724,6 +7945,10 @@ export default function App() {
     completedSet = getCompletedWorkoutSet(history)
   ) {
     if (!workoutItem) return false;
+
+    const manualStatus = String(workoutItem.status || "").trim().toLowerCase();
+    if (manualStatus === "completed") return true;
+    if (["not_completed", "missed"].includes(manualStatus)) return false;
 
     const currentAssignmentVersion = String(
       workoutItem.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || ""
@@ -6888,6 +8113,11 @@ export default function App() {
           name: data.name || "Без названия",
           order: data.order,
           sortOrder: data.sortOrder,
+          status: data.status || "planned",
+          statusUpdatedAt: data.statusUpdatedAt || "",
+          movedToDate: data.movedToDate || "",
+          scheduledDate: data.scheduledDate || "",
+          plannedDate: data.plannedDate || "",
           assignedBy: data.assignedBy || "",
           assignedAt: data.assignedAt || "",
           assignedProgramId: data.assignedProgramId || profileData.assignedProgramId || "",
@@ -6939,76 +8169,103 @@ export default function App() {
     }
   }
 
-  async function saveWorkoutsToFirebase() {
+  async function saveWorkoutsToFirebase(planOverride = null, options = {}) {
     try {
       const userId = selectedUserId || auth.currentUser?.uid;
+      const hasPlanOverride = Boolean(planOverride && typeof planOverride === "object" && Array.isArray(planOverride.workouts));
+      const planToSave = hasPlanOverride ? planOverride : plan;
+      const saveOptions = hasPlanOverride ? options : {};
+      const silent = Boolean(saveOptions.silent);
 
       if (!userId) {
-        alert("Пользователь не найден");
+        if (silent) setAdminClientStatus("Пользователь не найден.");
+        else alert("Пользователь не найден");
         return;
       }
 
       addLocalBackup(WORKOUT_PLAN_BACKUP_STORAGE_KEY, {
-        plan,
+        plan: planToSave,
         reason: "before_workouts_cloud_save",
         userId
       }, 10);
 
-      for (const [workoutIndex, workout] of plan.workouts.entries()) {
-        await setDoc(doc(db, "users", userId, "workouts", workout.id), {
-          name: workout.name,
+      const workoutsRef = collection(db, "users", userId, "workouts");
+      const existingWorkouts = await getDocs(workoutsRef);
+      const currentWorkoutIds = new Set((planToSave.workouts || []).map((workout) => workout.id));
+      const batch = writeBatch(db);
+
+      existingWorkouts.forEach((workoutDoc) => {
+        if (!currentWorkoutIds.has(workoutDoc.id)) {
+          batch.delete(workoutDoc.ref);
+        }
+      });
+
+      for (const [workoutIndex, workout] of (planToSave.workouts || []).entries()) {
+        batch.set(doc(db, "users", userId, "workouts", workout.id), {
+          ...workout,
+          id: workout.id,
+          name: workout.name || `День ${workoutIndex + 1}`,
           order: workoutIndex + 1,
           sortOrder: workoutIndex + 1,
           assignedBy: auth.currentUser?.uid || "",
           assignedAt: new Date().toISOString(),
-          exercises: workout.exercises.map((exercise) => ({
+          exercises: (workout.exercises || []).map((exercise) => ({
             id: exercise.id,
             name: exercise.name,
-            video: exercise.video || "",
-            sets: makeThreeSets(
-              exercise.sets,
-              exercise.name?.includes("Пресс") ? 15 : 8
-            )
+            video: exercise.video || exercise.videoUrl || exercise.videoURL || "",
+            videoAutoFilledFrom: exercise.videoAutoFilledFrom || "",
+            rest: exercise.rest || "90 сек",
+            requiresWeight: exercise.requiresWeight ?? exerciseUsesExternalWeight(exercise),
+            usesWeight: exercise.requiresWeight ?? exerciseUsesExternalWeight(exercise),
+            note: exercise.note || "",
+            description: exercise.description || "",
+            technique: exercise.technique || "",
+            sets: makeThreeSets(exercise.sets, exercise.name?.includes("Пресс") ? 15 : 8).map((set) => ({
+              ...(set?.id ? { id: set.id } : {}),
+              reps: set?.reps ?? "",
+              weight: set?.weight ?? ""
+            }))
           }))
         }, { merge: true });
       }
 
-      alert("Тренировки пользователя сохранены в Firebase ✅");
+      await batch.commit();
+      if (silent) setAdminClientStatus(saveOptions.successMessage || "Изменения тренировки сохранены.");
+      else alert("Тренировки пользователя сохранены в Firebase ✅");
     } catch (err) {
       console.log("Ошибка сохранения тренировок:", err);
-      alert("Не получилось сохранить тренировки");
+      if (options?.silent) setAdminClientStatus("Не получилось сохранить изменения тренировки.");
+      else alert("Не получилось сохранить тренировки");
     }
   }
 
-  async function sendAdminTelegramMessage(client = adminSelectedClient) {
+  async function sendAdminTelegramMessage(client = adminSelectedClient, messageOverride = "") {
     const telegram = getClientTelegramProfile(client);
-    const text = String(adminTelegramMessage || "").trim();
+    const text = String(messageOverride || adminTelegramMessage || "").trim();
 
     if (!client?.id) {
       setAdminClientStatus("Сначала выбери клиента.");
-      return;
+      return false;
     }
 
     if (!telegram.connected || !telegram.username) {
       setAdminClientStatus("У клиента не привязан Telegram.");
-      return;
+      return false;
     }
 
     if (!text) {
       setAdminClientStatus("Напиши сообщение для клиента.");
-      return;
+      return false;
     }
 
     setAdminTelegramSending(true);
 
     try {
-      const response = await fetch("/api/telegram/send-message", {
+      const response = await fetchAuthorized("/api/telegram/send-message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           clientId: client.id,
-          username: telegram.username,
-          chatId: telegram.chatId || "",
           text
         })
       });
@@ -7017,23 +8274,59 @@ export default function App() {
         throw new Error("Telegram backend error");
       }
 
-      setAdminTelegramMessage("");
+      if (!messageOverride) setAdminTelegramMessage("");
       setAdminClientStatus("Telegram-сообщение отправлено.");
+      await recordTrainerEvent(client.id, "message", "Сообщение тренера", text.slice(0, 160));
+      return true;
     } catch (error) {
       console.error("Ошибка отправки Telegram:", error);
       setAdminClientStatus("Backend Telegram ещё не подключён или сообщение не отправилось.");
+      return false;
     } finally {
       setAdminTelegramSending(false);
     }
   }
 
   function getClientTelegramProfile(client = {}) {
-    return client.telegram || {
-      connected: Boolean(client.telegramConnected || client.telegramUsername),
-      username: client.telegramUsername || "",
-      displayName: client.telegramDisplayName || client.telegramUsername || "",
-      notificationsEnabled: client.telegramNotificationsEnabled !== false
+    const telegram = client.telegram || {};
+    return {
+      ...telegram,
+      connected: Boolean(telegram.connected || client.telegramConnected || telegram.username || client.telegramUsername || telegram.telegramUserId || client.telegramUserId),
+      username: telegram.username || client.telegramUsername || "",
+      displayName: telegram.displayName || client.telegramDisplayName || client.telegramUsername || "",
+      notificationsEnabled: telegram.notificationsEnabled !== false && client.telegramNotificationsEnabled !== false
     };
+  }
+
+  async function sendTrainerClientMessage(text, client = adminSelectedClient) {
+    const message = String(text || "").trim();
+    if (!client?.id || !message) {
+      setAdminClientStatus("Сначала выбери клиента и напиши сообщение.");
+      return false;
+    }
+
+    const telegram = getClientTelegramProfile(client);
+    if (telegram.connected && telegram.username) {
+      return sendAdminTelegramMessage(client, message);
+    }
+
+    try {
+      await addDoc(collection(db, "users", client.id, "trainerMessages"), {
+        type: "trainer_message",
+        text: message,
+        status: "unread",
+        createdAt: new Date().toISOString(),
+        createdByUid: auth.currentUser?.uid || "",
+        createdByEmail: auth.currentUser?.email || user?.email || ""
+      });
+      await recordTrainerEvent(client.id, "message", "Внутреннее сообщение", message.slice(0, 160));
+      setAdminClientStatus("Telegram не подключён. Сообщение сохранено во внутренней истории клиента.");
+      return true;
+    } catch (error) {
+      console.error("Trainer message save failed:", error);
+      setAdminClientStatus("Не получилось сохранить сообщение клиенту.");
+      return false;
+    }
   }
 
   function openTelegramChat(username = "") {
@@ -7111,6 +8404,20 @@ export default function App() {
     const date = new Date(timestamp);
     date.setHours(0, 0, 0, 0);
     return date.getTime();
+  }
+
+  function getTrainerSummaryWeekStart(value = Date.now()) {
+    const date = new Date(getTrainerSummaryDayStart(value));
+    const mondayOffset = (date.getDay() + 6) % 7;
+    date.setDate(date.getDate() - mondayOffset);
+    return date.getTime();
+  }
+
+  function getTrainerSummaryDateKey(value) {
+    const timestamp = getTrainerSummaryTimestamp(value);
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   }
 
   function getTrainerSummaryDaysSince(value) {
@@ -7224,6 +8531,67 @@ export default function App() {
     });
   }
 
+  function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
+    const nutritionState = client.nutritionState || client.adminClientNutrition || client.nutrition || null;
+    const nutritionSummary = getTrainerNutritionSummary(nutritionState);
+    const completedWorkoutCount = Number(
+      client.completedWorkoutCount ??
+      client.assignedCompletedWorkoutCount ??
+      previousSummary.completedWorkoutCount ??
+      0
+    ) || 0;
+    const assignedWorkoutCount = Number(
+      client.assignedWorkoutCount ??
+      previousSummary.assignedWorkoutCount ??
+      0
+    ) || 0;
+    const explicitCompletion = Number(client.programCompletionPercent ?? previousSummary.programCompletionPercent);
+
+    return {
+      clientId: client.id,
+      lastWorkoutAt:
+        client.lastWorkoutAt ||
+        client.lastWorkoutDate ||
+        client.latestWorkoutAt ||
+        previousSummary.lastWorkoutAt ||
+        "",
+      workouts7: Number(client.workouts7 ?? client.weeklyWorkouts ?? previousSummary.workouts7 ?? 0) || 0,
+      workouts30: Number(client.workouts30 ?? previousSummary.workouts30 ?? 0) || 0,
+      workoutDateKeysCurrentWeek: Array.isArray(client.workoutDateKeysCurrentWeek)
+        ? client.workoutDateKeysCurrentWeek
+        : Array.isArray(previousSummary.workoutDateKeysCurrentWeek)
+          ? previousSummary.workoutDateKeysCurrentWeek
+          : null,
+      lastNutritionAt:
+        nutritionSummary.lastNutritionAt ||
+        client.lastNutritionAt ||
+        client.lastNutritionDate ||
+        previousSummary.lastNutritionAt ||
+        "",
+      nutritionDays7: Number(nutritionSummary.nutritionDays7 ?? client.nutritionDays7 ?? previousSummary.nutritionDays7 ?? 0) || 0,
+      averageCalories7: nutritionSummary.averageCalories7 ?? client.averageCalories7 ?? previousSummary.averageCalories7 ?? null,
+      lastMeasurementAt:
+        client.lastMeasurementAt ||
+        client.lastMeasurementDate ||
+        client.latestMeasurementAt ||
+        previousSummary.lastMeasurementAt ||
+        "",
+      assignedProgramId: client.assignedProgramId || previousSummary.assignedProgramId || "",
+      assignedProgramUpdatedAt: client.assignedProgramUpdatedAt || client.assignedProgramAt || previousSummary.assignedProgramUpdatedAt || "",
+      assignedWorkoutCount,
+      completedWorkoutCount,
+      plateau: previousSummary.plateau || { isPlateau: false, days: 0, delta: null },
+      payment: previousSummary.payment || null,
+      paymentAttention: previousSummary.paymentAttention || getClientPaymentAttention(null),
+      recentEvents: previousSummary.recentEvents || [],
+      programCompletionPercent: Number.isFinite(explicitCompletion)
+        ? Math.round(explicitCompletion)
+        : assignedWorkoutCount > 0
+          ? Math.min(100, Math.round(completedWorkoutCount / assignedWorkoutCount * 100))
+          : null
+    };
+  }
+
   async function loadTrainerClientSummaries(clients = []) {
     const requestId = trainerClientSummaryRequestRef.current + 1;
     trainerClientSummaryRequestRef.current = requestId;
@@ -7235,10 +8603,14 @@ export default function App() {
       return;
     }
 
-    setTrainerClientSummariesLoading(true);
+    setTrainerClientSummaries((previous) => Object.fromEntries(
+      safeClients.map((client) => [client.id, getTrainerClientFastSummary(client, previous[client.id])])
+    ));
+    setTrainerClientSummariesLoading(false);
     const nextSummaries = {};
     let nextClientIndex = 0;
     const todayStart = getTrainerSummaryDayStart();
+    const weekStart = getTrainerSummaryWeekStart();
     const sevenDayStart = todayStart - 6 * 24 * 60 * 60 * 1000;
     const thirtyDayStart = todayStart - 29 * 24 * 60 * 60 * 1000;
 
@@ -7310,12 +8682,18 @@ export default function App() {
       const workoutTimestamps = clientHistory
         .map((entry) => getTrainerSummaryTimestamp(entry.date || entry.completedAt || entry.createdAt))
         .filter(Boolean);
+      const workoutDateKeysCurrentWeek = [...new Set(workoutTimestamps
+        .filter((timestamp) => timestamp >= weekStart)
+        .map((timestamp) => getTrainerSummaryDateKey(timestamp))
+        .filter(Boolean)
+      )];
 
       return {
         clientId: client.id,
         lastWorkoutAt: workoutTimestamps[0] || "",
         workouts7: workoutTimestamps.filter((timestamp) => timestamp >= sevenDayStart).length,
         workouts30: workoutTimestamps.filter((timestamp) => timestamp >= thirtyDayStart).length,
+        workoutDateKeysCurrentWeek,
         ...nutritionSummary,
         lastMeasurementAt: clientMeasurements[0]
           ? clientMeasurements[0].date || clientMeasurements[0].createdAt || clientMeasurements[0].savedAt || ""
@@ -7369,6 +8747,7 @@ export default function App() {
               lastWorkoutAt: "",
               workouts7: 0,
               workouts30: 0,
+              workoutDateKeysCurrentWeek: [],
               lastNutritionAt: "",
               nutritionDays7: 0,
               averageCalories7: null,
@@ -7673,12 +9052,23 @@ export default function App() {
       });
     });
 
+    const resetWorkoutCalendar = {
+      scheduledDates: [],
+      monthlyTrainingDates: [],
+      plannedWorkouts: [],
+      assignedProgramId: template.id,
+      assignedProgramName: template.name,
+      assignedProgramUpdatedAt,
+      updatedAt: assignedProgramUpdatedAt
+    };
+
     batch.set(doc(db, "users", clientId), {
       assignedProgramId: template.id,
       assignedProgramName: template.name,
       assignedProgramAt: assignedProgramUpdatedAt,
       assignedProgramUpdatedAt,
-      assignedWorkoutCount: nextWorkouts.length
+      assignedWorkoutCount: nextWorkouts.length,
+      workoutCalendar: resetWorkoutCalendar
     }, { merge: true });
 
     await batch.commit();
@@ -7707,6 +9097,7 @@ export default function App() {
         id: exercise.id || `exercise_${workoutIndex + 1}_${exerciseIndex + 1}`,
         name: exercise.name || "Упражнение",
         video: exercise.video || exercise.videoUrl || exercise.videoURL || "",
+        requiresWeight: exerciseUsesExternalWeight(exercise),
         sets: Array.isArray(exercise.sets) && exercise.sets.length
           ? exercise.sets.map((set) => ({
               reps: Number(set.reps) || 8,
@@ -7746,6 +9137,34 @@ export default function App() {
         setPlan({ workouts: sortWorkoutDays(nextWorkouts) });
       }
 
+      const resetWorkoutCalendar = {
+        scheduledDates: [],
+        monthlyTrainingDates: [],
+        plannedWorkouts: [],
+        assignedProgramId: template.id,
+        assignedProgramName: template.name,
+        assignedProgramUpdatedAt,
+        updatedAt: assignedProgramUpdatedAt
+      };
+      setAdminSelectedClient((prev) => prev?.id === clientId ? {
+        ...prev,
+        assignedProgramId: template.id,
+        assignedProgramName: template.name,
+        assignedProgramAt: assignedProgramUpdatedAt,
+        assignedProgramUpdatedAt,
+        assignedWorkoutCount: nextWorkouts.length,
+        workoutCalendar: resetWorkoutCalendar
+      } : prev);
+      setUsersList((prev) => prev.map((item) => item.id === clientId ? {
+        ...item,
+        assignedProgramId: template.id,
+        assignedProgramName: template.name,
+        assignedProgramAt: assignedProgramUpdatedAt,
+        assignedProgramUpdatedAt,
+        assignedWorkoutCount: nextWorkouts.length,
+        workoutCalendar: resetWorkoutCalendar
+      } : item));
+
       setAdminClientStatus(`Назначено ${nextWorkouts.length} тренировок. Старые удалены: ${deletedCount}.`);
     } catch (error) {
       console.error("Ошибка назначения шаблона:", error);
@@ -7775,7 +9194,16 @@ export default function App() {
         assignedProgramName: "",
         assignedProgramAt: assignedProgramUpdatedAt,
         assignedProgramUpdatedAt,
-        assignedWorkoutCount: 0
+        assignedWorkoutCount: 0,
+        workoutCalendar: {
+          scheduledDates: [],
+          monthlyTrainingDates: [],
+          plannedWorkouts: [],
+          assignedProgramId: "",
+          assignedProgramName: "",
+          assignedProgramUpdatedAt,
+          updatedAt: assignedProgramUpdatedAt
+        }
       }, { merge: true });
 
       setPlan({ workouts: [] });
@@ -7828,6 +9256,16 @@ export default function App() {
         assignedProgramUpdatedAt
       );
 
+      const resetWorkoutCalendar = {
+        scheduledDates: [],
+        monthlyTrainingDates: [],
+        plannedWorkouts: [],
+        assignedProgramId: template.id,
+        assignedProgramName: template.name,
+        assignedProgramUpdatedAt,
+        updatedAt: assignedProgramUpdatedAt
+      };
+
       setAdminClientStatus(`Программа “${template.name}” назначена: ${nextWorkouts.length} тренировок. Старые удалены: ${deletedCount}.`);
 
       setAdminSelectedClient((prev) => prev?.id === clientId ? {
@@ -7836,7 +9274,8 @@ export default function App() {
         assignedProgramName: template.name,
         assignedProgramAt: assignedProgramUpdatedAt,
         assignedProgramUpdatedAt,
-        assignedWorkoutCount: nextWorkouts.length
+        assignedWorkoutCount: nextWorkouts.length,
+        workoutCalendar: resetWorkoutCalendar
       } : prev);
 
       setUsersList((prev) => prev.map((client) => (
@@ -7846,7 +9285,8 @@ export default function App() {
           assignedProgramName: template.name,
           assignedProgramAt: assignedProgramUpdatedAt,
           assignedProgramUpdatedAt,
-          assignedWorkoutCount: nextWorkouts.length
+          assignedWorkoutCount: nextWorkouts.length,
+          workoutCalendar: resetWorkoutCalendar
         } : client
       )));
 
@@ -7864,6 +9304,107 @@ export default function App() {
     }
   }
 
+  async function saveTrainerClientNutritionPlan(planDraft = {}) {
+    const clientId = adminSelectedClient?.id || selectedUserId;
+    if (!clientId) {
+      setAdminClientStatus("Сначала выбери клиента.");
+      return false;
+    }
+
+    const nextGoals = {
+      calories: Math.max(0, Number(planDraft.calories) || 0),
+      protein: Math.max(0, Number(planDraft.protein) || 0),
+      fat: Math.max(0, Number(planDraft.fat) || 0),
+      carbs: Math.max(0, Number(planDraft.carbs) || 0)
+    };
+
+    if (!nextGoals.calories || !nextGoals.protein) {
+      setAdminClientStatus("Укажи калории и белок для плана питания.");
+      return false;
+    }
+
+    if (planDraft.validFrom && planDraft.validTo && planDraft.validTo < planDraft.validFrom) {
+      setAdminClientStatus("Дата окончания плана не может быть раньше даты начала.");
+      return false;
+    }
+
+    const updatedAt = new Date().toISOString();
+    const {
+      goals: syncedGoals,
+      nutritionPlan: nextPlan,
+      nutritionState: nextNutritionState,
+      userPatch,
+      nutritionStatePatch
+    } = buildTrainerNutritionPlanUpdate({
+      planDraft,
+      currentNutrition: adminClientNutrition,
+      updatedAt,
+      updatedBy: auth.currentUser?.uid || ""
+    });
+
+    try {
+      await Promise.all([
+        setDoc(doc(db, "users", clientId), userPatch, { merge: true }),
+        setDoc(doc(db, "users", clientId, "nutrition", "state"), nutritionStatePatch, { merge: true })
+      ]);
+
+      setAdminSelectedClient((prev) => prev?.id === clientId ? {
+        ...prev,
+        nutritionGoals: syncedGoals,
+        nutritionPlan: nextPlan,
+        nutritionState: {
+          ...(prev.nutritionState || {}),
+          goals: nextNutritionState.goals,
+          nutritionPlan: nextPlan,
+          updatedAt
+        }
+      } : prev);
+      setUsersList((prev) => prev.map((client) => client.id === clientId ? {
+        ...client,
+        nutritionGoals: syncedGoals,
+        nutritionPlan: nextPlan,
+        nutritionState: {
+          ...(client.nutritionState || {}),
+          goals: nextNutritionState.goals,
+          nutritionPlan: nextPlan,
+          updatedAt
+        }
+      } : client));
+      setAdminClientNutrition(nextNutritionState);
+      if (auth.currentUser?.uid === clientId) {
+        setNutrition((prev) => ({
+          ...prev,
+          goals: {
+            ...(prev.goals || {}),
+            ...syncedGoals
+          },
+          nutritionPlan: nextPlan,
+          updatedAt
+        }));
+      }
+      await mirrorClientForTrainer({
+        ...(adminSelectedClient || usersList.find((client) => client.id === clientId) || {}),
+        id: clientId,
+        nutritionGoals: nextGoals,
+        nutritionPlan: nextPlan,
+        nutritionState: nextNutritionState
+      }, nextNutritionState);
+
+      await recordTrainerEvent(
+        clientId,
+        "nutrition",
+        "Назначен план питания",
+        `${nextPlan.name} · ${syncedGoals.calories} ккал`
+      );
+      setAdminClientStatus("План питания назначен клиенту.");
+      return true;
+    } catch (error) {
+      console.error("Trainer nutrition plan save error:", error);
+      setAdminClientStatus("Не получилось назначить план питания.");
+      return false;
+    }
+  }
+
   async function copyCurrentProgramToClient() {
     if (!adminCopyTargetUserId) {
       setAdminClientStatus("Выбери клиента для копирования.");
@@ -7878,6 +9419,7 @@ export default function App() {
             id: exercise.id,
             name: exercise.name,
             video: exercise.video || "",
+            requiresWeight: exerciseUsesExternalWeight(exercise),
             sets: makeThreeSets(exercise.sets, exercise.name?.includes("Пресс") ? 15 : 8)
           }))
         }, { merge: true });
@@ -8182,7 +9724,7 @@ export default function App() {
     if (!confirmed) return;
 
     try {
-      const response = await fetch("/api/admin/deleteUser", {
+      const response = await fetchAuthorized("/api/admin/deleteUser", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ uid: client.id })
@@ -8347,6 +9889,7 @@ export default function App() {
 
 async function loadUsers() {
     if (!canUseTrainerFeatures()) return;
+    setTrainerClientSummariesLoading(true);
 
     const sortUsers = (items = []) => [...items].sort((a, b) =>
       String(a.name || a.email || "").localeCompare(String(b.name || b.email || ""), "ru")
@@ -8395,7 +9938,7 @@ async function loadUsers() {
         });
 
         const clients = applyUsers(users);
-        await loadTrainerClientSummaries(clients);
+        void loadTrainerClientSummaries(clients);
         return;
       }
 
@@ -8475,10 +10018,11 @@ async function loadUsers() {
       }
 
       const clients = applyUsers(users);
-      await loadTrainerClientSummaries(clients);
+      void loadTrainerClientSummaries(clients);
     } catch (err) {
       console.log("Ошибка загрузки пользователей:", err);
       setAdminClientStatus("Не получилось загрузить клиентов. Проверь права Firestore для роли тренера.");
+      setTrainerClientSummariesLoading(false);
     }
   }
 
@@ -8870,7 +10414,31 @@ async function loadUsers() {
     });
   }
 
-  function getProfileNextTrainingText(profile = {}, userData = {}) {
+  function getProfileNextTrainingText(profile = {}, userData = {}, scheduledDates = []) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const nextScheduledDate = (Array.isArray(scheduledDates) ? scheduledDates : [])
+      .map((dateKey) => {
+        const date = new Date(`${dateKey}T00:00:00`);
+        return Number.isNaN(date.getTime()) ? null : { dateKey, date };
+      })
+      .filter((item) => item && item.date.getTime() >= today.getTime())
+      .sort((a, b) => a.date.getTime() - b.date.getTime())[0];
+
+    if (nextScheduledDate) {
+      const dayDifference = Math.round(
+        (nextScheduledDate.date.getTime() - today.getTime()) / (24 * 60 * 60 * 1000)
+      );
+
+      if (dayDifference === 0) return "Сегодня";
+      if (dayDifference === 1) return "Завтра";
+
+      return nextScheduledDate.date.toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "long"
+      });
+    }
+
     const sourceCalendar = userData?.workoutCalendar || userData?.calendar || {};
     const trainingDays = Array.isArray(sourceCalendar.trainingDays) && sourceCalendar.trainingDays.length
       ? sourceCalendar.trainingDays
@@ -8910,6 +10478,9 @@ async function loadUsers() {
     return {
       enabled: source.enabled !== false,
       reminderEnabled: source.reminderEnabled !== false,
+      reminderOffsetsHours: Array.isArray(source.reminderOffsetsHours) && source.reminderOffsetsHours.length
+        ? source.reminderOffsetsHours
+        : [24],
       reminderTime: source.reminderTime || "19:00",
       workoutTime: source.workoutTime || client.workoutTime || profile?.workoutTime || "13:00",
       hourReminderEnabled: source.hourReminderEnabled === true,
@@ -8969,6 +10540,9 @@ async function loadUsers() {
       const nextCalendar = {
         enabled: adminCalendarDraft.enabled !== false,
         reminderEnabled: adminCalendarDraft.reminderEnabled !== false,
+        reminderOffsetsHours: Array.isArray(adminCalendarDraft.reminderOffsetsHours) && adminCalendarDraft.reminderOffsetsHours.length
+          ? adminCalendarDraft.reminderOffsetsHours
+          : [24],
         reminderTime: adminCalendarDraft.reminderTime || "19:00",
         workoutTime: adminCalendarDraft.workoutTime || "13:00",
         hourReminderEnabled: adminCalendarDraft.hourReminderEnabled === true,
@@ -9032,7 +10606,7 @@ async function loadUsers() {
     setAdminClientStatus("Отправляю тестовое Telegram-напоминание...");
 
     try {
-      const response = await fetch("/api/telegram/test-workout-reminder", {
+      const response = await fetchAuthorized("/api/telegram/test-workout-reminder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -9055,6 +10629,190 @@ async function loadUsers() {
     } finally {
       setAdminCalendarTesting(false);
     }
+  }
+
+  async function saveTrainerClientWorkoutSchedule(dates = [], client = adminSelectedClient) {
+    const targetClient = client?.id ? client : (adminSelectedClient?.id ? adminSelectedClient : usersList.find((item) => item.id === selectedUserId));
+    const clientId = targetClient?.id || selectedUserId;
+    const workouts = sortWorkoutDays(plan.workouts || []);
+    const cleanDates = [...new Set((Array.isArray(dates) ? dates : [])
+      .map((date) => String(date || "").trim())
+      .filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date)))].sort();
+
+    if (!clientId) {
+      setAdminClientStatus("Сначала выбери клиента.");
+      return false;
+    }
+
+    if (!workouts.length) {
+      setAdminClientStatus("Сначала назначь клиенту программу тренировок.");
+      return false;
+    }
+
+    if (cleanDates.length !== workouts.length) {
+      setAdminClientStatus(`Нужно выбрать ${workouts.length} дат для ${workouts.length} тренировок.`);
+      return false;
+    }
+
+    const nowIso = new Date().toISOString();
+    const currentCalendar = targetClient?.workoutCalendar || {};
+    const plannedWorkouts = buildWorkoutScheduleDraft(cleanDates, workouts);
+    const nextCalendar = {
+      ...currentCalendar,
+      enabled: currentCalendar.enabled !== false,
+      scheduledDates: cleanDates,
+      monthlyTrainingDates: cleanDates,
+      plannedWorkouts,
+      assignedProgramId: targetClient?.assignedProgramId || workouts[0]?.assignedProgramId || plan.assignedProgramId || "",
+      assignedProgramName: targetClient?.assignedProgramName || workouts[0]?.assignedProgramName || plan.assignedProgramName || "",
+      assignedProgramUpdatedAt: targetClient?.assignedProgramUpdatedAt || workouts[0]?.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || "",
+      updatedAt: nowIso,
+      updatedBy: auth.currentUser?.uid || ""
+    };
+    const nextWorkouts = workouts.map((workout, index) => ({
+      ...workout,
+      scheduledDate: cleanDates[index],
+      plannedDate: cleanDates[index],
+      scheduleOrder: index + 1
+    }));
+    const batch = writeBatch(db);
+
+    nextWorkouts.forEach((workout, index) => {
+      if (!workout.id) return;
+      batch.set(doc(db, "users", clientId, "workouts", workout.id), {
+        scheduledDate: cleanDates[index],
+        plannedDate: cleanDates[index],
+        scheduleOrder: index + 1
+      }, { merge: true });
+    });
+    batch.set(doc(db, "users", clientId), {
+      workoutCalendar: nextCalendar,
+      trainingDays: currentCalendar.trainingDays || targetClient?.trainingDays || [],
+      workoutTime: currentCalendar.workoutTime || targetClient?.workoutTime || "",
+      updatedAt: nowIso
+    }, { merge: true });
+
+    try {
+      await batch.commit();
+      const patch = { workoutCalendar: nextCalendar };
+      setPlan((current) => ({
+        ...current,
+        workouts: sortWorkoutDays(nextWorkouts)
+      }));
+      setAdminSelectedClient((prev) => prev?.id === clientId ? { ...prev, ...patch } : prev);
+      setUsersList((prev) => prev.map((item) => item.id === clientId ? { ...item, ...patch } : item));
+      setAdminCalendarDraft((prev) => ({
+        ...prev,
+        scheduledDates: cleanDates,
+        monthlyTrainingDates: cleanDates
+      }));
+      setAdminClientStatus("Расписание тренировок сохранено.");
+      await recordTrainerEvent(clientId, "program", "Сохранено расписание тренировок", `${cleanDates.length} дат`);
+      return true;
+    } catch (error) {
+      console.error("Ошибка сохранения расписания тренировок:", error);
+      setAdminClientStatus("Не получилось сохранить расписание тренировок.");
+      return false;
+    }
+  }
+
+  async function saveTrainerClientNotificationSettings(settings = {}, client = adminSelectedClient) {
+    if (!client?.id) {
+      setAdminClientStatus("Сначала выбери клиента.");
+      return false;
+    }
+
+    const offsets = [...new Set(
+      (Array.isArray(settings.offsets) ? settings.offsets : [])
+        .map(Number)
+        .filter((hours) => [24, 12, 3, 1].includes(hours))
+    )].sort((a, b) => b - a);
+
+    if (!offsets.length) {
+      setAdminClientStatus("Выбери хотя бы один интервал напоминания.");
+      return false;
+    }
+
+    const currentCalendar = client.workoutCalendar || {};
+    const currentTelegram = getClientTelegramProfile(client);
+    const enabled = settings.enabled !== false;
+    const updatedAt = new Date().toISOString();
+    const normalizeProgressInterval = (value) => [7, 14, 30].includes(Number(value))
+      ? Number(value)
+      : 14;
+    const photoIntervalDays = normalizeProgressInterval(settings.progressPhotoIntervalDays);
+    const measurementsIntervalDays = normalizeProgressInterval(settings.measurementsIntervalDays);
+    const progressReminderSettings = {
+      ...(currentCalendar.progressReminderSettings || client.progressReminderSettings || {}),
+      photoEnabled: settings.progressPhotoEnabled === true,
+      measurementsEnabled: settings.measurementsEnabled === true,
+      intervalDays: 14,
+      photoIntervalDays,
+      measurementsIntervalDays,
+      updatedAt
+    };
+    const scheduledDates = Array.isArray(settings.scheduledDates)
+      ? [...new Set(settings.scheduledDates.filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(String(date))))].sort()
+      : Array.isArray(currentCalendar.scheduledDates)
+        ? currentCalendar.scheduledDates
+        : Array.isArray(currentCalendar.monthlyTrainingDates)
+          ? currentCalendar.monthlyTrainingDates
+          : [];
+    const nextCalendar = {
+      ...currentCalendar,
+      enabled: currentCalendar.enabled !== false,
+      reminderEnabled: enabled,
+      reminderOffsetsHours: offsets,
+      progressReminderSettings,
+      progressPhotoReminderEnabled: progressReminderSettings.photoEnabled,
+      measurementsReminderEnabled: progressReminderSettings.measurementsEnabled,
+      progressReminderIntervalDays: progressReminderSettings.intervalDays,
+      progressPhotoReminderIntervalDays: photoIntervalDays,
+      measurementsReminderIntervalDays: measurementsIntervalDays,
+      scheduledDates,
+      monthlyTrainingDates: scheduledDates,
+      updatedAt
+    };
+    const nextTelegram = {
+      ...currentTelegram,
+      notificationsEnabled: enabled
+    };
+
+    try {
+      await setDoc(doc(db, "users", client.id), {
+        workoutCalendar: nextCalendar,
+        telegram: nextTelegram,
+        telegramNotificationsEnabled: enabled,
+        updatedAt
+      }, { merge: true });
+
+      const patch = {
+        workoutCalendar: nextCalendar,
+        telegram: nextTelegram,
+        telegramNotificationsEnabled: enabled
+      };
+      setAdminSelectedClient((prev) => prev?.id === client.id ? { ...prev, ...patch } : prev);
+      setUsersList((prev) => prev.map((item) => item.id === client.id ? { ...item, ...patch } : item));
+      setAdminCalendarDraft((prev) => ({
+        ...prev,
+        reminderEnabled: enabled,
+        reminderOffsetsHours: offsets,
+        progressReminderSettings,
+        scheduledDates,
+        monthlyTrainingDates: scheduledDates
+      }));
+      setAdminClientStatus(enabled ? "Настройки уведомлений сохранены." : "Telegram-напоминания выключены.");
+      return true;
+    } catch (error) {
+      console.error("Ошибка сохранения Telegram reminders:", error);
+      setAdminClientStatus("Не получилось сохранить настройки уведомлений.");
+      return false;
+    }
+  }
+
+  function openClientTelegramConnection() {
+    window.open(`https://t.me/${TELEGRAM_BOT_USERNAME}`, "_blank", "noopener,noreferrer");
+    setAdminClientStatus("Открой бота на устройстве клиента и привяжи его аккаунт.");
   }
 
   async function deleteClientFromAdminPanel(client, options = {}) {
@@ -9112,6 +10870,228 @@ async function loadUsers() {
       console.error("Ошибка удаления клиента:", error);
       setAdminClientStatus("Не получилось удалить клиента.");
     }
+  }
+
+  function downloadTrainerClientExport(client, format = "excel") {
+    if (!client?.id) return;
+    const nutritionDays = getAdminNutritionDaysList(adminClientNutrition);
+    const rows = [
+      ["type", "date", "name", "calories", "protein", "fat", "carbs", "duration", "details"]
+    ];
+
+    adminClientHistory.forEach((item) => {
+      rows.push([
+        "workout",
+        item.date || item.completedAt || "",
+        item.workoutName || item.workout || item.name || "Тренировка",
+        "",
+        "",
+        "",
+        "",
+        item.durationSeconds || "",
+        item.postWorkoutFeedback?.title || item.readiness?.title || ""
+      ]);
+    });
+
+    adminClientMeasurements.forEach((item) => {
+      rows.push([
+        "measurement",
+        item.date || item.createdAt || "",
+        "Замер",
+        "",
+        "",
+        "",
+        "",
+        "",
+        `weight ${item.weight || item.values?.weight || ""}`
+      ]);
+    });
+
+    nutritionDays.forEach((day) => {
+      rows.push([
+        "nutrition",
+        day.date || "",
+        "day totals",
+        Math.round(Number(day.totals?.calories) || 0),
+        Math.round(Number(day.totals?.protein) || 0),
+        Math.round(Number(day.totals?.fat) || 0),
+        Math.round(Number(day.totals?.carbs) || 0),
+        "",
+        `score ${day.score || ""}`
+      ]);
+    });
+
+    if (format === "pdf") {
+      const htmlRows = rows.slice(1).map((row) => `<tr>${row.map((cell) => `<td>${String(cell).replace(/[<>&]/g, "")}</td>`).join("")}</tr>`).join("");
+      const popup = window.open("", "_blank", "noopener,noreferrer");
+      if (popup) {
+        popup.document.write(`<html><head><title>${client.name || client.email || "client"} report</title><style>body{font-family:Arial;padding:24px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px;font-size:12px}h1{font-size:22px}</style></head><body><h1>Отчёт клиента: ${client.name || client.email || client.id}</h1><table><thead><tr>${rows[0].map((cell) => `<th>${cell}</th>`).join("")}</tr></thead><tbody>${htmlRows}</tbody></table><script>window.print()</script></body></html>`);
+        popup.document.close();
+      }
+      setAdminClientStatus("PDF-отчёт открыт в новом окне для сохранения через печать.");
+      return;
+    }
+
+    const csv = rows.map((row) => row.map((cell) => `"${String(cell ?? "").replaceAll('"', '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${client.email || client.name || "client"}-trainer-export.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setAdminClientStatus("Excel-экспорт клиента подготовлен в CSV.");
+  }
+
+  async function deleteClientSubcollection(clientId, collectionName) {
+    const snapshot = await getDocs(collection(db, "users", clientId, collectionName));
+    const batch = writeBatch(db);
+    snapshot.forEach((item) => batch.delete(item.ref));
+    await batch.commit();
+  }
+
+  async function handleTrainerClientAction(action, client = adminSelectedClient) {
+    if (!client?.id) {
+      setAdminClientStatus("Сначала выбери клиента.");
+      return false;
+    }
+
+    if (!canUseTrainerFeatures() || (!canUseAdminFeatures() && !canManageClientProgram(client))) {
+      setAdminClientStatus("Нет прав на управление этим клиентом.");
+      return false;
+    }
+
+    try {
+      if (action === "archive" || action === "restore") {
+        const archived = action === "archive";
+        const patch = {
+          archived,
+          active: !archived,
+          archivedAt: archived ? new Date().toISOString() : "",
+          restoredAt: archived ? "" : new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        await setDoc(doc(db, "users", client.id), patch, { merge: true });
+        setAdminSelectedClient((prev) => prev?.id === client.id ? { ...prev, ...patch } : prev);
+        setUsersList((prev) => prev.map((item) => item.id === client.id ? { ...item, ...patch } : item));
+        await recordTrainerEvent(client.id, "client", archived ? "Клиент архивирован" : "Клиент восстановлен");
+        setAdminClientStatus(archived ? "Клиент архивирован." : "Клиент восстановлен.");
+        return true;
+      }
+
+      if (action === "disable_notifications") {
+        await saveTrainerClientNotificationSettings({
+          enabled: false,
+          offsets: client.workoutCalendar?.reminderOffsetsHours || [24],
+          scheduledDates: client.workoutCalendar?.scheduledDates || client.workoutCalendar?.monthlyTrainingDates || []
+        }, client);
+        await recordTrainerEvent(client.id, "notifications", "Уведомления отключены");
+        return true;
+      }
+
+      if (action === "export_excel" || action === "export_pdf") {
+        downloadTrainerClientExport(client, action === "export_pdf" ? "pdf" : "excel");
+        await recordTrainerEvent(client.id, "export", action === "export_pdf" ? "Экспорт PDF" : "Экспорт Excel");
+        return true;
+      }
+
+      if (action === "delete") {
+        await deleteClientFromAdminPanel(client);
+        return true;
+      }
+
+      if (action === "reset_progress") {
+        if (!window.confirm("Сбросить прогресс клиента? Профиль, программа и план питания сохранятся.")) return false;
+        await Promise.all([
+          deleteClientSubcollection(client.id, "history"),
+          deleteClientSubcollection(client.id, "measurements"),
+          deleteClientSubcollection(client.id, "progressPhotos"),
+          deleteClientSubcollection(client.id, "nutritionDays"),
+          setDoc(doc(db, "users", client.id, "nutrition", "state"), {
+            days: {},
+            updatedAt: new Date().toISOString()
+          }, { merge: true }),
+          setDoc(doc(db, "users", client.id), {
+            nutritionState: {
+              ...(client.nutritionState || {}),
+              days: {},
+              updatedAt: new Date().toISOString()
+            }
+          }, { merge: true })
+        ]);
+        const nextWorkouts = (plan.workouts || []).map((workout) => ({
+          ...workout,
+          status: "planned",
+          movedToDate: "",
+          statusUpdatedAt: new Date().toISOString()
+        }));
+        const workoutResetBatch = writeBatch(db);
+        let workoutResetWrites = 0;
+        nextWorkouts.forEach((workout, index) => {
+          if (!workout.id) return;
+          workoutResetBatch.set(doc(db, "users", client.id, "workouts", workout.id), {
+            ...workout,
+            order: index + 1,
+            sortOrder: index + 1
+          }, { merge: true });
+          workoutResetWrites += 1;
+        });
+        if (workoutResetWrites) await workoutResetBatch.commit();
+        setPlan((current) => ({ ...current, workouts: nextWorkouts }));
+        setAdminClientHistory([]);
+        setAdminClientMeasurements([]);
+        setAdminClientProgressPhotos([]);
+        setAdminClientNutrition((current) => current ? { ...current, days: {} } : current);
+        await recordTrainerEvent(client.id, "reset", "Прогресс клиента сброшен");
+        setAdminClientStatus("Прогресс сброшен. Программа и план питания сохранены.");
+        return true;
+      }
+
+      if (action === "duplicate") {
+        const newClientRef = doc(collection(db, "users"));
+        const copyId = newClientRef.id;
+        const copy = {
+          role: "client",
+          name: `${client.name || client.email || "Клиент"} копия`,
+          email: client.email ? `copy-${Date.now()}-${client.email}` : "",
+          profile: client.profile || {},
+          aiNutritionProfile: client.aiNutritionProfile || client.profile || {},
+          nutritionGoals: client.nutritionGoals || {},
+          nutritionPlan: client.nutritionPlan || null,
+          workoutCalendar: client.workoutCalendar || {},
+          telegramNotificationsEnabled: client.telegramNotificationsEnabled !== false,
+          assignedProgramId: client.assignedProgramId || "",
+          assignedProgramName: client.assignedProgramName || "",
+          assignedWorkoutCount: client.assignedWorkoutCount || (plan.workouts || []).length,
+          trainerId: client.trainerId || auth.currentUser?.uid || "",
+          assignedTrainerId: client.assignedTrainerId || client.trainerId || auth.currentUser?.uid || "",
+          trainerEmail: client.trainerEmail || auth.currentUser?.email || user?.email || "",
+          createdAt: new Date().toISOString(),
+          createdByUid: auth.currentUser?.uid || ""
+        };
+        await setDoc(newClientRef, { ...copy, uid: copyId, id: copyId });
+        const batch = writeBatch(db);
+        (plan.workouts || []).forEach((workout, index) => {
+          batch.set(doc(db, "users", copyId, "workouts", workout.id || createClientResourceId("workout")), {
+            ...workout,
+            order: index + 1,
+            status: "planned",
+            movedToDate: ""
+          });
+        });
+        await batch.commit();
+        setUsersList((prev) => [{ id: copyId, ...copy }, ...prev]);
+        await recordTrainerEvent(client.id, "client", "Клиент дублирован", copy.name);
+        setAdminClientStatus("Клиент дублирован без истории и прогресса.");
+        return true;
+      }
+    } catch (error) {
+      console.error("Trainer client action failed:", error);
+      setAdminClientStatus("Не получилось выполнить действие клиента.");
+      return false;
+    }
+
+    return false;
   }
 
   function generateAdminPassword() {
@@ -9235,7 +11215,6 @@ async function loadUsers() {
       setAdminNewUserEmail("");
       setAdminNewUserPassword("");
       setAdminCreateUserStatus(isTrainerCreator ? "Клиент создан и привязан к тренеру ✅" : "Клиент создан ✅");
-      setAdminCreateClientModalOpen(false);
       setUsersList((prev) => [createdClient, ...prev.filter((item) => item.id !== createdClient.id)]);
       setAdminAllUsersList((prev) => [createdClient, ...prev.filter((item) => item.id !== createdClient.id)]);
       setSelectedUserId(createdClient.id);
@@ -9344,6 +11323,46 @@ async function loadUsers() {
   function closeHistoryDeleteConfirm() {
     if (historyDeletingId) return;
     setHistoryDeleteCandidate(null);
+  }
+
+  function renderHistoryDeleteConfirm() {
+    if (!historyDeleteCandidate) return null;
+
+    const workoutDate = getTimestampValue(historyDeleteCandidate.date);
+    const dateLabel = workoutDate
+      ? new Date(workoutDate).toLocaleDateString("ru-RU", {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        }).replace(".", "")
+      : "без даты";
+
+    return (
+      <div className="historyDeleteOverlay" onClick={closeHistoryDeleteConfirm}>
+        <div className="historyDeleteModal" onClick={(event) => event.stopPropagation()}>
+          <div className="historyDeleteIcon">⌫</div>
+          <h3>Удалить тренировку?</h3>
+          <p>
+            {historyDeleteCandidate.workout || "Тренировка"}
+            <span>{dateLabel} · действие нельзя отменить</span>
+          </p>
+
+          <div className="historyDeleteActions">
+            <button type="button" onClick={closeHistoryDeleteConfirm} disabled={Boolean(historyDeletingId)}>
+              Отмена
+            </button>
+            <button
+              type="button"
+              className="danger"
+              onClick={confirmDeleteOwnHistoryWorkout}
+              disabled={Boolean(historyDeletingId)}
+            >
+              {historyDeletingId ? "Удаляю..." : "Удалить"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   async function confirmDeleteOwnHistoryWorkout() {
@@ -9482,6 +11501,27 @@ async function loadUsers() {
   function goToNextExercise() {
     if (!workout) return;
 
+    if (
+      workoutStarted &&
+      currentExerciseIndex > 0 &&
+      currentExerciseIndex <= workout.exercises.length
+    ) {
+      const currentExercise = workout.exercises[currentExerciseIndex - 1];
+      const hasEnteredWeight = currentExercise?.sets?.some((set) =>
+        hasWorkoutSetEntry(set.enteredWeight)
+      );
+
+      if (exerciseUsesExternalWeight(currentExercise) && !hasEnteredWeight) {
+        setExerciseValidationMessage("Введите вес хотя бы в одном подходе. Значение 0 тоже считается введённым.");
+        window.requestAnimationFrame(() => {
+          setWeightInputRefs.current[`${currentExercise.id}:0`]?.focus();
+        });
+        navigator.vibrate?.(90);
+        return;
+      }
+    }
+
+    setExerciseValidationMessage("");
     deckRef.current?.querySelector("video")?.pause();
     setOpenVideoId(null);
     setInlinePlayingVideoId("");
@@ -9562,12 +11602,12 @@ async function loadUsers() {
       ? safeReadUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, currentUser.uid, workoutModePreference)
       : workoutModePreference;
 
-    if (savedPreference?.mode === "basic") {
+    if (savedPreference?.remember && savedPreference?.mode === "basic") {
       openBasicWorkoutQuiz();
       return;
     }
 
-    if (savedPreference?.mode === "individual") {
+    if (savedPreference?.remember && savedPreference?.mode === "individual") {
       openIndividualWorkouts();
       return;
     }
@@ -9838,6 +11878,13 @@ async function loadUsers() {
     };
 
     const nextPlan = buildAiNutritionMonthlyPlan(nutrition, profile, history, aiNutritionSavedPlan);
+    const weekOne = nextPlan.weeks?.[0];
+    const nextGoals = weekOne ? {
+      calories: Math.round(Number(weekOne.calories) || defaultNutritionState.goals.calories),
+      protein: Math.round(Number(weekOne.protein) || defaultNutritionState.goals.protein),
+      fat: Math.round(Number(weekOne.fat) || defaultNutritionState.goals.fat),
+      carbs: Math.round(Number(weekOne.carbs) || defaultNutritionState.goals.carbs)
+    } : null;
     setAiNutritionProfile(profile);
     setAiNutritionProfileDraft(profile);
     setAiNutritionSavedPlan(nextPlan);
@@ -9859,11 +11906,22 @@ async function loadUsers() {
           profile,
           aiNutritionProfile: profile,
           aiNutritionPlan: nextPlan,
+          ...(nextGoals ? { nutritionGoals: nextGoals } : {}),
           firstSetupCompleted: true,
           firstSetupCompletedVersion: FIRST_SETUP_REQUIRED_VERSION,
           firstSetupCompletedAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         }, { merge: true });
+        if (nextGoals) {
+          await setDoc(doc(db, "users", auth.currentUser.uid, "nutrition", "state"), {
+            goals: {
+              ...nutrition.goals,
+              ...nextGoals
+            },
+            aiNutritionPlan: nextPlan,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        }
         setFirstSetupCompletedInCloud(true);
         try {
           localStorage.setItem(
@@ -9885,17 +11943,15 @@ async function loadUsers() {
       return false;
     }
 
-    const weekOne = nextPlan.weeks?.[0];
-    if (weekOne) {
+    if (nextGoals) {
       setNutrition((prev) => ({
         ...prev,
         goals: {
           ...prev.goals,
-          calories: weekOne.calories,
-          protein: weekOne.protein,
-          fat: weekOne.fat,
-          carbs: weekOne.carbs
-        }
+          ...nextGoals
+        },
+        aiNutritionPlan: nextPlan,
+        updatedAt: new Date().toISOString()
       }));
     }
 
@@ -10414,35 +12470,72 @@ function normalizeTelegramUsername(value = "") {
         <form className="loginCard" onSubmit={handleLogin}>
           <h2>Вход</h2>
 
-          <input
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
-            placeholder="Email"
-          />
-
-          <div className="passwordBox">
+          <label className="loginField">
+            <span>Email</span>
             <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Пароль"
+              value={login}
+              onChange={(e) => {
+                setLogin(e.target.value);
+                setLoginFieldErrors((current) => ({ ...current, email: "" }));
+                setLoginError("");
+                setLoginNotice("");
+              }}
+              placeholder="name@example.com"
+              inputMode="email"
+              autoComplete="email"
+              aria-invalid={Boolean(loginFieldErrors.email)}
+              aria-describedby={loginFieldErrors.email ? "login-email-error" : undefined}
             />
+            {loginFieldErrors.email && (
+              <small className="loginFieldError" id="login-email-error">{loginFieldErrors.email}</small>
+            )}
+          </label>
 
-            <button
-              type="button"
-              className="eyeBtn"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? "👁️" : "🙈"}
-            </button>
+          <label className="loginField">
+            <span>Пароль</span>
+            <div className="passwordBox">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setLoginFieldErrors((current) => ({ ...current, password: "" }));
+                  setLoginError("");
+                }}
+                placeholder="Пароль"
+                autoComplete="current-password"
+                aria-invalid={Boolean(loginFieldErrors.password)}
+                aria-describedby={loginFieldErrors.password ? "login-password-error" : undefined}
+              />
 
-    
-          </div>
+              <button
+                type="button"
+                className="eyeBtn"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+              >
+                {showPassword ? "👁️" : "🙈"}
+              </button>
+            </div>
+            {loginFieldErrors.password && (
+              <small className="loginFieldError" id="login-password-error">{loginFieldErrors.password}</small>
+            )}
+          </label>
 
-          {loginError && <div className="loginError">{loginError}</div>}
+          {loginError && <div className="loginError" role="alert">{loginError}</div>}
+          {loginNotice && <div className="loginNotice" role="status">{loginNotice}</div>}
 
-          <button className="loginBtn" type="submit">
-            Войти
+          <button className="loginBtn" type="submit" disabled={loginSubmitting || passwordResetSending}>
+            {loginSubmitting ? "Вхожу..." : "Войти"}
+          </button>
+
+          <button
+            className="loginResetBtn"
+            type="button"
+            disabled={loginSubmitting || passwordResetSending}
+            onClick={handleLoginPasswordReset}
+          >
+            {passwordResetSending ? "Отправляю..." : "Забыли пароль?"}
           </button>
 
           <p className="loginHint">Вход через email и пароль</p>
@@ -10519,25 +12612,32 @@ function normalizeTelegramUsername(value = "") {
   if (page === "workoutMode") {
     return (
       <div className="workoutModePage">
+        <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
         <button className="workoutModeBack" onClick={goBackToMain}>←</button>
 
         <section className="workoutModeHero">
-          <span>TRAINING MODE</span>
-          <h1>Выбери формат</h1>
+          <span>ТРЕНИРОВКИ</span>
+          <h1>Режим запуска</h1>
           <p>Можно тренироваться по базовой программе или по индивидуальному плану от тренера.</p>
         </section>
 
         <section className="workoutModeCards">
           <button className="workoutModeCard" onClick={openBasicWorkoutQuiz}>
-            <span className="workoutModeIcon">🧭</span>
-            <strong>Базовые тренировки</strong>
-            <small>Короткий опрос и готовый план из базы приложения.</small>
+            <span className="workoutModeIcon">Б</span>
+            <div>
+              <strong>Базовые тренировки</strong>
+              <small>Короткий опрос и готовый план из базы приложения.</small>
+            </div>
+            <i>›</i>
           </button>
 
           <button className="workoutModeCard premium" onClick={openIndividualWorkouts}>
-            <span className="workoutModeIcon">🎯</span>
-            <strong>Индивидуальный план</strong>
-            <small>Тренировки, которые создал и назначил тренер.</small>
+            <span className="workoutModeIcon">И</span>
+            <div>
+              <strong>Индивидуальный план</strong>
+              <small>Тренировки, которые создал и назначил тренер.</small>
+            </div>
+            <i>›</i>
           </button>
         </section>
 
@@ -10549,6 +12649,8 @@ function normalizeTelegramUsername(value = "") {
           />
           <span>Запомнить выбор и больше не спрашивать</span>
         </label>
+
+        {renderClientMainBottomBar("workouts", "mainMenuBottomBar profileBottomTabBar workoutModeBottomBar")}
       </div>
     );
   }
@@ -10558,10 +12660,11 @@ function normalizeTelegramUsername(value = "") {
 
     return (
       <div className="basicQuizPage">
+        <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
         <button className="workoutModeBack" onClick={() => setPage("workoutMode")}>←</button>
 
         <section className="workoutModeHero">
-          <span>BASIC PLAN</span>
+          <span>БАЗОВЫЕ ТРЕНИРОВКИ</span>
           <h1>Базовый подбор</h1>
           <p>Ответь на 3 вопроса — приложение предложит стартовый план тренировок.</p>
         </section>
@@ -10616,6 +12719,8 @@ function normalizeTelegramUsername(value = "") {
         <button className="basicQuizStartBtn" onClick={applyBasicWorkoutPlan}>
           Подобрать план
         </button>
+
+        {renderClientMainBottomBar("workouts", "mainMenuBottomBar profileBottomTabBar workoutModeBottomBar")}
       </div>
     );
   }
@@ -10885,7 +12990,16 @@ function normalizeTelegramUsername(value = "") {
   }
 
   if (page === "nutrition") {
-    const preliminaryAiNutritionPlan = aiNutritionSavedPlan || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
+    const preliminaryAiNutritionPlan = getClientNutritionDisplayPlan(
+      {
+        aiNutritionPlan: aiNutritionSavedPlan,
+        aiNutritionProfile,
+        profile: aiNutritionProfile,
+        nutritionPlan: nutrition.nutritionPlan
+      },
+      nutrition,
+      nutrition.goals
+    ) || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
     const preliminaryAiNutritionWeekNumber = getAiNutritionCurrentWeek(preliminaryAiNutritionPlan);
     const preliminaryAiNutritionProfile = preliminaryAiNutritionPlan?.profile || aiNutritionProfile || aiNutritionProfileDraft;
     const preliminaryAiNutritionWeek = preliminaryAiNutritionPlan?.weeks?.[preliminaryAiNutritionWeekNumber - 1] || preliminaryAiNutritionPlan?.weeks?.[0];
@@ -11622,14 +13736,27 @@ function normalizeTelegramUsername(value = "") {
                     <span>{nutritionAmountMode === "portion" ? `${selectedNutritionFood.portion || "Порция"}` : "Граммы"}</span>
                     <input
                       value={nutritionAmount}
-                      onChange={(e) => setNutritionAmount(e.target.value)}
+                      onChange={(e) => {
+                        setNutritionAmount(e.target.value);
+                        setNutritionAmountError("");
+                      }}
                       placeholder={nutritionAmountMode === "portion" ? "1" : "100"}
                       inputMode="decimal"
+                      aria-invalid={Boolean(nutritionAmountError)}
+                      aria-describedby={nutritionAmountError ? "nutrition-amount-error" : undefined}
                     />
+                    {nutritionAmountError && (
+                      <small className="nutritionInlineError" id="nutrition-amount-error">
+                        {nutritionAmountError}
+                      </small>
+                    )}
                   </label>
 
                   {(() => {
-                    const scale = getFoodScale(nutritionAmount, selectedNutritionFood, nutritionAmountMode);
+                    const amountValidation = validateNutritionAmount(nutritionAmount);
+                    const scale = amountValidation.valid
+                      ? getFoodScale(amountValidation.amount, selectedNutritionFood, nutritionAmountMode)
+                      : 0;
                     return (
                       <>
                         <div className="foodEditMacrosCards">
@@ -11729,6 +13856,7 @@ function normalizeTelegramUsername(value = "") {
                                 value={selectedNutritionFood.calories}
                                 onChange={(event) => updateSelectedNutritionFoodField("calories", event.target.value)}
                                 inputMode="decimal"
+                                aria-invalid={Boolean(nutritionProductErrors.calories)}
                               />
                             </label>
 
@@ -11738,6 +13866,7 @@ function normalizeTelegramUsername(value = "") {
                                 value={selectedNutritionFood.protein}
                                 onChange={(event) => updateSelectedNutritionFoodField("protein", event.target.value)}
                                 inputMode="decimal"
+                                aria-invalid={Boolean(nutritionProductErrors.protein)}
                               />
                             </label>
 
@@ -11747,6 +13876,7 @@ function normalizeTelegramUsername(value = "") {
                                 value={selectedNutritionFood.fat}
                                 onChange={(event) => updateSelectedNutritionFoodField("fat", event.target.value)}
                                 inputMode="decimal"
+                                aria-invalid={Boolean(nutritionProductErrors.fat)}
                               />
                             </label>
 
@@ -11756,6 +13886,7 @@ function normalizeTelegramUsername(value = "") {
                                 value={selectedNutritionFood.carbs}
                                 onChange={(event) => updateSelectedNutritionFoodField("carbs", event.target.value)}
                                 inputMode="decimal"
+                                aria-invalid={Boolean(nutritionProductErrors.carbs)}
                               />
                             </label>
                           </div>
@@ -11765,8 +13896,8 @@ function normalizeTelegramUsername(value = "") {
                             <div className="foodEditPortionUnitRow foodEditPortionInlineUnit">
                               <input
                                 value={String(selectedNutritionFood?.type === "dish"
-                                  ? (selectedNutritionFood.totalWeight || selectedNutritionFood.portionAmount || "")
-                                  : (selectedNutritionFood.portionAmount || getFoodPortionAmount(selectedNutritionFood) || "")
+                                  ? (selectedNutritionFood.totalWeight ?? selectedNutritionFood.portionAmount ?? "")
+                                  : (selectedNutritionFood.portionAmount ?? getFoodPortionAmount(selectedNutritionFood) ?? "")
                                 ).replace(/\s?(г|гр|g|мл|ml)$/iu, "").trim()}
                                 onChange={(event) => {
                                   if (selectedNutritionFood?.type === "dish") {
@@ -11779,6 +13910,8 @@ function normalizeTelegramUsername(value = "") {
                                   updateSelectedNutritionFoodField("portionAmount", event.target.value);
                                 }}
                                 placeholder="100"
+                                inputMode="decimal"
+                                aria-invalid={Boolean(nutritionProductErrors.portionAmount)}
                               />
                               <button
                                 type="button"
@@ -11793,6 +13926,12 @@ function normalizeTelegramUsername(value = "") {
                               </button>
                             </div>
                           </label>
+
+                          {Object.values(nutritionProductErrors).some(Boolean) && (
+                            <div className="nutritionProductValidation" role="alert">
+                              {Object.values(nutritionProductErrors).filter(Boolean)[0]}
+                            </div>
+                          )}
 
                           {selectedNutritionFood?.type === "dish" && (
                             <div className="dishEditIngredientsBox">
@@ -12103,7 +14242,7 @@ function normalizeTelegramUsername(value = "") {
                       type="button"
                       className="foodProductDeleteAction"
                       disabled={!canDeleteSelectedNutritionFood()}
-                      onClick={deleteSelectedNutritionFood}
+                      onClick={() => deleteSelectedNutritionFood()}
                     >
                       <span aria-hidden="true">⌫</span>
                       <strong>Удалить</strong>
@@ -12126,6 +14265,41 @@ function normalizeTelegramUsername(value = "") {
                       <strong>Добавить</strong>
                     </button>
                   </nav>
+                  )}
+
+                  {nutritionDeleteConfirmOpen && createPortal(
+                    <div className="nutritionDeleteConfirmOverlay" role="dialog" aria-modal="true" aria-labelledby="nutrition-delete-title">
+                      <button
+                        type="button"
+                        className="nutritionDeleteConfirmBackdrop"
+                        onClick={() => setNutritionDeleteConfirmOpen(false)}
+                        aria-label="Отменить удаление"
+                      />
+                      <section className="nutritionDeleteConfirmCard">
+                        <button
+                          type="button"
+                          className="nutritionDeleteConfirmClose"
+                          onClick={() => setNutritionDeleteConfirmOpen(false)}
+                          aria-label="Закрыть"
+                        >
+                          ×
+                        </button>
+                        <span aria-hidden="true">⌫</span>
+                        <h2 id="nutrition-delete-title">Удалить из моей базы?</h2>
+                        <p>
+                          «{selectedNutritionFood?.name || "Продукт"}» будет удалён без возможности восстановления.
+                        </p>
+                        <div>
+                          <button type="button" onClick={() => setNutritionDeleteConfirmOpen(false)}>
+                            Отмена
+                          </button>
+                          <button type="button" className="danger" onClick={() => deleteSelectedNutritionFood(true)}>
+                            Удалить
+                          </button>
+                        </div>
+                      </section>
+                    </div>,
+                    document.body
                   )}
                 </div>
               ) : (
@@ -12443,6 +14617,45 @@ function normalizeTelegramUsername(value = "") {
                     onChange={handleNutritionPhotoAiSearch}
                   />
 
+                  {nutritionPhotoNotFoundOpen && (
+                    <div className="nutritionPhotoNotFoundOverlay" role="presentation">
+                      <section
+                        className="nutritionPhotoNotFoundModal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="nutritionPhotoNotFoundTitle"
+                      >
+                        <button
+                          type="button"
+                          className="nutritionPhotoNotFoundClose"
+                          onClick={resetNutritionPhotoAiState}
+                          aria-label="Закрыть"
+                        >
+                          ×
+                        </button>
+
+                        <div className="nutritionPhotoNotFoundIcon" aria-hidden="true">⌕</div>
+                        <h3 id="nutritionPhotoNotFoundTitle">Продукт не распознан</h3>
+                        <p>Попробуй сделать более чёткое фото или добавь данные продукта самостоятельно.</p>
+
+                        <div className="nutritionPhotoNotFoundActions">
+                          <button type="button" onClick={retryNutritionPhotoFromNotFound}>
+                            <span aria-hidden="true">📷</span>
+                            Сфотографировать ещё раз
+                          </button>
+                          <button
+                            type="button"
+                            className="primary"
+                            onClick={addNutritionProductManuallyFromPhoto}
+                          >
+                            <span aria-hidden="true">＋</span>
+                            Добавить вручную
+                          </button>
+                        </div>
+                      </section>
+                    </div>
+                  )}
+
                   {nutritionPhotoPreview && (
                     <div className={`fatPhotoAiFloatingPreview ${nutritionPhotoAnalyzing ? "isAnalyzing" : ""}`}>
                       <div className="fatPhotoAiPreviewImage">
@@ -12507,6 +14720,13 @@ function normalizeTelegramUsername(value = "") {
                 </div>
               )}
             </section>
+          </div>
+        )}
+
+        {nutritionUndoDelete && (
+          <div className="nutritionUndoToast" role="status">
+            <span>Продукт удалён</span>
+            <button type="button" onClick={restoreNutritionFood}>Вернуть</button>
           </div>
         )}
 
@@ -12713,60 +14933,30 @@ function normalizeTelegramUsername(value = "") {
     );
   }
 
-  function openProgressMeasurements() {
-    setProfileMeasurementReturnTab("measurements");
-    setProfileMeasurementOpen(false);
-    setProfileActiveTab("measurements");
-    setPage("profile");
-    window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
-  }
-
-  function openProgressHistory() {
+  function openCabinetWorkoutHistory(workoutId = null, programScope = null) {
     loadHistory();
-    setPage("history");
-    window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
-  }
-
-  function openProgressHub() {
-    setProfileActiveTab("progress");
+    setWorkoutHistoryModalOpen(false);
+    setProfileProgressModalOpen(false);
+    setProfileWorkoutHistoryProgramScope(programScope);
+    setOpenHistoryKey(workoutId);
+    setProfileActiveTab("cabinet");
     setPage("profile");
+    setProfileWorkoutHistoryModalOpen(true);
     window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
   }
 
-  function renderProgressBottomBar(activeTab = "", backTarget = "progress") {
-    return (
-      <nav className="profileBottomTabBar progressBottomTabBar" aria-label="Разделы прогресса">
-        <button type="button" onClick={() => backTarget === "progress" ? openProgressHub() : setPage(backTarget)}>
-          <span aria-hidden="true">🏠</span>
-          <strong>Главная</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "progress" ? "active" : ""}
-          aria-current={activeTab === "progress" ? "page" : undefined}
-          onClick={openProgressHub}
-        >
-          <span aria-hidden="true">📈</span>
-          <strong>Прогресс</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "measurements" ? "active" : ""}
-          onClick={openProgressMeasurements}
-        >
-          <span aria-hidden="true">📏</span>
-          <strong>Замеры</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "history" ? "active" : ""}
-          onClick={openProgressHistory}
-        >
-          <span aria-hidden="true">🗓️</span>
-          <strong>История</strong>
-        </button>
-      </nav>
-    );
+  function toggleCabinetWorkoutHistory(itemId) {
+    const shouldOpen = openHistoryKey !== itemId;
+    setOpenHistoryKey(shouldOpen ? itemId : null);
+
+    if (shouldOpen) {
+      window.requestAnimationFrame(() => {
+        cabinetWorkoutHistoryItemRefs.current.get(itemId)?.scrollIntoView({
+          block: "start",
+          behavior: "smooth"
+        });
+      });
+    }
   }
 
   function renderClientMainBottomBar(activeTab = "main", className = "mainMenuBottomBar profileBottomTabBar") {
@@ -12912,6 +15102,444 @@ function normalizeTelegramUsername(value = "") {
     );
   }
 
+  function isTrainerNextWorkspace() {
+    return currentUserRole === "trainer" && !canUseAdminFeatures();
+  }
+
+  async function openTrainerNextClient(client, tab = "overview") {
+    if (!client?.id) return;
+
+    setSelectedUserId(client.id);
+    setAdminSelectedClient(client);
+    setAdminUsersSelectedTab(tab);
+    setTrainerNextSection("client");
+    setPage("admin");
+
+    await Promise.allSettled([
+      loadAdminClientOverview(client, false),
+      loadWorkoutsFromFirebase(client.id, { preserveCurrentPlanOnError: true })
+    ]);
+  }
+
+  async function navigateTrainerNext(section) {
+    if (section === "dashboard") {
+      setAdminClientPageOpen(false);
+      setTrainerNextSection("dashboard");
+      setPage("admin");
+      return;
+    }
+
+    if (section === "clients") {
+      setAdminClientFilter("all");
+      setAdminClientPageOpen(false);
+      setTrainerNextSection("clients");
+      setPage("admin");
+      return;
+    }
+
+    if (section === "workouts") {
+      setTrainerWorkoutTab("programs");
+      setTrainerProgramManagerOpen(true);
+      setAdminOpenWorkoutId("");
+      setAdminSelectedExerciseId("");
+      setAdminProgramLibraryTab("overview");
+      await loadAdminTrainingTemplates();
+      setTrainerNextSection("workouts");
+      setPage("adminWorkouts");
+      return;
+    }
+
+    if (section === "nutrition") {
+      const targetClient = adminSelectedClient || usersList.find((client) => client.id === selectedUserId) || usersList[0];
+      if (targetClient?.id) {
+        await loadAdminClientOverview(targetClient, false);
+        setAdminUsersSelectedTab("nutrition");
+        setTrainerNextSection("client");
+        setPage("admin");
+      } else {
+        setTrainerNextSection("clients");
+        setPage("admin");
+      }
+      return;
+    }
+
+    if (section === "more" || section === "settings") {
+      setAdminClientPageOpen(false);
+      setTrainerNextSection("cabinet");
+      setPage("admin");
+      return;
+    }
+
+    if (["messages", "analytics", "notifications"].includes(section)) {
+      setAdminClientPageOpen(false);
+      setTrainerNextSection(section);
+      setPage("admin");
+      return;
+    }
+
+    openAdminClientsWithFilter("all");
+  }
+
+  async function openTrainerProgramManager() {
+    setTrainerWorkoutTab("programs");
+    setTrainerProgramManagerOpen(true);
+    setAdminOpenWorkoutId("");
+    setAdminSelectedExerciseId("");
+    setAdminProgramLibraryTab("overview");
+    await loadAdminTrainingTemplates();
+    setPage("adminWorkouts");
+  }
+
+  async function openTrainerExerciseLibrary() {
+    setTrainerWorkoutTab("library");
+    setTrainerProgramManagerOpen(false);
+    await loadAdminTrainingTemplates();
+    setTrainerNextSection("workouts");
+    setPage("adminWorkouts");
+  }
+
+  function getTrainerNextExerciseLibraryItems() {
+    const templateWorkouts = adminTrainingTemplates.flatMap((template) => {
+      const templateBlocks = Array.isArray(template.blocks)
+        ? template.blocks
+        : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);
+
+      return [
+        ...(template.workouts || []),
+        ...templateBlocks.flatMap((block) =>
+          (block.weeks || []).flatMap((week) => week.workouts || [])
+        )
+      ];
+    });
+    const sources = [
+      ...(plan.workouts || []).flatMap((workout) => workout.exercises || []),
+      ...templateWorkouts.flatMap((workout) => workout.exercises || [])
+    ];
+    const library = new Map();
+
+    sources.forEach((exercise) => {
+      const key = String(exercise?.name || "").trim().toLocaleLowerCase("ru").replace(/ё/g, "е").replace(/\s+/g, " ");
+      if (!key) return;
+      const current = library.get(key);
+      const currentVideo = current?.video || current?.videoUrl || current?.videoURL || "";
+      const nextVideo = exercise?.video || exercise?.videoUrl || exercise?.videoURL || "";
+      if (!current || (!currentVideo && nextVideo)) library.set(key, exercise);
+    });
+
+    return [...library.values()];
+  }
+
+  function updateTrainerNextWorkout(workoutId, patch = {}) {
+    const nextPlan = {
+      ...plan,
+      workouts: (plan.workouts || []).map((workoutItem) =>
+        workoutItem.id === workoutId ? { ...workoutItem, ...patch } : workoutItem
+      )
+    };
+    const shouldAutoSaveStatus = ["status", "statusUpdatedAt", "movedToDate"].some((key) =>
+      Object.prototype.hasOwnProperty.call(patch, key)
+    );
+
+    setPlan(nextPlan);
+
+    if (shouldAutoSaveStatus) {
+      void saveWorkoutsToFirebase(nextPlan, {
+        silent: true,
+        successMessage: "Статус тренировки сохранён."
+      });
+    }
+  }
+
+  function updateTrainerNextExercise(workoutId, exerciseId, patch = {}) {
+    setPlan((current) => ({
+      ...current,
+      workouts: (current.workouts || []).map((workoutItem) => {
+        if (workoutItem.id !== workoutId) return workoutItem;
+
+        return {
+          ...workoutItem,
+          exercises: (workoutItem.exercises || []).map((exercise) => {
+            if (exercise.id !== exerciseId) return exercise;
+            const nextPatch = { ...patch };
+
+            if (Object.prototype.hasOwnProperty.call(patch, "name")) {
+              const libraryExercise = findExerciseLibraryMatch(
+                getTrainerNextExerciseLibraryItems(),
+                patch.name,
+                exerciseId
+              );
+              const libraryVideo = libraryExercise?.video || libraryExercise?.videoUrl || libraryExercise?.videoURL || "";
+
+              if (libraryVideo && (!exercise.video || exercise.videoAutoFilledFrom)) {
+                nextPatch.video = libraryVideo;
+                nextPatch.videoAutoFilledFrom = libraryExercise.name;
+                nextPatch.requiresWeight = exerciseUsesExternalWeight(libraryExercise);
+              } else if (exercise.videoAutoFilledFrom && !libraryVideo) {
+                nextPatch.video = "";
+                nextPatch.videoAutoFilledFrom = "";
+              }
+            }
+
+            return { ...exercise, ...nextPatch };
+          })
+        };
+      })
+    }));
+  }
+
+  function updateTrainerNextExerciseSet(workoutId, exerciseId, setIndex, patch = {}) {
+    setPlan((current) => ({
+      ...current,
+      workouts: (current.workouts || []).map((workoutItem) => {
+        if (workoutItem.id !== workoutId) return workoutItem;
+
+        return {
+          ...workoutItem,
+          exercises: (workoutItem.exercises || []).map((exercise) => {
+            if (exercise.id !== exerciseId) return exercise;
+            const sets = Array.isArray(exercise.sets) && exercise.sets.length
+              ? exercise.sets.map((set) => ({ ...set }))
+              : [{ reps: 8, weight: "" }];
+            sets[setIndex] = { ...(sets[setIndex] || {}), ...patch };
+            return { ...exercise, sets };
+          })
+        };
+      })
+    }));
+  }
+
+  function addTrainerNextExerciseSet(workoutId, exerciseId) {
+    setPlan((current) => ({
+      ...current,
+      workouts: (current.workouts || []).map((workoutItem) => {
+        if (workoutItem.id !== workoutId) return workoutItem;
+        return {
+          ...workoutItem,
+          exercises: (workoutItem.exercises || []).map((exercise) => {
+            if (exercise.id !== exerciseId) return exercise;
+            const sets = Array.isArray(exercise.sets) && exercise.sets.length
+              ? exercise.sets
+              : [{ reps: 8, weight: "" }];
+            const previousSet = sets[sets.length - 1] || {};
+            return {
+              ...exercise,
+              sets: [...sets, { reps: previousSet.reps ?? 8, weight: previousSet.weight ?? "" }]
+            };
+          })
+        };
+      })
+    }));
+  }
+
+  function removeTrainerNextExerciseSet(workoutId, exerciseId, setIndex) {
+    setPlan((current) => ({
+      ...current,
+      workouts: (current.workouts || []).map((workoutItem) => {
+        if (workoutItem.id !== workoutId) return workoutItem;
+        return {
+          ...workoutItem,
+          exercises: (workoutItem.exercises || []).map((exercise) => {
+            if (exercise.id !== exerciseId) return exercise;
+            const sets = Array.isArray(exercise.sets) && exercise.sets.length
+              ? exercise.sets
+              : [{ reps: 8, weight: "" }];
+            if (sets.length <= 1) return exercise;
+            return { ...exercise, sets: sets.filter((_, index) => index !== setIndex) };
+          })
+        };
+      })
+    }));
+  }
+
+  function addTrainerNextExercise(workoutId, sourceExercise = null) {
+    const stamp = Date.now();
+    const sourceName = String(sourceExercise?.name || "").trim();
+    const libraryExercise = sourceExercise || findExerciseLibraryMatch(
+      getTrainerNextExerciseLibraryItems(),
+      sourceName
+    );
+    const libraryVideo = libraryExercise?.video || libraryExercise?.videoUrl || libraryExercise?.videoURL || "";
+    const sourceSets = Array.isArray(libraryExercise?.sets) && libraryExercise.sets.length
+      ? libraryExercise.sets
+      : [{ reps: "8-12", weight: "" }, { reps: "8-12", weight: "" }, { reps: "8-12", weight: "" }];
+
+    setPlan((current) => ({
+      ...current,
+      workouts: (current.workouts || []).map((workoutItem) => (
+        workoutItem.id === workoutId
+          ? {
+              ...workoutItem,
+              exercises: [
+                ...(workoutItem.exercises || []),
+                {
+                  ...libraryExercise,
+                  id: `exercise_${stamp}`,
+                  name: sourceName || "Новое упражнение",
+                  video: libraryVideo,
+                  videoAutoFilledFrom: libraryVideo ? libraryExercise?.name || "" : "",
+                  requiresWeight: exerciseUsesExternalWeight(libraryExercise || { name: sourceName }),
+                  rest: libraryExercise?.rest || "90 сек",
+                  sets: sourceSets.map((set, index) => ({
+                    ...set,
+                    ...(set?.id ? { id: `set_${stamp}_${index}` } : {})
+                  }))
+                }
+              ]
+            }
+          : workoutItem
+      ))
+    }));
+  }
+
+  function removeTrainerNextExercise(workoutId, exerciseId) {
+    setPlan((current) => ({
+      ...current,
+      workouts: (current.workouts || []).map((workoutItem) =>
+        workoutItem.id !== workoutId
+          ? workoutItem
+          : {
+              ...workoutItem,
+              exercises: (workoutItem.exercises || []).filter((exercise) => exercise.id !== exerciseId)
+            }
+      )
+    }));
+  }
+
+  function duplicateTrainerNextExercise(workoutId, exerciseId) {
+    const stamp = Date.now();
+    setPlan((current) => ({
+      ...current,
+      workouts: (current.workouts || []).map((workoutItem) => {
+        if (workoutItem.id !== workoutId) return workoutItem;
+        const sourceIndex = (workoutItem.exercises || []).findIndex((exercise) => exercise.id === exerciseId);
+        if (sourceIndex < 0) return workoutItem;
+        const source = workoutItem.exercises[sourceIndex];
+        const copy = {
+          ...source,
+          id: `exercise_${stamp}`,
+          name: `${source.name || "Упражнение"} — копия`,
+          sets: (source.sets || []).map((set, index) => ({
+            ...set,
+            ...(set?.id ? { id: `set_${stamp}_${index}` } : {})
+          }))
+        };
+        const exercises = [...workoutItem.exercises];
+        exercises.splice(sourceIndex + 1, 0, copy);
+        return { ...workoutItem, exercises };
+      })
+    }));
+  }
+
+  function moveTrainerNextExercise(workoutId, exerciseId, direction) {
+    setPlan((current) => ({
+      ...current,
+      workouts: (current.workouts || []).map((workoutItem) => {
+        if (workoutItem.id !== workoutId) return workoutItem;
+        const exercises = [...(workoutItem.exercises || [])];
+        const sourceIndex = exercises.findIndex((exercise) => exercise.id === exerciseId);
+        const targetIndex = sourceIndex + direction;
+        if (sourceIndex < 0 || targetIndex < 0 || targetIndex >= exercises.length) return workoutItem;
+        [exercises[sourceIndex], exercises[targetIndex]] = [exercises[targetIndex], exercises[sourceIndex]];
+        return { ...workoutItem, exercises };
+      })
+    }));
+  }
+
+  function addTrainerNextWorkoutDay() {
+    setPlan((current) => {
+      const workouts = current.workouts || [];
+      const dayNumber = workouts.length + 1;
+      return {
+        ...current,
+        workouts: [
+          ...workouts,
+          {
+            id: `trainer_day_${Date.now()}`,
+            name: `День ${dayNumber}`,
+            order: dayNumber,
+            sortOrder: dayNumber,
+            exercises: []
+          }
+        ]
+      };
+    });
+  }
+
+  function duplicateTrainerNextWorkoutDay(workoutId) {
+    const stamp = Date.now();
+    setPlan((current) => {
+      const workouts = current.workouts || [];
+      const sourceIndex = workouts.findIndex((workout) => workout.id === workoutId);
+      if (sourceIndex < 0) return current;
+      const source = workouts[sourceIndex];
+      const copy = {
+        ...source,
+        id: `trainer_day_${stamp}`,
+        name: `${source.name || `День ${sourceIndex + 1}`} — копия`,
+        exercises: (source.exercises || []).map((exercise, exerciseIndex) => ({
+          ...exercise,
+          id: `exercise_${stamp}_${exerciseIndex}`,
+          sets: (exercise.sets || []).map((set, setIndex) => ({
+            ...set,
+            ...(set?.id ? { id: `set_${stamp}_${exerciseIndex}_${setIndex}` } : {})
+          }))
+        }))
+      };
+      const nextWorkouts = [...workouts];
+      nextWorkouts.splice(sourceIndex + 1, 0, copy);
+      return { ...current, workouts: nextWorkouts };
+    });
+  }
+
+  function removeTrainerNextWorkoutDay(workoutId) {
+    setPlan((current) => ({
+      ...current,
+      workouts: (current.workouts || []).filter((workout) => workout.id !== workoutId)
+    }));
+  }
+
+  async function uploadTrainerNextExerciseVideo(workoutId, exerciseId, file) {
+    if (!file || !auth.currentUser?.uid) return;
+
+    setAdminExerciseVideoUploadingId(exerciseId);
+    try {
+      const safeName = String(file.name || "exercise-video").replace(/[^\wа-яА-ЯёЁ.\-]+/g, "_");
+      const storageRef = ref(
+        storage,
+        `exercise-videos/${auth.currentUser.uid}/client-plans/${Date.now()}-${safeName}`
+      );
+      await uploadBytes(storageRef, file);
+      const videoUrl = await getDownloadURL(storageRef);
+      updateTrainerNextExercise(workoutId, exerciseId, {
+        video: videoUrl,
+        videoAutoFilledFrom: ""
+      });
+    } catch (error) {
+      console.error("Trainer exercise video upload error:", error);
+      showAppError("firebase", "Не получилось загрузить видео упражнения.");
+    } finally {
+      setAdminExerciseVideoUploadingId("");
+    }
+  }
+
+  function getTrainerNextCreateClientState() {
+    return {
+      open: adminCreateClientModalOpen,
+      name: adminNewUserName,
+      email: adminNewUserEmail,
+      password: adminNewUserPassword,
+      loading: adminCreateUserLoading,
+      status: adminCreateUserStatus,
+      credentials: adminCreatedCredentials,
+      onClose: () => setAdminCreateClientModalOpen(false),
+      onNameChange: setAdminNewUserName,
+      onEmailChange: setAdminNewUserEmail,
+      onPasswordChange: setAdminNewUserPassword,
+      onGeneratePassword: generateAdminPassword,
+      onSubmit: createUserFromAdminPanel
+    };
+  }
+
   function renderClientTrainingBottomBar(activeTab = "workouts") {
     return (
       <nav className="individualWorkoutMenuBar" aria-label="Навигация тренировок">
@@ -12962,7 +15590,7 @@ function normalizeTelegramUsername(value = "") {
     const isMainDashboard = page === "main";
     const visibleProfileTab = isMainDashboard
       ? "cabinet"
-      : (profileActiveTab === "nutrition" ? "cabinet" : profileActiveTab);
+      : (profileActiveTab === "nutrition" || profileActiveTab === "progress" ? "cabinet" : profileActiveTab);
     const totalWorkouts = history.length;
     const lastWorkout = history[0];
     const activeProfile = {
@@ -12978,12 +15606,32 @@ function normalizeTelegramUsername(value = "") {
     const previousClientProgressPhoto = Array.isArray(clientProgressPhotos) && clientProgressPhotos.length > 1
       ? clientProgressPhotos[1]
       : null;
+    const selectedClientProgressPhotoBefore = clientProgressPhotos.find(
+      (photo) => photo.id === profileProgressPhotoCompareIds[0]
+    ) || previousClientProgressPhoto;
+    const selectedClientProgressPhotoAfter = clientProgressPhotos.find(
+      (photo) => photo.id === profileProgressPhotoCompareIds[1]
+    ) || latestClientProgressPhoto;
+    const progressPhotoCompareViews = [
+      { id: "front", label: "Спереди", urlKey: "frontUrl" },
+      { id: "side", label: "Сбоку", urlKey: "sideUrl" },
+      { id: "back", label: "Со спины", urlKey: "backUrl" }
+    ];
+    const activeProgressPhotoCompareView = progressPhotoCompareViews.find(
+      (view) => view.id === profileProgressPhotoCompareView
+    ) || progressPhotoCompareViews[0];
+    const formatClientProgressPhotoDate = (photo) => {
+      const dateValue = photo?.date || photo?.createdAt?.slice(0, 10);
+      if (!dateValue) return "Дата не указана";
+      const date = new Date(`${dateValue}T12:00:00`);
+      return Number.isNaN(date.getTime()) ? "Дата не указана" : date.toLocaleDateString("ru-RU");
+    };
     const profileProgressPhotoSetComplete = ["front", "side", "back"].every(
       (view) => Boolean(profileProgressPhotoFiles[view])
     );
-    const activeGoalLabel = getAiNutritionGoalLabel(activeProfile?.goal || "recomp");
     const activeActivityLabel = getAiNutritionActivityLabel(activeProfile?.activity || "medium");
     const assignedProgramName = user?.assignedProgramName || aiNutritionProfile?.assignedProgramName || "";
+    const profileWorkoutHistoryItems = getProgramHistoryItems(history, profileWorkoutHistoryProgramScope);
     const trainingDaysText = getAiNutritionTrainingDays(activeProfile).length
       ? AI_NUTRITION_WEEK_DAYS
           .filter((day) => getAiNutritionTrainingDays(activeProfile).includes(day.id))
@@ -12992,12 +15640,163 @@ function normalizeTelegramUsername(value = "") {
       : "не выбраны";
     const todayTotals = getAiNutritionTotalsForToday(nutrition);
     const liveNutritionPreviewPlan = buildAiNutritionMonthlyPlan(nutrition, activeProfile, history, null);
-    const activePlan = liveNutritionPreviewPlan || aiNutritionSavedPlan || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
+    const activePlan = getClientNutritionDisplayPlan(
+      {
+        aiNutritionPlan: aiNutritionSavedPlan,
+        aiNutritionProfile: activeProfile,
+        profile: activeProfile,
+        nutritionPlan: nutrition.nutritionPlan
+      },
+      nutrition,
+      nutrition.goals
+    ) || liveNutritionPreviewPlan || aiNutritionSavedPlan || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
     const activeWeek = activePlan?.weeks?.[getAiNutritionCurrentWeek(activePlan) - 1] || activePlan?.weeks?.[0];
-    const profileMacros = getAiNutritionDayMacros(activeWeek || nutrition.goals, activeProfile);
+    const activePlanProfile = activePlan?.profile || activeProfile;
+    const activeGoalLabel = activePlan?.goalLabel || getAiNutritionGoalLabel(activePlanProfile?.goal || "recomp");
+    const profileMacros = getAiNutritionDayMacros(activeWeek || nutrition.goals, activePlanProfile);
+    const profileNutritionDraftProfile = {
+      ...activeProfile,
+      ...aiNutritionProfileDraft,
+      trainingDays: getAiNutritionTrainingDays(aiNutritionProfileDraft)
+    };
+    const profileNutritionDraftPlan = buildAiNutritionMonthlyPlan(nutrition, profileNutritionDraftProfile, history, null);
+    const profileNutritionDraftWeek = profileNutritionDraftPlan?.weeks?.[0] || profileNutritionDraftPlan?.start || nutrition.goals;
+    const profileNutritionDraftMacros = getAiNutritionDayMacros(profileNutritionDraftWeek, profileNutritionDraftProfile);
     const trainerNotificationCount = clientTrainerTasks.filter(
       (task) => getTrainerTaskStatus(task).id !== "completed"
     ).length;
+    const workoutCalendarDateKey = (date) => (
+      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+    );
+    const [workoutCalendarYear, workoutCalendarMonthIndex] = profileWorkoutCalendarMonth
+      .split("-")
+      .map(Number);
+    const workoutCalendarMonthDate = new Date(
+      workoutCalendarYear,
+      Math.max(0, (workoutCalendarMonthIndex || 1) - 1),
+      1
+    );
+    const workoutCalendarStartOffset = (workoutCalendarMonthDate.getDay() + 6) % 7;
+    const workoutCalendarGridStart = new Date(
+      workoutCalendarMonthDate.getFullYear(),
+      workoutCalendarMonthDate.getMonth(),
+      1 - workoutCalendarStartOffset
+    );
+    const workoutCalendarHistoryByDate = history.reduce((result, item) => {
+      const timestamp = getTimestampValue(item?.date);
+      if (!timestamp) return result;
+      const key = workoutCalendarDateKey(new Date(timestamp));
+      result[key] = [...(result[key] || []), item];
+      return result;
+    }, {});
+    const profileCalendarWorkouts = sortWorkoutDays(plan.workouts || []);
+    const profileCalendarSource = {
+      ...(profileWorkoutCalendarData || {}),
+      scheduledDates: profileWorkoutScheduledDates,
+      monthlyTrainingDates: profileWorkoutScheduledDates
+    };
+    const profileWorkoutSlots = buildPlannedWorkoutSlots({
+      workouts: profileCalendarWorkouts,
+      calendar: profileCalendarSource,
+      history
+    });
+    const profileWorkoutCalendarEntries = buildWorkoutScheduleCalendarEntries(profileWorkoutSlots);
+    const profileWorkoutEntriesByDate = profileWorkoutCalendarEntries.reduce((result, entry) => {
+      if (!result[entry.date]) result[entry.date] = [];
+      result[entry.date].push(entry);
+      return result;
+    }, {});
+    const profileWorkoutDraftEntriesByDate = profileWorkoutCalendarDraftDates.reduce((result, date, index) => {
+      result[date] = profileWorkoutEntriesByDate[date]?.length
+        ? profileWorkoutEntriesByDate[date]
+        : [{ date, order: index + 1, status: "planned", title: `Тренировка №${index + 1}` }];
+      return result;
+    }, {});
+    const profileWorkoutVisibleEntriesByDate = profileWorkoutCalendarEditing
+      ? profileWorkoutDraftEntriesByDate
+      : profileWorkoutEntriesByDate;
+    const workoutCalendarDays = Array.from({ length: 42 }, (_, index) => {
+      const date = new Date(
+        workoutCalendarGridStart.getFullYear(),
+        workoutCalendarGridStart.getMonth(),
+        workoutCalendarGridStart.getDate() + index
+      );
+      const key = workoutCalendarDateKey(date);
+      return {
+        date,
+        key,
+        isCurrentMonth: date.getMonth() === workoutCalendarMonthDate.getMonth(),
+        isToday: key === workoutCalendarDateKey(new Date()),
+        isScheduled: (
+          profileWorkoutCalendarEditing
+            ? profileWorkoutCalendarDraftDates
+            : profileWorkoutScheduledDates
+        ).includes(key),
+        scheduleEntries: profileWorkoutVisibleEntriesByDate[key] || [],
+        workouts: workoutCalendarHistoryByDate[key] || []
+      };
+    });
+    const selectedWorkoutCalendarItems = workoutCalendarHistoryByDate[profileWorkoutCalendarDate] || [];
+    const shiftProfileWorkoutCalendarMonth = (direction) => {
+      const nextMonth = new Date(
+        workoutCalendarMonthDate.getFullYear(),
+        workoutCalendarMonthDate.getMonth() + direction,
+        1
+      );
+      setProfileWorkoutCalendarMonth(
+        `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, "0")}`
+      );
+      setProfileWorkoutCalendarDate(workoutCalendarDateKey(nextMonth));
+    };
+    const toggleProfileWorkoutScheduledDate = (dateKey) => {
+      setProfileWorkoutCalendarDraftDates((current) => (
+        current.includes(dateKey)
+          ? current.filter((item) => item !== dateKey)
+          : [...current, dateKey].sort()
+      ));
+      setProfileWorkoutCalendarStatus("");
+    };
+    const saveProfileWorkoutCalendar = async () => {
+      const uid = auth.currentUser?.uid;
+      if (!uid || profileWorkoutCalendarSaving) return;
+
+      setProfileWorkoutCalendarSaving(true);
+      setProfileWorkoutCalendarStatus("");
+
+      try {
+        const userRef = doc(db, "users", uid);
+        const userSnapshot = await getDoc(userRef);
+        const currentCalendar = userSnapshot.exists()
+          ? userSnapshot.data()?.workoutCalendar || {}
+          : {};
+        const scheduledDates = [...new Set(profileWorkoutCalendarDraftDates)].sort();
+        const plannedWorkouts = buildWorkoutScheduleDraft(scheduledDates, sortWorkoutDays(plan.workouts || []));
+        const nextCalendar = {
+          ...currentCalendar,
+          scheduledDates,
+          monthlyTrainingDates: scheduledDates,
+          plannedWorkouts,
+          updatedAt: new Date().toISOString()
+        };
+
+        await setDoc(userRef, {
+          workoutCalendar: nextCalendar,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+
+        setProfileWorkoutScheduledDates(scheduledDates);
+        setProfileWorkoutCalendarDraftDates(scheduledDates);
+        setProfileWorkoutCalendarData(nextCalendar);
+        safeWriteUserJsonStorage(WORKOUT_CALENDAR_STORAGE_KEY, uid, nextCalendar);
+        setProfileWorkoutCalendarEditing(false);
+        setProfileWorkoutCalendarStatus("Тренировочные дни сохранены.");
+      } catch (error) {
+        console.error("Workout calendar save failed:", error);
+        setProfileWorkoutCalendarStatus("Не получилось сохранить дни. Проверь соединение.");
+      } finally {
+        setProfileWorkoutCalendarSaving(false);
+      }
+    };
 
     const profileAiNutritionPlan = activePlan;
     const profileAiNutritionDay = buildAiNutritionDayModel(nutrition, nutrition.days?.[nutritionDateKey], history);
@@ -13052,7 +15851,11 @@ function normalizeTelegramUsername(value = "") {
     );
     const profileAiNutritionTrainingAdvice = getAiNutritionTrainingDayAdvice(profileIsAiTrainingDayToday, profileAiNutritionActiveProfile?.goal);
     const lastWorkoutDate = formatProfileWorkoutDate(lastWorkout?.date);
-    const nextTrainingText = getProfileNextTrainingText(activeProfile, user);
+    const nextTrainingText = getProfileNextTrainingText(
+      activeProfile,
+      user,
+      profileWorkoutScheduledDates
+    );
     const currentGoalId = activeProfile?.goal || "recomp";
     const progressTone = currentGoalId === "mass"
       ? "Набираем массу аккуратно"
@@ -13061,9 +15864,9 @@ function normalizeTelegramUsername(value = "") {
         : currentGoalId === "maintain"
           ? "Держим форму стабильно"
           : "Рекомпозиция идёт по плану";
-    const greetingName = telegramProfile.displayName || auth.currentUser?.email?.split("@")?.[0] || "спортсмен";
+    const greetingName = profileAccount.displayName || telegramProfile.displayName || auth.currentUser?.email?.split("@")?.[0] || "спортсмен";
+    const profileAvatarUrl = profileAccount.avatarUrl || telegramProfile.avatarUrl || auth.currentUser?.photoURL || "";
     const profileStreak = Math.min(30, Math.max(0, totalWorkouts));
-    const aiProgressScore = Math.min(92, 58 + totalWorkouts * 4);
     const mainProfileWeight = Number(activeProfile?.weight);
     const savedMainMeasurementSeries = (Array.isArray(profileMeasurements) ? profileMeasurements : [])
       .slice(0, 7)
@@ -13103,30 +15906,16 @@ function normalizeTelegramUsername(value = "") {
     const mainWeightChange = mainLatestWeight && mainPreviousWeight
       ? mainLatestWeight - mainPreviousWeight
       : 0;
-    const aiCoachSummary = currentGoalId === "maintain"
-      ? "Вес и режим держим ровно. Контрольные замеры помогут не пропустить скрытый откат."
-      : currentGoalId === "recomp"
-        ? "Вес может стоять, но талия и объёмы должны меняться. Следи за замерами раз в неделю."
-        : currentGoalId === "mass"
-          ? "Рост веса должен идти плавно. Если талия растёт быстрее силы — снизим профицит."
-          : "Главный фокус — талия, вес и восстановление. Слишком резкий спад может просадить тренировки.";
-    const aiCoachStatuses = [
-      {
-        icon: totalWorkouts >= 8 ? "⚡" : "🏁",
-        title: totalWorkouts >= 8 ? "Ритм" : "Старт",
-        text: totalWorkouts >= 8 ? "хороший" : "набираем"
-      },
-      {
-        icon: currentGoalId === "mass" ? "📈" : currentGoalId === "maintain" ? "⚖️" : "🔥",
-        title: currentGoalId === "mass" ? "Масса" : currentGoalId === "maintain" ? "Вес" : "Форма",
-        text: currentGoalId === "maintain" ? "стабильно" : "контроль"
-      },
-      {
-        icon: "📏",
-        title: "Замер",
-        text: "раз в неделю"
-      }
-    ];
+    const progressInsight = buildProgressInsight({
+      history,
+      measurements: profileMeasurements,
+      nutrition,
+      calorieGoal: Number(profileMacros.calories || nutrition.goals.calories),
+      proteinGoal: Number(profileMacros.protein || nutrition.goals.protein),
+      scheduledDates: profileWorkoutScheduledDates,
+      goal: currentGoalId
+    });
+    const aiCoachStatuses = progressInsight.statuses;
 
     return (
       <div
@@ -13159,9 +15948,7 @@ function normalizeTelegramUsername(value = "") {
           </>
         )}
 
-        {!isMainDashboard && visibleProfileTab === "measurements"
-          ? renderProgressBottomBar("measurements")
-          : !isMainDashboard && renderClientMainBottomBar("cabinet")}
+        {!isMainDashboard && renderClientMainBottomBar("cabinet")}
 
         {isMainDashboard && (
           renderClientMainBottomBar("main")
@@ -13195,13 +15982,11 @@ function normalizeTelegramUsername(value = "") {
             className={`profileAiHero${!isMainDashboard && !canUseTrainerFeatures() ? " profileAiHeroButton" : ""}`}
             role={!isMainDashboard && !canUseTrainerFeatures() ? "button" : undefined}
             tabIndex={!isMainDashboard && !canUseTrainerFeatures() ? 0 : undefined}
-            aria-label={!isMainDashboard && !canUseTrainerFeatures() ? "Открыть профиль" : undefined}
+            aria-label={!isMainDashboard && !canUseTrainerFeatures() ? "Открыть аккаунт" : undefined}
             onClick={() => {
               if (isMainDashboard || canUseTrainerFeatures()) return;
               setProfileProgressModalOpen(false);
-              setProfileBodyMetricsOpen(true);
-              setProfileSettingsModalSection("profile");
-              setProfileSettingsModalOpen(true);
+              openProfileAccount();
             }}
             onKeyDown={(event) => {
               if (
@@ -13211,21 +15996,19 @@ function normalizeTelegramUsername(value = "") {
               ) return;
               event.preventDefault();
               setProfileProgressModalOpen(false);
-              setProfileBodyMetricsOpen(true);
-              setProfileSettingsModalSection("profile");
-              setProfileSettingsModalOpen(true);
+              openProfileAccount();
             }}
           >
             <div className="profileAiAvatarWrap">
               <div className={telegramProfile.connected ? "profileAvatarBig telegram profileUnifiedAvatar profileAiAvatar" : "profileAvatarBig profileUnifiedAvatar profileAiAvatar"}>
-                {telegramProfile.avatarUrl ? (
-                  <img src={telegramProfile.avatarUrl} alt="" onError={handleTelegramAvatarError} />
+                {profileAvatarUrl ? (
+                  <img src={profileAvatarUrl} alt="" />
                 ) : (
                   <span>{telegramProfile.connected ? "✈️" : "👤"}</span>
                 )}
               </div>
               <div className="profileAiAvatarRing">
-                <strong>{aiProgressScore}%</strong>
+                <strong>{progressInsight.score === null ? "—" : `${progressInsight.score}%`}</strong>
               </div>
             </div>
 
@@ -13246,6 +16029,11 @@ function normalizeTelegramUsername(value = "") {
                 className="progressHubCard photos"
                 onClick={() => {
                   setProfileProgressPhotoStatus("");
+                  setProfileProgressPhotoCompareIds([
+                    clientProgressPhotos[1]?.id || "",
+                    clientProgressPhotos[0]?.id || ""
+                  ]);
+                  setProfileProgressPhotoCompareView("front");
                   setProfileProgressPhotosModalOpen(true);
                 }}
               >
@@ -13305,14 +16093,68 @@ function normalizeTelegramUsername(value = "") {
                 className="progressHubCard progress"
                 onClick={() => {
                   setProfileSettingsModalOpen(false);
+                  loadHistory();
+                  setProfileWorkoutCalendarDraftDates(profileWorkoutScheduledDates);
+                  setProfileWorkoutCalendarEditing(false);
+                  setProfileWorkoutCalendarStatus("");
                   setProfileProgressModalOpen(true);
                 }}
               >
-                <span className="progressHubCardIcon">📈</span>
+                <span className="progressHubCardIcon">🗓️</span>
                 <span className="progressHubCardText">
-                  <small>РЕЗУЛЬТАТЫ</small>
-                  <strong>Прогресс</strong>
-                  <em>История тренировок</em>
+                  <small>ТРЕНИРОВКИ</small>
+                  <strong>Календарь</strong>
+                  <em>{history.length ? `${history.length} тренировок сохранено` : "История пока пустая"}</em>
+                </span>
+                <i>›</i>
+              </button>
+            )}
+
+            {!canUseTrainerFeatures() && (
+              <button
+                type="button"
+                className="progressHubCard history"
+                onClick={() => openCabinetWorkoutHistory()}
+              >
+                <span className="progressHubCardIcon">🕘</span>
+                <span className="progressHubCardText">
+                  <small>ТРЕНИРОВКИ</small>
+                  <strong>История тренировок</strong>
+                  <em>{history.length ? `${history.length} тренировок сохранено` : "История пока пустая"}</em>
+                </span>
+                <i>›</i>
+              </button>
+            )}
+
+            <button
+              type="button"
+              className="progressHubCard accountProfile"
+              onClick={openProfileAccount}
+            >
+              <span className="progressHubCardIcon">👤</span>
+              <span className="progressHubCardText">
+                <small>АККАУНТ</small>
+                <strong>Профиль</strong>
+                <em>Имя, почта, пароль и выход</em>
+              </span>
+              <i>›</i>
+            </button>
+
+            {!canUseTrainerFeatures() && (
+              <button
+                type="button"
+                className="progressHubCard questionnaire"
+                onClick={() => {
+                  setProfileBodyMetricsOpen(true);
+                  setProfileSettingsModalSection("profile");
+                  setProfileSettingsModalOpen(true);
+                }}
+              >
+                <span className="progressHubCardIcon">📋</span>
+                <span className="progressHubCardText">
+                  <small>ПАРАМЕТРЫ</small>
+                  <strong>Анкета</strong>
+                  <em>Вес, рост, возраст, цель и активность</em>
                 </span>
                 <i>›</i>
               </button>
@@ -13331,32 +16173,10 @@ function normalizeTelegramUsername(value = "") {
               <span className="progressHubCardText">
                 <small>ПАРАМЕТРЫ</small>
                 <strong>Настройки</strong>
-                <em>Режим тренировок, оформление и аккаунт</em>
+                <em>Оформление и Telegram</em>
               </span>
               <i>›</i>
             </button>
-          </div>
-          )}
-
-          {!isMainDashboard && visibleProfileTab === "progress" && (
-          <div className="profileProgressTab">
-            <header className="profileProgressTabHeader">
-              <span>ЛИЧНЫЙ ПРОГРЕСС</span>
-              <h1>Прогресс</h1>
-              <p>История выполненных тренировок и результатов.</p>
-            </header>
-
-            <div className="progressHubOverview profileProgressTabOverview">
-              <button type="button" className="progressHubCard history" onClick={openProgressHistory}>
-                <span className="progressHubCardIcon">🗓️</span>
-                <span className="progressHubCardText">
-                  <small>РЕЗУЛЬТАТЫ</small>
-                  <strong>История тренировок</strong>
-                  <em>{lastWorkout ? `${history.length} тренировок сохранено` : "История пока пуста"}</em>
-                </span>
-                <i>›</i>
-              </button>
-            </div>
           </div>
           )}
 
@@ -13364,7 +16184,7 @@ function normalizeTelegramUsername(value = "") {
           <div className="profileAiStatsRow">
             <div className="goal">
               <span>Твоя цель</span>
-              <strong>{activeProfile?.goal === "recomp" ? "Рекомпозиция" : activeGoalLabel}</strong>
+              <strong>{activeGoalLabel}</strong>
               <small>&nbsp;</small>
             </div>
 
@@ -13397,16 +16217,36 @@ function normalizeTelegramUsername(value = "") {
           )}
 
           {isMainDashboard && (
-          <div className={!isMainDashboard && profileProgressAnalysisOpen ? "profileAiCoachInsight open" : "profileAiCoachInsight"}>
+          <div className={`profileAiCoachInsight ${progressInsight.tone}`}>
             <button
               type="button"
               className="profileAiCoachToggle"
               onClick={isMainDashboard ? undefined : () => setProfileProgressAnalysisOpen((prev) => !prev)}
             >
-              <div>
-                <span>Оценка прогресса</span>
-                <h2>{totalWorkouts ? "Ты на правильном пути 💪" : "Пора создать историю прогресса"}</h2>
-                <p>{!isMainDashboard && profileProgressAnalysisOpen ? aiCoachSummary : "Краткая оценка прогресса, замеров и регулярности."}</p>
+              <div className="profileAiCoachSummary">
+                <div
+                  className="profileProgressGauge"
+                  style={{
+                    "--progress-score": progressInsight.score ?? 0,
+                    "--progress-angle": `${-180 + (progressInsight.score ?? 0) * 1.8}deg`
+                  }}
+                  role="img"
+                  aria-label={progressInsight.score === null
+                    ? "Недостаточно данных для оценки прогресса"
+                    : `Общая оценка прогресса ${progressInsight.score} из 100`}
+                >
+                  <div className="profileProgressGaugeDial">
+                    <i />
+                    <strong>{progressInsight.score ?? "—"}</strong>
+                  </div>
+                  <small>из 100</small>
+                </div>
+
+                <div className="profileAiCoachHeadline">
+                  <span>Оценка прогресса</span>
+                  <h2>{progressInsight.scoreLabel}</h2>
+                  <p>{progressInsight.scoreSummary}</p>
+                </div>
               </div>
 
               {!isMainDashboard && <em>{profileProgressAnalysisOpen ? "−" : "+"}</em>}
@@ -13414,8 +16254,11 @@ function normalizeTelegramUsername(value = "") {
 
             {(isMainDashboard || !profileProgressAnalysisOpen) && (
               <div className="profileAiCoachPreview">
-                {aiCoachStatuses.slice(0, 2).map((status) => (
-                  <span key={status.title}>{status.icon} {status.title}: {status.text}</span>
+                {aiCoachStatuses.map((status) => (
+                  <span key={status.title}>
+                    <b>{status.icon} {status.title}</b>
+                    <small>{status.text}</small>
+                  </span>
                 ))}
               </div>
             )}
@@ -13723,62 +16566,6 @@ function normalizeTelegramUsername(value = "") {
           </div>
           )}
 
-          {visibleProfileTab === "settings" && (
-          <>
-          <h1 className="profileSettingsPageTitle">Настройки</h1>
-          <div className={profileWorkoutModeOpen ? "profileWorkoutModeCard profileWorkoutModeSettingsSection open" : "profileWorkoutModeCard profileWorkoutModeSettingsSection"}>
-            <button
-              type="button"
-              className="profileWorkoutModeToggle"
-              onClick={() => setProfileWorkoutModeOpen((prev) => !prev)}
-            >
-              <div>
-                <span>ТРЕНИРОВКИ</span>
-                <strong>
-                  {workoutModePreference.mode === "basic"
-                    ? "Базовые тренировки"
-                    : workoutModePreference.mode === "individual"
-                      ? "Индивидуальный план"
-                      : "Выбор при входе"}
-                </strong>
-                <small>Режим запуска тренировок</small>
-              </div>
-
-              <em>{profileWorkoutModeOpen ? "−" : "+"}</em>
-            </button>
-
-            {profileWorkoutModeOpen && (
-              <div className="profileWorkoutModeExpanded">
-                <div className="profileWorkoutModeActions">
-                  <button
-                    type="button"
-                    className={workoutModePreference.mode === "basic" ? "active" : ""}
-                    onClick={() => saveWorkoutModePreference("basic", true)}
-                  >
-                    Базовые
-                  </button>
-
-                  <button
-                    type="button"
-                    className={workoutModePreference.mode === "individual" ? "active" : ""}
-                    onClick={() => saveWorkoutModePreference("individual", true)}
-                  >
-                    Индивидуальные
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => saveWorkoutModePreference("", false)}
-                  >
-                    Спрашивать
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-          </>
-          )}
-
         </section>
 
         {profileMeasurementsModalOpen && !isMainDashboard && visibleProfileTab === "cabinet" && (
@@ -13903,36 +16690,6 @@ function normalizeTelegramUsername(value = "") {
                   </div>
                 )}
 
-                {latestClientProgressPhoto && previousClientProgressPhoto && (
-                  <div className="cabinetProgressPhotosCompare">
-                    <div className="cabinetProgressPhotosCompareHead">
-                      <strong>Сравнение фотосессий</strong>
-                      <small>
-                        {new Date(`${previousClientProgressPhoto.date || previousClientProgressPhoto.createdAt?.slice(0, 10)}T12:00:00`).toLocaleDateString("ru-RU")}
-                        {" → "}
-                        {new Date(`${latestClientProgressPhoto.date || latestClientProgressPhoto.createdAt?.slice(0, 10)}T12:00:00`).toLocaleDateString("ru-RU")}
-                      </small>
-                    </div>
-                    <div className="cabinetProgressPhotosCompareGrid">
-                      {[
-                        ["Спереди", previousClientProgressPhoto.frontUrl, latestClientProgressPhoto.frontUrl],
-                        ["Сбоку", previousClientProgressPhoto.sideUrl, latestClientProgressPhoto.sideUrl],
-                        ["Со спины", previousClientProgressPhoto.backUrl, latestClientProgressPhoto.backUrl]
-                      ].map(([label, beforeUrl, afterUrl]) => (
-                        beforeUrl && afterUrl ? (
-                          <figure key={label}>
-                            <figcaption>{label}</figcaption>
-                            <div>
-                              <img src={beforeUrl} alt={`${label}: предыдущая фотосессия`} loading="lazy" />
-                              <img src={afterUrl} alt={`${label}: последняя фотосессия`} loading="lazy" />
-                            </div>
-                          </figure>
-                        ) : null
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 <div className="cabinetProgressPhotoSteps">
                   {[
                     ["front", "01", "Спереди"],
@@ -13966,6 +16723,91 @@ function normalizeTelegramUsername(value = "") {
                     {profileProgressPhotoStatus}
                   </p>
                 )}
+
+                {selectedClientProgressPhotoBefore && selectedClientProgressPhotoAfter && (
+                  <details className="cabinetProgressPhotosCompare">
+                    <summary className="cabinetProgressPhotosCompareHead">
+                      <span>
+                        <strong>Сравнить фотосессии</strong>
+                        <small>
+                          {formatClientProgressPhotoDate(selectedClientProgressPhotoBefore)}
+                          {" → "}
+                          {formatClientProgressPhotoDate(selectedClientProgressPhotoAfter)}
+                        </small>
+                      </span>
+                      <i aria-hidden="true">⌄</i>
+                    </summary>
+
+                    <div className="cabinetProgressPhotosCompareContent">
+                      <div className="cabinetProgressPhotosCompareControls">
+                        {[
+                          ["Раньше", 0],
+                          ["Позже", 1]
+                        ].map(([label, slot]) => (
+                          <label key={slot}>
+                            <span>{label}</span>
+                            <select
+                              value={profileProgressPhotoCompareIds[slot]}
+                              onChange={(event) => setProfileProgressPhotoCompareIds((current) => {
+                                const next = [...current];
+                                next[slot] = event.target.value;
+                                return next;
+                              })}
+                            >
+                              {clientProgressPhotos.map((photo) => (
+                                <option
+                                  key={photo.id}
+                                  value={photo.id}
+                                  disabled={profileProgressPhotoCompareIds[slot === 0 ? 1 : 0] === photo.id}
+                                >
+                                  {formatClientProgressPhotoDate(photo)}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                        ))}
+                      </div>
+
+                      <div className="cabinetProgressPhotosCompareTabs" role="tablist" aria-label="Ракурс фотографии">
+                        {progressPhotoCompareViews.map((view) => (
+                          <button
+                            type="button"
+                            role="tab"
+                            aria-selected={profileProgressPhotoCompareView === view.id}
+                            className={profileProgressPhotoCompareView === view.id ? "active" : ""}
+                            onClick={() => setProfileProgressPhotoCompareView(view.id)}
+                            key={view.id}
+                          >
+                            {view.label}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="cabinetProgressPhotosCompareStage">
+                        {[
+                          ["Раньше", selectedClientProgressPhotoBefore],
+                          ["Позже", selectedClientProgressPhotoAfter]
+                        ].map(([label, photo]) => (
+                          <figure key={`${label}_${photo?.id || ""}`}>
+                            <figcaption>
+                              <span>{label}</span>
+                              <strong>{formatClientProgressPhotoDate(photo)}</strong>
+                            </figcaption>
+                            {photo?.[activeProgressPhotoCompareView.urlKey] ? (
+                              <img
+                                src={photo[activeProgressPhotoCompareView.urlKey]}
+                                alt={`${activeProgressPhotoCompareView.label}: ${label.toLowerCase()}`}
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="cabinetProgressPhotosCompareMissing">Нет фото</div>
+                            )}
+                          </figure>
+                        ))}
+                      </div>
+                    </div>
+                  </details>
+                )}
               </div>
 
               <button
@@ -13995,45 +16837,327 @@ function normalizeTelegramUsername(value = "") {
             >
               <header className="cabinetUtilityModalHead">
                 <div>
-                  <span>ЛИЧНЫЙ ПРОГРЕСС</span>
-                  <h2 id="cabinetProgressModalTitle">Прогресс</h2>
+                  <span>ТРЕНИРОВКИ</span>
+                  <h2 id="cabinetProgressModalTitle">Календарь</h2>
                 </div>
                 <button
                   type="button"
-                  aria-label="Закрыть прогресс"
+                  aria-label="Закрыть календарь тренировок"
                   onClick={() => setProfileProgressModalOpen(false)}
                 >
                   ×
                 </button>
               </header>
 
-              <div className="cabinetUtilityModalBody">
-                <p className="cabinetUtilityModalIntro">
-                  История выполненных тренировок и результатов.
-                </p>
+              <div className="cabinetUtilityModalBody" ref={profileSettingsModalBodyRef}>
+                <div className="cabinetWorkoutCalendar">
+                  <div className="cabinetWorkoutCalendarNav">
+                    <button
+                      type="button"
+                      onClick={() => shiftProfileWorkoutCalendarMonth(-1)}
+                      aria-label="Предыдущий месяц"
+                    >
+                      ‹
+                    </button>
+                    <strong>
+                      {workoutCalendarMonthDate.toLocaleDateString("ru-RU", {
+                        month: "long",
+                        year: "numeric"
+                      })}
+                    </strong>
+                    <button
+                      type="button"
+                      onClick={() => shiftProfileWorkoutCalendarMonth(1)}
+                      aria-label="Следующий месяц"
+                    >
+                      ›
+                    </button>
+                  </div>
 
-                <div className="progressHubOverview profileProgressTabOverview">
-                  <button
-                    type="button"
-                    className="progressHubCard history"
-                    onClick={() => {
-                      setProfileProgressModalOpen(false);
-                      openProgressHistory();
-                    }}
-                  >
-                    <span className="progressHubCardIcon">🗓️</span>
-                    <span className="progressHubCardText">
-                      <small>РЕЗУЛЬТАТЫ</small>
-                      <strong>История тренировок</strong>
-                      <em>{lastWorkout ? `${history.length} тренировок сохранено` : "История пока пуста"}</em>
-                    </span>
-                    <i>›</i>
-                  </button>
+                  <div className="cabinetWorkoutCalendarPlanner">
+                    <div>
+                      <strong>
+                        {profileWorkoutCalendarEditing ? "Выбери дни тренировок" : "План на месяц"}
+                      </strong>
+                      <small>
+                        {profileWorkoutCalendarEditing
+                          ? "Нажимай на даты текущего месяца"
+                          : `${profileWorkoutScheduledDates.filter((dateKey) => dateKey.startsWith(profileWorkoutCalendarMonth)).length} дней запланировано`}
+                      </small>
+                    </div>
+                    {!profileWorkoutCalendarEditing && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setProfileWorkoutCalendarDraftDates(profileWorkoutScheduledDates);
+                          setProfileWorkoutCalendarEditing(true);
+                          setProfileWorkoutCalendarStatus("");
+                        }}
+                      >
+                        Изменить
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="cabinetWorkoutCalendarWeekdays" aria-hidden="true">
+                    {["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((day) => (
+                      <span key={day}>{day}</span>
+                    ))}
+                  </div>
+
+                  <div className="cabinetWorkoutCalendarGrid">
+                    {workoutCalendarDays.map((day) => {
+                      const statusClass = ["missed", "completed_off_date", "completed", "shifted", "planned"]
+                        .find((status) => day.scheduleEntries.some((entry) => entry.status === status));
+                      const hasHistoryWorkouts = !profileWorkoutCalendarEditing && day.workouts.length > 0;
+                      const visualStatus = statusClass === "completed_off_date"
+                        ? "completedOffDate"
+                        : statusClass || (hasHistoryWorkouts ? "historyCompleted" : "");
+                      const entryLabel = day.scheduleEntries.map((entry) => `№${entry.order}`).join(", ");
+                      const historyLabel = day.workouts.length > 1 ? `${day.workouts.length}×` : "✓";
+
+                      return (
+                        <button
+                          type="button"
+                          key={day.key}
+                          className={[
+                            day.isCurrentMonth ? "" : "outside",
+                            day.isToday ? "today" : "",
+                            day.scheduleEntries.length ? "hasWorkout" : "",
+                            day.isScheduled ? "scheduled" : "",
+                            hasHistoryWorkouts ? "hasHistoryWorkout" : "",
+                            visualStatus || "",
+                            profileWorkoutCalendarEditing ? "editing" : "",
+                            day.key === profileWorkoutCalendarDate ? "selected" : ""
+                          ].filter(Boolean).join(" ")}
+                          disabled={profileWorkoutCalendarEditing && !day.isCurrentMonth}
+                          onClick={() => {
+                            setProfileWorkoutCalendarDate(day.key);
+                            if (profileWorkoutCalendarEditing && day.isCurrentMonth) {
+                              toggleProfileWorkoutScheduledDate(day.key);
+                            }
+                          }}
+                          aria-label={[
+                            day.date.toLocaleDateString("ru-RU"),
+                            entryLabel ? `тренировка ${entryLabel}` : "",
+                            day.workouts.length ? `тренировок выполнено: ${day.workouts.length}` : ""
+                          ].filter(Boolean).join(", ")}
+                        >
+                          <span>{day.date.getDate()}</span>
+                          {day.scheduleEntries.length > 0 && <i>{entryLabel}</i>}
+                          {!day.scheduleEntries.length && hasHistoryWorkouts && <i>{historyLabel}</i>}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="cabinetWorkoutCalendarLegend" aria-label="Легенда статусов тренировок">
+                    <span><i className="planned" />План</span>
+                    <span><i className="completed" />В срок</span>
+                    <span><i className="historyCompleted" />Прошлые</span>
+                    <span><i className="completedOffDate" />Другой день</span>
+                    <span><i className="missed" />Пропущена</span>
+                    <span><i className="shifted" />Смещена</span>
+                  </div>
+
+                  {profileWorkoutCalendarEditing && (
+                    <div className="cabinetWorkoutCalendarEditActions">
+                      <button
+                        type="button"
+                        className="secondary"
+                        disabled={profileWorkoutCalendarSaving}
+                        onClick={() => {
+                          setProfileWorkoutCalendarDraftDates(profileWorkoutScheduledDates);
+                          setProfileWorkoutCalendarEditing(false);
+                          setProfileWorkoutCalendarStatus("");
+                        }}
+                      >
+                        Отмена
+                      </button>
+                      <button
+                        type="button"
+                        disabled={profileWorkoutCalendarSaving}
+                        onClick={saveProfileWorkoutCalendar}
+                      >
+                        {profileWorkoutCalendarSaving ? "Сохраняю..." : "Сохранить"}
+                      </button>
+                    </div>
+                  )}
+
+                  {profileWorkoutCalendarStatus && (
+                    <p className={profileWorkoutCalendarStatus.includes("сохранены") ? "cabinetWorkoutCalendarStatus success" : "cabinetWorkoutCalendarStatus"}>
+                      {profileWorkoutCalendarStatus}
+                    </p>
+                  )}
+
+                  <div className="cabinetWorkoutCalendarDay">
+                    <div>
+                      <span>Выбранный день</span>
+                      <strong>
+                        {new Date(`${profileWorkoutCalendarDate}T12:00:00`).toLocaleDateString("ru-RU", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric"
+                        })}
+                      </strong>
+                      {(profileWorkoutCalendarEditing
+                        ? profileWorkoutCalendarDraftDates
+                        : profileWorkoutScheduledDates
+                      ).includes(profileWorkoutCalendarDate) && (
+                        <em>Тренировка запланирована</em>
+                      )}
+                    </div>
+
+                    {selectedWorkoutCalendarItems.length ? (
+                      selectedWorkoutCalendarItems.map((item) => (
+                        <button
+                          type="button"
+                          key={item.id || `${item.date}_${item.workout}`}
+                          onClick={() => openCabinetWorkoutHistory(item.id)}
+                        >
+                          <span aria-hidden="true">🏋️</span>
+                          <div>
+                            <strong>{item.workout || "Тренировка"}</strong>
+                            <small>
+                              {new Date(getTimestampValue(item.date)).toLocaleTimeString("ru-RU", {
+                                hour: "2-digit",
+                                minute: "2-digit"
+                              })}
+                              {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
+                            </small>
+                          </div>
+                          <i>›</i>
+                        </button>
+                      ))
+                    ) : (
+                      <p>В этот день тренировок нет.</p>
+                    )}
+                  </div>
                 </div>
               </div>
             </section>
           </div>
         )}
+
+        {profileWorkoutHistoryModalOpen && !isMainDashboard && visibleProfileTab === "cabinet" && (
+          <div
+            className="workoutModeModalOverlay"
+            role="presentation"
+            onClick={() => setProfileWorkoutHistoryModalOpen(false)}
+          >
+            <section
+              className="workoutModeModal workoutHistoryModal cabinetWorkoutHistoryModal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="cabinetWorkoutHistoryModalTitle"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <header className="workoutModeModalHeader">
+                <div>
+                  <small>{profileWorkoutHistoryProgramScope ? "НАЗНАЧЕННАЯ ПРОГРАММА" : "ЛИЧНЫЙ КАБИНЕТ"}</small>
+                  <h2 id="cabinetWorkoutHistoryModalTitle">
+                    {profileWorkoutHistoryProgramScope?.assignedProgramName || "История тренировок"}
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  aria-label="Закрыть историю тренировок"
+                  onClick={() => setProfileWorkoutHistoryModalOpen(false)}
+                >
+                  ×
+                </button>
+              </header>
+
+              <div className="workoutHistoryModalList">
+                {historyLoading && <p>Загрузка истории...</p>}
+
+                {!historyLoading && profileWorkoutHistoryItems.map((item) => {
+                  const isOpen = openHistoryKey === item.id;
+                  const itemDate = getTimestampValue(item.date);
+
+                  return (
+                    <div
+                      className={`cabinetWorkoutHistoryItem ${isOpen ? "open" : ""}`}
+                      key={item.id || `${item.date}_${item.workout}`}
+                      ref={(node) => {
+                        if (node) cabinetWorkoutHistoryItemRefs.current.set(item.id, node);
+                        else cabinetWorkoutHistoryItemRefs.current.delete(item.id);
+                      }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => toggleCabinetWorkoutHistory(item.id)}
+                        aria-expanded={isOpen}
+                      >
+                        <span aria-hidden="true">{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
+                        <div>
+                          <strong>{item.workout || "Тренировка"}</strong>
+                          <small>
+                            {itemDate
+                              ? new Date(itemDate).toLocaleDateString("ru-RU", {
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric"
+                                }).replace(".", "")
+                              : "Без даты"}
+                            {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
+                          </small>
+                        </div>
+                        <i>{isOpen ? "⌃" : "›"}</i>
+                      </button>
+
+                      {isOpen && (
+                        <div className="cabinetWorkoutHistoryDetails">
+                          {(item.exercises || []).map((exercise, index) => (
+                            <div className="cabinetWorkoutHistoryExercise" key={`${exercise.name}_${index}`}>
+                              <div className="cabinetWorkoutHistoryExerciseHead">
+                                <strong>{exercise.name}</strong>
+                                <small>{exercise.sets?.length || 0} подходов</small>
+                              </div>
+                              <div className="cabinetWorkoutHistorySets">
+                                {(exercise.sets || []).map((set, setIndex) => (
+                                  <span key={setIndex}>
+                                    <b>{set.set || setIndex + 1}</b>
+                                    {set.reps === "" || set.reps == null ? "—" : set.reps} повт.
+                                    <i>
+                                      {set.weight === "" || set.weight == null
+                                        ? "без веса"
+                                        : `${set.weight} кг`}
+                                    </i>
+                                  </span>
+                                ))}
+                                {!exercise.sets?.length && <small>Подходы не сохранены</small>}
+                              </div>
+                            </div>
+                          ))}
+                          {!item.exercises?.length && <p>Данные упражнений не сохранены.</p>}
+                          <button
+                            type="button"
+                            className="cabinetWorkoutHistoryDelete"
+                            onClick={() => requestDeleteOwnHistoryWorkout(item)}
+                            disabled={historyDeletingId === item.id}
+                          >
+                            {historyDeletingId === item.id ? "Удаляю..." : "Удалить тренировку"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {!historyLoading && profileWorkoutHistoryItems.length === 0 && (
+                  <p>
+                    {profileWorkoutHistoryProgramScope
+                      ? "В этой программе завершённых тренировок пока нет."
+                      : "Завершённые тренировки появятся здесь."}
+                  </p>
+                )}
+              </div>
+            </section>
+          </div>
+        )}
+
+        {renderHistoryDeleteConfirm()}
 
         {profileSettingsModalOpen && !isMainDashboard && visibleProfileTab === "cabinet" && (
           <div
@@ -14042,7 +17166,7 @@ function normalizeTelegramUsername(value = "") {
             onClick={() => setProfileSettingsModalOpen(false)}
           >
             <section
-              className={`cabinetUtilityModal cabinetSettingsModal ${profileSettingsModalSection === "profile" ? "" : "compact"}`}
+              className={`cabinetUtilityModal cabinetSettingsModal ${profileSettingsModalSection === "settings" ? "compact" : ""}`}
               role="dialog"
               aria-modal="true"
               aria-labelledby="cabinetSettingsModalTitle"
@@ -14052,13 +17176,21 @@ function normalizeTelegramUsername(value = "") {
                 <div>
                   <span>ЛИЧНЫЙ КАБИНЕТ</span>
                   <h2 id="cabinetSettingsModalTitle">
-                    {profileSettingsModalSection === "profile" ? "Профиль" : "Настройки"}
+                    {profileSettingsModalSection === "account"
+                      ? "Аккаунт"
+                      : profileSettingsModalSection === "profile"
+                        ? "Профиль"
+                        : "Настройки"}
                   </h2>
                 </div>
                 <button
                   type="button"
                   aria-label={`Закрыть ${
-                    profileSettingsModalSection === "profile" ? "профиль" : "настройки"
+                    profileSettingsModalSection === "account"
+                      ? "аккаунт"
+                      : profileSettingsModalSection === "profile"
+                        ? "профиль"
+                        : "настройки"
                   }`}
                   onClick={() => setProfileSettingsModalOpen(false)}
                 >
@@ -14067,51 +17199,89 @@ function normalizeTelegramUsername(value = "") {
               </header>
 
               <div className="cabinetUtilityModalBody">
-                {profileSettingsModalSection === "settings" && !canUseTrainerFeatures() && (
-                <div className={profileWorkoutModeOpen ? "profileWorkoutModeCard profileWorkoutModeSettingsSection open" : "profileWorkoutModeCard profileWorkoutModeSettingsSection"}>
+                {profileSettingsModalSection === "account" && (
+                <section className="profileDashboardCard profileAccountSection">
+                  <div className="profileAccountAvatarEditor">
+                    <div className="profileAccountAvatarPreview">
+                      {profileAccountAvatarPreview || profileAvatarUrl ? (
+                        <img src={profileAccountAvatarPreview || profileAvatarUrl} alt="" />
+                      ) : (
+                        <span>👤</span>
+                      )}
+                    </div>
+                    <label>
+                      <strong>Изменить аватар</strong>
+                      <small>JPG, PNG или WEBP</small>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0] || null;
+                          openProfileAvatarCrop(file);
+                          event.target.value = "";
+                        }}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="profileAccountFields">
+                    <label>
+                      <span>Имя</span>
+                      <input
+                        value={profileAccountDraft.displayName}
+                        onChange={(event) => {
+                          setProfileAccountDraft((current) => ({ ...current, displayName: event.target.value }));
+                          setProfileAccountStatus("");
+                        }}
+                        placeholder="Твоё имя"
+                      />
+                    </label>
+                    <label>
+                      <span>Почта</span>
+                      <input
+                        type="email"
+                        value={profileAccountDraft.email}
+                        onChange={(event) => {
+                          setProfileAccountDraft((current) => ({ ...current, email: event.target.value }));
+                          setProfileAccountStatus("");
+                        }}
+                        placeholder="name@example.com"
+                      />
+                    </label>
+                  </div>
+
                   <button
                     type="button"
-                    className="profileWorkoutModeToggle"
-                    onClick={() => setProfileWorkoutModeOpen((prev) => !prev)}
+                    className="profileAccountPasswordButton"
+                    onClick={sendProfilePasswordReset}
                   >
-                    <div>
-                      <span>ТРЕНИРОВКИ</span>
-                      <strong>Режим запуска тренировок</strong>
-                      <small>
-                        {workoutModePreference.mode === "basic"
-                          ? "Базовые тренировки"
-                          : workoutModePreference.mode === "individual"
-                            ? "Индивидуальный план"
-                            : "Выбор при входе"}
-                      </small>
-                    </div>
-                    <em>{profileWorkoutModeOpen ? "−" : "+"}</em>
+                    <span>🔐</span>
+                    <span>
+                      <strong>Изменить пароль</strong>
+                      <small>Получить безопасную ссылку на почту</small>
+                    </span>
+                    <i>›</i>
                   </button>
 
-                  {profileWorkoutModeOpen && (
-                    <div className="profileWorkoutModeExpanded">
-                      <div className="profileWorkoutModeActions">
-                        <button
-                          type="button"
-                          className={workoutModePreference.mode === "basic" ? "active" : ""}
-                          onClick={() => saveWorkoutModePreference("basic", true)}
-                        >
-                          Базовые
-                        </button>
-                        <button
-                          type="button"
-                          className={workoutModePreference.mode === "individual" ? "active" : ""}
-                          onClick={() => saveWorkoutModePreference("individual", true)}
-                        >
-                          Индивидуальные
-                        </button>
-                        <button type="button" onClick={() => saveWorkoutModePreference("", false)}>
-                          Спрашивать
-                        </button>
-                      </div>
-                    </div>
+                  {profileAccountStatus && (
+                    <p className={profileAccountStatus.includes("сохранены") || profileAccountStatus.includes("отправлена") ? "profileAccountStatus success" : "profileAccountStatus"}>
+                      {profileAccountStatus}
+                    </p>
                   )}
-                </div>
+
+                  <button
+                    type="button"
+                    className="profileBodySaveBtn"
+                    disabled={profileAccountSaving}
+                    onClick={saveProfileAccount}
+                  >
+                    {profileAccountSaving ? "Сохраняю..." : "Сохранить аккаунт"}
+                  </button>
+
+                  <button type="button" className="profileLogoutBtn profileAccountLogout" onClick={logout}>
+                    Выйти из аккаунта
+                  </button>
+                </section>
                 )}
 
                 {profileSettingsModalSection === "profile" && (
@@ -14242,12 +17412,81 @@ function normalizeTelegramUsername(value = "") {
                       <i>›</i>
                     </button>
 
-                    <button type="button" className="profileLogoutBtn" onClick={logout}>
-                      Выйти из аккаунта
-                    </button>
                   </div>
                 </section>
                 )}
+              </div>
+            </section>
+          </div>
+        )}
+
+        {profileAvatarCropOpen && (
+          <div className="profileAvatarCropOverlay" role="presentation" onClick={closeProfileAvatarCrop}>
+            <section
+              className="profileAvatarCropModal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="profileAvatarCropTitle"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <header>
+                <div>
+                  <span>АВАТАР</span>
+                  <h2 id="profileAvatarCropTitle">Выбери область фото</h2>
+                </div>
+                <button type="button" aria-label="Закрыть редактор аватара" onClick={closeProfileAvatarCrop}>×</button>
+              </header>
+
+              <div
+                className="profileAvatarCropViewport"
+                onPointerDown={startProfileAvatarCropDrag}
+                onPointerMove={moveProfileAvatarCrop}
+                onPointerUp={endProfileAvatarCropDrag}
+                onPointerCancel={endProfileAvatarCropDrag}
+              >
+                <img
+                  ref={profileAvatarCropImageRef}
+                  src={profileAvatarCropSource}
+                  alt=""
+                  draggable="false"
+                  onLoad={(event) => {
+                    setProfileAvatarCropSize({
+                      width: event.currentTarget.naturalWidth,
+                      height: event.currentTarget.naturalHeight
+                    });
+                  }}
+                  style={{
+                    width: profileAvatarCropSize.width
+                      ? `${profileAvatarCropSize.width * Math.max(240 / profileAvatarCropSize.width, 240 / profileAvatarCropSize.height) * profileAvatarCropZoom}px`
+                      : "auto",
+                    height: profileAvatarCropSize.height
+                      ? `${profileAvatarCropSize.height * Math.max(240 / profileAvatarCropSize.width, 240 / profileAvatarCropSize.height) * profileAvatarCropZoom}px`
+                      : "auto",
+                    transform: `translate(calc(-50% + ${profileAvatarCropOffset.x}px), calc(-50% + ${profileAvatarCropOffset.y}px))`
+                  }}
+                />
+                <div className="profileAvatarCropMask" aria-hidden="true" />
+              </div>
+
+              <label className="profileAvatarCropZoom">
+                <span>−</span>
+                <input
+                  type="range"
+                  min="1"
+                  max="3"
+                  step="0.01"
+                  value={profileAvatarCropZoom}
+                  onChange={(event) => changeProfileAvatarCropZoom(event.target.value)}
+                  aria-label="Масштаб аватара"
+                />
+                <span>＋</span>
+              </label>
+
+              <p>Перемещай фото пальцем, чтобы лицо оказалось внутри круга.</p>
+
+              <div className="profileAvatarCropActions">
+                <button type="button" className="secondary" onClick={closeProfileAvatarCrop}>Отмена</button>
+                <button type="button" onClick={applyProfileAvatarCrop}>Готово</button>
               </div>
             </section>
           </div>
@@ -14392,7 +17631,7 @@ function normalizeTelegramUsername(value = "") {
             <div className="profileNutritionInlinePlan">
               <div className="profileNutritionInlinePlanHead">
                 <span>ВЫБРАТЬ ПЛАН</span>
-                <strong>{activeGoalLabel}</strong>
+                <strong>{getAiNutritionGoalLabel(aiNutritionProfileDraft.goal || activeProfile?.goal || "recomp")}</strong>
               </div>
 
               <div className="profileGoalPicker">
@@ -14423,10 +17662,10 @@ function normalizeTelegramUsername(value = "") {
               </div>
 
               <div className="profileMacroGrid">
-                <div><span>Ккал</span><strong>{Math.round(profileMacros.calories || nutrition.goals.calories)}</strong></div>
-                <div><span>Белки</span><strong>{Math.round(profileMacros.protein || nutrition.goals.protein)} г</strong></div>
-                <div><span>Жиры</span><strong>{Math.round(profileMacros.fat || nutrition.goals.fat)} г</strong></div>
-                <div><span>Угл.</span><strong>{Math.round(profileMacros.carbs || nutrition.goals.carbs)} г</strong></div>
+                <div><span>Ккал</span><strong>{Math.round(profileNutritionDraftMacros.calories || nutrition.goals.calories)}</strong></div>
+                <div><span>Белки</span><strong>{Math.round(profileNutritionDraftMacros.protein || nutrition.goals.protein)} г</strong></div>
+                <div><span>Жиры</span><strong>{Math.round(profileNutritionDraftMacros.fat || nutrition.goals.fat)} г</strong></div>
+                <div><span>Угл.</span><strong>{Math.round(profileNutritionDraftMacros.carbs || nutrition.goals.carbs)} г</strong></div>
               </div>
 
               <button
@@ -14723,6 +17962,8 @@ function normalizeTelegramUsername(value = "") {
         )}
 
         {visibleProfileTab === "settings" && (
+        <>
+        <h1 className="profileSettingsPageTitle">Настройки</h1>
         <section className="profileDashboardCard profileAppSettingsSection">
           <div className="profileSettingsActions">
             <button
@@ -14760,42 +18001,10 @@ function normalizeTelegramUsername(value = "") {
               <i>›</i>
             </button>
 
-            <button type="button" className="profileLogoutBtn" onClick={logout}>
-              Выйти из аккаунта
-            </button>
           </div>
         </section>
+        </>
         )}
-      </div>
-    );
-  }
-
-  if (page === "progress") {
-    const latestProgressWorkout = history[0] || null;
-
-    return (
-      <div className="progressHubPage">
-        <main className="progressHubShell">
-          <header className="progressHubHeader">
-            <span>ЛИЧНЫЙ ПРОГРЕСС</span>
-            <h1>Прогресс</h1>
-            <p>История выполненных тренировок и результатов.</p>
-          </header>
-
-          <section className="progressHubOverview">
-            <button type="button" className="progressHubCard history" onClick={openProgressHistory}>
-              <span className="progressHubCardIcon">🗓️</span>
-              <span className="progressHubCardText">
-                <small>РЕЗУЛЬТАТЫ</small>
-                <strong>История тренировок</strong>
-                <em>{latestProgressWorkout ? `${history.length} тренировок сохранено` : "История пока пуста"}</em>
-              </span>
-              <i>›</i>
-            </button>
-          </section>
-        </main>
-
-        {renderProgressBottomBar("progress", "main")}
       </div>
     );
   }
@@ -14995,34 +18204,9 @@ function normalizeTelegramUsername(value = "") {
           </div>
         )}
 
-        {historyDeleteCandidate && (
-          <div className="historyDeleteOverlay" onClick={closeHistoryDeleteConfirm}>
-            <div className="historyDeleteModal" onClick={(event) => event.stopPropagation()}>
-              <div className="historyDeleteIcon">⌫</div>
-              <h3>Удалить тренировку?</h3>
-              <p>
-                {getHistoryWorkoutParts(historyDeleteCandidate.workout).title}
-                <span>{formatHistoryCardDate(historyDeleteCandidate.date, true)} · действие нельзя отменить</span>
-              </p>
+        {renderHistoryDeleteConfirm()}
 
-              <div className="historyDeleteActions">
-                <button type="button" onClick={closeHistoryDeleteConfirm} disabled={Boolean(historyDeletingId)}>
-                  Отмена
-                </button>
-                <button
-                  type="button"
-                  className="danger"
-                  onClick={confirmDeleteOwnHistoryWorkout}
-                  disabled={Boolean(historyDeletingId)}
-                >
-                  {historyDeletingId ? "Удаляю..." : "Удалить"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {renderProgressBottomBar("history")}
+        {renderClientMainBottomBar("workouts")}
       </div>
     );
   }
@@ -15045,6 +18229,7 @@ function normalizeTelegramUsername(value = "") {
       lastWorkoutAt: "",
       workouts7: 0,
       workouts30: 0,
+      workoutDateKeysCurrentWeek: null,
       lastNutritionAt: "",
       nutritionDays7: 0,
       averageCalories7: null,
@@ -15152,8 +18337,19 @@ function normalizeTelegramUsername(value = "") {
     const weightPoints = getAdminWeightPoints(selectedClient || {});
     const badFeedbackCount = adminClientHistory.filter((item) => item.postWorkoutFeedback?.id === "bad").length;
     const recommendations = getAdminRecommendations(selectedClient || {}, adminClientHistory, adminClientNutrition);
-    const aiPlan = selectedClient?.aiNutritionPlan || selectedClient?.nutritionPlan || null;
-    const aiWeek = aiPlan?.weeks?.[0] || null;
+    const selectedNutritionFallbackGoals = selectedClient?.nutritionGoals || adminClientNutrition?.goals || {};
+    const selectedEffectiveNutritionGoals = getClientEffectiveNutritionGoals(
+      selectedClient || {},
+      adminClientNutrition,
+      selectedNutritionFallbackGoals
+    );
+    const trainerNutritionPlanOptions = buildClientNutritionPresetOptions(
+      selectedClient || {},
+      adminClientNutrition,
+      adminClientHistory
+    );
+    const aiPlan = getClientNutritionDisplayPlan(selectedClient || {}, adminClientNutrition, selectedNutritionFallbackGoals);
+    const aiWeek = getAiNutritionWeekForDate(aiPlan) || aiPlan?.weeks?.[0] || null;
     const maxCalories = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.calories));
     const maxProtein = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.protein));
     const maxWeight = Math.max(1, ...weightPoints.map((point) => point.weight));
@@ -15167,6 +18363,110 @@ function normalizeTelegramUsername(value = "") {
       month: "long",
       year: "numeric"
     });
+
+    if (isTrainerNextWorkspace()) {
+      const trainerNextSummaries = Object.fromEntries(
+        usersList.map((client) => {
+          const summary = getDashboardClientSummary(client);
+          return [client.id, {
+            ...summary,
+            status: getClientActivityStatus(summary)
+          }];
+        })
+      );
+      const trainerNextSelectedSummary = selectedClient
+        ? getDashboardClientSummary(selectedClient)
+        : {};
+      const trainerNextMode = trainerNextSection === "clients"
+        ? "clients"
+        : trainerNextSection === "client" && selectedClient
+          ? "client"
+          : trainerNextSection === "cabinet"
+            ? "cabinet"
+            : ["messages", "analytics", "notifications"].includes(trainerNextSection)
+              ? trainerNextSection
+              : "dashboard";
+      const trainerNextActiveSection = trainerNextMode === "client" ? "clients" : trainerNextMode === "cabinet" ? "more" : trainerNextMode;
+
+      return (
+        <TrainerWorkspace
+          appVersion={APP_VERSION}
+          mode={trainerNextMode}
+          activeSection={trainerNextActiveSection}
+          onNavigate={navigateTrainerNext}
+          onRefresh={refreshPage}
+          trainerName={adminGreetingName}
+          trainerAvatar={telegramProfile.avatarUrl}
+          clients={usersList}
+          clientSummaries={trainerNextSummaries}
+          summariesLoading={trainerClientSummariesLoading}
+          counts={{
+            active: trainerStatusCounts.active,
+            attention: attentionCount
+          }}
+          selectedClient={selectedClient}
+          selectedProfile={{
+            ...selectedProfile,
+            goalLabel: getAdminClientGoalLabel(selectedProfile?.goal)
+          }}
+          selectedSummary={{
+            ...trainerNextSelectedSummary,
+            status: getClientActivityStatus(trainerNextSelectedSummary)
+          }}
+          activeClientTab={adminUsersSelectedTab}
+          onClientTabChange={(tab) => {
+            setAdminUsersSelectedTab(tab);
+            setTrainerNextSection("client");
+          }}
+          onOpenClient={openTrainerNextClient}
+          onCloseClient={() => {
+            setAdminClientPageOpen(false);
+            setTrainerNextSection("clients");
+          }}
+          onCreateClient={() => setAdminCreateClientModalOpen(true)}
+          createClientState={getTrainerNextCreateClientState()}
+          measurements={adminClientMeasurements}
+          history={adminClientHistory}
+          nutritionDays={clientNutritionDays}
+          nutritionGoals={selectedEffectiveNutritionGoals}
+          nutritionPlanOptions={trainerNutritionPlanOptions}
+          photos={adminClientProgressPhotos}
+          tasks={adminClientTasks}
+          trainerNote={adminTrainerNote}
+          onGenerateNutritionPlan={() => setAdminClientStatus("Параметры AI-плана открыты в разделе питания.")}
+          onSaveNutritionPlan={saveTrainerClientNutritionPlan}
+          onSaveNotifications={saveTrainerClientNotificationSettings}
+          onTestNotification={() => sendAdminTestWorkoutReminder(selectedClient)}
+          onConnectTelegram={openClientTelegramConnection}
+          onSendMessage={sendTrainerClientMessage}
+          onClientAction={handleTrainerClientAction}
+          workouts={sortWorkoutDays(plan.workouts || [])}
+          exerciseLibrary={getTrainerNextExerciseLibraryItems()}
+          programTemplates={adminTrainingTemplates}
+          selectedProgramId={adminSelectedTemplateId}
+          onSelectProgram={setAdminSelectedTemplateId}
+          onAssignProgram={() => assignSavedProgramToClient(selectedClient?.id, adminSelectedTemplateId)}
+          onSaveWorkoutSchedule={(dates) => saveTrainerClientWorkoutSchedule(dates, selectedClient)}
+          programStatus={adminClientStatus}
+          onUpdateWorkout={updateTrainerNextWorkout}
+          onUpdateExercise={updateTrainerNextExercise}
+          onUpdateExerciseSet={updateTrainerNextExerciseSet}
+          onAddExerciseSet={addTrainerNextExerciseSet}
+          onRemoveExerciseSet={removeTrainerNextExerciseSet}
+          onAddExercise={addTrainerNextExercise}
+          onRemoveExercise={removeTrainerNextExercise}
+          onDuplicateExercise={duplicateTrainerNextExercise}
+          onMoveExercise={moveTrainerNextExercise}
+          onUploadExerciseVideo={uploadTrainerNextExerciseVideo}
+          exerciseVideoUploadingId={adminExerciseVideoUploadingId}
+          onAddDay={addTrainerNextWorkoutDay}
+          onDuplicateDay={duplicateTrainerNextWorkoutDay}
+          onRemoveDay={removeTrainerNextWorkoutDay}
+          onSaveWorkouts={saveWorkoutsToFirebase}
+          onLogout={logout}
+        />
+      );
+    }
 
     return (
       <div className="adminV3Shell">
@@ -15935,8 +19235,19 @@ function normalizeTelegramUsername(value = "") {
     const clientToday = clientNutritionDays[0] || { totals: { calories: 0, protein: 0, fat: 0, carbs: 0 }, foods: [], score: "—" };
     const workoutProgress = getAdminWorkoutProgressList(adminClientHistory);
     const recommendations = getAdminRecommendations(selectedClient || {}, adminClientHistory, adminClientNutrition);
-    const aiPlan = selectedClient?.aiNutritionPlan || selectedClient?.nutritionPlan || null;
-    const aiWeek = aiPlan?.weeks?.[0] || null;
+    const selectedNutritionFallbackGoals = selectedClient?.nutritionGoals || adminClientNutrition?.goals || {};
+    const selectedEffectiveNutritionGoals = getClientEffectiveNutritionGoals(
+      selectedClient || {},
+      adminClientNutrition,
+      selectedNutritionFallbackGoals
+    );
+    const trainerNutritionPlanOptions = buildClientNutritionPresetOptions(
+      selectedClient || {},
+      adminClientNutrition,
+      adminClientHistory
+    );
+    const aiPlan = getClientNutritionDisplayPlan(selectedClient || {}, adminClientNutrition, selectedNutritionFallbackGoals);
+    const aiWeek = getAiNutritionWeekForDate(aiPlan) || aiPlan?.weeks?.[0] || null;
     const lastWorkout = adminClientHistory[0];
     const maxCalories = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.calories));
     const maxProtein = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.protein));
@@ -15967,10 +19278,10 @@ function normalizeTelegramUsername(value = "") {
     const nutritionMonthAverageDays = Math.max(1, nutritionMonthDaysInPlan.length);
     const nutritionMonthAverageCalories = nutritionMonthCalories / nutritionMonthAverageDays;
     const nutritionMonthAverageProtein = nutritionMonthProtein / nutritionMonthAverageDays;
-    const dailyCalorieGoal = Number(aiWeek?.calories || selectedClient?.nutritionGoals?.calories || adminClientNutrition?.goals?.calories || defaultNutritionState.goals.calories) || 2400;
-    const dailyProteinGoal = Number(aiWeek?.protein || selectedClient?.nutritionGoals?.protein || adminClientNutrition?.goals?.protein || defaultNutritionState.goals.protein) || 160;
-    const dailyFatGoal = Number(aiWeek?.fat || selectedClient?.nutritionGoals?.fat || adminClientNutrition?.goals?.fat || defaultNutritionState.goals.fat) || 75;
-    const dailyCarbsGoal = Number(aiWeek?.carbs || selectedClient?.nutritionGoals?.carbs || adminClientNutrition?.goals?.carbs || defaultNutritionState.goals.carbs) || 260;
+    const dailyCalorieGoal = Number(selectedEffectiveNutritionGoals.calories) || 2400;
+    const dailyProteinGoal = Number(selectedEffectiveNutritionGoals.protein) || 160;
+    const dailyFatGoal = Number(selectedEffectiveNutritionGoals.fat) || 75;
+    const dailyCarbsGoal = Number(selectedEffectiveNutritionGoals.carbs) || 260;
     const currentMonthTrainingDays = ADMIN_CALENDAR_DAYS.filter((day) => adminCalendarDraft.trainingDays?.includes(day.id)).map((day) => day.title).join(", ") || "не выбраны";
     const trainingDayIdByJsDay = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
     const selectedPlateau = getClientPlateauInfo(adminClientMeasurements);
@@ -16144,6 +19455,92 @@ function normalizeTelegramUsername(value = "") {
       .filter(Boolean)
       .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
       .join(" ");
+
+    if (isTrainerNextWorkspace()) {
+      const trainerNextSummaries = Object.fromEntries(
+        usersList.map((client) => {
+          const summary = getClientCardSummary(client);
+          return [client.id, {
+            ...summary,
+            status: getClientActivityStatus(summary)
+          }];
+        })
+      );
+      const trainerNextTab = {
+        training: "workouts",
+        calendarNutrition: "nutrition",
+        telegram: "notifications"
+      }[adminUsersSelectedTab] || adminUsersSelectedTab;
+
+      return (
+        <TrainerWorkspace
+          appVersion={APP_VERSION}
+          mode={adminClientPageOpen && selectedClient ? "client" : "clients"}
+          activeSection="clients"
+          onNavigate={navigateTrainerNext}
+          onRefresh={refreshPage}
+          trainerName={selectedTrainerName}
+          trainerAvatar={telegramProfile.avatarUrl}
+          clients={usersList}
+          clientSummaries={trainerNextSummaries}
+          summariesLoading={trainerClientSummariesLoading}
+          selectedClient={selectedClient}
+          selectedProfile={{
+            ...selectedProfile,
+            goalLabel: getAdminClientGoalLabel(selectedProfile?.goal)
+          }}
+          selectedSummary={{
+            ...selectedSummary,
+            status: getClientActivityStatus(selectedSummary)
+          }}
+          activeClientTab={trainerNextTab}
+          onClientTabChange={setAdminUsersSelectedTab}
+          onOpenClient={openTrainerNextClient}
+          onCloseClient={() => setAdminClientPageOpen(false)}
+          onCreateClient={() => setAdminCreateClientModalOpen(true)}
+          createClientState={getTrainerNextCreateClientState()}
+          measurements={adminClientMeasurements}
+          history={adminClientHistory}
+          nutritionDays={clientNutritionDays}
+          nutritionGoals={selectedEffectiveNutritionGoals}
+          nutritionPlanOptions={trainerNutritionPlanOptions}
+          photos={adminClientProgressPhotos}
+          tasks={adminClientTasks}
+          trainerNote={adminTrainerNote}
+          onGenerateNutritionPlan={() => setAdminClientStatus("Параметры AI-плана открыты в разделе питания.")}
+          onSaveNutritionPlan={saveTrainerClientNutritionPlan}
+          onSaveNotifications={saveTrainerClientNotificationSettings}
+          onTestNotification={() => sendAdminTestWorkoutReminder(selectedClient)}
+          onConnectTelegram={openClientTelegramConnection}
+          onSendMessage={sendTrainerClientMessage}
+          onClientAction={handleTrainerClientAction}
+          workouts={sortWorkoutDays(plan.workouts || [])}
+          exerciseLibrary={getTrainerNextExerciseLibraryItems()}
+          programTemplates={adminTrainingTemplates}
+          selectedProgramId={adminSelectedTemplateId}
+          onSelectProgram={setAdminSelectedTemplateId}
+          onAssignProgram={() => assignSavedProgramToClient(selectedClient?.id, adminSelectedTemplateId)}
+          onSaveWorkoutSchedule={(dates) => saveTrainerClientWorkoutSchedule(dates, selectedClient)}
+          programStatus={adminClientStatus}
+          onUpdateWorkout={updateTrainerNextWorkout}
+          onUpdateExercise={updateTrainerNextExercise}
+          onUpdateExerciseSet={updateTrainerNextExerciseSet}
+          onAddExerciseSet={addTrainerNextExerciseSet}
+          onRemoveExerciseSet={removeTrainerNextExerciseSet}
+          onAddExercise={addTrainerNextExercise}
+          onRemoveExercise={removeTrainerNextExercise}
+          onDuplicateExercise={duplicateTrainerNextExercise}
+          onMoveExercise={moveTrainerNextExercise}
+          onUploadExerciseVideo={uploadTrainerNextExerciseVideo}
+          exerciseVideoUploadingId={adminExerciseVideoUploadingId}
+          onAddDay={addTrainerNextWorkoutDay}
+          onDuplicateDay={duplicateTrainerNextWorkoutDay}
+          onRemoveDay={removeTrainerNextWorkoutDay}
+          onSaveWorkouts={saveWorkoutsToFirebase}
+          onLogout={logout}
+        />
+      );
+    }
 
     return (
       <div className="adminUsersCrmPage">
@@ -17351,9 +20748,11 @@ function normalizeTelegramUsername(value = "") {
                           value={adminSelectedNutritionPreset}
                           onChange={(event) => setAdminSelectedNutritionPreset(event.target.value)}
                         >
-                          <option value="balanced">Баланс · 2400 ккал · Б 160</option>
-                          <option value="fat_loss">Снижение веса · 2100 ккал · Б 170</option>
-                          <option value="muscle_gain">Набор массы · 2850 ккал · Б 180</option>
+                          <option value="maintenance">Поддержка · 2400 ккал · Б 160</option>
+                          <option value="recomposition">Рекомпозиция · 2300 ккал · Б 180</option>
+                          <option value="fat_loss">Похудение · 2100 ккал · Б 170</option>
+                          <option value="cutting">Сушка · 1900 ккал · Б 185</option>
+                          <option value="mass_gain">Набор · 2850 ккал · Б 180</option>
                         </select>
                       </label>
 
@@ -17361,66 +20760,18 @@ function normalizeTelegramUsername(value = "") {
                         type="button"
                         className="adminNutritionAssignButton"
                         onClick={async () => {
-                          try {
-                            const nutritionPresetMap = {
-                              balanced: { name: "Баланс", calories: 2400, protein: 160, fat: 75, carbs: 260 },
-                              fat_loss: { name: "Снижение веса", calories: 2100, protein: 170, fat: 65, carbs: 190 },
-                              muscle_gain: { name: "Набор массы", calories: 2850, protein: 180, fat: 85, carbs: 340 }
-                            };
-                            const selectedNutritionPreset = nutritionPresetMap[adminSelectedNutritionPreset] || nutritionPresetMap.balanced;
-                            const nextNutritionGoals = {
-                              ...(selectedClient.nutritionGoals || {}),
-                              calories: selectedNutritionPreset.calories,
-                              protein: selectedNutritionPreset.protein,
-                              fat: selectedNutritionPreset.fat,
-                              carbs: selectedNutritionPreset.carbs
-                            };
-
-                            await setDoc(doc(db, "users", selectedClient.id), {
-                              nutritionGoals: nextNutritionGoals,
-                              nutritionPlan: {
-                                name: selectedNutritionPreset.name,
-                                calories: nextNutritionGoals.calories,
-                                protein: nextNutritionGoals.protein,
-                                updatedAt: new Date().toISOString()
-                              }
-                            }, { merge: true });
-
-                            setAdminSelectedClient((prev) => prev?.id === selectedClient.id ? {
-                              ...prev,
-                              nutritionGoals: nextNutritionGoals,
-                              nutritionPlan: {
-                                ...(prev.nutritionPlan || {}),
-                                name: selectedNutritionPreset.name,
-                                calories: nextNutritionGoals.calories,
-                                protein: nextNutritionGoals.protein,
-                                updatedAt: new Date().toISOString()
-                              }
-                            } : prev);
-
-                            setUsersList((prev) => prev.map((client) => client.id === selectedClient.id ? {
-                              ...client,
-                              nutritionGoals: nextNutritionGoals,
-                              nutritionPlan: {
-                                ...(client.nutritionPlan || {}),
-                                name: aiPlan?.title || aiPlan?.name || "План питания",
-                                calories: nextNutritionGoals.calories,
-                                protein: nextNutritionGoals.protein,
-                                updatedAt: new Date().toISOString()
-                              }
-                            } : client));
-
-                            await recordTrainerEvent(
-                              selectedClient.id,
-                              "nutrition",
-                              "Изменён план питания",
-                              `${selectedNutritionPreset.name} · ${nextNutritionGoals.calories} ккал`
-                            );
-                            setAdminClientStatus("План питания назначен клиенту.");
-                          } catch (error) {
-                            console.error("Nutrition plan assign error:", error);
-                            setAdminClientStatus("Не получилось назначить план питания.");
-                          }
+                          const nutritionPresetMap = {
+                            maintenance: { name: "Поддержка", goal: "Поддержание веса и формы", calories: 2400, protein: 160, fat: 75, carbs: 260 },
+                            recomposition: { name: "Рекомпозиция", goal: "Снижение жира и сохранение мышц", calories: 2300, protein: 180, fat: 70, carbs: 235 },
+                            fat_loss: { name: "Похудение", goal: "Плавное снижение веса", calories: 2100, protein: 170, fat: 65, carbs: 190 },
+                            cutting: { name: "Сушка", goal: "Снижение процента жира", calories: 1900, protein: 185, fat: 55, carbs: 160 },
+                            mass_gain: { name: "Набор", goal: "Набор мышечной массы", calories: 2850, protein: 180, fat: 85, carbs: 340 }
+                          };
+                          const selectedNutritionPreset = nutritionPresetMap[adminSelectedNutritionPreset] || nutritionPresetMap.maintenance;
+                          await saveTrainerClientNutritionPlan({
+                            ...selectedNutritionPreset,
+                            presetId: adminSelectedNutritionPreset
+                          });
                         }}
                       >
                         Назначить план питания
@@ -17858,15 +21209,62 @@ function normalizeTelegramUsername(value = "") {
     }
 
     const selectedUser = usersList.find((u) => u.id === selectedUserId);
+
+    if (isTrainerNextWorkspace() && !trainerProgramManagerOpen) {
+      const trainerName = telegramProfile.displayName ||
+        auth.currentUser?.displayName ||
+        auth.currentUser?.email?.split("@")?.[0] ||
+        "Тренер";
+
+      return (
+        <TrainerWorkspace
+          appVersion={APP_VERSION}
+          mode="workouts"
+          activeSection="workouts"
+          onNavigate={navigateTrainerNext}
+          trainerName={trainerName}
+          trainerAvatar={telegramProfile.avatarUrl}
+          clients={usersList}
+          selectedClient={adminSelectedClient || selectedUser || usersList[0] || null}
+          workouts={sortWorkoutDays(plan.workouts || [])}
+          exerciseLibrary={getTrainerNextExerciseLibraryItems()}
+          programTemplates={adminTrainingTemplates}
+          selectedProgramId={adminSelectedTemplateId}
+          onSelectProgram={setAdminSelectedTemplateId}
+          onAssignProgram={() => assignSavedProgramToClient(
+            (adminSelectedClient || selectedUser || usersList[0])?.id,
+            adminSelectedTemplateId
+          )}
+          onSaveWorkoutSchedule={(dates) => saveTrainerClientWorkoutSchedule(dates, adminSelectedClient || selectedUser || usersList[0])}
+          onOpenProgramManager={openTrainerProgramManager}
+          activeWorkoutTab={trainerWorkoutTab}
+          onWorkoutTabChange={openTrainerExerciseLibrary}
+          programStatus={adminClientStatus}
+          onUpdateWorkout={updateTrainerNextWorkout}
+          onUpdateExercise={updateTrainerNextExercise}
+          onUpdateExerciseSet={updateTrainerNextExerciseSet}
+          onAddExerciseSet={addTrainerNextExerciseSet}
+          onRemoveExerciseSet={removeTrainerNextExerciseSet}
+          onAddExercise={addTrainerNextExercise}
+          onRemoveExercise={removeTrainerNextExercise}
+          onDuplicateExercise={duplicateTrainerNextExercise}
+          onMoveExercise={moveTrainerNextExercise}
+          onUploadExerciseVideo={uploadTrainerNextExerciseVideo}
+          exerciseVideoUploadingId={adminExerciseVideoUploadingId}
+          onAddDay={addTrainerNextWorkoutDay}
+          onDuplicateDay={duplicateTrainerNextWorkoutDay}
+          onRemoveDay={removeTrainerNextWorkoutDay}
+          onSaveWorkouts={saveWorkoutsToFirebase}
+          onCreateClient={() => setAdminCreateClientModalOpen(true)}
+          createClientState={getTrainerNextCreateClientState()}
+        />
+      );
+    }
+
     const monthProgram = adminProgramGroups?.[0] || {
       id: `month_${Date.now()}`,
       name: "Программа на месяц",
-      blocks: [
-        { id: "microcycle_1", name: "Микроцикл 1", weeks: [{ id: "week_1", name: "Неделя 1", workouts: [] }, { id: "week_2", name: "Неделя 2", workouts: [] }] },
-        { id: "microcycle_2", name: "Микроцикл 2", weeks: [{ id: "week_3", name: "Неделя 3", workouts: [] }, { id: "week_4", name: "Неделя 4", workouts: [] }] },
-        { id: "microcycle_3", name: "Микроцикл 3", weeks: [{ id: "week_5", name: "Неделя 5", workouts: [] }, { id: "week_6", name: "Неделя 6", workouts: [] }] },
-        { id: "microcycle_4", name: "Микроцикл 4", weeks: [{ id: "week_7", name: "Неделя 7", workouts: [] }, { id: "week_8", name: "Неделя 8", workouts: [] }] }
-      ]
+      blocks: createFourWeekWorkoutProgramBlocks("default")
     };
 
     const normalizedMonthProgram = normalizeMonthProgram(monthProgram);
@@ -17878,8 +21276,7 @@ function normalizeTelegramUsername(value = "") {
       )
     );
     const monthExercises = monthWorkouts.reduce((sum, workout) => sum + (workout.exercises?.length || 0), 0);
-    const adminExerciseLibrary = Array.from(new Map(
-      [
+    const adminExerciseLibrarySources = [
         ...monthWorkouts.flatMap((workout) => workout.exercises || []),
         ...adminTrainingTemplates.flatMap((template) => {
           const templateMicrocycles = Array.isArray(template.blocks)
@@ -17892,10 +21289,15 @@ function normalizeTelegramUsername(value = "") {
             )
           ].flatMap((workout) => workout.exercises || []);
         })
-      ]
-        .filter((exercise) => String(exercise?.name || "").trim())
-        .map((exercise) => [String(exercise.name).trim().toLocaleLowerCase("ru"), exercise])
-    ).values());
+      ].filter((exercise) => String(exercise?.name || "").trim());
+    const adminExerciseLibrary = Array.from(adminExerciseLibrarySources.reduce((library, exercise) => {
+      const key = String(exercise.name).trim().toLocaleLowerCase("ru").replace(/ё/g, "е").replace(/\s+/g, " ");
+      const current = library.get(key);
+      const currentVideo = String(current?.video || current?.videoUrl || current?.videoURL || "").trim();
+      const exerciseVideo = String(exercise?.video || exercise?.videoUrl || exercise?.videoURL || "").trim();
+      if (!current || (!currentVideo && exerciseVideo)) library.set(key, exercise);
+      return library;
+    }, new Map()).values());
     const openMonthWorkoutContext = monthBlocks.flatMap((block) =>
       (block.weeks || []).flatMap((week) =>
         (week.workouts || []).map((workout) => ({ block, week, workout }))
@@ -17916,7 +21318,7 @@ function normalizeTelegramUsername(value = "") {
       const hasStructuredHierarchy = sourceMonths.some((month) =>
         Array.isArray(month.microcycles) || Array.isArray(month.blocks)
       ) || (Array.isArray(program.months) && Array.isArray(program.blocks));
-      const blockCount = sourceBlocks.length || (hasStructuredHierarchy ? 0 : 4);
+      const blockCount = sourceBlocks.length || (hasStructuredHierarchy ? 0 : 2);
       const blocks = Array.from({ length: blockCount }, (_, blockIndex) => {
         const sourceBlock = sourceBlocks[blockIndex] || {};
         const sourceWeeks = Array.isArray(sourceBlock.weeks)
@@ -18001,6 +21403,67 @@ function normalizeTelegramUsername(value = "") {
 
     function updateMonthProgramDescription(description) {
       setMonthProgram((program) => ({ ...program, description }));
+    }
+
+    function addProgramMonth() {
+      setMonthProgram((program) => {
+        const nextMonthNumber = (program.months || []).reduce((maxNumber, month, index) => {
+          const monthNumber = Number(String(month.name || "").match(/Месяц\s+(\d+)/i)?.[1]) || index + 1;
+          return Math.max(maxNumber, monthNumber);
+        }, 0) + 1;
+        const monthId = `month_${Date.now()}`;
+
+        return {
+          ...program,
+          months: [
+            ...(program.months || []),
+            {
+              id: monthId,
+              name: `Месяц ${nextMonthNumber}`,
+              microcycles: []
+            }
+          ]
+        };
+      });
+    }
+
+    function updateProgramMonth(monthId, patch = {}) {
+      setMonthProgram((program) => ({
+        ...program,
+        months: (program.months || []).map((month) =>
+          month.id === monthId ? { ...month, ...patch } : month
+        )
+      }));
+    }
+
+    function removeProgramMonth(monthId) {
+      const month = monthGroups.find((item) => item.id === monthId);
+      if (!month) return;
+      if (!window.confirm(`Удалить «${month.name || "Месяц"}» со всеми микроциклами, неделями и тренировками?`)) {
+        return;
+      }
+
+      const removedBlockIds = new Set(
+        (month.microcycles || month.blocks || []).map((block) => block.id)
+      );
+      const removedWorkoutIds = new Set(
+        (month.microcycles || month.blocks || []).flatMap((block) =>
+          (block.weeks || []).flatMap((week) =>
+            (week.workouts || []).map((workout) => workout.id)
+          )
+        )
+      );
+
+      setMonthProgram((program) => ({
+        ...program,
+        months: (program.months || []).filter((item) => item.id !== monthId),
+        blocks: (program.blocks || []).filter((block) => !removedBlockIds.has(block.id))
+      }));
+
+      if (removedWorkoutIds.has(adminOpenWorkoutId)) {
+        setAdminOpenWorkoutId("");
+        setAdminSelectedExerciseId("");
+      }
     }
 
     function addMonthBlock(monthId = "month_1") {
@@ -18262,6 +21725,8 @@ function normalizeTelegramUsername(value = "") {
 
       setAdminOpenProgramBlocks((current) => ({ ...current, [blockId]: true }));
       setAdminOpenProgramWeeks((current) => ({ ...current, [weekId]: true }));
+      setAdminOpenWorkoutId(newWorkoutId);
+      setAdminSelectedExerciseId("");
     }
 
     function updateMonthWorkout(blockId, weekId, workoutId, patch) {
@@ -18299,20 +21764,62 @@ function normalizeTelegramUsername(value = "") {
       }
     }
 
-    function addMonthExercise(blockId, weekId, workoutId, sourceExercise = null) {
+    function duplicateMonthWorkout(blockId, weekId, workoutId) {
+      const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
+      if (!sourceWorkout) return;
+      const stamp = Date.now();
+      const duplicatedWorkout = {
+        ...sourceWorkout,
+        id: `workout_${stamp}`,
+        name: `${sourceWorkout.name || "Тренировка"} — копия`,
+        exercises: (sourceWorkout.exercises || []).map((exercise, exerciseIndex) => ({
+          ...exercise,
+          id: `exercise_${stamp}_${exerciseIndex}`,
+          sets: (exercise.sets || []).map((set, setIndex) => ({
+            ...set,
+            ...(set?.id ? { id: `set_${stamp}_${exerciseIndex}_${setIndex}` } : {})
+          }))
+        }))
+      };
+
+      setMonthProgram((program) => ({
+        ...program,
+        blocks: program.blocks.map((block) => block.id !== blockId ? block : {
+          ...block,
+          weeks: block.weeks.map((week) => week.id !== weekId ? week : {
+            ...week,
+            workouts: (week.workouts || []).flatMap((workout) =>
+              workout.id === workoutId ? [workout, duplicatedWorkout] : [workout]
+            )
+          })
+        })
+      }));
+      setAdminOpenWorkoutId(duplicatedWorkout.id);
+      setAdminSelectedExerciseId("");
+    }
+
+    function addMonthExercise(blockId, weekId, workoutId, sourceExercise = null, openEditor = true) {
       const newExerciseId = `exercise_${Date.now()}`;
       const exerciseName = String(sourceExercise?.name || adminExerciseSearch || "Новое упражнение").trim() || "Новое упражнение";
+      const libraryExercise = sourceExercise || findExerciseLibraryMatch(adminExerciseLibrary, exerciseName);
+      const libraryVideo = libraryExercise?.video || libraryExercise?.videoUrl || libraryExercise?.videoURL || "";
       updateMonthWorkout(blockId, weekId, workoutId, {
         exercises: [
           ...((monthWorkouts.find((workout) => workout.id === workoutId)?.exercises) || []),
           {
             id: newExerciseId,
             name: exerciseName,
-            video: sourceExercise?.video || "",
+            video: libraryVideo,
+            videoAutoFilledFrom: libraryVideo ? libraryExercise.name : "",
+            requiresWeight: exerciseUsesExternalWeight(libraryExercise || { name: exerciseName }),
             sets: Array.from({ length: 3 }, () => ({ reps: 8, weight: "" }))
           }
         ]
       });
+      if (!openEditor) {
+        setAdminExerciseSearch("");
+        return;
+      }
       adminExerciseEditSnapshotRef.current = {
         isNew: true,
         blockId,
@@ -18445,11 +21952,60 @@ function normalizeTelegramUsername(value = "") {
       });
     }
 
+    function updateMonthExerciseName(blockId, weekId, workoutId, exercise, name) {
+      const libraryExercise = findExerciseLibraryMatch(adminExerciseLibrary, name, exercise.id);
+      const libraryVideo = libraryExercise?.video || libraryExercise?.videoUrl || libraryExercise?.videoURL || "";
+      const patch = { name };
+
+      if (libraryVideo && (!exercise.video || exercise.videoAutoFilledFrom)) {
+        patch.video = libraryVideo;
+        patch.videoAutoFilledFrom = libraryExercise.name;
+        patch.requiresWeight = exerciseUsesExternalWeight(libraryExercise);
+      } else if (exercise.videoAutoFilledFrom && !libraryVideo) {
+        patch.video = "";
+        patch.videoAutoFilledFrom = "";
+      }
+
+      updateMonthExercise(blockId, weekId, workoutId, exercise.id, patch);
+    }
+
     function removeMonthExercise(blockId, weekId, workoutId, exerciseId) {
       const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
       updateMonthWorkout(blockId, weekId, workoutId, {
         exercises: (sourceWorkout?.exercises || []).filter((exercise) => exercise.id !== exerciseId)
       });
+    }
+
+    function duplicateMonthExercise(blockId, weekId, workoutId, exerciseId) {
+      const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
+      const sourceExercise = sourceWorkout?.exercises?.find((exercise) => exercise.id === exerciseId);
+      if (!sourceWorkout || !sourceExercise) return;
+      const stamp = Date.now();
+      const duplicatedExercise = {
+        ...sourceExercise,
+        id: `exercise_${stamp}`,
+        name: `${sourceExercise.name || "Упражнение"} — копия`,
+        sets: (sourceExercise.sets || []).map((set, setIndex) => ({
+          ...set,
+          ...(set?.id ? { id: `set_${stamp}_${setIndex}` } : {})
+        }))
+      };
+
+      updateMonthWorkout(blockId, weekId, workoutId, {
+        exercises: (sourceWorkout.exercises || []).flatMap((exercise) =>
+          exercise.id === exerciseId ? [exercise, duplicatedExercise] : [exercise]
+        )
+      });
+    }
+
+    function moveMonthExercise(blockId, weekId, workoutId, exerciseId, direction) {
+      const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
+      const exercises = [...(sourceWorkout?.exercises || [])];
+      const currentIndex = exercises.findIndex((exercise) => exercise.id === exerciseId);
+      const nextIndex = currentIndex + direction;
+      if (currentIndex < 0 || nextIndex < 0 || nextIndex >= exercises.length) return;
+      [exercises[currentIndex], exercises[nextIndex]] = [exercises[nextIndex], exercises[currentIndex]];
+      updateMonthWorkout(blockId, weekId, workoutId, { exercises });
     }
 
     async function uploadMonthExerciseVideo(blockId, weekId, workoutId, exerciseId, file) {
@@ -18478,7 +22034,9 @@ function normalizeTelegramUsername(value = "") {
               workouts: (week.workouts || []).map((workout) => workout.id !== workoutId ? workout : {
                 ...workout,
                 exercises: (workout.exercises || []).map((exercise) =>
-                  exercise.id === exerciseId ? { ...exercise, video: url } : exercise
+                  exercise.id === exerciseId
+                    ? { ...exercise, video: url, videoAutoFilledFrom: "" }
+                    : exercise
                 )
               })
             })
@@ -18623,17 +22181,20 @@ function normalizeTelegramUsername(value = "") {
             workouts: (Array.isArray(week.workouts) ? week.workouts : []).map((workout, workoutIndex) => ({
               id: workout.id || `workout_${importStamp}_${microcycleIndex}_${weekIndex}_${workoutIndex}`,
               name: workout.name || `${week.name || `Неделя ${microcycleIndex * 2 + weekIndex + 1}`} — Тренировка ${workoutIndex + 1}`,
-              exercises: (Array.isArray(workout.exercises) ? workout.exercises : []).map((exercise, exerciseIndex) => ({
-                id: exercise.id || `exercise_${importStamp}_${microcycleIndex}_${weekIndex}_${workoutIndex}_${exerciseIndex}`,
-                name: exercise.name || "Упражнение",
-                video: exercise.video || "",
-                sets: Array.isArray(exercise.sets) && exercise.sets.length
-                  ? exercise.sets.map((set) => ({
-                      reps: set.reps ?? 8,
-                      weight: String(set.weight ?? "")
-                    }))
-                  : [{ reps: 8, weight: "" }]
-              }))
+              exercises: (Array.isArray(workout.exercises) ? workout.exercises : []).map((exercise, exerciseIndex) =>
+                applyExerciseLibraryDefaults({
+                  id: exercise.id || `exercise_${importStamp}_${microcycleIndex}_${weekIndex}_${workoutIndex}_${exerciseIndex}`,
+                  name: exercise.name || "Упражнение",
+                  video: exercise.video || exercise.videoUrl || exercise.videoURL || "",
+                  requiresWeight: exercise.requiresWeight,
+                  sets: Array.isArray(exercise.sets) && exercise.sets.length
+                    ? exercise.sets.map((set) => ({
+                        reps: set.reps ?? 8,
+                        weight: String(set.weight ?? "")
+                      }))
+                    : [{ reps: 8, weight: "" }]
+                }, adminExerciseLibrary)
+              )
             }))
           }))
         };
@@ -18757,20 +22318,20 @@ function normalizeTelegramUsername(value = "") {
           const setsCount = Math.max(1, Math.round(readNumber(cells[setsColumn], 3)));
           const reps = cleanCell(cells[repsColumn]) || "8";
           const weight = cleanCell(cells[weightColumn]);
-          currentWorkout.exercises.push({
+          currentWorkout.exercises.push(applyExerciseLibraryDefaults({
             name: exerciseName,
-            video: "",
             sets: Array.from({ length: setsCount }, () => ({ reps, weight }))
-          });
+          }, adminExerciseLibrary));
         });
 
         const fallbackWeekStart = Math.max(1, microcycleNumber * 2 - 1 || sheetIndex * 2 + 1);
         const weekNumbers = workoutsByWeek.size
           ? [...workoutsByWeek.keys()].sort((a, b) => a - b)
           : sheetWeekRangeMatch
-            ? Array.from(
-                { length: Number(sheetWeekRangeMatch[2]) - Number(sheetWeekRangeMatch[1]) + 1 },
-                (_, offset) => Number(sheetWeekRangeMatch[1]) + offset
+            ? getMicrocycleWeekNumbers(
+                microcycleNumber || sheetIndex + 1,
+                sheetWeekRangeMatch[1],
+                sheetWeekRangeMatch[2]
               )
             : [explicitWeekNumber || fallbackWeekStart, explicitWeekNumber ? null : fallbackWeekStart + 1].filter(Boolean);
 
@@ -18781,14 +22342,15 @@ function normalizeTelegramUsername(value = "") {
           monthNumber = Math.ceil(microcycleNumber / 2);
         }
 
+        const sharedWorkoutsByWeek = distributeMicrocycleWorkouts(sharedWorkouts, weekNumbers.length);
         const weeks = weekNumbers.map((weekNumber, weekIndex) => {
-          const workoutTemplates = workoutsByWeek.get(weekNumber) || sharedWorkouts;
+          const workoutTemplates = workoutsByWeek.get(weekNumber) || sharedWorkoutsByWeek[weekIndex] || [];
           return {
             id: `week_${importStamp}_${microcycleNumber}_${weekNumber}`,
             name: `Неделя ${weekNumber}`,
             workouts: workoutTemplates.map((workout, workoutIndex) => ({
               id: `workout_${importStamp}_${microcycleNumber}_${weekNumber}_${workoutIndex}`,
-              name: `Неделя ${weekNumber} — День ${workout.dayNumber || workoutIndex + 1}`,
+              name: `Тренировка ${(weekNumber - 1) * 2 + workoutIndex + 1}`,
               exercises: workout.exercises.map((exercise, exerciseIndex) => ({
                 ...exercise,
                 id: `exercise_${importStamp}_${microcycleNumber}_${weekNumber}_${workoutIndex}_${exerciseIndex}`,
@@ -18910,12 +22472,7 @@ function normalizeTelegramUsername(value = "") {
         ownerRole: owner.role,
         createdByUid: owner.uid,
         updatedByUid: owner.uid,
-        blocks: [
-          { id: "microcycle_1", name: "Микроцикл 1", weeks: [{ id: "week_1", name: "Неделя 1", workouts: [] }, { id: "week_2", name: "Неделя 2", workouts: [] }] },
-          { id: "microcycle_2", name: "Микроцикл 2", weeks: [{ id: "week_3", name: "Неделя 3", workouts: [] }, { id: "week_4", name: "Неделя 4", workouts: [] }] },
-          { id: "microcycle_3", name: "Микроцикл 3", weeks: [{ id: "week_5", name: "Неделя 5", workouts: [] }, { id: "week_6", name: "Неделя 6", workouts: [] }] },
-          { id: "microcycle_4", name: "Микроцикл 4", weeks: [{ id: "week_7", name: "Неделя 7", workouts: [] }, { id: "week_8", name: "Неделя 8", workouts: [] }] }
-        ]
+        blocks: createFourWeekWorkoutProgramBlocks(Date.now())
       });
 
       setAdminProgramEditorMode("create");
@@ -18926,7 +22483,17 @@ function normalizeTelegramUsername(value = "") {
       setAdminActiveProgramId(nextProgram.id);
       setAdminSelectedTemplateId("");
       setAdminProgramGroups([nextProgram]);
-      setPlan({ workouts: [] });
+      setPlan({
+        workouts: nextProgram.blocks.flatMap((block) =>
+          block.weeks.flatMap((week) =>
+            week.workouts.map((workout) => ({
+              ...workout,
+              blockName: block.name,
+              weekName: week.name
+            }))
+          )
+        )
+      });
     }
 
     function editExistingMonthProgram(templateId) {
@@ -19252,15 +22819,25 @@ function normalizeTelegramUsername(value = "") {
       }
     }
 
-    return (
-      <div className={`monthProgramEditorPage monthProgramPremium${adminProgramLibraryTab === "overview" ? " monthProgramOverviewMode" : ""}${adminOpenWorkoutId ? " monthProgramPremiumDayMode" : ""}`}>
+    const programManagerView = (
+      <div className={`monthProgramEditorPage monthProgramPremium${adminProgramLibraryTab === "overview" ? " monthProgramOverviewMode" : ""}${adminOpenWorkoutId ? " monthProgramPremiumDayMode" : ""}${isTrainerNextWorkspace() ? " trainerProgramManager" : ""}`}>
         <header className="programsCompactHeader">
           <button
             className="adminFixedMainBack"
-            onClick={() => adminProgramLibraryTab === "editor" ? handleMonthProgramBack() : setPage("admin")}
+            onClick={() => {
+              if (adminProgramLibraryTab === "editor") {
+                handleMonthProgramBack();
+                return;
+              }
+              if (isTrainerNextWorkspace()) {
+                setTrainerProgramManagerOpen(false);
+                return;
+              }
+              setPage("admin");
+            }}
             aria-label={
               adminProgramLibraryTab !== "editor"
-                ? "Главная"
+                ? isTrainerNextWorkspace() ? "К плану клиента" : "Главная"
                 : adminOpenWorkoutId
                   ? "Назад к микроциклу"
                   : Object.values(adminOpenProgramBlocks).some(Boolean)
@@ -19271,7 +22848,7 @@ function normalizeTelegramUsername(value = "") {
             <span>←</span>
             <b>
               {adminProgramLibraryTab !== "editor"
-                ? "Главная"
+                ? isTrainerNextWorkspace() ? "К плану клиента" : "Главная"
                 : adminOpenWorkoutId
                   ? "К микроциклу"
                   : Object.values(adminOpenProgramBlocks).some(Boolean)
@@ -19288,26 +22865,43 @@ function normalizeTelegramUsername(value = "") {
           return (
             <main className="programsOverviewPage">
               <nav className="adminV3Nav programsTopActionBar" aria-label="Действия с программами">
-                <button type="button" onClick={() => setPage("admin")}>
-                  <span className="adminV3NavIcon">←</span>
-                  <span className="adminV3NavLabel">Главная</span>
-                </button>
-                <button type="button" onClick={createNewMonthProgramDraft}>
-                  <span className="adminV3NavIcon">＋</span>
-                  <span className="adminV3NavLabel">Создать</span>
-                </button>
+                {!isTrainerNextWorkspace() && (
+                  <>
+                    <button type="button" onClick={() => setPage("admin")}>
+                      <span className="adminV3NavIcon">←</span>
+                      <span className="adminV3NavLabel">Главная</span>
+                    </button>
+                    <button type="button" onClick={createNewMonthProgramDraft}>
+                      <span className="adminV3NavIcon">＋</span>
+                      <span className="adminV3NavLabel">Создать</span>
+                    </button>
+                  </>
+                )}
                 <button
                   type="button"
                   disabled={!selectedTemplate}
                   onClick={() => openProgramFromLibrary(selectedTemplate?.id)}
                 >
-                  <span className="adminV3NavIcon">✎</span>
+                  {isTrainerNextWorkspace() ? <ProgramEditIcon size={19} /> : <span className="adminV3NavIcon">✎</span>}
                   <span className="adminV3NavLabel">Редактировать</span>
                 </button>
-                <button type="button" onClick={() => adminProgramImportInputRef.current?.click()}>
-                  <span className="adminV3NavIcon">↑</span>
-                  <span className="adminV3NavLabel">Загрузить</span>
-                </button>
+                {!isTrainerNextWorkspace() && (
+                  <button type="button" onClick={() => adminProgramImportInputRef.current?.click()}>
+                    <span className="adminV3NavIcon">↑</span>
+                    <span className="adminV3NavLabel">Загрузить</span>
+                  </button>
+                )}
+                {isTrainerNextWorkspace() && (
+                  <button
+                    className="danger"
+                    type="button"
+                    disabled={!selectedTemplate}
+                    onClick={deleteSelectedProgramFromLibrary}
+                  >
+                    <ProgramTrashIcon size={19} />
+                    <span className="adminV3NavLabel">Удалить</span>
+                  </button>
+                )}
               </nav>
 
               <section className="programsOverviewSection">
@@ -19315,8 +22909,11 @@ function normalizeTelegramUsername(value = "") {
                   <div>
                     <span>БИБЛИОТЕКА</span>
                     <h2>Готовые программы</h2>
+                    <p>Выберите программу для просмотра и редактирования.</p>
                   </div>
-                  <button type="button" onClick={loadAdminTrainingTemplates} aria-label="Обновить программы">↻</button>
+                  <button type="button" onClick={loadAdminTrainingTemplates} aria-label="Обновить программы">
+                    <ProgramRefreshIcon size={17} />Обновить
+                  </button>
                 </div>
 
                 {adminTrainingTemplates.length === 0 ? (
@@ -19324,8 +22921,14 @@ function normalizeTelegramUsername(value = "") {
                     <strong>{canUseAdminFeatures() ? "Пока нет готовых программ" : "У вас пока нет программ"}</strong>
                     <p>Создайте первую программу или загрузите Excel/JSON.</p>
                     <div className="programsOverviewConstructorActions">
-                      <button type="button" onClick={createNewMonthProgramDraft}>Создать</button>
-                      <button type="button" onClick={() => adminProgramImportInputRef.current?.click()}>Загрузить</button>
+                      {isTrainerNextWorkspace() ? (
+                        <button type="button" onClick={() => setAdminProgramCreateChoiceOpen(true)}>Создать или загрузить новую программу</button>
+                      ) : (
+                        <>
+                          <button type="button" onClick={createNewMonthProgramDraft}>Создать</button>
+                          <button type="button" onClick={() => adminProgramImportInputRef.current?.click()}>Загрузить</button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -19333,6 +22936,10 @@ function normalizeTelegramUsername(value = "") {
                     {adminTrainingTemplates.map((template) => {
                       const stats = getTemplateStats(template);
                       const isSelected = adminSelectedTemplateId === template.id;
+                      const createdAt = template.createdAt ? new Date(template.createdAt) : null;
+                      const createdLabel = createdAt && !Number.isNaN(createdAt.getTime())
+                        ? createdAt.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
+                        : "—";
 
                       return (
                         <button
@@ -19342,27 +22949,113 @@ function normalizeTelegramUsername(value = "") {
                           onClick={() => setAdminSelectedTemplateId(template.id)}
                         >
                           <div className="programsOverviewCardTitle">
-                            <strong>{template.name || "Без названия"}</strong>
-                            {isSelected && <span>Выбрана</span>}
+                            <i><ProgramDumbbellIcon size={29} /></i>
+                            <div>
+                              <strong>{template.name || "Без названия"}</strong>
+                              <p>{template.description || "Готовая тренировочная программа из библиотеки."}</p>
+                            </div>
+                            {isSelected && <span><b>✓</b>Выбрана</span>}
                           </div>
-                          <p>{template.description || "Готовая тренировочная программа из библиотеки."}</p>
                           <div className="programsOverviewCardStats">
-                            <span><b>{stats.weeksCount}</b> недель</span>
-                            <span><b>{stats.workoutsCount}</b> тренировок</span>
-                            <span><b>{stats.blocksCount}</b> микроциклов</span>
-                            <span><b>{stats.exercisesCount}</b> упражнений</span>
+                            <span><ProgramCalendarIcon size={16} /><b>{stats.weeksCount}</b><small>недель</small></span>
+                            <span><ProgramDumbbellIcon size={16} /><b>{stats.workoutsCount}</b><small>тренировок</small></span>
+                            <span><ProgramCycleIcon size={16} /><b>{stats.blocksCount}</b><small>микроцикла</small></span>
+                            <span><ProgramListIcon size={16} /><b>{stats.exercisesCount}</b><small>упражнений</small></span>
                           </div>
+                          <footer><span>Создана: {createdLabel}</span><span>Автор: Вы</span><b>•••</b></footer>
                         </button>
                       );
                     })}
+                    {isTrainerNextWorkspace() && (
+                      <button className="programsOverviewCreateCard" type="button" onClick={() => setAdminProgramCreateChoiceOpen(true)}>
+                        <ProgramPlusIcon size={21} />
+                        <strong>Создать или загрузить новую программу</strong>
+                        <span>Выберите: начать с нуля или импортировать готовую программу</span>
+                      </button>
+                    )}
                   </div>
                 )}
 
               </section>
 
+              {isTrainerNextWorkspace() && adminProgramCreateChoiceOpen && (
+                <div className="programCreateChoiceOverlay" role="dialog" aria-modal="true" aria-labelledby="programCreateChoiceTitle" onClick={() => setAdminProgramCreateChoiceOpen(false)}>
+                  <section className="programCreateChoiceSheet" onClick={(event) => event.stopPropagation()}>
+                    <header>
+                      <div>
+                        <span>НОВАЯ ПРОГРАММА</span>
+                        <h2 id="programCreateChoiceTitle">Создать или загрузить?</h2>
+                      </div>
+                      <button type="button" onClick={() => setAdminProgramCreateChoiceOpen(false)} aria-label="Закрыть">×</button>
+                    </header>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAdminProgramCreateChoiceOpen(false);
+                          createNewMonthProgramDraft();
+                        }}
+                      >
+                        <ProgramPlusIcon size={22} />
+                        <span><strong>Создать с нуля</strong><small>Открыть пустой конструктор программы.</small></span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAdminProgramCreateChoiceOpen(false);
+                          adminProgramImportInputRef.current?.click();
+                        }}
+                      >
+                        <ProgramUploadIcon size={22} />
+                        <span><strong>Загрузить файл</strong><small>Импортировать готовую программу из Excel или JSON.</small></span>
+                      </button>
+                    </div>
+                  </section>
+                </div>
+              )}
+
             </main>
           );
-        })() : (
+        })() : isTrainerNextWorkspace() ? (
+          <TrainerProgramConstructor
+            program={normalizedMonthProgram}
+            months={monthGroups}
+            activeWorkoutId={adminOpenWorkoutId}
+            onSelectWorkout={(workoutId) => {
+              setAdminSelectedExerciseId("");
+              setAdminExerciseSearch("");
+              setAdminOpenWorkoutId(workoutId);
+            }}
+            onProgramNameChange={updateMonthProgramName}
+            onSaveProgram={saveMonthProgramToLibrary}
+            onDeleteProgram={deleteSelectedProgramFromLibrary}
+            onAddMonth={addProgramMonth}
+            onUpdateMonth={updateProgramMonth}
+            onDeleteMonth={removeProgramMonth}
+            onAddCycle={addMonthBlock}
+            onCopyCycle={openCopyMonthProgramBlock}
+            onDeleteCycle={removeMonthBlock}
+            onAddWeek={addMonthWeek}
+            onDeleteWeek={removeMonthWeek}
+            onAddWorkout={addMonthWorkout}
+            onUpdateWorkout={updateMonthWorkout}
+            onDeleteWorkout={confirmRemoveMonthWorkout}
+            onDuplicateWorkout={duplicateMonthWorkout}
+            onAddExercise={(blockId, weekId, workoutId, sourceExercise = null) =>
+              addMonthExercise(blockId, weekId, workoutId, sourceExercise, false)
+            }
+            onUpdateExercise={updateMonthExercise}
+            onUpdateExerciseName={updateMonthExerciseName}
+            onDeleteExercise={removeMonthExercise}
+            onDuplicateExercise={duplicateMonthExercise}
+            onMoveExercise={moveMonthExercise}
+            onUpdateExerciseSet={updateMonthExerciseSet}
+            onAddExerciseSet={addMonthExerciseSet}
+            onRemoveExerciseSet={removeMonthExerciseSet}
+            onUploadExerciseVideo={uploadMonthExerciseVideo}
+            exerciseVideoUploadingId={adminExerciseVideoUploadingId}
+          />
+        ) : (
           <>
             <label className="monthProgramEditorNameField">
               <span>Название программы</span>
@@ -19387,10 +23080,22 @@ function normalizeTelegramUsername(value = "") {
                     key={month.id}
                   >
                     <div className="monthProgramMonthHead">
-                      <div>
+                      <div className="monthProgramMonthTitleEditor">
                         <span>Месяц {monthIndex + 1}</span>
-                        <h2>{month.name || `Месяц ${monthIndex + 1}`}</h2>
+                        <input
+                          value={month.name || `Месяц ${monthIndex + 1}`}
+                          onChange={(event) => updateProgramMonth(month.id, { name: event.target.value })}
+                          aria-label={`Название месяца ${monthIndex + 1}`}
+                        />
                       </div>
+                      <button
+                        className="monthProgramRemoveMonth"
+                        type="button"
+                        onClick={() => removeProgramMonth(month.id)}
+                        aria-label={`Удалить ${month.name || `месяц ${monthIndex + 1}`}`}
+                      >
+                        ×
+                      </button>
                     </div>
 
                     <div className="monthProgramBlocks monthProgramPremiumBlocks">
@@ -19645,9 +23350,10 @@ function normalizeTelegramUsername(value = "") {
                               const exerciseSets = Array.isArray(exercise.sets) && exercise.sets.length
                                 ? exercise.sets
                                 : [{ reps: 8, weight: "" }];
+                              const exerciseRequiresWeight = exerciseUsesExternalWeight(exercise);
                               const isExerciseSelected = adminSelectedExerciseId === exercise.id;
 
-                              return (
+                              const exerciseCard = (
                                 <div
                                   className={`monthExerciseCard compact monthProgramPremiumExercise${isExerciseSelected ? " selected" : ""}`}
                                   key={exercise.id}
@@ -19718,17 +23424,42 @@ function normalizeTelegramUsername(value = "") {
                                   <div className="monthExerciseRow compact">
                                     <input
                                       value={exercise.name || ""}
-                                      onChange={(event) => updateMonthExercise(block.id, week.id, workout.id, exercise.id, { name: event.target.value })}
+                                      onChange={(event) => updateMonthExerciseName(
+                                        block.id,
+                                        week.id,
+                                        workout.id,
+                                        exercise,
+                                        event.target.value
+                                      )}
                                       placeholder="Название упражнения"
                                     />
                                   </div>
 
-                                  <div className="monthProgramPremiumSetLegend">
-                                    <span>Подход</span><span>Повторы</span><span>Вес, кг</span><span />
+                                  <button
+                                    type="button"
+                                    className={`monthExerciseWeightMode${exerciseRequiresWeight ? " active" : ""}`}
+                                    aria-pressed={exerciseRequiresWeight}
+                                    onClick={() => updateMonthExercise(
+                                      block.id,
+                                      week.id,
+                                      workout.id,
+                                      exercise.id,
+                                      { requiresWeight: !exerciseRequiresWeight }
+                                    )}
+                                  >
+                                    <span>⚖</span>
+                                    <strong>Вес в упражнении</strong>
+                                    <i>{exerciseRequiresWeight ? "Нужен" : "Не нужен"}</i>
+                                  </button>
+
+                                  <div className={`monthProgramPremiumSetLegend${exerciseRequiresWeight ? "" : " withoutWeight"}`}>
+                                    <span>Подход</span><span>Повторы</span>
+                                    {exerciseRequiresWeight && <span>Вес, кг</span>}
+                                    <span />
                                   </div>
                                   <div className="monthExerciseSets compact">
                                     {exerciseSets.map((set, setIndex) => (
-                                      <div className="monthExerciseSetRow compact" key={setIndex}>
+                                      <div className={`monthExerciseSetRow compact${exerciseRequiresWeight ? "" : " withoutWeight"}`} key={setIndex}>
                                         <span>{setIndex + 1}</span>
                                         <input
                                           value={set.reps || ""}
@@ -19737,13 +23468,15 @@ function normalizeTelegramUsername(value = "") {
                                           inputMode="numeric"
                                           aria-label={`Повторы, подход ${setIndex + 1}`}
                                         />
-                                        <input
-                                          value={set.weight || ""}
-                                          onChange={(event) => updateMonthExerciseSet(block.id, week.id, workout.id, exercise.id, setIndex, { weight: event.target.value })}
-                                          placeholder="60"
-                                          inputMode="decimal"
-                                          aria-label={`Вес, подход ${setIndex + 1}`}
-                                        />
+                                        {exerciseRequiresWeight && (
+                                          <input
+                                            value={set.weight || ""}
+                                            onChange={(event) => updateMonthExerciseSet(block.id, week.id, workout.id, exercise.id, setIndex, { weight: event.target.value })}
+                                            placeholder="60"
+                                            inputMode="decimal"
+                                            aria-label={`Вес, подход ${setIndex + 1}`}
+                                          />
+                                        )}
                                         <button
                                           type="button"
                                           disabled={exerciseSets.length <= 1}
@@ -19767,6 +23500,16 @@ function normalizeTelegramUsername(value = "") {
                                   )}
                                 </div>
                               );
+
+                              return isExerciseSelected
+                                ? createPortal(
+                                    <div className="monthProgramPremium monthProgramPremiumDayEditor exercise-fullscreen-open monthExerciseEditorPortal">
+                                      {exerciseCard}
+                                    </div>,
+                                    document.body,
+                                    exercise.id
+                                  )
+                                : exerciseCard;
                             })}
 
                             {workoutExercises.length === 0 && (
@@ -19795,6 +23538,9 @@ function normalizeTelegramUsername(value = "") {
                   </section>
                 );
               })}
+              <button className="monthProgramAddMonth" type="button" onClick={addProgramMonth}>
+                + Добавить месяц
+              </button>
             </div>
 
           </>
@@ -19856,7 +23602,7 @@ function normalizeTelegramUsername(value = "") {
               event.target.value = "";
             }}
           />
-          {adminSelectedExerciseId ? null : adminOpenWorkoutId && openMonthWorkoutContext ? (
+          {isTrainerNextWorkspace() ? null : adminSelectedExerciseId ? null : adminOpenWorkoutId && openMonthWorkoutContext ? (
             <nav className="adminV3Nav adminV3BottomBar workoutEditorBottomBar" aria-label="Редактор тренировки">
               <button type="button" onClick={handleMonthProgramBack}>
                 <span className="adminV3NavIcon">←</span>
@@ -19902,10 +23648,46 @@ function normalizeTelegramUsername(value = "") {
               </button>
             </nav>
           ) : (
-            renderTrainerWorkspaceBottomBar("programs")
+            isTrainerNextWorkspace() ? null : renderTrainerWorkspaceBottomBar("programs")
           )}
       </div>
     );
+
+    if (isTrainerNextWorkspace()) {
+      const trainerName = telegramProfile.displayName ||
+        auth.currentUser?.displayName ||
+        auth.currentUser?.email?.split("@")?.[0] ||
+        "Тренер";
+
+      return (
+        <TrainerShell
+          appVersion={APP_VERSION}
+          activeSection="workouts"
+          onNavigate={navigateTrainerNext}
+          trainerName={trainerName}
+          trainerAvatar={telegramProfile.avatarUrl}
+        >
+          <div className="trainerNextPage trainerNextWorkoutPage trainerNextProgramsTab">
+            <div className="trainerNextDesktopPageHead">
+              <div>
+                <h1>{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Программы тренировок"}</h1>
+                <p>Создание программ и назначение клиентам</p>
+              </div>
+            </div>
+            <header className="trainerNextMobileHeader">
+              <h1>{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</h1>
+            </header>
+            <div className="trainerNextPageTabs">
+              <button type="button" className="active">Программы</button>
+              <button type="button" onClick={openTrainerExerciseLibrary}>Библиотека упражнений</button>
+            </div>
+            {programManagerView}
+          </div>
+        </TrainerShell>
+      );
+    }
+
+    return programManagerView;
   }
 
   if (page === "workoutPlan") {
@@ -20037,6 +23819,22 @@ function normalizeTelegramUsername(value = "") {
         activeDraftAssignmentVersion === plan.assignedProgramUpdatedAt
       )
     );
+    const individualWorkoutProgramScope = {
+      assignedProgramId: plan.assignedProgramId || activeIndividualWorkout?.assignedProgramId || "",
+      assignedProgramName: plan.assignedProgramName || activeIndividualWorkout?.assignedProgramName || "История программы",
+      assignedProgramUpdatedAt: plan.assignedProgramUpdatedAt || activeIndividualWorkout?.assignedProgramUpdatedAt || "",
+      workoutIds: sortedWorkouts.map((workoutItem) => workoutItem.id)
+    };
+    const individualWorkoutHistoryItems = getProgramHistoryItems(history, individualWorkoutProgramScope).slice(0, 12);
+    const formatIndividualHistoryDate = (value) => {
+      const timestamp = getTimestampValue(value);
+      if (!timestamp) return "Без даты";
+      return new Date(timestamp).toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      }).replace(".", "");
+    };
     const activeWorkoutActionLabel = hasActiveWorkoutDraft
       ? "Продолжить тренировку"
       : activeIndividualWorkoutCompleted
@@ -20105,17 +23903,28 @@ function normalizeTelegramUsername(value = "") {
     }
 
     return (
-      <div className={isIndividualWorkoutMode ? "workoutSelectPage individualWorkoutSelectPage clientCorePage clientCorePageWorkout" : "workoutSelectPage"}>
-        {isIndividualWorkoutMode && (
-          <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
-        )}
+      <div className={isIndividualWorkoutMode ? "workoutSelectPage individualWorkoutSelectPage clientCorePage clientCorePageWorkout" : "workoutSelectPage basicWorkoutSelectPage clientCorePage clientCorePageWorkout"}>
+        <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
         <div className="workoutSelectHero">
           <h1 className="workoutSelectTitle clientCorePageTitle">
-            <span>{isIndividualWorkoutMode ? "Индивидуальный" : "Выбери"}</span>
-            <strong>{isIndividualWorkoutMode ? "план" : "свою тренировку"}</strong>
+            <span>{isIndividualWorkoutMode ? "Индивидуальный" : "Базовые"}</span>
+            <strong>{isIndividualWorkoutMode ? "план" : "тренировки"}</strong>
           </h1>
 
-          {isIndividualWorkoutMode && (
+          <div className="workoutHeaderActions">
+            {isIndividualWorkoutMode && (
+              <button
+                type="button"
+                className="workoutHistoryHeaderButton"
+                aria-label="Открыть историю тренировок"
+                onClick={() => {
+                  loadHistory();
+                  setWorkoutHistoryModalOpen(true);
+                }}
+              >
+                🕘
+              </button>
+            )}
             <button
               type="button"
               className="workoutModeHeaderButton"
@@ -20124,12 +23933,12 @@ function normalizeTelegramUsername(value = "") {
             >
               📎
             </button>
-          )}
+          </div>
 
           <p>
             {isIndividualWorkoutMode
               ? "Листай тренировки и выбирай нужную"
-              : "Подбери план на сегодня и двигайся к цели"}
+              : "Выбери тренировку из подобранного плана"}
           </p>
           <div className="workoutSelectLine" />
         </div>
@@ -20351,7 +24160,7 @@ function normalizeTelegramUsername(value = "") {
           {renderClientMainBottomBar("workouts", "individualWorkoutMenuBar")}
         </div>
 
-        {isIndividualWorkoutMode && workoutModeModalOpen && (
+        {workoutModeModalOpen && (
           <div
             className="workoutModeModalOverlay"
             role="presentation"
@@ -20381,6 +24190,7 @@ function normalizeTelegramUsername(value = "") {
               <div className="workoutModeModalOptions">
                 <button
                   type="button"
+                  className={workoutModePreference.mode === "basic" ? "active" : ""}
                   onClick={() => {
                     setWorkoutModeModalOpen(false);
                     saveWorkoutModePreference("basic", true);
@@ -20398,10 +24208,10 @@ function normalizeTelegramUsername(value = "") {
 
                 <button
                   type="button"
-                  className="active"
+                  className={workoutModePreference.mode === "individual" ? "active" : ""}
                   onClick={() => {
-                    saveWorkoutModePreference("individual", true);
                     setWorkoutModeModalOpen(false);
+                    openIndividualWorkouts();
                   }}
                 >
                   <span>И</span>
@@ -20412,6 +24222,70 @@ function normalizeTelegramUsername(value = "") {
                   <i>✓</i>
                 </button>
               </div>
+            </section>
+          </div>
+        )}
+
+        {isIndividualWorkoutMode && workoutHistoryModalOpen && (
+          <div
+            className="workoutModeModalOverlay"
+            role="presentation"
+            onClick={() => setWorkoutHistoryModalOpen(false)}
+          >
+            <section
+              className="workoutModeModal workoutHistoryModal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="workoutHistoryModalTitle"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <header className="workoutModeModalHeader">
+                <div>
+                  <small>ИНДИВИДУАЛЬНЫЙ ПЛАН</small>
+                  <h2 id="workoutHistoryModalTitle">История тренировок</h2>
+                </div>
+                <button
+                  type="button"
+                  aria-label="Закрыть историю тренировок"
+                  onClick={() => setWorkoutHistoryModalOpen(false)}
+                >
+                  ×
+                </button>
+              </header>
+
+              <div className="workoutHistoryModalList">
+                {historyLoading && <p>Загрузка истории...</p>}
+
+                {!historyLoading && individualWorkoutHistoryItems.map((item) => (
+                  <div
+                    className="workoutHistoryModalItem"
+                    key={item.id || `${item.date}_${item.workout}`}
+                  >
+                    <span aria-hidden="true">{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
+                    <div>
+                      <strong>{item.workout || "Тренировка"}</strong>
+                      <small>
+                        {formatIndividualHistoryDate(item.date)}
+                        {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
+                      </small>
+                    </div>
+                  </div>
+                ))}
+
+                {!historyLoading && individualWorkoutHistoryItems.length === 0 && (
+                  <p>В этой программе завершённых тренировок пока нет.</p>
+                )}
+              </div>
+
+              {individualWorkoutHistoryItems.length > 0 && (
+                <button
+                  type="button"
+                  className="workoutHistoryModalAll"
+                  onClick={() => openCabinetWorkoutHistory(null, individualWorkoutProgramScope)}
+                >
+                  Открыть историю тренировок
+                </button>
+              )}
             </section>
           </div>
         )}
@@ -20513,8 +24387,9 @@ function normalizeTelegramUsername(value = "") {
           item.sets.map((set) => {
             const completed = isWorkoutSetCompleted(set);
             const weight = Number(set.enteredWeight || (set.completed ? set.weight : "")) || 0;
-            const enteredReps = Number(set.enteredReps || (set.completed ? set.reps : "")) || 0;
-            const reps = enteredReps > 0
+            const hasEnteredReps = hasWorkoutSetEntry(set.enteredReps);
+            const enteredReps = Number(hasEnteredReps ? set.enteredReps : (set.completed ? set.reps : "")) || 0;
+            const reps = hasEnteredReps
               ? enteredReps
               : completed
                 ? Number(set.reps || 8) || 0
@@ -20645,7 +24520,9 @@ function normalizeTelegramUsername(value = "") {
             )}
 
             {!isStartSlide && (
-              <div className="workoutStageTitle">
+              <div className={`workoutStageTitle ${
+                !isFinishSlide && exercise?.id !== "warmup" ? "withTechniqueButton" : ""
+              }`}>
                 <span>
                   {isFinishSlide
                     ? isWorkoutSaved
@@ -20653,6 +24530,21 @@ function normalizeTelegramUsername(value = "") {
                       : "Итоги тренировки"
                     : exercise?.name}
                 </span>
+                {!isFinishSlide && exercise?.id !== "warmup" && (
+                  <button
+                    type="button"
+                    className="workoutTechniqueButton"
+                    onClick={(event) => openWorkoutExerciseModal(
+                      setExerciseTechniqueOpenId,
+                      exercise.id,
+                      event.currentTarget
+                    )}
+                    aria-label="Показать пояснение техники"
+                    title="Техника выполнения"
+                  >
+                    i
+                  </button>
+                )}
               </div>
             )}
 
@@ -20749,27 +24641,38 @@ function normalizeTelegramUsername(value = "") {
               </div>
 
               <div className="workoutFinishActionPanel workoutStageActionPanel">
-                <button
-                  type="button"
-                  className="finishWorkoutButton"
-                  onClick={() => {
-                    if (isWorkoutSaved) {
-                      setIsWorkoutSaved(false);
-                      setShowWorkoutSavedCard(false);
-                      goBackToMain();
-                      return;
-                    }
+                <div className="finishNavigationRow">
+                  <button
+                    type="button"
+                    className="finishBackButton"
+                    onClick={goToPreviousExercise}
+                    disabled={isSaving}
+                    aria-label="Вернуться к последнему упражнению"
+                  >
+                    <span>Назад</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="finishWorkoutButton"
+                    onClick={() => {
+                      if (isWorkoutSaved) {
+                        setIsWorkoutSaved(false);
+                        setShowWorkoutSavedCard(false);
+                        goBackToMain();
+                        return;
+                      }
 
-                    saveWorkoutToFirebase(null);
-                  }}
-                  disabled={isSaving}
-                >
-                  {isSaving
-                    ? "Сохраняю..."
-                    : isWorkoutSaved
-                    ? "Вернуться в меню"
-                    : "Сохранить и завершить"}
-                </button>
+                      saveWorkoutToFirebase(null);
+                    }}
+                    disabled={isSaving}
+                  >
+                    {isSaving
+                      ? "Сохраняю..."
+                      : isWorkoutSaved
+                      ? "Вернуться в меню"
+                      : "Сохранить и завершить"}
+                  </button>
+                </div>
               </div>
               </>
             ) : (
@@ -20823,7 +24726,7 @@ function normalizeTelegramUsername(value = "") {
                             className="exerciseVideo"
                             src={exercise.video}
                             playsInline
-                            preload="metadata"
+                            preload="auto"
                             onPointerDown={(event) => event.stopPropagation()}
                             onTouchStart={(event) => event.stopPropagation()}
                             onTouchMove={(event) => event.stopPropagation()}
@@ -21064,6 +24967,9 @@ function normalizeTelegramUsername(value = "") {
                             <label className="workoutExerciseActualField workoutExerciseWeightField">
                               <span className="workoutExerciseWeightControls">
                                 <input
+                                  ref={(element) => {
+                                    setWeightInputRefs.current[`${exercise.id}:${index}`] = element;
+                                  }}
                                   type="text"
                                   inputMode="decimal"
                                   enterKeyHint="next"
@@ -21097,6 +25003,12 @@ function normalizeTelegramUsername(value = "") {
                         </div>
                       ))}
                     </div>
+                    {exerciseValidationMessage && (
+                      <p className="workoutExerciseValidation" role="alert">
+                        <span aria-hidden="true">!</span>
+                        {exerciseValidationMessage}
+                      </p>
+                    )}
                     {sharedExerciseAiWeightAdjustment && (
                       <small className="workoutAiSharedWeightNote">
                         Коррекция готовности: {sharedExerciseAiWeightAdjustment}
@@ -21118,12 +25030,112 @@ function normalizeTelegramUsername(value = "") {
                       )}
                     </button>
 
+                    <button
+                      type="button"
+                      className="workoutExerciseNoteButton"
+                      onClick={(event) => openWorkoutExerciseModal(
+                        setExerciseNoteOpenId,
+                        exercise.id,
+                        event.currentTarget
+                      )}
+                      aria-label="Открыть заметку к упражнению"
+                    >
+                      <span>Заметка</span>
+                      <span aria-hidden="true">✎</span>
+                    </button>
+
                     {exerciseAiWeightAdjustments.length > 0 && (
                       <div className="workoutAiAdjustHint">
                         Коррекция готовности · {workoutReadiness?.volumeText}
                       </div>
                     )}
+
                   </div>
+                )}
+
+                {exercise.id !== "warmup" && exerciseNoteOpenId === exercise.id && createPortal(
+                  <div
+                    className="workoutExerciseModalOverlay"
+                    role="presentation"
+                    onClick={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
+                    onTouchStart={(event) => event.stopPropagation()}
+                    onTouchMove={(event) => event.stopPropagation()}
+                    onTouchEnd={(event) => event.stopPropagation()}
+                  >
+                    <section
+                      className="workoutExerciseModal"
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="workoutExerciseNoteTitle"
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      <header>
+                        <div>
+                          <small>{exercise.name}</small>
+                          <h2 id="workoutExerciseNoteTitle">Заметка</h2>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
+                          aria-label="Закрыть заметку"
+                        >
+                          ×
+                        </button>
+                      </header>
+                      <textarea
+                        value={exercise.clientNote || ""}
+                        onChange={(event) => updateExerciseNote(exercise.id, event.target.value)}
+                        placeholder="Например: уменьшить вес или проверить положение локтей"
+                        maxLength={240}
+                      />
+                      <button
+                        type="button"
+                        className="workoutExerciseModalDone"
+                        onClick={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
+                      >
+                        Готово
+                      </button>
+                    </section>
+                  </div>,
+                  document.body
+                )}
+
+                {exercise.id !== "warmup" && exerciseTechniqueOpenId === exercise.id && createPortal(
+                  <div
+                    className="workoutExerciseModalOverlay"
+                    role="presentation"
+                    onClick={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
+                    onTouchStart={(event) => event.stopPropagation()}
+                    onTouchMove={(event) => event.stopPropagation()}
+                    onTouchEnd={(event) => event.stopPropagation()}
+                  >
+                    <section
+                      className="workoutExerciseModal workoutTechniqueModal"
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="workoutExerciseTechniqueTitle"
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      <header>
+                        <div>
+                          <small>Техника выполнения</small>
+                          <h2 id="workoutExerciseTechniqueTitle">{exercise.name}</h2>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
+                          aria-label="Закрыть пояснение техники"
+                        >
+                          ×
+                        </button>
+                      </header>
+                      <div className="workoutTechniqueModalContent">
+                        <span aria-hidden="true">i</span>
+                        <p>{getExerciseTechniqueHint(exercise.name)}</p>
+                      </div>
+                    </section>
+                  </div>,
+                  document.body
                 )}
 
                 {exercise.id !== "warmup" && restTimerSeconds > 0 && (

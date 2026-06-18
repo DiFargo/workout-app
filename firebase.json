@@ -75,6 +75,13 @@
         }
       },
       {
+        "source": "/api/admin/deleteUser",
+        "function": {
+          "functionId": "deleteUser",
+          "region": "europe-west1"
+        }
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
