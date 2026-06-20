@@ -203,6 +203,7 @@ import {
   getHistoryWorkoutParts
 } from "./utils/workoutHistoryPresentation";
 import { buildTrainerNutritionPlanUpdate } from "./utils/trainerNutritionPlan";
+import { buildTrainerExerciseLibraryItems } from "./utils/trainerExerciseLibrary";
 import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
 import {
   formatTrainerSummaryDate,
@@ -297,7 +298,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v691";
+const APP_VERSION = "v692";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -862,6 +863,10 @@ export default function App() {
   const [adminClientTab, setAdminClientTab] = useState("overview");
   const [adminTrainerNote, setAdminTrainerNote] = useState("");
   const [adminTrainingTemplates, setAdminTrainingTemplates] = useState([]);
+  const trainerExerciseLibraryItems = useMemo(
+    () => buildTrainerExerciseLibraryItems(plan, adminTrainingTemplates),
+    [plan, adminTrainingTemplates]
+  );
   const [adminTemplateName, setAdminTemplateName] = useState("");
   const [adminSelectedTemplateId, setAdminSelectedTemplateId] = useState("");
   const [adminSelectedNutritionPreset, setAdminSelectedNutritionPreset] = useState("maintenance");
@@ -12305,37 +12310,6 @@ async function loadUsers() {
     setPage("adminWorkouts");
   }
 
-  function getTrainerNextExerciseLibraryItems() {
-    const templateWorkouts = adminTrainingTemplates.flatMap((template) => {
-      const templateBlocks = Array.isArray(template.blocks)
-        ? template.blocks
-        : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);
-
-      return [
-        ...(template.workouts || []),
-        ...templateBlocks.flatMap((block) =>
-          (block.weeks || []).flatMap((week) => week.workouts || [])
-        )
-      ];
-    });
-    const sources = [
-      ...(plan.workouts || []).flatMap((workout) => workout.exercises || []),
-      ...templateWorkouts.flatMap((workout) => workout.exercises || [])
-    ];
-    const library = new Map();
-
-    sources.forEach((exercise) => {
-      const key = String(exercise?.name || "").trim().toLocaleLowerCase("ru").replace(/ё/g, "е").replace(/\s+/g, " ");
-      if (!key) return;
-      const current = library.get(key);
-      const currentVideo = current?.video || current?.videoUrl || current?.videoURL || "";
-      const nextVideo = exercise?.video || exercise?.videoUrl || exercise?.videoURL || "";
-      if (!current || (!currentVideo && nextVideo)) library.set(key, exercise);
-    });
-
-    return [...library.values()];
-  }
-
   function updateTrainerNextWorkout(workoutId, patch = {}) {
     const nextPlan = {
       ...plan,
@@ -12371,7 +12345,7 @@ async function loadUsers() {
 
             if (Object.prototype.hasOwnProperty.call(patch, "name")) {
               const libraryExercise = findExerciseLibraryMatch(
-                getTrainerNextExerciseLibraryItems(),
+                trainerExerciseLibraryItems,
                 patch.name,
                 exerciseId
               );
@@ -12462,7 +12436,7 @@ async function loadUsers() {
     const stamp = Date.now();
     const sourceName = String(sourceExercise?.name || "").trim();
     const libraryExercise = sourceExercise || findExerciseLibraryMatch(
-      getTrainerNextExerciseLibraryItems(),
+      trainerExerciseLibraryItems,
       sourceName
     );
     const libraryVideo = libraryExercise?.video || libraryExercise?.videoUrl || libraryExercise?.videoURL || "";
@@ -15484,7 +15458,7 @@ async function loadUsers() {
           onSendMessage={sendTrainerClientMessage}
           onClientAction={handleTrainerClientAction}
           workouts={sortWorkoutDays(plan.workouts || [])}
-          exerciseLibrary={getTrainerNextExerciseLibraryItems()}
+          exerciseLibrary={trainerExerciseLibraryItems}
           programTemplates={adminTrainingTemplates}
           selectedProgramId={adminSelectedTemplateId}
           onSelectProgram={setAdminSelectedTemplateId}
@@ -16558,7 +16532,7 @@ async function loadUsers() {
           onSendMessage={sendTrainerClientMessage}
           onClientAction={handleTrainerClientAction}
           workouts={sortWorkoutDays(plan.workouts || [])}
-          exerciseLibrary={getTrainerNextExerciseLibraryItems()}
+          exerciseLibrary={trainerExerciseLibraryItems}
           programTemplates={adminTrainingTemplates}
           selectedProgramId={adminSelectedTemplateId}
           onSelectProgram={setAdminSelectedTemplateId}
@@ -18270,7 +18244,7 @@ async function loadUsers() {
           clients={usersList}
           selectedClient={adminSelectedClient || selectedUser || usersList[0] || null}
           workouts={sortWorkoutDays(plan.workouts || [])}
-          exerciseLibrary={getTrainerNextExerciseLibraryItems()}
+          exerciseLibrary={trainerExerciseLibraryItems}
           programTemplates={adminTrainingTemplates}
           selectedProgramId={adminSelectedTemplateId}
           onSelectProgram={setAdminSelectedTemplateId}
