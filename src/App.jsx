@@ -194,6 +194,16 @@ import {
 } from "./utils/workoutCompletion";
 import { buildTrainerNutritionPlanUpdate } from "./utils/trainerNutritionPlan";
 import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
+import { pluralizeRu } from "./utils/trainerAttention";
+import {
+  formatTrainerSummaryDate,
+  getTrainerAssignmentVersionKey,
+  getTrainerSummaryDateKey,
+  getTrainerSummaryDayStart,
+  getTrainerSummaryDaysSince,
+  getTrainerSummaryTimestamp,
+  getTrainerSummaryWeekStart
+} from "./utils/trainerSummaryDates";
 import {
   CLIENT_PRIMARY_PAGES,
   mapLoginAuthError,
@@ -250,7 +260,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v680";
+const APP_VERSION = "v681";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5787,56 +5797,6 @@ export default function App() {
       .join(", ");
   }
 
-  function getTrainerSummaryTimestamp(value) {
-    if (!value) return 0;
-    if (typeof value?.toDate === "function") {
-      const timestamp = value.toDate().getTime();
-      return Number.isFinite(timestamp) ? timestamp : 0;
-    }
-    if (Number.isFinite(value?.seconds)) return value.seconds * 1000;
-    if (typeof value === "number") return Number.isFinite(value) ? value : 0;
-
-    const normalizedValue = /^\d{4}-\d{2}-\d{2}$/.test(String(value))
-      ? `${value}T12:00:00`
-      : value;
-    const timestamp = new Date(normalizedValue).getTime();
-    return Number.isFinite(timestamp) ? timestamp : 0;
-  }
-
-  function getTrainerSummaryDayStart(value = Date.now()) {
-    const timestamp = getTrainerSummaryTimestamp(value) || Date.now();
-    const date = new Date(timestamp);
-    date.setHours(0, 0, 0, 0);
-    return date.getTime();
-  }
-
-  function getTrainerSummaryWeekStart(value = Date.now()) {
-    const date = new Date(getTrainerSummaryDayStart(value));
-    const mondayOffset = (date.getDay() + 6) % 7;
-    date.setDate(date.getDate() - mondayOffset);
-    return date.getTime();
-  }
-
-  function getTrainerSummaryDateKey(value) {
-    const timestamp = getTrainerSummaryTimestamp(value);
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-  }
-
-  function getTrainerSummaryDaysSince(value) {
-    const timestamp = getTrainerSummaryTimestamp(value);
-    if (!timestamp) return null;
-    return Math.max(0, Math.floor(
-      (getTrainerSummaryDayStart() - getTrainerSummaryDayStart(timestamp)) / (24 * 60 * 60 * 1000)
-    ));
-  }
-
-  function getTrainerAssignmentVersionKey(value) {
-    const timestamp = getTrainerSummaryTimestamp(value);
-    return timestamp ? String(timestamp) : String(value || "").trim();
-  }
-
   function getTrainerNutritionSummary(nutritionState = null) {
     const todayStart = getTrainerSummaryDayStart();
     const sevenDayStart = todayStart - 7 * 24 * 60 * 60 * 1000;
@@ -5895,12 +5855,7 @@ export default function App() {
   }
 
   function getTrainerDayWord(value) {
-    const number = Math.abs(Number(value) || 0) % 100;
-    const lastDigit = number % 10;
-    if (number > 10 && number < 20) return "дней";
-    if (lastDigit === 1) return "день";
-    if (lastDigit >= 2 && lastDigit <= 4) return "дня";
-    return "дней";
+    return pluralizeRu(value, "день", "дня", "дней");
   }
 
   function getClientAttentionReasons(summary = {}) {
@@ -5925,15 +5880,6 @@ export default function App() {
     }
 
     return reasons.length ? reasons : ["активность в норме"];
-  }
-
-  function formatTrainerSummaryDate(value) {
-    const timestamp = getTrainerSummaryTimestamp(value);
-    if (!timestamp) return "нет данных";
-    return new Date(timestamp).toLocaleDateString("ru-RU", {
-      day: "2-digit",
-      month: "2-digit"
-    });
   }
 
   function getTrainerClientFastSummary(client = {}, previousSummary = {}) {

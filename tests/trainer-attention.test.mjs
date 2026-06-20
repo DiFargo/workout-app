@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getClientAttentionState } from "../src/utils/trainerAttention.js";
+import { getClientAttentionState, pluralizeRu } from "../src/utils/trainerAttention.js";
+
+test("russian day pluralization matches trainer labels", () => {
+  assert.equal(pluralizeRu(1, "день", "дня", "дней"), "день");
+  assert.equal(pluralizeRu(3, "день", "дня", "дней"), "дня");
+  assert.equal(pluralizeRu(11, "день", "дня", "дней"), "дней");
+  assert.equal(pluralizeRu(25, "день", "дня", "дней"), "дней");
+});
 
 test("future scheduled workouts do not trigger attention before they are due", () => {
   const now = new Date("2026-06-16T12:00:00");
