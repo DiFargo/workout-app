@@ -247,6 +247,7 @@ import {
   canManageTrainerTemplate,
   getTrainerProgramOwner
 } from "./utils/trainerProgramAccess";
+import { getTrainerProgramTemplateStats } from "./utils/trainerProgramStats";
 import {
   getAdminWeightPoints,
   getAdminWorkoutProgressList
@@ -319,7 +320,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v698";
+const APP_VERSION = "v699";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -19437,28 +19438,7 @@ async function loadUsers() {
     }
 
     function getTemplateStats(template = {}) {
-      const workouts = Array.isArray(template.workouts)
-        ? template.workouts
-        : (
-            (template.blocks || []).length
-              ? template.blocks
-              : (template.months || []).flatMap((month) => month.microcycles || month.blocks || [])
-          ).flatMap((block) =>
-            (block.weeks || []).flatMap((week) => week.workouts || [])
-          );
-      const templateMicrocycles = (template.blocks || []).length
-        ? template.blocks
-        : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);
-
-      const exercisesCount = workouts.reduce((sum, workout) => sum + ((workout.exercises || []).length), 0);
-      const weeksCount = templateMicrocycles.reduce((sum, block) => sum + ((block.weeks || []).length), 0);
-
-      return {
-        workoutsCount: workouts.length,
-        exercisesCount,
-        weeksCount: weeksCount || 4,
-        blocksCount: templateMicrocycles.length || 1
-      };
+      return getTrainerProgramTemplateStats(template);
     }
 
     function openProgramFromLibrary(templateId) {
