@@ -139,6 +139,7 @@ import {
   createEmptyTelegramProfile,
   hasRequiredAiNutritionProfileFields
 } from "./utils/profileDefaults";
+import { normalizeTelegramUsername } from "./utils/telegramProfile";
 import {
   enqueueFailedHistorySave,
   getFailedHistoryQueue,
@@ -240,7 +241,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v672";
+const APP_VERSION = "v673";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -9575,11 +9576,6 @@ async function loadUsers() {
     } catch (_) {
       // ignore localStorage errors
     }
-  }
-
-  
-function normalizeTelegramUsername(value = "") {
-    return String(value || "").trim().replace(/^@+/, "");
   }
 
   function createTelegramLinkCode() {
