@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import {
   buildPlannedWorkoutSlots,
   buildWorkoutScheduleCalendarEntries,
-  buildWorkoutScheduleDraft
+  buildWorkoutScheduleDraft,
+  syncWorkoutCalendarWithPlan
 } from "../src/utils/workoutSchedule.js";
 
 const workouts = [
@@ -73,4 +74,26 @@ test("manual planned workout status is shown as completed in calendar", () => {
 
   assert.equal(slots.filter((slot) => slot.isCompleted).length, 3);
   assert.equal(entries.filter((entry) => entry.status === "completed").length, 3);
+});
+
+test("workout calendar sync preserves statuses and records updater", () => {
+  const synced = syncWorkoutCalendarWithPlan({
+    scheduledDates: ["2026-06-15"],
+    monthlyTrainingDates: ["2026-06-17"],
+    plannedWorkouts: [
+      { workoutId: "w1", order: 1, date: "2026-06-15", status: "completed", statusUpdatedAt: "old" }
+    ]
+  }, [
+    { id: "w1", name: "Workout A" },
+    { id: "w2", name: "Workout B", plannedDate: "2026-06-20", status: "moved", movedToDate: "2026-06-22" }
+  ], "2026-06-20T10:00:00.000Z", "trainer_1");
+
+  assert.deepEqual(synced.scheduledDates, ["2026-06-15", "2026-06-17", "2026-06-20"]);
+  assert.deepEqual(synced.monthlyTrainingDates, synced.scheduledDates);
+  assert.equal(synced.updatedBy, "trainer_1");
+  assert.equal(synced.plannedWorkouts[0].status, "completed");
+  assert.equal(synced.plannedWorkouts[0].statusUpdatedAt, "old");
+  assert.equal(synced.plannedWorkouts[1].status, "moved");
+  assert.equal(synced.plannedWorkouts[1].movedToDate, "2026-06-22");
+  assert.equal(synced.plannedWorkouts[1].statusUpdatedAt, "2026-06-20T10:00:00.000Z");
 });

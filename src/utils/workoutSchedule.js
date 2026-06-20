@@ -169,3 +169,49 @@ export function buildWorkoutScheduleDraft(dates = [], workouts = []) {
     status: "planned"
   }));
 }
+
+export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], updatedAt = "", updatedBy = "") {
+  const existingPlannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
+  const scheduledDates = [...new Set([
+    ...(Array.isArray(calendar.scheduledDates) ? calendar.scheduledDates : []),
+    ...(Array.isArray(calendar.monthlyTrainingDates) ? calendar.monthlyTrainingDates : []),
+    ...existingPlannedWorkouts.map((item) => item?.date),
+    ...(Array.isArray(workouts) ? workouts : []).map((workout) => workout?.scheduledDate || workout?.plannedDate)
+  ].map(toWorkoutDateKey).filter(Boolean))].sort();
+  const plannedWorkouts = (Array.isArray(workouts) ? workouts : []).map((workout, index) => {
+    const workoutId = String(workout?.id || "").trim();
+    const existing = existingPlannedWorkouts.find((item) => (
+      String(item?.workoutId || "").trim() === workoutId ||
+      Number(item?.order) === index + 1 ||
+      Number(item?.index) === index
+    )) || {};
+    const workoutStatus = String(workout?.status || "").trim();
+    const existingStatus = String(existing.status || "").trim();
+    const status = (
+      workoutStatus && (workoutStatus !== "planned" || workout?.statusUpdatedAt || !existingStatus)
+        ? workoutStatus
+        : existingStatus || workoutStatus || "planned"
+    );
+
+    return {
+      ...existing,
+      order: index + 1,
+      index,
+      workoutId,
+      workoutName: String(workout?.name || existing.workoutName || `Workout ${index + 1}`).trim(),
+      date: toWorkoutDateKey(existing.date || workout?.scheduledDate || workout?.plannedDate || scheduledDates[index] || ""),
+      status,
+      movedToDate: toWorkoutDateKey(workout?.movedToDate || existing.movedToDate || ""),
+      statusUpdatedAt: workout?.statusUpdatedAt || existing.statusUpdatedAt || (status !== "planned" ? updatedAt : "")
+    };
+  });
+
+  return {
+    ...calendar,
+    scheduledDates,
+    monthlyTrainingDates: scheduledDates,
+    plannedWorkouts,
+    updatedAt,
+    updatedBy
+  };
+}
