@@ -262,7 +262,8 @@ import {
 } from "./utils/adminClientProfile";
 import {
   ADMIN_CALENDAR_DAYS,
-  getDefaultAdminCalendar
+  getDefaultAdminCalendar,
+  normalizeAdminProgressReminderInterval
 } from "./utils/adminClientCalendar";
 import {
   formatProfileWorkoutDate,
@@ -323,7 +324,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v702";
+const APP_VERSION = "v703";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -7421,11 +7422,8 @@ async function loadUsers() {
     const currentTelegram = getClientTelegramProfile(client);
     const enabled = settings.enabled !== false;
     const updatedAt = new Date().toISOString();
-    const normalizeProgressInterval = (value) => [7, 14, 30].includes(Number(value))
-      ? Number(value)
-      : 14;
-    const photoIntervalDays = normalizeProgressInterval(settings.progressPhotoIntervalDays);
-    const measurementsIntervalDays = normalizeProgressInterval(settings.measurementsIntervalDays);
+    const photoIntervalDays = normalizeAdminProgressReminderInterval(settings.progressPhotoIntervalDays);
+    const measurementsIntervalDays = normalizeAdminProgressReminderInterval(settings.measurementsIntervalDays);
     const progressReminderSettings = {
       ...(currentCalendar.progressReminderSettings || client.progressReminderSettings || {}),
       photoEnabled: settings.progressPhotoEnabled === true,

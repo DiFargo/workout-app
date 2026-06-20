@@ -10,6 +10,11 @@ export const ADMIN_CALENDAR_DAYS = [
   { id: "sun", title: "Вс", full: "Воскресенье" }
 ];
 
+export function normalizeAdminProgressReminderInterval(value) {
+  const interval = Number(value);
+  return [7, 14, 30].includes(interval) ? interval : 14;
+}
+
 export function getDefaultAdminCalendar(client = {}) {
   const source = client.workoutCalendar || client.calendar || {};
   const profile = getAdminClientProfile(client);

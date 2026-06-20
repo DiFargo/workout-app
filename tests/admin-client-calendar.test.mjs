@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 
 import {
   ADMIN_CALENDAR_DAYS,
-  getDefaultAdminCalendar
+  getDefaultAdminCalendar,
+  normalizeAdminProgressReminderInterval
 } from "../src/utils/adminClientCalendar.js";
 
 test("admin calendar day list keeps monday first week order", () => {
@@ -69,4 +70,12 @@ test("admin calendar preserves explicit workout calendar settings", () => {
       }
     }
   );
+});
+
+test("admin progress reminder interval accepts only supported cadence values", () => {
+  assert.equal(normalizeAdminProgressReminderInterval(7), 7);
+  assert.equal(normalizeAdminProgressReminderInterval("14"), 14);
+  assert.equal(normalizeAdminProgressReminderInterval(30), 30);
+  assert.equal(normalizeAdminProgressReminderInterval(21), 14);
+  assert.equal(normalizeAdminProgressReminderInterval("bad"), 14);
 });
