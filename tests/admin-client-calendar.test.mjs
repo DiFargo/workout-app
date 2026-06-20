@@ -1,7 +1,19 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { getDefaultAdminCalendar } from "../src/utils/adminClientCalendar.js";
+import {
+  ADMIN_CALENDAR_DAYS,
+  getDefaultAdminCalendar
+} from "../src/utils/adminClientCalendar.js";
+
+test("admin calendar day list keeps monday first week order", () => {
+  assert.deepEqual(
+    ADMIN_CALENDAR_DAYS.map((day) => day.id),
+    ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+  );
+  assert.equal(ADMIN_CALENDAR_DAYS[0].title, "Пн");
+  assert.equal(ADMIN_CALENDAR_DAYS[6].full, "Воскресенье");
+});
 
 test("admin calendar defaults to profile training days and standard reminders", () => {
   assert.deepEqual(

@@ -227,7 +227,10 @@ import {
   getAdminClientProfile,
   getAdminClientTrainingDaysText
 } from "./utils/adminClientProfile";
-import { getDefaultAdminCalendar } from "./utils/adminClientCalendar";
+import {
+  ADMIN_CALENDAR_DAYS,
+  getDefaultAdminCalendar
+} from "./utils/adminClientCalendar";
 import {
   formatProfileWorkoutDate,
   getProfileNextTrainingText
@@ -288,7 +291,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v687";
+const APP_VERSION = "v688";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -7517,16 +7520,6 @@ async function loadUsers() {
       setAdminDeletingWorkoutId("");
     }
   }
-
-  const ADMIN_CALENDAR_DAYS = [
-    { id: "mon", title: "Пн", full: "Понедельник" },
-    { id: "tue", title: "Вт", full: "Вторник" },
-    { id: "wed", title: "Ср", full: "Среда" },
-    { id: "thu", title: "Чт", full: "Четверг" },
-    { id: "fri", title: "Пт", full: "Пятница" },
-    { id: "sat", title: "Сб", full: "Суббота" },
-    { id: "sun", title: "Вс", full: "Воскресенье" }
-  ];
 
   function toggleAdminCalendarDay(dayId) {
     setAdminCalendarDraft((prev) => {
