@@ -1,5 +1,6 @@
 import { sumNutritionFoods } from "./nutritionFoodTotals.js";
 import { pluralizeRu } from "./trainerAttention.js";
+import { getClientPaymentAttention } from "../domain/clientInsights.js";
 import {
   getTrainerSummaryDayStart,
   getTrainerSummaryDaysSince,
@@ -89,4 +90,65 @@ export function getClientAttentionReasons(summary = {}) {
   }
 
   return reasons.length ? reasons : ["активность в норме"];
+}
+
+export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
+  const nutritionState = client.nutritionState || client.adminClientNutrition || client.nutrition || null;
+  const nutritionSummary = getTrainerNutritionSummary(nutritionState);
+  const completedWorkoutCount = Number(
+    client.completedWorkoutCount ??
+    client.assignedCompletedWorkoutCount ??
+    previousSummary.completedWorkoutCount ??
+    0
+  ) || 0;
+  const assignedWorkoutCount = Number(
+    client.assignedWorkoutCount ??
+    previousSummary.assignedWorkoutCount ??
+    0
+  ) || 0;
+  const explicitCompletion = Number(client.programCompletionPercent ?? previousSummary.programCompletionPercent);
+
+  return {
+    clientId: client.id,
+    lastWorkoutAt:
+      client.lastWorkoutAt ||
+      client.lastWorkoutDate ||
+      client.latestWorkoutAt ||
+      previousSummary.lastWorkoutAt ||
+      "",
+    workouts7: Number(client.workouts7 ?? client.weeklyWorkouts ?? previousSummary.workouts7 ?? 0) || 0,
+    workouts30: Number(client.workouts30 ?? previousSummary.workouts30 ?? 0) || 0,
+    workoutDateKeysCurrentWeek: Array.isArray(client.workoutDateKeysCurrentWeek)
+      ? client.workoutDateKeysCurrentWeek
+      : Array.isArray(previousSummary.workoutDateKeysCurrentWeek)
+        ? previousSummary.workoutDateKeysCurrentWeek
+        : null,
+    lastNutritionAt:
+      nutritionSummary.lastNutritionAt ||
+      client.lastNutritionAt ||
+      client.lastNutritionDate ||
+      previousSummary.lastNutritionAt ||
+      "",
+    nutritionDays7: Number(nutritionSummary.nutritionDays7 ?? client.nutritionDays7 ?? previousSummary.nutritionDays7 ?? 0) || 0,
+    averageCalories7: nutritionSummary.averageCalories7 ?? client.averageCalories7 ?? previousSummary.averageCalories7 ?? null,
+    lastMeasurementAt:
+      client.lastMeasurementAt ||
+      client.lastMeasurementDate ||
+      client.latestMeasurementAt ||
+      previousSummary.lastMeasurementAt ||
+      "",
+    assignedProgramId: client.assignedProgramId || previousSummary.assignedProgramId || "",
+    assignedProgramUpdatedAt: client.assignedProgramUpdatedAt || client.assignedProgramAt || previousSummary.assignedProgramUpdatedAt || "",
+    assignedWorkoutCount,
+    completedWorkoutCount,
+    plateau: previousSummary.plateau || { isPlateau: false, days: 0, delta: null },
+    payment: previousSummary.payment || null,
+    paymentAttention: previousSummary.paymentAttention || getClientPaymentAttention(null),
+    recentEvents: previousSummary.recentEvents || [],
+    programCompletionPercent: Number.isFinite(explicitCompletion)
+      ? Math.round(explicitCompletion)
+      : assignedWorkoutCount > 0
+        ? Math.min(100, Math.round(completedWorkoutCount / assignedWorkoutCount * 100))
+        : null
+  };
 }

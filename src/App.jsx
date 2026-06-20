@@ -214,6 +214,7 @@ import {
 import {
   getClientActivityStatus,
   getClientAttentionReasons,
+  getTrainerClientFastSummary,
   getTrainerDayWord,
   getTrainerNutritionSummary
 } from "./utils/trainerClientSummary";
@@ -226,6 +227,7 @@ import {
   getAdminClientProfile,
   getAdminClientTrainingDaysText
 } from "./utils/adminClientProfile";
+import { getDefaultAdminCalendar } from "./utils/adminClientCalendar";
 import {
   formatProfileWorkoutDate,
   getProfileNextTrainingText
@@ -286,7 +288,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v686";
+const APP_VERSION = "v687";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5805,67 +5807,6 @@ export default function App() {
     }
   }
 
-  function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
-    const nutritionState = client.nutritionState || client.adminClientNutrition || client.nutrition || null;
-    const nutritionSummary = getTrainerNutritionSummary(nutritionState);
-    const completedWorkoutCount = Number(
-      client.completedWorkoutCount ??
-      client.assignedCompletedWorkoutCount ??
-      previousSummary.completedWorkoutCount ??
-      0
-    ) || 0;
-    const assignedWorkoutCount = Number(
-      client.assignedWorkoutCount ??
-      previousSummary.assignedWorkoutCount ??
-      0
-    ) || 0;
-    const explicitCompletion = Number(client.programCompletionPercent ?? previousSummary.programCompletionPercent);
-
-    return {
-      clientId: client.id,
-      lastWorkoutAt:
-        client.lastWorkoutAt ||
-        client.lastWorkoutDate ||
-        client.latestWorkoutAt ||
-        previousSummary.lastWorkoutAt ||
-        "",
-      workouts7: Number(client.workouts7 ?? client.weeklyWorkouts ?? previousSummary.workouts7 ?? 0) || 0,
-      workouts30: Number(client.workouts30 ?? previousSummary.workouts30 ?? 0) || 0,
-      workoutDateKeysCurrentWeek: Array.isArray(client.workoutDateKeysCurrentWeek)
-        ? client.workoutDateKeysCurrentWeek
-        : Array.isArray(previousSummary.workoutDateKeysCurrentWeek)
-          ? previousSummary.workoutDateKeysCurrentWeek
-          : null,
-      lastNutritionAt:
-        nutritionSummary.lastNutritionAt ||
-        client.lastNutritionAt ||
-        client.lastNutritionDate ||
-        previousSummary.lastNutritionAt ||
-        "",
-      nutritionDays7: Number(nutritionSummary.nutritionDays7 ?? client.nutritionDays7 ?? previousSummary.nutritionDays7 ?? 0) || 0,
-      averageCalories7: nutritionSummary.averageCalories7 ?? client.averageCalories7 ?? previousSummary.averageCalories7 ?? null,
-      lastMeasurementAt:
-        client.lastMeasurementAt ||
-        client.lastMeasurementDate ||
-        client.latestMeasurementAt ||
-        previousSummary.lastMeasurementAt ||
-        "",
-      assignedProgramId: client.assignedProgramId || previousSummary.assignedProgramId || "",
-      assignedProgramUpdatedAt: client.assignedProgramUpdatedAt || client.assignedProgramAt || previousSummary.assignedProgramUpdatedAt || "",
-      assignedWorkoutCount,
-      completedWorkoutCount,
-      plateau: previousSummary.plateau || { isPlateau: false, days: 0, delta: null },
-      payment: previousSummary.payment || null,
-      paymentAttention: previousSummary.paymentAttention || getClientPaymentAttention(null),
-      recentEvents: previousSummary.recentEvents || [],
-      programCompletionPercent: Number.isFinite(explicitCompletion)
-        ? Math.round(explicitCompletion)
-        : assignedWorkoutCount > 0
-          ? Math.min(100, Math.round(completedWorkoutCount / assignedWorkoutCount * 100))
-          : null
-    };
-  }
-
   async function loadTrainerClientSummaries(clients = []) {
     const requestId = trainerClientSummaryRequestRef.current + 1;
     trainerClientSummaryRequestRef.current = requestId;
@@ -7586,26 +7527,6 @@ async function loadUsers() {
     { id: "sat", title: "Сб", full: "Суббота" },
     { id: "sun", title: "Вс", full: "Воскресенье" }
   ];
-
-  function getDefaultAdminCalendar(client = {}) {
-    const source = client.workoutCalendar || client.calendar || {};
-    const profile = getAdminClientProfile(client);
-
-    return {
-      enabled: source.enabled !== false,
-      reminderEnabled: source.reminderEnabled !== false,
-      reminderOffsetsHours: Array.isArray(source.reminderOffsetsHours) && source.reminderOffsetsHours.length
-        ? source.reminderOffsetsHours
-        : [24],
-      reminderTime: source.reminderTime || "19:00",
-      workoutTime: source.workoutTime || client.workoutTime || profile?.workoutTime || "13:00",
-      hourReminderEnabled: source.hourReminderEnabled === true,
-      trainingDays: Array.isArray(source.trainingDays) && source.trainingDays.length
-        ? source.trainingDays
-        : Array.isArray(profile?.trainingDays) ? profile.trainingDays : [],
-      daySettings: source.daySettings || source.scheduleByDay || {}
-    };
-  }
 
   function toggleAdminCalendarDay(dayId) {
     setAdminCalendarDraft((prev) => {

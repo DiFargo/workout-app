@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   getClientActivityStatus,
   getClientAttentionReasons,
+  getTrainerClientFastSummary,
   getTrainerDayWord,
   getTrainerNutritionSummary
 } from "../src/utils/trainerClientSummary.js";
@@ -67,4 +68,32 @@ test("trainer client attention reasons stay compact and readable", () => {
       `нет замера 31 ${getTrainerDayWord(31)}`
     ]
   );
+});
+
+test("trainer fast summary merges client fields with previous loaded summary", () => {
+  const summary = getTrainerClientFastSummary({
+    id: "client_1",
+    weeklyWorkouts: 2,
+    assignedWorkoutCount: 8,
+    assignedCompletedWorkoutCount: 3,
+    nutritionState: {
+      days: {
+        [dateKeyOffset(-1)]: { foods: [{ calories: 1800 }] }
+      }
+    }
+  }, {
+    lastWorkoutAt: "2026-06-10",
+    lastMeasurementAt: "2026-06-11",
+    assignedProgramId: "program_1",
+    recentEvents: [{ type: "note" }]
+  });
+
+  assert.equal(summary.clientId, "client_1");
+  assert.equal(summary.workouts7, 2);
+  assert.equal(summary.nutritionDays7, 1);
+  assert.equal(summary.assignedWorkoutCount, 8);
+  assert.equal(summary.completedWorkoutCount, 3);
+  assert.equal(summary.programCompletionPercent, 38);
+  assert.equal(summary.assignedProgramId, "program_1");
+  assert.deepEqual(summary.recentEvents, [{ type: "note" }]);
 });
