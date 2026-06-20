@@ -179,6 +179,32 @@ export function mergeNutritionDays(
   return mergedDays;
 }
 
+function shiftDateKey(dateKey = "", days = 0) {
+  const [year, month, day] = String(dateKey || "").split("-").map(Number);
+  if (![year, month, day].every(Number.isFinite)) return "";
+
+  const date = new Date(Date.UTC(year, month - 1, day + days));
+  return date.toISOString().slice(0, 10);
+}
+
+export function calculateNutritionFoodStreak(days = {}, endDateKey = "") {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(endDateKey || ""))) return 0;
+
+  let cursor = String(endDateKey);
+  let streak = 0;
+
+  while (cursor) {
+    const day = days?.[cursor];
+    const hasFood = Array.isArray(day?.foods) && day.foods.length > 0;
+    if (!hasFood) break;
+
+    streak += 1;
+    cursor = shiftDateKey(cursor, -1);
+  }
+
+  return streak;
+}
+
 export function getNutritionSearchScore(food = {}, query = "") {
   const normalizedQuery = String(query).trim().toLowerCase();
   if (!normalizedQuery) return 0;

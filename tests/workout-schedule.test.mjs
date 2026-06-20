@@ -54,3 +54,23 @@ test("missed planned workout is marked and projected forward", () => {
   assert.ok(entries.some((item) => item.date === "2026-06-12" && item.status === "missed"));
   assert.ok(entries.some((item) => item.date === "2026-06-18" && item.status === "shifted"));
 });
+
+test("manual planned workout status is shown as completed in calendar", () => {
+  const slots = buildPlannedWorkoutSlots({
+    workouts,
+    calendar: {
+      scheduledDates: ["2026-06-15", "2026-06-17", "2026-06-20"],
+      plannedWorkouts: [
+        { workoutId: "w1", order: 1, date: "2026-06-15", status: "completed" },
+        { workoutId: "w2", order: 2, date: "2026-06-17", status: "completed" },
+        { workoutId: "w3", order: 3, date: "2026-06-20", status: "completed" }
+      ]
+    },
+    history: [],
+    now: new Date("2026-06-18T12:00:00.000Z")
+  });
+  const entries = buildWorkoutScheduleCalendarEntries(slots);
+
+  assert.equal(slots.filter((slot) => slot.isCompleted).length, 3);
+  assert.equal(entries.filter((entry) => entry.status === "completed").length, 3);
+});

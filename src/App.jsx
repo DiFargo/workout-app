@@ -59,6 +59,7 @@ import {
   exerciseUsesExternalWeight,
   findExerciseLibraryMatch,
   findExistingPhotoFood,
+  calculateNutritionFoodStreak,
   getMicrocycleWeekNumbers,
   getWorkoutCompletion,
   getTimestampValue,
@@ -88,7 +89,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v581";
+const APP_VERSION = "v625";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -502,10 +503,16 @@ function showAppError(type = "api", customText = "") {
 
   const toast = document.createElement("div");
   toast.className = `appErrorToast appErrorToast--${type}`;
-  toast.innerHTML = `
-    <div class="appErrorToastTitle">${preset.title}</div>
-    <div class="appErrorToastText">${customText || preset.text}</div>
-  `;
+
+  const title = document.createElement("div");
+  title.className = "appErrorToastTitle";
+  title.textContent = preset.title;
+
+  const text = document.createElement("div");
+  text.className = "appErrorToastText";
+  text.textContent = customText || preset.text;
+
+  toast.append(title, text);
 
   document.body.appendChild(toast);
 
@@ -514,6 +521,79 @@ function showAppError(type = "api", customText = "") {
     toast.classList.add("appErrorToastOut");
     window.setTimeout(() => toast.remove(), 220);
   }, 4200);
+}
+
+function showAppConfirm(messageOrOptions = "", maybeOptions = {}) {
+  if (typeof document === "undefined") return Promise.resolve(false);
+
+  const options = typeof messageOrOptions === "object" && messageOrOptions !== null
+    ? messageOrOptions
+    : { ...maybeOptions, text: String(messageOrOptions || "") };
+  const titleText = options.title || "Подтвердить действие";
+  const bodyText = options.text || options.message || "";
+  const confirmText = options.confirmText || "Подтвердить";
+  const cancelText = options.cancelText || "Отмена";
+  const danger = Boolean(options.danger || /удал|сброс/i.test(bodyText));
+
+  const existing = document.querySelector(".appConfirmOverlay");
+  if (existing) existing.remove();
+
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.className = "appConfirmOverlay";
+
+    const dialog = document.createElement("div");
+    dialog.className = "appConfirmDialog";
+    dialog.setAttribute("role", "dialog");
+    dialog.setAttribute("aria-modal", "true");
+    dialog.setAttribute("aria-label", titleText);
+
+    const title = document.createElement("div");
+    title.className = "appConfirmTitle";
+    title.textContent = titleText;
+
+    const text = document.createElement("div");
+    text.className = "appConfirmText";
+    text.textContent = bodyText;
+
+    const actions = document.createElement("div");
+    actions.className = "appConfirmActions";
+
+    const cancelButton = document.createElement("button");
+    cancelButton.type = "button";
+    cancelButton.className = "appConfirmButton appConfirmButtonGhost";
+    cancelButton.textContent = cancelText;
+
+    const confirmButton = document.createElement("button");
+    confirmButton.type = "button";
+    confirmButton.className = `appConfirmButton appConfirmButtonPrimary${danger ? " danger" : ""}`;
+    confirmButton.textContent = confirmText;
+
+    let resolved = false;
+    const close = (value) => {
+      if (resolved) return;
+      resolved = true;
+      document.removeEventListener("keydown", handleKeyDown);
+      overlay.remove();
+      resolve(value);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") close(false);
+    };
+
+    cancelButton.addEventListener("click", () => close(false));
+    confirmButton.addEventListener("click", () => close(true));
+    overlay.addEventListener("click", (event) => {
+      if (event.target === overlay) close(false);
+    });
+    document.addEventListener("keydown", handleKeyDown);
+
+    actions.append(cancelButton, confirmButton);
+    dialog.append(title, text, actions);
+    overlay.append(dialog);
+    document.body.appendChild(overlay);
+    cancelButton.focus({ preventScroll: true });
+  });
 }
 
 function getNutritionUpdatedAt(state = {}) {
@@ -633,6 +713,40 @@ const nutritionMeals = [
   { id: "dinner", name: "Ужин", icon: "🌇" },
   { id: "snack", name: "Перекус/Другое", icon: "🌙" }
 ];
+
+function getDefaultNutritionMealByTime(date = new Date()) {
+  const hour = date.getHours();
+  if (hour >= 5 && hour < 11) return "breakfast";
+  if (hour >= 11 && hour < 16) return "lunch";
+  if (hour >= 16 && hour < 21) return "dinner";
+  return "snack";
+}
+
+function getNutritionOrbitPoint(angleDeg, radius = 184, centerX = 270, centerY = 232) {
+  const angleRad = ((angleDeg - 90) * Math.PI) / 180;
+  return {
+    x: Number((centerX + radius * Math.cos(angleRad)).toFixed(2)),
+    y: Number((centerY + radius * Math.sin(angleRad)).toFixed(2))
+  };
+}
+
+function getNutritionOrbitArcPath(startAngle, endAngle, radius = 184) {
+  const start = getNutritionOrbitPoint(startAngle, radius);
+  const end = getNutritionOrbitPoint(endAngle, radius);
+  const largeArcFlag = Math.abs(endAngle - startAngle) > 180 ? 1 : 0;
+  return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x} ${end.y}`;
+}
+
+function getNutritionOrbitSegment(startAngle, arcDegrees, progress) {
+  const safeProgress = Math.max(0, Math.min(100, Number(progress) || 0));
+  const endAngle = startAngle + arcDegrees * (safeProgress / 100);
+  return {
+    hasProgress: safeProgress > 0,
+    progressPath: safeProgress > 0 ? getNutritionOrbitArcPath(startAngle, endAngle) : "",
+    startDot: getNutritionOrbitPoint(startAngle),
+    progressDot: getNutritionOrbitPoint(endAngle)
+  };
+}
 
 const NUTRITION_ICON_PRESETS = ["🍗", "🥩", "🐟", "🥚", "🥛", "🧀", "🍚", "🥔", "🍞", "🥣", "🍌", "🍎", "🍓", "🥦", "🥗", "🍲", "☕", "🥤", "🍫", "🍽️"];
 
@@ -2842,6 +2956,7 @@ export default function App() {
       if (!isTouchDevice || !window.screen?.orientation?.lock) return;
       window.screen.orientation.lock("portrait-primary").catch(() => {
         // Mobile browsers allow orientation lock only in some contexts.
+        window.screen.orientation.lock("portrait").catch(() => {});
       });
     };
 
@@ -2850,6 +2965,8 @@ export default function App() {
     document.addEventListener("gestureend", preventGestureZoom, { passive: false });
     document.addEventListener("touchmove", preventMultiTouchZoom, { passive: false });
     document.addEventListener("visibilitychange", lockPortraitOrientation);
+    window.addEventListener("orientationchange", lockPortraitOrientation);
+    window.addEventListener("resize", lockPortraitOrientation);
     lockPortraitOrientation();
 
     return () => {
@@ -2858,6 +2975,8 @@ export default function App() {
       document.removeEventListener("gestureend", preventGestureZoom);
       document.removeEventListener("touchmove", preventMultiTouchZoom);
       document.removeEventListener("visibilitychange", lockPortraitOrientation);
+      window.removeEventListener("orientationchange", lockPortraitOrientation);
+      window.removeEventListener("resize", lockPortraitOrientation);
     };
   }, []);
 
@@ -2958,6 +3077,28 @@ export default function App() {
   });
 
   const [page, setPage] = useState("main");
+  useEffect(() => {
+    if (page !== "nutrition") return;
+
+    const scrollNutritionToTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      document.scrollingElement?.scrollTo?.({ top: 0, left: 0, behavior: "auto" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      document
+        .querySelector(".fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition")
+        ?.scrollTo?.({ top: 0, left: 0, behavior: "auto" });
+    };
+
+    scrollNutritionToTop();
+    const frame = window.requestAnimationFrame(scrollNutritionToTop);
+    const timeout = window.setTimeout(scrollNutritionToTop, 80);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
+  }, [page]);
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [individualWorkoutIndex, setIndividualWorkoutIndex] = useState(0);
   const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(false);
@@ -3392,6 +3533,7 @@ export default function App() {
   const [selectedNutritionDateKey, setSelectedNutritionDateKey] = useState(todayNutritionKey());
   const [nutritionCalendarOpen, setNutritionCalendarOpen] = useState(false);
   const [nutritionCalendarMonthKey, setNutritionCalendarMonthKey] = useState(() => todayNutritionKey().slice(0, 7));
+  const [nutritionZoukExpanded, setNutritionZoukExpanded] = useState(false);
   const [expandedNutritionMeals, setExpandedNutritionMeals] = useState({});
   const [fatSecretFoods, setFatSecretFoods] = useState([]);
   const [fatSecretLoading, setFatSecretLoading] = useState(false);
@@ -3413,7 +3555,7 @@ export default function App() {
 
   function startPerformanceCheck(label, meta = {}) {
     performanceMarksRef.current[label] = perfNow();
-    console.log(`⏱️ PERF START · ${label}`, meta);
+    if (import.meta.env.DEV) console.debug(`⏱️ PERF START · ${label}`, meta);
   }
 
   function endPerformanceCheck(label, meta = {}) {
@@ -3432,7 +3574,7 @@ export default function App() {
       ...meta
     };
 
-    console.log(`⏱️ PERF · ${label}: ${ms} ms`, payload);
+    if (import.meta.env.DEV) console.debug(`⏱️ PERF · ${label}: ${ms} ms`, payload);
 
     try {
       const key = "workout_app_perf_logs_v1";
@@ -4496,7 +4638,7 @@ export default function App() {
       loadHistory();
       loadWorkoutsFromFirebase(result.user.uid);
     } catch (err) {
-      console.log(err);
+      console.error(err);
 
       if (err.code === "auth/email-already-in-use") {
         setLoginError("Этот email уже зарегистрирован");
@@ -4674,19 +4816,7 @@ export default function App() {
   }
 
   function getNutritionCurrentStreak() {
-    const days = nutrition.days || {};
-    let streak = 0;
-    const cursor = nutritionKeyToDate(todayNutritionKey());
-
-    while (true) {
-      const key = dateToNutritionKey(cursor);
-      const hasFood = Boolean(days?.[key]?.foods?.length);
-      if (!hasFood) break;
-      streak += 1;
-      cursor.setDate(cursor.getDate() - 1);
-    }
-
-    return streak;
+    return calculateNutritionFoodStreak(nutrition.days || {}, nutritionDateKey || todayNutritionKey());
   }
 
   function openSelectedNutritionDate() {
@@ -5475,8 +5605,9 @@ export default function App() {
   }
 
   function openNutritionPicker(mealId) {
+    const targetMealId = mealId || getDefaultNutritionMealByTime();
     resetNutritionPhotoAiState();
-    setNutritionMeal(mealId);
+    setNutritionMeal(targetMealId);
     setNutritionSearch("");
     setNutritionSearchTab("food");
     setNutritionAmount("100");
@@ -5840,7 +5971,7 @@ export default function App() {
       endPerformanceCheck("AI photo · function request", { status: response.status, apiVersion: data.apiVersion || "" });
 
       if (!response.ok) {
-        console.log("[AI PHOTO] request failed", { status: response.status, apiVersion: data.apiVersion || "", code: data.code || "" });
+        console.warn("[AI PHOTO] request failed", { status: response.status, apiVersion: data.apiVersion || "", code: data.code || "" });
         setNutritionPhotoAiCandidates([]);
         setNutritionPhotoAiConfidence("");
         setNutritionPhotoAiResult(data.message || "Не удалось распознать продукт на фото. Попробуй другое изображение.");
@@ -5851,7 +5982,7 @@ export default function App() {
       const validProduct = isReliablePhotoFood(product, data);
 
       if (data.found === false || !validProduct) {
-        console.log("[AI PHOTO] invalid product", { apiVersion: data.apiVersion || "", product });
+        console.warn("[AI PHOTO] invalid product", { apiVersion: data.apiVersion || "", product });
         setNutritionPhotoAiCandidates([]);
         setNutritionPhotoAiConfidence("");
         setNutritionPhotoAiResult("");
@@ -7862,7 +7993,7 @@ export default function App() {
         setShowWorkoutSavedCard(false);
       }, 1800);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       enqueueFailedHistorySave(currentUser.uid, historyEntry, "history_save_failed");
       setHistory((prev) => [
         { id: historySaveId, ...historyEntry, pendingSync: true },
@@ -8148,7 +8279,7 @@ export default function App() {
       });
       return nextPlan;
     } catch (err) {
-      console.log("Ошибка загрузки тренировок:", err);
+      console.error("Ошибка загрузки тренировок:", err);
       if (preserveCurrentPlanOnError) {
         return plan;
       }
@@ -8169,6 +8300,61 @@ export default function App() {
     }
   }
 
+  function normalizeWorkoutCalendarDateKey(value = "") {
+    if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  }
+
+  function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], updatedAt = "") {
+    const existingPlannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
+    const scheduledDates = [...new Set([
+      ...(Array.isArray(calendar.scheduledDates) ? calendar.scheduledDates : []),
+      ...(Array.isArray(calendar.monthlyTrainingDates) ? calendar.monthlyTrainingDates : []),
+      ...existingPlannedWorkouts.map((item) => item?.date),
+      ...(Array.isArray(workouts) ? workouts : []).map((workout) => workout?.scheduledDate || workout?.plannedDate)
+    ].map(normalizeWorkoutCalendarDateKey).filter(Boolean))].sort();
+    const plannedWorkouts = (Array.isArray(workouts) ? workouts : []).map((workout, index) => {
+      const workoutId = String(workout?.id || "").trim();
+      const existing = existingPlannedWorkouts.find((item) => (
+        String(item?.workoutId || "").trim() === workoutId ||
+        Number(item?.order) === index + 1 ||
+        Number(item?.index) === index
+      )) || {};
+      const workoutStatus = String(workout?.status || "").trim();
+      const existingStatus = String(existing.status || "").trim();
+      const status = (
+        workoutStatus && (workoutStatus !== "planned" || workout?.statusUpdatedAt || !existingStatus)
+          ? workoutStatus
+          : existingStatus || workoutStatus || "planned"
+      );
+
+      return {
+        ...existing,
+        order: index + 1,
+        index,
+        workoutId,
+        workoutName: String(workout?.name || existing.workoutName || `Workout ${index + 1}`).trim(),
+        date: normalizeWorkoutCalendarDateKey(existing.date || workout?.scheduledDate || workout?.plannedDate || scheduledDates[index] || ""),
+        status,
+        movedToDate: normalizeWorkoutCalendarDateKey(workout?.movedToDate || existing.movedToDate || ""),
+        statusUpdatedAt: workout?.statusUpdatedAt || existing.statusUpdatedAt || (status !== "planned" ? updatedAt : "")
+      };
+    });
+
+    return {
+      ...calendar,
+      scheduledDates,
+      monthlyTrainingDates: scheduledDates,
+      plannedWorkouts,
+      updatedAt,
+      updatedBy: auth.currentUser?.uid || ""
+    };
+  }
+
   async function saveWorkoutsToFirebase(planOverride = null, options = {}) {
     try {
       const userId = selectedUserId || auth.currentUser?.uid;
@@ -8179,7 +8365,7 @@ export default function App() {
 
       if (!userId) {
         if (silent) setAdminClientStatus("Пользователь не найден.");
-        else alert("Пользователь не найден");
+        else showAppError("load", "Пользователь не найден");
         return;
       }
 
@@ -8190,9 +8376,16 @@ export default function App() {
       }, 10);
 
       const workoutsRef = collection(db, "users", userId, "workouts");
-      const existingWorkouts = await getDocs(workoutsRef);
+      const userRef = doc(db, "users", userId);
+      const [existingWorkouts, userSnapshot] = await Promise.all([
+        getDocs(workoutsRef),
+        getDoc(userRef)
+      ]);
+      const userData = userSnapshot.exists() ? userSnapshot.data() : {};
+      const nowIso = new Date().toISOString();
       const currentWorkoutIds = new Set((planToSave.workouts || []).map((workout) => workout.id));
       const batch = writeBatch(db);
+      const nextWorkoutCalendar = syncWorkoutCalendarWithPlan(userData.workoutCalendar || {}, planToSave.workouts || [], nowIso);
 
       existingWorkouts.forEach((workoutDoc) => {
         if (!currentWorkoutIds.has(workoutDoc.id)) {
@@ -8208,7 +8401,7 @@ export default function App() {
           order: workoutIndex + 1,
           sortOrder: workoutIndex + 1,
           assignedBy: auth.currentUser?.uid || "",
-          assignedAt: new Date().toISOString(),
+          assignedAt: workout.assignedAt || nowIso,
           exercises: (workout.exercises || []).map((exercise) => ({
             id: exercise.id,
             name: exercise.name,
@@ -8229,13 +8422,27 @@ export default function App() {
         }, { merge: true });
       }
 
+      batch.set(userRef, {
+        workoutCalendar: nextWorkoutCalendar,
+        assignedWorkoutCount: (planToSave.workouts || []).length,
+        updatedAt: nowIso
+      }, { merge: true });
+
       await batch.commit();
+      setAdminSelectedClient((prev) => prev?.id === userId ? { ...prev, workoutCalendar: nextWorkoutCalendar } : prev);
+      setUsersList((prev) => prev.map((item) => item.id === userId ? { ...item, workoutCalendar: nextWorkoutCalendar } : item));
+      if (auth.currentUser?.uid === userId) {
+        setProfileWorkoutCalendarData(nextWorkoutCalendar);
+        setProfileWorkoutScheduledDates(nextWorkoutCalendar.scheduledDates || []);
+        setProfileWorkoutCalendarDraftDates(nextWorkoutCalendar.scheduledDates || []);
+        safeWriteUserJsonStorage(WORKOUT_CALENDAR_STORAGE_KEY, userId, nextWorkoutCalendar);
+      }
       if (silent) setAdminClientStatus(saveOptions.successMessage || "Изменения тренировки сохранены.");
-      else alert("Тренировки пользователя сохранены в Firebase ✅");
+      else showAppError("savedLocal", "Тренировки пользователя сохранены.");
     } catch (err) {
-      console.log("Ошибка сохранения тренировок:", err);
+      console.error("Ошибка сохранения тренировок:", err);
       if (options?.silent) setAdminClientStatus("Не получилось сохранить изменения тренировки.");
-      else alert("Не получилось сохранить тренировки");
+      else showAppError("firebase", "Не получилось сохранить тренировки.");
     }
   }
 
@@ -9182,7 +9389,7 @@ export default function App() {
       return;
     }
 
-    const confirmed = window.confirm("Сбросить все назначенные тренировки клиента? У клиента будет пустая программа.");
+    const confirmed = await showAppConfirm("Сбросить все назначенные тренировки клиента? У клиента будет пустая программа.");
 
     if (!confirmed) return;
 
@@ -9243,7 +9450,7 @@ export default function App() {
       }
 
       const nextWorkouts = buildClientWorkoutsFromTemplate(template);
-      const confirmed = window.confirm(
+      const confirmed = await showAppConfirm(
         `Назначить клиенту программу “${template.name}”? Старые тренировки будут полностью удалены, будет назначено ${nextWorkouts.length} тренировок.`
       );
       if (!confirmed) return;
@@ -9713,14 +9920,14 @@ export default function App() {
         return;
       }
 
-      const confirmed = window.confirm(`Удалить клиента ${client.email || client.name || client.id} из базы приложения? Аккаунт Firebase Auth останется активным.`);
+      const confirmed = await showAppConfirm(`Удалить клиента ${client.email || client.name || client.id} из базы приложения? Аккаунт Firebase Auth останется активным.`);
       if (!confirmed) return;
 
       await deleteClientFromAdminPanel(client, { skipConfirm: true });
       return;
     }
 
-    const confirmed = window.confirm(`Полностью удалить клиента ${client.email || client.name || client.id}? Будет попытка удалить Auth через Cloud Function и профиль из Firestore.`);
+    const confirmed = await showAppConfirm(`Полностью удалить клиента ${client.email || client.name || client.id}? Будет попытка удалить Auth через Cloud Function и профиль из Firestore.`);
     if (!confirmed) return;
 
     try {
@@ -9784,7 +9991,7 @@ export default function App() {
     const sourceUser = adminAllUsersList.find((item) => item.id === transferFromUid);
     const targetUser = usersList.find((item) => item.id === transferToUid);
 
-    const confirmed = window.confirm(
+    const confirmed = await showAppConfirm(
       `Перенести данные с ${sourceUser?.email || transferFromUid} на ${targetUser?.email || adminTransferToUid}? Данные получателя будут дополнены/обновлены.`
     );
 
@@ -10020,7 +10227,7 @@ async function loadUsers() {
       const clients = applyUsers(users);
       void loadTrainerClientSummaries(clients);
     } catch (err) {
-      console.log("Ошибка загрузки пользователей:", err);
+      console.error("Ошибка загрузки пользователей:", err);
       setAdminClientStatus("Не получилось загрузить клиентов. Проверь права Firestore для роли тренера.");
       setTrainerClientSummariesLoading(false);
     }
@@ -10333,7 +10540,7 @@ async function loadUsers() {
       return;
     }
 
-    const confirmed = window.confirm(`Удалить выбранные тренировки: ${adminSelectedHistoryIds.length}? Это действие нельзя отменить.`);
+    const confirmed = await showAppConfirm(`Удалить выбранные тренировки: ${adminSelectedHistoryIds.length}? Это действие нельзя отменить.`);
     if (!confirmed) return;
 
     setAdminDeletingWorkoutId("bulk");
@@ -10367,7 +10574,7 @@ async function loadUsers() {
     }
 
     const workoutName = workoutItem.workout || "тренировку";
-    const confirmed = window.confirm(`Удалить "${workoutName}" из истории клиента? Это действие нельзя отменить.`);
+    const confirmed = await showAppConfirm(`Удалить "${workoutName}" из истории клиента? Это действие нельзя отменить.`);
 
     if (!confirmed) return;
 
@@ -10829,7 +11036,7 @@ async function loadUsers() {
     }
 
     if (!options.skipConfirm) {
-      const confirmed = window.confirm(`Удалить клиента ${client.email || client.name || client.id} из базы приложения? Аккаунт Firebase Auth может остаться активным.`);
+      const confirmed = await showAppConfirm(`Удалить клиента ${client.email || client.name || client.id} из базы приложения? Аккаунт Firebase Auth может остаться активным.`);
       if (!confirmed) return;
     }
 
@@ -11001,7 +11208,7 @@ async function loadUsers() {
       }
 
       if (action === "reset_progress") {
-        if (!window.confirm("Сбросить прогресс клиента? Профиль, программа и план питания сохранятся.")) return false;
+        if (!(await showAppConfirm("Сбросить прогресс клиента? Профиль, программа и план питания сохранятся."))) return false;
         await Promise.all([
           deleteClientSubcollection(client.id, "history"),
           deleteClientSubcollection(client.id, "measurements"),
@@ -11252,7 +11459,7 @@ async function loadUsers() {
     const currentUser = auth.currentUser;
 
     if (!currentUser) {
-      console.log("Пользователь ещё не загружен");
+      console.error("Пользователь ещё не загружен");
       return;
     }
 
@@ -11294,7 +11501,7 @@ async function loadUsers() {
       setHistory(nextHistory);
       endPerformanceCheck("Firebase · history load", { records: nextHistory.length });
     } catch (err) {
-      console.log("Ошибка загрузки истории:", err);
+      console.error("Ошибка загрузки истории:", err);
       const pendingWorkouts = getFailedHistoryQueue(currentUser.uid)
         .filter((item) => item?.entry)
         .map((item) => ({
@@ -12280,7 +12487,7 @@ function normalizeTelegramUsername(value = "") {
     if (!telegramConnectOpen) return;
 
     window.onTelegramAuthForWorkoutApp = async (telegramUser) => {
-      console.log("TELEGRAM CALLBACK WORKS:", telegramUser);
+      if (import.meta.env.DEV) console.debug("TELEGRAM CALLBACK WORKS:", telegramUser);
       setTelegramStatus("Telegram подтвердил вход. Проверяю данные...");
       await handleTelegramLoginAuth(telegramUser);
     };
@@ -13048,6 +13255,7 @@ function normalizeTelegramUsername(value = "") {
       );
       return acc;
     }, {});
+    const nutritionZoukFoodsCount = (nutritionToday.foods || []).length;
     const activeNutritionMeal = nutritionMeals.find((meal) => expandedNutritionMeals[meal.id]) || null;
     const activeNutritionMealFoods = activeNutritionMeal
       ? (nutritionToday.foods || []).filter((item) => item.mealId === activeNutritionMeal.id)
@@ -13079,6 +13287,60 @@ function normalizeTelegramUsername(value = "") {
     const aiNutritionScoreStyle = {
       background: `conic-gradient(#ff7d7d 0% ${proteinCircleEnd}%, #ffd15a ${proteinCircleEnd}% ${fatCircleEnd}%, #70cde3 ${fatCircleEnd}% 100%)`
     };
+    const nutritionSummaryCollapsedText = isCaloriesOverGoal
+      ? "Калории выше плана, следующий прием сделай легче."
+      : proteinPercent < 55
+        ? "Белка пока мало, добавь белковый продукт."
+        : caloriePercent < 45
+          ? "День пока свободный, можно добавить прием пищи."
+          : caloriePercent > 90
+            ? "План почти закрыт, дальше без лишних перекусов."
+            : "День идет ровно, держим темп.";
+    const nutritionOrbitItems = [
+      {
+        id: "calories",
+        label: "КАЛОРИИ",
+        amount: String(caloriesConsumed),
+        target: `из ${effectiveNutritionGoals.calories} ккал`,
+        progress: Math.min(100, Math.max(0, caloriePercent)),
+        color: "#22c55e",
+        startAngle: 324.3,
+        arcDegrees: 74.6
+      },
+      {
+        id: "protein",
+        label: "БЕЛКИ",
+        amount: `${roundMacro(nutritionTotals.protein)} г`,
+        target: `из ${effectiveNutritionGoals.protein} г`,
+        progress: Math.min(100, Math.max(0, proteinPercent)),
+        color: "#EA5D61",
+        startAngle: 63.2,
+        arcDegrees: 56
+      },
+      {
+        id: "carbs",
+        label: "УГЛЕВОДЫ",
+        amount: `${roundMacro(nutritionTotals.carbs)} г`,
+        target: `из ${effectiveNutritionGoals.carbs} г`,
+        progress: Math.min(100, Math.max(0, carbsPercent)),
+        color: "#1f7df2",
+        startAngle: 240.7,
+        arcDegrees: 56.5
+      },
+      {
+        id: "fat",
+        label: "ЖИРЫ",
+        amount: `${roundMacro(nutritionTotals.fat)} г`,
+        target: `из ${effectiveNutritionGoals.fat} г`,
+        progress: Math.min(100, Math.max(0, fatPercent)),
+        color: "#ffae27",
+        startAngle: 141.6,
+        arcDegrees: 74.7
+      }
+    ].map((item) => ({
+      ...item,
+      segment: getNutritionOrbitSegment(item.startAngle, item.arcDegrees, item.progress)
+    }));
 
     return (
       <div className="fatSecretPage nutritionFixedHeaderV3 clientCorePage clientCorePageNutrition">
@@ -13200,37 +13462,238 @@ function normalizeTelegramUsername(value = "") {
           </div>
         )}
 
-        <section
-          className={`nutritionCaloriesRenderCard ${isCaloriesOverGoal ? "overLimit" : ""} ${isNutritionTrainingDayToday ? "trainingDay" : ""}`}
-          style={{ "--nutrition-calorie-progress": `${Math.min(100, Math.max(0, caloriePercent))}%` }}
-        >
-          <div className="nutritionCaloriesRenderGrid" aria-hidden="true">
-            {Array.from({ length: 25 }).map((_, index) => (
-              <span
-                key={index}
-                className={
-                  index < Math.round((caloriePercent / 100) * 25)
-                    ? "isActive"
-                    : ""
-                }
-              />
-            ))}
-          </div>
+        <section className={`nutritionAiPlanDashboard collapsed nutritionAiPlanTopInline ${isCaloriesOverGoal ? "overLimit" : ""}`}>
+          <button
+            type="button"
+            className="nutritionAiPlanTopCard"
+            onClick={() => setIsAiNutritionPlanExpanded(true)}
+            aria-label="Развернуть анализ питания"
+          >
+            <span className="nutritionAiPlanCollapsedIcon" aria-hidden="true">📊</span>
+            <span className="nutritionAiPlanTopTitle">
+              <strong>Анализ питания</strong>
+              <small>{nutritionSummaryCollapsedText}</small>
+            </span>
+            <span className="nutritionAiPlanCollapsedArrow" aria-hidden="true">›</span>
+          </button>
+        </section>
 
-          <div className="nutritionCaloriesRenderDivider" aria-hidden="true" />
+        <section className="nutritionOrbitPreview" aria-label="Добавить еду">
+          <div className="nutritionOrbitPreviewCard">
+            <div className="nutritionOrbitStage">
+            <svg className="nutritionOrbitScene" viewBox="0 0 540 463" aria-hidden="true">
+              <defs>
+                <filter id="nutritionOrbitSoftShadow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feDropShadow dx="0" dy="13" stdDeviation="13" floodColor="#2f3a68" floodOpacity="0.13" />
+                </filter>
+                <filter id="nutritionOrbitAddShadow" x="-35%" y="-35%" width="170%" height="170%">
+                  <feDropShadow dx="0" dy="13" stdDeviation="12" floodColor="#4c2be1" floodOpacity="0.25" />
+                </filter>
+                <radialGradient id="nutritionOrbitProteinFill" cx="50%" cy="50%" r="62%">
+                  <stop offset="0%" stopColor="#fff1f2" />
+                  <stop offset="100%" stopColor="#ffffff" />
+                </radialGradient>
+                <radialGradient id="nutritionOrbitFatFill" cx="50%" cy="50%" r="62%">
+                  <stop offset="0%" stopColor="#fff8e6" />
+                  <stop offset="100%" stopColor="#ffffff" />
+                </radialGradient>
+                <radialGradient id="nutritionOrbitCarbsFill" cx="50%" cy="50%" r="62%">
+                  <stop offset="0%" stopColor="#eef7ff" />
+                  <stop offset="100%" stopColor="#ffffff" />
+                </radialGradient>
+                <radialGradient id="nutritionOrbitCaloriesFill" cx="50%" cy="50%" r="62%">
+                  <stop offset="0%" stopColor="#efffeb" />
+                  <stop offset="100%" stopColor="#ffffff" />
+                </radialGradient>
+                <linearGradient id="nutritionOrbitAddFill" x1="196" y1="134" x2="344" y2="274" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#8c67ff" />
+                  <stop offset="100%" stopColor="#4c25f1" />
+                </linearGradient>
+              </defs>
 
-          <div className="nutritionCaloriesRenderCol nutritionCaloriesRenderLeft">
-            <span>Осталось Калорий</span>
-            <strong>{caloriesLeft}</strong>
-          </div>
+              <circle cx="270" cy="232" r="184" fill="none" stroke="#dfd9ff" strokeWidth="2.4" />
+              {nutritionOrbitItems.map((item) => (
+                <path
+                  key={item.id}
+                  className={`nutritionOrbitProgressPath ${item.id}`}
+                  d={item.segment.progressPath}
+                  fill="none"
+                  stroke={item.color}
+                  strokeWidth="5.2"
+                  strokeLinecap="round"
+                />
+              ))}
 
-          <div className="nutritionCaloriesRenderDivider" aria-hidden="true" />
+              <circle className="nutritionOrbitAddHalo haloOuter" cx="270" cy="232" r="128" fill="#684cf6" opacity="0.055" />
+              <circle className="nutritionOrbitAddHalo haloMiddle" cx="270" cy="232" r="96" fill="#684cf6" opacity="0.075" />
+              <circle className="nutritionOrbitAddHalo haloInner" cx="270" cy="232" r="72" fill="#684cf6" opacity="0.09" />
+              <circle className="nutritionOrbitAddCore" cx="270" cy="232" r="58" fill="url(#nutritionOrbitAddFill)" filter="url(#nutritionOrbitAddShadow)" />
+              <path className="nutritionOrbitAddPlus" d="M270 200v64M238 232h64" stroke="#ffffff" strokeWidth="8" strokeLinecap="round" />
 
-          <div className="nutritionCaloriesRenderCol nutritionCaloriesRenderRight">
-            <span>Получено</span>
-            <strong>{caloriesConsumed}</strong>
+              {nutritionOrbitItems.map((item) => (
+                <g key={`${item.id}-dots`}>
+                  {item.segment.hasProgress && (
+                    <circle cx={item.segment.progressDot.x} cy={item.segment.progressDot.y} r="8" fill={item.color} />
+                  )}
+                </g>
+              ))}
+
+              <g filter="url(#nutritionOrbitSoftShadow)" transform="translate(118 101) scale(0.8929) translate(-118 -101)">
+                <circle cx="118" cy="101" r="54" fill="url(#nutritionOrbitCaloriesFill)" stroke="#ffffff" strokeWidth="6" />
+                <text x="118" y="80" textAnchor="middle" className="nutritionOrbitSvgLabel" fill={nutritionOrbitItems[0].color}>{nutritionOrbitItems[0].label}</text>
+                <text x="118" y="112" textAnchor="middle" className="nutritionOrbitSvgAmount">{nutritionOrbitItems[0].amount}</text>
+                <text x="118" y="140" textAnchor="middle" className="nutritionOrbitSvgTarget">{nutritionOrbitItems[0].target}</text>
+              </g>
+              <g filter="url(#nutritionOrbitSoftShadow)" transform="translate(432 101) scale(0.8929) translate(-432 -101)">
+                <circle cx="432" cy="101" r="54" fill="url(#nutritionOrbitProteinFill)" stroke="#ffffff" strokeWidth="6" />
+                <text x="432" y="80" textAnchor="middle" className="nutritionOrbitSvgLabel" fill={nutritionOrbitItems[1].color}>{nutritionOrbitItems[1].label}</text>
+                <text x="432" y="112" textAnchor="middle" className="nutritionOrbitSvgAmount">{nutritionOrbitItems[1].amount}</text>
+                <text x="432" y="140" textAnchor="middle" className="nutritionOrbitSvgTarget">{nutritionOrbitItems[1].target}</text>
+              </g>
+              <g filter="url(#nutritionOrbitSoftShadow)" transform="translate(114 370) scale(0.8929) translate(-114 -370)">
+                <circle cx="114" cy="370" r="54" fill="url(#nutritionOrbitCarbsFill)" stroke="#ffffff" strokeWidth="6" />
+                <text x="114" y="349" textAnchor="middle" className="nutritionOrbitSvgLabel" fill={nutritionOrbitItems[2].color}>{nutritionOrbitItems[2].label}</text>
+                <text x="114" y="381" textAnchor="middle" className="nutritionOrbitSvgAmount">{nutritionOrbitItems[2].amount}</text>
+                <text x="114" y="409" textAnchor="middle" className="nutritionOrbitSvgTarget">{nutritionOrbitItems[2].target}</text>
+              </g>
+              <g filter="url(#nutritionOrbitSoftShadow)" transform="translate(432 370) scale(0.8929) translate(-432 -370)">
+                <circle cx="432" cy="370" r="54" fill="url(#nutritionOrbitFatFill)" stroke="#ffffff" strokeWidth="6" />
+                <text x="432" y="349" textAnchor="middle" className="nutritionOrbitSvgLabel" fill={nutritionOrbitItems[3].color}>{nutritionOrbitItems[3].label}</text>
+                <text x="432" y="381" textAnchor="middle" className="nutritionOrbitSvgAmount">{nutritionOrbitItems[3].amount}</text>
+                <text x="432" y="409" textAnchor="middle" className="nutritionOrbitSvgTarget">{nutritionOrbitItems[3].target}</text>
+              </g>
+
+              <text x="270" y="334" textAnchor="middle" className="nutritionOrbitSvgTitle">Добавить еду</text>
+              <text x="270" y="360" textAnchor="middle" className="nutritionOrbitSvgSubtitle">
+                <tspan x="270" dy="0">Нажмите, чтобы добавить</tspan>
+                <tspan x="270" dy="18">продукты и записать приём пищи</tspan>
+              </text>
+            </svg>
+            <button
+              type="button"
+              className="nutritionOrbitHitButton"
+              onClick={() => openNutritionPicker()}
+              aria-label="Добавить еду"
+            />
+            </div>
           </div>
         </section>
+
+        <section className="nutritionZoukBlock">
+          <button
+            type="button"
+            className="nutritionZoukHeader"
+            onClick={() => setNutritionZoukExpanded(true)}
+            aria-expanded={nutritionZoukExpanded}
+            aria-haspopup="dialog"
+          >
+            <span className="nutritionZoukIcon" aria-hidden="true">🍽️</span>
+            <span className="nutritionZoukTitle">
+              <strong>Дневник питания</strong>
+              <small>Список продуктов за день</small>
+            </span>
+            <span className="nutritionZoukMeta">
+              <small>{nutritionZoukFoodsCount ? `${nutritionZoukFoodsCount} шт` : "пусто"}</small>
+              <i aria-hidden="true">›</i>
+            </span>
+          </button>
+        </section>
+
+        {nutritionZoukExpanded && (
+          <div className="nutritionZoukModalOverlay" role="dialog" aria-modal="true" aria-label="Дневник питания">
+            <button
+              type="button"
+              className="nutritionZoukModalBackdrop"
+              onClick={() => setNutritionZoukExpanded(false)}
+              aria-label="Закрыть список продуктов"
+            />
+            <section className="nutritionZoukModalSheet">
+              <header className="nutritionZoukModalHeader">
+                <span className="nutritionZoukIcon" aria-hidden="true">🍽️</span>
+                <div>
+                  <small>Продукты за день</small>
+                  <h2>Дневник питания</h2>
+                  <strong>{nutritionZoukFoodsCount ? `${nutritionZoukFoodsCount} шт` : "пока пусто"}</strong>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setNutritionZoukExpanded(false)}
+                  aria-label="Закрыть"
+                >
+                  ×
+                </button>
+              </header>
+
+            <div className="nutritionZoukContent">
+              {nutritionMeals.map((meal) => {
+                const foods = (nutritionToday.foods || []).filter((item) => item.mealId === meal.id);
+                const stats = mealStats[meal.id] || { calories: 0, count: 0 };
+
+                return (
+                  <div className="nutritionZoukMeal" key={meal.id}>
+                    <div className="nutritionZoukMealHead">
+                      <span className="nutritionZoukMealIcon" aria-hidden="true">{meal.icon}</span>
+                      <div>
+                        <strong>{meal.name}</strong>
+                        <small>{foods.length ? `${foods.length} шт · ${Math.round(stats.calories)} ккал` : "продуктов нет"}</small>
+                      </div>
+                      <button
+                        type="button"
+                        className="nutritionZoukAdd"
+                        onClick={() => {
+                          setNutritionZoukExpanded(false);
+                          openNutritionPicker(meal.id);
+                        }}
+                        aria-label={`Добавить продукт: ${meal.name}`}
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    {foods.length > 0 ? (
+                      <div className="nutritionZoukFoods">
+                        {foods.map((item) => (
+                          <button
+                            type="button"
+                            className="nutritionZoukFood"
+                            key={item.id}
+                            onClick={() => {
+                              setNutritionZoukExpanded(false);
+                              openNutritionFoodEditor(item);
+                              setNutritionSearchTab("food");
+                            }}
+                          >
+                            <span className="nutritionZoukFoodIcon" aria-hidden="true">{item.icon || getFoodIcon(item)}</span>
+                            <span className="nutritionZoukFoodText">
+                              <strong>{item.name}</strong>
+                              <small>{item.amount} г · Б {roundMacro(item.protein)} · Ж {roundMacro(item.fat)} · У {roundMacro(item.carbs)}</small>
+                            </span>
+                            <span className="nutritionZoukFoodKcal">
+                              <strong>{Math.round(Number(item.calories) || 0)}</strong>
+                              <small>ккал</small>
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        className="nutritionZoukEmpty"
+                        onClick={() => {
+                          setNutritionZoukExpanded(false);
+                          openNutritionPicker(meal.id);
+                        }}
+                      >
+                        Добавить продукт
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            </section>
+          </div>
+        )}
 
         <section className="fatMealList">
           {nutritionMeals.map((meal) => {
@@ -13401,7 +13864,7 @@ function normalizeTelegramUsername(value = "") {
         )}
 
         <section
-          className={`nutritionAiPlanDashboard ${isAiNutritionPlanExpanded ? "expanded nutritionAiPlanModal" : "collapsed"} ${isCaloriesOverGoal ? "overLimit" : ""}`}
+          className={`nutritionAiPlanDashboard ${isAiNutritionPlanExpanded ? "expanded nutritionAiPlanModal" : "collapsed nutritionAiPlanInlineHidden"} ${isCaloriesOverGoal ? "overLimit" : ""}`}
           role={isAiNutritionPlanExpanded ? "dialog" : undefined}
           aria-modal={isAiNutritionPlanExpanded ? "true" : undefined}
           aria-label={isAiNutritionPlanExpanded ? "План питания" : undefined}
@@ -13438,20 +13901,14 @@ function normalizeTelegramUsername(value = "") {
               aria-label="Развернуть сводку питания"
             >
               <div className="nutritionAiPlanCollapsedHeading">
-                <strong>Сводка</strong>
+                <strong>Анализ питания</strong>
               </div>
 
               <div className="nutritionAiPlanCollapsedContent">
                 <span className="nutritionAiPlanCollapsedIcon" aria-hidden="true">📊</span>
-                <div className="nutritionAiPlanCollapsedMacros">
-                  <span><strong>Б</strong><small>{roundMacro(nutritionTotals.protein)} / {effectiveNutritionGoals.protein} г</small></span>
-                  <span><strong>Ж</strong><small>{roundMacro(nutritionTotals.fat)} / {effectiveNutritionGoals.fat} г</small></span>
-                  <span><strong>У</strong><small>{roundMacro(nutritionTotals.carbs)} / {effectiveNutritionGoals.carbs} г</small></span>
-                </div>
-                <span className="nutritionAiPlanCollapsedArrow" aria-hidden="true">↨</span>
+                <span className="nutritionAiPlanCollapsedInsight">{nutritionSummaryCollapsedText}</span>
+                <span className="nutritionAiPlanCollapsedArrow" aria-hidden="true">›</span>
               </div>
-
-              <p>{isNutritionTrainingDayToday ? aiNutritionPageTrainingAdvice : aiNutritionDay.summary}</p>
             </button>
           ) : (
             <>
@@ -13534,16 +13991,6 @@ function normalizeTelegramUsername(value = "") {
                 <span className="info"><i>📅</i>Неделя {aiNutritionCurrentWeek}/4</span>
               </div>
 
-              <div className="nutritionAiPlanWater">
-                <div>
-                  <span>Вода</span>
-                  <strong>{waterPercent}%</strong>
-                </div>
-                <div>
-                  <button type="button" onClick={() => addWater(250)}>+250 мл</button>
-                  <button type="button" onClick={() => addWater(-250)}>−250 мл</button>
-                </div>
-              </div>
             </>
           )}
             </section>
@@ -14551,7 +14998,7 @@ function normalizeTelegramUsername(value = "") {
                       aria-label="Распознать еду по фото"
                     >
                       <span>📷</span>
-                      <strong>ИИ фото</strong>
+                      <strong>ИИ поиск</strong>
                     </button>
 
                     <button
@@ -20781,7 +21228,7 @@ function normalizeTelegramUsername(value = "") {
                         type="button"
                         className="adminNutritionAssignButton ghost"
                         onClick={async () => {
-                          const confirmed = window.confirm("Сбросить назначенный план питания клиента?");
+                          const confirmed = await showAppConfirm("Сбросить назначенный план питания клиента?");
                           if (!confirmed) return;
 
                           try {
@@ -21436,10 +21883,10 @@ function normalizeTelegramUsername(value = "") {
       }));
     }
 
-    function removeProgramMonth(monthId) {
+    async function removeProgramMonth(monthId) {
       const month = monthGroups.find((item) => item.id === monthId);
       if (!month) return;
-      if (!window.confirm(`Удалить «${month.name || "Месяц"}» со всеми микроциклами, неделями и тренировками?`)) {
+      if (!(await showAppConfirm(`Удалить «${month.name || "Месяц"}» со всеми микроциклами, неделями и тренировками?`))) {
         return;
       }
 
@@ -21556,10 +22003,10 @@ function normalizeTelegramUsername(value = "") {
       setAdminProgramCopyTarget(null);
     }
 
-    function removeMonthBlock(blockId) {
+    async function removeMonthBlock(blockId) {
       const block = monthBlocks.find((item) => item.id === blockId);
       if (!block) return;
-      if (!window.confirm(`Удалить микроцикл “${block.name || "Без названия"}” со всеми неделями и тренировками?`)) {
+      if (!(await showAppConfirm(`Удалить микроцикл “${block.name || "Без названия"}” со всеми неделями и тренировками?`))) {
         setAdminProgramSwipeOpenKey("");
         return;
       }
@@ -21593,11 +22040,11 @@ function normalizeTelegramUsername(value = "") {
       setAdminProgramSwipeOpenKey("");
     }
 
-    function removeMonthWeek(blockId, weekId) {
+    async function removeMonthWeek(blockId, weekId) {
       const block = monthBlocks.find((item) => item.id === blockId);
       const week = block?.weeks?.find((item) => item.id === weekId);
       if (!week) return;
-      if (!window.confirm(`Удалить “${week.name || "Неделя"}” со всеми днями?`)) {
+      if (!(await showAppConfirm(`Удалить “${week.name || "Неделя"}” со всеми днями?`))) {
         setAdminProgramSwipeOpenKey("");
         return;
       }
@@ -21625,10 +22072,10 @@ function normalizeTelegramUsername(value = "") {
       setAdminProgramSwipeOpenKey("");
     }
 
-    function confirmRemoveMonthWorkout(blockId, weekId, workoutId) {
+    async function confirmRemoveMonthWorkout(blockId, weekId, workoutId) {
       const workout = monthWorkouts.find((item) => item.id === workoutId);
       if (!workout) return;
-      if (!window.confirm(`Удалить тренировку “${workout.name || "Без названия"}”?`)) {
+      if (!(await showAppConfirm(`Удалить тренировку “${workout.name || "Без названия"}”?`))) {
         setAdminProgramSwipeOpenKey("");
         return;
       }
@@ -22691,7 +23138,7 @@ function normalizeTelegramUsername(value = "") {
         return false;
       }
 
-      const confirmed = window.confirm(`Удалить программу “${template.name}” из библиотеки? Это не удалит уже назначенные клиентам тренировки.`);
+      const confirmed = await showAppConfirm(`Удалить программу “${template.name}” из библиотеки? Это не удалит уже назначенные клиентам тренировки.`);
 
       if (!confirmed) return false;
 
@@ -22745,7 +23192,7 @@ function normalizeTelegramUsername(value = "") {
       openAdminProgramsOverview();
     }
 
-    function deleteSelectedMonthExercise() {
+    async function deleteSelectedMonthExercise() {
       if (!openMonthWorkoutContext || !adminSelectedExerciseId) {
         showAppError("load", "Сначала выберите упражнение.");
         return;
@@ -22758,7 +23205,7 @@ function normalizeTelegramUsername(value = "") {
         return;
       }
 
-      if (!window.confirm(`Удалить упражнение “${exercise.name || "Без названия"}”?`)) return;
+      if (!(await showAppConfirm(`Удалить упражнение “${exercise.name || "Без названия"}”?`))) return;
 
       removeMonthExercise(
         openMonthWorkoutContext.block.id,

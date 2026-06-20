@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   applyExerciseLibraryDefaults,
+  calculateNutritionFoodStreak,
   createFourWeekWorkoutProgramBlocks,
   distributeMicrocycleWorkouts,
   exerciseUsesExternalWeight,
@@ -201,4 +202,17 @@ test("nutrition days merge independently by their own update time", () => {
   const merged = mergeNutritionDays(localDays, cloudDays);
   assert.equal(merged["2026-06-10"].foods[0].id, "local-new");
   assert.equal(merged["2026-06-11"].foods[0].id, "cloud-new");
+});
+
+test("nutrition streak is counted from the selected day", () => {
+  const days = {
+    "2026-06-15": { foods: [{ id: "a" }] },
+    "2026-06-16": { foods: [{ id: "b" }] },
+    "2026-06-17": { foods: [{ id: "c" }] },
+    "2026-06-19": { foods: [{ id: "d" }] }
+  };
+
+  assert.equal(calculateNutritionFoodStreak(days, "2026-06-17"), 3);
+  assert.equal(calculateNutritionFoodStreak(days, "2026-06-19"), 1);
+  assert.equal(calculateNutritionFoodStreak(days, "2026-06-18"), 0);
 });

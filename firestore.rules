@@ -11,7 +11,9 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return signedIn() && request.auth.token.admin == true;
+      return signedIn() &&
+        "admin" in request.auth.token &&
+        request.auth.token.admin == true;
     }
 
     function isTrainer() {
@@ -257,7 +259,7 @@ service cloud.firestore {
         allow write: if isAdmin() || (isTrainer() && isAssignedTrainer(uid));
       }
 
-      match /{subPath=**} {
+      match /{collectionId}/{subPath=**} {
         allow read, write: if isOwnerOrAdmin(uid);
       }
     }
