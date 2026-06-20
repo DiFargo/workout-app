@@ -157,6 +157,11 @@ import {
   buildWorkoutScheduleCalendarEntries,
   buildWorkoutScheduleDraft
 } from "./utils/workoutSchedule";
+import {
+  clearStaleWorkoutCaches,
+  clearWorkoutDraft,
+  getWorkoutDraftKey
+} from "./utils/workoutDraftStorage";
 import { buildTrainerNutritionPlanUpdate } from "./utils/trainerNutritionPlan";
 import {
   CLIENT_PRIMARY_PAGES,
@@ -214,7 +219,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v658";
+const APP_VERSION = "v659";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -222,10 +227,8 @@ const ADMIN_EMAIL = "work.kriptonit.il@gmail.com";
 
 const NUTRITION_STORAGE_KEY = "workout_nutrition_v1";
 const NUTRITION_BACKUP_STORAGE_KEY = "workout_nutrition_backup_v1";
-const WORKOUT_DRAFT_STORAGE_KEY = "workout_active_draft_v1";
 const WORKOUT_PLAN_BACKUP_STORAGE_KEY = "workout_plan_backup_v1";
 const MEASUREMENTS_STORAGE_KEY = "workout_measurements_v1";
-const WORKOUT_ASSIGNMENT_STORAGE_KEY = "workout_assignment_version_v1";
 const INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY = "individual_workout_swipe_hint_seen_v1";
 const GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY = "workout_global_my_foods_backup_v1";
 const APP_THEME_STORAGE_KEY = "workout_app_theme_v1";
@@ -245,41 +248,6 @@ function getPersonalMyFoodsDocRef(uid) {
 
 function getPersonalMyFoodsFromState(nutritionState = {}) {
   return nutritionState?.myFoods || {};
-}
-
-function getWorkoutDraftKey(uid, workoutId) {
-  return `${WORKOUT_DRAFT_STORAGE_KEY}:${uid || "unknown"}:${workoutId || "unknown"}`;
-}
-
-function clearWorkoutDraft(uid, workoutId) {
-  try {
-    localStorage.removeItem(getWorkoutDraftKey(uid, workoutId));
-  } catch (_) {
-    // ignore localStorage errors
-  }
-}
-
-function clearStaleWorkoutCaches(uid, assignedProgramUpdatedAt) {
-  if (!uid || !assignedProgramUpdatedAt) return;
-
-  const savedAssignmentVersion = safeReadUserJsonStorage(WORKOUT_ASSIGNMENT_STORAGE_KEY, uid, "");
-  if (savedAssignmentVersion === assignedProgramUpdatedAt) return;
-
-  try {
-    const draftPrefix = `${WORKOUT_DRAFT_STORAGE_KEY}:${uid}:`;
-    const draftKeys = [];
-    for (let index = 0; index < localStorage.length; index += 1) {
-      const key = localStorage.key(index);
-      if (key?.startsWith(draftPrefix)) draftKeys.push(key);
-    }
-    draftKeys.forEach((key) => localStorage.removeItem(key));
-    localStorage.removeItem(getUserScopedStorageKey(STORAGE_KEY, uid));
-    localStorage.removeItem(getUserScopedStorageKey(WORKOUT_PLAN_BACKUP_STORAGE_KEY, uid));
-  } catch (_) {
-    // ignore localStorage errors
-  }
-
-  safeWriteUserJsonStorage(WORKOUT_ASSIGNMENT_STORAGE_KEY, uid, assignedProgramUpdatedAt);
 }
 
 async function saveNutritionStateWithMerge(uid, localNutritionState = {}) {
