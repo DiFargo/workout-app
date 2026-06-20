@@ -173,7 +173,8 @@ import {
 } from "./utils/workoutDraftStorage";
 import {
   buildCompletedWorkoutSet,
-  getCompletedWorkoutKey
+  getCompletedWorkoutKey,
+  isWorkoutCompletedWithSet
 } from "./utils/workoutCompletion";
 import { buildTrainerNutritionPlanUpdate } from "./utils/trainerNutritionPlan";
 import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
@@ -233,7 +234,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v665";
+const APP_VERSION = "v666";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5576,23 +5577,11 @@ export default function App() {
     workoutItem,
     completedSet = getCompletedWorkoutSet(history)
   ) {
-    if (!workoutItem) return false;
-
-    const manualStatus = String(workoutItem.status || "").trim().toLowerCase();
-    if (manualStatus === "completed") return true;
-    if (["not_completed", "missed"].includes(manualStatus)) return false;
-
-    const currentAssignmentVersion = String(
-      workoutItem.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || ""
-    ).trim();
-    const workoutIdKey = `id:${getCompletedWorkoutKey(workoutItem.id)}`;
-
-    if (currentAssignmentVersion) {
-      return completedSet.has(workoutIdKey);
-    }
-
-    return completedSet.has(workoutIdKey) ||
-      completedSet.has(`name:${getCompletedWorkoutKey(workoutItem.name)}`);
+    return isWorkoutCompletedWithSet(
+      workoutItem,
+      completedSet,
+      plan.assignedProgramUpdatedAt || ""
+    );
   }
 
   function getNextUncompletedWorkoutIndex(workouts = [], completedSet = getCompletedWorkoutSet(history)) {
