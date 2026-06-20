@@ -20,6 +20,10 @@ export function formatProfileWorkoutDate(dateValue) {
   });
 }
 
+export function formatProfileWorkoutDateKey(date = new Date()) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
 export function getProfileNextTrainingText(profile = {}, userData = {}, scheduledDates = []) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);

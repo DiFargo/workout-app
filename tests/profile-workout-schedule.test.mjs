@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   formatProfileWorkoutDate,
+  formatProfileWorkoutDateKey,
   getProfileNextTrainingText
 } from "../src/utils/profileWorkoutSchedule.js";
 
@@ -17,6 +18,11 @@ test("profile workout date label handles valid and invalid values", () => {
   assert.match(formatProfileWorkoutDate("2026-06-17"), /17\s+июн/);
   assert.equal(formatProfileWorkoutDate("bad-date"), "Нет данных");
   assert.equal(formatProfileWorkoutDate(""), "Нет данных");
+});
+
+test("profile workout date key keeps stable yyyy-mm-dd format", () => {
+  assert.equal(formatProfileWorkoutDateKey(new Date(2026, 0, 5)), "2026-01-05");
+  assert.equal(formatProfileWorkoutDateKey(new Date(2026, 10, 15)), "2026-11-15");
 });
 
 test("profile next training prefers explicit scheduled dates", () => {

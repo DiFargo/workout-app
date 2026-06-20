@@ -267,6 +267,7 @@ import {
   normalizeAdminProgressReminderInterval
 } from "./utils/adminClientCalendar";
 import {
+  formatProfileWorkoutDateKey,
   formatProfileWorkoutDate,
   getProfileNextTrainingText
 } from "./utils/profileWorkoutSchedule";
@@ -325,7 +326,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v704";
+const APP_VERSION = "v705";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -12503,9 +12504,6 @@ async function loadUsers() {
     const trainerNotificationCount = clientTrainerTasks.filter(
       (task) => getTrainerTaskStatus(task).id !== "completed"
     ).length;
-    const workoutCalendarDateKey = (date) => (
-      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
-    );
     const [workoutCalendarYear, workoutCalendarMonthIndex] = profileWorkoutCalendarMonth
       .split("-")
       .map(Number);
@@ -12523,7 +12521,7 @@ async function loadUsers() {
     const workoutCalendarHistoryByDate = history.reduce((result, item) => {
       const timestamp = getTimestampValue(item?.date);
       if (!timestamp) return result;
-      const key = workoutCalendarDateKey(new Date(timestamp));
+      const key = formatProfileWorkoutDateKey(new Date(timestamp));
       result[key] = [...(result[key] || []), item];
       return result;
     }, {});
@@ -12559,12 +12557,12 @@ async function loadUsers() {
         workoutCalendarGridStart.getMonth(),
         workoutCalendarGridStart.getDate() + index
       );
-      const key = workoutCalendarDateKey(date);
+      const key = formatProfileWorkoutDateKey(date);
       return {
         date,
         key,
         isCurrentMonth: date.getMonth() === workoutCalendarMonthDate.getMonth(),
-        isToday: key === workoutCalendarDateKey(new Date()),
+        isToday: key === formatProfileWorkoutDateKey(new Date()),
         isScheduled: (
           profileWorkoutCalendarEditing
             ? profileWorkoutCalendarDraftDates
@@ -12584,7 +12582,7 @@ async function loadUsers() {
       setProfileWorkoutCalendarMonth(
         `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, "0")}`
       );
-      setProfileWorkoutCalendarDate(workoutCalendarDateKey(nextMonth));
+      setProfileWorkoutCalendarDate(formatProfileWorkoutDateKey(nextMonth));
     };
     const toggleProfileWorkoutScheduledDate = (dateKey) => {
       setProfileWorkoutCalendarDraftDates((current) => (
