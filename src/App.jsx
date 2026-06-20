@@ -20,6 +20,11 @@ import {
   NUTRITION_ICON_PRESETS,
   nutritionMeals
 } from "./data/nutritionDefaults";
+import {
+  AI_NUTRITION_WEEK_DAYS,
+  NUTRITION_QUICK_SEARCHES,
+  TRAINER_NUTRITION_GOAL_PRESETS
+} from "./data/nutritionPlanning";
 import { searchLazyNutritionCatalog } from "./data/nutrition-catalog/lazyCatalog";
 import {
   createClientResourceId,
@@ -119,7 +124,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v634";
+const APP_VERSION = "v635";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -880,16 +885,6 @@ function getAiNutritionWeekForDate(plan, date = new Date()) {
   return plan.weeks[weekIndex] || plan.weeks[0];
 }
 
-const AI_NUTRITION_WEEK_DAYS = [
-  { id: "mon", short: "Пн", label: "Понедельник" },
-  { id: "tue", short: "Вт", label: "Вторник" },
-  { id: "wed", short: "Ср", label: "Среда" },
-  { id: "thu", short: "Чт", label: "Четверг" },
-  { id: "fri", short: "Пт", label: "Пятница" },
-  { id: "sat", short: "Сб", label: "Суббота" },
-  { id: "sun", short: "Вс", label: "Воскресенье" }
-];
-
 function getTodayAiNutritionWeekDayId(date = new Date()) {
   const jsDay = date.getDay();
   return AI_NUTRITION_WEEK_DAYS[jsDay === 0 ? 6 : jsDay - 1]?.id || "mon";
@@ -1234,14 +1229,6 @@ function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, profile 
   };
 }
 
-const TRAINER_NUTRITION_GOAL_PRESETS = [
-  { id: "maintain", name: "Поддержка", goal: "Поддержание веса и формы" },
-  { id: "recomp", name: "Рекомпозиция", goal: "Снижение жира и сохранение мышц" },
-  { id: "cut", name: "Похудение", goal: "Плавное снижение веса" },
-  { id: "dry", name: "Сушка", goal: "Снижение процента жира" },
-  { id: "mass", name: "Набор", goal: "Набор мышечной массы" }
-];
-
 function buildClientNutritionPresetOptions(client = {}, nutritionState = null, history = []) {
   const sourceProfile = client?.aiNutritionProfile || client?.profile || {};
   const nutritionForCalculation = {
@@ -1275,17 +1262,6 @@ function buildClientNutritionPresetOptions(client = {}, nutritionState = null, h
     };
   });
 }
-
-const NUTRITION_QUICK_SEARCHES = [
-  "молоко",
-  "творог",
-  "куриная грудка",
-  "овсянка",
-  "гречка",
-  "яйца",
-  "банан",
-  "кефир"
-];
 
 const RECENT_NUTRITION_SEARCHES_KEY = "nutrition_recent_foods_v1";
 const AI_NUTRITION_PROFILE_STORAGE_KEY = "ai_nutrition_profile_v1";
