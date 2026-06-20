@@ -117,6 +117,7 @@ import {
   searchLocalNutritionFoods
 } from "./utils/localNutritionCatalog";
 import { mergeNutritionStates } from "./utils/nutritionStateMerge";
+import { getPersonalMyFoodsDocRef } from "./utils/personalMyFoodsStorage";
 import {
   createEmptyAiNutritionProfileDraft,
   createEmptyTelegramProfile,
@@ -219,7 +220,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v659";
+const APP_VERSION = "v660";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -232,7 +233,6 @@ const MEASUREMENTS_STORAGE_KEY = "workout_measurements_v1";
 const INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY = "individual_workout_swipe_hint_seen_v1";
 const GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY = "workout_global_my_foods_backup_v1";
 const APP_THEME_STORAGE_KEY = "workout_app_theme_v1";
-const GLOBAL_MY_FOODS_DOC_ID = "shared";
 const FIRST_SETUP_DONE_USER_STORAGE_KEY = "workout_first_setup_done_user_uid";
 const FIRST_SETUP_REQUIRED_VERSION = "v2";
 const TELEGRAM_BOT_USERNAME = "tren_ai_coach_bot";
@@ -241,14 +241,6 @@ const TELEGRAM_PROFILE_STORAGE_KEY = "workout_telegram_profile_v1";
 const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
 const WORKOUT_CALENDAR_STORAGE_KEY = "workout_calendar_v1";
 const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
-
-function getPersonalMyFoodsDocRef(uid) {
-  return doc(db, "users", uid, "nutrition", "myFoods");
-}
-
-function getPersonalMyFoodsFromState(nutritionState = {}) {
-  return nutritionState?.myFoods || {};
-}
 
 async function saveNutritionStateWithMerge(uid, localNutritionState = {}) {
   const nutritionRef = doc(db, "users", uid, "nutrition", "state");
