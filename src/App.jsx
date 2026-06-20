@@ -277,6 +277,7 @@ import {
 } from "./utils/adminClientProgress";
 import {
   getAdminClientGoalLabel,
+  getAdminClientInitials,
   getAdminMeasurementPreviewFields,
   getAdminClientProfile,
   getAdminClientTrainingDaysText
@@ -350,7 +351,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v724";
+const APP_VERSION = "v725";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -16275,7 +16276,7 @@ async function loadUsers() {
                     {selectedTelegramProfile.avatarUrl ? (
                       <img src={selectedTelegramProfile.avatarUrl} alt="" />
                     ) : (
-                      String(selectedClient.name || selectedClient.email || "К").split(/[\s@._-]+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase()
+                      getAdminClientInitials(selectedClient)
                     )}
                   </div>
 
@@ -17542,7 +17543,7 @@ async function loadUsers() {
                           <img src={getClientTelegramProfile(selectedClient).avatarUrl} alt="" />
                         ) : (
                           <span>
-                            {String(selectedClient.name || selectedClient.email || "К").split(/[\s@._-]+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase()}
+                            {getAdminClientInitials(selectedClient)}
                           </span>
                         )}
                       </div>

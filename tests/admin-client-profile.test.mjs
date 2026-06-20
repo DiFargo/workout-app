@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   getAdminClientGoalLabel,
+  getAdminClientInitials,
   getAdminMeasurementPreviewFields,
   getAdminClientProfile,
   getAdminClientTrainingDaysText
@@ -25,6 +26,9 @@ test("admin client labels keep goal and training day text compact", () => {
   assert.equal(getAdminClientGoalLabel(""), "Рекомпозиция");
   assert.equal(getAdminClientTrainingDaysText({ trainingDays: ["mon", "wed", "sun"] }), "Пн, Ср, Вс");
   assert.equal(getAdminClientTrainingDaysText({ trainingDays: [] }), "—");
+  assert.equal(getAdminClientInitials({ name: "Илья Михайлов" }), "ИМ");
+  assert.equal(getAdminClientInitials({ email: "alfa.user@gmail.com" }), "AU");
+  assert.equal(getAdminClientInitials({}), "К");
 });
 
 test("admin measurement preview keeps only compact body fields", () => {

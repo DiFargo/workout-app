@@ -33,6 +33,19 @@ export function getAdminClientTrainingDaysText(profile = {}) {
     .join(", ");
 }
 
+export function getAdminClientInitials(client = {}, fallback = "К") {
+  const source = String(client?.name || client?.email || fallback || "").trim();
+  const initials = source
+    .split(/[\s@._-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+
+  return initials || fallback;
+}
+
 export function getAdminMeasurementPreviewFields(fields = []) {
   return (Array.isArray(fields) ? fields : [])
     .filter((field) => ADMIN_MEASUREMENT_PREVIEW_FIELD_IDS.includes(field.id));
