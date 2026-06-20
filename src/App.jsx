@@ -47,6 +47,7 @@ import {
   getProgramHistoryItems,
   getWorkoutReadinessOption,
   getWorkoutCover,
+  getWorkoutPresentationTitle,
   getWorkoutWarmupSteps,
   POST_WORKOUT_FEEDBACK_OPTIONS,
   WORKOUT_READINESS_OPTIONS
@@ -248,7 +249,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v677";
+const APP_VERSION = "v678";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5414,57 +5415,6 @@ export default function App() {
   function getNextUncompletedWorkoutIndex(workouts = [], completedSet = getCompletedWorkoutSet(history)) {
     const index = workouts.findIndex((workoutItem) => !isWorkoutCompletedByHistory(workoutItem, completedSet));
     return index >= 0 ? index : 0;
-  }
-
-  function getWorkoutPresentationTitle(workoutItem, dayNumber) {
-    const rawName = String(workoutItem?.title || workoutItem?.name || "").trim();
-    const explicitName = rawName
-      .split(/[·—–|]/)
-      .map((part) => part.trim())
-      .reverse()
-      .find((part) => (
-        part &&
-        !/^(?:неделя|день|тренировка|базовая)(?:\s+\d+)?$/i.test(part)
-      ));
-
-    if (explicitName) {
-      const cleanName = explicitName
-        .replace(/^(?:неделя|день|тренировка)\s*\d+\s*[:/+-]?\s*/i, "")
-        .replace(/\s*[+/]\s*/g, " и ")
-        .trim();
-
-      if (cleanName && !/^(?:неделя|день|тренировка)(?:\s+\d+)?$/i.test(cleanName)) {
-        return cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
-      }
-    }
-
-    const exerciseNames = (workoutItem?.exercises || []).map((exercise) => (
-      String(exercise?.name || "").toLowerCase()
-    ));
-    const groupRules = [
-      { label: "Ноги", patterns: [/ног/, /присед/, /выпад/, /бедр/, /икр/] },
-      { label: "Ягодицы", patterns: [/ягод/, /тазобед/, /глют/] },
-      { label: "Спина", patterns: [/спин/, /подтяг/, /тяга верх/, /тяга ниж/, /тяга гантел/, /тяга штанг/, /т-гриф/, /гиперэкст/] },
-      { label: "Грудь", patterns: [/груд/, /жим леж/, /жим гантел.*л[её]ж/, /сведен/, /развод/, /отжим/] },
-      { label: "Плечи", patterns: [/плеч/, /дельт/, /вертикальн.*жим/, /армейск/, /отведен.*рук/, /мах/] },
-      { label: "Руки", patterns: [/бицеп/, /трицеп/, /сгибан.*рук/, /разгибан.*рук/, /француз/] },
-      { label: "Пресс", patterns: [/пресс/, /скручив/, /планк/] }
-    ];
-    const detectedGroups = groupRules
-      .map((group) => ({
-        label: group.label,
-        score: exerciseNames.reduce((total, exerciseName) => (
-          total + (group.patterns.some((pattern) => pattern.test(exerciseName)) ? 1 : 0)
-        ), 0)
-      }))
-      .filter((group) => group.score > 0)
-      .sort((first, second) => second.score - first.score)
-      .slice(0, 2)
-      .map((group) => group.label);
-
-    return detectedGroups.length > 1
-      ? `${detectedGroups[0]} и ${detectedGroups[1].toLowerCase()}`
-      : detectedGroups[0] || `День ${dayNumber}`;
   }
 
   function getWorkoutPresentationImage(workoutItem, workoutTitle) {
