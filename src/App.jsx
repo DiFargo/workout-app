@@ -47,9 +47,11 @@ import {
   getProgramHistoryItems,
   getWorkoutReadinessOption,
   getWorkoutCover,
+  getWorkoutPresentationImage,
   getWorkoutPresentationTitle,
   getWorkoutWarmupSteps,
   POST_WORKOUT_FEEDBACK_OPTIONS,
+  WORKOUT_MENU_ITEMS,
   WORKOUT_READINESS_OPTIONS
 } from "./domain/workoutPresentation";
 import {
@@ -249,7 +251,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v678";
+const APP_VERSION = "v679";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2008,28 +2010,7 @@ export default function App() {
     return `${seconds} сек`;
   }, [workoutStartedAt, workoutFinishedAt, timerTick]);
 
-  const workoutMenuItems = [
-    {
-      day: "День 1",
-      title: "Спина + плечи",
-      image: "/workout-covers/menu-day-1.png"
-    },
-    {
-      day: "День 2",
-      title: "Грудь + плечи + руки",
-      image: "/workout-covers/menu-day-2.png"
-    },
-    {
-      day: "День 3",
-      title: "Спина + плечи",
-      image: "/workout-covers/menu-day-3.png"
-    },
-    {
-      day: "День 4",
-      title: "Грудь + руки",
-      image: "/workout-covers/menu-day-4.png"
-    }
-  ];
+  const workoutMenuItems = WORKOUT_MENU_ITEMS;
 
   useEffect(() => {
     if (!workout) return;
@@ -5415,24 +5396,6 @@ export default function App() {
   function getNextUncompletedWorkoutIndex(workouts = [], completedSet = getCompletedWorkoutSet(history)) {
     const index = workouts.findIndex((workoutItem) => !isWorkoutCompletedByHistory(workoutItem, completedSet));
     return index >= 0 ? index : 0;
-  }
-
-  function getWorkoutPresentationImage(workoutItem, workoutTitle) {
-    const exerciseImage = (workoutItem?.exercises || [])
-      .flatMap((exercise) => [exercise?.image, exercise?.thumbnail, exercise?.poster])
-      .find((image) => typeof image === "string" && image.trim());
-    const directImage =
-      workoutItem?.image ||
-      workoutItem?.thumbnail ||
-      workoutItem?.poster ||
-      exerciseImage;
-
-    if (directImage) return directImage;
-
-    const content = `${workoutTitle} ${(workoutItem?.exercises || []).map((exercise) => exercise?.name || "").join(" ")}`.toLowerCase();
-    if (/спин|плеч|тяга|подтяг|дельт/.test(content)) return workoutMenuItems[0]?.image || "";
-    if (/груд|рук|бицеп|трицеп|жим леж|сведен/.test(content)) return workoutMenuItems[1]?.image || "";
-    return "";
   }
 
   function getWorkoutPresentation(workoutItem, fallbackIndex = 0) {

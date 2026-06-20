@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { getWorkoutPresentationTitle } from "../src/domain/workoutPresentation.js";
+import {
+  getWorkoutPresentationImage,
+  getWorkoutPresentationTitle,
+  WORKOUT_MENU_ITEMS
+} from "../src/domain/workoutPresentation.js";
 
 test("workout presentation title prefers explicit workout name segment", () => {
   assert.equal(
@@ -19,5 +23,17 @@ test("workout presentation title falls back to detected exercise groups", () => 
       ]
     }, 1),
     "Грудь и руки"
+  );
+});
+
+test("workout presentation image prefers direct image and then fallback groups", () => {
+  assert.equal(
+    getWorkoutPresentationImage({ image: "/custom.png" }, "Спина"),
+    "/custom.png"
+  );
+
+  assert.equal(
+    getWorkoutPresentationImage({ exercises: [{ name: "Тяга нижнего блока" }] }, "Спина"),
+    WORKOUT_MENU_ITEMS[0].image
   );
 });
