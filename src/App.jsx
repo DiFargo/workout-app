@@ -231,6 +231,7 @@ import {
 import {
   getClientActivityStatus,
   getClientAttentionReasons,
+  getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
   getTrainerDayWord,
   getTrainerNutritionSummary
@@ -326,7 +327,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v705";
+const APP_VERSION = "v706";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5736,26 +5737,7 @@ export default function App() {
             nextSummaries[client.id] = await loadClientSummary(client);
           } catch (error) {
             console.warn(`Trainer summary load failed for ${client.id}:`, error);
-            nextSummaries[client.id] = {
-              clientId: client.id,
-              lastWorkoutAt: "",
-              workouts7: 0,
-              workouts30: 0,
-              workoutDateKeysCurrentWeek: [],
-              lastNutritionAt: "",
-              nutritionDays7: 0,
-              averageCalories7: null,
-              lastMeasurementAt: "",
-              assignedProgramId: client.assignedProgramId || "",
-              assignedProgramUpdatedAt: client.assignedProgramUpdatedAt || "",
-              assignedWorkoutCount: Number(client.assignedWorkoutCount) || 0,
-              completedWorkoutCount: 0,
-              plateau: { isPlateau: false, days: 0, delta: null },
-              payment: null,
-              paymentAttention: getClientPaymentAttention(null),
-              recentEvents: [],
-              programCompletionPercent: null
-            };
+            nextSummaries[client.id] = getTrainerClientEmptySummary(client);
           }
         }
       }
@@ -14996,25 +14978,8 @@ async function loadUsers() {
       );
     }
 
-    const getDashboardClientSummary = (client = {}) => trainerClientSummaries[client.id] || {
-      clientId: client.id || "",
-      lastWorkoutAt: "",
-      workouts7: 0,
-      workouts30: 0,
-      workoutDateKeysCurrentWeek: null,
-      lastNutritionAt: "",
-      nutritionDays7: 0,
-      averageCalories7: null,
-      lastMeasurementAt: "",
-      assignedProgramId: client.assignedProgramId || "",
-      assignedProgramUpdatedAt: client.assignedProgramUpdatedAt || "",
-      assignedWorkoutCount: Number(client.assignedWorkoutCount) || 0,
-      completedWorkoutCount: 0,
-      plateau: { isPlateau: false, days: 0, delta: null },
-      payment: null,
-      paymentAttention: getClientPaymentAttention(null),
-      programCompletionPercent: null
-    };
+    const getDashboardClientSummary = (client = {}) =>
+      trainerClientSummaries[client.id] || getTrainerClientEmptySummary(client);
     const trainerSummaryItems = usersList.map((client) => {
       const summary = getDashboardClientSummary(client);
       return {
@@ -15963,16 +15928,8 @@ async function loadUsers() {
     const credentialsText = adminCreatedCredentials
       ? `Логин: ${adminCreatedCredentials.email}\nПароль: ${adminCreatedCredentials.password}`
       : "";
-    const getClientCardSummary = (client = {}) => trainerClientSummaries[client.id] || {
-      lastWorkoutAt: "",
-      nutritionDays7: 0,
-      averageCalories7: null,
-      lastMeasurementAt: "",
-      assignedProgramId: client.assignedProgramId || "",
-      assignedProgramUpdatedAt: client.assignedProgramUpdatedAt || "",
-      assignedWorkoutCount: Number(client.assignedWorkoutCount) || 0,
-      programCompletionPercent: null
-    };
+    const getClientCardSummary = (client = {}) =>
+      trainerClientSummaries[client.id] || getTrainerClientEmptySummary(client);
 
     const adminUsersFilteredClients = usersList.filter((client) => {
       const profile = getAdminClientProfile(client);

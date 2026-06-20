@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   getClientActivityStatus,
   getClientAttentionReasons,
+  getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
   getTrainerDayWord,
   getTrainerNutritionSummary
@@ -68,6 +69,22 @@ test("trainer client attention reasons stay compact and readable", () => {
       `нет замера 31 ${getTrainerDayWord(31)}`
     ]
   );
+});
+
+test("trainer empty client summary preserves assigned program hints", () => {
+  const summary = getTrainerClientEmptySummary({
+    id: "client_1",
+    assignedProgramId: "program_1",
+    assignedProgramUpdatedAt: "2026-06-10",
+    assignedWorkoutCount: "8"
+  });
+
+  assert.equal(summary.clientId, "client_1");
+  assert.equal(summary.assignedProgramId, "program_1");
+  assert.equal(summary.assignedWorkoutCount, 8);
+  assert.equal(summary.completedWorkoutCount, 0);
+  assert.equal(summary.programCompletionPercent, null);
+  assert.deepEqual(summary.recentEvents, []);
 });
 
 test("trainer fast summary merges client fields with previous loaded summary", () => {

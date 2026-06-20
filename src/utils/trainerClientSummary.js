@@ -92,6 +92,29 @@ export function getClientAttentionReasons(summary = {}) {
   return reasons.length ? reasons : ["активность в норме"];
 }
 
+export function getTrainerClientEmptySummary(client = {}) {
+  return {
+    clientId: client.id || "",
+    lastWorkoutAt: "",
+    workouts7: 0,
+    workouts30: 0,
+    workoutDateKeysCurrentWeek: null,
+    lastNutritionAt: "",
+    nutritionDays7: 0,
+    averageCalories7: null,
+    lastMeasurementAt: "",
+    assignedProgramId: client.assignedProgramId || "",
+    assignedProgramUpdatedAt: client.assignedProgramUpdatedAt || "",
+    assignedWorkoutCount: Number(client.assignedWorkoutCount) || 0,
+    completedWorkoutCount: 0,
+    plateau: { isPlateau: false, days: 0, delta: null },
+    payment: null,
+    paymentAttention: getClientPaymentAttention(null),
+    recentEvents: [],
+    programCompletionPercent: null
+  };
+}
+
 export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
   const nutritionState = client.nutritionState || client.adminClientNutrition || client.nutrition || null;
   const nutritionSummary = getTrainerNutritionSummary(nutritionState);
