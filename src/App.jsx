@@ -74,6 +74,7 @@ import {
   getSearchHistoryName,
   getShortFoodName
 } from "./utils/nutritionFoodPresentation";
+import { parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
 import { buildProgressInsight } from "./utils/progressInsight";
 import {
   addLocalBackup,
@@ -140,7 +141,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v638";
+const APP_VERSION = "v639";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -1570,15 +1571,6 @@ function detectNutritionAmountMode(food, amount, savedMode = "") {
 
 function isPortionModeSelected(food, amount, mode = "") {
   return mode === "portion";
-}
-
-function roundMacro(value) {
-  return Math.round((Number(value) || 0) * 10) / 10;
-}
-
-function parseNutritionNumber(value, fallback = 0) {
-  const parsed = Number(String(value ?? "").replace(",", "."));
-  return Number.isFinite(parsed) ? parsed : fallback;
 }
 
 function getNutritionBaseMacroFood(food, amount = 100, mode = "grams") {
