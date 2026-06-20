@@ -235,6 +235,7 @@ import {
   getTrainerNutritionSummary
 } from "./utils/trainerClientSummary";
 import { buildTrainerCreateClientState } from "./utils/trainerCreateClientState";
+import { buildTrainerUserLists } from "./utils/trainerUserLists";
 import {
   buildAdminNutritionDaysList,
   buildAdminNutritionRecommendations
@@ -322,7 +323,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v701";
+const APP_VERSION = "v702";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -6761,28 +6762,11 @@ async function loadUsers() {
     if (!canUseTrainerFeatures()) return;
     setTrainerClientSummariesLoading(true);
 
-    const sortUsers = (items = []) => [...items].sort((a, b) =>
-      String(a.name || a.email || "").localeCompare(String(b.name || b.email || ""), "ru")
-    );
-
-    const normalizeTrainerClient = (item = {}) => ({
-      ...item,
-      role: item.role || "client"
-    });
-
     const applyUsers = (items = []) => {
-      const uniqueUsers = new Map();
-      items.forEach((item) => {
-        if (!item?.id) return;
-        uniqueUsers.set(item.id, normalizeTrainerClient(item));
+      const { users, clients } = buildTrainerUserLists(items, {
+        isAdmin: canUseAdminFeatures(),
+        adminEmail: ADMIN_EMAIL
       });
-
-      const users = sortUsers(Array.from(uniqueUsers.values()));
-      const clients = users.filter((item) => (
-        canUseAdminFeatures()
-          ? ["client", "trainer"].includes(item.role || "client") && item.email !== ADMIN_EMAIL
-          : (item.role || "client") === "client" && item.email !== ADMIN_EMAIL
-      ));
 
       setAdminAllUsersList(users);
       setUsersList(clients);
