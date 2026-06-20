@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   buildAdminNutritionDaysList,
+  buildAdminNutritionMonthOverview,
   buildAdminNutritionRecommendations
 } from "../src/utils/trainerNutritionInsights.js";
 
@@ -21,6 +22,25 @@ test("trainer nutrition days are sorted and include totals with score", () => {
   assert.equal(days[0].totals.protein, 20);
   assert.equal(days[0].totals.fat, 5);
   assert.equal(days[0].score, 8);
+});
+
+test("trainer nutrition month overview builds calendar grid and averages", () => {
+  const overview = buildAdminNutritionMonthOverview([
+    { date: "2026-06-20", totals: { calories: 2000, protein: 150 }, foods: [{}] },
+    { date: "2026-06-18", totals: { calories: 1600, protein: 110 }, foods: [{}] },
+    { date: "2026-05-31", totals: { calories: 900, protein: 60 }, foods: [{}] }
+  ], {
+    todayKey: "2026-06-20"
+  });
+
+  assert.equal(overview.days.length, 42);
+  assert.equal(overview.days[0].key, "2026-06-01");
+  assert.equal(overview.days[19].isToday, true);
+  assert.equal(overview.days[19].day.totals.calories, 2000);
+  assert.equal(overview.averageCalories, 1800);
+  assert.equal(overview.averageProtein, 130);
+  assert.equal(overview.trackedDaysCount, 2);
+  assert.match(overview.label, /июн/);
 });
 
 test("trainer nutrition recommendations highlight actionable issues", () => {

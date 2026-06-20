@@ -249,6 +249,7 @@ import { buildTrainerCreateClientState } from "./utils/trainerCreateClientState"
 import { buildTrainerUserLists } from "./utils/trainerUserLists";
 import {
   buildAdminNutritionDaysList,
+  buildAdminNutritionMonthOverview,
   buildAdminNutritionRecommendations
 } from "./utils/trainerNutritionInsights";
 import {
@@ -347,7 +348,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v722";
+const APP_VERSION = "v723";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -15799,32 +15800,11 @@ async function loadUsers() {
     const lastWorkout = adminClientHistory[0];
     const { maxCalories, maxProtein } = getAdminClientChartScales(clientNutritionDays, weightPoints);
 
-    const nutritionMonthBaseDate = clientNutritionDays[0]?.date ? new Date(`${clientNutritionDays[0].date}T12:00:00`) : new Date();
-    const nutritionMonthStart = new Date(nutritionMonthBaseDate.getFullYear(), nutritionMonthBaseDate.getMonth(), 1);
-    const nutritionMonthGridStart = new Date(nutritionMonthStart);
-    const nutritionMonthStartOffset = (nutritionMonthGridStart.getDay() + 6) % 7;
-    nutritionMonthGridStart.setDate(nutritionMonthGridStart.getDate() - nutritionMonthStartOffset);
-    const nutritionByDate = new Map(clientNutritionDays.map((day) => [day.date, day]));
-    const nutritionMonthDays = Array.from({ length: 42 }, (_, index) => {
-      const date = new Date(nutritionMonthGridStart);
-      date.setDate(nutritionMonthGridStart.getDate() + index);
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-      const day = nutritionByDate.get(key) || { date: key, totals: { calories: 0, protein: 0, fat: 0, carbs: 0 }, foods: [] };
-      return {
-        key,
-        date,
-        day,
-        inMonth: date.getMonth() === nutritionMonthStart.getMonth(),
-        isToday: key === new Date().toISOString().slice(0, 10)
-      };
-    });
-    const nutritionMonthLabel = nutritionMonthStart.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
-    const nutritionMonthDaysInPlan = nutritionMonthDays.filter((item) => item.inMonth && nutritionByDate.has(item.key));
-    const nutritionMonthCalories = nutritionMonthDaysInPlan.reduce((sum, item) => sum + (Number(item.day.totals.calories) || 0), 0);
-    const nutritionMonthProtein = nutritionMonthDaysInPlan.reduce((sum, item) => sum + (Number(item.day.totals.protein) || 0), 0);
-    const nutritionMonthAverageDays = Math.max(1, nutritionMonthDaysInPlan.length);
-    const nutritionMonthAverageCalories = nutritionMonthCalories / nutritionMonthAverageDays;
-    const nutritionMonthAverageProtein = nutritionMonthProtein / nutritionMonthAverageDays;
+    const nutritionMonthOverview = buildAdminNutritionMonthOverview(clientNutritionDays);
+    const nutritionMonthDays = nutritionMonthOverview.days;
+    const nutritionMonthLabel = nutritionMonthOverview.label;
+    const nutritionMonthAverageCalories = nutritionMonthOverview.averageCalories;
+    const nutritionMonthAverageProtein = nutritionMonthOverview.averageProtein;
     const dailyCalorieGoal = Number(selectedEffectiveNutritionGoals.calories) || 2400;
     const dailyProteinGoal = Number(selectedEffectiveNutritionGoals.protein) || 160;
     const dailyFatGoal = Number(selectedEffectiveNutritionGoals.fat) || 75;

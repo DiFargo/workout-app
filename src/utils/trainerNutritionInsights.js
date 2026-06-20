@@ -21,6 +21,46 @@ export function buildAdminNutritionDaysList(
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
+export function buildAdminNutritionMonthOverview(days = [], { todayKey = new Date().toISOString().slice(0, 10) } = {}) {
+  const safeDays = Array.isArray(days) ? days : [];
+  const baseDate = safeDays[0]?.date ? new Date(`${safeDays[0].date}T12:00:00`) : new Date(`${todayKey}T12:00:00`);
+  const monthStart = Number.isNaN(baseDate.getTime())
+    ? new Date()
+    : new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
+  const gridStart = new Date(monthStart);
+  const startOffset = (gridStart.getDay() + 6) % 7;
+  gridStart.setDate(gridStart.getDate() - startOffset);
+
+  const nutritionByDate = new Map(safeDays.map((day) => [day.date, day]));
+  const monthDays = Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(gridStart);
+    date.setDate(gridStart.getDate() + index);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    const day = nutritionByDate.get(key) || { date: key, totals: { calories: 0, protein: 0, fat: 0, carbs: 0 }, foods: [] };
+
+    return {
+      key,
+      date,
+      day,
+      inMonth: date.getMonth() === monthStart.getMonth(),
+      isToday: key === todayKey
+    };
+  });
+
+  const daysInPlan = monthDays.filter((item) => item.inMonth && nutritionByDate.has(item.key));
+  const calories = daysInPlan.reduce((sum, item) => sum + (Number(item.day.totals?.calories) || 0), 0);
+  const protein = daysInPlan.reduce((sum, item) => sum + (Number(item.day.totals?.protein) || 0), 0);
+  const averageDivisor = Math.max(1, daysInPlan.length);
+
+  return {
+    days: monthDays,
+    label: monthStart.toLocaleDateString("ru-RU", { month: "long", year: "numeric" }),
+    averageCalories: calories / averageDivisor,
+    averageProtein: protein / averageDivisor,
+    trackedDaysCount: daysInPlan.length
+  };
+}
+
 export function buildAdminNutritionRecommendations({
   profile = {},
   historyList = [],
