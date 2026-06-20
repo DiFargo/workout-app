@@ -5,7 +5,8 @@ import {
   buildNutritionCalendarDays,
   buildNutritionCurrentStreak,
   buildNutritionWeekDates,
-  formatNutritionCalendarMonthLabel
+  formatNutritionCalendarMonthLabel,
+  shiftNutritionCalendarMonthKey
 } from "../src/utils/nutritionCalendar.js";
 
 test("nutrition week dates start on monday around selected date", () => {
@@ -67,4 +68,10 @@ test("nutrition calendar days include food totals and selected flags", () => {
 
 test("nutrition calendar month label is formatted from month key", () => {
   assert.equal(formatNutritionCalendarMonthLabel("2026-06", "ru-RU"), "июнь 2026 г.");
+});
+
+test("nutrition calendar month shift keeps stable yyyy-mm keys", () => {
+  assert.equal(shiftNutritionCalendarMonthKey("2026-06", -1), "2026-05");
+  assert.equal(shiftNutritionCalendarMonthKey("2026-12", 1), "2027-01");
+  assert.equal(shiftNutritionCalendarMonthKey("2026-01", -1), "2025-12");
 });

@@ -52,7 +52,6 @@ import {
   WORKOUT_READINESS_OPTIONS
 } from "./domain/workoutPresentation";
 import {
-  dateToNutritionKey,
   formatNutritionDateLabel,
   getDefaultNutritionMealByTime,
   getNutritionOrbitSegment,
@@ -104,7 +103,8 @@ import {
   buildNutritionCalendarDays,
   buildNutritionCurrentStreak,
   buildNutritionWeekDates,
-  formatNutritionCalendarMonthLabel
+  formatNutritionCalendarMonthLabel,
+  shiftNutritionCalendarMonthKey
 } from "./utils/nutritionCalendar";
 import { getNutritionPhotoAiConfidenceText } from "./utils/nutritionPhotoAi";
 import {
@@ -330,7 +330,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v709";
+const APP_VERSION = "v710";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2333,11 +2333,7 @@ export default function App() {
   }
 
   function shiftNutritionCalendarMonth(offset) {
-    setNutritionCalendarMonthKey((current) => {
-      const [year, month] = String(current || todayNutritionKey().slice(0, 7)).split("-").map(Number);
-      const date = new Date(year || new Date().getFullYear(), (month || 1) - 1 + offset, 1);
-      return dateToNutritionKey(date).slice(0, 7);
-    });
+    setNutritionCalendarMonthKey((current) => shiftNutritionCalendarMonthKey(current, offset));
   }
 
   function getNutritionCalendarDays() {

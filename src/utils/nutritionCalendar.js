@@ -76,3 +76,9 @@ export function formatNutritionCalendarMonthLabel(monthKey = todayNutritionKey()
     year: "numeric"
   });
 }
+
+export function shiftNutritionCalendarMonthKey(monthKey = todayNutritionKey().slice(0, 7), offset = 0) {
+  const [year, month] = String(monthKey || todayNutritionKey().slice(0, 7)).split("-").map(Number);
+  const date = new Date(year || new Date().getFullYear(), (month || 1) - 1 + offset, 1);
+  return dateToNutritionKey(date).slice(0, 7);
+}
