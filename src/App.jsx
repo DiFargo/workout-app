@@ -91,6 +91,12 @@ import {
   normalizeNutritionFood,
   searchMyFoods
 } from "./utils/nutritionFoodModel";
+import {
+  getAiNutritionActivityLabel,
+  getAiNutritionGoalLabel,
+  getAiNutritionGoalShort,
+  getAiNutritionTrainingDayAdvice
+} from "./utils/aiNutritionLabels";
 import { parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
 import {
   getFoodPortionAmount,
@@ -168,7 +174,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v645";
+const APP_VERSION = "v646";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -740,24 +746,6 @@ function hasRequiredAiNutritionProfileFields(profile = {}) {
   );
 }
 
-function getAiNutritionGoalLabel(goal) {
-  if (goal === "mass") return "Набор массы";
-  if (goal === "cut") return "Похудение";
-  if (goal === "dry") return "Сушка";
-  if (goal === "maintain") return "Поддержка";
-  if (goal === "recomp") return "Рекомпозиция";
-  return "Рекомпозиция";
-}
-
-function getAiNutritionGoalShort(goal) {
-  if (goal === "mass") return "набор";
-  if (goal === "cut") return "похудение";
-  if (goal === "dry") return "сушка";
-  if (goal === "maintain") return "поддержка";
-  if (goal === "recomp") return "рекомпозиция";
-  return "рекомпозиция";
-}
-
 function collectAiNutritionFoodStats(nutrition = defaultNutritionState) {
   const counts = {};
   Object.values(nutrition.days || {}).forEach((day) => {
@@ -964,30 +952,6 @@ function getClientEffectiveNutritionGoals(client = {}, nutritionState = null, fa
   };
 }
 
-function getAiNutritionTrainingDayAdvice(isTrainingDay, goal = "recomp") {
-  if (!isTrainingDay) {
-    return "День без тренировки: держи обычные КБЖУ, не перегружай жиры вечером и оставь питание ровным.";
-  }
-
-  if (goal === "dry") {
-    return "Тренировочный день на сушке: белок держим высоким, углеводы лучше поставить до/после тренировки, жиры не повышать.";
-  }
-
-  if (goal === "cut") {
-    return "Тренировочный день в дефиците: добавь часть углеводов до/после зала, чтобы тренировка не просела.";
-  }
-
-  if (goal === "mass") {
-    return "Тренировочный день на наборе: держи небольшой профицит и добавь углеводы вокруг тренировки.";
-  }
-
-  if (goal === "maintain") {
-    return "Тренировочный день на поддержке: держи калории ровно, небольшой углеводный акцент до/после зала без общего профицита.";
-  }
-
-  return "Тренировочный день на рекомпозиции: белок выше, углеводы вокруг тренировки, лёгкий дефицит в дни отдыха.";
-}
-
 function calculateAiNutritionMacros(calories, weight, goal = "recomp") {
   const safeCalories = Math.max(1400, Math.round(Number(calories) || 2200));
   const safeWeight = Math.max(45, Number(weight) || 80);
@@ -1036,13 +1000,6 @@ function calculatePersonalAiNutritionCalories(profile = {}, nutrition = defaultN
   if (goal === "dry") return Math.round(personalizedBase - 180);
   if (goal === "maintain") return Math.round(personalizedBase);
   return Math.round(personalizedBase - 120);
-}
-
-function getAiNutritionActivityLabel(activity = "medium") {
-  if (activity === "low") return "низкая активность";
-  if (activity === "high") return "высокая активность";
-  if (activity === "veryHigh") return "очень высокая активность";
-  return "средняя активность";
 }
 
 function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, profile = null, history = [], previousPlan = null) {
