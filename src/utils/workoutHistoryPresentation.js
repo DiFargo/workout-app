@@ -1,3 +1,5 @@
+import { getCompletedWorkoutKey } from "./workoutCompletion.js";
+
 export function formatHistoryCardDate(dateValue, withYear = false) {
   const date = new Date(dateValue);
   if (Number.isNaN(date.getTime())) return "без даты";
@@ -52,4 +54,19 @@ export function getHistoryTopExercise(item = {}) {
   const exercises = item.exercises || [];
   const first = exercises.find((exercise) => exercise?.name);
   return first?.name || "Без упражнений";
+}
+
+export function getLastExerciseText(exerciseItem = {}, lastExerciseResults = {}) {
+  const exerciseKey = exerciseItem?.id
+    ? `id:${exerciseItem.id}`
+    : exerciseItem?.name
+      ? `name:${getCompletedWorkoutKey(exerciseItem.name)}`
+      : "";
+  const last = lastExerciseResults[exerciseKey];
+
+  if (!last) {
+    return "Прошлый раз: нет данных";
+  }
+
+  return `Прошлый раз: ${last}`;
 }

@@ -197,6 +197,7 @@ import {
 import {
   formatHistoryCardDate,
   formatHistoryTime,
+  getLastExerciseText,
   getHistorySetCount,
   getHistoryTopExercise,
   getHistoryVolume,
@@ -298,7 +299,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v692";
+const APP_VERSION = "v693";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2126,21 +2127,6 @@ export default function App() {
 
     return result;
   }, [history, workout?.assignedProgramUpdatedAt, plan.assignedProgramUpdatedAt]);
-
-  function getLastExerciseText(exerciseItem) {
-    const exerciseKey = exerciseItem?.id
-      ? `id:${exerciseItem.id}`
-      : exerciseItem?.name
-        ? `name:${getCompletedWorkoutKey(exerciseItem.name)}`
-        : "";
-    const last = lastExerciseResults[exerciseKey];
-
-    if (!last) {
-      return "Прошлый раз: нет данных";
-    }
-
-    return `Прошлый раз: ${last}`;
-  }
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -22041,7 +22027,7 @@ async function loadUsers() {
                       className="previousInfo subtle"
                       onClick={() => setExerciseHistoryOpenId((current) => current === exercise.id ? "" : exercise.id)}
                     >
-                      {getLastExerciseText(exercise)}
+                      {getLastExerciseText(exercise, lastExerciseResults)}
                       {exerciseHistoryOpenId === exercise.id && (
                         <small>План сейчас: {exercise.sets.length} подхода · нажми ещё раз, чтобы свернуть</small>
                       )}
