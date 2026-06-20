@@ -250,7 +250,8 @@ import { buildTrainerUserLists } from "./utils/trainerUserLists";
 import {
   buildAdminNutritionDaysList,
   buildAdminNutritionMonthOverview,
-  buildAdminNutritionRecommendations
+  buildAdminNutritionRecommendations,
+  getAdminNutritionDayMetrics
 } from "./utils/trainerNutritionInsights";
 import {
   buildAdminClientCsvLines,
@@ -351,7 +352,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v725";
+const APP_VERSION = "v726";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -17040,16 +17041,21 @@ async function loadUsers() {
                       ))}
 
                       {nutritionMonthDays.map(({ key, date, day, inMonth, isToday }) => {
-                        const calories = Number(day.totals.calories) || 0;
-                        const protein = Number(day.totals.protein) || 0;
-                        const fat = Number(day.totals.fat) || 0;
-                        const carbs = Number(day.totals.carbs) || 0;
-                        const caloriePercent = Math.min(100, Math.round((calories / dailyCalorieGoal) * 100));
-                        const proteinPercent = Math.min(100, Math.round((protein / dailyProteinGoal) * 100));
-                        const fatPercent = Math.min(100, Math.round((fat / dailyFatGoal) * 100));
-                        const carbsPercent = Math.min(100, Math.round((carbs / dailyCarbsGoal) * 100));
-                        const isHighCalories = calories > dailyCalorieGoal;
-                        const hasFood = calories > 0 || protein > 0 || fat > 0 || carbs > 0;
+                        const {
+                          calories,
+                          protein,
+                          caloriePercent,
+                          proteinPercent,
+                          fatPercent,
+                          carbsPercent,
+                          isHighCalories,
+                          hasFood
+                        } = getAdminNutritionDayMetrics(day, {
+                          calories: dailyCalorieGoal,
+                          protein: dailyProteinGoal,
+                          fat: dailyFatGoal,
+                          carbs: dailyCarbsGoal
+                        });
                         const isTrainingDay = adminClientHistory?.some((workout) => {
                           const workoutDateKey = workout?.date ? new Date(workout.date).toISOString().slice(0, 10) : "";
                           return workoutDateKey === key;

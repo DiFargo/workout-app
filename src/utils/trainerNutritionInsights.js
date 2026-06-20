@@ -61,6 +61,31 @@ export function buildAdminNutritionMonthOverview(days = [], { todayKey = new Dat
   };
 }
 
+export function getAdminNutritionDayMetrics(day = {}, goals = {}) {
+  const totals = day?.totals || {};
+  const calories = Number(totals.calories) || 0;
+  const protein = Number(totals.protein) || 0;
+  const fat = Number(totals.fat) || 0;
+  const carbs = Number(totals.carbs) || 0;
+  const calorieGoal = Number(goals.calories) || 2400;
+  const proteinGoal = Number(goals.protein) || 160;
+  const fatGoal = Number(goals.fat) || 75;
+  const carbsGoal = Number(goals.carbs) || 260;
+
+  return {
+    calories,
+    protein,
+    fat,
+    carbs,
+    caloriePercent: Math.min(100, Math.round((calories / calorieGoal) * 100)),
+    proteinPercent: Math.min(100, Math.round((protein / proteinGoal) * 100)),
+    fatPercent: Math.min(100, Math.round((fat / fatGoal) * 100)),
+    carbsPercent: Math.min(100, Math.round((carbs / carbsGoal) * 100)),
+    isHighCalories: calories > calorieGoal,
+    hasFood: calories > 0 || protein > 0 || fat > 0 || carbs > 0
+  };
+}
+
 export function buildAdminNutritionRecommendations({
   profile = {},
   historyList = [],

@@ -4,7 +4,8 @@ import assert from "node:assert/strict";
 import {
   buildAdminNutritionDaysList,
   buildAdminNutritionMonthOverview,
-  buildAdminNutritionRecommendations
+  buildAdminNutritionRecommendations,
+  getAdminNutritionDayMetrics
 } from "../src/utils/trainerNutritionInsights.js";
 
 test("trainer nutrition days are sorted and include totals with score", () => {
@@ -41,6 +42,30 @@ test("trainer nutrition month overview builds calendar grid and averages", () =>
   assert.equal(overview.averageProtein, 130);
   assert.equal(overview.trackedDaysCount, 2);
   assert.match(overview.label, /июн/);
+});
+
+test("trainer nutrition day metrics normalize totals and percents", () => {
+  assert.deepEqual(getAdminNutritionDayMetrics({
+    totals: { calories: 2600, protein: 80, fat: 40, carbs: 130 }
+  }, {
+    calories: 2400,
+    protein: 160,
+    fat: 80,
+    carbs: 260
+  }), {
+    calories: 2600,
+    protein: 80,
+    fat: 40,
+    carbs: 130,
+    caloriePercent: 100,
+    proteinPercent: 50,
+    fatPercent: 50,
+    carbsPercent: 50,
+    isHighCalories: true,
+    hasFood: true
+  });
+
+  assert.equal(getAdminNutritionDayMetrics({ totals: {} }).hasFood, false);
 });
 
 test("trainer nutrition recommendations highlight actionable issues", () => {
