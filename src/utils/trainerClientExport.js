@@ -95,3 +95,12 @@ export function trainerExportRowsToCsv(rows = []) {
       .join(","))
     .join("\n");
 }
+
+export function trainerExportRowsToHtmlRows(rows = []) {
+  return (Array.isArray(rows) ? rows : [])
+    .slice(1)
+    .map((row) => `<tr>${(Array.isArray(row) ? row : [])
+      .map((cell) => `<td>${String(cell).replace(/[<>&]/g, "")}</td>`)
+      .join("")}</tr>`)
+    .join("");
+}

@@ -4,7 +4,8 @@ import assert from "node:assert/strict";
 import {
   buildAdminClientCsvLines,
   buildTrainerClientExportRows,
-  trainerExportRowsToCsv
+  trainerExportRowsToCsv,
+  trainerExportRowsToHtmlRows
 } from "../src/utils/trainerClientExport.js";
 
 test("admin client csv lines include workout and nutrition totals", () => {
@@ -40,4 +41,13 @@ test("trainer client export rows include measurements and csv quoting", () => {
   assert.equal(rows[2][2], "Замер");
   assert.equal(rows[2][8], "weight 89.5");
   assert.match(trainerExportRowsToCsv(rows), /"nutrition","2026-06-17","day totals","2000"/);
+});
+
+test("trainer export html rows omit the header and strip unsafe cell characters", () => {
+  const htmlRows = trainerExportRowsToHtmlRows([
+    ["type", "date", "name"],
+    ["workout", "2026-06-20", "<Спина&плечи>"]
+  ]);
+
+  assert.equal(htmlRows, "<tr><td>workout</td><td>2026-06-20</td><td>Спинаплечи</td></tr>");
 });

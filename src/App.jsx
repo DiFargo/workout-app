@@ -254,7 +254,8 @@ import {
 import {
   buildAdminClientCsvLines,
   buildTrainerClientExportRows,
-  trainerExportRowsToCsv
+  trainerExportRowsToCsv,
+  trainerExportRowsToHtmlRows
 } from "./utils/trainerClientExport";
 import {
   buildAdminClientNutritionStateFromRoot,
@@ -343,7 +344,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v718";
+const APP_VERSION = "v719";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -7481,7 +7482,7 @@ async function loadUsers() {
     const rows = buildTrainerClientExportRows(adminClientHistory, adminClientMeasurements, nutritionDays);
 
     if (format === "pdf") {
-      const htmlRows = rows.slice(1).map((row) => `<tr>${row.map((cell) => `<td>${String(cell).replace(/[<>&]/g, "")}</td>`).join("")}</tr>`).join("");
+      const htmlRows = trainerExportRowsToHtmlRows(rows);
       const popup = window.open("", "_blank", "noopener,noreferrer");
       if (popup) {
         popup.document.write(`<html><head><title>${client.name || client.email || "client"} report</title><style>body{font-family:Arial;padding:24px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px;font-size:12px}h1{font-size:22px}</style></head><body><h1>Отчёт клиента: ${client.name || client.email || client.id}</h1><table><thead><tr>${rows[0].map((cell) => `<th>${cell}</th>`).join("")}</tr></thead><tbody>${htmlRows}</tbody></table><script>window.print()</script></body></html>`);
