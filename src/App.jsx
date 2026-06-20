@@ -99,6 +99,7 @@ import {
   getNutritionDayTotals,
   sumNutritionFoods
 } from "./utils/aiNutritionAnalysis";
+import { buildNutritionAdvice } from "./utils/nutritionAdvice";
 import {
   buildNutritionCalendarDays,
   buildNutritionCurrentStreak,
@@ -330,7 +331,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v710";
+const APP_VERSION = "v711";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2285,27 +2286,11 @@ export default function App() {
   );
 
   const nutritionAdvice = useMemo(() => {
-    const calorieLeft = nutrition.goals.calories - nutritionTotals.calories;
-    const proteinLeft = nutrition.goals.protein - nutritionTotals.protein;
-    const waterLeft = nutrition.goals.water - (nutritionToday.water || 0);
-
-    if (nutritionTotals.calories === 0) {
-      return "Добавь первый приём пищи — и я покажу, чего не хватает по калориям, белку и воде.";
-    }
-
-    if (proteinLeft > 45) {
-      return `Белка пока маловато: осталось примерно ${Math.ceil(proteinLeft)} г. Хороший вариант — курица, творог, рыба или протеин.`;
-    }
-
-    if (calorieLeft < 250 && proteinLeft > 15) {
-      return "Калории почти закрыты, но белок ещё можно добрать чем-то лёгким: творог, йогурт или протеин.";
-    }
-
-    if (waterLeft > 700) {
-      return "По еде всё неплохо. Воды сегодня маловато — добавь 1–2 стакана в ближайшее время.";
-    }
-
-    return "Отличный день по питанию. Держи белок стабильно — это хорошо поддержит прогресс в тренировках.";
+    return buildNutritionAdvice({
+      goals: nutrition.goals,
+      totals: nutritionTotals,
+      water: nutritionToday.water
+    });
   }, [nutrition.goals, nutritionTotals, nutritionToday.water]);
 
   function getNutritionWeekDates(centerKey = nutritionDateKey) {
