@@ -135,6 +135,14 @@ export function formatProfileMeasurementDate(measurement = null) {
   return parsedDate.toLocaleDateString("ru-RU");
 }
 
+export function formatProfileProgressPhotoDate(photo = null) {
+  const dateValue = photo?.date || photo?.createdAt?.slice(0, 10);
+  if (!dateValue) return "Дата не указана";
+
+  const date = new Date(`${dateValue}T12:00:00`);
+  return Number.isNaN(date.getTime()) ? "Дата не указана" : date.toLocaleDateString("ru-RU");
+}
+
 export function getProfileMeasurementValue(measurement = null, field = {}) {
   if (!field?.id) return "—";
   const value = measurement?.[field.id];

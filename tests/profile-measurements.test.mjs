@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   formatProfileMeasurementDate,
+  formatProfileProgressPhotoDate,
   getMeasurementTimestampValue,
   getProfileMeasurementFields,
   getProfileMeasurementGoalText,
@@ -50,4 +51,11 @@ test("profile measurement date and values stay user friendly", () => {
   assert.equal(getProfileMeasurementValue({ weight: 0 }, { id: "weight" }), "0");
   assert.equal(getProfileMeasurementValue({ weight: " 89.5 " }, { id: "weight" }), "89.5");
   assert.equal(getProfileMeasurementValue({}, { id: "weight" }), "—");
+});
+
+test("profile progress photo date uses saved day fields", () => {
+  assert.equal(formatProfileProgressPhotoDate(null), "Дата не указана");
+  assert.equal(formatProfileProgressPhotoDate({ date: "bad-date" }), "Дата не указана");
+  assert.equal(formatProfileProgressPhotoDate({ date: "2026-06-18" }), "18.06.2026");
+  assert.equal(formatProfileProgressPhotoDate({ createdAt: "2026-06-19T10:30:00.000Z" }), "19.06.2026");
 });

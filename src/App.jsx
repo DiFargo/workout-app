@@ -173,6 +173,7 @@ import { buildProgressInsight } from "./utils/progressInsight";
 import { buildBasicWorkoutPlanFromQuiz } from "./utils/basicWorkoutPlanBuilder";
 import {
   formatProfileMeasurementDate,
+  formatProfileProgressPhotoDate,
   getMeasurementTimestampValue,
   getProfileMeasurementFields,
   getProfileMeasurementValue
@@ -324,7 +325,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v703";
+const APP_VERSION = "v704";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -12462,12 +12463,7 @@ async function loadUsers() {
     const activeProgressPhotoCompareView = progressPhotoCompareViews.find(
       (view) => view.id === profileProgressPhotoCompareView
     ) || progressPhotoCompareViews[0];
-    const formatClientProgressPhotoDate = (photo) => {
-      const dateValue = photo?.date || photo?.createdAt?.slice(0, 10);
-      if (!dateValue) return "Дата не указана";
-      const date = new Date(`${dateValue}T12:00:00`);
-      return Number.isNaN(date.getTime()) ? "Дата не указана" : date.toLocaleDateString("ru-RU");
-    };
+    const formatClientProgressPhotoDate = formatProfileProgressPhotoDate;
     const profileProgressPhotoSetComplete = ["front", "side", "back"].every(
       (view) => Boolean(profileProgressPhotoFiles[view])
     );
