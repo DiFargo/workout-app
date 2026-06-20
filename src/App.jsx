@@ -118,6 +118,13 @@ import {
 } from "./utils/localNutritionCatalog";
 import { mergeNutritionStates } from "./utils/nutritionStateMerge";
 import { saveNutritionStateWithMerge } from "./utils/nutritionStateStorage";
+import {
+  loadNutritionPreferredUnit,
+  loadRecentNutritionFoods,
+  saveNutritionPreferredUnit,
+  saveRecentNutritionFood,
+  saveRecentNutritionFoods
+} from "./utils/nutritionPreferenceStorage";
 import { getPersonalMyFoodsDocRef } from "./utils/personalMyFoodsStorage";
 import {
   createEmptyAiNutritionProfileDraft,
@@ -221,7 +228,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v661";
+const APP_VERSION = "v662";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -243,65 +250,11 @@ const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
 const WORKOUT_CALENDAR_STORAGE_KEY = "workout_calendar_v1";
 const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
 
-const RECENT_NUTRITION_SEARCHES_KEY = "nutrition_recent_foods_v1";
 const AI_NUTRITION_PROFILE_STORAGE_KEY = "ai_nutrition_profile_v1";
 const AI_NUTRITION_PLAN_STORAGE_KEY = "ai_nutrition_plan_v1";
 
 // HARDER DELETE SWIPE
 const NUTRITION_DELETE_THRESHOLD = -135;
-
-function loadRecentNutritionFoods(uid = auth.currentUser?.uid) {
-  try {
-    if (!uid) return [];
-    const raw = localStorage.getItem(getUserScopedStorageKey(RECENT_NUTRITION_SEARCHES_KEY, uid));
-    const value = JSON.parse(raw || "[]");
-    return Array.isArray(value) ? value.slice(0, 8) : [];
-  } catch (_) {
-    return [];
-  }
-}
-
-function saveRecentNutritionFood(food, uid = auth.currentUser?.uid) {
-  try {
-    if (!food?.name || !uid) return;
-
-    const current = loadRecentNutritionFoods(uid);
-    const next = [
-      food,
-      ...current.filter((item) => item?.name !== food.name)
-    ].slice(0, 8);
-
-    localStorage.setItem(
-      getUserScopedStorageKey(RECENT_NUTRITION_SEARCHES_KEY, uid),
-      JSON.stringify(next)
-    );
-  } catch (_) {
-    // ignore localStorage errors
-  }
-}
-
-function getNutritionUnitStorageKey(food = {}) {
-  const baseKey = `nutrition_unit_${String(food?.name || "").trim().toLowerCase()}`;
-  return getUserScopedStorageKey(baseKey, auth.currentUser?.uid);
-}
-
-function saveNutritionPreferredUnit(food = {}, unitId = "") {
-  try {
-    if (!food?.name || !unitId) return;
-    localStorage.setItem(getNutritionUnitStorageKey(food), unitId);
-  } catch (_) {
-    // ignore storage errors
-  }
-}
-
-function loadNutritionPreferredUnit(food = {}) {
-  try {
-    if (!food?.name) return "";
-    return localStorage.getItem(getNutritionUnitStorageKey(food)) || "";
-  } catch (_) {
-    return "";
-  }
-}
 
 function isTrainerE2EHarnessEnabled() {
   return import.meta.env.DEV &&
@@ -3872,10 +3825,7 @@ export default function App() {
         return id !== cleanFoodId && foodIdValue !== cleanFoodId && (!cleanFoodName || name !== cleanFoodName);
       });
       if (currentUid) {
-        localStorage.setItem(
-          getUserScopedStorageKey(RECENT_NUTRITION_SEARCHES_KEY, currentUid),
-          JSON.stringify(next)
-        );
+        saveRecentNutritionFoods(next, currentUid);
       }
     } catch (_) {
       // ignore localStorage errors
