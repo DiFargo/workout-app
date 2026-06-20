@@ -171,6 +171,7 @@ import {
   clearWorkoutDraft,
   getWorkoutDraftKey
 } from "./utils/workoutDraftStorage";
+import { getCompletedWorkoutKey } from "./utils/workoutCompletion";
 import { buildTrainerNutritionPlanUpdate } from "./utils/trainerNutritionPlan";
 import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
 import {
@@ -229,7 +230,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v663";
+const APP_VERSION = "v664";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5559,13 +5560,6 @@ export default function App() {
     if (Number.isFinite(dayFromName) && dayFromName > 0) return dayFromName;
 
     return fallbackIndex + 1;
-  }
-
-  function getCompletedWorkoutKey(value = "") {
-    return String(value || "")
-      .toLowerCase()
-      .replace(/\s+/g, " ")
-      .trim();
   }
 
   function getCompletedWorkoutSet(
