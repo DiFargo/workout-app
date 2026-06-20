@@ -238,7 +238,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v668";
+const APP_VERSION = "v669";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2307,15 +2307,7 @@ export default function App() {
       date.setDate(start.getDate() + index);
       const key = dateToNutritionKey(date);
       const day = nutrition.days?.[key] || makeEmptyNutritionDay();
-      const totals = (day.foods || []).reduce(
-        (sum, item) => ({
-          calories: sum.calories + (Number(item.calories) || 0),
-          protein: sum.protein + (Number(item.protein) || 0),
-          fat: sum.fat + (Number(item.fat) || 0),
-          carbs: sum.carbs + (Number(item.carbs) || 0)
-        }),
-        { calories: 0, protein: 0, fat: 0, carbs: 0 }
-      );
+      const totals = getNutritionDayTotals(day);
 
       return {
         key,
