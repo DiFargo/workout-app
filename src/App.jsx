@@ -209,6 +209,7 @@ import {
 } from "./utils/workoutCompletion";
 import {
   formatHistoryCardDate,
+  formatIndividualWorkoutHistoryDate,
   formatHistoryTime,
   getLastExerciseText,
   getHistorySetCount,
@@ -327,7 +328,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v707";
+const APP_VERSION = "v708";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -20458,15 +20459,6 @@ async function loadUsers() {
       workoutIds: sortedWorkouts.map((workoutItem) => workoutItem.id)
     };
     const individualWorkoutHistoryItems = getProgramHistoryItems(history, individualWorkoutProgramScope).slice(0, 12);
-    const formatIndividualHistoryDate = (value) => {
-      const timestamp = getTimestampValue(value);
-      if (!timestamp) return "Без даты";
-      return new Date(timestamp).toLocaleDateString("ru-RU", {
-        day: "numeric",
-        month: "short",
-        year: "numeric"
-      }).replace(".", "");
-    };
     const activeWorkoutActionLabel = hasActiveWorkoutDraft
       ? "Продолжить тренировку"
       : activeIndividualWorkoutCompleted
@@ -20897,7 +20889,7 @@ async function loadUsers() {
                     <div>
                       <strong>{item.workout || "Тренировка"}</strong>
                       <small>
-                        {formatIndividualHistoryDate(item.date)}
+                        {formatIndividualWorkoutHistoryDate(item.date)}
                         {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
                       </small>
                     </div>

@@ -1,3 +1,4 @@
+import { getTimestampValue } from "./auditSafety.js";
 import { getCompletedWorkoutKey } from "./workoutCompletion.js";
 
 export function formatHistoryCardDate(dateValue, withYear = false) {
@@ -19,6 +20,17 @@ export function formatHistoryTime(dateValue) {
     hour: "2-digit",
     minute: "2-digit"
   });
+}
+
+export function formatIndividualWorkoutHistoryDate(value) {
+  const timestamp = getTimestampValue(value);
+  if (!timestamp) return "Без даты";
+
+  return new Date(timestamp).toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  }).replace(".", "");
 }
 
 export function getHistoryWorkoutParts(workoutName = "") {

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   formatHistoryCardDate,
+  formatIndividualWorkoutHistoryDate,
   formatHistoryTime,
   getHistorySetCount,
   getHistoryTopExercise,
@@ -16,6 +17,11 @@ test("history presentation formats workout date and time", () => {
   assert.match(formatHistoryTime("2026-06-17T08:30:00"), /08:30/);
   assert.equal(formatHistoryCardDate("bad-date"), "без даты");
   assert.equal(formatHistoryTime("bad-date"), "");
+});
+
+test("individual workout history date keeps year and empty fallback", () => {
+  assert.match(formatIndividualWorkoutHistoryDate("2026-06-17T08:30:00"), /17\s+июн.*2026/);
+  assert.equal(formatIndividualWorkoutHistoryDate("bad-date"), "Без даты");
 });
 
 test("history presentation splits workout day and title", () => {
