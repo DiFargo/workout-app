@@ -118,6 +118,11 @@ import {
 } from "./utils/clientUx";
 import { useModalFocusTrap } from "./hooks/useModalFocusTrap";
 import {
+  makeThreeSets,
+  normalizeExercise,
+  normalizePlan
+} from "./utils/workoutPlanNormalization";
+import {
   PostWorkoutFeedbackDialog,
   WorkoutExitDialog,
   WorkoutIncompleteDialog
@@ -160,7 +165,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v641";
+const APP_VERSION = "v642";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -1330,43 +1335,6 @@ function loadNutritionPreferredUnit(food = {}) {
   } catch (_) {
     return "";
   }
-}
-
-function makeThreeSets(sets = [], defaultReps = 8) {
-  const cleanSets = Array.isArray(sets) ? sets : [];
-
-  const buildSet = (set) => ({
-    ...set,
-    reps: set?.reps || defaultReps,
-    weight: set?.weight || "",
-    enteredReps: set?.enteredReps || "",
-    enteredWeight: set?.enteredWeight || ""
-  });
-
-  return Array.from(
-    { length: Math.max(cleanSets.length, 3) },
-    (_, index) => buildSet(cleanSets[index])
-  );
-}
-
-function normalizeExercise(exercise) {
-  const defaultReps = exercise?.name?.includes("Пресс") ? 15 : 8;
-
-  return {
-    ...exercise,
-    usesWeight: exerciseUsesExternalWeight(exercise),
-    video: exercise?.video || exercise?.videoUrl || exercise?.videoURL || "",
-    sets: makeThreeSets(exercise?.sets, defaultReps)
-  };
-}
-
-function normalizePlan(plan) {
-  return {
-    workouts: (plan.workouts || []).map((workout) => ({
-      ...workout,
-      exercises: (workout.exercises || []).map(normalizeExercise)
-    }))
-  };
 }
 
 const starterPlan = {
