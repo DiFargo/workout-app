@@ -57,6 +57,7 @@ import {
 } from "./domain/workoutPresentation";
 import {
   dateToNutritionKey,
+  formatNutritionDateLabel,
   getDefaultNutritionMealByTime,
   getNutritionOrbitSegment,
   makeEmptyNutritionDay,
@@ -166,7 +167,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v643";
+const APP_VERSION = "v644";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -1309,10 +1310,6 @@ function saveRecentNutritionFood(food, uid = auth.currentUser?.uid) {
   } catch (_) {
     // ignore localStorage errors
   }
-}
-
-function formatNutritionDateLabel(date = new Date()) {
-  return date.toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" });
 }
 
 function getNutritionUnitStorageKey(food = {}) {

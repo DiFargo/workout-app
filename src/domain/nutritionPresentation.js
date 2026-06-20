@@ -54,6 +54,10 @@ export function shiftNutritionDateKey(key, days) {
   return dateToNutritionKey(date);
 }
 
+export function formatNutritionDateLabel(date = new Date()) {
+  return date.toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" });
+}
+
 export function makeEmptyNutritionDay() {
   return {
     foods: [],
