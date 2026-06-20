@@ -127,6 +127,10 @@ import {
   saveRecentNutritionFood,
   saveRecentNutritionFoods
 } from "./utils/nutritionPreferenceStorage";
+import {
+  buildMyNutritionFoods,
+  buildNutritionSearchResults
+} from "./utils/nutritionSearchResults";
 import { getPersonalMyFoodsDocRef } from "./utils/personalMyFoodsStorage";
 import {
   createEmptyAiNutritionProfileDraft,
@@ -213,9 +217,7 @@ import {
   getTimestampValue,
   hasWorkoutSetEntry,
   isReliablePhotoFood,
-  isWorkoutSetCompleted,
-  limitSimilarNutritionFoods,
-  rankAndDedupeNutritionFoods
+  isWorkoutSetCompleted
 } from "./utils/auditSafety";
 
 import { auth, db, storage } from "./firebase";
@@ -236,7 +238,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v667";
+const APP_VERSION = "v668";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2201,77 +2203,17 @@ export default function App() {
   }, [nutrition.days]);
 
   const myNutritionFoods = useMemo(() => {
-    return Object.values(nutrition.myFoods || {})
-      .sort((a, b) => (Number(b.useCount) || 0) - (Number(a.useCount) || 0))
-      .map(normalizeNutritionFood);
+    return buildMyNutritionFoods(nutrition.myFoods);
   }, [nutrition.myFoods]);
 
   const nutritionSearchResults = useMemo(() => {
-    const query = nutritionSearch.trim().toLowerCase();
-    const recentIds = nutrition.recent || [];
-    const favoriteIds = nutrition.favorites || [];
-    const localFoods = nutritionFoodDatabase.map(normalizeNutritionFood);
-    const myFoods = Object.values(nutrition.myFoods || {})
-      .sort((a, b) => (Number(b.useCount) || 0) - (Number(a.useCount) || 0))
-      .map(normalizeNutritionFood);
-
-    if (nutritionSearchTab === "my") {
-      if (query.length >= 2) {
-        return myFoods
-          .filter((food) => getNutritionFoodSearchText(food).includes(query))
-          .slice(0, 30);
-      }
-
-      return myFoods.slice(0, 30);
-    }
-
-    if (nutritionSearchTab === "recent") {
-      return recentIds
-        .map((id) =>
-          myFoods.find((food) => food.id === id || food.foodId === id) ||
-          localFoods.find((food) => food.id === id) ||
-          (nutritionToday.foods || []).find((food) => food.foodId === id || food.id === id)
-        )
-        .filter(Boolean)
-        .map(normalizeNutritionFood)
-        .slice(0, 20);
-    }
-
-    if (nutritionSearchTab === "favorites") {
-      return favoriteIds
-        .map((id) =>
-          myFoods.find((food) => food.id === id || food.foodId === id) ||
-          localFoods.find((food) => food.id === id) ||
-          (nutritionToday.foods || []).find((food) => food.foodId === id || food.id === id)
-        )
-        .filter(Boolean)
-        .map(normalizeNutritionFood)
-        .slice(0, 20);
-    }
-
-    if (query.length >= 1) {
-      const personalMatches = rankAndDedupeNutritionFoods(
-        myFoods.filter((food) => getNutritionFoodSearchText(food).includes(query)),
-        query,
-        20
-      );
-
-      if (query.length >= 2 && fatSecretFoods.length > 0) {
-        return limitSimilarNutritionFoods(
-          rankAndDedupeNutritionFoods(
-            [...personalMatches, ...fatSecretFoods.map(normalizeNutritionFood)],
-            query,
-            30
-          ),
-          30,
-          2
-        );
-      }
-
-      return personalMatches;
-    }
-
-    return [];
+    return buildNutritionSearchResults({
+      nutritionSearch,
+      nutritionSearchTab,
+      nutrition,
+      nutritionToday,
+      fatSecretFoods
+    });
   }, [nutritionSearch, nutritionSearchTab, nutrition.favorites, nutrition.recent, nutrition.myFoods, nutritionToday.foods, fatSecretFoods]);
 
   const nutritionSearchResultKey = `${nutritionSearchTab}:${nutritionSearch.trim().toLowerCase()}`;
