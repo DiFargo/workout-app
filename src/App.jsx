@@ -110,6 +110,11 @@ import {
   getAiNutritionWeekForDate,
   isAiNutritionTrainingDay
 } from "./utils/aiNutritionSchedule";
+import {
+  getNutritionPlanMacroNumbers,
+  getNutritionPlanTimestamp,
+  getNutritionPresetGoalId
+} from "./utils/nutritionPlanHelpers";
 import { parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
 import {
   getFoodPortionAmount,
@@ -187,7 +192,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v648";
+const APP_VERSION = "v649";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -800,30 +805,6 @@ function getAiNutritionWeightTrend(nutrition = defaultNutritionState) {
     status,
     delta,
     text: `Вес ${status}: ${delta > 0 ? "+" : ""}${delta} кг за период записей.`
-  };
-}
-
-function getNutritionPlanTimestamp(plan = {}) {
-  return getTimestampValue(plan?.updatedAt || plan?.createdAt || plan?.assignedAt || "");
-}
-
-function getNutritionPresetGoalId(plan = {}, fallbackProfile = {}) {
-  const value = String(plan?.presetId || plan?.preset || plan?.goalId || fallbackProfile?.goal || "").trim();
-  if (value === "maintenance" || value === "maintain") return "maintain";
-  if (value === "recomposition" || value === "recomp") return "recomp";
-  if (value === "fat_loss" || value === "cut") return "cut";
-  if (value === "cutting" || value === "dry") return "dry";
-  if (value === "mass_gain" || value === "mass" || value === "muscle_gain") return "mass";
-  return fallbackProfile?.goal || "recomp";
-}
-
-function getNutritionPlanMacroNumbers(plan = {}, fallbackGoals = {}) {
-  const source = plan?.start || plan?.weeks?.[0] || plan || {};
-  return {
-    calories: Math.round(Number(source.calories || fallbackGoals.calories) || defaultNutritionState.goals.calories),
-    protein: Math.round(Number(source.protein || fallbackGoals.protein) || defaultNutritionState.goals.protein),
-    fat: Math.round(Number(source.fat || fallbackGoals.fat) || defaultNutritionState.goals.fat),
-    carbs: Math.round(Number(source.carbs || fallbackGoals.carbs) || defaultNutritionState.goals.carbs)
   };
 }
 
