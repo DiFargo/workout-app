@@ -234,6 +234,7 @@ import {
   getTrainerDayWord,
   getTrainerNutritionSummary
 } from "./utils/trainerClientSummary";
+import { buildTrainerCreateClientState } from "./utils/trainerCreateClientState";
 import {
   buildAdminNutritionDaysList,
   buildAdminNutritionRecommendations
@@ -321,7 +322,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v700";
+const APP_VERSION = "v701";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -12381,21 +12382,22 @@ async function loadUsers() {
   }
 
   function getTrainerNextCreateClientState() {
-    return {
+    return buildTrainerCreateClientState({
       open: adminCreateClientModalOpen,
       name: adminNewUserName,
       email: adminNewUserEmail,
       password: adminNewUserPassword,
       loading: adminCreateUserLoading,
       status: adminCreateUserStatus,
-      credentials: adminCreatedCredentials,
+      credentials: adminCreatedCredentials
+    }, {
       onClose: () => setAdminCreateClientModalOpen(false),
       onNameChange: setAdminNewUserName,
       onEmailChange: setAdminNewUserEmail,
       onPasswordChange: setAdminNewUserPassword,
       onGeneratePassword: generateAdminPassword,
       onSubmit: createUserFromAdminPanel
-    };
+    });
   }
 
   function renderClientTrainingBottomBar(activeTab = "workouts") {
