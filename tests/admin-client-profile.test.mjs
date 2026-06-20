@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   getAdminClientGoalLabel,
+  getAdminMeasurementPreviewFields,
   getAdminClientProfile,
   getAdminClientTrainingDaysText
 } from "../src/utils/adminClientProfile.js";
@@ -24,4 +25,16 @@ test("admin client labels keep goal and training day text compact", () => {
   assert.equal(getAdminClientGoalLabel(""), "Рекомпозиция");
   assert.equal(getAdminClientTrainingDaysText({ trainingDays: ["mon", "wed", "sun"] }), "Пн, Ср, Вс");
   assert.equal(getAdminClientTrainingDaysText({ trainingDays: [] }), "—");
+});
+
+test("admin measurement preview keeps only compact body fields", () => {
+  assert.deepEqual(
+    getAdminMeasurementPreviewFields([
+      { id: "weight" },
+      { id: "height" },
+      { id: "neck" },
+      { id: "ankle" }
+    ]).map((field) => field.id),
+    ["weight", "neck", "ankle"]
+  );
 });

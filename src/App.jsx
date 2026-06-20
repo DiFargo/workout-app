@@ -274,6 +274,7 @@ import {
 } from "./utils/adminClientProgress";
 import {
   getAdminClientGoalLabel,
+  getAdminMeasurementPreviewFields,
   getAdminClientProfile,
   getAdminClientTrainingDaysText
 } from "./utils/adminClientProfile";
@@ -344,7 +345,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v719";
+const APP_VERSION = "v720";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -14887,7 +14888,7 @@ async function loadUsers() {
       ? adminClientMeasurements[1]
       : null;
     const adminMeasurementFields = getProfileMeasurementFields(selectedProfile?.goal || "recomp");
-    const adminMeasurementPreviewFields = adminMeasurementFields.filter((field) => ["weight", "neck", "shoulders", "chest", "biceps", "forearm", "belly", "pelvis", "thigh", "calf", "ankle"].includes(field.id));
+    const adminMeasurementPreviewFields = getAdminMeasurementPreviewFields(adminMeasurementFields);
     const clientNutritionDays = getAdminNutritionDaysList(adminClientNutrition);
     const clientToday = clientNutritionDays[0] || { totals: { calories: 0, protein: 0, fat: 0, carbs: 0 }, foods: [], score: "—" };
     const workoutProgress = getAdminWorkoutProgressList(adminClientHistory);
@@ -15779,7 +15780,7 @@ async function loadUsers() {
       ? adminClientMeasurements[1]
       : null;
     const adminMeasurementFields = getProfileMeasurementFields(selectedProfile?.goal || "recomp");
-    const adminMeasurementPreviewFields = adminMeasurementFields.filter((field) => ["weight", "neck", "shoulders", "chest", "biceps", "forearm", "belly", "pelvis", "thigh", "calf", "ankle"].includes(field.id));
+    const adminMeasurementPreviewFields = getAdminMeasurementPreviewFields(adminMeasurementFields);
     const clientNutritionDays = getAdminNutritionDaysList(adminClientNutrition);
     const clientToday = clientNutritionDays[0] || { totals: { calories: 0, protein: 0, fat: 0, carbs: 0 }, foods: [], score: "—" };
     const workoutProgress = getAdminWorkoutProgressList(adminClientHistory);
