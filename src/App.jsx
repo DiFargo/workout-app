@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import "./styles.css";
 
-import { BASIC_WORKOUT_PLANS } from "./data/basicWorkoutPlans";
 import { getAiNutritionHistoryBaseline } from "./data/aiNutritionBaseline";
 import { starterPlan } from "./data/starterPlan";
 import {
@@ -171,6 +170,7 @@ import {
   getPieceProductSizeProfile
 } from "./utils/nutritionPortions";
 import { buildProgressInsight } from "./utils/progressInsight";
+import { buildBasicWorkoutPlanFromQuiz } from "./utils/basicWorkoutPlanBuilder";
 import {
   addLocalBackup,
   safeReadJsonStorage,
@@ -304,7 +304,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v694";
+const APP_VERSION = "v695";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -8496,19 +8496,6 @@ async function loadUsers() {
     }
   }
 
-  function buildBasicPlanFromQuiz(quiz = basicWorkoutQuiz) {
-    const planKey = quiz.goal === "muscle" || quiz.days === "4" ? "muscle" : "beginner";
-    const basePlan = BASIC_WORKOUT_PLANS[planKey] || BASIC_WORKOUT_PLANS.beginner;
-    const daysLimit = Number(quiz.days) || basePlan.workouts.length;
-
-    return {
-      id: basePlan.id,
-      name: basePlan.name,
-      description: basePlan.description,
-      workouts: sortWorkoutDays(basePlan.workouts.slice(0, Math.min(daysLimit, basePlan.workouts.length)))
-    };
-  }
-
   function openBasicWorkoutQuiz() {
     saveWorkoutModePreference("basic", workoutModeRemember);
     setSelectedWorkoutId(null);
@@ -8516,7 +8503,7 @@ async function loadUsers() {
   }
 
   function applyBasicWorkoutPlan() {
-    const nextPlan = buildBasicPlanFromQuiz(basicWorkoutQuiz);
+    const nextPlan = buildBasicWorkoutPlanFromQuiz(basicWorkoutQuiz);
     setPlan({ workouts: nextPlan.workouts });
     setSelectedWorkoutId(null);
     setPage("workouts");
@@ -9490,7 +9477,7 @@ async function loadUsers() {
   }
 
   if (page === "basicWorkoutQuiz") {
-    const previewPlan = buildBasicPlanFromQuiz(basicWorkoutQuiz);
+    const previewPlan = buildBasicWorkoutPlanFromQuiz(basicWorkoutQuiz);
 
     return (
       <div className="basicQuizPage">
