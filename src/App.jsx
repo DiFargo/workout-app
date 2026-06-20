@@ -163,7 +163,7 @@ import {
   setFailedNutritionSync,
   WORKOUT_HISTORY_BACKUP_STORAGE_KEY
 } from "./utils/offlineSyncStorage";
-import { parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
+import { getPositiveNutritionNumber, parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
 import {
   getFoodPortionAmount,
   getFoodScale,
@@ -327,7 +327,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v706";
+const APP_VERSION = "v707";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2445,12 +2445,6 @@ export default function App() {
   }
 
   function openNutritionCreateProductFromPhoto(aiFood = {}, fallbackName = "") {
-    const getPositiveNumber = (primary, fallback, defaultValue = 0) => {
-      const primaryNumber = Number(primary);
-      if (Number.isFinite(primaryNumber) && primaryNumber > 0) return primaryNumber;
-      const fallbackNumber = Number(fallback);
-      return Number.isFinite(fallbackNumber) && fallbackNumber > 0 ? fallbackNumber : defaultValue;
-    };
     const candidate = aiFood.candidates?.[0] || {};
     const rawAiResponse = aiFood.rawAiResponse || {};
     const brand = String(aiFood.brand || candidate.brand || rawAiResponse.brand || "").trim();
@@ -2458,11 +2452,11 @@ export default function App() {
     const cleanName = brand && !productName.toLowerCase().includes(brand.toLowerCase())
       ? `${brand} ${productName}`
       : productName;
-    const calories = getPositiveNumber(aiFood.calories, candidate.calories);
-    const protein = getPositiveNumber(aiFood.protein, candidate.protein);
-    const fat = getPositiveNumber(aiFood.fat, candidate.fat);
-    const carbs = getPositiveNumber(aiFood.carbs, candidate.carbs);
-    const estimatedGrams = getPositiveNumber(aiFood.estimatedGrams, candidate.estimatedGrams, 100);
+    const calories = getPositiveNutritionNumber(aiFood.calories, candidate.calories);
+    const protein = getPositiveNutritionNumber(aiFood.protein, candidate.protein);
+    const fat = getPositiveNutritionNumber(aiFood.fat, candidate.fat);
+    const carbs = getPositiveNutritionNumber(aiFood.carbs, candidate.carbs);
+    const estimatedGrams = getPositiveNutritionNumber(aiFood.estimatedGrams, candidate.estimatedGrams, 100);
     const labelText = String(
       aiFood.labelText || aiFood.fullText || aiFood.ocrText ||
       rawAiResponse.labelText || rawAiResponse.fullText || rawAiResponse.ocrText || ""
