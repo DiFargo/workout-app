@@ -140,7 +140,11 @@ import {
   createEmptyTelegramProfile,
   hasRequiredAiNutritionProfileFields
 } from "./utils/profileDefaults";
-import { normalizeTelegramUsername } from "./utils/telegramProfile";
+import {
+  createTelegramLinkCode,
+  normalizeTelegramUsername,
+  parseTelegramAuthResultFromHash
+} from "./utils/telegramProfile";
 import {
   enqueueFailedHistorySave,
   getFailedHistoryQueue,
@@ -242,7 +246,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v674";
+const APP_VERSION = "v675";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -9521,29 +9525,6 @@ async function loadUsers() {
       }
     } catch (_) {
       // ignore localStorage errors
-    }
-  }
-
-  function createTelegramLinkCode() {
-    return Math.random().toString(36).slice(2, 8).toUpperCase();
-  }
-
-  function parseTelegramAuthResultFromHash() {
-    try {
-      const hash = window.location.hash || "";
-      const params = new URLSearchParams(hash.replace(/^#/, ""));
-      const rawResult = params.get("tgAuthResult");
-
-      if (!rawResult) return null;
-
-      const base64 = rawResult.replace(/-/g, "+").replace(/_/g, "/");
-      const paddedBase64 = base64 + "=".repeat((4 - base64.length % 4) % 4);
-      const decoded = decodeURIComponent(escape(window.atob(paddedBase64)));
-
-      return JSON.parse(decoded);
-    } catch (error) {
-      console.error("Telegram tgAuthResult parse error:", error);
-      return null;
     }
   }
 
