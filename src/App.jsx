@@ -35,6 +35,7 @@ import {
 import {
   formatCompactTimer,
   formatWorkoutElapsedDuration,
+  buildWorkoutFinishSummary,
   AI_COACH_FEATURES,
   getAiHistoryItems,
   getAiWorkoutBaseWeight,
@@ -334,7 +335,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v713";
+const APP_VERSION = "v714";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -21030,44 +21031,20 @@ async function loadUsers() {
           workout,
           workoutPosition >= 0 ? workoutPosition : 0
         );
-        const finishDurationText =
-          workoutDurationText === "0 сек"
-            ? "меньше минуты"
-            : workoutDurationText === "—"
-              ? ""
-              : workoutDurationText;
-        const finishStats = [
-          finishDurationText ? { label: "Время", value: finishDurationText } : null,
-          completedExercisesCount > 0
-            ? { label: "Упражнения", value: completedExercisesCount }
-            : null,
-          totalSetsDone > 0 ? { label: "Подходы", value: totalSetsDone } : null,
-          totalVolumeDone > 0
-            ? { label: "Объём", value: `${Math.round(totalVolumeDone).toLocaleString("ru-RU")} кг` }
-            : null
-        ].filter(Boolean);
-        const finishProgressText =
-          totalSetsDone === 0 || volumeProgress === null
-            ? isWorkoutSaved
-              ? "Первая точка прогресса сохранена."
-              : "После сохранения это станет первой точкой прогресса."
-            : volumeProgress > 0
-              ? `Новый результат: объём +${volumeProgress}% к прошлой тренировке.`
-              : volumeProgress === 0
-                ? "Объём совпал с прошлой тренировкой."
-                : `Объём ${volumeProgress}% к прошлой тренировке.`;
-        const finishAdviceText =
-          totalSetsDone > 0
-            ? "Восстановись и оставь 1–2 повтора в запасе на следующей тренировке."
-            : "В следующий раз заполни вес и повторы, чтобы видеть прогресс.";
-        const finishSyncText =
-          workoutHistorySyncState === "saving"
-            ? "Сохранение..."
-            : workoutHistorySyncState === "local"
-              ? "Сохранено локально · ждёт синхронизации"
-              : workoutHistorySyncState === "synced"
-                ? "Синхронизировано"
-                : "";
+        const {
+          stats: finishStats,
+          progressText: finishProgressText,
+          adviceText: finishAdviceText,
+          syncText: finishSyncText
+        } = buildWorkoutFinishSummary({
+          workoutDurationText,
+          completedExercisesCount,
+          totalSetsDone,
+          totalVolumeDone,
+          volumeProgress,
+          isWorkoutSaved,
+          workoutHistorySyncState
+        });
         if (!exercise && !isFinishSlide && !isStartSlide) {
           return (
             <div className="exercise">

@@ -226,6 +226,55 @@ export function formatWorkoutElapsedDuration(startedAt = 0, endedAt = 0) {
   return `${seconds} сек`;
 }
 
+export function buildWorkoutFinishSummary({
+  workoutDurationText = "—",
+  completedExercisesCount = 0,
+  totalSetsDone = 0,
+  totalVolumeDone = 0,
+  volumeProgress = null,
+  isWorkoutSaved = false,
+  workoutHistorySyncState = ""
+} = {}) {
+  const finishDurationText =
+    workoutDurationText === "0 сек"
+      ? "меньше минуты"
+      : workoutDurationText === "—"
+        ? ""
+        : workoutDurationText;
+  const stats = [
+    finishDurationText ? { label: "Время", value: finishDurationText } : null,
+    completedExercisesCount > 0 ? { label: "Упражнения", value: completedExercisesCount } : null,
+    totalSetsDone > 0 ? { label: "Подходы", value: totalSetsDone } : null,
+    totalVolumeDone > 0
+      ? { label: "Объём", value: `${Math.round(totalVolumeDone).toLocaleString("ru-RU")} кг` }
+      : null
+  ].filter(Boolean);
+  const progressText =
+    totalSetsDone === 0 || volumeProgress === null
+      ? isWorkoutSaved
+        ? "Первая точка прогресса сохранена."
+        : "После сохранения это станет первой точкой прогресса."
+      : volumeProgress > 0
+        ? `Новый результат: объём +${volumeProgress}% к прошлой тренировке.`
+        : volumeProgress === 0
+          ? "Объём совпал с прошлой тренировкой."
+          : `Объём ${volumeProgress}% к прошлой тренировке.`;
+  const adviceText =
+    totalSetsDone > 0
+      ? "Восстановись и оставь 1–2 повтора в запасе на следующей тренировке."
+      : "В следующий раз заполни вес и повторы, чтобы видеть прогресс.";
+  const syncText =
+    workoutHistorySyncState === "saving"
+      ? "Сохранение..."
+      : workoutHistorySyncState === "local"
+        ? "Сохранено локально · ждёт синхронизации"
+        : workoutHistorySyncState === "synced"
+          ? "Синхронизировано"
+          : "";
+
+  return { stats, progressText, adviceText, syncText };
+}
+
 export function getDefaultWorkoutModePreference() {
   return {
     mode: "",

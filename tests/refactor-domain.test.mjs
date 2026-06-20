@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import {
+  buildWorkoutFinishSummary,
   formatCompactTimer,
   formatWorkoutElapsedDuration,
   getDefaultWorkoutModePreference,
@@ -24,6 +25,43 @@ test("workout elapsed duration keeps readable russian labels", () => {
   assert.equal(formatWorkoutElapsedDuration(1000, 11_000), "10 сек");
   assert.equal(formatWorkoutElapsedDuration(1000, 126_000), "2 мин 5 сек");
   assert.equal(formatWorkoutElapsedDuration(1000, 3_901_000), "1 ч 5 мин");
+});
+
+test("workout finish summary builds stats and progress copy", () => {
+  const summary = buildWorkoutFinishSummary({
+    workoutDurationText: "42 мин 10 сек",
+    completedExercisesCount: 5,
+    totalSetsDone: 14,
+    totalVolumeDone: 12345.6,
+    volumeProgress: 8,
+    workoutHistorySyncState: "synced"
+  });
+
+  assert.deepEqual(summary.stats.slice(0, 3), [
+    { label: "Время", value: "42 мин 10 сек" },
+    { label: "Упражнения", value: 5 },
+    { label: "Подходы", value: 14 }
+  ]);
+  assert.equal(summary.stats[3].label, "Объём");
+  assert.match(summary.stats[3].value, /12\s346 кг/);
+  assert.match(summary.progressText, /объём \+8%/);
+  assert.match(summary.adviceText, /Восстановись/);
+  assert.equal(summary.syncText, "Синхронизировано");
+});
+
+test("workout finish summary handles first saved point", () => {
+  const summary = buildWorkoutFinishSummary({
+    workoutDurationText: "0 сек",
+    totalSetsDone: 0,
+    volumeProgress: null,
+    isWorkoutSaved: true,
+    workoutHistorySyncState: "local"
+  });
+
+  assert.deepEqual(summary.stats, [{ label: "Время", value: "меньше минуты" }]);
+  assert.equal(summary.progressText, "Первая точка прогресса сохранена.");
+  assert.match(summary.adviceText, /заполни вес/);
+  assert.equal(summary.syncText, "Сохранено локально · ждёт синхронизации");
 });
 
 test("explicit workout duration remains the preferred estimate", () => {
