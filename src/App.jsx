@@ -175,8 +175,10 @@ import {
   formatProfileMeasurementDate,
   formatProfileProgressPhotoDate,
   getMeasurementTimestampValue,
+  getProfileMeasurementDelta,
   getProfileMeasurementFields,
-  getProfileMeasurementValue
+  getProfileMeasurementValue,
+  getProfileMeasurementValueById
 } from "./utils/profileMeasurements";
 import {
   addLocalBackup,
@@ -328,7 +330,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v708";
+const APP_VERSION = "v709";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -16064,23 +16066,15 @@ async function loadUsers() {
     const selectedNutritionCompliance = selectedNutritionAverage.calories
       ? Math.min(100, Math.round(selectedNutritionAverage.calories / dailyCalorieGoal * 100))
       : 0;
-    const getSelectedMeasurementValue = (fieldId, source = selectedLatestMeasurement) => {
-      const field = adminMeasurementFields.find((item) => item.id === fieldId);
-      return field && source ? getProfileMeasurementValue(source, field) : "";
-    };
+    const getSelectedMeasurementValue = (fieldId, source = selectedLatestMeasurement) => (
+      getProfileMeasurementValueById(source, adminMeasurementFields, fieldId)
+    );
     const selectedWeightValue = getSelectedMeasurementValue("weight") || selectedProfile?.weight || "";
     const selectedPreviousWeightValue = getSelectedMeasurementValue("weight", selectedPreviousMeasurement);
     const selectedWaistValue = getSelectedMeasurementValue("belly") || getSelectedMeasurementValue("waist") || "";
     const selectedPreviousWaistValue = getSelectedMeasurementValue("belly", selectedPreviousMeasurement) || getSelectedMeasurementValue("waist", selectedPreviousMeasurement);
-    const getMetricDelta = (currentValue, previousValue) => {
-      if (String(currentValue ?? "").trim() === "" || String(previousValue ?? "").trim() === "") return null;
-      const currentNumber = Number(String(currentValue || "").replace(",", "."));
-      const previousNumber = Number(String(previousValue || "").replace(",", "."));
-      if (!Number.isFinite(currentNumber) || !Number.isFinite(previousNumber)) return null;
-      return Math.round((currentNumber - previousNumber) * 10) / 10;
-    };
-    const selectedWeightDelta = getMetricDelta(selectedWeightValue, selectedPreviousWeightValue);
-    const selectedWaistDelta = getMetricDelta(selectedWaistValue, selectedPreviousWaistValue);
+    const selectedWeightDelta = getProfileMeasurementDelta(selectedWeightValue, selectedPreviousWeightValue);
+    const selectedWaistDelta = getProfileMeasurementDelta(selectedWaistValue, selectedPreviousWaistValue);
     const selectedProgramCompletion = Number.isFinite(selectedSummary.programCompletionPercent)
       ? selectedSummary.programCompletionPercent
       : null;

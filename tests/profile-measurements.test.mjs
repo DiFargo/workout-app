@@ -5,9 +5,11 @@ import {
   formatProfileMeasurementDate,
   formatProfileProgressPhotoDate,
   getMeasurementTimestampValue,
+  getProfileMeasurementDelta,
   getProfileMeasurementFields,
   getProfileMeasurementGoalText,
-  getProfileMeasurementValue
+  getProfileMeasurementValue,
+  getProfileMeasurementValueById
 } from "../src/utils/profileMeasurements.js";
 
 test("profile measurement fields include the full measurement wizard set", () => {
@@ -51,6 +53,21 @@ test("profile measurement date and values stay user friendly", () => {
   assert.equal(getProfileMeasurementValue({ weight: 0 }, { id: "weight" }), "0");
   assert.equal(getProfileMeasurementValue({ weight: " 89.5 " }, { id: "weight" }), "89.5");
   assert.equal(getProfileMeasurementValue({}, { id: "weight" }), "—");
+});
+
+test("profile measurement values can be selected by field id", () => {
+  const fields = getProfileMeasurementFields();
+
+  assert.equal(getProfileMeasurementValueById({ belly: " 88 " }, fields, "belly"), "88");
+  assert.equal(getProfileMeasurementValueById({ belly: "88" }, fields, "unknown"), "");
+  assert.equal(getProfileMeasurementValueById(null, fields, "belly"), "");
+});
+
+test("profile measurement delta handles decimals and invalid values", () => {
+  assert.equal(getProfileMeasurementDelta("89,5", "88.2"), 1.3);
+  assert.equal(getProfileMeasurementDelta("88.2", "89.5"), -1.3);
+  assert.equal(getProfileMeasurementDelta("", "89.5"), null);
+  assert.equal(getProfileMeasurementDelta("bad", "89.5"), null);
 });
 
 test("profile progress photo date uses saved day fields", () => {

@@ -152,3 +152,18 @@ export function getProfileMeasurementValue(measurement = null, field = {}) {
 
   return String(value).trim();
 }
+
+export function getProfileMeasurementValueById(measurement = null, fields = [], fieldId = "") {
+  const field = fields.find((item) => item.id === fieldId);
+  return field && measurement ? getProfileMeasurementValue(measurement, field) : "";
+}
+
+export function getProfileMeasurementDelta(currentValue, previousValue) {
+  if (String(currentValue ?? "").trim() === "" || String(previousValue ?? "").trim() === "") return null;
+
+  const currentNumber = Number(String(currentValue || "").replace(",", "."));
+  const previousNumber = Number(String(previousValue || "").replace(",", "."));
+  if (!Number.isFinite(currentNumber) || !Number.isFinite(previousNumber)) return null;
+
+  return Math.round((currentNumber - previousNumber) * 10) / 10;
+}
