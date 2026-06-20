@@ -172,6 +172,7 @@ import {
   getWorkoutDraftKey
 } from "./utils/workoutDraftStorage";
 import { buildTrainerNutritionPlanUpdate } from "./utils/trainerNutritionPlan";
+import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
 import {
   CLIENT_PRIMARY_PAGES,
   mapLoginAuthError,
@@ -228,7 +229,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v662";
+const APP_VERSION = "v663";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -255,12 +256,6 @@ const AI_NUTRITION_PLAN_STORAGE_KEY = "ai_nutrition_plan_v1";
 
 // HARDER DELETE SWIPE
 const NUTRITION_DELETE_THRESHOLD = -135;
-
-function isTrainerE2EHarnessEnabled() {
-  return import.meta.env.DEV &&
-    typeof window !== "undefined" &&
-    new URLSearchParams(window.location.search).get("trainerHarness") === "1";
-}
 
 function TrainerE2EHarness() {
   const [mode, setMode] = useState("dashboard");
