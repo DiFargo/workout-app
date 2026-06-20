@@ -222,6 +222,11 @@ import {
   getAdminWorkoutProgressList
 } from "./utils/adminClientProgress";
 import {
+  getAdminClientGoalLabel,
+  getAdminClientProfile,
+  getAdminClientTrainingDaysText
+} from "./utils/adminClientProfile";
+import {
   CLIENT_PRIMARY_PAGES,
   mapLoginAuthError,
   normalizeClientPrimaryPage,
@@ -277,7 +282,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v684";
+const APP_VERSION = "v685";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5794,24 +5799,6 @@ export default function App() {
       console.error("Ошибка Telegram notifications:", error);
       setAdminClientStatus("Не получилось обновить Telegram-уведомления.");
     }
-  }
-
-  function getAdminClientProfile(client = {}) {
-    return client.profile || client.aiNutritionProfile || client.bodyMetrics || client;
-  }
-
-  function getAdminClientGoalLabel(goal = "") {
-    return getAiNutritionGoalLabel(goal || "recomp");
-  }
-
-  function getAdminClientTrainingDaysText(profile = {}) {
-    const selected = getAiNutritionTrainingDays(profile);
-    if (!selected.length) return "—";
-
-    return AI_NUTRITION_WEEK_DAYS
-      .filter((day) => selected.includes(day.id))
-      .map((day) => day.short)
-      .join(", ");
   }
 
   function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
