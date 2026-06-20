@@ -274,7 +274,9 @@ import {
 import {
   formatProfileWorkoutDateKey,
   formatProfileWorkoutDate,
-  getProfileNextTrainingText
+  formatProfileWorkoutMonthKey,
+  getProfileNextTrainingText,
+  shiftProfileWorkoutMonthKey
 } from "./utils/profileWorkoutSchedule";
 import {
   CLIENT_PRIMARY_PAGES,
@@ -331,7 +333,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v711";
+const APP_VERSION = "v712";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -1003,14 +1005,8 @@ export default function App() {
 
     return () => window.cancelAnimationFrame(frameId);
   }, [profileWorkoutHistoryModalOpen, openHistoryKey, historyLoading, history.length]);
-  const [profileWorkoutCalendarMonth, setProfileWorkoutCalendarMonth] = useState(() => {
-    const date = new Date();
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-  });
-  const [profileWorkoutCalendarDate, setProfileWorkoutCalendarDate] = useState(() => {
-    const date = new Date();
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-  });
+  const [profileWorkoutCalendarMonth, setProfileWorkoutCalendarMonth] = useState(() => formatProfileWorkoutMonthKey());
+  const [profileWorkoutCalendarDate, setProfileWorkoutCalendarDate] = useState(() => formatProfileWorkoutDateKey());
   const [profileWorkoutCalendarData, setProfileWorkoutCalendarData] = useState({});
   const [profileWorkoutScheduledDates, setProfileWorkoutScheduledDates] = useState([]);
   const [profileWorkoutCalendarDraftDates, setProfileWorkoutCalendarDraftDates] = useState([]);
@@ -12534,15 +12530,9 @@ async function loadUsers() {
     });
     const selectedWorkoutCalendarItems = workoutCalendarHistoryByDate[profileWorkoutCalendarDate] || [];
     const shiftProfileWorkoutCalendarMonth = (direction) => {
-      const nextMonth = new Date(
-        workoutCalendarMonthDate.getFullYear(),
-        workoutCalendarMonthDate.getMonth() + direction,
-        1
-      );
-      setProfileWorkoutCalendarMonth(
-        `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, "0")}`
-      );
-      setProfileWorkoutCalendarDate(formatProfileWorkoutDateKey(nextMonth));
+      const nextMonthKey = shiftProfileWorkoutMonthKey(profileWorkoutCalendarMonth, direction);
+      setProfileWorkoutCalendarMonth(nextMonthKey);
+      setProfileWorkoutCalendarDate(`${nextMonthKey}-01`);
     };
     const toggleProfileWorkoutScheduledDate = (dateKey) => {
       setProfileWorkoutCalendarDraftDates((current) => (

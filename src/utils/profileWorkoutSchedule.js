@@ -24,6 +24,15 @@ export function formatProfileWorkoutDateKey(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
+export function formatProfileWorkoutMonthKey(date = new Date()) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+export function shiftProfileWorkoutMonthKey(monthKey = formatProfileWorkoutMonthKey(), direction = 0) {
+  const [year, month] = String(monthKey || formatProfileWorkoutMonthKey()).split("-").map(Number);
+  return formatProfileWorkoutMonthKey(new Date(year || new Date().getFullYear(), (month || 1) - 1 + direction, 1));
+}
+
 export function getProfileNextTrainingText(profile = {}, userData = {}, scheduledDates = []) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);

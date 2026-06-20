@@ -4,7 +4,9 @@ import assert from "node:assert/strict";
 import {
   formatProfileWorkoutDate,
   formatProfileWorkoutDateKey,
-  getProfileNextTrainingText
+  formatProfileWorkoutMonthKey,
+  getProfileNextTrainingText,
+  shiftProfileWorkoutMonthKey
 } from "../src/utils/profileWorkoutSchedule.js";
 
 function dateKeyOffset(offsetDays) {
@@ -23,6 +25,12 @@ test("profile workout date label handles valid and invalid values", () => {
 test("profile workout date key keeps stable yyyy-mm-dd format", () => {
   assert.equal(formatProfileWorkoutDateKey(new Date(2026, 0, 5)), "2026-01-05");
   assert.equal(formatProfileWorkoutDateKey(new Date(2026, 10, 15)), "2026-11-15");
+});
+
+test("profile workout month key shifts across year boundaries", () => {
+  assert.equal(formatProfileWorkoutMonthKey(new Date(2026, 0, 5)), "2026-01");
+  assert.equal(shiftProfileWorkoutMonthKey("2026-12", 1), "2027-01");
+  assert.equal(shiftProfileWorkoutMonthKey("2026-01", -1), "2025-12");
 });
 
 test("profile next training prefers explicit scheduled dates", () => {
