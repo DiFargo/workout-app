@@ -252,6 +252,11 @@ import {
   buildAdminNutritionRecommendations
 } from "./utils/trainerNutritionInsights";
 import {
+  buildAdminClientCsvLines,
+  buildTrainerClientExportRows,
+  trainerExportRowsToCsv
+} from "./utils/trainerClientExport";
+import {
   buildAdminClientNutritionStateFromRoot,
   getTrainerClientMirrorPayload
 } from "./utils/trainerClientMirror";
@@ -338,7 +343,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v716";
+const APP_VERSION = "v717";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5739,37 +5744,7 @@ export default function App() {
     }
 
     const nutritionDays = getAdminNutritionDaysList(adminClientNutrition);
-    const rows = [
-      ["type", "date", "name", "calories", "protein", "fat", "carbs", "duration", "feedback"].join(",")
-    ];
-
-    adminClientHistory.forEach((item) => {
-      rows.push([
-        "workout",
-        item.date || "",
-        `"${String(item.workout || "Тренировка").replaceAll('"', '""')}"`,
-        "",
-        "",
-        "",
-        "",
-        item.durationSeconds || "",
-        item.postWorkoutFeedback?.title || item.readiness?.title || ""
-      ].join(","));
-    });
-
-    nutritionDays.forEach((day) => {
-      rows.push([
-        "nutrition",
-        day.date,
-        '"day totals"',
-        Math.round(day.totals.calories),
-        Math.round(day.totals.protein),
-        Math.round(day.totals.fat),
-        Math.round(day.totals.carbs),
-        "",
-        `score ${day.score}`
-      ].join(","));
-    });
+    const rows = buildAdminClientCsvLines(adminClientHistory, nutritionDays);
 
     const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -7503,51 +7478,7 @@ async function loadUsers() {
   function downloadTrainerClientExport(client, format = "excel") {
     if (!client?.id) return;
     const nutritionDays = getAdminNutritionDaysList(adminClientNutrition);
-    const rows = [
-      ["type", "date", "name", "calories", "protein", "fat", "carbs", "duration", "details"]
-    ];
-
-    adminClientHistory.forEach((item) => {
-      rows.push([
-        "workout",
-        item.date || item.completedAt || "",
-        item.workoutName || item.workout || item.name || "Тренировка",
-        "",
-        "",
-        "",
-        "",
-        item.durationSeconds || "",
-        item.postWorkoutFeedback?.title || item.readiness?.title || ""
-      ]);
-    });
-
-    adminClientMeasurements.forEach((item) => {
-      rows.push([
-        "measurement",
-        item.date || item.createdAt || "",
-        "Замер",
-        "",
-        "",
-        "",
-        "",
-        "",
-        `weight ${item.weight || item.values?.weight || ""}`
-      ]);
-    });
-
-    nutritionDays.forEach((day) => {
-      rows.push([
-        "nutrition",
-        day.date || "",
-        "day totals",
-        Math.round(Number(day.totals?.calories) || 0),
-        Math.round(Number(day.totals?.protein) || 0),
-        Math.round(Number(day.totals?.fat) || 0),
-        Math.round(Number(day.totals?.carbs) || 0),
-        "",
-        `score ${day.score || ""}`
-      ]);
-    });
+    const rows = buildTrainerClientExportRows(adminClientHistory, adminClientMeasurements, nutritionDays);
 
     if (format === "pdf") {
       const htmlRows = rows.slice(1).map((row) => `<tr>${row.map((cell) => `<td>${String(cell).replace(/[<>&]/g, "")}</td>`).join("")}</tr>`).join("");
@@ -7560,7 +7491,7 @@ async function loadUsers() {
       return;
     }
 
-    const csv = rows.map((row) => row.map((cell) => `"${String(cell ?? "").replaceAll('"', '""')}"`).join(",")).join("\n");
+    const csv = trainerExportRowsToCsv(rows);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
