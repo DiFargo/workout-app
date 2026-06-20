@@ -3,17 +3,39 @@ import { getAiNutritionHistoryBaseline } from "../data/aiNutritionBaseline";
 import { makeEmptyNutritionDay, todayNutritionKey } from "../domain/nutritionPresentation";
 import { getShortFoodName } from "./nutritionFoodPresentation";
 
-export function getAiNutritionTotalsForToday(nutrition = {}) {
-  const today = nutrition.days?.[todayNutritionKey()] || {};
-  return (today.foods || []).reduce(
+export function sumNutritionFoods(foods = [], includeCount = false) {
+  return (Array.isArray(foods) ? foods : []).reduce(
     (sum, food) => ({
       calories: sum.calories + (Number(food.calories) || 0),
       protein: sum.protein + (Number(food.protein) || 0),
       fat: sum.fat + (Number(food.fat) || 0),
-      carbs: sum.carbs + (Number(food.carbs) || 0)
+      carbs: sum.carbs + (Number(food.carbs) || 0),
+      ...(includeCount ? { count: sum.count + 1 } : {})
     }),
-    { calories: 0, protein: 0, fat: 0, carbs: 0 }
+    includeCount
+      ? { calories: 0, protein: 0, fat: 0, carbs: 0, count: 0 }
+      : { calories: 0, protein: 0, fat: 0, carbs: 0 }
   );
+}
+
+export function getNutritionDayTotals(day = {}, includeCount = false) {
+  return sumNutritionFoods(day.foods || [], includeCount);
+}
+
+export function buildNutritionHistoryDays(days = {}, limit = 7) {
+  return Object.entries(days || {})
+    .map(([date, day]) => ({
+      date,
+      day,
+      totals: getNutritionDayTotals(day, true)
+    }))
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, limit);
+}
+
+export function getAiNutritionTotalsForToday(nutrition = {}) {
+  const today = nutrition.days?.[todayNutritionKey()] || {};
+  return getNutritionDayTotals(today);
 }
 
 export function getAiNutritionTargetFromHistory(nutrition = defaultNutritionState) {
@@ -32,15 +54,7 @@ export function buildAiNutritionDayModel(nutrition = defaultNutritionState, sele
   const day = selectedDay || nutrition.days?.[todayNutritionKey()] || makeEmptyNutritionDay();
   const goals = nutrition.goals || defaultNutritionState.goals;
   const baseline = getAiNutritionHistoryBaseline();
-  const totals = (day.foods || []).reduce(
-    (sum, item) => ({
-      calories: sum.calories + (Number(item.calories) || 0),
-      protein: sum.protein + (Number(item.protein) || 0),
-      fat: sum.fat + (Number(item.fat) || 0),
-      carbs: sum.carbs + (Number(item.carbs) || 0)
-    }),
-    { calories: 0, protein: 0, fat: 0, carbs: 0 }
-  );
+  const totals = getNutritionDayTotals(day);
 
   const left = {
     calories: Math.round((Number(goals.calories) || baseline.average.calories) - totals.calories),

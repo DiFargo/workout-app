@@ -93,8 +93,10 @@ import {
   getAiNutritionTrainingDayAdvice
 } from "./utils/aiNutritionLabels";
 import {
+  buildNutritionHistoryDays,
   buildAiNutritionDayModel,
-  getAiNutritionTotalsForToday
+  getAiNutritionTotalsForToday,
+  getNutritionDayTotals
 } from "./utils/aiNutritionAnalysis";
 import {
   buildAiNutritionMonthlyPlan,
@@ -234,7 +236,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v666";
+const APP_VERSION = "v667";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2191,34 +2193,11 @@ export default function App() {
   }, [nutrition, nutritionDateKey]);
 
   const nutritionTotals = useMemo(() => {
-    return (nutritionToday.foods || []).reduce(
-      (acc, item) => ({
-        calories: acc.calories + (Number(item.calories) || 0),
-        protein: acc.protein + (Number(item.protein) || 0),
-        fat: acc.fat + (Number(item.fat) || 0),
-        carbs: acc.carbs + (Number(item.carbs) || 0)
-      }),
-      { calories: 0, protein: 0, fat: 0, carbs: 0 }
-    );
+    return getNutritionDayTotals(nutritionToday);
   }, [nutritionToday]);
 
   const nutritionHistoryDays = useMemo(() => {
-    return Object.entries(nutrition.days || {})
-      .map(([date, day]) => {
-        const totals = (day.foods || []).reduce(
-          (acc, item) => ({
-            calories: acc.calories + (Number(item.calories) || 0),
-            protein: acc.protein + (Number(item.protein) || 0),
-            fat: acc.fat + (Number(item.fat) || 0),
-            carbs: acc.carbs + (Number(item.carbs) || 0),
-            count: acc.count + 1
-          }),
-          { calories: 0, protein: 0, fat: 0, carbs: 0, count: 0 }
-        );
-        return { date, day, totals };
-      })
-      .sort((a, b) => b.date.localeCompare(a.date))
-      .slice(0, 7);
+    return buildNutritionHistoryDays(nutrition.days, 7);
   }, [nutrition.days]);
 
   const myNutritionFoods = useMemo(() => {
