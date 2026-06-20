@@ -175,3 +175,83 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
         : null
   };
 }
+
+export function buildTrainerDashboardSummary(clients = [], summaries = {}) {
+  const summaryItems = (Array.isArray(clients) ? clients : []).map((client) => {
+    const summary = summaries?.[client.id] || getTrainerClientEmptySummary(client);
+    return {
+      client,
+      summary,
+      status: getClientActivityStatus(summary),
+      reasons: getClientAttentionReasons(summary)
+    };
+  });
+
+  const statusCounts = summaryItems.reduce(
+    (counts, item) => ({
+      ...counts,
+      [item.status.id]: (counts[item.status.id] || 0) + 1,
+      activeToday: counts.activeToday + (getTrainerSummaryDaysSince(item.summary.lastWorkoutAt) === 0 ? 1 : 0),
+      plateau: counts.plateau + (item.summary.plateau?.isPlateau ? 1 : 0),
+      payment: counts.payment + (["overdue", "soon"].includes(item.summary.paymentAttention?.id) ? 1 : 0)
+    }),
+    { active: 0, attention: 0, lost: 0, noProgram: 0, activeToday: 0, plateau: 0, payment: 0 }
+  );
+
+  const problemClients = summaryItems
+    .filter((item) => item.status.id !== "active")
+    .sort((first, second) => {
+      const priority = { lost: 0, noProgram: 1, attention: 2 };
+      return (priority[first.status.id] ?? 3) - (priority[second.status.id] ?? 3);
+    })
+    .slice(0, 5);
+
+  const focusItems = summaryItems
+    .flatMap(({ client, summary, status, reasons }) => {
+      const clientName = client.name || client.email || "Клиент";
+      const focusReasons = reasons.filter((reason) => reason !== "активность в норме");
+      if (focusReasons.length) {
+        return focusReasons.slice(0, 2).map((reason, index) => ({
+          id: `${client.id}_${status.id}_${index}`,
+          client,
+          clientName,
+          status,
+          text: reason
+        }));
+      }
+
+      return [{
+        id: `${client.id}_active`,
+        client,
+        clientName,
+        status,
+        text: summary.workouts7
+          ? `${summary.workouts7} тренировок за 7 дней · питание ${summary.nutritionDays7}/7`
+          : `Питание ${summary.nutritionDays7}/7 · программа ${summary.programCompletionPercent ?? "—"}%`
+      }];
+    })
+    .sort((first, second) => {
+      const priority = { lost: 0, noProgram: 1, attention: 2, active: 3 };
+      return (priority[first.status.id] ?? 4) - (priority[second.status.id] ?? 4);
+    })
+    .slice(0, 5);
+
+  const recentEvents = summaryItems
+    .flatMap(({ client, summary }) => (summary.recentEvents || []).map((event) => ({
+      ...event,
+      client,
+      clientName: client.name || client.email || "Клиент",
+      timestamp: getTrainerSummaryTimestamp(event.date)
+    })))
+    .filter((event) => event.timestamp)
+    .sort((first, second) => second.timestamp - first.timestamp)
+    .slice(0, 8);
+
+  return {
+    summaryItems,
+    statusCounts,
+    problemClients,
+    focusItems,
+    recentEvents
+  };
+}

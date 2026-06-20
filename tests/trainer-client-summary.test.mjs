@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  buildTrainerDashboardSummary,
   getClientActivityStatus,
   getClientAttentionReasons,
   getTrainerClientEmptySummary,
@@ -113,4 +114,38 @@ test("trainer fast summary merges client fields with previous loaded summary", (
   assert.equal(summary.programCompletionPercent, 38);
   assert.equal(summary.assignedProgramId, "program_1");
   assert.deepEqual(summary.recentEvents, [{ type: "note" }]);
+});
+
+test("trainer dashboard summary builds counts, focus and recent events", () => {
+  const clients = [
+    { id: "lost", name: "Lost" },
+    { id: "plain", name: "Plain" },
+    { id: "active", name: "Active" }
+  ];
+  const dashboard = buildTrainerDashboardSummary(clients, {
+    lost: {
+      assignedProgramId: "p1",
+      lastWorkoutAt: dateKeyOffset(-15),
+      lastNutritionAt: dateKeyOffset(-1),
+      lastMeasurementAt: dateKeyOffset(-1),
+      recentEvents: [{ id: "e1", date: dateKeyOffset(-1), title: "event" }]
+    },
+    active: {
+      assignedProgramId: "p1",
+      lastWorkoutAt: dateKeyOffset(0),
+      lastNutritionAt: dateKeyOffset(-1),
+      lastMeasurementAt: dateKeyOffset(-1),
+      workouts7: 2,
+      nutritionDays7: 4
+    }
+  });
+
+  assert.equal(dashboard.statusCounts.lost, 1);
+  assert.equal(dashboard.statusCounts.noProgram, 1);
+  assert.equal(dashboard.statusCounts.active, 1);
+  assert.equal(dashboard.statusCounts.activeToday, 1);
+  assert.deepEqual(dashboard.problemClients.map((item) => item.client.id), ["lost", "plain"]);
+  assert.equal(dashboard.focusItems[0].client.id, "lost");
+  assert.equal(dashboard.focusItems.at(-1).text, "2 тренировок за 7 дней · питание 4/7");
+  assert.equal(dashboard.recentEvents[0].clientName, "Lost");
 });
