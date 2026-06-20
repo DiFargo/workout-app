@@ -239,6 +239,11 @@ import {
   getTrainerClientMirrorPayload
 } from "./utils/trainerClientMirror";
 import {
+  canManageTrainerClientProgram,
+  canManageTrainerTemplate,
+  getTrainerProgramOwner
+} from "./utils/trainerProgramAccess";
+import {
   getAdminWeightPoints,
   getAdminWorkoutProgressList
 } from "./utils/adminClientProgress";
@@ -310,7 +315,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v696";
+const APP_VERSION = "v697";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -620,27 +625,25 @@ export default function App() {
   }
 
   function getCurrentProgramOwner() {
-    return {
-      uid: auth.currentUser?.uid || user?.uid || "",
-      role: canUseAdminFeatures() ? "admin" : "trainer"
-    };
+    return getTrainerProgramOwner(auth.currentUser?.uid || user?.uid || "", canUseAdminFeatures());
   }
 
   function canManageTrainingTemplate(template) {
-    if (canUseAdminFeatures()) return true;
     const currentUid = auth.currentUser?.uid || user?.uid || "";
-    return currentUserRole === "trainer" && Boolean(currentUid) && template?.ownerUid === currentUid;
+    return canManageTrainerTemplate(template, {
+      currentUid,
+      currentUserRole,
+      isAdmin: canUseAdminFeatures()
+    });
   }
 
   function canManageClientProgram(client) {
-    if (canUseAdminFeatures()) return true;
     const currentUid = auth.currentUser?.uid || user?.uid || "";
-    return currentUserRole === "trainer" && Boolean(currentUid) && [
-      client?.trainerId,
-      client?.assignedTrainerId,
-      client?.coachId,
-      client?.createdByUid
-    ].includes(currentUid);
+    return canManageTrainerClientProgram(client, {
+      currentUid,
+      currentUserRole,
+      isAdmin: canUseAdminFeatures()
+    });
   }
 
   const historyReplayInProgressRef = useRef(false);
