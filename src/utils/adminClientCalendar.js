@@ -10,6 +10,23 @@ export const ADMIN_CALENDAR_DAYS = [
   { id: "sun", title: "Вс", full: "Воскресенье" }
 ];
 
+const ADMIN_CALENDAR_DAY_IDS_BY_JS_DAY = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+
+export function getAdminCalendarDayIdFromDate(date) {
+  const parsed = date instanceof Date ? date : new Date(date);
+  return ADMIN_CALENDAR_DAY_IDS_BY_JS_DAY[parsed.getDay()] || "";
+}
+
+export function getAdminCalendarTrainingDaysLabel(trainingDays = [], fallback = "не выбраны") {
+  const selected = Array.isArray(trainingDays) ? trainingDays : [];
+  const label = ADMIN_CALENDAR_DAYS
+    .filter((day) => selected.includes(day.id))
+    .map((day) => day.title)
+    .join(", ");
+
+  return label || fallback;
+}
+
 export function normalizeAdminProgressReminderInterval(value) {
   const interval = Number(value);
   return [7, 14, 30].includes(interval) ? interval : 14;

@@ -283,6 +283,8 @@ import {
 } from "./utils/adminClientProfile";
 import {
   ADMIN_CALENDAR_DAYS,
+  getAdminCalendarDayIdFromDate,
+  getAdminCalendarTrainingDaysLabel,
   getDefaultAdminCalendar,
   normalizeAdminProgressReminderInterval
 } from "./utils/adminClientCalendar";
@@ -348,7 +350,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v723";
+const APP_VERSION = "v724";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -15809,8 +15811,7 @@ async function loadUsers() {
     const dailyProteinGoal = Number(selectedEffectiveNutritionGoals.protein) || 160;
     const dailyFatGoal = Number(selectedEffectiveNutritionGoals.fat) || 75;
     const dailyCarbsGoal = Number(selectedEffectiveNutritionGoals.carbs) || 260;
-    const currentMonthTrainingDays = ADMIN_CALENDAR_DAYS.filter((day) => adminCalendarDraft.trainingDays?.includes(day.id)).map((day) => day.title).join(", ") || "не выбраны";
-    const trainingDayIdByJsDay = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+    const currentMonthTrainingDays = getAdminCalendarTrainingDaysLabel(adminCalendarDraft.trainingDays);
     const selectedPlateau = getClientPlateauInfo(adminClientMeasurements);
     const selectedPaymentAttention = getClientPaymentAttention(adminClientPayment);
     const selectedSummary = selectedClient ? trainerClientSummaries[selectedClient.id] || {} : {};
@@ -17370,7 +17371,7 @@ async function loadUsers() {
                       ))}
 
                       {nutritionMonthDays.map(({ key, date, inMonth, isToday }) => {
-                        const isTrainingDay = adminCalendarDraft.trainingDays?.includes(trainingDayIdByJsDay[date.getDay()]);
+                        const isTrainingDay = adminCalendarDraft.trainingDays?.includes(getAdminCalendarDayIdFromDate(date));
 
                         return (
                           <div

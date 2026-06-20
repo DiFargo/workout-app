@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 
 import {
   ADMIN_CALENDAR_DAYS,
+  getAdminCalendarDayIdFromDate,
+  getAdminCalendarTrainingDaysLabel,
   getDefaultAdminCalendar,
   normalizeAdminProgressReminderInterval
 } from "../src/utils/adminClientCalendar.js";
@@ -35,6 +37,13 @@ test("admin calendar defaults to profile training days and standard reminders", 
       daySettings: {}
     }
   );
+});
+
+test("admin calendar helpers format selected training days", () => {
+  assert.equal(getAdminCalendarDayIdFromDate("2026-06-21T12:00:00"), "sun");
+  assert.equal(getAdminCalendarDayIdFromDate("2026-06-22T12:00:00"), "mon");
+  assert.equal(getAdminCalendarTrainingDaysLabel(["mon", "wed", "sat"]), "Пн, Ср, Сб");
+  assert.equal(getAdminCalendarTrainingDaysLabel([]), "не выбраны");
 });
 
 test("admin calendar preserves explicit workout calendar settings", () => {
