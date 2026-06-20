@@ -1,7 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { buildNutritionAdvice } from "../src/utils/nutritionAdvice.js";
+import {
+  buildNutritionAdvice,
+  buildNutritionSummaryCollapsedText
+} from "../src/utils/nutritionAdvice.js";
 
 test("nutrition advice starts with first meal guidance", () => {
   assert.match(
@@ -55,5 +58,28 @@ test("nutrition advice stays positive when targets are fine", () => {
       water: 2200
     }),
     /Отличный день/
+  );
+});
+
+test("nutrition summary collapsed text prioritizes actionable issues", () => {
+  assert.equal(
+    buildNutritionSummaryCollapsedText({ isCaloriesOverGoal: true, proteinPercent: 20, caloriePercent: 120 }),
+    "Калории выше плана, следующий прием сделай легче."
+  );
+  assert.equal(
+    buildNutritionSummaryCollapsedText({ proteinPercent: 40, caloriePercent: 70 }),
+    "Белка пока мало, добавь белковый продукт."
+  );
+  assert.equal(
+    buildNutritionSummaryCollapsedText({ proteinPercent: 80, caloriePercent: 30 }),
+    "День пока свободный, можно добавить прием пищи."
+  );
+  assert.equal(
+    buildNutritionSummaryCollapsedText({ proteinPercent: 80, caloriePercent: 95 }),
+    "План почти закрыт, дальше без лишних перекусов."
+  );
+  assert.equal(
+    buildNutritionSummaryCollapsedText({ proteinPercent: 80, caloriePercent: 70 }),
+    "День идет ровно, держим темп."
   );
 });

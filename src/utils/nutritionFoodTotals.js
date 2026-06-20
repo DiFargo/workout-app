@@ -12,3 +12,11 @@ export function sumNutritionFoods(foods = [], includeCount = false) {
       : { calories: 0, protein: 0, fat: 0, carbs: 0 }
   );
 }
+
+export function buildNutritionMealStats(foods = [], meals = []) {
+  return (Array.isArray(meals) ? meals : []).reduce((acc, meal) => {
+    const mealFoods = (Array.isArray(foods) ? foods : []).filter((item) => item.mealId === meal.id);
+    acc[meal.id] = sumNutritionFoods(mealFoods, true);
+    return acc;
+  }, {});
+}

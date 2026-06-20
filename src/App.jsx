@@ -98,10 +98,13 @@ import {
   buildNutritionHistoryDays,
   buildAiNutritionDayModel,
   getAiNutritionTotalsForToday,
-  getNutritionDayTotals,
-  sumNutritionFoods
+  getNutritionDayTotals
 } from "./utils/aiNutritionAnalysis";
-import { buildNutritionAdvice } from "./utils/nutritionAdvice";
+import {
+  buildNutritionAdvice,
+  buildNutritionSummaryCollapsedText
+} from "./utils/nutritionAdvice";
+import { buildNutritionMealStats } from "./utils/nutritionFoodTotals";
 import {
   buildNutritionCalendarDays,
   buildNutritionCurrentStreak,
@@ -335,7 +338,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v714";
+const APP_VERSION = "v715";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -9618,11 +9621,7 @@ async function loadUsers() {
     const nutritionDateTitle = isNutritionToday
       ? "Сегодня"
       : formatNutritionDateLabel(selectedNutritionDate).replace(/^./, (char) => char.toUpperCase());
-    const mealStats = nutritionMeals.reduce((acc, meal) => {
-      const foods = (nutritionToday.foods || []).filter((item) => item.mealId === meal.id);
-      acc[meal.id] = sumNutritionFoods(foods, true);
-      return acc;
-    }, {});
+    const mealStats = buildNutritionMealStats(nutritionToday.foods || [], nutritionMeals);
     const nutritionZoukFoodsCount = (nutritionToday.foods || []).length;
     const activeNutritionMeal = nutritionMeals.find((meal) => expandedNutritionMeals[meal.id]) || null;
     const activeNutritionMealFoods = activeNutritionMeal
@@ -9655,15 +9654,11 @@ async function loadUsers() {
     const aiNutritionScoreStyle = {
       background: `conic-gradient(#ff7d7d 0% ${proteinCircleEnd}%, #ffd15a ${proteinCircleEnd}% ${fatCircleEnd}%, #70cde3 ${fatCircleEnd}% 100%)`
     };
-    const nutritionSummaryCollapsedText = isCaloriesOverGoal
-      ? "Калории выше плана, следующий прием сделай легче."
-      : proteinPercent < 55
-        ? "Белка пока мало, добавь белковый продукт."
-        : caloriePercent < 45
-          ? "День пока свободный, можно добавить прием пищи."
-          : caloriePercent > 90
-            ? "План почти закрыт, дальше без лишних перекусов."
-            : "День идет ровно, держим темп.";
+    const nutritionSummaryCollapsedText = buildNutritionSummaryCollapsedText({
+      isCaloriesOverGoal,
+      proteinPercent,
+      caloriePercent
+    });
     const nutritionOrbitItems = [
       {
         id: "calories",
