@@ -269,6 +269,7 @@ import {
 import { normalizeTrainerMonthProgram } from "./utils/trainerMonthProgramNormalization";
 import { getTrainerProgramTemplateStats } from "./utils/trainerProgramStats";
 import {
+  getAdminAverageNutritionScore,
   getAdminWeightPoints,
   getAdminClientChartScales,
   getAdminWorkoutProgressList
@@ -346,7 +347,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v721";
+const APP_VERSION = "v722";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -14910,9 +14911,7 @@ async function loadUsers() {
     const aiPlan = getClientNutritionDisplayPlan(selectedClient || {}, adminClientNutrition, selectedNutritionFallbackGoals);
     const aiWeek = getAiNutritionWeekForDate(aiPlan) || aiPlan?.weeks?.[0] || null;
     const { maxCalories, maxProtein, maxWeight } = getAdminClientChartScales(clientNutritionDays, weightPoints);
-    const averageAiScore = clientNutritionDays.length
-      ? Math.round(clientNutritionDays.slice(0, 7).reduce((sum, day) => sum + (Number(day.score) || 0), 0) / Math.min(7, clientNutritionDays.length) * 10) / 10
-      : "—";
+    const averageAiScore = getAdminAverageNutritionScore(clientNutritionDays);
     const attentionCount = trainerStatusCounts.attention + trainerStatusCounts.lost + trainerStatusCounts.noProgram;
     const adminGreetingName = telegramProfile.displayName || auth.currentUser?.displayName || auth.currentUser?.email?.split("@")?.[0] || "тренер";
     const adminDashboardDate = new Date().toLocaleDateString("ru-RU", {

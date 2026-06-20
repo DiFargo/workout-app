@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  getAdminAverageNutritionScore,
   getAdminClientChartScales,
   getAdminWeightPoints,
   getAdminWorkoutProgressList
@@ -66,4 +67,20 @@ test("admin chart scales use recent nutrition and weight points", () => {
     maxProtein: 1,
     maxWeight: 1
   });
+});
+
+test("admin average nutrition score uses only recent tracked days", () => {
+  const days = [
+    { score: 7 },
+    { score: 8 },
+    { score: "9" },
+    { score: 10 },
+    { score: 6 },
+    { score: 7 },
+    { score: 8 },
+    { score: 1 }
+  ];
+
+  assert.equal(getAdminAverageNutritionScore(days), 7.9);
+  assert.equal(getAdminAverageNutritionScore([]), "—");
 });

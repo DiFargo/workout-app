@@ -56,3 +56,11 @@ export function getAdminClientChartScales(nutritionDays = [], weightPoints = [])
     maxWeight: Math.max(1, ...(Array.isArray(weightPoints) ? weightPoints : []).map((point) => Number(point?.weight) || 0))
   };
 }
+
+export function getAdminAverageNutritionScore(nutritionDays = []) {
+  const recentDays = (Array.isArray(nutritionDays) ? nutritionDays : []).slice(0, 7);
+  if (!recentDays.length) return "—";
+
+  const scoreSum = recentDays.reduce((sum, day) => sum + (Number(day?.score) || 0), 0);
+  return Math.round((scoreSum / recentDays.length) * 10) / 10;
+}
