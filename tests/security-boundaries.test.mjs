@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const functionsSource = await readFile(new URL("../functions/index.js", import.meta.url), "utf8");
 const appSource = await readFile(new URL("../src/App.jsx", import.meta.url), "utf8");
+const apiClientSource = await readFile(new URL("../src/utils/apiClient.js", import.meta.url), "utf8");
 const rulesSource = await readFile(new URL("../firestore.rules", import.meta.url), "utf8");
 const firebaseConfig = JSON.parse(
   await readFile(new URL("../firebase.json", import.meta.url), "utf8")
@@ -39,8 +40,9 @@ test("paid and privileged HTTP functions require Firebase authentication", () =>
 });
 
 test("client API calls send Firebase ID tokens", () => {
-  assert.match(appSource, /async function fetchAuthorized\(/);
-  assert.match(appSource, /async function fetchAuthorizedWithTimeout\(/);
+  assert.match(apiClientSource, /export async function fetchAuthorized\(/);
+  assert.match(apiClientSource, /export async function fetchAuthorizedWithTimeout\(/);
+  assert.match(apiClientSource, /"Authorization": `Bearer \$\{await currentUser\.getIdToken\(\)\}`/);
   assert.doesNotMatch(appSource, /fetch\("\/api\/telegram\/send-message"/);
   assert.doesNotMatch(appSource, /fetch\("\/api\/ai-food-photo"/);
   assert.doesNotMatch(appSource, /fetch\("\/api\/admin\/deleteUser"/);
