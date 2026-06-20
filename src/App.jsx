@@ -18,7 +18,6 @@ import { getAiNutritionHistoryBaseline } from "./data/aiNutritionBaseline";
 import { starterPlan } from "./data/starterPlan";
 import {
   defaultNutritionState,
-  LOCAL_NUTRITION_SEARCH_LIMIT,
   NUTRITION_ICON_PRESETS,
   nutritionMeals
 } from "./data/nutritionDefaults";
@@ -28,7 +27,6 @@ import {
   NUTRITION_QUICK_SEARCHES,
   TRAINER_NUTRITION_GOAL_PRESETS
 } from "./data/nutritionPlanning";
-import { searchLazyNutritionCatalog } from "./data/nutrition-catalog/lazyCatalog";
 import {
   createClientResourceId,
   getClientPaymentAttention,
@@ -114,6 +112,10 @@ import {
   getClientEffectiveNutritionGoals,
   getClientNutritionDisplayPlan
 } from "./utils/clientNutritionPlan";
+import {
+  mergeNutritionFoodResults,
+  searchLocalNutritionFoods
+} from "./utils/localNutritionCatalog";
 import { parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
 import {
   getFoodPortionAmount,
@@ -191,7 +193,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v650";
+const APP_VERSION = "v651";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -441,52 +443,6 @@ async function saveNutritionStateWithMerge(uid, localNutritionState = {}) {
     transaction.set(nutritionRef, mergedNutrition, { merge: true });
     return mergedNutrition;
   });
-}
-
-function normalizeLocalCatalogFood(food = {}) {
-  const portionAmount = Number(food.defaultGram || food.defaultAmount || 100) || 100;
-  const basisUnit = food.basisUnit || "g";
-
-  return {
-    id: food.id || `local_${String(food.name || "").toLowerCase().replace(/\s+/g, "_")}`,
-    foodId: food.id || "",
-    name: food.name || "Продукт",
-    aliases: food.aliases || [],
-    brand: food.brand || "",
-    category: food.category || "",
-    source: food.source || "Локальная база",
-    sourceType: "local_catalog",
-    basisUnit,
-    portion: basisUnit === "ml" ? `${portionAmount} мл` : `${portionAmount} г`,
-    portionAmount,
-    defaultGram: portionAmount,
-    calories: Number(food.calories) || 0,
-    protein: Number(food.protein) || 0,
-    fat: Number(food.fat) || 0,
-    carbs: Number(food.carbs) || 0,
-    icon: food.emoji || food.icon || "🍽️",
-    emoji: food.emoji || food.icon || "🍽️",
-    portionTypes: food.portionTypes || []
-  };
-}
-
-async function searchLocalNutritionFoods(query, limit = LOCAL_NUTRITION_SEARCH_LIMIT) {
-  const foods = await searchLazyNutritionCatalog(query, limit);
-  return foods.map(normalizeLocalCatalogFood);
-}
-
-function mergeNutritionFoodResults(primary = [], secondary = [], limit = 40) {
-  const map = new Map();
-
-  [...primary, ...secondary].forEach((food) => {
-    const normalizedFood = normalizeNutritionFood(food);
-    const key = normalizedFood.id || normalizedFood.foodId || normalizedFood.name;
-    if (key && !map.has(key)) {
-      map.set(key, normalizedFood);
-    }
-  });
-
-  return Array.from(map.values()).slice(0, limit);
 }
 
 function getAiNutritionTotalsForToday(nutrition = {}) {
