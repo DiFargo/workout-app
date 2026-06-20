@@ -117,6 +117,7 @@ import {
   searchLocalNutritionFoods
 } from "./utils/localNutritionCatalog";
 import { mergeNutritionStates } from "./utils/nutritionStateMerge";
+import { saveNutritionStateWithMerge } from "./utils/nutritionStateStorage";
 import { getPersonalMyFoodsDocRef } from "./utils/personalMyFoodsStorage";
 import {
   createEmptyAiNutritionProfileDraft,
@@ -218,9 +219,9 @@ import {
   sendPasswordResetEmail
 } from "firebase/auth";
 
-import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v660";
+const APP_VERSION = "v661";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -241,23 +242,6 @@ const TELEGRAM_PROFILE_STORAGE_KEY = "workout_telegram_profile_v1";
 const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
 const WORKOUT_CALENDAR_STORAGE_KEY = "workout_calendar_v1";
 const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
-
-async function saveNutritionStateWithMerge(uid, localNutritionState = {}) {
-  const nutritionRef = doc(db, "users", uid, "nutrition", "state");
-
-  return runTransaction(db, async (transaction) => {
-    const cloudSnapshot = await transaction.get(nutritionRef);
-    const cloudNutrition = cloudSnapshot.exists() ? cloudSnapshot.data() : {};
-    const mergedNutrition = {
-      ...mergeNutritionStates(localNutritionState, cloudNutrition),
-      __uid: uid,
-      updatedAt: new Date().toISOString()
-    };
-
-    transaction.set(nutritionRef, mergedNutrition, { merge: true });
-    return mergedNutrition;
-  });
-}
 
 const RECENT_NUTRITION_SEARCHES_KEY = "nutrition_recent_foods_v1";
 const AI_NUTRITION_PROFILE_STORAGE_KEY = "ai_nutrition_profile_v1";
