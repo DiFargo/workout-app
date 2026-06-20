@@ -146,6 +146,7 @@ import {
   normalizeTelegramUsername,
   parseTelegramAuthResultFromHash
 } from "./utils/telegramProfile";
+import { getClientTelegramProfile } from "./utils/clientTelegramProfile";
 import {
   enqueueFailedHistorySave,
   getFailedHistoryQueue,
@@ -296,7 +297,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v690";
+const APP_VERSION = "v691";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5685,17 +5686,6 @@ export default function App() {
     } finally {
       setAdminTelegramSending(false);
     }
-  }
-
-  function getClientTelegramProfile(client = {}) {
-    const telegram = client.telegram || {};
-    return {
-      ...telegram,
-      connected: Boolean(telegram.connected || client.telegramConnected || telegram.username || client.telegramUsername || telegram.telegramUserId || client.telegramUserId),
-      username: telegram.username || client.telegramUsername || "",
-      displayName: telegram.displayName || client.telegramDisplayName || client.telegramUsername || "",
-      notificationsEnabled: telegram.notificationsEnabled !== false && client.telegramNotificationsEnabled !== false
-    };
   }
 
   async function sendTrainerClientMessage(text, client = adminSelectedClient) {
