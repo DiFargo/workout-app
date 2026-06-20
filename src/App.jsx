@@ -122,6 +122,17 @@ import {
   createEmptyTelegramProfile,
   hasRequiredAiNutritionProfileFields
 } from "./utils/profileDefaults";
+import {
+  enqueueFailedHistorySave,
+  getFailedHistoryQueue,
+  getFailedMeasurementQueue,
+  getFailedNutritionSync,
+  removePendingHistoryBackups,
+  setFailedHistoryQueue,
+  setFailedMeasurementQueue,
+  setFailedNutritionSync,
+  WORKOUT_HISTORY_BACKUP_STORAGE_KEY
+} from "./utils/offlineSyncStorage";
 import { parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
 import {
   getFoodPortionAmount,
@@ -203,7 +214,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v657";
+const APP_VERSION = "v658";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -211,13 +222,9 @@ const ADMIN_EMAIL = "work.kriptonit.il@gmail.com";
 
 const NUTRITION_STORAGE_KEY = "workout_nutrition_v1";
 const NUTRITION_BACKUP_STORAGE_KEY = "workout_nutrition_backup_v1";
-const NUTRITION_FAILED_SYNC_QUEUE_KEY = "workout_nutrition_failed_sync_v1";
-const WORKOUT_HISTORY_BACKUP_STORAGE_KEY = "workout_history_pending_backup_v1";
-const WORKOUT_FAILED_HISTORY_QUEUE_KEY = "workout_history_failed_queue_v1";
 const WORKOUT_DRAFT_STORAGE_KEY = "workout_active_draft_v1";
 const WORKOUT_PLAN_BACKUP_STORAGE_KEY = "workout_plan_backup_v1";
 const MEASUREMENTS_STORAGE_KEY = "workout_measurements_v1";
-const MEASUREMENTS_FAILED_SYNC_QUEUE_KEY = "workout_measurements_failed_sync_v1";
 const WORKOUT_ASSIGNMENT_STORAGE_KEY = "workout_assignment_version_v1";
 const INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY = "individual_workout_swipe_hint_seen_v1";
 const GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY = "workout_global_my_foods_backup_v1";
@@ -232,84 +239,12 @@ const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
 const WORKOUT_CALENDAR_STORAGE_KEY = "workout_calendar_v1";
 const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
 
-function getFailedMeasurementQueue(uid = auth.currentUser?.uid) {
-  const queue = safeReadUserJsonStorage(MEASUREMENTS_FAILED_SYNC_QUEUE_KEY, uid, []);
-  return Array.isArray(queue) ? queue : [];
-}
-
-function setFailedMeasurementQueue(uid, queue = []) {
-  return safeWriteUserJsonStorage(
-    MEASUREMENTS_FAILED_SYNC_QUEUE_KEY,
-    uid,
-    Array.isArray(queue) ? queue : []
-  );
-}
-
-function getFailedNutritionSync(uid = auth.currentUser?.uid) {
-  return safeReadUserJsonStorage(NUTRITION_FAILED_SYNC_QUEUE_KEY, uid, null);
-}
-
-function setFailedNutritionSync(uid, nutritionState = null) {
-  return safeWriteUserJsonStorage(
-    NUTRITION_FAILED_SYNC_QUEUE_KEY,
-    uid,
-    nutritionState
-      ? {
-          nutrition: nutritionState,
-          queuedAt: new Date().toISOString()
-        }
-      : null
-  );
-}
-
-function removePendingHistoryBackups(uid, clientSaveId) {
-  if (!uid || !clientSaveId) return;
-
-  const storageKey = getUserScopedStorageKey(WORKOUT_HISTORY_BACKUP_STORAGE_KEY, uid);
-  const current = safeReadJsonStorage(storageKey, []);
-  if (!Array.isArray(current)) return;
-
-  safeWriteJsonStorage(
-    storageKey,
-    current.filter((item) => (
-      item?.id !== clientSaveId &&
-      item?.entry?.clientSaveId !== clientSaveId
-    ))
-  );
-}
-
-function getFailedHistoryQueue(uid = auth.currentUser?.uid) {
-  return safeReadUserJsonStorage(WORKOUT_FAILED_HISTORY_QUEUE_KEY, uid, []);
-}
-
-function setFailedHistoryQueue(uid, queue = []) {
-  return safeWriteUserJsonStorage(WORKOUT_FAILED_HISTORY_QUEUE_KEY, uid, Array.isArray(queue) ? queue : []);
-}
-
 function getPersonalMyFoodsDocRef(uid) {
   return doc(db, "users", uid, "nutrition", "myFoods");
 }
 
 function getPersonalMyFoodsFromState(nutritionState = {}) {
   return nutritionState?.myFoods || {};
-}
-
-function enqueueFailedHistorySave(uid, entry, reason = "failed_save") {
-  const queue = getFailedHistoryQueue(uid);
-  const saveId = entry?.clientSaveId || "";
-
-  if (saveId && queue.some((item) => item?.entry?.clientSaveId === saveId)) {
-    return queue;
-  }
-
-  const nextItem = {
-    id: saveId || entry?.id || `${Date.now()}_${Math.random().toString(36).slice(2)}`,
-    entry,
-    reason,
-    createdAt: new Date().toISOString()
-  };
-
-  setFailedHistoryQueue(uid, [nextItem, ...queue].slice(0, 25));
 }
 
 function getWorkoutDraftKey(uid, workoutId) {
