@@ -100,6 +100,7 @@ import {
   getNutritionDayTotals,
   sumNutritionFoods
 } from "./utils/aiNutritionAnalysis";
+import { getNutritionPhotoAiConfidenceText } from "./utils/nutritionPhotoAi";
 import {
   buildAiNutritionMonthlyPlan,
   buildClientNutritionPresetOptions
@@ -241,7 +242,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v673";
+const APP_VERSION = "v674";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -3185,41 +3186,6 @@ export default function App() {
     }
   }
 
-  function getNutritionPhotoAiConfidenceText(confidence) {
-    const numericConfidence = Number(confidence);
-    if (Number.isFinite(numericConfidence) && numericConfidence > 0) {
-      const percent = numericConfidence <= 1 ? Math.round(numericConfidence * 100) : Math.round(numericConfidence);
-      return `${Math.min(100, percent)}% уверенности`;
-    }
-
-    const textConfidence = String(confidence || "").trim();
-    return textConfidence ? textConfidence : "";
-  }
-
-  function getNutritionPhotoAiCandidateFoods(data = {}) {
-    const rawCandidates = [
-      data.food,
-      ...(Array.isArray(data.candidates) ? data.candidates : []),
-      ...(Array.isArray(data.foods) ? data.foods : []),
-      ...(Array.isArray(data.results) ? data.results : [])
-    ].filter(Boolean);
-
-    const uniqueCandidates = new Map();
-    rawCandidates.forEach((candidate) => {
-      const normalized = normalizeNutritionFood({
-        ...candidate,
-        source: candidate.source || "ИИ фото",
-        icon: candidate.icon || getFoodIcon(candidate)
-      });
-      const key = String(normalized.name || "").toLowerCase().trim();
-      if (key && !uniqueCandidates.has(key)) {
-        uniqueCandidates.set(key, normalized);
-      }
-    });
-
-    return Array.from(uniqueCandidates.values()).slice(0, 4);
-  }
-
   async function findExistingNutritionFoodFromPhoto(product = {}) {
     const query = String(product.query || product.name || "").trim();
     const currentFoods = [
@@ -3279,26 +3245,6 @@ export default function App() {
     setNutritionEditOriginalNote("");
     setEditingNutritionItemId(null);
     setNutritionPhotoAiResult(`Выбрано: ${normalizedFood.name}`);
-  }
-
-  function inferNutritionQueryFromPhotoName(fileName = "") {
-    const name = fileName.toLowerCase();
-    const hints = [
-      { keys: ["chicken", "кур", "grud", "груд"], query: "Куриная грудка" },
-      { keys: ["rice", "рис"], query: "Рис" },
-      { keys: ["buckwheat", "греч", "grech"], query: "Гречка" },
-      { keys: ["egg", "яйц"], query: "Яйцо" },
-      { keys: ["curd", "твор"], query: "Творог" },
-      { keys: ["oat", "овся"], query: "Овсянка" },
-      { keys: ["banana", "банан"], query: "Банан" },
-      { keys: ["salmon", "лосос", "рыб"], query: "Лосось" },
-      { keys: ["yogurt", "йогурт"], query: "Греческий йогурт" },
-      { keys: ["protein", "протеин"], query: "Протеин" },
-      { keys: ["apple", "яблок"], query: "Яблоко" },
-      { keys: ["potato", "карто"], query: "Картофель" }
-    ];
-
-    return hints.find((item) => item.keys.some((key) => name.includes(key)))?.query || "";
   }
 
   async function prepareNutritionPhotoForAi(file) {
