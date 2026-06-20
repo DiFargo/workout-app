@@ -227,6 +227,10 @@ import {
   getAdminClientTrainingDaysText
 } from "./utils/adminClientProfile";
 import {
+  formatProfileWorkoutDate,
+  getProfileNextTrainingText
+} from "./utils/profileWorkoutSchedule";
+import {
   CLIENT_PRIMARY_PAGES,
   mapLoginAuthError,
   normalizeClientPrimaryPage,
@@ -282,7 +286,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v685";
+const APP_VERSION = "v686";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -7582,75 +7586,6 @@ async function loadUsers() {
     { id: "sat", title: "Сб", full: "Суббота" },
     { id: "sun", title: "Вс", full: "Воскресенье" }
   ];
-
-  function formatProfileWorkoutDate(dateValue) {
-    if (!dateValue) return "Нет данных";
-
-    const date = new Date(dateValue);
-    if (Number.isNaN(date.getTime())) return "Нет данных";
-
-    return date.toLocaleDateString("ru-RU", {
-      day: "numeric",
-      month: "long"
-    });
-  }
-
-  function getProfileNextTrainingText(profile = {}, userData = {}, scheduledDates = []) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const nextScheduledDate = (Array.isArray(scheduledDates) ? scheduledDates : [])
-      .map((dateKey) => {
-        const date = new Date(`${dateKey}T00:00:00`);
-        return Number.isNaN(date.getTime()) ? null : { dateKey, date };
-      })
-      .filter((item) => item && item.date.getTime() >= today.getTime())
-      .sort((a, b) => a.date.getTime() - b.date.getTime())[0];
-
-    if (nextScheduledDate) {
-      const dayDifference = Math.round(
-        (nextScheduledDate.date.getTime() - today.getTime()) / (24 * 60 * 60 * 1000)
-      );
-
-      if (dayDifference === 0) return "Сегодня";
-      if (dayDifference === 1) return "Завтра";
-
-      return nextScheduledDate.date.toLocaleDateString("ru-RU", {
-        day: "numeric",
-        month: "long"
-      });
-    }
-
-    const sourceCalendar = userData?.workoutCalendar || userData?.calendar || {};
-    const trainingDays = Array.isArray(sourceCalendar.trainingDays) && sourceCalendar.trainingDays.length
-      ? sourceCalendar.trainingDays
-      : getAiNutritionTrainingDays(profile);
-
-    const workoutTime = sourceCalendar.workoutTime || userData?.workoutTime || profile?.workoutTime || "13:00";
-
-    if (!trainingDays.length) return `Не выбрано`;
-
-    const dayOrder = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-    const todayIndex = new Date().getDay();
-
-    let bestOffset = 8;
-    let bestDayId = trainingDays[0];
-
-    trainingDays.forEach((dayId) => {
-      const targetIndex = dayOrder.indexOf(dayId);
-      if (targetIndex === -1) return;
-
-      let offset = targetIndex - todayIndex;
-      if (offset <= 0) offset += 7;
-
-      if (offset < bestOffset) {
-        bestOffset = offset;
-        bestDayId = dayId;
-      }
-    });
-
-    const day = ADMIN_CALENDAR_DAYS.find((item) => item.id === bestDayId);
-    return `${day?.title || bestDayId} · ${workoutTime}`;
-  }
 
   function getDefaultAdminCalendar(client = {}) {
     const source = client.workoutCalendar || client.calendar || {};
