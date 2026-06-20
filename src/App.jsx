@@ -338,7 +338,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v715";
+const APP_VERSION = "v716";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2277,13 +2277,26 @@ export default function App() {
     });
   }, [nutrition.goals, nutritionTotals, nutritionToday.water]);
 
-  function getNutritionWeekDates(centerKey = nutritionDateKey) {
-    return buildNutritionWeekDates(centerKey);
-  }
+  const nutritionWeekDates = useMemo(() => {
+    return buildNutritionWeekDates(nutritionDateKey);
+  }, [nutritionDateKey]);
 
-  function getNutritionCurrentStreak() {
+  const nutritionCurrentStreak = useMemo(() => {
     return buildNutritionCurrentStreak(nutrition.days || {}, nutritionDateKey || todayNutritionKey());
-  }
+  }, [nutrition.days, nutritionDateKey]);
+
+  const nutritionCalendarDays = useMemo(() => {
+    return buildNutritionCalendarDays({
+      monthKey: nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7),
+      selectedDateKey: nutritionDateKey,
+      nutrition,
+      todayKey: todayNutritionKey()
+    });
+  }, [nutritionCalendarMonthKey, nutritionDateKey, nutrition]);
+
+  const nutritionCalendarMonthLabel = useMemo(() => {
+    return formatNutritionCalendarMonthLabel(nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7));
+  }, [nutritionCalendarMonthKey]);
 
   function openSelectedNutritionDate() {
     setExpandedNutritionMeals({});
@@ -2303,19 +2316,6 @@ export default function App() {
 
   function shiftNutritionCalendarMonth(offset) {
     setNutritionCalendarMonthKey((current) => shiftNutritionCalendarMonthKey(current, offset));
-  }
-
-  function getNutritionCalendarDays() {
-    return buildNutritionCalendarDays({
-      monthKey: nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7),
-      selectedDateKey: nutritionDateKey,
-      nutrition,
-      todayKey: todayNutritionKey()
-    });
-  }
-
-  function getNutritionCalendarMonthLabel() {
-    return formatNutritionCalendarMonthLabel(nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7));
   }
 
   function updateNutritionDay(updater) {
@@ -9614,9 +9614,8 @@ async function loadUsers() {
     const macroDonutStyle = {
       background: `conic-gradient(#70cde3 0deg ${carbsAngle}deg, #ffd15a ${carbsAngle}deg ${carbsAngle + fatAngle}deg, #ff7d7d ${carbsAngle + fatAngle}deg 360deg)`
     };
-    const weekDates = getNutritionWeekDates(nutritionDateKey);
+    const weekDates = nutritionWeekDates;
     const selectedNutritionDate = nutritionKeyToDate(nutritionDateKey);
-    const nutritionCurrentStreak = getNutritionCurrentStreak();
     const nutritionStreakText = `Серия записи еды — ${nutritionCurrentStreak} ${getTrainerDayWord(nutritionCurrentStreak)} 🔥`;
     const nutritionDateTitle = isNutritionToday
       ? "Сегодня"
@@ -9783,7 +9782,7 @@ async function loadUsers() {
                 <button type="button" onClick={() => shiftNutritionCalendarMonth(-1)} aria-label="Предыдущий месяц">‹</button>
                 <div>
                   <span>Календарь питания</span>
-                  <strong>{getNutritionCalendarMonthLabel()}</strong>
+                  <strong>{nutritionCalendarMonthLabel}</strong>
                 </div>
                 <button type="button" onClick={() => shiftNutritionCalendarMonth(1)} aria-label="Следующий месяц">›</button>
               </div>
@@ -9795,7 +9794,7 @@ async function loadUsers() {
               </div>
 
               <div className="nutritionCalendarGrid">
-                {getNutritionCalendarDays().map((day) => (
+                {nutritionCalendarDays.map((day) => (
                   <button
                     type="button"
                     key={day.key}
@@ -12570,7 +12569,7 @@ async function loadUsers() {
     const profileAiNutritionWeek = profileAiNutritionPlan?.weeks?.[profileAiNutritionWeekNumber - 1] || profileAiNutritionPlan?.weeks?.[0];
     const profileAiNutritionActiveProfile = profileAiNutritionPlan?.profile || activeProfile;
     const profileIsAiTrainingDayToday = isAiNutritionTrainingDay(profileAiNutritionActiveProfile);
-    const profileNutritionCalendarDays = getNutritionCalendarDays();
+    const profileNutritionCalendarDays = nutritionCalendarDays;
     const profileNutritionMonthDays = profileNutritionCalendarDays
       .slice(-7)
       .some((day) => day.isCurrentMonth)
