@@ -103,3 +103,274 @@ export function getDefaultWorkoutModePreference() {
     remember: false
   };
 }
+
+export const WORKOUT_READINESS_OPTIONS = [
+  {
+    id: "excellent",
+    emoji: "😤",
+    title: "Отлично",
+    subtitle: "Можно добавить вес",
+    weightFactor: 1,
+    volumeText: "следующий шаг веса вверх"
+  },
+  {
+    id: "good",
+    emoji: "🙂",
+    title: "Нормально",
+    subtitle: "Работаем по плану",
+    weightFactor: 1,
+    volumeText: "вес без изменений"
+  },
+  {
+    id: "bad",
+    emoji: "😵",
+    title: "Плохо",
+    subtitle: "Снизим нагрузку",
+    weightFactor: 0.85,
+    volumeText: "минус 15% с шагом веса"
+  }
+];
+
+const STANDARD_GYM_WEIGHTS = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+  12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
+  32, 34, 36, 38, 40,
+  42.5, 45, 47.5, 50, 52.5, 55, 57.5, 60,
+  62.5, 65, 67.5, 70, 72.5, 75, 77.5, 80,
+  82.5, 85, 87.5, 90, 92.5, 95, 97.5, 100,
+  105, 110, 115, 120, 125, 130, 135, 140,
+  145, 150, 160, 170, 180, 190, 200
+];
+
+export function getWorkoutReadinessOption(id) {
+  return WORKOUT_READINESS_OPTIONS.find((item) => item.id === id) || WORKOUT_READINESS_OPTIONS[1];
+}
+
+export function roundToStandardGymWeight(value, direction = "nearest") {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue) || numericValue <= 0) return "";
+
+  const weights = STANDARD_GYM_WEIGHTS;
+  if (direction === "up") {
+    return weights.find((weight) => weight > numericValue) || weights[weights.length - 1];
+  }
+
+  if (direction === "down") {
+    return [...weights].reverse().find((weight) => weight <= numericValue) || weights[0];
+  }
+
+  return weights.reduce((closest, current) => (
+    Math.abs(current - numericValue) < Math.abs(closest - numericValue) ? current : closest
+  ), weights[0]);
+}
+
+export function getAdjustedWorkoutWeight(weight, readinessId) {
+  const numericWeight = Number(String(weight || "").replace(",", "."));
+  if (!Number.isFinite(numericWeight) || numericWeight <= 0) return "";
+
+  const readiness = getWorkoutReadinessOption(readinessId);
+
+  if (readiness.id === "excellent") {
+    return roundToStandardGymWeight(numericWeight, "up");
+  }
+
+  if (readiness.id === "bad") {
+    return roundToStandardGymWeight(numericWeight * 0.85, "down");
+  }
+
+  return String(weight).trim();
+}
+
+export function parseWorkoutWeightValue(value) {
+  const numeric = Number(String(value || "").replace(",", "."));
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : 0;
+}
+
+function getBestProgressiveSetWeight(exerciseName, setIndex, history = []) {
+  let best = 0;
+
+  getAiHistoryItems(history).forEach((historyWorkout) => {
+    const exercise = (historyWorkout.exercises || []).find((item) => item.name === exerciseName);
+    if (!exercise?.sets?.length) return;
+
+    const set = exercise.sets[setIndex] || exercise.sets[exercise.sets.length - 1];
+    const actualWeight = parseWorkoutWeightValue(set?.weight);
+    const originalWeight = parseWorkoutWeightValue(set?.aiOriginalWeight);
+    const suggestedWeight = parseWorkoutWeightValue(set?.aiSuggestedWeight);
+    const protectedBase = Math.max(originalWeight, suggestedWeight);
+    const candidate = Math.max(actualWeight, protectedBase);
+
+    if (candidate > best) best = candidate;
+  });
+
+  return best;
+}
+
+export function getAiWorkoutBaseWeight(exerciseName, set, setIndex, history = [], useHistoryWeight = true) {
+  const programWeight = parseWorkoutWeightValue(set?.aiOriginalWeight || set?.weight);
+  if (!useHistoryWeight) return programWeight;
+
+  const bestHistoryWeight = getBestProgressiveSetWeight(exerciseName, setIndex, history);
+
+  return Math.max(programWeight, bestHistoryWeight);
+}
+
+export const POST_WORKOUT_FEEDBACK_OPTIONS = [
+  {
+    id: "good",
+    emoji: "🔥",
+    title: "Хорошо",
+    subtitle: "Можно прогрессировать",
+    advice: "Отличная работа. Продолжай в том же духе — AI сможет постепенно повышать нагрузку."
+  },
+  {
+    id: "normal",
+    emoji: "🙂",
+    title: "Нормально",
+    subtitle: "Стабильная тренировка",
+    advice: "Хорошая стабильная работа. Не обязательно прогрессировать каждую тренировку."
+  },
+  {
+    id: "bad",
+    emoji: "😵",
+    title: "Плохо",
+    subtitle: "Нужно восстановление",
+    advice: "Сделай акцент на сне, воде, углеводах и восстановлении. Следующую тренировку начни легче."
+  }
+];
+
+export const AI_COACH_FEATURES = [
+  {
+    id: "liveCoach",
+    icon: "⚡",
+    title: "AI-помощник тренировки",
+    subtitle: "Подсказки перед и во время тренировки"
+  },
+  {
+    id: "recovery",
+    icon: "🧘",
+    title: "Восстановление",
+    subtitle: "Оценка отдыха и готовности"
+  },
+  {
+    id: "muscleProgram",
+    icon: "🎯",
+    title: "Программа под мышцы",
+    subtitle: "Что качать следующим"
+  },
+  {
+    id: "nutritionPlan",
+    icon: "🍽️",
+    title: "План питания",
+    subtitle: "Калории, белки и фокус дня"
+  },
+  {
+    id: "motivation",
+    icon: "🔥",
+    title: "Мотивация",
+    subtitle: "Короткий настрой перед залом"
+  },
+  {
+    id: "progress",
+    icon: "📈",
+    title: "Прогресс",
+    subtitle: "Анализ истории тренировок"
+  },
+  {
+    id: "overload",
+    icon: "🛡️",
+    title: "Перегрузка мышц",
+    subtitle: "Где стоит снизить нагрузку"
+  },
+  {
+    id: "swap",
+    icon: "🔁",
+    title: "Автозамена упражнений",
+    subtitle: "Замены без потери смысла"
+  }
+];
+
+const AI_MUSCLE_RULES = [
+  { muscle: "Ноги", keywords: ["ног", "жим ног", "выпад", "румын", "разгибание ног", "присед", "тяга"] },
+  { muscle: "Спина", keywords: ["тяга", "спин", "верхнего блока", "т-грифа", "греб", "поясу"] },
+  { muscle: "Грудь", keywords: ["груд", "жим лёжа", "жим лежа", "сведение", "гантелей лёжа", "смит"] },
+  { muscle: "Плечи", keywords: ["плеч", "дельт", "отведение", "вертикальный жим", "жим в тренаж"] },
+  { muscle: "Руки", keywords: ["сгибание", "разгибание рук", "бицеп", "трицеп", "скотт", "кроссовер"] },
+  { muscle: "Пресс", keywords: ["пресс", "скручив"] }
+];
+
+export function getAiExerciseMuscles(name = "") {
+  const lowerName = String(name).toLowerCase();
+  const muscles = AI_MUSCLE_RULES
+    .filter((rule) => rule.keywords.some((keyword) => lowerName.includes(keyword)))
+    .map((rule) => rule.muscle);
+
+  return muscles.length ? [...new Set(muscles)] : ["Общая нагрузка"];
+}
+
+export function getExerciseMovementHint(name = "") {
+  const lowerName = String(name).toLowerCase();
+
+  if (/(тяга|греб|подтяг)/.test(lowerName)) return "тяговое движение";
+  if (/(жим|отжим)/.test(lowerName)) return "жимовое движение";
+  if (/(присед|выпад|разгибание ног|сгибание ног)/.test(lowerName)) return "движение для ног";
+  if (/(сгибание|разгибание рук|бицеп|трицеп)/.test(lowerName)) return "изолированное движение";
+  if (/(скручив|пресс|планк)/.test(lowerName)) return "упражнение для корпуса";
+
+  return "рабочий подход";
+}
+
+export function getAiHistoryItems(history = []) {
+  return (Array.isArray(history) ? history : [])
+    .map((item) => ({
+      ...item,
+      parsedDate: new Date(item.date || item.createdAt || Date.now())
+    }))
+    .filter((item) => !Number.isNaN(item.parsedDate.getTime()))
+    .sort((a, b) => b.parsedDate - a.parsedDate);
+}
+
+export function getProgramHistoryItems(history = [], scope = null) {
+  const items = getAiHistoryItems(history);
+  if (!scope) return items;
+
+  const programId = String(scope.assignedProgramId || "").trim();
+  const assignmentVersion = String(scope.assignedProgramUpdatedAt || "").trim();
+  const workoutIds = new Set((scope.workoutIds || []).map((id) => String(id || "").trim()).filter(Boolean));
+
+  return items.filter((item) => {
+    const itemProgramId = String(item?.assignedProgramId || "").trim();
+    const itemAssignmentVersion = String(item?.assignedProgramUpdatedAt || "").trim();
+
+    if (assignmentVersion && itemAssignmentVersion) {
+      return itemAssignmentVersion === assignmentVersion;
+    }
+    if (programId && itemProgramId) {
+      return itemProgramId === programId;
+    }
+
+    return !itemProgramId &&
+      !itemAssignmentVersion &&
+      workoutIds.has(String(item?.workoutId || "").trim());
+  });
+}
+
+export function getAiMuscleLoad(history = [], days = 14) {
+  const now = Date.now();
+  const dayMs = 24 * 60 * 60 * 1000;
+  const load = {};
+
+  getAiHistoryItems(history).forEach((workout) => {
+    const ageDays = Math.max(0, Math.round((now - workout.parsedDate.getTime()) / dayMs));
+    if (ageDays > days) return;
+
+    (workout.exercises || []).forEach((exercise) => {
+      const setCount = Array.isArray(exercise.sets) ? exercise.sets.length : 0;
+      getAiExerciseMuscles(exercise.name).forEach((muscle) => {
+        load[muscle] = (load[muscle] || 0) + Math.max(1, setCount);
+      });
+    });
+  });
+
+  return load;
+}

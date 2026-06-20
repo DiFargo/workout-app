@@ -23,13 +23,35 @@ import {
 } from "./domain/clientInsights";
 import {
   formatCompactTimer,
+  AI_COACH_FEATURES,
+  getAiExerciseMuscles,
+  getAiHistoryItems,
+  getAiMuscleLoad,
+  getAiWorkoutBaseWeight,
+  getAdjustedWorkoutWeight,
   getDefaultWorkoutModePreference,
   getEstimatedWorkoutDuration,
+  getExerciseMovementHint,
   getExerciseTechniqueHint,
+  parseWorkoutWeightValue,
+  getProgramHistoryItems,
+  getWorkoutReadinessOption,
   getWorkoutCover,
-  getWorkoutWarmupSteps
+  getWorkoutWarmupSteps,
+  POST_WORKOUT_FEEDBACK_OPTIONS,
+  WORKOUT_READINESS_OPTIONS
 } from "./domain/workoutPresentation";
+import {
+  dateToNutritionKey,
+  getDefaultNutritionMealByTime,
+  getNutritionOrbitSegment,
+  makeEmptyNutritionDay,
+  nutritionKeyToDate,
+  shiftNutritionDateKey,
+  todayNutritionKey
+} from "./domain/nutritionPresentation";
 import { compressProgressPhoto } from "./utils/imageCompression";
+import { showAppConfirm, showAppError } from "./utils/appFeedback";
 import { buildProgressInsight } from "./utils/progressInsight";
 import {
   buildPlannedWorkoutSlots,
@@ -89,7 +111,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v625";
+const APP_VERSION = "v631";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -459,143 +481,6 @@ async function fetchAuthorizedWithTimeout(url, options = {}, timeoutMs = 16000) 
   }, timeoutMs);
 }
 
-function getAppErrorPreset(type = "api") {
-  const presets = {
-    offline: {
-      title: "Нет интернета",
-      text: "Проверь подключение. Данные останутся локально."
-    },
-    firebase: {
-      title: "Firebase временно недоступен",
-      text: "Изменения сохранены локально и не потеряются."
-    },
-    api: {
-      title: "Сервер временно недоступен",
-      text: "Попробуй ещё раз через несколько секунд."
-    },
-    timeout: {
-      title: "Слишком долго",
-      text: "Сервер отвечает дольше обычного. Попробуй позже."
-    },
-    validation: {
-      title: "Нужно заполнить подход",
-      text: "Проверь введённые данные и попробуй снова."
-    },
-    savedLocal: {
-      title: "Сохранено локально",
-      text: "Данные не потеряются и синхронизируются позже."
-    },
-    load: {
-      title: "Не удалось загрузить данные",
-      text: "Проверь интернет или попробуй обновить страницу."
-    }
-  };
-
-  return presets[type] || presets.api;
-}
-
-function showAppError(type = "api", customText = "") {
-  if (typeof document === "undefined") return;
-
-  const preset = getAppErrorPreset(type);
-  const existing = document.querySelector(".appErrorToast");
-  if (existing) existing.remove();
-
-  const toast = document.createElement("div");
-  toast.className = `appErrorToast appErrorToast--${type}`;
-
-  const title = document.createElement("div");
-  title.className = "appErrorToastTitle";
-  title.textContent = preset.title;
-
-  const text = document.createElement("div");
-  text.className = "appErrorToastText";
-  text.textContent = customText || preset.text;
-
-  toast.append(title, text);
-
-  document.body.appendChild(toast);
-
-  window.clearTimeout(window.__workoutAppErrorToastTimer);
-  window.__workoutAppErrorToastTimer = window.setTimeout(() => {
-    toast.classList.add("appErrorToastOut");
-    window.setTimeout(() => toast.remove(), 220);
-  }, 4200);
-}
-
-function showAppConfirm(messageOrOptions = "", maybeOptions = {}) {
-  if (typeof document === "undefined") return Promise.resolve(false);
-
-  const options = typeof messageOrOptions === "object" && messageOrOptions !== null
-    ? messageOrOptions
-    : { ...maybeOptions, text: String(messageOrOptions || "") };
-  const titleText = options.title || "Подтвердить действие";
-  const bodyText = options.text || options.message || "";
-  const confirmText = options.confirmText || "Подтвердить";
-  const cancelText = options.cancelText || "Отмена";
-  const danger = Boolean(options.danger || /удал|сброс/i.test(bodyText));
-
-  const existing = document.querySelector(".appConfirmOverlay");
-  if (existing) existing.remove();
-
-  return new Promise((resolve) => {
-    const overlay = document.createElement("div");
-    overlay.className = "appConfirmOverlay";
-
-    const dialog = document.createElement("div");
-    dialog.className = "appConfirmDialog";
-    dialog.setAttribute("role", "dialog");
-    dialog.setAttribute("aria-modal", "true");
-    dialog.setAttribute("aria-label", titleText);
-
-    const title = document.createElement("div");
-    title.className = "appConfirmTitle";
-    title.textContent = titleText;
-
-    const text = document.createElement("div");
-    text.className = "appConfirmText";
-    text.textContent = bodyText;
-
-    const actions = document.createElement("div");
-    actions.className = "appConfirmActions";
-
-    const cancelButton = document.createElement("button");
-    cancelButton.type = "button";
-    cancelButton.className = "appConfirmButton appConfirmButtonGhost";
-    cancelButton.textContent = cancelText;
-
-    const confirmButton = document.createElement("button");
-    confirmButton.type = "button";
-    confirmButton.className = `appConfirmButton appConfirmButtonPrimary${danger ? " danger" : ""}`;
-    confirmButton.textContent = confirmText;
-
-    let resolved = false;
-    const close = (value) => {
-      if (resolved) return;
-      resolved = true;
-      document.removeEventListener("keydown", handleKeyDown);
-      overlay.remove();
-      resolve(value);
-    };
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") close(false);
-    };
-
-    cancelButton.addEventListener("click", () => close(false));
-    confirmButton.addEventListener("click", () => close(true));
-    overlay.addEventListener("click", (event) => {
-      if (event.target === overlay) close(false);
-    });
-    document.addEventListener("keydown", handleKeyDown);
-
-    actions.append(cancelButton, confirmButton);
-    dialog.append(title, text, actions);
-    overlay.append(dialog);
-    document.body.appendChild(overlay);
-    cancelButton.focus({ preventScroll: true });
-  });
-}
-
 function getNutritionUpdatedAt(state = {}) {
   return getTimestampValue(state?.updatedAt);
 }
@@ -714,40 +599,6 @@ const nutritionMeals = [
   { id: "snack", name: "Перекус/Другое", icon: "🌙" }
 ];
 
-function getDefaultNutritionMealByTime(date = new Date()) {
-  const hour = date.getHours();
-  if (hour >= 5 && hour < 11) return "breakfast";
-  if (hour >= 11 && hour < 16) return "lunch";
-  if (hour >= 16 && hour < 21) return "dinner";
-  return "snack";
-}
-
-function getNutritionOrbitPoint(angleDeg, radius = 184, centerX = 270, centerY = 232) {
-  const angleRad = ((angleDeg - 90) * Math.PI) / 180;
-  return {
-    x: Number((centerX + radius * Math.cos(angleRad)).toFixed(2)),
-    y: Number((centerY + radius * Math.sin(angleRad)).toFixed(2))
-  };
-}
-
-function getNutritionOrbitArcPath(startAngle, endAngle, radius = 184) {
-  const start = getNutritionOrbitPoint(startAngle, radius);
-  const end = getNutritionOrbitPoint(endAngle, radius);
-  const largeArcFlag = Math.abs(endAngle - startAngle) > 180 ? 1 : 0;
-  return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x} ${end.y}`;
-}
-
-function getNutritionOrbitSegment(startAngle, arcDegrees, progress) {
-  const safeProgress = Math.max(0, Math.min(100, Number(progress) || 0));
-  const endAngle = startAngle + arcDegrees * (safeProgress / 100);
-  return {
-    hasProgress: safeProgress > 0,
-    progressPath: safeProgress > 0 ? getNutritionOrbitArcPath(startAngle, endAngle) : "",
-    startDot: getNutritionOrbitPoint(startAngle),
-    progressDot: getNutritionOrbitPoint(endAngle)
-  };
-}
-
 const NUTRITION_ICON_PRESETS = ["🍗", "🥩", "🐟", "🥚", "🥛", "🧀", "🍚", "🥔", "🍞", "🥣", "🍌", "🍎", "🍓", "🥦", "🥗", "🍲", "☕", "🥤", "🍫", "🍽️"];
 
 const LOCAL_NUTRITION_SEARCH_LIMIT = 24;
@@ -796,282 +647,6 @@ function mergeNutritionFoodResults(primary = [], secondary = [], limit = 40) {
   });
 
   return Array.from(map.values()).slice(0, limit);
-}
-
-const WORKOUT_READINESS_OPTIONS = [
-  {
-    id: "excellent",
-    emoji: "😤",
-    title: "Отлично",
-    subtitle: "Можно добавить вес",
-    weightFactor: 1,
-    volumeText: "следующий шаг веса вверх"
-  },
-  {
-    id: "good",
-    emoji: "🙂",
-    title: "Нормально",
-    subtitle: "Работаем по плану",
-    weightFactor: 1,
-    volumeText: "вес без изменений"
-  },
-  {
-    id: "bad",
-    emoji: "😵",
-    title: "Плохо",
-    subtitle: "Снизим нагрузку",
-    weightFactor: 0.85,
-    volumeText: "минус 15% с шагом веса"
-  }
-];
-
-const STANDARD_GYM_WEIGHTS = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-  12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
-  32, 34, 36, 38, 40,
-  42.5, 45, 47.5, 50, 52.5, 55, 57.5, 60,
-  62.5, 65, 67.5, 70, 72.5, 75, 77.5, 80,
-  82.5, 85, 87.5, 90, 92.5, 95, 97.5, 100,
-  105, 110, 115, 120, 125, 130, 135, 140,
-  145, 150, 160, 170, 180, 190, 200
-];
-
-function getWorkoutReadinessOption(id) {
-  return WORKOUT_READINESS_OPTIONS.find((item) => item.id === id) || WORKOUT_READINESS_OPTIONS[1];
-}
-
-function roundToStandardGymWeight(value, direction = "nearest") {
-  const numericValue = Number(value);
-  if (!Number.isFinite(numericValue) || numericValue <= 0) return "";
-
-  const weights = STANDARD_GYM_WEIGHTS;
-  if (direction === "up") {
-    return weights.find((weight) => weight > numericValue) || weights[weights.length - 1];
-  }
-
-  if (direction === "down") {
-    return [...weights].reverse().find((weight) => weight <= numericValue) || weights[0];
-  }
-
-  return weights.reduce((closest, current) => (
-    Math.abs(current - numericValue) < Math.abs(closest - numericValue) ? current : closest
-  ), weights[0]);
-}
-
-function getAdjustedWorkoutWeight(weight, readinessId) {
-  const numericWeight = Number(String(weight || "").replace(",", "."));
-  if (!Number.isFinite(numericWeight) || numericWeight <= 0) return "";
-
-  const readiness = getWorkoutReadinessOption(readinessId);
-
-  if (readiness.id === "excellent") {
-    // Отлично: не проценты, а ровно следующий доступный шаг веса.
-    return roundToStandardGymWeight(numericWeight, "up");
-  }
-
-  if (readiness.id === "bad") {
-    // Плохо: минус 15% и округление вниз под доступный шаг веса.
-    return roundToStandardGymWeight(numericWeight * 0.85, "down");
-  }
-
-  // Нормально: сохраняем плановый вес без округления.
-  return String(weight).trim();
-}
-
-function parseWorkoutWeightValue(value) {
-  const numeric = Number(String(value || "").replace(",", "."));
-  return Number.isFinite(numeric) && numeric > 0 ? numeric : 0;
-}
-
-function getBestProgressiveSetWeight(exerciseName, setIndex, history = []) {
-  let best = 0;
-
-  getAiHistoryItems(history).forEach((historyWorkout) => {
-    const exercise = (historyWorkout.exercises || []).find((item) => item.name === exerciseName);
-    if (!exercise?.sets?.length) return;
-
-    const set = exercise.sets[setIndex] || exercise.sets[exercise.sets.length - 1];
-    const actualWeight = parseWorkoutWeightValue(set?.weight);
-    const originalWeight = parseWorkoutWeightValue(set?.aiOriginalWeight);
-    const suggestedWeight = parseWorkoutWeightValue(set?.aiSuggestedWeight);
-    const protectedBase = Math.max(originalWeight, suggestedWeight);
-
-    // Only saved/completed workouts are in history. If workout was adapted down and actual weight is lower, do not let it reduce future suggestions.
-    const candidate = Math.max(actualWeight, protectedBase);
-
-    if (candidate > best) best = candidate;
-  });
-
-  return best;
-}
-
-function getAiWorkoutBaseWeight(exerciseName, set, setIndex, history = [], useHistoryWeight = true) {
-  const programWeight = parseWorkoutWeightValue(set?.aiOriginalWeight || set?.weight);
-  if (!useHistoryWeight) return programWeight;
-
-  const bestHistoryWeight = getBestProgressiveSetWeight(exerciseName, setIndex, history);
-
-  return Math.max(programWeight, bestHistoryWeight);
-}
-
-const POST_WORKOUT_FEEDBACK_OPTIONS = [
-  {
-    id: "good",
-    emoji: "🔥",
-    title: "Хорошо",
-    subtitle: "Можно прогрессировать",
-    advice: "Отличная работа. Продолжай в том же духе — AI сможет постепенно повышать нагрузку."
-  },
-  {
-    id: "normal",
-    emoji: "🙂",
-    title: "Нормально",
-    subtitle: "Стабильная тренировка",
-    advice: "Хорошая стабильная работа. Не обязательно прогрессировать каждую тренировку."
-  },
-  {
-    id: "bad",
-    emoji: "😵",
-    title: "Плохо",
-    subtitle: "Нужно восстановление",
-    advice: "Сделай акцент на сне, воде, углеводах и восстановлении. Следующую тренировку начни легче."
-  }
-];
-
-const AI_COACH_FEATURES = [
-  {
-    id: "liveCoach",
-    icon: "⚡",
-    title: "AI-помощник тренировки",
-    subtitle: "Подсказки перед и во время тренировки"
-  },
-  {
-    id: "recovery",
-    icon: "🧘",
-    title: "Восстановление",
-    subtitle: "Оценка отдыха и готовности"
-  },
-  {
-    id: "muscleProgram",
-    icon: "🎯",
-    title: "Программа под мышцы",
-    subtitle: "Что качать следующим"
-  },
-  {
-    id: "nutritionPlan",
-    icon: "🍽️",
-    title: "План питания",
-    subtitle: "Калории, белки и фокус дня"
-  },
-  {
-    id: "motivation",
-    icon: "🔥",
-    title: "Мотивация",
-    subtitle: "Короткий настрой перед залом"
-  },
-  {
-    id: "progress",
-    icon: "📈",
-    title: "Прогресс",
-    subtitle: "Анализ истории тренировок"
-  },
-  {
-    id: "overload",
-    icon: "🛡️",
-    title: "Перегрузка мышц",
-    subtitle: "Где стоит снизить нагрузку"
-  },
-  {
-    id: "swap",
-    icon: "🔁",
-    title: "Автозамена упражнений",
-    subtitle: "Замены без потери смысла"
-  }
-];
-
-const AI_MUSCLE_RULES = [
-  { muscle: "Ноги", keywords: ["ног", "жим ног", "выпад", "румын", "разгибание ног", "присед", "тяга"] },
-  { muscle: "Спина", keywords: ["тяга", "спин", "верхнего блока", "т-грифа", "греб", "поясу"] },
-  { muscle: "Грудь", keywords: ["груд", "жим лёжа", "жим лежа", "сведение", "гантелей лёжа", "смит"] },
-  { muscle: "Плечи", keywords: ["плеч", "дельт", "отведение", "вертикальный жим", "жим в тренаж"] },
-  { muscle: "Руки", keywords: ["сгибание", "разгибание рук", "бицеп", "трицеп", "скотт", "кроссовер"] },
-  { muscle: "Пресс", keywords: ["пресс", "скручив"] }
-];
-
-function getAiExerciseMuscles(name = "") {
-  const lowerName = String(name).toLowerCase();
-  const muscles = AI_MUSCLE_RULES
-    .filter((rule) => rule.keywords.some((keyword) => lowerName.includes(keyword)))
-    .map((rule) => rule.muscle);
-
-  return muscles.length ? [...new Set(muscles)] : ["Общая нагрузка"];
-}
-
-function getExerciseMovementHint(name = "") {
-  const lowerName = String(name).toLowerCase();
-
-  if (/(тяга|греб|подтяг)/.test(lowerName)) return "тяговое движение";
-  if (/(жим|отжим)/.test(lowerName)) return "жимовое движение";
-  if (/(присед|выпад|разгибание ног|сгибание ног)/.test(lowerName)) return "движение для ног";
-  if (/(сгибание|разгибание рук|бицеп|трицеп)/.test(lowerName)) return "изолированное движение";
-  if (/(скручив|пресс|планк)/.test(lowerName)) return "упражнение для корпуса";
-
-  return "рабочий подход";
-}
-
-function getAiHistoryItems(history = []) {
-  return (Array.isArray(history) ? history : [])
-    .map((item) => ({
-      ...item,
-      parsedDate: new Date(item.date || item.createdAt || Date.now())
-    }))
-    .filter((item) => !Number.isNaN(item.parsedDate.getTime()))
-    .sort((a, b) => b.parsedDate - a.parsedDate);
-}
-
-function getProgramHistoryItems(history = [], scope = null) {
-  const items = getAiHistoryItems(history);
-  if (!scope) return items;
-
-  const programId = String(scope.assignedProgramId || "").trim();
-  const assignmentVersion = String(scope.assignedProgramUpdatedAt || "").trim();
-  const workoutIds = new Set((scope.workoutIds || []).map((id) => String(id || "").trim()).filter(Boolean));
-
-  return items.filter((item) => {
-    const itemProgramId = String(item?.assignedProgramId || "").trim();
-    const itemAssignmentVersion = String(item?.assignedProgramUpdatedAt || "").trim();
-
-    if (assignmentVersion && itemAssignmentVersion) {
-      return itemAssignmentVersion === assignmentVersion;
-    }
-    if (programId && itemProgramId) {
-      return itemProgramId === programId;
-    }
-
-    return !itemProgramId &&
-      !itemAssignmentVersion &&
-      workoutIds.has(String(item?.workoutId || "").trim());
-  });
-}
-
-function getAiMuscleLoad(history = [], days = 14) {
-  const now = Date.now();
-  const dayMs = 24 * 60 * 60 * 1000;
-  const load = {};
-
-  getAiHistoryItems(history).forEach((workout) => {
-    const ageDays = Math.max(0, Math.round((now - workout.parsedDate.getTime()) / dayMs));
-    if (ageDays > days) return;
-
-    (workout.exercises || []).forEach((exercise) => {
-      const setCount = Array.isArray(exercise.sets) ? exercise.sets.length : 0;
-      getAiExerciseMuscles(exercise.name).forEach((muscle) => {
-        load[muscle] = (load[muscle] || 0) + Math.max(1, setCount);
-      });
-    });
-  });
-
-  return load;
 }
 
 function getAiNutritionTotalsForToday(nutrition = {}) {
@@ -1961,36 +1536,6 @@ function getSearchHistoryName(food) {
     .trim();
 }
 
-function todayNutritionKey() {
-  return dateToNutritionKey(new Date());
-}
-
-function dateToNutritionKey(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function nutritionKeyToDate(key) {
-  const [year, month, day] = String(key || todayNutritionKey()).split("-").map(Number);
-  return new Date(year || new Date().getFullYear(), (month || 1) - 1, day || 1);
-}
-
-function shiftNutritionDateKey(key, days) {
-  const date = nutritionKeyToDate(key);
-  date.setDate(date.getDate() + days);
-  return dateToNutritionKey(date);
-}
-
-function makeEmptyNutritionDay() {
-  return {
-    foods: [],
-    water: 0,
-    weight: "",
-    note: ""
-  };
-}
 
 function formatNutritionDateLabel(date = new Date()) {
   return date.toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" });
