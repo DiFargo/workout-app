@@ -96,7 +96,8 @@ import {
   buildNutritionHistoryDays,
   buildAiNutritionDayModel,
   getAiNutritionTotalsForToday,
-  getNutritionDayTotals
+  getNutritionDayTotals,
+  sumNutritionFoods
 } from "./utils/aiNutritionAnalysis";
 import {
   buildAiNutritionMonthlyPlan,
@@ -238,7 +239,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v670";
+const APP_VERSION = "v671";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -6049,10 +6050,11 @@ export default function App() {
     const recordedDays = Object.entries(nutritionState?.days || {})
       .map(([date, day]) => {
         const foods = Array.isArray(day?.foods) ? day.foods : [];
+        const totals = sumNutritionFoods(foods);
         return {
           date,
           timestamp: getTrainerSummaryTimestamp(date),
-          calories: foods.reduce((sum, item) => sum + (Number(item?.calories) || 0), 0),
+          calories: totals.calories,
           hasData: foods.length > 0
         };
       })
@@ -10638,16 +10640,7 @@ function normalizeTelegramUsername(value = "") {
       : formatNutritionDateLabel(selectedNutritionDate).replace(/^./, (char) => char.toUpperCase());
     const mealStats = nutritionMeals.reduce((acc, meal) => {
       const foods = (nutritionToday.foods || []).filter((item) => item.mealId === meal.id);
-      acc[meal.id] = foods.reduce(
-        (sum, item) => ({
-          calories: sum.calories + (Number(item.calories) || 0),
-          protein: sum.protein + (Number(item.protein) || 0),
-          fat: sum.fat + (Number(item.fat) || 0),
-          carbs: sum.carbs + (Number(item.carbs) || 0),
-          count: sum.count + 1
-        }),
-        { calories: 0, protein: 0, fat: 0, carbs: 0, count: 0 }
-      );
+      acc[meal.id] = sumNutritionFoods(foods, true);
       return acc;
     }, {});
     const nutritionZoukFoodsCount = (nutritionToday.foods || []).length;
