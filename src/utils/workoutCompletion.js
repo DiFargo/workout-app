@@ -47,3 +47,16 @@ export function isWorkoutCompletedWithSet(workoutItem, completedSet = new Set(),
   return completedSet.has(workoutIdKey) ||
     completedSet.has(`name:${getCompletedWorkoutKey(workoutItem.name)}`);
 }
+
+export function getNextUncompletedWorkoutIndex(
+  workouts = [],
+  completedSet = new Set(),
+  currentAssignmentVersion = ""
+) {
+  const safeWorkouts = Array.isArray(workouts) ? workouts : [];
+  const index = safeWorkouts.findIndex((workoutItem) => (
+    !isWorkoutCompletedWithSet(workoutItem, completedSet, currentAssignmentVersion)
+  ));
+
+  return index >= 0 ? index : 0;
+}

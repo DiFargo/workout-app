@@ -142,6 +142,30 @@ export function getWorkoutPresentationTitle(workoutItem, dayNumber) {
     : detectedGroups[0] || `День ${dayNumber}`;
 }
 
+export function getWorkoutPresentation(workoutItem, fallbackIndex = 0) {
+  const weekNumber =
+    String(workoutItem?.name || "").match(/неделя\s*(\d+)/i)?.[1] ||
+    String(workoutItem?.weekName || "").match(/неделя\s*(\d+)/i)?.[1] ||
+    String(workoutItem?.id || "").match(/week[_-]?(\d+)/i)?.[1];
+  const dayNumber =
+    String(workoutItem?.name || "").match(/день\s*(\d+)/i)?.[1] ||
+    String(workoutItem?.id || "").match(/day[_-]?(\d+)/i)?.[1] ||
+    fallbackIndex + 1;
+  const title = getWorkoutPresentationTitle(workoutItem, dayNumber);
+
+  return {
+    day: weekNumber ? `Неделя ${weekNumber} · День ${dayNumber}` : `День ${dayNumber}`,
+    title,
+    image: getWorkoutPresentationImage(workoutItem, title),
+    trainerTip:
+      String(workoutItem?.trainerNote || workoutItem?.coachNote || workoutItem?.note || workoutItem?.description || "").trim() ||
+      "Следи за техникой и оставляй 1–2 повтора в запасе.",
+    exerciseCount: (workoutItem?.exercises || []).length,
+    setCount: (workoutItem?.exercises || []).flatMap((exercise) => exercise.sets || []).length,
+    duration: getEstimatedWorkoutDuration(workoutItem)
+  };
+}
+
 export function getWorkoutWarmupSteps(workout = {}) {
   const content = [
     workout.name,

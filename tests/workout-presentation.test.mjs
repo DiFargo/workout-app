@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  getWorkoutPresentation,
   getWorkoutPresentationImage,
   getWorkoutPresentationTitle,
   WORKOUT_MENU_ITEMS
@@ -36,4 +37,23 @@ test("workout presentation image prefers direct image and then fallback groups",
     getWorkoutPresentationImage({ exercises: [{ name: "Тяга нижнего блока" }] }, "Спина"),
     WORKOUT_MENU_ITEMS[0].image
   );
+});
+
+test("workout presentation builds stable day metadata and counters", () => {
+  const presentation = getWorkoutPresentation({
+    id: "week_2_day_3",
+    name: "Неделя 2 · День 3 · Грудь + руки",
+    trainerNote: "Работаем спокойно.",
+    exercises: [
+      { name: "Жим лежа", sets: [{ reps: 10 }, { reps: 10 }] },
+      { name: "Разгибание рук", sets: [{ reps: 12 }] }
+    ]
+  });
+
+  assert.equal(presentation.day, "Неделя 2 · День 3");
+  assert.equal(presentation.title, "Грудь и руки");
+  assert.equal(presentation.trainerTip, "Работаем спокойно.");
+  assert.equal(presentation.exerciseCount, 2);
+  assert.equal(presentation.setCount, 3);
+  assert.equal(presentation.image, WORKOUT_MENU_ITEMS[1].image);
 });

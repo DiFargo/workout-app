@@ -40,15 +40,13 @@ import {
   getAiWorkoutBaseWeight,
   getAdjustedWorkoutWeight,
   getDefaultWorkoutModePreference,
-  getEstimatedWorkoutDuration,
   getExerciseMovementHint,
   getExerciseTechniqueHint,
   parseWorkoutWeightValue,
   getProgramHistoryItems,
   getWorkoutReadinessOption,
   getWorkoutCover,
-  getWorkoutPresentationImage,
-  getWorkoutPresentationTitle,
+  getWorkoutPresentation,
   getWorkoutWarmupSteps,
   POST_WORKOUT_FEEDBACK_OPTIONS,
   WORKOUT_MENU_ITEMS,
@@ -191,6 +189,7 @@ import {
 import {
   buildCompletedWorkoutSet,
   getCompletedWorkoutKey,
+  getNextUncompletedWorkoutIndex as getNextUncompletedWorkoutIndexFromSet,
   isWorkoutCompletedWithSet
 } from "./utils/workoutCompletion";
 import { buildTrainerNutritionPlanUpdate } from "./utils/trainerNutritionPlan";
@@ -251,7 +250,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v679";
+const APP_VERSION = "v680";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5394,32 +5393,11 @@ export default function App() {
   }
 
   function getNextUncompletedWorkoutIndex(workouts = [], completedSet = getCompletedWorkoutSet(history)) {
-    const index = workouts.findIndex((workoutItem) => !isWorkoutCompletedByHistory(workoutItem, completedSet));
-    return index >= 0 ? index : 0;
-  }
-
-  function getWorkoutPresentation(workoutItem, fallbackIndex = 0) {
-    const weekNumber =
-      String(workoutItem?.name || "").match(/неделя\s*(\d+)/i)?.[1] ||
-      String(workoutItem?.weekName || "").match(/неделя\s*(\d+)/i)?.[1] ||
-      String(workoutItem?.id || "").match(/week[_-]?(\d+)/i)?.[1];
-    const dayNumber =
-      String(workoutItem?.name || "").match(/день\s*(\d+)/i)?.[1] ||
-      String(workoutItem?.id || "").match(/day[_-]?(\d+)/i)?.[1] ||
-      fallbackIndex + 1;
-    const title = getWorkoutPresentationTitle(workoutItem, dayNumber);
-
-    return {
-      day: weekNumber ? `Неделя ${weekNumber} · День ${dayNumber}` : `День ${dayNumber}`,
-      title,
-      image: getWorkoutPresentationImage(workoutItem, title),
-      trainerTip:
-        String(workoutItem?.trainerNote || workoutItem?.coachNote || workoutItem?.note || workoutItem?.description || "").trim() ||
-        "Следи за техникой и оставляй 1–2 повтора в запасе.",
-      exerciseCount: (workoutItem?.exercises || []).length,
-      setCount: (workoutItem?.exercises || []).flatMap((exercise) => exercise.sets || []).length,
-      duration: getEstimatedWorkoutDuration(workoutItem)
-    };
+    return getNextUncompletedWorkoutIndexFromSet(
+      workouts,
+      completedSet,
+      plan.assignedProgramUpdatedAt || ""
+    );
   }
 
   async function loadWorkoutsFromFirebase(userIdFromClick, options = {}) {
