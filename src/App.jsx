@@ -202,6 +202,7 @@ import {
 } from "./utils/clientUx";
 import { useModalFocusTrap } from "./hooks/useModalFocusTrap";
 import {
+  buildClientWorkoutsFromTemplate,
   makeThreeSets,
   normalizeExercise,
   normalizePlan
@@ -246,7 +247,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v675";
+const APP_VERSION = "v676";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -6616,39 +6617,6 @@ export default function App() {
 
     await batch.commit();
     return currentWorkoutsSnapshot.size;
-  }
-
-  function buildClientWorkoutsFromTemplate(template = {}) {
-    const structuredMicrocycles = Array.isArray(template.blocks) && template.blocks.length
-      ? template.blocks
-      : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);
-    const structuredWorkouts = structuredMicrocycles.flatMap((microcycle) =>
-      (microcycle.weeks || []).flatMap((week) => week.workouts || [])
-    );
-    const sourceWorkouts = structuredWorkouts.length ? structuredWorkouts : (template.workouts || []);
-
-    return sourceWorkouts.map((workoutItem, workoutIndex) => ({
-      id: workoutItem.id || `assigned_workout_${workoutIndex + 1}_${Date.now()}`,
-      name: workoutItem.name || `Тренировка ${workoutIndex + 1}`,
-      blockId: workoutItem.blockId || "",
-      blockName: workoutItem.blockName || "",
-      weekId: workoutItem.weekId || "",
-      weekName: workoutItem.weekName || "",
-      order: Number(workoutItem.order || workoutItem.sortOrder || workoutIndex + 1),
-      sortOrder: Number(workoutItem.sortOrder || workoutItem.order || workoutIndex + 1),
-      exercises: (workoutItem.exercises || []).map((exercise, exerciseIndex) => ({
-        id: exercise.id || `exercise_${workoutIndex + 1}_${exerciseIndex + 1}`,
-        name: exercise.name || "Упражнение",
-        video: exercise.video || exercise.videoUrl || exercise.videoURL || "",
-        requiresWeight: exerciseUsesExternalWeight(exercise),
-        sets: Array.isArray(exercise.sets) && exercise.sets.length
-          ? exercise.sets.map((set) => ({
-              reps: Number(set.reps) || 8,
-              weight: String(set.weight ?? "")
-            }))
-          : [{ reps: exercise.name?.includes("Пресс") ? 15 : 8, weight: "" }]
-      }))
-    }));
   }
 
   async function assignAdminTemplateToClient(clientId = selectedUserId, templateId = adminSelectedTemplateId) {
