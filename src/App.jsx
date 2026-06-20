@@ -14,6 +14,12 @@ import {
 import "./styles.css";
 
 import { BASIC_WORKOUT_PLANS } from "./data/basicWorkoutPlans";
+import {
+  defaultNutritionState,
+  LOCAL_NUTRITION_SEARCH_LIMIT,
+  NUTRITION_ICON_PRESETS,
+  nutritionMeals
+} from "./data/nutritionDefaults";
 import { searchLazyNutritionCatalog } from "./data/nutrition-catalog/lazyCatalog";
 import {
   createClientResourceId,
@@ -113,7 +119,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v633";
+const APP_VERSION = "v634";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -420,25 +426,6 @@ const nutritionFoodDatabase = [
   { id: "food_apple", name: "Яблоко", portion: "1 шт", calories: 95, protein: 0.5, fat: 0.3, carbs: 25, barcode: "4810000000110" },
   { id: "food_potato", name: "Картофель варёный", portion: "100 г", calories: 87, protein: 1.9, fat: 0.1, carbs: 20, barcode: "4810000000127" }
 ];
-
-const defaultNutritionState = {
-  goals: { calories: 2400, protein: 160, fat: 75, carbs: 260, water: 2500 },
-  days: {},
-  favorites: ["food_chicken", "food_rice", "food_curd", "food_protein"],
-  recent: [],
-  myFoods: {}
-};
-
-const nutritionMeals = [
-  { id: "breakfast", name: "Завтрак", icon: "🌅" },
-  { id: "lunch", name: "Обед", icon: "☀️" },
-  { id: "dinner", name: "Ужин", icon: "🌇" },
-  { id: "snack", name: "Перекус/Другое", icon: "🌙" }
-];
-
-const NUTRITION_ICON_PRESETS = ["🍗", "🥩", "🐟", "🥚", "🥛", "🧀", "🍚", "🥔", "🍞", "🥣", "🍌", "🍎", "🍓", "🥦", "🥗", "🍲", "☕", "🥤", "🍫", "🍽️"];
-
-const LOCAL_NUTRITION_SEARCH_LIMIT = 24;
 
 function normalizeLocalCatalogFood(food = {}) {
   const portionAmount = Number(food.defaultGram || food.defaultAmount || 100) || 100;
