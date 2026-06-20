@@ -171,7 +171,10 @@ import {
   clearWorkoutDraft,
   getWorkoutDraftKey
 } from "./utils/workoutDraftStorage";
-import { getCompletedWorkoutKey } from "./utils/workoutCompletion";
+import {
+  buildCompletedWorkoutSet,
+  getCompletedWorkoutKey
+} from "./utils/workoutCompletion";
 import { buildTrainerNutritionPlanUpdate } from "./utils/trainerNutritionPlan";
 import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
 import {
@@ -230,7 +233,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v664";
+const APP_VERSION = "v665";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5566,26 +5569,7 @@ export default function App() {
     historyItems = [],
     currentAssignmentVersion = plan.assignedProgramUpdatedAt || ""
   ) {
-    const completed = new Set();
-    const assignmentVersion = String(currentAssignmentVersion || "").trim();
-
-    (Array.isArray(historyItems) ? historyItems : []).forEach((item) => {
-      if (assignmentVersion) {
-        if (
-          String(item?.assignedProgramUpdatedAt || "").trim() === assignmentVersion &&
-          item?.workoutId
-        ) {
-          completed.add(`id:${getCompletedWorkoutKey(item.workoutId)}`);
-        }
-        return;
-      }
-
-      const workoutName = item?.workoutName || item?.workout;
-      if (workoutName) completed.add(`name:${getCompletedWorkoutKey(workoutName)}`);
-      if (item?.workoutId) completed.add(`id:${getCompletedWorkoutKey(item.workoutId)}`);
-    });
-
-    return completed;
+    return buildCompletedWorkoutSet(historyItems, currentAssignmentVersion);
   }
 
   function isWorkoutCompletedByHistory(
