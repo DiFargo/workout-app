@@ -68,6 +68,13 @@ import { fetchAuthorized, fetchAuthorizedWithTimeout } from "./utils/apiClient";
 import { showAppConfirm, showAppError } from "./utils/appFeedback";
 import { buildProgressInsight } from "./utils/progressInsight";
 import {
+  addLocalBackup,
+  DATA_SAFETY_MAX_BACKUPS,
+  removeLocalBackup,
+  safeReadJsonStorage,
+  safeWriteJsonStorage
+} from "./utils/storageSafety";
+import {
   buildPlannedWorkoutSlots,
   buildWorkoutScheduleCalendarEntries,
   buildWorkoutScheduleDraft
@@ -125,7 +132,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v636";
+const APP_VERSION = "v637";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -143,7 +150,6 @@ const MEASUREMENTS_FAILED_SYNC_QUEUE_KEY = "workout_measurements_failed_sync_v1"
 const WORKOUT_ASSIGNMENT_STORAGE_KEY = "workout_assignment_version_v1";
 const INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY = "individual_workout_swipe_hint_seen_v1";
 const GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY = "workout_global_my_foods_backup_v1";
-const DATA_SAFETY_MAX_BACKUPS = 25;
 const APP_THEME_STORAGE_KEY = "workout_app_theme_v1";
 const GLOBAL_MY_FOODS_DOC_ID = "shared";
 const FIRST_SETUP_DONE_USER_STORAGE_KEY = "workout_first_setup_done_user_uid";
@@ -154,46 +160,6 @@ const TELEGRAM_PROFILE_STORAGE_KEY = "workout_telegram_profile_v1";
 const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
 const WORKOUT_CALENDAR_STORAGE_KEY = "workout_calendar_v1";
 const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
-
-function safeReadJsonStorage(key, fallback = null) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
-  } catch (_) {
-    return fallback;
-  }
-}
-
-function safeWriteJsonStorage(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (error) {
-    console.error(`Local backup write failed: ${key}`, error);
-    return false;
-  }
-}
-
-function addLocalBackup(key, item, limit = DATA_SAFETY_MAX_BACKUPS) {
-  const current = safeReadJsonStorage(key, []);
-  const next = [
-    {
-      id: item?.id || `${Date.now()}_${Math.random().toString(36).slice(2)}`,
-      savedAt: new Date().toISOString(),
-      ...item
-    },
-    ...(Array.isArray(current) ? current : [])
-  ].slice(0, limit);
-
-  safeWriteJsonStorage(key, next);
-  return next;
-}
-
-function removeLocalBackup(key, backupId) {
-  const current = safeReadJsonStorage(key, []);
-  if (!Array.isArray(current)) return;
-  safeWriteJsonStorage(key, current.filter((item) => item.id !== backupId));
-}
 
 function getUserScopedStorageKey(baseKey, uid = auth.currentUser?.uid) {
   return uid ? `${baseKey}:${uid}` : baseKey;
