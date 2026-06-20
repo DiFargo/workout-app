@@ -235,6 +235,10 @@ import {
   getTrainerNutritionSummary
 } from "./utils/trainerClientSummary";
 import {
+  buildAdminNutritionDaysList,
+  buildAdminNutritionRecommendations
+} from "./utils/trainerNutritionInsights";
+import {
   buildAdminClientNutritionStateFromRoot,
   getTrainerClientMirrorPayload
 } from "./utils/trainerClientMirror";
@@ -315,7 +319,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v697";
+const APP_VERSION = "v698";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5759,53 +5763,22 @@ export default function App() {
   }
 
   function getAdminNutritionDaysList(nutritionState = null) {
-    return Object.entries(nutritionState?.days || {})
-      .map(([date, day]) => {
-        const totals = getNutritionDayTotals(day);
-
-        return {
-          date,
-          foods: day.foods || [],
-          totals,
-          score: buildAiNutritionDayModel({ ...defaultNutritionState, ...(nutritionState || {}) }, day, adminClientHistory).score
-        };
-      })
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+    return buildAdminNutritionDaysList(nutritionState, {
+      history: adminClientHistory,
+      defaultNutritionState,
+      buildDayModel: buildAiNutritionDayModel
+    });
   }
 
   function getAdminRecommendations(client, historyList, nutritionState) {
-    const profile = getAdminClientProfile(client);
     const days = getAdminNutritionDaysList(nutritionState);
-    const today = days[0];
-    const badFeedback = historyList.filter((item) => item.postWorkoutFeedback?.id === "bad").length;
-    const lastWorkoutDate = historyList[0]?.date ? new Date(historyList[0].date) : null;
-    const daysSinceWorkout = lastWorkoutDate ? Math.round((Date.now() - lastWorkoutDate.getTime()) / (24 * 60 * 60 * 1000)) : null;
-    const proteinGoal = Number(nutritionState?.goals?.protein || defaultNutritionState.goals.protein);
-    const proteinToday = Number(today?.totals?.protein || 0);
-
-    const recommendations = [];
-
-    if (badFeedback >= 2) {
-      recommendations.push("Снизить нагрузку на 1 неделю: у клиента несколько плохих feedback.");
-    }
-
-    if (proteinToday > 0 && proteinToday < proteinGoal * 0.7) {
-      recommendations.push("Добавить белок: сегодня заметно меньше цели.");
-    }
-
-    if (daysSinceWorkout !== null && daysSinceWorkout >= 5) {
-      recommendations.push("Клиент давно не тренировался — стоит написать и упростить вход в тренировку.");
-    }
-
-    if (!profile?.goal) {
-      recommendations.push("Обновить анкету/AI-план: не заполнена цель клиента.");
-    }
-
-    if (!recommendations.length) {
-      recommendations.push("Клиент выглядит стабильно: можно продолжать текущий план.");
-    }
-
-    return recommendations;
+    return buildAdminNutritionRecommendations({
+      profile: getAdminClientProfile(client),
+      historyList,
+      nutritionState,
+      days,
+      defaultProteinGoal: defaultNutritionState.goals.protein
+    });
   }
 
   function exportAdminClientCsv() {
