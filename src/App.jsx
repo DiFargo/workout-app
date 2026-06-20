@@ -101,6 +101,12 @@ import {
   getNutritionDayTotals,
   sumNutritionFoods
 } from "./utils/aiNutritionAnalysis";
+import {
+  buildNutritionCalendarDays,
+  buildNutritionCurrentStreak,
+  buildNutritionWeekDates,
+  formatNutritionCalendarMonthLabel
+} from "./utils/nutritionCalendar";
 import { getNutritionPhotoAiConfidenceText } from "./utils/nutritionPhotoAi";
 import {
   buildAiNutritionMonthlyPlan,
@@ -272,7 +278,6 @@ import {
   exerciseUsesExternalWeight,
   findExerciseLibraryMatch,
   findExistingPhotoFood,
-  calculateNutritionFoodStreak,
   getMicrocycleWeekNumbers,
   getWorkoutCompletion,
   getTimestampValue,
@@ -299,7 +304,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v693";
+const APP_VERSION = "v694";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2280,24 +2285,11 @@ export default function App() {
   }, [nutrition.goals, nutritionTotals, nutritionToday.water]);
 
   function getNutritionWeekDates(centerKey = nutritionDateKey) {
-    const centerDate = nutritionKeyToDate(centerKey);
-    const monday = new Date(centerDate);
-    const dayIndex = monday.getDay() === 0 ? 6 : monday.getDay() - 1;
-    monday.setDate(monday.getDate() - dayIndex);
-
-    return Array.from({ length: 7 }).map((_, index) => {
-      const date = new Date(monday);
-      date.setDate(monday.getDate() + index);
-      return {
-        key: dateToNutritionKey(date),
-        label: ["П", "В", "С", "Ч", "П", "С", "В"][index],
-        date
-      };
-    });
+    return buildNutritionWeekDates(centerKey);
   }
 
   function getNutritionCurrentStreak() {
-    return calculateNutritionFoodStreak(nutrition.days || {}, nutritionDateKey || todayNutritionKey());
+    return buildNutritionCurrentStreak(nutrition.days || {}, nutritionDateKey || todayNutritionKey());
   }
 
   function openSelectedNutritionDate() {
@@ -2325,41 +2317,16 @@ export default function App() {
   }
 
   function getNutritionCalendarDays() {
-    const [year, month] = String(nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7)).split("-").map(Number);
-    const firstDay = new Date(year || new Date().getFullYear(), (month || 1) - 1, 1);
-    const start = new Date(firstDay);
-    const mondayOffset = (firstDay.getDay() + 6) % 7;
-    start.setDate(firstDay.getDate() - mondayOffset);
-
-    return Array.from({ length: 42 }).map((_, index) => {
-      const date = new Date(start);
-      date.setDate(start.getDate() + index);
-      const key = dateToNutritionKey(date);
-      const day = nutrition.days?.[key] || makeEmptyNutritionDay();
-      const totals = getNutritionDayTotals(day);
-
-      return {
-        key,
-        date,
-        dayNumber: date.getDate(),
-        isCurrentMonth: date.getMonth() === firstDay.getMonth(),
-        isToday: key === todayNutritionKey(),
-        isSelected: key === nutritionDateKey,
-        hasFood: Boolean(day.foods?.length),
-        foodCount: day.foods?.length || 0,
-        calories: Math.round(totals.calories || 0),
-        protein: Math.round(totals.protein || 0),
-        isOverGoal: totals.calories > (Number(nutrition.goals?.calories) || 0)
-      };
+    return buildNutritionCalendarDays({
+      monthKey: nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7),
+      selectedDateKey: nutritionDateKey,
+      nutrition,
+      todayKey: todayNutritionKey()
     });
   }
 
   function getNutritionCalendarMonthLabel() {
-    const [year, month] = String(nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7)).split("-").map(Number);
-    return new Date(year || new Date().getFullYear(), (month || 1) - 1, 1).toLocaleDateString("ru-RU", {
-      month: "long",
-      year: "numeric"
-    });
+    return formatNutritionCalendarMonthLabel(nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7));
   }
 
   function updateNutritionDay(updater) {
