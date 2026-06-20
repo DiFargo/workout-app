@@ -122,6 +122,11 @@ import {
   mergeNutritionFoodResults,
   searchLocalNutritionFoods
 } from "./utils/localNutritionCatalog";
+import {
+  createEmptyAiNutritionProfileDraft,
+  createEmptyTelegramProfile,
+  hasRequiredAiNutritionProfileFields
+} from "./utils/profileDefaults";
 import { parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
 import {
   getFoodPortionAmount,
@@ -199,7 +204,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v652";
+const APP_VERSION = "v653";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -609,23 +614,6 @@ function buildAiCoachResult(featureId, { history = [], nutrition = defaultNutrit
   return results[featureId] || results.liveCoach;
 }
 
-function hasRequiredAiNutritionProfileFields(profile = {}) {
-  const weight = Number(String(profile?.weight || "").replace(",", "."));
-  const height = Number(String(profile?.height || "").replace(",", "."));
-  const age = Number(String(profile?.age || "").replace(",", "."));
-  const sex = String(profile?.sex || "").trim();
-
-  return (
-    Number.isFinite(weight) &&
-    weight > 0 &&
-    Number.isFinite(height) &&
-    height > 0 &&
-    Number.isFinite(age) &&
-    age > 0 &&
-    (sex === "male" || sex === "female")
-  );
-}
-
 function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, profile = null, history = [], previousPlan = null) {
   const baseline = getAiNutritionHistoryBaseline();
   const goals = nutrition.goals || defaultNutritionState.goals;
@@ -787,31 +775,6 @@ function buildClientNutritionPresetOptions(client = {}, nutritionState = null, h
 const RECENT_NUTRITION_SEARCHES_KEY = "nutrition_recent_foods_v1";
 const AI_NUTRITION_PROFILE_STORAGE_KEY = "ai_nutrition_profile_v1";
 const AI_NUTRITION_PLAN_STORAGE_KEY = "ai_nutrition_plan_v1";
-
-function createEmptyAiNutritionProfileDraft() {
-  return {
-    name: "",
-    weight: "",
-    targetWeight: "",
-    height: "",
-    age: "",
-    sex: "male",
-    activity: "medium",
-    goal: "recomp",
-    trainingDays: []
-  };
-}
-
-function createEmptyTelegramProfile() {
-  return {
-    connected: false,
-    username: "",
-    displayName: "",
-    avatarUrl: "",
-    chatId: "",
-    notificationsEnabled: true
-  };
-}
 
 // HARDER DELETE SWIPE
 const NUTRITION_DELETE_THRESHOLD = -135;
