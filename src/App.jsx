@@ -34,6 +34,7 @@ import {
 } from "./domain/clientInsights";
 import {
   formatCompactTimer,
+  formatWorkoutElapsedDuration,
   AI_COACH_FEATURES,
   getAiHistoryItems,
   getAiWorkoutBaseWeight,
@@ -333,7 +334,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v712";
+const APP_VERSION = "v713";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2068,24 +2069,7 @@ export default function App() {
   }, [workout?.id, workoutVideoCacheKey]);
 
   const workoutDurationText = useMemo(() => {
-    if (!workoutStartedAt) return "—";
-
-    const endTime = workoutFinishedAt || timerTick;
-    const totalSeconds = Math.max(0, Math.floor((endTime - workoutStartedAt) / 1000));
-
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    if (hours > 0) {
-      return `${hours} ч ${minutes} мин`;
-    }
-
-    if (minutes > 0) {
-      return `${minutes} мин ${seconds} сек`;
-    }
-
-    return `${seconds} сек`;
+    return formatWorkoutElapsedDuration(workoutStartedAt, workoutFinishedAt || timerTick);
   }, [workoutStartedAt, workoutFinishedAt, timerTick]);
 
   const workoutMenuItems = WORKOUT_MENU_ITEMS;

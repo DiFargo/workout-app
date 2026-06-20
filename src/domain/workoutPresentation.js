@@ -213,6 +213,19 @@ export function formatCompactTimer(totalSeconds = 0) {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
+export function formatWorkoutElapsedDuration(startedAt = 0, endedAt = 0) {
+  if (!startedAt) return "—";
+
+  const totalSeconds = Math.max(0, Math.floor(((Number(endedAt) || 0) - Number(startedAt)) / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (hours > 0) return `${hours} ч ${minutes} мин`;
+  if (minutes > 0) return `${minutes} мин ${seconds} сек`;
+  return `${seconds} сек`;
+}
+
 export function getDefaultWorkoutModePreference() {
   return {
     mode: "",

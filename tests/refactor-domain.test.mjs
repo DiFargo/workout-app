@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import {
   formatCompactTimer,
+  formatWorkoutElapsedDuration,
   getDefaultWorkoutModePreference,
   getEstimatedWorkoutDuration
 } from "../src/domain/workoutPresentation.js";
@@ -16,6 +17,13 @@ test("compact workout timer handles invalid and long values", () => {
   assert.equal(formatCompactTimer(-10), "0:00");
   assert.equal(formatCompactTimer(65), "1:05");
   assert.equal(formatCompactTimer(3605), "60:05");
+});
+
+test("workout elapsed duration keeps readable russian labels", () => {
+  assert.equal(formatWorkoutElapsedDuration(0, 1000), "—");
+  assert.equal(formatWorkoutElapsedDuration(1000, 11_000), "10 сек");
+  assert.equal(formatWorkoutElapsedDuration(1000, 126_000), "2 мин 5 сек");
+  assert.equal(formatWorkoutElapsedDuration(1000, 3_901_000), "1 ч 5 мин");
 });
 
 test("explicit workout duration remains the preferred estimate", () => {
