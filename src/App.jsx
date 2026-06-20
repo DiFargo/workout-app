@@ -103,6 +103,13 @@ import {
   calculatePersonalAiNutritionCalories,
   getAiNutritionActivityMultiplier
 } from "./utils/aiNutritionCalculations";
+import {
+  getAiNutritionCurrentWeek,
+  getAiNutritionDayMacros,
+  getAiNutritionTrainingDays,
+  getAiNutritionWeekForDate,
+  isAiNutritionTrainingDay
+} from "./utils/aiNutritionSchedule";
 import { parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
 import {
   getFoodPortionAmount,
@@ -180,7 +187,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v647";
+const APP_VERSION = "v648";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -793,66 +800,6 @@ function getAiNutritionWeightTrend(nutrition = defaultNutritionState) {
     status,
     delta,
     text: `Вес ${status}: ${delta > 0 ? "+" : ""}${delta} кг за период записей.`
-  };
-}
-
-function getAiNutritionCurrentWeek(plan) {
-  if (!plan?.createdAt) return 1;
-  const created = new Date(plan.createdAt);
-  if (Number.isNaN(created.getTime())) return 1;
-  const diffDays = Math.max(0, Math.floor((Date.now() - created.getTime()) / (24 * 60 * 60 * 1000)));
-  return Math.min(4, Math.floor(diffDays / 7) + 1);
-}
-
-function getAiNutritionWeekForDate(plan, date = new Date()) {
-  if (!Array.isArray(plan?.weeks) || !plan.weeks.length) return null;
-
-  const created = new Date(plan.createdAt);
-  const target = new Date(date);
-  if (Number.isNaN(created.getTime()) || Number.isNaN(target.getTime())) return plan.weeks[0];
-
-  created.setHours(0, 0, 0, 0);
-  target.setHours(0, 0, 0, 0);
-
-  const diffDays = Math.max(0, Math.floor((target.getTime() - created.getTime()) / (24 * 60 * 60 * 1000)));
-  const weekIndex = Math.min(plan.weeks.length - 1, Math.floor(diffDays / 7));
-  return plan.weeks[weekIndex] || plan.weeks[0];
-}
-
-function getTodayAiNutritionWeekDayId(date = new Date()) {
-  const jsDay = date.getDay();
-  return AI_NUTRITION_WEEK_DAYS[jsDay === 0 ? 6 : jsDay - 1]?.id || "mon";
-}
-
-function getAiNutritionTrainingDays(profile = {}) {
-  return Array.isArray(profile?.trainingDays) ? profile.trainingDays : [];
-}
-
-function isAiNutritionTrainingDay(profile = {}, date = new Date()) {
-  return getAiNutritionTrainingDays(profile).includes(getTodayAiNutritionWeekDayId(date));
-}
-
-function getAiNutritionDayMacros(baseMacros, profile = {}, date = new Date()) {
-  const macros = {
-    calories: Math.round(Number(baseMacros?.calories) || 0),
-    protein: Math.round(Number(baseMacros?.protein) || 0),
-    fat: Math.round(Number(baseMacros?.fat) || 0),
-    carbs: Math.round(Number(baseMacros?.carbs) || 0)
-  };
-
-  if (!isAiNutritionTrainingDay(profile, date)) {
-    return { ...macros, isTrainingDay: false };
-  }
-
-  const goal = profile?.goal || "recomp";
-  const calorieBoost = goal === "mass" ? 180 : goal === "dry" ? 90 : goal === "cut" ? 80 : goal === "maintain" ? 70 : 130;
-  const carbsBoost = goal === "dry" ? 25 : goal === "cut" ? 20 : goal === "maintain" ? 18 : 35;
-
-  return {
-    ...macros,
-    isTrainingDay: true,
-    calories: macros.calories + calorieBoost,
-    carbs: macros.carbs + carbsBoost
   };
 }
 
