@@ -131,11 +131,16 @@ import {
 import { buildProgressInsight } from "./utils/progressInsight";
 import {
   addLocalBackup,
-  DATA_SAFETY_MAX_BACKUPS,
-  removeLocalBackup,
   safeReadJsonStorage,
   safeWriteJsonStorage
 } from "./utils/storageSafety";
+import {
+  addUserLocalBackup,
+  getUserScopedStorageKey,
+  removeUserLocalBackup,
+  safeReadUserJsonStorage,
+  safeWriteUserJsonStorage
+} from "./utils/userScopedStorage";
 import {
   buildPlannedWorkoutSlots,
   buildWorkoutScheduleCalendarEntries,
@@ -198,7 +203,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v656";
+const APP_VERSION = "v657";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -226,26 +231,6 @@ const TELEGRAM_PROFILE_STORAGE_KEY = "workout_telegram_profile_v1";
 const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
 const WORKOUT_CALENDAR_STORAGE_KEY = "workout_calendar_v1";
 const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
-
-function getUserScopedStorageKey(baseKey, uid = auth.currentUser?.uid) {
-  return uid ? `${baseKey}:${uid}` : baseKey;
-}
-
-function safeReadUserJsonStorage(baseKey, uid, fallback = null) {
-  return safeReadJsonStorage(getUserScopedStorageKey(baseKey, uid), fallback);
-}
-
-function safeWriteUserJsonStorage(baseKey, uid, value) {
-  return safeWriteJsonStorage(getUserScopedStorageKey(baseKey, uid), value);
-}
-
-function addUserLocalBackup(baseKey, uid, item, limit = DATA_SAFETY_MAX_BACKUPS) {
-  return addLocalBackup(getUserScopedStorageKey(baseKey, uid), item, limit);
-}
-
-function removeUserLocalBackup(baseKey, uid, backupId) {
-  return removeLocalBackup(getUserScopedStorageKey(baseKey, uid), backupId);
-}
 
 function getFailedMeasurementQueue(uid = auth.currentUser?.uid) {
   const queue = safeReadUserJsonStorage(MEASUREMENTS_FAILED_SYNC_QUEUE_KEY, uid, []);
