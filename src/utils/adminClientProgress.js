@@ -47,3 +47,12 @@ export function getAdminWeightPoints(client = {}) {
 
   return currentWeight > 0 ? [{ date: "сейчас", weight: currentWeight }] : [];
 }
+
+export function getAdminClientChartScales(nutritionDays = [], weightPoints = []) {
+  const recentNutritionDays = (Array.isArray(nutritionDays) ? nutritionDays : []).slice(0, 7);
+  return {
+    maxCalories: Math.max(1, ...recentNutritionDays.map((day) => Number(day?.totals?.calories) || 0)),
+    maxProtein: Math.max(1, ...recentNutritionDays.map((day) => Number(day?.totals?.protein) || 0)),
+    maxWeight: Math.max(1, ...(Array.isArray(weightPoints) ? weightPoints : []).map((point) => Number(point?.weight) || 0))
+  };
+}

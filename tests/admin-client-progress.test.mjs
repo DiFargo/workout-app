@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  getAdminClientChartScales,
   getAdminWeightPoints,
   getAdminWorkoutProgressList
 } from "../src/utils/adminClientProgress.js";
@@ -44,4 +45,25 @@ test("admin weight points prefer valid history and fall back to current profile 
   assert.deepEqual(getAdminWeightPoints({ profile: { weight: 88 } }), [
     { date: "сейчас", weight: 88 }
   ]);
+});
+
+test("admin chart scales use recent nutrition and weight points", () => {
+  const scales = getAdminClientChartScales([
+    { totals: { calories: 1200, protein: 90 } },
+    { totals: { calories: 1800, protein: 110 } }
+  ], [
+    { weight: 88.5 },
+    { weight: 90 }
+  ]);
+
+  assert.deepEqual(scales, {
+    maxCalories: 1800,
+    maxProtein: 110,
+    maxWeight: 90
+  });
+  assert.deepEqual(getAdminClientChartScales([], []), {
+    maxCalories: 1,
+    maxProtein: 1,
+    maxWeight: 1
+  });
 });

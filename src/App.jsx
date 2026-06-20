@@ -270,6 +270,7 @@ import { normalizeTrainerMonthProgram } from "./utils/trainerMonthProgramNormali
 import { getTrainerProgramTemplateStats } from "./utils/trainerProgramStats";
 import {
   getAdminWeightPoints,
+  getAdminClientChartScales,
   getAdminWorkoutProgressList
 } from "./utils/adminClientProgress";
 import {
@@ -345,7 +346,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v720";
+const APP_VERSION = "v721";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -14908,9 +14909,7 @@ async function loadUsers() {
     );
     const aiPlan = getClientNutritionDisplayPlan(selectedClient || {}, adminClientNutrition, selectedNutritionFallbackGoals);
     const aiWeek = getAiNutritionWeekForDate(aiPlan) || aiPlan?.weeks?.[0] || null;
-    const maxCalories = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.calories));
-    const maxProtein = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.protein));
-    const maxWeight = Math.max(1, ...weightPoints.map((point) => point.weight));
+    const { maxCalories, maxProtein, maxWeight } = getAdminClientChartScales(clientNutritionDays, weightPoints);
     const averageAiScore = clientNutritionDays.length
       ? Math.round(clientNutritionDays.slice(0, 7).reduce((sum, day) => sum + (Number(day.score) || 0), 0) / Math.min(7, clientNutritionDays.length) * 10) / 10
       : "—";
@@ -15799,8 +15798,7 @@ async function loadUsers() {
     const aiPlan = getClientNutritionDisplayPlan(selectedClient || {}, adminClientNutrition, selectedNutritionFallbackGoals);
     const aiWeek = getAiNutritionWeekForDate(aiPlan) || aiPlan?.weeks?.[0] || null;
     const lastWorkout = adminClientHistory[0];
-    const maxCalories = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.calories));
-    const maxProtein = Math.max(1, ...clientNutritionDays.slice(0, 7).map((day) => day.totals.protein));
+    const { maxCalories, maxProtein } = getAdminClientChartScales(clientNutritionDays, weightPoints);
 
     const nutritionMonthBaseDate = clientNutritionDays[0]?.date ? new Date(`${clientNutritionDays[0].date}T12:00:00`) : new Date();
     const nutritionMonthStart = new Date(nutritionMonthBaseDate.getFullYear(), nutritionMonthBaseDate.getMonth(), 1);
