@@ -117,6 +117,7 @@ import {
   mergeNutritionFoodResults,
   searchLocalNutritionFoods
 } from "./utils/localNutritionCatalog";
+import { mergeNutritionStates } from "./utils/nutritionStateMerge";
 import {
   createEmptyAiNutritionProfileDraft,
   createEmptyTelegramProfile,
@@ -177,7 +178,6 @@ import {
   isReliablePhotoFood,
   isWorkoutSetCompleted,
   limitSimilarNutritionFoods,
-  mergeNutritionDays,
   rankAndDedupeNutritionFoods
 } from "./utils/auditSafety";
 
@@ -199,7 +199,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot, runTransaction } from "firebase/firestore";
 
-const APP_VERSION = "v654";
+const APP_VERSION = "v655";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -361,77 +361,6 @@ function clearStaleWorkoutCaches(uid, assignedProgramUpdatedAt) {
   }
 
   safeWriteUserJsonStorage(WORKOUT_ASSIGNMENT_STORAGE_KEY, uid, assignedProgramUpdatedAt);
-}
-
-function getNutritionUpdatedAt(state = {}) {
-  return getTimestampValue(state?.updatedAt);
-}
-
-function pickNutritionGoalNumbers(source = {}) {
-  return ["calories", "protein", "fat", "carbs", "water"].reduce((result, key) => {
-    const value = Number(source?.[key]);
-    if (Number.isFinite(value) && value >= 0) {
-      result[key] = value;
-    }
-    return result;
-  }, {});
-}
-
-function mergeNutritionStates(localState = {}, cloudState = {}, personalMyFoods = {}) {
-  const localIsNewer =
-    getNutritionUpdatedAt(localState) > getNutritionUpdatedAt(cloudState);
-  const primaryState = localIsNewer ? localState : cloudState;
-  const secondaryState = localIsNewer ? cloudState : localState;
-  const localPlanUpdatedAt = getNutritionUpdatedAt(localState?.nutritionPlan || {});
-  const cloudPlanUpdatedAt = getNutritionUpdatedAt(cloudState?.nutritionPlan || {});
-  const planPrimaryState =
-    cloudPlanUpdatedAt > localPlanUpdatedAt
-      ? cloudState
-      : localPlanUpdatedAt > cloudPlanUpdatedAt
-        ? localState
-        : primaryState;
-  const planSecondaryState = planPrimaryState === cloudState ? localState : cloudState;
-  const preferredNutritionPlan =
-    planPrimaryState?.nutritionPlan ||
-    planSecondaryState?.nutritionPlan ||
-    null;
-  const mergedDays = mergeNutritionDays(
-    localState.days || {},
-    cloudState.days || {},
-    localState.updatedAt,
-    cloudState.updatedAt
-  );
-
-  return {
-    ...defaultNutritionState,
-    ...secondaryState,
-    ...primaryState,
-    goals: {
-      ...defaultNutritionState.goals,
-      ...(secondaryState.goals || {}),
-      ...(primaryState.goals || {}),
-      ...pickNutritionGoalNumbers(preferredNutritionPlan)
-    },
-    nutritionPlan: preferredNutritionPlan,
-    days: mergedDays,
-    favorites: [
-      ...new Set([
-        ...(primaryState.favorites || defaultNutritionState.favorites),
-        ...(secondaryState.favorites || [])
-      ])
-    ],
-    recent: [
-      ...new Set([
-        ...(primaryState.recent || []),
-        ...(secondaryState.recent || [])
-      ])
-    ].slice(0, 80),
-    myFoods: {
-      ...(secondaryState.myFoods || {}),
-      ...(primaryState.myFoods || {}),
-      ...(personalMyFoods || {})
-    }
-  };
 }
 
 async function saveNutritionStateWithMerge(uid, localNutritionState = {}) {
