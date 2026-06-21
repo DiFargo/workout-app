@@ -40,11 +40,9 @@ import {
   getExerciseTechniqueHint,
   getProgramHistoryItems,
   getWorkoutReadinessOption,
-  getWorkoutCover,
   getWorkoutPresentation,
   getWorkoutWarmupSteps,
-  POST_WORKOUT_FEEDBACK_OPTIONS,
-  WORKOUT_MENU_ITEMS
+  POST_WORKOUT_FEEDBACK_OPTIONS
 } from "./domain/workoutPresentation";
 import {
   formatNutritionDateLabel,
@@ -189,7 +187,6 @@ import {
 } from "./utils/workoutDraftStorage";
 import {
   buildCompletedWorkoutSet,
-  getNextUncompletedWorkoutIndex as getNextUncompletedWorkoutIndexFromSet,
   getWorkoutAssignmentVersion,
   isWorkoutCompletedWithSet
 } from "./utils/workoutCompletion";
@@ -310,10 +307,7 @@ import {
 } from "./components/workout/WorkoutDialogs";
 import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
-import {
-  IndividualWorkoutHistoryDialog,
-  WorkoutModePickerDialog
-} from "./features/client/workouts/WorkoutListDialogs";
+import WorkoutListPage from "./features/client/workouts/WorkoutListPage";
 import { AppSplash, LoginPage } from "./components/auth/AuthScreens";
 import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
 import TrainerE2EHarness from "./components/trainer/TrainerE2EHarness";
@@ -375,7 +369,6 @@ const {
   FIRST_SETUP_DONE_USER_STORAGE_KEY,
   FIRST_SETUP_REQUIRED_VERSION,
   GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY,
-  INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY,
   INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS,
   MEASUREMENTS_STORAGE_KEY,
   NUTRITION_BACKUP_STORAGE_KEY,
@@ -504,11 +497,6 @@ export default function App() {
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [individualWorkoutIndex, setIndividualWorkoutIndex] = useState(0);
   const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(false);
-  const [individualWorkoutSwipeHintVisible, setIndividualWorkoutSwipeHintVisible] = useState(
-    () => safeReadJsonStorage(INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY, true) !== false
-  );
-  const individualWorkoutSwipeStartRef = useRef(null);
-  const individualWorkoutSwipeSuppressClickRef = useRef(false);
   const [openVideoId, setOpenVideoId] = useState(null);
   const [fullscreenVideo, setFullscreenVideo] = useState(null);
   const [inlinePlayingVideoId, setInlinePlayingVideoId] = useState("");
@@ -1786,8 +1774,6 @@ export default function App() {
         console.warn("Workout video prefetch unavailable:", error);
       });
   }, [workout?.id, workoutVideoCacheKey]);
-
-  const workoutMenuItems = WORKOUT_MENU_ITEMS;
 
   useEffect(() => {
     if (!workout) return;
@@ -4382,14 +4368,6 @@ export default function App() {
   ) {
     return isWorkoutCompletedWithSet(
       workoutItem,
-      completedSet,
-      getWorkoutAssignmentVersion(plan)
-    );
-  }
-
-  function getNextUncompletedWorkoutIndex(workouts = [], completedSet = getCompletedWorkoutSet(history)) {
-    return getNextUncompletedWorkoutIndexFromSet(
-      workouts,
       completedSet,
       getWorkoutAssignmentVersion(plan)
     );
@@ -18242,436 +18220,52 @@ async function loadUsers() {
   }
 
   if (page === APP_PAGES.WORKOUTS && !selectedWorkoutId) {
-    const sortedWorkouts = sortWorkoutDays(plan.workouts || []);
-    const completedWorkoutSet = getCompletedWorkoutSet(history);
-    const isIndividualWorkoutMode = workoutModePreference.mode === "individual";
-    const nextUncompletedWorkoutIndex = isIndividualWorkoutMode
-      ? getNextUncompletedWorkoutIndex(sortedWorkouts, completedWorkoutSet)
-      : 0;
-    const activeWorkoutIndex = isIndividualWorkoutMode
-      ? Math.min(
-          Math.max(
-            individualWorkoutIndexInitialized
-              ? (Number.isFinite(Number(individualWorkoutIndex)) ? Number(individualWorkoutIndex) : nextUncompletedWorkoutIndex)
-              : nextUncompletedWorkoutIndex,
-            0
-          ),
-          Math.max(sortedWorkouts.length - 1, 0)
-        )
-      : 0;
-    const activeIndividualWorkout = sortedWorkouts[activeWorkoutIndex];
-    const completedWorkoutCount = sortedWorkouts.filter((workoutItem) => (
-      isWorkoutCompletedByHistory(workoutItem, completedWorkoutSet)
-    )).length;
-    const activeIndividualWorkoutCompleted = isWorkoutCompletedByHistory(
-      activeIndividualWorkout,
-      completedWorkoutSet
-    );
-    const currentWorkoutUserId = (auth.currentUser || user)?.uid || "";
-    const activeWorkoutDraft = currentWorkoutUserId && activeIndividualWorkout?.id
-      ? safeReadJsonStorage(getWorkoutDraftKey(currentWorkoutUserId, activeIndividualWorkout.id), null)
-      : null;
-    const activeDraftAssignmentVersion =
-      activeWorkoutDraft?.assignmentVersion ||
-      activeWorkoutDraft?.assignedProgramUpdatedAt ||
-      activeWorkoutDraft?.plan?.assignedProgramUpdatedAt ||
-      "";
-    const hasActiveWorkoutDraft = Boolean(
-      activeWorkoutDraft?.workoutId === activeIndividualWorkout?.id &&
-      (
-        !plan.assignedProgramUpdatedAt ||
-        activeDraftAssignmentVersion === plan.assignedProgramUpdatedAt
-      )
-    );
-    const individualWorkoutProgramScope = {
-      assignedProgramId: plan.assignedProgramId || activeIndividualWorkout?.assignedProgramId || "",
-      assignedProgramName: plan.assignedProgramName || activeIndividualWorkout?.assignedProgramName || "История программы",
-      assignedProgramUpdatedAt: plan.assignedProgramUpdatedAt || activeIndividualWorkout?.assignedProgramUpdatedAt || "",
-      workoutIds: sortedWorkouts.map((workoutItem) => workoutItem.id)
-    };
-    const individualWorkoutHistoryItems = getProgramHistoryItems(history, individualWorkoutProgramScope).slice(0, 12);
-    const activeWorkoutActionLabel = hasActiveWorkoutDraft
-      ? "Продолжить тренировку"
-      : activeIndividualWorkoutCompleted
-        ? "Повторить тренировку"
-        : "Начать тренировку";
-    const activeWorkoutPendingSync = history.some((item) => (
-      item?.pendingSync &&
-      item?.workoutId === activeIndividualWorkout?.id &&
-      (
-        !plan.assignedProgramUpdatedAt ||
-        item?.assignedProgramUpdatedAt === plan.assignedProgramUpdatedAt
-      )
-    ));
-
-    function openWorkoutByIndex(index) {
-      const nextWorkout = sortedWorkouts[index];
-
-      if (nextWorkout) {
-        openWorkout(nextWorkout.id);
-      }
-    }
-
-    function moveIndividualWorkout(direction) {
-      if (!sortedWorkouts.length) return;
-
-      const currentIndex = Math.max(0, activeWorkoutIndex);
-      const nextIndex =
-        direction === "previous"
-          ? (currentIndex - 1 + sortedWorkouts.length) % sortedWorkouts.length
-          : (currentIndex + 1) % sortedWorkouts.length;
-
-      setIndividualWorkoutIndex(nextIndex);
-      setIndividualWorkoutIndexInitialized(true);
-    }
-
-    function dismissIndividualWorkoutSwipeHint() {
-      if (!individualWorkoutSwipeHintVisible) return;
-      setIndividualWorkoutSwipeHintVisible(false);
-      safeWriteJsonStorage(INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY, false);
-    }
-
-    function handleIndividualWorkoutSwipeStart(event) {
-      if (event.pointerType === "mouse" || sortedWorkouts.length < 2) return;
-
-      individualWorkoutSwipeStartRef.current = {
-        x: event.clientX,
-        y: event.clientY
-      };
-    }
-
-    function handleIndividualWorkoutSwipeEnd(event) {
-      const start = individualWorkoutSwipeStartRef.current;
-      individualWorkoutSwipeStartRef.current = null;
-      if (!start) return;
-
-      const deltaX = event.clientX - start.x;
-      const deltaY = event.clientY - start.y;
-      if (Math.abs(deltaX) < 44 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return;
-
-      individualWorkoutSwipeSuppressClickRef.current = true;
-      dismissIndividualWorkoutSwipeHint();
-      moveIndividualWorkout(deltaX < 0 ? "next" : "previous");
-      window.setTimeout(() => {
-        individualWorkoutSwipeSuppressClickRef.current = false;
-      }, 180);
-    }
-
     return (
-      <div className={isIndividualWorkoutMode ? "workoutSelectPage individualWorkoutSelectPage clientCorePage clientCorePageWorkout" : "workoutSelectPage basicWorkoutSelectPage clientCorePage clientCorePageWorkout"}>
-        <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
-        <div className="workoutSelectHero">
-          <h1 className="workoutSelectTitle clientCorePageTitle">
-            <span>{isIndividualWorkoutMode ? "Индивидуальный" : "Базовые"}</span>
-            <strong>{isIndividualWorkoutMode ? "план" : "тренировки"}</strong>
-          </h1>
-
-          <div className="workoutHeaderActions">
-            {isIndividualWorkoutMode && (
-              <button
-                type="button"
-                className="workoutHistoryHeaderButton"
-                aria-label="Открыть историю тренировок"
-                onClick={() => {
-                  loadHistory();
-                  setWorkoutHistoryModalOpen(true);
-                }}
-              >
-                🕘
-              </button>
-            )}
-            <button
-              type="button"
-              className="workoutModeHeaderButton"
-              aria-label="Выбрать режим запуска тренировки"
-              onClick={() => setWorkoutModeModalOpen(true)}
-            >
-              📎
-            </button>
-          </div>
-
-          <p>
-            {isIndividualWorkoutMode
-              ? "Листай тренировки и выбирай нужную"
-              : "Выбери тренировку из подобранного плана"}
-          </p>
-          <div className="workoutSelectLine" />
-        </div>
-
-        <div className={isIndividualWorkoutMode ? "workoutSelectList individualWorkoutDeck" : "workoutSelectList"}>
-          {sortedWorkouts.length === 0 ? (
-            <div className="workoutProgramEmptyState">
-              <div className="workoutProgramEmptyIcon">⏳</div>
-              <h2>Тренировка ещё не назначена</h2>
-              <p>Тренер пока не назначил тебе программу. Как только тренировка появится в твоём профиле, она отобразится здесь.</p>
-              <button onClick={goBackToMain}>Вернуться в меню</button>
-            </div>
-          ) : isIndividualWorkoutMode && activeIndividualWorkout ? (
-            (() => {
-              const w = activeIndividualWorkout;
-              const index = activeWorkoutIndex;
-              const completed = activeIndividualWorkoutCompleted;
-              const activeNext = index === nextUncompletedWorkoutIndex;
-              const item = getWorkoutPresentation(w, index);
-              const fallbackImage =
-                item.image ||
-                workoutMenuItems[index % workoutMenuItems.length]?.image ||
-                workoutMenuItems[0]?.image ||
-                "";
-              const coverImage = getWorkoutCover(w);
-              const adjacentCoverImages = [...new Set(
-                [-1, 1]
-                  .map((offset) => sortedWorkouts[
-                    (index + offset + sortedWorkouts.length) % sortedWorkouts.length
-                  ])
-                  .map(getWorkoutCover)
-                  .filter((image) => image && image !== coverImage)
-              )];
-
-              return (
-                <>
-                <article
-                  className={`workoutSelectCard individualWorkoutCardPro ${completed ? "completed" : ""} ${activeNext ? "activeNext" : ""}`}
-                  key={w.id}
-                  data-workout-card-id={w.id}
-                  onPointerDown={handleIndividualWorkoutSwipeStart}
-                  onPointerUp={handleIndividualWorkoutSwipeEnd}
-                  onPointerCancel={() => {
-                    individualWorkoutSwipeStartRef.current = null;
-                  }}
-                >
-                  <span className="individualWorkoutProTop">
-                    <span className="individualWorkoutBadges">
-                      {completed ? (
-                        <span className="individualWorkoutCompletedBadge">✓ Выполнена</span>
-                      ) : hasActiveWorkoutDraft ? (
-                        <span className="individualWorkoutProgressBadge">В процессе</span>
-                      ) : activeNext ? (
-                        <span className="individualWorkoutNextBadge">Следующая</span>
-                      ) : null}
-                      {activeWorkoutPendingSync && (
-                        <span className="individualWorkoutSyncBadge">Ожидает синхронизации</span>
-                      )}
-                    </span>
-                    <span className="individualWorkoutWeek">{item.day}</span>
-                  </span>
-
-                  <span className="individualWorkoutProBody">
-                    <span className="individualWorkoutProInfo">
-                      <span className="individualWorkoutTitle">{item.title}</span>
-                      <span className="individualWorkoutAccentLine" />
-
-                      <span className="individualWorkoutStats">
-                        <span><b>🏋️</b>{item.exerciseCount} упражнений</span>
-                        <span><b>▰</b>{item.setCount} подходов</span>
-                        <span><b>⏱</b>{item.duration}</span>
-                      </span>
-                    </span>
-
-                    <span className="individualWorkoutProImage">
-                      {coverImage || fallbackImage ? (
-                        <img
-                          src={coverImage || fallbackImage}
-                          alt=""
-                          width="512"
-                          height="910"
-                          loading="eager"
-                          decoding="async"
-                          fetchPriority="high"
-                          onError={(event) => {
-                            if (!fallbackImage || event.currentTarget.dataset.fallbackApplied === "true") return;
-                            event.currentTarget.dataset.fallbackApplied = "true";
-                            event.currentTarget.src = fallbackImage;
-                          }}
-                        />
-                      ) : (
-                        <span className="individualWorkoutImageFallback">
-                          <b>{item.title}</b>
-                          <small>{w.exercises?.[0]?.name || "Персональная тренировка"}</small>
-                        </span>
-                      )}
-                    </span>
-                  </span>
-
-                  <button
-                    type="button"
-                    className="individualWorkoutCardStartButton"
-                    onClick={(event) => {
-                      if (individualWorkoutSwipeSuppressClickRef.current) {
-                        event.preventDefault();
-                        return;
-                      }
-                      openWorkoutByIndex(index);
-                    }}
-                  >
-                    {activeWorkoutActionLabel}
-                  </button>
-
-                </article>
-                {adjacentCoverImages.map((image) => (
-                  <img
-                    className="individualWorkoutCoverPreload"
-                    src={image}
-                    alt=""
-                    width="1"
-                    height="1"
-                    loading="eager"
-                    decoding="async"
-                    aria-hidden="true"
-                    key={image}
-                  />
-                ))}
-                </>
-              );
-            })()
-          ) : (
-            sortedWorkouts.map((w, index) => {
-              const weekNumber =
-                String(w.name || "").match(/неделя\s*(\d+)/i)?.[1] ||
-                String(w.weekName || "").match(/неделя\s*(\d+)/i)?.[1] ||
-                String(w.id || "").match(/week[_-]?(\d+)/i)?.[1];
-
-              const workoutDayNumber =
-                String(w.name || "").match(/день\s*(\d+)/i)?.[1] ||
-                String(w.id || "").match(/day[_-]?(\d+)/i)?.[1] ||
-                index + 1;
-
-              const fallbackItem = workoutMenuItems[index % workoutMenuItems.length] || workoutMenuItems[0];
-
-              const item = {
-                day: weekNumber ? `Неделя ${weekNumber} · День ${workoutDayNumber}` : `День ${workoutDayNumber}`,
-                title: String(w.name || `День ${workoutDayNumber}`)
-                  .replace(/^Неделя\s*\d+\s*[—-]\s*/i, "")
-                  .replace(/^День\s*\d+\s*[—-]\s*/i, ""),
-                image: fallbackItem?.image || workoutMenuItems[0].image
-              };
-
-              return (
-                <button
-                  className="workoutSelectCard"
-                  key={w.id}
-                  onClick={() => openWorkout(w.id)}
-                >
-                  <span className="workoutSelectImageWrap">
-                    <img src={item.image} alt="" className="workoutSelectImage" />
-                  </span>
-
-                  <span className="workoutSelectText">
-                    <span className="workoutSelectDay">{item.day}</span>
-                    <span className="workoutSelectName">{item.title}</span>
-                  </span>
-
-                  <span className="workoutSelectArrow">›</span>
-                </button>
-              );
-            })
-          )}
-        </div>
-
-        {isIndividualWorkoutMode && sortedWorkouts.length > 1 && (
-          <div className="individualWorkoutNav">
-            <button
-              type="button"
-              aria-label="Предыдущая тренировка"
-              onClick={() => {
-                dismissIndividualWorkoutSwipeHint();
-                moveIndividualWorkout("previous");
-              }}
-            >
-              ←
-            </button>
-
-            <div className="individualWorkoutCenterNav">
-              {individualWorkoutSwipeHintVisible && (
-                <small className="individualWorkoutSwipeHint">
-                  Свайпни, чтобы выбрать тренировку
-                </small>
-              )}
-              <span className="individualWorkoutSwipeAffordance" aria-hidden="true">
-                ‹&nbsp;&nbsp;&nbsp;›
-              </span>
-            </div>
-
-            <button
-              type="button"
-              aria-label="Следующая тренировка"
-              onClick={() => {
-                dismissIndividualWorkoutSwipeHint();
-                moveIndividualWorkout("next");
-              }}
-            >
-              →
-            </button>
-          </div>
-        )}
-
-        <div className="individualWorkoutBottomPanel">
-          {isIndividualWorkoutMode && sortedWorkouts.length > 0 && (
-            <div className="individualWorkoutBottomProgress">
-              <span>{activeWorkoutIndex + 1} из {sortedWorkouts.length}</span>
-              <span>Выполнено {completedWorkoutCount} из {sortedWorkouts.length}</span>
-            </div>
-          )}
-          <ClientMainBottomBar
-            activeTab="workouts"
-            className="individualWorkoutMenuBar"
-            isTrainerMode={canUseTrainerFeatures()}
-            onGoMain={goBackToMain}
-            onOpenTraining={openTrainingEntry}
-            onOpenNutrition={() => setPage(APP_PAGES.NUTRITION)}
-            onOpenCabinet={() => {
-              loadHistory();
-              setProfileActiveTab("cabinet");
-              setPage(APP_PAGES.PROFILE);
-            }}
-            onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
-            onOpenTrainerPrograms={openAdminProgramsOverview}
-            onLoadTrainerCabinet={() => {
-              loadHistory();
-              setProfileActiveTab("cabinet");
-              setPage(APP_PAGES.PROFILE);
-            }}
-          />
-        </div>
-
-        <WorkoutModePickerDialog
-          open={workoutModeModalOpen}
-          workoutModePreference={workoutModePreference}
-          onClose={() => setWorkoutModeModalOpen(false)}
-          onOpenBasic={() => {
-            setWorkoutModeModalOpen(false);
-            saveWorkoutModePreference("basic", true);
-            setSelectedWorkoutId(null);
-            setPage(APP_PAGES.BASIC_WORKOUT_QUIZ);
-          }}
-          onOpenIndividual={() => {
-            setWorkoutModeModalOpen(false);
-            openIndividualWorkouts();
-          }}
-        />
-
-        <IndividualWorkoutHistoryDialog
-          open={Boolean(isIndividualWorkoutMode && workoutHistoryModalOpen)}
-          historyLoading={historyLoading}
-          historyItems={individualWorkoutHistoryItems}
-          onClose={() => setWorkoutHistoryModalOpen(false)}
-          onOpenAll={() => openCabinetWorkoutHistory(null, individualWorkoutProgramScope)}
-        />
-        <WorkoutDraftRestoreDialog
-          open={Boolean(workoutDraftRestorePrompt)}
-          blocked={Boolean(
-            workoutReadinessOpen ||
-            postWorkoutFeedbackOpen ||
-            fullscreenVideo ||
-            showFirstSetupOnboarding
-          )}
-          onRestart={() => handleWorkoutDraftChoice(false)}
-          onRestore={() => handleWorkoutDraftChoice(true)}
-        />
-      </div>
+      <WorkoutListPage
+        appVersion={APP_VERSION}
+        plan={plan}
+        history={history}
+        currentUserId={(auth.currentUser || user)?.uid || ""}
+        workoutModePreference={workoutModePreference}
+        individualWorkoutIndex={individualWorkoutIndex}
+        individualWorkoutIndexInitialized={individualWorkoutIndexInitialized}
+        setIndividualWorkoutIndex={setIndividualWorkoutIndex}
+        setIndividualWorkoutIndexInitialized={setIndividualWorkoutIndexInitialized}
+        workoutModeModalOpen={workoutModeModalOpen}
+        setWorkoutModeModalOpen={setWorkoutModeModalOpen}
+        workoutHistoryModalOpen={workoutHistoryModalOpen}
+        setWorkoutHistoryModalOpen={setWorkoutHistoryModalOpen}
+        workoutDraftRestorePrompt={workoutDraftRestorePrompt}
+        workoutReadinessOpen={workoutReadinessOpen}
+        postWorkoutFeedbackOpen={postWorkoutFeedbackOpen}
+        fullscreenVideo={fullscreenVideo}
+        showFirstSetupOnboarding={showFirstSetupOnboarding}
+        historyLoading={historyLoading}
+        isTrainerMode={canUseTrainerFeatures()}
+        onGoMain={goBackToMain}
+        onOpenTraining={openTrainingEntry}
+        onOpenNutrition={() => setPage(APP_PAGES.NUTRITION)}
+        onOpenCabinet={() => {
+          loadHistory();
+          setProfileActiveTab("cabinet");
+          setPage(APP_PAGES.PROFILE);
+        }}
+        onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
+        onOpenTrainerPrograms={openAdminProgramsOverview}
+        loadHistory={loadHistory}
+        openWorkout={openWorkout}
+        onOpenBasicMode={() => {
+          setWorkoutModeModalOpen(false);
+          saveWorkoutModePreference("basic", true);
+          setSelectedWorkoutId(null);
+          setPage(APP_PAGES.BASIC_WORKOUT_QUIZ);
+        }}
+        onOpenIndividualWorkouts={openIndividualWorkouts}
+        openCabinetWorkoutHistory={openCabinetWorkoutHistory}
+        handleWorkoutDraftChoice={handleWorkoutDraftChoice}
+      />
     );
   }
-
   if (!workout) {
     return (
       <div className="app">
