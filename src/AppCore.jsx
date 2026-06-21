@@ -313,6 +313,7 @@ import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDelete
 import WorkoutExerciseVideoFrame from "./features/client/workouts/WorkoutExerciseVideoFrame";
 import WorkoutFinishStage from "./features/client/workouts/WorkoutFinishStage";
 import WorkoutListPage from "./features/client/workouts/WorkoutListPage";
+import WorkoutRestTimer from "./features/client/workouts/WorkoutRestTimer";
 import {
   WorkoutFullscreenVideoOverlay,
   WorkoutNotFoundPage,
@@ -18642,36 +18643,16 @@ async function loadUsers() {
                 />
 
                 {exercise.id !== "warmup" && restTimerSeconds > 0 && (
-                  <div className="workoutRestTimer">
-                    <div>
-                      <span>Отдых между подходами</span>
-                      <strong>{formatCompactTimer(restTimerSeconds)}</strong>
-                    </div>
-                    <div>
-                      {[60, 90, 120].map((seconds) => (
-                        <button
-                          type="button"
-                          className={restTimerDuration === seconds ? "active" : ""}
-                          key={seconds}
-                          onClick={() => startRestTimer(seconds)}
-                        >
-                          {seconds}
-                        </button>
-                      ))}
-                      <button type="button" onClick={() => setRestTimerSeconds((current) => current + 30)}>
-                        +30
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRestTimerRunning(false);
-                          setRestTimerSeconds(0);
-                        }}
-                      >
-                        Пропустить
-                      </button>
-                    </div>
-                  </div>
+                  <WorkoutRestTimer
+                    activeDuration={restTimerDuration}
+                    onAddTime={() => setRestTimerSeconds((current) => current + 30)}
+                    onSkip={() => {
+                      setRestTimerRunning(false);
+                      setRestTimerSeconds(0);
+                    }}
+                    onStart={startRestTimer}
+                    timerText={formatCompactTimer(restTimerSeconds)}
+                  />
                 )}
               </div>
 
