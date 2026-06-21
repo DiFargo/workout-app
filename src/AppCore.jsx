@@ -59,6 +59,7 @@ import {
   shiftNutritionDateKey,
   todayNutritionKey
 } from "./domain/nutritionPresentation";
+import { buildNutritionOrbitItems } from "./domain/nutritionOrbitItems";
 import { compressProgressPhoto } from "./utils/imageCompression";
 import { fetchAuthorized, fetchAuthorizedWithTimeout } from "./utils/apiClient";
 import { showAppConfirm, showAppError } from "./utils/appFeedback";
@@ -9094,51 +9095,17 @@ async function loadUsers() {
       proteinPercent,
       caloriePercent
     });
-    const nutritionOrbitItems = [
-      {
-        id: "calories",
-        label: "КАЛОРИИ",
-        amount: String(caloriesConsumed),
-        target: `из ${effectiveNutritionGoals.calories} ккал`,
-        progress: Math.min(100, Math.max(0, caloriePercent)),
-        color: "#22c55e",
-        startAngle: 324.3,
-        arcDegrees: 74.6
-      },
-      {
-        id: "protein",
-        label: "БЕЛКИ",
-        amount: `${roundMacro(nutritionTotals.protein)} г`,
-        target: `из ${effectiveNutritionGoals.protein} г`,
-        progress: Math.min(100, Math.max(0, proteinPercent)),
-        color: "#EA5D61",
-        startAngle: 63.2,
-        arcDegrees: 56
-      },
-      {
-        id: "carbs",
-        label: "УГЛЕВОДЫ",
-        amount: `${roundMacro(nutritionTotals.carbs)} г`,
-        target: `из ${effectiveNutritionGoals.carbs} г`,
-        progress: Math.min(100, Math.max(0, carbsPercent)),
-        color: "#1f7df2",
-        startAngle: 240.7,
-        arcDegrees: 56.5
-      },
-      {
-        id: "fat",
-        label: "ЖИРЫ",
-        amount: `${roundMacro(nutritionTotals.fat)} г`,
-        target: `из ${effectiveNutritionGoals.fat} г`,
-        progress: Math.min(100, Math.max(0, fatPercent)),
-        color: "#ffae27",
-        startAngle: 141.6,
-        arcDegrees: 74.7
-      }
-    ].map((item) => ({
-      ...item,
-      segment: getNutritionOrbitSegment(item.startAngle, item.arcDegrees, item.progress)
-    }));
+    const nutritionOrbitItems = buildNutritionOrbitItems({
+      nutritionTotals,
+      effectiveNutritionGoals,
+      caloriesConsumed,
+      caloriePercent,
+      proteinPercent,
+      carbsPercent,
+      fatPercent,
+      roundMacro,
+      getNutritionOrbitSegment
+    });
 
     return (
       <div className="fatSecretPage nutritionFixedHeaderV3 clientCorePage clientCorePageNutrition">
@@ -21176,3 +21143,4 @@ async function loadUsers() {
 </div>
   );
 }
+
