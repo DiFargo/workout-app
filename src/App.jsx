@@ -245,6 +245,7 @@ import {
   getTrainerDayWord,
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
+  getTrainerProgramCompletionPercent,
   getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
 } from "./utils/trainerClientSummary";
@@ -356,7 +357,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v731";
+const APP_VERSION = "v732";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5680,9 +5681,11 @@ export default function App() {
             date: clientMeasurements[0].date || clientMeasurements[0].createdAt || clientMeasurements[0].savedAt || ""
           }] : [])
         ],
-        programCompletionPercent: assignedWorkoutCount > 0 && historyResult.status === "fulfilled"
-          ? Math.min(100, Math.round(completedWorkoutCount / assignedWorkoutCount * 100))
-          : null
+        programCompletionPercent: getTrainerProgramCompletionPercent(
+          assignedWorkoutCount,
+          completedWorkoutCount,
+          historyResult.status === "fulfilled"
+        )
       };
     };
 

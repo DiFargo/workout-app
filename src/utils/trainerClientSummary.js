@@ -92,6 +92,20 @@ export function getTrainerLastMeasurementAt(measurements = []) {
     : "";
 }
 
+export function getTrainerProgramCompletionPercent(
+  assignedWorkoutCount = 0,
+  completedWorkoutCount = 0,
+  canCalculate = true
+) {
+  if (!canCalculate) return null;
+
+  const assignedCount = Number(assignedWorkoutCount) || 0;
+  if (assignedCount <= 0) return null;
+
+  const completedCount = Number(completedWorkoutCount) || 0;
+  return Math.min(100, Math.round(completedCount / assignedCount * 100));
+}
+
 export function getClientActivityStatus(summary = {}) {
   if (!summary.assignedProgramId) {
     return { id: "noProgram", label: "Без программы" };
@@ -226,9 +240,7 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
     recentEvents: previousSummary.recentEvents || [],
     programCompletionPercent: Number.isFinite(explicitCompletion)
       ? Math.round(explicitCompletion)
-      : assignedWorkoutCount > 0
-        ? Math.min(100, Math.round(completedWorkoutCount / assignedWorkoutCount * 100))
-        : null
+      : getTrainerProgramCompletionPercent(assignedWorkoutCount, completedWorkoutCount)
   };
 }
 

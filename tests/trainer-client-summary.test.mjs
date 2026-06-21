@@ -11,6 +11,7 @@ import {
   getTrainerDayWord,
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
+  getTrainerProgramCompletionPercent,
   getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
 } from "../src/utils/trainerClientSummary.js";
@@ -99,6 +100,13 @@ test("trainer measurements are sorted by recency and expose latest date", () => 
   assert.deepEqual(sorted.map((item) => item.id), ["latest", "saved", "old", "bad"]);
   assert.equal(getTrainerLastMeasurementAt(measurements), "2026-06-20T10:00:00.000Z");
   assert.equal(getTrainerLastMeasurementAt([]), "");
+});
+
+test("trainer program completion percent stays bounded and optional", () => {
+  assert.equal(getTrainerProgramCompletionPercent(8, 3), 38);
+  assert.equal(getTrainerProgramCompletionPercent(8, 20), 100);
+  assert.equal(getTrainerProgramCompletionPercent(0, 3), null);
+  assert.equal(getTrainerProgramCompletionPercent(8, 3, false), null);
 });
 
 test("trainer client activity status detects missing program, lost and active states", () => {
