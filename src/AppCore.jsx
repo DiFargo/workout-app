@@ -308,6 +308,7 @@ import {
 import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
 import WorkoutListPage from "./features/client/workouts/WorkoutListPage";
+import { WorkoutFullscreenVideoOverlay, WorkoutNotFoundPage } from "./features/client/workouts/WorkoutRunOverlays";
 import { AppSplash, LoginPage } from "./components/auth/AuthScreens";
 import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
 import TrainerE2EHarness from "./components/trainer/TrainerE2EHarness";
@@ -18267,17 +18268,7 @@ async function loadUsers() {
     );
   }
   if (!workout) {
-    return (
-      <div className="app">
-        <div className="workoutHeader">
-          <button className="backBtn universalFixedBackPointer" onClick={() => setSelectedWorkoutId(null)}>
-            ← Главное меню
-          </button>
-
-          <h1 className="workoutTitle">Тренировка не найдена</h1>
-        </div>
-      </div>
-    );
+    return <WorkoutNotFoundPage onBackToMenu={() => setSelectedWorkoutId(null)} />;
   }
 
   const isFinishSlideActive =
@@ -19231,56 +19222,14 @@ async function loadUsers() {
         onSubmit={handleFirstSetupSubmit}
       />
 
-      {fullscreenVideo && (
-        <div
-          onClick={() => setFullscreenVideo(null)}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100dvh",
-            background: "rgba(0,0,0,0.95)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 9999
-          }}
-        >
-          <button
-            onClick={() => setFullscreenVideo(null)}
-            style={{
-              position: "absolute",
-              top: "20px",
-              right: "20px",
-              fontSize: "28px",
-              background: "none",
-              color: "white",
-              border: "none",
-              cursor: "pointer"
-            }}
-          >
-            ✕
-          </button>
-
-          <video
-            src={fullscreenVideo}
-            controls
-            autoPlay
-            playsInline
-            onError={() => {
-              setFullscreenVideo(null);
-              showAppError("load", "Видео упражнения не поддерживается или временно недоступно.");
-            }}
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              width: "100%",
-              maxWidth: "900px",
-              borderRadius: "12px"
-            }}
-          />
-        </div>
-      )}
+      <WorkoutFullscreenVideoOverlay
+        videoSrc={fullscreenVideo}
+        onClose={() => setFullscreenVideo(null)}
+        onVideoError={() => {
+          setFullscreenVideo(null);
+          showAppError("load", "Видео упражнения не поддерживается или временно недоступно.");
+        }}
+      />
     
 </div>
   );
