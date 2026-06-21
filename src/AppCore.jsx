@@ -306,6 +306,7 @@ import {
   WorkoutReadinessDialog
 } from "./components/workout/WorkoutDialogs";
 import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
+import WorkoutExerciseModals from "./features/client/workouts/WorkoutExerciseModals";
 import WorkoutExerciseSets from "./features/client/workouts/WorkoutExerciseSets";
 import WorkoutExerciseSupport from "./features/client/workouts/WorkoutExerciseSupport";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
@@ -18630,90 +18631,15 @@ async function loadUsers() {
                   />
                 )}
 
-                {exercise.id !== "warmup" && exerciseNoteOpenId === exercise.id && createPortal(
-                  <div
-                    className="workoutExerciseModalOverlay"
-                    role="presentation"
-                    onClick={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
-                    onTouchStart={(event) => event.stopPropagation()}
-                    onTouchMove={(event) => event.stopPropagation()}
-                    onTouchEnd={(event) => event.stopPropagation()}
-                  >
-                    <section
-                      className="workoutExerciseModal"
-                      role="dialog"
-                      aria-modal="true"
-                      aria-labelledby="workoutExerciseNoteTitle"
-                      onClick={(event) => event.stopPropagation()}
-                    >
-                      <header>
-                        <div>
-                          <small>{exercise.name}</small>
-                          <h2 id="workoutExerciseNoteTitle">Заметка</h2>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
-                          aria-label="Закрыть заметку"
-                        >
-                          ×
-                        </button>
-                      </header>
-                      <textarea
-                        value={exercise.clientNote || ""}
-                        onChange={(event) => updateExerciseNote(exercise.id, event.target.value)}
-                        placeholder="Например: уменьшить вес или проверить положение локтей"
-                        maxLength={240}
-                      />
-                      <button
-                        type="button"
-                        className="workoutExerciseModalDone"
-                        onClick={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
-                      >
-                        Готово
-                      </button>
-                    </section>
-                  </div>,
-                  document.body
-                )}
-
-                {exercise.id !== "warmup" && exerciseTechniqueOpenId === exercise.id && createPortal(
-                  <div
-                    className="workoutExerciseModalOverlay"
-                    role="presentation"
-                    onClick={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
-                    onTouchStart={(event) => event.stopPropagation()}
-                    onTouchMove={(event) => event.stopPropagation()}
-                    onTouchEnd={(event) => event.stopPropagation()}
-                  >
-                    <section
-                      className="workoutExerciseModal workoutTechniqueModal"
-                      role="dialog"
-                      aria-modal="true"
-                      aria-labelledby="workoutExerciseTechniqueTitle"
-                      onClick={(event) => event.stopPropagation()}
-                    >
-                      <header>
-                        <div>
-                          <small>Техника выполнения</small>
-                          <h2 id="workoutExerciseTechniqueTitle">{exercise.name}</h2>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
-                          aria-label="Закрыть пояснение техники"
-                        >
-                          ×
-                        </button>
-                      </header>
-                      <div className="workoutTechniqueModalContent">
-                        <span aria-hidden="true">i</span>
-                        <p>{getExerciseTechniqueHint(exercise.name)}</p>
-                      </div>
-                    </section>
-                  </div>,
-                  document.body
-                )}
+                <WorkoutExerciseModals
+                  exercise={exercise}
+                  noteOpen={exerciseNoteOpenId === exercise.id}
+                  onCloseNote={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
+                  onCloseTechnique={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
+                  onUpdateNote={updateExerciseNote}
+                  techniqueHint={getExerciseTechniqueHint(exercise.name)}
+                  techniqueOpen={exerciseTechniqueOpenId === exercise.id}
+                />
 
                 {exercise.id !== "warmup" && restTimerSeconds > 0 && (
                   <div className="workoutRestTimer">
