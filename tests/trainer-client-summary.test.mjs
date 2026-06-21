@@ -13,6 +13,7 @@ import {
   getTrainerNutritionSummary,
   getTrainerProgramCompletionPercent,
   getTrainerSettledCollectionItems,
+  getTrainerSettledDocumentData,
   getTrainerSummaryReadFailures,
   getTrainerSortedHistory,
   getTrainerSortedMeasurements,
@@ -154,6 +155,22 @@ test("trainer settled collection items read fulfilled snapshots only", () => {
     { id: "two", name: "Second" }
   ]);
   assert.deepEqual(getTrainerSettledCollectionItems({ status: "rejected", reason: new Error("x") }), []);
+});
+
+test("trainer settled document data reads fulfilled existing docs with fallback", () => {
+  const fallback = { source: "fallback" };
+  const value = {
+    exists: () => true,
+    data: () => ({ source: "doc" })
+  };
+  const missing = {
+    exists: () => false,
+    data: () => ({ source: "ignored" })
+  };
+
+  assert.deepEqual(getTrainerSettledDocumentData({ status: "fulfilled", value }, fallback), { source: "doc" });
+  assert.equal(getTrainerSettledDocumentData({ status: "fulfilled", value: missing }, fallback), fallback);
+  assert.equal(getTrainerSettledDocumentData({ status: "rejected", reason: new Error("x") }, fallback), fallback);
 });
 
 test("trainer client activity status detects missing program, lost and active states", () => {

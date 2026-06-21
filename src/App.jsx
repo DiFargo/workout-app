@@ -247,6 +247,7 @@ import {
   getTrainerNutritionSummary,
   getTrainerProgramCompletionPercent,
   getTrainerSettledCollectionItems,
+  getTrainerSettledDocumentData,
   getTrainerSummaryReadFailures,
   getTrainerSortedHistory,
   getTrainerSortedMeasurements,
@@ -360,7 +361,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v735";
+const APP_VERSION = "v736";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5620,17 +5621,13 @@ export default function App() {
         getTrainerSettledCollectionItems(measurementsResult)
       );
 
-      const nutritionState = nutritionResult.status === "fulfilled" && nutritionResult.value.exists()
-        ? nutritionResult.value.data()
-        : client?.nutritionState || null;
+      const nutritionState = getTrainerSettledDocumentData(nutritionResult, client?.nutritionState || null);
       const nutritionSummary = getTrainerNutritionSummary(nutritionState);
       const assignedProgramUpdatedAt = client.assignedProgramUpdatedAt || client.assignedProgramAt || "";
       const completedWorkoutCount = getTrainerCompletedWorkoutCountForAssignment(clientHistory, assignedProgramUpdatedAt);
 
       const assignedWorkoutCount = Number(client.assignedWorkoutCount) || 0;
-      const payment = paymentResult.status === "fulfilled" && paymentResult.value.exists()
-        ? paymentResult.value.data()
-        : null;
+      const payment = getTrainerSettledDocumentData(paymentResult);
       const workoutActivitySummary = getTrainerWorkoutActivitySummary(clientHistory, {
         weekStart,
         sevenDayStart,

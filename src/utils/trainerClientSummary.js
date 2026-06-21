@@ -138,6 +138,14 @@ export function getTrainerSettledCollectionItems(result = null) {
   return items;
 }
 
+export function getTrainerSettledDocumentData(result = null, fallback = null) {
+  if (result?.status === "fulfilled" && typeof result.value?.exists === "function" && result.value.exists()) {
+    return result.value.data();
+  }
+
+  return fallback;
+}
+
 export function getClientActivityStatus(summary = {}) {
   if (!summary.assignedProgramId) {
     return { id: "noProgram", label: "Без программы" };
