@@ -352,30 +352,29 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v754";
-const BARCODE_SEARCH_ENABLED = false;
-const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
-const STORAGE_KEY = "workout_tracker_v1";
-const ADMIN_EMAIL = "work.kriptonit.il@gmail.com";
-
-const NUTRITION_STORAGE_KEY = "workout_nutrition_v1";
-const NUTRITION_BACKUP_STORAGE_KEY = "workout_nutrition_backup_v1";
-const WORKOUT_PLAN_BACKUP_STORAGE_KEY = "workout_plan_backup_v1";
-const MEASUREMENTS_STORAGE_KEY = "workout_measurements_v1";
-const INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY = "individual_workout_swipe_hint_seen_v1";
-const GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY = "workout_global_my_foods_backup_v1";
-const APP_THEME_STORAGE_KEY = "workout_app_theme_v1";
-const FIRST_SETUP_DONE_USER_STORAGE_KEY = "workout_first_setup_done_user_uid";
-const FIRST_SETUP_REQUIRED_VERSION = "v2";
-const TELEGRAM_BOT_USERNAME = "tren_ai_coach_bot";
-const TELEGRAM_PROFILE_STORAGE_KEY = "workout_telegram_profile_v1";
-
-const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
-const WORKOUT_CALENDAR_STORAGE_KEY = "workout_calendar_v1";
-const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
-
-const AI_NUTRITION_PROFILE_STORAGE_KEY = "ai_nutrition_profile_v1";
-const AI_NUTRITION_PLAN_STORAGE_KEY = "ai_nutrition_plan_v1";
+import {
+  ADMIN_EMAIL,
+  AI_NUTRITION_PLAN_STORAGE_KEY,
+  AI_NUTRITION_PROFILE_STORAGE_KEY,
+  APP_THEME_STORAGE_KEY,
+  APP_VERSION,
+  BARCODE_SEARCH_ENABLED,
+  CLIENT_LAST_PAGE_STORAGE_KEY,
+  FIRST_SETUP_DONE_USER_STORAGE_KEY,
+  FIRST_SETUP_REQUIRED_VERSION,
+  GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY,
+  INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY,
+  INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS,
+  MEASUREMENTS_STORAGE_KEY,
+  NUTRITION_BACKUP_STORAGE_KEY,
+  NUTRITION_STORAGE_KEY,
+  STORAGE_KEY,
+  TELEGRAM_BOT_USERNAME,
+  TELEGRAM_PROFILE_STORAGE_KEY,
+  WORKOUT_CALENDAR_STORAGE_KEY,
+  WORKOUT_MODE_STORAGE_KEY,
+  WORKOUT_PLAN_BACKUP_STORAGE_KEY
+} from "./constants/appConfig";
 
 function TrainerE2EHarness() {
   const [mode, setMode] = useState("dashboard");
