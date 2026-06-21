@@ -99,13 +99,8 @@ import {
   buildNutritionSummaryCollapsedText
 } from "./utils/nutritionAdvice";
 import { buildNutritionMealStats } from "./utils/nutritionFoodTotals";
-import {
-  buildNutritionCalendarDays,
-  buildNutritionCurrentStreak,
-  buildNutritionWeekDates,
-  formatNutritionCalendarMonthLabel,
-  shiftNutritionCalendarMonthKey
-} from "./utils/nutritionCalendar";
+import { buildNutritionPageDerivedState } from "./utils/nutritionPageDerivedState";
+import { shiftNutritionCalendarMonthKey } from "./utils/nutritionCalendar";
 import { getNutritionPhotoAiConfidenceText } from "./utils/nutritionPhotoAi";
 import {
   buildAiNutritionMonthlyPlan,
@@ -136,7 +131,6 @@ import {
   saveRecentNutritionFood,
   saveRecentNutritionFoods
 } from "./utils/nutritionPreferenceStorage";
-import { buildNutritionSearchResults } from "./utils/nutritionSearchResults";
 import { getPersonalMyFoodsDocRef } from "./utils/personalMyFoodsStorage";
 import {
   createEmptyAiNutritionProfileDraft,
@@ -2004,56 +1998,40 @@ export default function App() {
   }
 
   const nutritionDateKey = selectedNutritionDateKey;
-  const isNutritionToday = nutritionDateKey === todayNutritionKey();
-
-  const nutritionToday = useMemo(() => {
-    return nutrition.days?.[nutritionDateKey] || makeEmptyNutritionDay();
-  }, [nutrition, nutritionDateKey]);
-
-  const nutritionTotals = useMemo(() => {
-    return getNutritionDayTotals(nutritionToday);
-  }, [nutritionToday]);
-
-  const nutritionSearchResults = useMemo(() => {
-    return buildNutritionSearchResults({
+  const {
+    isNutritionToday,
+    nutritionToday,
+    nutritionTotals,
+    nutritionSearchResults,
+    nutritionSearchResultKey,
+    activeNutritionSearchResultLimit,
+    nutritionWeekDates,
+    nutritionCurrentStreak,
+    nutritionCalendarDays,
+    nutritionCalendarMonthLabel
+  } = useMemo(() => {
+    return buildNutritionPageDerivedState({
+      nutrition,
       nutritionSearch,
       nutritionSearchTab,
-      nutrition,
-      nutritionToday,
-      fatSecretFoods
+      fatSecretFoods,
+      nutritionSearchResultLimit,
+      nutritionCalendarMonthKey,
+      nutritionDateKey
     });
-  }, [nutritionSearch, nutritionSearchTab, nutrition.favorites, nutrition.recent, nutrition.myFoods, nutritionToday.foods, fatSecretFoods]);
-
-  const nutritionSearchResultKey = `${nutritionSearchTab}:${nutritionSearch.trim().toLowerCase()}`;
-  const activeNutritionSearchResultLimit =
-    nutritionSearchResultLimit.key === nutritionSearchResultKey
-      ? nutritionSearchResultLimit.limit
-      : 8;
+  }, [
+    nutrition,
+    nutritionSearch,
+    nutritionSearchTab,
+    fatSecretFoods,
+    nutritionSearchResultLimit,
+    nutritionCalendarMonthKey,
+    nutritionDateKey
+  ]);
   const visibleNutritionSearchResults = useMemo(
     () => nutritionSearchResults.slice(0, activeNutritionSearchResultLimit),
     [nutritionSearchResults, activeNutritionSearchResultLimit]
   );
-
-  const nutritionWeekDates = useMemo(() => {
-    return buildNutritionWeekDates(nutritionDateKey);
-  }, [nutritionDateKey]);
-
-  const nutritionCurrentStreak = useMemo(() => {
-    return buildNutritionCurrentStreak(nutrition.days || {}, nutritionDateKey || todayNutritionKey());
-  }, [nutrition.days, nutritionDateKey]);
-
-  const nutritionCalendarDays = useMemo(() => {
-    return buildNutritionCalendarDays({
-      monthKey: nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7),
-      selectedDateKey: nutritionDateKey,
-      nutrition,
-      todayKey: todayNutritionKey()
-    });
-  }, [nutritionCalendarMonthKey, nutritionDateKey, nutrition]);
-
-  const nutritionCalendarMonthLabel = useMemo(() => {
-    return formatNutritionCalendarMonthLabel(nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7));
-  }, [nutritionCalendarMonthKey]);
 
   function selectNutritionDate(key) {
     setSelectedNutritionDateKey(key);
