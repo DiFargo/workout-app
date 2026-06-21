@@ -246,6 +246,7 @@ import {
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
   getTrainerProgramCompletionPercent,
+  getTrainerSettledCollectionItems,
   getTrainerSummaryReadFailures,
   getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
@@ -358,7 +359,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v733";
+const APP_VERSION = "v734";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5612,24 +5613,15 @@ export default function App() {
         );
       }
 
-      const clientHistory = [];
-      if (historyResult.status === "fulfilled") {
-        historyResult.value.forEach((historyDoc) => {
-          clientHistory.push({ id: historyDoc.id, ...historyDoc.data() });
-        });
-      }
+      const clientHistory = getTrainerSettledCollectionItems(historyResult);
       clientHistory.sort((a, b) => (
         getTrainerSummaryTimestamp(b.date || b.completedAt || b.createdAt) -
         getTrainerSummaryTimestamp(a.date || a.completedAt || a.createdAt)
       ));
 
-      let clientMeasurements = [];
-      if (measurementsResult.status === "fulfilled") {
-        measurementsResult.value.forEach((measurementDoc) => {
-          clientMeasurements.push({ id: measurementDoc.id, ...measurementDoc.data() });
-        });
-      }
-      clientMeasurements = getTrainerSortedMeasurements(clientMeasurements);
+      const clientMeasurements = getTrainerSortedMeasurements(
+        getTrainerSettledCollectionItems(measurementsResult)
+      );
 
       const nutritionState = nutritionResult.status === "fulfilled" && nutritionResult.value.exists()
         ? nutritionResult.value.data()

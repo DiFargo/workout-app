@@ -12,6 +12,7 @@ import {
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
   getTrainerProgramCompletionPercent,
+  getTrainerSettledCollectionItems,
   getTrainerSummaryReadFailures,
   getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
@@ -121,6 +122,21 @@ test("trainer summary read failures preserve failed names and reasons", () => {
   assert.deepEqual(failures.names, ["nutrition"]);
   assert.equal(failures.reasons.history, null);
   assert.equal(failures.reasons.nutrition, error);
+});
+
+test("trainer settled collection items read fulfilled snapshots only", () => {
+  const snapshot = {
+    forEach(callback) {
+      callback({ id: "one", data: () => ({ name: "First" }) });
+      callback({ id: "two", data: () => ({ name: "Second" }) });
+    }
+  };
+
+  assert.deepEqual(getTrainerSettledCollectionItems({ status: "fulfilled", value: snapshot }), [
+    { id: "one", name: "First" },
+    { id: "two", name: "Second" }
+  ]);
+  assert.deepEqual(getTrainerSettledCollectionItems({ status: "rejected", reason: new Error("x") }), []);
 });
 
 test("trainer client activity status detects missing program, lost and active states", () => {

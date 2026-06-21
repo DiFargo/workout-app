@@ -119,6 +119,18 @@ export function getTrainerSummaryReadFailures(readResults = {}) {
   };
 }
 
+export function getTrainerSettledCollectionItems(result = null) {
+  if (result?.status !== "fulfilled" || typeof result.value?.forEach !== "function") {
+    return [];
+  }
+
+  const items = [];
+  result.value.forEach((itemDoc) => {
+    items.push({ id: itemDoc.id, ...itemDoc.data() });
+  });
+  return items;
+}
+
 export function getClientActivityStatus(summary = {}) {
   if (!summary.assignedProgramId) {
     return { id: "noProgram", label: "Без программы" };
