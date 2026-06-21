@@ -5,6 +5,10 @@ export function getCompletedWorkoutKey(value = "") {
     .trim();
 }
 
+export function getWorkoutAssignmentVersion(plan = {}) {
+  return String(plan?.assignedProgramUpdatedAt || "").trim();
+}
+
 export function buildCompletedWorkoutSet(historyItems = [], currentAssignmentVersion = "") {
   const completed = new Set();
   const assignmentVersion = String(currentAssignmentVersion || "").trim();

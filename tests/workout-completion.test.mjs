@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   buildCompletedWorkoutSet,
   getNextUncompletedWorkoutIndex,
+  getWorkoutAssignmentVersion,
   isWorkoutCompletedWithSet
 } from "../src/utils/workoutCompletion.js";
 
@@ -15,6 +16,12 @@ test("workout completion set respects current assignment version", () => {
 
   assert.equal(isWorkoutCompletedWithSet({ id: "day-1" }, completed, "v1"), true);
   assert.equal(isWorkoutCompletedWithSet({ id: "day-2" }, completed, "v1"), false);
+});
+
+test("workout assignment version reads the current program update marker", () => {
+  assert.equal(getWorkoutAssignmentVersion({ assignedProgramUpdatedAt: " v1 " }), "v1");
+  assert.equal(getWorkoutAssignmentVersion({ assignedProgramAt: "legacy" }), "");
+  assert.equal(getWorkoutAssignmentVersion(null), "");
 });
 
 test("next uncompleted workout index skips completed and manual completed days", () => {
