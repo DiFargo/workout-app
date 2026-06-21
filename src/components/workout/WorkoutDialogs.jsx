@@ -1,3 +1,5 @@
+import { WORKOUT_READINESS_OPTIONS } from "../../domain/workoutPresentation";
+
 export function WorkoutExitDialog({ open, onStay, onLeave }) {
   if (!open) return null;
 
@@ -65,6 +67,127 @@ export function PostWorkoutFeedbackDialog({ open, options, isSaving, onSelect })
               <small>{option.subtitle}</small>
             </button>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function WorkoutReadinessDialog({
+  open,
+  selectedWorkoutId,
+  workoutStarted,
+  pendingOption,
+  onSelectOption,
+  onBack,
+  onApply
+}) {
+  if (!open || !selectedWorkoutId || workoutStarted) return null;
+
+  return (
+    <div className="workoutReadinessOverlay">
+      <div className="workoutReadinessStage">
+        <header className="workoutReadinessHeader">
+          <span>Готовность к тренировке</span>
+          <small>Выбери состояние перед разминкой</small>
+        </header>
+
+        <div className="workoutReadinessCard">
+          <div className="workoutReadinessIntro">
+            <span aria-hidden="true">◷</span>
+            <div>
+              <strong>Как ты себя чувствуешь?</strong>
+              <p>Выбор влияет только на рабочий вес этой тренировки.</p>
+            </div>
+          </div>
+
+          <div className="workoutReadinessGrid">
+            {WORKOUT_READINESS_OPTIONS.map((option) => (
+              <button
+                type="button"
+                key={option.id}
+                className={pendingOption?.id === option.id ? "active" : ""}
+                onClick={() => onSelectOption(option)}
+              >
+                <span>{option.emoji}</span>
+                <span>
+                  <strong>{option.title}</strong>
+                  <small>
+                    {option.id === "excellent"
+                      ? "Немного увеличить рабочий вес"
+                      : option.id === "good"
+                        ? "Оставить план тренера без изменений"
+                        : "Немного снизить нагрузку"}
+                  </small>
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <p className={`workoutReadinessConfirmation ${pendingOption ? "" : "empty"}`}>
+            {pendingOption
+              ? pendingOption.id === "good"
+                ? "Плановые веса тренера останутся без изменений."
+                : `Будет применена корректировка: ${pendingOption.volumeText}.`
+              : "Выберите вариант самочувствия."}
+          </p>
+        </div>
+
+        <div className="workoutReadinessActions">
+          <button type="button" onClick={onBack}>
+            Назад
+          </button>
+          <button
+            type="button"
+            disabled={!pendingOption}
+            onClick={() => onApply(pendingOption)}
+          >
+            Продолжить
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function WorkoutDraftRestoreDialog({
+  open,
+  blocked,
+  onRestart,
+  onRestore
+}) {
+  if (!open || blocked) return null;
+
+  return (
+    <div className="workoutDraftRestoreOverlay">
+      <div
+        className="workoutDraftRestoreCard"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="workoutDraftRestoreTitle"
+        aria-describedby="workoutDraftRestoreDescription"
+      >
+        <span className="workoutDraftRestoreIcon" aria-hidden="true">↩</span>
+        <h2 id="workoutDraftRestoreTitle">Продолжить тренировку?</h2>
+        <p id="workoutDraftRestoreDescription">
+          Найден незавершённый черновик. Можно восстановить прогресс или начать заново.
+        </p>
+
+        <div className="workoutDraftRestoreActions">
+          <button
+            type="button"
+            className="workoutDraftRestartButton"
+            onClick={onRestart}
+          >
+            Начать заново
+          </button>
+          <button
+            type="button"
+            className="workoutDraftRestoreButton"
+            onClick={onRestore}
+          >
+            Восстановить
+          </button>
         </div>
       </div>
     </div>

@@ -44,8 +44,7 @@ import {
   getWorkoutPresentation,
   getWorkoutWarmupSteps,
   POST_WORKOUT_FEEDBACK_OPTIONS,
-  WORKOUT_MENU_ITEMS,
-  WORKOUT_READINESS_OPTIONS
+  WORKOUT_MENU_ITEMS
 } from "./domain/workoutPresentation";
 import {
   formatNutritionDateLabel,
@@ -305,8 +304,10 @@ import {
 } from "./utils/workoutPlanNormalization";
 import {
   PostWorkoutFeedbackDialog,
+  WorkoutDraftRestoreDialog,
   WorkoutExitDialog,
-  WorkoutIncompleteDialog
+  WorkoutIncompleteDialog,
+  WorkoutReadinessDialog
 } from "./components/workout/WorkoutDialogs";
 import { AppSplash, LoginPage } from "./components/auth/AuthScreens";
 import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
@@ -3853,122 +3854,6 @@ export default function App() {
                     : "Создать профиль"}
               </button>
             )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  function renderWorkoutReadinessModal() {
-    if (!workoutReadinessOpen || !selectedWorkoutId || workoutStarted) return null;
-
-    return (
-      <div className="workoutReadinessOverlay">
-        <div className="workoutReadinessStage">
-          <header className="workoutReadinessHeader">
-            <span>Готовность к тренировке</span>
-            <small>Выбери состояние перед разминкой</small>
-          </header>
-
-          <div className="workoutReadinessCard">
-            <div className="workoutReadinessIntro">
-              <span aria-hidden="true">◷</span>
-              <div>
-                <strong>Как ты себя чувствуешь?</strong>
-                <p>Выбор влияет только на рабочий вес этой тренировки.</p>
-              </div>
-            </div>
-
-            <div className="workoutReadinessGrid">
-              {WORKOUT_READINESS_OPTIONS.map((option) => (
-                <button
-                  type="button"
-                  key={option.id}
-                  className={workoutReadinessPending?.id === option.id ? "active" : ""}
-                  onClick={() => setWorkoutReadinessPending(option)}
-                >
-                  <span>{option.emoji}</span>
-                  <span>
-                    <strong>{option.title}</strong>
-                    <small>
-                      {option.id === "excellent"
-                        ? "Немного увеличить рабочий вес"
-                        : option.id === "good"
-                          ? "Оставить план тренера без изменений"
-                          : "Немного снизить нагрузку"}
-                    </small>
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            <p className={`workoutReadinessConfirmation ${workoutReadinessPending ? "" : "empty"}`}>
-              {workoutReadinessPending
-                ? workoutReadinessPending.id === "good"
-                  ? "Плановые веса тренера останутся без изменений."
-                  : `Будет применена корректировка: ${workoutReadinessPending.volumeText}.`
-                : "Выберите вариант самочувствия."}
-            </p>
-          </div>
-
-          <div className="workoutReadinessActions">
-            <button type="button" onClick={leaveWorkoutToPlan}>
-              Назад
-            </button>
-            <button
-              type="button"
-              disabled={!workoutReadinessPending}
-              onClick={() => applyWorkoutReadiness(workoutReadinessPending)}
-            >
-              Продолжить
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  function renderWorkoutDraftRestoreModal() {
-    if (
-      !workoutDraftRestorePrompt ||
-      workoutReadinessOpen ||
-      postWorkoutFeedbackOpen ||
-      fullscreenVideo ||
-      showFirstSetupOnboarding
-    ) {
-      return null;
-    }
-
-    return (
-      <div className="workoutDraftRestoreOverlay">
-        <div
-          className="workoutDraftRestoreCard"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="workoutDraftRestoreTitle"
-          aria-describedby="workoutDraftRestoreDescription"
-        >
-          <span className="workoutDraftRestoreIcon" aria-hidden="true">↩</span>
-          <h2 id="workoutDraftRestoreTitle">Продолжить тренировку?</h2>
-          <p id="workoutDraftRestoreDescription">
-            Найден незавершённый черновик. Можно восстановить прогресс или начать заново.
-          </p>
-
-          <div className="workoutDraftRestoreActions">
-            <button
-              type="button"
-              className="workoutDraftRestartButton"
-              onClick={() => handleWorkoutDraftChoice(false)}
-            >
-              Начать заново
-            </button>
-            <button
-              type="button"
-              className="workoutDraftRestoreButton"
-              onClick={() => handleWorkoutDraftChoice(true)}
-            >
-              Восстановить
-            </button>
           </div>
         </div>
       </div>
@@ -19210,7 +19095,17 @@ async function loadUsers() {
           </div>
         )}
 
-        {renderWorkoutDraftRestoreModal()}
+        <WorkoutDraftRestoreDialog
+          open={Boolean(workoutDraftRestorePrompt)}
+          blocked={Boolean(
+            workoutReadinessOpen ||
+            postWorkoutFeedbackOpen ||
+            fullscreenVideo ||
+            showFirstSetupOnboarding
+          )}
+          onRestart={() => handleWorkoutDraftChoice(false)}
+          onRestore={() => handleWorkoutDraftChoice(true)}
+        />
       </div>
     );
   }
@@ -20125,7 +20020,15 @@ async function loadUsers() {
         );
       })()}
 
-      {renderWorkoutReadinessModal()}
+      <WorkoutReadinessDialog
+        open={workoutReadinessOpen}
+        selectedWorkoutId={selectedWorkoutId}
+        workoutStarted={workoutStarted}
+        pendingOption={workoutReadinessPending}
+        onSelectOption={setWorkoutReadinessPending}
+        onBack={leaveWorkoutToPlan}
+        onApply={applyWorkoutReadiness}
+      />
 
       <WorkoutExitDialog
         open={Boolean(workoutExitPromptOpen && !workoutDraftRestorePrompt && !fullscreenVideo)}
