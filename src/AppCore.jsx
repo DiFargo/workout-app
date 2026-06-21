@@ -196,7 +196,6 @@ import {
 import { buildWorkoutPageDerivedState } from "./utils/workoutPageDerivedState";
 import {
   formatHistoryCardDate,
-  formatIndividualWorkoutHistoryDate,
   formatHistoryTime,
   getLastExerciseText,
   getHistorySetCount,
@@ -311,6 +310,10 @@ import {
 } from "./components/workout/WorkoutDialogs";
 import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
+import {
+  IndividualWorkoutHistoryDialog,
+  WorkoutModePickerDialog
+} from "./features/client/workouts/WorkoutListDialogs";
 import { AppSplash, LoginPage } from "./components/auth/AuthScreens";
 import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
 import TrainerE2EHarness from "./components/trainer/TrainerE2EHarness";
@@ -18631,136 +18634,29 @@ async function loadUsers() {
           />
         </div>
 
-        {workoutModeModalOpen && (
-          <div
-            className="workoutModeModalOverlay"
-            role="presentation"
-            onClick={() => setWorkoutModeModalOpen(false)}
-          >
-            <section
-              className="workoutModeModal"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="workoutModeModalTitle"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <header className="workoutModeModalHeader">
-                <div>
-                  <small>ТРЕНИРОВКИ</small>
-                  <h2 id="workoutModeModalTitle">Режим запуска</h2>
-                </div>
-                <button
-                  type="button"
-                  aria-label="Закрыть выбор режима"
-                  onClick={() => setWorkoutModeModalOpen(false)}
-                >
-                  ×
-                </button>
-              </header>
+        <WorkoutModePickerDialog
+          open={workoutModeModalOpen}
+          workoutModePreference={workoutModePreference}
+          onClose={() => setWorkoutModeModalOpen(false)}
+          onOpenBasic={() => {
+            setWorkoutModeModalOpen(false);
+            saveWorkoutModePreference("basic", true);
+            setSelectedWorkoutId(null);
+            setPage(APP_PAGES.BASIC_WORKOUT_QUIZ);
+          }}
+          onOpenIndividual={() => {
+            setWorkoutModeModalOpen(false);
+            openIndividualWorkouts();
+          }}
+        />
 
-              <div className="workoutModeModalOptions">
-                <button
-                  type="button"
-                  className={workoutModePreference.mode === "basic" ? "active" : ""}
-                  onClick={() => {
-                    setWorkoutModeModalOpen(false);
-                    saveWorkoutModePreference("basic", true);
-                    setSelectedWorkoutId(null);
-                    setPage(APP_PAGES.BASIC_WORKOUT_QUIZ);
-                  }}
-                >
-                  <span>Б</span>
-                  <div>
-                    <strong>Базовые тренировки</strong>
-                    <small>Подбор готовой программы по цели и опыту</small>
-                  </div>
-                  <i>›</i>
-                </button>
-
-                <button
-                  type="button"
-                  className={workoutModePreference.mode === "individual" ? "active" : ""}
-                  onClick={() => {
-                    setWorkoutModeModalOpen(false);
-                    openIndividualWorkouts();
-                  }}
-                >
-                  <span>И</span>
-                  <div>
-                    <strong>Индивидуальный план</strong>
-                    <small>Программа, назначенная вашим тренером</small>
-                  </div>
-                  <i>✓</i>
-                </button>
-              </div>
-            </section>
-          </div>
-        )}
-
-        {isIndividualWorkoutMode && workoutHistoryModalOpen && (
-          <div
-            className="workoutModeModalOverlay"
-            role="presentation"
-            onClick={() => setWorkoutHistoryModalOpen(false)}
-          >
-            <section
-              className="workoutModeModal workoutHistoryModal"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="workoutHistoryModalTitle"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <header className="workoutModeModalHeader">
-                <div>
-                  <small>ИНДИВИДУАЛЬНЫЙ ПЛАН</small>
-                  <h2 id="workoutHistoryModalTitle">История тренировок</h2>
-                </div>
-                <button
-                  type="button"
-                  aria-label="Закрыть историю тренировок"
-                  onClick={() => setWorkoutHistoryModalOpen(false)}
-                >
-                  ×
-                </button>
-              </header>
-
-              <div className="workoutHistoryModalList">
-                {historyLoading && <p>Загрузка истории...</p>}
-
-                {!historyLoading && individualWorkoutHistoryItems.map((item) => (
-                  <div
-                    className="workoutHistoryModalItem"
-                    key={item.id || `${item.date}_${item.workout}`}
-                  >
-                    <span aria-hidden="true">{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
-                    <div>
-                      <strong>{item.workout || "Тренировка"}</strong>
-                      <small>
-                        {formatIndividualWorkoutHistoryDate(item.date)}
-                        {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
-                      </small>
-                    </div>
-                  </div>
-                ))}
-
-                {!historyLoading && individualWorkoutHistoryItems.length === 0 && (
-                  <p>В этой программе завершённых тренировок пока нет.</p>
-                )}
-              </div>
-
-              {individualWorkoutHistoryItems.length > 0 && (
-                <button
-                  type="button"
-                  className="workoutHistoryModalAll"
-                  onClick={() => openCabinetWorkoutHistory(null, individualWorkoutProgramScope)}
-                >
-                  Открыть историю тренировок
-                </button>
-              )}
-            </section>
-          </div>
-        )}
-
+        <IndividualWorkoutHistoryDialog
+          open={Boolean(isIndividualWorkoutMode && workoutHistoryModalOpen)}
+          historyLoading={historyLoading}
+          historyItems={individualWorkoutHistoryItems}
+          onClose={() => setWorkoutHistoryModalOpen(false)}
+          onOpenAll={() => openCabinetWorkoutHistory(null, individualWorkoutProgramScope)}
+        />
         <WorkoutDraftRestoreDialog
           open={Boolean(workoutDraftRestorePrompt)}
           blocked={Boolean(
