@@ -1,4 +1,4 @@
-const CACHE_NAME = "workout-app-v732";
+const CACHE_NAME = "workout-app-v733";
 const WORKOUT_VIDEO_CACHE = "workout-videos-v2";
 const APP_SHELL = ["/", "/index.html", "/manifest.json"];
 

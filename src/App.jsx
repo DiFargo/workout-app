@@ -246,6 +246,7 @@ import {
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
   getTrainerProgramCompletionPercent,
+  getTrainerSummaryReadFailures,
   getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
 } from "./utils/trainerClientSummary";
@@ -357,7 +358,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v732";
+const APP_VERSION = "v733";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5597,20 +5598,18 @@ export default function App() {
         getDocs(collection(db, "users", client.id, "measurements")),
         getDoc(doc(db, "users", client.id, "payments", "current"))
       ]);
-      const failedReads = [
-        historyResult.status === "rejected" ? "history" : "",
-        nutritionResult.status === "rejected" ? "nutrition" : "",
-        measurementsResult.status === "rejected" ? "measurements" : "",
-        paymentResult.status === "rejected" ? "payment" : ""
-      ].filter(Boolean);
+      const readFailures = getTrainerSummaryReadFailures({
+        history: historyResult,
+        nutrition: nutritionResult,
+        measurements: measurementsResult,
+        payment: paymentResult
+      });
 
-      if (failedReads.length) {
-        console.warn(`Trainer summary partial load failed for ${client.id}: ${failedReads.join(", ")}`, {
-          history: historyResult.status === "rejected" ? historyResult.reason : null,
-          nutrition: nutritionResult.status === "rejected" ? nutritionResult.reason : null,
-          measurements: measurementsResult.status === "rejected" ? measurementsResult.reason : null,
-          payment: paymentResult.status === "rejected" ? paymentResult.reason : null
-        });
+      if (readFailures.names.length) {
+        console.warn(
+          `Trainer summary partial load failed for ${client.id}: ${readFailures.names.join(", ")}`,
+          readFailures.reasons
+        );
       }
 
       const clientHistory = [];

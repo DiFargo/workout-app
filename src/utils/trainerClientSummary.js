@@ -106,6 +106,19 @@ export function getTrainerProgramCompletionPercent(
   return Math.min(100, Math.round(completedCount / assignedCount * 100));
 }
 
+export function getTrainerSummaryReadFailures(readResults = {}) {
+  const entries = Object.entries(readResults || {});
+  return {
+    names: entries
+      .filter(([, result]) => result?.status === "rejected")
+      .map(([name]) => name),
+    reasons: Object.fromEntries(entries.map(([name, result]) => [
+      name,
+      result?.status === "rejected" ? result.reason : null
+    ]))
+  };
+}
+
 export function getClientActivityStatus(summary = {}) {
   if (!summary.assignedProgramId) {
     return { id: "noProgram", label: "Без программы" };

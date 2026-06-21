@@ -12,6 +12,7 @@ import {
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
   getTrainerProgramCompletionPercent,
+  getTrainerSummaryReadFailures,
   getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
 } from "../src/utils/trainerClientSummary.js";
@@ -107,6 +108,19 @@ test("trainer program completion percent stays bounded and optional", () => {
   assert.equal(getTrainerProgramCompletionPercent(8, 20), 100);
   assert.equal(getTrainerProgramCompletionPercent(0, 3), null);
   assert.equal(getTrainerProgramCompletionPercent(8, 3, false), null);
+});
+
+test("trainer summary read failures preserve failed names and reasons", () => {
+  const error = new Error("no access");
+  const failures = getTrainerSummaryReadFailures({
+    history: { status: "fulfilled", value: [] },
+    nutrition: { status: "rejected", reason: error },
+    measurements: { status: "fulfilled", value: [] }
+  });
+
+  assert.deepEqual(failures.names, ["nutrition"]);
+  assert.equal(failures.reasons.history, null);
+  assert.equal(failures.reasons.nutrition, error);
 });
 
 test("trainer client activity status detects missing program, lost and active states", () => {
