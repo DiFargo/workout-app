@@ -91,12 +91,10 @@ import {
   getAiNutritionTrainingDayAdvice
 } from "./utils/aiNutritionLabels";
 import {
-  buildNutritionHistoryDays,
   buildAiNutritionDayModel,
   getNutritionDayTotals
 } from "./utils/aiNutritionAnalysis";
 import {
-  buildNutritionAdvice,
   buildNutritionSummaryCollapsedText
 } from "./utils/nutritionAdvice";
 import { buildNutritionMealStats } from "./utils/nutritionFoodTotals";
@@ -137,10 +135,7 @@ import {
   saveRecentNutritionFood,
   saveRecentNutritionFoods
 } from "./utils/nutritionPreferenceStorage";
-import {
-  buildMyNutritionFoods,
-  buildNutritionSearchResults
-} from "./utils/nutritionSearchResults";
+import { buildNutritionSearchResults } from "./utils/nutritionSearchResults";
 import { getPersonalMyFoodsDocRef } from "./utils/personalMyFoodsStorage";
 import {
   createEmptyAiNutritionProfileDraft,
@@ -357,7 +352,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v753";
+const APP_VERSION = "v754";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2001,7 +1996,8 @@ export default function App() {
     if (!currentUser || !nutritionCloudReady) return undefined;
 
     const timer = setTimeout(() => {
-      const { myFoods, ...userNutritionState } = nutrition;
+      const userNutritionState = { ...nutrition };
+      delete userNutritionState.myFoods;
       const backupId = `nutrition_${Date.now()}`;
       const nutritionPayload = {
         ...userNutritionState,
@@ -2250,14 +2246,6 @@ export default function App() {
     return getNutritionDayTotals(nutritionToday);
   }, [nutritionToday]);
 
-  const nutritionHistoryDays = useMemo(() => {
-    return buildNutritionHistoryDays(nutrition.days, 7);
-  }, [nutrition.days]);
-
-  const myNutritionFoods = useMemo(() => {
-    return buildMyNutritionFoods(nutrition.myFoods);
-  }, [nutrition.myFoods]);
-
   const nutritionSearchResults = useMemo(() => {
     return buildNutritionSearchResults({
       nutritionSearch,
@@ -2277,14 +2265,6 @@ export default function App() {
     () => nutritionSearchResults.slice(0, activeNutritionSearchResultLimit),
     [nutritionSearchResults, activeNutritionSearchResultLimit]
   );
-
-  const nutritionAdvice = useMemo(() => {
-    return buildNutritionAdvice({
-      goals: nutrition.goals,
-      totals: nutritionTotals,
-      water: nutritionToday.water
-    });
-  }, [nutrition.goals, nutritionTotals, nutritionToday.water]);
 
   const nutritionWeekDates = useMemo(() => {
     return buildNutritionWeekDates(nutritionDateKey);
@@ -2306,10 +2286,6 @@ export default function App() {
   const nutritionCalendarMonthLabel = useMemo(() => {
     return formatNutritionCalendarMonthLabel(nutritionCalendarMonthKey || todayNutritionKey().slice(0, 7));
   }, [nutritionCalendarMonthKey]);
-
-  function openSelectedNutritionDate() {
-    setExpandedNutritionMeals({});
-  }
 
   function selectNutritionDate(key) {
     setSelectedNutritionDateKey(key);
@@ -3582,7 +3558,8 @@ export default function App() {
 
       const currentUser = auth.currentUser;
       if (currentUser) {
-        const { myFoods, ...userNutritionState } = nextState;
+        const userNutritionState = { ...nextState };
+        delete userNutritionState.myFoods;
 
         saveNutritionStateWithMerge(currentUser.uid, {
           ...userNutritionState,
