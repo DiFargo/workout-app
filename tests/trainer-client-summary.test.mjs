@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  buildTrainerClientRecentEvents,
   buildTrainerDashboardSummary,
   getClientActivityStatus,
   getClientAttentionReasons,
@@ -171,6 +172,29 @@ test("trainer settled document data reads fulfilled existing docs with fallback"
   assert.deepEqual(getTrainerSettledDocumentData({ status: "fulfilled", value }, fallback), { source: "doc" });
   assert.equal(getTrainerSettledDocumentData({ status: "fulfilled", value: missing }, fallback), fallback);
   assert.equal(getTrainerSettledDocumentData({ status: "rejected", reason: new Error("x") }, fallback), fallback);
+});
+
+test("trainer client recent events combine workouts nutrition and measurements", () => {
+  const events = buildTrainerClientRecentEvents({
+    clientId: "client_1",
+    historyList: [
+      { id: "old", workoutName: "Old workout", date: "2026-06-01T10:00:00.000Z" },
+      { id: "new", workoutName: "New workout", completedAt: "2026-06-20T10:00:00.000Z" }
+    ],
+    nutritionSummary: { lastNutritionAt: "2026-06-19" },
+    measurements: [
+      { id: "m1", savedAt: "2026-06-18T10:00:00.000Z" }
+    ]
+  });
+
+  assert.deepEqual(events.map((event) => event.id), [
+    "workout_new",
+    "workout_old",
+    "nutrition_client_1_2026-06-19",
+    "measurement_m1"
+  ]);
+  assert.deepEqual(events.map((event) => event.type), ["workout", "workout", "nutrition", "measurement"]);
+  assert.equal(events[0].title, "New workout");
 });
 
 test("trainer client activity status detects missing program, lost and active states", () => {

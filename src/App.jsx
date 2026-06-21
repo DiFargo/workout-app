@@ -237,6 +237,7 @@ import {
   getTrainerSummaryWeekStart
 } from "./utils/trainerSummaryDates";
 import {
+  buildTrainerClientRecentEvents,
   getClientActivityStatus,
   buildTrainerDashboardSummary,
   getTrainerClientEmptySummary,
@@ -361,7 +362,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v736";
+const APP_VERSION = "v737";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5646,26 +5647,12 @@ export default function App() {
         plateau: getClientPlateauInfo(clientMeasurements),
         payment,
         paymentAttention: getClientPaymentAttention(payment),
-        recentEvents: [
-          ...clientHistory.slice(0, 3).map((entry) => ({
-            id: `workout_${entry.id}`,
-            type: "workout",
-            title: entry.workoutName || entry.name || entry.workout || "Тренировка завершена",
-            date: entry.date || entry.completedAt || entry.createdAt || ""
-          })),
-          ...(nutritionSummary.lastNutritionAt ? [{
-            id: `nutrition_${client.id}_${nutritionSummary.lastNutritionAt}`,
-            type: "nutrition",
-            title: "Обновлено питание",
-            date: nutritionSummary.lastNutritionAt
-          }] : []),
-          ...(clientMeasurements[0] ? [{
-            id: `measurement_${clientMeasurements[0].id}`,
-            type: "measurement",
-            title: "Добавлен контрольный замер",
-            date: clientMeasurements[0].date || clientMeasurements[0].createdAt || clientMeasurements[0].savedAt || ""
-          }] : [])
-        ],
+        recentEvents: buildTrainerClientRecentEvents({
+          clientId: client.id,
+          historyList: clientHistory,
+          nutritionSummary,
+          measurements: clientMeasurements
+        }),
         programCompletionPercent: getTrainerProgramCompletionPercent(
           assignedWorkoutCount,
           completedWorkoutCount,

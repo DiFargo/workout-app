@@ -146,6 +146,36 @@ export function getTrainerSettledDocumentData(result = null, fallback = null) {
   return fallback;
 }
 
+export function buildTrainerClientRecentEvents({
+  clientId = "",
+  historyList = [],
+  nutritionSummary = null,
+  measurements = []
+} = {}) {
+  const latestMeasurement = getTrainerSortedMeasurements(measurements)[0];
+
+  return [
+    ...getTrainerSortedHistory(historyList).slice(0, 3).map((entry) => ({
+      id: `workout_${entry.id}`,
+      type: "workout",
+      title: entry.workoutName || entry.name || entry.workout || "Ð¢Ñ€ÐµÐ½Ð¸Ñ€Ð¾Ð²ÐºÐ° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð°",
+      date: entry.date || entry.completedAt || entry.createdAt || ""
+    })),
+    ...(nutritionSummary?.lastNutritionAt ? [{
+      id: `nutrition_${clientId}_${nutritionSummary.lastNutritionAt}`,
+      type: "nutrition",
+      title: "ÐžÐ±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¾ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ðµ",
+      date: nutritionSummary.lastNutritionAt
+    }] : []),
+    ...(latestMeasurement ? [{
+      id: `measurement_${latestMeasurement.id}`,
+      type: "measurement",
+      title: "Ð”Ð¾Ð±Ð°Ð²Ð»ÐµÐ½ ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŒÐ½Ñ‹Ð¹ Ð·Ð°Ð¼ÐµÑ€",
+      date: latestMeasurement.date || latestMeasurement.createdAt || latestMeasurement.savedAt || ""
+    }] : [])
+  ];
+}
+
 export function getClientActivityStatus(summary = {}) {
   if (!summary.assignedProgramId) {
     return { id: "noProgram", label: "Без программы" };
