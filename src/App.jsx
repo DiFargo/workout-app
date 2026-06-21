@@ -358,7 +358,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v749";
+const APP_VERSION = "v750";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -1221,7 +1221,7 @@ export default function App() {
       const key = "workout_app_perf_logs_v1";
       const current = JSON.parse(localStorage.getItem(key) || "[]");
       localStorage.setItem(key, JSON.stringify([payload, ...current].slice(0, 50)));
-    } catch (_) {
+    } catch {
       // ignore localStorage errors
     }
 
@@ -1368,7 +1368,7 @@ export default function App() {
 
             try {
               safeWriteUserJsonStorage(AI_NUTRITION_PROFILE_STORAGE_KEY, u.uid, remoteProfile);
-            } catch (_) {
+            } catch {
               // ignore localStorage errors
             }
           }
@@ -1436,7 +1436,7 @@ export default function App() {
               refreshTelegramAvatar();
             }
           }
-        } catch (_) {
+        } catch {
           // ignore Telegram profile loading errors
         }
       } else {
@@ -1449,7 +1449,7 @@ export default function App() {
         setPlan({ workouts: [] });
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify({ workouts: [] }));
-        } catch (_) {
+        } catch {
           // ignore localStorage errors
         }
       }
@@ -1474,7 +1474,7 @@ export default function App() {
 
     try {
       localStorage.setItem(APP_THEME_STORAGE_KEY, safeTheme);
-    } catch (_) {
+    } catch {
       // ignore localStorage errors
     }
   }, [appTheme]);
@@ -1646,7 +1646,7 @@ export default function App() {
       completedForThisUser =
         localStorage.getItem(FIRST_SETUP_DONE_USER_STORAGE_KEY) === `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}` ||
         localStorage.getItem(`${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${user.uid}`) === FIRST_SETUP_REQUIRED_VERSION;
-    } catch (_) {
+    } catch {
       completedForThisUser = false;
     }
 
@@ -1656,7 +1656,7 @@ export default function App() {
       try {
         localStorage.setItem(FIRST_SETUP_DONE_USER_STORAGE_KEY, `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}`);
         localStorage.setItem(`${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${user.uid}`, FIRST_SETUP_REQUIRED_VERSION);
-      } catch (_) {
+      } catch {
         // ignore localStorage errors
       }
 
@@ -2769,7 +2769,7 @@ export default function App() {
 
     try {
       return JSON.parse(JSON.stringify(food));
-    } catch (_) {
+    } catch {
       return { ...food };
     }
   }
@@ -3624,7 +3624,7 @@ export default function App() {
       if (currentUid) {
         saveRecentNutritionFoods(next, currentUid);
       }
-    } catch (_) {
+    } catch {
       // ignore localStorage errors
     }
   }
@@ -4231,7 +4231,7 @@ export default function App() {
                       localStorage.setItem(FIRST_SETUP_DONE_USER_STORAGE_KEY, `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}`);
                       localStorage.setItem(`${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${user.uid}`, FIRST_SETUP_REQUIRED_VERSION);
                     }
-                  } catch (_) {
+                  } catch {
                     // ignore localStorage errors
                   }
 
@@ -7712,7 +7712,7 @@ async function loadUsers() {
       if (secondaryApp) {
         try {
           await deleteApp(secondaryApp);
-        } catch (_) {
+        } catch {
           // ignore secondary app cleanup
         }
       }
@@ -8349,7 +8349,7 @@ async function loadUsers() {
         safeWriteUserJsonStorage(AI_NUTRITION_PLAN_STORAGE_KEY, user.uid, nextPlan);
       }
 
-    } catch (_) {
+    } catch {
       // ignore localStorage errors
     }
 
@@ -8386,7 +8386,7 @@ async function loadUsers() {
             `${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${auth.currentUser.uid}`,
             FIRST_SETUP_REQUIRED_VERSION
           );
-        } catch (_) {
+        } catch {
           // ignore localStorage errors
         }
       } catch (error) {
@@ -8434,7 +8434,7 @@ async function loadUsers() {
         localStorage.removeItem(getUserScopedStorageKey(AI_NUTRITION_PROFILE_STORAGE_KEY, uid));
         localStorage.removeItem(getUserScopedStorageKey(AI_NUTRITION_PLAN_STORAGE_KEY, uid));
       }
-    } catch (_) {
+    } catch {
       // ignore localStorage errors
     }
   }
@@ -8480,7 +8480,7 @@ async function loadUsers() {
 
       try {
         safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegram);
-      } catch (_) {
+      } catch {
         // ignore localStorage errors
       }
     } catch (error) {
@@ -8520,7 +8520,7 @@ async function loadUsers() {
 
         try {
           safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegram);
-        } catch (_) {
+        } catch {
           // ignore localStorage errors
         }
 
@@ -8601,7 +8601,7 @@ async function loadUsers() {
 
         try {
           safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegram);
-        } catch (_) {
+        } catch {
           // ignore localStorage errors
         }
 
@@ -8649,7 +8649,7 @@ async function loadUsers() {
 
     try {
       safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegramProfile);
-    } catch (_) {
+    } catch {
       // ignore localStorage errors
     }
 
@@ -8684,7 +8684,7 @@ async function loadUsers() {
 
     try {
       safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegramProfile);
-    } catch (_) {
+    } catch {
       // ignore localStorage errors
     }
 
@@ -8807,7 +8807,7 @@ async function loadUsers() {
         safeWriteUserJsonStorage(AI_NUTRITION_PROFILE_STORAGE_KEY, uid, nextProfile);
         safeWriteUserJsonStorage(AI_NUTRITION_PLAN_STORAGE_KEY, uid, nextPlan);
       }
-    } catch (_) {
+    } catch {
       // ignore localStorage errors
     }
   }
@@ -8841,7 +8841,7 @@ async function loadUsers() {
       firstSetupCompletedLocally =
         localStorage.getItem(FIRST_SETUP_DONE_USER_STORAGE_KEY) === `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}` ||
         localStorage.getItem(`${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${user.uid}`) === FIRST_SETUP_REQUIRED_VERSION;
-    } catch (_) {
+    } catch {
       firstSetupCompletedLocally = false;
     }
   }
