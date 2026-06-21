@@ -255,6 +255,10 @@ export function getTrainerClientEmptySummary(client = {}) {
   };
 }
 
+export function getTrainerClientSummaryFromMap(client = {}, summaries = {}) {
+  return summaries?.[client.id] || getTrainerClientEmptySummary(client);
+}
+
 export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
   const nutritionState = client.nutritionState || client.adminClientNutrition || client.nutrition || null;
   const nutritionSummary = getTrainerNutritionSummary(nutritionState);
@@ -316,7 +320,7 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
 
 export function buildTrainerDashboardSummary(clients = [], summaries = {}) {
   const summaryItems = (Array.isArray(clients) ? clients : []).map((client) => {
-    const summary = summaries?.[client.id] || getTrainerClientEmptySummary(client);
+    const summary = getTrainerClientSummaryFromMap(client, summaries);
     return {
       client,
       summary,

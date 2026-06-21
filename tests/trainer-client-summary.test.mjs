@@ -9,6 +9,7 @@ import {
   getTrainerCompletedWorkoutCountForAssignment,
   getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
+  getTrainerClientSummaryFromMap,
   getTrainerDayWord,
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
@@ -245,6 +246,16 @@ test("trainer empty client summary preserves assigned program hints", () => {
   assert.equal(summary.completedWorkoutCount, 0);
   assert.equal(summary.programCompletionPercent, null);
   assert.deepEqual(summary.recentEvents, []);
+});
+
+test("trainer client summary map returns loaded data or a safe fallback", () => {
+  const loadedSummary = { clientId: "client_1", workouts7: 3 };
+
+  assert.equal(
+    getTrainerClientSummaryFromMap({ id: "client_1" }, { client_1: loadedSummary }),
+    loadedSummary
+  );
+  assert.equal(getTrainerClientSummaryFromMap({ id: "client_2" }, {}).clientId, "client_2");
 });
 
 test("trainer fast summary merges client fields with previous loaded summary", () => {

@@ -242,6 +242,7 @@ import {
   buildTrainerDashboardSummary,
   getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
+  getTrainerClientSummaryFromMap,
   getTrainerCompletedWorkoutCountForAssignment,
   getTrainerDayWord,
   getTrainerLastMeasurementAt,
@@ -362,7 +363,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v738";
+const APP_VERSION = "v739";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -14820,7 +14821,7 @@ async function loadUsers() {
     }
 
     const getDashboardClientSummary = (client = {}) =>
-      trainerClientSummaries[client.id] || getTrainerClientEmptySummary(client);
+      getTrainerClientSummaryFromMap(client, trainerClientSummaries);
     const trainerDashboardSummary = buildTrainerDashboardSummary(usersList, trainerClientSummaries);
     const trainerSummaryItems = trainerDashboardSummary.summaryItems;
     const trainerStatusCounts = trainerDashboardSummary.statusCounts;
@@ -15707,7 +15708,7 @@ async function loadUsers() {
       ? `Логин: ${adminCreatedCredentials.email}\nПароль: ${adminCreatedCredentials.password}`
       : "";
     const getClientCardSummary = (client = {}) =>
-      trainerClientSummaries[client.id] || getTrainerClientEmptySummary(client);
+      getTrainerClientSummaryFromMap(client, trainerClientSummaries);
 
     const adminUsersFilteredClients = usersList.filter((client) => {
       const profile = getAdminClientProfile(client);
