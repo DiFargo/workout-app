@@ -5,7 +5,8 @@ import {
   buildAdminNutritionDaysList,
   buildAdminNutritionMonthOverview,
   buildAdminNutritionRecommendations,
-  getAdminNutritionDayMetrics
+  getAdminNutritionDayMetrics,
+  hasAdminWorkoutOnDate
 } from "../src/utils/trainerNutritionInsights.js";
 
 test("trainer nutrition days are sorted and include totals with score", () => {
@@ -66,6 +67,18 @@ test("trainer nutrition day metrics normalize totals and percents", () => {
   });
 
   assert.equal(getAdminNutritionDayMetrics({ totals: {} }).hasFood, false);
+});
+
+test("trainer nutrition can detect workout history by calendar date", () => {
+  const history = [
+    { date: "2026-06-18T20:00:00.000Z" },
+    { date: "bad-date" },
+    {}
+  ];
+
+  assert.equal(hasAdminWorkoutOnDate(history, "2026-06-18"), true);
+  assert.equal(hasAdminWorkoutOnDate(history, "2026-06-19"), false);
+  assert.equal(hasAdminWorkoutOnDate(null, "2026-06-18"), false);
 });
 
 test("trainer nutrition recommendations highlight actionable issues", () => {

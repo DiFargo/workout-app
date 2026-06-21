@@ -86,6 +86,15 @@ export function getAdminNutritionDayMetrics(day = {}, goals = {}) {
   };
 }
 
+export function hasAdminWorkoutOnDate(historyList = [], dateKey = "") {
+  return (Array.isArray(historyList) ? historyList : []).some((workout) => {
+    if (!workout?.date) return false;
+    const parsed = new Date(workout.date);
+    if (Number.isNaN(parsed.getTime())) return false;
+    return parsed.toISOString().slice(0, 10) === dateKey;
+  });
+}
+
 export function buildAdminNutritionRecommendations({
   profile = {},
   historyList = [],

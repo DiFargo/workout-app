@@ -251,7 +251,8 @@ import {
   buildAdminNutritionDaysList,
   buildAdminNutritionMonthOverview,
   buildAdminNutritionRecommendations,
-  getAdminNutritionDayMetrics
+  getAdminNutritionDayMetrics,
+  hasAdminWorkoutOnDate
 } from "./utils/trainerNutritionInsights";
 import {
   buildAdminClientCsvLines,
@@ -352,7 +353,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v726";
+const APP_VERSION = "v727";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -17056,10 +17057,7 @@ async function loadUsers() {
                           fat: dailyFatGoal,
                           carbs: dailyCarbsGoal
                         });
-                        const isTrainingDay = adminClientHistory?.some((workout) => {
-                          const workoutDateKey = workout?.date ? new Date(workout.date).toISOString().slice(0, 10) : "";
-                          return workoutDateKey === key;
-                        });
+                        const isTrainingDay = hasAdminWorkoutOnDate(adminClientHistory, key);
 
                         return (
                           <div
