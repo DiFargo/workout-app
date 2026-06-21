@@ -243,6 +243,7 @@ import {
   buildTrainerDashboardSummary,
   getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
+  getTrainerCompletedWorkoutCountForAssignment,
   getTrainerDayWord,
   getTrainerNutritionSummary
 } from "./utils/trainerClientSummary";
@@ -354,7 +355,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v728";
+const APP_VERSION = "v729";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5634,19 +5635,7 @@ export default function App() {
         : client?.nutritionState || null;
       const nutritionSummary = getTrainerNutritionSummary(nutritionState);
       const assignedProgramUpdatedAt = client.assignedProgramUpdatedAt || client.assignedProgramAt || "";
-      const assignmentVersionKey = getTrainerAssignmentVersionKey(assignedProgramUpdatedAt);
-      const completedWorkoutIds = new Set();
-
-      if (assignmentVersionKey && historyResult.status === "fulfilled") {
-        clientHistory.forEach((entry) => {
-          const entryVersionKey = getTrainerAssignmentVersionKey(
-            entry.assignedProgramUpdatedAt || entry.assignmentVersion
-          );
-          if (entry.workoutId && entryVersionKey === assignmentVersionKey) {
-            completedWorkoutIds.add(entry.workoutId);
-          }
-        });
-      }
+      const completedWorkoutCount = getTrainerCompletedWorkoutCountForAssignment(clientHistory, assignedProgramUpdatedAt);
 
       const assignedWorkoutCount = Number(client.assignedWorkoutCount) || 0;
       const payment = paymentResult.status === "fulfilled" && paymentResult.value.exists()
@@ -5674,7 +5663,7 @@ export default function App() {
         assignedProgramId: client.assignedProgramId || "",
         assignedProgramUpdatedAt,
         assignedWorkoutCount,
-        completedWorkoutCount: completedWorkoutIds.size,
+        completedWorkoutCount,
         plateau: getClientPlateauInfo(clientMeasurements),
         payment,
         paymentAttention: getClientPaymentAttention(payment),
@@ -5699,7 +5688,7 @@ export default function App() {
           }] : [])
         ],
         programCompletionPercent: assignedWorkoutCount > 0 && historyResult.status === "fulfilled"
-          ? Math.min(100, Math.round(completedWorkoutIds.size / assignedWorkoutCount * 100))
+          ? Math.min(100, Math.round(completedWorkoutCount / assignedWorkoutCount * 100))
           : null
       };
     };

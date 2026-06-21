@@ -2,6 +2,7 @@ import { sumNutritionFoods } from "./nutritionFoodTotals.js";
 import { pluralizeRu } from "./trainerAttention.js";
 import { getClientPaymentAttention } from "../domain/clientInsights.js";
 import {
+  getTrainerAssignmentVersionKey,
   getTrainerSummaryDayStart,
   getTrainerSummaryDaysSince,
   getTrainerSummaryTimestamp
@@ -34,6 +35,23 @@ export function getTrainerNutritionSummary(nutritionState = null) {
       ? Math.round(lastSevenDays.reduce((sum, day) => sum + day.calories, 0) / lastSevenDays.length)
       : null
   };
+}
+
+export function getTrainerCompletedWorkoutCountForAssignment(historyList = [], assignedProgramUpdatedAt = "") {
+  const assignmentVersionKey = getTrainerAssignmentVersionKey(assignedProgramUpdatedAt);
+  if (!assignmentVersionKey) return 0;
+
+  const completedWorkoutIds = new Set();
+  (Array.isArray(historyList) ? historyList : []).forEach((entry) => {
+    const entryVersionKey = getTrainerAssignmentVersionKey(
+      entry?.assignedProgramUpdatedAt || entry?.assignmentVersion
+    );
+    if (entry?.workoutId && entryVersionKey === assignmentVersionKey) {
+      completedWorkoutIds.add(entry.workoutId);
+    }
+  });
+
+  return completedWorkoutIds.size;
 }
 
 export function getClientActivityStatus(summary = {}) {

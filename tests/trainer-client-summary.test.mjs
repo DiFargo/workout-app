@@ -5,6 +5,7 @@ import {
   buildTrainerDashboardSummary,
   getClientActivityStatus,
   getClientAttentionReasons,
+  getTrainerCompletedWorkoutCountForAssignment,
   getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
   getTrainerDayWord,
@@ -36,6 +37,20 @@ test("trainer nutrition summary excludes today from seven day average", () => {
   assert.equal(summary.lastNutritionAt, today);
   assert.equal(summary.nutritionDays7, 2);
   assert.equal(summary.averageCalories7, 1500);
+});
+
+test("trainer completed workout count matches current assignment version", () => {
+  const assignedAt = "2026-06-20T10:00:00.000Z";
+  const history = [
+    { workoutId: "w1", assignedProgramUpdatedAt: assignedAt },
+    { workoutId: "w1", assignedProgramUpdatedAt: assignedAt },
+    { workoutId: "w2", assignmentVersion: assignedAt },
+    { workoutId: "old", assignedProgramUpdatedAt: "2026-06-01T10:00:00.000Z" },
+    { assignedProgramUpdatedAt: assignedAt }
+  ];
+
+  assert.equal(getTrainerCompletedWorkoutCountForAssignment(history, assignedAt), 2);
+  assert.equal(getTrainerCompletedWorkoutCountForAssignment(history, ""), 0);
 });
 
 test("trainer client activity status detects missing program, lost and active states", () => {
