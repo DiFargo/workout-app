@@ -1,0 +1,153 @@
+/* LOGIN */
+.loginPage {
+  min-height: 100vh;
+  width: 100%;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+.loginHero {
+  width: 100%;
+  text-align: center;
+}
+
+.appLogo {
+  width: 78px;
+  height: 78px;
+  margin: 0 auto 16px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 900;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.38);
+}
+
+.loginHero h1 {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: var(--text);
+}
+
+.loginHero p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 390px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+}
+
+.loginCard h2 {
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: 26px;
+}
+
+.loginCard input,
+.exercise input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: #090b09;
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.loginCard input:focus,
+.exercise input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(127, 159, 58, 0.1);
+}
+
+.passwordBox {
+  position: relative;
+  width: 100%;
+}
+
+.passwordBox input {
+  padding-right: 60px;
+}
+
+.eyeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 42px;
+  height: 42px;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  color: var(--muted);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.loginBtn,
+.loginCard .loginBtn {
+  width: 100%;
+  min-height: 72px;
+  margin-top: 6px;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: none;
+}
+
+.loginBtn:active {
+  transform: scale(0.98);
+}
+
+.loginError {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(212, 90, 90, 0.12);
+  color: #d97979;
+  text-align: center;
+  font-size: 14px;
+}
+
+.loginHint {
+  margin: 0;
+  text-align: center;
+  color: #737a73;
+  font-size: 13px;
+}

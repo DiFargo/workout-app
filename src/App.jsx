@@ -1,4 +1,4 @@
-import "./styles.css";
+import "./styles/index.css";
 import AppCore from "./AppCore";
 
 export default function App() {

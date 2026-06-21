@@ -33,7 +33,6 @@ import {
 import {
   formatCompactTimer,
   buildWorkoutFinishSummary,
-  AI_COACH_FEATURES,
   getAiHistoryItems,
   getAiWorkoutBaseWeight,
   getAdjustedWorkoutWeight,
@@ -86,8 +85,7 @@ import {
 import { recalcDishFromIngredients, sumDishIngredientWeight } from "./utils/nutritionDish";
 import {
   getAiNutritionActivityLabel,
-  getAiNutritionGoalLabel,
-  getAiNutritionTrainingDayAdvice
+  getAiNutritionGoalLabel
 } from "./utils/aiNutritionLabels";
 import {
   buildAiNutritionDayModel,
@@ -104,7 +102,6 @@ import {
   buildAiNutritionMonthlyPlan,
   buildClientNutritionPresetOptions
 } from "./utils/aiNutritionPlanBuilder";
-import { buildAiCoachResult } from "./utils/aiCoachResult";
 import {
   getAiNutritionCurrentWeek,
   getAiNutritionDayMacros,
@@ -264,6 +261,7 @@ import {
 } from "./utils/trainerProgramAccess";
 import { normalizeTrainerMonthProgram } from "./utils/trainerMonthProgramNormalization";
 import { getTrainerProgramTemplateStats } from "./utils/trainerProgramStats";
+import AppRouter from "./app/AppRouter";
 import {
   getAdminAverageNutritionScore,
   getAdminWeightPoints,
@@ -292,7 +290,6 @@ import {
   shiftProfileWorkoutMonthKey
 } from "./utils/profileWorkoutSchedule";
 import {
-  CLIENT_PRIMARY_PAGES,
   mapLoginAuthError,
   normalizeClientPrimaryPage,
   validateLoginFields,
@@ -350,6 +347,16 @@ import {
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
 import * as appConfig from "./constants/appConfig";
+import { APP_PAGES } from "./app/appPages";
+import { normalizeAppTheme, APP_THEMES } from "./app/appTheme";
+import { isClientPrimaryPage, normalizeAppPage } from "./app/appNavigation";
+import { useAppBackNavigation } from "./shared/hooks/useAppBackNavigation";
+import { useFirebaseSyncStatus } from "./shared/hooks/useFirebaseSyncStatus";
+import {
+  ClientMainBottomBar,
+  ClientTrainingBottomBar,
+  TrainerWorkspaceBottomBar
+} from "./shared/ui/BottomBar";
 
 const {
   ADMIN_EMAIL,
@@ -393,9 +400,9 @@ export default function App() {
   const [appLoading, setAppLoading] = useState(true);
   const [appTheme, setAppTheme] = useState(() => {
     try {
-      return localStorage.getItem(APP_THEME_STORAGE_KEY) || "dark-green";
+      return normalizeAppTheme(localStorage.getItem(APP_THEME_STORAGE_KEY));
     } catch {
-      return "dark-green";
+      return APP_THEMES.DARK_GREEN;
     }
   });
   const [appThemeCloudReady, setAppThemeCloudReady] = useState(false);
@@ -442,30 +449,17 @@ export default function App() {
   const nutritionReplayInProgressRef = useRef(false);
   const measurementReplayInProgressRef = useRef(false);
 
-  useEffect(() => {
-    const handleOffline = () => {
+  useFirebaseSyncStatus({
+    onOffline: () => {
       showAppError("offline");
-    };
-
-    const handleOnline = () => {
+    },
+    onOnline: () => {
       showAppError("savedLocal", "Соединение восстановлено.");
       replayFailedHistorySaves(auth.currentUser?.uid);
       replayFailedNutritionSync(auth.currentUser?.uid);
       replayFailedMeasurementSaves(auth.currentUser?.uid);
-    };
-
-    window.addEventListener("offline", handleOffline);
-    window.addEventListener("online", handleOnline);
-
-    if (typeof navigator !== "undefined" && !navigator.onLine) {
-      handleOffline();
     }
-
-    return () => {
-      window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("online", handleOnline);
-    };
-  }, []);
+  });
 
   const [plan, setPlan] = useState(() => ({ workouts: [] }));
   const [workoutModePreference, setWorkoutModePreference] = useState(() => getDefaultWorkoutModePreference());
@@ -478,9 +472,9 @@ export default function App() {
     days: "4"
   });
 
-  const [page, setPage] = useState("main");
+  const [page, setPage] = useState(APP_PAGES.MAIN);
   useEffect(() => {
-    if (page !== "nutrition") return;
+    if (page !== APP_PAGES.NUTRITION) return;
 
     const scrollNutritionToTop = () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -1102,9 +1096,13 @@ export default function App() {
           const resolvedRole = nextIsAdmin ? "admin" : (roleData.role || "client");
           setCurrentUserRole(resolvedRole);
           if (resolvedRole === "client") {
-            setPage(normalizeClientPrimaryPage(
-              safeReadUserJsonStorage(CLIENT_LAST_PAGE_STORAGE_KEY, u.uid, "main")
-            ));
+            setPage(
+              normalizeAppPage(
+                normalizeClientPrimaryPage(
+                  safeReadUserJsonStorage(CLIENT_LAST_PAGE_STORAGE_KEY, u.uid, APP_PAGES.MAIN)
+                )
+              )
+            );
           }
           setProfileAccount(remoteAccount);
           setProfileAccountDraft({
@@ -1112,7 +1110,7 @@ export default function App() {
             email: remoteAccount.email
           });
 
-          if (remoteTheme === "warm-light" || remoteTheme === "dark-green") {
+          if (remoteTheme === APP_THEMES.WARM_LIGHT || remoteTheme === APP_THEMES.DARK_GREEN) {
             setAppTheme(remoteTheme);
           }
 
@@ -1222,7 +1220,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const safeTheme = appTheme === "warm-light" ? "warm-light" : "dark-green";
+    const safeTheme = normalizeAppTheme(appTheme);
     document.documentElement.dataset.appTheme = safeTheme;
     document.body.dataset.appTheme = safeTheme;
 
@@ -1236,7 +1234,7 @@ export default function App() {
   useEffect(() => {
     if (!user?.uid || !appThemeCloudReady) return;
 
-    const safeTheme = appTheme === "warm-light" ? "warm-light" : "dark-green";
+    const safeTheme = normalizeAppTheme(appTheme);
     setDoc(doc(db, "users", user.uid), {
       appTheme: safeTheme,
       appThemeUpdatedAt: new Date().toISOString()
@@ -1250,7 +1248,7 @@ export default function App() {
       doc(db, "users", user.uid),
       (snapshot) => {
         const remoteTheme = snapshot.data()?.appTheme;
-        if (remoteTheme === "warm-light" || remoteTheme === "dark-green") {
+        if (remoteTheme === APP_THEMES.WARM_LIGHT || remoteTheme === APP_THEMES.DARK_GREEN) {
           setAppTheme((currentTheme) => remoteTheme !== currentTheme ? remoteTheme : currentTheme);
         }
         setAppThemeCloudReady(true);
@@ -1264,36 +1262,37 @@ export default function App() {
       isAdminClaim || currentUserRole === "admin" || currentUserRole === "trainer"
     );
 
-    if (isLoggedIn && !appLoading && hasTrainerDashboard && page === "main") {
+    if (isLoggedIn && !appLoading && hasTrainerDashboard && page === APP_PAGES.MAIN) {
       setSelectedUserId(null);
-      setPage("admin");
+      setPage(APP_PAGES.ADMIN);
     }
   }, [appLoading, currentUserRole, isAdminClaim, isLoggedIn, page]);
 
   useEffect(() => {
+    const normalizedClientPrimaryPage = normalizeAppPage(page);
     if (
       !isLoggedIn ||
       appLoading ||
       !user?.uid ||
       currentUserRole !== "client" ||
-      !CLIENT_PRIMARY_PAGES.includes(page)
+      !isClientPrimaryPage(normalizedClientPrimaryPage)
     ) return;
 
-    safeWriteUserJsonStorage(CLIENT_LAST_PAGE_STORAGE_KEY, user.uid, page);
+    safeWriteUserJsonStorage(CLIENT_LAST_PAGE_STORAGE_KEY, user.uid, normalizedClientPrimaryPage);
 
     const currentHistoryPage = window.history.state?.workoutAppPage;
     if (!currentHistoryPage) {
       window.history.replaceState(
-        { ...(window.history.state || {}), workoutAppPage: page },
+        { ...(window.history.state || {}), workoutAppPage: normalizedClientPrimaryPage },
         ""
       );
-    } else if (currentHistoryPage !== page) {
+    } else if (currentHistoryPage !== normalizedClientPrimaryPage) {
       window.history.pushState(
-        { ...(window.history.state || {}), workoutAppPage: page },
+        { ...(window.history.state || {}), workoutAppPage: normalizedClientPrimaryPage },
         ""
       );
     }
-  }, [appLoading, currentUserRole, isLoggedIn, page, user?.uid]);
+  }, [appLoading, currentUserRole, isClientPrimaryPage, isLoggedIn, page, user?.uid]);
 
   useEffect(() => () => {
     if (nutritionUndoTimerRef.current) {
@@ -1435,91 +1434,29 @@ export default function App() {
     currentUserRole
   ]);
 
-  useEffect(() => {
-    if (!isLoggedIn || appLoading) return;
+  const hasTransientScreen =
+    Boolean(selectedWorkoutId) ||
+    Boolean(fullscreenVideo) ||
+    workoutIncompleteConfirmOpen ||
+    nutritionPickerOpen ||
+    nutritionEditPageOpen ||
+    dishIngredientPickerOpen ||
+    nutritionCreateChoiceOpen ||
+    nutritionDeleteConfirmOpen ||
+    barcodeScannerOpen ||
+    Object.values(expandedNutritionMeals || {}).some(Boolean);
 
-    const hasTransientScreen =
-      Boolean(selectedWorkoutId) ||
-      Boolean(fullscreenVideo) ||
-      workoutIncompleteConfirmOpen ||
-      nutritionPickerOpen ||
-      nutritionEditPageOpen ||
-      dishIngredientPickerOpen ||
-      nutritionCreateChoiceOpen ||
-      nutritionDeleteConfirmOpen ||
-      barcodeScannerOpen ||
-      Object.values(expandedNutritionMeals || {}).some(Boolean);
-    const shouldTrapAndroidBack =
-      page !== "main" ||
-      hasTransientScreen;
-
-    if (!shouldTrapAndroidBack) return;
-
-    const needsSyntheticBackEntry =
-      hasTransientScreen ||
-      !CLIENT_PRIMARY_PAGES.includes(page);
-
-    if (needsSyntheticBackEntry && !window.history.state?.workoutAppBackTrap) {
-      window.history.pushState({
-        ...(window.history.state || {}),
-        workoutAppBackTrap: true,
-        workoutAppPage: CLIENT_PRIMARY_PAGES.includes(page) ? page : undefined
-      }, "");
-    }
-
-    const onAndroidBack = (event) => {
-      const targetPage = event.state?.workoutAppPage;
-      if (
-        !hasTransientScreen &&
-        CLIENT_PRIMARY_PAGES.includes(targetPage) &&
-        targetPage !== page
-      ) {
-        setPage(targetPage);
-        window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0 }));
-        return;
-      }
-
-      const handled = handleAppBackNavigation();
-
-      if (handled && hasTransientScreen) {
-        setTimeout(() => {
-          if (!window.history.state?.workoutAppBackTrap) {
-            window.history.pushState({
-              ...(window.history.state || {}),
-              workoutAppBackTrap: true,
-              workoutAppPage: CLIENT_PRIMARY_PAGES.includes(page) ? page : undefined
-            }, "");
-          }
-        }, 0);
-      }
-    };
-
-    window.addEventListener("popstate", onAndroidBack);
-
-    return () => {
-      window.removeEventListener("popstate", onAndroidBack);
-    };
-  }, [
+  useAppBackNavigation({
     isLoggedIn,
     appLoading,
     page,
-    selectedWorkoutId,
-    workoutStarted,
-    currentExerciseIndex,
-    workoutReadinessOpen,
-    workoutExitPromptOpen,
-    workoutIncompleteConfirmOpen,
-    workoutDraftRestorePrompt,
-    isWorkoutSaved,
-    fullscreenVideo,
-    nutritionPickerOpen,
-    nutritionEditPageOpen,
-    dishIngredientPickerOpen,
-    nutritionCreateChoiceOpen,
-    nutritionDeleteConfirmOpen,
-    barcodeScannerOpen,
-    expandedNutritionMeals
-  ]);
+    hasTransientScreen,
+    isPrimaryPage: isClientPrimaryPage,
+    handleTransientBack: handleAppBackNavigation,
+    restorePrimaryPage: (targetPage) => {
+      setPage(normalizeAppPage(targetPage));
+    }
+  });
 
   useEffect(() => {
     const query = nutritionSearch.trim();
@@ -1872,7 +1809,7 @@ export default function App() {
         validation.password
       );
 
-      setPage("main");
+      setPage(APP_PAGES.MAIN);
       setLoginError("");
       setLoginFieldErrors({});
       setSelectedUserId(null);
@@ -1922,7 +1859,7 @@ export default function App() {
       });
 
       setLoginError("");
-      setPage("main");
+      setPage(APP_PAGES.MAIN);
       setSelectedUserId(null);
 
       loadHistory();
@@ -2520,7 +2457,7 @@ export default function App() {
     resetNutritionPhotoAiState();
     setNutritionPickerOpen(false);
     setExpandedNutritionMeals({});
-    setPage("nutrition");
+    setPage(APP_PAGES.NUTRITION);
   }
 
   function canDeleteSelectedNutritionFood() {
@@ -3576,7 +3513,7 @@ export default function App() {
     setProfileMeasurementWizardStep(0);
     setProfileMeasurementOpen(false);
     setProfileActiveTab(profileMeasurementReturnTab);
-    setPage("profile");
+    setPage(APP_PAGES.PROFILE);
   }
 
   function renderFirstSetupOnboarding(forceVisible = false) {
@@ -3906,7 +3843,7 @@ export default function App() {
                   setShowFirstSetupOnboarding(false);
                   setOnboardingStep(0);
                   setFirstSetupSaveStatus("");
-                  setPage("main");
+                  setPage(APP_PAGES.MAIN);
                 }}
               >
                 {firstSetupSaveStatus === "saving"
@@ -4043,7 +3980,7 @@ export default function App() {
   }
 
   function toggleAppTheme() {
-    setAppTheme((currentTheme) => currentTheme === "warm-light" ? "dark-green" : "warm-light");
+    setAppTheme((currentTheme) => (currentTheme === APP_THEMES.WARM_LIGHT ? APP_THEMES.DARK_GREEN : APP_THEMES.WARM_LIGHT));
   }
 
   function openProfileAccount() {
@@ -4263,7 +4200,7 @@ export default function App() {
     setUser(null);
     setIsAdminClaim(false);
     setCurrentUserRole("client");
-    setPage("main");
+    setPage(APP_PAGES.MAIN);
     setPlan({ workouts: [] });
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
@@ -4310,7 +4247,7 @@ export default function App() {
   }
 
   function goBackToMain() {
-    setPage("main");
+    setPage(APP_PAGES.MAIN);
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
     setFullscreenVideo(null);
@@ -4361,7 +4298,7 @@ export default function App() {
     setIsWorkoutSaved(false);
     setShowWorkoutSavedCard(false);
     setWorkoutHistorySyncState("idle");
-    setPage("workouts");
+    setPage(APP_PAGES.WORKOUTS);
   }
 
   function requestLeaveWorkout() {
@@ -4459,7 +4396,7 @@ export default function App() {
       return true;
     }
 
-    if (page !== "main") {
+    if (page !== APP_PAGES.MAIN) {
       goBackToMain();
       return true;
     }
@@ -5362,13 +5299,13 @@ export default function App() {
   function openAdminProgramsOverview() {
     setAdminOpenWorkoutId("");
     setAdminProgramLibraryTab("overview");
-    setPage("adminWorkouts");
+    setPage(APP_PAGES.ADMIN_WORKOUTS);
   }
 
   function openAdminClientsWithFilter(filter = "all") {
     setAdminClientFilter(filter);
     setAdminClientPageOpen(false);
-    setPage("adminUsers");
+    setPage(APP_PAGES.ADMIN_USERS);
   }
 
   async function createAdminTemplateFromCurrentPlan() {
@@ -5895,7 +5832,7 @@ export default function App() {
     }
 
     if (destination === "nutrition") {
-      setPage("nutrition");
+      setPage(APP_PAGES.NUTRITION);
       return;
     }
 
@@ -6404,7 +6341,7 @@ async function loadUsers() {
     setAdminSelectedClient(client);
     setAdminClientTab("overview");
     if (openClientPage) {
-      setPage("adminUsers");
+      setPage(APP_PAGES.ADMIN_USERS);
       setAdminClientPageOpen(true);
       setAdminUsersSelectedTab("overview");
     }
@@ -7701,7 +7638,7 @@ async function loadUsers() {
   }
 
   function openHistory() {
-    setPage("history");
+    setPage(APP_PAGES.HISTORY);
     setSelectedWorkoutId(null);
     setOpenVideoId(null);
     setFullscreenVideo(null);
@@ -7745,7 +7682,7 @@ async function loadUsers() {
     }
 
     setSelectedWorkoutId(null);
-    setPage("workoutMode");
+    setPage(APP_PAGES.WORKOUT_MODE);
   }
 
   function openIndividualWorkouts() {
@@ -7753,7 +7690,7 @@ async function loadUsers() {
     setSelectedWorkoutId(null);
     setIndividualWorkoutIndex(0);
     setIndividualWorkoutIndexInitialized(false);
-    setPage("workouts");
+    setPage(APP_PAGES.WORKOUTS);
     window.requestAnimationFrame(() => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     });
@@ -7769,14 +7706,14 @@ async function loadUsers() {
   function openBasicWorkoutQuiz() {
     saveWorkoutModePreference("basic", workoutModeRemember);
     setSelectedWorkoutId(null);
-    setPage("basicWorkoutQuiz");
+    setPage(APP_PAGES.BASIC_WORKOUT_QUIZ);
   }
 
   function applyBasicWorkoutPlan() {
     const nextPlan = buildBasicWorkoutPlanFromQuiz(basicWorkoutQuiz);
     setPlan({ workouts: nextPlan.workouts });
     setSelectedWorkoutId(null);
-    setPage("workouts");
+    setPage(APP_PAGES.WORKOUTS);
   }
 
   function openWorkoutWithDraftChoice(id, savedDraft, shouldRestoreDraft, freshPlan = null) {
@@ -8407,7 +8344,7 @@ async function loadUsers() {
     const telegramAuthResult = parseTelegramAuthResultFromHash();
 
     if (telegramAuthResult) {
-      setPage("profile");
+      setPage(APP_PAGES.PROFILE);
       setTelegramConnectOpen(false);
       handleTelegramLoginAuth(telegramAuthResult);
 
@@ -8417,7 +8354,7 @@ async function loadUsers() {
     }
 
     if (params.get("telegramLinked") === "1") {
-      setPage("profile");
+      setPage(APP_PAGES.PROFILE);
       setTelegramConnectOpen(false);
       refreshTelegramConnection();
 
@@ -8427,7 +8364,7 @@ async function loadUsers() {
     }
 
     if (params.get("telegramError")) {
-      setPage("profile");
+      setPage(APP_PAGES.PROFILE);
       setTelegramConnectOpen(true);
       setTelegramStatus("Telegram вернул ошибку. Попробуй войти ещё раз.");
       const cleanUrl = `${window.location.origin}${window.location.pathname}`;
@@ -8556,7 +8493,7 @@ async function loadUsers() {
     );
   }
 
-  if (page === "adminPanel") {
+  if (page === APP_PAGES.ADMIN_PANEL) {
     return (
       <AdminPanelHub
         canUseAdminFeatures={canUseAdminFeatures}
@@ -8566,388 +8503,103 @@ async function loadUsers() {
     );
   }
 
+  const routedPage = (
+    <AppRouter
+      page={page}
+      appVersion={APP_VERSION}
+      workoutModeRemember={workoutModeRemember}
+      canUseTrainerFeatures={canUseTrainerFeatures()}
+      basicWorkoutQuiz={basicWorkoutQuiz}
+      onBackToMain={goBackToMain}
+      onOpenBasicWorkoutQuiz={openBasicWorkoutQuiz}
+      onOpenIndividualWorkouts={openIndividualWorkouts}
+      onSetWorkoutModeRemember={setWorkoutModeRemember}
+      onSetPage={setPage}
+      onOpenTrainingEntry={openTrainingEntry}
+      onApplyBasicWorkoutPlan={applyBasicWorkoutPlan}
+      onBasicWorkoutQuizChange={setBasicWorkoutQuiz}
+      onOpenNutrition={() => setPage(APP_PAGES.NUTRITION)}
+      onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
+      onOpenTrainerPrograms={openAdminProgramsOverview}
+      onOpenCabinet={() => {
+        loadHistory();
+        setProfileActiveTab("cabinet");
+        setPage(APP_PAGES.PROFILE);
+      }}
+      history={history}
+      historyLoading={historyLoading}
+      openHistoryKey={openHistoryKey}
+      historySwipeId={historySwipeId}
+      historyDeletingId={historyDeletingId}
+      loadHistory={loadHistory}
+      handleHistoryTouchStart={handleHistoryTouchStart}
+      handleHistoryTouchEnd={handleHistoryTouchEnd}
+      requestDeleteOwnHistoryWorkout={requestDeleteOwnHistoryWorkout}
+      setOpenHistoryKey={setOpenHistoryKey}
+      renderHistoryDeleteConfirm={renderHistoryDeleteConfirm}
+      aiNutritionProfile={aiNutritionProfile}
+      aiNutritionProfileDraft={aiNutritionProfileDraft}
+      profileMeasurements={profileMeasurements}
+      profileMeasurementWizardStep={profileMeasurementWizardStep}
+      profileMeasurementDraft={profileMeasurementDraft}
+      profileMeasurementStatus={profileMeasurementStatus}
+      profileMeasurementSaving={profileMeasurementSaving}
+      setProfileMeasurementDraft={setProfileMeasurementDraft}
+      setProfileMeasurementStatus={setProfileMeasurementStatus}
+      setProfileMeasurementWizardStep={setProfileMeasurementWizardStep}
+      setProfileMeasurementOpen={setProfileMeasurementOpen}
+      setProfileActiveTab={setProfileActiveTab}
+      profileMeasurementReturnTab={profileMeasurementReturnTab}
+      saveProfileMeasurement={saveProfileMeasurement}
+      selectedAiFeatureId={selectedAiFeatureId}
+      setSelectedAiFeatureId={setSelectedAiFeatureId}
+      aiNutritionSavedPlan={aiNutritionSavedPlan}
+      setAiNutritionProfileDraft={setAiNutritionProfileDraft}
+      saveAiNutritionPlan={saveAiNutritionPlan}
+      resetAiNutritionPlan={resetAiNutritionPlan}
+      nutritionDateKey={nutritionDateKey}
+      aiNutritionAdaptedToday={aiNutritionAdaptedToday}
+      setAiNutritionAdaptedToday={setAiNutritionAdaptedToday}
+      plan={plan}
+      nutrition={nutrition}
+      user={user}
+      getCompletedWorkoutSet={getCompletedWorkoutSet}
+      isWorkoutCompletedByHistory={isWorkoutCompletedByHistory}
+      onOpenWorkoutPlanWorkout={(index) => {
+        setIndividualWorkoutIndex(index);
+        setIndividualWorkoutIndexInitialized(true);
+        setSelectedWorkoutId(null);
+        setPage(APP_PAGES.WORKOUTS);
+        window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
+      }}
+      onOpenWorkoutPlanWorkouts={() => {
+        setSelectedWorkoutId(null);
+        setPage(APP_PAGES.WORKOUTS);
+        window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
+      }}
+      onOpenWorkoutPlan={() => {
+        setPage(APP_PAGES.WORKOUT_PLAN);
+        window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
+      }}
+      onOpenWorkoutPlanHistory={() => {
+        loadHistory();
+        setPage(APP_PAGES.HISTORY);
+      }}
+    />
+  );
 
-  if (page === "workoutMode") {
-    return (
-      <div className="workoutModePage">
-        <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
-        <button className="workoutModeBack" onClick={goBackToMain}>←</button>
-
-        <section className="workoutModeHero">
-          <span>ТРЕНИРОВКИ</span>
-          <h1>Режим запуска</h1>
-          <p>Можно тренироваться по базовой программе или по индивидуальному плану от тренера.</p>
-        </section>
-
-        <section className="workoutModeCards">
-          <button className="workoutModeCard" onClick={openBasicWorkoutQuiz}>
-            <span className="workoutModeIcon">Б</span>
-            <div>
-              <strong>Базовые тренировки</strong>
-              <small>Короткий опрос и готовый план из базы приложения.</small>
-            </div>
-            <i>›</i>
-          </button>
-
-          <button className="workoutModeCard premium" onClick={openIndividualWorkouts}>
-            <span className="workoutModeIcon">И</span>
-            <div>
-              <strong>Индивидуальный план</strong>
-              <small>Тренировки, которые создал и назначил тренер.</small>
-            </div>
-            <i>›</i>
-          </button>
-        </section>
-
-        <label className="workoutModeRemember">
-          <input
-            type="checkbox"
-            checked={workoutModeRemember}
-            onChange={(event) => setWorkoutModeRemember(event.target.checked)}
-          />
-          <span>Запомнить выбор и больше не спрашивать</span>
-        </label>
-
-        {renderClientMainBottomBar("workouts", "mainMenuBottomBar profileBottomTabBar workoutModeBottomBar")}
-      </div>
-    );
+  if ([
+    APP_PAGES.WORKOUT_MODE,
+    APP_PAGES.BASIC_WORKOUT_QUIZ,
+    APP_PAGES.HISTORY,
+    APP_PAGES.WORKOUT_PLAN,
+    APP_PAGES.MEASUREMENT_WIZARD,
+    APP_PAGES.AI_COACH
+  ].includes(page)) {
+    return routedPage;
   }
 
-  if (page === "basicWorkoutQuiz") {
-    const previewPlan = buildBasicWorkoutPlanFromQuiz(basicWorkoutQuiz);
-
-    return (
-      <div className="basicQuizPage">
-        <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
-        <button className="workoutModeBack" onClick={() => setPage("workoutMode")}>←</button>
-
-        <section className="workoutModeHero">
-          <span>БАЗОВЫЕ ТРЕНИРОВКИ</span>
-          <h1>Базовый подбор</h1>
-          <p>Ответь на 3 вопроса — приложение предложит стартовый план тренировок.</p>
-        </section>
-
-        <section className="basicQuizCard">
-          <label>
-            <span>Цель</span>
-            <select
-              value={basicWorkoutQuiz.goal}
-              onChange={(event) => setBasicWorkoutQuiz((prev) => ({ ...prev, goal: event.target.value }))}
-            >
-              <option value="muscle">Набрать мышцы</option>
-              <option value="beginner">Начать тренироваться</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Опыт</span>
-            <select
-              value={basicWorkoutQuiz.level}
-              onChange={(event) => setBasicWorkoutQuiz((prev) => ({ ...prev, level: event.target.value }))}
-            >
-              <option value="beginner">Новичок</option>
-              <option value="middle">Уже тренировался</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Сколько тренировок в неделю</span>
-            <select
-              value={basicWorkoutQuiz.days}
-              onChange={(event) => setBasicWorkoutQuiz((prev) => ({ ...prev, days: event.target.value }))}
-            >
-              <option value="3">3 тренировки</option>
-              <option value="4">4 тренировки</option>
-            </select>
-          </label>
-        </section>
-
-        <section className="basicQuizPreview">
-          <span>Рекомендуемый план</span>
-          <strong>{previewPlan.name}</strong>
-          <p>{previewPlan.description}</p>
-          <div>
-            <b>{previewPlan.workouts.length}</b>
-            <small>тренировки</small>
-            <b>{previewPlan.workouts.reduce((sum, workout) => sum + (workout.exercises?.length || 0), 0)}</b>
-            <small>упражнений</small>
-          </div>
-        </section>
-
-        <button className="basicQuizStartBtn" onClick={applyBasicWorkoutPlan}>
-          Подобрать план
-        </button>
-
-        {renderClientMainBottomBar("workouts", "mainMenuBottomBar profileBottomTabBar workoutModeBottomBar")}
-      </div>
-    );
-  }
-
-  if (page === "aiCoach") {
-    const activeAiFeature = AI_COACH_FEATURES.find((feature) => feature.id === selectedAiFeatureId) || AI_COACH_FEATURES[0];
-    const aiResult = buildAiCoachResult(activeAiFeature.id, { history, nutrition, plan });
-    const isNutritionPlanFeature = activeAiFeature.id === "nutritionPlan";
-    const aiNutritionDay = buildAiNutritionDayModel(nutrition, nutrition.days?.[nutritionDateKey], history);
-    const activeAiNutritionPlan = aiNutritionSavedPlan || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
-    const activeAiNutritionWeekNumber = getAiNutritionCurrentWeek(activeAiNutritionPlan);
-    const activeAiNutritionWeek = activeAiNutritionPlan?.weeks?.[activeAiNutritionWeekNumber - 1] || activeAiNutritionPlan?.weeks?.[0];
-    const activeAiNutritionProfile = activeAiNutritionPlan?.profile || aiNutritionProfile || aiNutritionProfileDraft;
-    const isAiTrainingDayToday = isAiNutritionTrainingDay(activeAiNutritionProfile);
-    const activeAiNutritionTodayMacros = getAiNutritionDayMacros(activeAiNutritionWeek || nutrition.goals, activeAiNutritionProfile);
-    const aiNutritionTrainingAdvice = getAiNutritionTrainingDayAdvice(isAiTrainingDayToday, activeAiNutritionProfile?.goal);
-
-    return (
-      <div className="aiCoachPage">
-        <button className="backBtn universalFixedBackPointer aiCoachBackBtn" onClick={goBackToMain}>←</button>
-
-        <section className="aiCoachHero">
-          <div className="aiCoachBadge">AI ASSISTANT CORE</div>
-          <h1>AI-помощник</h1>
-          <p>Умные подсказки по питанию, тренировкам, восстановлению и прогрессу на основе твоей истории.</p>
-        </section>
-
-        {isNutritionPlanFeature ? (
-          <section className="aiNutritionPlanShell">
-            {!activeAiNutritionPlan ? (
-              <div className="aiNutritionOnboardingCard">
-                <div className="aiNutritionOnboardingHead">
-                  <span>AI-план питания v1</span>
-                  <h2>Создадим месячный план КБЖУ</h2>
-                  <p>AI возьмёт твой вес, рост, возраст, цель, текущие КБЖУ, питание за всё время, частые продукты и историю тренировок.</p>
-                </div>
-
-                <div className="aiNutritionBodyReadOnlyCard">
-                  <div className="aiNutritionBodyReadOnlyHead">
-                    <strong>Данные из личного кабинета</strong>
-                    <small>Редактируются только в профиле</small>
-                  </div>
-                  <div className="aiNutritionBodyReadOnlyGrid">
-                    <span><i>Вес</i><b>{aiNutritionProfileDraft.weight || "—"}</b></span>
-                    <span><i>Рост</i><b>{aiNutritionProfileDraft.height || "—"}</b></span>
-                    <span><i>Возраст</i><b>{aiNutritionProfileDraft.age || "—"}</b></span>
-                    <span><i>Пол</i><b>{aiNutritionProfileDraft.sex === "female" ? "Ж" : "М"}</b></span>
-                  </div>
-                  <button
-                    type="button"
-                    className="aiNutritionProfileLinkBtn"
-                    onClick={() => setPage("profile")}
-                  >
-                    Изменить в личном кабинете
-                  </button>
-                </div>
-
-                <div className="aiNutritionTrainingDaysPicker">
-                  <div className="aiNutritionTrainingDaysHead">
-                    <strong>Дни тренировок</strong>
-                    <small>Можно выбрать несколько дней</small>
-                  </div>
-                  <div className="aiNutritionTrainingDaysGrid">
-                    {AI_NUTRITION_WEEK_DAYS.map((day) => {
-                      const selected = getAiNutritionTrainingDays(aiNutritionProfileDraft).includes(day.id);
-                      return (
-                        <button
-                          type="button"
-                          key={day.id}
-                          className={selected ? "active" : ""}
-                          title={day.label}
-                          onClick={() => setAiNutritionProfileDraft((prev) => {
-                            const current = getAiNutritionTrainingDays(prev);
-                            const next = current.includes(day.id)
-                              ? current.filter((item) => item !== day.id)
-                              : [...current, day.id];
-                            return { ...prev, trainingDays: next };
-                          })}
-                        >
-                          {day.short}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="aiNutritionGoalPicker">
-                  {[
-                    { id: "maintain", title: "Поддержка", text: "ровный вес и стабильная энергия" },
-                    { id: "recomp", title: "Рекомпозиция", text: "больше и лёгкий дефицит" },
-                    { id: "mass", title: "Набор массы", text: "плавно + калории" },
-                    { id: "cut", title: "Похудение", text: "комфортный дефицит" },
-                    { id: "dry", title: "Сушка", text: "дефицит + сохранить мышцы" }
-                  ].map((goal) => (
-                    <button
-                      type="button"
-                      key={goal.id}
-                      className={aiNutritionProfileDraft.goal === goal.id ? "active" : ""}
-                      onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, goal: goal.id }))}
-                    >
-                      <strong>{goal.title}</strong>
-                      <small>{goal.text}</small>
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  className="aiNutritionPrimaryBtn"
-                  onClick={() => saveAiNutritionPlan()}
-                >
-                  Создать AI-план
-                </button>
-              </div>
-            ) : (
-              <div className="aiNutritionPlanCardFull">
-                <div className="aiNutritionPlanHero">
-                  <div>
-                    <span>Твой AI-план питания</span>
-                    <h2>{activeAiNutritionPlan.goalLabel}</h2>
-                    <p>{activeAiNutritionPlan.comment}</p>
-                  </div>
-                  <strong>{aiNutritionDay.score}/10</strong>
-                </div>
-
-                <div className="aiNutritionTodayMacros">
-                  <div>
-                    <span>Сегодня</span>
-                    <strong>{activeAiNutritionTodayMacros?.calories || nutrition.goals.calories}</strong>
-                    <small>ккал</small>
-                  </div>
-                  <div>
-                    <span>Белки</span>
-                    <strong>{activeAiNutritionTodayMacros?.protein || nutrition.goals.protein}</strong>
-                    <small>г</small>
-                  </div>
-                  <div>
-                    <span>Жиры</span>
-                    <strong>{activeAiNutritionTodayMacros?.fat || nutrition.goals.fat}</strong>
-                    <small>г</small>
-                  </div>
-                  <div>
-                    <span>Углеводы</span>
-                    <strong>{activeAiNutritionTodayMacros?.carbs || nutrition.goals.carbs}</strong>
-                    <small>г</small>
-                  </div>
-                </div>
-
-                <div className="aiNutritionPlanInsight">
-                  <span>Краткий AI-комментарий</span>
-                  <p>{aiNutritionDay.summary} {aiNutritionTrainingAdvice}</p>
-                </div>
-
-                <div className="aiNutritionBadgesRow">
-                  {aiNutritionDay.badges.map((badge) => (
-                    <span key={badge.text} className={badge.type}>
-                      <i>{badge.icon}</i>{badge.text}
-                    </span>
-                  ))}
-                </div>
-
-                <div className={`aiNutritionTrainingDayInfo ${isAiTrainingDayToday ? "active" : ""}`}>
-                  <span>{isAiTrainingDayToday ? "Сегодня тренировка" : "Сегодня без тренировки"}</span>
-                  <p>{aiNutritionTrainingAdvice}</p>
-                </div>
-
-                <button
-                  type="button"
-                  className="aiNutritionAdaptBtn"
-                  onClick={() => setAiNutritionAdaptedToday((value) => !value)}
-                >
-                  Адаптировать под сегодня
-                </button>
-
-                {aiNutritionAdaptedToday && (
-                  <div className="aiNutritionPlanInsight aiNutritionAdaptResult">
-                    <span>Совет на остаток дня</span>
-                    <p>{aiNutritionDay.adaptiveAdvice}</p>
-                  </div>
-                )}
-
-                <div className="aiNutritionWeeksGrid">
-                  {activeAiNutritionPlan.weeks.map((week) => (
-                    <div key={week.week} className={week.week === activeAiNutritionWeekNumber ? "active" : ""}>
-                      <span>{week.label}</span>
-                      <strong>{week.calories} ккал</strong>
-                      <small>Б {week.protein} · Ж {week.fat} · У {week.carbs}</small>
-                      <p>{week.focus}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="aiNutritionTwoCol">
-                  <div>
-                    <span>Прогресс недели</span>
-                    <p>Сейчас активна {activeAiNutritionWeekNumber} неделя. {activeAiNutritionPlan.weightTrend?.text}</p>
-                  </div>
-                  <div>
-                    <span>Частые продукты</span>
-                    <p>{activeAiNutritionPlan.frequentFoods?.length ? activeAiNutritionPlan.frequentFoods.join(", ") : "AI будет собирать список по истории питания."}</p>
-                  </div>
-                </div>
-
-                <div className="aiNutritionImproveBox">
-                  <span>Что улучшить сегодня</span>
-                  <p>{aiNutritionDay.left.protein > 20 ? "1. Добрать белок простыми продуктами." : "1. Белок держится хорошо."}</p>
-                  <p>{aiNutritionDay.left.carbs > 80 ? "2. Добавить углеводы вокруг тренировки." : "2. Углеводы близко к цели."}</p>
-                  <p>{aiNutritionDay.left.fat < 0 ? "3. Остаток дня сделать менее жирным." : "3. Не перегружать жиры вечером."}</p>
-                </div>
-
-                <div className="aiNutritionPlanActions">
-                  <button type="button" onClick={() => saveAiNutritionPlan(aiNutritionProfile)}>Обновить план</button>
-                  <button type="button" className="ghost" onClick={resetAiNutritionPlan}>Пересоздать анкету</button>
-                </div>
-              </div>
-            )}
-          </section>
-        ) : (
-          <section className="aiCoachResultCard">
-            <div className="aiCoachResultTop">
-              <div>
-                <span>{activeAiFeature.icon}</span>
-                <h2>{aiResult.title}</h2>
-                <p>{aiResult.status}</p>
-              </div>
-              <strong>{aiResult.score}%</strong>
-            </div>
-
-            <div className="aiCoachMeter" aria-hidden="true">
-              <i style={{ width: `${Math.min(100, Math.max(4, aiResult.score))}%` }} />
-            </div>
-
-            <div className="aiCoachBlocks">
-              <div className="aiCoachMiniBlock">
-                <h3>Анализ</h3>
-                {aiResult.bullets.map((item) => (
-                  <p key={item}>{item}</p>
-                ))}
-              </div>
-
-              <div className="aiCoachMiniBlock accent">
-                <h3>Что сделать</h3>
-                {aiResult.actions.map((item) => (
-                  <p key={item}>{item}</p>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        <section className="aiCoachGrid">
-          {AI_COACH_FEATURES.map((feature) => (
-            <button
-              type="button"
-              key={feature.id}
-              className={`aiCoachFeatureCard ${feature.id === activeAiFeature.id ? "active" : ""}`}
-              onClick={() => setSelectedAiFeatureId(feature.id)}
-            >
-              <span>{feature.icon}</span>
-              <strong>{feature.title}</strong>
-              <small>{feature.subtitle}</small>
-            </button>
-          ))}
-        </section>
-      </div>
-    );
-  }
-
-  if (page === "nutrition") {
+  if (page === APP_PAGES.NUTRITION) {
     const preliminaryAiNutritionPlan = getClientNutritionDisplayPlan(
       {
         aiNutritionPlan: aiNutritionSavedPlan,
@@ -10866,207 +10518,31 @@ async function loadUsers() {
         )}
 
         {!nutritionPickerOpen && !nutritionCalendarOpen && !activeNutritionMeal && (
-          renderClientMainBottomBar("nutrition", "mainMenuBottomBar profileBottomTabBar nutritionBottomTabBar")
-        )}
-      </div>
-    );
-  }
-
-
-  if (page === "measurementWizard") {
-    const activeProfile = {
-      ...(aiNutritionProfile || {}),
-      ...aiNutritionProfileDraft
-    };
-    const latestProfileMeasurement = Array.isArray(profileMeasurements) && profileMeasurements.length
-      ? profileMeasurements[0]
-      : null;
-    const measurementFields = getProfileMeasurementFields(activeProfile?.goal || "recomp");
-    const totalWizardScreens = measurementFields.length + 2;
-    const isIntroStep = profileMeasurementWizardStep === 0;
-    const isReviewStep = profileMeasurementWizardStep === totalWizardScreens - 1;
-    const activeField = !isIntroStep && !isReviewStep ? measurementFields[profileMeasurementWizardStep - 1] : null;
-    const nextMeasurementField = measurementFields[profileMeasurementWizardStep] || null;
-    const progressPercent = Math.max(4, Math.round(((profileMeasurementWizardStep + 1) / totalWizardScreens) * 100));
-
-    const closeMeasurementWizard = () => {
-      setProfileMeasurementDraft({
-        weight: "",
-        neck: "",
-        shoulders: "",
-        chest: "",
-        biceps: "",
-        forearm: "",
-        wrist: "",
-        belly: "",
-        pelvis: "",
-        thigh: "",
-        calf: "",
-        ankle: "",
-        note: ""
-      });
-      setProfileMeasurementStatus("");
-      setProfileMeasurementWizardStep(0);
-      setProfileMeasurementOpen(false);
-      setProfileActiveTab(profileMeasurementReturnTab);
-      setPage("profile");
-    };
-
-    return (
-      <div className="measurementFullscreenPage">
-        <div className="measurementFullscreenHeader">
-          <div className="measurementFullscreenProgress">
-            <span>Шаг {profileMeasurementWizardStep + 1} из {totalWizardScreens}</span>
-            <i><em style={{ width: `${progressPercent}%` }} /></i>
-          </div>
-          <button
-            type="button"
-            className="measurementFullscreenClose"
-            onClick={closeMeasurementWizard}
-            aria-label="Закрыть без сохранения"
-          >
-            ×
-          </button>
-        </div>
-
-        <main className="measurementFullscreenBody">
-          {nextMeasurementField && (
-            <img
-              src={`/measurements/${nextMeasurementField.id}.webp`}
-              alt=""
-              aria-hidden="true"
-              className="measurementFullscreenPreload"
-              loading="eager"
-              decoding="async"
-            />
-          )}
-
-          {isIntroStep && (
-            <section className="measurementFullscreenCard intro">
-              <div className="profileMeasurementWizardVisual measurementIntroVisual">
-                <div className="profileMeasurementMiniHuman">
-                  <i />
-                  <b />
-                  <em />
-                </div>
-              </div>
-
-              <h2>Как выполнять замеры</h2>
-              <p>Мерь утром, одной и той же лентой, в спокойном состоянии. Не втягивай живот и не затягивай ленту слишком сильно.</p>
-
-              <div className="profileMeasurementTips">
-                <span>Одинаковое время</span>
-                <span>Одна лента</span>
-                <span>Без натяжения</span>
-                <span>Фото можно делать отдельно</span>
-              </div>
-            </section>
-          )}
-
-          {activeField && (
-            <section className="measurementFullscreenCard measurement">
-              <div className={`measurementFullscreenImageFrame zone-${activeField.id}`}>
-                <img
-                  src={`/measurements/${activeField.id}.webp`}
-                  alt={activeField.label}
-                  className="measurementFullscreenImage"
-                  loading="eager"
-                  decoding="async"
-                  fetchPriority="high"
-                />
-              </div>
-
-              <div className="measurementFullscreenText">
-                <h2>{activeField.label}</h2>
-                <p>{activeField.hint}</p>
-              </div>
-
-              <label className="measurementFullscreenInput">
-                <div>
-                  <input
-                    inputMode="decimal"
-                    value={profileMeasurementDraft[activeField.id] || ""}
-                    placeholder="0"
-                    onChange={(event) => setProfileMeasurementDraft((prev) => ({ ...prev, [activeField.id]: event.target.value }))}
-                  />
-                  <em>{activeField.unit}</em>
-                </div>
-              </label>
-
-              <small className="measurementFullscreenPrevious">
-                Прошлый раз: {getProfileMeasurementValue(latestProfileMeasurement, activeField)} {activeField.unit}
-              </small>
-            </section>
-          )}
-
-          {isReviewStep && (
-            <section className="measurementFullscreenCard review">
-              <h2>Проверь данные</h2>
-              <p>Если всё верно — сохрани контрольный замер. Пустые поля можно оставить пустыми.</p>
-
-              <div className="measurementFullscreenReviewGrid">
-                {measurementFields.map((field) => (
-                  <div key={field.id}>
-                    <span>{field.label}</span>
-                    <strong>{profileMeasurementDraft[field.id] || "0"}</strong>
-                    <small>{field.unit}</small>
-                  </div>
-                ))}
-              </div>
-
-              <label className="profileMeasurementNote wizardNote">
-                <span>Заметка</span>
-                <textarea
-                  value={profileMeasurementDraft.note || ""}
-                  placeholder="Например: утром, после тренировки, самочувствие..."
-                  onChange={(event) => setProfileMeasurementDraft((prev) => ({ ...prev, note: event.target.value }))}
-                />
-              </label>
-
-            </section>
-          )}
-        </main>
-
-        {profileMeasurementStatus && (
-          <p className="measurementFullscreenStatus">{profileMeasurementStatus}</p>
-        )}
-
-        <div className="measurementFullscreenNav">
-          <button
-            type="button"
-            onClick={() => {
-              if (profileMeasurementWizardStep === 0) {
-                closeMeasurementWizard();
-                return;
-              }
-              setProfileMeasurementWizardStep((step) => Math.max(0, step - 1));
+          <ClientMainBottomBar
+            activeTab="nutrition"
+            className="mainMenuBottomBar profileBottomTabBar nutritionBottomTabBar"
+            isTrainerMode={canUseTrainerFeatures()}
+            onGoMain={goBackToMain}
+            onOpenTraining={openTrainingEntry}
+            onOpenNutrition={() => setPage(APP_PAGES.NUTRITION)}
+            onOpenCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
             }}
-          >
-            ← Назад
-          </button>
-
-          {!isReviewStep ? (
-            <button
-              type="button"
-              className="next"
-              onClick={() => setProfileMeasurementWizardStep((step) => Math.min(totalWizardScreens - 1, step + 1))}
-            >
-              Вперёд →
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="next"
-              disabled={profileMeasurementSaving}
-              onClick={saveProfileMeasurement}
-            >
-              {profileMeasurementStatus.startsWith("Замер сохранён") ? "Сохранено ✓" : "Сохранить"}
-            </button>
-          )}
-        </div>
+            onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
+            onOpenTrainerPrograms={openAdminProgramsOverview}
+            onLoadTrainerCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
+            }}
+          />
+        )}
       </div>
     );
   }
+
 
   function openCabinetWorkoutHistory(workoutId = null, programScope = null) {
     loadHistory();
@@ -11075,7 +10551,7 @@ async function loadUsers() {
     setProfileWorkoutHistoryProgramScope(programScope);
     setOpenHistoryKey(workoutId);
     setProfileActiveTab("cabinet");
-    setPage("profile");
+    setPage(APP_PAGES.PROFILE);
     setProfileWorkoutHistoryModalOpen(true);
     window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
   }
@@ -11094,149 +10570,6 @@ async function loadUsers() {
     }
   }
 
-  function renderClientMainBottomBar(activeTab = "main", className = "mainMenuBottomBar profileBottomTabBar") {
-    if (canUseTrainerFeatures()) {
-      return renderTrainerMainBottomBar(activeTab, className);
-    }
-
-    return (
-      <nav className={className} aria-label="Основные разделы">
-        <button
-          type="button"
-          className={activeTab === "main" ? "active" : ""}
-          aria-current={activeTab === "main" ? "page" : undefined}
-          onClick={goBackToMain}
-        >
-          <span aria-hidden="true">🏠</span>
-          <strong>Главная</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "workouts" ? "active" : ""}
-          aria-current={activeTab === "workouts" ? "page" : undefined}
-          onClick={openTrainingEntry}
-        >
-          <span aria-hidden="true">🏋️</span>
-          <strong>Тренировки</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "nutrition" ? "active" : ""}
-          aria-current={activeTab === "nutrition" ? "page" : undefined}
-          onClick={() => setPage("nutrition")}
-        >
-          <span aria-hidden="true">🍽️</span>
-          <strong>Питание</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "cabinet" ? "active" : ""}
-          aria-current={activeTab === "cabinet" ? "page" : undefined}
-          onClick={() => {
-            loadHistory();
-            setProfileActiveTab("cabinet");
-            setPage("profile");
-          }}
-        >
-          <span aria-hidden="true">👤</span>
-          <strong>Кабинет</strong>
-        </button>
-      </nav>
-    );
-  }
-
-  function renderTrainerMainBottomBar(activeTab = "main", className = "mainMenuBottomBar profileBottomTabBar") {
-    return (
-      <nav className={`${className} trainerRoleBottomBar`} aria-label="Разделы тренера">
-        <button
-          type="button"
-          className={activeTab === "main" ? "active" : ""}
-          aria-current={activeTab === "main" ? "page" : undefined}
-          onClick={() => {
-            setSelectedUserId(null);
-            setPage("admin");
-          }}
-        >
-          <span aria-hidden="true">🏠</span>
-          <strong>Главная</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "clients" ? "active" : ""}
-          aria-current={activeTab === "clients" ? "page" : undefined}
-          onClick={() => openAdminClientsWithFilter("all")}
-        >
-          <span aria-hidden="true">👥</span>
-          <strong>Клиенты</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "programs" ? "active" : ""}
-          aria-current={activeTab === "programs" ? "page" : undefined}
-          onClick={openAdminProgramsOverview}
-        >
-          <span aria-hidden="true">📋</span>
-          <strong>Программы</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "cabinet" ? "active" : ""}
-          aria-current={activeTab === "cabinet" ? "page" : undefined}
-          onClick={() => {
-            loadHistory();
-            setProfileActiveTab("cabinet");
-            setPage("profile");
-          }}
-        >
-          <span aria-hidden="true">👤</span>
-          <strong>Кабинет</strong>
-        </button>
-      </nav>
-    );
-  }
-
-  function renderTrainerWorkspaceBottomBar(activeTab = "clients") {
-    return (
-      <nav className="adminV3Nav adminV3BottomBar trainerRoleWorkspaceBar" aria-label="Разделы тренера">
-        <button
-          className={activeTab === "main" ? "active" : ""}
-          type="button"
-          onClick={() => {
-            setSelectedUserId(null);
-            setPage("admin");
-          }}
-        >
-          <span className="adminV3NavIcon">🏠</span>
-          <span className="adminV3NavLabel">Главная</span>
-        </button>
-        <button className={activeTab === "clients" ? "active" : ""} type="button" onClick={() => openAdminClientsWithFilter("all")}>
-          <span className="adminV3NavIcon">👥</span>
-          <span className="adminV3NavLabel">Клиенты</span>
-        </button>
-        <button
-          className={activeTab === "programs" ? "active" : ""}
-          type="button"
-          onClick={openAdminProgramsOverview}
-        >
-          <span className="adminV3NavIcon">📋</span>
-          <span className="adminV3NavLabel">Программы</span>
-        </button>
-        <button
-          className={activeTab === "cabinet" ? "active" : ""}
-          type="button"
-          onClick={() => {
-            loadHistory();
-            setProfileActiveTab("cabinet");
-            setPage("profile");
-          }}
-        >
-          <span className="adminV3NavIcon">👤</span>
-          <span className="adminV3NavLabel">Кабинет</span>
-        </button>
-      </nav>
-    );
-  }
-
   function isTrainerNextWorkspace() {
     return currentUserRole === "trainer" && !canUseAdminFeatures();
   }
@@ -11248,7 +10581,7 @@ async function loadUsers() {
     setAdminSelectedClient(client);
     setAdminUsersSelectedTab(tab);
     setTrainerNextSection("client");
-    setPage("admin");
+    setPage(APP_PAGES.ADMIN);
 
     await Promise.allSettled([
       loadAdminClientOverview(client, false),
@@ -11260,7 +10593,7 @@ async function loadUsers() {
     if (section === "dashboard") {
       setAdminClientPageOpen(false);
       setTrainerNextSection("dashboard");
-      setPage("admin");
+      setPage(APP_PAGES.ADMIN);
       return;
     }
 
@@ -11268,7 +10601,7 @@ async function loadUsers() {
       setAdminClientFilter("all");
       setAdminClientPageOpen(false);
       setTrainerNextSection("clients");
-      setPage("admin");
+      setPage(APP_PAGES.ADMIN);
       return;
     }
 
@@ -11280,7 +10613,7 @@ async function loadUsers() {
       setAdminProgramLibraryTab("overview");
       await loadAdminTrainingTemplates();
       setTrainerNextSection("workouts");
-      setPage("adminWorkouts");
+      setPage(APP_PAGES.ADMIN_WORKOUTS);
       return;
     }
 
@@ -11290,10 +10623,10 @@ async function loadUsers() {
         await loadAdminClientOverview(targetClient, false);
         setAdminUsersSelectedTab("nutrition");
         setTrainerNextSection("client");
-        setPage("admin");
+        setPage(APP_PAGES.ADMIN);
       } else {
         setTrainerNextSection("clients");
-        setPage("admin");
+        setPage(APP_PAGES.ADMIN);
       }
       return;
     }
@@ -11301,14 +10634,14 @@ async function loadUsers() {
     if (section === "more" || section === "settings") {
       setAdminClientPageOpen(false);
       setTrainerNextSection("cabinet");
-      setPage("admin");
+      setPage(APP_PAGES.ADMIN);
       return;
     }
 
     if (["messages", "analytics", "notifications"].includes(section)) {
       setAdminClientPageOpen(false);
       setTrainerNextSection(section);
-      setPage("admin");
+      setPage(APP_PAGES.ADMIN);
       return;
     }
 
@@ -11322,7 +10655,7 @@ async function loadUsers() {
     setAdminSelectedExerciseId("");
     setAdminProgramLibraryTab("overview");
     await loadAdminTrainingTemplates();
-    setPage("adminWorkouts");
+    setPage(APP_PAGES.ADMIN_WORKOUTS);
   }
 
   async function openTrainerExerciseLibrary() {
@@ -11330,7 +10663,7 @@ async function loadUsers() {
     setTrainerProgramManagerOpen(false);
     await loadAdminTrainingTemplates();
     setTrainerNextSection("workouts");
-    setPage("adminWorkouts");
+    setPage(APP_PAGES.ADMIN_WORKOUTS);
   }
 
   function updateTrainerNextWorkout(workoutId, patch = {}) {
@@ -11645,54 +10978,8 @@ async function loadUsers() {
     });
   }
 
-  function renderClientTrainingBottomBar(activeTab = "workouts") {
-    return (
-      <nav className="individualWorkoutMenuBar" aria-label="Навигация тренировок">
-        <button type="button" onClick={goBackToMain}>
-          <span aria-hidden="true">🏠</span>
-          <strong>Главная</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "workouts" ? "active" : ""}
-          aria-current={activeTab === "workouts" ? "page" : undefined}
-          onClick={() => {
-            setSelectedWorkoutId(null);
-            setPage("workouts");
-            window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
-          }}
-        >
-          <span aria-hidden="true">🏋️</span>
-          <strong>Тренировки</strong>
-        </button>
-        <button
-          type="button"
-          className={activeTab === "plan" ? "active" : ""}
-          aria-current={activeTab === "plan" ? "page" : undefined}
-          onClick={() => {
-            setPage("workoutPlan");
-            window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
-          }}
-        >
-          <span aria-hidden="true">📋</span>
-          <strong>План</strong>
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            loadHistory();
-            setPage("history");
-          }}
-        >
-          <span aria-hidden="true">🗓️</span>
-          <strong>История</strong>
-        </button>
-      </nav>
-    );
-  }
-
-  if (page === "profile" || page === "main") {
-    const isMainDashboard = page === "main";
+  if (page === APP_PAGES.PROFILE || page === APP_PAGES.MAIN) {
+    const isMainDashboard = page === APP_PAGES.MAIN;
     const visibleProfileTab = isMainDashboard
       ? "cabinet"
       : (profileActiveTab === "nutrition" || profileActiveTab === "progress" ? "cabinet" : profileActiveTab);
@@ -12017,10 +11304,48 @@ async function loadUsers() {
           </>
         )}
 
-        {!isMainDashboard && renderClientMainBottomBar("cabinet")}
+        {!isMainDashboard && (
+          <ClientMainBottomBar
+            activeTab="cabinet"
+            isTrainerMode={canUseTrainerFeatures()}
+            onGoMain={goBackToMain}
+            onOpenTraining={openTrainingEntry}
+            onOpenNutrition={() => setPage(APP_PAGES.NUTRITION)}
+            onOpenCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
+            }}
+            onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
+            onOpenTrainerPrograms={openAdminProgramsOverview}
+            onLoadTrainerCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
+            }}
+          />
+        )}
 
         {isMainDashboard && (
-          renderClientMainBottomBar("main")
+          <ClientMainBottomBar
+            activeTab="main"
+            isTrainerMode={canUseTrainerFeatures()}
+            onGoMain={goBackToMain}
+            onOpenTraining={openTrainingEntry}
+            onOpenNutrition={() => setPage(APP_PAGES.NUTRITION)}
+            onOpenCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
+            }}
+            onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
+            onOpenTrainerPrograms={openAdminProgramsOverview}
+            onLoadTrainerCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
+            }}
+          />
         )}
 
         {isMainDashboard && <h1 className="mainDashboardTitle clientCorePageTitle">Главное меню</h1>}
@@ -12451,7 +11776,7 @@ async function loadUsers() {
                     setProfileMeasurementOpen(false);
                     setProfileMeasurementWizardStep(0);
                     setProfileMeasurementStatus("");
-                    setPage("measurementWizard");
+                    setPage(APP_PAGES.MEASUREMENT_WIZARD);
                   }}
                 >
                   📏 Начать замер
@@ -12695,7 +12020,7 @@ async function loadUsers() {
                   setProfileMeasurementOpen(false);
                   setProfileMeasurementWizardStep(0);
                   setProfileMeasurementStatus("");
-                  setPage("measurementWizard");
+                  setPage(APP_PAGES.MEASUREMENT_WIZARD);
                 }}
               >
                 📏 Начать замер
@@ -13453,10 +12778,10 @@ async function loadUsers() {
                 <section className="profileDashboardCard profileAppSettingsSection">
                   <div className="profileSettingsActions">
                     <button type="button" className="profileThemeSwitchBtn" onClick={toggleAppTheme}>
-                      <span className="profileThemeIcon">{appTheme === "warm-light" ? "🌙" : "☀️"}</span>
+                      <span className="profileThemeIcon">{appTheme === APP_THEMES.WARM_LIGHT ? "🌙" : "☀️"}</span>
                       <span className="profileThemeText">
                         <strong>Оформление</strong>
-                        <small>{appTheme === "warm-light" ? "Переключить на тёмный стиль" : "Переключить на светлый стиль"}</small>
+                        <small>{appTheme === APP_THEMES.WARM_LIGHT ? "Переключить на тёмный стиль" : "Переключить на светлый стиль"}</small>
                       </span>
                       <i>›</i>
                     </button>
@@ -13570,7 +12895,7 @@ async function loadUsers() {
                   setSelectedUserId(null);
                   currentUserRole === "trainer" && !canUseAdminFeatures()
                     ? openAdminClientsWithFilter("all")
-                    : setPage("admin");
+                    : setPage(APP_PAGES.ADMIN);
                 }}
               >
                 ⚙️ Тренерская
@@ -13581,7 +12906,7 @@ async function loadUsers() {
                 type="button"
                 onClick={() => {
                   setSelectedUserId(null);
-                  setPage("adminPanel");
+                  setPage(APP_PAGES.ADMIN_PANEL);
                 }}
               >
                 🛠️ Админ-панель
@@ -14040,10 +13365,10 @@ async function loadUsers() {
               className="profileThemeSwitchBtn"
               onClick={toggleAppTheme}
             >
-              <span className="profileThemeIcon">{appTheme === "warm-light" ? "🌙" : "☀️"}</span>
+              <span className="profileThemeIcon">{appTheme === APP_THEMES.WARM_LIGHT ? "🌙" : "☀️"}</span>
               <span className="profileThemeText">
                 <strong>Оформление</strong>
-                <small>{appTheme === "warm-light" ? "Переключить на тёмно-зелёный стиль" : "Переключить на светлый стиль"}</small>
+                <small>{appTheme === APP_THEMES.WARM_LIGHT ? "Переключить на тёмно-зелёный стиль" : "Переключить на светлый стиль"}</small>
               </span>
               <i>›</i>
             </button>
@@ -14078,157 +13403,11 @@ async function loadUsers() {
     );
   }
 
-  if (page === "history") {
-    const historyItems = getAiHistoryItems(history);
-    const totalHistorySets = historyItems.reduce((sum, item) => (
-      sum + (item.exercises || []).reduce((exerciseSum, exercise) => exerciseSum + (exercise.sets?.length || 0), 0)
-    ), 0);
-    const totalHistoryExercises = historyItems.reduce((sum, item) => sum + (item.exercises?.length || 0), 0);
-    const latestHistoryWorkout = historyItems[0];
-
-    return (
-      <div className="app historyPagePremium historyPageCompact progressHistoryPage">
-
-        <section className="historyCompactHero">
-          <div>
-            <span>История</span>
-            <h1>Тренировки</h1>
-            <p>{historyItems.length ? `Последняя: ${formatHistoryCardDate(latestHistoryWorkout?.date, true)}` : "Сохраняй тренировки — здесь будет прогресс."}</p>
-          </div>
-
-          <button className="historyRefreshBtn historyCompactRefresh" onClick={loadHistory}>
-            🔄
-          </button>
-        </section>
-
-        <section className="historyCompactStats">
-          <div>
-            <strong>{historyItems.length}</strong>
-            <span>трен.</span>
-          </div>
-          <div>
-            <strong>{totalHistorySets}</strong>
-            <span>подходов</span>
-          </div>
-          <div>
-            <strong>{totalHistoryExercises}</strong>
-            <span>упр.</span>
-          </div>
-        </section>
-
-        {latestHistoryWorkout && (
-          <section className="historyCompactLast">
-            <span>Последняя</span>
-            <strong>{getHistoryWorkoutParts(latestHistoryWorkout.workout).title}</strong>
-            <small>{formatHistoryCardDate(latestHistoryWorkout.date)} · {getHistorySetCount(latestHistoryWorkout)} подходов · {getHistoryTopExercise(latestHistoryWorkout)}</small>
-          </section>
-        )}
-
-        {historyLoading && (
-          <div className="historyEmptyCard historyCompactEmpty">
-            <h3>Загрузка истории...</h3>
-          </div>
-        )}
-
-        {!historyLoading && historyItems.length === 0 && (
-          <div className="historyEmptyCard historyCompactEmpty">
-            <h3>История пустая</h3>
-            <p>Заверши тренировку, и она появится здесь.</p>
-          </div>
-        )}
-
-        {!historyLoading && historyItems.length > 0 && (
-          <div className="historyCompactList">
-            {historyItems.map((item) => {
-              const isOpen = openHistoryKey === item.id;
-              const date = formatHistoryCardDate(item.date);
-              const time = formatHistoryTime(item.date);
-              const parts = getHistoryWorkoutParts(item.workout);
-              const setCount = getHistorySetCount(item);
-              const volume = getHistoryVolume(item);
-              const exerciseCount = item.exercises?.length || 0;
-              const isDeleting = historyDeletingId === item.id;
-              const isSwiped = historySwipeId === item.id;
-
-              return (
-                <article
-                  className={`${isOpen ? "historyCompactCard open" : "historyCompactCard"}${isSwiped ? " swiped" : ""}`}
-                  key={item.id}
-                  onTouchStart={(event) => handleHistoryTouchStart(event, item.id)}
-                  onTouchEnd={(event) => handleHistoryTouchEnd(event, item)}
-                >
-                  <div className="historySwipeDeleteAction" onClick={() => requestDeleteOwnHistoryWorkout(item)}>
-                    {isDeleting ? "Удаляю..." : "Удалить"}
-                  </div>
-
-                  <div className="historyCompactCardInner">
-                    <div className="historyCompactCardTop">
-                    <button
-                      type="button"
-                      className="historyCompactMain"
-                      onClick={() => setOpenHistoryKey(isOpen ? null : item.id)}
-                    >
-                      <span>{date}{time ? ` · ${time}` : ""}</span>
-                      <strong>{parts.title}</strong>
-                      <small>{parts.day} · {exerciseCount} упр. · {setCount} подходов</small>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="historyCompactToggle"
-                      onClick={() => setOpenHistoryKey(isOpen ? null : item.id)}
-                      aria-label={isOpen ? "Свернуть" : "Развернуть"}
-                    >
-                      {isOpen ? "⏫" : "⏬"}
-                    </button>
-                  </div>
-
-                  <div className="historyCompactMeta">
-                    <span>{volume > 0 ? `${Math.round(volume)} кг объём` : "объём —"}</span>
-                    {item.postWorkoutFeedback?.title && (
-                      <span>{item.postWorkoutFeedback.emoji || "💬"} {item.postWorkoutFeedback.title}</span>
-                    )}
-                  </div>
-
-                    {isOpen && (
-                      <div className="historyCompactBody">
-                      {(item.exercises || []).map((exercise, index) => (
-                        <div className="historyCompactExercise" key={`${exercise.name}_${index}`}>
-                          <div className="historyCompactExerciseHead">
-                            <strong>{exercise.name}</strong>
-                            <span>{exercise.sets?.length || 0} подх.</span>
-                          </div>
-
-                          <div className="historyCompactSets">
-                            {(exercise.sets || []).map((set, setIndex) => (
-                              <span key={setIndex}>
-                                {set.set || setIndex + 1}: {set.reps || "—"}×{set.weight || "без веса"}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                      </div>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-
-        {renderHistoryDeleteConfirm()}
-
-        {renderClientMainBottomBar("workouts")}
-      </div>
-    );
-  }
-
-  if (page === "admin") {
+  if (page === APP_PAGES.ADMIN) {
     if (!canUseTrainerFeatures()) {
       return (
         <div className="app">
-          <button className="backBtn" onClick={() => setPage("main")}>← Главное меню</button>
+          <button className="backBtn" onClick={() => setPage(APP_PAGES.MAIN)}>← Главное меню</button>
           <div className="historyEmptyCard">
             <h3>Доступ закрыт</h3>
             <p>Тренерская доступна админам и пользователям с ролью тренера.</p>
@@ -14409,7 +13588,20 @@ async function loadUsers() {
             <small>Admin Panel v3</small>
           </div>
 
-          {renderTrainerWorkspaceBottomBar("main")}
+          <TrainerWorkspaceBottomBar
+            activeTab="main"
+            onGoMain={() => {
+              setSelectedUserId(null);
+              setPage(APP_PAGES.ADMIN);
+            }}
+            onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
+            onOpenTrainerPrograms={openAdminProgramsOverview}
+            onLoadTrainerCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
+            }}
+          />
 
           
         </aside>
@@ -14583,7 +13775,7 @@ async function loadUsers() {
                   <h2>Клиенты</h2>
                   <p>Выбери клиента, чтобы открыть workspace.</p>
                 </div>
-                <button onClick={() => setPage("adminUsers")}>Создать</button>
+                <button onClick={() => setPage(APP_PAGES.ADMIN_USERS)}>Создать</button>
               </div>
 
               <div className="adminV3ClientTable">
@@ -14852,7 +14044,7 @@ async function loadUsers() {
                     <button className="adminV3OpenEditor" onClick={() => {
                       setSelectedUserId(selectedClient.id);
                       loadWorkoutsFromFirebase(selectedClient.id);
-                      setPage("adminWorkouts");
+                      setPage(APP_PAGES.ADMIN_WORKOUTS);
                     }}>
                       Открыть desktop-редактор программы
                     </button>
@@ -15098,11 +14290,11 @@ async function loadUsers() {
     );
   }
 
-  if (page === "adminUsers") {
+  if (page === APP_PAGES.ADMIN_USERS) {
     if (!canUseTrainerFeatures()) {
       return (
         <div className="app">
-          <button className="backBtn" onClick={() => setPage("main")}>← Главное меню</button>
+          <button className="backBtn" onClick={() => setPage(APP_PAGES.MAIN)}>← Главное меню</button>
           <div className="historyEmptyCard">
             <h3>Доступ закрыт</h3>
             <p>Тренерская доступна админам и пользователям с ролью тренера.</p>
@@ -16554,7 +15746,7 @@ async function loadUsers() {
                         <button onClick={() => {
                           setSelectedUserId(selectedClient.id);
                           loadWorkoutsFromFirebase(selectedClient.id);
-                          setPage("adminWorkouts");
+                          setPage(APP_PAGES.ADMIN_WORKOUTS);
                         }}>
                           Редактор
                         </button>
@@ -17071,18 +16263,31 @@ async function loadUsers() {
             </section>
           )}
 </main>
-{!adminClientPageOpen && (
-          renderTrainerWorkspaceBottomBar("clients")
+ {!adminClientPageOpen && (
+          <TrainerWorkspaceBottomBar
+            activeTab="clients"
+            onGoMain={() => {
+              setSelectedUserId(null);
+              setPage(APP_PAGES.ADMIN);
+            }}
+            onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
+            onOpenTrainerPrograms={openAdminProgramsOverview}
+            onLoadTrainerCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
+            }}
+          />
 )}
 </div>
     );
   }
 
-  if (page === "adminWorkouts") {
+  if (page === APP_PAGES.ADMIN_WORKOUTS) {
     if (!canUseTrainerFeatures()) {
       return (
         <div className="app">
-          <button className="backBtn" onClick={() => setPage("main")}>← Главное меню</button>
+          <button className="backBtn" onClick={() => setPage(APP_PAGES.MAIN)}>← Главное меню</button>
           <div className="historyEmptyCard">
             <h3>Доступ закрыт</h3>
             <p>Тренерская доступна админам и пользователям с ролью тренера.</p>
@@ -18610,7 +17815,7 @@ async function loadUsers() {
                 setTrainerProgramManagerOpen(false);
                 return;
               }
-              setPage("admin");
+              setPage(APP_PAGES.ADMIN);
             }}
             aria-label={
               adminProgramLibraryTab !== "editor"
@@ -18644,7 +17849,7 @@ async function loadUsers() {
               <nav className="adminV3Nav programsTopActionBar" aria-label="Действия с программами">
                 {!isTrainerNextWorkspace() && (
                   <>
-                    <button type="button" onClick={() => setPage("admin")}>
+                    <button type="button" onClick={() => setPage(APP_PAGES.ADMIN)}>
                       <span className="adminV3NavIcon">←</span>
                       <span className="adminV3NavLabel">Главная</span>
                     </button>
@@ -19424,8 +18629,23 @@ async function loadUsers() {
                 <span className="adminV3NavLabel">Сохранить</span>
               </button>
             </nav>
-          ) : (
-            isTrainerNextWorkspace() ? null : renderTrainerWorkspaceBottomBar("programs")
+            ) : (
+            isTrainerNextWorkspace() ? null : (
+              <TrainerWorkspaceBottomBar
+                activeTab="programs"
+                onGoMain={() => {
+                  setSelectedUserId(null);
+                  setPage(APP_PAGES.ADMIN);
+                }}
+                onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
+                onOpenTrainerPrograms={openAdminProgramsOverview}
+                onLoadTrainerCabinet={() => {
+                  loadHistory();
+                  setProfileActiveTab("cabinet");
+                  setPage(APP_PAGES.PROFILE);
+                }}
+              />
+            )
           )}
       </div>
     );
@@ -19467,94 +18687,7 @@ async function loadUsers() {
     return programManagerView;
   }
 
-  if (page === "workoutPlan") {
-    const sortedPlanWorkouts = sortWorkoutDays(plan.workouts || []);
-    const completedPlanWorkoutSet = getCompletedWorkoutSet(history);
-    const completedPlanWorkoutCount = sortedPlanWorkouts.filter((workoutItem) => (
-      isWorkoutCompletedByHistory(workoutItem, completedPlanWorkoutSet)
-    )).length;
-    const workoutPlanWeeks = sortedPlanWorkouts.reduce((groups, workoutItem, index) => {
-      const presentation = getWorkoutPresentation(workoutItem, index);
-      const weekName =
-        workoutItem.weekName ||
-        presentation.day.split("·")[0]?.trim() ||
-        "План";
-      const currentGroup = groups.find((group) => group.name === weekName);
-      const item = { workout: workoutItem, presentation, index };
-
-      if (currentGroup) {
-        currentGroup.items.push(item);
-      } else {
-        groups.push({ name: weekName, items: [item] });
-      }
-
-      return groups;
-    }, []);
-
-    return (
-      <div className="workoutPlanOverviewPage">
-        <main className="workoutPlanOverviewShell">
-          <header className="workoutPlanOverviewHeader">
-            <span>ПРОГРАММА ТРЕНЕРА</span>
-            <h1>План тренировок</h1>
-            <p>{plan.assignedProgramName || user?.assignedProgramName || "Индивидуальная программа"}</p>
-          </header>
-
-          <section className="workoutPlanOverviewStats">
-            <div><strong>{workoutPlanWeeks.length}</strong><span>недель</span></div>
-            <div><strong>{sortedPlanWorkouts.length}</strong><span>тренировок</span></div>
-            <div><strong>{completedPlanWorkoutCount}</strong><span>выполнено</span></div>
-          </section>
-
-          <div className="workoutPlanWeekList">
-            {workoutPlanWeeks.length ? workoutPlanWeeks.map((week) => (
-              <section className="workoutPlanWeek" key={week.name}>
-                <h2>{week.name}</h2>
-                <div>
-                  {week.items.map(({ workout: workoutItem, presentation, index }) => {
-                    const completed = isWorkoutCompletedByHistory(workoutItem, completedPlanWorkoutSet);
-
-                    return (
-                      <button
-                        type="button"
-                        className={completed ? "completed" : ""}
-                        key={workoutItem.id}
-                        onClick={() => {
-                          setIndividualWorkoutIndex(index);
-                           setIndividualWorkoutIndexInitialized(true);
-                           setSelectedWorkoutId(null);
-                           setPage("workouts");
-                           window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
-                         }}
-                      >
-                        <span>
-                          <small>{presentation.day}</small>
-                          <strong>{presentation.title}</strong>
-                          <em>{presentation.exerciseCount} упр. · {presentation.setCount} подходов</em>
-                        </span>
-                        <i>{completed ? "✓" : "›"}</i>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-            )) : (
-              <div className="workoutPlanOverviewEmpty">
-                <strong>План пока не назначен</strong>
-                <span>После назначения тренером здесь появятся недели и тренировки.</span>
-              </div>
-            )}
-          </div>
-        </main>
-
-        <div className="individualWorkoutBottomPanel workoutPlanOverviewBottomPanel">
-          {renderClientTrainingBottomBar("plan")}
-        </div>
-      </div>
-    );
-  }
-
-  if (page === "workouts" && !selectedWorkoutId) {
+  if (page === APP_PAGES.WORKOUTS && !selectedWorkoutId) {
     const sortedWorkouts = sortWorkoutDays(plan.workouts || []);
     const completedWorkoutSet = getCompletedWorkoutSet(history);
     const isIndividualWorkoutMode = workoutModePreference.mode === "individual";
@@ -19925,7 +19058,26 @@ async function loadUsers() {
               <span>Выполнено {completedWorkoutCount} из {sortedWorkouts.length}</span>
             </div>
           )}
-          {renderClientMainBottomBar("workouts", "individualWorkoutMenuBar")}
+          <ClientMainBottomBar
+            activeTab="workouts"
+            className="individualWorkoutMenuBar"
+            isTrainerMode={canUseTrainerFeatures()}
+            onGoMain={goBackToMain}
+            onOpenTraining={openTrainingEntry}
+            onOpenNutrition={() => setPage(APP_PAGES.NUTRITION)}
+            onOpenCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
+            }}
+            onOpenTrainerClients={() => openAdminClientsWithFilter("all")}
+            onOpenTrainerPrograms={openAdminProgramsOverview}
+            onLoadTrainerCabinet={() => {
+              loadHistory();
+              setProfileActiveTab("cabinet");
+              setPage(APP_PAGES.PROFILE);
+            }}
+          />
         </div>
 
         {workoutModeModalOpen && (
@@ -19963,7 +19115,7 @@ async function loadUsers() {
                     setWorkoutModeModalOpen(false);
                     saveWorkoutModePreference("basic", true);
                     setSelectedWorkoutId(null);
-                    setPage("basicWorkoutQuiz");
+                    setPage(APP_PAGES.BASIC_WORKOUT_QUIZ);
                   }}
                 >
                   <span>Б</span>
@@ -21066,4 +20218,3 @@ async function loadUsers() {
 </div>
   );
 }
-
