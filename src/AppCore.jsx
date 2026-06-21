@@ -309,6 +309,7 @@ import {
   WorkoutIncompleteDialog,
   WorkoutReadinessDialog
 } from "./components/workout/WorkoutDialogs";
+import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
 import { AppSplash, LoginPage } from "./components/auth/AuthScreens";
 import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
@@ -3518,349 +3519,36 @@ export default function App() {
     setPage(APP_PAGES.PROFILE);
   }
 
-  function renderFirstSetupOnboarding(forceVisible = false) {
-    if (!showFirstSetupOnboarding && !forceVisible) return null;
+  async function handleFirstSetupSubmit() {
+    if (!hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft)) return;
 
-    const totalSteps = 9;
-    const profileName = String(aiNutritionProfileDraft.name || "").trim();
-    const numericAge = Number(aiNutritionProfileDraft.age);
-    const numericWeight = Number(String(aiNutritionProfileDraft.weight || "").replace(",", "."));
-    const numericHeight = Number(aiNutritionProfileDraft.height);
-    const stepCanContinue = [
-      true,
-      aiNutritionProfileDraft.sex === "male" || aiNutritionProfileDraft.sex === "female",
-      profileName.length >= 2,
-      Number.isFinite(numericAge) && numericAge >= 14 && numericAge <= 100,
-      Number.isFinite(numericWeight) && numericWeight >= 30 && numericWeight <= 350,
-      Number.isFinite(numericHeight) && numericHeight >= 120 && numericHeight <= 230,
-      ["low", "medium", "high", "veryHigh"].includes(aiNutritionProfileDraft.activity),
-      ["cut", "mass", "recomp", "maintain"].includes(aiNutritionProfileDraft.goal),
-      hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft)
-    ][onboardingStep];
-    const handleOnboardingFieldSubmit = (event) => {
-      if (event.key !== "Enter") return;
+    setFirstSetupSaveStatus("saving");
+    const savedToCloud = await saveAiNutritionPlan(aiNutritionProfileDraft);
 
-      event.preventDefault();
-      if (!stepCanContinue) return;
+    if (!savedToCloud) {
+      setFirstSetupSaveStatus("error");
+      showAppError(
+        "save",
+        "Профиль сохранён на устройстве, но не отправлен в облако. Проверь соединение и повтори."
+      );
+      return;
+    }
 
-      event.currentTarget.blur();
-      setOnboardingStep((currentStep) => Math.min(currentStep + 1, totalSteps - 1));
-    };
-    const activityOptions = [
-      ["low", "🪑", "Минимальный", "Мало движения"],
-      ["medium", "🚶", "Умеренный", "1–3 тренировки в неделю"],
-      ["high", "🏃", "Активный", "3–5 тренировок в неделю"],
-      ["veryHigh", "🏋️", "Очень активный", "Спорт почти каждый день"]
-    ];
-    const goalOptions = [
-      ["cut", "🔥", "Похудение", "Снизить вес"],
-      ["mass", "💪", "Набор массы", "Набрать мышечную массу"],
-      ["recomp", "🔄", "Рекомпозиция", "Снизить жир и набрать мышцы"],
-      ["maintain", "🌿", "Поддержание формы", "Сохранить текущую форму"]
-    ];
-    const goalLabel = goalOptions.find(([id]) => id === aiNutritionProfileDraft.goal)?.[2] || "Рекомпозиция";
-    const activityLabel = activityOptions.find(([id]) => id === aiNutritionProfileDraft.activity)?.[2] || "Умеренный";
-    const onboardingTitles = [
-      "Добро пожаловать!",
-      "Выберите пол",
-      "Как вас зовут?",
-      "Сколько вам лет?",
-      "Ваш текущий вес",
-      "Ваш рост",
-      "Уровень активности",
-      "Ваша цель",
-      "Проверьте ваши данные"
-    ];
-    const onboardingSubtitles = [
-      "Давайте настроим ваш профиль, чтобы тренировки и рекомендации были максимально точными.",
-      "Это поможет учитывать ваши особенности.",
-      "Введите ваше имя.",
-      "Введите ваш возраст.",
-      "Введите ваш текущий вес.",
-      "Введите ваш рост.",
-      "Выберите, насколько вы активны.",
-      "Выберите вашу основную цель.",
-      "Проверьте и подтвердите данные перед созданием профиля."
-    ];
+    try {
+      if (user?.uid && hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft)) {
+        localStorage.setItem(FIRST_SETUP_DONE_USER_STORAGE_KEY, `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}`);
+        localStorage.setItem(`${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${user.uid}`, FIRST_SETUP_REQUIRED_VERSION);
+      }
+    } catch {
+      // ignore localStorage errors
+    }
 
-    return (
-      <div className="firstSetupOverlay">
-        <div className="firstSetupCard">
-          <div className="firstSetupProgress">
-            <span>{onboardingStep + 1} / {totalSteps}</span>
-            <div>
-              {Array.from({ length: totalSteps }, (_, index) => (
-                <i className={index <= onboardingStep ? "active" : ""} key={index} />
-              ))}
-            </div>
-          </div>
-
-          <header className="firstSetupHeader">
-            <h2>{onboardingTitles[onboardingStep]}</h2>
-            <p>{onboardingSubtitles[onboardingStep]}</p>
-          </header>
-
-          <div className="firstSetupBody">
-            {onboardingStep === 0 && (
-              <div className="firstSetupWelcomeVisual" aria-hidden="true">
-                <span className="firstSetupClipboard">📋</span>
-                <span className="firstSetupDumbbell">🏋️</span>
-                <span className="firstSetupApple">🍏</span>
-                <span className="firstSetupBottle">🧴</span>
-              </div>
-            )}
-
-            {onboardingStep === 1 && (
-              <div className="firstSetupChoiceGrid firstSetupSexGrid">
-                <button
-                  type="button"
-                  className={aiNutritionProfileDraft.sex === "male" ? "active" : ""}
-                  onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, sex: "male" }))}
-                >
-                  <span>👨🏻</span>
-                  <strong>Мужчина</strong>
-                </button>
-
-                <button
-                  type="button"
-                  className={aiNutritionProfileDraft.sex === "female" ? "active" : ""}
-                  onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, sex: "female" }))}
-                >
-                  <span>👩🏻</span>
-                  <strong>Женщина</strong>
-                </button>
-              </div>
-            )}
-
-            {onboardingStep === 2 && (
-              <label className="firstSetupField">
-                <span>Ваше имя</span>
-                <input
-                  className="firstSetupInput"
-                  placeholder="Например, Илья"
-                  type="text"
-                  autoComplete="name"
-                  enterKeyHint="next"
-                  value={aiNutritionProfileDraft.name || ""}
-                  onChange={(event) => setAiNutritionProfileDraft((prev) => ({ ...prev, name: event.target.value }))}
-                  onKeyDown={handleOnboardingFieldSubmit}
-                />
-              </label>
-            )}
-
-            {onboardingStep === 3 && (
-              <label className="firstSetupField">
-                <span>Возраст</span>
-                <div className="firstSetupInputWithUnit">
-                  <input
-                    className="firstSetupInput"
-                    inputMode="numeric"
-                    placeholder="0"
-                    type="number"
-                    min="14"
-                    max="100"
-                    enterKeyHint="next"
-                    value={aiNutritionProfileDraft.age || ""}
-                    onChange={(event) => setAiNutritionProfileDraft((prev) => ({ ...prev, age: event.target.value }))}
-                    onKeyDown={handleOnboardingFieldSubmit}
-                  />
-                  <em>лет</em>
-                </div>
-              </label>
-            )}
-
-            {onboardingStep === 4 && (
-              <label className="firstSetupField">
-                <span>Вес</span>
-                <div className="firstSetupInputWithUnit">
-                  <input
-                    className="firstSetupInput"
-                    inputMode="decimal"
-                    placeholder="0"
-                    type="number"
-                    min="30"
-                    max="350"
-                    step="0.1"
-                    enterKeyHint="next"
-                    value={aiNutritionProfileDraft.weight || ""}
-                    onChange={(event) => setAiNutritionProfileDraft((prev) => ({ ...prev, weight: event.target.value }))}
-                    onKeyDown={handleOnboardingFieldSubmit}
-                  />
-                  <em>кг</em>
-                </div>
-              </label>
-            )}
-
-            {onboardingStep === 5 && (
-              <label className="firstSetupField">
-                <span>Рост</span>
-                <div className="firstSetupInputWithUnit">
-                  <input
-                    className="firstSetupInput"
-                    inputMode="numeric"
-                    placeholder="0"
-                    type="number"
-                    min="120"
-                    max="230"
-                    enterKeyHint="next"
-                    value={aiNutritionProfileDraft.height || ""}
-                    onChange={(event) => setAiNutritionProfileDraft((prev) => ({ ...prev, height: event.target.value }))}
-                    onKeyDown={handleOnboardingFieldSubmit}
-                  />
-                  <em>см</em>
-                </div>
-              </label>
-            )}
-
-            {onboardingStep === 6 && (
-              <div className="firstSetupActivityList">
-                {activityOptions.map(([id, icon, label, description]) => (
-                  <button
-                    type="button"
-                    key={id}
-                    className={aiNutritionProfileDraft.activity === id ? "active" : ""}
-                    onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, activity: id }))}
-                  >
-                    <span>{icon}</span>
-                    <span><strong>{label}</strong><small>{description}</small></span>
-                    <i aria-hidden="true" />
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {onboardingStep === 7 && (
-              <div className="firstSetupGoalStep">
-                <div className="firstSetupGoalGrid">
-                  {goalOptions.map(([id, icon, label, description]) => (
-                    <button
-                      type="button"
-                      key={id}
-                      className={aiNutritionProfileDraft.goal === id ? "active" : ""}
-                      onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, goal: id }))}
-                    >
-                      <span>{icon}</span>
-                      <strong>{label}</strong>
-                      <small>{description}</small>
-                    </button>
-                  ))}
-                </div>
-                <label className="firstSetupField firstSetupTargetWeight">
-                  <span>Желаемый вес <small>(необязательно)</small></span>
-                  <div className="firstSetupInputWithUnit">
-                    <input
-                      className="firstSetupInput"
-                      inputMode="decimal"
-                      placeholder="Например, 75"
-                      type="number"
-                      min="30"
-                      max="350"
-                      step="0.1"
-                      enterKeyHint="next"
-                      value={aiNutritionProfileDraft.targetWeight || ""}
-                      onChange={(event) => setAiNutritionProfileDraft((prev) => ({ ...prev, targetWeight: event.target.value }))}
-                      onKeyDown={handleOnboardingFieldSubmit}
-                    />
-                    <em>кг</em>
-                  </div>
-                </label>
-              </div>
-            )}
-
-            {onboardingStep === 8 && (
-              <div className="firstSetupReview">
-                {[
-                  ["⚥", "Пол", aiNutritionProfileDraft.sex === "female" ? "Женщина" : "Мужчина"],
-                  ["👤", "Имя", profileName || "—"],
-                  ["🎂", "Возраст", `${aiNutritionProfileDraft.age || "—"} лет`],
-                  ["⚖️", "Вес", `${aiNutritionProfileDraft.weight || "—"} кг`],
-                  ["📏", "Рост", `${aiNutritionProfileDraft.height || "—"} см`],
-                  ["🏃", "Уровень активности", activityLabel],
-                  ["🎯", "Цель", goalLabel],
-                  ["↔", "Желаемый вес", aiNutritionProfileDraft.targetWeight ? `${aiNutritionProfileDraft.targetWeight} кг` : "Не указан"]
-                ].map(([icon, label, value]) => (
-                  <div key={label}>
-                    <span>{icon}</span>
-                    <small>{label}</small>
-                    <strong>{value}</strong>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="firstSetupBottom">
-            {onboardingStep > 0 && (
-              <button
-                type="button"
-                className="firstSetupSecondary"
-                onClick={() => setOnboardingStep((prev) => prev - 1)}
-              >
-                Назад
-              </button>
-            )}
-
-            {onboardingStep < totalSteps - 1 ? (
-              <button
-                type="button"
-                className="firstSetupPrimary"
-                disabled={!stepCanContinue}
-                onClick={() => setOnboardingStep((prev) => prev + 1)}
-              >
-                {onboardingStep === 0 ? "Начать" : "Далее"}
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="firstSetupPrimary"
-                disabled={
-                  !hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft) ||
-                  firstSetupSaveStatus === "saving"
-                }
-                onClick={async () => {
-                  if (!hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft)) return;
-
-                  setFirstSetupSaveStatus("saving");
-                  const savedToCloud = await saveAiNutritionPlan(aiNutritionProfileDraft);
-
-                  if (!savedToCloud) {
-                    setFirstSetupSaveStatus("error");
-                    showAppError(
-                      "save",
-                      "Профиль сохранён на устройстве, но не отправлен в облако. Проверь соединение и повтори."
-                    );
-                    return;
-                  }
-
-                  try {
-                    if (user?.uid && hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft)) {
-                      localStorage.setItem(FIRST_SETUP_DONE_USER_STORAGE_KEY, `${user.uid}:${FIRST_SETUP_REQUIRED_VERSION}`);
-                      localStorage.setItem(`${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${user.uid}`, FIRST_SETUP_REQUIRED_VERSION);
-                    }
-                  } catch {
-                    // ignore localStorage errors
-                  }
-
-                  setFirstSetupCompletedInSession(true);
-                  setShowFirstSetupOnboarding(false);
-                  setOnboardingStep(0);
-                  setFirstSetupSaveStatus("");
-                  setPage(APP_PAGES.MAIN);
-                }}
-              >
-                {firstSetupSaveStatus === "saving"
-                  ? "Сохраняю..."
-                  : firstSetupSaveStatus === "error"
-                    ? "Повторить сохранение"
-                    : "Создать профиль"}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    );
+    setFirstSetupCompletedInSession(true);
+    setShowFirstSetupOnboarding(false);
+    setOnboardingStep(0);
+    setFirstSetupSaveStatus("");
+    setPage(APP_PAGES.MAIN);
   }
-
   function refreshPage() {
     window.location.reload();
   }
@@ -8313,7 +8001,17 @@ async function loadUsers() {
   }
 
   if ((showFirstSetupOnboarding || firstSetupRequiredNow) && isLoggedIn && !appLoading) {
-    return renderFirstSetupOnboarding(firstSetupRequiredNow);
+    return (
+      <FirstSetupOnboarding
+        open={Boolean(showFirstSetupOnboarding || firstSetupRequiredNow)}
+        onboardingStep={onboardingStep}
+        profileDraft={aiNutritionProfileDraft}
+        saveStatus={firstSetupSaveStatus}
+        setOnboardingStep={setOnboardingStep}
+        setProfileDraft={setAiNutritionProfileDraft}
+        onSubmit={handleFirstSetupSubmit}
+      />
+    );
   }
 
   if (!isLoggedIn) {
@@ -20033,7 +19731,15 @@ async function loadUsers() {
         }}
       />
 
-      {renderFirstSetupOnboarding()}
+      <FirstSetupOnboarding
+        open={showFirstSetupOnboarding}
+        onboardingStep={onboardingStep}
+        profileDraft={aiNutritionProfileDraft}
+        saveStatus={firstSetupSaveStatus}
+        setOnboardingStep={setOnboardingStep}
+        setProfileDraft={setAiNutritionProfileDraft}
+        onSubmit={handleFirstSetupSubmit}
+      />
 
       {fullscreenVideo && (
         <div
