@@ -311,7 +311,8 @@ import WorkoutListPage from "./features/client/workouts/WorkoutListPage";
 import {
   WorkoutFullscreenVideoOverlay,
   WorkoutNotFoundPage,
-  WorkoutRunTopControls
+  WorkoutRunTopControls,
+  WorkoutStageHeading
 } from "./features/client/workouts/WorkoutRunOverlays";
 import { AppSplash, LoginPage } from "./components/auth/AuthScreens";
 import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
@@ -18436,42 +18437,19 @@ async function loadUsers() {
             onTouchMove={handleExerciseTouchMove}
             onTouchEnd={handleExerciseTouchEnd}
           >
-            {!isStartSlide && !isFinishSlide && (
-              <div className="exerciseCounter">
-                {currentExerciseIndex === 0
-                  ? "Разминка"
-                  : `Упражнение ${currentExerciseIndex} из ${workout.exercises.length}`}
-              </div>
-            )}
-
-            {!isStartSlide && (
-              <div className={`workoutStageTitle ${
-                !isFinishSlide && exercise?.id !== "warmup" ? "withTechniqueButton" : ""
-              }`}>
-                <span>
-                  {isFinishSlide
-                    ? isWorkoutSaved
-                      ? "Тренировка завершена"
-                      : "Итоги тренировки"
-                    : exercise?.name}
-                </span>
-                {!isFinishSlide && exercise?.id !== "warmup" && (
-                  <button
-                    type="button"
-                    className="workoutTechniqueButton"
-                    onClick={(event) => openWorkoutExerciseModal(
-                      setExerciseTechniqueOpenId,
-                      exercise.id,
-                      event.currentTarget
-                    )}
-                    aria-label="Показать пояснение техники"
-                    title="Техника выполнения"
-                  >
-                    i
-                  </button>
-                )}
-              </div>
-            )}
+            <WorkoutStageHeading
+              currentExerciseIndex={currentExerciseIndex}
+              exercise={exercise}
+              exerciseCount={workout.exercises.length}
+              isFinishSlide={isFinishSlide}
+              isStartSlide={isStartSlide}
+              isWorkoutSaved={isWorkoutSaved}
+              onOpenTechnique={(event) => openWorkoutExerciseModal(
+                setExerciseTechniqueOpenId,
+                exercise.id,
+                event.currentTarget
+              )}
+            />
 
             {isStartSlide ? null : isFinishSlide ? (
               <>

@@ -95,3 +95,52 @@ export function WorkoutRunTopControls({ isSaving, showBackButton, onExit, onBack
     </>
   );
 }
+
+export function WorkoutStageHeading({
+  currentExerciseIndex,
+  exercise,
+  exerciseCount,
+  isFinishSlide,
+  isStartSlide,
+  isWorkoutSaved,
+  onOpenTechnique
+}) {
+  if (isStartSlide) {
+    return null;
+  }
+
+  const showTechniqueButton = !isFinishSlide && exercise?.id !== "warmup";
+
+  return (
+    <>
+      {!isFinishSlide && (
+        <div className="exerciseCounter">
+          {currentExerciseIndex === 0
+            ? "Разминка"
+            : `Упражнение ${currentExerciseIndex} из ${exerciseCount}`}
+        </div>
+      )}
+
+      <div className={`workoutStageTitle ${showTechniqueButton ? "withTechniqueButton" : ""}`}>
+        <span>
+          {isFinishSlide
+            ? isWorkoutSaved
+              ? "Тренировка завершена"
+              : "Итоги тренировки"
+            : exercise?.name}
+        </span>
+        {showTechniqueButton && (
+          <button
+            type="button"
+            className="workoutTechniqueButton"
+            onClick={onOpenTechnique}
+            aria-label="Показать пояснение техники"
+            title="Техника выполнения"
+          >
+            i
+          </button>
+        )}
+      </div>
+    </>
+  );
+}
