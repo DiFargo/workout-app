@@ -358,7 +358,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v750";
+const APP_VERSION = "v751";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -4969,7 +4969,7 @@ export default function App() {
             await addDoc(collection(db, "users", uid, "history"), item.entry);
           }
           syncedCount += 1;
-        } catch (error) {
+        } catch {
           remaining.push(item);
         }
       }
@@ -5035,7 +5035,7 @@ export default function App() {
           }
 
           syncedCount += 1;
-        } catch (error) {
+        } catch {
           remaining.push(item);
         }
       }
@@ -6514,13 +6514,11 @@ export default function App() {
 
       const sourceData = sourceSnap.data() || {};
       const targetData = targetSnap.exists() ? targetSnap.data() || {} : {};
-      const {
-        role: _sourceRole,
-        createdBy: _sourceCreatedBy,
-        createdAt: _sourceCreatedAt,
-        email: _sourceEmail,
-        ...safeSourceData
-      } = sourceData;
+      const safeSourceData = { ...sourceData };
+      delete safeSourceData.role;
+      delete safeSourceData.createdBy;
+      delete safeSourceData.createdAt;
+      delete safeSourceData.email;
 
       await setDoc(doc(db, "users", transferToUid), {
         ...safeSourceData,
