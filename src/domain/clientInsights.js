@@ -16,6 +16,12 @@ export function getTrainerTaskStatus(task = {}) {
   return { id: "progress", label: "В процессе" };
 }
 
+export function getActiveTrainerTasksCount(tasks = []) {
+  return (Array.isArray(tasks) ? tasks : [])
+    .filter((task) => getTrainerTaskStatus(task).id !== "completed")
+    .length;
+}
+
 export function getClientTrainerTaskDestination(task = {}) {
   const content = [
     task.target,

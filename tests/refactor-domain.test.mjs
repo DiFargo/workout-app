@@ -9,6 +9,7 @@ import {
   getEstimatedWorkoutDuration
 } from "../src/domain/workoutPresentation.js";
 import {
+  getActiveTrainerTasksCount,
   getClientPlateauInfo,
   getMeasurementWeightValue
 } from "../src/domain/clientInsights.js";
@@ -92,6 +93,16 @@ test("plateau detection compares measurements at least two weeks apart", () => {
   assert.equal(plateau.isPlateau, true);
   assert.equal(plateau.days, 17);
   assert.equal(plateau.delta, 0.2);
+});
+
+test("active trainer task count ignores completed tasks", () => {
+  assert.equal(getActiveTrainerTasksCount([
+    { status: "completed" },
+    { completedAt: "2026-06-20T12:00:00.000Z" },
+    { status: "progress" },
+    { title: "Проверить замеры" }
+  ]), 2);
+  assert.equal(getActiveTrainerTasksCount(null), 0);
 });
 
 test("lazy nutrition catalog loads once and returns local matches", async () => {

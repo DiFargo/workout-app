@@ -27,6 +27,7 @@ import {
 } from "./data/nutritionPlanning";
 import {
   createClientResourceId,
+  getActiveTrainerTasksCount,
   getClientPaymentAttention,
   getClientPlateauInfo,
   getClientTrainerTaskDestination,
@@ -353,7 +354,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v727";
+const APP_VERSION = "v728";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -12377,9 +12378,7 @@ async function loadUsers() {
     const profileNutritionDraftPlan = buildAiNutritionMonthlyPlan(nutrition, profileNutritionDraftProfile, history, null);
     const profileNutritionDraftWeek = profileNutritionDraftPlan?.weeks?.[0] || profileNutritionDraftPlan?.start || nutrition.goals;
     const profileNutritionDraftMacros = getAiNutritionDayMacros(profileNutritionDraftWeek, profileNutritionDraftProfile);
-    const trainerNotificationCount = clientTrainerTasks.filter(
-      (task) => getTrainerTaskStatus(task).id !== "completed"
-    ).length;
+    const trainerNotificationCount = getActiveTrainerTasksCount(clientTrainerTasks);
     const [workoutCalendarYear, workoutCalendarMonthIndex] = profileWorkoutCalendarMonth
       .split("-")
       .map(Number);
@@ -16474,7 +16473,7 @@ async function loadUsers() {
                         <div className="trainerClientSectionHead">
                           <div>
                             <span>ЗАДАЧИ КЛИЕНТУ</span>
-                            <small>{adminClientTasks.filter((task) => getTrainerTaskStatus(task).id !== "completed").length} активных</small>
+                            <small>{getActiveTrainerTasksCount(adminClientTasks)} активных</small>
                           </div>
                           <button type="button" onClick={() => setAdminTaskComposerOpen(true)}>＋ Добавить задачу</button>
                         </div>
@@ -16820,7 +16819,7 @@ async function loadUsers() {
                           <span>ЗАДАЧИ НА НЕДЕЛЮ</span>
                           <h3>Задачи клиенту</h3>
                         </div>
-                        <strong>{adminClientTasks.filter((task) => getTrainerTaskStatus(task).id !== "completed").length}</strong>
+                        <strong>{getActiveTrainerTasksCount(adminClientTasks)}</strong>
                       </div>
 
                       <div className="trainerTaskCreate">
