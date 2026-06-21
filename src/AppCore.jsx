@@ -306,6 +306,7 @@ import {
   WorkoutReadinessDialog
 } from "./components/workout/WorkoutDialogs";
 import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
+import WorkoutExerciseSets from "./features/client/workouts/WorkoutExerciseSets";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
 import WorkoutExerciseVideoFrame from "./features/client/workouts/WorkoutExerciseVideoFrame";
 import WorkoutFinishStage from "./features/client/workouts/WorkoutFinishStage";
@@ -18600,106 +18601,16 @@ async function loadUsers() {
                     />
                   </>
                 ) : (
-                  <section className="workoutExerciseSets">
-                    <div className="workoutExerciseSetsList">
-                      <div
-                        className={`workoutExerciseSetsHeader ${exerciseUsesExternalWeight(exercise) ? "" : "withoutWeight"}`}
-                        aria-hidden="true"
-                      >
-                        <span />
-                        <span>Повторы</span>
-                        {exerciseUsesExternalWeight(exercise) && <span>Вес, кг</span>}
-                      </div>
-                      {exercise.sets.map((set, index) => (
-                        <div
-                          className={`setRow ${exerciseUsesExternalWeight(exercise) ? "" : "withoutWeight"} ${set.completed ? "completed" : ""}`}
-                          key={index}
-                        >
-                          <button
-                            type="button"
-                            className="workoutExerciseSetNumber"
-                            onClick={() => toggleWorkoutSetCompleted(exercise.id, index)}
-                            aria-label={set.completed ? `Снять отметку с подхода ${index + 1}` : `Отметить подход ${index + 1}`}
-                          >
-                            {set.completed ? "✓" : String(index + 1).padStart(2, "0")}
-                          </button>
-                          <label className="workoutExerciseActualField">
-                            <input
-                              ref={(element) => {
-                                setRepsInputRefs.current[`${exercise.id}:${index}`] = element;
-                              }}
-                              type="text"
-                              inputMode="numeric"
-                              pattern="[0-9]*"
-                              aria-label={`Повторы, подход ${index + 1}`}
-                              placeholder={set.reps ? `${set.reps}` : "повторы"}
-                              value={set.enteredReps ?? ""}
-                              onPointerDown={(event) => event.stopPropagation()}
-                              onTouchStart={(event) => event.stopPropagation()}
-                              onTouchMove={(event) => event.stopPropagation()}
-                              onTouchEnd={(event) => event.stopPropagation()}
-                              onChange={(event) =>
-                                updateSet(
-                                  exercise.id,
-                                  index,
-                                  "enteredReps",
-                                  event.target.value.replace(/[^0-9]/g, "")
-                                )
-                              }
-                            />
-                          </label>
-                          {exerciseUsesExternalWeight(exercise) && (
-                            <label className="workoutExerciseActualField workoutExerciseWeightField">
-                              <span className="workoutExerciseWeightControls">
-                                <input
-                                  ref={(element) => {
-                                    setWeightInputRefs.current[`${exercise.id}:${index}`] = element;
-                                  }}
-                                  type="text"
-                                  inputMode="decimal"
-                                  enterKeyHint="next"
-                                  aria-label={`Вес, подход ${index + 1}`}
-                                  placeholder={set.weight ? `${set.weight}` : "вес"}
-                                  value={set.enteredWeight ?? ""}
-                                  onPointerDown={(event) => event.stopPropagation()}
-                                  onTouchStart={(event) => event.stopPropagation()}
-                                  onTouchMove={(event) => event.stopPropagation()}
-                                  onTouchEnd={(event) => event.stopPropagation()}
-                                  onKeyDown={(event) => {
-                                    if (event.key === "Enter") {
-                                      event.preventDefault();
-                                      setRepsInputRefs.current[`${exercise.id}:${index + 1}`]?.focus();
-                                    }
-                                  }}
-                                  onChange={(event) =>
-                                    updateSet(
-                                      exercise.id,
-                                      index,
-                                      "enteredWeight",
-                                      event.target.value
-                                        .replace(/[^0-9.,]/g, "")
-                                        .replace(",", ".")
-                                    )
-                                  }
-                                />
-                              </span>
-                            </label>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                    {exerciseValidationMessage && (
-                      <p className="workoutExerciseValidation" role="alert">
-                        <span aria-hidden="true">!</span>
-                        {exerciseValidationMessage}
-                      </p>
-                    )}
-                    {sharedExerciseAiWeightAdjustment && (
-                      <small className="workoutAiSharedWeightNote">
-                        Коррекция готовности: {sharedExerciseAiWeightAdjustment}
-                      </small>
-                    )}
-                  </section>
+                  <WorkoutExerciseSets
+                    exercise={exercise}
+                    exerciseValidationMessage={exerciseValidationMessage}
+                    hasExternalWeight={exerciseUsesExternalWeight(exercise)}
+                    onToggleSetCompleted={toggleWorkoutSetCompleted}
+                    onUpdateSet={updateSet}
+                    repsInputRefs={setRepsInputRefs}
+                    sharedExerciseAiWeightAdjustment={sharedExerciseAiWeightAdjustment}
+                    weightInputRefs={setWeightInputRefs}
+                  />
                 )}
 
                 {exercise.id !== "warmup" && (
