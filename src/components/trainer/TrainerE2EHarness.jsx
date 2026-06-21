@@ -1,8 +1,9 @@
 import { useState } from "react";
 import TrainerWorkspace from "./TrainerWorkspace";
-import { APP_VERSION } from "../../constants/appConfig";
+import * as appConfig from "../../constants/appConfig";
 
 function TrainerE2EHarness() {
+  const APP_VERSION = appConfig?.APP_VERSION || "v0";
   const [mode, setMode] = useState("dashboard");
   const [activeSection, setActiveSection] = useState("dashboard");
   const [activeClientTab, setActiveClientTab] = useState("overview");
