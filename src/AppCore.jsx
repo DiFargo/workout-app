@@ -307,6 +307,7 @@ import {
 } from "./components/workout/WorkoutDialogs";
 import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
 import WorkoutExerciseSets from "./features/client/workouts/WorkoutExerciseSets";
+import WorkoutExerciseSupport from "./features/client/workouts/WorkoutExerciseSupport";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
 import WorkoutExerciseVideoFrame from "./features/client/workouts/WorkoutExerciseVideoFrame";
 import WorkoutFinishStage from "./features/client/workouts/WorkoutFinishStage";
@@ -18614,39 +18615,19 @@ async function loadUsers() {
                 )}
 
                 {exercise.id !== "warmup" && (
-                  <div className="workoutExerciseSupport">
-                    <button
-                      type="button"
-                      className="previousInfo subtle"
-                      onClick={() => setExerciseHistoryOpenId((current) => current === exercise.id ? "" : exercise.id)}
-                    >
-                      {getLastExerciseText(exercise, lastExerciseResults)}
-                      {exerciseHistoryOpenId === exercise.id && (
-                        <small>План сейчас: {exercise.sets.length} подхода · нажми ещё раз, чтобы свернуть</small>
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      className="workoutExerciseNoteButton"
-                      onClick={(event) => openWorkoutExerciseModal(
-                        setExerciseNoteOpenId,
-                        exercise.id,
-                        event.currentTarget
-                      )}
-                      aria-label="Открыть заметку к упражнению"
-                    >
-                      <span>Заметка</span>
-                      <span aria-hidden="true">✎</span>
-                    </button>
-
-                    {exerciseAiWeightAdjustments.length > 0 && (
-                      <div className="workoutAiAdjustHint">
-                        Коррекция готовности · {workoutReadiness?.volumeText}
-                      </div>
+                  <WorkoutExerciseSupport
+                    exercise={exercise}
+                    exerciseAiWeightAdjustments={exerciseAiWeightAdjustments}
+                    exerciseHistoryOpenId={exerciseHistoryOpenId}
+                    lastExerciseText={getLastExerciseText(exercise, lastExerciseResults)}
+                    onOpenNote={(event) => openWorkoutExerciseModal(
+                      setExerciseNoteOpenId,
+                      exercise.id,
+                      event.currentTarget
                     )}
-
-                  </div>
+                    onToggleHistory={() => setExerciseHistoryOpenId((current) => current === exercise.id ? "" : exercise.id)}
+                    readinessVolumeText={workoutReadiness?.volumeText}
+                  />
                 )}
 
                 {exercise.id !== "warmup" && exerciseNoteOpenId === exercise.id && createPortal(
