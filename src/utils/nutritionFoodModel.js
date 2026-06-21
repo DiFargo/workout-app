@@ -1,13 +1,13 @@
 import {
   getFoodIcon,
   getNutritionFoodSearchText
-} from "./nutritionFoodPresentation";
-import { parseNutritionNumber, roundMacro } from "./nutritionNumbers";
+} from "./nutritionFoodPresentation.js";
+import { parseNutritionNumber, roundMacro } from "./nutritionNumbers.js";
 import {
   getFoodPortionAmount,
   getFoodScale,
   getPieceProductSizeProfile
-} from "./nutritionPortions";
+} from "./nutritionPortions.js";
 
 export function normalizeNutritionFood(food) {
   const foodId = food.id || food.foodId || food.fatSecretId || `food_${Date.now()}`;
@@ -32,6 +32,57 @@ export function normalizeNutritionFood(food) {
     type: food.type || "",
     ingredients: Array.isArray(food.ingredients) ? food.ingredients : [],
     totalWeight: parseNutritionNumber(food.totalWeight, 0) || parseNutritionNumber(food.portionAmount, 0) || 0
+  };
+}
+
+export function buildCustomNutritionFoodDraft({
+  id = `custom_${Date.now()}`,
+  foodId = `custom_${Date.now()}`
+} = {}) {
+  return {
+    ...normalizeNutritionFood({
+      id,
+      foodId,
+      name: "",
+      portion: "100 г",
+      portionAmount: 100,
+      calories: 0,
+      protein: 0,
+      fat: 0,
+      carbs: 0,
+      source: "Моя база",
+      amountMode: "grams",
+      lastAmount: 100,
+      icon: "🍽️"
+    }),
+    name: ""
+  };
+}
+
+export function buildCustomNutritionDishDraft({
+  id = `dish_${Date.now()}`,
+  foodId = `dish_${Date.now()}`
+} = {}) {
+  return {
+    ...normalizeNutritionFood({
+      id,
+      foodId,
+      name: "",
+      portion: "100 г",
+      portionAmount: 100,
+      totalWeight: 100,
+      calories: 0,
+      protein: 0,
+      fat: 0,
+      carbs: 0,
+      source: "Моя база",
+      amountMode: "grams",
+      lastAmount: 100,
+      icon: "🍲",
+      type: "dish",
+      ingredients: []
+    }),
+    name: ""
   };
 }
 

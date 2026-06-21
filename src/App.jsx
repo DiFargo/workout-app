@@ -75,6 +75,8 @@ import {
   getShortFoodName
 } from "./utils/nutritionFoodPresentation";
 import {
+  buildCustomNutritionDishDraft,
+  buildCustomNutritionFoodDraft,
   detectNutritionAmountMode,
   enrichNutritionFoodIcon,
   getDefaultNutritionSmartUnit,
@@ -365,7 +367,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v741";
+const APP_VERSION = "v742";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -2507,24 +2509,7 @@ export default function App() {
   }
 
   function createCustomNutritionFood() {
-    const draftFood = {
-      ...normalizeNutritionFood({
-      id: `custom_${Date.now()}`,
-      foodId: `custom_${Date.now()}`,
-      name: "",
-      portion: "100 г",
-      portionAmount: 100,
-      calories: 0,
-      protein: 0,
-      fat: 0,
-      carbs: 0,
-      source: "Моя база",
-      amountMode: "grams",
-      lastAmount: 100,
-      icon: "🍽️"
-      }),
-      name: ""
-    };
+    const draftFood = buildCustomNutritionFoodDraft();
 
     setFatSecretError("");
     setNutritionFallbackSuggestions([]);
@@ -2542,27 +2527,7 @@ export default function App() {
   }
 
   function createCustomNutritionDish() {
-    const draftDish = {
-      ...normalizeNutritionFood({
-      id: `dish_${Date.now()}`,
-      foodId: `dish_${Date.now()}`,
-      name: "",
-      portion: "100 г",
-      portionAmount: 100,
-      totalWeight: 100,
-      calories: 0,
-      protein: 0,
-      fat: 0,
-      carbs: 0,
-      source: "Моя база",
-      amountMode: "grams",
-      lastAmount: 100,
-      icon: "🍲",
-      type: "dish",
-      ingredients: []
-      }),
-      name: ""
-    };
+    const draftDish = buildCustomNutritionDishDraft();
 
     setFatSecretError("");
     setNutritionFallbackSuggestions([]);
