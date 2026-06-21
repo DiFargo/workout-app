@@ -358,7 +358,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v748";
+const APP_VERSION = "v749";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -9441,18 +9441,11 @@ async function loadUsers() {
     const caloriePercentRaw = Math.round((nutritionTotals.calories / Math.max(1, effectiveNutritionGoals.calories)) * 100);
     const caloriePercent = Math.min(100, caloriePercentRaw);
     const isCaloriesOverGoal = nutritionTotals.calories > effectiveNutritionGoals.calories;
-    const waterPercent = Math.min(100, Math.round(((nutritionToday.water || 0) / nutrition.goals.water) * 100));
     const caloriesLeft = Math.max(0, Math.round(effectiveNutritionGoals.calories - nutritionTotals.calories));
     const caloriesConsumed = Math.round(nutritionTotals.calories);
     const proteinPercent = Math.min(100, Math.round((nutritionTotals.protein / effectiveNutritionGoals.protein) * 100));
     const fatPercent = Math.min(100, Math.round((nutritionTotals.fat / effectiveNutritionGoals.fat) * 100));
     const carbsPercent = Math.min(100, Math.round((nutritionTotals.carbs / effectiveNutritionGoals.carbs) * 100));
-    const macroTotal = Math.max(1, nutritionTotals.protein + nutritionTotals.fat + nutritionTotals.carbs);
-    const carbsAngle = (nutritionTotals.carbs / macroTotal) * 360;
-    const fatAngle = (nutritionTotals.fat / macroTotal) * 360;
-    const macroDonutStyle = {
-      background: `conic-gradient(#70cde3 0deg ${carbsAngle}deg, #ffd15a ${carbsAngle}deg ${carbsAngle + fatAngle}deg, #ff7d7d ${carbsAngle + fatAngle}deg 360deg)`
-    };
     const weekDates = nutritionWeekDates;
     const selectedNutritionDate = nutritionKeyToDate(nutritionDateKey);
     const nutritionStreakText = `Серия записи еды — ${nutritionCurrentStreak} ${getTrainerDayWord(nutritionCurrentStreak)} 🔥`;
@@ -9470,7 +9463,6 @@ async function loadUsers() {
       : { calories: 0, count: 0 };
     const aiNutritionDay = buildAiNutritionDayModel({ ...nutrition, goals: effectiveNutritionGoals }, nutritionToday, history);
     const aiNutritionActivePlan = preliminaryAiNutritionPlan || buildAiNutritionMonthlyPlan(nutrition);
-    const aiNutritionBaseline = aiNutritionDay.baseline;
     const aiNutritionGoal = aiNutritionActivePlan?.profile?.goal || aiNutritionProfile?.goal || "recomp";
     const aiNutritionGoalText =
       aiNutritionGoal === "recomp"
@@ -9479,10 +9471,7 @@ async function loadUsers() {
     const aiNutritionCurrentWeek = preliminaryAiNutritionWeekNumber;
     const aiNutritionPageProfile = preliminaryAiNutritionProfile;
     const isNutritionTrainingDayToday = isAiNutritionTrainingDay(aiNutritionPageProfile);
-    const aiNutritionPageWeek = preliminaryAiNutritionWeek;
     const aiNutritionTodayPlanMacros = preliminaryAiNutritionTodayMacros;
-    const aiNutritionPageTrainingAdvice = getAiNutritionTrainingDayAdvice(isNutritionTrainingDayToday, aiNutritionPageProfile?.goal);
-    const aiNutritionScorePercent = Math.min(96, Math.max(8, Math.round((aiNutritionDay.score || 0) * 10)));
     const macroCaloriesProtein = Math.max(0, Number(nutritionTotals.protein) || 0) * 4;
     const macroCaloriesFat = Math.max(0, Number(nutritionTotals.fat) || 0) * 9;
     const macroCaloriesCarbs = Math.max(0, Number(nutritionTotals.carbs) || 0) * 4;
