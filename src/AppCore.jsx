@@ -307,6 +307,7 @@ import {
 } from "./components/workout/WorkoutDialogs";
 import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
+import WorkoutExerciseVideoFrame from "./features/client/workouts/WorkoutExerciseVideoFrame";
 import WorkoutFinishStage from "./features/client/workouts/WorkoutFinishStage";
 import WorkoutListPage from "./features/client/workouts/WorkoutListPage";
 import {
@@ -18524,135 +18525,62 @@ async function loadUsers() {
                       <b>{String(currentExerciseIndex).padStart(2, "0")}</b>
                     </div>
 
-                    <div
-                      className={`workoutExerciseVideoFrame ${!exercise.video || exerciseVideoFailed ? "fallback" : ""}`}
-                    >
-                      {exercise.video && !exerciseVideoFailed ? (
-                        <>
-                          <video
-                            key={`${exercise.id}:${videoRetryToken}`}
-                            className="exerciseVideo"
-                            src={exercise.video}
-                            playsInline
-                            preload="auto"
-                            onPointerDown={(event) => event.stopPropagation()}
-                            onTouchStart={(event) => event.stopPropagation()}
-                            onTouchMove={(event) => event.stopPropagation()}
-                            onTouchEnd={(event) => event.stopPropagation()}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              if (event.currentTarget.paused) {
-                                event.currentTarget.play().catch(() => {
-                                  showAppError("load", "Не получилось запустить видео упражнения.");
-                                });
-                              } else {
-                                event.currentTarget.pause();
-                              }
-                            }}
-                            onPlay={() => {
-                              setInlinePlayingVideoId(exercise.id);
-                              showInlineVideoControlsTemporarily();
-                            }}
-                            onPause={() => {
-                              setInlinePlayingVideoId("");
-                              showInlineVideoControlsTemporarily();
-                            }}
-                            onEnded={() => {
-                              if (inlineVideoControlsTimerRef.current) {
-                                window.clearTimeout(inlineVideoControlsTimerRef.current);
-                                inlineVideoControlsTimerRef.current = null;
-                              }
-                              setInlinePlayingVideoId("");
-                              setInlineVideoControlsVisible(true);
-                            }}
-                            onLoadStart={() => {
-                              setVideoLoadingId(exercise.id);
-                              startPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video });
-                            }}
-                            onCanPlay={() => setVideoLoadingId("")}
-                            onLoadedMetadata={(event) => {
-                              setVideoLoadingId("");
-                              endPerformanceCheck(`Video · ${exercise.name}`, {
-                                src: exercise.video,
-                                duration: Math.round(Number(event.currentTarget.duration) || 0)
-                              });
-                            }}
-                            onError={() => {
-                              endPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video, error: true });
-                              if (inlineVideoControlsTimerRef.current) {
-                                window.clearTimeout(inlineVideoControlsTimerRef.current);
-                                inlineVideoControlsTimerRef.current = null;
-                              }
-                              setInlinePlayingVideoId("");
-                              setInlineVideoControlsVisible(true);
-                              setVideoLoadingId("");
-                              setOpenVideoId(`error:${exercise.id}`);
-                            }}
-                          />
-                          {videoLoadingId === exercise.id && (
-                            <span className="workoutExerciseVideoLoading">Загрузка видео...</span>
-                          )}
-                          {inlinePlayingVideoId !== exercise.id && (
-                            <button
-                              type="button"
-                              className={`workoutExerciseInlinePlayButton ${inlineVideoControlsVisible ? "" : "is-hidden"}`}
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                const video = event.currentTarget.parentElement?.querySelector("video");
-                                video?.play().catch(() => {
-                                  showAppError("load", "Не получилось запустить видео упражнения.");
-                                });
-                              }}
-                              aria-label="Воспроизвести видео упражнения"
-                            >
-                              <span aria-hidden="true">▶</span>
-                            </button>
-                          )}
-                          {inlinePlayingVideoId === exercise.id && (
-                            <button
-                              type="button"
-                              className={`workoutExerciseInlinePauseButton ${inlineVideoControlsVisible ? "" : "is-hidden"}`}
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                event.currentTarget.parentElement?.querySelector("video")?.pause();
-                              }}
-                              aria-label="Поставить видео на паузу"
-                            >
-                              <span aria-hidden="true">Ⅱ</span>
-                            </button>
-                          )}
-                          <button
-                            type="button"
-                            className="workoutExerciseFullscreenButton"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              event.currentTarget.parentElement?.querySelector("video")?.pause();
-                              setFullscreenVideo(exercise.video);
-                            }}
-                            aria-label="Развернуть видео на весь экран"
-                            title="На весь экран"
-                          >
-                            <span aria-hidden="true">⛶</span>
-                          </button>
-                        </>
-                      ) : (
-                        <div className="workoutExerciseVideoFallback">
-                          <strong>Видео техники недоступно</strong>
-                          <small>{getExerciseTechniqueHint(exercise.name)}</small>
-                          {exercise.video && exerciseVideoFailed && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setOpenVideoId(null);
-                                setVideoRetryToken((current) => current + 1);
-                              }}
-                            >
-                              Повторить загрузку
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    <WorkoutExerciseVideoFrame
+                      exercise={exercise}
+                      exerciseVideoFailed={exerciseVideoFailed}
+                      fallbackHint={getExerciseTechniqueHint(exercise.name)}
+                      inlinePlayingVideoId={inlinePlayingVideoId}
+                      inlineVideoControlsVisible={inlineVideoControlsVisible}
+                      onFullscreenVideo={setFullscreenVideo}
+                      onInlineVideoPlayFailed={() => {
+                        showAppError("load", "Не получилось запустить видео упражнения.");
+                      }}
+                      onRetryVideo={() => {
+                        setOpenVideoId(null);
+                        setVideoRetryToken((current) => current + 1);
+                      }}
+                      onVideoCanPlay={() => setVideoLoadingId("")}
+                      onVideoEnded={() => {
+                        if (inlineVideoControlsTimerRef.current) {
+                          window.clearTimeout(inlineVideoControlsTimerRef.current);
+                          inlineVideoControlsTimerRef.current = null;
+                        }
+                        setInlinePlayingVideoId("");
+                        setInlineVideoControlsVisible(true);
+                      }}
+                      onVideoError={() => {
+                        endPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video, error: true });
+                        if (inlineVideoControlsTimerRef.current) {
+                          window.clearTimeout(inlineVideoControlsTimerRef.current);
+                          inlineVideoControlsTimerRef.current = null;
+                        }
+                        setInlinePlayingVideoId("");
+                        setInlineVideoControlsVisible(true);
+                        setVideoLoadingId("");
+                        setOpenVideoId(`error:${exercise.id}`);
+                      }}
+                      onVideoLoadedMetadata={(event) => {
+                        setVideoLoadingId("");
+                        endPerformanceCheck(`Video · ${exercise.name}`, {
+                          src: exercise.video,
+                          duration: Math.round(Number(event.currentTarget.duration) || 0)
+                        });
+                      }}
+                      onVideoLoadStart={() => {
+                        setVideoLoadingId(exercise.id);
+                        startPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video });
+                      }}
+                      onVideoPause={() => {
+                        setInlinePlayingVideoId("");
+                        showInlineVideoControlsTemporarily();
+                      }}
+                      onVideoPlay={() => {
+                        setInlinePlayingVideoId(exercise.id);
+                        showInlineVideoControlsTemporarily();
+                      }}
+                      videoLoadingId={videoLoadingId}
+                      videoRetryToken={videoRetryToken}
+                    />
                   </>
                 )}
 
