@@ -248,6 +248,7 @@ import {
   getTrainerProgramCompletionPercent,
   getTrainerSettledCollectionItems,
   getTrainerSummaryReadFailures,
+  getTrainerSortedHistory,
   getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
 } from "./utils/trainerClientSummary";
@@ -359,7 +360,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v734";
+const APP_VERSION = "v735";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5613,11 +5614,7 @@ export default function App() {
         );
       }
 
-      const clientHistory = getTrainerSettledCollectionItems(historyResult);
-      clientHistory.sort((a, b) => (
-        getTrainerSummaryTimestamp(b.date || b.completedAt || b.createdAt) -
-        getTrainerSummaryTimestamp(a.date || a.completedAt || a.createdAt)
-      ));
+      const clientHistory = getTrainerSortedHistory(getTrainerSettledCollectionItems(historyResult));
 
       const clientMeasurements = getTrainerSortedMeasurements(
         getTrainerSettledCollectionItems(measurementsResult)

@@ -80,6 +80,13 @@ export function getTrainerWorkoutActivitySummary(historyList = [], {
   };
 }
 
+export function getTrainerSortedHistory(historyList = []) {
+  return [...(Array.isArray(historyList) ? historyList : [])].sort((a, b) => (
+    getTrainerSummaryTimestamp(b?.date || b?.completedAt || b?.createdAt) -
+    getTrainerSummaryTimestamp(a?.date || a?.completedAt || a?.createdAt)
+  ));
+}
+
 export function getTrainerSortedMeasurements(measurements = []) {
   return [...(Array.isArray(measurements) ? measurements : [])]
     .sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));

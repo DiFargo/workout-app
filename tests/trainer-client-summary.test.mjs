@@ -14,6 +14,7 @@ import {
   getTrainerProgramCompletionPercent,
   getTrainerSettledCollectionItems,
   getTrainerSummaryReadFailures,
+  getTrainerSortedHistory,
   getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
 } from "../src/utils/trainerClientSummary.js";
@@ -88,6 +89,22 @@ test("trainer workout activity summary counts recent and weekly workout days", (
     summary.workoutDateKeysCurrentWeek,
     [...new Set([today, yesterday].filter((date) => getTrainerSummaryDayStart(date) >= getTrainerSummaryWeekStart()))]
   );
+});
+
+test("trainer history is sorted by workout recency", () => {
+  const history = [
+    { id: "created", createdAt: "2026-06-12T10:00:00.000Z" },
+    { id: "date", date: "2026-06-20T10:00:00.000Z" },
+    { id: "completed", completedAt: "2026-06-18T10:00:00.000Z" },
+    { id: "bad", date: "bad-date" }
+  ];
+
+  assert.deepEqual(getTrainerSortedHistory(history).map((item) => item.id), [
+    "date",
+    "completed",
+    "created",
+    "bad"
+  ]);
 });
 
 test("trainer measurements are sorted by recency and expose latest date", () => {
