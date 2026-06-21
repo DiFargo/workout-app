@@ -358,7 +358,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v744";
+const APP_VERSION = "v745";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -20693,7 +20693,6 @@ async function loadUsers() {
             ? warmupExercise
             : normalizeExercise(workout.exercises[currentExerciseIndex - 1]);
 
-        const isFirstSlide = workoutStarted && currentExerciseIndex === 0;
         const exerciseVideoFailed = exercise?.id && openVideoId === `error:${exercise.id}`;
         const exerciseAiWeightAdjustments = exercise?.id && exercise.id !== "warmup"
           ? exercise.sets
