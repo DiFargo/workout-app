@@ -65,3 +65,33 @@ export function WorkoutFullscreenVideoOverlay({ videoSrc, onClose, onVideoError 
     </div>
   );
 }
+
+export function WorkoutRunTopControls({ isSaving, showBackButton, onExit, onBack }) {
+  return (
+    <>
+      <button
+        type="button"
+        className="workoutCloseButton"
+        onClick={onExit}
+        disabled={isSaving}
+        aria-label="Выйти из тренировки"
+      >
+        ×
+      </button>
+
+      <div className="workoutHeader workoutHeaderCompact">
+        {showBackButton && (
+          <button
+            className="backIconBtn universalFixedBackPointer"
+            onClick={onBack}
+            aria-label="Вернуться назад"
+          >
+            ←
+          </button>
+        )}
+
+        <div aria-hidden="true" />
+      </div>
+    </>
+  );
+}

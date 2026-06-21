@@ -308,7 +308,11 @@ import {
 import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
 import WorkoutListPage from "./features/client/workouts/WorkoutListPage";
-import { WorkoutFullscreenVideoOverlay, WorkoutNotFoundPage } from "./features/client/workouts/WorkoutRunOverlays";
+import {
+  WorkoutFullscreenVideoOverlay,
+  WorkoutNotFoundPage,
+  WorkoutRunTopControls
+} from "./features/client/workouts/WorkoutRunOverlays";
 import { AppSplash, LoginPage } from "./components/auth/AuthScreens";
 import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
 import TrainerE2EHarness from "./components/trainer/TrainerE2EHarness";
@@ -18275,41 +18279,25 @@ async function loadUsers() {
     workoutStarted && currentExerciseIndex === workout.exercises.length + 1;
 
   const shouldShowTopBackButton = isWorkoutSaved === true && !isFinishSlideActive;
+  const returnFromSavedWorkout = () => {
+    setSelectedWorkoutId(null);
+    setOpenVideoId(null);
+    setCurrentExerciseIndex(0);
+    setWorkoutStarted(false);
+    setWorkoutStartedAt(null);
+    setWorkoutFinishedAt(null);
+    setIsWorkoutSaved(false);
+    setShowWorkoutSavedCard(false);
+  };
 
   return (
     <div className={`app workoutRunPage ${workoutStarted && !isWorkoutSaved ? "workoutRunPageNoHeader" : ""}`}>
-      <button
-        type="button"
-        className="workoutCloseButton"
-        onClick={requestLeaveWorkout}
-        disabled={isSaving}
-        aria-label="Выйти из тренировки"
-      >
-        ×
-      </button>
-
-      <div className="workoutHeader workoutHeaderCompact">
-        {shouldShowTopBackButton && isWorkoutSaved && (
-          <button
-            className="backIconBtn universalFixedBackPointer"
-            onClick={() => {
-              setSelectedWorkoutId(null);
-              setOpenVideoId(null);
-              setCurrentExerciseIndex(0);
-              setWorkoutStarted(false);
-              setWorkoutStartedAt(null);
-              setWorkoutFinishedAt(null);
-              setIsWorkoutSaved(false);
-                    setShowWorkoutSavedCard(false);
-            }}
-            aria-label="Вернуться назад"
-          >
-            ←
-          </button>
-        )}
-
-        <div aria-hidden="true" />
-      </div>
+      <WorkoutRunTopControls
+        isSaving={isSaving}
+        showBackButton={shouldShowTopBackButton && isWorkoutSaved}
+        onExit={requestLeaveWorkout}
+        onBack={returnFromSavedWorkout}
+      />
 
       {(() => {
         const isStartSlide = !workoutStarted;
