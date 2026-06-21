@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   CalendarDays as ProgramCalendarIcon,
@@ -14,7 +14,6 @@ import {
 import "./styles.css";
 
 import { getAiNutritionHistoryBaseline } from "./data/aiNutritionBaseline";
-import { starterPlan } from "./data/starterPlan";
 import {
   defaultNutritionState,
   NUTRITION_ICON_PRESETS,
@@ -22,8 +21,7 @@ import {
 } from "./data/nutritionDefaults";
 import { nutritionFoodDatabase } from "./data/nutritionFoods";
 import {
-  AI_NUTRITION_WEEK_DAYS,
-  NUTRITION_QUICK_SEARCHES
+  AI_NUTRITION_WEEK_DAYS
 } from "./data/nutritionPlanning";
 import {
   createClientResourceId,
@@ -42,7 +40,6 @@ import {
   getAiWorkoutBaseWeight,
   getAdjustedWorkoutWeight,
   getDefaultWorkoutModePreference,
-  getExerciseMovementHint,
   getExerciseTechniqueHint,
   parseWorkoutWeightValue,
   getProgramHistoryItems,
@@ -78,23 +75,19 @@ import {
   buildCustomNutritionDishDraft,
   buildCustomNutritionFoodDraft,
   detectNutritionAmountMode,
-  enrichNutritionFoodIcon,
   getDefaultNutritionSmartUnit,
   getMyFoodsArray,
   getNutritionBaseMacroFood,
   getNutritionSmartUnitId,
   getNutritionSmartUnits,
-  isPortionModeSelected,
   makePersonalFoodKey,
   normalizeMyFoodRecord,
-  normalizeNutritionFood,
-  searchMyFoods
+  normalizeNutritionFood
 } from "./utils/nutritionFoodModel";
 import { recalcDishFromIngredients, sumDishIngredientWeight } from "./utils/nutritionDish";
 import {
   getAiNutritionActivityLabel,
   getAiNutritionGoalLabel,
-  getAiNutritionGoalShort,
   getAiNutritionTrainingDayAdvice
 } from "./utils/aiNutritionLabels";
 import {
@@ -175,8 +168,7 @@ import {
 import { getPositiveNutritionNumber, parseNutritionNumber, roundMacro } from "./utils/nutritionNumbers";
 import {
   getFoodPortionAmount,
-  getFoodScale,
-  getPieceProductSizeProfile
+  getFoodScale
 } from "./utils/nutritionPortions";
 import { buildProgressInsight } from "./utils/progressInsight";
 import { buildBasicWorkoutPlanFromQuiz } from "./utils/basicWorkoutPlanBuilder";
@@ -325,7 +317,6 @@ import {
   buildClientWorkoutsFromTemplate,
   makeThreeSets,
   normalizeExercise,
-  normalizePlan,
   sortWorkoutDays
 } from "./utils/workoutPlanNormalization";
 import {
@@ -367,7 +358,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v743";
+const APP_VERSION = "v744";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -391,9 +382,6 @@ const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
 
 const AI_NUTRITION_PROFILE_STORAGE_KEY = "ai_nutrition_profile_v1";
 const AI_NUTRITION_PLAN_STORAGE_KEY = "ai_nutrition_plan_v1";
-
-// HARDER DELETE SWIPE
-const NUTRITION_DELETE_THRESHOLD = -135;
 
 function TrainerE2EHarness() {
   const [mode, setMode] = useState("dashboard");
