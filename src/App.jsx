@@ -275,6 +275,7 @@ import {
   getTrainerClientMirrorPayload
 } from "./utils/trainerClientMirror";
 import {
+  buildTrainerProgramAccessContext,
   canManageTrainerClientProgram,
   canManageTrainerTemplate,
   getTrainerProgramOwner
@@ -363,7 +364,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v739";
+const APP_VERSION = "v740";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -676,22 +677,20 @@ export default function App() {
     return getTrainerProgramOwner(auth.currentUser?.uid || user?.uid || "", canUseAdminFeatures());
   }
 
-  function canManageTrainingTemplate(template) {
-    const currentUid = auth.currentUser?.uid || user?.uid || "";
-    return canManageTrainerTemplate(template, {
-      currentUid,
+  function getCurrentProgramAccessContext() {
+    return buildTrainerProgramAccessContext({
+      currentUid: auth.currentUser?.uid || user?.uid || "",
       currentUserRole,
       isAdmin: canUseAdminFeatures()
     });
   }
 
+  function canManageTrainingTemplate(template) {
+    return canManageTrainerTemplate(template, getCurrentProgramAccessContext());
+  }
+
   function canManageClientProgram(client) {
-    const currentUid = auth.currentUser?.uid || user?.uid || "";
-    return canManageTrainerClientProgram(client, {
-      currentUid,
-      currentUserRole,
-      isAdmin: canUseAdminFeatures()
-    });
+    return canManageTrainerClientProgram(client, getCurrentProgramAccessContext());
   }
 
   const historyReplayInProgressRef = useRef(false);

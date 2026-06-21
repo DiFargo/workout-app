@@ -5,6 +5,18 @@ export function getTrainerProgramOwner(currentUid = "", isAdmin = false) {
   };
 }
 
+export function buildTrainerProgramAccessContext({
+  currentUid = "",
+  currentUserRole = "",
+  isAdmin = false
+} = {}) {
+  return {
+    currentUid: String(currentUid || ""),
+    currentUserRole: String(currentUserRole || ""),
+    isAdmin: Boolean(isAdmin)
+  };
+}
+
 export function canManageTrainerTemplate(template = {}, context = {}) {
   if (context.isAdmin) return true;
 
