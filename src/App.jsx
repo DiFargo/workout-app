@@ -367,7 +367,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v742";
+const APP_VERSION = "v743";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -8035,12 +8035,6 @@ async function loadUsers() {
     setTimeout(() => {
       setSwipeDirection("");
     }, 560);
-  }
-
-  function isInteractiveTarget(target) {
-    return Boolean(
-      target?.closest?.("input, textarea, select, button, video")
-    );
   }
 
   function handleExerciseTouchStart() {
