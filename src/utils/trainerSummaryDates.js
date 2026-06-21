@@ -28,6 +28,18 @@ export function getTrainerSummaryWeekStart(value = Date.now()) {
   return date.getTime();
 }
 
+export function getTrainerSummaryPeriodBounds(value = Date.now()) {
+  const dayMs = 24 * 60 * 60 * 1000;
+  const todayStart = getTrainerSummaryDayStart(value);
+
+  return {
+    todayStart,
+    weekStart: getTrainerSummaryWeekStart(value),
+    sevenDayStart: todayStart - 6 * dayMs,
+    thirtyDayStart: todayStart - 29 * dayMs
+  };
+}
+
 export function getTrainerSummaryDateKey(value) {
   const timestamp = getTrainerSummaryTimestamp(value);
   if (!timestamp) return "";

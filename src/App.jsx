@@ -233,8 +233,8 @@ import {
   formatTrainerSummaryDate,
   getTrainerSummaryDayStart,
   getTrainerSummaryDaysSince,
-  getTrainerSummaryTimestamp,
-  getTrainerSummaryWeekStart
+  getTrainerSummaryPeriodBounds,
+  getTrainerSummaryTimestamp
 } from "./utils/trainerSummaryDates";
 import {
   buildTrainerClientRecentEvents,
@@ -362,7 +362,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v737";
+const APP_VERSION = "v738";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5590,10 +5590,7 @@ export default function App() {
     setTrainerClientSummariesLoading(false);
     const nextSummaries = {};
     let nextClientIndex = 0;
-    const todayStart = getTrainerSummaryDayStart();
-    const weekStart = getTrainerSummaryWeekStart();
-    const sevenDayStart = todayStart - 6 * 24 * 60 * 60 * 1000;
-    const thirtyDayStart = todayStart - 29 * 24 * 60 * 60 * 1000;
+    const { weekStart, sevenDayStart, thirtyDayStart } = getTrainerSummaryPeriodBounds();
 
     const loadClientSummary = async (client) => {
       const [historyResult, nutritionResult, measurementsResult, paymentResult] = await Promise.allSettled([

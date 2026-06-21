@@ -5,6 +5,8 @@ import {
   formatTrainerSummaryDate,
   getTrainerAssignmentVersionKey,
   getTrainerSummaryDateKey,
+  getTrainerSummaryDayStart,
+  getTrainerSummaryPeriodBounds,
   getTrainerSummaryTimestamp,
   getTrainerSummaryWeekStart
 } from "../src/utils/trainerSummaryDates.js";
@@ -26,6 +28,16 @@ test("trainer summary date helpers format stable keys and labels", () => {
 
 test("trainer summary week start returns monday", () => {
   assert.equal(getTrainerSummaryDateKey(getTrainerSummaryWeekStart("2026-06-18")), "2026-06-15");
+});
+
+test("trainer summary period bounds keep rolling windows aligned to day start", () => {
+  const dayMs = 24 * 60 * 60 * 1000;
+  const bounds = getTrainerSummaryPeriodBounds("2026-06-18T14:30:00");
+
+  assert.equal(bounds.todayStart, getTrainerSummaryDayStart("2026-06-18T14:30:00"));
+  assert.equal(bounds.weekStart, getTrainerSummaryWeekStart("2026-06-18T14:30:00"));
+  assert.equal(bounds.sevenDayStart, bounds.todayStart - 6 * dayMs);
+  assert.equal(bounds.thirtyDayStart, bounds.todayStart - 29 * dayMs);
 });
 
 test("trainer assignment version key preserves raw fallback values", () => {
