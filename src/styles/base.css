@@ -1,0 +1,37 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0d0f0d;
+  --card: #171a17;
+  --card-2: #1d211d;
+  --line: #2b302b;
+  --text: #f4f6f2;
+  --muted: #8f968f;
+
+  --accent: #7f9f3a;
+  --accent-2: #91ad4e;
+
+  --danger: #d45a5a;
+  --success: #5f8f4e;
+}
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+

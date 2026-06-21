@@ -11,7 +11,6 @@ import {
   Trash2 as ProgramTrashIcon,
   Upload as ProgramUploadIcon
 } from "lucide-react";
-import "./styles.css";
 
 import { getAiNutritionHistoryBaseline } from "./data/aiNutritionBaseline";
 import {
