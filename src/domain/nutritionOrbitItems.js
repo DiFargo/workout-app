@@ -1,9 +1,9 @@
-export const NUTRITION_ORBIT_BASE_ITEMS = [
+﻿export const NUTRITION_ORBIT_BASE_ITEMS = [
   {
     id: "calories",
-    label: "Калории",
-    amountBuilder: ({ caloriesConsumed }) => `${String(caloriesConsumed)} ккал`,
-    targetBuilder: ({ effectiveNutritionGoals }) => `до ${effectiveNutritionGoals.calories} ккал`,
+    label: "\u041a\u0430\u043b\u043e\u0440\u0438\u0438",
+    amountBuilder: ({ caloriesConsumed }) => `${String(caloriesConsumed)} \u043a\u043a\u0430\u043b`,
+    targetBuilder: ({ effectiveNutritionGoals }) => `\u0434\u043e ${effectiveNutritionGoals.calories} \u043a\u043a\u0430\u043b`,
     color: "#22c55e",
     startAngle: 324.3,
     arcDegrees: 74.6,
@@ -11,9 +11,9 @@ export const NUTRITION_ORBIT_BASE_ITEMS = [
   },
   {
     id: "protein",
-    label: "Белки",
-    amountBuilder: ({ nutritionTotals, roundMacro }) => `${roundMacro(nutritionTotals.protein)} г`,
-    targetBuilder: ({ effectiveNutritionGoals }) => `до ${effectiveNutritionGoals.protein} г`,
+    label: "\u0411\u0435\u043b\u043a\u0438",
+    amountBuilder: ({ nutritionTotals, roundMacro }) => `${roundMacro(nutritionTotals.protein)} \u0433`,
+    targetBuilder: ({ effectiveNutritionGoals }) => `\u0434\u043e ${effectiveNutritionGoals.protein} \u0433`,
     color: "#EA5D61",
     startAngle: 63.2,
     arcDegrees: 56,
@@ -21,9 +21,9 @@ export const NUTRITION_ORBIT_BASE_ITEMS = [
   },
   {
     id: "carbs",
-    label: "Углеводы",
-    amountBuilder: ({ nutritionTotals, roundMacro }) => `${roundMacro(nutritionTotals.carbs)} г`,
-    targetBuilder: ({ effectiveNutritionGoals }) => `до ${effectiveNutritionGoals.carbs} г`,
+    label: "\u0423\u0433\u043b\u0435\u0432\u043e\u0434\u044b",
+    amountBuilder: ({ nutritionTotals, roundMacro }) => `${roundMacro(nutritionTotals.carbs)} \u0433`,
+    targetBuilder: ({ effectiveNutritionGoals }) => `\u0434\u043e ${effectiveNutritionGoals.carbs} \u0433`,
     color: "#1f7df2",
     startAngle: 240.7,
     arcDegrees: 56.5,
@@ -31,9 +31,9 @@ export const NUTRITION_ORBIT_BASE_ITEMS = [
   },
   {
     id: "fat",
-    label: "Жиры",
-    amountBuilder: ({ nutritionTotals, roundMacro }) => `${roundMacro(nutritionTotals.fat)} г`,
-    targetBuilder: ({ effectiveNutritionGoals }) => `до ${effectiveNutritionGoals.fat} г`,
+    label: "\u0416\u0438\u0440\u044b",
+    amountBuilder: ({ nutritionTotals, roundMacro }) => `${roundMacro(nutritionTotals.fat)} \u0433`,
+    targetBuilder: ({ effectiveNutritionGoals }) => `\u0434\u043e ${effectiveNutritionGoals.fat} \u0433`,
     color: "#ffae27",
     startAngle: 141.6,
     arcDegrees: 74.7,
