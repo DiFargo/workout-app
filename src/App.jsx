@@ -357,7 +357,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v752";
+const APP_VERSION = "v753";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -17712,10 +17712,6 @@ async function loadUsers() {
       setMonthProgram((program) => ({ ...program, name }));
     }
 
-    function updateMonthProgramDescription(description) {
-      setMonthProgram((program) => ({ ...program, description }));
-    }
-
     function addProgramMonth() {
       setMonthProgram((program) => {
         const nextMonthNumber = (program.months || []).reduce((maxNumber, month, index) => {
@@ -17983,13 +17979,6 @@ async function loadUsers() {
       if (!adminProgramSwipeSuppressClickRef.current) return;
       event.preventDefault();
       event.stopPropagation();
-    }
-
-    function updateMonthBlock(blockId, patch) {
-      setMonthProgram((program) => ({
-        ...program,
-        blocks: program.blocks.map((block) => block.id === blockId ? { ...block, ...patch } : block)
-      }));
     }
 
     function toggleMonthProgramBlock(blockId) {
