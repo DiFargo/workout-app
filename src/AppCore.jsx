@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   CalendarDays as ProgramCalendarIcon,
@@ -32,7 +32,6 @@ import {
 } from "./domain/clientInsights";
 import {
   formatCompactTimer,
-  formatWorkoutElapsedDuration,
   buildWorkoutFinishSummary,
   AI_COACH_FEATURES,
   getAiHistoryItems,
@@ -40,7 +39,6 @@ import {
   getAdjustedWorkoutWeight,
   getDefaultWorkoutModePreference,
   getExerciseTechniqueHint,
-  parseWorkoutWeightValue,
   getProgramHistoryItems,
   getWorkoutReadinessOption,
   getWorkoutCover,
@@ -195,11 +193,11 @@ import {
 } from "./utils/workoutDraftStorage";
 import {
   buildCompletedWorkoutSet,
-  getCompletedWorkoutKey,
   getNextUncompletedWorkoutIndex as getNextUncompletedWorkoutIndexFromSet,
   getWorkoutAssignmentVersion,
   isWorkoutCompletedWithSet
 } from "./utils/workoutCompletion";
+import { buildWorkoutPageDerivedState } from "./utils/workoutPageDerivedState";
 import {
   formatHistoryCardDate,
   formatIndividualWorkoutHistoryDate,
@@ -1812,16 +1810,23 @@ export default function App() {
     return () => clearInterval(timer);
   }, [workoutStartedAt, workoutFinishedAt]);
 
-  const workout = useMemo(() => {
-    return plan.workouts.find((w) => w.id === selectedWorkoutId);
-  }, [selectedWorkoutId, plan]);
-
-  const workoutVideoUrls = useMemo(() => [...new Set(
-    (workout?.exercises || [])
-      .map((exercise) => exercise?.video || exercise?.videoUrl || exercise?.videoURL || "")
-      .filter(Boolean)
-  )], [workout]);
-  const workoutVideoCacheKey = workoutVideoUrls.join("|");
+  const {
+    workout,
+    workoutVideoUrls,
+    workoutVideoCacheKey,
+    workoutDurationText,
+    lastExerciseResults
+  } = useMemo(
+    () => buildWorkoutPageDerivedState({
+      plan,
+      selectedWorkoutId,
+      history,
+      workoutStartedAt,
+      workoutFinishedAt,
+      timerTick
+    }),
+    [plan, selectedWorkoutId, history, workoutStartedAt, workoutFinishedAt, timerTick]
+  );
 
   useEffect(() => {
     if (!workoutVideoCacheKey || !("serviceWorker" in navigator)) return;
@@ -1839,10 +1844,6 @@ export default function App() {
       });
   }, [workout?.id, workoutVideoCacheKey]);
 
-  const workoutDurationText = useMemo(() => {
-    return formatWorkoutElapsedDuration(workoutStartedAt, workoutFinishedAt || timerTick);
-  }, [workoutStartedAt, workoutFinishedAt, timerTick]);
-
   const workoutMenuItems = WORKOUT_MENU_ITEMS;
 
   useEffect(() => {
@@ -1852,62 +1853,6 @@ export default function App() {
       setCurrentExerciseIndex(0);
     }
   }, [workout, currentExerciseIndex]);
-
-  const lastExerciseResults = useMemo(() => {
-    const result = {};
-    const currentAssignmentVersion = String(
-      workout?.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || ""
-    ).trim();
-    const sortedHistory = [...history].sort(
-      (a, b) => new Date(b?.date || 0).getTime() - new Date(a?.date || 0).getTime()
-    );
-
-    sortedHistory.forEach((historyWorkout) => {
-      if (
-        currentAssignmentVersion &&
-        String(historyWorkout?.assignedProgramUpdatedAt || "").trim() !== currentAssignmentVersion
-      ) {
-        return;
-      }
-      if (!historyWorkout.exercises) return;
-
-      historyWorkout.exercises.forEach((exercise) => {
-        const exerciseKey = exercise?.id
-          ? `id:${exercise.id}`
-          : exercise?.name
-            ? `name:${getCompletedWorkoutKey(exercise.name)}`
-            : "";
-        if (!exerciseKey || result[exerciseKey]) return;
-
-        const completedSets = (exercise.sets || []).filter((set) => (
-          Number(set?.reps) > 0 || parseWorkoutWeightValue(set?.weight) > 0
-        ));
-        if (!completedSets.length) return;
-
-        const lastSet = completedSets[completedSets.length - 1];
-        const reps = Number(lastSet?.reps) || 0;
-        const weight = parseWorkoutWeightValue(lastSet?.weight);
-        const sameReps = reps > 0 && completedSets.every((set) => Number(set?.reps) === reps);
-        const sameWeight = weight > 0 && completedSets.every(
-          (set) => parseWorkoutWeightValue(set?.weight) === weight
-        );
-
-        if (weight > 0) {
-          result[exerciseKey] = sameReps && sameWeight
-            ? `${completedSets.length}×${reps} · ${weight} кг`
-            : `${completedSets.length} подх. · ${reps || "—"} повт. · ${weight} кг`;
-          return;
-        }
-
-        const totalReps = completedSets.reduce((sum, set) => sum + (Number(set?.reps) || 0), 0);
-        result[exerciseKey] = sameReps
-          ? `${completedSets.length}×${reps}`
-          : `${completedSets.length} подх. · ${totalReps} повторов`;
-      });
-    });
-
-    return result;
-  }, [history, workout?.assignedProgramUpdatedAt, plan.assignedProgramUpdatedAt]);
 
   async function handleLogin(e) {
     e.preventDefault();
