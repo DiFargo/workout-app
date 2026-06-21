@@ -718,7 +718,6 @@ function DashboardAttentionList({ clients, summaries, onOpenClient }) {
 function TrainerDashboard({
   clients,
   clientSummaries,
-  counts,
   onOpenClient,
   onRefresh,
   onNotifications,
@@ -1830,7 +1829,6 @@ function ClientExerciseProgress({ history = [] }) {
     allExerciseProgress,
     progressing,
     stableExercises,
-    adapting,
     regressing,
     latestExerciseProgressDate,
     exerciseProgressInsight
@@ -3752,7 +3750,7 @@ function TrainerCabinetPage({ trainerName, trainerAvatar, clients = [], counts =
   );
 }
 
-function TrainerUtilityPage({ section, clients = [], clientSummaries = {}, counts = {}, onNavigate, onRefresh, onSendMessage }) {
+function TrainerUtilityPage({ section, clients = [], clientSummaries = {}, onNavigate, onRefresh, onSendMessage }) {
   const messageItems = useMemo(() => {
     const items = [];
     clients.filter((client) => !client.archived).forEach((client) => {
