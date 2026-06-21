@@ -93,7 +93,6 @@ import {
 import {
   buildNutritionHistoryDays,
   buildAiNutritionDayModel,
-  getAiNutritionTotalsForToday,
   getNutritionDayTotals
 } from "./utils/aiNutritionAnalysis";
 import {
@@ -358,7 +357,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v751";
+const APP_VERSION = "v752";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -12229,8 +12228,6 @@ async function loadUsers() {
     const profileProgressPhotoSetComplete = ["front", "side", "back"].every(
       (view) => Boolean(profileProgressPhotoFiles[view])
     );
-    const activeActivityLabel = getAiNutritionActivityLabel(activeProfile?.activity || "medium");
-    const assignedProgramName = user?.assignedProgramName || aiNutritionProfile?.assignedProgramName || "";
     const profileWorkoutHistoryItems = getProgramHistoryItems(history, profileWorkoutHistoryProgramScope);
     const trainingDaysText = getAiNutritionTrainingDays(activeProfile).length
       ? AI_NUTRITION_WEEK_DAYS
@@ -12238,7 +12235,6 @@ async function loadUsers() {
           .map((day) => day.short)
           .join(", ")
       : "не выбраны";
-    const todayTotals = getAiNutritionTotalsForToday(nutrition);
     const liveNutritionPreviewPlan = buildAiNutritionMonthlyPlan(nutrition, activeProfile, history, null);
     const activePlan = getClientNutritionDisplayPlan(
       {
@@ -12388,11 +12384,9 @@ async function loadUsers() {
     };
 
     const profileAiNutritionPlan = activePlan;
-    const profileAiNutritionDay = buildAiNutritionDayModel(nutrition, nutrition.days?.[nutritionDateKey], history);
     const profileAiNutritionWeekNumber = getAiNutritionCurrentWeek(profileAiNutritionPlan);
     const profileAiNutritionWeek = profileAiNutritionPlan?.weeks?.[profileAiNutritionWeekNumber - 1] || profileAiNutritionPlan?.weeks?.[0];
     const profileAiNutritionActiveProfile = profileAiNutritionPlan?.profile || activeProfile;
-    const profileIsAiTrainingDayToday = isAiNutritionTrainingDay(profileAiNutritionActiveProfile);
     const profileNutritionCalendarDays = nutritionCalendarDays;
     const profileNutritionMonthDays = profileNutritionCalendarDays
       .slice(-7)
@@ -12422,15 +12416,8 @@ async function loadUsers() {
           year: "numeric"
         })}`
       : profileNutritionSelectedDate.toLocaleDateString("ru-RU");
-    const profileAiNutritionSelectedWeek = getAiNutritionWeekForDate(profileAiNutritionPlan, profileNutritionSelectedDate);
-    const profileAiNutritionSelectedMacros = getAiNutritionDayMacros(
-      profileAiNutritionSelectedWeek || profileAiNutritionWeek || nutrition.goals,
-      profileAiNutritionActiveProfile,
-      profileNutritionSelectedDate
-    );
     const profileNutritionSelectedDay = nutrition.days?.[nutritionDateKey] || makeEmptyNutritionDay();
     const profileNutritionSelectedTotals = getNutritionDayTotals(profileNutritionSelectedDay);
-    const profileAiNutritionTrainingAdvice = getAiNutritionTrainingDayAdvice(profileIsAiTrainingDayToday, profileAiNutritionActiveProfile?.goal);
     const lastWorkoutDate = formatProfileWorkoutDate(lastWorkout?.date);
     const nextTrainingText = getProfileNextTrainingText(
       activeProfile,
@@ -14752,7 +14739,6 @@ async function loadUsers() {
     const getDashboardClientSummary = (client = {}) =>
       getTrainerClientSummaryFromMap(client, trainerClientSummaries);
     const trainerDashboardSummary = buildTrainerDashboardSummary(usersList, trainerClientSummaries);
-    const trainerSummaryItems = trainerDashboardSummary.summaryItems;
     const trainerStatusCounts = trainerDashboardSummary.statusCounts;
     const trainerProblemClients = trainerDashboardSummary.problemClients;
     const trainerAiFocusItems = trainerDashboardSummary.focusItems;
@@ -14772,19 +14758,10 @@ async function loadUsers() {
 
     const selectedClient = adminSelectedClient || usersList.find((client) => client.id === selectedUserId) || filteredUsers[0] || usersList[0] || null;
     const selectedProfile = getAdminClientProfile(selectedClient || {});
-    const selectedLatestMeasurement = Array.isArray(adminClientMeasurements) && adminClientMeasurements.length
-      ? adminClientMeasurements[0]
-      : null;
-    const selectedPreviousMeasurement = Array.isArray(adminClientMeasurements) && adminClientMeasurements.length > 1
-      ? adminClientMeasurements[1]
-      : null;
-    const adminMeasurementFields = getProfileMeasurementFields(selectedProfile?.goal || "recomp");
-    const adminMeasurementPreviewFields = getAdminMeasurementPreviewFields(adminMeasurementFields);
     const clientNutritionDays = getAdminNutritionDaysList(adminClientNutrition);
     const clientToday = clientNutritionDays[0] || { totals: { calories: 0, protein: 0, fat: 0, carbs: 0 }, foods: [], score: "—" };
     const workoutProgress = getAdminWorkoutProgressList(adminClientHistory);
     const weightPoints = getAdminWeightPoints(selectedClient || {});
-    const badFeedbackCount = adminClientHistory.filter((item) => item.postWorkoutFeedback?.id === "bad").length;
     const recommendations = getAdminRecommendations(selectedClient || {}, adminClientHistory, adminClientNutrition);
     const selectedNutritionFallbackGoals = selectedClient?.nutritionGoals || adminClientNutrition?.goals || {};
     const selectedEffectiveNutritionGoals = getClientEffectiveNutritionGoals(
@@ -15640,7 +15617,6 @@ async function loadUsers() {
       getTrainerClientSummaryFromMap(client, trainerClientSummaries);
 
     const adminUsersFilteredClients = usersList.filter((client) => {
-      const profile = getAdminClientProfile(client);
       const search = adminUsersSearch.trim().toLowerCase();
       const matchesSearch = !search ||
         String(client.name || "").toLowerCase().includes(search) ||
@@ -15686,8 +15662,6 @@ async function loadUsers() {
     const aiPlan = getClientNutritionDisplayPlan(selectedClient || {}, adminClientNutrition, selectedNutritionFallbackGoals);
     const aiWeek = getAiNutritionWeekForDate(aiPlan) || aiPlan?.weeks?.[0] || null;
     const lastWorkout = adminClientHistory[0];
-    const { maxCalories, maxProtein } = getAdminClientChartScales(clientNutritionDays, weightPoints);
-
     const nutritionMonthOverview = buildAdminNutritionMonthOverview(clientNutritionDays);
     const nutritionMonthDays = nutritionMonthOverview.days;
     const nutritionMonthLabel = nutritionMonthOverview.label;
@@ -17683,7 +17657,6 @@ async function loadUsers() {
         (week.workouts || []).map((workout) => ({ ...workout, blockName: block.name, weekName: week.name }))
       )
     );
-    const monthExercises = monthWorkouts.reduce((sum, workout) => sum + (workout.exercises?.length || 0), 0);
     const adminExerciseLibrarySources = [
         ...monthWorkouts.flatMap((workout) => workout.exercises || []),
         ...adminTrainingTemplates.flatMap((template) => {
