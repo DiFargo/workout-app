@@ -3,6 +3,7 @@ import { pluralizeRu } from "./trainerAttention.js";
 import { getClientPaymentAttention } from "../domain/clientInsights.js";
 import {
   getTrainerAssignmentVersionKey,
+  getTrainerSummaryDateKey,
   getTrainerSummaryDayStart,
   getTrainerSummaryDaysSince,
   getTrainerSummaryTimestamp
@@ -52,6 +53,30 @@ export function getTrainerCompletedWorkoutCountForAssignment(historyList = [], a
   });
 
   return completedWorkoutIds.size;
+}
+
+export function getTrainerWorkoutActivitySummary(historyList = [], {
+  weekStart = 0,
+  sevenDayStart = 0,
+  thirtyDayStart = 0
+} = {}) {
+  const workoutTimestamps = (Array.isArray(historyList) ? historyList : [])
+    .map((entry) => getTrainerSummaryTimestamp(entry?.date || entry?.completedAt || entry?.createdAt))
+    .filter(Boolean)
+    .sort((a, b) => b - a);
+
+  const workoutDateKeysCurrentWeek = [...new Set(workoutTimestamps
+    .filter((timestamp) => timestamp >= weekStart)
+    .map((timestamp) => getTrainerSummaryDateKey(timestamp))
+    .filter(Boolean)
+  )];
+
+  return {
+    lastWorkoutAt: workoutTimestamps[0] || "",
+    workouts7: workoutTimestamps.filter((timestamp) => timestamp >= sevenDayStart).length,
+    workouts30: workoutTimestamps.filter((timestamp) => timestamp >= thirtyDayStart).length,
+    workoutDateKeysCurrentWeek
+  };
 }
 
 export function getClientActivityStatus(summary = {}) {

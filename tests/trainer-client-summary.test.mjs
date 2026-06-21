@@ -9,9 +9,14 @@ import {
   getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
   getTrainerDayWord,
-  getTrainerNutritionSummary
+  getTrainerNutritionSummary,
+  getTrainerWorkoutActivitySummary
 } from "../src/utils/trainerClientSummary.js";
-import { getTrainerSummaryDateKey } from "../src/utils/trainerSummaryDates.js";
+import {
+  getTrainerSummaryDateKey,
+  getTrainerSummaryDayStart,
+  getTrainerSummaryWeekStart
+} from "../src/utils/trainerSummaryDates.js";
 
 function dateKeyOffset(offsetDays) {
   const date = new Date();
@@ -51,6 +56,33 @@ test("trainer completed workout count matches current assignment version", () =>
 
   assert.equal(getTrainerCompletedWorkoutCountForAssignment(history, assignedAt), 2);
   assert.equal(getTrainerCompletedWorkoutCountForAssignment(history, ""), 0);
+});
+
+test("trainer workout activity summary counts recent and weekly workout days", () => {
+  const today = dateKeyOffset(0);
+  const yesterday = dateKeyOffset(-1);
+  const eightDaysAgo = dateKeyOffset(-8);
+  const thirtyOneDaysAgo = dateKeyOffset(-31);
+  const summary = getTrainerWorkoutActivitySummary([
+    { date: eightDaysAgo },
+    { completedAt: today },
+    { date: yesterday },
+    { date: yesterday },
+    { createdAt: thirtyOneDaysAgo },
+    {}
+  ], {
+    weekStart: getTrainerSummaryWeekStart(),
+    sevenDayStart: getTrainerSummaryDayStart() - 6 * 24 * 60 * 60 * 1000,
+    thirtyDayStart: getTrainerSummaryDayStart() - 29 * 24 * 60 * 60 * 1000
+  });
+
+  assert.equal(summary.lastWorkoutAt, getTrainerSummaryDayStart(today) + 12 * 60 * 60 * 1000);
+  assert.equal(summary.workouts7, 3);
+  assert.equal(summary.workouts30, 4);
+  assert.deepEqual(
+    summary.workoutDateKeysCurrentWeek,
+    [...new Set([today, yesterday].filter((date) => getTrainerSummaryDayStart(date) >= getTrainerSummaryWeekStart()))]
+  );
 });
 
 test("trainer client activity status detects missing program, lost and active states", () => {

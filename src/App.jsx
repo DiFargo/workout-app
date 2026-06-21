@@ -231,8 +231,6 @@ import { buildTrainerExerciseLibraryItems } from "./utils/trainerExerciseLibrary
 import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
 import {
   formatTrainerSummaryDate,
-  getTrainerAssignmentVersionKey,
-  getTrainerSummaryDateKey,
   getTrainerSummaryDayStart,
   getTrainerSummaryDaysSince,
   getTrainerSummaryTimestamp,
@@ -245,7 +243,8 @@ import {
   getTrainerClientFastSummary,
   getTrainerCompletedWorkoutCountForAssignment,
   getTrainerDayWord,
-  getTrainerNutritionSummary
+  getTrainerNutritionSummary,
+  getTrainerWorkoutActivitySummary
 } from "./utils/trainerClientSummary";
 import { buildTrainerCreateClientState } from "./utils/trainerCreateClientState";
 import { buildTrainerUserLists } from "./utils/trainerUserLists";
@@ -355,7 +354,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v729";
+const APP_VERSION = "v730";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5641,21 +5640,15 @@ export default function App() {
       const payment = paymentResult.status === "fulfilled" && paymentResult.value.exists()
         ? paymentResult.value.data()
         : null;
-      const workoutTimestamps = clientHistory
-        .map((entry) => getTrainerSummaryTimestamp(entry.date || entry.completedAt || entry.createdAt))
-        .filter(Boolean);
-      const workoutDateKeysCurrentWeek = [...new Set(workoutTimestamps
-        .filter((timestamp) => timestamp >= weekStart)
-        .map((timestamp) => getTrainerSummaryDateKey(timestamp))
-        .filter(Boolean)
-      )];
+      const workoutActivitySummary = getTrainerWorkoutActivitySummary(clientHistory, {
+        weekStart,
+        sevenDayStart,
+        thirtyDayStart
+      });
 
       return {
         clientId: client.id,
-        lastWorkoutAt: workoutTimestamps[0] || "",
-        workouts7: workoutTimestamps.filter((timestamp) => timestamp >= sevenDayStart).length,
-        workouts30: workoutTimestamps.filter((timestamp) => timestamp >= thirtyDayStart).length,
-        workoutDateKeysCurrentWeek,
+        ...workoutActivitySummary,
         ...nutritionSummary,
         lastMeasurementAt: clientMeasurements[0]
           ? clientMeasurements[0].date || clientMeasurements[0].createdAt || clientMeasurements[0].savedAt || ""
