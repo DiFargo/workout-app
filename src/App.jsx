@@ -358,7 +358,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v747";
+const APP_VERSION = "v748";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -882,7 +882,7 @@ export default function App() {
   const [adminClientHistory, setAdminClientHistory] = useState([]);
   const [adminClientNutrition, setAdminClientNutrition] = useState(null);
   const [adminClientMeasurements, setAdminClientMeasurements] = useState([]);
-  const [adminClientLoading, setAdminClientLoading] = useState(false);
+  const [, setAdminClientLoading] = useState(false);
   const [adminClientStatus, setAdminClientStatus] = useState("");
   const [adminClientFilter, setAdminClientFilter] = useState("all");
   const [trainerNextSection, setTrainerNextSection] = useState("dashboard");
@@ -929,7 +929,6 @@ export default function App() {
   const [adminTransferStatus, setAdminTransferStatus] = useState("");
   const [adminTransferLoading, setAdminTransferLoading] = useState(false);
   const [adminUsersSearch, setAdminUsersSearch] = useState("");
-  const [adminUsersFilter, setAdminUsersFilter] = useState("all");
   const [adminUsersSelectedTab, setAdminUsersSelectedTab] = useState("overview");
   const [adminTelegramMessage, setAdminTelegramMessage] = useState("");
   const [adminTelegramSending, setAdminTelegramSending] = useState(false);
@@ -949,10 +948,8 @@ export default function App() {
   const [adminSelectedHistoryIds, setAdminSelectedHistoryIds] = useState([]);
 
   const [adminCreateClientModalOpen, setAdminCreateClientModalOpen] = useState(false);
-  const [adminActiveWorkoutId, setAdminActiveWorkoutId] = useState("");
   const [adminSelectedExerciseId, setAdminSelectedExerciseId] = useState("");
   const [adminExerciseVideoUploadingId, setAdminExerciseVideoUploadingId] = useState("");
-  const [adminVideoPreview, setAdminVideoPreview] = useState(null);
   const adminProgramImportInputRef = useRef(null);
   const [adminOpenWorkoutId, setAdminOpenWorkoutId] = useState("");
   const [adminOpenProgramBlocks, setAdminOpenProgramBlocks] = useState({});
@@ -963,10 +960,9 @@ export default function App() {
   const adminExerciseEditSnapshotRef = useRef(null);
   const adminProgramSwipeStartRef = useRef(null);
   const adminProgramSwipeSuppressClickRef = useRef(false);
-  const [adminProgramEditorMode, setAdminProgramEditorMode] = useState("create");
+  const [, setAdminProgramEditorMode] = useState("create");
   const [adminProgramLibraryTab, setAdminProgramLibraryTab] = useState("overview");
   const [adminProgramCreateChoiceOpen, setAdminProgramCreateChoiceOpen] = useState(false);
-  const [adminInspectorTab, setAdminInspectorTab] = useState("main");
   const [adminProgramGroups, setAdminProgramGroups] = useState([]);
   const [adminActiveProgramId, setAdminActiveProgramId] = useState("");
   const [adminActiveDayId, setAdminActiveDayId] = useState("");
@@ -1123,7 +1119,7 @@ export default function App() {
   const [telegramProfile, setTelegramProfile] = useState(createEmptyTelegramProfile);
   const [telegramDraft, setTelegramDraft] = useState(createEmptyTelegramProfile);
   const [telegramConnectOpen, setTelegramConnectOpen] = useState(false);
-  const [telegramLinkCode, setTelegramLinkCode] = useState("");
+  const [, setTelegramLinkCode] = useState("");
   const [telegramLinking, setTelegramLinking] = useState(false);
   const telegramLoginContainerRef = useRef(null);
   const telegramAvatarRefreshRef = useRef(false);
@@ -1140,7 +1136,7 @@ export default function App() {
   const [nutritionAmountError, setNutritionAmountError] = useState("");
   const [nutritionProductErrors, setNutritionProductErrors] = useState({});
   const [nutritionEditNote, setNutritionEditNote] = useState("");
-  const [nutritionEditDetailsOpen, setNutritionEditDetailsOpen] = useState(false);
+  const [, setNutritionEditDetailsOpen] = useState(false);
   const [nutritionEditPageOpen, setNutritionEditPageOpen] = useState(false);
   const [nutritionEditOriginalFood, setNutritionEditOriginalFood] = useState(null);
   const [nutritionEditOriginalNote, setNutritionEditOriginalNote] = useState("");
@@ -1169,7 +1165,6 @@ export default function App() {
   const [nutritionPhotoAiCandidates, setNutritionPhotoAiCandidates] = useState([]);
   const [nutritionPhotoAiConfidence, setNutritionPhotoAiConfidence] = useState("");
   const [nutritionPhotoNotFoundOpen, setNutritionPhotoNotFoundOpen] = useState(false);
-  const [nutritionAnalysisOpen, setNutritionAnalysisOpen] = useState(true);
   const [nutritionPickerOpen, setNutritionPickerOpen] = useState(false);
   const [nutritionSearchTab, setNutritionSearchTab] = useState("food");
   const [nutritionSearchResultLimit, setNutritionSearchResultLimit] = useState({
@@ -1188,7 +1183,7 @@ export default function App() {
   const [recentNutritionFoods, setRecentNutritionFoods] = useState([]);
   const [showRecentNutritionFoods, setShowRecentNutritionFoods] = useState(false);
   const [barcodeScannerOpen, setBarcodeScannerOpen] = useState(false);
-  const [barcodeScannerError, setBarcodeScannerError] = useState("");
+  const [, setBarcodeScannerError] = useState("");
   const [nutritionCloudReady, setNutritionCloudReady] = useState(false);
   const barcodeVideoRef = useRef(null);
   const nutritionPhotoInputRef = useRef(null);
