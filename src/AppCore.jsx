@@ -314,6 +314,7 @@ import WorkoutExerciseVideoFrame from "./features/client/workouts/WorkoutExercis
 import WorkoutFinishStage from "./features/client/workouts/WorkoutFinishStage";
 import WorkoutListPage from "./features/client/workouts/WorkoutListPage";
 import WorkoutRestTimer from "./features/client/workouts/WorkoutRestTimer";
+import WorkoutStageActionPanel from "./features/client/workouts/WorkoutStageActionPanel";
 import {
   WorkoutFullscreenVideoOverlay,
   WorkoutNotFoundPage,
@@ -18656,57 +18657,13 @@ async function loadUsers() {
                 )}
               </div>
 
-              {exercise.id === "warmup" && (
-                <div className="warmupBottomPanel workoutStageActionPanel">
-                  <div className="warmupNavigationRow">
-                    <button
-                      type="button"
-                      className="warmupPreviousButton"
-                      onClick={requestLeaveWorkout}
-                    >
-                      Назад
-                    </button>
-
-                    <button
-                      type="button"
-                      className="warmupReadyButton"
-                      onClick={() => {
-                        goToNextExercise();
-                      }}
-                    >
-                      Начать тренировку
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {exercise.id !== "warmup" && (
-                <div className="exerciseActionPanel workoutStageActionPanel">
-                  <div className="exerciseNavigationRow">
-                    <button
-                      type="button"
-                      className="exercisePrevButton"
-                      onClick={() => {
-                        goToPreviousExercise();
-                      }}
-                    >
-                      Назад
-                    </button>
-
-                    <button
-                      type="button"
-                      className="exerciseNextButton"
-                      onClick={() => {
-                        goToNextExercise();
-                      }}
-                    >
-                      {currentExerciseIndex >= workout.exercises.length
-                        ? "К итогам"
-                        : "Далее"}
-                    </button>
-                  </div>
-                </div>
-              )}
+              <WorkoutStageActionPanel
+                isLastExercise={currentExerciseIndex >= workout.exercises.length}
+                isWarmup={exercise.id === "warmup"}
+                onNext={goToNextExercise}
+                onPrevious={goToPreviousExercise}
+                onWarmupBack={requestLeaveWorkout}
+              />
               </>
             )}
 
