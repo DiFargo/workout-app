@@ -307,6 +307,7 @@ import {
 } from "./components/workout/WorkoutDialogs";
 import FirstSetupOnboarding from "./features/auth/FirstSetupOnboarding";
 import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
+import WorkoutFinishStage from "./features/client/workouts/WorkoutFinishStage";
 import WorkoutListPage from "./features/client/workouts/WorkoutListPage";
 import {
   WorkoutFullscreenVideoOverlay,
@@ -18452,132 +18453,36 @@ async function loadUsers() {
             />
 
             {isStartSlide ? null : isFinishSlide ? (
-              <>
-                {showWorkoutSavedCard && (
-                  <div className="workoutSavedFloatingCard">
-                    <div className="workoutSavedCheck">✓</div>
-                    <strong>Тренировка сохранена</strong>
-                    <span>{postWorkoutFeedback?.advice || "Отличная работа"}</span>
-                  </div>
-                )}
+              <WorkoutFinishStage
+                completedExercisesCount={completedExercisesCount}
+                exerciseCount={workout.exercises.length}
+                finishAdviceText={finishAdviceText}
+                finishPresentation={finishPresentation}
+                finishProgressText={finishProgressText}
+                finishStats={finishStats}
+                finishSyncText={finishSyncText}
+                goToPreviousExercise={goToPreviousExercise}
+                incompleteExerciseNames={incompleteExerciseNames}
+                isSaving={isSaving}
+                isWorkoutSaved={isWorkoutSaved}
+                onClientCommentChange={(event) => setWorkoutClientComment(event.target.value)}
+                onFinishWorkout={() => {
+                  if (isWorkoutSaved) {
+                    setIsWorkoutSaved(false);
+                    setShowWorkoutSavedCard(false);
+                    goBackToMain();
+                    return;
+                  }
 
-                <div
-                  key="finish-slide"
-                className={`finishSlideWrap workoutFinishScreen ${
-                  swipeDirection === "up"
-                    ? "slideFromBottom"
-                    : swipeDirection === "down"
-                    ? "slideFromTop"
-                    : ""
-                }`}
-                style={{
-                  transform: swipeOffset
-                    ? `translateY(${swipeOffset}px)`
-                    : undefined
+                  saveWorkoutToFirebase(null);
                 }}
-              >
-                <div className="exercise exerciseSlideCard finishSummaryCard workoutFinishCard workoutStageCard">
-                  <div className="workoutFinishTop">
-                    <span>{isWorkoutSaved ? "Выполнена" : "Готова к сохранению"}</span>
-                    <span>{finishPresentation.day}</span>
-                  </div>
-
-                  <div className="workoutFinishResult">
-                    <span className="workoutFinishTrophy" aria-hidden="true">🏆</span>
-                    <div>
-                      <p>{isWorkoutSaved ? "Отличная работа" : "Проверь результат"}</p>
-                    </div>
-                  </div>
-
-                  {finishStats.length > 0 && (
-                    <div className="workoutFinishStats">
-                      {finishStats.map((stat) => (
-                        <div key={stat.label}>
-                          <span>{stat.label}</span>
-                          <strong>{stat.value}</strong>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="workoutFinishProgress">
-                    <span>Прогресс</span>
-                    <strong>
-                      Выполнено {completedExercisesCount} из {workout.exercises.length} упражнений
-                    </strong>
-                    <p>{finishProgressText}</p>
-                  </div>
-
-                  {!isWorkoutSaved && incompleteExerciseNames.length > 0 && (
-                    <div className="workoutFinishIncomplete">
-                      <strong>Остались без данных</strong>
-                      <span>{incompleteExerciseNames.slice(0, 3).join(" · ")}</span>
-                    </div>
-                  )}
-
-                  {!isWorkoutSaved && (
-                    <label className="workoutFinishComment">
-                      <span>Комментарий тренеру</span>
-                      <textarea
-                        value={workoutClientComment}
-                        onChange={(event) => setWorkoutClientComment(event.target.value)}
-                        placeholder="Например: последний подход дался тяжело"
-                        maxLength={300}
-                      />
-                    </label>
-                  )}
-
-                  <div className="workoutFinishTip">
-                    <span aria-hidden="true">💡</span>
-                    <p>{finishAdviceText}</p>
-                  </div>
-
-                  {finishSyncText && (
-                    <div className={`workoutFinishSyncStatus ${workoutHistorySyncState}`}>
-                      <span aria-hidden="true">
-                        {workoutHistorySyncState === "local" ? "◷" : workoutHistorySyncState === "synced" ? "✓" : "•"}
-                      </span>
-                      {finishSyncText}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="workoutFinishActionPanel workoutStageActionPanel">
-                <div className="finishNavigationRow">
-                  <button
-                    type="button"
-                    className="finishBackButton"
-                    onClick={goToPreviousExercise}
-                    disabled={isSaving}
-                    aria-label="Вернуться к последнему упражнению"
-                  >
-                    <span>Назад</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="finishWorkoutButton"
-                    onClick={() => {
-                      if (isWorkoutSaved) {
-                        setIsWorkoutSaved(false);
-                        setShowWorkoutSavedCard(false);
-                        goBackToMain();
-                        return;
-                      }
-
-                      saveWorkoutToFirebase(null);
-                    }}
-                    disabled={isSaving}
-                  >
-                    {isSaving
-                      ? "Сохраняю..."
-                      : isWorkoutSaved
-                      ? "Вернуться в меню"
-                      : "Сохранить и завершить"}
-                  </button>
-                </div>
-              </div>
-              </>
+                postWorkoutFeedback={postWorkoutFeedback}
+                showWorkoutSavedCard={showWorkoutSavedCard}
+                swipeDirection={swipeDirection}
+                swipeOffset={swipeOffset}
+                workoutClientComment={workoutClientComment}
+                workoutHistorySyncState={workoutHistorySyncState}
+              />
             ) : (
               <>
               <div
