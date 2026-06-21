@@ -316,6 +316,7 @@ import {
   WorkoutRunTopControls,
   WorkoutStageHeading
 } from "./features/client/workouts/WorkoutRunOverlays";
+import { WorkoutWarmupBody, WorkoutWarmupHeader } from "./features/client/workouts/WorkoutWarmupStage";
 import { AppSplash, LoginPage } from "./components/auth/AuthScreens";
 import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
 import TrainerE2EHarness from "./components/trainer/TrainerE2EHarness";
@@ -18508,16 +18509,11 @@ async function loadUsers() {
                 }}
               >
                 {exercise.id === "warmup" ? (
-                  <header className="warmupPlanHeader">
-                    <div className="warmupPlanMeta">
-                      <span className="warmupPlanBadge">Подготовка</span>
-                      <span className="warmupPlanWorkout">{finishPresentation.day}</span>
-                    </div>
-                    <span className="warmupPlanAccent" aria-hidden="true" />
-                    <span className="warmupPlanSummary">
-                      {warmupCompletedSteps.length} из {warmupSteps.length} шагов · около 5 минут
-                    </span>
-                  </header>
+                  <WorkoutWarmupHeader
+                    completedStepsCount={warmupCompletedSteps.length}
+                    dayLabel={finishPresentation.day}
+                    stepCount={warmupSteps.length}
+                  />
                 ) : (
                   <>
                     <div className="workoutExerciseMeta">
@@ -18586,69 +18582,22 @@ async function loadUsers() {
 
                 {exercise.id === "warmup" ? (
                   <>
-                  <div className="warmupExerciseHero">
-                    <div className="warmupExerciseIntro">
-                      <span aria-hidden="true">i</span>
-                      <div>
-                        <strong>Подготовь тело к нагрузке</strong>
-                        <p>Разогрей суставы и подготовься к рабочим подходам.</p>
-                      </div>
-                    </div>
-
-                    <div className="warmupExerciseSteps">
-                      {warmupSteps.map((step, stepIndex) => {
-                        const completed = warmupCompletedSteps.includes(stepIndex);
-
-                        return (
-                          <button
-                            type="button"
-                            className={`warmupExerciseItem ${completed ? "completed" : ""}`}
-                            key={step.title}
-                            onClick={() => toggleWarmupStep(stepIndex)}
-                          >
-                            <span aria-hidden="true">
-                              {completed ? "✓" : String(stepIndex + 1).padStart(2, "0")}
-                            </span>
-                            <span>
-                              <strong>{step.title}</strong>
-                              <small>{step.description}</small>
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    <div className="warmupTimer">
-                      <div>
-                        <span>Таймер разминки</span>
-                        <strong>{formatCompactTimer(warmupTimerSeconds)}</strong>
-                      </div>
-                      <div className="warmupTimerControls">
-                        {[180, 300].map((seconds) => (
-                          <button
-                            type="button"
-                            className={warmupTimerDuration === seconds ? "active" : ""}
-                            key={seconds}
-                            onClick={() => setWarmupTimerPreset(seconds)}
-                          >
-                            {seconds / 60} мин
-                          </button>
-                        ))}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (warmupTimerSeconds <= 0) {
-                              setWarmupTimerSeconds(warmupTimerDuration);
-                            }
-                            setWarmupTimerRunning((current) => !current);
-                          }}
-                        >
-                          {warmupTimerRunning ? "Пауза" : warmupTimerSeconds < warmupTimerDuration ? "Продолжить" : "Старт"}
-                        </button>
-                      </div>
-                    </div>
-
-                  </div>
+                    <WorkoutWarmupBody
+                      completedSteps={warmupCompletedSteps}
+                      onSetTimerPreset={setWarmupTimerPreset}
+                      onToggleStep={toggleWarmupStep}
+                      onToggleTimer={() => {
+                        if (warmupTimerSeconds <= 0) {
+                          setWarmupTimerSeconds(warmupTimerDuration);
+                        }
+                        setWarmupTimerRunning((current) => !current);
+                      }}
+                      timerDuration={warmupTimerDuration}
+                      timerRunning={warmupTimerRunning}
+                      timerSeconds={warmupTimerSeconds}
+                      timerText={formatCompactTimer(warmupTimerSeconds)}
+                      warmupSteps={warmupSteps}
+                    />
                   </>
                 ) : (
                   <section className="workoutExerciseSets">
