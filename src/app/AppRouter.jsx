@@ -29,12 +29,14 @@ export default function AppRouter({
   openHistoryKey,
   historySwipeId,
   historyDeletingId,
+  historyDeleteCandidate,
   loadHistory,
   handleHistoryTouchStart,
   handleHistoryTouchEnd,
   requestDeleteOwnHistoryWorkout,
   setOpenHistoryKey,
-  renderHistoryDeleteConfirm,
+  closeHistoryDeleteConfirm,
+  confirmDeleteOwnHistoryWorkout,
   aiNutritionProfile,
   aiNutritionProfileDraft,
   profileMeasurements,
@@ -118,6 +120,7 @@ export default function AppRouter({
         openHistoryKey={openHistoryKey}
         historySwipeId={historySwipeId}
         historyDeletingId={historyDeletingId}
+        historyDeleteCandidate={historyDeleteCandidate}
         goBackToMain={onBackToMain}
         openTrainingEntry={onOpenTrainingEntry}
         onOpenNutrition={onOpenNutrition}
@@ -129,7 +132,8 @@ export default function AppRouter({
         handleHistoryTouchEnd={handleHistoryTouchEnd}
         requestDeleteOwnHistoryWorkout={requestDeleteOwnHistoryWorkout}
         setOpenHistoryKey={setOpenHistoryKey}
-        renderHistoryDeleteConfirm={renderHistoryDeleteConfirm}
+        closeHistoryDeleteConfirm={closeHistoryDeleteConfirm}
+        confirmDeleteOwnHistoryWorkout={confirmDeleteOwnHistoryWorkout}
       />
     );
   }

@@ -309,6 +309,7 @@ import {
   WorkoutIncompleteDialog,
   WorkoutReadinessDialog
 } from "./components/workout/WorkoutDialogs";
+import HistoryDeleteConfirmDialog from "./features/client/workouts/HistoryDeleteConfirmDialog";
 import { AppSplash, LoginPage } from "./components/auth/AuthScreens";
 import TrainerWorkspace, { TrainerProgramConstructor, TrainerShell } from "./components/trainer/TrainerWorkspace";
 import TrainerE2EHarness from "./components/trainer/TrainerE2EHarness";
@@ -7285,46 +7286,6 @@ async function loadUsers() {
     setHistoryDeleteCandidate(null);
   }
 
-  function renderHistoryDeleteConfirm() {
-    if (!historyDeleteCandidate) return null;
-
-    const workoutDate = getTimestampValue(historyDeleteCandidate.date);
-    const dateLabel = workoutDate
-      ? new Date(workoutDate).toLocaleDateString("ru-RU", {
-          day: "numeric",
-          month: "short",
-          year: "numeric"
-        }).replace(".", "")
-      : "без даты";
-
-    return (
-      <div className="historyDeleteOverlay" onClick={closeHistoryDeleteConfirm}>
-        <div className="historyDeleteModal" onClick={(event) => event.stopPropagation()}>
-          <div className="historyDeleteIcon">⌫</div>
-          <h3>Удалить тренировку?</h3>
-          <p>
-            {historyDeleteCandidate.workout || "Тренировка"}
-            <span>{dateLabel} · действие нельзя отменить</span>
-          </p>
-
-          <div className="historyDeleteActions">
-            <button type="button" onClick={closeHistoryDeleteConfirm} disabled={Boolean(historyDeletingId)}>
-              Отмена
-            </button>
-            <button
-              type="button"
-              className="danger"
-              onClick={confirmDeleteOwnHistoryWorkout}
-              disabled={Boolean(historyDeletingId)}
-            >
-              {historyDeletingId ? "Удаляю..." : "Удалить"}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   async function confirmDeleteOwnHistoryWorkout() {
     const workoutItem = historyDeleteCandidate;
     const currentUser = auth.currentUser;
@@ -8416,12 +8377,14 @@ async function loadUsers() {
       openHistoryKey={openHistoryKey}
       historySwipeId={historySwipeId}
       historyDeletingId={historyDeletingId}
+      historyDeleteCandidate={historyDeleteCandidate}
       loadHistory={loadHistory}
       handleHistoryTouchStart={handleHistoryTouchStart}
       handleHistoryTouchEnd={handleHistoryTouchEnd}
       requestDeleteOwnHistoryWorkout={requestDeleteOwnHistoryWorkout}
       setOpenHistoryKey={setOpenHistoryKey}
-      renderHistoryDeleteConfirm={renderHistoryDeleteConfirm}
+      closeHistoryDeleteConfirm={closeHistoryDeleteConfirm}
+      confirmDeleteOwnHistoryWorkout={confirmDeleteOwnHistoryWorkout}
       aiNutritionProfile={aiNutritionProfile}
       aiNutritionProfileDraft={aiNutritionProfileDraft}
       profileMeasurements={profileMeasurements}
@@ -12436,7 +12399,12 @@ async function loadUsers() {
           </div>
         )}
 
-        {renderHistoryDeleteConfirm()}
+        <HistoryDeleteConfirmDialog
+          candidate={historyDeleteCandidate}
+          deletingId={historyDeletingId}
+          onClose={closeHistoryDeleteConfirm}
+          onConfirm={confirmDeleteOwnHistoryWorkout}
+        />
 
         {profileSettingsModalOpen && !isMainDashboard && visibleProfileTab === "cabinet" && (
           <div

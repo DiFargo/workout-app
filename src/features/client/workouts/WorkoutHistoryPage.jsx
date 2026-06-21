@@ -1,4 +1,5 @@
 ﻿import { ClientMainBottomBar } from "../../../shared/ui/BottomBar";
+import HistoryDeleteConfirmDialog from "./HistoryDeleteConfirmDialog";
 import {
   getAiHistoryItems
 } from "../../../domain/workoutPresentation";
@@ -18,6 +19,7 @@ export default function WorkoutHistoryPage({
   openHistoryKey,
   historySwipeId,
   historyDeletingId,
+  historyDeleteCandidate,
   goBackToMain,
   openTrainingEntry,
   onOpenNutrition,
@@ -29,7 +31,8 @@ export default function WorkoutHistoryPage({
   handleHistoryTouchEnd,
   requestDeleteOwnHistoryWorkout,
   setOpenHistoryKey,
-  renderHistoryDeleteConfirm
+  closeHistoryDeleteConfirm,
+  confirmDeleteOwnHistoryWorkout
 }) {
   const historyItems = getAiHistoryItems(history);
   const totalHistorySets = historyItems.reduce((sum, item) => (
@@ -169,7 +172,12 @@ export default function WorkoutHistoryPage({
         </div>
       )}
 
-      {renderHistoryDeleteConfirm()}
+      <HistoryDeleteConfirmDialog
+        candidate={historyDeleteCandidate}
+        deletingId={historyDeletingId}
+        onClose={closeHistoryDeleteConfirm}
+        onConfirm={confirmDeleteOwnHistoryWorkout}
+      />
 
       <ClientMainBottomBar
         activeTab="workouts"
@@ -185,4 +193,3 @@ export default function WorkoutHistoryPage({
     </div>
   );
 }
-
