@@ -9,7 +9,9 @@ import {
   getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
   getTrainerDayWord,
+  getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
+  getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
 } from "../src/utils/trainerClientSummary.js";
 import {
@@ -83,6 +85,20 @@ test("trainer workout activity summary counts recent and weekly workout days", (
     summary.workoutDateKeysCurrentWeek,
     [...new Set([today, yesterday].filter((date) => getTrainerSummaryDayStart(date) >= getTrainerSummaryWeekStart()))]
   );
+});
+
+test("trainer measurements are sorted by recency and expose latest date", () => {
+  const measurements = [
+    { id: "old", date: "2026-06-01T10:00:00.000Z" },
+    { id: "saved", savedAt: "2026-06-12T10:00:00.000Z" },
+    { id: "latest", createdAt: "2026-06-20T10:00:00.000Z" },
+    { id: "bad", date: "bad-date" }
+  ];
+
+  const sorted = getTrainerSortedMeasurements(measurements);
+  assert.deepEqual(sorted.map((item) => item.id), ["latest", "saved", "old", "bad"]);
+  assert.equal(getTrainerLastMeasurementAt(measurements), "2026-06-20T10:00:00.000Z");
+  assert.equal(getTrainerLastMeasurementAt([]), "");
 });
 
 test("trainer client activity status detects missing program, lost and active states", () => {

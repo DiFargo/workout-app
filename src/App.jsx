@@ -243,7 +243,9 @@ import {
   getTrainerClientFastSummary,
   getTrainerCompletedWorkoutCountForAssignment,
   getTrainerDayWord,
+  getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
+  getTrainerSortedMeasurements,
   getTrainerWorkoutActivitySummary
 } from "./utils/trainerClientSummary";
 import { buildTrainerCreateClientState } from "./utils/trainerCreateClientState";
@@ -354,7 +356,7 @@ import {
 
 import { collection, getDocs, doc, setDoc, addDoc, getDoc, deleteDoc, query, where, getFirestore, writeBatch, onSnapshot } from "firebase/firestore";
 
-const APP_VERSION = "v730";
+const APP_VERSION = "v731";
 const BARCODE_SEARCH_ENABLED = false;
 const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 const STORAGE_KEY = "workout_tracker_v1";
@@ -5621,13 +5623,13 @@ export default function App() {
         getTrainerSummaryTimestamp(a.date || a.completedAt || a.createdAt)
       ));
 
-      const clientMeasurements = [];
+      let clientMeasurements = [];
       if (measurementsResult.status === "fulfilled") {
         measurementsResult.value.forEach((measurementDoc) => {
           clientMeasurements.push({ id: measurementDoc.id, ...measurementDoc.data() });
         });
       }
-      clientMeasurements.sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
+      clientMeasurements = getTrainerSortedMeasurements(clientMeasurements);
 
       const nutritionState = nutritionResult.status === "fulfilled" && nutritionResult.value.exists()
         ? nutritionResult.value.data()
@@ -5650,9 +5652,7 @@ export default function App() {
         clientId: client.id,
         ...workoutActivitySummary,
         ...nutritionSummary,
-        lastMeasurementAt: clientMeasurements[0]
-          ? clientMeasurements[0].date || clientMeasurements[0].createdAt || clientMeasurements[0].savedAt || ""
-          : "",
+        lastMeasurementAt: getTrainerLastMeasurementAt(clientMeasurements),
         assignedProgramId: client.assignedProgramId || "",
         assignedProgramUpdatedAt,
         assignedWorkoutCount,

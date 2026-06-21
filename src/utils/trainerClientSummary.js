@@ -1,6 +1,7 @@
 import { sumNutritionFoods } from "./nutritionFoodTotals.js";
 import { pluralizeRu } from "./trainerAttention.js";
 import { getClientPaymentAttention } from "../domain/clientInsights.js";
+import { getMeasurementTimestampValue } from "./profileMeasurements.js";
 import {
   getTrainerAssignmentVersionKey,
   getTrainerSummaryDateKey,
@@ -77,6 +78,18 @@ export function getTrainerWorkoutActivitySummary(historyList = [], {
     workouts30: workoutTimestamps.filter((timestamp) => timestamp >= thirtyDayStart).length,
     workoutDateKeysCurrentWeek
   };
+}
+
+export function getTrainerSortedMeasurements(measurements = []) {
+  return [...(Array.isArray(measurements) ? measurements : [])]
+    .sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
+}
+
+export function getTrainerLastMeasurementAt(measurements = []) {
+  const latestMeasurement = getTrainerSortedMeasurements(measurements)[0];
+  return latestMeasurement
+    ? latestMeasurement.date || latestMeasurement.createdAt || latestMeasurement.savedAt || ""
+    : "";
 }
 
 export function getClientActivityStatus(summary = {}) {
