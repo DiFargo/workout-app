@@ -2,7 +2,7 @@ export const NUTRITION_ORBIT_BASE_ITEMS = [
   {
     id: "calories",
     label: "Калории",
-    amountBuilder: ({ caloriesConsumed, effectiveNutritionGoals }) => String(caloriesConsumed),
+    amountBuilder: ({ caloriesConsumed }) => `${String(caloriesConsumed)} ккал`,
     targetBuilder: ({ effectiveNutritionGoals }) => `до ${effectiveNutritionGoals.calories} ккал`,
     color: "#22c55e",
     startAngle: 324.3,
