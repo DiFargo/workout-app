@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
@@ -10,17 +11,20 @@ async function expectNoHorizontalOverflow(page) {
 }
 
 test("trainer workspace smoke: dashboard, clients, client card and messages stay usable", async ({ page }) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/?trainerHarness=1");
   const main = page.getByRole("main");
 
   await expect(page.getByRole("heading", { name: "Дашборд" }).or(page.getByRole("heading", { name: "Обзор" })).first()).toBeVisible();
   await expect(page.getByText(/^v\d+$/)).toBeVisible();
   await expectNoHorizontalOverflow(page);
+  assertNoRuntimeErrors();
 
   await page.getByRole("button", { name: /^Клиенты$/ }).click();
   await expect(page.getByRole("heading", { name: "Клиенты" })).toBeVisible();
   await expect(page.getByText("Germes")).toBeVisible();
   await expectNoHorizontalOverflow(page);
+  assertNoRuntimeErrors();
 
   await page.getByRole("button", { name: /Germes/ }).first().click();
   await expect(page.getByRole("heading", { name: "Germes" })).toBeVisible();
@@ -30,16 +34,19 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
   await main.getByRole("button", { name: "Уведомления" }).click();
   await expect(page.getByRole("heading", { name: "Напоминания" })).toBeVisible();
   await expectNoHorizontalOverflow(page);
+  assertNoRuntimeErrors();
 
   await page.getByRole("button", { name: /^Сообщения$/ }).first().click();
   await expect(page.getByRole("heading", { name: "Сообщения" }).first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Нужно ответить" })).toBeVisible();
   await expectNoHorizontalOverflow(page);
+  assertNoRuntimeErrors();
 });
 
 test("trainer mobile overflow menu opens compact extra sections", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "Mobile overflow exists only on compact trainer navigation.");
 
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/?trainerHarness=1");
 
   await page.getByRole("button", { name: /^Ещё$/ }).click();
@@ -48,4 +55,5 @@ test("trainer mobile overflow menu opens compact extra sections", async ({ page 
   await expect(page.getByRole("button", { name: /Аналитика/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /Уведомления/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /Кабинет/ })).toBeVisible();
+  assertNoRuntimeErrors();
 });

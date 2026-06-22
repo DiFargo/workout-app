@@ -1,0 +1,119 @@
+/* AI photo: explicit not-found state without creating a fake product. */
+.nutritionPhotoNotFoundOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 18000 !important;
+  padding: 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  background: rgba(2, 6, 4, 0.72) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.nutritionPhotoNotFoundModal {
+  position: relative !important;
+  width: min(100%, 340px) !important;
+  padding: 24px 18px 18px !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 22px !important;
+  background: #111712 !important;
+  color: #f5f7f3 !important;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.46) !important;
+  text-align: center !important;
+}
+
+.nutritionPhotoNotFoundClose {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 11px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(245, 247, 243, 0.68) !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+}
+
+.nutritionPhotoNotFoundIcon {
+  width: 52px !important;
+  height: 52px !important;
+  margin: 0 auto 12px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 16px !important;
+  background: rgba(117, 101, 232, 0.14) !important;
+  color: #988bf3 !important;
+  font-size: 28px !important;
+}
+
+.nutritionPhotoNotFoundModal h3 {
+  margin: 0 !important;
+  color: inherit !important;
+  font-size: 20px !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0 !important;
+}
+
+.nutritionPhotoNotFoundModal p {
+  margin: 8px auto 17px !important;
+  max-width: 280px !important;
+  color: rgba(245, 247, 243, 0.58) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+}
+
+.nutritionPhotoNotFoundActions {
+  display: grid !important;
+  gap: 8px !important;
+}
+
+.nutritionPhotoNotFoundActions button {
+  min-height: 46px !important;
+  padding: 0 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(245, 247, 243, 0.82) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.nutritionPhotoNotFoundActions button.primary {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundOverlay {
+  background: rgba(38, 42, 64, 0.32) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundModal {
+  border-color: #e0e3ed !important;
+  background: #ffffff !important;
+  color: #171923 !important;
+  box-shadow: 0 26px 70px rgba(50, 55, 82, 0.22) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundModal p {
+  color: #73798b !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundClose,
+html:root[data-app-theme="warm-light"] body #root .nutritionPhotoNotFoundActions button:not(.primary) {
+  border-color: #e1e4ee !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+}
+

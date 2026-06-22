@@ -1,0 +1,38 @@
+/* V491: readable measurement review values and branded review scrolling. */
+.measurementFullscreenCard.review,
+.measurementFullscreenReviewGrid,
+.profileMeasurementWizardCard.review,
+.profileMeasurementReviewGrid {
+  scrollbar-width: thin !important;
+  scrollbar-color: #6552e6 rgba(101, 82, 230, 0.12) !important;
+}
+
+.measurementFullscreenCard.review::-webkit-scrollbar,
+.measurementFullscreenReviewGrid::-webkit-scrollbar,
+.profileMeasurementWizardCard.review::-webkit-scrollbar,
+.profileMeasurementReviewGrid::-webkit-scrollbar {
+  display: block !important;
+  width: 5px !important;
+}
+
+.measurementFullscreenCard.review::-webkit-scrollbar-track,
+.measurementFullscreenReviewGrid::-webkit-scrollbar-track,
+.profileMeasurementWizardCard.review::-webkit-scrollbar-track,
+.profileMeasurementReviewGrid::-webkit-scrollbar-track {
+  border-radius: 999px !important;
+  background: rgba(101, 82, 230, 0.12) !important;
+}
+
+.measurementFullscreenCard.review::-webkit-scrollbar-thumb,
+.measurementFullscreenReviewGrid::-webkit-scrollbar-thumb,
+.profileMeasurementWizardCard.review::-webkit-scrollbar-thumb,
+.profileMeasurementReviewGrid::-webkit-scrollbar-thumb {
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, #7b68ee, #5542d8) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .measurementFullscreenReviewGrid strong,
+html:root[data-app-theme="warm-light"] body #root .profileMeasurementReviewGrid strong {
+  color: #151824 !important;
+}
+

@@ -1,0 +1,348 @@
+/* EXERCISE BOTTOM BACK BUTTON â€” NOT FIXED, SAME AS FORWARD */
+.workoutRunPage .exerciseNavigationRow .exerciseBackButton {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: auto !important;
+
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  flex: 1 1 0 !important;
+
+  min-height: 58px !important;
+  padding: 0 14px !important;
+
+  border-radius: 22px !important;
+  border: none !important;
+
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+  -webkit-text-fill-color: #10120f !important;
+
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.2px !important;
+  line-height: 1 !important;
+
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  margin: 12px 0 0 0 !important;
+  transform: none !important;
+  backdrop-filter: none !important;
+}
+
+.workoutRunPage .exerciseNavigationRow .exerciseBackButton::before {
+  content: none !important;
+  display: none !important;
+}
+
+.workoutRunPage .exerciseNavigationRow .exerciseBackButton:active {
+  transform: scale(0.985) !important;
+}
+
+/* same layout for forward and back in row */
+.workoutRunPage .exerciseNavigationRow .exerciseNextButton {
+  flex: 1 1 0 !important;
+  margin: 12px 0 0 0 !important;
+}
+
+@media (max-width: 480px) {
+  .workoutRunPage .exerciseNavigationRow .exerciseBackButton {
+    min-height: 56px !important;
+    border-radius: 20px !important;
+    font-size: 19px !important;
+  }
+}
+
+/* EXERCISE PREV BUTTON â€” SEPARATE FROM GLOBAL BACK BUTTONS */
+.workoutRunPage .exerciseNavigationRow .exercisePrevButton {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: auto !important;
+
+  flex: 1 1 0 !important;
+
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 58px !important;
+
+  margin: 12px 0 0 0 !important;
+  padding: 0 14px !important;
+
+  border: none !important;
+  border-radius: 22px !important;
+
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+  -webkit-text-fill-color: #10120f !important;
+
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.2px !important;
+  line-height: 1 !important;
+
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  transform: none !important;
+  backdrop-filter: none !important;
+}
+
+.workoutRunPage .exerciseNavigationRow .exercisePrevButton::before {
+  content: none !important;
+  display: none !important;
+}
+
+.workoutRunPage .exerciseNavigationRow .exercisePrevButton:active {
+  transform: scale(0.985) !important;
+}
+
+.workoutRunPage .exerciseNavigationRow .exercisePrevButton *,
+.workoutRunPage .exerciseNavigationRow .exercisePrevButton {
+  color: #10120f !important;
+  -webkit-text-fill-color: #10120f !important;
+}
+
+@media (max-width: 480px) {
+  .workoutRunPage .exerciseNavigationRow .exercisePrevButton {
+    min-height: 56px !important;
+    border-radius: 20px !important;
+    font-size: 19px !important;
+  }
+}
+
+/* EXERCISE NAV BUTTONS â€” EXACT SAME SIZE */
+.workoutRunPage .exerciseNavigationRow {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+  width: 100% !important;
+  align-items: stretch !important;
+}
+
+.workoutRunPage .exerciseNavigationRow .exercisePrevButton,
+.workoutRunPage .exerciseNavigationRow .exerciseNextButton {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+
+  margin: 12px 0 0 0 !important;
+  padding: 0 14px !important;
+
+  border-radius: 22px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 480px) {
+  .workoutRunPage .exerciseNavigationRow .exercisePrevButton,
+  .workoutRunPage .exerciseNavigationRow .exerciseNextButton {
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    border-radius: 20px !important;
+    font-size: 19px !important;
+  }
+}
+
+/* EXERCISE BUTTONS â€” 35/65 WIDTH */
+.workoutRunPage .exerciseNavigationRow {
+  grid-template-columns: 0.35fr 0.65fr !important;
+  gap: 12px !important;
+}
+
+/* FIRST EXERCISE â€” FULL WIDTH NEXT BUTTON */
+.workoutRunPage .exerciseNavigationRow:has(.exerciseNextButton):not(:has(.exercisePrevButton)) {
+  display: block !important;
+}
+
+.workoutRunPage .exerciseNavigationRow:not(:has(.exercisePrevButton)) .exerciseNextButton {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: none !important;
+}
+
+/* EXERCISE CLOSE BUTTON */
+.exerciseCloseButton {
+  position: absolute !important;
+  top: 18px !important;
+  right: 18px !important;
+  z-index: 50 !important;
+
+  width: 44px !important;
+  height: 44px !important;
+
+  border: none !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background:
+    radial-gradient(circle at top, rgba(127,159,58,0.26), transparent 60%),
+    rgba(255,255,255,0.06) !important;
+
+  border: 1px solid rgba(127,159,58,0.18) !important;
+
+  color: #d6f07a !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+.exerciseCloseButton:active {
+  transform: scale(0.96) !important;
+}
+
+/* FIRST EXERCISE CLOSE BUTTON â€” REAL */
+.workoutRunPage .exerciseSlideCard {
+  position: relative !important;
+}
+
+.workoutRunPage .exerciseCloseButton {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  z-index: 80 !important;
+
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+
+  border-radius: 50% !important;
+  border: 1px solid rgba(127,159,58,0.22) !important;
+
+  background:
+    radial-gradient(circle at top, rgba(127,159,58,0.26), transparent 62%),
+    rgba(255,255,255,0.055) !important;
+
+  color: #d6f07a !important;
+  -webkit-text-fill-color: #d6f07a !important;
+
+  font-size: 27px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+.workoutRunPage .exerciseCloseButton:active {
+  transform: scale(0.96) !important;
+}
+
+/* FINISH BACK BUTTON â€” HIDDEN BEFORE SAVE */
+.workoutRunPage .finishNavigationRow .finishBackButton {
+  display: flex !important;
+}
+
+/* WORKOUT CLOSE BUTTON â€” TOP RIGHT ON START / WARMUP / EXERCISE */
+.workoutRunPage .startWorkoutSlide,
+.workoutRunPage .exerciseSlideCard {
+  position: relative !important;
+}
+
+.workoutRunPage .workoutCloseButton {
+  position: fixed !important;
+  top: max(16px, calc(env(safe-area-inset-top) + 12px)) !important;
+  right: max(16px, calc(env(safe-area-inset-right) + 16px)) !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 9600 !important;
+
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border-radius: 50% !important;
+  border: 1px solid rgba(127,159,58,0.22) !important;
+
+  background:
+    radial-gradient(circle at top, rgba(127,159,58,0.26), transparent 62%),
+    rgba(255,255,255,0.055) !important;
+
+  color: #d6f07a !important;
+  -webkit-text-fill-color: #d6f07a !important;
+
+  font-size: 27px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+
+  transform: none !important;
+  backdrop-filter: none !important;
+}
+
+.workoutRunPage .workoutCloseButton::before {
+  content: none !important;
+  display: none !important;
+}
+
+.workoutRunPage .workoutCloseButton:active {
+  transform: scale(0.96) !important;
+}
+
+/* keep old class safe if browser cache has it */
+.workoutRunPage .exerciseCloseButton {
+  top: 16px !important;
+  right: 16px !important;
+  left: auto !important;
+}
+

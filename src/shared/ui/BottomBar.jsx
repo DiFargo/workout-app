@@ -26,15 +26,15 @@ export function ClientMainBottomBar({
   }
 
   return (
-    <nav className={className} aria-label="ÐžÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹">
+    <nav className={className} aria-label="Основные разделы">
       <button
         type="button"
         className={activeTab === "main" ? "active" : ""}
         aria-current={activeTab === "main" ? "page" : undefined}
         onClick={onGoMain}
       >
-        <span aria-hidden="true">ðŸ </span>
-        <strong>Ð“Ð»Ð°Ð²Ð½Ð°Ñ</strong>
+        <span aria-hidden="true">🏠</span>
+        <strong>Главная</strong>
       </button>
       <button
         type="button"
@@ -42,8 +42,8 @@ export function ClientMainBottomBar({
         aria-current={activeTab === "workouts" ? "page" : undefined}
         onClick={onOpenTraining}
       >
-        <span aria-hidden="true">ðŸ‹ï¸</span>
-        <strong>Ð¢Ñ€ÐµÐ½Ð¸Ñ€Ð¾Ð²ÐºÐ¸</strong>
+        <span aria-hidden="true">🏋️</span>
+        <strong>Тренировки</strong>
       </button>
       <button
         type="button"
@@ -51,8 +51,8 @@ export function ClientMainBottomBar({
         aria-current={activeTab === "nutrition" ? "page" : undefined}
         onClick={onOpenNutrition}
       >
-        <span aria-hidden="true">ðŸ½ï¸</span>
-        <strong>ÐŸÐ¸Ñ‚Ð°Ð½Ð¸Ðµ</strong>
+        <span aria-hidden="true">🍽️</span>
+        <strong>Питание</strong>
       </button>
       <button
         type="button"
@@ -60,8 +60,8 @@ export function ClientMainBottomBar({
         aria-current={activeTab === "cabinet" ? "page" : undefined}
         onClick={onOpenCabinet}
       >
-        <span aria-hidden="true">ðŸ‘¤</span>
-        <strong>ÐšÐ°Ð±Ð¸Ð½ÐµÑ‚</strong>
+        <span aria-hidden="true">👤</span>
+        <strong>Кабинет</strong>
       </button>
     </nav>
   );
@@ -77,15 +77,15 @@ export function TrainerMainBottomBar({
   onLoadTrainerCabinet
 }) {
   return (
-    <nav className={`${className} trainerRoleBottomBar`} aria-label="Ð Ð°Ð·Ð´ÐµÐ»Ñ‹ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°">
+    <nav className={`${className} trainerRoleBottomBar`} aria-label="Разделы тренера">
       <button
         type="button"
         className={activeTab === "main" ? "active" : ""}
         aria-current={activeTab === "main" ? "page" : undefined}
         onClick={onGoMain}
       >
-        <span aria-hidden="true">ðŸ </span>
-        <strong>Ð“Ð»Ð°Ð²Ð½Ð°Ñ</strong>
+        <span aria-hidden="true">🏠</span>
+        <strong>Главная</strong>
       </button>
       <button
         type="button"
@@ -93,8 +93,8 @@ export function TrainerMainBottomBar({
         aria-current={activeTab === "clients" ? "page" : undefined}
         onClick={onOpenTrainerClients}
       >
-        <span aria-hidden="true">ðŸ‘¥</span>
-        <strong>ÐšÐ»Ð¸ÐµÐ½Ñ‚Ñ‹</strong>
+        <span aria-hidden="true">👥</span>
+        <strong>Клиенты</strong>
       </button>
       <button
         type="button"
@@ -102,8 +102,8 @@ export function TrainerMainBottomBar({
         aria-current={activeTab === "programs" ? "page" : undefined}
         onClick={onOpenTrainerPrograms}
       >
-        <span aria-hidden="true">ðŸ“‹</span>
-        <strong>ÐŸÑ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹</strong>
+        <span aria-hidden="true">📋</span>
+        <strong>Программы</strong>
       </button>
       <button
         type="button"
@@ -111,8 +111,8 @@ export function TrainerMainBottomBar({
         aria-current={activeTab === "cabinet" ? "page" : undefined}
         onClick={onLoadTrainerCabinet}
       >
-        <span aria-hidden="true">ðŸ‘¤</span>
-        <strong>ÐšÐ°Ð±Ð¸Ð½ÐµÑ‚</strong>
+        <span aria-hidden="true">👤</span>
+        <strong>Кабинет</strong>
       </button>
     </nav>
   );
@@ -127,34 +127,34 @@ export function TrainerWorkspaceBottomBar({
   onLoadTrainerCabinet
 }) {
   return (
-    <nav className="adminV3Nav adminV3BottomBar trainerRoleWorkspaceBar" aria-label="Ð Ð°Ð·Ð´ÐµÐ»Ñ‹ Ñ‚Ñ€ÐµÐ½ÐµÑ€Ð°">
+    <nav className="adminV3Nav adminV3BottomBar trainerRoleWorkspaceBar" aria-label="Разделы тренера">
       <button
         className={activeTab === "main" ? "active" : ""}
         type="button"
         onClick={onGoMain}
       >
-        <span className="adminV3NavIcon">ðŸ </span>
-        <span className="adminV3NavLabel">Ð“Ð»Ð°Ð²Ð½Ð°Ñ</span>
+        <span className="adminV3NavIcon">🏠</span>
+        <span className="adminV3NavLabel">Главная</span>
       </button>
       <button className={activeTab === "clients" ? "active" : ""} type="button" onClick={onOpenTrainerClients}>
-        <span className="adminV3NavIcon">ðŸ‘¥</span>
-        <span className="adminV3NavLabel">ÐšÐ»Ð¸ÐµÐ½Ñ‚Ñ‹</span>
+        <span className="adminV3NavIcon">👥</span>
+        <span className="adminV3NavLabel">Клиенты</span>
       </button>
       <button
         className={activeTab === "programs" ? "active" : ""}
         type="button"
         onClick={onOpenTrainerPrograms}
       >
-        <span className="adminV3NavIcon">ðŸ“‹</span>
-        <span className="adminV3NavLabel">ÐŸÑ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹</span>
+        <span className="adminV3NavIcon">📋</span>
+        <span className="adminV3NavLabel">Программы</span>
       </button>
       <button
         className={activeTab === "cabinet" ? "active" : ""}
         type="button"
         onClick={onLoadTrainerCabinet}
       >
-        <span className="adminV3NavIcon">ðŸ‘¤</span>
-        <span className="adminV3NavLabel">ÐšÐ°Ð±Ð¸Ð½ÐµÑ‚</span>
+        <span className="adminV3NavIcon">👤</span>
+        <span className="adminV3NavLabel">Кабинет</span>
       </button>
     </nav>
   );
@@ -168,10 +168,10 @@ export function ClientTrainingBottomBar({
   onOpenHistory
 }) {
   return (
-    <nav className="individualWorkoutMenuBar" aria-label="ÐÐ°Ð²Ð¸Ð³Ð°Ñ†Ð¸Ñ Ñ‚Ñ€ÐµÐ½Ð¸Ñ€Ð¾Ð²Ð¾Ðº">
+    <nav className="individualWorkoutMenuBar" aria-label="Навигация тренировок">
       <button type="button" onClick={onGoMain}>
-        <span aria-hidden="true">ðŸ </span>
-        <strong>Ð“Ð»Ð°Ð²Ð½Ð°Ñ</strong>
+        <span aria-hidden="true">🏠</span>
+        <strong>Главная</strong>
       </button>
       <button
         type="button"
@@ -179,8 +179,8 @@ export function ClientTrainingBottomBar({
         aria-current={activeTab === "workouts" ? "page" : undefined}
         onClick={onOpenWorkouts}
       >
-        <span aria-hidden="true">ðŸ‹ï¸</span>
-        <strong>Ð¢Ñ€ÐµÐ½Ð¸Ñ€Ð¾Ð²ÐºÐ¸</strong>
+        <span aria-hidden="true">🏋️</span>
+        <strong>Тренировки</strong>
       </button>
       <button
         type="button"
@@ -188,12 +188,12 @@ export function ClientTrainingBottomBar({
         aria-current={activeTab === "plan" ? "page" : undefined}
         onClick={onOpenPlan}
       >
-        <span aria-hidden="true">ðŸ“‹</span>
-        <strong>ÐŸÐ»Ð°Ð½</strong>
+        <span aria-hidden="true">📋</span>
+        <strong>План</strong>
       </button>
       <button type="button" onClick={onOpenHistory}>
-        <span aria-hidden="true">ðŸ—“ï¸</span>
-        <strong>Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ</strong>
+        <span aria-hidden="true">🗓️</span>
+        <strong>История</strong>
       </button>
     </nav>
   );

@@ -1,5 +1,4 @@
-﻿import { ClientMainBottomBar } from "../../../shared/ui/BottomBar";
-import HistoryDeleteConfirmDialog from "./HistoryDeleteConfirmDialog";
+﻿import HistoryDeleteConfirmDialog from "./HistoryDeleteConfirmDialog";
 import {
   getAiHistoryItems
 } from "../../../domain/workoutPresentation";
@@ -14,6 +13,7 @@ import {
 
 export default function WorkoutHistoryPage({
   canUseTrainerFeatures,
+  renderClientMainBottomBar,
   history,
   historyLoading,
   openHistoryKey,
@@ -179,17 +179,17 @@ export default function WorkoutHistoryPage({
         onConfirm={confirmDeleteOwnHistoryWorkout}
       />
 
-      <ClientMainBottomBar
-        activeTab="workouts"
-        isTrainerMode={canUseTrainerFeatures}
-        onGoMain={goBackToMain}
-        onOpenTraining={openTrainingEntry}
-        onOpenNutrition={onOpenNutrition}
-        onOpenCabinet={openProfileCabinet}
-        onOpenTrainerClients={onOpenTrainerClients}
-        onOpenTrainerPrograms={onOpenTrainerPrograms}
-        onLoadTrainerCabinet={openProfileCabinet}
-      />
+      {(renderClientMainBottomBar || (() => null))({
+        activeTab: "workouts",
+        isTrainerMode: canUseTrainerFeatures,
+        onGoMain: goBackToMain,
+        onOpenTraining: openTrainingEntry,
+        onOpenNutrition,
+        onOpenCabinet: openProfileCabinet,
+        onOpenTrainerClients,
+        onOpenTrainerPrograms,
+        onLoadTrainerCabinet: openProfileCabinet
+      })}
     </div>
   );
 }

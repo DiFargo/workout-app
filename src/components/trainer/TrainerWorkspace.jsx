@@ -215,6 +215,7 @@ function getWorkspaceDate(value) {
 }
 
 function getMeasurementDate(item = {}) {
+  if (!item || typeof item !== "object") return null;
   return getWorkspaceDate(item.date || item.createdAt || item.updatedAt || item.savedAt);
 }
 
@@ -909,7 +910,8 @@ function ClientOverview({ profile, summary, measurements, history, nutritionDays
 
 function ClientMeasurements({ measurements = [] }) {
   const [expanded, setExpanded] = useState(false);
-  const sortedMeasurements = (Array.isArray(measurements) ? measurements : [])
+  const safeMeasurements = (Array.isArray(measurements) ? measurements : []).filter((item) => item && typeof item === "object");
+  const sortedMeasurements = safeMeasurements
     .slice()
     .sort((a, b) => (getMeasurementDate(b)?.getTime() || 0) - (getMeasurementDate(a)?.getTime() || 0));
   const latest = sortedMeasurements[0] || null;

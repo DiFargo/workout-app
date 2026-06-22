@@ -1,8 +1,7 @@
-import { ClientMainBottomBar } from "../../../shared/ui/BottomBar";
-
 export default function WorkoutModePage({
   appVersion,
   workoutModeRemember,
+  renderClientMainBottomBar,
   canUseTrainerFeatures,
   onBackToMain,
   onOpenBasicWorkoutQuiz,
@@ -57,18 +56,20 @@ export default function WorkoutModePage({
         <span>Запомнить выбор и больше не спрашивать</span>
       </label>
 
-      <ClientMainBottomBar
-        activeTab="workouts"
-        className="mainMenuBottomBar profileBottomTabBar workoutModeBottomBar"
-        isTrainerMode={canUseTrainerFeatures}
-        onGoMain={onBackToMain}
-        onOpenTraining={onOpenTraining}
-        onOpenNutrition={onOpenNutrition}
-        onOpenCabinet={onOpenCabinet}
-        onOpenTrainerClients={onOpenTrainerClients}
-        onOpenTrainerPrograms={onOpenTrainerPrograms}
-        onLoadTrainerCabinet={onLoadTrainerCabinet}
-      />
+      {renderClientMainBottomBar?.(
+        "workouts",
+        {
+          className: "mainMenuBottomBar profileBottomTabBar workoutModeBottomBar",
+          isTrainerMode: canUseTrainerFeatures,
+          onGoMain: onBackToMain,
+          onOpenTraining,
+          onOpenNutrition,
+          onOpenCabinet,
+          onOpenTrainerClients,
+          onOpenTrainerPrograms,
+          onLoadTrainerCabinet
+        }
+      )}
     </div>
   );
 }

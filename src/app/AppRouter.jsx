@@ -1,16 +1,22 @@
 import { APP_PAGES } from "./appPages";
 import WorkoutModePage from "../features/client/workouts/WorkoutModePage";
+import WorkoutListPage from "../features/client/workouts/WorkoutListPage";
 import BasicWorkoutQuizPage from "../features/client/workouts/BasicWorkoutQuizPage";
 import MeasurementWizardPage from "../features/client/measurements/MeasurementWizardPage";
 import WorkoutHistoryPage from "../features/client/workouts/WorkoutHistoryPage";
 import WorkoutPlanPage from "../features/client/workouts/WorkoutPlanPage";
 import AiCoachPage from "../features/client/ai/AiCoachPage";
+import AdminPanelHub from "../components/admin/AdminPanelHub";
 
 export default function AppRouter({
   page,
   appVersion,
+  renderClientMainBottomBar,
   workoutModeRemember,
+  canUseAdminFeatures,
   canUseTrainerFeatures,
+  renderNutritionPage,
+  workoutListProps,
   basicWorkoutQuiz,
   onBackToMain,
   onOpenBasicWorkoutQuiz,
@@ -24,6 +30,7 @@ export default function AppRouter({
   onOpenTrainerClients,
   onOpenTrainerPrograms,
   onOpenCabinet,
+  openAdminProgramsOverview,
   history,
   historyLoading,
   openHistoryKey,
@@ -64,17 +71,33 @@ export default function AppRouter({
   nutrition,
   plan,
   user,
-  onOpenWorkoutPlanWorkout,
-  onOpenWorkoutPlanWorkouts,
-  onOpenWorkoutPlan,
-  onOpenWorkoutPlanHistory,
+  workoutPlanRouteHandlers,
   getCompletedWorkoutSet,
   isWorkoutCompletedByHistory
 }) {
+  if (page === APP_PAGES.ADMIN_PANEL) {
+    return (
+      <AdminPanelHub
+        canUseAdminFeatures={canUseAdminFeatures}
+        setPage={onSetPage}
+        openAdminProgramsOverview={openAdminProgramsOverview}
+      />
+    );
+  }
+
+  if (page === APP_PAGES.NUTRITION) {
+    return renderNutritionPage?.() || null;
+  }
+
+  if (page === APP_PAGES.WORKOUTS) {
+    return <WorkoutListPage {...workoutListProps} />;
+  }
+
   if (page === APP_PAGES.WORKOUT_MODE) {
     return (
       <WorkoutModePage
         appVersion={appVersion}
+        renderClientMainBottomBar={renderClientMainBottomBar}
         workoutModeRemember={workoutModeRemember}
         canUseTrainerFeatures={canUseTrainerFeatures}
         onBackToMain={onBackToMain}
@@ -95,6 +118,7 @@ export default function AppRouter({
     return (
       <BasicWorkoutQuizPage
         appVersion={appVersion}
+        renderClientMainBottomBar={renderClientMainBottomBar}
         basicWorkoutQuiz={basicWorkoutQuiz}
         onBasicWorkoutQuizChange={onBasicWorkoutQuizChange}
         onGoBackToMode={() => onSetPage(APP_PAGES.WORKOUT_MODE)}
@@ -115,6 +139,7 @@ export default function AppRouter({
     return (
       <WorkoutHistoryPage
         canUseTrainerFeatures={canUseTrainerFeatures}
+        renderClientMainBottomBar={renderClientMainBottomBar}
         history={history}
         historyLoading={historyLoading}
         openHistoryKey={openHistoryKey}
@@ -168,10 +193,10 @@ export default function AppRouter({
         history={history}
         user={user}
         onGoBackToMain={onBackToMain}
-        onOpenWorkoutIndex={onOpenWorkoutPlanWorkout}
-        onOpenWorkouts={onOpenWorkoutPlanWorkouts}
-        onOpenPlan={onOpenWorkoutPlan}
-        onOpenHistory={onOpenWorkoutPlanHistory}
+        onOpenWorkoutIndex={workoutPlanRouteHandlers?.onOpenWorkoutPlanWorkout}
+        onOpenWorkouts={workoutPlanRouteHandlers?.onOpenWorkoutPlanWorkouts}
+        onOpenPlan={workoutPlanRouteHandlers?.onOpenWorkoutPlan}
+        onOpenHistory={workoutPlanRouteHandlers?.onOpenWorkoutPlanHistory}
         getCompletedWorkoutSet={getCompletedWorkoutSet}
         isWorkoutCompletedByHistory={isWorkoutCompletedByHistory}
       />
@@ -181,6 +206,7 @@ export default function AppRouter({
   if (page === APP_PAGES.MEASUREMENT_WIZARD) {
     return (
       <MeasurementWizardPage
+        renderClientMainBottomBar={renderClientMainBottomBar}
         aiNutritionProfile={aiNutritionProfile}
         aiNutritionProfileDraft={aiNutritionProfileDraft}
         profileMeasurements={profileMeasurements}

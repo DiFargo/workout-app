@@ -1,0 +1,242 @@
+﻿/* TRAINER DESKTOP WORKSPACE V326 */
+.adminClientDesktopDelete {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  #root:has(.adminV3Shell),
+  #root:has(.adminUsersCrmPage),
+  #root:has(.monthProgramOverviewMode),
+  #root:has(.trainerRolePage.clientCorePageCabinet) {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .adminV3Shell {
+    width: min(100%, 1440px) !important;
+    max-width: 1440px !important;
+    padding-right: 48px !important;
+    padding-left: 48px !important;
+  }
+
+  .adminV3Main {
+    max-width: 1320px !important;
+  }
+
+  .adminUsersCrmPage {
+    width: min(100%, 1440px) !important;
+    max-width: 1440px !important;
+    margin: 0 auto !important;
+    grid-template-columns: 1fr !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .adminUsersCrmSidebar {
+    width: 0 !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .adminUsersCrmMain:not(.adminUsersCrmMainClientPage) {
+    width: 100% !important;
+    max-width: 1320px !important;
+    margin: 0 auto !important;
+    padding: 34px 48px 214px !important;
+  }
+
+  .adminUsersCrmGridCardsOnly,
+  .adminUsersClientsPanelFull {
+    max-width: none !important;
+  }
+
+  .adminUsersClientsPanelFull {
+    min-height: 0 !important;
+    padding: 20px !important;
+  }
+
+  .adminClientCardsGridFive {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-rows: minmax(172px, auto) !important;
+    gap: 16px !important;
+  }
+
+  .adminClientCardWide,
+  .adminClientAddCard {
+    min-height: 172px !important;
+    padding: 18px !important;
+  }
+
+  .adminUsersCrmMainClientPage {
+    width: 100% !important;
+    max-width: 1320px !important;
+    margin: 0 auto !important;
+    padding: 28px 48px 214px !important;
+  }
+
+  .adminClientWorkspaceCrmPage {
+    width: 100% !important;
+    max-width: 1240px !important;
+  }
+
+  .adminClientRenderTopbar {
+    justify-content: space-between !important;
+    gap: 16px !important;
+  }
+
+  .adminClientDesktopDelete {
+    min-height: 46px;
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 95, 95, 0.38);
+    border-radius: 14px;
+    background: rgba(255, 95, 95, 0.09);
+    color: #ff8a8a;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .adminClientWorkspaceCrmPage .adminClientMetricGridRender {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .adminClientWorkspaceCrmPage .adminClientMetricCardRender,
+  .adminClientWorkspaceCrmPage .adminClientMetricCardWideRender {
+    min-height: 96px !important;
+    padding: 14px !important;
+    border: 1px solid rgba(255, 255, 255, 0.065) !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.028) !important;
+  }
+
+  .adminClientMeasurementsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .monthProgramEditorPage.monthProgramPremium.monthProgramOverviewMode {
+    width: min(100%, 1320px) !important;
+    max-width: 1320px !important;
+    min-height: 100dvh !important;
+    padding-right: 48px !important;
+    padding-left: 48px !important;
+  }
+
+  .monthProgramPremium.monthProgramOverviewMode .programsCompactHeader {
+    min-height: 54px;
+    margin-bottom: 14px;
+  }
+
+  .monthProgramPremium.monthProgramOverviewMode .programsCompactHeader h1 {
+    font-size: 28px;
+  }
+
+  .monthProgramPremium.monthProgramOverviewMode .programsOverviewSection {
+    min-height: 300px;
+    padding: 24px;
+    border-radius: 26px;
+  }
+
+  .monthProgramPremium.monthProgramOverviewMode .programsOverviewGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .monthProgramPremium.monthProgramOverviewMode .programsOverviewCard {
+    min-height: 178px;
+    padding: 18px;
+  }
+
+  .trainerRolePage.profileTabbedPage.clientCorePageCabinet {
+    width: min(calc(100vw - 64px), 1180px) !important;
+    max-width: 1180px !important;
+    height: auto !important;
+    min-height: 100dvh !important;
+    margin: 0 auto !important;
+    padding: 32px 32px 170px !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.075);
+    border-left: 1px solid rgba(255, 255, 255, 0.075);
+  }
+
+  .trainerRolePage.clientCorePageCabinet .profileCabinetPageTitle {
+    min-height: 52px !important;
+    margin-bottom: 14px !important;
+    font-size: 34px !important;
+    text-align: left !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetSection {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHero {
+    min-height: 118px !important;
+    flex-basis: 118px !important;
+    padding: 18px 22px !important;
+    grid-template-columns: 76px minmax(0, 1fr) 18px !important;
+    gap: 18px !important;
+    border-radius: 22px !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatarWrap,
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatar {
+    width: 74px !important;
+    height: 74px !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHeroText h1 {
+    font-size: 24px !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview {
+    margin-top: 16px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: none !important;
+    gap: 14px !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
+    height: 112px !important;
+    min-height: 112px !important;
+    padding: 16px 18px !important;
+    grid-template-columns: 52px minmax(0, 1fr) 18px !important;
+    gap: 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardIcon {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 32px !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText small {
+    font-size: 10px !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText strong {
+    font-size: 20px !important;
+  }
+
+  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText em {
+    font-size: 12px !important;
+  }
+}
+

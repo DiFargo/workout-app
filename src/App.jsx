@@ -1,6 +1,10 @@
-import "./styles/index.css";
 import AppCore from "./AppCore";
+import AppErrorBoundary from "./components/common/AppErrorBoundary";
 
 export default function App() {
-  return <AppCore />;
+  return (
+    <AppErrorBoundary>
+      <AppCore />
+    </AppErrorBoundary>
+  );
 }

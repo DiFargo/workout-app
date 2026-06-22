@@ -1,0 +1,141 @@
+/* Individual plan always fits the viewport without page scrolling. */
+.clientCorePageWorkout.individualWorkoutSelectPage {
+  height: calc(100dvh - 4px) !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - 4px) !important;
+  padding-bottom: 94px !important;
+  overflow: hidden !important;
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero {
+  flex: 0 0 clamp(50px, 8.5dvh, 66px) !important;
+  min-height: 0 !important;
+  margin-bottom: clamp(4px, 1dvh, 8px) !important;
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
+  min-height: 0 !important;
+  height: 100% !important;
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutDeck {
+  flex: 1 1 0 !important;
+  width: 100% !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutCardPro {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutProBody {
+  min-height: 0 !important;
+  padding-bottom: clamp(72px, 10dvh, 96px) !important;
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutCardStartButton {
+  left: clamp(12px, 4.5vw, 18px) !important;
+  right: clamp(12px, 4.5vw, 18px) !important;
+  bottom: clamp(12px, 2.2dvh, 18px) !important;
+  height: clamp(48px, 7.4dvh, 62px) !important;
+  min-height: clamp(48px, 7.4dvh, 62px) !important;
+  font-size: clamp(14px, 4vw, 17px) !important;
+}
+
+@media (max-height: 700px) {
+  .clientCorePageWorkout.individualWorkoutSelectPage {
+    padding-top: 10px !important;
+    padding-bottom: 88px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle span,
+  .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle strong {
+    font-size: 22px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutCardPro {
+    grid-template-rows: 30px minmax(0, 1fr) !important;
+    gap: 5px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutProTop {
+    height: 30px !important;
+    min-height: 30px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutNextBadge,
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutProgressBadge,
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutCompletedBadge,
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutWeek {
+    min-height: 28px !important;
+    padding: 6px 10px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutProBody {
+    padding-top: 14px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutTitle {
+    font-size: 21px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutAccentLine {
+    margin: 8px 0 10px !important;
+  }
+
+  .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutStats {
+    gap: 5px !important;
+  }
+}
+
+/* Nutrition content scrolls while the bottom navigation stays fixed. */
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
+  height: calc(100dvh - 4px) !important;
+  min-height: calc(100dvh - 4px) !important;
+  max-height: calc(100dvh - 4px) !important;
+  padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain !important;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::-webkit-scrollbar {
+  display: none;
+}
+
+/* Reserve a stable zone for workout progress and the fixed bottom bar. */
+.clientCorePageWorkout.individualWorkoutSelectPage {
+  padding-bottom: calc(148px + env(safe-area-inset-bottom)) !important;
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
+  height: 98px !important;
+  min-height: 98px !important;
+  max-height: 98px !important;
+}
+
+.clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutBottomProgress {
+  top: -30px !important;
+  padding-bottom: 0 !important;
+}
+
+@media (max-height: 700px) {
+  .clientCorePageWorkout.individualWorkoutSelectPage {
+    padding-bottom: calc(138px + env(safe-area-inset-bottom)) !important;
+  }
+
+.clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutBottomProgress {
+    top: -26px !important;
+  }
+}
+

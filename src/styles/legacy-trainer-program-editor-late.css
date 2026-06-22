@@ -1,0 +1,1214 @@
+/* PROGRAMS BOTTOM BAR V145 */
+.programsBottomBarImportInput {
+  display: none !important;
+}
+
+.programsTopActionBar {
+  width: min(100%, 560px);
+  margin: 0 auto 14px;
+  padding: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(24, 30, 25, 0.98), rgba(14, 18, 15, 0.98));
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+}
+
+.programsTopActionBar > button {
+  min-width: 0;
+  min-height: 58px;
+  padding: 7px 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.programsTopActionBar .adminV3NavIcon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.programsTopActionBar .adminV3NavLabel {
+  max-width: 100%;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.programsTopActionBar > button:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programsBottomBar {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button {
+  min-width: 0 !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button > .adminV3NavIcon {
+  font-size: 21px;
+  line-height: 1;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button > .adminV3NavLabel {
+  max-width: 100%;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button.programsBottomBarDelete {
+  color: rgba(255, 183, 183, 0.88) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button.programsBottomBarDelete .adminV3NavIcon {
+  color: rgba(255, 142, 142, 0.92) !important;
+}
+
+@media (min-width: 701px) {
+  nav.adminV3Nav.adminV3BottomBar.programsBottomBar {
+    width: calc(100vw - 24px) !important;
+    max-width: 560px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* PROGRAMS COMPACT HEADER V146 */
+.monthProgramPremium .programsCompactHeader {
+  width: 100%;
+  min-height: 38px;
+  margin: 0 0 10px;
+  padding: 4px 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.monthProgramPremium .programsCompactHeader h1 {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 950;
+  text-align: center;
+}
+
+.monthProgramPremium.monthProgramOverviewMode .programsOverviewPage {
+  padding-top: 0;
+}
+
+/* MONTH PROGRAM ACCORDION EDITOR V147 */
+.monthProgramPremium .monthProgramEditorNameField {
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 11px 12px;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.monthProgramPremium .monthProgramEditorNameField span {
+  display: block;
+  margin-bottom: 5px;
+  color: rgba(164, 196, 91, 0.84);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.monthProgramPremium .monthProgramEditorNameField input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 15px;
+  font-weight: 900;
+  outline: none;
+}
+
+.monthProgramPremium .monthProgramAccordionBlock {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.monthProgramPremium .monthProgramAccordionHead {
+  width: 100%;
+  min-height: 62px;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  border: 0;
+  border-radius: 19px;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+}
+
+.monthProgramPremium .monthProgramAccordionHead div,
+.monthProgramPremium .monthProgramAccordionHead strong,
+.monthProgramPremium .monthProgramAccordionHead span {
+  min-width: 0;
+}
+
+.monthProgramPremium .monthProgramAccordionHead strong,
+.monthProgramPremium .monthProgramAccordionHead span {
+  display: block;
+}
+
+.monthProgramPremium .monthProgramAccordionHead strong {
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.monthProgramPremium .monthProgramAccordionHead span {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.43);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.monthProgramPremium .monthProgramAccordionHead small {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 10px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.monthProgramPremium .monthProgramAccordionHead b {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(131, 167, 58, 0.13);
+  color: rgba(221, 242, 173, 0.9);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.monthProgramPremium .monthProgramAccordionBlock.expanded {
+  border-color: rgba(131, 167, 58, 0.2);
+}
+
+.monthProgramPremium .monthProgramAccordionBlock.expanded .monthProgramAccordionHead {
+  border-radius: 19px 19px 0 0;
+  background: rgba(131, 167, 58, 0.055);
+}
+
+.monthProgramPremium .monthProgramAccordionBlock > .monthProgramPremiumWeeks {
+  padding: 0 10px 10px;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramAccordionHead {
+  display: none;
+}
+
+@media (min-width: 761px) {
+  .monthProgramPremium .monthProgramEditorNameField {
+    max-width: 560px;
+  }
+
+  .monthProgramPremium .monthProgramAccordionHead {
+    min-height: 66px;
+    padding: 12px 14px;
+  }
+}
+
+/* MONTH PROGRAM SAVE ICON V149 */
+.monthProgramPremium .monthProgramEditorSaveIcon {
+  position: fixed;
+  top: max(14px, calc(env(safe-area-inset-top) + 10px));
+  right: max(14px, calc(env(safe-area-inset-right) + 14px));
+  z-index: 9999;
+  width: 46px;
+  min-width: 46px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(190, 230, 112, 0.48);
+  border-radius: 14px;
+  background: linear-gradient(145deg, #91ad4e, #6f9134);
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(77, 112, 35, 0.38);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.monthProgramPremium .monthProgramEditorSaveIcon:active {
+  transform: scale(0.96);
+}
+
+/* MONTH PROGRAM EDITOR BOTTOM BAR V160 */
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button {
+  min-width: 0 !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button > .adminV3NavIcon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button > .adminV3NavLabel {
+  max-width: 100%;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button.programEditorBottomBarSave {
+  color: rgba(221, 242, 173, 0.96) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button.programEditorBottomBarDelete,
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button.programEditorBottomBarDelete .adminV3NavIcon {
+  color: rgba(255, 142, 142, 0.92) !important;
+}
+
+@media (min-width: 701px) {
+  nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar {
+    width: calc(100vw - 24px) !important;
+    max-width: 560px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* MONTH WORKOUT EDITOR BOTTOM BAR V151 */
+.monthProgramPremium.monthProgramPremiumDayMode .programsCompactHeader,
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBackToOverview,
+.monthProgramPremium.monthProgramPremiumDayMode .monthAddExerciseBtn {
+  display: none !important;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode {
+  padding-top: max(14px, env(safe-area-inset-top)) !important;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumExercise {
+  cursor: pointer;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumExercise.selected {
+  border-color: rgba(145, 173, 78, 0.5) !important;
+  background: rgba(127, 159, 58, 0.1) !important;
+  box-shadow: inset 0 0 0 1px rgba(145, 173, 78, 0.12);
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthExerciseRow.compact {
+  grid-template-columns: minmax(0, 1fr) 76px !important;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthExerciseRow.compact > button {
+  display: none !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button {
+  min-width: 0 !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button > .adminV3NavIcon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button > .adminV3NavLabel {
+  max-width: 100%;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button.workoutEditorBottomBarDelete {
+  color: rgba(255, 183, 183, 0.9) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button.workoutEditorBottomBarDelete .adminV3NavIcon {
+  color: rgba(255, 142, 142, 0.94) !important;
+}
+
+@media (min-width: 701px) {
+  nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar {
+    width: calc(100vw - 24px) !important;
+    max-width: 560px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* MONTH PROGRAM WEEK EDITOR V152 */
+.monthProgramPremium .monthProgramPremiumWeeks {
+  gap: 7px;
+}
+
+.monthProgramPremium .monthProgramPremiumWeek {
+  padding: 0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.monthProgramPremium .monthProgramPremiumWeekHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  margin: 0;
+  padding-right: 8px;
+}
+
+.monthProgramPremium .weekEditorToggle {
+  width: 100%;
+  min-height: 52px;
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 0;
+  border-radius: 13px;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+}
+
+.monthProgramPremium .weekEditorToggle span,
+.monthProgramPremium .weekEditorToggle strong,
+.monthProgramPremium .weekEditorToggle small {
+  display: block;
+}
+
+.monthProgramPremium .weekEditorToggle strong {
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.monthProgramPremium .weekEditorToggle small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.monthProgramPremium .weekEditorToggle b {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(131, 167, 58, 0.12);
+  color: rgba(221, 242, 173, 0.9);
+  font-size: 17px;
+}
+
+.monthProgramPremium .monthProgramPremiumWeek.expanded .weekEditorToggle {
+  background: rgba(131, 167, 58, 0.055);
+  border-radius: 13px 13px 0 0;
+}
+
+.monthProgramPremium .weekEditorAddDay {
+  width: auto !important;
+  min-width: 58px;
+  min-height: 32px !important;
+  padding: 0 9px !important;
+  border-color: rgba(145, 173, 78, 0.2) !important;
+  border-radius: 9px !important;
+  background: rgba(127, 159, 58, 0.12) !important;
+  color: rgba(221, 242, 173, 0.92) !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  white-space: nowrap;
+}
+
+.monthProgramPremium .weekEditorDayList {
+  padding: 0 9px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.monthProgramPremium .weekEditorDayCard {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.monthProgramPremium .weekEditorDayOpen {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+}
+
+.monthProgramPremium .weekEditorDayOpen strong {
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.monthProgramPremium .weekEditorDayOpen span {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+@media (min-width: 761px) {
+  .monthProgramPremium .monthProgramPremiumWeeks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .monthProgramPremium .weekEditorDayOpen strong {
+    font-size: 13px;
+  }
+}
+
+/* MONTH PROGRAM HIERARCHY V155 */
+.monthProgramPremium .monthProgramMonths {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.monthProgramPremium .monthProgramMonth {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.monthProgramPremium .monthProgramMonthHead {
+  min-height: 42px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.monthProgramPremium .monthProgramMonthHead span,
+.monthProgramPremium .monthProgramMonthHead h2 {
+  display: block;
+  margin: 0;
+}
+
+.monthProgramPremium .monthProgramMonthHead span {
+  color: rgba(164, 196, 91, 0.76);
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.monthProgramPremium .monthProgramMonthHead h2 {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.monthProgramPremium .monthProgramMonthHead > button,
+.monthProgramPremium .monthProgramBlockControls button {
+  min-height: 32px;
+  padding: 0 9px;
+  border: 1px solid rgba(145, 173, 78, 0.2);
+  border-radius: 9px;
+  background: rgba(127, 159, 58, 0.12);
+  color: rgba(221, 242, 173, 0.92);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.monthProgramPremium .monthProgramMonth .monthProgramPremiumBlocks {
+  gap: 8px;
+}
+
+.monthProgramPremium .monthProgramMonthAddBlock {
+  min-height: 32px;
+  margin: 8px 0 0 auto;
+  padding: 0 10px;
+  display: block;
+  border: 1px solid rgba(145, 173, 78, 0.2);
+  border-radius: 9px;
+  background: rgba(127, 159, 58, 0.12);
+  color: rgba(221, 242, 173, 0.92);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.monthProgramPremium .monthProgramBlockHeaderRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.monthProgramPremium .monthProgramBlockHeaderRow .monthProgramAccordionHead {
+  min-width: 0;
+}
+
+.monthProgramPremium .monthProgramBlockControls {
+  padding-right: 9px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.monthProgramPremium .monthProgramBlockControls button {
+  min-height: 29px;
+  padding: 0 7px;
+  font-size: 9px;
+}
+
+.monthProgramPremium .monthProgramBlockControls .monthProgramHeaderToggle,
+.monthProgramPremium .weekEditorHeaderToggle {
+  min-height: 29px;
+  padding: 0 7px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.monthProgramPremium .weekEditorHeadActions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.monthProgramPremium .monthProgramBlockControls .monthProgramCopyIcon {
+  width: 30px;
+  min-width: 30px;
+  padding: 0;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramMonth:not(.active),
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramMonth.active > .monthProgramMonthHead,
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramMonth.active > .monthProgramMonthAddBlock,
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBlock.active > .monthProgramBlockHeaderRow {
+  display: none;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramMonth.active {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBlocks > .programEditorSwipeRow:not(.active) {
+  display: none;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBlocks > .programEditorSwipeRow.active {
+  padding-right: 0;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBlocks > .programEditorSwipeRow.active > .programEditorSwipeDelete {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  .monthProgramPremium .monthProgramBlockHeaderRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .monthProgramPremium .monthProgramBlockControls {
+    padding: 0 7px 0 0;
+    justify-content: flex-end;
+  }
+
+  .monthProgramPremium .monthProgramBlockControls button,
+  .monthProgramPremium .weekEditorHeadActions button {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    font-size: 8px !important;
+  }
+}
+
+@media (min-width: 761px) {
+  .monthProgramPremium .monthProgramMonths {
+    gap: 14px;
+  }
+
+  .monthProgramPremium .monthProgramMonth {
+    padding: 12px;
+  }
+}
+
+/* MONTH PROGRAM COPY AND SWIPE ACTIONS V156 */
+.monthProgramPremium .programEditorSwipeRow {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.monthProgramPremium .programEditorSwipeContent {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  transition: transform 180ms ease, box-shadow 140ms ease;
+}
+
+.monthProgramPremium .programEditorSwipeRow:hover > .programEditorSwipeContent,
+.monthProgramPremium .programEditorSwipeRow:active > .programEditorSwipeContent {
+  box-shadow: inset 0 0 0 1px rgba(164, 196, 91, 0.14);
+}
+
+.monthProgramPremium .programEditorSwipeRow:active {
+  cursor: grabbing;
+}
+
+.monthProgramPremium .programEditorSwipeRow.delete-open > .programEditorSwipeContent {
+  transform: translateX(-76px);
+}
+
+.monthProgramPremium .programEditorSwipeDelete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  width: 76px;
+  height: 100%;
+  padding: 0 8px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 0 13px 13px 0;
+  background: #a83434;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+}
+
+.monthProgramPremium .programEditorSwipeRow.delete-open > .programEditorSwipeDelete {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.monthProgramPremium .programCopySheetBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10020;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.monthProgramPremium .programCopySheet {
+  width: 100%;
+  max-width: 520px;
+  padding: 10px 14px calc(16px + env(safe-area-inset-bottom));
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px 18px 12px 12px;
+  background: #151915;
+  box-shadow: 0 -18px 42px rgba(0, 0, 0, 0.42);
+}
+
+.monthProgramPremium .programCopySheetHandle {
+  width: 38px;
+  height: 4px;
+  margin: 0 auto 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.monthProgramPremium .programCopySheet h2 {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 17px;
+  font-weight: 950;
+  text-align: center;
+}
+
+.monthProgramPremium .programCopyTargetList {
+  display: grid;
+  gap: 10px;
+  max-height: min(56vh, 420px);
+  overflow-y: auto;
+}
+
+.monthProgramPremium .programCopyTargetMonth {
+  padding: 9px;
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.monthProgramPremium .programCopyTargetMonth h3 {
+  margin: 0 0 2px;
+  color: rgba(164, 196, 91, 0.88);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.monthProgramPremium .programCopyTargetMonth button,
+.monthProgramPremium .programCopySheetActions button {
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.monthProgramPremium .programCopyTargetMonth button {
+  text-align: left;
+}
+
+.monthProgramPremium .programCopySheetActions {
+  margin-top: 13px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (min-width: 761px) {
+  .monthProgramPremium .programCopySheetBackdrop {
+    align-items: center;
+  }
+
+  .monthProgramPremium .programCopySheet {
+    border-radius: 18px;
+  }
+}
+
+/* MONTH EXERCISE SEARCH V169 */
+.monthProgramPremiumDayEditor .monthExerciseSearch {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseSearch > input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 13px;
+  font-weight: 800;
+  outline: none;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseSearch > input:focus {
+  border-color: rgba(145, 173, 78, 0.42);
+  box-shadow: 0 0 0 3px rgba(127, 159, 58, 0.08);
+}
+
+.monthProgramPremiumDayEditor .monthExerciseSearchResults {
+  margin-top: 6px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: #121612;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+.monthProgramPremiumDayEditor .monthExerciseSearchResults button {
+  width: 100%;
+  min-height: 43px;
+  padding: 7px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 0;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #fff;
+  text-align: left;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseSearchResults strong {
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseSearchResults button span,
+.monthProgramPremiumDayEditor .monthExerciseSearchResults > span {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseSearchResults > span {
+  padding: 10px;
+  text-align: center;
+}
+
+/* MONTH EXERCISE FULLSCREEN V170 */
+.monthProgramPremiumDayEditor .monthExerciseFullscreenHeader {
+  display: none;
+}
+
+.monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  width: 100%;
+  height: 100dvh;
+  margin: 0;
+  padding:
+    max(14px, calc(env(safe-area-inset-top) + 10px))
+    14px
+    calc(100px + env(safe-area-inset-bottom)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #0d100d !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+}
+
+.monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected .monthExerciseFullscreenHeader {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  min-height: 46px;
+  margin: 0 0 14px;
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 88px;
+  align-items: center;
+  background: #0d100d;
+}
+
+.monthProgramPremiumDayEditor .exerciseEditBar {
+  position: fixed;
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px));
+  left: 12px;
+  right: 12px;
+  z-index: 10060;
+  min-height: 64px;
+  padding: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  background: rgba(17, 21, 17, 0.96);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.monthProgramPremiumDayEditor .exerciseEditBar button {
+  min-width: 0;
+  padding: 5px 3px;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.monthProgramPremiumDayEditor .exerciseEditBar button span {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.monthProgramPremiumDayEditor .exerciseEditBar button small {
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.monthProgramPremiumDayEditor .exerciseEditBar button.empty {
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.018);
+  opacity: 1;
+}
+
+.monthProgramPremiumDayEditor .exerciseEditBar button.save {
+  color: rgba(221, 242, 173, 0.96);
+}
+
+.monthProgramPremiumDayEditor .monthExerciseFullscreenTitle {
+  margin: 0 0 14px;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 20px;
+  font-weight: 950;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseFullscreenHeader button {
+  min-height: 36px;
+  padding: 0 9px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseFullscreenHeader strong {
+  grid-column: 2;
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 16px;
+  font-weight: 950;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected .monthProgramPremiumExerciseNumber {
+  display: none;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseListItem {
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 0;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #fff;
+  text-align: left;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseListItem strong {
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseListItem span {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseRow.compact {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseVideoBlock {
+  margin-bottom: 12px;
+  padding: 8px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 13px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.monthProgramPremiumDayEditor .monthExerciseVideoBlock video {
+  width: 100%;
+  max-height: 42vh;
+  border-radius: 10px;
+  background: #000;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseVideoBlock > span {
+  min-height: 96px;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseVideoBlock .monthVideoUploadBtn {
+  width: 100%;
+  min-height: 38px;
+  display: grid;
+  place-items: center;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseEditorNav {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px));
+  z-index: 10060;
+  min-height: 68px;
+  padding: 7px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  background: rgba(17, 21, 17, 0.96);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.monthProgramPremiumDayEditor .monthExerciseEditorNav button {
+  min-width: 0;
+  padding: 5px 3px;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.monthProgramPremiumDayEditor .monthExerciseEditorNav button span {
+  font-size: 19px;
+  line-height: 1;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseEditorNav button small {
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.monthProgramPremiumDayEditor .monthExerciseEditorNav button.danger {
+  color: rgba(255, 142, 142, 0.92);
+}
+
+.monthProgramPremiumDayEditor .monthExerciseEditorNav button.save {
+  color: rgba(221, 242, 173, 0.96);
+}
+
+@media (min-width: 761px) {
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected {
+    left: 50%;
+    width: min(100%, 680px);
+    transform: translateX(-50%);
+    border-left: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+  }
+
+  .monthProgramPremiumDayEditor .monthExerciseEditorNav {
+    left: 50%;
+    right: auto;
+    width: min(calc(100vw - 24px), 560px);
+    transform: translateX(-50%);
+  }
+
+  .monthProgramPremiumDayEditor .exerciseEditBar {
+    left: 50%;
+    right: auto;
+    width: min(calc(100vw - 24px), 560px);
+    transform: translateX(-50%);
+  }
+}
+
+/* ADMIN CLIENT SUMMARY LINKS V181 */
+.adminSummaryLink {
+  appearance: none;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease;
+}
+
+.adminSummaryLink:hover {
+  border-color: rgba(164, 196, 91, 0.28) !important;
+}
+
+.adminSummaryLink:active {
+  transform: translateY(1px);
+}
+
+.adminSummaryLink:focus-visible {
+  outline: 2px solid rgba(164, 196, 91, 0.7);
+  outline-offset: 2px;
+}
+
+.adminV3KpiGrid > button.adminSummaryLink {
+  min-height: 92px;
+  padding: 15px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  background: rgba(255, 255, 255, 0.035);
+  color: inherit;
+  text-align: left;
+}
+
+.adminUsersCrmMain .adminUsersFilterPills {
+  display: flex !important;
+  width: min(100%, 1120px);
+  margin: 0 auto 12px !important;
+}
+

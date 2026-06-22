@@ -1,8 +1,8 @@
 import { buildBasicWorkoutPlanFromQuiz } from "../../../utils/basicWorkoutPlanBuilder";
-import { ClientMainBottomBar } from "../../../shared/ui/BottomBar";
 
 export default function BasicWorkoutQuizPage({
   appVersion,
+  renderClientMainBottomBar,
   basicWorkoutQuiz,
   onBasicWorkoutQuizChange,
   onGoBackToMode,
@@ -82,18 +82,20 @@ export default function BasicWorkoutQuizPage({
         Подобрать план
       </button>
 
-      <ClientMainBottomBar
-        activeTab="workouts"
-        className="mainMenuBottomBar profileBottomTabBar workoutModeBottomBar"
-        isTrainerMode={canUseTrainerFeatures}
-        onGoMain={onGoMain}
-        onOpenTraining={onOpenTraining}
-        onOpenNutrition={onOpenNutrition}
-        onOpenCabinet={onOpenCabinet}
-        onOpenTrainerClients={onOpenTrainerClients}
-        onOpenTrainerPrograms={onOpenTrainerPrograms}
-        onLoadTrainerCabinet={onLoadTrainerCabinet}
-      />
+      {renderClientMainBottomBar?.(
+        "workouts",
+        {
+          className: "mainMenuBottomBar profileBottomTabBar workoutModeBottomBar",
+          isTrainerMode: canUseTrainerFeatures,
+          onGoMain,
+          onOpenTraining,
+          onOpenNutrition,
+          onOpenCabinet,
+          onOpenTrainerClients,
+          onOpenTrainerPrograms,
+          onLoadTrainerCabinet
+        }
+      )}
     </div>
   );
 }

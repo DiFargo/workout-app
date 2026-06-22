@@ -1,0 +1,3548 @@
+﻿/* =========================================================
+   PREMIUM DELETE SWIPE WITHOUT COLLAPSE
+   ========================================================= */
+
+.productDeleteBg {
+  background:
+    radial-gradient(circle at 100% 50%, rgba(255, 88, 88, 0.20), transparent 58%),
+    linear-gradient(90deg,
+      rgba(18, 30, 29, 0.10),
+      rgba(64, 22, 22, 0.64)
+    ) !important;
+}
+
+.productDeleteBg span {
+  width: 34px !important;
+  height: 34px !important;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04)) !important;
+
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  color: rgba(255, 230, 230, 0.92) !important;
+
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+.productSwipeShell.deleting {
+  animation: none !important;
+  opacity: 1 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.productSwipeShell.deleting .productDeleteBg {
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+.productRowExact.deleting {
+  transform: translateX(-120%) !important;
+  opacity: 0 !important;
+  transition:
+    transform 0.22s ease,
+    opacity 0.18s ease !important;
+}
+
+@keyframes productDeleteCollapse {
+  0% {
+    opacity: 1;
+    max-height: none;
+  }
+
+  100% {
+    opacity: 1;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* =========================================================
+   PRODUCT ROW TAP TO EDIT
+   ========================================================= */
+
+.productRowExact {
+  cursor: pointer !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.productRowExact:active {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.035), transparent 44%),
+    linear-gradient(180deg, rgba(17, 32, 31, 0.99), rgba(10, 23, 23, 0.99)) !important;
+}
+
+/* =========================================================
+   PRODUCT EDIT PAGE â€” RENDER RESTORE
+   ========================================================= */
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) {
+  padding: 28px 20px 24px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(29, 255, 109, 0.055), transparent 32%),
+    radial-gradient(circle at 50% 42%, rgba(255,255,255,0.028), transparent 42%),
+    linear-gradient(180deg, #061012 0%, #05090b 100%) !important;
+}
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTopPremium {
+  position: absolute !important;
+  top: 18px !important;
+  left: 18px !important;
+  right: 18px !important;
+  height: 56px !important;
+  padding: 0 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchBackMini {
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(255,255,255,0.94) !important;
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  pointer-events: auto !important;
+}
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTitleWrap,
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchClosePremium {
+  display: none !important;
+}
+
+.foodEditRenderScreen {
+  width: 100% !important;
+  max-width: 430px !important;
+  margin: 0 auto !important;
+  padding: 54px 0 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+.foodEditHeroRender {
+  width: 100% !important;
+  min-height: 244px !important;
+  padding: 34px 24px 28px !important;
+  border-radius: 34px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38, 255, 119, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(14, 25, 25, 0.96), rgba(9, 16, 18, 0.985)) !important;
+  box-shadow:
+    0 18px 48px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.035) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.foodEditIconRender {
+  width: 74px !important;
+  height: 74px !important;
+  margin-bottom: 18px !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38, 255, 119, 0.22), transparent 55%),
+    linear-gradient(180deg, rgba(20, 78, 46, 0.78), rgba(11, 52, 35, 0.9)) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 36px !important;
+}
+
+.foodEditHeroRender strong {
+  max-width: 340px !important;
+  color: rgba(247,248,251,0.96) !important;
+  font-size: 27px !important;
+  font-weight: 950 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.65px !important;
+}
+
+.foodEditHeroRender small {
+  margin-top: 14px !important;
+  color: rgba(247,248,251,0.42) !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+}
+
+.foodEditSegmentRow {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+
+.foodEditSegmentRow button {
+  height: 62px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  background: linear-gradient(180deg, rgba(16,24,27,0.96), rgba(10,15,18,0.98)) !important;
+  color: rgba(247,248,251,0.58) !important;
+  font-size: 20px !important;
+  font-weight: 950 !important;
+}
+
+.foodEditSegmentRow button.active {
+  border-color: rgba(33,255,105,0.82) !important;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(40,255,116,0.22), transparent 55%),
+    linear-gradient(135deg, #1fe95f, #7be54a) !important;
+  color: rgba(5,12,8,0.92) !important;
+}
+
+.foodEditAmountCard {
+  min-height: 112px !important;
+  padding: 20px 22px !important;
+  border-radius: 25px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+  background: linear-gradient(180deg, rgba(14,22,25,0.97), rgba(8,14,17,0.99)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.foodEditAmountCard span {
+  color: rgba(247,248,251,0.48) !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  margin-bottom: 8px !important;
+}
+
+.foodEditAmountCard input {
+  width: 100% !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  color: rgba(247,248,251,0.96) !important;
+  font-size: 48px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  outline: none !important;
+}
+
+.foodEditMacrosCards {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+}
+
+.foodEditMacrosCards div {
+  min-height: 132px !important;
+  padding: 18px 10px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+  background: linear-gradient(180deg, rgba(14,22,25,0.965), rgba(8,14,17,0.99)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.foodEditMacrosCards span {
+  color: rgba(247,248,251,0.48) !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+}
+
+.foodEditMacrosCards strong {
+  margin-top: 12px !important;
+  color: rgba(247,248,251,0.96) !important;
+  font-size: 32px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+}
+
+.foodEditMacrosCards small {
+  margin-top: 10px !important;
+  color: rgba(38,255,116,0.78) !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+}
+
+.foodEditRowsCard {
+  margin-top: 8px !important;
+  padding: 14px 16px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+  background: linear-gradient(180deg, rgba(14,22,25,0.965), rgba(8,14,17,0.99)) !important;
+}
+
+.foodEditRow {
+  width: 100% !important;
+  height: 56px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) minmax(92px, auto) 18px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  text-align: left !important;
+}
+
+.foodEditRow + .foodEditRow {
+  border-top: 1px solid rgba(255,255,255,0.055) !important;
+}
+
+.foodEditRowIcon {
+  color: rgba(247,248,251,0.72) !important;
+  font-size: 28px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.foodEditRowLabel {
+  color: rgba(247,248,251,0.86) !important;
+  font-size: 16px !important;
+  font-weight: 850 !important;
+}
+
+.foodEditRow strong {
+  color: rgba(38,255,116,0.82) !important;
+  font-size: 15px !important;
+  font-weight: 850 !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.foodEditRow.muted strong {
+  color: rgba(247,248,251,0.48) !important;
+}
+
+.foodEditRow em {
+  color: rgba(247,248,251,0.42) !important;
+  font-size: 29px !important;
+  font-style: normal !important;
+  line-height: 1 !important;
+}
+
+.foodEditSaveRender {
+  width: 100% !important;
+  min-height: 72px !important;
+  margin-top: 12px !important;
+  border-radius: 22px !important;
+  background: linear-gradient(135deg, #1fe95f, #7be54a) !important;
+  color: rgba(5,12,8,0.96) !important;
+  font-size: 25px !important;
+  font-weight: 950 !important;
+  box-shadow: 0 18px 42px rgba(31,233,95,0.16) !important;
+}
+
+@media (max-width: 480px) {
+  .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .foodEditRenderScreen {
+    max-width: 100% !important;
+    gap: 11px !important;
+  }
+
+  .foodEditHeroRender {
+    min-height: 224px !important;
+    padding: 30px 20px 24px !important;
+    border-radius: 32px !important;
+  }
+
+  .foodEditHeroRender strong {
+    font-size: 25px !important;
+  }
+
+  .foodEditAmountCard {
+    min-height: 104px !important;
+  }
+
+  .foodEditAmountCard input {
+    font-size: 44px !important;
+  }
+
+  .foodEditMacrosCards div {
+    min-height: 124px !important;
+  }
+
+  .foodEditMacrosCards strong {
+    font-size: 30px !important;
+  }
+
+  .foodEditRowsCard {
+    padding: 12px 14px !important;
+  }
+
+  .foodEditRow {
+    height: 54px !important;
+    grid-template-columns: 38px minmax(0, 1fr) minmax(78px, auto) 16px !important;
+  }
+
+  .foodEditRowLabel {
+    font-size: 15px !important;
+  }
+
+  .foodEditRow strong {
+    font-size: 14px !important;
+    max-width: 128px !important;
+  }
+
+  .foodEditSaveRender {
+    min-height: 68px !important;
+    font-size: 24px !important;
+  }
+}
+
+/* =========================================================
+   FOOD EDIT COMPACT HEADER + BUTTONS + AMOUNT
+   ========================================================= */
+
+/* Ð²ÐµÑ€Ñ…Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ñ Ð½Ð°Ð·Ð²Ð°Ð½Ð¸ÐµÐ¼ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° Ð½Ð¸Ð¶Ðµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð² 3 Ñ€Ð°Ð·Ð° */
+.foodEditHeroRender {
+  min-height: 82px !important;
+  padding: 12px 18px !important;
+  border-radius: 24px !important;
+
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 12px !important;
+  align-items: center !important;
+  text-align: left !important;
+}
+
+.foodEditIconRender {
+  grid-row: 1 / 3 !important;
+
+  width: 44px !important;
+  height: 44px !important;
+  margin: 0 !important;
+
+  border-radius: 15px !important;
+  font-size: 22px !important;
+}
+
+.foodEditHeroRender strong {
+  max-width: 100% !important;
+  font-size: 18px !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.35px !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.foodEditHeroRender small {
+  margin-top: 4px !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ¸ 100 Ð³ / 1 Ð¿Ð¾Ñ€Ñ†Ð¸Ñ Ð½Ð¸Ð¶Ðµ Ð½Ð° 40% */
+.foodEditSegmentRow {
+  gap: 10px !important;
+}
+
+.foodEditSegmentRow button {
+  height: 37px !important;
+  min-height: 37px !important;
+
+  border-radius: 15px !important;
+
+  background: linear-gradient(180deg, rgba(16,24,27,0.96), rgba(10,15,18,0.98)) !important;
+  color: rgba(247,248,251,0.58) !important;
+
+  font-size: 15px !important;
+  font-weight: 900 !important;
+
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.025) !important;
+}
+
+/* Ð°ÐºÑ‚Ð¸Ð²Ð½Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ°: Ð·ÐµÐ»Ñ‘Ð½Ñ‹Ð¼ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ñ‚ÐµÐºÑÑ‚ Ð¸ Ð¾Ð±Ð²Ð¾Ð´ÐºÐ°, Ð½Ðµ Ð²ÑÑ Ð·Ð°Ð»Ð¸Ð²ÐºÐ° */
+.foodEditSegmentRow button.active {
+  border-color: rgba(33,255,105,0.62) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 62%),
+    linear-gradient(180deg, rgba(16,24,27,0.96), rgba(10,15,18,0.98)) !important;
+
+  color: rgba(38,255,116,0.92) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.035),
+    0 0 0 1px rgba(38,255,116,0.08) !important;
+}
+
+/* Ð±Ð»Ð¾Ðº ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð½Ð¸Ð¶Ðµ Ð² 2 Ñ€Ð°Ð·Ð° */
+.foodEditAmountCard {
+  min-height: 56px !important;
+  padding: 10px 16px !important;
+  border-radius: 18px !important;
+}
+
+.foodEditAmountCard span {
+  margin-bottom: 4px !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.foodEditAmountCard input {
+  font-size: 25px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+  .foodEditHeroRender {
+    min-height: 78px !important;
+    padding: 11px 16px !important;
+    border-radius: 22px !important;
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+  }
+
+  .foodEditIconRender {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 14px !important;
+    font-size: 21px !important;
+  }
+
+  .foodEditHeroRender strong {
+    font-size: 17px !important;
+  }
+
+  .foodEditHeroRender small {
+    font-size: 11px !important;
+  }
+
+  .foodEditSegmentRow button {
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 14px !important;
+  }
+
+  .foodEditAmountCard {
+    min-height: 52px !important;
+    padding: 9px 15px !important;
+  }
+
+  .foodEditAmountCard input {
+    font-size: 24px !important;
+  }
+}
+
+/* =========================================================
+   PRODUCT EDIT PAGE TUNE â€” HEADER + CONTROLS + MACROS + ROWS
+   ========================================================= */
+
+/* Ð²ÐµÑ€Ñ…Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ñ Ð½Ð°Ð·Ð²Ð°Ð½Ð¸ÐµÐ¼ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° +35% Ð¿Ð¾ Ð²Ñ‹ÑÐ¾Ñ‚Ðµ */
+.foodEditHeroRender {
+  min-height: 105px !important;
+  padding: 16px 18px !important;
+  border-radius: 25px !important;
+  grid-template-columns: 58px minmax(0, 1fr) !important;
+  column-gap: 14px !important;
+}
+
+.foodEditIconRender {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 18px !important;
+  font-size: 27px !important;
+}
+
+.foodEditHeroRender strong {
+  font-size: 20px !important;
+  line-height: 1.12 !important;
+}
+
+.foodEditHeroRender small {
+  margin-top: 6px !important;
+  font-size: 13px !important;
+}
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ¸ 100 Ð³ / 1 Ð¿Ð¾Ñ€Ñ†Ð¸Ñ Ñ‡ÑƒÑ‚ÑŒ Ð²Ñ‹ÑˆÐµ */
+.foodEditSegmentRow button {
+  height: 44px !important;
+  min-height: 44px !important;
+  border-radius: 17px !important;
+  font-size: 16px !important;
+}
+
+/* Ð°ÐºÑ‚Ð¸Ð²Ð½Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ°: Ð·ÐµÐ»Ñ‘Ð½Ñ‹Ðµ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¸ÐºÐ¾Ð½ÐºÐ°/Ñ‚ÐµÐºÑÑ‚/Ð¾Ð±Ð²Ð¾Ð´ÐºÐ°, Ð½Ðµ Ð²ÑÑ Ð·Ð°Ð»Ð¸Ð²ÐºÐ° */
+.foodEditSegmentRow button.active {
+  border-color: rgba(33, 255, 105, 0.72) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38, 255, 116, 0.075), transparent 60%),
+    linear-gradient(180deg, rgba(16,24,27,0.96), rgba(10,15,18,0.98)) !important;
+  color: rgba(38, 255, 116, 0.95) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.035),
+    0 0 0 1px rgba(38,255,116,0.08) !important;
+}
+
+/* Ð‘Ð–Ð£ Ð½Ð¸Ð¶Ðµ Ð¿Ð¾ Ð²Ñ‹ÑÐ¾Ñ‚Ðµ Ð½Ð° 50% */
+.foodEditMacrosCards div {
+  min-height: 62px !important;
+  padding: 8px 8px !important;
+  border-radius: 18px !important;
+}
+
+.foodEditMacrosCards span {
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.foodEditMacrosCards strong {
+  margin-top: 5px !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+}
+
+.foodEditMacrosCards small {
+  margin-top: 4px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+/* Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð¿Ð¾ÑÐ»Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ Ð´Ð²ÑƒÑ… Ð¿ÑƒÐ½ÐºÑ‚Ð¾Ð² */
+.foodEditRowsCard {
+  margin-top: 4px !important;
+  padding: 12px 16px !important;
+}
+
+.foodEditRow {
+  height: 58px !important;
+}
+
+@media (max-width: 480px) {
+  .foodEditHeroRender {
+    min-height: 100px !important;
+    padding: 15px 16px !important;
+    grid-template-columns: 54px minmax(0, 1fr) !important;
+  }
+
+  .foodEditIconRender {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 25px !important;
+  }
+
+  .foodEditHeroRender strong {
+    font-size: 19px !important;
+  }
+
+  .foodEditSegmentRow button {
+    height: 42px !important;
+    min-height: 42px !important;
+    font-size: 15px !important;
+  }
+
+  .foodEditMacrosCards div {
+    min-height: 58px !important;
+    padding: 7px 7px !important;
+    border-radius: 17px !important;
+  }
+
+  .foodEditMacrosCards strong {
+    font-size: 21px !important;
+  }
+
+  .foodEditRow {
+    height: 56px !important;
+  }
+}
+
+/* =========================================================
+   PIXEL TUNE TO MATCH REFERENCE
+   ========================================================= */
+
+/* Ð¾Ð±Ñ‰Ð¸Ð¹ ÑÐºÑ€Ð°Ð½ */
+.foodEditRenderScreen {
+  gap: 10px !important;
+  max-width: 420px !important;
+}
+
+/* Ð²ÐµÑ€Ñ…Ð½ÑÑ ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ° */
+.foodEditHeroRender {
+  min-height: 118px !important;
+  padding: 18px 20px !important;
+  border-radius: 28px !important;
+
+  border: 1px solid rgba(255,255,255,0.07) !important;
+
+  background:
+    radial-gradient(circle at 18% 0%, rgba(38,255,116,0.07), transparent 38%),
+    linear-gradient(180deg, rgba(10,18,21,0.985), rgba(7,12,15,0.995)) !important;
+
+  box-shadow:
+    0 16px 36px rgba(0,0,0,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.03) !important;
+}
+
+.foodEditIconRender {
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 20px !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.16), transparent 58%),
+    linear-gradient(180deg, rgba(12,35,26,0.95), rgba(8,20,16,0.98)) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 10px 24px rgba(0,0,0,0.18) !important;
+}
+
+.foodEditHeroRender strong {
+  font-size: 21px !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.45px !important;
+}
+
+.foodEditHeroRender small {
+  color: rgba(247,248,251,0.46) !important;
+}
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ¸ */
+.foodEditSegmentRow {
+  gap: 12px !important;
+}
+
+.foodEditSegmentRow button {
+  height: 48px !important;
+  border-radius: 19px !important;
+
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  background:
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+
+  font-size: 17px !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.025) !important;
+}
+
+.foodEditSegmentRow button.active {
+  border-color: rgba(39,255,118,0.62) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(39,255,118,0.05), transparent 60%),
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+
+  color: rgba(39,255,118,0.96) !important;
+}
+
+/* ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ */
+.foodEditAmountCard {
+  min-height: 66px !important;
+
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+
+  background:
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+}
+
+.foodEditAmountCard span {
+  font-size: 13px !important;
+  color: rgba(247,248,251,0.46) !important;
+}
+
+.foodEditAmountCard input {
+  font-size: 32px !important;
+  font-weight: 950 !important;
+}
+
+/* Ð‘Ð–Ð£ */
+.foodEditMacrosCards {
+  gap: 12px !important;
+}
+
+.foodEditMacrosCards div {
+  min-height: 82px !important;
+
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+
+  background:
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+}
+
+.foodEditMacrosCards span {
+  font-size: 13px !important;
+}
+
+.foodEditMacrosCards strong {
+  font-size: 24px !important;
+}
+
+.foodEditMacrosCards small {
+  font-size: 12px !important;
+}
+
+/* Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº */
+.foodEditRowsCard {
+  border-radius: 28px !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+
+  background:
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+
+  overflow: hidden !important;
+}
+
+.foodEditRow {
+  height: 64px !important;
+}
+
+.foodEditRow + .foodEditRow {
+  border-top: 1px solid rgba(255,255,255,0.045) !important;
+}
+
+.foodEditRowIcon {
+  font-size: 30px !important;
+  color: rgba(247,248,251,0.70) !important;
+}
+
+.foodEditRowLabel {
+  font-size: 17px !important;
+}
+
+.foodEditRow strong {
+  font-size: 16px !important;
+}
+
+.foodEditRow em {
+  font-size: 31px !important;
+  color: rgba(247,248,251,0.36) !important;
+}
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ° ÑÐ¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ */
+.foodEditSaveRender {
+  min-height: 74px !important;
+
+  border-radius: 24px !important;
+
+  background:
+    linear-gradient(135deg, #28ef62, #79e74d) !important;
+
+  box-shadow:
+    0 18px 42px rgba(40,239,98,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+
+  font-size: 24px !important;
+  letter-spacing: -0.4px !important;
+}
+
+/* ===== FINAL PRODUCT EDIT TUNE ===== */
+
+.foodEditHeroRender strong{
+  font-size:18px!important;
+  line-height:1.18!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:unset!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+}
+
+.foodEditSegmentRow button{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+}
+
+.foodEditAmountCard input{
+  text-align:center!important;
+  color:rgba(247,248,251,0.82)!important;
+}
+
+.foodEditMacrosCards strong{
+  color:rgba(247,248,251,0.82)!important;
+}
+
+.foodEditRowsCard{
+  padding-top:4px!important;
+  padding-bottom:4px!important;
+}
+
+.foodEditRow{
+  height:56px!important;
+}
+
+.foodEditBottomActions{
+  display:grid!important;
+  grid-template-columns:1fr 1.4fr!important;
+  gap:12px!important;
+  margin-top:8px!important;
+}
+
+.foodEditDeleteButton{
+  min-height:74px!important;
+  border:none!important;
+  border-radius:24px!important;
+  background:
+    linear-gradient(180deg, rgba(45,14,14,0.98), rgba(28,10,10,0.99))!important;
+  border:1px solid rgba(255,90,90,0.18)!important;
+  color:rgba(255,220,220,0.92)!important;
+  font-size:21px!important;
+  font-weight:900!important;
+}
+
+.foodEditSaveRender{
+  margin-top:0!important;
+}
+
+@media (max-width:480px){
+  .foodEditHeroRender strong{
+    font-size:17px!important;
+  }
+
+  .foodEditDeleteButton,
+  .foodEditSaveRender{
+    min-height:68px!important;
+  }
+
+  .foodEditDeleteButton{
+    font-size:19px!important;
+  }
+}
+
+/* =========================================================
+   FOOD EDIT FINAL FIX â€” TITLE/SOURCE + BOTTOM BUTTONS
+   ========================================================= */
+
+/* OpenAI Ð½Ðµ Ð½Ð°ÐµÐ·Ð¶Ð°ÐµÑ‚ Ð½Ð° Ð½Ð°Ð·Ð²Ð°Ð½Ð¸Ðµ */
+.foodEditHeroRender {
+  align-items: center !important;
+  row-gap: 4px !important;
+}
+
+.foodEditHeroRender strong {
+  margin-bottom: 4px !important;
+  line-height: 1.16 !important;
+}
+
+.foodEditHeroRender small {
+  display: block !important;
+  margin-top: 6px !important;
+  line-height: 1.15 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Ð´Ð²Ðµ ÐºÐ½Ð¾Ð¿ÐºÐ¸ ÑÐ½Ð¸Ð·Ñƒ Ñ‡ÑƒÑ‚ÑŒ ÑƒÐ¶Ðµ */
+.foodEditBottomActions {
+  width: calc(100% - 18px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  gap: 12px !important;
+}
+
+/* ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ â€” Ð±ÐµÐ»Ð¾-Ñ‡Ñ‘Ñ€Ð½Ð°Ñ, Ñ Ð¸ÐºÐ¾Ð½ÐºÐ¾Ð¹ */
+.foodEditDeleteButton {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+
+  background:
+    linear-gradient(180deg, rgba(17, 24, 27, 0.98), rgba(8, 13, 16, 0.995)) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  color: rgba(247, 248, 251, 0.88) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.035),
+    0 12px 26px rgba(0,0,0,0.20) !important;
+}
+
+.foodEditDeleteIcon {
+  font-size: 21px !important;
+  line-height: 1 !important;
+  filter: grayscale(1) brightness(1.25) !important;
+  opacity: 0.9 !important;
+}
+
+.foodEditDeleteButton span:last-child {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}
+
+@media (max-width: 480px) {
+  .foodEditBottomActions {
+    width: calc(100% - 16px) !important;
+    gap: 10px !important;
+  }
+
+  .foodEditDeleteIcon {
+    font-size: 19px !important;
+  }
+}
+
+/* ===== DELETE/SAVE BUTTON FINAL SIZE + ICON ===== */
+
+.foodEditBottomActions{
+  width:calc(100% - 34px)!important;
+  gap:10px!important;
+}
+
+.foodEditDeleteButton,
+.foodEditSaveRender{
+  min-height:60px!important;
+  border-radius:20px!important;
+  font-size:18px!important;
+}
+
+.foodEditDeleteButton{
+  background:
+    linear-gradient(180deg, rgba(20,24,28,0.98), rgba(10,13,16,0.995))!important;
+
+  border:1px solid rgba(255,255,255,0.09)!important;
+  color:rgba(247,248,251,0.88)!important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.03),
+    0 10px 24px rgba(0,0,0,0.18)!important;
+}
+
+.foodEditDeleteIcon{
+  font-size:28px!important;
+  line-height:1!important;
+  font-weight:300!important;
+  color:rgba(247,248,251,0.92)!important;
+  filter:none!important;
+  opacity:0.95!important;
+  transform:translateY(-1px)!important;
+}
+
+.foodEditDeleteButton span:last-child{
+  font-size:18px!important;
+  letter-spacing:-0.2px!important;
+}
+
+.foodEditSaveRender{
+  font-size:19px!important;
+}
+
+@media (max-width:480px){
+
+  .foodEditBottomActions{
+    width:calc(100% - 28px)!important;
+  }
+
+  .foodEditDeleteButton,
+  .foodEditSaveRender{
+    min-height:56px!important;
+    border-radius:18px!important;
+  }
+
+  .foodEditDeleteIcon{
+    font-size:25px!important;
+  }
+
+  .foodEditDeleteButton span:last-child,
+  .foodEditSaveRender{
+    font-size:17px!important;
+  }
+}
+
+/* =========================================================
+   FOOD EDIT: FUNCTIONAL MEAL/NOTE + FINAL BUTTON STYLE
+   ========================================================= */
+
+/* ÑÐ¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ Ð¼ÐµÐ½ÐµÐµ ÑÑ€ÐºÐ°Ñ */
+.foodEditSaveRender {
+  background:
+    linear-gradient(135deg, rgba(41, 198, 91, 0.92), rgba(118, 203, 76, 0.92)) !important;
+  box-shadow:
+    0 12px 28px rgba(31, 233, 95, 0.10),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+
+/* Ð½Ð¸Ð¶Ð½Ð¸Ðµ ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ñ‡ÑƒÑ‚ÑŒ ÑƒÐ¶Ðµ Ð¸ Ñ‚ÐµÐºÑÑ‚ Ð¼ÐµÐ½ÑŒÑˆÐµ */
+.foodEditBottomActions {
+  width: calc(100% - 42px) !important;
+  gap: 10px !important;
+}
+
+.foodEditDeleteButton,
+.foodEditSaveRender {
+  min-height: 56px !important;
+  border-radius: 18px !important;
+  font-size: 16px !important;
+}
+
+/* Ð¼ÑƒÑÐ¾Ñ€ÐºÐ° ÐºÐ°Ðº Ð½Ð° Ñ€ÐµÐ½Ð´ÐµÑ€Ðµ: Ñ‚Ð¾Ð½ÐºÐ°Ñ Ð±ÐµÐ»Ð°Ñ outline-Ð¸ÐºÐ¾Ð½ÐºÐ° */
+.foodEditDeleteIcon {
+  width: 22px !important;
+  height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.foodEditDeleteIcon svg {
+  width: 22px !important;
+  height: 22px !important;
+  display: block !important;
+}
+
+.foodEditDeleteIcon svg path {
+  fill: none !important;
+  stroke: rgba(247, 248, 251, 0.92) !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+.foodEditDeleteButton span:last-child {
+  font-size: 16px !important;
+}
+
+/* Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÐµÐµ Ð¿Ð¾ÑÐ»Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ "ÐŸÐ¾Ñ€Ñ†Ð¸Ñ" */
+.foodEditRowsCard {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+.foodEditRow {
+  height: 54px !important;
+}
+
+/* Ð²Ñ‹Ð±Ð¾Ñ€ Ð¿Ñ€Ð¸Ñ‘Ð¼Ð° Ð¿Ð¸Ñ‰Ð¸ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ Ð½Ð¸Ð¶Ð½ÐµÐ³Ð¾ Ð±Ð»Ð¾ÐºÐ° */
+.foodEditMealSelector {
+  padding: 6px 0 10px 42px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  border-top: 1px solid rgba(255,255,255,0.045) !important;
+}
+
+.foodEditMealSelector button {
+  min-height: 38px !important;
+  padding: 0 10px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  background: rgba(255,255,255,0.025) !important;
+  color: rgba(247,248,251,0.72) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 7px !important;
+}
+
+.foodEditMealSelector button.active {
+  border-color: rgba(38,255,116,0.42) !important;
+  color: rgba(38,255,116,0.92) !important;
+  background: rgba(38,255,116,0.055) !important;
+}
+
+.foodEditMealSelector button span {
+  font-size: 15px !important;
+  line-height: 1 !important;
+}
+
+.foodEditMealSelector button strong {
+  font-size: 12px !important;
+  font-weight: 850 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+@media (max-width: 480px) {
+  .foodEditBottomActions {
+    width: calc(100% - 34px) !important;
+  }
+
+  .foodEditDeleteButton,
+  .foodEditSaveRender {
+    min-height: 54px !important;
+    font-size: 15px !important;
+  }
+
+  .foodEditDeleteButton span:last-child {
+    font-size: 15px !important;
+  }
+
+  .foodEditDeleteIcon,
+  .foodEditDeleteIcon svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .foodEditMealSelector {
+    padding-left: 38px !important;
+    gap: 7px !important;
+  }
+}
+
+/* =========================================================
+   FOOD EDIT NAV + BOTTOM BUTTON TEXT ALIGN
+   ========================================================= */
+
+/* Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾Ð´Ð½Ñƒ ÐºÐ½Ð¾Ð¿ÐºÑƒ Ð½Ð°Ð·Ð°Ð´ */
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTopPremium {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodEditSingleBack {
+  position: relative !important;
+  z-index: 20 !important;
+  pointer-events: auto !important;
+}
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTitleWrap,
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchClosePremium,
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTopSpacer {
+  display: none !important;
+}
+
+/* Ñ‚ÐµÐºÑÑ‚ Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ / Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ Ð¾Ð´Ð¸Ð½Ð°ÐºÐ¾Ð²Ð¾Ð³Ð¾ Ñ€Ð°Ð·Ð¼ÐµÑ€Ð° */
+.foodEditDeleteButton,
+.foodEditSaveRender {
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.15px !important;
+}
+
+.foodEditDeleteButton span:last-child {
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.15px !important;
+}
+
+@media (max-width: 480px) {
+  .foodEditDeleteButton,
+  .foodEditSaveRender,
+  .foodEditDeleteButton span:last-child {
+    font-size: 15px !important;
+  }
+}
+
+/* =========================================================
+   REAL SINGLE BACK BUTTON FIX
+   ========================================================= */
+
+/* Ð¿Ð¾Ð»Ð½Ð¾ÑÑ‚ÑŒÑŽ ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ ÑÑ‚Ð°Ñ€ÑƒÑŽ Ð²ÐµÑ€Ñ…Ð½ÑŽÑŽ Ð¿Ð°Ð½ÐµÐ»ÑŒ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ */
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) > .fatSearchTopPremium {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ð¾Ð´Ð½Ð° Ð½Ð°ÑÑ‚Ð¾ÑÑ‰Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ° Ð½Ð°Ð·Ð°Ð´ */
+.foodEditBackOnly {
+  position: fixed !important;
+  top: 18px !important;
+  left: 18px !important;
+  z-index: 99999 !important;
+
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(255,255,255,0.95) !important;
+
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+
+/* =========================================================
+   FINAL HARD BACK DEDUPLICATION
+   ========================================================= */
+
+/* Ð¿Ð¾Ð»Ð½Ð¾ÑÑ‚ÑŒÑŽ ÑÐºÑ€Ñ‹Ñ‚ÑŒ ÑÑ‚Ð°Ñ€ÑƒÑŽ Ð²ÐµÑ€Ñ…Ð½ÑŽÑŽ Ð¿Ð°Ð½ÐµÐ»ÑŒ overlay */
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) > .fatSearchTopPremium,
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTopPremium,
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchBackMini,
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) button[aria-label="ÐÐ°Ð·Ð°Ð´ Ðº Ð¿Ð¾Ð¸ÑÐºÑƒ"],
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) button[aria-label="ÐÐ°Ð·Ð°Ð´ Ðº Ð¿Ð¸Ñ‚Ð°Ð½Ð¸ÑŽ"]:not(.foodEditBackOnly) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ÐµÐ´Ð¸Ð½ÑÑ‚Ð²ÐµÐ½Ð½Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ° Ð½Ð°Ð·Ð°Ð´ */
+.foodEditBackOnly {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+
+  position: fixed !important;
+  top: 18px !important;
+  left: 18px !important;
+  z-index: 999999 !important;
+
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 50% !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(255,255,255,0.95) !important;
+
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+/* =========================================================
+   HIDE UNDERLYING NUTRITION BACK BUTTON WHEN FOOD EDIT IS OPEN
+   ========================================================= */
+
+/* ÑÑ‚Ð¾ Ð±Ñ‹Ð»Ð° Ð²Ñ‚Ð¾Ñ€Ð°Ñ ÑÑ‚Ñ€ÐµÐ»ÐºÐ° Ð¾Ñ‚ Ð¾ÑÐ½Ð¾Ð²Ð½Ð¾Ð³Ð¾ ÑÐºÑ€Ð°Ð½Ð° Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ Ð¿Ð¾Ð´ overlay */
+.fatSecretPage:has(.foodEditRenderScreen) > .nutritionBackTopLeftV3,
+.fatSecretPage:has(.foodEditRenderScreen) > .backBtn.universalFixedBackPointer,
+.fatSecretPage:has(.foodEditRenderScreen) .nutritionBackTopLeftV3 {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ð½Ð° ÑÐºÑ€Ð°Ð½Ðµ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ ÑÑ‚Ð° ÐºÐ½Ð¾Ð¿ÐºÐ° */
+.foodEditBackOnly {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  position: fixed !important;
+  top: 18px !important;
+  left: 18px !important;
+  z-index: 999999 !important;
+}
+
+/* =========================================================
+   MOVE ADD FOOD CANCEL X TO TOP RIGHT
+   ========================================================= */
+
+/* Ð½Ðµ Ñ‚Ñ€Ð¾Ð³Ð°ÐµÐ¼ ÑÑ‚Ñ€ÐµÐ»ÐºÑƒ Ð½Ð°Ð·Ð°Ð´, Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¸Ð¼ Ð¸Ð¼ÐµÐ½Ð½Ð¾ ÐºÑ€ÐµÑÑ‚Ð¸Ðº Ð¾Ñ‚Ð¼ÐµÐ½Ñ‹ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ */
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchClosePremium {
+  position: fixed !important;
+  top: 18px !important;
+  right: 18px !important;
+  left: auto !important;
+
+  z-index: 99999 !important;
+
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(255,255,255,0.94) !important;
+
+  font-size: 34px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+/* Ð½Ð° ÑÐºÑ€Ð°Ð½Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ ÐµÐ´Ñ‹ Ð½Ðµ Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¸Ð¼ ÑÑ‚Ñ€ÐµÐ»ÐºÑƒ */
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchBackMini {
+  position: static !important;
+  right: auto !important;
+  left: auto !important;
+}
+
+/* =========================================================
+   ADD FOOD SCREEN: BACK RETURNS TO NUTRITION
+   ========================================================= */
+
+/* ÐºÐ¾Ð³Ð´Ð° Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ Ð¿Ð¾Ð¸ÑÐº/Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ ÐµÐ´Ñ‹, ÑÐºÑ€Ñ‹Ð²Ð°ÐµÐ¼ ÑÑ‚Ñ€ÐµÐ»ÐºÑƒ Ð¾ÑÐ½Ð¾Ð²Ð½Ð¾Ð³Ð¾ ÑÐºÑ€Ð°Ð½Ð° Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ */
+.fatSecretPage:has(.fatFoodSearchOverlay) > .nutritionBackTopLeftV3,
+.fatSecretPage:has(.fatFoodSearchOverlay) > .backBtn.universalFixedBackPointer,
+.fatSecretPage:has(.fatFoodSearchOverlay) .nutritionBackTopLeftV3,
+.fatSecretPage:has(.fatFoodSearchOverlay) .backBtn.universalFixedBackPointer {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ð½Ð¾Ð²Ð°Ñ ÑÑ‚Ñ€ÐµÐ»ÐºÐ° Ð¸Ð¼ÐµÐ½Ð½Ð¾ Ð½Ð° ÑÐºÑ€Ð°Ð½Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ ÐµÐ´Ñ‹ */
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .addFoodBackOnly {
+  position: fixed !important;
+  top: 18px !important;
+  left: 18px !important;
+  right: auto !important;
+
+  z-index: 99999 !important;
+
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(255,255,255,0.95) !important;
+
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+/* ÐºÑ€ÐµÑÑ‚Ð¸Ðº Ð¾Ñ‚Ð¼ÐµÐ½Ñ‹ Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ ÑÐ¿Ñ€Ð°Ð²Ð° */
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchClosePremium {
+  position: fixed !important;
+  top: 18px !important;
+  right: 18px !important;
+  left: auto !important;
+}
+
+/* =========================================================
+   NUTRITION SUMMARY â€” RENDER COPY
+   ========================================================= */
+
+.nutritionSummaryRender {
+  width: 100% !important;
+  max-width: 520px !important;
+  margin: 28px auto 0 !important;
+  padding: 28px 18px 20px !important;
+
+  border-radius: 34px !important;
+  border: 1px solid rgba(127, 255, 122, 0.14) !important;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(39, 255, 116, 0.07), transparent 32%),
+    linear-gradient(180deg, rgba(8, 20, 22, 0.97), rgba(5, 12, 14, 0.995)) !important;
+
+  box-shadow:
+    0 22px 60px rgba(0,0,0,0.34),
+    inset 0 1px 0 rgba(255,255,255,0.025) !important;
+}
+
+.nutritionSummaryRender h2 {
+  margin: 0 0 20px 12px !important;
+
+  color: rgba(247,248,251,0.96) !important;
+  font-size: 31px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.8px !important;
+}
+
+.summaryCaloriesCard,
+.summaryMacroCard,
+.summaryWaterCard {
+  width: 100% !important;
+
+  border-radius: 25px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.035), transparent 38%),
+    linear-gradient(180deg, rgba(12, 24, 25, 0.985), rgba(7, 15, 17, 0.995)) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.025),
+    0 12px 28px rgba(0,0,0,0.18) !important;
+}
+
+.summaryCaloriesCard {
+  min-height: 166px !important;
+  padding: 24px 26px !important;
+
+  display: grid !important;
+  grid-template-columns: 96px minmax(0, 1fr) !important;
+  gap: 28px !important;
+  align-items: center !important;
+}
+
+.summaryDotGrid {
+  width: 78px !important;
+  display: grid !important;
+  grid-template-columns: repeat(5, 13px) !important;
+  grid-auto-rows: 13px !important;
+  gap: 7px !important;
+}
+
+.summaryDotGrid span {
+  width: 13px !important;
+  height: 13px !important;
+  border-radius: 50% !important;
+  background: rgba(39, 255, 116, 0.16) !important;
+}
+
+.summaryDotGrid span.on {
+  background: rgba(39, 255, 116, 0.72) !important;
+  box-shadow: 0 0 10px rgba(39, 255, 116, 0.18) !important;
+}
+
+.summaryCaloriesInfo {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.summaryCaloriesRow {
+  display: grid !important;
+  grid-template-columns: 1fr auto !important;
+  gap: 20px !important;
+  align-items: center !important;
+}
+
+.summaryCaloriesRow span {
+  color: rgba(247,248,251,0.62) !important;
+  font-size: 20px !important;
+  line-height: 1.05 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.35px !important;
+}
+
+.summaryCaloriesRow strong {
+  color: rgba(247,248,251,0.96) !important;
+  font-size: 27px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.4px !important;
+}
+
+.summaryCaloriesRow.muted span,
+.summaryCaloriesRow.muted strong {
+  color: rgba(247,248,251,0.48) !important;
+}
+
+.summaryCaloriesDivider {
+  height: 1px !important;
+  width: 100% !important;
+  background: rgba(255,255,255,0.075) !important;
+  margin: 4px 0 2px !important;
+}
+
+.summaryMacroCard {
+  min-height: 134px !important;
+  margin-top: 16px !important;
+  padding: 20px 26px !important;
+
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 112px !important;
+  gap: 18px !important;
+  align-items: center !important;
+}
+
+.summaryMacroLegend {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.summaryMacroLegend span {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+
+  color: rgba(247,248,251,0.66) !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.35px !important;
+}
+
+.summaryMacroLegend i {
+  width: 13px !important;
+  height: 13px !important;
+  border-radius: 50% !important;
+  flex: 0 0 auto !important;
+}
+
+.summaryMacroLegend i.carbs { background: #68d9ef !important; }
+.summaryMacroLegend i.fat { background: #ffd33f !important; }
+.summaryMacroLegend i.protein { background: #ff6572 !important; }
+
+.summaryDonut {
+  width: 86px !important;
+  height: 86px !important;
+  margin-left: auto !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.summaryDonut span {
+  width: 42px !important;
+  height: 42px !important;
+  display: block !important;
+  border-radius: 50% !important;
+  background: rgba(7, 15, 17, 0.995) !important;
+}
+
+.summaryNutrientsGrid {
+  margin-top: 16px !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+}
+
+.summaryNutrientsGrid div {
+  min-height: 94px !important;
+  padding: 16px 10px !important;
+
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+
+  background:
+    linear-gradient(180deg, rgba(12, 24, 25, 0.985), rgba(7, 15, 17, 0.995)) !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+}
+
+.summaryNutrientsGrid span {
+  color: rgba(247,248,251,0.48) !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+}
+
+.summaryNutrientsGrid strong {
+  color: rgba(247,248,251,0.96) !important;
+  font-size: 29px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.4px !important;
+}
+
+.summaryWaterCard {
+  min-height: 152px !important;
+  margin-top: 16px !important;
+  padding: 24px 20px 20px !important;
+}
+
+.summaryWaterTop {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 8px 22px !important;
+}
+
+.summaryWaterTop span {
+  color: rgba(247,248,251,0.92) !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.45px !important;
+}
+
+.summaryWaterTop strong {
+  color: rgba(247,248,251,0.66) !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+}
+
+.summaryWaterActions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 16px !important;
+}
+
+.summaryWaterActions button {
+  min-height: 56px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.055), transparent 60%),
+    linear-gradient(180deg, rgba(24, 33, 35, 0.86), rgba(12, 20, 22, 0.96)) !important;
+
+  color: rgba(247,248,251,0.55) !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.2px !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.035) !important;
+}
+
+@media (max-width: 480px) {
+  .nutritionSummaryRender {
+    margin-top: 24px !important;
+    padding: 24px 14px 18px !important;
+    border-radius: 30px !important;
+  }
+
+  .nutritionSummaryRender h2 {
+    font-size: 29px !important;
+    margin-left: 10px !important;
+  }
+
+  .summaryCaloriesCard {
+    min-height: 154px !important;
+    padding: 22px 20px !important;
+    grid-template-columns: 82px minmax(0, 1fr) !important;
+    gap: 20px !important;
+  }
+
+  .summaryDotGrid {
+    grid-template-columns: repeat(5, 12px) !important;
+    grid-auto-rows: 12px !important;
+    gap: 6px !important;
+  }
+
+  .summaryDotGrid span {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .summaryCaloriesRow span {
+    font-size: 17px !important;
+  }
+
+  .summaryCaloriesRow strong {
+    font-size: 24px !important;
+  }
+
+  .summaryMacroCard {
+    padding: 18px 20px !important;
+    grid-template-columns: minmax(0, 1fr) 96px !important;
+  }
+
+  .summaryMacroLegend span {
+    font-size: 17px !important;
+  }
+
+  .summaryDonut {
+    width: 78px !important;
+    height: 78px !important;
+  }
+
+  .summaryDonut span {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .summaryNutrientsGrid div {
+    min-height: 88px !important;
+  }
+
+  .summaryNutrientsGrid span {
+    font-size: 16px !important;
+  }
+
+  .summaryNutrientsGrid strong {
+    font-size: 26px !important;
+  }
+
+  .summaryWaterTop span,
+  .summaryWaterTop strong {
+    font-size: 22px !important;
+  }
+
+  .summaryWaterActions button {
+    min-height: 52px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* =========================================================
+   SUMMARY COMPACT TEXT + CALORIE GRID
+   ========================================================= */
+
+/* Ð½Ð°Ð´Ð¿Ð¸ÑÑŒ "Ð¡Ð²Ð¾Ð´ÐºÐ°" Ð¼ÐµÐ½ÑŒÑˆÐµ Ð² 2 Ñ€Ð°Ð·Ð° */
+.nutritionSummaryRender h2 {
+  font-size: 15px !important;
+  line-height: 1 !important;
+  margin-bottom: 12px !important;
+  letter-spacing: -0.25px !important;
+}
+
+/* ÑÐµÑ‚ÐºÐ° ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð² 3 Ñ€Ð°Ð·Ð° */
+.summaryCaloriesCard {
+  grid-template-columns: 36px minmax(0, 1fr) !important;
+  gap: 14px !important;
+}
+
+.summaryDotGrid {
+  width: 30px !important;
+  grid-template-columns: repeat(5, 5px) !important;
+  grid-auto-rows: 5px !important;
+  gap: 3px !important;
+}
+
+.summaryDotGrid span {
+  width: 5px !important;
+  height: 5px !important;
+}
+
+/* Ñ‚ÐµÐºÑÑ‚Ñ‹ Ð¸ Ñ†Ð¸Ñ„Ñ€Ñ‹ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð² 2 Ñ€Ð°Ð·Ð° */
+.summaryCaloriesRow span {
+  font-size: 10px !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.1px !important;
+}
+
+.summaryCaloriesRow strong {
+  font-size: 13px !important;
+  line-height: 1 !important;
+  letter-spacing: -0.15px !important;
+}
+
+/* Ð Ð¡Ðš Ñ‚Ð¾Ð¶Ðµ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð² 2 Ñ€Ð°Ð·Ð° */
+.summaryCaloriesRow.muted span,
+.summaryCaloriesRow.muted strong {
+  font-size: 10px !important;
+  line-height: 1 !important;
+}
+
+.summaryCaloriesDivider {
+  margin: 2px 0 1px !important;
+}
+
+@media (max-width: 480px) {
+  .nutritionSummaryRender h2 {
+    font-size: 14px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .summaryCaloriesCard {
+    grid-template-columns: 34px minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .summaryDotGrid {
+    width: 28px !important;
+    grid-template-columns: repeat(5, 5px) !important;
+    grid-auto-rows: 5px !important;
+    gap: 2.5px !important;
+  }
+
+  .summaryDotGrid span {
+    width: 5px !important;
+    height: 5px !important;
+  }
+
+  .summaryCaloriesRow span {
+    font-size: 9px !important;
+  }
+
+  .summaryCaloriesRow strong {
+    font-size: 12px !important;
+  }
+
+  .summaryCaloriesRow.muted span,
+  .summaryCaloriesRow.muted strong {
+    font-size: 9px !important;
+  }
+}
+
+/* =========================================================
+   SUMMARY SCALE UP ADJUSTMENTS
+   ========================================================= */
+
+/* Ð¡Ð²Ð¾Ð´ÐºÐ° +30% */
+.nutritionSummaryRender h2 {
+  font-size: 19px !important;
+  margin-bottom: 14px !important;
+}
+
+/* ÑÐµÑ‚ÐºÐ° ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ +10% */
+.summaryCaloriesCard {
+  grid-template-columns: 40px minmax(0, 1fr) !important;
+}
+
+.summaryDotGrid {
+  width: 33px !important;
+  grid-template-columns: repeat(5, 5.5px) !important;
+  grid-auto-rows: 5.5px !important;
+  gap: 3.2px !important;
+}
+
+.summaryDotGrid span {
+  width: 5.5px !important;
+  height: 5.5px !important;
+}
+
+/* Ñ‚ÐµÐºÑÑ‚/Ñ†Ð¸Ñ„Ñ€Ñ‹ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ +20% */
+.summaryCaloriesRow span {
+  font-size: 12px !important;
+}
+
+.summaryCaloriesRow strong {
+  font-size: 16px !important;
+}
+
+/* Ð Ð¡Ðš +30% */
+.summaryCaloriesRow.muted span,
+.summaryCaloriesRow.muted strong {
+  font-size: 13px !important;
+}
+
+@media (max-width: 480px) {
+  .nutritionSummaryRender h2 {
+    font-size: 18px !important;
+  }
+
+  .summaryCaloriesCard {
+    grid-template-columns: 38px minmax(0, 1fr) !important;
+  }
+
+  .summaryDotGrid {
+    width: 31px !important;
+  }
+
+  .summaryDotGrid span {
+    width: 5.5px !important;
+    height: 5.5px !important;
+  }
+
+  .summaryCaloriesRow span {
+    font-size: 11px !important;
+  }
+
+  .summaryCaloriesRow strong {
+    font-size: 15px !important;
+  }
+
+  .summaryCaloriesRow.muted span,
+  .summaryCaloriesRow.muted strong {
+    font-size: 12px !important;
+  }
+}
+
+/* =========================================================
+   SUMMARY SECOND SCALE UP
+   ========================================================= */
+
+/* Ð¡Ð²Ð¾Ð´ÐºÐ° +30% */
+.nutritionSummaryRender h2 {
+  font-size: 25px !important;
+  margin-bottom: 18px !important;
+  letter-spacing: -0.35px !important;
+}
+
+/* ÑÐµÑ‚ÐºÐ° ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ +20% */
+.summaryCaloriesCard {
+  grid-template-columns: 50px minmax(0, 1fr) !important;
+  gap: 18px !important;
+}
+
+.summaryDotGrid {
+  width: 40px !important;
+  grid-template-columns: repeat(5, 7px) !important;
+  grid-auto-rows: 7px !important;
+  gap: 4px !important;
+}
+
+.summaryDotGrid span {
+  width: 7px !important;
+  height: 7px !important;
+}
+
+/* Ñ‚ÐµÐºÑÑ‚ Ð¸ Ñ†Ð¸Ñ„Ñ€Ñ‹ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ +20% */
+.summaryCaloriesRow span {
+  font-size: 15px !important;
+  line-height: 1.08 !important;
+}
+
+.summaryCaloriesRow strong {
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+
+/* Ð Ð¡Ðš +25% */
+.summaryCaloriesRow.muted span,
+.summaryCaloriesRow.muted strong {
+  font-size: 16px !important;
+}
+
+.summaryCaloriesInfo {
+  gap: 10px !important;
+}
+
+@media (max-width: 480px) {
+  .nutritionSummaryRender h2 {
+    font-size: 23px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .summaryCaloriesCard {
+    grid-template-columns: 46px minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .summaryDotGrid {
+    width: 37px !important;
+    grid-template-columns: repeat(5, 6.5px) !important;
+    grid-auto-rows: 6.5px !important;
+    gap: 3.5px !important;
+  }
+
+  .summaryDotGrid span {
+    width: 6.5px !important;
+    height: 6.5px !important;
+  }
+
+  .summaryCaloriesRow span {
+    font-size: 14px !important;
+  }
+
+  .summaryCaloriesRow strong {
+    font-size: 18px !important;
+  }
+
+  .summaryCaloriesRow.muted span,
+  .summaryCaloriesRow.muted strong {
+    font-size: 15px !important;
+  }
+}
+
+/* =========================================================
+   SUMMARY BJU + WATER SIZE TUNING
+   ========================================================= */
+
+/* Ð±Ð»Ð¾Ðº Ð‘Ð–Ð£ â€” Ñ‚ÐµÐºÑÑ‚ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¸ Ð±ÐµÐ· Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ° */
+.summaryMacroLegend span {
+  font-size: 13px !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  gap: 8px !important;
+}
+
+/* ÑÐ»ÐµÐ´ÑƒÑŽÑ‰Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð‘Ð–Ð£ â€” Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð½Ð° 40% */
+.summaryNutrientsGrid strong {
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.summaryNutrientsGrid span {
+  font-size: 13px !important;
+  white-space: nowrap !important;
+}
+
+/* Ð²Ð¾Ð´Ð° Ð¼ÐµÐ½ÑŒÑˆÐµ Ð½Ð° 25% */
+.summaryWaterTop span,
+.summaryWaterTop strong {
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+  .summaryMacroLegend span {
+    font-size: 12px !important;
+  }
+
+  .summaryNutrientsGrid strong {
+    font-size: 11px !important;
+  }
+
+  .summaryNutrientsGrid span {
+    font-size: 12px !important;
+  }
+
+  .summaryWaterTop span,
+  .summaryWaterTop strong {
+    font-size: 16px !important;
+  }
+}
+
+/* =========================================================
+   SUMMARY UNIFIED TEXT SIZE
+   ========================================================= */
+
+/* ÐµÐ´Ð¸Ð½Ñ‹Ð¹ Ñ€Ð°Ð·Ð¼ÐµÑ€ Ñ‚ÐµÐºÑÑ‚Ð° ÐºÐ°Ðº Ñƒ "ÐžÑÑ‚Ð°Ð»Ð¾ÑÑŒ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹" */
+.summaryCaloriesRow span,
+.summaryCaloriesRow strong,
+.summaryCaloriesRow.muted span,
+.summaryCaloriesRow.muted strong,
+.summaryMacroLegend span,
+.summaryNutrientsGrid span,
+.summaryNutrientsGrid strong,
+.summaryWaterTop span,
+.summaryWaterTop strong,
+.summaryWaterActions button {
+  font-size: 15px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.12px !important;
+}
+
+/* Ð±ÐµÐ· Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¾Ð² */
+.summaryMacroLegend span,
+.summaryNutrientsGrid span,
+.summaryWaterTop span {
+  white-space: nowrap !important;
+}
+
+/* Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð‘Ð–Ð£ Ñ‡ÑƒÑ‚ÑŒ Ð¿Ð»Ð¾Ñ‚Ð½ÐµÐµ */
+.summaryNutrientsGrid strong {
+  font-weight: 900 !important;
+}
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ð²Ð¾Ð´Ñ‹ */
+.summaryWaterActions button {
+  min-height: 48px !important;
+}
+
+@media (max-width: 480px) {
+  .summaryCaloriesRow span,
+  .summaryCaloriesRow strong,
+  .summaryCaloriesRow.muted span,
+  .summaryCaloriesRow.muted strong,
+  .summaryMacroLegend span,
+  .summaryNutrientsGrid span,
+  .summaryNutrientsGrid strong,
+  .summaryWaterTop span,
+  .summaryWaterTop strong,
+  .summaryWaterActions button {
+    font-size: 14px !important;
+  }
+}
+
+/* =========================================================
+   SUMMARY REMOVE GREEN GLOW + TALLER CALORIE GRID
+   ========================================================= */
+
+/* ÑƒÐ±Ñ€Ð°Ñ‚ÑŒ Ð·ÐµÐ»Ñ‘Ð½Ð¾Ðµ ÑÐ²ÐµÑ‡ÐµÐ½Ð¸Ðµ */
+.nutritionSummaryRender {
+  background:
+    linear-gradient(180deg, rgba(8, 20, 22, 0.97), rgba(5, 12, 14, 0.995)) !important;
+  box-shadow:
+    0 22px 60px rgba(0,0,0,0.34),
+    inset 0 1px 0 rgba(255,255,255,0.025) !important;
+}
+
+/* ÑƒÐ²ÐµÐ»Ð¸Ñ‡Ð¸Ñ‚ÑŒ ÑÐµÑ‚ÐºÑƒ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð¿Ð¾ Ð²Ñ‹ÑÐ¾Ñ‚Ðµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð½Ð° 10% */
+.summaryDotGrid {
+  transform: scaleY(1.1) !important;
+  transform-origin: center !important;
+}
+
+/* =========================================================
+   REAL TODAY + STREAK FIX â€” CURRENT BASE
+   ========================================================= */
+
+/* "Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ" â€” Ð±ÑƒÐºÐ²Ñ‹ Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½Ðµ Ð½Ð°ÐµÐ·Ð¶Ð°ÑŽÑ‚ Ð´Ñ€ÑƒÐ³ Ð½Ð° Ð´Ñ€ÑƒÐ³Ð° */
+.fatSecretPage .nutritionHeroTitleV4 h1,
+.nutritionHeroV4 .nutritionHeroTitleV4 h1,
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1 {
+  letter-spacing: -0.25px !important;
+  line-height: 1.05 !important;
+  font-kerning: normal !important;
+  text-rendering: geometricPrecision !important;
+  transform: none !important;
+  text-shadow: none !important;
+}
+
+/* ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ ÐºÐ½Ð¾Ð¿ÐºÑƒ/Ð´ÑƒÐ±Ð»ÑŒ "Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ" Ð¿Ñ€Ð¸ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ð½Ð¾Ð¼ Ð´Ñ€ÑƒÐ³Ð¾Ð¼ Ð´Ð½Ðµ */
+.fatSecretPage .nutritionHeroTitleV4 button,
+.nutritionHeroV4 .nutritionHeroTitleV4 button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* "Ð¡ÐµÑ€Ð¸Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸ ÐµÐ´Ñ‹" â€” ÑƒÐ±Ñ€Ð°Ñ‚ÑŒ Ñ„Ð¾Ð½, Ð¾ÐºÐ°Ð½Ñ‚Ð¾Ð²ÐºÑƒ Ð¸ ÑÑ‚ÐµÐºÐ»ÑÐ½Ð½Ñ‹Ð¹ Ð±ÐµÐ¹Ð´Ð¶ */
+.fatSecretPage .nutritionStreakV4,
+.nutritionStreakV4,
+.fatSecretPage .fatStreakLineTop,
+.fatStreakLineTop {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ñ‚ÐµÐºÑÑ‚ ÑÐµÑ€Ð¸Ð¸ Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð±ÐµÐ· Ð¿Ð»Ð°ÑˆÐºÐ¸ */
+.fatSecretPage .nutritionStreakV4 span,
+.nutritionStreakV4 span,
+.fatSecretPage .fatStreakLineTop span,
+.fatStreakLineTop span {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ÑÑ‚Ñ€Ð°Ñ…Ð¾Ð²ÐºÐ° Ð¾Ñ‚ Ð¿ÑÐµÐ²Ð´Ð¾Ñ„Ð¾Ð½Ð° */
+.fatSecretPage .nutritionHeroTitleV4::before,
+.fatSecretPage .nutritionHeroTitleV4::after,
+.fatSecretPage .nutritionHeroTitleV4 h1::before,
+.fatSecretPage .nutritionHeroTitleV4 h1::after,
+.fatSecretPage .nutritionStreakV4::before,
+.fatSecretPage .nutritionStreakV4::after {
+  display: none !important;
+  content: none !important;
+}
+
+@media (max-width: 430px) {
+  .fatSecretPage .nutritionHeroTitleV4 h1,
+  .nutritionHeroV4 .nutritionHeroTitleV4 h1,
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1 {
+    letter-spacing: -0.15px !important;
+    line-height: 1.06 !important;
+  }
+}
+
+/* =========================================================
+   SAFE FOOD EDIT WEIGHT MODE + CALORIES CARD
+   ========================================================= */
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ° Ñ€ÑƒÑ‡Ð½Ð¾Ð³Ð¾ Ð²Ð²Ð¾Ð´Ð° Ð³Ñ€Ð°Ð¼Ð¼Ð¾Ð² â€” Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð²ÐµÑÑ‹ */
+.foodEditSegmentRow .weightModeButton {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.weightModeIcon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 19px !important;
+  line-height: 1 !important;
+  color: rgba(38, 255, 116, 0.95) !important;
+}
+
+/* Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾Ð¹ Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ Ð¸Ð¼ÐµÐ½Ð½Ð¾ ÐºÐ½Ð¾Ð¿ÐºÐ° Ð²ÐµÑÐ° */
+.foodEditSegmentRow .weightModeButton.active {
+  border-color: rgba(38,255,116,0.62) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 62%),
+    linear-gradient(180deg, rgba(16,24,27,0.96), rgba(10,15,18,0.98)) !important;
+  color: rgba(38,255,116,0.95) !important;
+}
+
+/* Ñ‚ÐµÐ¿ÐµÑ€ÑŒ ÐšÐ‘Ð–Ð£ = 4 Ð±Ð»Ð¾ÐºÐ° */
+.foodEditMacrosCards {
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 8px !important;
+}
+
+.foodEditMacrosCards div {
+  min-width: 0 !important;
+}
+
+.foodEditMacrosCards span {
+  font-size: 11px !important;
+  white-space: nowrap !important;
+}
+
+.foodEditMacrosCards strong {
+  font-size: 18px !important;
+}
+
+.foodEditMacrosCards small {
+  font-size: 10px !important;
+}
+
+@media (max-width: 480px) {
+  .foodEditMacrosCards {
+    gap: 7px !important;
+  }
+
+  .foodEditMacrosCards span {
+    font-size: 10px !important;
+  }
+
+  .foodEditMacrosCards strong {
+    font-size: 16px !important;
+  }
+}
+
+/* =========================================================
+   FOOD EDIT SAVE LOGIC UX FIX
+   ========================================================= */
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ° Ð²ÐµÑÐ¾Ð² â€” Ñ€ÐµÐ¶Ð¸Ð¼ Ñ€ÑƒÑ‡Ð½Ð¾Ð³Ð¾ Ð²Ð²Ð¾Ð´Ð°, Ð½Ðµ ÑÐ±Ñ€Ð°ÑÑ‹Ð²Ð°ÐµÑ‚ Ð³Ñ€Ð°Ð¼Ð¼Ñ‹ */
+.foodEditSegmentRow .weightModeButton {
+  cursor: default !important;
+}
+
+/* Ð²Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ð¾ Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð²ÐµÑÑ‹ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ð½Ñ‹Ð¼Ð¸ ÐºÐ°Ðº Ñ€ÐµÐ¶Ð¸Ð¼ Ñ€ÑƒÑ‡Ð½Ð¾Ð³Ð¾ Ð²Ð²Ð¾Ð´Ð° */
+.foodEditSegmentRow .weightModeButton.active {
+  border-color: rgba(38,255,116,0.62) !important;
+}
+
+/* =========================================================
+   PERSONAL FOOD DATABASE
+   ========================================================= */
+
+.fatSearchQuickActions button span {
+  white-space: nowrap !important;
+}
+
+.fatSearchResultInfo span {
+  display: block !important;
+  color: rgba(130, 240, 118, 0.74) !important;
+}
+
+.fatSearchResultCard:has(.fatSearchResultInfo span) {
+  transition: transform 0.16s ease, border-color 0.16s ease;
+}
+
+.fatSearchResultCard:active {
+  transform: scale(0.985) !important;
+}
+
+/* =========================================================
+   PERSONAL DB SEARCH FIRST
+   ========================================================= */
+
+.fatSearchStatus strong {
+  line-height: 1.25 !important;
+}
+
+.fatSearchResultInfo span {
+  color: rgba(130, 240, 118, 0.78) !important;
+}
+
+/* =========================================================
+   FOOD SEARCH BOTTOM ACTION BAR
+   ========================================================= */
+
+/* ÑÐºÑ€Ñ‹Ñ‚ÑŒ ÑÑ‚Ð°Ñ€Ñ‹Ðµ Ð±Ñ‹ÑÑ‚Ñ€Ñ‹Ðµ Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ñ ÑÐ²ÐµÑ€Ñ…Ñƒ, ÐµÑÐ»Ð¸ Ð³Ð´Ðµ-Ñ‚Ð¾ Ð¾ÑÑ‚Ð°Ð»Ð¸ÑÑŒ */
+.fatFoodSearchScreenPremium .fatSearchQuickActions {
+  display: none !important;
+}
+
+/* Ð¼ÐµÑÑ‚Ð¾ ÑÐ½Ð¸Ð·Ñƒ, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð±Ð°Ñ€ Ð½Ðµ Ð¿ÐµÑ€ÐµÐºÑ€Ñ‹Ð²Ð°Ð» Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ‹ */
+.fatFoodSearchScreenPremium {
+  padding-bottom: 98px !important;
+}
+
+.fatSearchBottomBar {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: max(14px, env(safe-area-inset-bottom)) !important;
+  transform: translateX(-50%) !important;
+  z-index: 99990 !important;
+
+  width: min(calc(100% - 24px), 430px) !important;
+  min-height: 76px !important;
+  padding: 8px !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 7px !important;
+
+  border-radius: 26px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  background:
+    linear-gradient(180deg, rgba(17, 25, 28, 0.94), rgba(7, 12, 15, 0.985)) !important;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.38),
+    inset 0 1px 0 rgba(255,255,255,0.035) !important;
+
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+.fatSearchBottomBar button {
+  min-width: 0 !important;
+  min-height: 58px !important;
+  padding: 7px 4px !important;
+
+  border: none !important;
+  border-radius: 19px !important;
+
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(247,248,251,0.76) !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+}
+
+.fatSearchBottomBar button span {
+  font-size: 19px !important;
+  line-height: 1 !important;
+}
+
+.fatSearchBottomBar button strong {
+  font-size: 10px !important;
+  line-height: 1.05 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.15px !important;
+  white-space: nowrap !important;
+}
+
+.fatSearchBottomBar button:active {
+  transform: scale(0.97) !important;
+  background: rgba(38,255,116,0.07) !important;
+}
+
+/* Ð¿Ñ€ÐµÐ²ÑŒÑŽ Ñ„Ð¾Ñ‚Ð¾ Ñ‚ÐµÐ¿ÐµÑ€ÑŒ ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½Ð¾ Ð½Ð°Ð´ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð°Ð¼Ð¸ */
+.fatPhotoAiInput {
+  display: none !important;
+}
+
+.fatPhotoAiFloatingPreview {
+  width: 100% !important;
+  margin: 10px 0 8px !important;
+  padding: 10px !important;
+
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) 34px !important;
+  gap: 10px !important;
+  align-items: center !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  background: rgba(255,255,255,0.035) !important;
+}
+
+.fatPhotoAiFloatingPreview img {
+  width: 46px !important;
+  height: 46px !important;
+  object-fit: cover !important;
+  border-radius: 14px !important;
+}
+
+.fatPhotoAiFloatingPreview strong {
+  display: block !important;
+  font-size: 13px !important;
+  color: rgba(247,248,251,0.88) !important;
+}
+
+.fatPhotoAiFloatingPreview span,
+.fatPhotoAiFloatingPreview small {
+  display: block !important;
+  margin-top: 3px !important;
+  font-size: 11px !important;
+  color: rgba(247,248,251,0.48) !important;
+}
+
+.fatPhotoAiFloatingPreview button {
+  width: 32px !important;
+  height: 32px !important;
+  border: none !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,0.06) !important;
+  color: rgba(247,248,251,0.7) !important;
+  font-size: 20px !important;
+}
+
+@media (max-width: 380px) {
+  .fatSearchBottomBar {
+    width: min(calc(100% - 16px), 430px) !important;
+    gap: 5px !important;
+    padding: 7px !important;
+  }
+
+  .fatSearchBottomBar button strong {
+    font-size: 9px !important;
+  }
+
+  .fatSearchBottomBar button span {
+    font-size: 18px !important;
+  }
+}
+
+/* =========================================================
+   FOOD SEARCH RESULTS â€” RENDER STYLE
+   ========================================================= */
+
+.fatFoodSearchScreenPremium .fatSearchResults,
+.fatFoodSearchScreenPremium .fatSearchResultList {
+  border-radius: 22px !important;
+  overflow: hidden !important;
+}
+
+.fatSearchResultCard {
+  width: 100% !important;
+  min-height: 76px !important;
+  padding: 12px 14px !important;
+  margin: 0 !important;
+
+  display: grid !important;
+  grid-template-columns: 44px minmax(0, 1fr) 34px !important;
+  gap: 13px !important;
+  align-items: center !important;
+
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.075) !important;
+
+  background:
+    radial-gradient(circle at 0% 50%, rgba(157,245,76,0.035), transparent 36%),
+    linear-gradient(180deg, rgba(12, 18, 14, 0.96), rgba(7, 12, 10, 0.98)) !important;
+
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
+.fatSearchResultCard:first-of-type {
+  border-top-left-radius: 22px !important;
+  border-top-right-radius: 22px !important;
+}
+
+.fatSearchResultCard:last-of-type {
+  border-bottom: 0 !important;
+  border-bottom-left-radius: 22px !important;
+  border-bottom-right-radius: 22px !important;
+}
+
+.fatSearchResultIcon {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background: rgba(157,245,76,0.09) !important;
+  color: rgba(176, 234, 104, 0.94) !important;
+
+  font-size: 17px !important;
+  line-height: 1 !important;
+}
+
+.fatSearchResultInfo {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.fatSearchResultInfo strong {
+  display: block !important;
+  max-width: 100% !important;
+
+  color: rgba(248,248,246,0.94) !important;
+  font-size: 17px !important;
+  font-weight: 750 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.25px !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.fatSearchResultInfo span {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+
+  color: rgba(247,248,251,0.54) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+
+.fatSearchResultInfo span em {
+  flex: 0 0 auto !important;
+  color: rgba(130, 240, 118, 0.92) !important;
+  font-style: normal !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+.fatSearchResultInfo span small {
+  min-width: 0 !important;
+  color: rgba(247,248,251,0.50) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.fatSearchResultCheck {
+  width: 24px !important;
+  height: 24px !important;
+  justify-self: end !important;
+
+  border-radius: 6px !important;
+  border: 2px solid rgba(157,245,76,0.78) !important;
+  background: transparent !important;
+  box-shadow: 0 0 10px rgba(157,245,76,0.08) !important;
+}
+
+.fatSearchResultAdd {
+  display: none !important;
+}
+
+/* bottom bar closer to render */
+.fatSearchBottomBar {
+  min-height: 86px !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(180deg, rgba(32, 38, 31, 0.94), rgba(16, 21, 17, 0.985)) !important;
+  border-color: rgba(157,245,76,0.13) !important;
+}
+
+.fatSearchBottomBar button {
+  min-height: 70px !important;
+  border-radius: 14px !important;
+  background: rgba(157,245,76,0.045) !important;
+  border: 1px solid rgba(157,245,76,0.10) !important;
+}
+
+.fatSearchBottomBar button span {
+  color: rgba(157,245,76,0.92) !important;
+  font-size: 22px !important;
+}
+
+.fatSearchBottomBar button strong {
+  color: rgba(248,248,246,0.86) !important;
+  font-size: 10px !important;
+  line-height: 1.12 !important;
+  text-transform: uppercase !important;
+}
+
+@media (max-width: 390px) {
+  .fatSearchResultCard {
+    min-height: 70px !important;
+    padding: 10px 12px !important;
+    grid-template-columns: 40px minmax(0, 1fr) 30px !important;
+    gap: 10px !important;
+  }
+
+  .fatSearchResultInfo strong {
+    font-size: 15px !important;
+  }
+
+  .fatSearchResultInfo span em,
+  .fatSearchResultInfo span small {
+    font-size: 12px !important;
+  }
+
+  .fatSearchResultCheck {
+    width: 22px !important;
+    height: 22px !important;
+  }
+}
+
+/* =========================================================
+   FOOD SEARCH â€” CLOSER TO MAIN NUTRITION STYLE
+   ========================================================= */
+
+/* Ð²ÑÑ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ð° Ð¿Ð¾Ð¸ÑÐºÐ° Ð±Ð»Ð¸Ð¶Ðµ Ðº ÑÑ‚Ð¸Ð»ÑŽ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ: ÑÑ‚ÐµÐºÐ»Ð¾, Ð¼ÑÐ³ÐºÐ¸Ðµ Ð³Ñ€Ð°Ð½Ð¸Ñ†Ñ‹ */
+.fatFoodSearchScreenPremium {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38, 255, 116, 0.055), transparent 34%),
+    linear-gradient(180deg, rgba(3, 13, 17, 0.99), rgba(3, 9, 11, 1)) !important;
+}
+
+/* Ð²ÐµÑ€Ñ…Ð½ÑÑ Ð·Ð¾Ð½Ð° ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÐµÐµ Ð¸ Ñ‡Ð¸Ñ‰Ðµ */
+.fatFoodSearchScreenPremium .fatSearchTopPremium {
+  margin-bottom: 16px !important;
+}
+
+/* Ð¿Ð¾Ð¸ÑÐº ÐºÐ°Ðº premium-ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ° Ð¸Ð· Ð¾ÑÐ½Ð¾Ð²Ð½Ð¾Ð³Ð¾ ÑÐºÑ€Ð°Ð½Ð° */
+.fatSearchInputWrapPremium {
+  min-height: 64px !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(255,255,255,0.105) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(38,255,116,0.06), transparent 44%),
+    linear-gradient(180deg, rgba(17, 27, 29, 0.96), rgba(9, 15, 17, 0.985)) !important;
+  box-shadow:
+    0 16px 34px rgba(0,0,0,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.035) !important;
+}
+
+.fatSearchInputWrapPremium input {
+  font-size: 23px !important;
+  font-weight: 850 !important;
+  color: rgba(248,248,246,0.94) !important;
+}
+
+/* ÑÐ¿Ð¸ÑÐ¾Ðº Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¾Ð² ÐºÐ°Ðº Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð¾Ð² Ð² Ñ€Ð°ÑÐºÑ€Ñ‹Ñ‚Ð¾Ð¼ Ð¿Ñ€Ð¸Ñ‘Ð¼Ðµ Ð¿Ð¸Ñ‰Ð¸ */
+.fatSearchResultCard {
+  min-height: 86px !important;
+  padding: 14px 16px !important;
+  grid-template-columns: 48px minmax(0, 1fr) 36px !important;
+  gap: 14px !important;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(38,255,116,0.035), transparent 42%),
+    linear-gradient(180deg, rgba(13, 27, 25, 0.86), rgba(7, 16, 15, 0.96)) !important;
+
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+.fatSearchResultCard:first-of-type {
+  border-top-left-radius: 24px !important;
+  border-top-right-radius: 24px !important;
+}
+
+.fatSearchResultCard:last-of-type {
+  border-bottom-left-radius: 24px !important;
+  border-bottom-right-radius: 24px !important;
+}
+
+/* Ð¸ÐºÐ¾Ð½ÐºÐ° ÑÐ»ÐµÐ²Ð° Ð¼ÑÐ³Ñ‡Ðµ, ÐºÐ°Ðº Ð¿Ð»Ð¸Ñ‚ÐºÐ°/ÑÐ¼Ð¾Ð´Ð·Ð¸ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ */
+.fatSearchResultIcon {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 16px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.20), transparent 66%),
+    rgba(38,255,116,0.075) !important;
+  color: rgba(38,255,116,0.92) !important;
+  font-size: 18px !important;
+}
+
+/* Ð½Ð°Ð·Ð²Ð°Ð½Ð¸Ðµ Ð¶Ð¸Ñ€Ð½ÐµÐµ, Ð±Ð»Ð¸Ð¶Ðµ Ðº Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°Ð¼ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ ÐžÐ±ÐµÐ´Ð° */
+.fatSearchResultInfo strong {
+  font-size: 20px !important;
+  font-weight: 950 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.55px !important;
+  color: rgba(248,248,246,0.96) !important;
+}
+
+/* Ð½Ð¸Ð¶Ð½ÑÑ ÑÑ‚Ñ€Ð¾ÐºÐ°: Ð·ÐµÐ»Ñ‘Ð½Ð°Ñ Ð¿Ð¾Ñ€Ñ†Ð¸Ñ + Ð¿Ñ€Ð¸Ð³Ð»ÑƒÑˆÑ‘Ð½Ð½Ñ‹Ð¹ Ð Ð¡Ðš */
+.fatSearchResultInfo span {
+  gap: 10px !important;
+}
+
+.fatSearchResultInfo span em {
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  color: rgba(38,255,116,0.92) !important;
+}
+
+.fatSearchResultInfo span small {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: rgba(248,248,246,0.50) !important;
+}
+
+/* ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚ ÑÐ¿Ñ€Ð°Ð²Ð° ÐºÐ°Ðº Ð°ÐºÐºÑƒÑ€Ð°Ñ‚Ð½Ñ‹Ð¹ action-Ñ‡ÐµÐº */
+.fatSearchResultCheck {
+  width: 25px !important;
+  height: 25px !important;
+  border-radius: 7px !important;
+  border: 2px solid rgba(157,245,76,0.72) !important;
+  opacity: 0.9 !important;
+}
+
+/* Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð±Ð°Ñ€ Ð±Ð»Ð¸Ð¶Ðµ Ðº Ð±Ð¾Ð»ÑŒÑˆÐ¸Ð¼ premium-ÐºÐ½Ð¾Ð¿ÐºÐ°Ð¼ */
+.fatSearchBottomBar {
+  width: min(calc(100% - 28px), 430px) !important;
+  min-height: 96px !important;
+  padding: 9px !important;
+  gap: 10px !important;
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 56%),
+    linear-gradient(180deg, rgba(22, 31, 27, 0.97), rgba(11, 17, 14, 0.99)) !important;
+  border: 1px solid rgba(157,245,76,0.16) !important;
+  box-shadow:
+    0 22px 56px rgba(0,0,0,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+
+.fatSearchBottomBar button {
+  min-height: 78px !important;
+  border-radius: 20px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(157,245,76,0.10), transparent 62%),
+    rgba(255,255,255,0.035) !important;
+  border: 1px solid rgba(157,245,76,0.13) !important;
+}
+
+.fatSearchBottomBar button span {
+  font-size: 25px !important;
+  color: rgba(157,245,76,0.96) !important;
+}
+
+.fatSearchBottomBar button strong {
+  font-size: 10px !important;
+  font-weight: 950 !important;
+  line-height: 1.08 !important;
+  color: rgba(248,248,246,0.88) !important;
+}
+
+/* Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ‹ Ð½Ðµ Ð¿Ñ€ÑÑ‚Ð°Ð»Ð¸ÑÑŒ Ð¿Ð¾Ð´ Ð±Ð°Ñ€ */
+.fatFoodSearchScreenPremium {
+  padding-bottom: 118px !important;
+}
+
+@media (max-width: 390px) {
+  .fatSearchInputWrapPremium {
+    min-height: 58px !important;
+    border-radius: 24px !important;
+  }
+
+  .fatSearchInputWrapPremium input {
+    font-size: 20px !important;
+  }
+
+  .fatSearchResultCard {
+    min-height: 78px !important;
+    padding: 12px 13px !important;
+    grid-template-columns: 42px minmax(0, 1fr) 30px !important;
+    gap: 11px !important;
+  }
+
+  .fatSearchResultIcon {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 14px !important;
+  }
+
+  .fatSearchResultInfo strong {
+    font-size: 17px !important;
+  }
+
+  .fatSearchResultInfo span em {
+    font-size: 13px !important;
+  }
+
+  .fatSearchResultInfo span small {
+    font-size: 12px !important;
+  }
+
+  .fatSearchBottomBar {
+    min-height: 88px !important;
+    gap: 7px !important;
+  }
+
+  .fatSearchBottomBar button {
+    min-height: 70px !important;
+    border-radius: 17px !important;
+  }
+}
+
+/* =========================================================
+   SEARCH RESULTS: MY DATABASE FIRST + AI/FATSECRET BELOW
+   ========================================================= */
+
+.fatSearchResultInfo span small {
+  color: rgba(248,248,246,0.48) !important;
+}
+
+.fatSearchResultCard {
+  position: relative !important;
+}
+
+.fatSearchResultCard:active {
+  transform: scale(0.988) !important;
+}
+
+/* =========================================================
+   SEARCH ORDER FIX: MY RESULTS FIRST, AI LOADER BELOW
+   ========================================================= */
+
+/* ÑÑ‚Ð°Ñ€Ñ‹Ðµ Ð±Ð¾Ð»ÑŒÑˆÐ¸Ðµ Ð¿ÑƒÑÑ‚Ñ‹Ðµ skeleton-ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸ Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½Ðµ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð·Ð°Ð½Ð¸Ð¼Ð°Ñ‚ÑŒ Ð²ÐµÑ€Ñ… */
+.fatSkeletonList {
+  display: none !important;
+}
+
+/* ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½Ñ‹Ð¹ loader Ð¿Ð¾ÑÐ»Ðµ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¾Ð² Ð¼Ð¾ÐµÐ¹ Ð±Ð°Ð·Ñ‹ */
+.fatAiLoadingBelow {
+  width: 100% !important;
+  min-height: 52px !important;
+  margin: 8px 0 4px !important;
+  padding: 12px 14px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(157,245,76,0.11) !important;
+  background:
+    radial-gradient(circle at 0% 50%, rgba(157,245,76,0.05), transparent 44%),
+    rgba(255,255,255,0.025) !important;
+}
+
+.fatAiLoadingBelow span {
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(157,245,76,0.24) !important;
+  border-top-color: rgba(157,245,76,0.9) !important;
+  animation: fatAiSpin 0.8s linear infinite !important;
+  flex: 0 0 auto !important;
+}
+
+.fatAiLoadingBelow strong {
+  color: rgba(248,248,246,0.58) !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+  line-height: 1.2 !important;
+}
+
+@keyframes fatAiSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   FOOD EDIT BACK BEHAVIOR FIX
+   ========================================================= */
+
+/* Ð²Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ð¾ Ð½Ðµ Ð¼ÐµÐ½ÑÐµÐ¼ ÐºÐ½Ð¾Ð¿ÐºÑƒ, Ð¼ÐµÐ½ÑÐµÑ‚ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð»Ð¾Ð³Ð¸ÐºÐ°:
+   Ð¸Ð· Ð¿Ð¾Ð¸ÑÐºÐ° -> Ð½Ð°Ð·Ð°Ð´ Ð² Ð¿Ð¾Ð¸ÑÐº ÐµÐ´Ñ‹,
+   Ð¸Ð· ÑƒÐ¶Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð½Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° -> Ð½Ð°Ð·Ð°Ð´ Ð² Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ðµ */
+.foodEditBackOnly {
+  cursor: pointer !important;
+}
+
+/* =========================================================
+   FOOD EDIT DETAILS PANEL
+   ========================================================= */
+
+.foodEditHeroEditable {
+  position: relative !important;
+}
+
+.foodEditPencilButton {
+  position: absolute !important;
+  top: 14px !important;
+  right: 14px !important;
+  z-index: 4 !important;
+
+  width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.10), transparent 64%),
+    rgba(255,255,255,0.035) !important;
+
+  color: rgba(38,255,116,0.95) !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.035) !important;
+}
+
+.foodEditPencilButton:active {
+  transform: scale(0.96) !important;
+}
+
+.foodEditDetailsPanel {
+  width: 100% !important;
+  margin: -2px 0 14px !important;
+  padding: 14px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(38,255,116,0.045), transparent 44%),
+    linear-gradient(180deg, rgba(12,22,24,0.96), rgba(7,13,15,0.985)) !important;
+
+  box-shadow:
+    0 14px 34px rgba(0,0,0,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.028) !important;
+}
+
+.foodEditDetailsPanel label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  margin: 0 !important;
+}
+
+.foodEditDetailsPanel label span {
+  color: rgba(248,248,246,0.48) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.1px !important;
+}
+
+.foodEditDetailsPanel input,
+.foodEditDetailsPanel textarea {
+  width: 100% !important;
+  min-height: 46px !important;
+  padding: 12px 13px !important;
+
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(248,248,246,0.94) !important;
+
+  font-size: 15px !important;
+  font-weight: 850 !important;
+  line-height: 1.2 !important;
+
+  outline: none !important;
+  resize: vertical !important;
+}
+
+.foodEditDetailsPanel textarea {
+  min-height: 78px !important;
+}
+
+.foodEditDetailsPanel input:focus,
+.foodEditDetailsPanel textarea:focus {
+  border-color: rgba(38,255,116,0.42) !important;
+  box-shadow: 0 0 0 3px rgba(38,255,116,0.055) !important;
+}
+
+.foodEditDetailsGrid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 8px !important;
+}
+
+.foodEditDetailsGrid input {
+  text-align: center !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+@media (max-width: 390px) {
+  .foodEditPencilButton {
+    top: 12px !important;
+    right: 12px !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 12px !important;
+    font-size: 20px !important;
+  }
+
+  .foodEditDetailsPanel {
+    padding: 12px !important;
+    border-radius: 22px !important;
+  }
+
+  .foodEditDetailsGrid {
+    gap: 6px !important;
+  }
+
+  .foodEditDetailsPanel input,
+  .foodEditDetailsPanel textarea {
+    font-size: 13px !important;
+  }
+
+  .foodEditDetailsGrid label span {
+    font-size: 10px !important;
+  }
+}
+
+/* =========================================================
+   NUTRITION PRODUCT CALORIES FIX
+   ========================================================= */
+
+/* ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¸ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° Ð² ÑÐ¿Ð¸ÑÐºÐµ Ð¿Ñ€Ð¸Ñ‘Ð¼Ð° Ð¿Ð¸Ñ‰Ð¸ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÑŽÑ‚ÑÑ ÐºÐ°Ðº ÑƒÐ¶Ðµ ÑÐ¾Ñ…Ñ€Ð°Ð½Ñ‘Ð½Ð½Ñ‹Ð¹ Ð¸Ñ‚Ð¾Ð³,
+   Ð±ÐµÐ· Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Ð½Ð¾Ð³Ð¾ ÑƒÐ¼Ð½Ð¾Ð¶ÐµÐ½Ð¸Ñ Ð½Ð° Ð³Ñ€Ð°Ð¼Ð¼Ñ‹ */
+.productKcalExact {
+  white-space: nowrap !important;
+}
+
+/* =========================================================
+   FOOD EDIT PORTION MODE FIX
+   ========================================================= */
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ° Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ Ñ‚ÐµÐ¿ÐµÑ€ÑŒ Ñ€ÐµÐ°Ð»ÑŒÐ½Ð¾ Ð¿Ð¾Ð´ÑÑ‚Ð°Ð²Ð»ÑÐµÑ‚ Ð²ÐµÑ/Ð¼Ð» Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ */
+.foodEditSegmentRow button.active {
+  border-color: rgba(38,255,116,0.62) !important;
+}
+
+.foodEditAmountCard span {
+  white-space: nowrap !important;
+}
+
+.foodEditSegmentRow .weightModeButton.active {
+  color: rgba(38,255,116,0.95) !important;
+}
+
+/* =========================================================
+   FULL PAGE PRODUCT EDIT
+   ========================================================= */
+
+.foodEditPageOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  background:
+    radial-gradient(circle at top, rgba(38,255,116,0.05), transparent 30%),
+    linear-gradient(180deg, rgba(5,10,12,0.985), rgba(3,7,9,1)) !important;
+}
+
+.foodEditPageSheet {
+  width: 100% !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+  padding: 18px 16px 42px !important;
+}
+
+.foodEditPageHeader {
+  display: grid !important;
+  grid-template-columns: 44px 1fr auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-bottom: 24px !important;
+}
+
+.foodEditPageHeader strong {
+  color: rgba(248,248,246,0.95) !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.5px !important;
+}
+
+.foodEditPageBack,
+.foodEditPageSave {
+  border: none !important;
+  background: rgba(255,255,255,0.06) !important;
+  color: rgba(248,248,246,0.9) !important;
+  border-radius: 14px !important;
+  min-height: 42px !important;
+  padding: 0 14px !important;
+  font-weight: 800 !important;
+}
+
+.foodEditPageBack {
+  width: 42px !important;
+  padding: 0 !important;
+  font-size: 22px !important;
+}
+
+.foodEditPageSave {
+  color: rgba(38,255,116,0.92) !important;
+}
+
+.foodEditPageContent {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.foodEditPageContent label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.foodEditPageContent label span {
+  color: rgba(248,248,246,0.48) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.foodEditPageContent input,
+.foodEditPageContent textarea {
+  width: 100% !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  background: rgba(255,255,255,0.04) !important;
+  border-radius: 18px !important;
+  min-height: 54px !important;
+  padding: 14px !important;
+  color: rgba(248,248,246,0.95) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+.foodEditPageContent textarea {
+  min-height: 140px !important;
+  resize: vertical !important;
+}
+
+.foodEditPageGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 12px !important;
+}
+
+/* =========================================================
+   PORTION MODE FINAL FIX
+   ========================================================= */
+
+/* Ð²ÐµÑÑ‹ Ð²ÑÐµÐ³Ð´Ð° ÐºÐ»Ð¸ÐºÐ°Ð±ÐµÐ»ÑŒÐ½Ñ‹Ðµ Ð¿Ð¾ÑÐ»Ðµ Ð²Ñ‹Ð±Ð¾Ñ€Ð° 1 Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ */
+.foodEditSegmentRow .weightModeButton {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Ð¿Ð¾Ð»Ðµ Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ Ð² Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¾Ñ€Ðµ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° Ð¿Ñ€Ð¸Ð½Ð¸Ð¼Ð°ÐµÑ‚ Ð»ÑŽÐ±Ð¾Ð¹ Ñ‚ÐµÐºÑÑ‚: 1 Ð¿Ð¾Ñ€Ñ†Ð¸Ñ, ÑÑ‚Ð°ÐºÐ°Ð½, Ð±Ð°Ð½ÐºÐ°, 250 Ð¼Ð» */
+.foodEditPageContent input,
+.foodEditDetailsPanel input {
+  text-transform: none !important;
+}
+
+/* =========================================================
+   FOOD EDIT PORTION UNIT SELECT
+   ========================================================= */
+
+.foodEditPortionUnitRow {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 78px !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.foodEditPortionUnitRow input {
+  min-width: 0 !important;
+}
+
+.foodEditPortionUnitRow select {
+  width: 78px !important;
+  min-height: 54px !important;
+  padding: 0 12px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 62%),
+    rgba(255,255,255,0.04) !important;
+
+  color: rgba(38,255,116,0.95) !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+
+  outline: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  text-align: center !important;
+  text-align-last: center !important;
+}
+
+.foodEditPortionUnitRow select:focus {
+  border-color: rgba(38,255,116,0.42) !important;
+  box-shadow: 0 0 0 3px rgba(38,255,116,0.055) !important;
+}
+
+/* =========================================================
+   SAVE BUTTON ICON
+   ========================================================= */
+
+.foodEditPageSave {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  min-width: 72px !important;
+}
+
+.foodEditSaveIcon {
+  font-size: 14px !important;
+  line-height: 1 !important;
+}
+
+/* =========================================================
+   PORTION UNIT TOGGLE â€” NO DROPDOWN
+   ========================================================= */
+
+.foodEditPortionUnitRow select {
+  display: none !important;
+}
+
+.foodEditPortionUnitToggle {
+  width: 78px !important;
+  min-height: 54px !important;
+  padding: 0 12px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 62%),
+    rgba(255,255,255,0.04) !important;
+
+  color: rgba(38,255,116,0.95) !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  outline: none !important;
+  cursor: pointer !important;
+}
+
+.foodEditPortionUnitToggle:active {
+  transform: scale(0.96) !important;
+}
+
+/* =========================================================
+   PORTION MODE AFTER RELOAD FIX
+   ========================================================= */
+
+/* Ñ€ÐµÐ¶Ð¸Ð¼ Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ Ñ‚ÐµÐ¿ÐµÑ€ÑŒ Ð²Ð¾ÑÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÑ‚ÑÑ Ð¸Ð· ÑÐ¾Ñ…Ñ€Ð°Ð½Ñ‘Ð½Ð½Ñ‹Ñ… amountMode/portionAmount */
+.foodEditSegmentRow button {
+  user-select: none !important;
+}
+
+/* =========================================================
+   ADD FOOD SEARCH â€” HIDE TOP-RIGHT X
+   ========================================================= */
+
+/* ÐºÑ€ÐµÑÑ‚Ð¸Ðº Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½Ðµ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ð¿Ð¾Ð¸ÑÐºÐ° ÐµÐ´Ñ‹,
+   Ð½Ð¾ Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹Ð¼ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ð½Ð¾Ð³Ð¾/Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€ÑƒÐµÐ¼Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° */
+.fatFoodSearchScreenPremium .fatSearchClosePremium {
+  z-index: 20 !important;
+}
+
+/* =========================================================
+   CREATE CUSTOM FOOD
+   ========================================================= */
+
+.foodEditPageSave span:last-child {
+  line-height: 1 !important;
+}
+
+/* =========================================================
+   ADMIN USERS CREATE PANEL
+   ========================================================= */
+
+.adminUsersPage {
+  padding-bottom: 40px !important;
+}
+
+.adminCreateUserCard,
+.adminUsersListCard {
+  max-width: 460px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.adminCreateUserForm {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+.adminCreateUserForm label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+}
+
+.adminCreateUserForm label span {
+  color: rgba(244,246,242,0.52) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.adminCreateUserForm input {
+  width: 100% !important;
+  min-height: 52px !important;
+  padding: 14px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  background: rgba(0,0,0,0.26) !important;
+  color: rgba(244,246,242,0.94) !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  outline: none !important;
+}
+
+.adminCreateUserForm input:focus {
+  border-color: rgba(127,159,58,0.55) !important;
+  box-shadow: 0 0 0 3px rgba(127,159,58,0.10) !important;
+}
+
+.adminPasswordRow {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 82px !important;
+  gap: 8px !important;
+}
+
+.adminPasswordRow button {
+  min-height: 52px !important;
+  border: none !important;
+  border-radius: 16px !important;
+  background: rgba(127,159,58,0.18) !important;
+  color: #bfe977 !important;
+  font-weight: 950 !important;
+}
+
+.adminCreateUserSubmit {
+  width: 100% !important;
+  min-height: 58px !important;
+  margin-top: 4px !important;
+  border: none !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+.adminCreateUserSubmit:disabled {
+  opacity: 0.55 !important;
+}
+
+.adminCreateUserStatus {
+  margin: 12px 0 0 !important;
+  text-align: center !important;
+  color: rgba(244,246,242,0.62) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+.adminCredentialsBox {
+  margin-top: 14px !important;
+  padding: 14px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(127,159,58,0.22) !important;
+  background: rgba(127,159,58,0.08) !important;
+}
+
+.adminCredentialsBox span,
+.adminCredentialsBox strong,
+.adminCredentialsBox code {
+  display: block !important;
+}
+
+.adminCredentialsBox span {
+  color: rgba(244,246,242,0.48) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.adminCredentialsBox strong {
+  margin-top: 5px !important;
+  color: rgba(244,246,242,0.92) !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+.adminCredentialsBox code {
+  margin-top: 10px !important;
+  padding: 12px !important;
+  white-space: pre-wrap !important;
+  border-radius: 14px !important;
+  background: rgba(0,0,0,0.28) !important;
+  color: #bfe977 !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+.adminCredentialsBox button {
+  width: 100% !important;
+  min-height: 44px !important;
+  margin-top: 10px !important;
+  border: none !important;
+  border-radius: 14px !important;
+  background: rgba(255,255,255,0.07) !important;
+  color: rgba(244,246,242,0.86) !important;
+  font-weight: 900 !important;
+}
+
+.adminUsersList {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.adminUserRow {
+  width: 100% !important;
+  min-height: 74px !important;
+  padding: 12px 14px !important;
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) 18px !important;
+  gap: 12px !important;
+  align-items: center !important;
+  text-align: left !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 20px !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(244,246,242,0.92) !important;
+}
+
+.adminUserRow > span {
+  width: 42px !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 16px !important;
+  background: rgba(127,159,58,0.13) !important;
+  font-size: 20px !important;
+}
+
+.adminUserRow strong {
+  display: block !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.adminUserRow small {
+  display: block !important;
+  margin-top: 4px !important;
+  color: rgba(244,246,242,0.45) !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.adminUserRow em {
+  color: rgba(127,159,58,0.88) !important;
+  font-size: 24px !important;
+  font-style: normal !important;
+}
+

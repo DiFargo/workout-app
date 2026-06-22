@@ -1,0 +1,2747 @@
+/* AI COACH CENTER */
+.aiCoachPage {
+  min-height: 100vh;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: max(34px, calc(env(safe-area-inset-top) + 22px)) 14px calc(28px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at top, rgba(127, 159, 58, 0.16) 0%, transparent 34%),
+    linear-gradient(180deg, #0d110d 0%, #070a08 100%);
+  color: var(--text);
+}
+
+.aiCoachBackBtn {
+  z-index: 80;
+}
+
+.aiCoachHero {
+  padding: 56px 6px 18px;
+  text-align: center;
+}
+
+.aiCoachBadge {
+  width: fit-content;
+  margin: 0 auto 12px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(127, 159, 58, 0.28);
+  background: rgba(127, 159, 58, 0.12);
+  color: #b7d46d;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+}
+
+.aiCoachHero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(34px, 9vw, 48px);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -1.4px;
+}
+
+.aiCoachHero p {
+  max-width: 380px;
+  margin: 12px auto 0;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.42;
+}
+
+.aiCoachResultCard {
+  margin: 0 auto 14px;
+  padding: 18px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), transparent 34%),
+    linear-gradient(180deg, rgba(24, 29, 24, 0.94) 0%, rgba(13, 16, 13, 0.96) 100%);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.34);
+}
+
+.aiCoachResultTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.aiCoachResultTop span {
+  width: 46px;
+  height: 46px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: rgba(127, 159, 58, 0.16);
+  border: 1px solid rgba(127, 159, 58, 0.16);
+  font-size: 24px;
+}
+
+.aiCoachResultTop h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -0.4px;
+}
+
+.aiCoachResultTop p {
+  margin: 7px 0 0;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.aiCoachResultTop strong {
+  min-width: 72px;
+  padding: 13px 12px;
+  border-radius: 22px;
+  background: rgba(127, 159, 58, 0.14);
+  border: 1px solid rgba(127, 159, 58, 0.18);
+  color: #c6ee76;
+  font-size: 24px;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1;
+}
+
+.aiCoachMeter {
+  height: 8px;
+  margin: 16px 0;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.aiCoachMeter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 18px rgba(127, 159, 58, 0.34);
+  transition: width 0.32s ease;
+}
+
+.aiCoachBlocks {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.aiCoachMiniBlock {
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.aiCoachMiniBlock.accent {
+  background: rgba(127, 159, 58, 0.08);
+  border-color: rgba(127, 159, 58, 0.14);
+}
+
+.aiCoachMiniBlock h3 {
+  margin: 0 0 10px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.aiCoachMiniBlock p {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.aiCoachGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.aiCoachFeatureCard {
+  min-height: 138px;
+  padding: 14px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: linear-gradient(180deg, rgba(24, 29, 24, 0.86), rgba(13, 16, 13, 0.92));
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
+}
+
+.aiCoachFeatureCard.active {
+  border-color: rgba(127, 159, 58, 0.38);
+  background:
+    radial-gradient(circle at top left, rgba(127, 159, 58, 0.18), transparent 48%),
+    linear-gradient(180deg, rgba(24, 29, 24, 0.96), rgba(13, 16, 13, 0.98));
+}
+
+.aiCoachFeatureCard:active {
+  transform: scale(0.98);
+}
+
+.aiCoachFeatureCard span {
+  width: 38px;
+  height: 38px;
+  margin-bottom: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.055);
+  font-size: 21px;
+}
+
+.aiCoachFeatureCard strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.14;
+}
+
+.aiCoachFeatureCard small {
+  display: block;
+  margin-top: 7px;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.24;
+}
+
+@media (max-width: 390px) {
+  .aiCoachPage {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .aiCoachGrid {
+    gap: 8px;
+  }
+
+  .aiCoachFeatureCard {
+    min-height: 132px;
+    padding: 13px;
+  }
+
+  .aiCoachResultCard {
+    padding: 16px;
+  }
+}
+
+/* =========================================================
+   AI NUTRITION HISTORY PLAN â€” FATSECRET MARCH/APRIL BASELINE
+   ========================================================= */
+.nutritionAiHistoryPlanCard {
+  width: calc(100% - 20px);
+  max-width: 520px;
+  margin: 12px auto 16px;
+  padding: 16px;
+  border-radius: 26px;
+  border: 1px solid rgba(157, 245, 76, 0.14);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(157, 245, 76, 0.12), transparent 38%),
+    linear-gradient(180deg, rgba(25, 31, 25, 0.94), rgba(12, 15, 12, 0.96));
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.nutritionAiHistoryTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px;
+  gap: 12px;
+  align-items: start;
+}
+
+.nutritionAiHistoryTop span {
+  display: inline-flex;
+  margin-bottom: 7px;
+  color: rgba(157, 245, 76, 0.9);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nutritionAiHistoryTop h2 {
+  margin: 0;
+  color: rgba(248, 248, 246, 0.94);
+  font-size: 18px;
+  font-weight: 950;
+  line-height: 1.18;
+  letter-spacing: -0.3px;
+}
+
+.nutritionAiHistoryTop p {
+  margin: 8px 0 0;
+  color: rgba(248, 248, 246, 0.52);
+  font-size: 12.5px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.nutritionAiHistoryTop > strong {
+  width: 58px;
+  height: 58px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10120f;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  font-size: 22px;
+  font-weight: 950;
+  box-shadow: 0 12px 28px rgba(127, 159, 58, 0.22);
+}
+
+.nutritionAiHistoryBadges {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 13px 0 2px;
+  scrollbar-width: none;
+}
+
+.nutritionAiHistoryBadges::-webkit-scrollbar {
+  display: none;
+}
+
+.nutritionAiHistoryBadges span {
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(248, 248, 246, 0.78);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  font-size: 12px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.nutritionAiHistoryBadges span.good {
+  border-color: rgba(157, 245, 76, 0.18);
+  background: rgba(157, 245, 76, 0.075);
+}
+
+.nutritionAiHistoryBadges span.warning {
+  border-color: rgba(255, 180, 90, 0.2);
+  background: rgba(255, 180, 90, 0.075);
+}
+
+.nutritionAiHistoryBadges i {
+  font-style: normal;
+}
+
+.nutritionAiHistoryAdvice,
+.nutritionAiHistoryWeekly {
+  margin-top: 12px;
+  padding: 13px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.nutritionAiHistoryAdvice h3,
+.nutritionAiHistoryWeekly span {
+  display: block;
+  margin: 0 0 6px;
+  color: rgba(248, 248, 246, 0.86);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.nutritionAiHistoryAdvice p,
+.nutritionAiHistoryWeekly p {
+  margin: 0;
+  color: rgba(248, 248, 246, 0.58);
+  font-size: 12.5px;
+  font-weight: 750;
+  line-height: 1.36;
+}
+
+.nutritionAiHistoryMonth {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.nutritionAiHistoryMonth div {
+  min-height: 76px;
+  padding: 10px 8px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.nutritionAiHistoryMonth span {
+  color: rgba(248, 248, 246, 0.4);
+  font-size: 10.5px;
+  font-weight: 850;
+}
+
+.nutritionAiHistoryMonth strong {
+  color: rgba(248, 248, 246, 0.92);
+  font-size: 13px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.nutritionAiHistoryMonth small {
+  color: rgba(248, 248, 246, 0.43);
+  font-size: 10.5px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+@media (max-width: 430px) {
+  .nutritionAiHistoryPlanCard {
+    width: calc(100% - 16px);
+    padding: 14px;
+    border-radius: 24px;
+  }
+
+  .nutritionAiHistoryTop {
+    grid-template-columns: minmax(0, 1fr) 58px;
+  }
+
+  .nutritionAiHistoryTop > strong {
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+    font-size: 21px;
+  }
+
+  .nutritionAiHistoryMonth {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* AI ASSISTANT / NUTRITION TARGET INFO FINAL */
+.nutritionTargetInfoCard {
+  margin-top: 14px;
+}
+
+.nutritionTargetInfoCard .nutritionAiHistoryTop strong {
+  min-width: 54px;
+}
+
+.nutritionTargetBadges span.info {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.nutritionOpenAssistantBtn {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.nutritionOpenAssistantBtn:active {
+  transform: scale(0.98);
+}
+
+/* AI NUTRITION PLAN V1 â€” ASSISTANT PAGE */
+.aiNutritionPlanShell {
+  margin: 0 auto 14px;
+}
+
+.aiNutritionOnboardingCard,
+.aiNutritionPlanCardFull {
+  padding: 18px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at top left, rgba(127, 159, 58, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(24, 29, 24, 0.96), rgba(13, 16, 13, 0.98));
+  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.36);
+}
+
+.aiNutritionOnboardingHead span,
+.aiNutritionPlanHero span,
+.aiNutritionPlanInsight span,
+.aiNutritionTwoCol span,
+.aiNutritionImproveBox span {
+  display: inline-flex;
+  margin-bottom: 8px;
+  color: rgba(183, 212, 109, 0.96);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.aiNutritionOnboardingHead h2,
+.aiNutritionPlanHero h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 950;
+  line-height: 1.08;
+  letter-spacing: -0.6px;
+}
+
+.aiNutritionOnboardingHead p,
+.aiNutritionPlanHero p,
+.aiNutritionPlanInsight p,
+.aiNutritionTwoCol p,
+.aiNutritionImproveBox p {
+  margin: 9px 0 0;
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.38;
+}
+
+.aiNutritionFormGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.aiNutritionFormGrid label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.aiNutritionFormGrid label span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.aiNutritionFormGrid input {
+  width: 100%;
+  height: 52px;
+  padding: 0 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.24);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 16px;
+  font-weight: 900;
+  outline: none;
+}
+
+.aiNutritionFormGrid input:focus {
+  border-color: rgba(127, 159, 58, 0.42);
+  box-shadow: 0 0 0 3px rgba(127, 159, 58, 0.12);
+}
+
+.aiNutritionGoalPicker {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.aiNutritionGoalPicker button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.aiNutritionGoalPicker button.active {
+  border-color: rgba(127, 159, 58, 0.42);
+  background: rgba(127, 159, 58, 0.12);
+}
+
+.aiNutritionGoalPicker strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.aiNutritionGoalPicker small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.aiNutritionPrimaryBtn,
+.aiNutritionPlanActions button {
+  width: 100%;
+  min-height: 58px;
+  margin-top: 14px;
+  border: none;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+  font-size: 17px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.aiNutritionPlanActions button.ghost {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.aiNutritionPlanHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 76px;
+  gap: 14px;
+  align-items: start;
+}
+
+.aiNutritionPlanHero > strong {
+  width: 70px;
+  height: 70px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+  font-size: 19px;
+  font-weight: 950;
+  box-shadow: 0 16px 32px rgba(127, 159, 58, 0.2);
+}
+
+.aiNutritionTodayMacros {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.aiNutritionTodayMacros div,
+.aiNutritionWeeksGrid div,
+.aiNutritionTwoCol div,
+.aiNutritionPlanInsight,
+.aiNutritionImproveBox {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.aiNutritionTodayMacros div {
+  min-height: 78px;
+  padding: 11px 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.aiNutritionTodayMacros span,
+.aiNutritionWeeksGrid span {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.aiNutritionTodayMacros strong {
+  margin-top: 5px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.aiNutritionTodayMacros small {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.34);
+  font-size: 10px !important;
+  font-weight: 900;
+}
+
+.aiNutritionPlanInsight,
+.aiNutritionImproveBox {
+  margin-top: 12px;
+  padding: 14px;
+}
+
+.aiNutritionBadgesRow {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 12px 0 2px;
+  scrollbar-width: none;
+}
+
+.aiNutritionBadgesRow::-webkit-scrollbar {
+  display: none;
+}
+
+.aiNutritionBadgesRow span {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.aiNutritionBadgesRow span.good {
+  border-color: rgba(127, 159, 58, 0.24);
+  background: rgba(127, 159, 58, 0.1);
+}
+
+.aiNutritionBadgesRow span.warning {
+  border-color: rgba(255, 180, 90, 0.22);
+  background: rgba(255, 180, 90, 0.08);
+}
+
+.aiNutritionBadgesRow i {
+  margin-right: 5px;
+  font-style: normal;
+}
+
+.aiNutritionWeeksGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.aiNutritionWeeksGrid div {
+  min-height: 120px;
+  padding: 12px;
+}
+
+.aiNutritionWeeksGrid div.active {
+  border-color: rgba(127, 159, 58, 0.3);
+  background: rgba(127, 159, 58, 0.085);
+}
+
+.aiNutritionWeeksGrid strong {
+  display: block;
+  margin-top: 7px;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 950;
+}
+
+.aiNutritionWeeksGrid small,
+.aiNutritionWeeksGrid p {
+  display: block;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 11.5px;
+  font-weight: 800;
+  line-height: 1.26;
+}
+
+.aiNutritionTwoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.aiNutritionTwoCol div {
+  padding: 13px;
+}
+
+.aiNutritionPlanActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 430px) {
+  .aiNutritionFormGrid,
+  .aiNutritionTodayMacros {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .aiNutritionPlanHero {
+    grid-template-columns: minmax(0, 1fr) 66px;
+  }
+
+  .aiNutritionPlanHero > strong {
+    width: 62px;
+    height: 62px;
+    border-radius: 21px;
+    font-size: 17px;
+  }
+
+  .aiNutritionWeeksGrid,
+  .aiNutritionTwoCol,
+  .aiNutritionPlanActions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.aiNutritionAdaptBtn {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(127, 159, 58, 0.22);
+  background: rgba(127, 159, 58, 0.1);
+  color: rgba(220, 245, 154, 0.94);
+  font-size: 15px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.aiNutritionAdaptResult {
+  border-color: rgba(127, 159, 58, 0.18);
+  background: rgba(127, 159, 58, 0.07);
+}
+
+/* AI PLAN NUTRITION DASHBOARD â€” merged summary block */
+.nutritionAiPlanDashboard {
+  width: 100%;
+  margin: 12px 0 14px;
+  padding: 15px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background:
+    radial-gradient(circle at top, rgba(127, 159, 58, 0.14), transparent 42%),
+    linear-gradient(180deg, rgba(24, 29, 24, 0.96), rgba(12, 15, 12, 0.96));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  position: relative;
+}
+
+.nutritionAiPlanHeader {
+  display: grid;
+  grid-template-columns: 36px 1fr 36px;
+  align-items: start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.nutritionAiPlanTitleBox {
+  grid-column: 2;
+  text-align: center;
+  min-width: 0;
+}
+
+.nutritionAiPlanTitleBox span,
+.nutritionAiPlanConclusion span,
+.nutritionAiPlanWater span,
+.nutritionAiPlanScoreBlock > span {
+  display: block;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.18px;
+}
+
+.nutritionAiPlanTitleBox span {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 18px;
+  line-height: 1.08;
+  letter-spacing: -0.45px;
+}
+
+.nutritionAiPlanHeader h2 {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 11px;
+  font-weight: 950;
+  line-height: 1.15;
+  letter-spacing: 0.12px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.nutritionAiPlanMiniBtn {
+  grid-column: 3;
+  justify-self: end;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  padding: 0;
+  border: 1px solid rgba(127, 159, 58, 0.28);
+  border-radius: 50%;
+  background: rgba(127, 159, 58, 0.11);
+  color: #b8d76c;
+  font-size: 17px;
+  font-weight: 950;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nutritionAiPlanBody {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  align-items: stretch;
+}
+
+.nutritionAiPlanRsk {
+  min-height: 96px;
+  padding: 10px;
+  border-radius: 23px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  background: rgba(0, 0, 0, 0.16);
+  display: grid;
+  grid-template-columns: minmax(96px, 0.74fr) minmax(142px, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.nutritionAiPlanGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin: 0;
+  align-self: center;
+}
+
+.nutritionAiPlanGrid span {
+  aspect-ratio: 1 / 1;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.nutritionAiPlanGrid span.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 14px rgba(127, 159, 58, 0.2);
+}
+
+.nutritionAiPlanRskRight {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nutritionAiPlanRskInfo {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.nutritionAiPlanRskInfo div {
+  min-width: 0;
+  text-align: center;
+}
+
+.nutritionAiPlanRskInfo span,
+.nutritionAiPlanRskFoot span,
+.nutritionAiPlanMacros span,
+.nutritionAiPlanMacros small,
+.nutritionAiPlanMacroPercent span {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 10px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.nutritionAiPlanRskInfo strong {
+  display: block;
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -0.6px;
+}
+
+.nutritionAiPlanRskInfo i {
+  display: block;
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nutritionAiPlanRskFoot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 0;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nutritionAiPlanRskFoot strong {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 11px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.nutritionAiPlanScoreBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 0;
+}
+
+.nutritionAiPlanScoreBlock > span {
+  color: rgba(255, 255, 255, 0.42);
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.nutritionAiPlanScore {
+  width: 118px;
+  height: 118px;
+  padding: 9px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 14px 32px rgba(0, 0, 0, 0.18);
+  position: relative;
+}
+
+.nutritionAiPlanScore::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: #101410;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nutritionAiPlanScore > div {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: rgba(10, 13, 10, 0.82);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.nutritionAiPlanScore strong {
+  color: #fff;
+  font-size: 31px;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: -1.2px;
+}
+
+.nutritionAiPlanMacroPercent {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 11px;
+}
+
+.nutritionAiPlanMacroPercent span,
+.nutritionAiPlanBadges span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 27px;
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.nutritionAiPlanMacroPercent i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.nutritionAiPlanMacroPercent i.carbs { background: #70cde3; }
+.nutritionAiPlanMacroPercent i.fat { background: #ffd15a; }
+.nutritionAiPlanMacroPercent i.protein { background: #ff7d7d; }
+
+.nutritionAiPlanMacros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.nutritionAiPlanMacros div {
+  min-height: 66px;
+  padding: 10px 7px;
+  border-radius: 19px;
+  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  text-align: center;
+}
+
+.nutritionAiPlanMacros strong {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 17px;
+  font-weight: 950;
+  letter-spacing: -0.4px;
+}
+
+.nutritionAiPlanMacros small {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+.nutritionAiPlanConclusion {
+  margin-top: 10px;
+  padding: 12px 13px;
+  border-radius: 20px;
+  background: rgba(127, 159, 58, 0.075);
+  border: 1px solid rgba(127, 159, 58, 0.12);
+  text-align: center;
+}
+
+.nutritionAiPlanConclusion p {
+  margin: 5px 0 0;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.34;
+}
+
+.nutritionAiPlanBadges {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 10px 0 2px;
+  scrollbar-width: none;
+}
+
+.nutritionAiPlanBadges::-webkit-scrollbar { display: none; }
+
+.nutritionAiPlanBadges span {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.nutritionAiPlanBadges span.good {
+  color: #b8d76c;
+  background: rgba(127, 159, 58, 0.1);
+  border-color: rgba(127, 159, 58, 0.16);
+}
+
+.nutritionAiPlanBadges span.warning,
+.nutritionAiPlanBadges span.warn {
+  color: #ffbf73;
+  background: rgba(255, 191, 115, 0.09);
+  border-color: rgba(255, 191, 115, 0.14);
+}
+
+.nutritionAiPlanWater {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nutritionAiPlanWater strong {
+  display: block;
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.nutritionAiPlanWater div:last-child {
+  display: flex;
+  gap: 7px;
+}
+
+.nutritionAiPlanWater button {
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+@media (max-width: 390px) {
+  .nutritionAiPlanDashboard { padding: 13px; border-radius: 25px; }
+  .nutritionAiPlanHeader { grid-template-columns: 34px 1fr 34px; margin-bottom: 10px; }
+  .nutritionAiPlanTitleBox span { font-size: 17px; }
+  .nutritionAiPlanHeader h2 { font-size: 10px; }
+  .nutritionAiPlanMiniBtn { width: 32px; height: 32px; min-width: 32px; }
+  .nutritionAiPlanRsk { grid-template-columns: minmax(86px, 0.66fr) minmax(134px, 1fr); gap: 8px; padding: 9px; }
+  .nutritionAiPlanGrid { gap: 3px; }
+  .nutritionAiPlanRskInfo strong { font-size: 17px; }
+  .nutritionAiPlanScore { width: 110px; height: 110px; }
+  .nutritionAiPlanScore > div { width: 78px; height: 78px; }
+  .nutritionAiPlanScore strong { font-size: 29px; }
+  .nutritionAiPlanMacros { gap: 6px; }
+  .nutritionAiPlanMacros strong { font-size: 16px; }
+}
+
+/* AI PLAN NUTRITION â€” compact premium tuning 2026-05-20 */
+.nutritionAiPlanDashboard {
+  background:
+    radial-gradient(circle at 14% 16%, rgba(255, 255, 255, 0.055), transparent 34%),
+    linear-gradient(180deg, rgba(35, 45, 56, 0.96), rgba(20, 29, 36, 0.96)) !important;
+  border-color: rgba(255, 255, 255, 0.045) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 18px 44px rgba(0, 0, 0, 0.18) !important;
+}
+
+.nutritionAiPlanRsk {
+  min-height: 82px !important;
+  padding: 10px 12px !important;
+  grid-template-columns: 72px minmax(0, 1fr) !important;
+  gap: 13px !important;
+  border-radius: 21px !important;
+  background: rgba(3, 10, 16, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.nutritionAiPlanGrid {
+  width: 64px !important;
+  grid-template-columns: repeat(5, 9px) !important;
+  grid-auto-rows: 9px !important;
+  gap: 4px !important;
+  align-self: center !important;
+  justify-self: center !important;
+}
+
+.nutritionAiPlanGrid span {
+  width: 9px !important;
+  height: 9px !important;
+  border-radius: 5px !important;
+  aspect-ratio: auto !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+}
+
+.nutritionAiPlanGrid span.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  box-shadow: 0 0 10px rgba(127, 159, 58, 0.18) !important;
+}
+
+.nutritionAiPlanRskRight {
+  gap: 6px !important;
+}
+
+.nutritionAiPlanRskInfo {
+  gap: 8px !important;
+}
+
+.nutritionAiPlanRskInfo span,
+.nutritionAiPlanRskFoot span {
+  color: rgba(245, 247, 251, 0.52) !important;
+}
+
+.nutritionAiPlanRskInfo strong {
+  font-size: 19px !important;
+  color: rgba(255, 255, 255, 0.94) !important;
+}
+
+.nutritionAiPlanRskFoot {
+  justify-content: flex-start !important;
+  padding-top: 7px !important;
+  gap: 8px !important;
+}
+
+.nutritionAiPlanRskFoot strong {
+  color: rgba(255, 255, 255, 0.86) !important;
+}
+
+.nutritionAiPlanScoreBlock {
+  margin-top: 2px !important;
+  gap: 8px !important;
+}
+
+.nutritionAiPlanScoreBlock > span {
+  color: rgba(245, 247, 251, 0.48) !important;
+}
+
+.nutritionAiPlanScore {
+  width: 124px !important;
+  height: 124px !important;
+  padding: 0 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 16px 34px rgba(0, 0, 0, 0.2) !important;
+}
+
+.nutritionAiPlanScore::after {
+  inset: 14px !important;
+  background: rgba(13, 19, 17, 0.96) !important;
+  border-color: rgba(255, 255, 255, 0.055) !important;
+}
+
+.nutritionAiPlanScore > div {
+  width: 78px !important;
+  height: 78px !important;
+  background: rgba(8, 13, 11, 0.9) !important;
+}
+
+.nutritionAiPlanScore strong {
+  font-size: 32px !important;
+}
+
+.nutritionAiPlanMacros {
+  gap: 7px !important;
+  margin-top: 9px !important;
+}
+
+.nutritionAiPlanMacros div {
+  min-height: 56px !important;
+  padding: 8px 7px !important;
+  border-radius: 18px !important;
+  background: rgba(3, 10, 16, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.055) !important;
+}
+
+.nutritionAiPlanMacros strong {
+  margin-top: 3px !important;
+  font-size: 16px !important;
+}
+
+.nutritionAiPlanMacros small {
+  margin-top: 1px !important;
+  font-size: 9px !important;
+}
+
+@media (max-width: 390px) {
+  .nutritionAiPlanRsk {
+    min-height: 78px !important;
+    grid-template-columns: 66px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    padding: 9px 10px !important;
+  }
+
+  .nutritionAiPlanGrid {
+    width: 58px !important;
+    grid-template-columns: repeat(5, 8px) !important;
+    grid-auto-rows: 8px !important;
+    gap: 4px !important;
+  }
+
+  .nutritionAiPlanGrid span {
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  .nutritionAiPlanRskInfo strong {
+    font-size: 18px !important;
+  }
+
+  .nutritionAiPlanScore {
+    width: 118px !important;
+    height: 118px !important;
+  }
+
+  .nutritionAiPlanScore::after {
+    inset: 13px !important;
+  }
+
+  .nutritionAiPlanScore > div {
+    width: 74px !important;
+    height: 74px !important;
+  }
+
+  .nutritionAiPlanScore strong {
+    font-size: 30px !important;
+  }
+
+  .nutritionAiPlanMacros div {
+    min-height: 52px !important;
+    padding: 7px 6px !important;
+  }
+}
+
+/* AI PLAN NUTRITION â€” two-state collapsed/expanded behavior */
+.nutritionAiPlanDashboard.collapsed {
+  padding-bottom: 13px !important;
+}
+
+.nutritionAiPlanToggleBtn {
+  grid-column: 3;
+  justify-self: end;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 18px;
+  font-weight: 950;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.nutritionAiPlanToggleBtn:active {
+  transform: scale(0.96);
+}
+
+.nutritionAiPlanCollapsedCard {
+  width: 100%;
+  padding: 11px 12px 12px;
+  border-radius: 21px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  background: rgba(3, 10, 16, 0.24);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.nutritionAiPlanCollapsedCard:active {
+  transform: scale(0.99);
+}
+
+.nutritionAiPlanCollapsedTop {
+  display: grid;
+  grid-template-columns: 1fr 1fr 74px;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.nutritionAiPlanCollapsedTop > div {
+  min-height: 52px;
+  padding: 8px 7px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.nutritionAiPlanCollapsedTop > div.score {
+  background: rgba(127, 159, 58, 0.08);
+  border-color: rgba(127, 159, 58, 0.13);
+}
+
+.nutritionAiPlanCollapsedTop span,
+.nutritionAiPlanCollapsedMacros span {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 10px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.nutritionAiPlanCollapsedTop strong {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.91);
+  font-size: 18px;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: -0.45px;
+}
+
+.nutritionAiPlanCollapsedTop .score strong {
+  color: #b8d76c;
+}
+
+.nutritionAiPlanCollapsedMacros {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nutritionAiPlanCollapsedMacros::-webkit-scrollbar {
+  display: none;
+}
+
+.nutritionAiPlanCollapsedMacros span {
+  flex: 0 0 auto;
+  min-height: 27px;
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+.nutritionAiPlanCollapsedCard p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.32;
+  text-align: center;
+}
+
+.nutritionAiPlanDashboard.collapsed .nutritionAiPlanHeader {
+  margin-bottom: 9px !important;
+}
+
+.nutritionAiPlanDashboard.expanded .nutritionAiPlanHeader {
+  margin-bottom: 12px !important;
+}
+
+@media (max-width: 390px) {
+  .nutritionAiPlanCollapsedTop {
+    grid-template-columns: 1fr 1fr 66px;
+    gap: 6px;
+  }
+
+  .nutritionAiPlanCollapsedTop > div {
+    min-height: 50px;
+    padding: 7px 5px;
+  }
+
+  .nutritionAiPlanCollapsedTop strong {
+    font-size: 17px;
+  }
+
+  .nutritionAiPlanCollapsedCard p {
+    font-size: 11.5px;
+  }
+}
+
+/* =========================================================
+   AI PLAN COLORS MATCH MEAL CARDS â€” BASE App(40)
+   Ð¡Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¾Ðµ ÑÐ¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÐºÐ°Ðº Ð·Ð°ÐºÑ€Ñ‹Ñ‚Ñ‹Ðµ Ð—Ð°Ð²Ñ‚Ñ€Ð°Ðº/ÐžÐ±ÐµÐ´/Ð£Ð¶Ð¸Ð½.
+   Ð Ð°Ð·Ð²ÐµÑ€Ð½ÑƒÑ‚Ð¾Ðµ ÑÐ¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ ÐºÐ°Ðº Ñ€Ð°ÑÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹ meal-card.
+   ========================================================= */
+.fatSecretPage .nutritionAiPlanDashboard,
+.nutritionAiPlanDashboard {
+  overflow: hidden !important;
+  transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 180ms ease !important;
+}
+
+.fatSecretPage .nutritionAiPlanDashboard.collapsed,
+.nutritionAiPlanDashboard.collapsed {
+  background:
+    radial-gradient(circle at 12% 24%, rgba(255,255,255,0.045), transparent 42%),
+    linear-gradient(180deg, rgba(25, 38, 48, 0.96), rgba(10, 20, 28, 0.96)) !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+  box-shadow:
+    0 14px 32px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.035) !important;
+}
+
+.fatSecretPage .nutritionAiPlanDashboard.expanded,
+.nutritionAiPlanDashboard.expanded {
+  background:
+    radial-gradient(circle at 8% 18%, rgba(18, 227, 92, 0.08), transparent 38%),
+    radial-gradient(circle at 56% 16%, rgba(255,255,255,0.045), transparent 42%),
+    linear-gradient(180deg, rgba(28, 45, 52, 0.96), rgba(12, 28, 30, 0.98)) !important;
+  border-color: rgba(145, 173, 78, 0.25) !important;
+  box-shadow:
+    0 14px 32px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.035) !important;
+}
+
+.fatSecretPage .nutritionAiPlanCollapsedCard,
+.nutritionAiPlanCollapsedCard,
+.fatSecretPage .nutritionAiPlanRsk,
+.nutritionAiPlanRsk,
+.fatSecretPage .nutritionAiPlanMacros div,
+.nutritionAiPlanMacros div,
+.fatSecretPage .nutritionAiPlanConclusion,
+.nutritionAiPlanConclusion {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.035), transparent 42%),
+    linear-gradient(180deg, rgba(9, 20, 26, 0.72), rgba(5, 14, 18, 0.78)) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.03),
+    0 8px 18px rgba(0,0,0,0.12) !important;
+}
+
+.fatSecretPage .nutritionAiPlanDashboard.expanded .nutritionAiPlanRsk,
+.nutritionAiPlanDashboard.expanded .nutritionAiPlanRsk,
+.fatSecretPage .nutritionAiPlanDashboard.expanded .nutritionAiPlanConclusion,
+.nutritionAiPlanDashboard.expanded .nutritionAiPlanConclusion {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(41, 255, 123, 0.045), transparent 40%),
+    linear-gradient(180deg, rgba(12, 24, 22, 0.97), rgba(8, 18, 18, 0.985)) !important;
+  border-color: rgba(67, 255, 136, 0.10) !important;
+}
+
+.fatSecretPage .nutritionAiPlanCollapsedTop > div,
+.nutritionAiPlanCollapsedTop > div,
+.fatSecretPage .nutritionAiPlanCollapsedMacros span,
+.nutritionAiPlanCollapsedMacros span,
+.fatSecretPage .nutritionAiPlanMacroPercent span,
+.nutritionAiPlanMacroPercent span,
+.fatSecretPage .nutritionAiPlanBadges span,
+.nutritionAiPlanBadges span {
+  background: rgba(255,255,255,0.04) !important;
+  border-color: rgba(255,255,255,0.055) !important;
+}
+
+.fatSecretPage .nutritionAiPlanCollapsedTop > div.score,
+.nutritionAiPlanCollapsedTop > div.score {
+  background: rgba(127, 159, 58, 0.10) !important;
+  border-color: rgba(127, 159, 58, 0.18) !important;
+}
+
+.fatSecretPage .nutritionAiPlanToggleBtn,
+.nutritionAiPlanToggleBtn {
+  background: rgba(255,255,255,0.045) !important;
+  border-color: rgba(255,255,255,0.075) !important;
+  color: rgba(255,255,255,0.58) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035) !important;
+}
+
+.fatSecretPage .nutritionAiPlanDashboard.expanded .nutritionAiPlanToggleBtn,
+.nutritionAiPlanDashboard.expanded .nutritionAiPlanToggleBtn {
+  background: rgba(127, 159, 58, 0.12) !important;
+  border-color: rgba(127, 159, 58, 0.20) !important;
+  color: rgba(184, 215, 108, 0.88) !important;
+}
+
+/* APP43 TARGETED UPDATE: AI sex picker, photo analysis animation, calorie over-limit grid */
+.aiNutritionSexPicker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.aiNutritionSexPicker button {
+  width: 100%;
+  min-height: 62px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.aiNutritionSexPicker button.active {
+  border-color: rgba(127, 159, 58, 0.42);
+  background: rgba(127, 159, 58, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.aiNutritionSexPicker strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.aiNutritionSexPicker small {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.fatPhotoAiFloatingPreview.isAnalyzing {
+  position: relative !important;
+  overflow: hidden !important;
+  border-color: rgba(127, 159, 58, 0.24) !important;
+  background:
+    radial-gradient(circle at 0% 50%, rgba(127, 159, 58, 0.14), transparent 42%),
+    rgba(255, 255, 255, 0.04) !important;
+}
+
+.fatPhotoAiFloatingPreview.isAnalyzing::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, rgba(145, 173, 78, 0.12), transparent);
+  transform: translateX(-120%);
+  animation: fatPhotoAiGlowSweep 1.45s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.fatPhotoAiPreviewImage {
+  width: 46px;
+  height: 46px;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.fatPhotoAiPreviewImage img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+.fatPhotoAiFloatingPreview.isAnalyzing .fatPhotoAiPreviewImage {
+  box-shadow: 0 0 0 1px rgba(127, 159, 58, 0.22), 0 0 18px rgba(127, 159, 58, 0.16);
+}
+
+.fatPhotoAiScanLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -30%;
+  height: 35%;
+  background: linear-gradient(180deg, transparent, rgba(145, 173, 78, 0.55), transparent);
+  animation: fatPhotoAiScanMove 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.fatPhotoAiAnalyzeDots {
+  display: flex;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.fatPhotoAiAnalyzeDots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(145, 173, 78, 0.85);
+  animation: fatPhotoAiDotPulse 1s ease-in-out infinite;
+}
+
+.fatPhotoAiAnalyzeDots i:nth-child(2) {
+  animation-delay: 0.14s;
+}
+
+.fatPhotoAiAnalyzeDots i:nth-child(3) {
+  animation-delay: 0.28s;
+}
+
+@keyframes fatPhotoAiGlowSweep {
+  0% { transform: translateX(-120%); opacity: 0; }
+  35% { opacity: 1; }
+  100% { transform: translateX(120%); opacity: 0; }
+}
+
+@keyframes fatPhotoAiScanMove {
+  0%, 100% { top: -30%; opacity: 0.45; }
+  50% { top: 95%; opacity: 1; }
+}
+
+@keyframes fatPhotoAiDotPulse {
+  0%, 100% { opacity: 0.32; transform: translateY(0) scale(0.82); }
+  50% { opacity: 1; transform: translateY(-2px) scale(1); }
+}
+
+.nutritionCaloriesRenderCard.overLimit .nutritionCaloriesRenderGrid span {
+  background: rgba(110, 42, 42, 0.56) !important;
+}
+
+.nutritionCaloriesRenderCard.overLimit .nutritionCaloriesRenderGrid span.isActive {
+  background: #e34e4e !important;
+  box-shadow: 0 0 15px rgba(227, 78, 78, 0.42) !important;
+}
+
+.nutritionCaloriesRenderCard.overLimit .nutritionCaloriesRenderGrid {
+  filter: drop-shadow(0 0 18px rgba(227, 78, 78, 0.16)) !important;
+}
+
+.nutritionAiPlanDashboard.overLimit .nutritionAiPlanGrid span.active {
+  background: linear-gradient(135deg, #e34e4e, #ff7d7d) !important;
+  box-shadow: 0 0 14px rgba(227, 78, 78, 0.26) !important;
+}
+
+.nutritionAiPlanDashboard.overLimit .nutritionAiPlanCollapsedTop > div.score {
+  background: rgba(227, 78, 78, 0.09) !important;
+  border-color: rgba(227, 78, 78, 0.17) !important;
+}
+
+@media (max-width: 380px) {
+  .aiNutritionSexPicker {
+    gap: 8px;
+  }
+
+  .aiNutritionSexPicker button {
+    min-height: 58px;
+    padding: 11px 12px;
+  }
+}
+
+/* APP43 PHOTO SEARCH PROCESS + COMPACT AI ASSISTANT */
+.fatPhotoAiSearchProcess {
+  width: 100%;
+  min-height: 82px;
+  margin: 10px 0 10px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  border-radius: 22px;
+  border: 1px solid rgba(127, 159, 58, 0.2);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(127, 159, 58, 0.15), transparent 42%),
+    linear-gradient(180deg, rgba(15, 23, 16, 0.95), rgba(8, 13, 9, 0.98));
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.fatPhotoAiSearchProcess strong {
+  display: block;
+  color: rgba(247, 248, 251, 0.9);
+  font-size: 14px;
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.fatPhotoAiSearchProcess p {
+  margin: 5px 0 0;
+  color: rgba(247, 248, 251, 0.5);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.fatPhotoAiSearchOrbit {
+  width: 46px;
+  height: 46px;
+  position: relative;
+  border-radius: 50%;
+  background: rgba(127, 159, 58, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(127, 159, 58, 0.18);
+}
+
+.fatPhotoAiSearchOrbit i {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 3px solid rgba(127, 159, 58, 0.12);
+  border-top-color: rgba(145, 173, 78, 0.95);
+  animation: fatPhotoAiOrbit 0.9s linear infinite;
+}
+
+.fatPhotoAiSearchOrbit span {
+  position: absolute;
+  inset: 17px;
+  border-radius: 50%;
+  background: rgba(145, 173, 78, 0.9);
+  box-shadow: 0 0 18px rgba(145, 173, 78, 0.4);
+  animation: fatPhotoAiCorePulse 1.15s ease-in-out infinite;
+}
+
+@keyframes fatPhotoAiOrbit {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fatPhotoAiCorePulse {
+  0%, 100% { transform: scale(0.74); opacity: 0.55; }
+  50% { transform: scale(1); opacity: 1; }
+}
+
+.aiCoachPage {
+  padding-top: max(26px, calc(env(safe-area-inset-top) + 16px)) !important;
+  padding-bottom: 18px !important;
+}
+
+.aiCoachHero {
+  padding: 18px 18px 16px !important;
+  border-radius: 28px !important;
+  margin-bottom: 12px !important;
+}
+
+.aiCoachHero h1 {
+  font-size: 34px !important;
+  line-height: 0.98 !important;
+  letter-spacing: -1.2px !important;
+}
+
+.aiCoachHero p {
+  margin-top: 8px !important;
+  font-size: 13px !important;
+  line-height: 1.32 !important;
+}
+
+.aiCoachBadge {
+  margin-bottom: 10px !important;
+  font-size: 10px !important;
+}
+
+.aiNutritionPlanShell,
+.aiCoachResultCard {
+  padding: 14px !important;
+  border-radius: 26px !important;
+  margin-bottom: 12px !important;
+}
+
+.aiNutritionOnboardingCard,
+.aiNutritionPlanCardFull {
+  padding: 16px !important;
+  border-radius: 24px !important;
+}
+
+.aiNutritionOnboardingHead h2,
+.aiNutritionPlanHero h2 {
+  font-size: 21px !important;
+}
+
+.aiNutritionOnboardingHead p,
+.aiNutritionPlanHero p,
+.aiNutritionPlanInsight p,
+.aiNutritionTwoCol p,
+.aiNutritionImproveBox p {
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+}
+
+.aiNutritionFormGrid {
+  gap: 8px !important;
+  margin-top: 12px !important;
+}
+
+.aiNutritionFormGrid input {
+  height: 46px !important;
+  border-radius: 16px !important;
+  font-size: 15px !important;
+}
+
+.aiNutritionSexPicker,
+.aiNutritionGoalPicker {
+  margin-top: 10px !important;
+  gap: 8px !important;
+}
+
+.aiNutritionGoalPicker button {
+  padding: 11px 12px !important;
+  border-radius: 19px !important;
+}
+
+.aiNutritionGoalPicker strong {
+  font-size: 14px !important;
+}
+
+.aiNutritionGoalPicker small {
+  margin-top: 3px !important;
+  font-size: 11px !important;
+}
+
+.aiNutritionPrimaryBtn,
+.aiNutritionPlanActions button {
+  min-height: 52px !important;
+  margin-top: 12px !important;
+  border-radius: 19px !important;
+  font-size: 16px !important;
+}
+
+.aiCoachGrid {
+  gap: 8px !important;
+}
+
+.aiCoachFeatureCard {
+  min-height: 78px !important;
+  padding: 12px 10px !important;
+  border-radius: 20px !important;
+}
+
+.aiCoachFeatureCard span {
+  font-size: 21px !important;
+}
+
+.aiCoachFeatureCard strong {
+  font-size: 13px !important;
+  line-height: 1.12 !important;
+}
+
+.aiCoachFeatureCard small {
+  margin-top: 4px !important;
+  font-size: 10px !important;
+  line-height: 1.15 !important;
+}
+
+/* APP43 AI NUTRITION TRAINING DAYS */
+.aiNutritionTrainingDaysPicker {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.065);
+  background: rgba(255,255,255,0.035);
+}
+
+.aiNutritionTrainingDaysHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.aiNutritionTrainingDaysHead strong {
+  color: rgba(255,255,255,0.86);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.aiNutritionTrainingDaysHead small {
+  color: rgba(255,255,255,0.42);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.aiNutritionTrainingDaysGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.aiNutritionTrainingDaysGrid button {
+  height: 38px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.58);
+  font-size: 12px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.aiNutritionTrainingDaysGrid button.active {
+  background: linear-gradient(135deg, rgba(127,159,58,0.32), rgba(145,173,78,0.2));
+  border-color: rgba(127,159,58,0.38);
+  color: rgba(235,255,185,0.94);
+  box-shadow: 0 0 18px rgba(127,159,58,0.12);
+}
+
+.aiNutritionTrainingDayInfo,
+.nutritionAiTrainingDayPill {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.065);
+  background: rgba(255,255,255,0.038);
+}
+
+.aiNutritionTrainingDayInfo.active,
+.nutritionAiTrainingDayPill.active {
+  border-color: rgba(127,159,58,0.22);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(127,159,58,0.12), transparent 45%),
+    rgba(255,255,255,0.04);
+}
+
+.aiNutritionTrainingDayInfo span,
+.nutritionAiTrainingDayPill span {
+  display: block;
+  color: rgba(255,255,255,0.82);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.aiNutritionTrainingDayInfo p,
+.nutritionAiTrainingDayPill small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(255,255,255,0.52);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.32;
+}
+
+.nutritionAiTrainingDayPill {
+  margin: 8px 0 10px;
+  text-align: center;
+  padding: 10px 12px;
+}
+
+@media (max-width: 380px) {
+  .aiNutritionTrainingDaysGrid {
+    gap: 5px;
+  }
+
+  .aiNutritionTrainingDaysGrid button {
+    height: 34px;
+    border-radius: 12px;
+    font-size: 11px;
+  }
+}
+
+/* APP43 PROFILE BODY METRICS + READONLY AI PLAN DATA */
+.profileBodyMetricsCard,
+.aiNutritionBodyReadOnlyCard {
+  width: 100%;
+  margin: 14px 0 16px;
+  padding: 14px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(127, 159, 58, 0.1), transparent 42%),
+    rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.profileBodyMetricsHead,
+.aiNutritionBodyReadOnlyHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.profileBodyMetricsHead strong,
+.aiNutritionBodyReadOnlyHead strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.profileBodyMetricsHead small,
+.aiNutritionBodyReadOnlyHead small {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.profileBodyMetricsGrid,
+.aiNutritionBodyReadOnlyGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.profileBodyMetricsGrid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profileBodyMetricsGrid span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.profileBodyMetricsGrid input {
+  width: 100%;
+  height: 46px;
+  padding: 0 11px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.24);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 15px;
+  font-weight: 900;
+  outline: none;
+}
+
+.profileBodyMetricsGrid input:focus {
+  border-color: rgba(127, 159, 58, 0.42);
+  box-shadow: 0 0 0 3px rgba(127, 159, 58, 0.1);
+}
+
+.profileSexPicker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.profileSexPicker button,
+.profileBodySaveBtn,
+.aiNutritionProfileLinkBtn {
+  height: 46px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.profileSexPicker button.active {
+  color: rgba(235, 255, 185, 0.94);
+  border-color: rgba(127, 159, 58, 0.38);
+  background: rgba(127, 159, 58, 0.14);
+}
+
+.profileBodySaveBtn,
+.aiNutritionProfileLinkBtn {
+  width: 100%;
+  margin-top: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+  border: none;
+}
+
+.aiNutritionBodyReadOnlyGrid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.aiNutritionBodyReadOnlyGrid span {
+  min-height: 56px;
+  padding: 9px 6px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.aiNutritionBodyReadOnlyGrid i {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.aiNutritionBodyReadOnlyGrid b {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  font-weight: 950;
+}
+
+@media (max-width: 380px) {
+  .profileBodyMetricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .aiNutritionBodyReadOnlyGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* APP43 FIX: top calories use training-day AI goals */
+.nutritionCaloriesRenderCard.trainingDay {
+  border-color: rgba(127, 159, 58, 0.18) !important;
+}
+
+.nutritionCaloriesRenderCard.trainingDay .nutritionCaloriesRenderGrid {
+  filter: drop-shadow(0 0 18px rgba(127, 159, 58, 0.16)) !important;
+}
+
+/* APP43 MANUAL FOOD ICON EDIT */
+.foodEditIconManualBox {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 12px;
+  align-items: end;
+  margin-top: 10px;
+}
+
+.foodEditIconPreviewManual {
+  width: 62px;
+  height: 62px;
+  border-radius: 22px;
+  border: 1px solid rgba(127, 159, 58, 0.18);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(127, 159, 58, 0.15), transparent 46%),
+    rgba(255, 255, 255, 0.045);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 31px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035);
+}
+
+.foodEditIconManualBox label {
+  margin: 0;
+}
+
+.foodEditIconManualBox input {
+  text-align: center;
+  font-size: 27px !important;
+  letter-spacing: 0 !important;
+}
+
+.foodEditIconPresetRow {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 7px;
+  margin: 10px 0 4px;
+}
+
+.foodEditIconPresetRow button {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  min-height: 0;
+  padding: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.065);
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.foodEditIconPresetRow button.active {
+  border-color: rgba(127,159,58,0.38);
+  background: rgba(127,159,58,0.14);
+  box-shadow: 0 0 16px rgba(127,159,58,0.13);
+}
+
+@media (max-width: 380px) {
+  .foodEditIconPresetRow {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+  }
+
+  .foodEditIconPresetRow button {
+    font-size: 18px;
+    border-radius: 12px;
+  }
+}
+
+.firstSetupOverlay{position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.92);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:center;padding:24px}
+.firstSetupCard{width:min(100%,420px);padding:24px;border-radius:34px;background:radial-gradient(circle at top left,rgba(127,159,58,.18),transparent 38%),linear-gradient(180deg,#101712,#070b08);border:1px solid rgba(255,255,255,.06)}
+.firstSetupStep,p{color:rgba(255,255,255,.55)}
+.firstSetupCard h2{margin:10px 0 8px;font-size:34px;color:#fff}
+.firstSetupBody{margin-top:20px}
+.firstSetupInput{width:100%;height:64px;border:none;border-radius:22px;background:rgba(255,255,255,.06);padding:0 20px;color:#fff;font-size:24px;font-weight:900}
+.firstSetupChoiceGrid,.firstSetupGoalGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.firstSetupChoiceGrid button,.firstSetupGoalGrid button,.firstSetupDays button{border:none;border-radius:20px;background:rgba(255,255,255,.05);color:#fff;min-height:58px;font-weight:900}
+.firstSetupChoiceGrid button.active,.firstSetupGoalGrid button.active,.firstSetupDays button.active{background:linear-gradient(135deg,rgba(127,159,58,.34),rgba(127,159,58,.12))}
+.firstSetupDays{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.firstSetupDays button{height:46px;min-height:46px}
+.firstSetupBottom{display:flex;gap:10px;margin-top:24px}
+.firstSetupPrimary,.firstSetupSecondary{flex:1;height:58px;border:none;border-radius:22px;font-weight:1000}
+.firstSetupPrimary{background:linear-gradient(135deg,#91ad4e,#6e8836);color:#081007}
+.firstSetupSecondary{background:rgba(255,255,255,.06);color:#fff}
+
+.firstSetupPrimary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.35);
+}
+
+.firstSetupOverlay {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* WORKOUT DRAFT RESTORE */
+.workoutDraftRestoreOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 11950;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:
+    max(20px, env(safe-area-inset-top))
+    max(18px, env(safe-area-inset-right))
+    max(20px, env(safe-area-inset-bottom))
+    max(18px, env(safe-area-inset-left));
+  background: rgba(0, 0, 0, 0.76);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.workoutDraftRestoreCard {
+  width: min(100%, 390px);
+  padding: 24px;
+  border: 1px solid rgba(142, 178, 67, 0.32);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(20, 28, 20, 0.99), rgba(8, 12, 9, 0.99));
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.62),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  text-align: center;
+}
+
+.workoutDraftRestoreIcon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(160, 198, 77, 0.34);
+  border-radius: 50%;
+  background: rgba(127, 159, 58, 0.14);
+  color: #b8d66b;
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.workoutDraftRestoreCard h2 {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.98);
+  font-size: 25px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.workoutDraftRestoreCard p {
+  margin: 10px auto 20px;
+  max-width: 310px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.42;
+}
+
+.workoutDraftRestoreActions {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 9px;
+}
+
+.workoutDraftRestoreActions button {
+  min-width: 0;
+  min-height: 56px;
+  padding: 10px 12px;
+  border-radius: 19px;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.workoutDraftRestartButton {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.workoutDraftRestoreButton {
+  border: 1px solid rgba(190, 225, 105, 0.38);
+  background: linear-gradient(135deg, #a8ca52, #84a53d);
+  color: #0a1008;
+  box-shadow: 0 12px 28px rgba(113, 145, 45, 0.26);
+}
+
+.workoutDraftRestoreActions button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 360px) {
+  .workoutDraftRestoreCard {
+    padding: 21px 18px;
+    border-radius: 28px;
+  }
+
+  .workoutDraftRestoreActions button {
+    padding-inline: 8px;
+    font-size: 13px;
+  }
+}
+
+/* APP46 AI WORKOUT READINESS */
+.workoutReadinessOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(18px);
+}
+
+.workoutReadinessCard {
+  width: min(100%, 430px);
+  padding: 22px;
+  border-radius: 34px;
+  border: 1px solid rgba(127, 159, 58, 0.18);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(127, 159, 58, 0.16), transparent 38%),
+    linear-gradient(180deg, rgba(17, 24, 18, 0.98), rgba(7, 10, 8, 0.99));
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.035);
+}
+
+.workoutReadinessBadge {
+  display: inline-flex;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(127, 159, 58, 0.13);
+  color: rgba(210, 235, 144, 0.88);
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.workoutReadinessCard h2 {
+  margin: 13px 0 7px;
+  color: #fff;
+  font-size: 29px;
+  line-height: 1.05;
+  letter-spacing: -0.8px;
+}
+
+.workoutReadinessCard p {
+  margin: 0 0 16px;
+  color: rgba(255,255,255,0.52);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.workoutReadinessGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.workoutReadinessGrid button {
+  min-height: 92px;
+  padding: 10px 6px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.065);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.82);
+  cursor: pointer;
+}
+
+.workoutReadinessGrid button.active {
+  border-color: rgba(127,159,58,0.4);
+  background: rgba(127,159,58,0.16);
+  box-shadow: 0 0 22px rgba(127,159,58,0.14);
+}
+
+.workoutReadinessGrid span {
+  display: block;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.workoutReadinessGrid strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.workoutReadinessGrid small {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255,255,255,0.43);
+  font-size: 9px !important;
+  font-weight: 850;
+  line-height: 1.15;
+}
+
+.workoutReadinessSkip {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 13px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.065);
+  background: rgba(255,255,255,0.045);
+  color: rgba(255,255,255,0.72);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.workoutReadinessInline {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(127,159,58,0.16);
+  background: rgba(127,159,58,0.08);
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  column-gap: 8px;
+  text-align: left;
+}
+
+.workoutReadinessInline span {
+  grid-row: span 2;
+  font-size: 25px;
+  text-align: center;
+}
+
+.workoutReadinessInline strong {
+  color: rgba(255,255,255,0.86);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.workoutReadinessInline small {
+  color: rgba(255,255,255,0.46);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.workoutAiAdjustHint {
+  width: 100%;
+  margin: -4px 0 11px;
+  padding: 9px 11px;
+  border-radius: 16px;
+  background: rgba(127,159,58,0.075);
+  border: 1px solid rgba(127,159,58,0.12);
+  color: rgba(225,239,185,0.74);
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1.25;
+  text-align: center;
+}
+
+@media (max-width: 380px) {
+  .workoutReadinessGrid {
+    gap: 6px;
+  }
+
+  .workoutReadinessGrid button {
+    min-height: 84px;
+    border-radius: 18px;
+  }
+
+  .workoutReadinessGrid span {
+    font-size: 22px;
+  }
+
+  .workoutReadinessGrid strong {
+    font-size: 10px;
+  }
+}
+
+.workoutAiSetWeightNote {
+  width: 100%;
+  margin: -3px 0 9px;
+  padding: 7px 10px;
+  border-radius: 14px;
+  background: rgba(127, 159, 58, 0.075);
+  border: 1px solid rgba(127, 159, 58, 0.11);
+  color: rgba(226, 241, 185, 0.66);
+  font-size: 10.5px;
+  font-weight: 850;
+  text-align: center;
+}
+
+.postWorkoutOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 13000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(18px);
+}
+
+.postWorkoutCard {
+  width: min(100%, 430px);
+  padding: 22px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top left, rgba(127,159,58,0.15), transparent 38%),
+    linear-gradient(180deg, rgba(18,24,19,0.98), rgba(7,10,8,0.99));
+  border: 1px solid rgba(127,159,58,0.16);
+}
+
+.postWorkoutBadge {
+  display: inline-flex;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(127,159,58,0.12);
+  color: rgba(214,232,161,0.88);
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.postWorkoutCard h2 {
+  margin: 13px 0 7px;
+  color: #fff;
+  font-size: 29px;
+  line-height: 1.05;
+}
+
+.postWorkoutCard p {
+  margin: 0 0 16px;
+  color: rgba(255,255,255,0.54);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.postWorkoutGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.postWorkoutGrid button {
+  min-height: 118px;
+  padding: 12px 8px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.82);
+}
+
+.postWorkoutGrid span {
+  display: block;
+  font-size: 32px;
+}
+
+.postWorkoutGrid strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.postWorkoutGrid small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(255,255,255,0.42);
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 850;
+}
+
+.postWorkoutGrid button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.workoutSavedFloatingCard span {
+  max-width: 260px;
+  line-height: 1.25;
+  text-align: center;
+}
+

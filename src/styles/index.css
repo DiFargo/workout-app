@@ -1,12 +1,13 @@
-@import "./base.css";
-@import "./auth.css";
-@import "./menu.css";
-@import "./theme.css";
-@import "./app.css";
-@import "./workoutFlow.css";
-@import "./splash.css";
+@import "./tokens.css";
+@import "./themes.css";
+@import "./layout.css";
+@import "./components.css";
+@import "./client-main.css";
 @import "./workouts.css";
-@import "./nutrition.css";
-@import "./legacy-overrides.css";
-@import "./adminPanelHub.css";
+@import "./nutrition-stack.css";
+@import "./trainer.css";
+@import "./profile.css";
+@import "./measurements.css";
+@import "./admin.css";
+@import "./legacy-stack.css";
 

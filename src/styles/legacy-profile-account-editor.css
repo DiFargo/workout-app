@@ -1,0 +1,366 @@
+/* Cabinet account editor. */
+.profileAccountSection {
+  display: grid;
+  gap: 12px;
+}
+
+.profileAccountAvatarEditor {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.profileAccountAvatarPreview {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(117, 101, 232, 0.3);
+  border-radius: 18px;
+  background: rgba(117, 101, 232, 0.12);
+  font-size: 28px;
+}
+
+.profileAccountAvatarPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileAccountAvatarEditor label {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.profileAccountAvatarEditor label strong,
+.profileAccountAvatarEditor label small {
+  display: block;
+}
+
+.profileAccountAvatarEditor label strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+}
+
+.profileAccountAvatarEditor label small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 9px;
+}
+
+.profileAccountAvatarEditor input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.profileAccountFields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.profileAccountFields label {
+  display: grid;
+  gap: 5px;
+}
+
+.profileAccountFields label > span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.profileAccountFields input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.94);
+  font: inherit;
+  font-size: 13px;
+}
+
+.profileAccountFields input:focus {
+  border-color: rgba(117, 101, 232, 0.62);
+  box-shadow: 0 0 0 3px rgba(117, 101, 232, 0.12);
+}
+
+.profileAccountPasswordButton {
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  text-align: left;
+}
+
+.profileAccountPasswordButton > span:first-child {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(117, 101, 232, 0.14);
+}
+
+.profileAccountPasswordButton strong,
+.profileAccountPasswordButton small {
+  display: block;
+}
+
+.profileAccountPasswordButton strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+}
+
+.profileAccountPasswordButton small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 9px;
+}
+
+.profileAccountPasswordButton i {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 19px;
+  font-style: normal;
+}
+
+.profileAccountStatus {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 123, 114, 0.2);
+  border-radius: 11px;
+  background: rgba(255, 123, 114, 0.07);
+  color: #ff9b95;
+  font-size: 10px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.profileAccountStatus.success {
+  border-color: rgba(70, 184, 124, 0.24);
+  background: rgba(70, 184, 124, 0.08);
+  color: #9be4bd;
+}
+
+.profileAccountLogout {
+  width: 100% !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor,
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label,
+html:root[data-app-theme="warm-light"] body #root .profileAccountFields input,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #171923;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label strong,
+html:root[data-app-theme="warm-light"] body #root .profileAccountFields label > span,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton strong {
+  color: #171923;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label small,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton small,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton i {
+  color: #73798b;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountFields input {
+  background: #f7f8fc;
+}
+
+/* Circular avatar crop editor. */
+.profileAvatarCropOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 19000;
+  padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
+  display: grid;
+  place-items: center;
+  background: rgba(3, 5, 10, 0.76);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.profileAvatarCropModal {
+  width: min(100%, 350px);
+  padding: 15px;
+  display: grid;
+  gap: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  background: #11141d;
+  color: #f7f8fc;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.48);
+}
+
+.profileAvatarCropModal > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profileAvatarCropModal > header span {
+  color: #8f80f4;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.profileAvatarCropModal > header h2 {
+  margin: 4px 0 0;
+  color: inherit;
+  font-size: 19px;
+  line-height: 1.15;
+}
+
+.profileAvatarCropModal > header button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font-size: 22px;
+}
+
+.profileAvatarCropViewport {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #07090d;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.profileAvatarCropViewport:active {
+  cursor: grabbing;
+}
+
+.profileAvatarCropViewport > img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.profileAvatarCropMask {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 238px;
+  height: 238px;
+  border: 2px solid rgba(255, 255, 255, 0.94);
+  border-radius: 50%;
+  box-shadow: 0 0 0 120px rgba(3, 5, 10, 0.58);
+  pointer-events: none;
+}
+
+.profileAvatarCropZoom {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 18px;
+  text-align: center;
+}
+
+.profileAvatarCropZoom input {
+  width: 100%;
+  accent-color: #7565e8;
+}
+
+.profileAvatarCropModal > p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 10px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.profileAvatarCropActions {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 8px;
+}
+
+.profileAvatarCropActions button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.profileAvatarCropActions button.secondary {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropOverlay {
+  background: rgba(35, 39, 55, 0.34);
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropModal {
+  border-color: #e0e3ed;
+  background: #fbfbfe;
+  color: #171923;
+  box-shadow: 0 26px 70px rgba(50, 55, 82, 0.22);
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropModal > header button,
+html:root[data-app-theme="warm-light"] body .profileAvatarCropActions button.secondary {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #596176;
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropZoom {
+  color: #596176;
+}
+
+html:root[data-app-theme="warm-light"] body .profileAvatarCropModal > p {
+  color: #73798b;
+}
+

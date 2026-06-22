@@ -158,19 +158,19 @@ export function buildTrainerClientRecentEvents({
     ...getTrainerSortedHistory(historyList).slice(0, 3).map((entry) => ({
       id: `workout_${entry.id}`,
       type: "workout",
-      title: entry.workoutName || entry.name || entry.workout || "Ð¢Ñ€ÐµÐ½Ð¸Ñ€Ð¾Ð²ÐºÐ° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð°",
+      title: entry.workoutName || entry.name || entry.workout || "\u0422\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0430",
       date: entry.date || entry.completedAt || entry.createdAt || ""
     })),
     ...(nutritionSummary?.lastNutritionAt ? [{
       id: `nutrition_${clientId}_${nutritionSummary.lastNutritionAt}`,
       type: "nutrition",
-      title: "ÐžÐ±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¾ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ðµ",
+      title: "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u043e \u043f\u0438\u0442\u0430\u043d\u0438\u0435",
       date: nutritionSummary.lastNutritionAt
     }] : []),
     ...(latestMeasurement ? [{
       id: `measurement_${latestMeasurement.id}`,
       type: "measurement",
-      title: "Ð”Ð¾Ð±Ð°Ð²Ð»ÐµÐ½ ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŒÐ½Ñ‹Ð¹ Ð·Ð°Ð¼ÐµÑ€",
+      title: "\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d \u043a\u043e\u043d\u0442\u0440\u043e\u043b\u044c\u043d\u044b\u0439 \u0437\u0430\u043c\u0435\u0440",
       date: latestMeasurement.date || latestMeasurement.createdAt || latestMeasurement.savedAt || ""
     }] : [])
   ];

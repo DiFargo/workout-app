@@ -1,0 +1,478 @@
+/* === NUTRITION BOTTOM BAR V284 === */
+.fatSecretPage.nutritionFixedHeaderV3 {
+  padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  transform: translateX(-50%) !important;
+  width: min(374px, calc(100vw - 20px)) !important;
+  max-width: 374px !important;
+  height: 82px !important;
+  min-height: 82px !important;
+  max-height: 82px !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  border-radius: 17px !important;
+  background: linear-gradient(180deg, rgba(22, 29, 23, 0.98), rgba(11, 16, 12, 0.99)) !important;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+  z-index: 9500 !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar button {
+  height: 68px !important;
+  min-height: 68px !important;
+  max-height: 68px !important;
+  padding: 7px 3px 6px !important;
+  gap: 2px !important;
+  border-color: transparent !important;
+  border-radius: 13px !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  box-shadow: none !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar button span {
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  font-size: 27px !important;
+  line-height: 32px !important;
+  transform: translateY(-3px) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar button strong {
+  height: 16px !important;
+  min-height: 16px !important;
+  max-height: 16px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 16px !important;
+  transform: translateY(-2px) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar button.active {
+  border-color: rgba(145, 173, 78, 0.14) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145, 173, 78, 0.15), transparent 68%),
+    rgba(127, 159, 58, 0.045) !important;
+  color: #b5e655 !important;
+}
+
+/* === COMPACT NUTRITION MEALS V285 === */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanDashboard {
+  display: block !important;
+  flex: 0 0 auto !important;
+}
+
+/* Workout flow */
+:root[data-app-theme="warm-light"] .warmupExerciseCard,
+:root[data-app-theme="warm-light"] .exerciseCard,
+:root[data-app-theme="warm-light"] .workoutCompletionCard {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .warmupExerciseIntro,
+:root[data-app-theme="warm-light"] .warmupExerciseSteps,
+:root[data-app-theme="warm-light"] .warmupExerciseItem,
+:root[data-app-theme="warm-light"] .exerciseSets,
+:root[data-app-theme="warm-light"] .exerciseSetRow,
+:root[data-app-theme="warm-light"] .workoutCompletionStats,
+:root[data-app-theme="warm-light"] .workoutCompletionProgress {
+  border-color: #e4e7f1 !important;
+  background: #f7f8fc !important;
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .warmupExerciseItem::after,
+:root[data-app-theme="warm-light"] .warmupExerciseItem::before {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .exerciseVideoWrap,
+:root[data-app-theme="warm-light"] .exerciseVideoFallback {
+  border-color: #e2e5ef !important;
+  background: #f1f3f8 !important;
+  color: #616a80 !important;
+}
+
+:root[data-app-theme="warm-light"] .exerciseSetRow input,
+:root[data-app-theme="warm-light"] .workoutRunPage input {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: inset 0 1px 2px rgba(47, 54, 91, 0.04) !important;
+}
+
+:root[data-app-theme="warm-light"] .exerciseSetRow input::placeholder,
+:root[data-app-theme="warm-light"] .workoutRunPage input::placeholder {
+  color: #9aa1b3 !important;
+}
+
+/* Food search, product and editor */
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium,
+:root[data-app-theme="warm-light"] .foodEditPageSheet,
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceSheet {
+  border-color: #e0e3ee !important;
+  background: #f9faff !important;
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchInputWrapPremium,
+:root[data-app-theme="warm-light"] .foodEditPageContent input,
+:root[data-app-theme="warm-light"] .foodEditPageContent textarea,
+:root[data-app-theme="warm-light"] .foodEditPortionInlineUnit,
+:root[data-app-theme="warm-light"] .foodEditPortionUnitRow,
+:root[data-app-theme="warm-light"] .fatMealDropdown {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 8px 24px rgba(54, 62, 109, 0.07) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchInputWrapPremium input,
+:root[data-app-theme="warm-light"] .foodEditPageContent input,
+:root[data-app-theme="warm-light"] .foodEditPageContent textarea,
+:root[data-app-theme="warm-light"] .foodEditPortionUnitToggle {
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchInputWrapPremium input::placeholder,
+:root[data-app-theme="warm-light"] .foodEditPageContent input::placeholder,
+:root[data-app-theme="warm-light"] .foodEditPageContent textarea::placeholder {
+  color: #949caf !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchHistoryNameButton,
+:root[data-app-theme="warm-light"] .fatSearchResultCard,
+:root[data-app-theme="warm-light"] .fatMealDropdown button,
+:root[data-app-theme="warm-light"] .foodEditIconPresetRow button {
+  border-color: #e3e6f0 !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchHistoryNameButton:active,
+:root[data-app-theme="warm-light"] .fatSearchResultCard:active,
+:root[data-app-theme="warm-light"] .fatMealDropdown button.active,
+:root[data-app-theme="warm-light"] .foodEditIconPresetRow button.active {
+  border-color: #8d80ec !important;
+  background: #efedff !important;
+  color: #4d3bd0 !important;
+}
+
+:root[data-app-theme="warm-light"] .foodEditMealSelector,
+:root[data-app-theme="warm-light"] .foodEditSegmentRow button.active {
+  border-color: #7666e8 !important;
+  background: #efedff !important;
+  color: #4e3bd0 !important;
+}
+
+:root[data-app-theme="warm-light"] .foodEditMacroValue,
+:root[data-app-theme="warm-light"] .foodEditAmountCard strong,
+:root[data-app-theme="warm-light"] .foodEditHeroRender h2 {
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .foodEditHeroRender small,
+:root[data-app-theme="warm-light"] .foodEditAmountCard span,
+:root[data-app-theme="warm-light"] .foodEditMacrosCards span,
+:root[data-app-theme="warm-light"] .foodEditRowsCard span {
+  color: #737b91 !important;
+}
+
+/* Shared bottom navigation and action bars */
+:root[data-app-theme="warm-light"] .mainMenuBottomBar,
+:root[data-app-theme="warm-light"] .profileBottomTabBar,
+:root[data-app-theme="warm-light"] .nutritionBottomTabBar,
+:root[data-app-theme="warm-light"] .individualWorkoutMenuBar,
+:root[data-app-theme="warm-light"] .fatSearchBottomBar,
+:root[data-app-theme="warm-light"] .fatSearchBottomBarFive,
+:root[data-app-theme="warm-light"] .foodProductActionBar,
+:root[data-app-theme="warm-light"] .foodEditPageActionBar,
+:root[data-app-theme="warm-light"] .warmupBottomPanel,
+:root[data-app-theme="warm-light"] .exerciseBottomPanel,
+:root[data-app-theme="warm-light"] .workoutCompletionBottomPanel,
+:root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar {
+  border-color: #e0e3ee !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow:
+    0 -10px 32px rgba(53, 61, 105, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(18px) !important;
+}
+
+:root[data-app-theme="warm-light"] .mainMenuBottomBar button,
+:root[data-app-theme="warm-light"] .profileBottomTabBar button,
+:root[data-app-theme="warm-light"] .nutritionBottomTabBar button,
+:root[data-app-theme="warm-light"] .individualWorkoutMenuBar button,
+:root[data-app-theme="warm-light"] .fatSearchBottomBar button,
+:root[data-app-theme="warm-light"] .fatSearchBottomBarFive button,
+:root[data-app-theme="warm-light"] .foodProductActionBar button,
+:root[data-app-theme="warm-light"] .foodEditPageActionBar button,
+:root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar button {
+  border-color: transparent !important;
+  background: transparent !important;
+  color: #7b8295 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .mainMenuBottomBar button.active,
+:root[data-app-theme="warm-light"] .profileBottomTabBar button.active,
+:root[data-app-theme="warm-light"] .nutritionBottomTabBar button.active,
+:root[data-app-theme="warm-light"] .individualWorkoutMenuBar button.active,
+:root[data-app-theme="warm-light"] .fatSearchBottomBar button.active,
+:root[data-app-theme="warm-light"] .fatSearchBottomBarFive button.active,
+:root[data-app-theme="warm-light"] .foodProductActionBar button.active,
+:root[data-app-theme="warm-light"] .foodEditPageActionBar button.active,
+:root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar button.active {
+  border-color: #e1defb !important;
+  background: #f0effd !important;
+  color: #5542d8 !important;
+}
+
+:root[data-app-theme="warm-light"] .foodProductActionBar .foodProductAddAction,
+:root[data-app-theme="warm-light"] .foodEditPageActionBar .foodEditPageConfirmAction {
+  border-color: #ddd9fa !important;
+  background: #efedff !important;
+  color: #4e3bd0 !important;
+}
+
+/* === UNIFIED CLIENT BOTTOM BAR SIZE ACROSS CORE PAGES === */
+.mainMenuBottomBar.profileBottomTabBar,
+.nutritionBottomTabBar,
+.individualWorkoutMenuBar,
+.workoutModeBottomBar {
+  box-sizing: border-box !important;
+  min-height: 80px !important;
+  height: 80px !important;
+  max-height: 80px !important;
+  padding: 5px 6px !important;
+  gap: 3px !important;
+  border-radius: 16px !important;
+}
+
+/* === BOTTOM BAR LAYOUT NORMALIZER (MAIN / TRAINING / NUTRITION / CABINET) === */
+.mainMenuBottomBar.profileBottomTabBar,
+.nutritionBottomTabBar,
+.individualWorkoutMenuBar,
+.workoutModeBottomBar,
+.mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  transform: translateX(-50%) !important;
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  margin: 0 auto !important;
+}
+
+.mainMenuBottomBar.profileBottomTabBar > button,
+.nutritionBottomTabBar > button,
+.individualWorkoutMenuBar > button,
+.workoutModeBottomBar > button {
+  min-height: 68px !important;
+  height: 68px !important;
+  max-height: 68px !important;
+  padding: 6px 2px 5px !important;
+  border-radius: 13px !important;
+}
+
+.mainMenuBottomBar.profileBottomTabBar > button span,
+.nutritionBottomTabBar > button span,
+.individualWorkoutMenuBar > button span,
+.workoutModeBottomBar > button span {
+  min-height: 31px !important;
+  height: 31px !important;
+  max-height: 31px !important;
+  font-size: 26px !important;
+  line-height: 31px !important;
+}
+
+.mainMenuBottomBar.profileBottomTabBar > button strong,
+.nutritionBottomTabBar > button strong,
+.individualWorkoutMenuBar > button strong,
+.workoutModeBottomBar > button strong {
+  min-height: 16px !important;
+  height: 16px !important;
+  max-height: 16px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 16px !important;
+}
+
+/* Ensure training containers keep the same anchored width as the navigation bar. */
+.individualWorkoutSelectPage > .individualWorkoutBottomPanel,
+.workoutPlanOverviewPage > .individualWorkoutBottomPanel {
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+}
+
+@media (max-width: 430px) {
+  .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
+  .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
+  .mainDashboardPage nav.trainerRoleBottomBar[aria-label="Основные разделы"],
+  .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar.trainerRoleBottomBar[aria-label="Основные разделы"],
+  .mainMenuBottomBar.profileBottomTabBar,
+  .nutritionBottomTabBar,
+  .individualWorkoutMenuBar,
+  .workoutModeBottomBar,
+  .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar,
+  .individualWorkoutSelectPage > .individualWorkoutBottomPanel,
+  .workoutPlanOverviewPage > .individualWorkoutBottomPanel,
+  .clientCorePageWorkout.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
+    width: min(350px, calc(100vw - 52px)) !important;
+    max-width: 350px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .mainDashboardPage .profileCabinetSection,
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection,
+  .profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection,
+  .profileTabbedPage[data-profile-tab="nutrition"] .profileCabinetSection,
+  .profileTabbedPage[data-profile-tab="settings"] .profileCabinetSection {
+    width: min(100%, calc(100vw - 28px)) !important;
+    max-width: calc(100vw - 28px) !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .mainDashboardPage .profileCabinetSection,
+  .profileTabbedPage .profileCabinetSection {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .progressHubOverview,
+  .mainDashboardPage .progressHubOverview,
+  .profileTabbedPage .profileCabinetProgressOverview {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+  }
+
+  .progressHubCard,
+  .mainDashboardPage .progressHubCard,
+  .profileTabbedPage .progressHubCard {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Forms and settings */
+:root[data-app-theme="warm-light"] input,
+:root[data-app-theme="warm-light"] select,
+:root[data-app-theme="warm-light"] textarea {
+  caret-color: #5a49df;
+}
+
+:root[data-app-theme="warm-light"] .profileDashboardPage input,
+:root[data-app-theme="warm-light"] .profileDashboardPage select,
+:root[data-app-theme="warm-light"] .profileDashboardPage textarea,
+:root[data-app-theme="warm-light"] .adminV3Shell input,
+:root[data-app-theme="warm-light"] .adminV3Shell select,
+:root[data-app-theme="warm-light"] .adminV3Shell textarea {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .profileDashboardPage input::placeholder,
+:root[data-app-theme="warm-light"] .profileDashboardPage textarea::placeholder,
+:root[data-app-theme="warm-light"] .adminV3Shell input::placeholder,
+:root[data-app-theme="warm-light"] .adminV3Shell textarea::placeholder {
+  color: #9aa1b3 !important;
+}
+
+/* Trainer and admin surfaces */
+:root[data-app-theme="warm-light"] .adminV3Sidebar,
+:root[data-app-theme="warm-light"] .adminV3Panel,
+:root[data-app-theme="warm-light"] .adminV3Workspace,
+:root[data-app-theme="warm-light"] .adminV3ProfileCard,
+:root[data-app-theme="warm-light"] .adminFocusCard,
+:root[data-app-theme="warm-light"] .adminDashboardSection,
+:root[data-app-theme="warm-light"] .adminDashboardMiniItem,
+:root[data-app-theme="warm-light"] .adminPanelHubCard,
+:root[data-app-theme="warm-light"] .adminV3KpiGrid > *,
+:root[data-app-theme="warm-light"] .adminClientCardCrm,
+:root[data-app-theme="warm-light"] .adminCalendarPanel {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08) !important;
+}
+
+:root[data-app-theme="warm-light"] .adminV3Sidebar button,
+:root[data-app-theme="warm-light"] .adminV3Tabs button,
+:root[data-app-theme="warm-light"] .adminV3Filters button {
+  color: #60697f !important;
+}
+
+:root[data-app-theme="warm-light"] .adminV3Sidebar button.active,
+:root[data-app-theme="warm-light"] .adminV3Tabs button.active,
+:root[data-app-theme="warm-light"] .adminV3Filters button.active {
+  border-color: #dedafb !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
+:root[data-app-theme="warm-light"] .adminFocusValue,
+:root[data-app-theme="warm-light"] .adminDashboardSectionTitle,
+:root[data-app-theme="warm-light"] .adminDashboardMiniName,
+:root[data-app-theme="warm-light"] .adminV3PanelHead strong,
+:root[data-app-theme="warm-light"] .adminV3ProfileCard h3 {
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .adminFocusLabel,
+:root[data-app-theme="warm-light"] .adminDashboardMiniDesc,
+:root[data-app-theme="warm-light"] .adminV3ProfileCard p,
+:root[data-app-theme="warm-light"] .adminV3ProfileCard small {
+  color: #737b91 !important;
+}
+
+:root[data-app-theme="warm-light"] .adminDashboardMiniStatus,
+:root[data-app-theme="warm-light"] .adminV3OpenEditor,
+:root[data-app-theme="warm-light"] .adminSummaryLink small {
+  color: #5a49df !important;
+}
+
+/* Light theme controls and feedback */
+:root[data-app-theme="warm-light"] .menuRefreshIconBtn,
+:root[data-app-theme="warm-light"] .backIconBtn,
+:root[data-app-theme="warm-light"] .universalFixedBackPointer,
+:root[data-app-theme="warm-light"] .fatSearchClosePremium {
+  border-color: #e1e4ef !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #434b61 !important;
+  box-shadow: 0 8px 22px rgba(55, 64, 112, 0.09) !important;
+}
+
+:root[data-app-theme="warm-light"] .appVersionBadge {
+  color: #8a91a4 !important;
+}
+
+:root[data-app-theme="warm-light"] button:focus-visible,
+:root[data-app-theme="warm-light"] input:focus-visible,
+:root[data-app-theme="warm-light"] textarea:focus-visible,
+:root[data-app-theme="warm-light"] select:focus-visible {
+  outline: 3px solid rgba(90, 73, 223, 0.2) !important;
+  outline-offset: 2px !important;
+}
+

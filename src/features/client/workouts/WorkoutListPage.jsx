@@ -1,6 +1,4 @@
 import { useRef, useState } from "react";
-
-import { ClientMainBottomBar } from "../../../shared/ui/BottomBar";
 import {
   getProgramHistoryItems,
   getWorkoutCover,
@@ -25,6 +23,7 @@ import {
 
 export default function WorkoutListPage({
   appVersion,
+  renderClientMainBottomBar,
   plan,
   history,
   currentUserId,
@@ -430,18 +429,18 @@ export default function WorkoutListPage({
             <span>Выполнено {completedWorkoutCount} из {sortedWorkouts.length}</span>
           </div>
         )}
-        <ClientMainBottomBar
-          activeTab="workouts"
-          className="individualWorkoutMenuBar"
-          isTrainerMode={isTrainerMode}
-          onGoMain={onGoMain}
-          onOpenTraining={onOpenTraining}
-          onOpenNutrition={onOpenNutrition}
-          onOpenCabinet={onOpenCabinet}
-          onOpenTrainerClients={onOpenTrainerClients}
-          onOpenTrainerPrograms={onOpenTrainerPrograms}
-          onLoadTrainerCabinet={onOpenCabinet}
-        />
+        {(renderClientMainBottomBar || (() => null))({
+          activeTab: "workouts",
+          className: "individualWorkoutMenuBar",
+          isTrainerMode,
+          onGoMain,
+          onOpenTraining,
+          onOpenNutrition,
+          onOpenCabinet,
+          onOpenTrainerClients,
+          onOpenTrainerPrograms,
+          onLoadTrainerCabinet: onOpenCabinet
+        })}
       </div>
 
       <WorkoutModePickerDialog

@@ -1,0 +1,263 @@
+/* Workout flow polish V458 */
+.workoutRunPage .workoutCloseButton {
+  top: max(12px, calc(env(safe-area-inset-top) + 10px)) !important;
+  right: max(12px, calc(env(safe-area-inset-right) + 12px)) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: rgba(15, 18, 24, 0.92) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.workoutRunPage .workoutStageTitle {
+  padding-right: 58px !important;
+  padding-left: 58px !important;
+}
+
+.workoutRunPage .workoutStageCard,
+.workoutRunPage .startWorkoutSlide {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: linear-gradient(180deg, rgba(23, 27, 33, 0.98), rgba(9, 12, 16, 0.99)) !important;
+  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.workoutReadinessConfirmation {
+  min-height: 30px;
+}
+
+.workoutReadinessConfirmation.empty {
+  visibility: hidden;
+}
+
+.workoutExerciseValidation {
+  margin: 7px 2px 0;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(244, 112, 112, 0.24);
+  border-radius: 12px;
+  background: rgba(244, 112, 112, 0.08);
+  color: #ffb0b0;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.workoutExerciseValidation > span {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(244, 112, 112, 0.16);
+}
+
+.workoutRunPage .workoutExerciseTools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.workoutRunPage .workoutExerciseTools button {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
+.workoutRunPage .workoutExerciseTools button.active {
+  border-color: rgba(117, 101, 232, 0.5) !important;
+  background: rgba(117, 101, 232, 0.16) !important;
+  color: #c9c2ff !important;
+}
+
+.workoutExerciseNote,
+.workoutExerciseTechniqueHint {
+  width: 100%;
+  flex: 1 0 100%;
+}
+
+.workoutExerciseNote {
+  display: grid;
+  gap: 6px;
+}
+
+.workoutExerciseNote > span {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.workoutExerciseNote textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 68px;
+  padding: 10px 11px;
+  resize: vertical;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.94);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.workoutExerciseTechniqueHint {
+  padding: 9px 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.workoutExerciseTechniqueHint > span {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(117, 101, 232, 0.18);
+  color: #c9c2ff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.workoutExerciseTechniqueHint p {
+  margin: 1px 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.workoutFinishComment > span {
+  color: rgba(255, 255, 255, 0.64) !important;
+}
+
+.workoutFinishComment textarea {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: none !important;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow {
+  display: grid !important;
+  grid-template-columns: minmax(92px, 0.8fr) minmax(0, 2.2fr) !important;
+  gap: 8px !important;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishBackButton {
+  position: static !important;
+  inset: auto !important;
+  grid-column: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishBackButton::before {
+  content: none !important;
+  display: none !important;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishBackButton > span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  color: inherit !important;
+  -webkit-text-fill-color: currentColor !important;
+  font: inherit;
+  line-height: 1;
+}
+
+.workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishWorkoutButton {
+  grid-column: 2 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutCloseButton {
+  border-color: #dfe3ef !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #4f5668 !important;
+  -webkit-text-fill-color: #4f5668 !important;
+  box-shadow: 0 8px 22px rgba(50, 59, 104, 0.12) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseValidation {
+  border-color: #f2caca;
+  background: #fff4f4;
+  color: #a13f3f;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseTools button {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseTools button.active {
+  border-color: #7565e8 !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseNote > span,
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseTechniqueHint p,
+html:root[data-app-theme="warm-light"] body #root .workoutFinishComment > span {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseNote textarea,
+html:root[data-app-theme="warm-light"] body #root .workoutFinishComment textarea {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseTechniqueHint {
+  border-color: #e1e4ef;
+  background: #f7f8fc;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseCard button.previousInfo:not(.showVideoBtn) {
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishBackButton {
+  border-color: #e1e4ef !important;
+  background: #f4f6fc !important;
+  color: #596176 !important;
+}
+

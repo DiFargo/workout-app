@@ -1,0 +1,1830 @@
+/* === V104 BODY METRICS MOVED TO SETTINGS === */
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileBodyMetricsSettingsSection {
+  display: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection {
+  display: block !important;
+  margin-top: 14px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  margin-top: 14px !important;
+}
+
+/* === PROFILE SETTINGS COMPACT OVERVIEW === */
+
+.profileTabbedPage[data-profile-tab="settings"] .profileCabinetSection {
+  padding: 18px 14px 0 !important;
+  gap: 10px !important;
+}
+
+.profileSettingsPageTitle {
+  margin: 0 0 4px !important;
+  color: #fff !important;
+  font-size: clamp(28px, 8vw, 36px) !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeSettingsSection,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection,
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  width: calc(100% - 28px) !important;
+  max-width: 692px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  border-radius: 24px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeSettingsSection {
+  width: 100% !important;
+  margin-top: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection,
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  margin-top: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead {
+  min-height: 82px !important;
+  padding: 13px 15px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle span,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead span {
+  font-size: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle strong,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead strong {
+  margin: 4px 0 3px !important;
+  font-size: 18px !important;
+  line-height: 1.08 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle small,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead small {
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle em,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead em {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 14px !important;
+  font-size: 20px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  padding: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsActions {
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+  min-height: 68px !important;
+  margin: 0 !important;
+  padding: 9px 12px !important;
+  border-radius: 18px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn {
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  text-align: left !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeIcon,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramAvatar {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 14px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeText {
+  display: grid !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeText strong {
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeText small {
+  color: rgba(255,255,255,.48) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn i {
+  color: rgba(255,255,255,.36) !important;
+  font-size: 26px !important;
+  font-style: normal !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+  grid-template-columns: 42px minmax(0, 1fr) auto 16px !important;
+  gap: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramText strong {
+  font-size: 16px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramText small {
+  font-size: 11px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem em {
+  min-height: 26px !important;
+  padding: 0 8px !important;
+  font-size: 9px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileLogoutBtn {
+  min-height: 50px !important;
+  border-radius: 17px !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+}
+
+@media (max-width: 370px) {
+  .profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem em {
+    display: none !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+    grid-template-columns: 42px minmax(0, 1fr) 16px !important;
+  }
+}
+
+/* Ð¡Ñ‚Ð°Ñ€Ñ‹Ð¹ ÐºÐ»Ð°ÑÑ Ð°Ð½ÐºÐµÑ‚Ñ‹ Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½Ðµ Ð´Ð¾Ð»Ð¶ÐµÐ½ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°Ñ‚ÑŒÑÑ Ð² Ð·Ð°Ð¼ÐµÑ€Ð°Ñ…, ÐµÑÐ»Ð¸ Ð±Ñ€Ð°ÑƒÐ·ÐµÑ€ Ð´ÐµÑ€Ð¶Ð¸Ñ‚ ÑÑ‚Ð°Ñ€Ñ‹Ð¹ CSS */
+.profileTabbedPage[data-profile-tab="measurements"] .profileBodyMetricsMeasurementsSection {
+  display: none !important;
+}
+
+/* === V105 PROFILE MEASUREMENT WIZARD === */
+
+.profileMeasurementWizardPanel {
+  overflow: hidden !important;
+}
+
+.profileMeasurementPreview {
+  padding: 16px 0 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.profileMeasurementMannequinCard {
+  min-height: 300px !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(145, 173, 78, .16) !important;
+  background:
+    radial-gradient(circle at 50% 15%, rgba(145,173,78,.16), transparent 44%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.profileMeasurementMannequin {
+  width: 230px !important;
+  height: 280px !important;
+  margin: 14px auto 6px !important;
+  position: relative !important;
+}
+
+.profileMeasurementMannequin::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 84px !important;
+  top: 46px !important;
+  width: 62px !important;
+  height: 118px !important;
+  border-radius: 34px 34px 28px 28px !important;
+  border: 2px solid rgba(180, 220, 91, .58) !important;
+  background: linear-gradient(180deg, rgba(145,173,78,.12), rgba(145,173,78,.03)) !important;
+  box-shadow: inset 0 0 24px rgba(145,173,78,.08) !important;
+}
+
+.profileMeasurementMannequin::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 96px !important;
+  top: 156px !important;
+  width: 38px !important;
+  height: 105px !important;
+  border-left: 2px solid rgba(180, 220, 91, .5) !important;
+  border-right: 2px solid rgba(180, 220, 91, .5) !important;
+  border-radius: 0 0 26px 26px !important;
+}
+
+.pmHead {
+  position: absolute !important;
+  left: 96px !important;
+  top: 10px !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(180, 220, 91, .55) !important;
+}
+
+.pmNeckLine,
+.pmShouldersLine,
+.pmChestLine,
+.pmBellyLine,
+.pmPelvisLine,
+.pmThighLine,
+.pmCalfLine {
+  position: absolute !important;
+  height: 3px !important;
+  border-radius: 999px !important;
+  background: rgba(181, 230, 85, .88) !important;
+  box-shadow: 0 0 14px rgba(145,173,78,.28) !important;
+}
+
+.pmNeckLine { left: 95px; top: 49px; width: 40px; }
+.pmShouldersLine { left: 49px; top: 69px; width: 132px; }
+.pmChestLine { left: 72px; top: 98px; width: 86px; }
+.pmBellyLine { left: 78px; top: 136px; width: 74px; }
+.pmPelvisLine { left: 76px; top: 164px; width: 78px; }
+.pmThighLine { left: 78px; top: 205px; width: 74px; }
+.pmCalfLine { left: 88px; top: 244px; width: 54px; }
+
+.pmLabel {
+  position: absolute !important;
+  padding: 5px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(11,15,12,.86) !important;
+  border: 1px solid rgba(145,173,78,.22) !important;
+  color: rgba(244,246,242,.82) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+
+.pmLabelNeck { left: 146px; top: 38px; }
+.pmLabelChest { left: 4px; top: 88px; }
+.pmLabelBelly { right: 0; top: 126px; }
+.pmLabelThigh { left: 0; top: 196px; }
+
+.profileMeasurementLastGrid,
+.profileMeasurementReviewGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 9px !important;
+}
+
+.profileMeasurementLastGrid div,
+.profileMeasurementReviewGrid div {
+  min-height: 72px !important;
+  padding: 12px !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.035) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.profileMeasurementLastGrid span,
+.profileMeasurementReviewGrid span {
+  display: block !important;
+  color: rgba(255,255,255,.46) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.profileMeasurementLastGrid strong,
+.profileMeasurementReviewGrid strong {
+  margin-top: 5px !important;
+  display: inline-block !important;
+  color: #fff !important;
+  font-size: 22px !important;
+  font-weight: 950 !important;
+}
+
+.profileMeasurementLastGrid small,
+.profileMeasurementReviewGrid small {
+  margin-left: 4px !important;
+  color: rgba(181,230,85,.78) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.profileMeasurementStartBtn {
+  width: 100% !important;
+  min-height: 64px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(145,173,78,.32) !important;
+  background: linear-gradient(180deg, rgba(145,173,78,.30), rgba(91,122,42,.18)) !important;
+  color: #f2ffd0 !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+}
+
+.profileMeasurementWizard {
+  margin-top: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.profileMeasurementWizardProgress {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.profileMeasurementWizardProgress span {
+  color: rgba(255,255,255,.52) !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  text-align: center !important;
+}
+
+.profileMeasurementWizardProgress i {
+  height: 8px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.07) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255,255,255,.04) !important;
+}
+
+.profileMeasurementWizardProgress i em {
+  display: block !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  background: linear-gradient(90deg, #7f9f3a, #b5e655) !important;
+}
+
+.profileMeasurementWizardCard {
+  min-height: 440px !important;
+  padding: 18px !important;
+  border-radius: 28px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145,173,78,.13), transparent 52%),
+    rgba(255,255,255,.035) !important;
+  border: 1px solid rgba(255,255,255,.065) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
+}
+
+.profileMeasurementWizardCard h3 {
+  margin: 0 !important;
+  text-align: center !important;
+  color: #fff !important;
+  font-size: 30px !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.7px !important;
+}
+
+.profileMeasurementWizardCard p {
+  margin: 0 !important;
+  color: rgba(255,255,255,.55) !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1.38 !important;
+}
+
+.profileMeasurementWizardVisual,
+.profileMeasurementZoneVisual {
+  height: 150px !important;
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(181,230,85,.20), transparent 58%),
+    rgba(0,0,0,.20) !important;
+  border: 1px solid rgba(145,173,78,.14) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.profileMeasurementMiniHuman {
+  width: 100px !important;
+  height: 128px !important;
+  margin: 12px auto 0 !important;
+  position: relative !important;
+}
+
+.profileMeasurementMiniHuman i {
+  position: absolute !important;
+  left: 34px !important;
+  top: 0 !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(181,230,85,.58) !important;
+}
+
+.profileMeasurementMiniHuman b {
+  position: absolute !important;
+  left: 24px !important;
+  top: 36px !important;
+  width: 52px !important;
+  height: 60px !important;
+  border-radius: 28px !important;
+  border: 2px solid rgba(181,230,85,.58) !important;
+}
+
+.profileMeasurementMiniHuman em {
+  position: absolute !important;
+  left: 30px !important;
+  top: 94px !important;
+  width: 40px !important;
+  height: 34px !important;
+  border-left: 2px solid rgba(181,230,85,.58) !important;
+  border-right: 2px solid rgba(181,230,85,.58) !important;
+}
+
+.profileMeasurementTips {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  margin-top: auto !important;
+}
+
+.profileMeasurementTips span {
+  padding: 11px 10px !important;
+  border-radius: 16px !important;
+  background: rgba(145,173,78,.10) !important;
+  color: rgba(244,246,242,.76) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.profileMeasurementZoneVisual {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.profileMeasurementZoneVisual strong {
+  font-size: 42px !important;
+  line-height: 1 !important;
+}
+
+.profileMeasurementZoneVisual span {
+  color: rgba(229,255,175,.92) !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  letter-spacing: .14em !important;
+}
+
+.profileMeasurementZoneVisual i {
+  width: 52% !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background: #b5e655 !important;
+  box-shadow: 0 0 16px rgba(181,230,85,.35) !important;
+}
+
+.profileMeasurementWizardInput {
+  margin-top: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.profileMeasurementWizardInput > span {
+  color: rgba(255,255,255,.56) !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+}
+
+.profileMeasurementWizardInput div {
+  display: grid !important;
+  grid-template-columns: 1fr 56px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  border-radius: 22px !important;
+  background: #090b09 !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+}
+
+.profileMeasurementWizardInput input {
+  height: 58px !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  color: #fff !important;
+  font-size: 30px !important;
+  font-weight: 950 !important;
+  text-align: center !important;
+}
+
+.profileMeasurementWizardInput em {
+  color: rgba(181,230,85,.86) !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  font-style: normal !important;
+  text-align: center !important;
+}
+
+.profileMeasurementPreviousValue {
+  color: rgba(255,255,255,.38) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.profileMeasurementWizardNav {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+.profileMeasurementWizardNav button {
+  min-height: 58px !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: rgba(255,255,255,.045) !important;
+  color: rgba(255,255,255,.74) !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+.profileMeasurementWizardNav button.next {
+  background: linear-gradient(180deg, rgba(145,173,78,.28), rgba(91,122,42,.16)) !important;
+  border-color: rgba(145,173,78,.30) !important;
+  color: #f2ffd0 !important;
+}
+
+.profileMeasurementWizardNav button:disabled {
+  opacity: .38 !important;
+}
+
+.profileMeasurementWizardCard.review {
+  min-height: 460px !important;
+}
+
+.profileMeasurementReviewGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  max-height: 270px !important;
+  overflow-y: auto !important;
+  padding-right: 2px !important;
+}
+
+.profileMeasurementReviewGrid div {
+  min-height: 62px !important;
+}
+
+.profileMeasurementNote.wizardNote textarea {
+  min-height: 78px !important;
+}
+
+@media (max-width: 390px) {
+  .profileMeasurementWizardCard {
+    min-height: 420px !important;
+    padding: 16px !important;
+  }
+
+  .profileMeasurementWizardCard h3 {
+    font-size: 27px !important;
+  }
+
+  .profileMeasurementMannequin {
+    transform: scale(.92) !important;
+    transform-origin: top center !important;
+  }
+}
+
+/* === V106 ANKLE MEASUREMENT === */
+
+.pmLabelAnkle {
+  right: 0 !important;
+  top: 238px !important;
+}
+
+.profileMeasurementReviewGrid {
+  max-height: 300px !important;
+}
+
+/* === V107 REAL MEASUREMENT IMAGES === */
+
+.profileMeasurementImageFrame {
+  width: 100% !important;
+  height: 220px !important;
+  border-radius: 26px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(181, 230, 85, .16), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.035), rgba(0,0,0,.16)) !important;
+  border: 1px solid rgba(145, 173, 78, .16) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 14px 30px rgba(0,0,0,.22) !important;
+}
+
+.profileMeasurementImageFrame::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), transparent 34%, rgba(0,0,0,.20)),
+    radial-gradient(circle at 50% 50%, transparent 50%, rgba(0,0,0,.24) 100%) !important;
+}
+
+.profileMeasurementImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  filter: drop-shadow(0 0 18px rgba(145, 173, 78, .26)) !important;
+  transform: scale(1.02) !important;
+}
+
+.profileMeasurementWizardCard {
+  min-height: 500px !important;
+}
+
+.profileMeasurementWizardCard .profileMeasurementWizardInput {
+  margin-top: 0 !important;
+}
+
+/* ÐšÐ°Ñ€Ñ‚Ð¸Ð½ÐºÐ¸ Ð´ÐµÑ‚Ð°Ð»ÐµÐ¹ Ð¼Ð¾Ð¶Ð½Ð¾ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°Ñ‚ÑŒ Ñ‡ÑƒÑ‚ÑŒ ÐºÑ€ÑƒÐ¿Ð½ÐµÐµ */
+.profileMeasurementImageFrame.zone-biceps .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-forearm .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-wrist .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-thigh .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-calf .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-ankle .profileMeasurementImage {
+  transform: scale(1.08) !important;
+}
+
+/* ÐžÐ±Ñ‰Ð¸Ðµ Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ Ñ‚ÐµÐ»Ð° Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ ÑÐ¿Ð¾ÐºÐ¾Ð¹Ð½ÐµÐµ */
+.profileMeasurementImageFrame.zone-belly .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-chest .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-shoulders .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-pelvis .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-neck .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-weight .profileMeasurementImage {
+  transform: scale(1.01) !important;
+}
+
+@media (max-width: 390px) {
+  .profileMeasurementImageFrame {
+    height: 196px !important;
+    border-radius: 24px !important;
+  }
+
+  .profileMeasurementWizardCard {
+    min-height: 480px !important;
+  }
+}
+
+/* === V108 MEASUREMENT WIZARD POLISH === */
+
+.profileMeasurementWizardCard {
+  position: relative !important;
+}
+
+.profileMeasurementWizardClose {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: rgba(7,10,7,.82) !important;
+  color: rgba(255,255,255,.74) !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  z-index: 10 !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,.32) !important;
+}
+
+.profileMeasurementImageFrame {
+  height: 250px !important;
+  margin-top: 4px !important;
+  border-radius: 28px !important;
+}
+
+.profileMeasurementImage {
+  transform: scale(1.18) !important;
+}
+
+.profileMeasurementImageFrame.zone-biceps .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-forearm .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-wrist .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-thigh .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-calf .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-ankle .profileMeasurementImage {
+  transform: scale(1.28) !important;
+}
+
+.profileMeasurementImageFrame.zone-belly .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-chest .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-shoulders .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-pelvis .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-neck .profileMeasurementImage,
+.profileMeasurementImageFrame.zone-weight .profileMeasurementImage {
+  transform: scale(1.18) !important;
+}
+
+.profileMeasurementInputLabelHidden {
+  display: none !important;
+}
+
+.profileMeasurementWizardInput {
+  margin-top: 2px !important;
+}
+
+.profileMeasurementWizardInput div {
+  grid-template-columns: 1fr 64px !important;
+  min-height: 76px !important;
+  padding: 8px 10px !important;
+  border-radius: 24px !important;
+}
+
+.profileMeasurementWizardInput input {
+  height: 60px !important;
+  font-size: 34px !important;
+}
+
+.profileMeasurementWizardInput em {
+  min-height: 44px !important;
+  border-radius: 16px !important;
+  background: rgba(145,173,78,.10) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: rgba(229,255,175,.92) !important;
+}
+
+.profileMeasurementPreviousValue {
+  margin-top: -2px !important;
+  font-size: 13px !important;
+  color: rgba(255,255,255,.42) !important;
+}
+
+.profileMeasurementWizardNav button {
+  min-height: 64px !important;
+  border-radius: 24px !important;
+  font-size: 17px !important;
+}
+
+.profileMeasurementWizardNav button.next {
+  background: linear-gradient(180deg, #2b371d 0%, #1c2516 100%) !important;
+  border-color: rgba(145,173,78,.35) !important;
+}
+
+/* MAIN DASHBOARD ALIGNED WITH INDIVIDUAL WORKOUT PLAN */
+.mainDashboardPage {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.16) 0%, transparent 34%),
+    linear-gradient(180deg, #0b120c 0%, #050805 100%) !important;
+}
+
+.mainDashboardTitle {
+  width: min(460px, calc(100vw - 36px));
+  margin: 0 auto 24px !important;
+  font-size: clamp(29px, 6vw, 34px) !important;
+  line-height: 1.02 !important;
+}
+
+.mainDashboardTitle::after {
+  content: "";
+  width: 72px;
+  height: 5px;
+  margin: 14px auto 0;
+  display: block;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7f9f3a, #a8c957);
+  box-shadow: 0 0 18px rgba(127, 159, 58, 0.24);
+}
+
+.mainDashboardPage .profileCabinetSection {
+  box-sizing: border-box !important;
+  width: min(560px, calc(100vw - 28px)) !important;
+  max-width: 560px !important;
+  margin: 0 auto 18px !important;
+  padding: 18px !important;
+  border: 1px solid rgba(127, 159, 58, 0.24) !important;
+  border-radius: 34px !important;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(127, 159, 58, 0.21), transparent 38%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+  box-shadow:
+    0 24px 58px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+}
+
+.mainDashboardPage .profileAiDashboardCard::before {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 36%) !important;
+}
+
+.mainDashboardPage .profileAiHero {
+  min-height: 76px !important;
+  grid-template-columns: 72px minmax(0, 1fr) !important;
+  gap: 14px !important;
+  align-items: center !important;
+}
+
+.mainDashboardPage .profileAiAvatarWrap {
+  width: 68px !important;
+  height: 68px !important;
+  margin: 0 !important;
+  align-self: center !important;
+}
+
+.mainDashboardPage .profileAiAvatar {
+  width: 64px !important;
+  height: 64px !important;
+  margin: 2px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(127, 159, 58, 0.28) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32) !important;
+}
+
+.mainDashboardPage .profileAiAvatarRing {
+  right: -4px !important;
+  top: -4px !important;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.mainDashboardPage .profileAiAvatarRing strong {
+  font-size: 9px !important;
+}
+
+.mainDashboardPage .profileAiHeroText {
+  min-height: 0 !important;
+  padding: 0 !important;
+  justify-content: center !important;
+}
+
+.mainDashboardPage .profileAiHeroText h1 {
+  margin: 0 !important;
+  font-size: clamp(25px, 5vw, 32px) !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0 !important;
+}
+
+.mainDashboardPage .profileAiStatsRow {
+  margin-top: 18px !important;
+  gap: 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.065);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+}
+
+.mainDashboardPage .profileAiStatsRow > div {
+  height: 72px !important;
+  min-height: 72px !important;
+  padding: 9px 7px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.mainDashboardPage .profileAiStatsRow > div + div {
+  border-left: 1px solid rgba(255, 255, 255, 0.065) !important;
+}
+
+.mainDashboardPage .profileAiStatsRow span {
+  color: rgba(255, 255, 255, 0.50) !important;
+}
+
+.mainDashboardPage .profileAiSplitCards {
+  margin: 0 !important;
+  gap: 0 !important;
+}
+
+.mainDashboardPage .profileAiMiniCard {
+  min-height: 76px !important;
+  padding: 12px 8px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.mainDashboardPage .profileAiMiniCard + .profileAiMiniCard {
+  border-left: 1px solid rgba(255, 255, 255, 0.065) !important;
+}
+
+.mainDashboardPage .profileAiMiniCard span {
+  color: rgba(255, 255, 255, 0.50) !important;
+}
+
+.mainDashboardPage .profileAiCoachInsight {
+  margin-top: 0 !important;
+  border: 1px solid rgba(127, 159, 58, 0.16) !important;
+  border-radius: 22px !important;
+  background: rgba(127, 159, 58, 0.065) !important;
+  box-shadow: none !important;
+}
+
+.mainDashboardPage .profileAiCoachToggle {
+  min-height: 104px !important;
+  padding: 15px 16px !important;
+  grid-template-columns: 1fr !important;
+  cursor: default !important;
+}
+
+.mainDashboardPage .profileAiCoachToggle h2 {
+  font-size: clamp(20px, 4vw, 25px) !important;
+}
+
+.mainDashboardPage .profileAiCoachPreview {
+  padding: 0 16px 15px !important;
+}
+
+@media (max-width: 420px) {
+  .mainDashboardTitle {
+    width: calc(100vw - 28px);
+    margin-bottom: 18px !important;
+    font-size: 28px !important;
+  }
+
+  .mainDashboardPage .profileCabinetSection {
+    width: min(560px, calc(100vw - 28px)) !important;
+    max-width: 560px !important;
+    padding: 15px !important;
+    border-radius: 30px !important;
+  }
+
+  .mainDashboardPage .profileAiHeroText h1 {
+    font-size: 24px !important;
+  }
+
+  .mainDashboardPage .profileAiStatsRow > div {
+    height: 68px !important;
+    min-height: 68px !important;
+  }
+
+  .mainDashboardPage .profileAiMiniCard {
+    min-height: 70px !important;
+  }
+}
+
+.profileMeasurementWizardCard h3 {
+  font-size: 34px !important;
+  line-height: 1.05 !important;
+}
+
+.profileMeasurementWizardCard p {
+  max-width: 330px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+@media (max-width: 390px) {
+  .profileMeasurementImageFrame {
+    height: 226px !important;
+  }
+
+  .profileMeasurementWizardCard h3 {
+    font-size: 31px !important;
+  }
+
+  .profileMeasurementWizardInput input {
+    font-size: 31px !important;
+  }
+}
+
+/* === V109 FULLSCREEN MEASUREMENT WIZARD === */
+
+.measurementFullscreenPage {
+  height: 100dvh !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  max-width: 560px !important;
+  margin: 0 auto !important;
+  padding:
+    max(28px, calc(env(safe-area-inset-top) + 18px))
+    14px
+    calc(116px + env(safe-area-inset-bottom))
+    14px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145,173,78,.16), transparent 38%),
+    linear-gradient(180deg, #0d130d 0%, #060906 100%) !important;
+  color: var(--text) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.measurementFullscreenHeader {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto 12px !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+.measurementFullscreenBack,
+.measurementFullscreenClose {
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(145,173,78,.14) !important;
+  background: rgba(9,13,9,.86) !important;
+  color: #76ff8a !important;
+  font-size: 34px !important;
+  font-weight: 950 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,.28) !important;
+}
+
+.measurementFullscreenClose {
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 16px !important;
+  color: rgba(255,255,255,.66) !important;
+  font-size: 25px !important;
+  line-height: 1 !important;
+  z-index: 2 !important;
+}
+
+.measurementFullscreenProgress {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 9px !important;
+  width: min(calc(100% - 108px), 330px) !important;
+}
+
+.measurementFullscreenProgress span {
+  color: rgba(255,255,255,.62) !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  text-align: center !important;
+}
+
+.measurementFullscreenProgress i {
+  height: 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.06) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255,255,255,.035) !important;
+}
+
+.measurementFullscreenProgress i em {
+  display: block !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  background: linear-gradient(90deg, #7f9f3a, #b5e655) !important;
+  box-shadow: 0 0 18px rgba(181,230,85,.34) !important;
+}
+
+.measurementFullscreenBody {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  overflow: hidden !important;
+}
+
+.measurementFullscreenCard {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 16px !important;
+  border-radius: 34px !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145,173,78,.13), transparent 48%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)) !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
+}
+
+.measurementFullscreenCard::-webkit-scrollbar {
+  display: none !important;
+}
+
+.measurementFullscreenPreload {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.measurementFullscreenImageFrame {
+  height: min(43vh, 330px) !important;
+  min-height: 260px !important;
+  width: 100% !important;
+  border-radius: 30px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(181,230,85,.18), transparent 62%),
+    rgba(0,0,0,.22) !important;
+  border: 1px solid rgba(145,173,78,.16) !important;
+}
+
+.measurementFullscreenImageFrame::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), transparent 35%, rgba(0,0,0,.20)),
+    radial-gradient(circle at 50% 50%, transparent 50%, rgba(0,0,0,.24) 100%) !important;
+}
+
+.measurementFullscreenImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  filter: drop-shadow(0 0 22px rgba(145,173,78,.30)) !important;
+  transform: scale(1.18) !important;
+}
+
+.measurementFullscreenImageFrame.zone-biceps .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-forearm .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-wrist .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-thigh .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-calf .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-ankle .measurementFullscreenImage {
+  transform: scale(1.30) !important;
+}
+
+.measurementFullscreenText h2,
+.measurementFullscreenCard h2 {
+  margin: 0 !important;
+  color: #fff !important;
+  font-size: clamp(32px, 8vw, 42px) !important;
+  font-weight: 950 !important;
+  line-height: 1.03 !important;
+  text-align: center !important;
+  letter-spacing: -1px !important;
+}
+
+.measurementFullscreenText p,
+.measurementFullscreenCard p {
+  max-width: 350px !important;
+  margin: 8px auto 0 !important;
+  color: rgba(255,255,255,.56) !important;
+  font-size: 15px !important;
+  font-weight: 850 !important;
+  line-height: 1.38 !important;
+  text-align: center !important;
+}
+
+.measurementFullscreenInput {
+  margin-top: auto !important;
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.measurementFullscreenInput div {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 66px !important;
+  gap: 8px !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 80px !important;
+  padding: 9px 10px !important;
+  box-sizing: border-box !important;
+  border-radius: 26px !important;
+  background: #070a07 !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+}
+
+.measurementFullscreenInput input {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  padding: 0 8px !important;
+  box-sizing: border-box !important;
+  height: 62px !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  color: #fff !important;
+  text-align: center !important;
+  font-size: 36px !important;
+  font-weight: 950 !important;
+}
+
+.measurementFullscreenInput em {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  min-height: 46px !important;
+  border-radius: 16px !important;
+  background: rgba(145,173,78,.10) !important;
+  color: rgba(229,255,175,.92) !important;
+  font-size: 15px !important;
+  font-style: normal !important;
+  font-weight: 950 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.measurementFullscreenPrevious {
+  color: rgba(255,255,255,.40) !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.measurementFullscreenNav {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 12px)) !important;
+  transform: translateX(-50%) !important;
+  width: min(calc(100vw - 24px), 536px) !important;
+  z-index: 9800 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  padding: 10px !important;
+  border-radius: 30px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: linear-gradient(180deg, #121712 0%, #0d110d 100%) !important;
+  box-shadow: 0 -18px 44px rgba(0,0,0,.66) !important;
+}
+
+.measurementFullscreenNav button {
+  min-height: 66px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,.075) !important;
+  background: linear-gradient(180deg, #191d19 0%, #111511 100%) !important;
+  color: rgba(255,255,255,.72) !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+}
+
+.measurementFullscreenNav button.next {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127,159,58,.32), transparent 62%),
+    linear-gradient(180deg, #253018 0%, #1b2416 100%) !important;
+  border-color: rgba(127,159,58,.44) !important;
+  color: #f4f6f2 !important;
+}
+
+.measurementFullscreenNav button:disabled {
+  opacity: .38 !important;
+}
+
+.measurementFullscreenReviewGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 9px !important;
+  max-height: 42vh !important;
+  overflow-y: auto !important;
+  padding-right: 2px !important;
+}
+
+.measurementFullscreenReviewGrid div {
+  min-height: 66px !important;
+  padding: 12px !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.035) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.measurementFullscreenReviewGrid span {
+  display: block !important;
+  color: rgba(255,255,255,.46) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.measurementFullscreenReviewGrid strong {
+  margin-top: 5px !important;
+  display: inline-block !important;
+  color: #fff !important;
+  font-size: 21px !important;
+  font-weight: 950 !important;
+}
+
+.measurementFullscreenReviewGrid small {
+  margin-left: 4px !important;
+  color: rgba(181,230,85,.78) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.measurementFullscreenSave {
+  width: 100% !important;
+  min-height: 62px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(145,173,78,.30) !important;
+  background: linear-gradient(180deg, rgba(145,173,78,.28), rgba(91,122,42,.16)) !important;
+  color: #f2ffd0 !important;
+  font-size: 17px !important;
+  font-weight: 950 !important;
+}
+
+.measurementFullscreenStatus {
+  margin: 12px 0 0 !important;
+  color: rgba(255,255,255,.58) !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.measurementIntroVisual {
+  height: min(38vh, 300px) !important;
+}
+
+@media (max-width: 390px) {
+  .measurementFullscreenPage {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .measurementFullscreenHeader {
+    width: min(100%, 300px) !important;
+  }
+
+  .measurementFullscreenCard {
+    padding: 14px !important;
+  }
+
+  .measurementFullscreenImageFrame {
+    height: min(41vh, 292px) !important;
+    min-height: 236px !important;
+  }
+
+  .measurementFullscreenText h2,
+  .measurementFullscreenCard h2 {
+    font-size: 32px !important;
+  }
+
+  .measurementFullscreenInput input {
+    font-size: 32px !important;
+  }
+
+  .measurementFullscreenNav {
+    width: calc(100vw - 18px) !important;
+    padding: 9px !important;
+  }
+
+  .measurementFullscreenNav button {
+    min-height: 62px !important;
+    border-radius: 22px !important;
+    font-size: 17px !important;
+  }
+}
+
+/* === V110 MEASUREMENT DASHBOARD MANNEQUIN === */
+
+.profileMeasurementDashboardCard {
+  position: relative !important;
+  min-height: 430px !important;
+  padding: 16px !important;
+  border-radius: 30px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(145, 173, 78, .18) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145,173,78,.18), transparent 46%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)) !important;
+  box-shadow:
+    0 18px 44px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+
+.profileMeasurementDashboardCard::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.035), transparent 36%, rgba(0,0,0,.28)),
+    radial-gradient(circle at 50% 44%, transparent 46%, rgba(0,0,0,.24) 100%) !important;
+}
+
+.profileMeasurementDashboardTop {
+  position: relative !important;
+  z-index: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-bottom: 8px !important;
+}
+
+.profileMeasurementDashboardTop span {
+  color: rgba(181,230,85,.88) !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase !important;
+}
+
+.profileMeasurementDashboardTop strong {
+  color: #fff !important;
+  font-size: 22px !important;
+  font-weight: 950 !important;
+  letter-spacing: -.3px !important;
+}
+
+.profileMeasurementDashboardTop small {
+  color: rgba(255,255,255,.42) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.profileMeasurementDashboardImageWrap {
+  position: relative !important;
+  z-index: 1 !important;
+  height: 350px !important;
+  border-radius: 26px !important;
+  overflow: hidden !important;
+  background: rgba(0,0,0,.16) !important;
+}
+
+.profileMeasurementDashboardImage {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  transform: scale(1.10) translateY(8px) !important;
+  filter: drop-shadow(0 0 24px rgba(145,173,78,.34)) !important;
+}
+
+.profileMeasurementMetricBadge {
+  position: absolute !important;
+  z-index: 3 !important;
+  min-width: 76px !important;
+  padding: 7px 9px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(181,230,85,.22) !important;
+  background: rgba(7,10,7,.82) !important;
+  color: rgba(255,255,255,.68) !important;
+  font-size: 10.5px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,.24) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.profileMeasurementMetricBadge b {
+  color: #dfff8e !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+}
+
+.profileMeasurementMetricNeck {
+  top: 44px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+.profileMeasurementMetricChest {
+  top: 122px !important;
+  left: 10px !important;
+}
+
+.profileMeasurementMetricBelly {
+  top: 184px !important;
+  right: 10px !important;
+}
+
+.profileMeasurementMetricThigh {
+  bottom: 74px !important;
+  left: 16px !important;
+}
+
+.profileMeasurementLastGrid {
+  margin-top: 2px !important;
+}
+
+.profileMeasurementStartBtn {
+  margin-top: 2px !important;
+}
+
+@media (max-width: 390px) {
+  .profileMeasurementDashboardCard {
+    min-height: 400px !important;
+    padding: 14px !important;
+    border-radius: 28px !important;
+  }
+
+  .profileMeasurementDashboardImageWrap {
+    height: 318px !important;
+  }
+
+  .profileMeasurementDashboardImage {
+    transform: scale(1.13) translateY(8px) !important;
+  }
+
+  .profileMeasurementMetricBadge {
+    min-width: 68px !important;
+    padding: 6px 8px !important;
+    font-size: 10px !important;
+  }
+
+  .profileMeasurementMetricChest {
+    top: 112px !important;
+  }
+
+  .profileMeasurementMetricBelly {
+    top: 168px !important;
+  }
+
+  .profileMeasurementMetricThigh {
+    bottom: 66px !important;
+  }
+}
+
+/* === V111 MEASUREMENT DASHBOARD SCALE ICON === */
+
+.profileMeasurementDashboardCard {
+  min-height: 245px !important;
+}
+
+.profileMeasurementDashboardImageWrap,
+.profileMeasurementDashboardImage,
+.profileMeasurementMetricBadge {
+  display: none !important;
+}
+
+.profileMeasurementDashboardIconWrap {
+  position: relative !important;
+  z-index: 2 !important;
+  min-height: 142px !important;
+  margin-top: 10px !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(145, 173, 78, .15) !important;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(181,230,85,.17), transparent 58%),
+    rgba(0,0,0,.18) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+
+.profileMeasurementDashboardIcon {
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(180deg, rgba(145,173,78,.26), rgba(145,173,78,.10)) !important;
+  border: 1px solid rgba(181,230,85,.22) !important;
+  font-size: 38px !important;
+  line-height: 1 !important;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.28),
+    0 0 22px rgba(145,173,78,.16) !important;
+}
+
+.profileMeasurementDashboardIconWrap p {
+  max-width: 260px !important;
+  margin: 0 !important;
+  color: rgba(255,255,255,.52) !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+  line-height: 1.35 !important;
+  text-align: center !important;
+}
+
+@media (max-width: 390px) {
+  .profileMeasurementDashboardCard {
+    min-height: 230px !important;
+  }
+
+  .profileMeasurementDashboardIconWrap {
+    min-height: 130px !important;
+    border-radius: 24px !important;
+  }
+
+  .profileMeasurementDashboardIcon {
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 23px !important;
+    font-size: 34px !important;
+  }
+}
+
+/* === V112 LAST MEASUREMENT VALUES === */
+
+.profileMeasurementLastGrid strong {
+  min-height: 30px !important;
+}
+
+.profileMeasurementLastGrid div {
+  justify-content: center !important;
+}
+
+.profileMeasurementDashboardTop small {
+  min-height: 16px !important;
+}
+
+/* === V114 TRAINER CLIENT MEASUREMENTS === */
+
+.adminClientMeasurementsBlock {
+  margin: 14px 0 !important;
+  padding: 16px !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(145, 173, 78, .16) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145,173,78,.12), transparent 52%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)) !important;
+  box-shadow: 0 18px 42px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+
+.adminClientMeasurementsHead {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  margin-bottom: 13px !important;
+}
+
+.adminClientMeasurementsHead span {
+  display: block !important;
+  margin-bottom: 5px !important;
+  color: rgba(181,230,85,.86) !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  letter-spacing: .14em !important;
+}
+
+.adminClientMeasurementsHead h3 {
+  margin: 0 !important;
+  color: #fff !important;
+  font-size: 22px !important;
+  font-weight: 950 !important;
+  line-height: 1.05 !important;
+}
+
+.adminClientMeasurementsHead p {
+  margin: 7px 0 0 !important;
+  color: rgba(255,255,255,.46) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+}
+
+.adminClientMeasurementsHead > strong {
+  min-width: 48px !important;
+  height: 48px !important;
+  border-radius: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(145,173,78,.14) !important;
+  border: 1px solid rgba(145,173,78,.20) !important;
+  color: #dfff8e !important;
+  font-size: 20px !important;
+  font-weight: 950 !important;
+}
+
+.adminClientMeasurementsGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 9px !important;
+}
+
+.adminClientMeasurementItem {
+  min-height: 82px !important;
+  padding: 12px !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255,255,255,.065) !important;
+  background: rgba(7,10,7,.35) !important;
+  display: grid !important;
+  grid-template-columns: 1fr auto !important;
+  grid-template-rows: auto 1fr !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.adminClientMeasurementItem span {
+  grid-column: 1 / 3 !important;
+  color: rgba(255,255,255,.48) !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  line-height: 1.1 !important;
+}
+
+.adminClientMeasurementItem strong {
+  color: #fff !important;
+  font-size: 23px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+.adminClientMeasurementItem strong small {
+  margin-left: 4px !important;
+  color: rgba(181,230,85,.82) !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+}
+
+.adminClientMeasurementItem em {
+  min-width: 44px !important;
+  padding: 6px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.045) !important;
+  color: rgba(255,255,255,.44) !important;
+  font-style: normal !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  text-align: center !important;
+}
+
+.adminClientMeasurementItem em.up {
+  background: rgba(95,143,78,.16) !important;
+  color: #b5e655 !important;
+}
+
+.adminClientMeasurementItem em.down {
+  background: rgba(212,90,90,.14) !important;
+  color: #ff9b9b !important;
+}
+
+.adminClientMeasurementsEmpty {
+  min-height: 130px !important;
+  padding: 18px !important;
+  border-radius: 24px !important;
+  border: 1px dashed rgba(145,173,78,.18) !important;
+  background: rgba(0,0,0,.18) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  text-align: center !important;
+}
+
+.adminClientMeasurementsEmpty span { font-size: 34px !important; }
+
+.adminClientMeasurementsEmpty p {
+  max-width: 360px !important;
+  margin: 0 !important;
+  color: rgba(255,255,255,.48) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+}
+
+@media (max-width: 420px) {
+  .adminClientMeasurementsBlock { padding: 14px !important; border-radius: 26px !important; }
+  .adminClientMeasurementsGrid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  .adminClientMeasurementItem { min-height: 76px !important; padding: 11px !important; border-radius: 18px !important; }
+  .adminClientMeasurementItem strong { font-size: 21px !important; }
+}
+

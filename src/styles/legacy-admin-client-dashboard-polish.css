@@ -1,0 +1,3049 @@
+﻿/* === CLIENTS PAGE REAL CLEANUP V19 === */
+/* ÃÂ£ÃÂ´ÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ¸ÃÂµ ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦ÃÂ½ÃÂµÃÂ³ÃÂ¾ Clients CRM ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ° ÃÂ¸ Ã‘ÂÃ‘â€šÃÂ°Ã‘â‚¬Ã‘â€¹Ã‘â€¦ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂ¾ÃÂº ÃÂ½ÃÂ° Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ ÃÂµ ÃÅ¡ÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃ‘â€¹ */
+
+.adminUsersBrand,
+.adminUsersSideAction {
+  display: none !important;
+}
+
+.adminUsersCrmSidebar {
+  min-height: auto !important;
+  padding-bottom: 0 !important;
+}
+
+.adminUsersCrmSidebar .adminUsersBack {
+  margin-bottom: 18px !important;
+}
+
+.adminUsersCrmMain {
+  padding-top: 6px !important;
+}
+
+/* === DASHBOARD REDESIGN V20 === */
+
+.adminFocusGrid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:14px !important;
+  margin-top:18px !important;
+}
+
+.adminFocusCard{
+  border-radius:28px !important;
+  padding:22px 18px !important;
+  background:linear-gradient(180deg,#141814 0%,#0f130f 100%) !important;
+  border:1px solid rgba(255,255,255,.06) !important;
+  min-height:128px !important;
+}
+
+.adminFocusLabel{
+  color:rgba(255,255,255,.55) !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  margin-bottom:14px !important;
+}
+
+.adminFocusValue{
+  color:#fff !important;
+  font-size:42px !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+}
+
+.adminDashboardSection{
+  margin-top:22px !important;
+  border-radius:30px !important;
+  padding:22px !important;
+  background:linear-gradient(180deg,#141814 0%,#0f130f 100%) !important;
+  border:1px solid rgba(255,255,255,.06) !important;
+}
+
+.adminDashboardSectionTitle{
+  font-size:26px !important;
+  font-weight:900 !important;
+  color:#fff !important;
+  margin-bottom:16px !important;
+}
+
+.adminDashboardMiniList{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:12px !important;
+}
+
+.adminDashboardMiniItem{
+  border-radius:22px !important;
+  padding:16px !important;
+  background:rgba(255,255,255,.03) !important;
+  border:1px solid rgba(255,255,255,.04) !important;
+}
+
+.adminDashboardMiniTop{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+
+.adminDashboardMiniName{
+  color:#fff !important;
+  font-size:18px !important;
+  font-weight:800 !important;
+}
+
+.adminDashboardMiniStatus{
+  color:#b5db53 !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+}
+
+.adminDashboardMiniDesc{
+  margin-top:8px !important;
+  color:rgba(255,255,255,.6) !important;
+  font-size:14px !important;
+  line-height:1.4 !important;
+}
+
+.adminDashboardTimeline{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+
+.adminDashboardTimelineItem{
+  padding:14px 16px !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,.03) !important;
+  color:rgba(255,255,255,.78) !important;
+  font-size:14px !important;
+}
+
+@media (max-width:420px){
+  .adminFocusGrid{
+    gap:10px !important;
+  }
+
+  .adminFocusCard{
+    min-height:108px !important;
+    padding:18px 14px !important;
+    border-radius:24px !important;
+  }
+
+  .adminFocusValue{
+    font-size:34px !important;
+  }
+
+  .adminDashboardSection{
+    padding:18px !important;
+    border-radius:24px !important;
+  }
+
+  .adminDashboardSectionTitle{
+    font-size:22px !important;
+  }
+}
+
+/* === DASHBOARD REMOVE DUPLICATES SAFE V22 === */
+/* Ãâ€˜ÃÂµÃÂ· Ã‘Æ’ÃÂ´ÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ¸Ã‘Â JSX: Ã‘ÂÃÂºÃ‘â‚¬Ã‘â€¹ÃÂ²ÃÂ°ÃÂµÃÂ¼ ÃÂ´Ã‘Æ’ÃÂ±ÃÂ»ÃÂ¸ ÃÂ½ÃÂ° dashboard, Ã‘â€¡Ã‘â€šÃÂ¾ÃÂ±Ã‘â€¹ ÃÂ½ÃÂµ ÃÂ»ÃÂ¾ÃÂ¼ÃÂ°Ã‘â€šÃ‘Å’ Ã‘ÂÃÂ±ÃÂ¾Ã‘â‚¬ÃÂºÃ‘Æ’ */
+
+.adminV3Main .adminV3Filters,
+.adminV3Main .adminV3DashboardGrid,
+.adminV3Main .adminV3ClientTable,
+.adminV3Main .adminV3Workspace,
+.adminV3Main .adminClientWorkspace,
+.adminV3Main .adminClientBottomTools,
+.adminV3Main .adminClientDangerZoneBottom,
+.adminV3Main .adminV3Alerts,
+.adminV3Main .adminAiAlerts {
+  display: none !important;
+}
+
+/* ÃÅ¾Ã‘ÂÃ‘â€šÃÂ°ÃÂ²ÃÂ»Ã‘ÂÃÂµÃÂ¼ Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ½ÃÂ¾ÃÂ²Ã‘â€¹ÃÂµ control-center ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ v20 */
+.adminV3Main .adminFocusGrid,
+.adminV3Main .adminDashboardSection {
+  display: grid !important;
+}
+
+.adminV3Main .adminDashboardSection {
+  display: block !important;
+}
+
+/* === DASHBOARD REMOVE TOP BLOCKS V23 === */
+/* Dashboard: Ã‘Æ’ÃÂ±Ã‘â‚¬ÃÂ°Ã‘â€šÃ‘Å’ Trainer CRM hero ÃÂ¸ Ã‘ÂÃ‘â€šÃÂ°Ã‘â‚¬Ã‘â€¹ÃÂµ KPI-ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ */
+
+.adminV3Sidebar .adminV3Brand,
+.adminV3Main > .adminV3KpiGrid {
+  display: none !important;
+}
+
+.adminV3Sidebar {
+  padding-top: 18px !important;
+}
+
+.adminV3Main {
+  padding-top: 22px !important;
+}
+
+/* === DASHBOARD HEADER WHITE TITLE V24 === */
+
+.adminV3Main h1,
+.adminV3Title,
+.adminDashboardTitle {
+  color: #ffffff !important;
+}
+
+/* ÃËœÃ‘ÂÃ‘â€šÃÂ¾Ã‘â‚¬ÃÂ¸Ã‘Â ÃÂ·ÃÂ°ÃÂ¼ÃÂµÃÂ½ÃÂµÃÂ½ÃÂ° ÃÂ½ÃÂ° Telegram; Telegram-ÃÂºÃÂ¾ÃÂ½Ã‘â€šÃÂµÃÂ½Ã‘â€š ÃÂ²Ã‘â€¹ÃÂ½ÃÂµÃ‘ÂÃÂµÃÂ½ ÃÂ² ÃÂ¾Ã‘â€šÃÂ´ÃÂµÃÂ»Ã‘Å’ÃÂ½Ã‘Æ’Ã‘Å½ ÃÂ²ÃÂºÃÂ»ÃÂ°ÃÂ´ÃÂºÃ‘Æ’ ÃÂ±ÃÂµÃÂ·ÃÂ¾ÃÂ¿ÃÂ°Ã‘ÂÃÂ½ÃÂ¾ */
+
+.adminClientTelegramOnlyTab {
+  margin-top: 14px !important;
+}
+
+.adminClientTelegramBlockMoved {
+  min-height: 166px !important;
+  padding: 18px !important;
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(18, 117, 188, 0.18), transparent 42%),
+    linear-gradient(180deg, #101a1d 0%, #0f1415 100%) !important;
+  background-color: #101a1d !important;
+  border: 1px solid rgba(32, 154, 238, 0.24) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+}
+
+.adminClientTelegramOnlyTab .adminV3OpenEditor {
+  margin-top: 14px !important;
+}
+
+/* === CLIENT TELEGRAM ONLY TAB V28 === */
+/* ÃÂ ÃÂµÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂ¹ Telegram-ÃÂ±ÃÂ»ÃÂ¾ÃÂº ÃÂ¿ÃÂ¾ÃÂºÃÂ°ÃÂ·Ã‘â€¹ÃÂ²ÃÂ°ÃÂµÃ‘â€šÃ‘ÂÃ‘Â Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ²ÃÂ¾ ÃÂ²ÃÂºÃÂ»ÃÂ°ÃÂ´ÃÂºÃÂµ Telegram */
+
+.adminClientTelegramOnlyTab {
+  margin-top: 14px !important;
+  padding-bottom: 120px !important;
+}
+
+/* === CLIENT OVERVIEW CLEANUP V29 === */
+/* ÃÅ¾ÃÂ±ÃÂ·ÃÂ¾Ã‘â‚¬: Ã‘Æ’ÃÂ±Ã‘â‚¬ÃÂ°Ã‘â€šÃ‘Å’ AI-Ã‘â‚¬ÃÂµÃÂºÃÂ¾ÃÂ¼ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â€ ÃÂ¸Ã‘Å½ ÃÂ¿Ã‘â‚¬ÃÂ¾ ÃÂ±ÃÂµÃÂ»ÃÂ¾ÃÂº, Ã‘Æ’ÃÂ±Ã‘â‚¬ÃÂ°Ã‘â€šÃ‘Å’ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃ‘Æ’ ÃÂ¾ÃÂ±ÃÂ½ÃÂ¾ÃÂ²ÃÂ¸Ã‘â€šÃ‘Å’, Ã‘ÂÃÂ´ÃÂµÃÂ»ÃÂ°Ã‘â€šÃ‘Å’ ÃÂ½ÃÂ¸ÃÂ¶ÃÂ½ÃÂ¸ÃÂµ ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ ÃÂºÃÂ¾ÃÂ¼ÃÂ¿ÃÂ°ÃÂºÃ‘â€šÃÂ½ÃÂµÃÂµ */
+
+.adminClientRecommendationsRender,
+.adminClientRecommendations {
+  display: none !important;
+}
+
+.adminClientWorkspaceActionsRender {
+  display: none !important;
+}
+
+.adminClientBottomTools {
+  gap: 12px !important;
+  margin-top: 14px !important;
+}
+
+.adminClientNotesBlock,
+.adminClientTransferBlock {
+  min-height: auto !important;
+  padding: 14px !important;
+  border-radius: 22px !important;
+}
+
+.adminClientBottomBlockHead {
+  margin-bottom: 10px !important;
+}
+
+.adminClientBottomBlockHead h3 {
+  font-size: 18px !important;
+  line-height: 1.15 !important;
+}
+
+.adminClientBottomBlockHead span {
+  font-size: 10px !important;
+}
+
+.adminClientNotesBlock textarea,
+.adminClientNotesBlock .adminV3Note {
+  min-height: 74px !important;
+  height: 74px !important;
+  max-height: 92px !important;
+}
+
+.adminTransferGrid {
+  gap: 10px !important;
+}
+
+.adminTransferGrid label {
+  gap: 6px !important;
+}
+
+.adminClientTransferBlock .adminV3OpenEditor,
+.adminClientNotesBlock .adminV3OpenEditor {
+  min-height: 42px !important;
+  padding: 10px 14px !important;
+}
+
+/* ÃÅ¡ÃÂ¾ÃÂ¼ÃÂ¿ÃÂ°ÃÂºÃ‘â€šÃÂ½Ã‘â€¹ÃÂ¹ ÃÂºÃ‘â‚¬ÃÂ°Ã‘ÂÃÂ¸ÃÂ²Ã‘â€¹ÃÂ¹ ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦ ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ¸ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° */
+
+.adminClientWorkspaceHeadRender {
+  min-height: auto !important;
+  padding: 18px 18px 16px !important;
+  margin-bottom: 14px !important;
+
+  display: grid !important;
+  grid-template-columns: 78px 1fr !important;
+  align-items: center !important;
+  gap: 16px !important;
+
+  border-radius: 28px !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(127, 159, 58, 0.18), transparent 38%),
+    linear-gradient(180deg, rgba(18, 22, 18, 0.98), rgba(11, 14, 11, 0.98)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+.adminClientAvatarRender {
+  width: 72px !important;
+  height: 72px !important;
+  min-width: 72px !important;
+
+  border-radius: 24px !important;
+  font-size: 30px !important;
+  font-weight: 900 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background:
+    radial-gradient(circle at 50% 20%, rgba(170, 230, 75, .28), transparent 60%),
+    linear-gradient(180deg, #1d2a13, #11170f) !important;
+  border: 1px solid rgba(170, 230, 75, .35) !important;
+  color: #c9ff67 !important;
+}
+
+.adminClientIdentityRender {
+  min-width: 0 !important;
+}
+
+.adminClientIdentityRender h2 {
+  margin: 0 !important;
+  color: #fff !important;
+  font-size: clamp(28px, 6vw, 42px) !important;
+  line-height: 1.05 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.adminClientIdentityRender p {
+  margin: 6px 0 0 !important;
+  color: rgba(255, 255, 255, 0.62) !important;
+  font-size: 15px !important;
+  line-height: 1.2 !important;
+  font-weight: 800 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.adminClientStatusRender {
+  grid-column: 2 !important;
+  margin-top: -8px !important;
+
+  width: fit-content !important;
+  min-height: 30px !important;
+  padding: 6px 12px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+
+  border-radius: 999px !important;
+  background: rgba(110, 255, 80, 0.10) !important;
+  border: 1px solid rgba(110, 255, 80, 0.20) !important;
+  color: #aaff67 !important;
+
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.adminClientStatusRender i {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: #68ff52 !important;
+  box-shadow: 0 0 18px rgba(104, 255, 82, .7) !important;
+}
+
+@media (max-width: 520px) {
+  .adminClientWorkspaceHeadRender {
+    grid-template-columns: 64px 1fr !important;
+    gap: 13px !important;
+    padding: 15px !important;
+    border-radius: 24px !important;
+  }
+
+  .adminClientAvatarRender {
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 60px !important;
+    border-radius: 20px !important;
+    font-size: 26px !important;
+  }
+
+  .adminClientIdentityRender h2 {
+    font-size: 30px !important;
+  }
+
+  .adminClientIdentityRender p {
+    font-size: 13px !important;
+  }
+
+  .adminClientStatusRender {
+    margin-top: -4px !important;
+    font-size: 13px !important;
+    min-height: 28px !important;
+    padding: 5px 10px !important;
+  }
+}
+
+/* === REAL CLIENT HEADER COMPACT V31 === */
+/* ÃÂ ÃÂµÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂµ ÃÂºÃÂ»ÃÂ°Ã‘ÂÃ‘ÂÃ‘â€¹: adminClientWorkspaceHeaderRender / adminClientIdentityRender / adminClientInitialsRender */
+
+.adminClientWorkspaceHeaderRender {
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 13px 14px !important;
+  margin: 0 0 12px !important;
+
+  display: block !important;
+
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(127, 159, 58, 0.16), transparent 38%),
+    linear-gradient(180deg, rgba(18, 22, 18, 0.98), rgba(11, 14, 11, 0.98)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.26) !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender {
+  min-height: 0 !important;
+
+  display: grid !important;
+  grid-template-columns: 56px minmax(0, 1fr) !important;
+  grid-template-areas:
+    "avatar name"
+    "avatar status" !important;
+  align-items: center !important;
+  column-gap: 12px !important;
+  row-gap: 4px !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientInitialsRender {
+  grid-area: avatar !important;
+
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  min-height: 56px !important;
+  margin: 0 !important;
+
+  border-radius: 18px !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background:
+    radial-gradient(circle at 50% 20%, rgba(170, 230, 75, .25), transparent 60%),
+    linear-gradient(180deg, #1d2a13, #11170f) !important;
+  border: 1px solid rgba(170, 230, 75, .34) !important;
+  color: #c9ff67 !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender > div:not(.adminClientInitialsRender):not(.adminClientStatusRender) {
+  grid-area: name !important;
+  min-width: 0 !important;
+  align-self: end !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender h2 {
+  margin: 0 !important;
+  color: #fff !important;
+  font-size: 25px !important;
+  line-height: 1.05 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.035em !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender p {
+  margin: 4px 0 0 !important;
+  color: rgba(255, 255, 255, 0.62) !important;
+  font-size: 12px !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientStatusRender {
+  grid-area: status !important;
+  align-self: start !important;
+
+  width: fit-content !important;
+  min-height: 25px !important;
+  margin: 2px 0 0 !important;
+  padding: 4px 10px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+
+  border-radius: 999px !important;
+  background: rgba(110, 255, 80, 0.10) !important;
+  border: 1px solid rgba(110, 255, 80, 0.20) !important;
+  color: #aaff67 !important;
+
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientStatusRender i {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  background: #68ff52 !important;
+  box-shadow: 0 0 16px rgba(104, 255, 82, .7) !important;
+}
+
+@media (max-width: 520px) {
+  .adminClientWorkspaceHeaderRender {
+    padding: 12px 13px !important;
+    border-radius: 22px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender {
+    grid-template-columns: 52px minmax(0, 1fr) !important;
+    column-gap: 11px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientInitialsRender {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+    border-radius: 17px !important;
+    font-size: 23px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender h2 {
+    font-size: 24px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender p {
+    font-size: 11px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientStatusRender {
+    min-height: 24px !important;
+    padding: 4px 9px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* === CLIENT HEADER FINAL COMPACT V32 === */
+/* Ãâ€¢Ã‘â€°Ã‘â€˜ ÃÂºÃÂ¾ÃÂ¼ÃÂ¿ÃÂ°ÃÂºÃ‘â€šÃÂ½ÃÂµÃÂµ: mini profile card, ÃÂ¼ÃÂµÃÂ½Ã‘Å’Ã‘Ë†ÃÂµ ÃÂ¿Ã‘Æ’Ã‘ÂÃ‘â€šÃÂ¾Ã‘â€šÃ‘â€¹, Ã‘ÂÃ‘â€šÃÂ°Ã‘â€šÃ‘Æ’Ã‘Â ÃÂ² ÃÂ¾ÃÂ´ÃÂ½Ã‘Æ’ ÃÂ»ÃÂ¸ÃÂ½ÃÂ¸Ã‘Å½ */
+
+.adminClientWorkspaceHeaderRender {
+  padding: 10px 12px !important;
+  margin: 0 0 10px !important;
+  border-radius: 21px !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender {
+  grid-template-columns: 48px minmax(0, 1fr) auto !important;
+  grid-template-areas: "avatar name status" !important;
+  column-gap: 11px !important;
+  row-gap: 0 !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientInitialsRender {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  border-radius: 17px !important;
+  font-size: 22px !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender > div:not(.adminClientInitialsRender):not(.adminClientStatusRender) {
+  align-self: center !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender h2 {
+  font-size: 23px !important;
+  line-height: 1 !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender p {
+  margin-top: 5px !important;
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+  max-width: 100% !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientStatusRender {
+  grid-area: status !important;
+  align-self: center !important;
+  justify-self: end !important;
+
+  min-height: 25px !important;
+  margin: 0 !important;
+  padding: 5px 9px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientStatusRender i {
+  width: 7px !important;
+  height: 7px !important;
+}
+
+@media (max-width: 520px) {
+  .adminClientWorkspaceHeaderRender {
+    padding: 10px 11px !important;
+    border-radius: 20px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender {
+    grid-template-columns: 46px minmax(0, 1fr) auto !important;
+    column-gap: 10px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientInitialsRender {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    border-radius: 16px !important;
+    font-size: 21px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender h2 {
+    font-size: 22px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender p {
+    font-size: 10.5px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientStatusRender {
+    min-height: 24px !important;
+    padding: 5px 8px !important;
+    font-size: 10.5px !important;
+  }
+}
+
+@media (max-width: 370px) {
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender {
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+    grid-template-areas:
+      "avatar name"
+      "avatar status" !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientStatusRender {
+    justify-self: start !important;
+    margin-top: 3px !important;
+  }
+}
+
+/* === CLIENT OVERVIEW ONLY BLOCKS V33 === */
+/* Ãâ€”ÃÂ°ÃÂ¼ÃÂµÃ‘â€šÃÂºÃÂ° Ã‘â€šÃ‘â‚¬ÃÂµÃÂ½ÃÂµÃ‘â‚¬ÃÂ°, ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂ½ÃÂ¾Ã‘Â ÃÂ´ÃÂ°ÃÂ½ÃÂ½Ã‘â€¹Ã‘â€¦ ÃÂ¸ Ã‘Æ’ÃÂ´ÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ¸ÃÂµ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° ÃÂ¿ÃÂ¾ÃÂºÃÂ°ÃÂ·Ã‘â€¹ÃÂ²ÃÂ°Ã‘Å½Ã‘â€šÃ‘ÂÃ‘Â Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ²ÃÂ¾ ÃÂ²ÃÂºÃÂ»ÃÂ°ÃÂ´ÃÂºÃÂµ ÃÅ¾ÃÂ±ÃÂ·ÃÂ¾Ã‘â‚¬ */
+
+.adminClientOverviewOnlyBlocks {
+  margin-top: 14px !important;
+}
+
+.adminClientOverviewOnlyBlocks .adminClientBottomTools {
+  margin-top: 0 !important;
+}
+
+/* === PROGRAM TAB CLEANUP SAFE V34 === */
+/* ÃÂ£ÃÂ±ÃÂ¸Ã‘â‚¬ÃÂ°ÃÂµÃÂ¼ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃ‘Æ’ Ã‘â‚¬ÃÂµÃÂ´ÃÂ°ÃÂºÃ‘â€šÃÂ¾Ã‘â‚¬ ÃÂ¸ ÃÂ±ÃÂ»ÃÂ¾ÃÂº Ã‘â€šÃÂµÃÂºÃ‘Æ’Ã‘â€°ÃÂµÃÂ¹ ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ³Ã‘â‚¬ÃÂ°ÃÂ¼ÃÂ¼Ã‘â€¹ Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ² ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂµ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° */
+
+.adminProgramClientTab .adminAssignProgramHead button,
+.adminProgramClientTab .adminCurrentProgramBadge {
+  display: none !important;
+}
+
+/* === NUTRITION PLAN DROPDOWN V35 === */
+/* ÃÅ¸ÃÂ»ÃÂ°ÃÂ½ ÃÂ¿ÃÂ¸Ã‘â€šÃÂ°ÃÂ½ÃÂ¸Ã‘Â: ÃÂ²Ã‘â€¹ÃÂ¿ÃÂ°ÃÂ´ÃÂ°Ã‘Å½Ã‘â€°ÃÂ¸ÃÂ¹ Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂ¾ÃÂº + ÃÂ½ÃÂ°ÃÂ·ÃÂ½ÃÂ°Ã‘â€¡ÃÂ¸Ã‘â€šÃ‘Å’ + Ã‘ÂÃÂ±Ã‘â‚¬ÃÂ¾Ã‘ÂÃÂ¸Ã‘â€šÃ‘Å’ */
+
+.adminNutritionAssignCard {
+  gap: 12px !important;
+}
+
+.adminNutritionPlanSelect {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  margin: 12px 0 12px !important;
+}
+
+.adminNutritionPlanSelect span {
+  color: rgba(255,255,255,.52) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+}
+
+.adminNutritionPlanSelect select {
+  width: 100% !important;
+  height: 48px !important;
+  padding: 0 14px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: #0b0f0b !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+
+.adminNutritionAssignCard .adminNutritionAssignButton {
+  width: 100% !important;
+  min-height: 46px !important;
+  margin-top: 8px !important;
+}
+
+.adminNutritionAssignCard .adminNutritionAssignButton.ghost {
+  margin-top: 8px !important;
+  background: rgba(255,255,255,.045) !important;
+  color: rgba(255,255,255,.78) !important;
+  border: 1px solid rgba(255,255,255,.075) !important;
+}
+
+/* === PROGRESS DIAGRAMS IN OVERVIEW V36 === */
+/* Ãâ€ÃÂ¸ÃÂ°ÃÂ³Ã‘â‚¬ÃÂ°ÃÂ¼ÃÂ¼Ã‘â€¹ ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ³Ã‘â‚¬ÃÂµÃ‘ÂÃ‘ÂÃÂ° ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂ½ÃÂµÃ‘ÂÃÂµÃÂ½Ã‘â€¹ ÃÂ¸ÃÂ· ÃÅ¸Ã‘â‚¬ÃÂ¾ÃÂ³Ã‘â‚¬ÃÂ°ÃÂ¼ÃÂ¼Ã‘â€¹ ÃÂ² ÃÅ¾ÃÂ±ÃÂ·ÃÂ¾Ã‘â‚¬ */
+
+.adminClientTabContentRender .adminProgressDiagramsPanel {
+  margin-top: 14px !important;
+}
+
+.adminProgramClientTab .adminProgressDiagramsPanel {
+  display: none !important;
+}
+
+/* === PREMIUM CALENDAR REDESIGN V37 === */
+
+.calendarDayCard,
+.calendarNutritionDay,
+.nutritionCalendarDay,
+.adminNutritionCalendarDay {
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,.045) !important;
+  background:
+    linear-gradient(180deg, rgba(17,20,17,.98), rgba(10,12,10,.98)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.02),
+    0 8px 20px rgba(0,0,0,.22) !important;
+  padding: 8px 6px !important;
+  transition: .18s ease !important;
+}
+
+.calendarDayCard.good,
+.calendarNutritionDay.good,
+.nutritionCalendarDay.good,
+.adminNutritionCalendarDay.good {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(173,255,84,.08), transparent 55%),
+    linear-gradient(180deg, #20291a, #161d13) !important;
+}
+
+.calendarDayCard.bad,
+.calendarNutritionDay.bad,
+.nutritionCalendarDay.bad,
+.adminNutritionCalendarDay.bad {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,84,84,.08), transparent 55%),
+    linear-gradient(180deg, #261717, #1b1010) !important;
+}
+
+.calendarDayCalories,
+.nutritionCalendarCalories,
+.adminNutritionCalendarCalories {
+  font-size: 22px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  color: rgba(255,255,255,.92) !important;
+  margin-top: 8px !important;
+}
+
+.calendarDayProtein,
+.nutritionCalendarProtein,
+.adminNutritionCalendarProtein {
+  margin-top: 5px !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: rgba(195,255,126,.82) !important;
+}
+
+.calendarDayProteinLabel,
+.nutritionCalendarProteinLabel,
+.adminNutritionCalendarProteinLabel {
+  display: none !important;
+}
+
+.calendarDayProgress,
+.nutritionCalendarProgress,
+.adminNutritionCalendarProgress {
+  height: 4px !important;
+  border-radius: 999px !important;
+  margin-top: 10px !important;
+  background: rgba(255,255,255,.05) !important;
+  overflow: hidden !important;
+}
+
+.calendarDayProgress > div,
+.nutritionCalendarProgress > div,
+.adminNutritionCalendarProgress > div {
+  height: 100% !important;
+  border-radius: inherit !important;
+  background:
+    linear-gradient(90deg, rgba(191,255,96,.88), rgba(225,255,160,.98)) !important;
+}
+
+.calendarGrid,
+.nutritionCalendarGrid,
+.adminNutritionCalendarGrid {
+  gap: 8px !important;
+}
+
+@media (max-width: 520px) {
+  .calendarDayCalories,
+  .nutritionCalendarCalories,
+  .adminNutritionCalendarCalories {
+    font-size: 18px !important;
+  }
+
+  .calendarDayProtein,
+  .nutritionCalendarProtein,
+  .adminNutritionCalendarProtein {
+    font-size: 12px !important;
+  }
+
+  .calendarDayCard,
+  .calendarNutritionDay,
+  .nutritionCalendarDay,
+  .adminNutritionCalendarDay {
+    border-radius: 16px !important;
+    padding: 7px 5px !important;
+  }
+}
+
+.adminNutritionMonthHead {
+  display: contents !important;
+}
+
+.adminCalendarDays,
+.adminNutritionCalendarGrid,
+.nutritionCalendarGrid,
+.calendarGrid {
+  order: 3 !important;
+}
+
+.adminNutritionMonthHead .adminNutritionMonthSummary {
+  order: 4 !important;
+  margin-top: 14px !important;
+  width: 100% !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+@media (max-width: 420px) {
+
+}
+
+/* Ãâ€”ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â ÃÂ²ÃÂ¾ÃÂ·ÃÂ²Ã‘â‚¬ÃÂ°Ã‘â€°Ã‘â€˜ÃÂ½ ÃÂ½ÃÂ°ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦; ÃÅ¸ÃÂ»ÃÂ°ÃÂ½ / Ãâ€”ÃÂ° ÃÂ¼ÃÂµÃ‘ÂÃ‘ÂÃ‘â€  ÃÂ¿ÃÂ¾ÃÂ´ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘â€˜ÃÂ¼ */
+
+.adminNutritionMonthPanel {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.adminNutritionMonthHead {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  order: 1 !important;
+}
+
+.adminNutritionMonthHead > div:first-child {
+  order: 1 !important;
+}
+
+.adminCalendarDays,
+.adminNutritionCalendarGrid,
+.nutritionCalendarGrid,
+.calendarGrid {
+  order: 2 !important;
+}
+
+.adminNutritionMonthHead .adminNutritionMonthSummary {
+  order: 99 !important;
+  margin-top: 14px !important;
+  width: 100% !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.adminNutritionMonthSummary > div {
+  min-height: 74px !important;
+  padding: 14px !important;
+  border-radius: 20px !important;
+  background:
+    linear-gradient(180deg, rgba(20, 24, 20, .98), rgba(12, 15, 12, .98)) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.adminNutritionMonthSummary strong {
+  color: #fff !important;
+  font-size: 18px !important;
+  line-height: 1.1 !important;
+  margin-top: 6px !important;
+}
+
+@media (max-width: 420px) {
+  .adminNutritionMonthHead .adminNutritionMonthSummary {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .adminNutritionMonthSummary > div {
+    min-height: 66px !important;
+    padding: 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .adminNutritionMonthSummary strong {
+    font-size: 16px !important;
+  }
+}
+
+/* Ãâ€˜ÃÂµÃÂ·ÃÂ¾ÃÂ¿ÃÂ°Ã‘ÂÃÂ½Ã‘â€¹ÃÂ¹ Ã‘â€žÃÂ¸ÃÂºÃ‘Â ÃÂ¿ÃÂ¾Ã‘ÂÃÂ»ÃÂµ ÃÂ¾Ã‘Ë†ÃÂ¸ÃÂ±ÃÂºÃÂ¸ Ã‘ÂÃÂ±ÃÂ¾Ã‘â‚¬ÃÂºÃÂ¸: JSX ÃÂ½ÃÂµ ÃÂ»ÃÂ¾ÃÂ¼ÃÂ°ÃÂµÃÂ¼, header Ã‘ÂÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦Ã‘Æ’, summary ÃÂºÃÂ¾ÃÂ¼ÃÂ¿ÃÂ°ÃÂºÃ‘â€šÃÂ½ÃÂ¾ */
+
+.adminNutritionMonthHead {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+.adminNutritionMonthHead > div:first-child {
+  display: block !important;
+}
+
+.adminNutritionMonthHead > div:first-child span,
+.adminNutritionMonthHead > div:first-child h3,
+.adminNutritionMonthHead > div:first-child p {
+  display: block !important;
+}
+
+.adminNutritionMonthSummary {
+  width: 100% !important;
+  margin-top: 10px !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.adminNutritionMonthSummary > div {
+  min-height: 68px !important;
+  padding: 12px 14px !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(180deg, rgba(20, 24, 20, .98), rgba(12, 15, 12, .98)) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.adminNutritionMonthSummary span {
+  color: rgba(255,255,255,.48) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+}
+
+.adminNutritionMonthSummary strong {
+  color: #fff !important;
+  font-size: 17px !important;
+  line-height: 1.1 !important;
+  margin-top: 5px !important;
+}
+
+.adminNutritionMonthSummary small {
+  color: rgba(195,255,126,.72) !important;
+  font-size: 12px !important;
+}
+
+/* Ã¢Å¡Â¡Ã¯Â¸Â Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ² ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬ÃÂµ */
+.adminNutritionTrainingBadge,
+.nutritionTrainingBadge,
+.calendarTrainingBadge,
+.adminCalendarTrainingBadge {
+  font-size: 0 !important;
+}
+
+.adminNutritionTrainingBadge::before,
+.nutritionTrainingBadge::before,
+.calendarTrainingBadge::before,
+.adminCalendarTrainingBadge::before {
+  content: "Ã¢Å¡Â¡Ã¯Â¸Â" !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 420px) {
+  .adminNutritionMonthSummary {
+    gap: 8px !important;
+  }
+
+  .adminNutritionMonthSummary > div {
+    min-height: 62px !important;
+    padding: 11px 12px !important;
+    border-radius: 17px !important;
+  }
+
+  .adminNutritionMonthSummary strong {
+    font-size: 15px !important;
+  }
+}
+
+/* ÃÂ ÃÂµÃÂ°ÃÂ»Ã‘Å’ÃÂ½ÃÂ¾: ÃÂ·ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº Ã‘ÂÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦Ã‘Æ’, ÃÅ¸ÃÂ»ÃÂ°ÃÂ½/Ãâ€”ÃÂ° ÃÂ¼ÃÂµÃ‘ÂÃ‘ÂÃ‘â€  ÃÂ¿ÃÂ¾ÃÂ´ Ã‘ÂÃÂµÃ‘â€šÃÂºÃÂ¾ÃÂ¹ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â, Ã¢Å¡Â¡Ã¯Â¸Â Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ² Ã‘ÂÃ‘â€¡ÃÂµÃÂ¹ÃÂºÃÂ°Ã‘â€¦ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â */
+
+.adminNutritionMonthHead {
+  display: block !important;
+  margin-bottom: 12px !important;
+}
+
+.adminNutritionMonthHead .adminNutritionMonthSummary {
+  display: none !important;
+}
+
+.adminNutritionMonthSummaryBelow {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin-top: 14px !important;
+  width: 100% !important;
+}
+
+.adminNutritionTrainingMark {
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 420px) {
+
+}
+
+/* === CALENDAR VISUAL ORDER FIX V44 === */
+/* ÃÂ¤ÃÂ¸ÃÂºÃ‘Â ÃÂ¿ÃÂ¾Ã‘â‚¬Ã‘ÂÃÂ´ÃÂºÃÂ°: ÃÂ·ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº Ã‘ÂÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦Ã‘Æ’, Ã‘ÂÃÂµÃ‘â€šÃÂºÃÂ° ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â, ÃÅ¸ÃÂ»ÃÂ°ÃÂ½/Ãâ€”ÃÂ° ÃÂ¼ÃÂµÃ‘ÂÃ‘ÂÃ‘â€  Ã‘ÂÃÂ½ÃÂ¸ÃÂ·Ã‘Æ’ */
+
+.adminNutritionMonthPanel {
+  display: block !important;
+}
+
+.adminNutritionMonthHead {
+  display: block !important;
+  order: initial !important;
+  margin-bottom: 12px !important;
+}
+
+.adminNutritionMonthHead > div:first-child {
+  order: initial !important;
+  display: block !important;
+}
+
+.adminNutritionCalendarLegend,
+.adminNutritionCalendarMonthTitle,
+.adminNutritionMonthGrid {
+  order: initial !important;
+}
+
+.adminNutritionMonthSummaryBelow {
+  display: grid !important;
+  order: initial !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin-top: 14px !important;
+  width: 100% !important;
+}
+
+.adminNutritionMonthSummaryBelow > div {
+  min-height: 74px !important;
+  padding: 14px !important;
+  border-radius: 20px !important;
+  background:
+    linear-gradient(180deg, rgba(20, 24, 20, .98), rgba(12, 15, 12, .98)) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.adminNutritionMonthSummaryBelow span {
+  color: rgba(255,255,255,.48) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+}
+
+.adminNutritionMonthSummaryBelow strong {
+  color: #fff !important;
+  font-size: 18px !important;
+  line-height: 1.1 !important;
+  margin-top: 6px !important;
+}
+
+.adminNutritionMonthSummaryBelow small {
+  color: rgba(195,255,126,.72) !important;
+  font-size: 12px !important;
+}
+
+/* Ã¢Å¡Â¡Ã¯Â¸Â ÃÂ¼ÃÂµÃÂ½Ã‘Å’Ã‘Ë†ÃÂµ ÃÂ¸ ÃÂ½ÃÂµÃÂ¼ÃÂ½ÃÂ¾ÃÂ³ÃÂ¾ ÃÂ¿Ã‘â‚¬ÃÂ°ÃÂ²ÃÂµÃÂµ Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ² ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬ÃÂ½ÃÂ¾ÃÂ¹ Ã‘ÂÃ‘â€¡ÃÂµÃÂ¹ÃÂºÃÂµ */
+.adminNutritionTrainingMark {
+  font-size: 10px !important;
+  line-height: 1 !important;
+  transform: translate(5px, -1px) !important;
+  opacity: .88 !important;
+}
+
+@media (max-width: 420px) {
+  .adminNutritionMonthSummaryBelow {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .adminNutritionMonthSummaryBelow > div {
+    min-height: 66px !important;
+    padding: 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .adminNutritionMonthSummaryBelow strong {
+    font-size: 16px !important;
+  }
+
+  .adminNutritionTrainingMark {
+    font-size: 9px !important;
+    transform: translate(6px, -1px) !important;
+  }
+}
+
+/* ÃÂÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸Ã‘Â: ÃÂ·ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº Ã‘ÂÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦Ã‘Æ’, ÃÂ´ÃÂ½ÃÂ¸ ÃÂ² ÃÂ¾ÃÂ´ÃÂ¸ÃÂ½ Ã‘â‚¬Ã‘ÂÃÂ´, ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼Ã‘Â Ã‘â€šÃ‘â‚¬ÃÂµÃÂ½ÃÂ¸Ã‘â‚¬ÃÂ¾ÃÂ²ÃÂºÃÂ¸/ÃÂ½ÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ½ÃÂ¸Ã‘â€šÃ‘Å’ ÃÂ² ÃÂ½ÃÂ¸ÃÂ¶ÃÂµ */
+
+.adminCalendarPanelMerged {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  margin: 0 !important;
+  font-size: 24px !important;
+  line-height: 1.05 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays button {
+  min-width: 0 !important;
+  min-height: 54px !important;
+  padding: 8px 4px !important;
+  border-radius: 16px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays button strong {
+  display: block !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarSettingsGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin-top: 0 !important;
+}
+
+@media (max-width: 420px) {
+
+.adminCalendarPanelMerged .adminCalendarDays {
+    gap: 5px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarDays button {
+    min-height: 48px !important;
+    padding: 7px 3px !important;
+    border-radius: 14px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarDays button strong {
+    font-size: 12px !important;
+  }
+
+}
+
+.adminCalendarPanelMerged .adminCalendarHead {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  margin-bottom: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  margin: 0 !important;
+  font-size: 24px !important;
+  line-height: 1.08 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  min-height: 34px !important;
+  padding: 7px 12px !important;
+  border-radius: 14px !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays {
+  order: 2 !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarSettingsGrid {
+  order: 3 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin-top: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarSettingsGrid label {
+  min-height: 74px !important;
+  padding: 12px !important;
+  border-radius: 18px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarSettingsGrid label span {
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+  margin-bottom: 8px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarSettingsGrid input {
+  height: 38px !important;
+  border-radius: 14px !important;
+  font-size: 15px !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged .adminCalendarHead h3 {
+    font-size: 22px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTelegram {
+    min-height: 30px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    border-radius: 13px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarSettingsGrid {
+    gap: 8px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarSettingsGrid label {
+    min-height: 68px !important;
+    padding: 10px !important;
+    border-radius: 16px !important;
+  }
+}
+
+/* ÃÅ¡ÃÂ¾ÃÂ´ÃÂ¾ÃÂ¼: ÃÂ·ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº -> ÃÂ´ÃÂ½ÃÂ¸ -> ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼Ã‘Â -> Ã‘ÂÃ‘â€šÃÂ°Ã‘â€šÃ‘Æ’Ã‘ÂÃ‘â€¹ -> ÃÂ¿Ã‘â‚¬ÃÂ¸ÃÂ¼ÃÂµÃ‘â‚¬ -> Ã‘ÂÃÂ¾Ã‘â€¦Ã‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€šÃ‘Å’ -> Ã‘â€šÃÂµÃ‘ÂÃ‘â€š */
+
+.adminCalendarPanelMerged {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  padding: 22px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(22, 91, 117, .12), transparent 35%),
+    radial-gradient(circle at 8% 8%, rgba(127, 159, 58, .10), transparent 34%),
+    linear-gradient(180deg, rgba(13, 20, 15, .98), rgba(8, 11, 9, .98)) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead {
+  order: 1 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead > div:first-child {
+  min-width: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead span {
+  display: block !important;
+  margin-bottom: 8px !important;
+  color: #8eb64a !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+  letter-spacing: .12em !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  margin: 0 !important;
+  font-size: 34px !important;
+  line-height: 1.02 !important;
+  letter-spacing: -.04em !important;
+  color: #fff !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead p {
+  display: none !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  min-height: 34px !important;
+  padding: 7px 12px !important;
+  border-radius: 16px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  background: rgba(20, 77, 103, .62) !important;
+  border: 1px solid rgba(63, 163, 224, .35) !important;
+  color: #d7f1ff !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays {
+  order: 2 !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 9px !important;
+  width: 100% !important;
+  margin: 4px 0 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarSettingsGrid {
+  order: 3 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarSettingsGrid label {
+  min-height: 78px !important;
+  padding: 12px 14px !important;
+  border-radius: 18px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarSettingsGrid label span {
+  display: block !important;
+  margin-bottom: 9px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  color: rgba(255,255,255,.52) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarSettingsGrid input {
+  height: 40px !important;
+  border-radius: 14px !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarToggle,
+.adminCalendarPanelMerged .adminCalendarTelegramToggle,
+.adminCalendarPanelMerged .adminCalendarStatus,
+.adminCalendarPanelMerged .adminCalendarSaveBtn,
+.adminCalendarPanelMerged .adminCalendarTestBtn {
+  order: 4 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarPreview,
+.adminCalendarPanelMerged .adminCalendarMessagePreview {
+  order: 5 !important;
+}
+
+.adminCalendarPanelMerged button {
+  position: relative;
+}
+
+@media (max-width: 420px) {
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+    font-size: 30px !important;
+  }
+
+.adminCalendarPanelMerged .adminCalendarDays {
+    gap: 7px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarSettingsGrid {
+    gap: 9px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarSettingsGrid label {
+    min-height: 70px !important;
+    padding: 10px 12px !important;
+    border-radius: 16px !important;
+  }
+}
+
+/* ÃÂ¤ÃÂ¸ÃÂ½ÃÂ°ÃÂ»Ã‘Å’ÃÂ½ÃÂ¾: ÃÂ·ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº -> ÃÂ´ÃÂ½ÃÂ¸ -> ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼Ã‘Â -> Ã‘ÂÃ‘â€šÃÂ°Ã‘â€šÃ‘Æ’Ã‘ÂÃ‘â€¹ -> ÃÂ¿Ã‘â‚¬ÃÂ¸ÃÂ¼ÃÂµÃ‘â‚¬ -> Ã‘ÂÃÂ¾Ã‘â€¦Ã‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€šÃ‘Å’ -> Ã‘â€šÃÂµÃ‘ÂÃ‘â€š */
+
+.adminCalendarPanelMerged {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  padding: 22px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(22, 91, 117, .12), transparent 35%),
+    radial-gradient(circle at 8% 8%, rgba(127, 159, 58, .10), transparent 34%),
+    linear-gradient(180deg, rgba(13, 20, 15, .98), rgba(8, 11, 9, .98)) !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarHead {
+  order: 1 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarHead > div:first-child {
+  min-width: 0 !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarHead span {
+  display: block !important;
+  margin-bottom: 7px !important;
+  color: #8eb64a !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+  letter-spacing: .12em !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarHead h3 {
+  margin: 0 !important;
+  font-size: 34px !important;
+  line-height: 1.02 !important;
+  letter-spacing: -.04em !important;
+  color: #fff !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarHead p {
+  display: none !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarHead .adminCalendarTelegram,
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  min-height: 32px !important;
+  padding: 6px 11px !important;
+  border-radius: 15px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  background: rgba(20, 77, 103, .62) !important;
+  border: 1px solid rgba(63, 163, 224, .35) !important;
+  color: #d7f1ff !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarDays {
+  order: 2 !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 9px !important;
+  width: 100% !important;
+  margin: 2px 0 0 !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarSettingsGrid {
+  order: 3 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarSettingsGrid label {
+  min-height: 78px !important;
+  padding: 12px 14px !important;
+  border-radius: 18px !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarSettingsGrid label span {
+  display: block !important;
+  margin-bottom: 9px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  color: rgba(255,255,255,.52) !important;
+}
+
+.adminCalendarPanelMerged > .adminCalendarSettingsGrid input {
+  height: 40px !important;
+  border-radius: 14px !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+/* Ãâ€™Ã‘ÂÃÂµ ÃÂ¾Ã‘ÂÃ‘â€šÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂµ Ã‘ÂÃÂ»ÃÂµÃÂ¼ÃÂµÃÂ½Ã‘â€šÃ‘â€¹ ÃÂ¿ÃÂ¾Ã‘ÂÃÂ»ÃÂµ ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼ÃÂµÃÂ½ÃÂ¸ */
+.adminCalendarPanelMerged > *:not(.adminCalendarHead):not(.adminCalendarDays):not(.adminCalendarSettingsGrid) {
+  order: 4 !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged {
+    padding: 18px !important;
+    gap: 14px !important;
+    border-radius: 26px !important;
+  }
+
+  .adminCalendarPanelMerged > .adminCalendarHead h3 {
+    font-size: 30px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTelegram {
+    min-height: 30px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    border-radius: 14px !important;
+  }
+
+  .adminCalendarPanelMerged > .adminCalendarDays {
+    gap: 7px !important;
+  }
+
+  .adminCalendarPanelMerged > .adminCalendarSettingsGrid {
+    gap: 9px !important;
+  }
+
+  .adminCalendarPanelMerged > .adminCalendarSettingsGrid label {
+    min-height: 70px !important;
+    padding: 10px 12px !important;
+    border-radius: 16px !important;
+  }
+}
+
+/* === CALENDAR CLEANUP V52 === */
+/* ÃÂ£ÃÂ±Ã‘â‚¬ÃÂ°ÃÂ½Ã‘â€¹ ÃÂ»ÃÂ¸Ã‘Ë†ÃÂ½ÃÂ¸ÃÂµ Ã‘â€šÃÂµÃÂºÃ‘ÂÃ‘â€šÃ‘â€¹ ÃÂ¸ Ã‘Æ’ÃÂ¼ÃÂµÃÂ½Ã‘Å’Ã‘Ë†ÃÂµÃÂ½ÃÂ° Ã‘â€šÃÂµÃ‘ÂÃ‘â€šÃÂ¾ÃÂ²ÃÂ°Ã‘Â ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ° */
+
+.adminCalendarPanelMerged .adminCalendarTestBtn,
+.adminCalendarPanelMerged button[class*="Test"] {
+  max-width: 320px !important;
+  min-height: 54px !important;
+  margin: 0 auto !important;
+  border-radius: 20px !important;
+  background:
+    linear-gradient(180deg,
+      rgba(58, 62, 68, .92),
+      rgba(34, 37, 42, .96)
+    ) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  color: rgba(255,255,255,.92) !important;
+  box-shadow: none !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn span,
+.adminCalendarPanelMerged button[class*="Test"] span {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged .adminCalendarTestBtn,
+  .adminCalendarPanelMerged button[class*="Test"] {
+    max-width: 280px !important;
+    min-height: 50px !important;
+    border-radius: 18px !important;
+  }
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn,
+.adminCalendarPanelMerged button[class*="Test"],
+.adminCalendarPanelMerged button:has(> span:only-child) {
+  max-width: 330px !important;
+  min-height: 44px !important;
+  height: 44px !important;
+  padding: 8px 18px !important;
+  margin: 0 auto !important;
+  border-radius: 18px !important;
+  background: #071b1d !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  color: rgba(255,255,255,.72) !important;
+  box-shadow: none !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn *,
+.adminCalendarPanelMerged button[class*="Test"] *,
+.adminCalendarPanelMerged button:has(> span:only-child) * {
+  font-size: 13px !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn svg,
+.adminCalendarPanelMerged button[class*="Test"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  opacity: .7 !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged .adminCalendarTestBtn,
+  .adminCalendarPanelMerged button[class*="Test"],
+  .adminCalendarPanelMerged button:has(> span:only-child) {
+    max-width: 280px !important;
+    min-height: 40px !important;
+    height: 40px !important;
+    padding: 7px 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTestBtn *,
+  .adminCalendarPanelMerged button[class*="Test"] *,
+  .adminCalendarPanelMerged button:has(> span:only-child) * {
+    font-size: 12px !important;
+  }
+}
+
+/* Ãâ€™ÃÂ¾ÃÂ·ÃÂ²Ã‘â‚¬ÃÂ°Ã‘â€°ÃÂ°ÃÂµÃÂ¼ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃ‘Æ’ Ã‘â€šÃÂµÃ‘ÂÃ‘â€šÃÂ¾ÃÂ²ÃÂ¾ÃÂ¹ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸, ÃÂ½ÃÂ¾ ÃÂ´ÃÂµÃÂ»ÃÂ°ÃÂµÃÂ¼ Ã‘â€šÃÂµÃÂºÃ‘ÂÃ‘â€š ÃÂ¼ÃÂµÃÂ½Ã‘Å’Ã‘Ë†ÃÂµ */
+.adminCalendarPanelMerged .adminCalendarTestBtn,
+.adminCalendarPanelMerged button[class*="Test"] {
+  max-width: 100% !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  padding: 14px 18px !important;
+  margin: 0 !important;
+  border-radius: 22px !important;
+  background: #071b1d !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  color: rgba(255,255,255,.76) !important;
+  box-shadow: none !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn *,
+.adminCalendarPanelMerged button[class*="Test"] * {
+  font-size: 14px !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn svg,
+.adminCalendarPanelMerged button[class*="Test"] svg {
+  width: 17px !important;
+  height: 17px !important;
+  opacity: .72 !important;
+}
+
+/* Telegram badge: Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ Ã‘ÂÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ Telegram + Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ° Ã‘ÂÃ‘â€šÃÂ°Ã‘â€šÃ‘Æ’Ã‘ÂÃÂ° */
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 30px !important;
+  padding: 6px 11px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  background: rgba(255,255,255,.055) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  color: rgba(255,255,255,.72) !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged .adminCalendarTestBtn,
+  .adminCalendarPanelMerged button[class*="Test"] {
+    min-height: 60px !important;
+    height: 60px !important;
+    padding: 12px 16px !important;
+    border-radius: 20px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTestBtn *,
+  .adminCalendarPanelMerged button[class*="Test"] * {
+    font-size: 13px !important;
+  }
+
+}
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: center !important;
+  font-size: 28px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -.035em !important;
+  color: #fff !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  order: 2 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  min-height: 30px !important;
+  padding: 6px 12px !important;
+  margin-top: 2px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  background: rgba(255,255,255,.055) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  color: rgba(255,255,255,.72) !important;
+}
+
+/* ÃÂ£ÃÂ±ÃÂ¸Ã‘â‚¬ÃÂ°ÃÂµÃÂ¼ ÃÂ¿Ã‘Æ’Ã‘ÂÃ‘â€šÃ‘â€¹ÃÂµ ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ ÃÂ¿ÃÂ¾Ã‘ÂÃÂ»ÃÂµ ÃÂ¿Ã‘â‚¬ÃÂ¾Ã‘Ë†ÃÂ»Ã‘â€¹Ã‘â€¦ Ã‘Æ’ÃÂ´ÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ¸ÃÂ¹ */
+.adminCalendarPanelMerged .adminCalendarPreview:empty,
+.adminCalendarPanelMerged .adminCalendarMessagePreview:empty,
+.adminCalendarPanelMerged .adminCalendarTelegramToggle:empty,
+.adminCalendarPanelMerged .adminCalendarTelegramStatus:empty,
+.adminCalendarPanelMerged button:empty,
+.adminCalendarPanelMerged div:empty {
+  display: none !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ÃÂ¢Ã‘â‚¬ÃÂ¸ ÃÂ¾Ã‘ÂÃÂ½ÃÂ¾ÃÂ²ÃÂ½Ã‘â€¹ÃÂµ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ ÃÂ¾ÃÂ´ÃÂ½ÃÂ¾ÃÂ³ÃÂ¾ Ã‘â‚¬ÃÂ°ÃÂ·ÃÂ¼ÃÂµÃ‘â‚¬ÃÂ°: ÃÂÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸Ã‘Â / ÃÂ¡ÃÂ¾Ã‘â€¦Ã‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€šÃ‘Å’ / ÃÂ¢ÃÂµÃ‘ÂÃ‘â€š */
+.adminCalendarPanelMerged .adminCalendarToggle,
+.adminCalendarPanelMerged .adminCalendarSaveBtn,
+.adminCalendarPanelMerged .adminCalendarTestBtn,
+.adminCalendarPanelMerged button[class*="Toggle"],
+.adminCalendarPanelMerged button[class*="Save"],
+.adminCalendarPanelMerged button[class*="Test"] {
+  width: 100% !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  padding: 14px 18px !important;
+  border-radius: 22px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 420px) {
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+    font-size: 25px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTelegram {
+    min-height: 28px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarToggle,
+  .adminCalendarPanelMerged .adminCalendarSaveBtn,
+  .adminCalendarPanelMerged .adminCalendarTestBtn,
+  .adminCalendarPanelMerged button[class*="Toggle"],
+  .adminCalendarPanelMerged button[class*="Save"],
+  .adminCalendarPanelMerged button[class*="Test"] {
+    min-height: 60px !important;
+    height: 60px !important;
+    padding: 12px 16px !important;
+    border-radius: 20px !important;
+  }
+
+}
+
+.adminCalendarPanelMerged .adminCalendarHead span {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 6px !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  color: #8eb64a !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+  letter-spacing: .12em !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: center !important;
+  font-size: 26px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -.035em !important;
+  color: #fff !important;
+}
+
+/* Badge Telegram: ÃÂ½ÃÂ°ÃÂ´ÃÂ¿ÃÂ¸Ã‘ÂÃ‘Å’ Telegram ÃÂ±ÃÂµÃÂ· ÃÂºÃÂ°ÃÂ²Ã‘â€¹Ã‘â€¡ÃÂµÃÂº + Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ° */
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  order: 2 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  min-height: 30px !important;
+  height: 30px !important;
+  padding: 0 12px !important;
+  margin: 2px auto 0 !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  background: rgba(255,255,255,.055) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  color: rgba(255,255,255,.72) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram::before {
+  content: "" !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 999px !important;
+  flex: 0 0 auto !important;
+  background: rgba(255,255,255,.34) !important;
+  box-shadow: none !important;
+}
+
+/* ÃÅ¡ÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ ÃÂ¾ÃÂ´ÃÂ¸ÃÂ½ÃÂ°ÃÂºÃÂ¾ÃÂ²ÃÂ¾ÃÂ¹ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃ‘â€¹: ÃÂÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸Ã‘Â / ÃÂ¡ÃÂ¾Ã‘â€¦Ã‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€šÃ‘Å’ Ã‘â‚¬ÃÂ°Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂ°ÃÂ½ÃÂ¸ÃÂµ / ÃÂ¢ÃÂµÃ‘ÂÃ‘â€šÃÂ¾ÃÂ²ÃÂ¾ÃÂµ Ã‘ÂÃÂ¾ÃÂ¾ÃÂ±Ã‘â€°ÃÂµÃÂ½ÃÂ¸ÃÂµ */
+.adminCalendarPanelMerged .adminCalendarToggle,
+.adminCalendarPanelMerged .adminCalendarSaveBtn,
+.adminCalendarPanelMerged .adminCalendarTestBtn,
+.adminCalendarPanelMerged button[class*="Toggle"],
+.adminCalendarPanelMerged button[class*="Save"],
+.adminCalendarPanelMerged button[class*="Test"] {
+  width: 100% !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  max-height: 64px !important;
+  padding: 0 18px !important;
+  border-radius: 22px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* ÃÂ¢ÃÂµÃ‘ÂÃ‘â€šÃÂ¾ÃÂ²ÃÂ°Ã‘Â ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ° Ã‘â€šÃ‘â€˜ÃÂ¼ÃÂ½ÃÂ°Ã‘Â, Ã‘â€šÃÂµÃÂºÃ‘ÂÃ‘â€š ÃÂ¼ÃÂµÃÂ½Ã‘Å’Ã‘Ë†ÃÂµ */
+.adminCalendarPanelMerged .adminCalendarTestBtn,
+.adminCalendarPanelMerged button[class*="Test"] {
+  background: #071b1d !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  color: rgba(255,255,255,.72) !important;
+  box-shadow: none !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn *,
+.adminCalendarPanelMerged button[class*="Test"] * {
+  font-size: 12px !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn svg,
+.adminCalendarPanelMerged button[class*="Test"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  opacity: .72 !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged .adminCalendarHead span {
+    font-size: 12px !important;
+    letter-spacing: .1em !important;
+  }
+
+.adminCalendarPanelMerged .adminCalendarToggle,
+  .adminCalendarPanelMerged .adminCalendarSaveBtn,
+  .adminCalendarPanelMerged .adminCalendarTestBtn,
+  .adminCalendarPanelMerged button[class*="Toggle"],
+  .adminCalendarPanelMerged button[class*="Save"],
+  .adminCalendarPanelMerged button[class*="Test"] {
+    min-height: 60px !important;
+    height: 60px !important;
+    max-height: 60px !important;
+    padding: 0 16px !important;
+    border-radius: 20px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTestBtn *,
+  .adminCalendarPanelMerged button[class*="Test"] * {
+    font-size: 11px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTelegram {
+    min-height: 28px !important;
+    height: 28px !important;
+    padding: 0 10px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* ÃÂ ÃÂµÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂµ ÃÂºÃÂ»ÃÂ°Ã‘ÂÃ‘ÂÃ‘â€¹: ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ ÃÂ¾ÃÂ´ÃÂ½ÃÂ¾ÃÂ¹ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃ‘â€¹ + Telegram ÃÂ±ÃÂµÃÂ· ÃÂºÃÂ°ÃÂ²Ã‘â€¹Ã‘â€¡ÃÂµÃÂº */
+
+.adminCalendarPanelMerged .adminCalendarHead {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  text-align: center !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead > div:first-child {
+  width: 100% !important;
+  text-align: center !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead span {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 6px !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: center !important;
+  font-size: 24px !important;
+  line-height: 1.05 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: fit-content !important;
+  min-height: 30px !important;
+  height: 30px !important;
+  padding: 0 12px !important;
+  margin: 2px auto 0 !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  background: rgba(255,255,255,.055) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  color: rgba(255,255,255,.72) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram::before {
+  content: "" !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.34) !important;
+  box-shadow: none !important;
+  flex: 0 0 auto !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram.connected {
+  background: rgba(92, 255, 84, .08) !important;
+  border-color: rgba(92, 255, 84, .16) !important;
+  color: rgba(220,255,210,.9) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarEqualButton {
+  width: 100% !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  max-height: 64px !important;
+  padding: 0 18px !important;
+  border-radius: 22px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestButton {
+  background: #071b1d !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  color: rgba(255,255,255,.72) !important;
+  box-shadow: none !important;
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged .adminCalendarEqualButton {
+    min-height: 60px !important;
+    height: 60px !important;
+    max-height: 60px !important;
+    border-radius: 20px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTestButton {
+    font-size: 10px !important;
+  }
+}
+
+/* Ãâ€“Ã‘â€˜Ã‘ÂÃ‘â€šÃÂºÃÂ¾ ÃÂ²Ã‘â€¹Ã‘â‚¬ÃÂ°ÃÂ²ÃÂ½ÃÂ¸ÃÂ²ÃÂ°ÃÂµÃÂ¼ 3 ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ */
+
+.adminCalendarEqualButtonsWrap {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+.adminCalendarEqualButtonsWrap > button,
+.adminCalendarEqualButtonsWrap .adminCalendarEqualButton,
+.adminCalendarEqualButtonsWrap .adminCalendarReminderButton,
+.adminCalendarEqualButtonsWrap .adminCalendarSaveButton,
+.adminCalendarEqualButtonsWrap .adminCalendarTestButton,
+.adminCalendarEqualButtonsWrap .adminV3OpenEditor {
+  width: 100% !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  max-height: 64px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 18px !important;
+  border-radius: 22px !important;
+}
+
+.adminCalendarEqualButtonsWrap .adminCalendarTestButton {
+  background: #071b1d !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  color: rgba(255,255,255,.72) !important;
+  box-shadow: none !important;
+}
+
+.adminCalendarEqualButtonsWrap .adminCalendarTestButton,
+.adminCalendarEqualButtonsWrap .adminCalendarTestButton * {
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarEqualButtonsWrap > button,
+  .adminCalendarEqualButtonsWrap .adminCalendarEqualButton,
+  .adminCalendarEqualButtonsWrap .adminCalendarReminderButton,
+  .adminCalendarEqualButtonsWrap .adminCalendarSaveButton,
+  .adminCalendarEqualButtonsWrap .adminCalendarTestButton,
+  .adminCalendarEqualButtonsWrap .adminV3OpenEditor {
+    min-height: 60px !important;
+    height: 60px !important;
+    max-height: 60px !important;
+  }
+
+  .adminCalendarEqualButtonsWrap .adminCalendarTestButton,
+  .adminCalendarEqualButtonsWrap .adminCalendarTestButton * {
+    font-size: 10px !important;
+  }
+}
+
+/* ÃÅ¸ÃÂ¾ÃÂ»Ã‘Â ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼ÃÂµÃÂ½ÃÂ¸ ÃÂ¿ÃÂ¾Ã‘ÂÃÂ²ÃÂ»Ã‘ÂÃ‘Å½Ã‘â€šÃ‘ÂÃ‘Â ÃÂ¿ÃÂ¾ ÃÂºÃÂ¾ÃÂ»ÃÂ¸Ã‘â€¡ÃÂµÃ‘ÂÃ‘â€šÃÂ²Ã‘Æ’ ÃÂ²Ã‘â€¹ÃÂ±Ã‘â‚¬ÃÂ°ÃÂ½ÃÂ½Ã‘â€¹Ã‘â€¦ ÃÂ´ÃÂ½ÃÂµÃÂ¹ */
+
+.adminCalendarPanelMerged .adminCalendarPerDaySettings {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+.adminCalendarDaySettingsRow {
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) minmax(0, 1fr) 76px !important;
+  gap: 8px !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 10px !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.035) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.adminCalendarDaySettingsTitle {
+  height: 42px !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(127,159,58,.12) !important;
+  color: #d8ff95 !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+}
+
+.adminCalendarDaySettingsRow label {
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.adminCalendarDaySettingsRow label span {
+  display: block !important;
+  margin: 0 0 5px !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  color: rgba(255,255,255,.48) !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarDaySettingsRow {
+    grid-template-columns: 38px minmax(0, 1fr) minmax(0, 1fr) 62px !important;
+    gap: 6px !important;
+    padding: 8px !important;
+    border-radius: 16px !important;
+  }
+
+  .adminCalendarDaySettingsTitle {
+    height: 38px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+  }
+
+.adminCalendarDaySettingsRow input,
+  .adminCalendarHourReminder {
+    height: 36px !important;
+    min-height: 36px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+  }
+
+  .adminCalendarHourReminder {
+    font-size: 10px !important;
+    padding: 0 5px !important;
+  }
+}
+
+/* ÃÅ¸ÃÂ¾ÃÂºÃÂ°ÃÂ·Ã‘â€¹ÃÂ²ÃÂ°ÃÂµÃÂ¼ Ã‘â‚¬ÃÂµÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂµ Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ¾ÃÂºÃÂ¸ ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼ÃÂµÃÂ½ÃÂ¸ ÃÂ¿ÃÂ¾ ÃÂºÃÂ°ÃÂ¶ÃÂ´ÃÂ¾ÃÂ¼Ã‘Æ’ ÃÂ²Ã‘â€¹ÃÂ±Ã‘â‚¬ÃÂ°ÃÂ½ÃÂ½ÃÂ¾ÃÂ¼Ã‘Æ’ ÃÂ´ÃÂ½Ã‘Å½ */
+
+.adminCalendarPanelMerged {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+/* Header */
+.adminCalendarPanelMerged .adminCalendarHead {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  gap: 8px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead span {
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  text-align: center !important;
+  font-size: 24px !important;
+  margin: 0 !important;
+}
+
+/* Telegram */
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: fit-content !important;
+  min-height: 30px !important;
+  padding: 0 12px !important;
+  margin: 2px auto 0 !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  background: rgba(255,255,255,.055) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  color: rgba(255,255,255,.72) !important;
+}
+
+/* Ãâ€ÃÂ½ÃÂ¸ */
+.adminCalendarPanelMerged .adminCalendarDays {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+}
+
+/* ÃÅ¸ÃÂµÃ‘â‚¬Ã‘ÂÃÂ¾ÃÂ½ÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂµ ÃÂ¿ÃÂ¾ÃÂ»Ã‘Â ÃÂ¿ÃÂ¾ ÃÂ´ÃÂ½Ã‘ÂÃÂ¼ */
+.adminCalendarPanelMerged .adminCalendarPerDaySettings {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDaySettingsRow {
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) minmax(0, 1fr) 76px !important;
+  gap: 8px !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 10px !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+}
+
+.adminCalendarDaySettingsTitle {
+  height: 42px !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(127,159,58,.14) !important;
+  color: #d8ff95 !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+}
+
+.adminCalendarDaySettingsRow label {
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.adminCalendarDaySettingsRow label span {
+  display: block !important;
+  margin: 0 0 5px !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  color: rgba(255,255,255,.5) !important;
+  white-space: nowrap !important;
+}
+
+.adminCalendarDaySettingsRow input {
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  border-radius: 13px !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.adminCalendarHourReminder {
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 8px !important;
+  border-radius: 13px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: rgba(255,255,255,.045) !important;
+  color: rgba(255,255,255,.62) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.adminCalendarHourReminder.active {
+  background: rgba(127,159,58,.20) !important;
+  border-color: rgba(127,159,58,.34) !important;
+  color: #d8ff95 !important;
+}
+
+/* ÃÅ¡ÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ */
+.adminCalendarEqualButtonsWrap > button,
+.adminCalendarPanelMerged .adminCalendarEqualButton,
+.adminCalendarPanelMerged .adminV3OpenEditor,
+.adminCalendarPanelMerged .adminCalendarTestButton {
+  width: 100% !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  max-height: 64px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 22px !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged .adminCalendarDaySettingsRow {
+    grid-template-columns: 38px minmax(0, 1fr) minmax(0, 1fr) 62px !important;
+    gap: 6px !important;
+    padding: 8px !important;
+  }
+
+  .adminCalendarDaySettingsTitle {
+    height: 38px !important;
+    font-size: 12px !important;
+  }
+
+  .adminCalendarDaySettingsRow label span {
+    font-size: 9px !important;
+  }
+
+  .adminCalendarDaySettingsRow input,
+  .adminCalendarHourReminder {
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 11px !important;
+  }
+
+  .adminCalendarHourReminder {
+    padding: 0 4px !important;
+    font-size: 10px !important;
+  }
+
+}
+
+/* ÃÂÃÂºÃÂºÃ‘Æ’Ã‘â‚¬ÃÂ°Ã‘â€šÃÂ½Ã‘â€¹ÃÂ¹ ÃÂ±ÃÂ»ÃÂ¾ÃÂº ÃÂ½ÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸ÃÂ¹: Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ¾ÃÂºÃÂ¸ ÃÂ´ÃÂ½ÃÂµÃÂ¹, ÃÂ¿ÃÂ¾ÃÂ»Ã‘Â ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼ÃÂµÃÂ½ÃÂ¸ ÃÂ¸ ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂºÃÂ»Ã‘Å½Ã‘â€¡ÃÂ°Ã‘â€šÃÂµÃÂ»Ã‘Å’ ÃÂ·ÃÂ° Ã‘â€¡ÃÂ°Ã‘Â */
+
+.adminCalendarPanelMerged {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  padding: 20px !important;
+  border-radius: 28px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 8px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead span {
+  display: block !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  color: #8eb64a !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  letter-spacing: .12em !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  margin: 0 !important;
+  text-align: center !important;
+  font-size: 26px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -.03em !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: fit-content !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  padding: 0 12px !important;
+  margin: 2px auto 0 !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  background: rgba(255,255,255,.055) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  color: rgba(255,255,255,.72) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram::before {
+  content: "" !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.34) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram.connected::before {
+  background: #63ff52 !important;
+  box-shadow: 0 0 10px rgba(99,255,82,.52) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarPerDaySettings {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDaySettingsRow {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100% !important;
+  padding: 14px !important;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025)) !important;
+  border: 1px solid rgba(255,255,255,.065) !important;
+  box-sizing: border-box !important;
+}
+
+.adminCalendarDaySettingsHeader {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.adminCalendarDaySettingsTitle {
+  width: 46px !important;
+  height: 42px !important;
+  border-radius: 15px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 46px !important;
+  background: rgba(127,159,58,.18) !important;
+  color: #d8ff95 !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+}
+
+.adminCalendarDaySettingsName {
+  color: rgba(255,255,255,.78) !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.adminCalendarDayTimeGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+.adminCalendarDaySettingsRow label {
+  display: block !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.adminCalendarDaySettingsRow label span {
+  display: block !important;
+  margin: 0 0 7px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  color: rgba(255,255,255,.48) !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+}
+
+.adminCalendarDaySettingsRow input {
+  width: 100% !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  border-radius: 14px !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.adminCalendarHourReminder {
+  width: 100% !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  padding: 0 14px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: rgba(255,255,255,.045) !important;
+  color: rgba(255,255,255,.68) !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+}
+
+.adminCalendarHourReminder i {
+  width: 38px !important;
+  height: 22px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.12) !important;
+  position: relative !important;
+  flex: 0 0 auto !important;
+}
+
+.adminCalendarHourReminder i::before {
+  content: "" !important;
+  position: absolute !important;
+  width: 18px !important;
+  height: 18px !important;
+  left: 2px !important;
+  top: 2px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.7) !important;
+  transition: .18s ease !important;
+}
+
+.adminCalendarHourReminder.active {
+  background: rgba(127,159,58,.16) !important;
+  border-color: rgba(127,159,58,.30) !important;
+  color: #d8ff95 !important;
+}
+
+.adminCalendarHourReminder.active i {
+  background: rgba(145, 205, 56, .55) !important;
+}
+
+.adminCalendarHourReminder.active i::before {
+  transform: translateX(16px) !important;
+  background: #fff !important;
+}
+
+.adminCalendarEqualButtonsWrap > button,
+.adminCalendarPanelMerged .adminCalendarEqualButton,
+.adminCalendarPanelMerged .adminV3OpenEditor,
+.adminCalendarPanelMerged .adminCalendarTestButton {
+  width: 100% !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  max-height: 64px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 22px !important;
+  box-sizing: border-box !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestButton {
+  background: #071b1d !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  color: rgba(255,255,255,.72) !important;
+  box-shadow: none !important;
+  font-size: 11px !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged {
+    padding: 18px !important;
+    gap: 13px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarHead h3 {
+    font-size: 24px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarDaySettingsRow {
+    padding: 12px !important;
+    gap: 11px !important;
+    border-radius: 20px !important;
+  }
+
+  .adminCalendarDaySettingsTitle {
+    width: 42px !important;
+    height: 40px !important;
+    flex-basis: 42px !important;
+    font-size: 13px !important;
+  }
+
+  .adminCalendarDaySettingsName {
+    font-size: 13px !important;
+  }
+
+  .adminCalendarDayTimeGrid {
+    gap: 8px !important;
+  }
+
+  .adminCalendarDaySettingsRow label span {
+    font-size: 10px !important;
+  }
+
+  .adminCalendarDaySettingsRow input {
+    height: 40px !important;
+    min-height: 40px !important;
+    font-size: 13px !important;
+  }
+
+  .adminCalendarHourReminder {
+    height: 42px !important;
+    min-height: 42px !important;
+    font-size: 12px !important;
+  }
+
+  .adminCalendarEqualButtonsWrap > button,
+  .adminCalendarPanelMerged .adminCalendarEqualButton,
+  .adminCalendarPanelMerged .adminV3OpenEditor,
+  .adminCalendarPanelMerged .adminCalendarTestButton {
+    min-height: 60px !important;
+    height: 60px !important;
+    max-height: 60px !important;
+  }
+}
+
+/* === CALENDAR MATCH RENDER V62 === */
+/* ÃÂ¤ÃÂ¸ÃÂ½ÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂ¹ ÃÂ²ÃÂ¸ÃÂ´ Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ Ã‘â€¹ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â ÃÂ¿ÃÂ¾ Ã‘â‚¬ÃÂµÃ‘â€žÃÂµÃ‘â‚¬ÃÂµÃÂ½Ã‘ÂÃ‘Æ’: Ã‘â‚¬ÃÂ°ÃÂ·ÃÂ¼ÃÂµÃ‘â‚¬Ã‘â€¹, Ã‘â‚¬ÃÂ°Ã‘ÂÃÂ¿ÃÂ¾ÃÂ»ÃÂ¾ÃÂ¶ÃÂµÃÂ½ÃÂ¸ÃÂµ, Ã‘â€žÃ‘Æ’ÃÂ½ÃÂºÃ‘â€ ÃÂ¸ÃÂ¾ÃÂ½ÃÂ°ÃÂ» */
+
+.adminCalendarPanelMerged {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  padding: 22px 18px 18px !important;
+  border-radius: 28px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(31, 83, 58, .18), transparent 34%),
+    linear-gradient(180deg, rgba(12, 22, 18, .98), rgba(8, 12, 10, .99)) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 18px 42px rgba(0,0,0,.32) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead {
+  order: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead span {
+  display: none !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  margin: 0 !important;
+  text-align: center !important;
+  font-size: 30px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -.035em !important;
+  color: #fff !important;
+  text-shadow: 0 1px 16px rgba(255,255,255,.08) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 9px !important;
+  width: fit-content !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 20px !important;
+  margin: 4px auto 0 !important;
+  border-radius: 999px !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  background: rgba(99,255,82,.08) !important;
+  border: 1px solid rgba(99,255,82,.18) !important;
+  color: rgba(190,255,160,.92) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram::before {
+  content: "" !important;
+  width: 11px !important;
+  height: 11px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.34) !important;
+  flex: 0 0 auto !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram.connected::before {
+  background: #53ff43 !important;
+  box-shadow: 0 0 12px rgba(83,255,67,.6) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays {
+  order: 2 !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin: 10px 0 0 !important;
+  width: 100% !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays button {
+  min-height: 54px !important;
+  height: 54px !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  background: rgba(3, 7, 7, .52) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+  color: rgba(255,255,255,.58) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays button.active {
+  background: linear-gradient(180deg, rgba(93,131,38,.45), rgba(55,81,28,.32)) !important;
+  border-color: rgba(155,205,56,.34) !important;
+  color: #e6ffb4 !important;
+  box-shadow: 0 0 18px rgba(119,180,40,.16), inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays button strong {
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays button span {
+  display: none !important;
+}
+
+.adminCalendarDaysHintText {
+  order: 3 !important;
+  margin: 4px 0 0 !important;
+  color: rgba(255,255,255,.58) !important;
+  text-align: center !important;
+  font-size: 17px !important;
+  line-height: 1.45 !important;
+  font-weight: 650 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarPerDaySettings {
+  order: 4 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDaySettingsRow {
+  display: grid !important;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-template-areas:
+    "day workout remind"
+    "hour hour hour" !important;
+  column-gap: 12px !important;
+  row-gap: 12px !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 16px 14px 14px !important;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.028)) !important;
+  border: 1px solid rgba(255,255,255,.075) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035) !important;
+  box-sizing: border-box !important;
+}
+
+.adminCalendarDaySettingsHeader {
+  grid-area: day !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.adminCalendarDaySettingsTitle {
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 58px !important;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(143, 202, 52, .30), rgba(76, 107, 31, .20)) !important;
+  border: 1px solid rgba(151,205,56,.22) !important;
+  color: #edffbf !important;
+  font-size: 25px !important;
+  font-weight: 950 !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.25) !important;
+}
+
+.adminCalendarDaySettingsName {
+  display: none !important;
+}
+
+.adminCalendarDayTimeGrid {
+  display: contents !important;
+}
+
+.adminCalendarDayTimeGrid label {
+  display: block !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.adminCalendarDayTimeGrid label:first-child {
+  grid-area: workout !important;
+}
+
+.adminCalendarDayTimeGrid label:last-child {
+  grid-area: remind !important;
+}
+
+.adminCalendarDaySettingsRow label span {
+  display: block !important;
+  margin: 0 0 9px !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  color: rgba(255,255,255,.70) !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+}
+
+.adminCalendarDaySettingsRow input {
+  width: 100% !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  border-radius: 16px !important;
+  background: rgba(2,7,7,.46) !important;
+  border: 1px solid rgba(255,255,255,.095) !important;
+  color: #fff !important;
+  font-size: 18px !important;
+  font-weight: 850 !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+.adminCalendarHourReminder {
+  grid-area: hour !important;
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  padding: 0 10px 0 0 !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(255,255,255,.075) !important;
+  background: transparent !important;
+  color: rgba(255,255,255,.78) !important;
+  font-size: 17px !important;
+  font-weight: 850 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+}
+
+.adminCalendarHourReminder i {
+  width: 48px !important;
+  height: 28px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.13) !important;
+  position: relative !important;
+  flex: 0 0 auto !important;
+}
+
+.adminCalendarHourReminder i::before {
+  content: "" !important;
+  position: absolute !important;
+  width: 24px !important;
+  height: 24px !important;
+  left: 2px !important;
+  top: 2px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.78) !important;
+  transition: .18s ease !important;
+}
+
+.adminCalendarHourReminder.active {
+  color: rgba(255,255,255,.92) !important;
+}
+
+.adminCalendarHourReminder.active i {
+  background: rgba(48, 205, 53, .75) !important;
+}
+
+.adminCalendarHourReminder.active i::before {
+  transform: translateX(20px) !important;
+  background: #fff !important;
+}
+
+.adminCalendarNoDaysHint {
+  padding: 14px !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.035) !important;
+  color: rgba(255,255,255,.52) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+}
+
+.adminCalendarEqualButtonsWrap {
+  order: 5 !important;
+}
+
+.adminCalendarEqualButtonsWrap > button,
+.adminCalendarPanelMerged .adminCalendarEqualButton,
+.adminCalendarPanelMerged .adminV3OpenEditor,
+.adminCalendarPanelMerged .adminCalendarTestButton {
+  width: 100% !important;
+  min-height: 62px !important;
+  height: 62px !important;
+  max-height: 62px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 20px !important;
+  box-sizing: border-box !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestButton {
+  background: linear-gradient(180deg, rgba(6, 37, 42, .88), rgba(4, 25, 28, .96)) !important;
+  border: 1px solid rgba(64, 174, 205, .22) !important;
+  color: rgba(196,235,245,.78) !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged {
+    padding: 18px 14px 16px !important;
+    gap: 12px !important;
+    border-radius: 26px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarHead h3 {
+    font-size: 27px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTelegram {
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 17px !important;
+    font-size: 14px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarDays {
+    gap: 6px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarDays button {
+    min-height: 50px !important;
+    height: 50px !important;
+    border-radius: 15px !important;
+  }
+
+  .adminCalendarDaysHintText {
+    font-size: 15px !important;
+    line-height: 1.42 !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarDaySettingsRow {
+    grid-template-columns: 58px minmax(0, 1fr) minmax(0, 1fr) !important;
+    column-gap: 9px !important;
+    row-gap: 11px !important;
+    padding: 14px 12px 12px !important;
+    border-radius: 21px !important;
+  }
+
+  .adminCalendarDaySettingsTitle {
+    width: 52px !important;
+    height: 52px !important;
+    flex-basis: 52px !important;
+    border-radius: 16px !important;
+    font-size: 22px !important;
+  }
+
+  .adminCalendarDaySettingsRow label span {
+    font-size: 12px !important;
+    margin-bottom: 7px !important;
+  }
+
+  .adminCalendarDaySettingsRow input {
+    height: 42px !important;
+    min-height: 42px !important;
+    border-radius: 15px !important;
+    font-size: 15px !important;
+  }
+
+  .adminCalendarHourReminder {
+    height: 44px !important;
+    min-height: 44px !important;
+    font-size: 15px !important;
+  }
+
+  .adminCalendarHourReminder i {
+    width: 46px !important;
+    height: 26px !important;
+  }
+
+  .adminCalendarHourReminder i::before {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .adminCalendarHourReminder.active i::before {
+    transform: translateX(20px) !important;
+  }
+
+  .adminCalendarEqualButtonsWrap > button,
+  .adminCalendarPanelMerged .adminCalendarEqualButton,
+  .adminCalendarPanelMerged .adminV3OpenEditor,
+  .adminCalendarPanelMerged .adminCalendarTestButton {
+    min-height: 58px !important;
+    height: 58px !important;
+    max-height: 58px !important;
+    border-radius: 19px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTestButton {
+    font-size: 13px !important;
+  }
+}
+

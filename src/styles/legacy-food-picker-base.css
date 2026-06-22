@@ -1,0 +1,1950 @@
+﻿/* FATSECRET-LIKE FOOD PICKER â€” NEW BASE */
+.fatFoodSearchOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483600 !important;
+  background: #050b14 !important;
+  padding: 0 !important;
+}
+
+.fatFoodSearchScreen {
+  width: 100% !important;
+  max-width: 560px !important;
+  height: 100dvh !important;
+  margin: 0 auto !important;
+  padding: max(18px, env(safe-area-inset-top)) 0 max(92px, env(safe-area-inset-bottom)) !important;
+  border-radius: 0 !important;
+  border: none !important;
+  background: #050b14 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.fatSearchTop,
+.fatSearchTopCloseRight {
+  height: 88px !important;
+  min-height: 88px !important;
+  padding: 12px 18px 8px !important;
+  display: grid !important;
+  grid-template-columns: 48px 1fr 48px !important;
+  align-items: center !important;
+  background: #252c38 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.fatSearchTopSpacer { display: none !important; }
+
+.fatSearchClose,
+.fatSearchTopCloseRight .fatSearchClose {
+  position: static !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  border: none !important;
+  background: transparent !important;
+  color: #c7cedb !important;
+  font-size: 42px !important;
+  font-weight: 300 !important;
+  line-height: 1 !important;
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  justify-self: start !important;
+}
+
+.fatSearchTitleWrap {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.fatSearchTitleButton {
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  color: #f3f6fb !important;
+}
+
+.fatSearchTitleButton strong {
+  color: #f3f6fb !important;
+  font-size: 28px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.fatSearchTitleButton span {
+  color: #9aa3b3 !important;
+  font-size: 24px !important;
+  transform: translateY(1px) !important;
+}
+
+.fatSearchTitleWrap small {
+  margin-top: 5px !important;
+  color: #a0a9b9 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+}
+
+.fatSecretTabs,
+.fatSearchTabs {
+  height: 58px !important;
+  min-height: 58px !important;
+  padding: 0 0 0 0 !important;
+  gap: 0 !important;
+  background: #252c38 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  overflow-x: auto !important;
+}
+
+.fatSearchTabs button {
+  min-width: 122px !important;
+  height: 58px !important;
+  padding: 0 16px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: rgba(225,230,240,0.58) !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  letter-spacing: .2px !important;
+  white-space: nowrap !important;
+}
+
+.fatSearchTabs button.active {
+  color: #f5f7fb !important;
+}
+
+.fatSearchTabs button.active::after {
+  height: 4px !important;
+  width: 96px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  bottom: 0 !important;
+  border-radius: 999px 999px 0 0 !important;
+  background: #f5f7fb !important;
+}
+
+.fatSearchInputWrap {
+  min-height: 62px !important;
+  margin: 20px 12px 14px !important;
+  padding: 0 20px !important;
+  border-radius: 999px !important;
+  border: 3px solid #566072 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  flex-shrink: 0 !important;
+}
+
+.fatSearchInputWrap span {
+  color: #9ba4b4 !important;
+  font-size: 38px !important;
+  line-height: 1 !important;
+  transform: translateY(-1px) !important;
+}
+
+.fatSearchInputWrap input {
+  height: 56px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  color: #eef3fb !important;
+  font-size: 23px !important;
+  font-weight: 600 !important;
+}
+
+.fatSearchInputWrap input::placeholder {
+  color: #aab2c1 !important;
+  opacity: 1 !important;
+}
+
+.fatSearchAmountRow {
+  display: none !important;
+}
+
+.fatSearchList {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  padding: 0 0 22px !important;
+  overflow-y: auto !important;
+  background: #050b14 !important;
+}
+
+.fatSearchItem {
+  min-height: 90px !important;
+  padding: 0 20px 0 38px !important;
+  display: grid !important;
+  grid-template-columns: 42px 1fr 34px !important;
+  gap: 18px !important;
+  align-items: center !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(140,150,170,0.18) !important;
+  background: transparent !important;
+}
+
+.fatSearchFavorite {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  border: 3px solid #70798b !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  position: relative !important;
+}
+
+.fatSearchFavorite::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 9px !important;
+  border: 3px solid #70798b !important;
+  border-radius: 50% !important;
+  border-left-color: transparent !important;
+}
+
+.fatSearchFoodName {
+  padding: 0 !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.fatSearchFoodName strong {
+  color: #eef3fb !important;
+  font-size: 23px !important;
+  font-weight: 700 !important;
+  line-height: 1.12 !important;
+}
+
+.fatSearchFoodName span {
+  margin-top: 6px !important;
+  color: rgba(170,180,196,0.78) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  display: none !important;
+}
+
+.fatSearchAdd {
+  width: 34px !important;
+  height: 42px !important;
+  min-width: 34px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  color: #8d96a7 !important;
+  font-size: 38px !important;
+  font-weight: 300 !important;
+  transform: rotate(-45deg) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.fatSearchStatus {
+  padding: 28px 20px !important;
+  color: #9ba4b4 !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+}
+
+.fatSecretBottomTools,
+.fatSearchBottomTools {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: max(18px, env(safe-area-inset-bottom)) !important;
+  transform: translateX(-50%) !important;
+  width: min(470px, calc(100% - 48px)) !important;
+  height: 104px !important;
+  padding: 0 38px !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  align-items: center !important;
+  gap: 22px !important;
+  border-radius: 999px !important;
+  border: none !important;
+  background: #3d424e !important;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.35) !important;
+  z-index: 2147483640 !important;
+}
+
+.fatSearchBottomTools button {
+  width: 64px !important;
+  height: 64px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 24px !important;
+  background: transparent !important;
+  color: #23d86f !important;
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.fatSearchBottomTools button:nth-child(2) {
+  position: relative !important;
+  font-size: 44px !important;
+}
+
+.fatSearchBottomTools button:nth-child(2)::after {
+  content: "!" !important;
+  position: absolute !important;
+  right: 6px !important;
+  bottom: 8px !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  background: #f6b93b !important;
+  color: #283040 !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  line-height: 18px !important;
+  text-align: center !important;
+}
+
+.fatMealDropdown {
+  top: 58px !important;
+  left: 0 !important;
+  right: auto !important;
+  min-width: 210px !important;
+  background: #18202d !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  z-index: 2147483646 !important;
+}
+
+.fatBarcodeOverlay {
+  z-index: 2147483645 !important;
+}
+
+@media (max-width: 480px) {
+  .fatSearchTop,
+  .fatSearchTopCloseRight {
+    height: 82px !important;
+    min-height: 82px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .fatSearchTitleButton strong {
+    font-size: 25px !important;
+  }
+
+  .fatSearchTitleWrap small {
+    font-size: 14px !important;
+  }
+
+  .fatSearchTabs button {
+    min-width: 114px !important;
+    font-size: 15px !important;
+  }
+
+  .fatSearchInputWrap {
+    margin: 20px 10px 12px !important;
+    min-height: 60px !important;
+  }
+
+  .fatSearchInputWrap input {
+    font-size: 22px !important;
+  }
+
+  .fatSearchItem {
+    min-height: 91px !important;
+    padding-left: 42px !important;
+    padding-right: 34px !important;
+    grid-template-columns: 40px 1fr 30px !important;
+    gap: 16px !important;
+  }
+
+  .fatSearchFoodName strong {
+    font-size: 22px !important;
+  }
+
+  .fatSecretBottomTools,
+  .fatSearchBottomTools {
+    width: min(470px, calc(100% - 48px)) !important;
+    height: 104px !important;
+    padding: 0 34px !important;
+  }
+}
+
+/* =========================================================
+   FATSECRET-STYLE FOOD SEARCH â€” PREMIUM UI BASE 2026-05-13
+   Ð¢Ð¾Ð»ÑŒÐºÐ¾ Ð²Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ñ‹Ð¹ ÑÐ»Ð¾Ð¹ Ð¿Ð¾Ð¸ÑÐºÐ° ÐµÐ´Ñ‹, API FatSecret Ð½Ðµ Ñ‚Ñ€Ð¾Ð³Ð°ÐµÐ¼.
+   ========================================================= */
+.fatFoodSearchScreenPremium {
+  width: min(560px, 100%) !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  padding: max(18px, calc(env(safe-area-inset-top) + 14px)) 14px max(18px, calc(env(safe-area-inset-bottom) + 14px)) !important;
+  background:
+    radial-gradient(circle at 18% 2%, rgba(18, 227, 92, 0.13), transparent 30%),
+    radial-gradient(circle at 80% 0%, rgba(47, 78, 86, 0.26), transparent 34%),
+    linear-gradient(180deg, #041016 0%, #02070b 100%) !important;
+  color: #f4f6fb !important;
+  overflow-y: auto !important;
+  scrollbar-width: none !important;
+}
+
+.fatFoodSearchScreenPremium::-webkit-scrollbar { display: none !important; }
+
+.fatSearchTopPremium {
+  display: grid !important;
+  grid-template-columns: 46px 1fr 46px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 18px !important;
+}
+
+.fatSearchBackMini,
+.fatSearchClosePremium {
+  width: 46px !important;
+  height: 46px !important;
+  border: 1px solid rgba(255,255,255,.1) !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,.055) !important;
+  color: rgba(255,255,255,.86) !important;
+  font-size: 28px !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.fatSearchTitleButtonPremium {
+  width: 100% !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  color: #fff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4px !important;
+  cursor: pointer !important;
+}
+
+.fatSearchTitleButtonPremium span {
+  color: rgba(255,255,255,.48) !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+.fatSearchTitleButtonPremium strong {
+  color: #fff !important;
+  font-size: clamp(24px, 6.7vw, 34px) !important;
+  font-weight: 900 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.8px !important;
+}
+
+.fatSearchInputWrapPremium {
+  min-height: 62px !important;
+  margin: 0 0 12px !important;
+  padding: 0 12px 0 16px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,.105) !important;
+  background: rgba(255,255,255,.06) !important;
+  display: grid !important;
+  grid-template-columns: 26px 1fr 38px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+
+.fatSearchInputWrapPremium span {
+  color: rgba(255,255,255,.44) !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+}
+
+.fatSearchInputWrapPremium input,
+.fatSearchBarcodeInline input,
+.fatAmountInputCard input {
+  width: 100% !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  color: #fff !important;
+  font-size: 20px !important;
+  font-weight: 850 !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+.fatSearchInputWrapPremium input::placeholder,
+.fatSearchBarcodeInline input::placeholder,
+.fatAmountInputCard input::placeholder {
+  color: rgba(255,255,255,.36) !important;
+}
+
+.fatSearchInputWrapPremium button {
+  width: 36px !important;
+  height: 36px !important;
+  border: none !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,.09) !important;
+  color: rgba(255,255,255,.68) !important;
+  font-size: 26px !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.fatSearchQuickActions {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 9px !important;
+  margin: 0 0 12px !important;
+}
+
+.fatSearchQuickActions button {
+  min-height: 74px !important;
+  padding: 11px 8px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  background: rgba(255,255,255,.052) !important;
+  color: #fff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  font-size: 23px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+}
+
+.fatSearchQuickActions button span {
+  color: rgba(255,255,255,.62) !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+  line-height: 1.08 !important;
+  text-align: center !important;
+}
+
+.fatSearchBarcodeInline {
+  display: grid !important;
+  grid-template-columns: 1fr 82px !important;
+  gap: 8px !important;
+  margin-bottom: 14px !important;
+}
+
+.fatSearchBarcodeInline input {
+  min-height: 50px !important;
+  padding: 0 16px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,.085) !important;
+  background: rgba(255,255,255,.045) !important;
+  font-size: 15px !important;
+}
+
+.fatSearchBarcodeInline button {
+  min-height: 50px !important;
+  border: none !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #12e35c, #87e44f) !important;
+  color: #061008 !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.fatSearchListPremium {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding-bottom: 8px !important;
+}
+
+.fatSearchResultCard {
+  width: 100% !important;
+  min-height: 92px !important;
+  padding: 14px 12px 14px 16px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,.095) !important;
+  background:
+    radial-gradient(circle at left, rgba(18,227,92,.09), transparent 42%),
+    rgba(255,255,255,.047) !important;
+  color: #fff !important;
+  display: grid !important;
+  grid-template-columns: 1fr 46px !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.fatSearchResultInfo {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+}
+
+.fatSearchResultInfo strong {
+  color: #fff !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  line-height: 1.12 !important;
+}
+
+.fatSearchResultInfo span {
+  color: rgba(255,255,255,.48) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+
+.fatSearchResultInfo small {
+  color: rgba(18,227,92,.88) !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  line-height: 1.2 !important;
+}
+
+.fatSearchResultAdd {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #12e35c, #87e44f) !important;
+  color: #061008 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 34px !important;
+  font-weight: 800 !important;
+  line-height: .8 !important;
+}
+
+.fatFoodAmountScreen {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.fatFoodAmountHero {
+  padding: 24px 18px !important;
+  border-radius: 30px !important;
+  border: 1px solid rgba(255,255,255,.1) !important;
+  background:
+    radial-gradient(circle at top, rgba(18,227,92,.14), transparent 46%),
+    rgba(255,255,255,.052) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  gap: 9px !important;
+}
+
+.fatFoodAmountHero span {
+  width: 66px !important;
+  height: 66px !important;
+  border-radius: 24px !important;
+  background: rgba(18,227,92,.12) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 34px !important;
+}
+
+.fatFoodAmountHero strong {
+  color: #fff !important;
+  font-size: 25px !important;
+  font-weight: 900 !important;
+  line-height: 1.08 !important;
+}
+
+.fatFoodAmountHero small {
+  color: rgba(255,255,255,.5) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+.fatAmountQuickRow {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+.fatAmountQuickRow button {
+  min-height: 52px !important;
+  border-radius: 19px !important;
+  border: 1px solid rgba(255,255,255,.1) !important;
+  background: rgba(255,255,255,.055) !important;
+  color: rgba(255,255,255,.78) !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+}
+
+.fatAmountQuickRow button.active {
+  background: linear-gradient(135deg, #12e35c, #87e44f) !important;
+  color: #061008 !important;
+  border-color: rgba(18,227,92,.45) !important;
+}
+
+.fatAmountInputCard {
+  min-height: 74px !important;
+  padding: 12px 16px !important;
+  border-radius: 23px !important;
+  border: 1px solid rgba(255,255,255,.095) !important;
+  background: rgba(255,255,255,.05) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 4px !important;
+}
+
+.fatAmountInputCard span {
+  color: rgba(255,255,255,.45) !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+.fatAmountInputCard input {
+  font-size: 29px !important;
+  font-weight: 900 !important;
+}
+
+.fatAmountMacrosGrid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 10px !important;
+}
+
+.fatAmountMacrosGrid div {
+  min-height: 88px !important;
+  padding: 12px 8px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  background: rgba(255,255,255,.047) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+}
+
+.fatAmountMacrosGrid div.wide {
+  grid-column: 1 / -1 !important;
+  min-height: 104px !important;
+}
+
+.fatAmountMacrosGrid span {
+  color: rgba(255,255,255,.43) !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+}
+
+.fatAmountMacrosGrid strong {
+  color: #fff !important;
+  font-size: 25px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.fatAmountMacrosGrid .wide strong {
+  font-size: 42px !important;
+}
+
+.fatAmountMacrosGrid small {
+  color: rgba(18,227,92,.84) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.fatAmountAddButton {
+  width: 100% !important;
+  min-height: 66px !important;
+  border: none !important;
+  border-radius: 24px !important;
+  background: linear-gradient(135deg, #12e35c, #87e44f) !important;
+  color: #061008 !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  box-shadow: 0 18px 40px rgba(18, 227, 92, .18) !important;
+}
+
+@media (max-width: 380px) {
+  .fatSearchQuickActions { gap: 7px !important; }
+  .fatSearchQuickActions button { min-height: 68px !important; font-size: 21px !important; }
+  .fatSearchQuickActions button span { font-size: 11px !important; }
+  .fatSearchResultInfo strong { font-size: 17px !important; }
+  .fatSearchResultInfo small { font-size: 12px !important; }
+}
+
+/* AI FOOD PHOTO SEARCH */
+.fatPhotoAiBox {
+  width: 100%;
+  margin: 10px 0 12px;
+}
+
+.fatPhotoAiUpload,
+.fatPhotoAiPreviewRow {
+  width: 100%;
+  min-height: 78px;
+  padding: 12px;
+  border-radius: 24px;
+  border: 1px solid rgba(127, 159, 58, 0.18);
+  background:
+    radial-gradient(circle at left, rgba(127, 159, 58, 0.14), transparent 48%),
+    rgba(255, 255, 255, 0.045);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.fatPhotoAiUpload {
+  cursor: pointer;
+}
+
+.fatPhotoAiUpload > span {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border-radius: 18px;
+  background: rgba(127, 159, 58, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+.fatPhotoAiUpload strong,
+.fatPhotoAiPreviewRow strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.fatPhotoAiUpload small,
+.fatPhotoAiPreviewRow span,
+.fatPhotoAiPreviewRow small {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.fatPhotoAiPreviewRow img {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  border-radius: 18px;
+  object-fit: cover;
+  background: #050705;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fatPhotoAiPreviewRow > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.fatPhotoAiPreviewRow button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 380px) {
+  .fatPhotoAiUpload,
+  .fatPhotoAiPreviewRow {
+    min-height: 72px;
+    border-radius: 22px;
+  }
+
+  .fatPhotoAiUpload > span {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+
+  .fatPhotoAiPreviewRow img {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
+  }
+}
+
+/* OPENAI NUTRITION SEARCH MODE */
+.fatFoodMeta,
+.fatFoodSource,
+.fatFoodBrand {
+  word-break: break-word;
+}
+
+.fatSearchStatus strong {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(244, 246, 242, 0.88);
+}
+
+/* PREMIUM ADD FOOD SEARCH PAGE â€” COMPACT REDESIGN */
+.fatSearchPage,
+.nutritionPickerPage,
+.foodSearchPage {
+  min-height: 100dvh;
+}
+
+.fatSearchHeader,
+.nutritionSearchHeader,
+.foodSearchHeader {
+  padding-top: 10px;
+  margin-bottom: 12px;
+}
+
+.fatSearchHeader h2,
+.nutritionSearchHeader h2,
+.foodSearchHeader h2 {
+  margin: 0;
+  font-size: clamp(25px, 7vw, 34px);
+  line-height: 1.05;
+  letter-spacing: -0.8px;
+}
+
+.fatSearchHeader p,
+.nutritionSearchHeader p,
+.foodSearchHeader p {
+  margin: 7px 0 0;
+  color: rgba(244, 246, 242, 0.48);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.fatSearchBox,
+.nutritionSearchBox,
+.foodSearchBox {
+  position: sticky;
+  top: max(10px, env(safe-area-inset-top));
+  z-index: 20;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(23, 28, 23, 0.96), rgba(10, 13, 10, 0.96));
+  border: 1px solid rgba(127, 159, 58, 0.16);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.fatSearchInputWrap,
+.nutritionSearchInputWrap,
+.foodSearchInputWrap {
+  display: grid;
+  grid-template-columns: 1fr 42px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.fatSearchInputWrap input,
+.nutritionSearchInputWrap input,
+.foodSearchInputWrap input {
+  width: 100%;
+  min-height: 50px;
+  padding: 13px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(0, 0, 0, 0.34);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 800;
+  outline: none;
+}
+
+.fatSearchInputWrap input::placeholder,
+.nutritionSearchInputWrap input::placeholder,
+.foodSearchInputWrap input::placeholder {
+  color: rgba(255, 255, 255, 0.32);
+  font-weight: 800;
+}
+
+.fatSearchInputWrap button,
+.nutritionSearchInputWrap button,
+.foodSearchInputWrap button {
+  width: 42px;
+  height: 42px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.fatQuickActions button {
+  min-height: 48px !important;
+  padding: 8px 8px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(127, 159, 58, 0.16) !important;
+  background: rgba(127, 159, 58, 0.08) !important;
+  color: rgba(244, 246, 242, 0.78) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1.12 !important;
+  box-shadow: none !important;
+}
+
+.fatQuickSuggestions {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  margin: 10px -2px 0;
+  scrollbar-width: none;
+}
+
+.fatQuickSuggestions button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(244, 246, 242, 0.72);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.fatQuickSuggestions button:active,
+.fatQuickActions button:active {
+  transform: scale(0.975);
+}
+
+/* Make old big photo/search blocks compact if present */
+.fatPhotoSearchCard,
+.aiPhotoSearchCard,
+.nutritionPhotoSearchCard {
+  padding: 12px !important;
+  margin: 8px 0 10px !important;
+  border-radius: 22px !important;
+  min-height: auto !important;
+}
+
+.fatPhotoSearchCard h3,
+.aiPhotoSearchCard h3,
+.nutritionPhotoSearchCard h3 {
+  margin: 0 0 4px !important;
+  font-size: 16px !important;
+  line-height: 1.15 !important;
+}
+
+.fatPhotoSearchCard p,
+.aiPhotoSearchCard p,
+.nutritionPhotoSearchCard p {
+  margin: 0 !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  color: rgba(244, 246, 242, 0.46) !important;
+}
+
+/* Result cards */
+.fatSearchResults,
+.nutritionSearchResults,
+.foodSearchResults {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-bottom: 18px;
+}
+
+.fatFoodCard,
+.fatSearchResultCard,
+.nutritionFoodCard,
+.foodResultCard {
+  position: relative;
+  width: 100%;
+  min-height: 76px;
+  padding: 13px 58px 13px 14px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  background:
+    radial-gradient(circle at left, rgba(127, 159, 58, 0.10), transparent 45%),
+    linear-gradient(180deg, rgba(22, 27, 22, 0.98), rgba(10, 13, 10, 0.98)) !important;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22) !important;
+}
+
+.fatFoodCard strong,
+.fatSearchResultCard strong,
+.nutritionFoodCard strong,
+.foodResultCard strong {
+  display: block;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.16;
+  letter-spacing: -0.2px;
+  padding-right: 32px;
+}
+
+.fatFoodCard span,
+.fatSearchResultCard span,
+.nutritionFoodCard span,
+.foodResultCard span {
+  color: rgba(244, 246, 242, 0.46);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.fatAiBadge {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin-top: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(127, 159, 58, 0.14);
+  border: 1px solid rgba(127, 159, 58, 0.18);
+  color: #b7d46d !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.3px;
+}
+
+.fatFoodCalories,
+.fatFoodKcal,
+.nutritionFoodCalories {
+  margin-top: 7px;
+  color: rgba(244, 246, 242, 0.68) !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+}
+
+.fatFoodCard button,
+.fatSearchResultCard button,
+.nutritionFoodCard button,
+.foodResultCard button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  border-radius: 15px !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+/* Empty / loading states */
+.fatSearchStatus {
+  width: 100%;
+  padding: 18px 14px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top, rgba(127, 159, 58, 0.10), transparent 55%),
+    rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  color: rgba(244, 246, 242, 0.54);
+  font-size: 14px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.fatSearchStatus strong {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(244, 246, 242, 0.88);
+  font-size: 16px;
+}
+
+.fatFallbackSuggestions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.fatFallbackSuggestions button {
+  width: 100%;
+  min-height: 46px;
+  border-radius: 18px;
+  border: 1px solid rgba(127, 159, 58, 0.20);
+  background: rgba(127, 159, 58, 0.08);
+  color: rgba(244, 246, 242, 0.82);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+@media (max-width: 420px) {
+
+.fatQuickActions button {
+    min-height: 45px !important;
+    font-size: 11px !important;
+    border-radius: 16px !important;
+  }
+
+  .fatSearchBox,
+  .nutritionSearchBox,
+  .foodSearchBox {
+    border-radius: 22px;
+    padding: 9px;
+  }
+
+  .fatFoodCard,
+  .fatSearchResultCard,
+  .nutritionFoodCard,
+  .foodResultCard {
+    border-radius: 20px !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+}
+
+/* ADD FOOD PAGE â€” FINAL PREMIUM POLISH */
+.fatSearchPage,
+.nutritionPickerPage,
+.foodSearchPage {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at top left, rgba(127, 159, 58, 0.12), transparent 35%),
+    linear-gradient(180deg, #07100c 0%, #05090a 100%);
+}
+
+.fatSearchHeader,
+.nutritionSearchHeader,
+.foodSearchHeader {
+  padding-top: 0 !important;
+  margin-bottom: 8px !important;
+}
+
+.fatSearchHeader h2,
+.nutritionSearchHeader h2,
+.foodSearchHeader h2 {
+  font-size: clamp(28px, 7.4vw, 38px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -1px !important;
+}
+
+.fatSearchHeader p,
+.nutritionSearchHeader p,
+.foodSearchHeader p {
+  margin-top: 4px !important;
+  font-size: 12px !important;
+  line-height: 1.15 !important;
+  opacity: 0.72;
+}
+
+/* sticky compact search area */
+.fatSearchBox,
+.nutritionSearchBox,
+.foodSearchBox {
+  position: sticky !important;
+  top: max(6px, env(safe-area-inset-top)) !important;
+  z-index: 50 !important;
+  padding: 8px !important;
+  margin: 8px 0 8px !important;
+  border-radius: 24px !important;
+  background:
+    linear-gradient(180deg, rgba(18, 24, 20, 0.94), rgba(7, 11, 10, 0.94)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.fatSearchInputWrap,
+.nutritionSearchInputWrap,
+.foodSearchInputWrap {
+  min-height: 56px !important;
+  border-radius: 21px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 42px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0 !important;
+}
+
+.fatSearchInputWrap input,
+.nutritionSearchInputWrap input,
+.foodSearchInputWrap input {
+  min-height: 54px !important;
+  padding: 12px 14px !important;
+  border-radius: 19px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  color: #fff !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+}
+
+.fatSearchInputWrap input::placeholder,
+.nutritionSearchInputWrap input::placeholder,
+.foodSearchInputWrap input::placeholder {
+  color: rgba(255, 255, 255, 0.34) !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+}
+
+.fatSearchInputWrap button,
+.nutritionSearchInputWrap button,
+.foodSearchInputWrap button {
+  width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  border-radius: 15px !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  font-size: 20px !important;
+}
+
+/* compact top actions */
+.fatQuickActions { display: none !important; }
+
+.fatQuickActions button {
+  min-height: 44px !important;
+  padding: 7px 7px !important;
+  border-radius: 17px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  color: rgba(244, 246, 242, 0.72) !important;
+  font-size: 11px !important;
+  line-height: 1.08 !important;
+  font-weight: 900 !important;
+  box-shadow: none !important;
+}
+
+.fatQuickActions button:first-child {
+  border-color: rgba(127, 159, 58, 0.18) !important;
+  background: rgba(127, 159, 58, 0.075) !important;
+}
+
+/* popular suggestions */
+.fatQuickSuggestionsTitle,
+.fatRecentFoodsTitle {
+  margin: 10px 2px 7px;
+  color: rgba(244, 246, 242, 0.42);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.fatQuickSuggestions {
+  display: flex !important;
+  gap: 8px !important;
+  overflow-x: auto !important;
+  padding: 0 2px 8px !important;
+  margin: 0 -2px 2px !important;
+  scrollbar-width: none;
+}
+
+.fatQuickSuggestions::-webkit-scrollbar {
+  display: none;
+}
+
+.fatQuickSuggestions button {
+  flex: 0 0 auto;
+  min-height: 34px !important;
+  padding: 7px 12px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(127, 159, 58, 0.14) !important;
+  background: rgba(127, 159, 58, 0.07) !important;
+  color: rgba(244, 246, 242, 0.72) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  white-space: nowrap;
+}
+
+/* remove feeling of a huge duplicate photo CTA */
+.fatPhotoSearchCard,
+.aiPhotoSearchCard,
+.nutritionPhotoSearchCard {
+  min-height: 72px !important;
+  padding: 12px 14px !important;
+  margin: 8px 0 10px !important;
+  border-radius: 22px !important;
+  background:
+    radial-gradient(circle at left, rgba(127, 159, 58, 0.18), transparent 52%),
+    rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(127, 159, 58, 0.14) !important;
+}
+
+.fatPhotoSearchCard h3,
+.aiPhotoSearchCard h3,
+.nutritionPhotoSearchCard h3 {
+  margin: 0 0 5px !important;
+  font-size: 17px !important;
+  line-height: 1.12 !important;
+}
+
+.fatPhotoSearchCard p,
+.aiPhotoSearchCard p,
+.nutritionPhotoSearchCard p {
+  margin: 0 !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+  color: rgba(244, 246, 242, 0.44) !important;
+}
+
+/* product results */
+.fatSearchResults,
+.nutritionSearchResults,
+.foodSearchResults {
+  display: flex;
+  flex-direction: column;
+  gap: 9px !important;
+  padding-bottom: 18px;
+}
+
+.fatFoodCard,
+.fatSearchResultCard,
+.nutritionFoodCard,
+.foodResultCard {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 86px !important;
+  padding: 14px 62px 14px 15px !important;
+  border-radius: 23px !important;
+  background:
+    radial-gradient(circle at left top, rgba(127, 159, 58, 0.12), transparent 44%),
+    linear-gradient(180deg, rgba(18, 23, 18, 0.98), rgba(7, 10, 8, 0.98)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.072) !important;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+}
+
+.fatFoodCard strong,
+.fatSearchResultCard strong,
+.nutritionFoodCard strong,
+.foodResultCard strong {
+  display: block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  color: #fff !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.3px;
+}
+
+.fatFoodCard span,
+.fatSearchResultCard span,
+.nutritionFoodCard span,
+.foodResultCard span {
+  color: rgba(244, 246, 242, 0.44) !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+  line-height: 1.2 !important;
+}
+
+.fatAiBadge {
+  display: inline-flex !important;
+  width: fit-content !important;
+  margin: 2px 0 5px !important;
+  padding: 3px 7px !important;
+  border-radius: 999px !important;
+  background: rgba(127, 159, 58, 0.13) !important;
+  border: 1px solid rgba(127, 159, 58, 0.16) !important;
+  color: #a7c85a !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.3px !important;
+}
+
+.fatFoodCalories,
+.fatFoodKcal,
+.nutritionFoodCalories,
+.fatFoodMeta {
+  margin-top: 6px !important;
+  color: rgba(74, 235, 97, 0.9) !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  line-height: 1.2 !important;
+}
+
+/* smaller FatSecret-style plus */
+.fatFoodCard button,
+.fatSearchResultCard button,
+.nutritionFoodCard button,
+.foodResultCard button {
+  position: absolute !important;
+  right: 13px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  background:
+    linear-gradient(135deg, rgba(56, 238, 80, 0.96), rgba(84, 245, 95, 0.96)) !important;
+  color: #061008 !important;
+  font-size: 27px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  box-shadow:
+    0 10px 22px rgba(56, 238, 80, 0.18),
+    inset 0 1px 0 rgba(255,255,255,0.24) !important;
+}
+
+.fatFoodCard button:active,
+.fatSearchResultCard button:active,
+.nutritionFoodCard button:active,
+.foodResultCard button:active {
+  transform: translateY(-50%) scale(0.94) !important;
+}
+
+/* recent foods */
+.fatRecentFoods {
+  margin: 8px 0 10px;
+  padding: 10px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.032);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fatRecentFoodsTitle {
+  margin-top: 0;
+}
+
+.fatRecentFoodButton {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 7px;
+  padding: 8px 11px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.035);
+  color: rgba(244,246,242,0.76);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fatRecentFoodButton span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.fatRecentFoodButton strong {
+  color: #a7c85a;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+/* skeleton loading */
+.fatSkeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 8px;
+}
+
+.fatSkeletonCard {
+  height: 86px;
+  border-radius: 23px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.035), rgba(255,255,255,0.075), rgba(255,255,255,0.035));
+  background-size: 220% 100%;
+  animation: fatSkeletonPulse 1.15s ease-in-out infinite;
+}
+
+@keyframes fatSkeletonPulse {
+  0% { background-position: 120% 0; opacity: 0.62; }
+  50% { opacity: 1; }
+  100% { background-position: -120% 0; opacity: 0.62; }
+}
+
+/* empty state */
+.fatSearchStatus {
+  width: 100%;
+  padding: 18px 14px !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at top, rgba(127,159,58,0.12), transparent 56%),
+    rgba(255,255,255,0.035) !important;
+  border: 1px solid rgba(255,255,255,0.065) !important;
+  color: rgba(244,246,242,0.52) !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+  text-align: center;
+}
+
+.fatSearchStatus strong {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(244,246,242,0.9);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.fatFallbackSuggestions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.fatFallbackSuggestions button {
+  width: 100%;
+  min-height: 45px;
+  border-radius: 17px;
+  border: 1px solid rgba(127,159,58,0.18);
+  background: rgba(127,159,58,0.07);
+  color: rgba(244,246,242,0.78);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+/* phone refinements */
+@media (max-width: 420px) {
+  .fatSearchBox,
+  .nutritionSearchBox,
+  .foodSearchBox {
+    margin-top: 6px !important;
+    border-radius: 22px !important;
+  }
+
+  .fatQuickActions { display: none !important; }
+
+  .fatQuickActions button {
+    min-height: 42px !important;
+    font-size: 10.5px !important;
+    border-radius: 16px !important;
+  }
+
+  .fatFoodCard,
+  .fatSearchResultCard,
+  .nutritionFoodCard,
+  .foodResultCard {
+    min-height: 82px !important;
+    padding-right: 59px !important;
+    border-radius: 21px !important;
+  }
+
+  .fatFoodCard strong,
+  .fatSearchResultCard strong,
+  .nutritionFoodCard strong,
+  .foodResultCard strong {
+    font-size: 16px !important;
+  }
+}
+
+/* FOOD SEARCH PATCH â€” centered meal picker, barcode quick action, recent only on tap */
+.fatMealDropdown.fatMealDropdownCentered {
+  position: fixed !important;
+  top: max(92px, calc(env(safe-area-inset-top) + 78px)) !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(320px, calc(100vw - 34px)) !important;
+  min-width: 0 !important;
+  padding: 10px !important;
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at top, rgba(18, 227, 92, 0.12), transparent 46%),
+    rgba(14, 23, 29, 0.98) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55) !important;
+  z-index: 2147483646 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.fatMealDropdown.fatMealDropdownCentered button:not(.fatMealDropdownCollapse) {
+  width: 100% !important;
+  min-height: 54px !important;
+  padding: 10px 14px !important;
+  border-radius: 18px !important;
+  display: grid !important;
+  grid-template-columns: 34px 1fr !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-align: left !important;
+}
+
+.fatMealDropdownCollapse {
+  width: 100% !important;
+  min-height: 42px !important;
+  margin-top: 2px !important;
+  padding: 0 !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.fatMealDropdownCollapse:active {
+  transform: scale(0.98) !important;
+}
+
+/* SEARCH HISTORY NAMES ONLY â€” FINAL */
+.fatSearchHistoryNames {
+  width: 100%;
+  margin: 12px 0 4px;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.fatSearchHistoryNamesTitle {
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.fatSearchHistoryNamesList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fatSearchHistoryNameButton {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.16);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 15px;
+  font-weight: 850;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fatSearchHistoryNameButton:active {
+  transform: scale(0.985);
+}
+
+/* COMPACT MEAL DROPDOWN â€” 2026-05-15 */
+.fatMealDropdown,
+.fatMealDropdownCentered {
+  width: min(220px, 72vw) !important;
+  padding: 7px !important;
+  border-radius: 18px !important;
+  top: calc(100% + 6px) !important;
+}
+
+.fatMealDropdown button,
+.fatMealDropdownCentered button {
+  min-height: 42px !important;
+  padding: 8px 10px !important;
+  border-radius: 13px !important;
+  gap: 9px !important;
+}
+
+.fatMealDropdown button span,
+.fatMealDropdownCentered button span {
+  font-size: 19px !important;
+}
+
+.fatMealDropdown button strong,
+.fatMealDropdownCentered button strong {
+  font-size: 15px !important;
+}
+
+.fatMealDropdownCollapse {
+  min-height: 40px !important;
+  margin-top: 5px !important;
+  font-size: 26px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+  .fatMealDropdown,
+  .fatMealDropdownCentered {
+    width: min(205px, 68vw) !important;
+    padding: 6px !important;
+    border-radius: 17px !important;
+  }
+
+  .fatMealDropdown button,
+  .fatMealDropdownCentered button {
+    min-height: 40px !important;
+    padding: 7px 9px !important;
+  }
+}
+
+/* SEARCH HISTORY ARROWS + HIDE LOCAL DATABASE RESULTS â€” FINAL */
+.fatSearchHistoryNameButton {
+  display: grid !important;
+  grid-template-columns: 28px 1fr 28px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 54px !important;
+  padding: 0 14px !important;
+}
+
+.fatSearchHistoryNameButton::before {
+  content: "â—·" !important;
+  color: rgba(255, 255, 255, 0.48) !important;
+  font-size: 23px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.fatSearchHistoryNameButton::after {
+  content: "â†–" !important;
+  color: rgba(255, 255, 255, 0.48) !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.fatSearchHistoryNameButton span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+
+/* FATSECRET PRODUCT ROWS â€” EDIT ON TAP / DELETE ON LEFT SWIPE */
+.fatSecretPage .fatMealItems {
+  padding: 0 !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  background: #343b49 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.fatSecretPage .fatFoodItem,
+.fatSecretPage .fatFoodItemEditable {
+  width: 100% !important;
+  min-height: 66px !important;
+  padding: 12px 18px 12px 54px !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: transparent !important;
+  color: inherit !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 58px 26px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-align: left !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  touch-action: pan-y !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.fatSecretPage .fatFoodItemEditable:active {
+  background: rgba(255, 255, 255, 0.055) !important;
+}
+
+.fatSecretPage .fatFoodInfo {
+  min-width: 0 !important;
+}
+
+.fatSecretPage .fatFoodInfo strong,
+.fatSecretPage .fatFoodItemEditable strong {
+  display: block !important;
+  max-width: 100% !important;
+  color: rgba(255, 255, 255, 0.94) !important;
+  font-size: clamp(18px, 5vw, 23px) !important;
+  font-weight: 500 !important;
+  line-height: 1.16 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.fatSecretPage .fatFoodInfo span,
+.fatSecretPage .fatFoodItemEditable span:not(.fatFoodEditIcon) {
+  display: block !important;
+  margin-top: 6px !important;
+  color: #20d66a !important;
+  font-size: clamp(15px, 4vw, 20px) !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage .fatFoodCalories {
+  min-width: 0 !important;
+  text-align: right !important;
+}
+
+.fatSecretPage .fatFoodCalories strong {
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-size: clamp(19px, 5vw, 24px) !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage .fatFoodEditIcon {
+  width: 26px !important;
+  height: 36px !important;
+  margin: 0 !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage .fatAmountAddButton {
+  font-size: clamp(24px, 6vw, 30px) !important;
+}
+
+@media (max-width: 380px) {
+  .fatSecretPage .fatFoodItem,
+  .fatSecretPage .fatFoodItemEditable {
+    min-height: 60px !important;
+    padding-left: 42px !important;
+    grid-template-columns: minmax(0, 1fr) 46px 22px !important;
+  }
+}
+
