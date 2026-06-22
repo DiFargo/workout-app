@@ -130,6 +130,8 @@ import {
   getHistoryWorkoutParts
 } from "./utils/workoutHistoryPresentation";
 import { buildTrainerExerciseLibraryItems } from "./utils/trainerExerciseLibrary";
+import ClientE2EHarness from "./components/client/ClientE2EHarness";
+import { isClientE2EHarnessEnabled } from "./utils/clientHarness";
 import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
 import {
   formatTrainerSummaryDate,
@@ -302,9 +304,14 @@ const {
 export default function App() {
   useModalFocusTrap();
 
+  const showClientHarness = isClientE2EHarnessEnabled();
   const showTrainerHarness = isTrainerE2EHarnessEnabled();
 
   usePreventMobileZoom();
+
+  if (showClientHarness) {
+    return <ClientE2EHarness />;
+  }
 
   if (showTrainerHarness) {
     return <TrainerE2EHarness />;
