@@ -34,6 +34,17 @@ async function clickIfVisible(locator) {
   return false;
 }
 
+async function openTrainerPrograms(page) {
+  const mobileNav = page.locator(".trainerNextMobileNav");
+  if (await isVisible(mobileNav)) {
+    await mobileNav.locator("button").nth(3).click();
+    await expect(page.locator(".trainerNextMoreDrawer")).toBeVisible();
+    await page.locator(".trainerNextMoreDrawer nav button").first().click();
+    return;
+  }
+  await page.locator(".trainerNextSidebar nav button").nth(3).click();
+}
+
 test("trainer workspace smoke: dashboard, clients, client card and messages stay usable", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/?trainerHarness=1");
@@ -123,5 +134,40 @@ test("trainer mobile overflow menu opens compact extra sections", async ({ page 
   await expect(page.locator(".trainerNextMoreDrawer nav button")).toHaveCount(4);
   await page.locator(".trainerNextMoreDrawer nav button").first().click();
   await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
+  assertNoRuntimeErrors();
+});
+
+test("trainer programs page keeps editor, preview and library usable", async ({ page }) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  await page.goto("/?trainerHarness=1");
+
+  await openTrainerPrograms(page);
+  await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
+  await expect(page.locator(".trainerNextWorkoutLayout")).toBeVisible();
+  await expect(page.locator(".trainerNextWorkoutDays .trainerNextWorkoutDayItem")).toHaveCount(2);
+  await expect(page.locator(".trainerNextExerciseList article")).toHaveCount(2);
+  await expect(page.locator(".trainerNextExerciseName").first()).toBeVisible();
+  await page.locator(".trainerNextExerciseName").first().click();
+  await expect(page.locator(".trainerNextExerciseEditor")).toBeVisible();
+  await page.locator(".trainerNextSetEditor input").first().fill("10");
+  await expectNoHorizontalOverflow(page);
+  assertNoRuntimeErrors();
+
+  const desktopPreviewOpened = await clickIfVisible(page.locator(".trainerNextHeadActions button").first());
+  if (!desktopPreviewOpened) {
+    await page.locator(".trainerNextMobileHeader button").first().click();
+  }
+  await expect(page.locator(".trainerNextWorkoutPreview")).toBeVisible();
+  await expect(page.locator(".trainerNextWorkoutPreview article")).toHaveCount(2);
+  await page.locator(".trainerNextModalClose").click();
+  await expect(page.locator(".trainerNextWorkoutPreview")).toBeHidden();
+
+  await page.locator(".trainerNextPageTabs button").nth(1).click();
+  await expect(page.locator(".trainerNextLibrary")).toBeVisible();
+  await expect(page.locator(".trainerNextLibrary article")).toHaveCount(3);
+  const firstExerciseName = await page.locator(".trainerNextLibrary article strong").first().textContent();
+  await page.locator(".trainerNextLibrary input").fill((firstExerciseName || "").slice(0, 4));
+  await expect(page.locator(".trainerNextLibrary article").first()).toBeVisible();
+  await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });

@@ -7,6 +7,7 @@ function TrainerE2EHarness() {
   const [mode, setMode] = useState("dashboard");
   const [activeSection, setActiveSection] = useState("dashboard");
   const [activeClientTab, setActiveClientTab] = useState("overview");
+  const [activeWorkoutTab, setActiveWorkoutTab] = useState("plan");
   const [selectedProgramId, setSelectedProgramId] = useState("program_tren_plus");
   const [selectedClient, setSelectedClient] = useState({
     id: "client_e2e",
@@ -179,6 +180,9 @@ function TrainerE2EHarness() {
       selectedProgramId={selectedProgramId}
       onSelectProgram={setSelectedProgramId}
       onAssignProgram={() => true}
+      onOpenProgramManager={() => setActiveWorkoutTab("plan")}
+      activeWorkoutTab={activeWorkoutTab}
+      onWorkoutTabChange={setActiveWorkoutTab}
       onSaveWorkoutSchedule={(dates) => {
         setSelectedClient((current) => ({
           ...current,
