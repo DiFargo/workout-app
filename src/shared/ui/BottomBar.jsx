@@ -29,6 +29,7 @@ export function ClientMainBottomBar({
     <nav className={className} aria-label="Основные разделы">
       <button
         type="button"
+        data-testid="client-nav-main"
         className={activeTab === "main" ? "active" : ""}
         aria-current={activeTab === "main" ? "page" : undefined}
         onClick={onGoMain}
@@ -38,6 +39,7 @@ export function ClientMainBottomBar({
       </button>
       <button
         type="button"
+        data-testid="client-nav-workouts"
         className={activeTab === "workouts" ? "active" : ""}
         aria-current={activeTab === "workouts" ? "page" : undefined}
         onClick={onOpenTraining}
@@ -47,6 +49,7 @@ export function ClientMainBottomBar({
       </button>
       <button
         type="button"
+        data-testid="client-nav-nutrition"
         className={activeTab === "nutrition" ? "active" : ""}
         aria-current={activeTab === "nutrition" ? "page" : undefined}
         onClick={onOpenNutrition}
@@ -56,6 +59,7 @@ export function ClientMainBottomBar({
       </button>
       <button
         type="button"
+        data-testid="client-nav-cabinet"
         className={activeTab === "cabinet" ? "active" : ""}
         aria-current={activeTab === "cabinet" ? "page" : undefined}
         onClick={onOpenCabinet}
