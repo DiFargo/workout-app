@@ -46,3 +46,30 @@ test("application styles use the modular styles entrypoint", async () => {
     assert.match(indexCss, new RegExp(`@import "${requiredImport.replace(".", "\\.")}"`));
   }
 });
+
+test("trainer UI routes stay behind terminal route boundaries", async () => {
+  const appCore = await readText("src/AppCore.jsx");
+  const terminalRoutes = await readText("src/app/appTerminalRoutes.jsx");
+  const trainerUsersRoute = await readText("src/features/trainer/TrainerUsersRoute.jsx");
+  const trainerWorkoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
+
+  assert.match(appCore, /renderAppTerminalRoute/);
+  assert.doesNotMatch(appCore, /TrainerUsersLegacyRoute/);
+  assert.doesNotMatch(appCore, /TrainerClientsWorkspaceRoute/);
+  assert.doesNotMatch(appCore, /TrainerAdminWorkoutsNextRoute/);
+  assert.doesNotMatch(appCore, /TrainerProgramManagerView/);
+  assert.doesNotMatch(appCore, /from ["']\.\/components\/trainer\/TrainerWorkspace["']/);
+
+  assert.match(terminalRoutes, /TrainerDashboardRoute/);
+  assert.match(terminalRoutes, /TrainerUsersRoute/);
+  assert.match(terminalRoutes, /TrainerAdminWorkoutsRoute/);
+  assert.doesNotMatch(terminalRoutes, /TrainerUsersLegacyRoute/);
+  assert.doesNotMatch(terminalRoutes, /TrainerClientsWorkspaceRoute/);
+  assert.doesNotMatch(terminalRoutes, /TrainerProgramManagerView/);
+
+  assert.match(trainerUsersRoute, /TrainerClientsWorkspaceRoute/);
+  assert.match(trainerUsersRoute, /TrainerUsersLegacyRoute/);
+  assert.match(trainerUsersRoute, /buildTrainerUsersPageModel/);
+  assert.match(trainerWorkoutsRoute, /TrainerAdminWorkoutsNextRoute/);
+  assert.match(trainerWorkoutsRoute, /TrainerProgramManagerView/);
+});
