@@ -10,35 +10,104 @@ async function expectNoHorizontalOverflow(page) {
   expect(metrics.documentWidth).toBeLessThanOrEqual(metrics.viewportWidth + 1);
 }
 
+async function isVisible(locator) {
+  return locator.evaluate((element) => {
+    const style = window.getComputedStyle(element);
+    const box = element.getBoundingClientRect();
+    return style.display !== "none" && style.visibility !== "hidden" && box.width > 0 && box.height > 0;
+  });
+}
+
+async function navButton(page, desktopIndex, mobileIndex = desktopIndex) {
+  const mobileNav = page.locator(".trainerNextMobileNav");
+  if (await isVisible(mobileNav)) {
+    return mobileNav.locator("button").nth(mobileIndex);
+  }
+  return page.locator(".trainerNextSidebar nav button").nth(desktopIndex);
+}
+
+async function clickIfVisible(locator) {
+  if (await locator.count() && await locator.first().isVisible()) {
+    await locator.first().click();
+    return true;
+  }
+  return false;
+}
+
 test("trainer workspace smoke: dashboard, clients, client card and messages stay usable", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/?trainerHarness=1");
-  const main = page.getByRole("main");
+  const main = page.locator(".trainerNextMain");
 
-  await expect(page.getByRole("heading", { name: "Дашборд" }).or(page.getByRole("heading", { name: "Обзор" })).first()).toBeVisible();
+  await expect(page.locator(".trainerNextRoot")).toBeVisible();
   await expect(page.getByText(/^v\d+$/)).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await page.getByRole("button", { name: /^Клиенты$/ }).click();
-  await expect(page.getByRole("heading", { name: "Клиенты" })).toBeVisible();
+  await (await navButton(page, 1, 1)).click();
+  await expect(page.locator(".trainerNextClientsPage")).toBeVisible();
   await expect(page.getByText("Germes")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
   await page.getByRole("button", { name: /Germes/ }).first().click();
   await expect(page.getByRole("heading", { name: "Germes" })).toBeVisible();
-  await expect(main.getByRole("button", { name: "План тренировок" })).toBeVisible();
-  await main.getByRole("button", { name: "Питание" }).click();
-  await expect(page.getByText("План питания клиента")).toBeVisible();
-  await main.getByRole("button", { name: "Уведомления" }).click();
-  await expect(page.getByRole("heading", { name: "Напоминания" })).toBeVisible();
+  await expect(main.locator(".trainerNextClientTabs button")).toHaveCount(7);
+
+  await main.locator(".trainerNextClientTabs button").nth(1).click();
+  await expect(page.locator(".trainerWorkoutScheduleGrid")).toBeVisible();
+  await expect(page.locator(".trainerWorkoutScheduleLegend")).toBeVisible();
+  await expect(page.locator(".trainerClientProgramEditButton")).toBeVisible();
+  await page.locator(".trainerClientProgramEditButton").click();
+  await expect(page.locator(".trainerWorkoutEditorModal")).toBeVisible();
+  await expect(page.locator(".trainerWorkoutEditorModalBody")).toBeVisible();
+  await expect(page.locator(".trainerWorkoutEditorModal")).toContainText("tren+");
+  await page.locator(".trainerWorkoutEditorModal header button").click();
+  await expect(page.locator(".trainerWorkoutEditorModal")).toBeHidden();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await page.getByRole("button", { name: /^Сообщения$/ }).first().click();
-  await expect(page.getByRole("heading", { name: "Сообщения" }).first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Нужно ответить" })).toBeVisible();
+  if (await clickIfVisible(page.locator(".trainerNextClientBackRow .trainerNextPrimary"))) {
+    await expect(page.locator(".trainerClientMessageModal")).toBeVisible();
+    await page.locator(".trainerClientMessageModal textarea").fill("Smoke message to client");
+    await page.locator(".trainerClientMessageModal .trainerNextPrimary").click();
+    await expect(page.locator(".trainerClientMessageModal")).toBeHidden();
+  }
+
+  const desktopActionsOpened = await clickIfVisible(page.locator(".trainerNextClientBackRow button").nth(2));
+  if (!desktopActionsOpened) {
+    await page.locator(".trainerNextMobileMore").click();
+  }
+  await expect(page.locator(".trainerClientActionSheet")).toBeVisible();
+  await expect(page.locator(".trainerClientActionSheet button.danger")).toBeVisible();
+  await page.locator(".trainerClientActionSheet header button").click();
+  await expect(page.locator(".trainerClientActionSheet")).toBeHidden();
+  assertNoRuntimeErrors();
+
+  await main.locator(".trainerNextClientTabs button").nth(2).click();
+  await expect(page.locator(".trainerNutritionAnalytics")).toBeVisible();
+  await main.locator(".trainerNextClientTabs button").nth(5).click();
+  await expect(page.locator(".trainerNotificationCalendarGrid")).toBeVisible();
+  await expect(page.locator(".trainerNotificationLegend")).toBeVisible();
+  await page.locator(".trainerNotificationOffsets label").first().click();
+  await page.locator(".trainerNotificationActions .trainerNextPrimary").click();
+  await expectNoHorizontalOverflow(page);
+  assertNoRuntimeErrors();
+
+  await (await navButton(page, 2, 2)).click();
+  await expect(page.locator(".trainerMessageCenter")).toBeVisible();
+  await expect(page.locator(".trainerMessageFilters")).toBeVisible();
+  await expect(page.locator(".trainerMessageList > button")).toHaveCount(1);
+  await page.locator(".trainerMessageList > button").first().click();
+  await expect(page.locator(".trainerMessageModal")).toBeVisible();
+  await page.locator(".trainerMessageCoachHint button").first().click();
+  await expect(page.locator(".trainerMessageModalSend")).toBeEnabled();
+  await page.locator(".trainerMessageModalSend").click();
+  await expect(page.locator(".trainerMessageStatus")).toBeVisible();
+  await page.locator(".trainerMessageModalHead button").click();
+  await expect(page.locator(".trainerMessageModal")).toBeHidden();
+  await page.locator(".trainerMessageFilters button").nth(1).click();
+  await expect(page.locator(".trainerMessageFilters button.active")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });
@@ -49,11 +118,10 @@ test("trainer mobile overflow menu opens compact extra sections", async ({ page 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/?trainerHarness=1");
 
-  await page.getByRole("button", { name: /^Ещё$/ }).click();
-  await expect(page.getByRole("dialog", { name: "Дополнительные разделы" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Программы/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Аналитика/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Уведомления/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Кабинет/ })).toBeVisible();
+  await page.locator(".trainerNextMobileNav button").nth(3).click();
+  await expect(page.locator(".trainerNextMoreDrawer")).toBeVisible();
+  await expect(page.locator(".trainerNextMoreDrawer nav button")).toHaveCount(4);
+  await page.locator(".trainerNextMoreDrawer nav button").first().click();
+  await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
   assertNoRuntimeErrors();
 });
