@@ -37,13 +37,31 @@ function collectCssImports(source) {
 
 function collectModuleImports(source) {
   return [
-    ...source.matchAll(/\bimport\s+(?:[^"']+\s+from\s+)?["']([^"']+)["']/g)
+    ...source.matchAll(/\bimport\s+(?:[^"']+\s+from\s+)?["']([^"']+)["']/g),
+    ...source.matchAll(/\bimport\(["']([^"']+)["']\)/g)
   ].map((match) => match[1]);
 }
 
 function resolveRelativeImport(file, importSource) {
   if (!importSource.startsWith(".")) return null;
   return path.normalize(path.join(path.dirname(file), importSource));
+}
+
+async function resolveSourceImport(file, importSource) {
+  const base = resolveRelativeImport(file, importSource);
+  if (!base) return null;
+
+  for (const candidate of [
+    base,
+    `${base}.js`,
+    `${base}.jsx`,
+    path.join(base, "index.js"),
+    path.join(base, "index.jsx")
+  ]) {
+    if (await pathExists(candidate)) return path.normalize(candidate);
+  }
+
+  return null;
 }
 
 async function walkCssImports(entryPath, visiting = new Set(), visited = new Set()) {
@@ -95,6 +113,30 @@ test("app entrypoints stay thin", async () => {
   assert.match(mainSource, /navigator\.serviceWorker\.register\(["']\/sw\.js["']\)/);
   assert.doesNotMatch(mainSource, /AppCore/);
   assert.ok(mainSource.split(/\r?\n/).length <= 16, "main.jsx should remain a thin app entrypoint");
+});
+
+test("source modules stay reachable from the app entrypoint", async () => {
+  const allSourceFiles = (await collectFiles("src", [".js", ".jsx"]))
+    .map((file) => path.normalize(file))
+    .sort();
+  const reachableFiles = new Set();
+  const pendingFiles = [path.normalize("src/main.jsx")];
+
+  while (pendingFiles.length > 0) {
+    const file = pendingFiles.pop();
+    if (reachableFiles.has(file)) continue;
+    reachableFiles.add(file);
+
+    const source = await readText(file);
+    for (const importSource of collectModuleImports(source)) {
+      const resolved = await resolveSourceImport(file, importSource);
+      if (resolved) pendingFiles.push(resolved);
+    }
+  }
+
+  const unreachableFiles = allSourceFiles.filter((file) => !reachableFiles.has(file));
+
+  assert.deepEqual(unreachableFiles, []);
 });
 
 test("application styles use the modular styles entrypoint", async () => {
