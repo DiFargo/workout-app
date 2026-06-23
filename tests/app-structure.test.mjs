@@ -251,10 +251,9 @@ test("dark nutrition hero keeps explicit readable text overrides", async () => {
 test("verification scripts stay usable in the Windows workspace", async () => {
   const packageJson = JSON.parse(await readText("package.json"));
   const verifyScript = await readText("scripts/verify.cmd");
-  const verifySmokeScript = await readText("scripts/verify-smoke.cmd");
 
   assert.equal(packageJson.scripts.verify, "scripts\\verify.cmd");
-  assert.equal(packageJson.scripts["verify:smoke"], "scripts\\verify-smoke.cmd");
+  assert.equal(packageJson.scripts["verify:smoke"], undefined);
   assert.match(packageJson.scripts["test:rules"], /XDG_CONFIG_HOME=\.config/);
   assert.match(packageJson.scripts["test:rules"], /--cache \.\/\.npm-cache/);
 
@@ -269,11 +268,6 @@ test("verification scripts stay usable in the Windows workspace", async () => {
 
   assert.doesNotMatch(verifyScript, /test:rules/);
   assert.doesNotMatch(verifyScript, /test:e2e/);
-
-  assert.match(verifySmokeScript, /call scripts\\verify\.cmd/);
-  assert.match(verifySmokeScript, /tests\/e2e\/client-smoke\.spec\.js/);
-  assert.match(verifySmokeScript, /tests\/e2e\/trainer-workspace\.spec\.js/);
-  assert.equal((verifySmokeScript.match(/test:e2e/g) || []).length, 1);
 });
 
 test("trainer UI routes stay behind terminal route boundaries", async () => {
