@@ -35,6 +35,7 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 
 1. Keep `AppCore.jsx` stable unless a concrete product change touches a contained area.
 2. Treat CSS as the next architecture track:
+   - start with `npm.cmd run report:css`;
    - map large CSS files to screens/components;
    - identify route-specific CSS that can be imported by lazy route chunks;
    - keep the current CSS budget green while reducing it gradually;

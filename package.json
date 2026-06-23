@@ -11,6 +11,7 @@
     "test:e2e": "playwright test",
     "verify": "scripts\\verify.cmd",
     "check:bundle": "node scripts/check-build-budget.mjs",
+    "report:css": "node scripts/report-css-size.mjs",
     "lint": "eslint .",
     "lint:critical": "eslint src/utils/clientUx.js src/utils/trainerAttention.js src/utils/trainerNutritionPlan.js tests/client-ux.test.mjs tests/trainer-attention.test.mjs tests/trainer-nutrition-plan.test.mjs tests/security-boundaries.test.mjs tests/firestore-rules.rules.mjs tests/e2e/client-smoke.spec.js tests/e2e/trainer-workspace.spec.js playwright.config.js",
     "preview": "vite preview"
