@@ -39,6 +39,7 @@ npm.cmd run verify
 This runs:
 
 - production build
+- main JS bundle budget check
 - unit tests
 - critical lint
 
@@ -62,6 +63,7 @@ The main architecture guards live in:
 
 - `tests/app-structure.test.mjs`
 - `tests/appcore-props-scope.test.mjs`
+- `scripts/check-build-budget.mjs`
 
 They protect:
 
@@ -73,5 +75,17 @@ They protect:
 - client/trainer feature separation
 - pure `domain` and `utils` layers
 - route prop/dependency initialization order
+- main app JS chunk size after `vite build`
 
 When changing the structure, update these tests intentionally instead of working around them.
+
+## Bundle Budget
+
+`npm.cmd run verify` runs `scripts/check-build-budget.mjs` immediately after the production build.
+
+Current limits:
+
+- main `dist/assets/index-*.js` raw size: `600 KiB`
+- main `dist/assets/index-*.js` gzip size: `170 KiB`
+
+These limits intentionally track the initial app JavaScript chunk only. Route chunks can grow independently when they belong to lazy-loaded screens.
