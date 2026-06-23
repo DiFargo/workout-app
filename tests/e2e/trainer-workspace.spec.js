@@ -57,6 +57,7 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
 
   await (await navButton(page, 1, 1)).click();
   await expect(page.locator(".trainerNextClientsPage")).toBeVisible();
+  await expect(main.locator("h1")).toHaveCount(1);
   await expect(page.getByText("Germes")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
@@ -107,6 +108,7 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
 
   await (await navButton(page, 2, 2)).click();
   await expect(page.locator(".trainerMessageCenter")).toBeVisible();
+  await expect(main.locator("h1")).toHaveCount(1);
   await expect(page.locator(".trainerMessageFilters")).toBeVisible();
   await expect(page.locator(".trainerMessageList > button")).toHaveCount(1);
   await page.locator(".trainerMessageList > button").first().click();
@@ -143,6 +145,7 @@ test("trainer programs page keeps editor, preview and library usable", async ({ 
 
   await openTrainerPrograms(page);
   await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
+  await expect(page.locator(".trainerNextMain h1")).toHaveCount(1);
   await expect(page.locator(".trainerNextWorkoutLayout")).toBeVisible();
   await expect(page.locator(".trainerNextWorkoutDays .trainerNextWorkoutDayItem")).toHaveCount(2);
   await expect(page.locator(".trainerNextExerciseList article")).toHaveCount(2);

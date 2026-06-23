@@ -26,7 +26,7 @@ export function ClientMainBottomBar({
   }
 
   return (
-    <nav className={className} aria-label="Основные разделы">
+    <nav className={`${className} clientBottomNav`} data-testid="client-bottom-nav" aria-label="Основные разделы">
       <button
         type="button"
         data-testid="client-nav-main"

@@ -359,7 +359,8 @@
 }
 
 .trainerNextDesktopPageHead h1,
-.trainerNextMobileHeader h1 {
+.trainerNextMobileHeader h1,
+.trainerNextMobileTitle {
   margin: 0;
   color: var(--tn-text);
   font-size: 25px;
@@ -3440,7 +3441,8 @@
     margin-bottom: 13px;
   }
 
-  .trainerNextMobileHeader h1 {
+  .trainerNextMobileHeader h1,
+  .trainerNextMobileTitle {
     font-size: 20px;
   }
 
@@ -4154,7 +4156,8 @@
     grid-template-columns: 1fr 34px;
   }
 
-  .trainerNextWorkoutPage .trainerNextMobileHeader h1 {
+  .trainerNextWorkoutPage .trainerNextMobileHeader h1,
+  .trainerNextWorkoutPage .trainerNextMobileTitle {
     font-size: 20px;
   }
 
@@ -9431,7 +9434,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     margin-bottom: 13px;
   }
 
-  .trainerNextMobileHeader h1 {
+  .trainerNextMobileHeader h1,
+  .trainerNextMobileTitle {
     font-size: 20px;
   }
 

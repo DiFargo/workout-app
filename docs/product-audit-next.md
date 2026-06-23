@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v1004`.
+Last updated at app version `v1005`.
 
 ## Evidence
 
@@ -22,25 +22,19 @@ No horizontal overflow was detected in the harness audit for the checked screens
 
 No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 
+## Done
+
+1. Client workouts title now reads as `Индивидуальный план` in E2E text extraction.
+2. Trainer clients, messages and programs screens now expose one primary `h1` in E2E checks.
+3. Client bottom navigation has a stable `client-bottom-nav` test id and `clientBottomNav` class for future audits.
+
 ## P1: Next Product Fixes
 
-1. Client workouts header reads as `Индивидуальныйплан` in text extraction.
-   - Check whether the visual heading lacks spacing or only uses tight nested markup.
-   - Expected result: title reads naturally as `Индивидуальный план` and still fits on mobile.
-
-2. Trainer pages expose duplicate top headings.
-   - Seen on clients, messages and programs where the audit reads headings like `Клиенты`, `Клиенты`.
-   - Expected result: one primary `h1` per screen, secondary section titles use lower hierarchy.
-
-3. Trainer mobile programs navigation needs clearer handling in audits and UX review.
+1. Trainer mobile programs navigation needs clearer handling in audits and UX review.
    - Mobile bottom nav opens the extra menu before programs, while desktop navigates directly.
    - Expected result: behavior remains intentional, but labels and test helpers make this explicit.
 
-4. Client navigation should have a stable shared selector for visual audits.
-   - Current harness works through test ids, but bottom nav class is not captured by the generic audit selector.
-   - Expected result: easier future checks for nav height, spacing and safe-area behavior.
-
-5. Nutrition screen remains the densest client screen.
+2. Nutrition screen remains the densest client screen.
    - Harness sees many buttons in the nutrition view.
    - Expected result: visually confirm button grouping, tap targets and modal entry points on mobile.
 
@@ -59,8 +53,5 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 
 ## Recommended Order
 
-1. Fix the client workout title spacing.
-2. Normalize trainer heading hierarchy.
-3. Improve trainer mobile programs navigation test helper/label clarity.
-4. Add stable nav selectors for future visual audits.
-5. Do a manual nutrition visual pass before any CSS cleanup.
+1. Improve trainer mobile programs navigation test helper/label clarity.
+2. Do a manual nutrition visual pass before any CSS cleanup.

@@ -22,6 +22,8 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await page.getByTestId("client-nav-workouts").click();
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
   await expect(page.locator(".workoutSelectTitle")).toBeVisible();
+  await expect(page.locator(".workoutSelectTitle")).toHaveText("Индивидуальный план");
+  await expect(page.getByTestId("client-bottom-nav")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 

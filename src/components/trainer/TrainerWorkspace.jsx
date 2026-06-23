@@ -751,7 +751,7 @@ function TrainerDashboard({
     <div className="trainerNextPage trainerNextDashboard">
       <header className="trainerNextMobileHeader">
         <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
-        <h1>Дашборд</h1>
+        <div className="trainerNextMobileTitle">Дашборд</div>
         <div className="trainerNextMobileHeaderActions">
           <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
           <button type="button" onClick={onNotifications} aria-label="Уведомления"><Bell size={22} />{attentionCount > 0 ? <i>{attentionCount}</i> : null}</button>
@@ -2320,7 +2320,7 @@ function TrainerNutritionPage({ client, nutritionDays, goals, planOptions = [], 
         <button className="trainerNextPrimary" type="button">Отправить план клиенту <ChevronDown size={16} /></button>
       </div>
       <header className="trainerNextMobileHeader">
-        <h1>Питание и дневник</h1>
+        <div className="trainerNextMobileTitle">Питание и дневник</div>
         <button type="button" aria-label="Календарь"><CalendarDays size={21} /></button>
       </header>
       <NutritionView client={client} nutritionDays={nutritionDays} goals={goals} planOptions={planOptions} onGeneratePlan={onGeneratePlan} onSavePlan={onSavePlan} status={status} />
@@ -2879,7 +2879,7 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
         <div><h1>Клиенты</h1><p>{clients.length} {pluralize(clients.length, "клиент", "клиента", "клиентов")} в работе</p></div>
         <button className="trainerNextPrimary" type="button" onClick={onCreateClient}><Plus size={18} />Добавить клиента</button>
       </div>
-      <header className="trainerNextMobileHeader"><span className="trainerNextMobileHeaderSpacer" aria-hidden="true" /><h1>Клиенты</h1><button type="button" onClick={onCreateClient}><Plus size={22} /></button></header>
+      <header className="trainerNextMobileHeader"><span className="trainerNextMobileHeaderSpacer" aria-hidden="true" /><div className="trainerNextMobileTitle">Клиенты</div><button type="button" onClick={onCreateClient}><Plus size={22} /></button></header>
       <div className="trainerNextClientsStandalone">
         <label className="trainerNextSearch open"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Поиск клиента..." /></label>
         <DashboardClientList clients={clients} summaries={summaries} filter="all" search={search} onOpenClient={onOpenClient} />
@@ -3434,7 +3434,7 @@ function TrainerWorkoutEditor({
         ) : null}
       </div> : null}
       {!embedded ? <header className="trainerNextMobileHeader">
-        <h1>{tab === "library" ? "Библиотека" : "План тренировок"}</h1>
+        <div className="trainerNextMobileTitle">{tab === "library" ? "Библиотека" : "План тренировок"}</div>
         {tab === "plan" ? <button type="button" onClick={() => setPreviewOpen(true)} aria-label="Предпросмотр"><Eye size={21} /></button> : <span />}
       </header> : null}
       {!embedded ? <div className="trainerNextPageTabs">
@@ -3713,7 +3713,7 @@ function TrainerCabinetPage({ trainerName, trainerAvatar, clients = [], counts =
     <div className="trainerNextPage trainerNextCabinetPage">
       <header className="trainerNextMobileHeader">
         <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
-        <h1>Кабинет</h1>
+        <div className="trainerNextMobileTitle">Кабинет</div>
         <div className="trainerNextMobileHeaderActions">
           <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
           <button type="button" onClick={() => onNavigate("notifications")} aria-label="Уведомления">
@@ -4158,7 +4158,7 @@ function TrainerUtilityPage({ section, clients = [], clientSummaries = {}, onNav
     <div className="trainerNextPage trainerUtilityPage">
       <header className="trainerNextMobileHeader">
         <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
-        <h1>{config.title}</h1>
+        <div className="trainerNextMobileTitle">{config.title}</div>
         <div className="trainerNextMobileHeaderActions">
           <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
           <button type="button" onClick={() => onNavigate("notifications")} aria-label="Уведомления"><Bell size={21} /></button>

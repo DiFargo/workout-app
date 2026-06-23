@@ -457,7 +457,7 @@ export default function TrainerAdminWorkoutsRoute({
             </div>
           </div>
           <header className="trainerNextMobileHeader">
-            <h1>{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</h1>
+            <div className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
           </header>
           <div className="trainerNextPageTabs">
             <button type="button" className="active">Программы</button>

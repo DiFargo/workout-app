@@ -181,6 +181,7 @@ export default function WorkoutListPage({
       <div className="workoutSelectHero">
         <h1 className="workoutSelectTitle clientCorePageTitle">
           <span>{isIndividualWorkoutMode ? "Индивидуальный" : "Базовые"}</span>
+          {" "}
           <strong>{isIndividualWorkoutMode ? "план" : "тренировки"}</strong>
         </h1>
 
