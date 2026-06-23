@@ -225,6 +225,27 @@ test("client and trainer feature layers do not import each other", async () => {
   assert.deepEqual(violations, []);
 });
 
+test("feature layers only depend on app navigation contracts", async () => {
+  const featureFiles = await collectFiles("src/features", [".js", ".jsx"]);
+  const allowedAppModules = new Set([
+    path.normalize("src/app/appPages"),
+    path.normalize("src/app/appNavigation")
+  ]);
+  const violations = [];
+
+  for (const file of featureFiles) {
+    const source = await readText(file);
+    for (const importSource of collectModuleImports(source)) {
+      const resolved = resolveRelativeImport(file, importSource);
+      if (!resolved?.startsWith(path.normalize("src/app"))) continue;
+      if (allowedAppModules.has(resolved)) continue;
+      violations.push(`${file} -> ${importSource}`);
+    }
+  }
+
+  assert.deepEqual(violations, []);
+});
+
 test("domain and utils stay free from React and UI layers", async () => {
   const pureFiles = [
     ...(await collectFiles("src/domain", [".js", ".mjs"])),
