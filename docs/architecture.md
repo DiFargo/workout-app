@@ -12,6 +12,7 @@ This project is a production React + Firebase fitness application. The current g
 - `src/features/trainer` owns trainer-facing feature UI and handlers.
 - `src/components` owns reusable UI shells and legacy component surfaces.
 - `src/shared/hooks` and `src/shared/ui` own truly shared React pieces.
+- Do not add new shared hooks under `src/hooks`; keep them in `src/shared/hooks`.
 - `src/domain` and `src/utils` are pure logic modules. They must not import React, components or feature layers.
 - `src/styles/index.css` is the only application CSS entrypoint.
 
@@ -22,6 +23,8 @@ This project is a production React + Firebase fitness application. The current g
 - Do not let `features/client` and `features/trainer` import each other directly.
 - Feature layers may import from `src/app` only through navigation contracts: `appPages` and `appNavigation`.
 - Do not import CSS directly from components. CSS should be reachable from `src/styles/index.css`.
+- Do not leave unused JS/JSX source files in `src`. Source modules must stay reachable from `src/main.jsx`.
+- Do not introduce JS/JSX import cycles.
 - Do not move Firebase/security behavior unless the task explicitly requires it.
 - Keep `AppCore.jsx` as a coordinator. A large file is acceptable if it is readable and route/context oriented.
 
@@ -64,6 +67,8 @@ They protect:
 
 - thin app entrypoints
 - modular CSS entrypoint and import graph
+- source module reachability and import graph cycles
+- shared hooks location
 - AppCore coordinator boundaries
 - client/trainer feature separation
 - pure `domain` and `utils` layers
