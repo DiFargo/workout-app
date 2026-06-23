@@ -1,0 +1,81 @@
+/* Final pass for primary client screen rhythm after legacy layer grouping. */
+html body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
+html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
+html body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  min-height: 32px !important;
+  height: auto !important;
+  margin: 0 0 10px !important;
+  font-family: Arial, sans-serif !important;
+  font-size: 25px !important;
+  font-weight: 800 !important;
+  line-height: 1.08 !important;
+  letter-spacing: 0 !important;
+  color: rgba(248, 250, 255, 0.94) !important;
+  text-align: left !important;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.24) !important;
+}
+
+html body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero {
+  margin-top: 8px !important;
+}
+
+html body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 5px !important;
+  white-space: nowrap !important;
+}
+
+html body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle span,
+html body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle strong {
+  display: inline !important;
+  font: inherit !important;
+  color: inherit !important;
+  letter-spacing: 0 !important;
+  white-space: inherit !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
+  align-items: center !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4 small {
+  opacity: 1 !important;
+  color: rgba(76, 84, 108, 0.88) !important;
+  text-shadow: none !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4.selected small {
+  color: #6d4df8 !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 span {
+  opacity: 1 !important;
+  color: rgba(232, 237, 248, 0.74) !important;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.18) !important;
+}
+
+@media (max-width: 430px) {
+  html body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
+  html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
+  html body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle,
+  html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+    font-size: 24px !important;
+  }
+
+  html body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
+    min-width: 0 !important;
+    max-width: calc(100vw - 126px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
+    font-size: 18.5px !important;
+    gap: 4px !important;
+  }
+}

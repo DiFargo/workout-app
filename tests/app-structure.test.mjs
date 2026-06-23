@@ -239,13 +239,14 @@ test("modular CSS import graph resolves without cycles", async () => {
 
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const finalPolishStack = await readText("src/styles/legacy-stack-final-polish.css");
-  const darkGreenFoodFlow = await readText("src/styles/legacy-dark-green-food-flow.css");
+  const darkGreenFoodFlow = await readText("src/styles/legacy-client-screen-alignment.css");
 
   assert.match(finalPolishStack, /@import "\.\/legacy-dark-green-food-flow\.css"/);
-  assert.match(darkGreenFoodFlow, /nutritionHeroV4 \.nutritionHeroTitleV4 \.clientCorePageTitle/);
+  assert.match(finalPolishStack, /@import "\.\/legacy-client-screen-alignment\.css"/);
+  assert.match(darkGreenFoodFlow, /nutritionHeroTitleV4 \.clientCorePageTitle/);
   assert.match(darkGreenFoodFlow, /nutritionWeekV4 \.nutritionDayV4 small/);
   assert.match(darkGreenFoodFlow, /nutritionStreakV4 span/);
-  assert.match(darkGreenFoodFlow, /rgba\(246,\s*248,\s*255,\s*0\.92\)/);
+  assert.match(darkGreenFoodFlow, /rgba\(248,\s*250,\s*255,\s*0\.94\)/);
 });
 
 test("verification scripts stay usable in the Windows workspace", async () => {
