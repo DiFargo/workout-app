@@ -9,7 +9,6 @@ import {
   getClientAttentionState,
   getTrainerAttentionDaysSince as getLocalDaysSince
 } from "../../utils/trainerAttention.js";
-import "./trainer-workspace.css";
 import {
   Activity,
   ArrowLeft,

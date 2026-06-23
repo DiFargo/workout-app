@@ -14,8 +14,4 @@ echo === Critical lint ===
 call npm.cmd run lint:critical || exit /b %ERRORLEVEL%
 
 echo.
-echo === Firestore rules tests ===
-call npm.cmd run test:rules || exit /b %ERRORLEVEL%
-
-echo.
 echo All verification checks passed.

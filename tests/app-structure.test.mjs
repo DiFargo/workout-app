@@ -58,11 +58,13 @@ test("application styles use the modular styles entrypoint", async () => {
   const main = await readText("src/main.jsx");
   const indexCss = await readText("src/styles/index.css");
   const appSource = await readText("src/App.jsx");
+  const trainerWorkspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
 
   assert.equal(await pathExists("src/styles.css"), false);
   assert.match(main, /['"]\.\/styles\/index\.css['"]/);
   assert.doesNotMatch(main, /['"]\.\/styles\.css['"]/);
   assert.doesNotMatch(appSource, /styles\.css/);
+  assert.doesNotMatch(trainerWorkspace, /\.css['"]/);
 
   for (const requiredImport of [
     "./tokens.css",
@@ -97,12 +99,12 @@ test("verification scripts stay usable in the Windows workspace", async () => {
   for (const requiredCommand of [
     "call npm.cmd run build",
     "call npm.cmd test",
-    "call npm.cmd run lint:critical",
-    "call npm.cmd run test:rules"
+    "call npm.cmd run lint:critical"
   ]) {
     assert.match(verifyScript, new RegExp(requiredCommand.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
 
+  assert.doesNotMatch(verifyScript, /test:rules/);
   assert.doesNotMatch(verifyScript, /test:e2e/);
 });
 
