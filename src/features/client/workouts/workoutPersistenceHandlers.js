@@ -4,7 +4,7 @@ import {
 } from "../offline/offlineReplayHandlers";
 import { loadWorkoutsFromFirebaseWithDeps } from "./workoutFirebaseLoadHandlers";
 import { saveWorkoutsToFirebaseWithDeps } from "./workoutPlanFirebaseSaveHandlers";
-import { saveTrainerNextPlanWithDeps } from "../../trainer/trainerNextPlanHandlers";
+import { saveTrainerNextPlanWithDeps } from "./workoutPlanUpdateHandlers";
 
 export function createWorkoutPersistenceHandlers(getContext) {
   async function replayFailedHistorySaves(uid) {

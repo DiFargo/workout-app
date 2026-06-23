@@ -35,6 +35,17 @@ function collectCssImports(source) {
   return [...source.matchAll(/@import\s+["']([^"']+)["']\s*;/g)].map((match) => match[1]);
 }
 
+function collectModuleImports(source) {
+  return [
+    ...source.matchAll(/\bimport\s+(?:[^"']+\s+from\s+)?["']([^"']+)["']/g)
+  ].map((match) => match[1]);
+}
+
+function resolveRelativeImport(file, importSource) {
+  if (!importSource.startsWith(".")) return null;
+  return path.normalize(path.join(path.dirname(file), importSource));
+}
+
 async function walkCssImports(entryPath, visiting = new Set(), visited = new Set()) {
   const normalizedEntry = path.normalize(entryPath);
   assert.equal(visiting.has(normalizedEntry), false, `CSS import cycle detected at ${normalizedEntry}`);
@@ -179,6 +190,36 @@ test("production components do not import feature layers back", async () => {
     if (!source.includes("features/")) continue;
     if (allowedFeatureImports.has(path.normalize(file))) continue;
     violations.push(file);
+  }
+
+  assert.deepEqual(violations, []);
+});
+
+test("client and trainer feature layers do not import each other", async () => {
+  const clientFiles = await collectFiles("src/features/client", [".js", ".jsx"]);
+  const trainerFiles = await collectFiles("src/features/trainer", [".js", ".jsx"]);
+  const trainerFeatureRoot = path.normalize("src/features/trainer");
+  const clientFeatureRoot = path.normalize("src/features/client");
+  const violations = [];
+
+  for (const file of clientFiles) {
+    const source = await readText(file);
+    for (const importSource of collectModuleImports(source)) {
+      const resolved = resolveRelativeImport(file, importSource);
+      if (resolved?.startsWith(trainerFeatureRoot)) {
+        violations.push(`${file} -> ${importSource}`);
+      }
+    }
+  }
+
+  for (const file of trainerFiles) {
+    const source = await readText(file);
+    for (const importSource of collectModuleImports(source)) {
+      const resolved = resolveRelativeImport(file, importSource);
+      if (resolved?.startsWith(clientFeatureRoot)) {
+        violations.push(`${file} -> ${importSource}`);
+      }
+    }
   }
 
   assert.deepEqual(violations, []);
