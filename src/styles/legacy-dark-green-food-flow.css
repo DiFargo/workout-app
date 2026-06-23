@@ -317,4 +317,28 @@
   color: var(--text) !important;
 }
 
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroV4 .nutritionHeroTitleV4 .clientCorePageTitle {
+  background: transparent !important;
+  color: rgba(246, 248, 255, 0.92) !important;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.22) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4 small {
+  color: rgba(98, 106, 126, 0.86) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4.today small {
+  color: rgba(58, 66, 86, 0.9) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4.selected small {
+  color: #6d4df8 !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4,
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 span {
+  background: transparent !important;
+  color: rgba(232, 236, 248, 0.68) !important;
+}
+
 
