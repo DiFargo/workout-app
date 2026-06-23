@@ -166,3 +166,27 @@ test("production components do not import feature layers back", async () => {
 
   assert.deepEqual(violations, []);
 });
+
+test("domain and utils stay free from React and UI layers", async () => {
+  const pureFiles = [
+    ...(await collectFiles("src/domain", [".js", ".mjs"])),
+    ...(await collectFiles("src/utils", [".js", ".mjs"]))
+  ];
+  const forbiddenPatterns = [
+    /\bfrom\s+["']react["']/,
+    /\bimport\s+["']react["']/,
+    /components\//,
+    /features\//,
+    /\.jsx["']/
+  ];
+  const violations = [];
+
+  for (const file of pureFiles) {
+    const source = await readText(file);
+    if (forbiddenPatterns.some((pattern) => pattern.test(source))) {
+      violations.push(file);
+    }
+  }
+
+  assert.deepEqual(violations, []);
+});
