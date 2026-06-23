@@ -450,6 +450,8 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
       <button
         type="button"
         key={item.id}
+        data-section={item.id}
+        data-testid={mobile ? `trainer-nav-${item.id}` : `trainer-desktop-nav-${item.id}`}
         className={active ? "active" : ""}
         onClick={() => {
           if (mobile && item.id === "more") {
@@ -502,6 +504,8 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
                   <button
                     type="button"
                     key={item.id}
+                    data-section={item.id}
+                    data-testid={`trainer-more-${item.id}`}
                     className={activeSection === item.id ? "active" : ""}
                     onClick={() => {
                       setOverflowOpen(false);

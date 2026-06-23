@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v1005`.
+Last updated at app version `v1006`.
 
 ## Evidence
 
@@ -27,14 +27,11 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 1. Client workouts title now reads as `Индивидуальный план` in E2E text extraction.
 2. Trainer clients, messages and programs screens now expose one primary `h1` in E2E checks.
 3. Client bottom navigation has a stable `client-bottom-nav` test id and `clientBottomNav` class for future audits.
+4. Trainer mobile navigation uses stable semantic test ids for the More drawer and Programs entry.
 
 ## P1: Next Product Fixes
 
-1. Trainer mobile programs navigation needs clearer handling in audits and UX review.
-   - Mobile bottom nav opens the extra menu before programs, while desktop navigates directly.
-   - Expected result: behavior remains intentional, but labels and test helpers make this explicit.
-
-2. Nutrition screen remains the densest client screen.
+1. Nutrition screen remains the densest client screen.
    - Harness sees many buttons in the nutrition view.
    - Expected result: visually confirm button grouping, tap targets and modal entry points on mobile.
 
@@ -53,5 +50,4 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 
 ## Recommended Order
 
-1. Improve trainer mobile programs navigation test helper/label clarity.
-2. Do a manual nutrition visual pass before any CSS cleanup.
+1. Do a manual nutrition visual pass before any CSS cleanup.

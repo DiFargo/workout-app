@@ -18,12 +18,10 @@ async function isVisible(locator) {
   });
 }
 
-async function navButton(page, desktopIndex, mobileIndex = desktopIndex) {
-  const mobileNav = page.locator(".trainerNextMobileNav");
-  if (await isVisible(mobileNav)) {
-    return mobileNav.locator("button").nth(mobileIndex);
-  }
-  return page.locator(".trainerNextSidebar nav button").nth(desktopIndex);
+async function trainerNavButton(page, section) {
+  const mobileButton = page.getByTestId(`trainer-nav-${section}`);
+  if (await mobileButton.count() && await mobileButton.isVisible()) return mobileButton;
+  return page.getByTestId(`trainer-desktop-nav-${section}`);
 }
 
 async function clickIfVisible(locator) {
@@ -37,12 +35,14 @@ async function clickIfVisible(locator) {
 async function openTrainerPrograms(page) {
   const mobileNav = page.locator(".trainerNextMobileNav");
   if (await isVisible(mobileNav)) {
-    await mobileNav.locator("button").nth(3).click();
+    const moreButton = page.getByTestId("trainer-nav-more");
+    await expect(moreButton).toBeVisible();
+    await moreButton.click();
     await expect(page.locator(".trainerNextMoreDrawer")).toBeVisible();
-    await page.locator(".trainerNextMoreDrawer nav button").first().click();
+    await page.getByTestId("trainer-more-workouts").click();
     return;
   }
-  await page.locator(".trainerNextSidebar nav button").nth(3).click();
+  await page.getByTestId("trainer-desktop-nav-workouts").click();
 }
 
 test("trainer workspace smoke: dashboard, clients, client card and messages stay usable", async ({ page }) => {
@@ -55,7 +55,7 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await (await navButton(page, 1, 1)).click();
+  await (await trainerNavButton(page, "clients")).click();
   await expect(page.locator(".trainerNextClientsPage")).toBeVisible();
   await expect(main.locator("h1")).toHaveCount(1);
   await expect(page.getByText("Germes")).toBeVisible();
@@ -106,7 +106,7 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await (await navButton(page, 2, 2)).click();
+  await (await trainerNavButton(page, "messages")).click();
   await expect(page.locator(".trainerMessageCenter")).toBeVisible();
   await expect(main.locator("h1")).toHaveCount(1);
   await expect(page.locator(".trainerMessageFilters")).toBeVisible();
@@ -131,10 +131,11 @@ test("trainer mobile overflow menu opens compact extra sections", async ({ page 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/?trainerHarness=1");
 
-  await page.locator(".trainerNextMobileNav button").nth(3).click();
+  await page.getByTestId("trainer-nav-more").click();
   await expect(page.locator(".trainerNextMoreDrawer")).toBeVisible();
   await expect(page.locator(".trainerNextMoreDrawer nav button")).toHaveCount(4);
-  await page.locator(".trainerNextMoreDrawer nav button").first().click();
+  await expect(page.getByTestId("trainer-more-workouts")).toBeVisible();
+  await page.getByTestId("trainer-more-workouts").click();
   await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
   assertNoRuntimeErrors();
 });
