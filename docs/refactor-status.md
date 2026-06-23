@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v995`.
+Last updated at app version `v997`.
 
 ## Stable Now
 
@@ -19,9 +19,10 @@ From the latest verified build:
 
 - main app JS chunk: about `452.90 KiB` raw, `124.46 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- CSS bundle: about `1.96 MB` raw.
+- CSS bundle: about `1919.64 KiB` raw, `243.06 KiB` gzip.
+- CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 
-The JS side has already received the biggest low-risk win. The next meaningful size problem is CSS, not more AppCore slicing.
+The JS side has already received the biggest low-risk win. The next meaningful size problem is CSS cleanup and eventual CSS route splitting, not more AppCore slicing.
 
 ## Do Not Do Next
 
@@ -36,6 +37,7 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 2. Treat CSS as the next architecture track:
    - map large CSS files to screens/components;
    - identify route-specific CSS that can be imported by lazy route chunks;
+   - keep the current CSS budget green while reducing it gradually;
    - only remove classes after usage search and visual/e2e checks.
 3. Consider lazy-loading trainer/client heavy data helpers only when their state and handlers can move with the route cleanly.
 4. Run `npm.cmd run verify` after structural changes and `npm.cmd run test:e2e` after route/loading changes.

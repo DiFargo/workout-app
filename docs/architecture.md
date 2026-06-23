@@ -87,5 +87,7 @@ Current limits:
 
 - main `dist/assets/index-*.js` raw size: `600 KiB`
 - main `dist/assets/index-*.js` gzip size: `170 KiB`
+- main `dist/assets/index-*.css` raw size: `2100 KiB`
+- main `dist/assets/index-*.css` gzip size: `270 KiB`
 
-These limits intentionally track the initial app JavaScript chunk only. Route chunks can grow independently when they belong to lazy-loaded screens.
+These limits intentionally track the initial app JavaScript and CSS chunks only. Route chunks can grow independently when they belong to lazy-loaded screens.
