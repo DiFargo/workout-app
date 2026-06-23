@@ -10,6 +10,7 @@
     "test:rules": "set XDG_CONFIG_HOME=.config&& npx --yes --cache ./.npm-cache firebase-tools@15.20.0 emulators:exec --only firestore \"node --test tests/firestore-rules.rules.mjs\"",
     "test:e2e": "playwright test",
     "verify": "scripts\\verify.cmd",
+    "verify:smoke": "scripts\\verify-smoke.cmd",
     "check:bundle": "node scripts/check-build-budget.mjs",
     "report:css": "node scripts/report-css-size.mjs",
     "lint": "eslint .",
