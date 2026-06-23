@@ -16,6 +16,21 @@ async function pathExists(path) {
   }
 }
 
+async function collectFiles(dir, extensions, files = []) {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const entryPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      await collectFiles(entryPath, extensions, files);
+    } else if (extensions.some((extension) => entry.name.endsWith(extension))) {
+      files.push(entryPath);
+    }
+  }
+
+  return files;
+}
+
 function collectCssImports(source) {
   return [...source.matchAll(/@import\s+["']([^"']+)["']\s*;/g)].map((match) => match[1]);
 }
@@ -133,4 +148,21 @@ test("trainer UI routes stay behind terminal route boundaries", async () => {
   assert.match(trainerUsersRoute, /buildTrainerUsersPageModel/);
   assert.match(trainerWorkoutsRoute, /TrainerAdminWorkoutsNextRoute/);
   assert.match(trainerWorkoutsRoute, /TrainerProgramManagerView/);
+});
+
+test("production components do not import feature layers back", async () => {
+  const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
+  const allowedFeatureImports = new Set([
+    path.normalize("src/components/client/ClientE2EHarness.jsx")
+  ]);
+  const violations = [];
+
+  for (const file of componentFiles) {
+    const source = await readText(file);
+    if (!source.includes("features/")) continue;
+    if (allowedFeatureImports.has(path.normalize(file))) continue;
+    violations.push(file);
+  }
+
+  assert.deepEqual(violations, []);
 });
