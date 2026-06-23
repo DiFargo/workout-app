@@ -1,4 +1,4 @@
-﻿import { useMemo, useRef, useState } from "react";
+﻿import { lazy, Suspense, useMemo, useRef, useState } from "react";
 import {
   defaultNutritionState
 } from "./data/nutritionDefaults";
@@ -130,7 +130,6 @@ import {
   getHistoryWorkoutParts
 } from "./utils/workoutHistoryPresentation";
 import { buildTrainerExerciseLibraryItems } from "./utils/trainerExerciseLibrary";
-import ClientE2EHarness from "./components/client/ClientE2EHarness";
 import { isClientE2EHarnessEnabled } from "./utils/clientHarness";
 import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
 import {
@@ -222,7 +221,6 @@ import { createWorkoutRuntimeHandlers } from "./features/client/workouts/workout
 import { createWorkoutPersistenceHandlers } from "./features/client/workouts/workoutPersistenceHandlers";
 import { useWorkoutRuntimeEffects } from "./features/client/workouts/useWorkoutRuntimeEffects";
 import { saveCompletedWorkoutToFirebase } from "./features/client/workouts/workoutFirebaseSaveHandlers";
-import TrainerE2EHarness from "./components/trainer/TrainerE2EHarness";
 import { createTrainerClientCalendarHandlers } from "./features/trainer/trainerClientCalendarHandlers";
 import { createTrainerClientHistoryHandlers } from "./features/trainer/trainerClientHistoryHandlers";
 import { createTrainerClientOverviewLoader } from "./features/trainer/trainerClientOverviewLoader";
@@ -278,6 +276,9 @@ import {
   ClientTrainingBottomBar,
 } from "./shared/ui/BottomBar";
 
+const ClientE2EHarness = lazy(() => import("./components/client/ClientE2EHarness"));
+const TrainerE2EHarness = lazy(() => import("./components/trainer/TrainerE2EHarness"));
+
 const {
   ADMIN_EMAIL,
   AI_NUTRITION_PLAN_STORAGE_KEY,
@@ -310,11 +311,19 @@ export default function App() {
   usePreventMobileZoom();
 
   if (showClientHarness) {
-    return <ClientE2EHarness />;
+    return (
+      <Suspense fallback={null}>
+        <ClientE2EHarness />
+      </Suspense>
+    );
   }
 
   if (showTrainerHarness) {
-    return <TrainerE2EHarness />;
+    return (
+      <Suspense fallback={null}>
+        <TrainerE2EHarness />
+      </Suspense>
+    );
   }
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
