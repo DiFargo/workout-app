@@ -139,6 +139,55 @@ test("source modules stay reachable from the app entrypoint", async () => {
   assert.deepEqual(unreachableFiles, []);
 });
 
+test("source module import graph stays acyclic", async () => {
+  const sourceFiles = await collectFiles("src", [".js", ".jsx"]);
+  const graph = new Map();
+
+  for (const file of sourceFiles) {
+    const source = await readText(file);
+    const imports = [];
+
+    for (const importSource of collectModuleImports(source)) {
+      const resolved = await resolveSourceImport(file, importSource);
+      if (resolved) imports.push(resolved);
+    }
+
+    graph.set(path.normalize(file), imports);
+  }
+
+  const visiting = new Set();
+  const visited = new Set();
+  const stack = [];
+  const cycles = [];
+
+  function visit(file) {
+    if (visiting.has(file)) {
+      const cycleStart = stack.indexOf(file);
+      cycles.push([...stack.slice(cycleStart), file].join(" -> "));
+      return;
+    }
+
+    if (visited.has(file)) return;
+
+    visiting.add(file);
+    stack.push(file);
+
+    for (const nextFile of graph.get(file) || []) {
+      visit(nextFile);
+    }
+
+    stack.pop();
+    visiting.delete(file);
+    visited.add(file);
+  }
+
+  for (const file of graph.keys()) {
+    visit(file);
+  }
+
+  assert.deepEqual(cycles, []);
+});
+
 test("application styles use the modular styles entrypoint", async () => {
   const main = await readText("src/main.jsx");
   const indexCss = await readText("src/styles/index.css");
