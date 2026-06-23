@@ -356,6 +356,7 @@ export default function TrainerAdminWorkoutsRoute({
       addMonthExercise={addMonthExercise}
       addMonthExerciseSet={addMonthExerciseSet}
       addMonthWeek={addMonthWeek}
+      addMonthWorkout={addMonthWorkout}
       addProgramMonth={addProgramMonth}
       adminExerciseLibrary={monthAdminExerciseLibrary}
       adminExerciseSearch={adminExerciseSearch}

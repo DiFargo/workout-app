@@ -11,6 +11,7 @@ export default function TrainerProgramManagerView({
   addMonthExercise,
   addMonthExerciseSet,
   addMonthWeek,
+  addMonthWorkout,
   addProgramMonth,
   adminExerciseLibrary,
   adminExerciseSearch,
