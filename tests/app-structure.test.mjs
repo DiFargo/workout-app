@@ -89,7 +89,8 @@ test("AppCore stays a coordinator and does not re-import nutrition internals", a
   const appCore = await readText("src/AppCore.jsx");
   const appCoreLines = appCore.split(/\r?\n/).length;
 
-  assert.match(appCore, /renderNutritionRoute/);
+  assert.match(appCore, /NutritionRoute/);
+  assert.doesNotMatch(appCore, /renderNutritionRoute/);
   assert.doesNotMatch(appCore, /renderNutritionPageFromContext/);
   assert.doesNotMatch(appCore, /NutritionPageView/);
   assert.doesNotMatch(appCore, /nutritionPageModel/);

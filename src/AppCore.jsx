@@ -244,7 +244,6 @@ import { createProfileNutritionHandlers } from "./features/client/profile/profil
 import {
   createNutritionFlowMiscHandlers
 } from "./features/client/nutrition/nutritionFlowMiscHandlers";
-import { renderNutritionRoute } from "./features/client/nutrition/renderNutritionRoute";
 import {
   getTimestampValue
 } from "./utils/auditSafety";
@@ -277,6 +276,7 @@ import {
 } from "./shared/ui/BottomBar";
 
 const ClientE2EHarness = lazy(() => import("./components/client/ClientE2EHarness"));
+const NutritionRoute = lazy(() => import("./features/client/nutrition/NutritionRoute"));
 const TrainerE2EHarness = lazy(() => import("./components/trainer/TrainerE2EHarness"));
 
 const {
@@ -2418,7 +2418,7 @@ export default function App() {
   }
 
   function renderNutritionPage() {
-    return renderNutritionRoute({
+    const nutritionRouteProps = {
       activeNutritionSearchResultLimit,
       addNutritionFoodFromPicker,
       addNutritionProductManuallyFromPhoto,
@@ -2543,7 +2543,13 @@ export default function App() {
       updateSelectedNutritionFoodField,
       updateSelectedNutritionPortionUnit,
       visibleNutritionSearchResults
-    });
+    };
+
+    return (
+      <Suspense fallback={null}>
+        <NutritionRoute {...nutritionRouteProps} />
+      </Suspense>
+    );
   }
   return renderAppTerminalRoute({
     ADMIN_CALENDAR_DAYS,
