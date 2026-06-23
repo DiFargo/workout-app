@@ -43,6 +43,7 @@ async function walkCssImports(entryPath, visiting = new Set(), visited = new Set
 
 test("AppCore stays a coordinator and does not re-import nutrition internals", async () => {
   const appCore = await readText("src/AppCore.jsx");
+  const appCoreLines = appCore.split(/\r?\n/).length;
 
   assert.match(appCore, /renderNutritionRoute/);
   assert.doesNotMatch(appCore, /renderNutritionPageFromContext/);
@@ -50,15 +51,18 @@ test("AppCore stays a coordinator and does not re-import nutrition internals", a
   assert.doesNotMatch(appCore, /nutritionPageModel/);
   assert.doesNotMatch(appCore, /NUTRITION_ICON_PRESETS/);
   assert.doesNotMatch(appCore, /nutritionMeals/);
+  assert.ok(appCoreLines <= 3200, `AppCore.jsx grew to ${appCoreLines} lines; keep it as a coordinator`);
 });
 
 test("application styles use the modular styles entrypoint", async () => {
   const main = await readText("src/main.jsx");
   const indexCss = await readText("src/styles/index.css");
+  const appSource = await readText("src/App.jsx");
 
   assert.equal(await pathExists("src/styles.css"), false);
   assert.match(main, /['"]\.\/styles\/index\.css['"]/);
   assert.doesNotMatch(main, /['"]\.\/styles\.css['"]/);
+  assert.doesNotMatch(appSource, /styles\.css/);
 
   for (const requiredImport of [
     "./tokens.css",
@@ -80,6 +84,26 @@ test("modular CSS import graph resolves without cycles", async () => {
   assert.ok(visited.has(path.normalize("src/styles/legacy-stack.css")));
   assert.ok(visited.has(path.normalize("src/components/trainer/trainer-workspace.css")));
   assert.equal(await pathExists("src/styles.css"), false);
+});
+
+test("verification scripts stay usable in the Windows workspace", async () => {
+  const packageJson = JSON.parse(await readText("package.json"));
+  const verifyScript = await readText("scripts/verify.cmd");
+
+  assert.equal(packageJson.scripts.verify, "scripts\\verify.cmd");
+  assert.match(packageJson.scripts["test:rules"], /XDG_CONFIG_HOME=\.config/);
+  assert.match(packageJson.scripts["test:rules"], /--cache \.\/\.npm-cache/);
+
+  for (const requiredCommand of [
+    "call npm.cmd run build",
+    "call npm.cmd test",
+    "call npm.cmd run lint:critical",
+    "call npm.cmd run test:rules"
+  ]) {
+    assert.match(verifyScript, new RegExp(requiredCommand.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  assert.doesNotMatch(verifyScript, /test:e2e/);
 });
 
 test("trainer UI routes stay behind terminal route boundaries", async () => {
