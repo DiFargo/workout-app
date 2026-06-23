@@ -88,155 +88,202 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
       setWorkoutModeRemember,
       startPerformanceCheck
     } = getBootstrapContext();
-    const unsubscribe = onAuthStateChanged(auth, async (u) => {
-      const startedAt = Date.now();
-      startPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
+    let disposed = false;
+    let bootstrapRunId = 0;
+    let splashTimerId = null;
+    let bootstrapFallbackTimerId = null;
 
-      resetAuthBootstrapState({
-        user: u,
-        defaultNutritionState,
-        createEmptyAiNutritionProfileDraft,
-        createEmptyTelegramProfile,
-        setFirstSetupProfileHydrated,
-        setFirstSetupCompletedInCloud,
-        setFirstSetupCompletedInSession,
-        setShowFirstSetupOnboarding,
-        setOnboardingStep,
-        setAppThemeCloudReady,
-        setAiNutritionProfile,
-        setAiNutritionProfileDraft,
-        setAiNutritionSavedPlan,
-        setTelegramProfile,
-        setTelegramDraft,
-        setTelegramStatus,
-        setTelegramConnectOpen,
-        setProfileAccount,
-        setProfileAccountDraft,
-        setProfileAccountAvatarFile,
-        setProfileAccountAvatarPreview,
-        setProfileAccountStatus,
-        setNutritionCloudReady,
-        setNutrition,
-        setRecentNutritionFoods,
-        setUser,
-        setIsLoggedIn
-      });
-
-      hydrateCachedUserState({
-        user: u,
-        AI_NUTRITION_PLAN_STORAGE_KEY,
-        AI_NUTRITION_PROFILE_STORAGE_KEY,
-        NUTRITION_STORAGE_KEY,
-        TELEGRAM_PROFILE_STORAGE_KEY,
-        WORKOUT_CALENDAR_STORAGE_KEY,
-        WORKOUT_MODE_STORAGE_KEY,
-        STORAGE_KEY,
-        defaultNutritionState,
-        createEmptyTelegramProfile,
-        getDefaultWorkoutModePreference,
-        hasRequiredAiNutritionProfileFields,
-        loadRecentNutritionFoods,
-        safeReadUserJsonStorage,
-        setAiNutritionProfile,
-        setAiNutritionProfileDraft,
-        setAiNutritionSavedPlan,
-        setNutrition,
-        setPlan,
-        setProfileWorkoutCalendarData,
-        setProfileWorkoutCalendarDraftDates,
-        setProfileWorkoutScheduledDates,
-        setRecentNutritionFoods,
-        setTelegramDraft,
-        setTelegramProfile,
-        setWorkoutModePreference,
-        setWorkoutModeRemember,
-        setProfileWorkoutCalendarEditing,
-        setProfileWorkoutCalendarStatus
-      });
-
-      if (u) {
-        const nextIsAdmin = await resolveAdminClaim({
-          user: u,
-          setIsAdminClaim
-        });
-
-        await loadRemoteUserBootstrapState({
-          user: u,
-          db,
-          isAdmin: nextIsAdmin,
-          APP_PAGES,
-          APP_THEMES,
-          AI_NUTRITION_PLAN_STORAGE_KEY,
-          AI_NUTRITION_PROFILE_STORAGE_KEY,
-          CLIENT_LAST_PAGE_STORAGE_KEY,
-          FIRST_SETUP_REQUIRED_VERSION,
-          WORKOUT_CALENDAR_STORAGE_KEY,
-          hasRequiredAiNutritionProfileFields,
-          normalizeAppPage,
-          normalizeClientPrimaryPage,
-          safeReadUserJsonStorage,
-          safeWriteUserJsonStorage,
-          setAiNutritionProfile,
-          setAiNutritionProfileDraft,
-          setAiNutritionSavedPlan,
-          setAppTheme,
-          setAppThemeCloudReady,
-          setCurrentUserRole,
-          setFirstSetupCompletedInCloud,
-          setFirstSetupProfileHydrated,
-          setPage,
-          setProfileAccount,
-          setProfileAccountDraft,
-          setProfileWorkoutCalendarData,
-          setProfileWorkoutCalendarDraftDates,
-          setProfileWorkoutScheduledDates
-        });
-
-        await loadInitialSignedInUserData({
-          user: u,
-          loadWorkoutsFromFirebase,
-          loadHistory,
-          loadNutritionFromFirebase,
-          loadProfileMeasurements,
-          loadClientProgressPhotos,
-          loadClientTrainerTasks,
-          replayFailedHistorySaves,
-          replayFailedNutritionSync,
-          replayFailedMeasurementSaves
-        });
-
-        await hydrateRemoteTelegramProfile({
-          user: u,
-          db,
-          TELEGRAM_PROFILE_STORAGE_KEY,
-          refreshTelegramAvatar,
-          safeWriteUserJsonStorage,
-          setTelegramDraft,
-          setTelegramProfile
-        });
-      } else {
-        applySignedOutBootstrapState({
-          STORAGE_KEY,
-          setClientProgressPhotos,
-          setCurrentUserRole,
-          setFirstSetupProfileHydrated,
-          setAppThemeCloudReady,
-          setNutritionCloudReady,
-          setPlan,
-          setProfileMeasurements
-        });
+    function clearBootstrapTimers() {
+      if (splashTimerId) {
+        window.clearTimeout(splashTimerId);
+        splashTimerId = null;
       }
+      if (bootstrapFallbackTimerId) {
+        window.clearTimeout(bootstrapFallbackTimerId);
+        bootstrapFallbackTimerId = null;
+      }
+    }
 
-      endPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
+    function finishBootstrapLoading({ runId, startedAt }) {
+      if (disposed || runId !== bootstrapRunId) return;
+      clearBootstrapTimers();
 
       const elapsed = Date.now() - startedAt;
       const minimumSplashTime = 900;
 
-      setTimeout(() => {
-        setAppLoading(false);
+      splashTimerId = window.setTimeout(() => {
+        if (!disposed && runId === bootstrapRunId) {
+          setAppLoading(false);
+        }
       }, Math.max(0, minimumSplashTime - elapsed));
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, async (u) => {
+      const runId = bootstrapRunId + 1;
+      bootstrapRunId = runId;
+      clearBootstrapTimers();
+      const startedAt = Date.now();
+      startPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
+      setAppLoading(true);
+
+      bootstrapFallbackTimerId = window.setTimeout(() => {
+        if (!disposed && runId === bootstrapRunId) {
+          console.warn("Auth bootstrap timeout: forcing loading screen to close");
+          setFirstSetupProfileHydrated(true);
+          setAppThemeCloudReady(true);
+          setAppLoading(false);
+        }
+      }, 15000);
+
+      try {
+        resetAuthBootstrapState({
+          user: u,
+          defaultNutritionState,
+          createEmptyAiNutritionProfileDraft,
+          createEmptyTelegramProfile,
+          setFirstSetupProfileHydrated,
+          setFirstSetupCompletedInCloud,
+          setFirstSetupCompletedInSession,
+          setShowFirstSetupOnboarding,
+          setOnboardingStep,
+          setAppThemeCloudReady,
+          setAiNutritionProfile,
+          setAiNutritionProfileDraft,
+          setAiNutritionSavedPlan,
+          setTelegramProfile,
+          setTelegramDraft,
+          setTelegramStatus,
+          setTelegramConnectOpen,
+          setProfileAccount,
+          setProfileAccountDraft,
+          setProfileAccountAvatarFile,
+          setProfileAccountAvatarPreview,
+          setProfileAccountStatus,
+          setNutritionCloudReady,
+          setNutrition,
+          setRecentNutritionFoods,
+          setUser,
+          setIsLoggedIn
+        });
+
+        hydrateCachedUserState({
+          user: u,
+          AI_NUTRITION_PLAN_STORAGE_KEY,
+          AI_NUTRITION_PROFILE_STORAGE_KEY,
+          NUTRITION_STORAGE_KEY,
+          TELEGRAM_PROFILE_STORAGE_KEY,
+          WORKOUT_CALENDAR_STORAGE_KEY,
+          WORKOUT_MODE_STORAGE_KEY,
+          STORAGE_KEY,
+          defaultNutritionState,
+          createEmptyTelegramProfile,
+          getDefaultWorkoutModePreference,
+          hasRequiredAiNutritionProfileFields,
+          loadRecentNutritionFoods,
+          safeReadUserJsonStorage,
+          setAiNutritionProfile,
+          setAiNutritionProfileDraft,
+          setAiNutritionSavedPlan,
+          setNutrition,
+          setPlan,
+          setProfileWorkoutCalendarData,
+          setProfileWorkoutCalendarDraftDates,
+          setProfileWorkoutScheduledDates,
+          setRecentNutritionFoods,
+          setTelegramDraft,
+          setTelegramProfile,
+          setWorkoutModePreference,
+          setWorkoutModeRemember,
+          setProfileWorkoutCalendarEditing,
+          setProfileWorkoutCalendarStatus
+        });
+
+        if (u) {
+          const nextIsAdmin = await resolveAdminClaim({
+            user: u,
+            setIsAdminClaim
+          });
+
+          await loadRemoteUserBootstrapState({
+            user: u,
+            db,
+            isAdmin: nextIsAdmin,
+            APP_PAGES,
+            APP_THEMES,
+            AI_NUTRITION_PLAN_STORAGE_KEY,
+            AI_NUTRITION_PROFILE_STORAGE_KEY,
+            CLIENT_LAST_PAGE_STORAGE_KEY,
+            FIRST_SETUP_REQUIRED_VERSION,
+            WORKOUT_CALENDAR_STORAGE_KEY,
+            hasRequiredAiNutritionProfileFields,
+            normalizeAppPage,
+            normalizeClientPrimaryPage,
+            safeReadUserJsonStorage,
+            safeWriteUserJsonStorage,
+            setAiNutritionProfile,
+            setAiNutritionProfileDraft,
+            setAiNutritionSavedPlan,
+            setAppTheme,
+            setAppThemeCloudReady,
+            setCurrentUserRole,
+            setFirstSetupCompletedInCloud,
+            setFirstSetupProfileHydrated,
+            setPage,
+            setProfileAccount,
+            setProfileAccountDraft,
+            setProfileWorkoutCalendarData,
+            setProfileWorkoutCalendarDraftDates,
+            setProfileWorkoutScheduledDates
+          });
+
+          await loadInitialSignedInUserData({
+            user: u,
+            loadWorkoutsFromFirebase,
+            loadHistory,
+            loadNutritionFromFirebase,
+            loadProfileMeasurements,
+            loadClientProgressPhotos,
+            loadClientTrainerTasks,
+            replayFailedHistorySaves,
+            replayFailedNutritionSync,
+            replayFailedMeasurementSaves
+          });
+
+          await hydrateRemoteTelegramProfile({
+            user: u,
+            db,
+            TELEGRAM_PROFILE_STORAGE_KEY,
+            refreshTelegramAvatar,
+            safeWriteUserJsonStorage,
+            setTelegramDraft,
+            setTelegramProfile
+          });
+        } else {
+          applySignedOutBootstrapState({
+            STORAGE_KEY,
+            setClientProgressPhotos,
+            setCurrentUserRole,
+            setFirstSetupProfileHydrated,
+            setAppThemeCloudReady,
+            setNutritionCloudReady,
+            setPlan,
+            setProfileMeasurements
+          });
+        }
+      } catch (error) {
+        console.error("Auth bootstrap error", error);
+        setFirstSetupProfileHydrated(true);
+        setAppThemeCloudReady(true);
+      } finally {
+        endPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
+        finishBootstrapLoading({ runId, startedAt });
+      }
     });
 
-    return () => unsubscribe();
+    return () => {
+      disposed = true;
+      clearBootstrapTimers();
+      unsubscribe();
+    };
   }, []);
 }

@@ -271,6 +271,15 @@ test("verification scripts stay usable in the Windows workspace", async () => {
   assert.doesNotMatch(verifyScript, /test:e2e/);
 });
 
+test("auth bootstrap cannot leave the splash screen blocked forever", async () => {
+  const source = await readText("src/app/useAuthBootstrapEffect.js");
+
+  assert.match(source, /bootstrapFallbackTimerId\s*=\s*window\.setTimeout/);
+  assert.match(source, /Auth bootstrap timeout: forcing loading screen to close/);
+  assert.match(source, /setFirstSetupProfileHydrated\(true\);[\s\S]*setAppLoading\(false\);/);
+  assert.match(source, /catch \(error\)[\s\S]*setFirstSetupProfileHydrated\(true\);[\s\S]*finally/);
+});
+
 test("trainer UI routes stay behind terminal route boundaries", async () => {
   const appCore = await readText("src/AppCore.jsx");
   const terminalRoutes = await readText("src/app/appTerminalRoutes.jsx");
