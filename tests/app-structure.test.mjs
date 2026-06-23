@@ -124,11 +124,17 @@ test("application styles use the modular styles entrypoint", async () => {
 
 test("modular CSS import graph resolves without cycles", async () => {
   const visited = await walkCssImports("src/styles/index.css");
+  const allCssFiles = [
+    ...(await collectFiles("src/styles", [".css"])),
+    ...(await collectFiles("src/components", [".css"]))
+  ].map((file) => path.normalize(file)).sort();
+  const reachableCssFiles = [...visited].sort();
 
   assert.ok(visited.has(path.normalize("src/styles/index.css")));
   assert.ok(visited.has(path.normalize("src/styles/legacy-stack.css")));
   assert.ok(visited.has(path.normalize("src/components/trainer/trainer-workspace.css")));
   assert.equal(await pathExists("src/styles.css"), false);
+  assert.deepEqual(reachableCssFiles, allCssFiles);
 });
 
 test("verification scripts stay usable in the Windows workspace", async () => {
