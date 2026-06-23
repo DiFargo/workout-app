@@ -45,7 +45,7 @@ import { useProfileTelegramEffects } from "./features/client/profile/useProfileT
 import { useProfileUiEffects } from "./features/client/profile/useProfileUiEffects";
 import { showAppConfirm, showAppError } from "./utils/appFeedback";
 import { createPerformanceCheckHandlers } from "./utils/performanceChecks";
-import { usePreventMobileZoom } from "./hooks/usePreventMobileZoom";
+import { usePreventMobileZoom } from "./shared/hooks/usePreventMobileZoom";
 import {
   getFoodIcon
 } from "./utils/nutritionFoodPresentation";
@@ -203,7 +203,7 @@ import {
 import {
   normalizeClientPrimaryPage
 } from "./utils/clientUx";
-import { useModalFocusTrap } from "./hooks/useModalFocusTrap";
+import { useModalFocusTrap } from "./shared/hooks/useModalFocusTrap";
 import { createAuthHandlers } from "./features/auth/authHandlers";
 import { createFirstSetupHandlers } from "./features/auth/firstSetupHandlers";
 import {

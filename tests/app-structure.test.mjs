@@ -188,6 +188,14 @@ test("source module import graph stays acyclic", async () => {
   assert.deepEqual(cycles, []);
 });
 
+test("shared React hooks stay in the shared hooks layer", async () => {
+  const legacyHookFiles = await pathExists("src/hooks")
+    ? await collectFiles("src/hooks", [".js", ".jsx"])
+    : [];
+
+  assert.deepEqual(legacyHookFiles, []);
+});
+
 test("application styles use the modular styles entrypoint", async () => {
   const main = await readText("src/main.jsx");
   const indexCss = await readText("src/styles/index.css");
