@@ -1,8 +1,14 @@
+import { lazy, Suspense } from "react";
 import ProfileDashboardRoute from "../features/client/profile/ProfileDashboardRoute";
-import WorkoutRunRoute from "../features/client/workouts/WorkoutRunRoute";
-import TrainerAdminWorkoutsRoute from "../features/trainer/TrainerAdminWorkoutsRoute";
-import TrainerDashboardRoute from "../features/trainer/TrainerDashboardRoute";
-import TrainerUsersRoute from "../features/trainer/TrainerUsersRoute";
+
+const TrainerAdminWorkoutsRoute = lazy(() => import("../features/trainer/TrainerAdminWorkoutsRoute"));
+const TrainerDashboardRoute = lazy(() => import("../features/trainer/TrainerDashboardRoute"));
+const TrainerUsersRoute = lazy(() => import("../features/trainer/TrainerUsersRoute"));
+const WorkoutRunRoute = lazy(() => import("../features/client/workouts/WorkoutRunRoute"));
+
+function renderLazyTerminalRoute(route) {
+  return <Suspense fallback={null}>{route}</Suspense>;
+}
 
 export function renderAppTerminalRoute(ctx) {
   const { APP_PAGES, page } = ctx;
@@ -18,18 +24,18 @@ export function renderAppTerminalRoute(ctx) {
   }
 
   if (page === APP_PAGES.ADMIN) {
-    return <TrainerDashboardRoute {...ctx} />;
+    return renderLazyTerminalRoute(<TrainerDashboardRoute {...ctx} />);
   }
 
   if (page === APP_PAGES.ADMIN_USERS) {
-    return <TrainerUsersRoute {...ctx} />;
+    return renderLazyTerminalRoute(<TrainerUsersRoute {...ctx} />);
   }
 
   if (page === APP_PAGES.ADMIN_WORKOUTS) {
-    return <TrainerAdminWorkoutsRoute {...ctx} />;
+    return renderLazyTerminalRoute(<TrainerAdminWorkoutsRoute {...ctx} />);
   }
 
-  return (
+  return renderLazyTerminalRoute(
     <WorkoutRunRoute
       {...ctx}
       setProfileDraft={ctx.setAiNutritionProfileDraft}
