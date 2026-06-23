@@ -5,6 +5,11 @@ import { APP_VERSION } from "../../constants/appConfig";
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
+import {
+  buildNutritionCalendarDays,
+  formatNutritionCalendarMonthLabel,
+  shiftNutritionCalendarMonthKey
+} from "../../utils/nutritionCalendar";
 
 const HARNESS_DATE = "2026-06-22";
 
@@ -96,6 +101,7 @@ export default function ClientE2EHarness() {
   const [nutrition] = useState(buildHarnessNutrition);
   const [nutritionPickerOpen, setNutritionPickerOpen] = useState(false);
   const [nutritionCalendarOpen, setNutritionCalendarOpen] = useState(false);
+  const [nutritionCalendarMonthKey, setNutritionCalendarMonthKey] = useState(HARNESS_DATE.slice(0, 7));
   const [expandedNutritionMeals, setExpandedNutritionMeals] = useState({});
   const [nutritionZoukExpanded, setNutritionZoukExpanded] = useState(false);
   const [isAiNutritionPlanExpanded, setIsAiNutritionPlanExpanded] = useState(false);
@@ -109,6 +115,13 @@ export default function ClientE2EHarness() {
   const nutritionToday = nutrition.days[nutritionDateKey] || { foods: [] };
   const nutritionTotals = getHarnessNutritionTotals(nutritionToday);
   const nutritionWeekDates = getHarnessWeekDates(nutritionDateKey);
+  const nutritionCalendarDays = buildNutritionCalendarDays({
+    monthKey: nutritionCalendarMonthKey,
+    selectedDateKey: nutritionDateKey,
+    nutrition,
+    todayKey: HARNESS_DATE
+  });
+  const nutritionCalendarMonthLabel = formatNutritionCalendarMonthLabel(nutritionCalendarMonthKey);
 
   function renderBottomBar(firstArg, secondArg = {}) {
     const props = typeof firstArg === "object"
@@ -226,8 +239,8 @@ export default function ClientE2EHarness() {
           nutritionAmount: "100",
           nutritionAmountError: "",
           nutritionAmountMode: "grams",
-          nutritionCalendarDays: [],
-          nutritionCalendarMonthLabel: "Июнь 2026",
+          nutritionCalendarDays,
+          nutritionCalendarMonthLabel,
           nutritionCalendarOpen,
           nutritionCreateChoiceOpen: false,
           nutritionCurrentStreak: 4,
@@ -305,7 +318,9 @@ export default function ClientE2EHarness() {
           setPendingDishIngredientGrams: () => {},
           setSelectedNutritionFood: () => {},
           setShowRecentNutritionFoods: () => {},
-          shiftNutritionCalendarMonth: () => {},
+          shiftNutritionCalendarMonth: (offset) => {
+            setNutritionCalendarMonthKey((currentMonthKey) => shiftNutritionCalendarMonthKey(currentMonthKey, offset));
+          },
           showRecentNutritionFoods: false,
           todayNutritionKey,
           updateSelectedDishTotalWeight: () => {},

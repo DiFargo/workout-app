@@ -65,6 +65,7 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
 
   await page.locator(".nutritionHeaderIconButton").nth(1).click();
   await expect(page.locator(".nutritionCalendarOverlay")).toBeVisible();
+  await expect(page.locator(".nutritionCalendarDay")).toHaveCount(42);
   await page.locator(".nutritionCalendarClose").click();
   await expect(page.locator(".nutritionCalendarOverlay")).toBeHidden();
 
