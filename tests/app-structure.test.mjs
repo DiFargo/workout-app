@@ -247,6 +247,7 @@ test("verification scripts stay usable in the Windows workspace", async () => {
 
   for (const requiredCommand of [
     "call npm.cmd run build",
+    "call npm.cmd run check:bundle",
     "call npm.cmd test",
     "call npm.cmd run lint:critical"
   ]) {
