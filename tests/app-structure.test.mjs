@@ -69,6 +69,23 @@ test("AppCore stays a coordinator and does not re-import nutrition internals", a
   assert.ok(appCoreLines <= 3200, `AppCore.jsx grew to ${appCoreLines} lines; keep it as a coordinator`);
 });
 
+test("app entrypoints stay thin", async () => {
+  const appSource = await readText("src/App.jsx");
+  const mainSource = await readText("src/main.jsx");
+
+  assert.match(appSource, /import AppCore from ["']\.\/AppCore["']/);
+  assert.match(appSource, /import AppErrorBoundary from ["']\.\/components\/common\/AppErrorBoundary["']/);
+  assert.match(appSource, /<AppErrorBoundary>/);
+  assert.match(appSource, /<AppCore \/>/);
+  assert.ok(appSource.split(/\r?\n/).length <= 16, "App.jsx should remain a thin AppCore wrapper");
+
+  assert.match(mainSource, /createRoot\(document\.getElementById\(['"]root['"]\)\)\.render/);
+  assert.match(mainSource, /['"]\.\/styles\/index\.css['"]/);
+  assert.match(mainSource, /navigator\.serviceWorker\.register\(["']\/sw\.js["']\)/);
+  assert.doesNotMatch(mainSource, /AppCore/);
+  assert.ok(mainSource.split(/\r?\n/).length <= 16, "main.jsx should remain a thin app entrypoint");
+});
+
 test("application styles use the modular styles entrypoint", async () => {
   const main = await readText("src/main.jsx");
   const indexCss = await readText("src/styles/index.css");
