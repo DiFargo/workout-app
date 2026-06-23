@@ -1,12 +1,18 @@
+import { lazy, Suspense } from "react";
 import { APP_PAGES } from "./appPages";
-import WorkoutModePage from "../features/client/workouts/WorkoutModePage";
-import WorkoutListPage from "../features/client/workouts/WorkoutListPage";
-import BasicWorkoutQuizPage from "../features/client/workouts/BasicWorkoutQuizPage";
-import MeasurementWizardPage from "../features/client/measurements/MeasurementWizardPage";
-import WorkoutHistoryPage from "../features/client/workouts/WorkoutHistoryPage";
-import WorkoutPlanPage from "../features/client/workouts/WorkoutPlanPage";
-import AiCoachPage from "../features/client/ai/AiCoachPage";
-import AdminPanelHub from "../components/admin/AdminPanelHub";
+
+const AdminPanelHub = lazy(() => import("../components/admin/AdminPanelHub"));
+const AiCoachPage = lazy(() => import("../features/client/ai/AiCoachPage"));
+const BasicWorkoutQuizPage = lazy(() => import("../features/client/workouts/BasicWorkoutQuizPage"));
+const MeasurementWizardPage = lazy(() => import("../features/client/measurements/MeasurementWizardPage"));
+const WorkoutHistoryPage = lazy(() => import("../features/client/workouts/WorkoutHistoryPage"));
+const WorkoutListPage = lazy(() => import("../features/client/workouts/WorkoutListPage"));
+const WorkoutModePage = lazy(() => import("../features/client/workouts/WorkoutModePage"));
+const WorkoutPlanPage = lazy(() => import("../features/client/workouts/WorkoutPlanPage"));
+
+function renderLazyRoute(route) {
+  return <Suspense fallback={null}>{route}</Suspense>;
+}
 
 export default function AppRouter({
   page,
@@ -76,7 +82,7 @@ export default function AppRouter({
   isWorkoutCompletedByHistory
 }) {
   if (page === APP_PAGES.ADMIN_PANEL) {
-    return (
+    return renderLazyRoute(
       <AdminPanelHub
         canUseAdminFeatures={canUseAdminFeatures}
         setPage={onSetPage}
@@ -90,11 +96,11 @@ export default function AppRouter({
   }
 
   if (page === APP_PAGES.WORKOUTS) {
-    return <WorkoutListPage {...workoutListProps} />;
+    return renderLazyRoute(<WorkoutListPage {...workoutListProps} />);
   }
 
   if (page === APP_PAGES.WORKOUT_MODE) {
-    return (
+    return renderLazyRoute(
       <WorkoutModePage
         appVersion={appVersion}
         renderClientMainBottomBar={renderClientMainBottomBar}
@@ -115,7 +121,7 @@ export default function AppRouter({
   }
 
   if (page === APP_PAGES.BASIC_WORKOUT_QUIZ) {
-    return (
+    return renderLazyRoute(
       <BasicWorkoutQuizPage
         appVersion={appVersion}
         renderClientMainBottomBar={renderClientMainBottomBar}
@@ -136,7 +142,7 @@ export default function AppRouter({
   }
 
   if (page === APP_PAGES.HISTORY) {
-    return (
+    return renderLazyRoute(
       <WorkoutHistoryPage
         canUseTrainerFeatures={canUseTrainerFeatures}
         renderClientMainBottomBar={renderClientMainBottomBar}
@@ -164,7 +170,7 @@ export default function AppRouter({
   }
 
   if (page === APP_PAGES.AI_COACH) {
-    return (
+    return renderLazyRoute(
       <AiCoachPage
         onGoBack={onBackToMain}
         onOpenProfile={() => onSetPage(APP_PAGES.PROFILE)}
@@ -187,7 +193,7 @@ export default function AppRouter({
   }
 
   if (page === APP_PAGES.WORKOUT_PLAN) {
-    return (
+    return renderLazyRoute(
       <WorkoutPlanPage
         plan={plan}
         history={history}
@@ -204,7 +210,7 @@ export default function AppRouter({
   }
 
   if (page === APP_PAGES.MEASUREMENT_WIZARD) {
-    return (
+    return renderLazyRoute(
       <MeasurementWizardPage
         renderClientMainBottomBar={renderClientMainBottomBar}
         aiNutritionProfile={aiNutritionProfile}
