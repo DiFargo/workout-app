@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.306`.
+Last updated at app version `v.1.307`.
 
 ## Evidence
 
@@ -122,6 +122,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 37. Nutrition flow CSS now loads from the nutrition lazy stack instead of the core app stylesheet.
 38. Nutrition orbit CSS now loads from the nutrition lazy stack instead of the core app stylesheet.
 39. Nutrition week strip now uses unambiguous two-letter weekday labels and keeps marker sizes guarded in the visual audit.
+40. Nutrition warm-light add-food/search cleanup CSS now loads from the nutrition lazy stack instead of the core app stylesheet.
 
 ## P1: Next Product Fixes
 
@@ -145,6 +146,7 @@ Started in `v.1.250`.
    - Status: broad nutrition flow CSS moved behind the nutrition lazy entrypoint after food search, create, photo fallback and custom dish screenshots were added.
    - Status: nutrition orbit CSS moved behind the nutrition lazy entrypoint after the nutrition visual audit guarded the main orbit screen.
    - Status: nutrition weekday labels now use `Пн`, `Вт`, `Ср`, `Чт`, `Пт`, `Сб`, `Вс` with marker-size guards in the visual audit.
+   - Status: warm-light add-food/search cleanup CSS moved behind the nutrition lazy entrypoint under the existing nutrition visual audit.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
    - Status: core legacy stack cleanup continued by removing import-only aggregators after client primary/nutrition/workout visual guards passed.
    - Status: light, nutrition and admin stack aggregators were also removed after client primary/nutrition, trainer and admin visual guards passed.
