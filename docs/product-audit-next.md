@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.277`.
+Last updated at app version `v.1.278`.
 
 ## Evidence
 
@@ -8,7 +8,8 @@ Last updated at app version `v.1.277`.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd test`: passed with `212` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `19` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed with `21` passed and `1` skipped.
+- `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
 - `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/trainer-visual.spec.js`: passed with `2` passed.
@@ -23,6 +24,11 @@ Last updated at app version `v.1.277`.
   - trainer programs.
 
 No horizontal overflow was detected in the harness audit for the checked screens.
+
+The client primary visual audit now attaches screenshots for:
+
+- client main dashboard;
+- client cabinet.
 
 The nutrition visual audit now attaches screenshots for:
 
@@ -60,6 +66,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 5. Trainer workspace has a screenshot-based visual audit for dashboard, clients, messages and programs.
 6. Trainer compact action buttons, message filters and mobile route header buttons keep stable 40px tap targets.
 7. Client workout plan cards and workout modals have screenshot coverage and stable 40px tap targets for compact controls.
+8. Client main dashboard and cabinet have screenshot coverage with bottom navigation and card spacing checks.
 
 ## P1: Next Product Fixes
 
@@ -81,7 +88,7 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client nutrition, client workouts and trainer workspace screenshot artifacts are covered.
+   - Status: client main, client cabinet, client nutrition, client workouts and trainer workspace screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
