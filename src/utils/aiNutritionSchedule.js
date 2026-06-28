@@ -24,7 +24,8 @@ export function getAiNutritionWeekForDate(plan, date = new Date()) {
 }
 
 export function getTodayAiNutritionWeekDayId(date = new Date()) {
-  const jsDay = date.getDay();
+  const normalizedDate = date instanceof Date ? date : new Date(date);
+  const jsDay = Number.isNaN(normalizedDate.getTime()) ? new Date().getDay() : normalizedDate.getDay();
   return AI_NUTRITION_WEEK_DAYS[jsDay === 0 ? 6 : jsDay - 1]?.id || "mon";
 }
 

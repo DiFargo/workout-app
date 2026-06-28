@@ -5,6 +5,7 @@ import { APP_VERSION } from "../../constants/appConfig";
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
+import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
 import ProfileWorkoutHistoryModal from "../../features/client/profile/ProfileWorkoutHistoryModal";
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
 import {
@@ -107,6 +108,23 @@ const harnessLatestMeasurement = {
   belly: 91,
   thigh: 61
 };
+
+const harnessNutritionGoals = {
+  calories: 2409,
+  protein: 172,
+  fat: 62,
+  carbs: 291
+};
+
+const harnessProfileNutritionWeekDays = [
+  { key: "2026-06-22", date: "2026-06-22", dayNumber: 22, calories: 1650, protein: 132, hasFood: true, isSelected: true, isToday: true },
+  { key: "2026-06-23", date: "2026-06-23", dayNumber: 23, calories: 0, protein: 0, hasFood: false },
+  { key: "2026-06-24", date: "2026-06-24", dayNumber: 24, calories: 2480, protein: 158, hasFood: true, isOverGoal: true },
+  { key: "2026-06-25", date: "2026-06-25", dayNumber: 25, calories: 0, protein: 0, hasFood: false },
+  { key: "2026-06-26", date: "2026-06-26", dayNumber: 26, calories: 2120, protein: 170, hasFood: true },
+  { key: "2026-06-27", date: "2026-06-27", dayNumber: 27, calories: 0, protein: 0, hasFood: false },
+  { key: "2026-06-28", date: "2026-06-28", dayNumber: 28, calories: 0, protein: 0, hasFood: false }
+];
 
 function buildHarnessNutrition() {
   return {
@@ -218,6 +236,10 @@ export default function ClientE2EHarness() {
   const [cabinetMeasurementsOpen, setCabinetMeasurementsOpen] = useState(
     () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "measurements"
   );
+  const [cabinetNutritionOpen, setCabinetNutritionOpen] = useState(
+    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "nutrition"
+  );
+  const [cabinetNutritionGoal, setCabinetNutritionGoal] = useState("recomp");
   const nutritionPhotoInputRef = useRef(null);
   const nutritionFoodSwipeMoved = useRef(false);
   const cabinetWorkoutHistoryItemRefs = useRef(new Map());
@@ -528,6 +550,24 @@ export default function ClientE2EHarness() {
           getMeasurementValue={(measurement, field) => `${measurement[field.id]} ${field.unit}`}
           onClose={() => setCabinetMeasurementsOpen(false)}
           onStart={() => {}}
+        />
+        <ProfileNutritionModal
+          open={cabinetNutritionOpen}
+          profileDraft={{ goal: cabinetNutritionGoal }}
+          activeProfile={{ goal: "recomp" }}
+          draftMacros={harnessNutritionGoals}
+          nutritionGoals={harnessNutritionGoals}
+          saveStatus=""
+          weekLabel="22-28 июня"
+          weekDays={harnessProfileNutritionWeekDays}
+          aiPlan={null}
+          aiWeek={harnessNutritionGoals}
+          aiActiveProfile={{ goal: cabinetNutritionGoal }}
+          selectedTotals={{ calories: 1650, protein: 132, fat: 48, carbs: 154 }}
+          onClose={() => setCabinetNutritionOpen(false)}
+          onGoalChange={setCabinetNutritionGoal}
+          onSave={() => {}}
+          onShiftWeek={() => {}}
         />
       </>
     ));

@@ -121,5 +121,19 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.locator(".cabinetMeasurementModalHead button").click();
   await expect(page.locator(".cabinetMeasurementModal")).toBeHidden();
 
+  await page.goto("/?clientHarness=1&clientCabinetModal=nutrition");
+  await page.getByTestId("client-nav-cabinet").click();
+  await expect(page.locator(".cabinetNutritionModal")).toBeVisible();
+  await expectTapTargets(page, [
+    ".cabinetNutritionModalHead button",
+    ".profileGoalPicker button",
+    ".profileDashboardButton",
+    ".profileNutritionCalendarMonthTitle button"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-cabinet-nutrition-modal.png");
+  await page.locator(".cabinetNutritionModalHead button").click();
+  await expect(page.locator(".cabinetNutritionModal")).toBeHidden();
+
   assertNoRuntimeErrors();
 });

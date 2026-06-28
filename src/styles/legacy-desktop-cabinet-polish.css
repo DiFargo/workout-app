@@ -3273,6 +3273,7 @@ html:root[data-app-theme="warm-light"] body #root
 
 .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionCalendarMonthTitle {
   min-height: 32px !important;
+  grid-template-columns: 44px minmax(0, 1fr) 44px !important;
   margin: 0 0 6px !important;
 }
 
@@ -3281,9 +3282,9 @@ html:root[data-app-theme="warm-light"] body #root
 }
 
 .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionCalendarMonthTitle button {
-  width: 30px !important;
-  height: 30px !important;
-  min-height: 30px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
 }
 
 .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthGrid {
@@ -3358,7 +3359,7 @@ html:root[data-app-theme="warm-light"] body #root
 }
 
 .cabinetNutritionModal .cabinetNutritionCombined .profileGoalPicker button {
-  min-height: 38px !important;
+  min-height: 44px !important;
 }
 
 .cabinetNutritionModal .cabinetNutritionCombined .profileGoalModeHint {
