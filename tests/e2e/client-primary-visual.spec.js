@@ -199,6 +199,9 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=telegram");
   await clickClientCabinetNav(page);
   await expect(page.locator(".profileTelegramManageModal")).toBeVisible();
+  await expect(page.locator(".profileTelegramManageModal")).toHaveAttribute("role", "dialog");
+  await expect(page.locator(".profileTelegramManageModal")).toHaveAttribute("aria-modal", "true");
+  await expect(page.locator(".profileTelegramModalClose")).toHaveAttribute("aria-label", "Закрыть Telegram");
   await expectTapTargets(page, [
     ".profileTelegramModalClose",
     ".profileTelegramManageActions button",

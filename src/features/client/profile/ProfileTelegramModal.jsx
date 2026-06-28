@@ -17,8 +17,18 @@ export default function ProfileTelegramModal({
 
   return (
     <div className="profileTelegramModalOverlay">
-      <div className="profileTelegramModal profileTelegramManageModal">
-        <button type="button" className="profileTelegramModalClose" onClick={onClose}>×</button>
+      <div
+        className="profileTelegramModal profileTelegramManageModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="profileTelegramManageTitle"
+      >
+        <button
+          type="button"
+          className="profileTelegramModalClose"
+          aria-label="Закрыть Telegram"
+          onClick={onClose}
+        >×</button>
 
         <div className="profileTelegramManageHead">
           <div className="profileTelegramManageAvatar">
@@ -26,7 +36,7 @@ export default function ProfileTelegramModal({
           </div>
           <div>
             <span>TELEGRAM</span>
-            <h3>{telegramProfile.connected ? "Telegram подключён" : "Привязать Telegram"}</h3>
+            <h3 id="profileTelegramManageTitle">{telegramProfile.connected ? "Telegram подключён" : "Привязать Telegram"}</h3>
             <p>
               {telegramProfile.connected
                 ? `${telegramProfile.displayName || `@${telegramProfile.username || "telegram"}`} ${telegramProfile.username ? `· @${telegramProfile.username}` : ""}`

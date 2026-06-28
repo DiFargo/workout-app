@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.321`.
+Last updated at app version `v.1.322`.
 
 ## Evidence
 
@@ -10,6 +10,7 @@ Last updated at app version `v.1.321`.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `35` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
+- `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`: passed.
 - `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `4` passed.
 - `npx.cmd playwright test tests/e2e/client-ai-coach-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js`: passed with `2` passed.
@@ -149,6 +150,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 53. Nutrition food icon editor and training-day calorie highlight CSS now load through `nutrition-food-icon-lazy.css` in the nutrition lazy stack.
 54. The former mixed AI/nutrition/workout stylesheet was retired; its remaining core profile/first-setup rules now live in `legacy-profile-first-setup-core.css`.
 55. Nutrition week day buttons now expose full-date accessible labels and selected state, guarded by the nutrition visual audit.
+56. Cabinet Telegram management modal now exposes dialog semantics and an accessible close control, guarded by the primary visual audit.
 
 ## P1: Next Product Fixes
 
