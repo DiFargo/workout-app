@@ -164,6 +164,7 @@ test("trainer programs page keeps editor, preview and library usable", async ({ 
   await expect(page.locator(".trainerNextMain h1")).toHaveCount(1);
   await expect(page.locator(".trainerNextWorkoutLayout")).toBeVisible();
   await expect(page.locator(".trainerNextWorkoutDays .trainerNextWorkoutDayItem")).toHaveCount(2);
+  await expect(page.locator(".trainerNextWorkoutDaySelect[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".trainerNextExerciseList article")).toHaveCount(2);
   await expect(page.locator(".trainerNextExerciseName").first()).toBeVisible();
   await page.locator(".trainerNextExerciseName").first().click();

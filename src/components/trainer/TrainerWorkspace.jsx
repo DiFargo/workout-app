@@ -3573,7 +3573,7 @@ function TrainerWorkoutEditor({
               const statusClass = visualStatus;
               return (
                 <div className={`trainerNextWorkoutDayItem ${statusClass}${isActive ? " active" : ""}`} key={workout.id || index}>
-                  <button type="button" className="trainerNextWorkoutDaySelect" onClick={() => setSelectedWorkoutId(workout.id)}>
+                  <button type="button" className="trainerNextWorkoutDaySelect" aria-pressed={isActive} onClick={() => setSelectedWorkoutId(workout.id)}>
                     <strong>
                       День {index + 1}
                       {visualStatus === "completed" ? <span className="trainerWorkoutDayDoneMark" aria-label="Выполнена">✓</span> : null}
