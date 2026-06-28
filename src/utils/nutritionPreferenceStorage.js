@@ -8,7 +8,7 @@ export function loadRecentNutritionFoods(uid = auth.currentUser?.uid) {
     if (!uid) return [];
     const raw = localStorage.getItem(getUserScopedStorageKey(RECENT_NUTRITION_SEARCHES_KEY, uid));
     const value = JSON.parse(raw || "[]");
-    return Array.isArray(value) ? value.slice(0, 8) : [];
+    return Array.isArray(value) ? value.slice(0, 9) : [];
   } catch (_) {
     return [];
   }
@@ -19,7 +19,7 @@ export function saveRecentNutritionFoods(foods = [], uid = auth.currentUser?.uid
     if (!uid) return;
     localStorage.setItem(
       getUserScopedStorageKey(RECENT_NUTRITION_SEARCHES_KEY, uid),
-      JSON.stringify((Array.isArray(foods) ? foods : []).slice(0, 8))
+      JSON.stringify((Array.isArray(foods) ? foods : []).slice(0, 9))
     );
   } catch (_) {
     // ignore localStorage errors
@@ -33,7 +33,7 @@ export function saveRecentNutritionFood(food, uid = auth.currentUser?.uid) {
   const next = [
     food,
     ...current.filter((item) => item?.name !== food.name)
-  ].slice(0, 8);
+  ].slice(0, 9);
 
   saveRecentNutritionFoods(next, uid);
 }

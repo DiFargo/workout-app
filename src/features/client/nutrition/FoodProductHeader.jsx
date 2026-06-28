@@ -17,7 +17,7 @@ export default function FoodProductHeader({
         <div className="foodProductFlowHeader">
           <div className="foodProductFlowTitle">
             <span>Питание</span>
-            <h2>{isEditing ? "Продукт" : "Добавить продукт"}</h2>
+            <h2>Продукт</h2>
           </div>
 
           <div className="foodEditInlineMealHeader">

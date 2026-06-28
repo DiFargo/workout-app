@@ -173,6 +173,18 @@ export function getNutritionSmartUnitId(food = {}, amount = 100, mode = "grams")
   ));
 
   if (matched) return matched.id;
+
+  if (mode === "portion") {
+    const portionAmount = parseNutritionNumber(food?.portionAmount, 0);
+    const portionMatched = units.find((unit) => (
+      unit.mode === "portion" &&
+      portionAmount > 0 &&
+      Math.abs((Number(unit.portionAmount || unit.amount) || 0) - portionAmount) < 0.01
+    ));
+
+    if (portionMatched) return portionMatched.id;
+  }
+
   return mode === "portion" ? "custom-portion" : "grams";
 }
 

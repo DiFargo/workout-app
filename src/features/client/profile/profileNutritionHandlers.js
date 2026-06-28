@@ -20,6 +20,7 @@ export function saveAiBodyMetricsWithDeps({
     ...(aiNutritionProfile || {}),
     ...aiNutritionProfileDraft,
     weight: String(aiNutritionProfileDraft.weight || "").trim(),
+    targetWeight: String(aiNutritionProfileDraft.targetWeight || "").trim(),
     height: String(aiNutritionProfileDraft.height || "").trim(),
     age: String(aiNutritionProfileDraft.age || "").trim(),
     sex: aiNutritionProfileDraft.sex || "male",

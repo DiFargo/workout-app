@@ -21,6 +21,7 @@ export default function FoodPortionSelector({
         onClick={onUseGrams}
       >
         <span className="weightModeIcon">⚖</span>
+        <strong>Вес</strong>
       </button>
 
       <div className="foodEditPortionDropdown">

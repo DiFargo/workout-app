@@ -47,6 +47,13 @@
         }
       },
       {
+        "source": "/api/ai-workout-program-import",
+        "function": {
+          "functionId": "aiWorkoutProgramImport",
+          "region": "us-central1"
+        }
+      },
+      {
         "source": "/api/telegram/login-verify",
         "function": {
           "functionId": "telegramLoginVerify",

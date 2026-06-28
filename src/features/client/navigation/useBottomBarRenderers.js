@@ -16,8 +16,12 @@ export function createBottomBarRenderers({
 }) {
   return {
     renderClientMainBottomBar(activeTab, additionalProps = {}) {
+      const normalizedProps =
+        activeTab && typeof activeTab === "object"
+          ? activeTab
+          : { activeTab, ...additionalProps };
+
       return renderClientMainBottomBarInternal({
-        activeTab,
         isTrainerMode,
         onGoMain,
         onOpenTraining,
@@ -26,7 +30,7 @@ export function createBottomBarRenderers({
         onOpenTrainerClients,
         onOpenTrainerPrograms,
         onLoadTrainerCabinet,
-        ...additionalProps
+        ...normalizedProps
       });
     },
     renderTrainerMainBottomBar(activeTab, additionalProps = {}) {

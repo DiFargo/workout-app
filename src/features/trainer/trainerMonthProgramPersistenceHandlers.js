@@ -2,6 +2,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { createFourWeekWorkoutProgramBlocks } from "../../utils/auditSafety";
+import { requestTrainerAiProgramImport } from "./trainerAiProgramImport";
 import { createTrainerMonthProgramImportHelpers } from "./trainerMonthProgramImportHelpers";
 
 function flattenMonthProgramWorkouts(program) {
@@ -244,6 +245,57 @@ export function createTrainerMonthProgramPersistenceHandlers({
     }
   }
 
+  async function importMonthProgramWithAi({ text = "", file = null } = {}) {
+    if (!String(text || "").trim() && !file) {
+      showAppError("load", "Вставьте текст программы или прикрепите файл.");
+      return;
+    }
+
+    try {
+      const aiProgram = await requestTrainerAiProgramImport({ text, file });
+      let nextProgram = normalizeImportedMonthlyProgram(aiProgram);
+      const owner = getCurrentProgramOwner();
+      const importStamp = Date.now();
+      nextProgram = normalizeMonthProgram({
+        ...nextProgram,
+        id: `ai_imported_${importStamp}`,
+        ownerUid: owner.uid,
+        ownerRole: owner.role,
+        createdByUid: owner.uid,
+        updatedByUid: owner.uid,
+        createdAt: new Date(importStamp).toISOString()
+      });
+
+      setAdminProgramEditorMode("create");
+      setAdminProgramLibraryTab("editor");
+      setAdminOpenWorkoutId("");
+      setAdminSelectedExerciseId("");
+      setAdminExerciseSearch("");
+      adminExerciseEditSnapshotRef.current = null;
+      setAdminOpenProgramBlocks({});
+      setAdminOpenProgramWeeks({});
+      setAdminActiveProgramId(nextProgram.id);
+      setAdminSelectedTemplateId(nextProgram.id);
+      setAdminProgramGroups([nextProgram]);
+
+      const flatWorkouts = flattenMonthProgramWorkouts(nextProgram);
+
+      setPlan({ workouts: flatWorkouts });
+      setAdminTrainingTemplates((current) => [
+        { ...nextProgram, workouts: flatWorkouts },
+        ...current.filter((template) => template.id !== nextProgram.id)
+      ]);
+      const saved = await saveMonthProgramToLibrary(nextProgram);
+      if (saved) {
+        showAppError("savedLocal", "ИИ создал черновик программы. Проверьте и отредактируйте перед назначением.");
+      }
+    } catch (error) {
+      console.error("AI program import error:", error);
+      showAppError("load", error.message || "Не получилось создать программу через ИИ.");
+      throw error;
+    }
+  }
+
   function createNewMonthProgramDraft() {
     const owner = getCurrentProgramOwner();
     const nextProgram = normalizeMonthProgram({
@@ -400,6 +452,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
     createNewMonthProgramDraft,
     editExistingMonthProgram,
     importMonthProgramFromFile,
+    importMonthProgramWithAi,
     refreshCurrentMonthProgram,
     saveMonthProgramAndOpenOverview,
     saveMonthProgramToLibrary,

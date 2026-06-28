@@ -1,6 +1,7 @@
 export function createWorkoutCompletionViewHelpers({
   plan,
   history,
+  workoutCalendar,
   buildCompletedWorkoutSet,
   getWorkoutAssignmentVersion,
   isWorkoutCompletedWithSet
@@ -9,7 +10,7 @@ export function createWorkoutCompletionViewHelpers({
     historyItems = [],
     currentAssignmentVersion = getWorkoutAssignmentVersion(plan)
   ) {
-    return buildCompletedWorkoutSet(historyItems, currentAssignmentVersion);
+    return buildCompletedWorkoutSet(historyItems, currentAssignmentVersion, workoutCalendar);
   }
 
   function isWorkoutCompletedByHistory(

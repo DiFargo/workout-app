@@ -43,9 +43,20 @@ export default function FoodEditPage({
     <div className="foodEditPageOverlay">
       <div className="foodEditPageSheet">
         <div className="foodEditPageHeader">
+          <span className="foodEditPageHeaderSpacer" aria-hidden="true" />
+
           <strong className="foodEditPageTitleCenter">
             {isDish ? "Редактирование блюда" : "Редактирование продукта"}
           </strong>
+
+          <button
+            type="button"
+            className="foodEditPageHeaderClose"
+            onClick={onCancel}
+            aria-label="Закрыть"
+          >
+            ×
+          </button>
         </div>
 
         <div className="foodEditPageContent">
@@ -110,7 +121,7 @@ export default function FoodEditPage({
             onClick={onConfirm}
           >
             <span aria-hidden="true">✓</span>
-            <strong>Готово</strong>
+            <strong>Сохранить</strong>
           </button>
         </nav>
       </div>

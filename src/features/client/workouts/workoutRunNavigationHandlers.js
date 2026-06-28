@@ -1,27 +1,42 @@
-import {
-  exerciseUsesExternalWeight,
-  hasWorkoutSetEntry
-} from "../../../utils/auditSafety";
-
 export function createWorkoutRunNavigationHandlers({
   workout,
   workoutStarted,
   currentExerciseIndex,
   deckRef,
   touchStartY,
-  setWeightInputRefs,
+  exerciseValidationTimerRef,
+  partialExerciseWarningKeysRef,
   setOpenVideoId,
   setInlinePlayingVideoId,
   setRestTimerRunning,
   setRestTimerSeconds,
   setIsWorkoutSaved,
   setShowWorkoutSavedCard,
+  postWorkoutFeedback,
+  setPostWorkoutFeedbackOpen,
   setSwipeDirection,
   setWorkoutStarted,
   setCurrentExerciseIndex,
   setExerciseValidationMessage,
   setSwipeOffset
 }) {
+  function showExerciseValidation(message) {
+    if (exerciseValidationTimerRef?.current) {
+      window.clearTimeout(exerciseValidationTimerRef.current);
+    }
+
+    setExerciseValidationMessage(message);
+
+    if (exerciseValidationTimerRef) {
+      exerciseValidationTimerRef.current = window.setTimeout(() => {
+        setExerciseValidationMessage((current) => (
+          current === message ? "" : current
+        ));
+        exerciseValidationTimerRef.current = null;
+      }, 2600);
+    }
+  }
+
   function centerExerciseDeck() {
     setTimeout(() => {
       if (deckRef.current) {
@@ -71,18 +86,43 @@ export function createWorkoutRunNavigationHandlers({
       currentExerciseIndex <= workout.exercises.length
     ) {
       const currentExercise = workout.exercises[currentExerciseIndex - 1];
-      const hasEnteredWeight = currentExercise?.sets?.some((set) =>
-        hasWorkoutSetEntry(set.enteredWeight)
-      );
+      const sets = Array.isArray(currentExercise?.sets) ? currentExercise.sets : [];
+      const completedSetsCount = sets.filter((set) => set?.completed).length;
+      const hasCompletedSet = completedSetsCount > 0;
 
-      if (exerciseUsesExternalWeight(currentExercise) && !hasEnteredWeight) {
-        setExerciseValidationMessage("Введите вес хотя бы в одном подходе. Значение 0 тоже считается введённым.");
-        window.requestAnimationFrame(() => {
-          setWeightInputRefs.current[`${currentExercise.id}:0`]?.focus();
-        });
-        navigator.vibrate?.(90);
+      if (sets.length > 0 && !hasCompletedSet) {
+        showExerciseValidation("Отметьте хотя бы один подход, чтобы перейти дальше.");
+        navigator.vibrate?.(70);
         return;
       }
+
+      if (sets.length > 0 && completedSetsCount > 0 && completedSetsCount < sets.length) {
+        const warningKey = `${workout.id || "workout"}:${currentExercise.id || currentExerciseIndex}`;
+        const alreadyWarned = partialExerciseWarningKeysRef?.current?.has(warningKey);
+
+        if (!alreadyWarned) {
+          partialExerciseWarningKeysRef?.current?.add(warningKey);
+          showExerciseValidation("Не все подходы завершены. Нажмите «Далее» еще раз.");
+          navigator.vibrate?.(55);
+          return;
+        }
+      }
+
+      if (exerciseValidationTimerRef?.current) {
+        window.clearTimeout(exerciseValidationTimerRef.current);
+        exerciseValidationTimerRef.current = null;
+      }
+      setExerciseValidationMessage("");
+    }
+
+    if (
+      workoutStarted &&
+      currentExerciseIndex === workout.exercises.length &&
+      !postWorkoutFeedback
+    ) {
+      setExerciseValidationMessage("");
+      setPostWorkoutFeedbackOpen?.(true);
+      return;
     }
 
     setExerciseValidationMessage("");

@@ -50,17 +50,28 @@ export function buildPlannedWorkoutSlots({
   history = [],
   now = new Date()
 } = {}) {
+  const safeWorkouts = Array.isArray(workouts) ? workouts : [];
+  const assignmentVersion = String(
+    calendar?.assignedProgramUpdatedAt ||
+    safeWorkouts.find((workout) => workout?.assignedProgramUpdatedAt)?.assignedProgramUpdatedAt ||
+    ""
+  ).trim();
+  const relevantHistory = assignmentVersion
+    ? (Array.isArray(history) ? history : []).filter((item) => (
+      String(item?.assignedProgramUpdatedAt || item?.assignmentVersion || "").trim() === assignmentVersion
+    ))
+    : history;
   const todayKey = toWorkoutDateKey(now);
   const sortedDates = [...new Set([
     ...(Array.isArray(calendar.scheduledDates) ? calendar.scheduledDates : []),
     ...(Array.isArray(calendar.monthlyTrainingDates) ? calendar.monthlyTrainingDates : [])
   ].map(toWorkoutDateKey).filter(Boolean))].sort();
   const plannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
-  const completionMaps = buildCompletionMaps(history);
+  const completionMaps = buildCompletionMaps(relevantHistory);
   const lastPlannedDate = sortedDates[sortedDates.length - 1] || todayKey;
   let nextShiftDate = addDays(lastPlannedDate > todayKey ? lastPlannedDate : todayKey, 2);
 
-  return (Array.isArray(workouts) ? workouts : []).map((workout, index) => {
+  return safeWorkouts.map((workout, index) => {
     const workoutId = String(workout?.id || "").trim();
     const workoutName = String(workout?.name || `Тренировка ${index + 1}`).trim();
     const planned = plannedWorkouts.find((item) => (
@@ -170,21 +181,53 @@ export function buildWorkoutScheduleDraft(dates = [], workouts = []) {
   }));
 }
 
+function findMatchingPlannedWorkout(plannedWorkouts = [], workout = {}, index = 0) {
+  const workoutId = String(workout?.id || workout?.workoutId || "").trim();
+  return (Array.isArray(plannedWorkouts) ? plannedWorkouts : []).find((item) => (
+    String(item?.workoutId || "").trim() === workoutId ||
+    Number(item?.order) === index + 1 ||
+    Number(item?.index) === index
+  )) || {};
+}
+
+export function buildWorkoutScheduleDraftWithExistingStatuses(
+  dates = [],
+  workouts = [],
+  plannedWorkouts = []
+) {
+  return buildWorkoutScheduleDraft(dates, workouts).map((item, index) => {
+    const existing = findMatchingPlannedWorkout(plannedWorkouts, workouts[index], index);
+    const status = String(existing.status || item.status || "planned").trim() || "planned";
+
+    return {
+      ...item,
+      status,
+      movedToDate: toWorkoutDateKey(existing.movedToDate || ""),
+      statusUpdatedAt: existing.statusUpdatedAt || "",
+      completedDate: toWorkoutDateKey(existing.completedDate || "")
+    };
+  });
+}
+
 export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], updatedAt = "", updatedBy = "") {
   const existingPlannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
+  const safeWorkouts = Array.isArray(workouts) ? workouts : [];
+  const workoutAssignment = safeWorkouts.find((workout) => workout?.assignedProgramUpdatedAt) || {};
+  const workoutProgram = safeWorkouts.find((workout) => workout?.assignedProgramId || workout?.assignedProgramName) || {};
+  const assignedProgramId = String(workoutProgram.assignedProgramId || calendar.assignedProgramId || "").trim();
+  const assignedProgramName = String(workoutProgram.assignedProgramName || calendar.assignedProgramName || "").trim();
+  const assignedProgramUpdatedAt = String(
+    workoutAssignment.assignedProgramUpdatedAt || calendar.assignedProgramUpdatedAt || ""
+  ).trim();
   const scheduledDates = [...new Set([
     ...(Array.isArray(calendar.scheduledDates) ? calendar.scheduledDates : []),
     ...(Array.isArray(calendar.monthlyTrainingDates) ? calendar.monthlyTrainingDates : []),
     ...existingPlannedWorkouts.map((item) => item?.date),
-    ...(Array.isArray(workouts) ? workouts : []).map((workout) => workout?.scheduledDate || workout?.plannedDate)
+    ...safeWorkouts.map((workout) => workout?.scheduledDate || workout?.plannedDate)
   ].map(toWorkoutDateKey).filter(Boolean))].sort();
-  const plannedWorkouts = (Array.isArray(workouts) ? workouts : []).map((workout, index) => {
+  const plannedWorkouts = safeWorkouts.map((workout, index) => {
     const workoutId = String(workout?.id || "").trim();
-    const existing = existingPlannedWorkouts.find((item) => (
-      String(item?.workoutId || "").trim() === workoutId ||
-      Number(item?.order) === index + 1 ||
-      Number(item?.index) === index
-    )) || {};
+    const existing = findMatchingPlannedWorkout(existingPlannedWorkouts, workout, index);
     const workoutStatus = String(workout?.status || "").trim();
     const existingStatus = String(existing.status || "").trim();
     const status = (
@@ -201,6 +244,7 @@ export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], update
       workoutName: String(workout?.name || existing.workoutName || `Workout ${index + 1}`).trim(),
       date: toWorkoutDateKey(existing.date || workout?.scheduledDate || workout?.plannedDate || scheduledDates[index] || ""),
       status,
+      assignedProgramUpdatedAt,
       movedToDate: toWorkoutDateKey(workout?.movedToDate || existing.movedToDate || ""),
       statusUpdatedAt: workout?.statusUpdatedAt || existing.statusUpdatedAt || (status !== "planned" ? updatedAt : "")
     };
@@ -211,6 +255,9 @@ export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], update
     scheduledDates,
     monthlyTrainingDates: scheduledDates,
     plannedWorkouts,
+    assignedProgramId,
+    assignedProgramName,
+    assignedProgramUpdatedAt,
     updatedAt,
     updatedBy
   };

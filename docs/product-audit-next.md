@@ -1,11 +1,15 @@
 # Product Audit Backlog
 
-Last updated at app version `v1006`.
+Last updated at app version `v.1.250`.
 
 ## Evidence
 
-- `npm.cmd run verify`: passed.
-- `npm.cmd run test:e2e`: passed with `11` passed and `1` skipped after serializing E2E workers.
+- `npm.cmd run build`: passed.
+- `npm.cmd run check:bundle`: passed.
+- `npm.cmd test`: passed with `207` passed.
+- `npm.cmd run lint:critical`: passed.
+- `npm.cmd run test:e2e`: passed with `15` passed and `1` skipped.
+- `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
 - Harness audit covered mobile and desktop variants for:
   - client main;
   - client workouts;
@@ -17,6 +21,14 @@ Last updated at app version `v1006`.
   - trainer programs.
 
 No horizontal overflow was detected in the harness audit for the checked screens.
+
+The nutrition visual audit now attaches screenshots for:
+
+- nutrition main screen;
+- food search;
+- calendar modal;
+- diary modal;
+- nutrition analysis modal.
 
 ## P0
 
@@ -31,23 +43,31 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 
 ## P1: Next Product Fixes
 
+Done in `v.1.250`.
+
 1. Nutrition screen remains the densest client screen.
    - Harness sees many buttons in the nutrition view.
-   - Expected result: visually confirm button grouping, tap targets and modal entry points on mobile.
+   - Result: added a mobile visual Playwright audit for grouping, tap targets and modal entry points.
+   - Result: fixed undersized diary modal controls and nutrition analysis modal close control to stable mobile tap targets.
 
 ## P2: Later Technical Cleanup
+
+Started in `v.1.250`.
 
 1. CSS bundle is still the largest structural debt.
    - Keep cleanup route-by-route, not by deleting legacy files blindly.
    - Start with nutrition or trainer screens only after screenshots/manual checks.
+   - Status: no blind CSS deletion was done in this pass.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Add visual artifacts only after deciding the exact reference screens.
+   - Status: client nutrition screenshot artifacts were added first because this is the densest client route.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
+   - Status: postponed; current change keeps the existing loading model.
 
 ## Recommended Order
 
-1. Do a manual nutrition visual pass before any CSS cleanup.
+1. Continue route-by-route screenshot audits before any CSS cleanup.
+2. Start CSS cleanup only from a route whose screenshots are already stable.

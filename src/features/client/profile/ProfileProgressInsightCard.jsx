@@ -1,3 +1,25 @@
+function getProgressGaugeTone(score) {
+  if (score === null || score === undefined) {
+    return {
+      color: "rgba(140, 148, 168, 0.7)",
+      glow: "rgba(140, 148, 168, 0.16)"
+    };
+  }
+
+  const alpha = score >= 75
+    ? 1
+    : score >= 50
+      ? 0.78
+      : score >= 25
+        ? 0.48
+        : 0.22;
+
+  return {
+    color: `rgba(123, 111, 232, ${alpha})`,
+    glow: `rgba(123, 111, 232, ${Math.max(0.1, alpha * 0.24).toFixed(2)})`
+  };
+}
+
 export default function ProfileProgressInsightCard({
   isMainDashboard,
   progressInsight,
@@ -7,6 +29,11 @@ export default function ProfileProgressInsightCard({
   totalWorkouts,
   onToggle
 }) {
+  const gaugeScore = typeof progressInsight.score === "number"
+    ? Math.max(0, Math.min(100, progressInsight.score))
+    : null;
+  const gaugeTone = getProgressGaugeTone(gaugeScore);
+
   return (
     <div className={`profileAiCoachInsight profileProgressInsightCard ${progressInsight.tone}`}>
       <button
@@ -18,8 +45,10 @@ export default function ProfileProgressInsightCard({
           <div
             className="profileProgressGauge"
             style={{
-              "--progress-score": progressInsight.score ?? 0,
-              "--progress-angle": `${-180 + (progressInsight.score ?? 0) * 1.8}deg`
+              "--progress-score": gaugeScore ?? 0,
+              "--progress-fill": `${Math.round((gaugeScore ?? 0) * 3.6)}deg`,
+              "--progress-color": gaugeTone.color,
+              "--progress-glow": gaugeTone.glow
             }}
             role="img"
             aria-label={progressInsight.score === null
@@ -30,7 +59,13 @@ export default function ProfileProgressInsightCard({
               <i />
               <strong>{progressInsight.score ?? "—"}</strong>
             </div>
-            <small>из 100</small>
+            <small style={{
+              top: "54px",
+              bottom: "auto",
+              color: "#778196",
+              WebkitTextFillColor: "#778196",
+              fontSize: "8px"
+            }}>из 100</small>
           </div>
 
           <div className="profileAiCoachHeadline">

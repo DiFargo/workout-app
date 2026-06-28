@@ -1,7 +1,6 @@
 import {
   buildCustomNutritionDishDraft,
   buildCustomNutritionFoodDraft,
-  detectNutritionAmountMode,
   getDefaultNutritionSmartUnit,
   getNutritionSmartUnits,
   normalizeNutritionFood
@@ -84,14 +83,13 @@ export function createNutritionProductEditorHandlers({
       icon: storedFood?.icon || normalizedFood.icon || getFoodIcon(normalizedFood)
     };
 
-    const savedMode = storedFood?.amountMode || normalizedFood.amountMode || "";
     const savedAmount = storedFood?.lastAmount || normalizedFood.lastAmount;
     const preferredUnitId = loadNutritionPreferredUnit(foodForPicker);
     const defaultUnit =
       getNutritionSmartUnits(foodForPicker).find((unit) => unit.id === preferredUnitId) ||
       getDefaultNutritionSmartUnit(foodForPicker);
-    const nextAmount = savedAmount || defaultUnit.amount || 100;
-    const nextMode = savedMode || defaultUnit.mode || detectNutritionAmountMode(foodForPicker, nextAmount, savedMode);
+    const nextAmount = savedAmount || foodForPicker.portionAmount || defaultUnit.portionAmount || defaultUnit.amount || 100;
+    const nextMode = "grams";
 
     if (!savedAmount && defaultUnit.mode === "portion") {
       foodForPicker.portion = defaultUnit.portion || defaultUnit.label || foodForPicker.portion;

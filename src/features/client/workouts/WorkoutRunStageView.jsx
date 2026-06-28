@@ -5,7 +5,6 @@ import WorkoutExerciseSets from "./WorkoutExerciseSets";
 import WorkoutExerciseSupport from "./WorkoutExerciseSupport";
 import WorkoutExerciseVideoFrame from "./WorkoutExerciseVideoFrame";
 import WorkoutFinishStage from "./WorkoutFinishStage";
-import WorkoutRestTimer from "./WorkoutRestTimer";
 import WorkoutStageActionPanel from "./WorkoutStageActionPanel";
 import { WorkoutStageHeading } from "./WorkoutRunOverlays";
 import { WorkoutWarmupBody, WorkoutWarmupHeader } from "./WorkoutWarmupStage";
@@ -18,7 +17,6 @@ export default function WorkoutRunStageView({
   exerciseHistoryOpenId,
   exerciseNoteOpenId,
   exerciseTechniqueOpenId,
-  exerciseValidationMessage,
   endPerformanceCheck,
   goBackToMain,
   goToNextExercise,
@@ -41,8 +39,6 @@ export default function WorkoutRunStageView({
   postWorkoutFeedback,
   repsInputRefs,
   requestLeaveWorkout,
-  restTimerDuration,
-  restTimerSeconds,
   saveWorkoutToFirebase,
   setExerciseHistoryOpenId,
   setExerciseNoteOpenId,
@@ -52,8 +48,7 @@ export default function WorkoutRunStageView({
   setInlineVideoControlsVisible,
   setIsWorkoutSaved,
   setOpenVideoId,
-  setRestTimerRunning,
-  setRestTimerSeconds,
+  setPostWorkoutFeedbackOpen,
   setShowWorkoutSavedCard,
   setVideoLoadingId,
   setVideoRetryToken,
@@ -64,7 +59,6 @@ export default function WorkoutRunStageView({
   showInlineVideoControlsTemporarily,
   showWorkoutSavedCard,
   startPerformanceCheck,
-  startRestTimer,
   swipeDirection,
   swipeOffset,
   toggleWarmupStep,
@@ -168,7 +162,12 @@ export default function WorkoutRunStageView({
               return;
             }
 
-            saveWorkoutToFirebase(null);
+            if (postWorkoutFeedback) {
+              saveWorkoutToFirebase(postWorkoutFeedback);
+              return;
+            }
+
+            setPostWorkoutFeedbackOpen(true);
           }}
           postWorkoutFeedback={postWorkoutFeedback}
           showWorkoutSavedCard={showWorkoutSavedCard}
@@ -292,7 +291,6 @@ export default function WorkoutRunStageView({
             ) : (
               <WorkoutExerciseSets
                 exercise={exercise}
-                exerciseValidationMessage={exerciseValidationMessage}
                 hasExternalWeight={exerciseUsesExternalWeight(exercise)}
                 onToggleSetCompleted={toggleWorkoutSetCompleted}
                 onUpdateSet={updateSet}
@@ -328,18 +326,6 @@ export default function WorkoutRunStageView({
               techniqueOpen={exerciseTechniqueOpenId === exercise.id}
             />
 
-            {exercise.id !== "warmup" && restTimerSeconds > 0 && (
-              <WorkoutRestTimer
-                activeDuration={restTimerDuration}
-                onAddTime={() => setRestTimerSeconds((current) => current + 30)}
-                onSkip={() => {
-                  setRestTimerRunning(false);
-                  setRestTimerSeconds(0);
-                }}
-                onStart={startRestTimer}
-                timerText={formatCompactTimer(restTimerSeconds)}
-              />
-            )}
           </div>
 
           <WorkoutStageActionPanel

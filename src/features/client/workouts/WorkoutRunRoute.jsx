@@ -42,6 +42,7 @@ export default function WorkoutRunRoute({
   isWorkoutSaved,
   lastExerciseResults,
   leaveWorkoutToPlan,
+  logout,
   normalizeExercise,
   onboardingStep,
   openVideoId,
@@ -153,7 +154,6 @@ export default function WorkoutRunRoute({
         exerciseHistoryOpenId={exerciseHistoryOpenId}
         exerciseNoteOpenId={exerciseNoteOpenId}
         exerciseTechniqueOpenId={exerciseTechniqueOpenId}
-        exerciseValidationMessage={exerciseValidationMessage}
         endPerformanceCheck={endPerformanceCheck}
         getLastExerciseText={getLastExerciseText}
         goBackToMain={goBackToMain}
@@ -187,6 +187,7 @@ export default function WorkoutRunRoute({
         setInlineVideoControlsVisible={setInlineVideoControlsVisible}
         setIsWorkoutSaved={setIsWorkoutSaved}
         setOpenVideoId={setOpenVideoId}
+        setPostWorkoutFeedbackOpen={setPostWorkoutFeedbackOpen}
         setRestTimerRunning={setRestTimerRunning}
         setRestTimerSeconds={setRestTimerSeconds}
         setShowWorkoutSavedCard={setShowWorkoutSavedCard}
@@ -222,6 +223,13 @@ export default function WorkoutRunRoute({
         workoutReadiness={workoutReadiness}
         workoutStarted={workoutStarted}
       />
+
+      {exerciseValidationMessage && (
+        <div className="workoutExerciseValidationToast" role="alert">
+          <span aria-hidden="true">!</span>
+          <strong>{exerciseValidationMessage}</strong>
+        </div>
+      )}
 
       <WorkoutReadinessDialog
         open={workoutReadinessOpen}
@@ -264,6 +272,7 @@ export default function WorkoutRunRoute({
         onSelect={(option) => {
           setPostWorkoutFeedback(option);
           setPostWorkoutFeedbackOpen(false);
+          setCurrentExerciseIndex(workout.exercises.length + 1);
           saveWorkoutToFirebase(option);
         }}
       />
@@ -276,6 +285,7 @@ export default function WorkoutRunRoute({
         setOnboardingStep={setOnboardingStep}
         setProfileDraft={setProfileDraft}
         onSubmit={onFirstSetupSubmit}
+        onExit={logout}
       />
 
       <WorkoutFullscreenVideoOverlay

@@ -8,6 +8,10 @@ import {
   formatNutritionCalendarMonthLabel,
   shiftNutritionCalendarMonthKey
 } from "../src/utils/nutritionCalendar.js";
+import {
+  getMillisecondsUntilNextNutritionDay,
+  shouldShiftNutritionDateOnLocalDayChange
+} from "../src/features/client/nutrition/useNutritionDayRolloverEffect.js";
 
 test("nutrition week dates start on monday around selected date", () => {
   const week = buildNutritionWeekDates("2026-06-18");
@@ -74,4 +78,16 @@ test("nutrition calendar month shift keeps stable yyyy-mm keys", () => {
   assert.equal(shiftNutritionCalendarMonthKey("2026-06", -1), "2026-05");
   assert.equal(shiftNutritionCalendarMonthKey("2026-12", 1), "2027-01");
   assert.equal(shiftNutritionCalendarMonthKey("2026-01", -1), "2025-12");
+});
+
+test("nutrition day rollover waits until the next local day", () => {
+  const delay = getMillisecondsUntilNextNutritionDay(new Date(2026, 5, 23, 23, 59, 30, 0));
+
+  assert.equal(delay, 31_200);
+});
+
+test("nutrition day rollover preserves manually selected past days", () => {
+  assert.equal(shouldShiftNutritionDateOnLocalDayChange("2026-06-23", "2026-06-23"), true);
+  assert.equal(shouldShiftNutritionDateOnLocalDayChange("", "2026-06-23"), true);
+  assert.equal(shouldShiftNutritionDateOnLocalDayChange("2026-06-20", "2026-06-23"), false);
 });

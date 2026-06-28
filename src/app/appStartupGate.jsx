@@ -81,7 +81,8 @@ export function renderAppStartupGate({
   loginSubmitting,
   passwordResetSending,
   handleLogin,
-  handleLoginPasswordReset
+  handleLoginPasswordReset,
+  logout
 }) {
   if (appLoading || firstSetupStillResolving) {
     return <AppSplash />;
@@ -97,6 +98,7 @@ export function renderAppStartupGate({
         setOnboardingStep={setOnboardingStep}
         setProfileDraft={setAiNutritionProfileDraft}
         onSubmit={handleFirstSetupSubmit}
+        onExit={logout}
       />
     );
   }

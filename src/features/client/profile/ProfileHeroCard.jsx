@@ -1,13 +1,22 @@
+function getTimeOfDayGreeting() {
+  const hour = new Date().getHours();
+
+  if (hour >= 5 && hour < 12) return "Доброе утро";
+  if (hour >= 12 && hour < 18) return "Добрый день";
+  if (hour >= 18 && hour < 23) return "Добрый вечер";
+  return "Доброй ночи";
+}
+
 export default function ProfileHeroCard({
   isMainDashboard,
-  canOpenAccount,
   telegramProfile,
   avatarUrl,
   progressScore,
   greetingName,
   onOpenAccount
 }) {
-  const clickable = !isMainDashboard && canOpenAccount;
+  const clickable = false;
+  const greeting = getTimeOfDayGreeting();
 
   return (
     <div
@@ -39,8 +48,9 @@ export default function ProfileHeroCard({
 
       <div className="profileAiHeroText">
         {!isMainDashboard && <span>ЛИЧНЫЙ КАБИНЕТ</span>}
-        <h1>Добрый день, {greetingName} 👋</h1>
+        <h1>{greeting}, {greetingName} 👋</h1>
       </div>
+
     </div>
   );
 }

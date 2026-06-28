@@ -37,6 +37,44 @@ test("next uncompleted workout index skips completed and manual completed days",
   assert.equal(getNextUncompletedWorkoutIndex(workouts, completed, "v1"), 2);
 });
 
+test("client completion count includes trainer calendar completed statuses", () => {
+  const completed = buildCompletedWorkoutSet([
+    { workoutId: "day-1", assignedProgramUpdatedAt: "v1" },
+    { workoutId: "day-2", assignedProgramUpdatedAt: "v1" }
+  ], "v1", {
+    assignedProgramUpdatedAt: "v1",
+    plannedWorkouts: [
+      { workoutId: "day-3", order: 3, status: "completed" },
+      { workoutId: "day-4", order: 4, status: "completed" },
+      { workoutId: "day-5", order: 5, status: "missed" }
+    ]
+  });
+  const workouts = [
+    { id: "day-1", order: 1 },
+    { id: "day-2", order: 2 },
+    { id: "day-3", order: 3 },
+    { id: "day-4", order: 4 },
+    { id: "day-5", order: 5 }
+  ];
+
+  assert.equal(
+    workouts.filter((workout) => isWorkoutCompletedWithSet(workout, completed, "v1")).length,
+    4
+  );
+  assert.equal(getNextUncompletedWorkoutIndex(workouts, completed, "v1"), 4);
+});
+
+test("old workout calendar completion statuses do not affect current assignment", () => {
+  const completed = buildCompletedWorkoutSet([], "new-assignment", {
+    assignedProgramUpdatedAt: "old-assignment",
+    plannedWorkouts: [
+      { workoutId: "day-1", order: 1, status: "completed" }
+    ]
+  });
+
+  assert.equal(isWorkoutCompletedWithSet({ id: "day-1", order: 1 }, completed, "new-assignment"), false);
+});
+
 test("next uncompleted workout index returns first item when everything is complete", () => {
   assert.equal(
     getNextUncompletedWorkoutIndex([{ id: "day-1", status: "completed" }]),

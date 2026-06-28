@@ -1,3 +1,5 @@
+import { RefreshCw } from "lucide-react";
+
 export default function ProfilePageChrome({
   showVersion,
   appVersion,
@@ -19,7 +21,7 @@ export default function ProfilePageChrome({
           aria-label="Обновить страницу"
           title="Обновить страницу"
         >
-          🔄
+          <RefreshCw aria-hidden="true" />
         </button>
       )}
 

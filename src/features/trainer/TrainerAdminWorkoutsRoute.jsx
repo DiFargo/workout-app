@@ -240,6 +240,7 @@ export default function TrainerAdminWorkoutsRoute({
     createNewMonthProgramDraft,
     editExistingMonthProgram,
     importMonthProgramFromFile,
+    importMonthProgramWithAi,
     refreshCurrentMonthProgram,
     saveMonthProgramAndOpenOverview,
     saveMonthProgramToLibrary,
@@ -388,6 +389,7 @@ export default function TrainerAdminWorkoutsRoute({
       handleAdminProgramSwipeStart={handleAdminProgramSwipeStart}
       handleMonthProgramBack={handleMonthProgramBack}
       importMonthProgramFromFile={importMonthProgramFromFile}
+      importMonthProgramWithAi={importMonthProgramWithAi}
       isTrainerNextWorkspace={isTrainerNextWorkspace}
       loadAdminTrainingTemplates={loadAdminTrainingTemplates}
       loadHistory={loadHistory}

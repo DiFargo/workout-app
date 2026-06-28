@@ -58,6 +58,18 @@ export async function saveWorkoutsToFirebaseWithDeps({
       nowIso,
       auth.currentUser?.uid || ""
     );
+    const rootAssignmentInfo = {
+      assignedProgramId: nextWorkoutCalendar.assignedProgramId || planToSave.assignedProgramId || userData.assignedProgramId || "",
+      assignedProgramName: nextWorkoutCalendar.assignedProgramName || planToSave.assignedProgramName || userData.assignedProgramName || "",
+      assignedProgramUpdatedAt: nextWorkoutCalendar.assignedProgramUpdatedAt || planToSave.assignedProgramUpdatedAt || userData.assignedProgramUpdatedAt || userData.assignedProgramAt || ""
+    };
+    const getPlannedSlot = (workout, index) => (
+      (Array.isArray(nextWorkoutCalendar.plannedWorkouts) ? nextWorkoutCalendar.plannedWorkouts : []).find((item) => (
+        String(item?.workoutId || "").trim() === String(workout?.id || "").trim() ||
+        Number(item?.order) === index + 1 ||
+        Number(item?.index) === index
+      )) || {}
+    );
 
     existingWorkouts.forEach((workoutDoc) => {
       if (!currentWorkoutIds.has(workoutDoc.id)) {
@@ -66,12 +78,28 @@ export async function saveWorkoutsToFirebaseWithDeps({
     });
 
     for (const [workoutIndex, workout] of (planToSave.workouts || []).entries()) {
+      const plannedSlot = getPlannedSlot(workout, workoutIndex);
+      const scheduleOrder = Number(workout.scheduleOrder || plannedSlot.order || workoutIndex + 1);
+      const plannedDate = workout.plannedDate || workout.scheduledDate || plannedSlot.date || "";
+      const status = workout.status || plannedSlot.status || "planned";
+      const assignmentInfo = {
+        assignedProgramId: workout.assignedProgramId || rootAssignmentInfo.assignedProgramId,
+        assignedProgramName: workout.assignedProgramName || rootAssignmentInfo.assignedProgramName,
+        assignedProgramUpdatedAt: workout.assignedProgramUpdatedAt || rootAssignmentInfo.assignedProgramUpdatedAt
+      };
       batch.set(doc(db, "users", userId, "workouts", workout.id), {
         ...workout,
         id: workout.id,
         name: workout.name || `День ${workoutIndex + 1}`,
         order: workoutIndex + 1,
         sortOrder: workoutIndex + 1,
+        scheduleOrder,
+        scheduledDate: plannedDate,
+        plannedDate,
+        status,
+        movedToDate: workout.movedToDate || plannedSlot.movedToDate || "",
+        statusUpdatedAt: workout.statusUpdatedAt || plannedSlot.statusUpdatedAt || "",
+        ...assignmentInfo,
         assignedBy: auth.currentUser?.uid || "",
         assignedAt: workout.assignedAt || nowIso,
         exercises: (workout.exercises || []).map((exercise) => ({
@@ -96,13 +124,19 @@ export async function saveWorkoutsToFirebaseWithDeps({
 
     batch.set(userRef, {
       workoutCalendar: nextWorkoutCalendar,
+      ...rootAssignmentInfo,
       assignedWorkoutCount: (planToSave.workouts || []).length,
       updatedAt: nowIso
     }, { merge: true });
 
     await batch.commit();
-    setAdminSelectedClient((prev) => prev?.id === userId ? { ...prev, workoutCalendar: nextWorkoutCalendar } : prev);
-    setUsersList((prev) => prev.map((item) => item.id === userId ? { ...item, workoutCalendar: nextWorkoutCalendar } : item));
+    const clientPatch = {
+      workoutCalendar: nextWorkoutCalendar,
+      ...rootAssignmentInfo,
+      assignedWorkoutCount: (planToSave.workouts || []).length
+    };
+    setAdminSelectedClient((prev) => prev?.id === userId ? { ...prev, ...clientPatch } : prev);
+    setUsersList((prev) => prev.map((item) => item.id === userId ? { ...item, ...clientPatch } : item));
     if (auth.currentUser?.uid === userId) {
       setProfileWorkoutCalendarData(nextWorkoutCalendar);
       setProfileWorkoutScheduledDates(nextWorkoutCalendar.scheduledDates || []);

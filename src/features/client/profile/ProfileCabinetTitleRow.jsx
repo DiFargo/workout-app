@@ -1,3 +1,5 @@
+import { Bell } from "lucide-react";
+
 export default function ProfileCabinetTitleRow({
   showTrainerNotifications,
   trainerNotificationCount,
@@ -14,7 +16,7 @@ export default function ProfileCabinetTitleRow({
           title="Уведомления тренера"
           onClick={onOpenTrainerNotifications}
         >
-          <span aria-hidden="true">🔔</span>
+          <Bell aria-hidden="true" />
           {trainerNotificationCount > 0 && (
             <em>{Math.min(trainerNotificationCount, 99)}</em>
           )}

@@ -118,11 +118,7 @@ export function hasWorkoutSetEntry(value) {
 }
 
 export function isWorkoutSetCompleted(set = {}) {
-  return Boolean(
-    set.completed ||
-    hasWorkoutSetEntry(set.enteredWeight) ||
-    hasWorkoutSetEntry(set.enteredReps)
-  );
+  return Boolean(set.completed);
 }
 
 export function getWorkoutCompletion(workout = {}) {

@@ -39,7 +39,12 @@ export function WorkoutIncompleteDialog({ open, completion, onContinue, onSave }
   );
 }
 
-export function PostWorkoutFeedbackDialog({ open, options, isSaving, onSelect }) {
+export function PostWorkoutFeedbackDialog({
+  open,
+  options,
+  isSaving,
+  onSelect
+}) {
   if (!open) return null;
 
   return (

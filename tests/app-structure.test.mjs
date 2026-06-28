@@ -202,12 +202,14 @@ test("application styles use the modular styles entrypoint", async () => {
   const indexCss = await readText("src/styles/index.css");
   const appSource = await readText("src/App.jsx");
   const trainerWorkspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
+  const adminPanelHub = await readText("src/components/admin/AdminPanelHub.jsx");
 
   assert.equal(await pathExists("src/styles.css"), false);
   assert.match(main, /['"]\.\/styles\/index\.css['"]/);
   assert.doesNotMatch(main, /['"]\.\/styles\.css['"]/);
   assert.doesNotMatch(appSource, /styles\.css/);
-  assert.doesNotMatch(trainerWorkspace, /\.css['"]/);
+  assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
+  assert.match(adminPanelHub, /['"]\.\.\/\.\.\/styles\/admin-lazy\.css['"]/);
 
   for (const requiredImport of [
     "./tokens.css",
@@ -215,15 +217,50 @@ test("application styles use the modular styles entrypoint", async () => {
     "./layout.css",
     "./components.css",
     "./nutrition-stack.css",
-    "./trainer.css",
     "./legacy-stack.css"
   ]) {
     assert.match(indexCss, new RegExp(`@import "${requiredImport.replace(".", "\\.")}"`));
   }
+
+  for (const deferredImport of [
+    "./trainer.css",
+    "./admin.css",
+    "./legacy-admin-stack.css",
+    "./legacy-trainer-desktop-adaptation-late.css",
+    "./legacy-trainer-program-editor-late.css",
+    "./legacy-trainer-light-workspace.css",
+    "./legacy-trainer-light-audit.css",
+    "./nutrition-trainer-desktop.css"
+  ]) {
+    assert.doesNotMatch(indexCss, new RegExp(`@import "${deferredImport.replace(".", "\\.")}"`));
+  }
+
+  const allSourceFiles = await collectFiles("src", [".js", ".jsx"]);
+  const allowedCssImportFiles = new Set([
+    path.normalize("src/main.jsx"),
+    path.normalize("src/components/trainer/TrainerWorkspace.jsx"),
+    path.normalize("src/components/admin/AdminPanelHub.jsx")
+  ]);
+
+  for (const file of allSourceFiles) {
+    const source = await readText(file);
+    if (!/\.css['"]/.test(source)) continue;
+    assert.ok(
+      allowedCssImportFiles.has(path.normalize(file)),
+      `Unexpected CSS import outside approved entrypoints: ${file}`
+    );
+  }
 });
 
 test("modular CSS import graph resolves without cycles", async () => {
-  const visited = await walkCssImports("src/styles/index.css");
+  const visited = new Set();
+  for (const cssEntry of [
+    "src/styles/index.css",
+    "src/styles/trainer-lazy.css",
+    "src/styles/admin-lazy.css"
+  ]) {
+    await walkCssImports(cssEntry, new Set(), visited);
+  }
   const allCssFiles = [
     ...(await collectFiles("src/styles", [".css"])),
     ...(await collectFiles("src/components", [".css"]))
@@ -231,6 +268,8 @@ test("modular CSS import graph resolves without cycles", async () => {
   const reachableCssFiles = [...visited].sort();
 
   assert.ok(visited.has(path.normalize("src/styles/index.css")));
+  assert.ok(visited.has(path.normalize("src/styles/trainer-lazy.css")));
+  assert.ok(visited.has(path.normalize("src/styles/admin-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/legacy-stack.css")));
   assert.ok(visited.has(path.normalize("src/components/trainer/trainer-workspace.css")));
   assert.equal(await pathExists("src/styles.css"), false);
@@ -305,6 +344,15 @@ test("trainer UI routes stay behind terminal route boundaries", async () => {
   assert.match(trainerUsersRoute, /buildTrainerUsersPageModel/);
   assert.match(trainerWorkoutsRoute, /TrainerAdminWorkoutsNextRoute/);
   assert.match(trainerWorkoutsRoute, /TrainerProgramManagerView/);
+});
+
+test("trainer program editor keeps an explicit back action", async () => {
+  const workspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
+  const managerView = await readText("src/features/trainer/TrainerProgramManagerView.jsx");
+
+  assert.match(workspace, /export function TrainerProgramConstructor\(\{[\s\S]*?\bonBack,/);
+  assert.match(workspace, /onBack\s*\?\s*\([\s\S]*?<button type="button" onClick=\{onBack\}>[\s\S]*?<ArrowLeft/);
+  assert.match(managerView, /<TrainerProgramConstructor[\s\S]*?onBack=\{handleMonthProgramBack\}/);
 });
 
 test("production components do not import feature layers back", async () => {

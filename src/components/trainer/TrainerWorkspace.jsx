@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import "../../styles/trainer-lazy.css";
 import { analyzeExerciseProgress } from "../../utils/exerciseProgress.js";
 import {
   buildPlannedWorkoutSlots,
@@ -1211,13 +1212,87 @@ function ClientBodyProgress({ measurements, photos }) {
   );
 }
 
-function ClientNotes({ note, tasks }) {
+function getWorkoutNoteItems(history = []) {
+  return history
+    .flatMap((item) => {
+      const workoutTitle = item.workoutName || item.workout || "Тренировка";
+      const date = item.finishedAt || item.date || item.createdAt;
+      const notes = [];
+      const clientComment = String(item.clientComment || "").trim();
+
+      if (clientComment) {
+        notes.push({
+          id: `${item.id || item.clientSaveId || date}-comment`,
+          title: `Комментарий: ${workoutTitle}`,
+          text: clientComment,
+          date
+        });
+      }
+
+      if (item.postWorkoutFeedback?.title) {
+        notes.push({
+          id: `${item.id || item.clientSaveId || date}-feedback`,
+          title: `Оценка: ${item.postWorkoutFeedback.title}`,
+          text: item.postWorkoutFeedback.advice || "Клиент отметил самочувствие после тренировки.",
+          date
+        });
+      }
+
+      (item.exercises || []).forEach((exercise, exerciseIndex) => {
+        const exerciseNote = String(exercise.clientNote || "").trim();
+        if (!exerciseNote) return;
+
+        notes.push({
+          id: `${item.id || item.clientSaveId || date}-exercise-${exercise.id || exerciseIndex}`,
+          title: exercise.name || workoutTitle,
+          text: exerciseNote,
+          date
+        });
+      });
+
+      return notes;
+    })
+    .sort((first, second) => new Date(second.date || 0).getTime() - new Date(first.date || 0).getTime())
+    .slice(0, 12);
+}
+
+function ClientNotes({ note, tasks = [], history = [] }) {
+  const workoutNotes = getWorkoutNoteItems(history);
+
   return (
     <section className="trainerNextSimplePanel">
       <div className="trainerNextPanelTitle"><div><h2>Заметки</h2><p>Рабочая информация тренера по клиенту</p></div></div>
       <div className="trainerNextNoteCard">
         <StickyNote size={21} />
         <p>{note || "Заметка тренера пока не добавлена."}</p>
+      </div>
+      <div className="trainerNextPanelTitle trainerNextWorkoutNotesTitle">
+        <div>
+          <h2>Пометки из тренировок</h2>
+          <p>Комментарии клиента, оценка самочувствия и заметки по упражнениям</p>
+        </div>
+      </div>
+      <div className="trainerNextHistoryList">
+        {workoutNotes.length ? (
+          workoutNotes.map((item) => (
+            <article key={item.id}>
+              <span><MessageSquare size={18} /></span>
+              <div>
+                <strong>{item.title}</strong>
+                <small>{formatCompactDate(item.date)}</small>
+                <p>{item.text}</p>
+              </div>
+            </article>
+          ))
+        ) : (
+          <article>
+            <span><MessageSquare size={18} /></span>
+            <div>
+              <strong>Пока нет пометок</strong>
+              <small>Они появятся после завершения тренировок клиентом.</small>
+            </div>
+          </article>
+        )}
       </div>
       <div className="trainerNextHistoryList">
         {tasks.map((task, index) => <article key={task.id || index}><span><ClipboardList size={18} /></span><div><strong>{task.title || task.text || "Задача"}</strong><small>{formatCompactDate(task.createdAt || task.date)}</small></div></article>)}
@@ -2832,7 +2907,7 @@ function TrainerClientDetail({
       {["bodyProgress", "measurements", "photos"].includes(activeTab) ? <ClientBodyProgress measurements={measurements} photos={photos} /> : null}
       {activeTab === "notifications" ? <ClientNotifications key={client.id} client={client} workouts={workouts} measurements={measurements} photos={photos} status={programStatus} onSave={onSaveNotifications} onTest={onTestNotification} onConnectTelegram={onConnectTelegram} /> : null}
       {activeTab === "exerciseProgress" ? <ClientExerciseProgress history={history} /> : null}
-      {activeTab === "notes" ? <ClientNotes note={note} tasks={tasks} /> : null}
+      {activeTab === "notes" ? <ClientNotes note={note} tasks={tasks} history={history} /> : null}
 
       {messageOpen ? (
         <div className="trainerClientModalBackdrop" role="dialog" aria-modal="true">
@@ -2917,6 +2992,7 @@ export function TrainerProgramConstructor({
   onProgramNameChange,
   onSaveProgram,
   onDeleteProgram,
+  onBack,
   onAddMonth,
   onUpdateMonth,
   onDeleteMonth,
@@ -3016,6 +3092,11 @@ export function TrainerProgramConstructor({
           />
         </label>
         <div>
+          {onBack ? (
+            <button type="button" onClick={onBack}>
+              <ArrowLeft size={17} />Назад
+            </button>
+          ) : null}
           <button className="danger" type="button" onClick={onDeleteProgram}>
             <Trash2 size={17} />Удалить
           </button>

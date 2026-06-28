@@ -58,15 +58,7 @@ export function createWorkoutRuntimeHandlers({
               sets: exercise.sets.map((set, setIndex) => {
                 if (setIndex !== index) return set;
 
-                const nextSet = { ...set, [field]: value };
-                if (field === "enteredWeight" || field === "enteredReps") {
-                  nextSet.completed = Boolean(
-                    hasWorkoutSetEntry(nextSet.enteredWeight) ||
-                    hasWorkoutSetEntry(nextSet.enteredReps)
-                  );
-                }
-
-                return nextSet;
+                return { ...set, [field]: value };
               })
             }
           : exercise
@@ -125,8 +117,8 @@ export function createWorkoutRuntimeHandlers({
 
     updateSet(exerciseId, setIndex, "completed", nextCompleted);
     if (nextCompleted) {
+      setExerciseValidationMessage("");
       navigator.vibrate?.(45);
-      startRestTimer();
     }
   }
 

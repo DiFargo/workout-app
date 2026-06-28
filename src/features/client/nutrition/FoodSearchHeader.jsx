@@ -1,6 +1,7 @@
 export default function FoodSearchHeader({
   selectedFood,
   searchTab,
+  createChoiceOpen = false,
   mealMenuOpen,
   meals,
   mealId,
@@ -10,10 +11,19 @@ export default function FoodSearchHeader({
   onClose
 }) {
   const selectedMealName = meals.find((meal) => meal.id === mealId)?.name;
+  const isMyProductsPage = !selectedFood && searchTab === "my";
+  const isSearchPage = !selectedFood && searchTab !== "my";
+  const showCloseButton = !createChoiceOpen;
 
   return (
-    <div className="fatSearchTopPremium">
-      {!selectedFood && searchTab === "my" && (
+    <div className={`fatSearchTopPremium ${isSearchPage ? "fatSearchTopPremiumHome foodSearchHeaderExactMainAlign" : ""} ${isMyProductsPage ? "fatSearchTopPremiumMy" : ""}`}>
+      {isSearchPage && (
+        <div className="foodFlowTitleGroup foodFlowSearchTitle">
+          <h2>Добавить еду</h2>
+        </div>
+      )}
+
+      {isMyProductsPage && (
         <div className="foodFlowTitleGroup">
           <span>Питание</span>
           <h2>Мои продукты</h2>
@@ -55,6 +65,7 @@ export default function FoodSearchHeader({
         )}
       </div>
 
+      {showCloseButton && (
       <button
         type="button"
         className="fatSearchClosePremium"
@@ -66,6 +77,7 @@ export default function FoodSearchHeader({
       >
         ×
       </button>
+      )}
     </div>
   );
 }

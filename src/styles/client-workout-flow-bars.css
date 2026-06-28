@@ -1,0 +1,327 @@
+/* v.1.134: workout flow bottom bars must match the main client bottom nav geometry. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutStageActionPanel,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutBottomPanel {
+    box-sizing: border-box !important;
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 9500 !important;
+    width: auto !important;
+    max-width: none !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    max-height: 76px !important;
+    margin: 0 !important;
+    padding: 7px !important;
+    overflow: hidden !important;
+    border: 1px solid #dfe4ee !important;
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    backdrop-filter: blur(18px) !important;
+    box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutReadinessStage {
+    width: min(100%, 520px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: calc(100dvh - 108px - env(safe-area-inset-bottom, 0px)) !important;
+    display: grid !important;
+    grid-template-rows: minmax(0, auto) !important;
+    align-content: center !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 12px !important;
+    margin: auto 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutReadinessOverlay {
+    padding:
+      max(16px, calc(env(safe-area-inset-top, 0px) + 10px))
+      0
+      calc(100px + env(safe-area-inset-bottom, 0px)) !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutReadinessHeader {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutReadinessOverlay .workoutReadinessCard {
+    width: 100% !important;
+    max-height: min(560px, calc(100dvh - 146px - env(safe-area-inset-bottom, 0px))) !important;
+    align-self: center !important;
+    margin: 0 auto !important;
+    overflow-y: auto !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutReadinessActions {
+    box-sizing: border-box !important;
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 13100 !important;
+    width: auto !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    max-height: 76px !important;
+    margin: 0 !important;
+    padding: 7px !important;
+    display: grid !important;
+    grid-template-columns: minmax(74px, 0.75fr) minmax(0, 2.25fr) !important;
+    gap: 8px !important;
+    border: 1px solid #dfe4ee !important;
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    backdrop-filter: blur(18px) !important;
+    box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupNavigationRow,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseNavigationRow,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishNavigationRow {
+    width: 100% !important;
+    height: 62px !important;
+    min-height: 62px !important;
+    max-height: 62px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(74px, 0.75fr) minmax(0, 2.25fr) !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    gap: 8px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPreviousButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupReadyButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exercisePrevButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseNextButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishBackButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkoutButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutReadinessActions > button {
+    box-sizing: border-box !important;
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 62px !important;
+    min-height: 62px !important;
+    max-height: 62px !important;
+    margin: 0 !important;
+    padding: 0 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 15px !important;
+    font-size: 16px !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutButton {
+    grid-column: 1 / -1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseDeck.workoutStageDeck:has(.warmupExerciseCard),
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseDeck:has(.warmupExerciseCard) {
+    box-sizing: border-box !important;
+    height: calc(100dvh - max(14px, calc(env(safe-area-inset-top, 0px) + 10px))) !important;
+    max-height: calc(100dvh - max(14px, calc(env(safe-area-inset-top, 0px) + 10px))) !important;
+    padding:
+      max(10px, calc(env(safe-area-inset-top, 0px) + 4px))
+      12px
+      calc(100px + env(safe-area-inset-bottom, 0px)) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseCard {
+    width: min(100%, 520px) !important;
+    max-height: min(560px, calc(100dvh - 132px - env(safe-area-inset-bottom, 0px))) !important;
+    margin: auto !important;
+    overflow-y: auto !important;
+    flex: 0 1 auto !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPreviousButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exercisePrevButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishBackButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutReadinessActions > button:first-child {
+    border: 1px solid #dfe4ee !important;
+    background: #f7f9fe !important;
+    color: #596176 !important;
+    -webkit-text-fill-color: #596176 !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupReadyButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseNextButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkoutButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutButton,
+  html:root[data-app-theme="warm-light"] body #root .workoutReadinessActions > button:last-child {
+    border: 1px solid transparent !important;
+    background: linear-gradient(135deg, #6552e6 0%, #2d6ff2 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    box-shadow: 0 12px 26px rgba(77, 69, 202, 0.23) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutReadinessActions > button:disabled {
+    opacity: 0.45 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutOverlay {
+    box-sizing: border-box !important;
+    padding: 18px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(35, 40, 68, 0.28) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    backdrop-filter: blur(16px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutCard {
+    box-sizing: border-box !important;
+    width: min(100%, 430px) !important;
+    max-width: calc(100vw - 36px) !important;
+    max-height: calc(100dvh - 36px) !important;
+    padding: 24px 22px 22px !important;
+    overflow: hidden !important;
+    border: 1px solid #dfe3ef !important;
+    border-radius: 28px !important;
+    background: #ffffff !important;
+    color: #151824 !important;
+    box-shadow: 0 24px 64px rgba(43, 50, 92, 0.22) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutBadge {
+    display: inline-flex !important;
+    min-height: 28px !important;
+    padding: 0 13px !important;
+    align-items: center !important;
+    border-radius: 999px !important;
+    background: #f0edff !important;
+    color: #5c48e8 !important;
+    -webkit-text-fill-color: #5c48e8 !important;
+    font-size: 12px !important;
+    font-weight: 950 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutCard h2 {
+    margin: 14px 0 9px !important;
+    color: #151824 !important;
+    font-size: clamp(31px, 8vw, 40px) !important;
+    line-height: 1.04 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutCard > p {
+    margin: 0 0 18px !important;
+    color: #737b91 !important;
+    font-size: 15px !important;
+    font-weight: 850 !important;
+    line-height: 1.25 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutComment {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutComment span {
+    margin: 0 0 7px !important;
+    color: #8d8474 !important;
+    -webkit-text-fill-color: #8d8474 !important;
+    font-size: 12px !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutComment textarea {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-height: 82px !important;
+    max-height: 120px !important;
+    resize: none !important;
+    padding: 14px 16px !important;
+    border: 1px solid #ddd8f9 !important;
+    border-radius: 20px !important;
+    background: #fffdf5 !important;
+    color: #151824 !important;
+    font-size: 15px !important;
+    line-height: 1.25 !important;
+    box-shadow: inset 0 0 0 2px rgba(104, 82, 230, 0.08) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutGrid {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutGrid button {
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 118px !important;
+    padding: 12px 6px 11px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid #e1e4ef !important;
+    border-radius: 20px !important;
+    background: #f7f8fc !important;
+    color: #596176 !important;
+    -webkit-text-fill-color: #596176 !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutGrid span {
+    font-size: 30px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutGrid strong {
+    max-width: 100% !important;
+    margin-top: 9px !important;
+    overflow: hidden !important;
+    color: #596176 !important;
+    -webkit-text-fill-color: #596176 !important;
+    font-size: 13px !important;
+    font-weight: 950 !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .postWorkoutGrid small {
+    max-width: 100% !important;
+    margin-top: 6px !important;
+    overflow: hidden !important;
+    color: #7b8397 !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    line-height: 1.15 !important;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+  }
+}

@@ -69,7 +69,7 @@ export default function NutritionPlanDetails({
             aria-label="Развернуть сводку питания"
           >
             <div className="nutritionAiPlanCollapsedHeading">
-              <strong>Анализ питания</strong>
+              <strong>Анализ</strong>
             </div>
 
             <div className="nutritionAiPlanCollapsedContent">

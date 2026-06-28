@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Clock3, Paperclip } from "lucide-react";
 import {
   getProgramHistoryItems,
   getWorkoutCover,
@@ -21,11 +22,17 @@ import {
   WorkoutModePickerDialog
 } from "./WorkoutListDialogs";
 
+const versionedLocalAsset = (src, version) => {
+  if (typeof src !== "string" || !src.startsWith("/")) return src;
+  return `${src}${src.includes("?") ? "&" : "?"}v=${encodeURIComponent(version || "")}`;
+};
+
 export default function WorkoutListPage({
   appVersion,
   renderClientMainBottomBar,
   plan,
   history,
+  workoutCalendar = {},
   currentUserId,
   workoutModePreference,
   individualWorkoutIndex,
@@ -64,7 +71,7 @@ export default function WorkoutListPage({
 
   const sortedWorkouts = sortWorkoutDays(plan.workouts || []);
   const assignmentVersion = getWorkoutAssignmentVersion(plan);
-  const completedWorkoutSet = buildCompletedWorkoutSet(history, assignmentVersion);
+  const completedWorkoutSet = buildCompletedWorkoutSet(history, assignmentVersion, workoutCalendar);
   const isIndividualWorkoutMode = workoutModePreference.mode === "individual";
   const nextUncompletedWorkoutIndex = isIndividualWorkoutMode
     ? getNextUncompletedWorkoutIndex(sortedWorkouts, completedWorkoutSet, assignmentVersion)
@@ -85,6 +92,9 @@ export default function WorkoutListPage({
     isWorkoutCompletedWithSet(workoutItem, completedWorkoutSet, assignmentVersion)
   );
   const completedWorkoutCount = sortedWorkouts.filter(isWorkoutCompleted).length;
+  const completedWorkoutProgressPercent = sortedWorkouts.length > 0
+    ? Math.min(100, Math.max(0, Math.round((completedWorkoutCount / sortedWorkouts.length) * 100)))
+    : 0;
   const activeIndividualWorkoutCompleted = isWorkoutCompleted(activeIndividualWorkout);
   const activeWorkoutDraft = currentUserId && activeIndividualWorkout?.id
     ? safeReadJsonStorage(getWorkoutDraftKey(currentUserId, activeIndividualWorkout.id), null)
@@ -180,9 +190,15 @@ export default function WorkoutListPage({
       <div className="appVersionBadge clientPageVersionBadge">{appVersion}</div>
       <div className="workoutSelectHero">
         <h1 className="workoutSelectTitle clientCorePageTitle">
-          <span>{isIndividualWorkoutMode ? "Индивидуальный" : "Базовые"}</span>
-          {" "}
-          <strong>{isIndividualWorkoutMode ? "план" : "тренировки"}</strong>
+          {isIndividualWorkoutMode ? (
+            "Мой план"
+          ) : (
+            <>
+              <span>Базовые</span>
+              {" "}
+              <strong>тренировки</strong>
+            </>
+          )}
         </h1>
 
         <div className="workoutHeaderActions">
@@ -196,7 +212,7 @@ export default function WorkoutListPage({
                 setWorkoutHistoryModalOpen(true);
               }}
             >
-              🕘
+              <Clock3 aria-hidden="true" />
             </button>
           )}
           <button
@@ -205,7 +221,7 @@ export default function WorkoutListPage({
             aria-label="Выбрать режим запуска тренировки"
             onClick={() => setWorkoutModeModalOpen(true)}
           >
-            📎
+            <Paperclip aria-hidden="true" />
           </button>
         </div>
 
@@ -232,18 +248,21 @@ export default function WorkoutListPage({
             const completed = activeIndividualWorkoutCompleted;
             const activeNext = index === nextUncompletedWorkoutIndex;
             const item = getWorkoutPresentation(w, index);
-            const fallbackImage =
+            const fallbackImage = versionedLocalAsset(
               item.image ||
-              WORKOUT_MENU_ITEMS[index % WORKOUT_MENU_ITEMS.length]?.image ||
-              WORKOUT_MENU_ITEMS[0]?.image ||
-              "";
-            const coverImage = getWorkoutCover(w);
+                WORKOUT_MENU_ITEMS[index % WORKOUT_MENU_ITEMS.length]?.image ||
+                WORKOUT_MENU_ITEMS[0]?.image ||
+                "",
+              appVersion
+            );
+            const coverImage = versionedLocalAsset(getWorkoutCover(w), appVersion);
             const adjacentCoverImages = [...new Set(
               [-1, 1]
                 .map((offset) => sortedWorkouts[
                   (index + offset + sortedWorkouts.length) % sortedWorkouts.length
                 ])
                 .map(getWorkoutCover)
+                .map((image) => versionedLocalAsset(image, appVersion))
                 .filter((image) => image && image !== coverImage)
             )];
 
@@ -310,21 +329,21 @@ export default function WorkoutListPage({
                         </span>
                       )}
                     </span>
-                  </span>
 
-                  <button
-                    type="button"
-                    className="individualWorkoutCardStartButton"
-                    onClick={(event) => {
-                      if (swipeSuppressClickRef.current) {
-                        event.preventDefault();
-                        return;
-                      }
-                      openWorkoutByIndex(index);
-                    }}
-                  >
-                    {activeWorkoutActionLabel}
-                  </button>
+                    <button
+                      type="button"
+                      className="individualWorkoutCardStartButton"
+                      onClick={(event) => {
+                        if (swipeSuppressClickRef.current) {
+                          event.preventDefault();
+                          return;
+                        }
+                        openWorkoutByIndex(index);
+                      }}
+                    >
+                      {activeWorkoutActionLabel}
+                    </button>
+                  </span>
                 </article>
                 {adjacentCoverImages.map((image) => (
                   <img
@@ -361,7 +380,7 @@ export default function WorkoutListPage({
               title: String(w.name || `День ${workoutDayNumber}`)
                 .replace(/^Неделя\s*\d+\s*[—-]\s*/i, "")
                 .replace(/^День\s*\d+\s*[—-]\s*/i, ""),
-              image: fallbackItem?.image || WORKOUT_MENU_ITEMS[0].image
+              image: versionedLocalAsset(fallbackItem?.image || WORKOUT_MENU_ITEMS[0].image, appVersion)
             };
 
             return (
@@ -425,7 +444,10 @@ export default function WorkoutListPage({
 
       <div className="individualWorkoutBottomPanel">
         {isIndividualWorkoutMode && sortedWorkouts.length > 0 && (
-          <div className="individualWorkoutBottomProgress">
+          <div
+            className="individualWorkoutBottomProgress"
+            style={{ "--completed-workouts-progress": `${completedWorkoutProgressPercent}%` }}
+          >
             <span>{activeWorkoutIndex + 1} из {sortedWorkouts.length}</span>
             <span>Выполнено {completedWorkoutCount} из {sortedWorkouts.length}</span>
           </div>

@@ -39,7 +39,24 @@ export function getTrainerNutritionSummary(nutritionState = null) {
   };
 }
 
-export function getTrainerCompletedWorkoutCountForAssignment(historyList = [], assignedProgramUpdatedAt = "") {
+function getTrainerCompletionKey(item = {}) {
+  const workoutId = String(item?.workoutId || item?.id || "").trim();
+  if (workoutId) return `id:${workoutId}`;
+
+  const order = Number(item?.order ?? item?.scheduleOrder);
+  if (Number.isFinite(order) && order > 0) return `order:${order}`;
+
+  const index = Number(item?.index);
+  if (Number.isFinite(index) && index >= 0) return `index:${index}`;
+
+  return "";
+}
+
+export function getTrainerCompletedWorkoutCountForAssignment(
+  historyList = [],
+  assignedProgramUpdatedAt = "",
+  workoutCalendar = {}
+) {
   const assignmentVersionKey = getTrainerAssignmentVersionKey(assignedProgramUpdatedAt);
   if (!assignmentVersionKey) return 0;
 
@@ -48,10 +65,22 @@ export function getTrainerCompletedWorkoutCountForAssignment(historyList = [], a
     const entryVersionKey = getTrainerAssignmentVersionKey(
       entry?.assignedProgramUpdatedAt || entry?.assignmentVersion
     );
-    if (entry?.workoutId && entryVersionKey === assignmentVersionKey) {
-      completedWorkoutIds.add(entry.workoutId);
+    const completionKey = getTrainerCompletionKey(entry);
+    if (completionKey && entryVersionKey === assignmentVersionKey) {
+      completedWorkoutIds.add(completionKey);
     }
   });
+
+  const calendarVersionKey = getTrainerAssignmentVersionKey(workoutCalendar?.assignedProgramUpdatedAt);
+  if (!calendarVersionKey || calendarVersionKey === assignmentVersionKey) {
+    (Array.isArray(workoutCalendar?.plannedWorkouts) ? workoutCalendar.plannedWorkouts : []).forEach((entry) => {
+      const status = String(entry?.status || "").trim().toLowerCase();
+      const completionKey = getTrainerCompletionKey(entry);
+      if (completionKey && ["completed", "completed_off_date"].includes(status)) {
+        completedWorkoutIds.add(completionKey);
+      }
+    });
+  }
 
   return completedWorkoutIds.size;
 }
@@ -262,9 +291,17 @@ export function getTrainerClientSummaryFromMap(client = {}, summaries = {}) {
 export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
   const nutritionState = client.nutritionState || client.adminClientNutrition || client.nutrition || null;
   const nutritionSummary = getTrainerNutritionSummary(nutritionState);
+  const assignedProgramUpdatedAt = client.assignedProgramUpdatedAt || client.assignedProgramAt || previousSummary.assignedProgramUpdatedAt || "";
+  const hasWorkoutCalendar = Boolean(client.workoutCalendar);
+  const calendarCompletedWorkoutCount = getTrainerCompletedWorkoutCountForAssignment(
+    [],
+    assignedProgramUpdatedAt,
+    client.workoutCalendar || {}
+  );
   const completedWorkoutCount = Number(
     client.completedWorkoutCount ??
     client.assignedCompletedWorkoutCount ??
+    (hasWorkoutCalendar ? calendarCompletedWorkoutCount : null) ??
     previousSummary.completedWorkoutCount ??
     0
   ) || 0;
@@ -305,7 +342,7 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
       previousSummary.lastMeasurementAt ||
       "",
     assignedProgramId: client.assignedProgramId || previousSummary.assignedProgramId || "",
-    assignedProgramUpdatedAt: client.assignedProgramUpdatedAt || client.assignedProgramAt || previousSummary.assignedProgramUpdatedAt || "",
+    assignedProgramUpdatedAt,
     assignedWorkoutCount,
     completedWorkoutCount,
     plateau: previousSummary.plateau || { isPlateau: false, days: 0, delta: null },

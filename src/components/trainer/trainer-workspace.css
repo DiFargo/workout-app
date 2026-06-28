@@ -2158,6 +2158,17 @@
   font-weight: 500;
 }
 
+.trainerNextHistoryList article p {
+  margin: 2px 0 0;
+  color: var(--tn-text);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.trainerNextWorkoutNotesTitle {
+  margin-top: 16px;
+}
+
 .trainerNextHistoryList article > svg {
   color: var(--tn-green);
 }
@@ -4830,6 +4841,127 @@
   color: var(--tn-muted);
   font-size: 12px;
   line-height: 1.35;
+}
+
+.trainerNextProgramsTab .programAiImportSheet {
+  width: min(560px, 100%);
+}
+
+.trainerNextProgramsTab .programAiImportHint {
+  margin: -2px 0 14px;
+  color: var(--tn-muted);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.trainerNextProgramsTab .programAiImportText {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.trainerNextProgramsTab .programAiImportText > span {
+  color: var(--tn-purple);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.trainerNextProgramsTab .programAiImportText textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  padding: 12px 13px;
+  border: 1px solid #e3e5ee;
+  border-radius: 16px;
+  background: #f8f9fd;
+  color: var(--tn-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.4;
+  outline: none;
+}
+
+.trainerNextProgramsTab .programAiImportText textarea:focus {
+  border-color: rgba(104, 68, 245, 0.45);
+  box-shadow: 0 0 0 4px rgba(104, 68, 245, 0.08);
+}
+
+.trainerNextProgramsTab .programAiImportFile {
+  position: relative;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px dashed rgba(104, 68, 245, 0.32);
+  border-radius: 16px;
+  background: #f6f3ff;
+  color: var(--tn-text);
+  cursor: pointer;
+}
+
+.trainerNextProgramsTab .programAiImportFile svg {
+  color: var(--tn-purple);
+}
+
+.trainerNextProgramsTab .programAiImportFile input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.trainerNextProgramsTab .programAiImportError {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(223, 82, 102, 0.25);
+  border-radius: 13px;
+  background: #fff0f3;
+  color: #b6364e;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions {
+  display: grid;
+  grid-template-columns: minmax(116px, 0.4fr) minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions > button {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  gap: 0;
+  padding: 0 14px;
+  border: 1px solid #e3e5ee;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--tn-muted);
+  font-size: 13px;
+  font-weight: 950;
+  text-align: center;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions > button:last-child {
+  border-color: transparent;
+  background: linear-gradient(135deg, #6844f5, #2d6ff2);
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(76, 68, 201, 0.18);
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions > button:disabled {
+  opacity: 0.62;
+  cursor: wait;
 }
 
 .trainerNextProgramsTab .programEditorBottomBar,
@@ -8670,7 +8802,7 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   .trainerProgramSelectedBar > div {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 1fr 1.2fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .trainerProgramSelectedBar > div button {

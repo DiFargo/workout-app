@@ -1,3 +1,4 @@
+import { CalendarDays, Search } from "lucide-react";
 import { todayNutritionKey } from "../../../domain/nutritionPresentation";
 
 export default function NutritionHeader({
@@ -22,7 +23,7 @@ export default function NutritionHeader({
             aria-label="Поиск еды"
             title="Поиск еды"
           >
-            <span className="nutritionQuickSearchIcon" aria-hidden="true" />
+            <Search className="nutritionHeaderLucideIcon" aria-hidden="true" />
           </button>
           <button
             className="nutritionQuickActionExact nutritionHeaderIconButton"
@@ -31,7 +32,7 @@ export default function NutritionHeader({
             aria-label="Календарь"
             title="Календарь"
           >
-            <span className="nutritionQuickCalendarIcon" aria-hidden="true">🗓️</span>
+            <CalendarDays className="nutritionQuickCalendarIcon" aria-hidden="true" />
           </button>
         </div>
       </div>

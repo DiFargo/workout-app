@@ -1,3 +1,5 @@
+import "../../styles/admin-lazy.css";
+
 export default function AdminPanelHub({
   canUseAdminFeatures,
   setPage,

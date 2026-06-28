@@ -64,7 +64,31 @@ export default function FoodProductPage({
   onAdd
 }) {
   return (
-    <div className="fatFoodAmountScreen foodEditRenderScreen">
+    <div className="fatFoodAmountScreen foodEditRenderScreen foodProductRenderScreen">
+      {!editPageOpen && (
+        <div className="foodProductTopActions" aria-label="Действия с продуктом">
+          <button
+            type="button"
+            className="foodProductTopAction foodProductTopDelete"
+            disabled={!canDelete}
+            onClick={onDelete}
+            aria-label="Удалить продукт"
+            title="Удалить"
+          >
+            <span aria-hidden="true">🗑</span>
+          </button>
+          <button
+            type="button"
+            className="foodProductTopAction foodProductTopEdit"
+            onClick={onOpenEditPage}
+            aria-label="Редактировать продукт"
+            title="Редактировать"
+          >
+            <span aria-hidden="true">✎</span>
+          </button>
+        </div>
+      )}
+
       <FoodProductHeader
         showFlowHeader={!editPageOpen}
         isEditing={isEditing}
@@ -136,10 +160,7 @@ export default function FoodProductPage({
 
       <FoodProductActionBar
         hidden={editPageOpen}
-        canDelete={canDelete}
         onBack={onBack}
-        onDelete={onDelete}
-        onEdit={onOpenEditPage}
         onAdd={onAdd}
       />
 

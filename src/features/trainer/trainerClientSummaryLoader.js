@@ -75,7 +75,11 @@ export function createTrainerClientSummaryLoader({
       const nutritionState = getTrainerSettledDocumentData(nutritionResult, client?.nutritionState || null);
       const nutritionSummary = getTrainerNutritionSummary(nutritionState);
       const assignedProgramUpdatedAt = client.assignedProgramUpdatedAt || client.assignedProgramAt || "";
-      const completedWorkoutCount = getTrainerCompletedWorkoutCountForAssignment(clientHistory, assignedProgramUpdatedAt);
+      const completedWorkoutCount = getTrainerCompletedWorkoutCountForAssignment(
+        clientHistory,
+        assignedProgramUpdatedAt,
+        client.workoutCalendar || {}
+      );
       const assignedWorkoutCount = Number(client.assignedWorkoutCount) || 0;
       const payment = getTrainerSettledDocumentData(paymentResult);
       const workoutActivitySummary = getTrainerWorkoutActivitySummary(clientHistory, {

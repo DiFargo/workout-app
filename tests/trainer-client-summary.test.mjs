@@ -67,6 +67,25 @@ test("trainer completed workout count matches current assignment version", () =>
   assert.equal(getTrainerCompletedWorkoutCountForAssignment(history, ""), 0);
 });
 
+test("trainer completed workout count includes manual calendar statuses", () => {
+  const assignedAt = "2026-06-20T10:00:00.000Z";
+  const history = [
+    { workoutId: "w1", assignedProgramUpdatedAt: assignedAt },
+    { workoutId: "w2", assignedProgramUpdatedAt: assignedAt }
+  ];
+  const calendar = {
+    assignedProgramUpdatedAt: assignedAt,
+    plannedWorkouts: [
+      { workoutId: "w3", order: 3, status: "completed" },
+      { workoutId: "w4", order: 4, status: "completed_off_date" },
+      { workoutId: "w5", order: 5, status: "missed" }
+    ]
+  };
+
+  assert.equal(getTrainerCompletedWorkoutCountForAssignment(history, assignedAt, calendar), 4);
+  assert.equal(getTrainerCompletedWorkoutCountForAssignment([], "new-assignment", calendar), 0);
+});
+
 test("trainer workout activity summary counts recent and weekly workout days", () => {
   const today = dateKeyOffset(0);
   const yesterday = dateKeyOffset(-1);

@@ -1,7 +1,8 @@
 export default function NutritionCreateChoice({
   open,
   onCreateFood,
-  onCreateDish
+  onCreateDish,
+  onClose
 }) {
   if (!open) {
     return null;
@@ -11,6 +12,14 @@ export default function NutritionCreateChoice({
     <div className="nutritionCreateChoiceOverlay nutritionCreateChoiceScreen">
       <div className="nutritionCreateChoiceSheet">
         <div className="nutritionCreateChoiceHeader">
+          <button
+            type="button"
+            className="nutritionCreateChoiceClose"
+            onClick={onClose}
+            aria-label="Закрыть"
+          >
+            ×
+          </button>
           <span>Моя база</span>
           <h3>Создать</h3>
           <p>Выбери продукт или блюдо из нескольких ингредиентов.</p>

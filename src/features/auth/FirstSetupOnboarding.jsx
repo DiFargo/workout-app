@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
+
 import { hasRequiredAiNutritionProfileFields } from "../../utils/profileDefaults";
 
-const TOTAL_STEPS = 9;
+const TOTAL_STEPS = 10;
 
 const ACTIVITY_OPTIONS = [
   ["low", "🪑", "Минимальный", "Мало движения"],
@@ -25,6 +27,7 @@ const ONBOARDING_TITLES = [
   "Ваш рост",
   "Уровень активности",
   "Ваша цель",
+  "Целевой вес",
   "Проверьте ваши данные"
 ];
 
@@ -37,8 +40,95 @@ const ONBOARDING_SUBTITLES = [
   "Введите ваш рост.",
   "Выберите, насколько вы активны.",
   "Выберите вашу основную цель.",
+  "Укажите вес, к которому будем вести питание и прогресс.",
   "Проверьте и подтвердите данные перед созданием профиля."
 ];
+
+const NUMBER_SLIDER_CONFIG = {
+  age: { label: "Возраст", min: 14, max: 80, step: 1, unit: "лет", fallback: 30, marks: ["14", "30", "80"] },
+  weight: { label: "Текущий вес", min: 40, max: 250, step: 0.1, unit: "кг", fallback: 80, marks: ["40", "80", "250"] },
+  height: { label: "Рост", min: 140, max: 210, step: 1, unit: "см", fallback: 175, marks: ["140", "175", "210"] },
+  targetWeight: { label: "Целевой вес", min: 40, max: 250, step: 0.1, unit: "кг", fallback: 75, marks: ["40", "75", "250"] }
+};
+
+const METRIC_STEP_FIELDS = {
+  3: "age",
+  4: "weight",
+  5: "height",
+  8: "targetWeight"
+};
+
+function normalizeNumberValue(value) {
+  const number = Number(String(value || "").replace(",", "."));
+  return Number.isFinite(number) ? number : null;
+}
+
+function formatNumberValue(value, step = 1) {
+  const number = normalizeNumberValue(value);
+  if (number === null) return "";
+  return Number(step) < 1
+    ? number.toFixed(1).replace(/\.0$/, "")
+    : String(Math.round(number));
+}
+
+function getSuggestedTargetWeight(profileDraft) {
+  const currentWeight = normalizeNumberValue(profileDraft.weight);
+  if (!currentWeight) return NUMBER_SLIDER_CONFIG.targetWeight.fallback;
+
+  const multiplier = profileDraft.goal === "mass"
+    ? 1.08
+    : profileDraft.goal === "cut"
+      ? 0.9
+      : 1;
+
+  const suggested = Math.round(currentWeight * multiplier * 10) / 10;
+  return Math.min(NUMBER_SLIDER_CONFIG.targetWeight.max, Math.max(NUMBER_SLIDER_CONFIG.targetWeight.min, suggested));
+}
+
+function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
+  const config = NUMBER_SLIDER_CONFIG[field];
+  const safeFallback = fallback ?? config.fallback;
+  const numericValue = normalizeNumberValue(value);
+  const sliderValue = numericValue ?? safeFallback;
+  const rangeValue = Math.min(config.max, Math.max(config.min, sliderValue));
+  const sliderProgress = Math.min(
+    100,
+    Math.max(0, ((rangeValue - config.min) / (config.max - config.min)) * 100)
+  );
+
+  return (
+    <label className="firstSetupMetricSlider" style={{ "--slider-progress": `${sliderProgress}%` }}>
+      <span className="firstSetupMetricLabel">{config.label}</span>
+      <strong className="firstSetupMetricValue">{formatNumberValue(sliderValue, config.step)} <small>{config.unit}</small></strong>
+      <input
+        type="range"
+        min={config.min}
+        max={config.max}
+        step={config.step}
+        value={rangeValue}
+        onChange={(event) => onChange(formatNumberValue(event.target.value, config.step))}
+      />
+      <div className="firstSetupMetricTicks" aria-hidden="true">
+        {Array.from({ length: 21 }, (_, index) => <i key={index} />)}
+      </div>
+      <div className="firstSetupMetricMarks" aria-hidden="true">
+        {(config.marks || [config.min, safeFallback, config.max]).map((mark) => <span key={mark}>{mark}</span>)}
+      </div>
+      <div className="firstSetupMetricInput">
+        <input
+          inputMode={config.step < 1 ? "decimal" : "numeric"}
+          type="number"
+          min={config.min}
+          max={config.max}
+          step={config.step}
+          value={value || ""}
+          onChange={(event) => onChange(event.target.value)}
+        />
+        <em>{config.unit}</em>
+      </div>
+    </label>
+  );
+}
 
 export default function FirstSetupOnboarding({
   open,
@@ -47,14 +137,17 @@ export default function FirstSetupOnboarding({
   saveStatus,
   setOnboardingStep,
   setProfileDraft,
-  onSubmit
+  onSubmit,
+  onExit
 }) {
-  if (!open) return null;
+  const [exitConfirmOpen, setExitConfirmOpen] = useState(false);
 
   const profileName = String(profileDraft.name || "").trim();
   const numericAge = Number(profileDraft.age);
   const numericWeight = Number(String(profileDraft.weight || "").replace(",", "."));
   const numericHeight = Number(profileDraft.height);
+  const numericTargetWeight = Number(String(profileDraft.targetWeight || "").replace(",", "."));
+  const targetWeightIsValid = Number.isFinite(numericTargetWeight) && numericTargetWeight >= 30 && numericTargetWeight <= 350;
   const stepCanContinue = [
     true,
     profileDraft.sex === "male" || profileDraft.sex === "female",
@@ -64,7 +157,8 @@ export default function FirstSetupOnboarding({
     Number.isFinite(numericHeight) && numericHeight >= 120 && numericHeight <= 230,
     ["low", "medium", "high", "veryHigh"].includes(profileDraft.activity),
     ["cut", "mass", "recomp", "maintain"].includes(profileDraft.goal),
-    hasRequiredAiNutritionProfileFields(profileDraft)
+    targetWeightIsValid,
+    hasRequiredAiNutritionProfileFields(profileDraft) && targetWeightIsValid
   ][onboardingStep];
 
   const goalLabel = GOAL_OPTIONS.find(([id]) => id === profileDraft.goal)?.[2] || "Рекомпозиция";
@@ -73,6 +167,29 @@ export default function FirstSetupOnboarding({
   function updateProfileDraft(patch) {
     setProfileDraft((prev) => ({ ...prev, ...patch }));
   }
+
+  useEffect(() => {
+    const field = METRIC_STEP_FIELDS[onboardingStep];
+    if (!field || profileDraft[field]) return;
+
+    const fallback = field === "targetWeight"
+      ? getSuggestedTargetWeight(profileDraft)
+      : NUMBER_SLIDER_CONFIG[field].fallback;
+
+    setProfileDraft((prev) => (
+      prev[field]
+        ? prev
+        : { ...prev, [field]: formatNumberValue(fallback, NUMBER_SLIDER_CONFIG[field].step) }
+    ));
+  }, [
+    onboardingStep,
+    profileDraft.age,
+    profileDraft.weight,
+    profileDraft.height,
+    profileDraft.targetWeight,
+    profileDraft.goal,
+    setProfileDraft
+  ]);
 
   function handleFieldSubmit(event) {
     if (event.key !== "Enter") return;
@@ -84,9 +201,20 @@ export default function FirstSetupOnboarding({
     setOnboardingStep((currentStep) => Math.min(currentStep + 1, TOTAL_STEPS - 1));
   }
 
+  if (!open) return null;
+
   return (
     <div className="firstSetupOverlay">
       <div className="firstSetupCard">
+        <button
+          type="button"
+          className="firstSetupExitButton"
+          aria-label="Выйти из опросника"
+          onClick={() => setExitConfirmOpen(true)}
+        >
+          ×
+        </button>
+
         <div className="firstSetupProgress">
           <span>{onboardingStep + 1} / {TOTAL_STEPS}</span>
           <div>
@@ -150,67 +278,27 @@ export default function FirstSetupOnboarding({
           )}
 
           {onboardingStep === 3 && (
-            <label className="firstSetupField">
-              <span>Возраст</span>
-              <div className="firstSetupInputWithUnit">
-                <input
-                  className="firstSetupInput"
-                  inputMode="numeric"
-                  placeholder="0"
-                  type="number"
-                  min="14"
-                  max="100"
-                  enterKeyHint="next"
-                  value={profileDraft.age || ""}
-                  onChange={(event) => updateProfileDraft({ age: event.target.value })}
-                  onKeyDown={handleFieldSubmit}
-                />
-                <em>лет</em>
-              </div>
-            </label>
+            <FirstSetupMetricSlider
+              field="age"
+              value={profileDraft.age}
+              onChange={(value) => updateProfileDraft({ age: value })}
+            />
           )}
 
           {onboardingStep === 4 && (
-            <label className="firstSetupField">
-              <span>Вес</span>
-              <div className="firstSetupInputWithUnit">
-                <input
-                  className="firstSetupInput"
-                  inputMode="decimal"
-                  placeholder="0"
-                  type="number"
-                  min="30"
-                  max="350"
-                  step="0.1"
-                  enterKeyHint="next"
-                  value={profileDraft.weight || ""}
-                  onChange={(event) => updateProfileDraft({ weight: event.target.value })}
-                  onKeyDown={handleFieldSubmit}
-                />
-                <em>кг</em>
-              </div>
-            </label>
+            <FirstSetupMetricSlider
+              field="weight"
+              value={profileDraft.weight}
+              onChange={(value) => updateProfileDraft({ weight: value })}
+            />
           )}
 
           {onboardingStep === 5 && (
-            <label className="firstSetupField">
-              <span>Рост</span>
-              <div className="firstSetupInputWithUnit">
-                <input
-                  className="firstSetupInput"
-                  inputMode="numeric"
-                  placeholder="0"
-                  type="number"
-                  min="120"
-                  max="230"
-                  enterKeyHint="next"
-                  value={profileDraft.height || ""}
-                  onChange={(event) => updateProfileDraft({ height: event.target.value })}
-                  onKeyDown={handleFieldSubmit}
-                />
-                <em>см</em>
-              </div>
-            </label>
+            <FirstSetupMetricSlider
+              field="height"
+              value={profileDraft.height}
+              onChange={(value) => updateProfileDraft({ height: value })}
+            />
           )}
 
           {onboardingStep === 6 && (
@@ -246,29 +334,19 @@ export default function FirstSetupOnboarding({
                   </button>
                 ))}
               </div>
-              <label className="firstSetupField firstSetupTargetWeight">
-                <span>Желаемый вес <small>(необязательно)</small></span>
-                <div className="firstSetupInputWithUnit">
-                  <input
-                    className="firstSetupInput"
-                    inputMode="decimal"
-                    placeholder="Например, 75"
-                    type="number"
-                    min="30"
-                    max="350"
-                    step="0.1"
-                    enterKeyHint="next"
-                    value={profileDraft.targetWeight || ""}
-                    onChange={(event) => updateProfileDraft({ targetWeight: event.target.value })}
-                    onKeyDown={handleFieldSubmit}
-                  />
-                  <em>кг</em>
-                </div>
-              </label>
             </div>
           )}
 
           {onboardingStep === 8 && (
+            <FirstSetupMetricSlider
+              field="targetWeight"
+              value={profileDraft.targetWeight}
+              fallback={getSuggestedTargetWeight(profileDraft)}
+              onChange={(value) => updateProfileDraft({ targetWeight: value })}
+            />
+          )}
+
+          {onboardingStep === 9 && (
             <div className="firstSetupReview">
               {[
                 ["⚥", "Пол", profileDraft.sex === "female" ? "Женщина" : "Мужчина"],
@@ -278,7 +356,7 @@ export default function FirstSetupOnboarding({
                 ["📏", "Рост", `${profileDraft.height || "—"} см`],
                 ["🏃", "Уровень активности", activityLabel],
                 ["🎯", "Цель", goalLabel],
-                ["↔", "Желаемый вес", profileDraft.targetWeight ? `${profileDraft.targetWeight} кг` : "Не указан"]
+                ["↔", "Целевой вес", profileDraft.targetWeight ? `${profileDraft.targetWeight} кг` : "Не указан"]
               ].map(([icon, label, value]) => (
                 <div key={label}>
                   <span>{icon}</span>
@@ -314,7 +392,7 @@ export default function FirstSetupOnboarding({
             <button
               type="button"
               className="firstSetupPrimary"
-              disabled={!hasRequiredAiNutritionProfileFields(profileDraft) || saveStatus === "saving"}
+              disabled={!hasRequiredAiNutritionProfileFields(profileDraft) || !targetWeightIsValid || saveStatus === "saving"}
               onClick={onSubmit}
             >
               {saveStatus === "saving"
@@ -325,6 +403,28 @@ export default function FirstSetupOnboarding({
             </button>
           )}
         </div>
+
+        {exitConfirmOpen && (
+          <div className="firstSetupExitConfirm" role="dialog" aria-modal="true">
+            <div className="firstSetupExitConfirmCard">
+              <h3>Выйти из опросника?</h3>
+              <p>Данные этого шага не сохранятся. Ты вернёшься на экран авторизации.</p>
+              <div>
+                <button type="button" onClick={() => setExitConfirmOpen(false)}>Остаться</button>
+                <button
+                  type="button"
+                  className="primary"
+                  onClick={() => {
+                    setExitConfirmOpen(false);
+                    onExit?.();
+                  }}
+                >
+                  Выйти
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

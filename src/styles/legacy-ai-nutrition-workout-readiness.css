@@ -2698,6 +2698,40 @@
   font-weight: 800;
 }
 
+.postWorkoutComment {
+  display: block;
+  margin: 0 0 14px;
+}
+
+.postWorkoutComment span {
+  display: block;
+  margin: 0 0 7px;
+  color: rgba(255,255,255,0.66);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.postWorkoutComment textarea {
+  width: 100%;
+  min-height: 74px;
+  resize: vertical;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.9);
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.35;
+  outline: none;
+}
+
+.postWorkoutComment textarea:focus {
+  border-color: rgba(127,159,58,0.42);
+  box-shadow: 0 0 0 3px rgba(127,159,58,0.12);
+}
+
 .postWorkoutGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

@@ -10,6 +10,7 @@ import {
   getWorkoutCompletion,
   isWorkoutSetCompleted
 } from "../../../utils/auditSafety";
+import { applyWorkoutProgressionToFuturePlan } from "./workoutPlanUpdateHandlers";
 
 export async function saveCompletedWorkoutToFirebase({
   db,
@@ -33,6 +34,8 @@ export async function saveCompletedWorkoutToFirebase({
   setIsWorkoutSaved,
   setShowWorkoutSavedCard,
   setHistory,
+  setPlan,
+  saveWorkoutsToFirebase,
   feedbackOverride = null,
   allowIncomplete = false
 }) {
@@ -50,7 +53,7 @@ export async function saveCompletedWorkoutToFirebase({
   }
 
   if (!hasFilledSet) {
-    showAppError("validation", "Заполни вес или повторы хотя бы в одном подходе перед завершением тренировки.");
+    showAppError("validation", "Отметь выполненным хотя бы один подход перед завершением тренировки.");
     return;
   }
 
@@ -145,6 +148,22 @@ export async function saveCompletedWorkoutToFirebase({
     setWorkoutHistorySyncState("synced");
     setShowWorkoutSavedCard(true);
     navigator.vibrate?.([100, 70, 150]);
+
+    const progression = applyWorkoutProgressionToFuturePlan(plan, workout, {
+      updatedAt: historyEntry.finishedAt
+    });
+    if (
+      progression.changed &&
+      typeof setPlan === "function" &&
+      typeof saveWorkoutsToFirebase === "function"
+    ) {
+      setPlan(progression.plan);
+      try {
+        await saveWorkoutsToFirebase(progression.plan, { silent: true });
+      } catch (progressionError) {
+        console.warn("Failed to save workout progression update", progressionError);
+      }
+    }
 
     setTimeout(() => {
       setShowWorkoutSavedCard(false);

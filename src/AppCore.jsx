@@ -1,4 +1,4 @@
-﻿import { lazy, Suspense, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
   defaultNutritionState
 } from "./data/nutritionDefaults";
@@ -37,6 +37,7 @@ import { createNutritionSelectedFoodDeleteHandlers } from "./features/client/nut
 import { createNutritionCloudLoader } from "./features/client/nutrition/nutritionCloudLoader";
 import { useNutritionSearchEffects } from "./features/client/nutrition/useNutritionSearchEffects";
 import { useNutritionRuntimeEffects } from "./features/client/nutrition/useNutritionRuntimeEffects";
+import { useNutritionDayRolloverEffect } from "./features/client/nutrition/useNutritionDayRolloverEffect";
 import { useNutritionPageScrollEffect } from "./features/client/nutrition/useNutritionPageScrollEffect";
 import { createProfileAccountHandlers } from "./features/client/profile/profileAccountHandlers";
 import { createProfileProgressHandlers } from "./features/client/profile/profileProgressHandlers";
@@ -254,13 +255,19 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 
 import * as appConfig from "./constants/appConfig";
 import { APP_PAGES } from "./app/appPages";
+import { preloadClientRouteChunks } from "./app/AppRouter";
 import { renderAppRoutePage } from "./app/appRouteRenderer";
-import { renderAppTerminalRoute } from "./app/appTerminalRoutes";
+import {
+  preloadClientTerminalRouteChunks,
+  preloadTrainerRouteChunks,
+  renderAppTerminalRoute
+} from "./app/appTerminalRoutes";
 import {
   getFirstSetupGateState,
   renderAppStartupGate
 } from "./app/appStartupGate";
 import { isAppRouterPage } from "./app/appRouterPages";
+import RouteFallback from "./app/RouteFallback";
 import { normalizeAppTheme, APP_THEMES } from "./app/appTheme";
 import { isClientPrimaryPage, normalizeAppPage } from "./app/appNavigation";
 import {
@@ -275,9 +282,13 @@ import {
   ClientTrainingBottomBar,
 } from "./shared/ui/BottomBar";
 
-const ClientE2EHarness = lazy(() => import("./components/client/ClientE2EHarness"));
-const NutritionRoute = lazy(() => import("./features/client/nutrition/NutritionRoute"));
-const TrainerE2EHarness = lazy(() => import("./components/trainer/TrainerE2EHarness"));
+const loadClientE2EHarness = () => import("./components/client/ClientE2EHarness");
+const loadNutritionRoute = () => import("./features/client/nutrition/NutritionRoute");
+const loadTrainerE2EHarness = () => import("./components/trainer/TrainerE2EHarness");
+
+const ClientE2EHarness = lazy(loadClientE2EHarness);
+const NutritionRoute = lazy(loadNutritionRoute);
+const TrainerE2EHarness = lazy(loadTrainerE2EHarness);
 
 const {
   ADMIN_EMAIL,
@@ -312,7 +323,7 @@ export default function App() {
 
   if (showClientHarness) {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteFallback />}>
         <ClientE2EHarness />
       </Suspense>
     );
@@ -320,7 +331,7 @@ export default function App() {
 
   if (showTrainerHarness) {
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteFallback />}>
         <TrainerE2EHarness />
       </Suspense>
     );
@@ -379,7 +390,7 @@ export default function App() {
       showAppError("offline");
     },
     onOnline: () => {
-      showAppError("savedLocal", "Соединение восстановлено.");
+      showAppError("savedLocal", "?????????? ?????????????.");
       replayFailedHistorySaves(auth.currentUser?.uid);
       replayFailedNutritionSync(auth.currentUser?.uid);
       replayFailedMeasurementSaves(auth.currentUser?.uid);
@@ -429,6 +440,8 @@ export default function App() {
   const [exerciseNoteOpenId, setExerciseNoteOpenId] = useState("");
   const [exerciseTechniqueOpenId, setExerciseTechniqueOpenId] = useState("");
   const [exerciseValidationMessage, setExerciseValidationMessage] = useState("");
+  const exerciseValidationTimerRef = useRef(null);
+  const partialExerciseWarningKeysRef = useRef(new Set());
   const [videoLoadingId, setVideoLoadingId] = useState("");
   const [videoRetryToken, setVideoRetryToken] = useState(0);
   const [workoutHistorySyncState, setWorkoutHistorySyncState] = useState("idle");
@@ -438,6 +451,16 @@ export default function App() {
   const [timerTick, setTimerTick] = useState(Date.now());
   const setRepsInputRefs = useRef({});
   const setWeightInputRefs = useRef({});
+
+  useEffect(() => () => {
+    if (exerciseValidationTimerRef.current) {
+      window.clearTimeout(exerciseValidationTimerRef.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    partialExerciseWarningKeysRef.current.clear();
+  }, [selectedWorkoutId, workoutStartedAt]);
 
   function showInlineVideoControlsTemporarily() {
     if (inlineVideoControlsTimerRef.current) {
@@ -1087,6 +1110,26 @@ export default function App() {
     setShowFirstSetupOnboarding
   });
 
+  useEffect(() => {
+    if (!isLoggedIn || appLoading) return undefined;
+
+    const preloadClientScreens = () => {
+      if (currentUserRole === "client") {
+        preloadClientRouteChunks();
+        preloadClientTerminalRouteChunks();
+        loadNutritionRoute().catch((error) => console.warn("Nutrition preload error", error));
+        return;
+      }
+
+      if (isAdminClaim || currentUserRole === "admin" || currentUserRole === "trainer") {
+        preloadTrainerRouteChunks();
+      }
+    };
+
+    const preloadTimerId = window.setTimeout(preloadClientScreens, 0);
+    return () => window.clearTimeout(preloadTimerId);
+  }, [appLoading, currentUserRole, isAdminClaim, isLoggedIn]);
+
   const hasTransientScreen =
     Boolean(selectedWorkoutId) ||
     Boolean(fullscreenVideo) ||
@@ -1183,6 +1226,7 @@ export default function App() {
   } = createWorkoutCompletionViewHelpers({
     plan,
     history,
+    workoutCalendar: profileWorkoutCalendarData,
     buildCompletedWorkoutSet,
     getWorkoutAssignmentVersion,
     isWorkoutCompletedWithSet
@@ -1193,6 +1237,7 @@ export default function App() {
     currentExerciseIndex,
     inlineVideoControlsTimerRef,
     plan,
+    postWorkoutFeedback,
     restTimerDuration,
     restTimerRunning,
     restTimerSeconds,
@@ -1248,6 +1293,14 @@ export default function App() {
   });
 
   const nutritionDateKey = selectedNutritionDateKey;
+
+  useNutritionDayRolloverEffect({
+    nutritionDateKey,
+    setExpandedNutritionMeals,
+    setNutritionCalendarMonthKey,
+    setSelectedNutritionDateKey
+  });
+
   const {
     isNutritionToday,
     nutritionToday,
@@ -2089,6 +2142,8 @@ export default function App() {
     currentExerciseIndex,
     deckRef,
     touchStartY,
+    exerciseValidationTimerRef,
+    partialExerciseWarningKeysRef,
     setWeightInputRefs,
     setOpenVideoId,
     setInlinePlayingVideoId,
@@ -2096,6 +2151,8 @@ export default function App() {
     setRestTimerSeconds,
     setIsWorkoutSaved,
     setShowWorkoutSavedCard,
+    postWorkoutFeedback,
+    setPostWorkoutFeedbackOpen,
     setSwipeDirection,
     setWorkoutStarted,
     setCurrentExerciseIndex,
@@ -2188,6 +2245,8 @@ export default function App() {
       setIsWorkoutSaved,
       setShowWorkoutSavedCard,
       setHistory,
+      setPlan,
+      saveWorkoutsToFirebase,
       feedbackOverride,
       allowIncomplete
     });
@@ -2320,7 +2379,8 @@ export default function App() {
     loginSubmitting,
     passwordResetSending,
     handleLogin,
-    handleLoginPasswordReset
+    handleLoginPasswordReset,
+    logout
   });
 
   if (startupGate) {
@@ -2388,6 +2448,7 @@ export default function App() {
     setAiNutritionAdaptedToday,
     plan,
     nutrition,
+    profileWorkoutCalendarData,
     user,
     getCompletedWorkoutSet,
     isWorkoutCompletedByHistory,
@@ -2546,7 +2607,7 @@ export default function App() {
     };
 
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<RouteFallback />}>
         <NutritionRoute {...nutritionRouteProps} />
       </Suspense>
     );

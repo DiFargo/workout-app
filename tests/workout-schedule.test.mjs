@@ -4,6 +4,7 @@ import {
   buildPlannedWorkoutSlots,
   buildWorkoutScheduleCalendarEntries,
   buildWorkoutScheduleDraft,
+  buildWorkoutScheduleDraftWithExistingStatuses,
   syncWorkoutCalendarWithPlan
 } from "../src/utils/workoutSchedule.js";
 
@@ -76,6 +77,23 @@ test("manual planned workout status is shown as completed in calendar", () => {
   assert.equal(entries.filter((entry) => entry.status === "completed").length, 3);
 });
 
+test("planned workout slots ignore history from an older assignment", () => {
+  const slots = buildPlannedWorkoutSlots({
+    workouts: [{ id: "w1", name: "Workout A", assignedProgramUpdatedAt: "new-assignment" }],
+    calendar: {
+      assignedProgramUpdatedAt: "new-assignment",
+      plannedWorkouts: [
+        { workoutId: "w1", order: 1, date: "2026-06-20", status: "planned" }
+      ]
+    },
+    history: [{ workoutId: "w1", date: "2026-06-20", assignedProgramUpdatedAt: "old-assignment" }],
+    now: new Date("2026-06-20T12:00:00.000Z")
+  });
+
+  assert.equal(slots[0].status, "planned");
+  assert.equal(slots[0].isCompleted, false);
+});
+
 test("workout calendar sync preserves statuses and records updater", () => {
   const synced = syncWorkoutCalendarWithPlan({
     scheduledDates: ["2026-06-15"],
@@ -96,4 +114,40 @@ test("workout calendar sync preserves statuses and records updater", () => {
   assert.equal(synced.plannedWorkouts[1].status, "moved");
   assert.equal(synced.plannedWorkouts[1].movedToDate, "2026-06-22");
   assert.equal(synced.plannedWorkouts[1].statusUpdatedAt, "2026-06-20T10:00:00.000Z");
+});
+
+test("schedule draft keeps trainer completed statuses when dates are saved again", () => {
+  const draft = buildWorkoutScheduleDraftWithExistingStatuses(
+    ["2026-06-18", "2026-06-20", "2026-06-22"],
+    workouts,
+    [
+      { workoutId: "w1", order: 1, date: "2026-06-18", status: "completed", statusUpdatedAt: "done" },
+      { workoutId: "w2", order: 2, date: "2026-06-20", status: "missed", movedToDate: "2026-06-24" }
+    ]
+  );
+
+  assert.equal(draft[0].status, "completed");
+  assert.equal(draft[0].statusUpdatedAt, "done");
+  assert.equal(draft[1].status, "missed");
+  assert.equal(draft[1].movedToDate, "2026-06-24");
+  assert.equal(draft[2].status, "planned");
+});
+
+test("workout calendar sync carries current assignment marker to planned workouts", () => {
+  const synced = syncWorkoutCalendarWithPlan({}, [
+    {
+      id: "w1",
+      name: "Workout A",
+      assignedProgramId: "program_1",
+      assignedProgramName: "Four week plan",
+      assignedProgramUpdatedAt: "assignment_v2",
+      status: "completed"
+    }
+  ], "2026-06-20T10:00:00.000Z", "trainer_1");
+
+  assert.equal(synced.assignedProgramId, "program_1");
+  assert.equal(synced.assignedProgramName, "Four week plan");
+  assert.equal(synced.assignedProgramUpdatedAt, "assignment_v2");
+  assert.equal(synced.plannedWorkouts[0].assignedProgramUpdatedAt, "assignment_v2");
+  assert.equal(synced.plannedWorkouts[0].status, "completed");
 });

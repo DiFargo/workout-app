@@ -1,3 +1,7 @@
+import { APP_VERSION } from "../../../constants/appConfig";
+
+const versionedMeasurementAsset = (src) => `${src}?v=${encodeURIComponent(APP_VERSION)}`;
+
 export default function ProfileMeasurementWizardPanel({
   visible,
   open,
@@ -94,11 +98,13 @@ export default function ProfileMeasurementWizardPanel({
                 ×
               </button>
               <div className="profileMeasurementWizardVisual">
-                <div className="profileMeasurementMiniHuman">
-                  <i />
-                  <b />
-                  <em />
-                </div>
+                <img
+                  src={versionedMeasurementAsset("/measurements/measurement_dashboard.webp")}
+                  alt="Как выполнять замеры тела"
+                  className="measurementIntroImage"
+                  loading="eager"
+                  decoding="async"
+                />
               </div>
 
               <h3>Как выполнять замеры</h3>
@@ -125,7 +131,7 @@ export default function ProfileMeasurementWizardPanel({
               </button>
               <div className={`profileMeasurementImageFrame zone-${activeField.id}`}>
                 <img
-                  src={`/measurements/${activeField.id}.webp`}
+                  src={versionedMeasurementAsset(`/measurements/${activeField.id}.webp`)}
                   alt={activeField.label}
                   className="profileMeasurementImage"
                   loading="eager"

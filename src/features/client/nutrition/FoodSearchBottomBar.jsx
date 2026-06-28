@@ -3,12 +3,11 @@ export default function FoodSearchBottomBar({
   searchTab,
   onBack,
   onSearch,
-  onPhoto,
   onCreate,
   onMyProducts
 }) {
   return (
-    <div className="fatSearchBottomBar fatSearchBottomBarFive">
+    <div className="fatSearchBottomBar fatSearchBottomBarFour">
       <button
         type="button"
         className="fatSearchBackAction"
@@ -16,7 +15,7 @@ export default function FoodSearchBottomBar({
         aria-label="Назад к питанию"
       >
         <span>←</span>
-        <strong>Назад к питанию</strong>
+        <strong>Назад</strong>
       </button>
 
       <button
@@ -25,17 +24,7 @@ export default function FoodSearchBottomBar({
         onClick={onSearch}
       >
         <span>⌕</span>
-        <strong>Поиск<br />еды</strong>
-      </button>
-
-      <button
-        type="button"
-        className="fatSearchPhotoAction"
-        onClick={onPhoto}
-        aria-label="Распознать еду по фото"
-      >
-        <span>📷</span>
-        <strong>ИИ поиск</strong>
+        <strong>Поиск</strong>
       </button>
 
       <button
@@ -44,7 +33,7 @@ export default function FoodSearchBottomBar({
         onClick={onCreate}
       >
         <span>＋</span>
-        <strong>Создать<br />продукт</strong>
+        <strong>Создать</strong>
       </button>
 
       <button
@@ -52,8 +41,8 @@ export default function FoodSearchBottomBar({
         className={`fatSearchMyProductsAction ${!createChoiceOpen && searchTab === "my" ? "active" : ""}`}
         onClick={onMyProducts}
       >
-        <span>💾</span>
-        <strong>Мои продукты</strong>
+        <span>▣</span>
+        <strong>Мои</strong>
       </button>
     </div>
   );

@@ -1,6 +1,6 @@
 import { doc, setDoc, writeBatch } from "firebase/firestore";
 
-import { buildWorkoutScheduleDraft } from "../../utils/workoutSchedule";
+import { buildWorkoutScheduleDraftWithExistingStatuses } from "../../utils/workoutSchedule";
 import { sortWorkoutDays } from "../../utils/workoutPlanNormalization";
 import { normalizeAdminProgressReminderInterval } from "../../utils/adminClientCalendar";
 import { getClientTelegramProfile } from "../../utils/clientTelegramProfile";
@@ -207,16 +207,23 @@ export function createTrainerClientCalendarHandlers({
 
     const nowIso = new Date().toISOString();
     const currentCalendar = targetClient?.workoutCalendar || {};
-    const plannedWorkouts = buildWorkoutScheduleDraft(cleanDates, workouts);
+    const plannedWorkouts = buildWorkoutScheduleDraftWithExistingStatuses(
+      cleanDates,
+      workouts,
+      currentCalendar.plannedWorkouts || []
+    );
+    const assignmentInfo = {
+      assignedProgramId: targetClient?.assignedProgramId || workouts[0]?.assignedProgramId || plan.assignedProgramId || "",
+      assignedProgramName: targetClient?.assignedProgramName || workouts[0]?.assignedProgramName || plan.assignedProgramName || "",
+      assignedProgramUpdatedAt: targetClient?.assignedProgramUpdatedAt || workouts[0]?.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || ""
+    };
     const nextCalendar = {
       ...currentCalendar,
       enabled: currentCalendar.enabled !== false,
       scheduledDates: cleanDates,
       monthlyTrainingDates: cleanDates,
       plannedWorkouts,
-      assignedProgramId: targetClient?.assignedProgramId || workouts[0]?.assignedProgramId || plan.assignedProgramId || "",
-      assignedProgramName: targetClient?.assignedProgramName || workouts[0]?.assignedProgramName || plan.assignedProgramName || "",
-      assignedProgramUpdatedAt: targetClient?.assignedProgramUpdatedAt || workouts[0]?.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || "",
+      ...assignmentInfo,
       updatedAt: nowIso,
       updatedBy: auth.currentUser?.uid || ""
     };
@@ -224,7 +231,11 @@ export function createTrainerClientCalendarHandlers({
       ...workout,
       scheduledDate: cleanDates[index],
       plannedDate: cleanDates[index],
-      scheduleOrder: index + 1
+      scheduleOrder: index + 1,
+      status: plannedWorkouts[index]?.status || workout.status || "planned",
+      movedToDate: plannedWorkouts[index]?.movedToDate || workout.movedToDate || "",
+      statusUpdatedAt: plannedWorkouts[index]?.statusUpdatedAt || workout.statusUpdatedAt || "",
+      ...assignmentInfo
     }));
     const batch = writeBatch(db);
 
@@ -233,11 +244,16 @@ export function createTrainerClientCalendarHandlers({
       batch.set(doc(db, "users", clientId, "workouts", workout.id), {
         scheduledDate: cleanDates[index],
         plannedDate: cleanDates[index],
-        scheduleOrder: index + 1
+        scheduleOrder: index + 1,
+        status: workout.status || "planned",
+        movedToDate: workout.movedToDate || "",
+        statusUpdatedAt: workout.statusUpdatedAt || "",
+        ...assignmentInfo
       }, { merge: true });
     });
     batch.set(doc(db, "users", clientId), {
       workoutCalendar: nextCalendar,
+      ...assignmentInfo,
       trainingDays: currentCalendar.trainingDays || targetClient?.trainingDays || [],
       workoutTime: currentCalendar.workoutTime || targetClient?.workoutTime || "",
       updatedAt: nowIso

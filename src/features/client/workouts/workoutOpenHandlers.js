@@ -55,6 +55,10 @@ export function createWorkoutOpenHandlers({
     const restoredReadiness = shouldRestoreDraft && savedDraft?.selectedReadiness?.id
       ? getWorkoutReadinessOption(savedDraft.selectedReadiness.id)
       : null;
+    const restoredPostWorkoutFeedback =
+      shouldRestoreDraft && savedDraft?.selectedPostWorkoutFeedback?.id
+        ? savedDraft.selectedPostWorkoutFeedback
+        : null;
 
     if (shouldRestoreDraft) {
       setPlan(savedDraft.plan);
@@ -95,7 +99,7 @@ export function createWorkoutOpenHandlers({
     setExerciseHistoryOpenId("");
     setWorkoutHistorySyncState("idle");
     setWorkoutExitPromptOpen(false);
-    setPostWorkoutFeedback(null);
+    setPostWorkoutFeedback(restoredPostWorkoutFeedback);
     setPostWorkoutFeedbackOpen(false);
     setWorkoutReadinessOpen(!shouldRestoreDraft);
     setIsWorkoutSaved(false);

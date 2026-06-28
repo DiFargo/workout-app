@@ -110,7 +110,9 @@ export function createNutritionPhotoAiHandlers({
     const defaultUnit =
       getNutritionSmartUnits(normalizedFood).find((unit) => unit.id === preferredUnitId) ||
       getDefaultNutritionSmartUnit(normalizedFood);
-    const fallbackAmount = normalizedFood.lastAmount || defaultUnit.amount || 100;
+    const fallbackAmount = defaultUnit.mode === "portion"
+      ? (defaultUnit.portionAmount || normalizedFood.portionAmount || 100)
+      : (normalizedFood.lastAmount || normalizedFood.portionAmount || defaultUnit.amount || 100);
 
     const foodForPicker = {
       ...normalizedFood,
@@ -120,7 +122,7 @@ export function createNutritionPhotoAiHandlers({
 
     setSelectedNutritionFood(foodForPicker);
     setNutritionAmount(String(fallbackAmount));
-    setNutritionAmountMode(defaultUnit.mode || "grams");
+    setNutritionAmountMode("grams");
     setNutritionEditDetailsOpen(false);
     setNutritionEditPageOpen(false);
     setNutritionEditOriginalFood(null);

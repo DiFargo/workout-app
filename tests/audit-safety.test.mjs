@@ -142,9 +142,9 @@ test("nutrition results are ranked and exact duplicates are removed", () => {
 
 test("an explicitly checked workout set is completed without manual input", () => {
   assert.equal(isWorkoutSetCompleted({ completed: true }), true);
-  assert.equal(isWorkoutSetCompleted({ enteredReps: "10" }), true);
-  assert.equal(isWorkoutSetCompleted({ enteredWeight: "0", enteredReps: "" }), true);
-  assert.equal(isWorkoutSetCompleted({ enteredWeight: "", enteredReps: "0" }), true);
+  assert.equal(isWorkoutSetCompleted({ enteredReps: "10" }), false);
+  assert.equal(isWorkoutSetCompleted({ enteredWeight: "0", enteredReps: "" }), false);
+  assert.equal(isWorkoutSetCompleted({ enteredWeight: "", enteredReps: "0" }), false);
   assert.equal(hasWorkoutSetEntry(""), false);
   assert.equal(hasWorkoutSetEntry("0"), true);
 });

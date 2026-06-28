@@ -51,7 +51,7 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
   const main = page.locator(".trainerNextMain");
 
   await expect(page.locator(".trainerNextRoot")).toBeVisible();
-  await expect(page.getByText(/^v\d+$/)).toBeVisible();
+  await expect(page.getByText(/^v(?:\.\d+)+$/)).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 

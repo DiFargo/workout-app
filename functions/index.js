@@ -15,6 +15,8 @@ const ADMIN_BOOTSTRAP_SECRET = defineSecret("ADMIN_BOOTSTRAP_SECRET");
 const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
 const TELEGRAM_WEBHOOK_URL = "https://europe-west1-tren-85720.cloudfunctions.net/telegramWebhook";
 const MAX_AI_IMAGE_DATA_LENGTH = 8 * 1024 * 1024;
+const MAX_AI_PROGRAM_TEXT_LENGTH = 35000;
+const MAX_AI_PROGRAM_FILE_DATA_LENGTH = 10 * 1024 * 1024;
 
 function json(res, status, payload) {
   res.status(status).set("Content-Type", "application/json").send(JSON.stringify(payload));
@@ -867,6 +869,323 @@ function extractJsonObject(text = "") {
     }
   }
 }
+
+function cleanProgramText(value = "", maxLength = 120) {
+  return String(value || "").replace(/\s+/g, " ").trim().slice(0, maxLength);
+}
+
+function normalizeAiWorkoutSet(set = {}) {
+  const reps = Number.parseInt(String(set.reps ?? set.repetitions ?? 10).replace(",", "."), 10);
+  const weightValue = set.weight ?? set.weightKg ?? set.load ?? "";
+  const weight = String(weightValue ?? "").replace(",", ".").trim();
+
+  return {
+    reps: Number.isFinite(reps) && reps > 0 ? reps : 10,
+    weight: weight && weight !== "0" ? weight : ""
+  };
+}
+
+function normalizeAiWorkoutExercise(exercise = {}, index = 0) {
+  const sourceSets = Array.isArray(exercise.sets) && exercise.sets.length
+    ? exercise.sets
+    : Array.from({ length: Math.max(1, Number.parseInt(exercise.setsCount || exercise.approaches || 3, 10) || 3) }, () => ({
+        reps: exercise.reps || exercise.repetitions || 10,
+        weight: exercise.weight || exercise.weightKg || ""
+      }));
+
+  return {
+    name: cleanProgramText(exercise.name || exercise.exercise || `Упражнение ${index + 1}`, 90) || `Упражнение ${index + 1}`,
+    notes: cleanProgramText(exercise.notes || exercise.comment || "", 240),
+    sets: sourceSets.slice(0, 8).map(normalizeAiWorkoutSet)
+  };
+}
+
+function normalizeAiWorkout(workout = {}, index = 0) {
+  const exercises = Array.isArray(workout.exercises) ? workout.exercises : [];
+
+  return {
+    name: cleanProgramText(workout.name || workout.title || `Тренировка ${index + 1}`, 90) || `Тренировка ${index + 1}`,
+    focus: cleanProgramText(workout.focus || workout.goal || "", 120),
+    exercises: exercises.slice(0, 14).map(normalizeAiWorkoutExercise).filter((exercise) => exercise.name)
+  };
+}
+
+function normalizeAiWorkoutImportProgram(rawProgram = {}) {
+  const rawWeeks = Array.isArray(rawProgram.weeks) ? rawProgram.weeks : [];
+  const fallbackWorkouts = Array.isArray(rawProgram.workouts) ? rawProgram.workouts : [];
+  let weeks = rawWeeks.map((week, weekIndex) => ({
+    name: cleanProgramText(week.name || `Неделя ${weekIndex + 1}`, 60),
+    workouts: (Array.isArray(week.workouts) ? week.workouts : []).map(normalizeAiWorkout)
+  }));
+
+  if (!weeks.some((week) => week.workouts.length) && fallbackWorkouts.length) {
+    const weekCount = Math.max(1, Math.ceil(fallbackWorkouts.length / 2));
+    weeks = Array.from({ length: weekCount }, (_, weekIndex) => ({
+      name: `Неделя ${weekIndex + 1}`,
+      workouts: fallbackWorkouts
+        .slice(weekIndex * 2, weekIndex * 2 + 2)
+        .map((workout, workoutIndex) => normalizeAiWorkout(workout, weekIndex * 2 + workoutIndex))
+    }));
+  }
+
+  weeks = weeks
+    .map((week, weekIndex) => ({
+      name: week.name || `Неделя ${weekIndex + 1}`,
+      workouts: week.workouts.filter((workout) => workout.exercises.length)
+    }))
+    .filter((week) => week.workouts.length)
+    .slice(0, 12);
+
+  if (!weeks.length) {
+    throw createHttpError(422, "AI did not find workouts and exercises");
+  }
+
+  const blocks = Array.from({ length: Math.ceil(weeks.length / 2) }, (_, blockIndex) => {
+    const blockWeeks = weeks.slice(blockIndex * 2, blockIndex * 2 + 2);
+
+    return {
+      name: `Микроцикл ${blockIndex + 1}`,
+      monthId: `month_${Math.floor(blockIndex / 2) + 1}`,
+      weeks: blockWeeks.map((week, weekIndex) => ({
+        name: week.name || `Неделя ${blockIndex * 2 + weekIndex + 1}`,
+        workouts: week.workouts.map((workout, workoutIndex) => ({
+          name: workout.name || `Тренировка ${workoutIndex + 1}`,
+          focus: workout.focus || "",
+          exercises: workout.exercises
+        }))
+      }))
+    };
+  });
+  const monthIds = blocks
+    .map((block) => block.monthId)
+    .filter((monthId, index, list) => list.indexOf(monthId) === index);
+
+  return {
+    schema: "tren-monthly-program-v2",
+    name: cleanProgramText(rawProgram.name || rawProgram.title || "Программа из ИИ", 80) || "Программа из ИИ",
+    description: cleanProgramText(rawProgram.description || "Создано из материала тренера через ИИ", 240),
+    months: monthIds.map((monthId, index) => ({
+      id: monthId,
+      name: `Месяц ${index + 1}`,
+      microcycles: blocks.filter((block) => block.monthId === monthId)
+    })),
+    blocks
+  };
+}
+
+export const aiWorkoutProgramImport = onRequest(
+  {
+    region: "us-central1",
+    memory: "1GiB",
+    timeoutSeconds: 90,
+    secrets: [OPENAI_API_KEY],
+    cors: true
+  },
+  async (req, res) => {
+    const apiVersion = "aiWorkoutProgramImport-v1";
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed", apiVersion });
+
+    try {
+      const context = await getAuthenticatedContext(req);
+      if (context.token?.admin !== true && context.role !== "trainer") {
+        throw createHttpError(403, "Trainer access required");
+      }
+      await enforceRateLimit(context.uid, "ai-workout-program-import", {
+        limit: 8,
+        windowMs: 10 * 60 * 1000
+      });
+      await enforceRateLimit(context.uid, "ai-workout-program-import-daily", {
+        limit: 40,
+        windowMs: 24 * 60 * 60 * 1000
+      });
+
+      const {
+        text = "",
+        imageData = "",
+        fileData = "",
+        mimeType = "",
+        fileName = "program"
+      } = req.body || {};
+      const cleanText = String(text || "").trim().slice(0, MAX_AI_PROGRAM_TEXT_LENGTH);
+      const cleanImageData = String(imageData || "");
+      const cleanFileData = String(fileData || "");
+
+      if (!cleanText && !cleanImageData && !cleanFileData) {
+        return json(res, 400, { ok: false, error: "Missing program material", apiVersion });
+      }
+      if (cleanImageData && cleanImageData.length > MAX_AI_IMAGE_DATA_LENGTH) {
+        return json(res, 413, { ok: false, error: "Image payload is too large", apiVersion });
+      }
+      if (cleanFileData && cleanFileData.length > MAX_AI_PROGRAM_FILE_DATA_LENGTH) {
+        return json(res, 413, { ok: false, error: "File payload is too large", apiVersion });
+      }
+
+      const apiKey = OPENAI_API_KEY.value();
+      if (!apiKey) {
+        return json(res, 500, { ok: false, error: "OPENAI_API_KEY is not configured", apiVersion });
+      }
+
+      const systemPrompt = [
+        "You convert trainer-provided workout programs into structured JSON for a fitness coaching app.",
+        "Read Russian or English program text, screenshots, tables, PDF or document-like files.",
+        "Preserve workout order, exercise order, sets, reps, working weight if present, and short notes.",
+        "Do not invent client results. If weight is absent, use an empty string.",
+        "Return only realistic training structure. Ignore decorative text, prices, nutrition and unrelated content.",
+        "Use Russian names for generated workout titles when source is Russian."
+      ].join("\n");
+      const userPrompt = [
+        "Analyze the trainer material and create an editable workout program.",
+        "Return 1-12 weeks. Put workouts into the correct week when possible.",
+        "For each workout include exercises in source order.",
+        "For sets, expand shorthand like 3x10 into three set objects.",
+        "If one line says 4 sets of 8-10 reps, create 4 sets with reps \"8-10\" or 8 if a number is required.",
+        "Required JSON shape:",
+        '{"name":"program name","description":"short source summary","confidence":"high|medium|low","weeks":[{"name":"Неделя 1","workouts":[{"name":"День 1 — Спина","focus":"Спина","exercises":[{"name":"Тяга верхнего блока","notes":"","sets":[{"reps":10,"weight":"40"}]}]}]}]}',
+        `File name: ${fileName}`,
+        cleanText ? `Trainer text:\n${cleanText}` : "No pasted text."
+      ].join("\n\n");
+      const userContent = [{ type: "input_text", text: userPrompt }];
+      const normalizedMimeType = String(mimeType || "").toLowerCase();
+
+      if (cleanImageData) {
+        const imageUrl = cleanImageData.startsWith("data:")
+          ? cleanImageData
+          : `data:${normalizedMimeType || "image/jpeg"};base64,${cleanImageData.includes(",") ? cleanImageData.split(",").pop() : cleanImageData}`;
+        userContent.push({ type: "input_image", image_url: imageUrl });
+      } else if (cleanFileData) {
+        userContent.push({
+          type: "input_file",
+          filename: String(fileName || "program-file"),
+          file_data: cleanFileData
+        });
+      }
+
+      const openAiResponse = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          input: [
+            {
+              role: "system",
+              content: [{ type: "input_text", text: systemPrompt }]
+            },
+            {
+              role: "user",
+              content: userContent
+            }
+          ],
+          text: {
+            format: {
+              type: "json_schema",
+              name: "workout_program_import",
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  confidence: { type: "string" },
+                  weeks: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      additionalProperties: false,
+                      properties: {
+                        name: { type: "string" },
+                        workouts: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            additionalProperties: false,
+                            properties: {
+                              name: { type: "string" },
+                              focus: { type: "string" },
+                              exercises: {
+                                type: "array",
+                                items: {
+                                  type: "object",
+                                  additionalProperties: false,
+                                  properties: {
+                                    name: { type: "string" },
+                                    notes: { type: "string" },
+                                    sets: {
+                                      type: "array",
+                                      items: {
+                                        type: "object",
+                                        additionalProperties: false,
+                                        properties: {
+                                          reps: { type: "number" },
+                                          weight: { type: "string" }
+                                        },
+                                        required: ["reps", "weight"]
+                                      }
+                                    }
+                                  },
+                                  required: ["name", "notes", "sets"]
+                                }
+                              }
+                            },
+                            required: ["name", "focus", "exercises"]
+                          }
+                        }
+                      },
+                      required: ["name", "workouts"]
+                    }
+                  }
+                },
+                required: ["name", "description", "confidence", "weeks"]
+              }
+            }
+          },
+          max_output_tokens: 3500
+        })
+      });
+      const raw = await openAiResponse.text();
+
+      if (!openAiResponse.ok) {
+        console.error("OpenAI aiWorkoutProgramImport error:", raw);
+        return json(res, 500, { ok: false, error: "OpenAI request failed", message: "ИИ не смог обработать файл.", details: raw.slice(0, 800), apiVersion });
+      }
+
+      let parsed = null;
+      try {
+        const responseData = JSON.parse(raw);
+        const outputText = responseData.output_text
+          || responseData.output?.flatMap((item) => item.content || []).find((item) => item.type === "output_text")?.text
+          || "";
+        parsed = JSON.parse(outputText);
+      } catch (error) {
+        console.error("aiWorkoutProgramImport parse error:", error, raw);
+        parsed = extractJsonObject(raw);
+      }
+
+      if (!parsed) {
+        return json(res, 500, { ok: false, error: "AI response parse failed", message: "ИИ вернул ответ без структуры программы.", apiVersion });
+      }
+
+      const program = normalizeAiWorkoutImportProgram(parsed);
+
+      return json(res, 200, {
+        ok: true,
+        apiVersion,
+        confidence: parsed.confidence || "medium",
+        program
+      });
+    } catch (error) {
+      console.error("aiWorkoutProgramImport error:", error);
+      return json(res, getHttpErrorStatus(error), {
+        ok: false,
+        error: "ai_workout_program_import_failed",
+        message: error.message,
+        apiVersion
+      });
+    }
+  }
+);
 
 async function fetchOpenAiNutritionFoods(query) {
   const response = await fetch("https://api.openai.com/v1/responses", {

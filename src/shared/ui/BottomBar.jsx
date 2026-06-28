@@ -1,4 +1,6 @@
 ﻿
+import { Dumbbell, Home, UserRound, Utensils } from "lucide-react";
+
 export function ClientMainBottomBar({
   activeTab = "main",
   className = "mainMenuBottomBar profileBottomTabBar",
@@ -34,7 +36,7 @@ export function ClientMainBottomBar({
         aria-current={activeTab === "main" ? "page" : undefined}
         onClick={onGoMain}
       >
-        <span aria-hidden="true">🏠</span>
+        <span aria-hidden="true"><Home /></span>
         <strong>Главная</strong>
       </button>
       <button
@@ -44,7 +46,7 @@ export function ClientMainBottomBar({
         aria-current={activeTab === "workouts" ? "page" : undefined}
         onClick={onOpenTraining}
       >
-        <span aria-hidden="true">🏋️</span>
+        <span aria-hidden="true"><Dumbbell /></span>
         <strong>Тренировки</strong>
       </button>
       <button
@@ -54,7 +56,7 @@ export function ClientMainBottomBar({
         aria-current={activeTab === "nutrition" ? "page" : undefined}
         onClick={onOpenNutrition}
       >
-        <span aria-hidden="true">🍽️</span>
+        <span aria-hidden="true"><Utensils /></span>
         <strong>Питание</strong>
       </button>
       <button
@@ -64,7 +66,7 @@ export function ClientMainBottomBar({
         aria-current={activeTab === "cabinet" ? "page" : undefined}
         onClick={onOpenCabinet}
       >
-        <span aria-hidden="true">👤</span>
+        <span aria-hidden="true"><UserRound /></span>
         <strong>Кабинет</strong>
       </button>
     </nav>

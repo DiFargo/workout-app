@@ -224,6 +224,9 @@ const {
         nutritionToday,
         mealStats,
         expandedNutritionMeals,
+        deletingFoodId: deletingNutritionFoodId,
+        swipeOffsets: nutritionFoodSwipeOffsets,
+        swipeMovedRef: nutritionFoodSwipeMoved,
         getFoodIcon,
         roundMacro,
         onOpenZouk: () => setNutritionZoukExpanded(true),
@@ -237,7 +240,11 @@ const {
           openNutritionFoodEditor(item);
           setNutritionSearchTab("food");
         },
-        onOpenMealFoods: (mealId) => setExpandedNutritionMeals({ [mealId]: true })
+        onOpenMealFoods: (mealId) => setExpandedNutritionMeals({ [mealId]: true }),
+        onSwipeStart: handleNutritionFoodSwipeStart,
+        onSwipeMove: handleNutritionFoodSwipeMove,
+        onSwipeEnd: handleNutritionFoodSwipeEnd,
+        onSwipeCancel: handleNutritionFoodSwipeCancel
       }}
       mealModalProps={{
         activeMeal: activeNutritionMeal,
@@ -289,6 +296,7 @@ const {
         header: {
           selectedFood: selectedNutritionFood,
           searchTab: nutritionSearchTab,
+          createChoiceOpen: nutritionCreateChoiceOpen,
           mealMenuOpen: nutritionMealMenuOpen,
           meals: nutritionMeals,
           mealId: nutritionMeal,
@@ -299,6 +307,11 @@ const {
           },
           onCollapseMealMenu: () => setNutritionMealMenuOpen(false),
           onClose: () => {
+            if (nutritionCreateChoiceOpen) {
+              setNutritionCreateChoiceOpen(false);
+              setNutritionMealMenuOpen(false);
+              return;
+            }
             setNutritionMealMenuOpen(false);
             setSelectedNutritionFood(null);
             setEditingNutritionItemId(null);
@@ -422,6 +435,9 @@ const {
             setNutritionSearch(food.name.split(" — ")[0]);
             setNutritionSearchTab("food");
             setShowRecentNutritionFoods(false);
+            setNutritionCreateChoiceOpen(false);
+            setNutritionMealMenuOpen(false);
+            addNutritionFoodFromPicker(food);
           },
           onSuggestionSelect: (suggestion) => {
             if (suggestion.includes("фото")) {
@@ -432,6 +448,9 @@ const {
           },
           onMyFoodSelect: (normalizedFood) => {
             const myFoodId = normalizedFood.id || normalizedFood.foodId;
+            const nextAmount = normalizedFood.amountMode === "portion"
+              ? (normalizedFood.portionAmount || 100)
+              : (normalizedFood.lastAmount || normalizedFood.portionAmount || 100);
             saveRecentNutritionFood(normalizedFood);
             setSelectedNutritionFood({
               ...normalizedFood,
@@ -441,8 +460,8 @@ const {
               icon: normalizedFood.icon || getFoodIcon(normalizedFood)
             });
             setEditingNutritionItemId(`my:${myFoodId}`);
-            setNutritionAmount(String(normalizedFood.lastAmount || normalizedFood.portionAmount || 100));
-            setNutritionAmountMode(normalizedFood.amountMode || "grams");
+            setNutritionAmount(String(nextAmount));
+            setNutritionAmountMode("grams");
             setNutritionEditNote("");
             setNutritionEditDetailsOpen(false);
             setNutritionEditPageOpen(false);

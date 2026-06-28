@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
@@ -96,6 +96,28 @@ function getHarnessWeekDates(selectedKey) {
 }
 
 export default function ClientE2EHarness() {
+  useEffect(() => {
+    const previousHtmlTheme = document.documentElement.dataset.appTheme;
+    const previousBodyTheme = document.body.dataset.appTheme;
+
+    document.documentElement.dataset.appTheme = "warm-light";
+    document.body.dataset.appTheme = "warm-light";
+
+    return () => {
+      if (previousHtmlTheme) {
+        document.documentElement.dataset.appTheme = previousHtmlTheme;
+      } else {
+        delete document.documentElement.dataset.appTheme;
+      }
+
+      if (previousBodyTheme) {
+        document.body.dataset.appTheme = previousBodyTheme;
+      } else {
+        delete document.body.dataset.appTheme;
+      }
+    };
+  }, []);
+
   const [page, setPage] = useState("main");
   const [nutritionDateKey, setNutritionDateKey] = useState(HARNESS_DATE);
   const [nutrition] = useState(buildHarnessNutrition);
@@ -140,8 +162,18 @@ export default function ClientE2EHarness() {
   }
 
   function renderHarnessChrome(activeTab, title, children) {
+    const pageClass = activeTab === "main"
+      ? " clientCorePageMain mainDashboardPage"
+      : activeTab === "cabinet"
+        ? " clientCorePageCabinet"
+        : "";
+
     return (
-      <main className="profileDashboardPage profileTabbedPage clientCorePage" data-testid={`client-harness-${activeTab}`}>
+      <main
+        className={`profileDashboardPage profileTabbedPage clientCorePage${pageClass}`}
+        data-profile-tab={activeTab === "cabinet" ? "cabinet" : undefined}
+        data-testid={`client-harness-${activeTab}`}
+      >
         <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
         <section className="profileUnifiedCard profileAiDashboardCard profileCabinetSection">
           <h1 className="clientCorePageTitle">{title}</h1>

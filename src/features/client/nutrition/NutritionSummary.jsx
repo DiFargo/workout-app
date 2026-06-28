@@ -13,7 +13,7 @@ export default function NutritionSummary({
       >
         <span className="nutritionAiPlanCollapsedIcon" aria-hidden="true">📊</span>
         <span className="nutritionAiPlanTopTitle">
-          <strong>Анализ питания</strong>
+          <strong>Анализ</strong>
           <small>{summaryText}</small>
         </span>
         <span className="nutritionAiPlanCollapsedArrow" aria-hidden="true">›</span>

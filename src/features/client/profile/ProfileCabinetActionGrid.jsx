@@ -56,7 +56,7 @@ export default function ProfileCabinetActionGrid({
           className="nutrition"
           icon="🍽️"
           eyebrow="ПЛАН ПИТАНИЯ"
-          title="План КБЖУ"
+          title="КБЖУ"
           note={nutritionText}
           onClick={onOpenNutrition}
         />
@@ -78,7 +78,7 @@ export default function ProfileCabinetActionGrid({
           className="history"
           icon="🕘"
           eyebrow="ТРЕНИРОВКИ"
-          title="История тренировок"
+          title="История"
           note={historyText}
           onClick={onOpenHistory}
         />

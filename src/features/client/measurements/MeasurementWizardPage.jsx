@@ -1,8 +1,11 @@
 ﻿import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
+import { APP_VERSION } from "../../../constants/appConfig";
 import {
   getProfileMeasurementFields,
   getProfileMeasurementValue
 } from "../../../utils/profileMeasurements";
+
+const versionedMeasurementAsset = (src) => `${src}?v=${encodeURIComponent(APP_VERSION)}`;
 
 export default function MeasurementWizardPage({
   aiNutritionProfile,
@@ -106,7 +109,7 @@ export default function MeasurementWizardPage({
       <main className="measurementFullscreenBody">
         {nextMeasurementField && (
           <img
-            src={`/measurements/${nextMeasurementField.id}.webp`}
+            src={versionedMeasurementAsset(`/measurements/${nextMeasurementField.id}.webp`)}
             alt=""
             aria-hidden="true"
             className="measurementFullscreenPreload"
@@ -118,11 +121,13 @@ export default function MeasurementWizardPage({
         {isIntroStep && (
           <section className="measurementFullscreenCard intro">
             <div className="profileMeasurementWizardVisual measurementIntroVisual">
-              <div className="profileMeasurementMiniHuman">
-                <i />
-                <b />
-                <em />
-              </div>
+              <img
+                src={versionedMeasurementAsset("/measurements/measurement_dashboard.webp")}
+                alt="Как выполнять замеры тела"
+                className="measurementIntroImage"
+                loading="eager"
+                decoding="async"
+              />
             </div>
 
             <h2>Как выполнять замеры</h2>
@@ -141,7 +146,7 @@ export default function MeasurementWizardPage({
           <section className="measurementFullscreenCard measurement">
             <div className={`measurementFullscreenImageFrame zone-${activeField.id}`}>
               <img
-                src={`/measurements/${activeField.id}.webp`}
+                src={versionedMeasurementAsset(`/measurements/${activeField.id}.webp`)}
                 alt={activeField.label}
                 className="measurementFullscreenImage"
                 loading="eager"

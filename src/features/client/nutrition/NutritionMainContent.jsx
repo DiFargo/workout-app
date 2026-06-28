@@ -29,11 +29,11 @@ export default function NutritionMainContent({
         <NutritionCalendarModal {...calendarProps} />
       )}
 
-      <NutritionSummary {...summaryProps} />
-
       <NutritionOrbit {...orbitProps} />
 
       <NutritionDiary {...diaryProps} />
+
+      <NutritionSummary {...summaryProps} />
 
       <NutritionMealModal {...mealModalProps} />
 

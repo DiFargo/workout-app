@@ -1,13 +1,33 @@
 import { lazy, Suspense } from "react";
 import ProfileDashboardRoute from "../features/client/profile/ProfileDashboardRoute";
+import RouteFallback from "./RouteFallback";
 
-const TrainerAdminWorkoutsRoute = lazy(() => import("../features/trainer/TrainerAdminWorkoutsRoute"));
-const TrainerDashboardRoute = lazy(() => import("../features/trainer/TrainerDashboardRoute"));
-const TrainerUsersRoute = lazy(() => import("../features/trainer/TrainerUsersRoute"));
-const WorkoutRunRoute = lazy(() => import("../features/client/workouts/WorkoutRunRoute"));
+const loadTrainerAdminWorkoutsRoute = () => import("../features/trainer/TrainerAdminWorkoutsRoute");
+const loadTrainerDashboardRoute = () => import("../features/trainer/TrainerDashboardRoute");
+const loadTrainerUsersRoute = () => import("../features/trainer/TrainerUsersRoute");
+const loadWorkoutRunRoute = () => import("../features/client/workouts/WorkoutRunRoute");
+
+const TrainerAdminWorkoutsRoute = lazy(loadTrainerAdminWorkoutsRoute);
+const TrainerDashboardRoute = lazy(loadTrainerDashboardRoute);
+const TrainerUsersRoute = lazy(loadTrainerUsersRoute);
+const WorkoutRunRoute = lazy(loadWorkoutRunRoute);
+
+export function preloadClientTerminalRouteChunks() {
+  return Promise.allSettled([
+    loadWorkoutRunRoute()
+  ]);
+}
+
+export function preloadTrainerRouteChunks() {
+  return Promise.allSettled([
+    loadTrainerDashboardRoute(),
+    loadTrainerUsersRoute(),
+    loadTrainerAdminWorkoutsRoute()
+  ]);
+}
 
 function renderLazyTerminalRoute(route) {
-  return <Suspense fallback={null}>{route}</Suspense>;
+  return <Suspense fallback={<RouteFallback />}>{route}</Suspense>;
 }
 
 export function renderAppTerminalRoute(ctx) {

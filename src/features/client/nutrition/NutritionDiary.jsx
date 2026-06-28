@@ -5,13 +5,20 @@ export default function NutritionDiary({
   nutritionToday,
   mealStats,
   expandedNutritionMeals,
+  deletingFoodId,
+  swipeOffsets = {},
+  swipeMovedRef,
   getFoodIcon,
   roundMacro,
   onOpenZouk,
   onCloseZouk,
   onAddMealFood,
   onEditFood,
-  onOpenMealFoods
+  onOpenMealFoods,
+  onSwipeStart,
+  onSwipeMove,
+  onSwipeEnd,
+  onSwipeCancel
 }) {
   return (
     <>
@@ -25,7 +32,7 @@ export default function NutritionDiary({
         >
           <span className="nutritionZoukIcon" aria-hidden="true">🍽️</span>
           <span className="nutritionZoukTitle">
-            <strong>Дневник питания</strong>
+            <strong>Дневник</strong>
             <small>Список продуктов за день</small>
           </span>
           <span className="nutritionZoukMeta">
@@ -86,12 +93,30 @@ export default function NutritionDiary({
                     {foods.length > 0 ? (
                       <div className="nutritionZoukFoods">
                         {foods.map((item) => (
-                          <button
-                            type="button"
-                            className="nutritionZoukFood"
+                          <div
+                            className={`productSwipeShell nutritionZoukSwipeShell ${deletingFoodId === item.id ? "deleting" : ""}`}
                             key={item.id}
-                            onClick={() => onEditFood(item)}
                           >
+                            <div className="productDeleteBg">
+                              <span aria-hidden="true">×</span>
+                            </div>
+
+                            <button
+                              type="button"
+                              className={`nutritionZoukFood ${deletingFoodId === item.id ? "deleting" : ""}`}
+                              style={{
+                                transform: `translateX(${swipeOffsets[item.id] || 0}px)`,
+                                opacity: deletingFoodId === item.id ? 0 : 1
+                              }}
+                              onClick={() => {
+                                if (swipeMovedRef?.current?.[item.id]) return;
+                                onEditFood(item);
+                              }}
+                              onTouchStart={(event) => onSwipeStart?.(item.id, event)}
+                              onTouchMove={(event) => onSwipeMove?.(item.id, event)}
+                              onTouchEnd={(event) => onSwipeEnd?.(item.id, event)}
+                              onTouchCancel={() => onSwipeCancel?.(item.id)}
+                            >
                             <span className="nutritionZoukFoodIcon" aria-hidden="true">{item.icon || getFoodIcon(item)}</span>
                             <span className="nutritionZoukFoodText">
                               <strong>{item.name}</strong>
@@ -101,7 +126,8 @@ export default function NutritionDiary({
                               <strong>{Math.round(Number(item.calories) || 0)}</strong>
                               <small>ккал</small>
                             </span>
-                          </button>
+                            </button>
+                          </div>
                         ))}
                       </div>
                     ) : (
