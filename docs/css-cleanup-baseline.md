@@ -165,3 +165,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.312`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.313`: moved `legacy-workout-flow-polish.css` and `legacy-workout-exercise-notes.css` from core `index.css` into the workout lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
 - Verification for `v.1.313`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.314`: moved `legacy-workout-navigation-close-early.css` and `client-workout-set-rows.css` from core `index.css` into the workout lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.314`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
