@@ -270,6 +270,7 @@ export default function WorkoutListPage({
               <>
                 <article
                   className={`workoutSelectCard individualWorkoutCardPro ${completed ? "completed" : ""} ${activeNext ? "activeNext" : ""}`}
+                  aria-current={activeNext ? "step" : undefined}
                   key={w.id}
                   data-workout-card-id={w.id}
                   onPointerDown={handleIndividualWorkoutSwipeStart}

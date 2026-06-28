@@ -503,6 +503,12 @@ test("trainer client training program cards expose selected state", async () => 
   assert.match(trainingTab, /className=\{isSelected \|\| isAssigned \? "adminSavedProgramCard active" : "adminSavedProgramCard"\}[\s\S]*aria-pressed=\{isSelected \|\| isAssigned\}/);
 });
 
+test("client workout next card exposes current step state", async () => {
+  const workoutListPage = await readText("src/features/client/workouts/WorkoutListPage.jsx");
+
+  assert.match(workoutListPage, /className=\{`workoutSelectCard individualWorkoutCardPro[\s\S]*aria-current=\{activeNext \? "step" : undefined\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

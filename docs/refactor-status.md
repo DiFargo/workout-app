@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.362`.
+Last updated at app version `v.1.363`.
 
 ## Stable Now
 
@@ -82,6 +82,7 @@ Last updated at app version `v.1.362`.
 - Production trainer client workspace role toggle and tabs expose selected `aria-pressed` state under the app structure audit.
 - Client workout warmup timer presets expose selected `aria-pressed` state under the app structure audit.
 - Production trainer client training program cards expose selected `aria-pressed` state under the app structure audit.
+- Client workout next card exposes current step state with `aria-current` under the app structure audit.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.
