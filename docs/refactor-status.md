@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.285`.
+Last updated at app version `v.1.286`.
 
 ## Stable Now
 
@@ -20,6 +20,7 @@ Last updated at app version `v.1.285`.
 - Core CSS no longer uses the redundant `layout.css` and `components.css` grouping aliases; their child files are imported directly.
 - Client nutrition visual coverage now includes search results, product amount/edit surfaces and My Database before deeper CSS cleanup.
 - Client nutrition CSS cleanup removed an older duplicated product/edit action-bar block; later food search CSS owns those product surfaces.
+- Client workout visual coverage now includes the empty assigned plan state before workout empty-state CSS cleanup.
 
 ## Current Build Shape
 

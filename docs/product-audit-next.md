@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.285`.
+Last updated at app version `v.1.286`.
 
 ## Evidence
 
@@ -8,11 +8,11 @@ Last updated at app version `v.1.285`.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd test`: passed with `212` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `23` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed with `25` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
-- `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js`: passed with `2` passed.
+- `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js`: passed with `4` passed.
 - `npx.cmd playwright test tests/e2e/trainer-visual.spec.js`: passed with `2` passed.
 - Harness audit covered mobile and desktop variants for:
   - client main;
@@ -53,7 +53,8 @@ The client workout visual audit now attaches screenshots for:
 - workout plan cards;
 - next workout card after swipe;
 - workout mode modal;
-- workout history modal.
+- workout history modal;
+- empty assigned plan state.
 
 The trainer visual audit now attaches screenshots for:
 
@@ -85,6 +86,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 14. Nutrition product flow coverage now catches food search results, product amount/edit surfaces and My Database.
 15. Nutrition product meal selector and edit close button now keep stable tap/click targets in the deeper visual audit.
 16. Nutrition CSS cleanup removed an older duplicated product/edit action-bar block after the deeper visual audit covered both surfaces.
+17. Client workout visual coverage now includes the empty assigned plan state for safer workout empty-state CSS cleanup.
 
 ## P1: Next Product Fixes
 
@@ -106,7 +108,7 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client main, client cabinet, client nutrition, client workouts, trainer workspace and admin hub screenshot artifacts are covered.
+   - Status: client main, client cabinet, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.

@@ -16,7 +16,7 @@ Covered by Playwright visual audits:
 - Client main dashboard: `tests/e2e/client-primary-visual.spec.js`
 - Client cabinet: `tests/e2e/client-primary-visual.spec.js`
 - Client nutrition main, food search, food results, product amount screen, product edit sheet, My Database, calendar, diary and analysis modal: `tests/e2e/client-nutrition-visual.spec.js`
-- Client workout cards, swipe, workout mode modal and workout history modal: `tests/e2e/client-workout-visual.spec.js`
+- Client workout cards, swipe, workout mode modal, workout history modal and empty assigned plan state: `tests/e2e/client-workout-visual.spec.js`
 - Trainer dashboard, clients, client card, messages and programs: `tests/e2e/trainer-visual.spec.js`
 - Admin panel hub and denied state: `tests/e2e/admin-visual.spec.js`
 
@@ -52,6 +52,7 @@ Start mapping here before any cleanup:
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.
    - Candidate files: `client-workout-card-render.css`, `legacy-client-workout-flow-late.css`, workout-related blocks in broad legacy files.
+   - Expanded in `v.1.286`: visual coverage now includes the empty assigned plan state before cleanup of workout empty-state CSS.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.

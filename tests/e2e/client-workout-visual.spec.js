@@ -142,3 +142,20 @@ test("client workout visual audit covers plan cards and workout modals", async (
 
   assertNoRuntimeErrors();
 });
+
+test("client workout visual audit covers empty assigned plan state", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1&clientWorkoutState=empty");
+  await page.getByTestId("client-nav-workouts").click();
+  await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
+  await expect(page.locator(".workoutProgramEmptyState")).toBeVisible();
+  await expectTapTargets(page, [
+    ".workoutProgramEmptyState button",
+    ".clientBottomNav button"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-workout-empty-state.png");
+
+  assertNoRuntimeErrors();
+});

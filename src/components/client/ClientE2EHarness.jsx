@@ -143,6 +143,11 @@ function getHarnessWeekDates(selectedKey) {
 }
 
 export default function ClientE2EHarness() {
+  const workoutHarnessState = typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search).get("clientWorkoutState")
+    : "";
+  const visibleHarnessWorkouts = workoutHarnessState === "empty" ? [] : harnessWorkouts;
+
   useEffect(() => {
     const previousHtmlTheme = document.documentElement.dataset.appTheme;
     const previousBodyTheme = document.body.dataset.appTheme;
@@ -283,7 +288,7 @@ export default function ClientE2EHarness() {
           appVersion={APP_VERSION}
           renderClientMainBottomBar={renderBottomBar}
           plan={{
-            workouts: harnessWorkouts,
+            workouts: visibleHarnessWorkouts,
             assignedProgramId: "client_harness_program",
             assignedProgramName: "Тестовая программа",
             assignedProgramUpdatedAt: "2026-06-18T10:00:00.000Z"
