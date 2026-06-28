@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.300`.
+Last updated at app version `v.1.301`.
 
 ## Stable Now
 
@@ -17,6 +17,7 @@ Last updated at app version `v.1.300`.
 - Admin lazy CSS no longer uses the redundant `admin.css` alias; `adminPanelHub.css` is imported directly.
 - Admin internals CSS for DEV-only visual coverage is isolated in `admin-internals-lazy.css`, keeping the production admin hub chunk lightweight.
 - Admin hub and admin internals CSS entrypoints are now structurally guarded against accidental heavy import drift.
+- Mobile client smoke waits long enough for slow cold auth bootstrap runs observed in Playwright mobile.
 - Client smoke tests wait past the auth bootstrap fallback window, matching the app's signed-out loading behavior on slower mobile runs.
 - Trainer lazy CSS no longer uses the redundant `trainer.css` alias; `trainer-workspace.css` is imported directly.
 - Core CSS no longer uses the redundant `themes.css` and `client-main.css` aliases; `theme.css` and `auth.css` are imported directly.
@@ -35,6 +36,7 @@ Last updated at app version `v.1.300`.
 - Client cabinet settings, trainer notifications and Telegram management modals are covered by the primary visual audit, including close/action tap targets.
 - Client nutrition visual audit now checks weekday strip geometry so labels cannot crowd day markers.
 - Client nutrition food-search/product polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client nutrition AI photo not-found modal is covered by the nutrition visual audit, and its CSS is owned by `nutrition-stack.css`.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape
@@ -43,7 +45,7 @@ From the latest verified build:
 
 - main app JS chunk: about `469.50 KiB` raw, `130.82 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1620.74 KiB` raw, `166.03 KiB` gzip.
+- main CSS bundle: about `1617.92 KiB` raw, `165.66 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - CSS source files under `src`: 93 total in the latest `npm.cmd run report:css` pass, about `3504.68 KiB` total source CSS.
 

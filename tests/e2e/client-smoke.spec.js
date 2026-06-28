@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
-test.setTimeout(45_000);
+test.setTimeout(60_000);
 
 test.beforeEach(async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Вход" })).toBeVisible({ timeout: 25_000 });
+  await expect(page.getByRole("heading", { name: "Вход" })).toBeVisible({ timeout: 40_000 });
   assertNoRuntimeErrors();
 });
 

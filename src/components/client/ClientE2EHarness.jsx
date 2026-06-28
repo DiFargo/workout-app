@@ -239,12 +239,16 @@ function getHarnessWeekDates(selectedKey) {
 }
 
 export default function ClientE2EHarness() {
+  const harnessParams = typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search)
+    : null;
   const cabinetModalParam = typeof window !== "undefined"
-    ? new URLSearchParams(window.location.search).get("clientCabinetModal")
+    ? harnessParams.get("clientCabinetModal")
     : "";
   const workoutHarnessState = typeof window !== "undefined"
-    ? new URLSearchParams(window.location.search).get("clientWorkoutState")
+    ? harnessParams.get("clientWorkoutState")
     : "";
+  const nutritionPhotoNotFoundParam = harnessParams?.get("clientNutritionPhotoNotFound") === "1";
   const visibleHarnessWorkouts = workoutHarnessState === "empty" ? [] : harnessWorkouts;
 
   useEffect(() => {
@@ -269,10 +273,10 @@ export default function ClientE2EHarness() {
     };
   }, []);
 
-  const [page, setPage] = useState("main");
+  const [page, setPage] = useState(nutritionPhotoNotFoundParam ? "nutrition" : "main");
   const [nutritionDateKey, setNutritionDateKey] = useState(HARNESS_DATE);
   const [nutrition] = useState(buildHarnessNutrition);
-  const [nutritionPickerOpen, setNutritionPickerOpen] = useState(false);
+  const [nutritionPickerOpen, setNutritionPickerOpen] = useState(nutritionPhotoNotFoundParam);
   const [nutritionCalendarOpen, setNutritionCalendarOpen] = useState(false);
   const [nutritionCalendarMonthKey, setNutritionCalendarMonthKey] = useState(HARNESS_DATE.slice(0, 7));
   const [expandedNutritionMeals, setExpandedNutritionMeals] = useState({});
@@ -290,6 +294,7 @@ export default function ClientE2EHarness() {
   const [nutritionAmount, setNutritionAmount] = useState("100");
   const [nutritionAmountMode, setNutritionAmountMode] = useState("grams");
   const [nutritionProductUnitMenuOpen, setNutritionProductUnitMenuOpen] = useState(false);
+  const [nutritionPhotoNotFoundOpen, setNutritionPhotoNotFoundOpen] = useState(nutritionPhotoNotFoundParam);
   const [nutritionEditNote, setNutritionEditNote] = useState("");
   const [individualWorkoutIndex, setIndividualWorkoutIndex] = useState(0);
   const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(false);
@@ -519,7 +524,7 @@ export default function ClientE2EHarness() {
           nutritionPhotoAiResult: null,
           nutritionPhotoAnalyzing: false,
           nutritionPhotoInputRef,
-          nutritionPhotoNotFoundOpen: false,
+          nutritionPhotoNotFoundOpen,
           nutritionPhotoPreview: "",
           nutritionPickerOpen,
           nutritionProductErrors: {},
@@ -544,9 +549,9 @@ export default function ClientE2EHarness() {
           removeSelectedDishIngredient: () => {},
           renderTrainerMainBottomBar: renderBottomBar,
           resetNutritionPhotoAiSearch: () => {},
-          resetNutritionPhotoAiState: () => {},
+          resetNutritionPhotoAiState: () => setNutritionPhotoNotFoundOpen(false),
           restoreNutritionFood: () => {},
-          retryNutritionPhotoFromNotFound: () => {},
+          retryNutritionPhotoFromNotFound: () => setNutritionPhotoNotFoundOpen(false),
           selectNutritionDate: setNutritionDateKey,
           selectNutritionPhotoAiCandidate: () => {},
           selectedNutritionFood,

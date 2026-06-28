@@ -221,7 +221,12 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.doesNotMatch(appSource, /styles\.css/);
   assert.match(appCore, /['"]\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appCore, /['"]\.\/styles\/nutrition-stack\.css['"]/);
-  assert.match(nutritionStackCss, /@import "\.\/client-food-search-final\.css"/);
+  for (const nutritionLazyImport of [
+    "./client-food-search-final.css",
+    "./legacy-nutrition-photo-not-found.css"
+  ]) {
+    assert.match(nutritionStackCss, new RegExp(`@import "${nutritionLazyImport.replace(".", "\\.")}"`));
+  }
   assert.match(appRouter, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
@@ -283,7 +288,8 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-trainer-light-workspace.css",
     "./legacy-trainer-light-audit.css",
     "./nutrition-trainer-desktop.css",
-    "./client-food-search-final.css"
+    "./client-food-search-final.css",
+    "./legacy-nutrition-photo-not-found.css"
   ]) {
     assert.doesNotMatch(indexCss, new RegExp(`@import "${deferredImport.replace(".", "\\.")}"`));
   }

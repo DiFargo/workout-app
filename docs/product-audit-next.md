@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.300`.
+Last updated at app version `v.1.301`.
 
 ## Evidence
 
@@ -57,6 +57,7 @@ The nutrition visual audit now attaches screenshots for:
 - calendar modal;
 - diary modal;
 - nutrition analysis modal.
+- AI photo not-found modal.
 
 The client workout visual audit now attaches screenshots for:
 
@@ -112,6 +113,8 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 30. Admin hub CSS split is guarded structurally so heavy CRM/program imports stay out of the production admin entrypoint.
 31. Mobile login smoke now waits past the auth bootstrap fallback window, reducing false failures when Firebase auth is slow to resolve.
 32. Nutrition food-search/product polish CSS now loads from the nutrition lazy stack instead of the core app stylesheet.
+33. Nutrition AI photo not-found modal now has screenshot coverage and lazy-owned CSS.
+34. Mobile login smoke now allows slow cold auth bootstrap runs that can take about 31 seconds in Playwright mobile.
 
 ## P1: Next Product Fixes
 
@@ -131,6 +134,7 @@ Started in `v.1.250`.
    - Start with nutrition or trainer screens only after screenshots/manual checks.
    - Status: nutrition cleanup continues under deeper visual coverage; older duplicate product/edit action-bar CSS was removed without blind file deletion.
    - Status: food-search/product polish CSS moved behind the nutrition lazy entrypoint after the nutrition visual audit covered those surfaces.
+   - Status: AI photo not-found modal CSS moved behind the nutrition lazy entrypoint after adding modal screenshot coverage.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
    - Status: core legacy stack cleanup continued by removing import-only aggregators after client primary/nutrition/workout visual guards passed.
    - Status: light, nutrition and admin stack aggregators were also removed after client primary/nutrition, trainer and admin visual guards passed.

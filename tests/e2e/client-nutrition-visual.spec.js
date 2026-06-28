@@ -205,3 +205,24 @@ test("client nutrition visual audit covers dense actions and modal entry points"
 
   assertNoRuntimeErrors();
 });
+
+test("client nutrition visual audit covers AI photo not-found modal", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1&clientNutritionPhotoNotFound=1");
+  await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
+  await expect(page.locator(".fatFoodSearchScreenPremium")).toBeVisible();
+  await expect(page.locator(".nutritionPhotoNotFoundModal")).toBeVisible();
+
+  await expectTapTargets(page, [
+    ".nutritionPhotoNotFoundClose",
+    ".nutritionPhotoNotFoundActions button"
+  ], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-photo-not-found.png");
+
+  await page.locator(".nutritionPhotoNotFoundClose").click();
+  await expect(page.locator(".nutritionPhotoNotFoundModal")).toBeHidden();
+
+  assertNoRuntimeErrors();
+});
