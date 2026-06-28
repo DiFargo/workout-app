@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.337`.
+Last updated at app version `v.1.338`.
 
 ## Stable Now
 
@@ -73,6 +73,7 @@ Last updated at app version `v.1.337`.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.
 - Nutrition food-search bottom bar tabs expose selected `aria-pressed` state under the nutrition visual audit.
 - Nutrition meal picker choices expose expanded and selected state under the nutrition visual audit.
+- Nutrition product icon presets expose selected `aria-pressed` state under the nutrition visual audit.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape

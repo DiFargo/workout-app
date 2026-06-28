@@ -52,6 +52,7 @@ export default function FoodEditBasicFields({
             type="button"
             key={icon}
             className={selectedFood.icon === icon ? "active" : ""}
+            aria-pressed={selectedFood.icon === icon}
             onClick={() => onUpdateField("icon", icon)}
             aria-label={`Выбрать иконку ${icon}`}
           >

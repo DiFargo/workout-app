@@ -213,6 +213,10 @@ test("client nutrition visual audit covers dense actions and modal entry points"
 
   await page.locator(".foodProductTopEdit").click();
   await expect(page.locator(".foodEditPageSheet")).toBeVisible();
+  await expect(page.locator(".foodEditIconPresetRow button").first()).toHaveAttribute("aria-pressed", /^(true|false)$/);
+  const firstIconPreset = await page.locator(".foodEditIconPresetRow button").first().textContent();
+  await page.locator(".foodEditIconManualBox input").fill(firstIconPreset || "");
+  await expect(page.locator(".foodEditIconPresetRow button[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".foodEditPageHeaderClose",
     ".foodEditIconPresetRow button",

@@ -166,6 +166,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 69. Nutrition portion selector choices now expose selected state with `aria-pressed`, guarded by the nutrition visual audit.
 70. Nutrition food-search bottom bar tabs now expose selected state with `aria-pressed`, guarded by the nutrition visual audit.
 71. Nutrition meal picker choices now expose expanded and selected state, guarded by the nutrition visual audit.
+72. Nutrition product icon presets now expose selected state with `aria-pressed`, guarded by the nutrition visual audit.
 
 ## P1: Next Product Fixes
 
