@@ -34,6 +34,7 @@ export default function FoodSearchHeader({
         <button
           type="button"
           className="fatSearchTitleButtonPremium"
+          aria-expanded={mealMenuOpen}
           onClick={onToggleMealMenu}
         >
           <span>Добавить в</span>
@@ -47,6 +48,7 @@ export default function FoodSearchHeader({
                 type="button"
                 key={meal.id}
                 className={mealId === meal.id ? "active" : ""}
+                aria-pressed={mealId === meal.id}
                 onClick={() => onSelectMeal(meal.id)}
               >
                 <span>{meal.icon}</span>

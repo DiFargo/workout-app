@@ -26,6 +26,7 @@ export default function FoodProductHeader({
             <button
               type="button"
               className="foodEditInlineMealButton"
+              aria-expanded={mealMenuOpen}
               onClick={onToggleMealMenu}
             >
               {selectedMealName}
@@ -38,6 +39,7 @@ export default function FoodProductHeader({
                     type="button"
                     key={meal.id}
                     className={mealId === meal.id ? "active" : ""}
+                    aria-pressed={mealId === meal.id}
                     onClick={() => onSelectMeal(meal.id)}
                   >
                     <span>{meal.icon}</span>

@@ -144,6 +144,12 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await expect(page.locator(".fatFoodSearchScreenPremium")).toBeVisible();
   await expect(page.locator(".fatSearchBottomBar button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".fatSearchSearchAction")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".fatSearchTitleButtonPremium")).toHaveAttribute("aria-expanded", /^(true|false)$/);
+  await page.locator(".fatSearchTitleButtonPremium").click();
+  await expect(page.locator(".fatMealDropdown")).toBeVisible();
+  await expect(page.locator(".fatMealDropdown button[aria-pressed='true']")).toHaveCount(1);
+  await page.locator(".fatMealDropdownCollapse").click();
+  await expect(page.locator(".fatMealDropdown")).toBeHidden();
   await expectTapTargets(page, [
     ".fatSearchClosePremium",
     ".fatSearchTitleButtonPremium",
@@ -178,6 +184,12 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await page.locator(".fatSearchResultCard").first().click();
   await expect(page.locator(".foodProductRenderScreen")).toBeVisible();
   await expect(page.locator(".foodProductAmountStepper")).toBeVisible();
+  await expect(page.locator(".foodEditInlineMealButton")).toHaveAttribute("aria-expanded", /^(true|false)$/);
+  await page.locator(".foodEditInlineMealButton").click();
+  await expect(page.locator(".foodEditMealPickerDropdown")).toBeVisible();
+  await expect(page.locator(".foodEditMealPickerDropdown button[aria-pressed='true']")).toHaveCount(1);
+  await page.locator(".foodEditMealPickerDropdown button").nth(1).click();
+  await expect(page.locator(".foodEditMealPickerDropdown")).toBeHidden();
   await expect(page.locator(".weightModeButton")).toHaveAttribute("aria-pressed", /^(true|false)$/);
   await page.locator(".foodEditPortionDropdownButton").click();
   await expect(page.locator(".foodEditPortionDropdownMenu")).toBeVisible();

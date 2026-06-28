@@ -211,3 +211,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.335`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.336`: strengthened nutrition food-search bottom bar tabs with selected `aria-pressed` state.
 - Verification for `v.1.336`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.337`: strengthened nutrition meal picker choices with expanded and selected state.
+- Verification for `v.1.337`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
