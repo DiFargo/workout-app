@@ -5,7 +5,7 @@ This project is a production React + Firebase fitness application. The current g
 ## Current Shape
 
 - `src/App.jsx` is only the thin app wrapper: `AppErrorBoundary` + `AppCore`.
-- `src/main.jsx` is only the runtime entrypoint: React root, `src/styles/index.css`, service worker registration.
+- `src/main.jsx` is only the runtime entrypoint: React root, core CSS, service worker registration.
 - `src/AppCore.jsx` is the coordinator. It may hold global state, assemble route context, and choose large app routes.
 - `src/app` owns app-level routing, navigation contracts and bootstrap/runtime hooks.
 - `src/features/client` owns client-facing feature UI and handlers.
@@ -14,7 +14,7 @@ This project is a production React + Firebase fitness application. The current g
 - `src/shared/hooks` and `src/shared/ui` own truly shared React pieces.
 - Do not add new shared hooks under `src/hooks`; keep them in `src/shared/hooks`.
 - `src/domain` and `src/utils` are pure logic modules. They must not import React, components or feature layers.
-- `src/styles/index.css` is the only application CSS entrypoint.
+- `src/styles/index.css` is the core application CSS entrypoint. Heavy route stacks may be lazy-loaded from the approved route/style entrypoints guarded by `tests/app-structure.test.mjs`.
 
 ## Layer Rules
 
@@ -22,7 +22,7 @@ This project is a production React + Firebase fitness application. The current g
 - Do not import `src/features` from production components. The only current exception is the client E2E harness.
 - Do not let `features/client` and `features/trainer` import each other directly.
 - Feature layers may import from `src/app` only through navigation contracts: `appPages` and `appNavigation`.
-- Do not import CSS directly from components. CSS should be reachable from `src/styles/index.css`.
+- Do not import CSS directly from arbitrary components. CSS should be reachable from `src/styles/index.css` or from an approved lazy CSS entrypoint guarded by `tests/app-structure.test.mjs`.
 - Do not leave unused JS/JSX source files in `src`. Source modules must stay reachable from `src/main.jsx`.
 - Do not introduce JS/JSX import cycles.
 - Do not move Firebase/security behavior unless the task explicitly requires it.
@@ -68,7 +68,7 @@ The main architecture guards live in:
 They protect:
 
 - thin app entrypoints
-- modular CSS entrypoint and import graph
+- modular CSS entrypoints and import graph
 - source module reachability and import graph cycles
 - shared hooks location
 - AppCore coordinator boundaries

@@ -1,30 +1,30 @@
 # Refactor Status
 
-Last updated at app version `v1002`.
+Last updated at app version `v.1.275`.
 
 ## Stable Now
 
 - `src/App.jsx` is a thin `AppErrorBoundary` + `AppCore` wrapper.
-- `src/main.jsx` is a thin React entrypoint with one CSS entry: `src/styles/index.css`.
+- `src/main.jsx` is a thin React entrypoint with core CSS and service worker registration.
 - `src/AppCore.jsx` is still large, but now acts mostly as a coordinator for state, route context and handler wiring.
 - JS/JSX source modules are guarded against unreachable files and import cycles.
-- CSS files are guarded so every CSS file under `src/styles` and `src/components` stays reachable from `src/styles/index.css`.
+- CSS files are guarded so every CSS file under `src/styles` and `src/components` stays reachable from the core or approved lazy CSS entrypoints.
 - Shared hooks live in `src/shared/hooks`.
 - Main route, terminal route, nutrition route and E2E harness screens are lazy-loaded.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
-- Empty CSS placeholder files were removed; `src/styles/index.css` remains the only app CSS entrypoint.
+- Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
 
 ## Current Build Shape
 
 From the latest verified build:
 
-- main app JS chunk: about `452.90 KiB` raw, `124.46 KiB` gzip.
+- main app JS chunk: about `473.20 KiB` raw, `131.82 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- CSS bundle: about `1919.64 KiB` raw, `243.06 KiB` gzip.
+- main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 86 total in the latest `npm.cmd run report:css` pass.
+- CSS source files under `src`: 105 total in the latest `npm.cmd run report:css` pass.
 
-The JS side has already received the biggest low-risk win. The next meaningful size problem is CSS cleanup and eventual CSS route splitting, not more AppCore slicing.
+The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
 ## Do Not Do Next
 
@@ -39,7 +39,7 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 2. Treat CSS as the next architecture track:
    - start with `npm.cmd run report:css`;
    - map large CSS files to screens/components;
-   - identify route-specific CSS that can be imported by lazy route chunks;
+   - keep route-specific CSS behind approved lazy entrypoints;
    - keep the current CSS budget green while reducing it gradually;
    - only remove classes after usage search and visual/e2e checks.
 3. Consider lazy-loading trainer/client heavy data helpers only when their state and handlers can move with the route cleanly.
@@ -47,6 +47,8 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 
 ## Recent Verification
 
-- `npm.cmd run verify`: passed.
-- `npm.cmd run test:e2e`: passed, `11` passed and `1` skipped.
-- `npm.cmd run test:rules`: passed, `7` passed.
+- `npm.cmd run test`: passed, `212` passed.
+- `npm.cmd run build`: passed.
+- `npm.cmd run check:bundle`: passed.
+- `npm.cmd run report:css`: passed.
+- `npm.cmd run test:e2e`: passed, `15` passed and `1` skipped.
