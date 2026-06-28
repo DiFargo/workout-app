@@ -1,5 +1,33 @@
 export const DATA_SAFETY_MAX_BACKUPS = 25;
 
+const QUOTA_ERROR_NAMES = new Set(["QuotaExceededError", "NS_ERROR_DOM_QUOTA_REACHED"]);
+
+function isQuotaExceeded(error) {
+  return QUOTA_ERROR_NAMES.has(error?.name) || error?.code === 22 || error?.code === 1014;
+}
+
+function isDisposableBackupKey(key) {
+  return /backup|failed_sync|pending/i.test(String(key || ""));
+}
+
+function removeDisposableBackups(exceptKey) {
+  try {
+    const keys = [];
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (key && key !== exceptKey && isDisposableBackupKey(key)) keys.push(key);
+    }
+    keys.forEach((key) => localStorage.removeItem(key));
+    return keys.length;
+  } catch (_) {
+    return 0;
+  }
+}
+
+function writeJsonStorage(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
 export function safeReadJsonStorage(key, fallback = null) {
   try {
     const raw = localStorage.getItem(key);
@@ -11,9 +39,32 @@ export function safeReadJsonStorage(key, fallback = null) {
 
 export function safeWriteJsonStorage(key, value) {
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    writeJsonStorage(key, value);
     return true;
   } catch (error) {
+    if (isQuotaExceeded(error)) {
+      if (Array.isArray(value)) {
+        const compactLimits = [12, 6, 3, 1, 0].filter((limit) => limit < value.length);
+        for (const limit of compactLimits) {
+          try {
+            writeJsonStorage(key, value.slice(0, limit));
+            return true;
+          } catch (_) {
+            // Try a smaller backup snapshot before dropping unrelated backups.
+          }
+        }
+      }
+
+      if (removeDisposableBackups(key)) {
+        try {
+          writeJsonStorage(key, value);
+          return true;
+        } catch (_) {
+          // Fall through to the final warning below.
+        }
+      }
+    }
+
     console.error(`Local backup write failed: ${key}`, error);
     return false;
   }
