@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.282`.
+Last updated at app version `v.1.283`.
 
 ## Evidence
 
@@ -77,6 +77,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 10. Admin lazy CSS cleanup started by removing the redundant `admin.css` alias file.
 11. Trainer lazy CSS cleanup continued by removing the redundant `trainer.css` alias file.
 12. Core CSS entrypoint cleanup removed redundant `themes.css` and `client-main.css` alias files.
+13. Core CSS entrypoint cleanup removed redundant `layout.css` and `components.css` grouping files.
 
 ## P1: Next Product Fixes
 

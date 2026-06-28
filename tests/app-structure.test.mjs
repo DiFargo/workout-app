@@ -225,8 +225,11 @@ test("application styles use the modular styles entrypoint", async () => {
   for (const requiredImport of [
     "./tokens.css",
     "./theme.css",
-    "./layout.css",
-    "./components.css",
+    "./base.css",
+    "./app.css",
+    "./menu.css",
+    "./splash.css",
+    "./workoutFlow.css",
     "./auth.css",
     "./legacy-stack.css"
   ]) {
@@ -238,6 +241,8 @@ test("application styles use the modular styles entrypoint", async () => {
     "./admin.css",
     "./themes.css",
     "./client-main.css",
+    "./layout.css",
+    "./components.css",
     "./nutrition-stack.css",
     "./legacy-admin-stack.css",
     "./legacy-trainer-desktop-adaptation-late.css",
