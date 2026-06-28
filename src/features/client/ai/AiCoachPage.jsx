@@ -283,6 +283,7 @@ export default function AiCoachPage({
             key={feature.id}
             data-testid={`ai-coach-feature-${feature.id}`}
             className={`aiCoachFeatureCard ${feature.id === activeAiFeature.id ? "active" : ""}`}
+            aria-pressed={feature.id === activeAiFeature.id}
             onClick={() => setSelectedAiFeatureId(feature.id)}
           >
             <span>{feature.icon}</span>

@@ -61,6 +61,7 @@ test("client AI coach visual audit covers insights and nutrition plan states", a
   await expect(page.locator(".aiCoachHero")).toBeVisible();
   await expect(page.locator(".aiCoachResultCard")).toBeVisible();
   await expect(page.locator(".aiCoachFeatureCard")).toHaveCount(8);
+  await expect(page.locator(".aiCoachFeatureCard[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".aiCoachBackBtn",
     ".aiCoachFeatureCard"
@@ -70,6 +71,7 @@ test("client AI coach visual audit covers insights and nutrition plan states", a
 
   await page.getByTestId("ai-coach-feature-nutritionPlan").click();
   await expect(page.locator(".aiNutritionOnboardingCard")).toBeVisible();
+  await expect(page.getByTestId("ai-coach-feature-nutritionPlan")).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator(".aiNutritionTrainingDaysGrid button[aria-pressed='true']")).not.toHaveCount(0);
   await expect(page.locator(".aiNutritionGoalPicker button[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [

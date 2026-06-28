@@ -225,3 +225,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.342`: `tests/trainer-attention.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.343`: strengthened AI Coach nutrition onboarding choices with selected `aria-pressed` state.
 - Verification for `v.1.343`: `tests/nutrition-plan-builder.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.344`: strengthened AI Coach feature cards with selected `aria-pressed` state.
+- Verification for `v.1.344`: `tests/progress-insight.test.mjs`, `tests/nutrition-plan-builder.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
