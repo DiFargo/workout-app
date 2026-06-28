@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.291`.
+Last updated at app version `v.1.292`.
 
 ## Evidence
 
@@ -96,6 +96,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 20. Client cabinet measurements modal now has screenshot coverage, and its close action keeps a stable 44px tap target.
 21. Client cabinet nutrition modal now has screenshot coverage, accepts string date keys in nutrition planning helpers, and keeps close/goal/week controls at stable 44px tap targets.
 22. Client cabinet workout calendar modal now has screenshot coverage, and its close/month/edit/save controls keep stable 44px tap targets.
+23. Core CSS cleanup removed four import-only legacy stack aggregators; `index.css` imports the same child files directly and the CSS graph guard was updated.
 
 ## P1: Next Product Fixes
 
@@ -115,6 +116,7 @@ Started in `v.1.250`.
    - Start with nutrition or trainer screens only after screenshots/manual checks.
    - Status: nutrition cleanup continues under deeper visual coverage; older duplicate product/edit action-bar CSS was removed without blind file deletion.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
+   - Status: core legacy stack cleanup continued by removing import-only aggregators after client primary/nutrition/workout visual guards passed.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
@@ -122,7 +124,7 @@ Started in `v.1.250`.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
-   - Status: started for admin hub, trainer workspace and core covered screens; entrypoints now import CSS directly where aliases were redundant.
+   - Status: started for admin hub, trainer workspace and core covered screens; entrypoints now import CSS directly where aliases or stack aggregators were redundant.
 
 ## Recommended Order
 

@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
-- Latest source CSS report: `99` files, about `3502.14 KiB` total source CSS.
+- Latest source CSS report: `95` files, about `3501.99 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -52,6 +52,7 @@ Start mapping here before any cleanup:
    - Expanded in `v.1.289`: visual coverage now includes the cabinet measurements modal and its close/start actions.
    - Expanded in `v.1.290`: visual coverage now includes the cabinet nutrition modal, its goal picker, week navigation and save action.
    - Expanded in `v.1.291`: visual coverage now includes the cabinet workout calendar modal, history entry and edit controls.
+   - Continued in `v.1.292`: removed four import-only legacy stack aggregator files by importing their child CSS directly from `index.css`.
 
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.
@@ -106,3 +107,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.290`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.291`: expanded the client primary visual audit to cover the cabinet workout calendar modal and fixed its close, month navigation, edit and save/cancel controls to stable 44px tap targets.
 - Verification for `v.1.291`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.292`: deleted import-only aggregators `legacy-stack.css`, `legacy-stack-foundation.css`, `legacy-stack-workflows.css` and `legacy-stack-final-polish.css`; `index.css` now imports the same child CSS files directly in the same order.
+- Verification for `v.1.292`: `tests/app-structure.test.mjs`, client primary/nutrition/workout visual specs and `npm.cmd run report:css` passed before full verification.
