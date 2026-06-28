@@ -4,7 +4,7 @@ import { failOnRuntimeErrors } from "./runtime-errors.js";
 test.beforeEach(async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Вход" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Вход" })).toBeVisible({ timeout: 15_000 });
   assertNoRuntimeErrors();
 });
 

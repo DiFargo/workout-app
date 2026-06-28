@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
-- Latest source CSS report: `103` files, about `3508.53 KiB` total source CSS.
+- Latest source CSS report: `101` files, about `3508.48 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -46,6 +46,7 @@ Start mapping here before any cleanup:
 1. Client primary screens.
    - Reason: main and cabinet now have direct screenshot coverage.
    - Candidate files: `client-primary-final-lock.css`, `client-render-target-lock.css`, `client-visual-unity-final.css`, `legacy-desktop-cabinet-polish.css`.
+   - Started in `v.1.282`: removed one-line core aliases `themes.css` and `client-main.css`; `index.css` now imports `theme.css` and `auth.css` directly.
 
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.
@@ -80,3 +81,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.280`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.281`: deleted `src/styles/trainer.css`, which only re-exported `src/components/trainer/trainer-workspace.css`; `src/styles/trainer-lazy.css` now imports the trainer workspace CSS directly.
 - Verification for `v.1.281`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.282`: deleted `src/styles/themes.css` and `src/styles/client-main.css`, which only re-exported `theme.css` and `auth.css`; `src/styles/index.css` now imports those files directly.
+- Verification for `v.1.282`: `tests/e2e/client-smoke.spec.js`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.

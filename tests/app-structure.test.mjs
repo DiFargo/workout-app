@@ -224,9 +224,10 @@ test("application styles use the modular styles entrypoint", async () => {
 
   for (const requiredImport of [
     "./tokens.css",
-    "./themes.css",
+    "./theme.css",
     "./layout.css",
     "./components.css",
+    "./auth.css",
     "./legacy-stack.css"
   ]) {
     assert.match(indexCss, new RegExp(`@import "${requiredImport.replace(".", "\\.")}"`));
@@ -235,6 +236,8 @@ test("application styles use the modular styles entrypoint", async () => {
   for (const deferredImport of [
     "./trainer.css",
     "./admin.css",
+    "./themes.css",
+    "./client-main.css",
     "./nutrition-stack.css",
     "./legacy-admin-stack.css",
     "./legacy-trainer-desktop-adaptation-late.css",
