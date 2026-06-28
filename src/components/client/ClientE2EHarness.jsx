@@ -7,6 +7,9 @@ import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
 import ProfileProgressPhotosModal from "../../features/client/profile/ProfileProgressPhotosModal";
+import ProfileSettingsModal from "../../features/client/profile/ProfileSettingsModal";
+import ProfileTelegramModal from "../../features/client/profile/ProfileTelegramModal";
+import ProfileTrainerNotificationsModal from "../../features/client/profile/ProfileTrainerNotificationsModal";
 import ProfileWorkoutCalendarModal from "../../features/client/profile/ProfileWorkoutCalendarModal";
 import ProfileWorkoutHistoryModal from "../../features/client/profile/ProfileWorkoutHistoryModal";
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
@@ -135,6 +138,23 @@ const harnessProgressPhotoCompareViews = [
   { id: "back", label: "Со спины", urlKey: "backUrl" }
 ];
 
+const harnessTrainerTasks = [
+  {
+    id: "client_harness_task_1",
+    title: "Update measurements",
+    dueDate: "2026-06-30",
+    target: "measurements",
+    status: "progress"
+  },
+  {
+    id: "client_harness_task_2",
+    title: "Add progress photos",
+    dueDate: "2026-07-02",
+    target: "progressPhotos",
+    status: "completed"
+  }
+];
+
 function buildHarnessWorkoutCalendarDays(monthKey, selectedDateKey) {
   const [year, month] = monthKey.split("-").map(Number);
   const monthStart = new Date(year, month - 1, 1, 12);
@@ -219,6 +239,9 @@ function getHarnessWeekDates(selectedKey) {
 }
 
 export default function ClientE2EHarness() {
+  const cabinetModalParam = typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search).get("clientCabinetModal")
+    : "";
   const workoutHarnessState = typeof window !== "undefined"
     ? new URLSearchParams(window.location.search).get("clientWorkoutState")
     : "";
@@ -275,21 +298,31 @@ export default function ClientE2EHarness() {
   const [cabinetWorkoutHistoryOpen, setCabinetWorkoutHistoryOpen] = useState(false);
   const [cabinetWorkoutHistoryItemOpen, setCabinetWorkoutHistoryItemOpen] = useState("client_harness_history_1");
   const [cabinetMeasurementsOpen, setCabinetMeasurementsOpen] = useState(
-    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "measurements"
+    () => cabinetModalParam === "measurements"
   );
   const [cabinetNutritionOpen, setCabinetNutritionOpen] = useState(
-    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "nutrition"
+    () => cabinetModalParam === "nutrition"
   );
   const [cabinetNutritionGoal, setCabinetNutritionGoal] = useState("recomp");
   const [cabinetCalendarOpen, setCabinetCalendarOpen] = useState(
-    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "calendar"
+    () => cabinetModalParam === "calendar"
   );
   const [cabinetPhotosOpen, setCabinetPhotosOpen] = useState(
-    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "photos"
+    () => cabinetModalParam === "photos"
+  );
+  const [cabinetSettingsOpen, setCabinetSettingsOpen] = useState(
+    () => cabinetModalParam === "settings"
+  );
+  const [telegramModalOpen, setTelegramModalOpen] = useState(
+    () => cabinetModalParam === "telegram"
+  );
+  const [trainerNotificationsOpen, setTrainerNotificationsOpen] = useState(
+    () => cabinetModalParam === "notifications"
   );
   const [cabinetCalendarEditing, setCabinetCalendarEditing] = useState(false);
   const [cabinetCalendarSelectedDate, setCabinetCalendarSelectedDate] = useState("2026-06-05");
   const nutritionPhotoInputRef = useRef(null);
+  const telegramLoginContainerRef = useRef(null);
   const nutritionFoodSwipeMoved = useRef(false);
   const cabinetWorkoutHistoryItemRefs = useRef(new Map());
 
@@ -666,6 +699,46 @@ export default function ClientE2EHarness() {
           onCompareIdsChange={() => {}}
           onCompareViewChange={() => {}}
           onSave={() => {}}
+        />
+        <ProfileSettingsModal
+          open={cabinetSettingsOpen}
+          section="settings"
+          onClose={() => setCabinetSettingsOpen(false)}
+        >
+          <div className="profileMainSummaryGrid">
+            <article><strong>Harness</strong><span>Profile settings shell</span></article>
+            <article><strong>Telegram</strong><span>Connected checks</span></article>
+          </div>
+          <button type="button" className="profileDashboardButton" onClick={() => setTelegramModalOpen(true)}>
+            Open Telegram
+          </button>
+        </ProfileSettingsModal>
+        <ProfileTrainerNotificationsModal
+          open={trainerNotificationsOpen}
+          tasks={harnessTrainerTasks}
+          activeCount={1}
+          getTaskDestination={(task) => task.target || ""}
+          onClose={() => setTrainerNotificationsOpen(false)}
+          onOpenTask={() => {}}
+        />
+        <ProfileTelegramModal
+          open={telegramModalOpen}
+          telegramProfile={{
+            connected: true,
+            username: "harness_coach",
+            displayName: "Harness Athlete",
+            avatarUrl: "",
+            notificationsEnabled: true
+          }}
+          loginContainerRef={telegramLoginContainerRef}
+          loginWidgetReady={true}
+          linking={false}
+          status="Notifications enabled"
+          onAvatarError={() => {}}
+          onClose={() => setTelegramModalOpen(false)}
+          onCheckLogin={() => {}}
+          onChangeTelegram={() => {}}
+          onDisconnect={() => {}}
         />
       </>
     ));

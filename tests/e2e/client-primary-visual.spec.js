@@ -165,5 +165,42 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.locator(".cabinetProgressPhotosHead button").click();
   await expect(page.locator(".cabinetProgressPhotosModal")).toBeHidden();
 
+  await page.goto("/?clientHarness=1&clientCabinetModal=settings");
+  await page.getByTestId("client-nav-cabinet").click();
+  await expect(page.locator(".cabinetSettingsModal")).toBeVisible();
+  await expectTapTargets(page, [
+    ".cabinetUtilityModalHead button",
+    ".cabinetSettingsModal .profileDashboardButton"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-cabinet-settings-modal.png");
+  await page.locator(".cabinetUtilityModalHead button").click();
+  await expect(page.locator(".cabinetSettingsModal")).toBeHidden();
+
+  await page.goto("/?clientHarness=1&clientCabinetModal=notifications");
+  await page.getByTestId("client-nav-cabinet").click();
+  await expect(page.locator(".profileTrainerNotificationsModal")).toBeVisible();
+  await expectTapTargets(page, [
+    ".profileTrainerNotificationsHead button",
+    ".profileTrainerNotificationItem"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-cabinet-trainer-notifications-modal.png");
+  await page.locator(".profileTrainerNotificationsHead button").click();
+  await expect(page.locator(".profileTrainerNotificationsModal")).toBeHidden();
+
+  await page.goto("/?clientHarness=1&clientCabinetModal=telegram");
+  await page.getByTestId("client-nav-cabinet").click();
+  await expect(page.locator(".profileTelegramManageModal")).toBeVisible();
+  await expectTapTargets(page, [
+    ".profileTelegramModalClose",
+    ".profileTelegramManageActions button",
+    ".profileTelegramSave"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-cabinet-telegram-modal.png");
+  await page.locator(".profileTelegramSave").click();
+  await expect(page.locator(".profileTelegramManageModal")).toBeHidden();
+
   assertNoRuntimeErrors();
 });

@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
-- Latest source CSS report: `92` files, about `3503.89 KiB` total source CSS.
+- Latest main CSS bundle: about `1654.33 KiB` raw, `169.09 KiB` gzip.
+- Latest source CSS report: `92` files, about `3503.88 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -30,16 +30,16 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `266.69 KiB`
+- `src/styles/client-primary-final-lock.css` - `266.70 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.26 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `170.85 KiB`
 - `src/styles/client-render-target-lock.css` - `116.67 KiB`
 - `src/styles/legacy-food-editor-tail.css` - `100.56 KiB`
 - `src/styles/legacy-admin-client-dashboard-polish.css` - `97.12 KiB`
-- `src/styles/legacy-desktop-cabinet-polish.css` - `93.17 KiB`
+- `src/styles/legacy-desktop-cabinet-polish.css` - `93.22 KiB`
 - `src/styles/legacy-client-workout-flow-late.css` - `87.59 KiB`
 - `src/styles/client-visual-unity-final.css` - `80.04 KiB`
-- `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.79 KiB`
+- `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.78 KiB`
 
 ## Cleanup Order
 
@@ -55,6 +55,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.292`: removed four import-only legacy stack aggregator files by importing their child CSS directly from `index.css`.
    - Continued in `v.1.293`: removed remaining import-only light, nutrition and admin stack aggregators by importing their child CSS directly from the active entrypoints.
    - Expanded in `v.1.294`: visual coverage now includes the cabinet progress photos modal, upload steps and save action.
+   - Expanded in `v.1.296`: visual coverage now includes cabinet settings, trainer notifications and Telegram management modals with close/action tap-target guards.
 
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.
@@ -118,3 +119,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.294`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.295`: fixed the nutrition week strip spacing so weekday labels no longer crowd the day markers on compact mobile headers.
 - Verification for `v.1.295`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.296`: expanded the client primary visual audit to cover cabinet settings, trainer notifications and Telegram management modals, and fixed their compact close controls to stable 40px tap targets.
+- Verification for `v.1.296`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.

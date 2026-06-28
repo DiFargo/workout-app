@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.295`.
+Last updated at app version `v.1.296`.
 
 ## Evidence
 
@@ -35,6 +35,9 @@ The client primary visual audit now attaches screenshots for:
 - cabinet nutrition modal.
 - cabinet workout calendar modal.
 - cabinet progress photos modal.
+- cabinet settings modal.
+- cabinet trainer notifications modal.
+- cabinet Telegram management modal.
 
 The admin visual audit now attaches screenshots for:
 
@@ -101,6 +104,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 24. CSS cleanup removed the remaining import-only light, nutrition and admin stack aggregators from active style entrypoints.
 25. Client cabinet progress photos modal now has screenshot coverage for the upload steps and save action.
 26. Nutrition week strip now keeps weekday labels separated from day markers, with a visual audit geometry guard.
+27. Client cabinet settings, trainer notifications and Telegram management modals now have screenshot coverage and stable close/action tap targets.
 
 ## P1: Next Product Fixes
 
@@ -125,7 +129,7 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, cabinet workout calendar modal, cabinet progress photos modal, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
+   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, cabinet workout calendar modal, cabinet progress photos modal, cabinet settings modal, cabinet trainer notifications modal, cabinet Telegram management modal, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
