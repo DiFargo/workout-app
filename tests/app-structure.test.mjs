@@ -212,6 +212,7 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.doesNotMatch(main, /['"]\.\/styles\.css['"]/);
   assert.doesNotMatch(appSource, /styles\.css/);
   assert.match(appCore, /['"]\.\/styles\/client-workout-lazy\.css['"]/);
+  assert.match(appCore, /['"]\.\/styles\/nutrition-stack\.css['"]/);
   assert.match(appRouter, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
@@ -222,7 +223,6 @@ test("application styles use the modular styles entrypoint", async () => {
     "./themes.css",
     "./layout.css",
     "./components.css",
-    "./nutrition-stack.css",
     "./legacy-stack.css"
   ]) {
     assert.match(indexCss, new RegExp(`@import "${requiredImport.replace(".", "\\.")}"`));
@@ -231,6 +231,7 @@ test("application styles use the modular styles entrypoint", async () => {
   for (const deferredImport of [
     "./trainer.css",
     "./admin.css",
+    "./nutrition-stack.css",
     "./legacy-admin-stack.css",
     "./legacy-trainer-desktop-adaptation-late.css",
     "./legacy-trainer-program-editor-late.css",
@@ -266,6 +267,7 @@ test("modular CSS import graph resolves without cycles", async () => {
   for (const cssEntry of [
     "src/styles/index.css",
     "src/styles/client-workout-lazy.css",
+    "src/styles/nutrition-stack.css",
     "src/styles/trainer-lazy.css",
     "src/styles/admin-lazy.css"
   ]) {
@@ -279,6 +281,7 @@ test("modular CSS import graph resolves without cycles", async () => {
 
   assert.ok(visited.has(path.normalize("src/styles/index.css")));
   assert.ok(visited.has(path.normalize("src/styles/client-workout-lazy.css")));
+  assert.ok(visited.has(path.normalize("src/styles/nutrition-stack.css")));
   assert.ok(visited.has(path.normalize("src/styles/trainer-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/admin-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/legacy-stack.css")));

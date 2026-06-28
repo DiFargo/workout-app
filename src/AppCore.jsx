@@ -283,11 +283,16 @@ import {
 } from "./shared/ui/BottomBar";
 
 const loadWorkoutStyles = () => import("./styles/client-workout-lazy.css");
+const loadNutritionStyles = () => import("./styles/nutrition-stack.css");
 const loadClientE2EHarness = () => Promise.all([
   loadWorkoutStyles(),
+  loadNutritionStyles(),
   import("./components/client/ClientE2EHarness")
+]).then(([, , module]) => module);
+const loadNutritionRoute = () => Promise.all([
+  loadNutritionStyles(),
+  import("./features/client/nutrition/NutritionRoute")
 ]).then(([, module]) => module);
-const loadNutritionRoute = () => import("./features/client/nutrition/NutritionRoute");
 const loadTrainerE2EHarness = () => import("./components/trainer/TrainerE2EHarness");
 
 const ClientE2EHarness = lazy(loadClientE2EHarness);
