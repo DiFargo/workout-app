@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
-- Latest source CSS report: `92` files, about `3501.88 KiB` total source CSS.
+- Latest source CSS report: `92` files, about `3503.89 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -67,6 +67,7 @@ Start mapping here before any cleanup:
    - Candidate files: `client-nutrition-grid-lock.css`, `legacy-food-editor-tail.css`, `nutrition.css`, `legacy-nutrition-late-layout.css`.
    - Expanded in `v.1.284`: visual coverage now includes search results, product amount screen, product edit sheet and My Database.
    - Continued in `v.1.285`: removed an older duplicated product/edit action-bar block from `client-visual-unity-final.css`; later food search CSS owns those surfaces.
+   - Fixed in `v.1.295`: nutrition week strip keeps readable weekday labels separated from day markers and is guarded by geometry checks in the nutrition visual audit.
 
 4. Trainer workspace.
    - Reason: dashboard, clients, messages and programs have coverage; the CSS is large but route-scoped.
@@ -115,3 +116,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.293`: `tests/app-structure.test.mjs`, client primary/nutrition, trainer and admin visual specs and `npm.cmd run report:css` passed before full verification.
 - `v.1.294`: expanded the client primary visual audit to cover the cabinet progress photos modal, upload step labels and save action.
 - Verification for `v.1.294`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.295`: fixed the nutrition week strip spacing so weekday labels no longer crowd the day markers on compact mobile headers.
+- Verification for `v.1.295`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.

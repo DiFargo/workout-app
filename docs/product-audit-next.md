@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.294`.
+Last updated at app version `v.1.295`.
 
 ## Evidence
 
@@ -100,6 +100,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 23. Core CSS cleanup removed four import-only legacy stack aggregators; `index.css` imports the same child files directly and the CSS graph guard was updated.
 24. CSS cleanup removed the remaining import-only light, nutrition and admin stack aggregators from active style entrypoints.
 25. Client cabinet progress photos modal now has screenshot coverage for the upload steps and save action.
+26. Nutrition week strip now keeps weekday labels separated from day markers, with a visual audit geometry guard.
 
 ## P1: Next Product Fixes
 

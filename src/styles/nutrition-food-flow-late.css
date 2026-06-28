@@ -1177,3 +1177,64 @@
   background: linear-gradient(90deg, #5a49df 0 8%, #e5e8f1 8% 100%) !important;
 }
 
+/* Keep weekday labels visually separate from the day markers on compact nutrition headers. */
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
+  box-sizing: border-box !important;
+  height: 54px !important;
+  min-height: 54px !important;
+  padding: 4px 7px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 {
+  box-sizing: border-box !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  gap: 5px !important;
+  justify-content: center !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
+  height: 13px !important;
+  font-size: 13px !important;
+  line-height: 13px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
+  height: 56px !important;
+  min-height: 56px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 {
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  gap: 7px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
+  height: 13px !important;
+  font-size: 13px !important;
+  line-height: 13px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+}
+

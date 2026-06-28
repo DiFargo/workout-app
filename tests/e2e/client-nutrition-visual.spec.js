@@ -73,6 +73,37 @@ async function expectAboveBottomBar(page, floatingSelector) {
   expect(metrics.floating.bottom).toBeLessThanOrEqual(metrics.bottomBar.y + 1);
 }
 
+async function expectNutritionWeekStripReadable(page) {
+  const metrics = await page.evaluate(() => {
+    const week = document.querySelector(".nutritionWeekV4")?.getBoundingClientRect();
+    const days = [...document.querySelectorAll(".nutritionDayV4")].map((day) => {
+      const dayRect = day.getBoundingClientRect();
+      const labelRect = day.querySelector("small")?.getBoundingClientRect();
+      const markerRect = day.querySelector("span")?.getBoundingClientRect();
+
+      return {
+        dayTop: Math.round(dayRect.top),
+        dayBottom: Math.round(dayRect.bottom),
+        labelBottom: Math.round(labelRect?.bottom || 0),
+        markerTop: Math.round(markerRect?.top || 0)
+      };
+    });
+
+    return {
+      weekTop: Math.round(week?.top || 0),
+      weekBottom: Math.round(week?.bottom || 0),
+      days
+    };
+  });
+
+  expect(metrics.days).toHaveLength(7);
+  for (const day of metrics.days) {
+    expect(day.dayTop).toBeGreaterThanOrEqual(metrics.weekTop);
+    expect(day.dayBottom).toBeLessThanOrEqual(metrics.weekBottom);
+    expect(day.markerTop - day.labelBottom).toBeGreaterThanOrEqual(4);
+  }
+}
+
 test("client nutrition visual audit covers dense actions and modal entry points", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
@@ -81,6 +112,7 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
   await expect(page.locator(".nutritionHeroTitleV4 .clientCorePageTitle")).toBeVisible();
 
+  await expectNutritionWeekStripReadable(page);
   await expectNoHorizontalOverflow(page);
   await expectTapTargets(page, [
     ".nutritionHeaderIconButton",
