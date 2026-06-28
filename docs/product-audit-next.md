@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.303`.
+Last updated at app version `v.1.304`.
 
 ## Evidence
 
@@ -8,7 +8,7 @@ Last updated at app version `v.1.303`.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd test`: passed with `212` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `27` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed with `31` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `4` passed.
 - `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
@@ -119,6 +119,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 34. Mobile login smoke now allows slow cold auth bootstrap runs that can take about 31 seconds in Playwright mobile.
 35. Nutrition create product/dish choice modal now has screenshot coverage and tap-target checks.
 36. Nutrition custom dish ingredient flow now has screenshot coverage from dish editor through ingredient confirmation.
+37. Nutrition flow CSS now loads from the nutrition lazy stack instead of the core app stylesheet.
 
 ## P1: Next Product Fixes
 
@@ -139,6 +140,7 @@ Started in `v.1.250`.
    - Status: nutrition cleanup continues under deeper visual coverage; older duplicate product/edit action-bar CSS was removed without blind file deletion.
    - Status: food-search/product polish CSS moved behind the nutrition lazy entrypoint after the nutrition visual audit covered those surfaces.
    - Status: AI photo not-found modal CSS moved behind the nutrition lazy entrypoint after adding modal screenshot coverage.
+   - Status: broad nutrition flow CSS moved behind the nutrition lazy entrypoint after food search, create, photo fallback and custom dish screenshots were added.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
    - Status: core legacy stack cleanup continued by removing import-only aggregators after client primary/nutrition/workout visual guards passed.
    - Status: light, nutrition and admin stack aggregators were also removed after client primary/nutrition, trainer and admin visual guards passed.
