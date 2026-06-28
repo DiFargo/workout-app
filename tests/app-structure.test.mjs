@@ -535,6 +535,12 @@ test("trainer mobile overflow navigation exposes current page state", async () =
   assert.match(workspace, /const active = activeSection === item\.id;[\s\S]*data-testid=\{`trainer-more-\$\{item\.id\}`\}[\s\S]*className=\{active \? "active" : ""\}[\s\S]*aria-current=\{active \? "page" : undefined\}/);
 });
 
+test("trainer workouts page program tab exposes selected state", async () => {
+  const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
+
+  assert.match(workoutsRoute, /<button type="button" className="active" aria-pressed="true">[\s\S]*?<\/button>[\s\S]*openTrainerExerciseLibrary/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

@@ -462,7 +462,7 @@ export default function TrainerAdminWorkoutsRoute({
             <div className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
           </header>
           <div className="trainerNextPageTabs">
-            <button type="button" className="active">Программы</button>
+            <button type="button" className="active" aria-pressed="true">Программы</button>
             <button type="button" onClick={openTrainerExerciseLibrary}>Библиотека упражнений</button>
           </div>
           {programManagerView}
