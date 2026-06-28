@@ -2648,6 +2648,7 @@ function ClientNotifications({
                 <button
                   type="button"
                   className={draft.photoIntervalDays === days ? "active" : ""}
+                  aria-pressed={draft.photoIntervalDays === days}
                   key={days}
                   onClick={() => setDraft((current) => ({ ...current, photoIntervalDays: days }))}
                 >
@@ -2680,6 +2681,7 @@ function ClientNotifications({
                 <button
                   type="button"
                   className={draft.measurementsIntervalDays === days ? "active" : ""}
+                  aria-pressed={draft.measurementsIntervalDays === days}
                   key={days}
                   onClick={() => setDraft((current) => ({ ...current, measurementsIntervalDays: days }))}
                 >
@@ -2731,6 +2733,7 @@ function ClientNotifications({
                     photoReminder ? "photoReminder" : "",
                     measurementReminder ? "measurementReminder" : ""
                   ].filter(Boolean).join(" ")}
+                  aria-pressed={active}
                   onClick={() => toggleScheduledDate(day.key)}
                   title={labels.length ? `${day.key}: ${labels.join(", ")}` : day.key}
                 >

@@ -118,6 +118,8 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
   await main.locator(".trainerNextClientTabs button").nth(5).click();
   await expect(page.locator(".trainerNotificationCalendarGrid")).toBeVisible();
   await expect(page.locator(".trainerNotificationLegend")).toBeVisible();
+  await expect(page.locator(".trainerReminderPeriod button[aria-pressed='true']")).toHaveCount(2);
+  await expect(page.locator(".trainerNotificationCalendarGrid button[aria-pressed='true']")).not.toHaveCount(0);
   await page.locator(".trainerNotificationOffsets label").first().click();
   await page.locator(".trainerNotificationActions .trainerNextPrimary").click();
   await expectNoHorizontalOverflow(page);

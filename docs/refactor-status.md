@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.352`.
+Last updated at app version `v.1.353`.
 
 ## Stable Now
 
@@ -72,6 +72,7 @@ Last updated at app version `v.1.352`.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
+- Trainer notification reminder periods and workout calendar dates expose selected `aria-pressed` state under trainer smoke.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.

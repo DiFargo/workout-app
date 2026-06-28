@@ -243,3 +243,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.351`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.352`: strengthened trainer message list items with selected `aria-pressed` state.
 - Verification for `v.1.352`: `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.353`: strengthened trainer notification reminder periods and workout calendar dates with selected `aria-pressed` state.
+- Verification for `v.1.353`: `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
