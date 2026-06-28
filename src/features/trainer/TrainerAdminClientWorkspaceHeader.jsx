@@ -94,6 +94,7 @@ export default function TrainerAdminClientWorkspaceHeader({
           <button
             type="button"
             className={selectedClient.role === "trainer" ? "adminTrainerRoleButton active" : "adminTrainerRoleButton"}
+            aria-pressed={selectedClient.role === "trainer"}
             onClick={() => updateUserTrainerRole(selectedClient, selectedClient.role !== "trainer")}
           >
             {selectedClient.role === "trainer" ? "Убрать тренера" : "Назначить тренером"}
@@ -107,6 +108,7 @@ export default function TrainerAdminClientWorkspaceHeader({
             key={id}
             type="button"
             className={adminUsersSelectedTab === id ? "active" : ""}
+            aria-pressed={adminUsersSelectedTab === id}
             onClick={() => {
               setAdminUsersSelectedTab(id);
               scrollAdminClientWorkspaceTop();

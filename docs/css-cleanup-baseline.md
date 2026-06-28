@@ -257,3 +257,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.358`: `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.359`: strengthened production trainer dashboard filters and client rows with selected `aria-pressed` state.
 - Verification for `v.1.359`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.360`: strengthened production trainer client workspace role toggle and tabs with selected `aria-pressed` state.
+- Verification for `v.1.360`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

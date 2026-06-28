@@ -484,6 +484,13 @@ test("trainer dashboard selectors expose selected state", async () => {
   assert.match(dashboardGrid, /className=\{isActive \? "active" : ""\}[\s\S]*aria-pressed=\{isActive\}/);
 });
 
+test("trainer client workspace header selectors expose selected state", async () => {
+  const workspaceHeader = await readText("src/features/trainer/TrainerAdminClientWorkspaceHeader.jsx");
+
+  assert.match(workspaceHeader, /className=\{selectedClient\.role === "trainer" \? "adminTrainerRoleButton active" : "adminTrainerRoleButton"\}[\s\S]*aria-pressed=\{selectedClient\.role === "trainer"\}/);
+  assert.match(workspaceHeader, /className=\{adminUsersSelectedTab === id \? "active" : ""\}[\s\S]*aria-pressed=\{adminUsersSelectedTab === id\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([
