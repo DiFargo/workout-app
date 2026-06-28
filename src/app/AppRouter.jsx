@@ -3,7 +3,11 @@ import { APP_PAGES } from "./appPages";
 import RouteFallback from "./RouteFallback";
 
 const loadAdminPanelHub = () => import("../components/admin/AdminPanelHub");
-const loadAiCoachPage = () => import("../features/client/ai/AiCoachPage");
+const loadAiCoachStyles = () => import("../styles/ai-coach-lazy.css");
+const loadAiCoachPage = () => Promise.all([
+  loadAiCoachStyles(),
+  import("../features/client/ai/AiCoachPage")
+]).then(([, module]) => module);
 const loadBasicWorkoutQuizPage = () => import("../features/client/workouts/BasicWorkoutQuizPage");
 const loadMeasurementWizardPage = () => import("../features/client/measurements/MeasurementWizardPage");
 const loadWorkoutHistoryPage = () => import("../features/client/workouts/WorkoutHistoryPage");

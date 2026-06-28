@@ -285,11 +285,13 @@ import {
 
 const loadWorkoutStyles = () => import("./styles/client-workout-lazy.css");
 const loadNutritionStyles = () => import("./styles/nutrition-stack.css");
+const loadAiCoachStyles = () => import("./styles/ai-coach-lazy.css");
 const loadClientE2EHarness = () => Promise.all([
   loadWorkoutStyles(),
   loadNutritionStyles(),
+  loadAiCoachStyles(),
   import("./components/client/ClientE2EHarness")
-]).then(([, , module]) => module);
+]).then(([, , , module]) => module);
 const loadNutritionRoute = () => Promise.all([
   loadNutritionStyles(),
   import("./features/client/nutrition/NutritionRoute")

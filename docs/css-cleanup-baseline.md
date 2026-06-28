@@ -169,3 +169,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.314`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.315`: added client AI Coach visual audit coverage for overview, AI nutrition onboarding and generated plan states before extracting mixed AI/nutrition/workout CSS, and fixed AI nutrition training-day tap targets.
 - Verification for `v.1.315`: `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.316`: moved route-specific AI Coach CSS from the mixed core stylesheet into `ai-coach-lazy.css` and guarded the lazy import in `tests/app-structure.test.mjs`.
+- Verification for `v.1.316`: `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

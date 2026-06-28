@@ -206,6 +206,7 @@ test("application styles use the modular styles entrypoint", async () => {
   const indexCss = await readText("src/styles/index.css");
   const clientWorkoutLazyCss = await readText("src/styles/client-workout-lazy.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
+  const aiCoachLazyCss = await readText("src/styles/ai-coach-lazy.css");
   const appSource = await readText("src/App.jsx");
   const appCore = await readText("src/AppCore.jsx");
   const appRouter = await readText("src/app/AppRouter.jsx");
@@ -222,6 +223,11 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.doesNotMatch(appSource, /styles\.css/);
   assert.match(appCore, /['"]\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appCore, /['"]\.\/styles\/nutrition-stack\.css['"]/);
+  assert.match(appCore, /['"]\.\/styles\/ai-coach-lazy\.css['"]/);
+  assert.match(aiCoachLazyCss, /\.aiCoachPage/);
+  assert.match(aiCoachLazyCss, /\.aiNutritionPlanShell/);
+  assert.doesNotMatch(indexCss, /\.aiCoachPage/);
+  assert.doesNotMatch(indexCss, /\.aiNutritionPlanShell/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-client-workout-flow-late\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-flow-polish\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-exercise-notes\.css"/);
@@ -237,6 +243,7 @@ test("application styles use the modular styles entrypoint", async () => {
     assert.match(nutritionStackCss, new RegExp(`@import "${nutritionLazyImport.replace(".", "\\.")}"`));
   }
   assert.match(appRouter, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
+  assert.match(appRouter, /['"]\.\.\/styles\/ai-coach-lazy\.css['"]/);
   assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
   assert.match(adminPanelHub, /['"]\.\.\/\.\.\/styles\/admin-lazy\.css['"]/);
@@ -289,6 +296,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-stack-foundation.css",
     "./legacy-stack-workflows.css",
     "./legacy-stack-final-polish.css",
+    "./ai-coach-lazy.css",
     "./nutrition-stack.css",
     "./legacy-admin-stack.css",
     "./legacy-trainer-desktop-adaptation-late.css",
@@ -336,6 +344,7 @@ test("modular CSS import graph resolves without cycles", async () => {
   const visited = new Set();
   for (const cssEntry of [
     "src/styles/index.css",
+    "src/styles/ai-coach-lazy.css",
     "src/styles/client-workout-lazy.css",
     "src/styles/nutrition-stack.css",
     "src/styles/trainer-lazy.css",
@@ -351,6 +360,7 @@ test("modular CSS import graph resolves without cycles", async () => {
   const reachableCssFiles = [...visited].sort();
 
   assert.ok(visited.has(path.normalize("src/styles/index.css")));
+  assert.ok(visited.has(path.normalize("src/styles/ai-coach-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/client-workout-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/nutrition-stack.css")));
   assert.ok(visited.has(path.normalize("src/styles/trainer-lazy.css")));

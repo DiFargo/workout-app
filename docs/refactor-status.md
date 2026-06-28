@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.315`.
+Last updated at app version `v.1.316`.
 
 ## Stable Now
 
@@ -47,6 +47,7 @@ Last updated at app version `v.1.315`.
 - Client nutrition create product/dish choice modal is covered by the nutrition visual audit.
 - Client nutrition custom dish editor, ingredient picker and ingredient confirmation are covered by the nutrition visual audit.
 - Client AI Coach overview, AI nutrition onboarding and generated plan states are covered by the client AI Coach visual audit.
+- Client AI Coach route CSS is owned by `ai-coach-lazy.css` instead of the core app stylesheet.
 - Client nutrition flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition orbit CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition warm-light add-food/search cleanup CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
@@ -57,11 +58,11 @@ Last updated at app version `v.1.315`.
 
 From the latest verified build:
 
-- main app JS chunk: about `469.52 KiB` raw, `130.84 KiB` gzip.
+- main app JS chunk: about `469.71 KiB` raw, `130.88 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1378.51 KiB` raw, `140.98 KiB` gzip.
+- main CSS bundle: about `1366.35 KiB` raw, `139.15 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 93 total in the latest `npm.cmd run report:css` pass, about `3506.45 KiB` total source CSS.
+- CSS source files under `src`: 94 total in the latest `npm.cmd run report:css` pass, about `3506.49 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
