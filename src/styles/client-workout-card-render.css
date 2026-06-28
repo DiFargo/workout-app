@@ -503,7 +503,7 @@ html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workout
 /* Final adaptive lock for the individual workout picker.
    Keep this at the end so old fixed-bottom workout rules cannot stretch the card area. */
 html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage {
-  --workout-picker-nav: 28px;
+  --workout-picker-nav: 40px;
   --workout-picker-progress: 28px;
   --workout-picker-bottom-reserve: 102px;
   min-height: 100svh !important;
@@ -595,6 +595,11 @@ html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workout
   margin: 0 !important;
 }
 
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage > .individualWorkoutNav > button {
+  min-width: 40px !important;
+  min-height: 40px !important;
+}
+
 html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
   grid-row: 4 !important;
   position: static !important;
@@ -643,9 +648,16 @@ html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workout
   transform: none !important;
 }
 
+html:root[data-app-theme="warm-light"] body #root .workoutModeModalHeader > button {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+}
+
 @media (max-height: 760px) {
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage {
-    --workout-picker-nav: 22px;
+    --workout-picker-nav: 40px;
     --workout-picker-progress: 26px;
     --workout-picker-bottom-reserve: 96px;
     row-gap: 6px !important;

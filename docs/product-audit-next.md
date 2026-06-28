@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.276`.
+Last updated at app version `v.1.277`.
 
 ## Evidence
 
@@ -8,8 +8,9 @@ Last updated at app version `v.1.276`.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd test`: passed with `212` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `17` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed with `19` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
+- `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/trainer-visual.spec.js`: passed with `2` passed.
 - Harness audit covered mobile and desktop variants for:
   - client main;
@@ -31,6 +32,13 @@ The nutrition visual audit now attaches screenshots for:
 - diary modal;
 - nutrition analysis modal.
 
+The client workout visual audit now attaches screenshots for:
+
+- workout plan cards;
+- next workout card after swipe;
+- workout mode modal;
+- workout history modal.
+
 The trainer visual audit now attaches screenshots for:
 
 - trainer dashboard;
@@ -51,6 +59,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 4. Trainer mobile navigation uses stable semantic test ids for the More drawer and Programs entry.
 5. Trainer workspace has a screenshot-based visual audit for dashboard, clients, messages and programs.
 6. Trainer compact action buttons, message filters and mobile route header buttons keep stable 40px tap targets.
+7. Client workout plan cards and workout modals have screenshot coverage and stable 40px tap targets for compact controls.
 
 ## P1: Next Product Fixes
 
@@ -72,7 +81,7 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client nutrition and trainer workspace screenshot artifacts are covered.
+   - Status: client nutrition, client workouts and trainer workspace screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
