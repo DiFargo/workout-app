@@ -142,6 +142,8 @@ test("client nutrition visual audit covers dense actions and modal entry points"
 
   await page.locator(".nutritionHeaderIconButton").first().click();
   await expect(page.locator(".fatFoodSearchScreenPremium")).toBeVisible();
+  await expect(page.locator(".fatSearchBottomBar button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".fatSearchSearchAction")).toHaveAttribute("aria-pressed", "true");
   await expectTapTargets(page, [
     ".fatSearchClosePremium",
     ".fatSearchTitleButtonPremium",
@@ -155,6 +157,8 @@ test("client nutrition visual audit covers dense actions and modal entry points"
 
   await page.locator(".fatSearchCreateAction").click();
   await expect(page.locator(".nutritionCreateChoiceScreen")).toBeVisible();
+  await expect(page.locator(".fatSearchBottomBar button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".fatSearchCreateAction")).toHaveAttribute("aria-pressed", "true");
   await expectTapTargets(page, [
     ".nutritionCreateChoiceClose",
     ".nutritionCreateChoiceGrid button",
@@ -212,6 +216,8 @@ test("client nutrition visual audit covers dense actions and modal entry points"
 
   await page.locator(".fatSearchMyProductsAction").click();
   await expect(page.locator(".fatSearchResultCard")).toHaveCount(1);
+  await expect(page.locator(".fatSearchBottomBar button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".fatSearchMyProductsAction")).toHaveAttribute("aria-pressed", "true");
   await expectTapTargets(page, [".fatSearchResultCard", ".fatSearchBottomBar button"]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-my-products.png");

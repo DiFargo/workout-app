@@ -6,6 +6,10 @@ export default function FoodSearchBottomBar({
   onCreate,
   onMyProducts
 }) {
+  const searchActive = !createChoiceOpen && searchTab !== "my";
+  const createActive = createChoiceOpen;
+  const myProductsActive = !createChoiceOpen && searchTab === "my";
+
   return (
     <div className="fatSearchBottomBar fatSearchBottomBarFour">
       <button
@@ -20,7 +24,8 @@ export default function FoodSearchBottomBar({
 
       <button
         type="button"
-        className={`fatSearchSearchAction ${!createChoiceOpen && searchTab !== "my" ? "active" : ""}`}
+        className={`fatSearchSearchAction ${searchActive ? "active" : ""}`}
+        aria-pressed={searchActive}
         onClick={onSearch}
       >
         <span>⌕</span>
@@ -29,7 +34,8 @@ export default function FoodSearchBottomBar({
 
       <button
         type="button"
-        className={`fatSearchCreateAction ${createChoiceOpen ? "active" : ""}`}
+        className={`fatSearchCreateAction ${createActive ? "active" : ""}`}
+        aria-pressed={createActive}
         onClick={onCreate}
       >
         <span>＋</span>
@@ -38,7 +44,8 @@ export default function FoodSearchBottomBar({
 
       <button
         type="button"
-        className={`fatSearchMyProductsAction ${!createChoiceOpen && searchTab === "my" ? "active" : ""}`}
+        className={`fatSearchMyProductsAction ${myProductsActive ? "active" : ""}`}
+        aria-pressed={myProductsActive}
         onClick={onMyProducts}
       >
         <span>▣</span>
