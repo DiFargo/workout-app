@@ -6,6 +6,7 @@ import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
+import ProfileWorkoutCalendarModal from "../../features/client/profile/ProfileWorkoutCalendarModal";
 import ProfileWorkoutHistoryModal from "../../features/client/profile/ProfileWorkoutHistoryModal";
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
 import {
@@ -126,6 +127,40 @@ const harnessProfileNutritionWeekDays = [
   { key: "2026-06-28", date: "2026-06-28", dayNumber: 28, calories: 0, protein: 0, hasFood: false }
 ];
 
+const harnessWorkoutScheduledDates = ["2026-06-02", "2026-06-05", "2026-06-09", "2026-06-12", "2026-06-16", "2026-06-19", "2026-06-23", "2026-06-26"];
+
+function buildHarnessWorkoutCalendarDays(monthKey, selectedDateKey) {
+  const [year, month] = monthKey.split("-").map(Number);
+  const monthStart = new Date(year, month - 1, 1, 12);
+  const gridStart = new Date(monthStart);
+  const startDay = gridStart.getDay() || 7;
+  gridStart.setDate(gridStart.getDate() - startDay + 1);
+
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(gridStart);
+    date.setDate(gridStart.getDate() + index);
+    const key = date.toISOString().slice(0, 10);
+    const scheduledIndex = harnessWorkoutScheduledDates.indexOf(key);
+    const status = key === "2026-06-05"
+      ? "completed"
+      : key === "2026-06-12"
+        ? "missed"
+        : key === "2026-06-19"
+          ? "shifted"
+          : "planned";
+
+    return {
+      key,
+      date,
+      isCurrentMonth: date.getMonth() === month - 1,
+      isToday: key === HARNESS_DATE,
+      isScheduled: scheduledIndex >= 0,
+      scheduleEntries: scheduledIndex >= 0 ? [{ order: scheduledIndex + 1, status }] : [],
+      workouts: key === selectedDateKey ? [{ id: "client_harness_history_1", workout: "День 1 - Верх тела", date: `${key}T18:30:00.000Z`, durationSeconds: 2700 }] : []
+    };
+  });
+}
+
 function buildHarnessNutrition() {
   return {
     ...defaultNutritionState,
@@ -240,6 +275,11 @@ export default function ClientE2EHarness() {
     () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "nutrition"
   );
   const [cabinetNutritionGoal, setCabinetNutritionGoal] = useState("recomp");
+  const [cabinetCalendarOpen, setCabinetCalendarOpen] = useState(
+    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "calendar"
+  );
+  const [cabinetCalendarEditing, setCabinetCalendarEditing] = useState(false);
+  const [cabinetCalendarSelectedDate, setCabinetCalendarSelectedDate] = useState("2026-06-05");
   const nutritionPhotoInputRef = useRef(null);
   const nutritionFoodSwipeMoved = useRef(false);
   const cabinetWorkoutHistoryItemRefs = useRef(new Map());
@@ -260,6 +300,11 @@ export default function ClientE2EHarness() {
       ? harnessSearchFoods
       : [];
   const visibleNutritionSearchResults = nutritionSearchResults.slice(0, nutritionSearchResultLimit);
+  const cabinetCalendarMonthKey = "2026-06";
+  const cabinetCalendarDays = buildHarnessWorkoutCalendarDays(cabinetCalendarMonthKey, cabinetCalendarSelectedDate);
+  const cabinetCalendarSelectedItems = cabinetCalendarDays
+    .find((day) => day.key === cabinetCalendarSelectedDate)
+    ?.workouts || [];
 
   function openHarnessSelectedFood(food) {
     setSelectedNutritionFood({
@@ -568,6 +613,28 @@ export default function ClientE2EHarness() {
           onGoalChange={setCabinetNutritionGoal}
           onSave={() => {}}
           onShiftWeek={() => {}}
+        />
+        <ProfileWorkoutCalendarModal
+          open={cabinetCalendarOpen}
+          modalBodyRef={null}
+          monthDate={new Date("2026-06-01T12:00:00")}
+          monthKey={cabinetCalendarMonthKey}
+          calendarDays={cabinetCalendarDays}
+          selectedDate={cabinetCalendarSelectedDate}
+          selectedItems={cabinetCalendarSelectedItems}
+          scheduledDates={harnessWorkoutScheduledDates}
+          draftDates={harnessWorkoutScheduledDates}
+          editing={cabinetCalendarEditing}
+          saving={false}
+          status=""
+          getTimestampValue={(value) => value}
+          onClose={() => setCabinetCalendarOpen(false)}
+          onShiftMonth={() => {}}
+          onStartEdit={() => setCabinetCalendarEditing(true)}
+          onCancelEdit={() => setCabinetCalendarEditing(false)}
+          onSave={() => setCabinetCalendarEditing(false)}
+          onDayClick={(day) => setCabinetCalendarSelectedDate(day.key)}
+          onOpenHistory={() => setCabinetWorkoutHistoryOpen(true)}
         />
       </>
     ));

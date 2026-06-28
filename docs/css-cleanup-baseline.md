@@ -7,14 +7,14 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
-- Latest source CSS report: `99` files, about `3502.15 KiB` total source CSS.
+- Latest source CSS report: `99` files, about `3502.14 KiB` total source CSS.
 
 ## Screenshot Coverage
 
 Covered by Playwright visual audits:
 
 - Client main dashboard: `tests/e2e/client-primary-visual.spec.js`
-- Client cabinet, cabinet workout history modal, measurements modal and nutrition modal: `tests/e2e/client-primary-visual.spec.js`
+- Client cabinet, cabinet workout history modal, measurements modal, nutrition modal and workout calendar modal: `tests/e2e/client-primary-visual.spec.js`
 - Client nutrition main, food search, food results, product amount screen, product edit sheet, My Database, calendar, diary and analysis modal: `tests/e2e/client-nutrition-visual.spec.js`
 - Client workout cards, swipe, workout mode modal, workout history modal and empty assigned plan state: `tests/e2e/client-workout-visual.spec.js`
 - Trainer dashboard, clients, client card, messages and programs: `tests/e2e/trainer-visual.spec.js`
@@ -51,6 +51,7 @@ Start mapping here before any cleanup:
    - Expanded in `v.1.288`: visual coverage now includes the cabinet workout history modal and its compact delete action.
    - Expanded in `v.1.289`: visual coverage now includes the cabinet measurements modal and its close/start actions.
    - Expanded in `v.1.290`: visual coverage now includes the cabinet nutrition modal, its goal picker, week navigation and save action.
+   - Expanded in `v.1.291`: visual coverage now includes the cabinet workout calendar modal, history entry and edit controls.
 
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.
@@ -103,3 +104,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.289`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.290`: expanded the client primary visual audit to cover the cabinet nutrition modal, accepted string dates in AI nutrition schedule helpers and fixed modal nutrition controls to stable 44px tap targets.
 - Verification for `v.1.290`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.291`: expanded the client primary visual audit to cover the cabinet workout calendar modal and fixed its close, month navigation, edit and save/cancel controls to stable 44px tap targets.
+- Verification for `v.1.291`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.

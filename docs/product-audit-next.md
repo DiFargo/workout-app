@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.290`.
+Last updated at app version `v.1.291`.
 
 ## Evidence
 
@@ -33,6 +33,7 @@ The client primary visual audit now attaches screenshots for:
 - cabinet workout history modal;
 - cabinet measurements modal.
 - cabinet nutrition modal.
+- cabinet workout calendar modal.
 
 The admin visual audit now attaches screenshots for:
 
@@ -94,6 +95,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 19. Client cabinet workout history modal now has screenshot coverage, and its delete action keeps a stable 44px tap target.
 20. Client cabinet measurements modal now has screenshot coverage, and its close action keeps a stable 44px tap target.
 21. Client cabinet nutrition modal now has screenshot coverage, accepts string date keys in nutrition planning helpers, and keeps close/goal/week controls at stable 44px tap targets.
+22. Client cabinet workout calendar modal now has screenshot coverage, and its close/month/edit/save controls keep stable 44px tap targets.
 
 ## P1: Next Product Fixes
 
@@ -116,7 +118,7 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
+   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, cabinet workout calendar modal, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
