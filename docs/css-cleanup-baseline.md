@@ -171,3 +171,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.315`: `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.316`: moved route-specific AI Coach CSS from the mixed core stylesheet into `ai-coach-lazy.css` and guarded the lazy import in `tests/app-structure.test.mjs`.
 - Verification for `v.1.316`: `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.317`: moved nutrition AI plan and AI photo process CSS from the mixed core stylesheet into `nutrition-ai-plan-lazy.css` under the nutrition lazy stack.
+- Verification for `v.1.317`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
