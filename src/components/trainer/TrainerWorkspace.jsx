@@ -3537,7 +3537,7 @@ function TrainerWorkoutEditor({
       </header> : null}
       {!embedded ? <div className="trainerNextPageTabs">
         <button type="button" onClick={onOpenProgramManager}>Программы</button>
-        <button type="button" className={tab === "library" ? "active" : ""} onClick={() => onWorkoutTabChange("library")}>Библиотека упражнений</button>
+        <button type="button" className={tab === "library" ? "active" : ""} aria-pressed={tab === "library"} onClick={() => onWorkoutTabChange("library")}>Библиотека упражнений</button>
       </div> : null}
 
       {tab === "plan" ? (

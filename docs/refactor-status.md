@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.341`.
+Last updated at app version `v.1.342`.
 
 ## Stable Now
 
@@ -77,6 +77,7 @@ Last updated at app version `v.1.341`.
 - Nutrition product icon presets expose selected `aria-pressed` state under the nutrition visual audit.
 - Nutrition product portion unit toggle exposes selected `aria-pressed` state under the nutrition visual audit.
 - Trainer client card tabs expose selected `aria-pressed` state under trainer workspace and visual audits.
+- Trainer workout library tab exposes selected `aria-pressed` state under trainer workspace and visual audits.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape

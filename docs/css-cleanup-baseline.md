@@ -221,3 +221,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.340`: `tests/trainer-attention.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.341`: locked client nutrition weekday label and marker centers on mobile.
 - Verification for `v.1.341`: `tests/nutrition-calendar.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.342`: strengthened trainer workout library tab with selected `aria-pressed` state.
+- Verification for `v.1.342`: `tests/trainer-attention.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

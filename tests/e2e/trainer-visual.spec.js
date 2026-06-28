@@ -137,6 +137,7 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
 
   await openTrainerPrograms(page);
   await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
+  await expect(page.locator(".trainerNextPageTabs button").nth(1)).toHaveAttribute("aria-pressed", /^(true|false)$/);
   await expectTapTargets(page, [
     ".trainerNextPageTabs button",
     ".trainerNextWorkoutDayItem",

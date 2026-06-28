@@ -183,6 +183,7 @@ test("trainer programs page keeps editor, preview and library usable", async ({ 
 
   await page.locator(".trainerNextPageTabs button").nth(1).click();
   await expect(page.locator(".trainerNextLibrary")).toBeVisible();
+  await expect(page.locator(".trainerNextPageTabs button").nth(1)).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator(".trainerNextLibrary article")).toHaveCount(3);
   const firstExerciseName = await page.locator(".trainerNextLibrary article strong").first().textContent();
   await page.locator(".trainerNextLibrary input").fill((firstExerciseName || "").slice(0, 4));
