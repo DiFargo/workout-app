@@ -2,3 +2,5 @@
 @import "./client-workout-empty-state.css";
 @import "./client-workout-card-render.css";
 @import "./legacy-client-workout-flow-late.css";
+@import "./legacy-workout-flow-polish.css";
+@import "./legacy-workout-exercise-notes.css";

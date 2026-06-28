@@ -223,6 +223,8 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(appCore, /['"]\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appCore, /['"]\.\/styles\/nutrition-stack\.css['"]/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-client-workout-flow-late\.css"/);
+  assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-flow-polish\.css"/);
+  assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-exercise-notes\.css"/);
   for (const nutritionLazyImport of [
     "./legacy-warm-light-add-food-search-cleanup.css",
     "./client-food-search-final.css",
@@ -293,6 +295,8 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-trainer-light-audit.css",
     "./nutrition-trainer-desktop.css",
     "./legacy-client-workout-flow-late.css",
+    "./legacy-workout-flow-polish.css",
+    "./legacy-workout-exercise-notes.css",
     "./legacy-dark-green-food-flow.css",
     "./legacy-warm-light-add-food-search-cleanup.css",
     "./client-food-search-final.css",

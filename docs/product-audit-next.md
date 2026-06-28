@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.312`.
+Last updated at app version `v.1.313`.
 
 ## Evidence
 
@@ -128,6 +128,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 43. Client harness, nutrition visual and primary visual audits now wait for client bottom navigation before route clicks.
 44. Trainer workspace and trainer visual audits now wait for trainer navigation controls before route clicks.
 45. Client workout flow late CSS now loads from the workout lazy stack instead of the core app stylesheet.
+46. Client workout run polish and exercise notes CSS now load from the workout lazy stack instead of the core app stylesheet.
 
 ## P1: Next Product Fixes
 
@@ -155,6 +156,7 @@ Started in `v.1.250`.
    - Status: dark-green nutrition food-flow CSS moved behind the nutrition lazy entrypoint with structural guards preserving readable dark nutrition overrides.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
    - Status: client workout flow late CSS moved behind the workout lazy entrypoint after workout visual guards were stable.
+   - Status: client workout run polish and exercise notes CSS moved behind the workout lazy entrypoint under the same guards.
    - Status: core legacy stack cleanup continued by removing import-only aggregators after client primary/nutrition/workout visual guards passed.
    - Status: light, nutrition and admin stack aggregators were also removed after client primary/nutrition, trainer and admin visual guards passed.
 
