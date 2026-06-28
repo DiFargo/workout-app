@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
-- Latest source CSS report: `105` files, about `3508.48 KiB` total source CSS.
+- Latest source CSS report: `104` files, about `3508.56 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -62,6 +62,7 @@ Start mapping here before any cleanup:
 5. Admin hub only.
    - Reason: hub is covered; deep admin CRM internals need more harnessing first.
    - Candidate files: `adminPanelHub.css`, hub-specific rules inside admin lazy stack.
+   - Started in `v.1.280`: removed the one-line `admin.css` alias and imported `adminPanelHub.css` directly from `admin-lazy.css`.
 
 ## Guardrails
 
@@ -71,3 +72,8 @@ Start mapping here before any cleanup:
 - After each route cleanup, run the matching targeted visual spec first.
 - Before committing, run `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css`.
 - Do not clean admin CRM internals until a deeper admin harness exists.
+
+## Completed Cleanup
+
+- `v.1.280`: deleted `src/styles/admin.css`, which only re-exported `adminPanelHub.css`; `src/styles/admin-lazy.css` now imports `adminPanelHub.css` directly.
+- Verification for `v.1.280`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and `npm.cmd run report:css` passed before full verification.

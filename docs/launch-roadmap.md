@@ -11,6 +11,7 @@
 - Локальные visual audits покрывают client main/cabinet, client nutrition, client workouts, trainer workspace и admin hub.
 - Production smoke оформлен в `docs/production-smoke-checklist.md`.
 - CSS cleanup baseline оформлен в `docs/css-cleanup-baseline.md`.
+- Route-by-route CSS cleanup started with the covered admin hub lazy stack.
 - Дальше идти без деплоя, пока изменение не требует production-проверки.
 
 ## Неделя 1: стабильная база
