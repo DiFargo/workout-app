@@ -94,6 +94,7 @@ export default function AiCoachPage({
                         type="button"
                         key={day.id}
                         className={selected ? "active" : ""}
+                        aria-pressed={selected}
                         title={day.label}
                         onClick={() => setAiNutritionProfileDraft((prev) => {
                           const current = getAiNutritionTrainingDays(prev);
@@ -122,6 +123,7 @@ export default function AiCoachPage({
                     type="button"
                     key={goal.id}
                     className={aiNutritionProfileDraft.goal === goal.id ? "active" : ""}
+                    aria-pressed={aiNutritionProfileDraft.goal === goal.id}
                     onClick={() => setAiNutritionProfileDraft((prev) => ({ ...prev, goal: goal.id }))}
                   >
                     <strong>{goal.title}</strong>

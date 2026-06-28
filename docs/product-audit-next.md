@@ -170,6 +170,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 73. Nutrition product portion unit toggle now exposes selected state with `aria-pressed`, guarded by the nutrition visual audit.
 74. Trainer client card tabs now expose selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
 75. Trainer workout library tab now exposes selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
+76. AI Coach nutrition onboarding training-day and goal choices now expose selected state with `aria-pressed`, guarded by the AI Coach visual audit.
 
 ## P1: Next Product Fixes
 

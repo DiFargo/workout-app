@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.342`.
+Last updated at app version `v.1.343`.
 
 ## Stable Now
 
@@ -78,6 +78,7 @@ Last updated at app version `v.1.342`.
 - Nutrition product portion unit toggle exposes selected `aria-pressed` state under the nutrition visual audit.
 - Trainer client card tabs expose selected `aria-pressed` state under trainer workspace and visual audits.
 - Trainer workout library tab exposes selected `aria-pressed` state under trainer workspace and visual audits.
+- AI Coach nutrition onboarding training-day and goal choices expose selected `aria-pressed` state under the AI Coach visual audit.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape
