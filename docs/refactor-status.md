@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.364`.
+Last updated at app version `v.1.365`.
 
 ## Stable Now
 
@@ -84,6 +84,7 @@ Last updated at app version `v.1.364`.
 - Production trainer client training program cards expose selected `aria-pressed` state under the app structure audit.
 - Client workout next card exposes current step state with `aria-current` under the app structure audit.
 - Legacy trainer dashboard client tabs expose selected `aria-pressed` state under the app structure audit.
+- Legacy trainer admin history bulk selection exposes selected state and labeled workout checkboxes under the app structure audit.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.

@@ -8,7 +8,7 @@ export default function TrainerAdminHistoryTab({
   toggleAdminSelectAllHistory
 }) {
   const visibleHistory = adminClientHistory.slice(0, 20);
-  const allVisibleSelected = visibleHistory.every((item) => adminSelectedHistoryIds.includes(item.id)) && adminClientHistory.length;
+  const allVisibleSelected = visibleHistory.length > 0 && visibleHistory.every((item) => adminSelectedHistoryIds.includes(item.id));
 
   return (
     <div className="adminV3TabGrid">
@@ -18,7 +18,7 @@ export default function TrainerAdminHistoryTab({
         <div className="adminHistoryDeleteHint">Отметь нужные тренировки и удали только выбранные.</div>
 
         <div className="adminHistorySelectBar">
-          <button type="button" onClick={toggleAdminSelectAllHistory}>
+          <button type="button" aria-pressed={allVisibleSelected} onClick={toggleAdminSelectAllHistory}>
             {allVisibleSelected ? "Снять выбор" : "Выбрать видимые"}
           </button>
 
@@ -39,6 +39,7 @@ export default function TrainerAdminHistoryTab({
                 <input
                   type="checkbox"
                   checked={adminSelectedHistoryIds.includes(item.id)}
+                  aria-label={`Выбрать тренировку: ${item.workout || "Тренировка"}`}
                   onChange={() => toggleAdminSelectedHistoryId(item.id)}
                 />
                 <i />
