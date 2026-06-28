@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
+test.setTimeout(60_000);
+
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
     documentWidth: document.documentElement.scrollWidth,
@@ -84,11 +86,16 @@ async function expectWorkoutCardSpacing(page) {
   expect(metrics.progress.bottom).toBeLessThanOrEqual(metrics.bottomNav.y);
 }
 
+async function openClientWorkoutHarness(page) {
+  await page.goto("/?clientHarness=1");
+  await expect(page.getByTestId("client-nav-workouts")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-workouts").click();
+}
+
 test("client workout visual audit covers plan cards and workout modals", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1");
-  await page.getByTestId("client-nav-workouts").click();
+  await openClientWorkoutHarness(page);
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
   await expect(page.locator(".clientCorePageWorkout")).toBeVisible();
   await expect(page.locator(".individualWorkoutCardPro")).toBeVisible();
@@ -147,6 +154,7 @@ test("client workout visual audit covers empty assigned plan state", async ({ pa
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
   await page.goto("/?clientHarness=1&clientWorkoutState=empty");
+  await expect(page.getByTestId("client-nav-workouts")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-workouts").click();
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
   await expect(page.locator(".workoutProgramEmptyState")).toBeVisible();

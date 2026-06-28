@@ -155,3 +155,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.307`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run build`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.308`: moved `legacy-dark-green-food-flow.css` from core `index.css` into the nutrition lazy stack and updated the dark nutrition readability guard.
 - Verification for `v.1.308`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run build`, `npm.cmd run verify`, repeated `npm.cmd run test:e2e` after one timeout flake, and `npm.cmd run report:css` passed.
+- `v.1.309`: stabilized `tests/e2e/client-workout-visual.spec.js` by waiting for the client harness workout nav before clicking and allowing cold harness startup room.
+- Verification for `v.1.309`: `tests/e2e/client-workout-visual.spec.js`, `tests/app-structure.test.mjs`, `npm.cmd run build`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

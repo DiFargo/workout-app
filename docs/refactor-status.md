@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.308`.
+Last updated at app version `v.1.309`.
 
 ## Stable Now
 
@@ -19,6 +19,7 @@ Last updated at app version `v.1.308`.
 - Admin hub and admin internals CSS entrypoints are now structurally guarded against accidental heavy import drift.
 - Mobile client smoke waits long enough for slow cold auth bootstrap runs observed in Playwright mobile.
 - Client smoke tests wait past the auth bootstrap fallback window, matching the app's signed-out loading behavior on slower mobile runs.
+- Client workout visual audit waits for the harness bottom navigation before clicking, reducing cold-start timeout flakes.
 - Trainer lazy CSS no longer uses the redundant `trainer.css` alias; `trainer-workspace.css` is imported directly.
 - Core CSS no longer uses the redundant `themes.css` and `client-main.css` aliases; `theme.css` and `auth.css` are imported directly.
 - Core CSS no longer uses the redundant `layout.css` and `components.css` grouping aliases; their child files are imported directly.
