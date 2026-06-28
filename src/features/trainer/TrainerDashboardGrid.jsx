@@ -37,7 +37,9 @@ export default function TrainerDashboardGrid({
             return (
               <button
                 key={client.id}
+                type="button"
                 className={isActive ? "active" : ""}
+                aria-pressed={isActive}
                 onClick={() => loadAdminClientOverview(client, true)}
               >
                 <span>

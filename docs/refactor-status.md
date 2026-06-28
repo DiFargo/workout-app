@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.358`.
+Last updated at app version `v.1.359`.
 
 ## Stable Now
 
@@ -78,6 +78,7 @@ Last updated at app version `v.1.358`.
 - First setup sex, activity and goal choices expose selected `aria-pressed` state under the client primary visual audit.
 - Profile body metric sex choices expose selected `aria-pressed` state under the client primary visual audit.
 - Production trainer admin user filters and client cards expose selected `aria-pressed` state under the app structure audit.
+- Production trainer dashboard filters and client rows expose selected `aria-pressed` state under the app structure audit.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.

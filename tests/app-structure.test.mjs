@@ -476,6 +476,14 @@ test("trainer admin user selectors expose selected state", async () => {
   assert.match(usersGrid, /className=\{active \? "adminClientCard[\s\S]*aria-pressed=\{active\}/);
 });
 
+test("trainer dashboard selectors expose selected state", async () => {
+  const dashboardFilters = await readText("src/features/trainer/TrainerDashboardKpiFilters.jsx");
+  const dashboardGrid = await readText("src/features/trainer/TrainerDashboardGrid.jsx");
+
+  assert.match(dashboardFilters, /className=\{adminClientFilter === id \? "active" : ""\}[\s\S]*aria-pressed=\{adminClientFilter === id\}/);
+  assert.match(dashboardGrid, /className=\{isActive \? "active" : ""\}[\s\S]*aria-pressed=\{isActive\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

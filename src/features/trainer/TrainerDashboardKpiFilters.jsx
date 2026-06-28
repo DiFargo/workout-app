@@ -30,7 +30,9 @@ export default function TrainerDashboardKpiFilters({
         ].map(([id, label]) => (
           <button
             key={id}
+            type="button"
             className={adminClientFilter === id ? "active" : ""}
+            aria-pressed={adminClientFilter === id}
             onClick={() => setAdminClientFilter(id)}
           >
             {label}
