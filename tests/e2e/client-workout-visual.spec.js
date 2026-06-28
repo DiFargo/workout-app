@@ -167,3 +167,35 @@ test("client workout visual audit covers empty assigned plan state", async ({ pa
 
   assertNoRuntimeErrors();
 });
+
+test("client workout visual audit covers AI workout dialogs", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutDialogs&clientWorkoutDialog=draft");
+  await expect(page.getByTestId("client-harness-workout-dialogs")).toBeAttached({ timeout: 40_000 });
+  await expect(page.locator(".workoutDraftRestoreOverlay")).toBeVisible();
+  await expectTapTargets(page, [".workoutDraftRestoreActions button"]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-workout-draft-restore-dialog.png");
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutDialogs&clientWorkoutDialog=readiness");
+  await expect(page.getByTestId("client-harness-workout-dialogs")).toBeAttached({ timeout: 40_000 });
+  await expect(page.locator(".workoutReadinessOverlay")).toBeVisible();
+  await expectTapTargets(page, [
+    ".workoutReadinessGrid button",
+    ".workoutReadinessActions button"
+  ]);
+  await page.locator(".workoutReadinessGrid button").nth(1).click();
+  await expect(page.locator(".workoutReadinessGrid button.active")).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-workout-readiness-dialog.png");
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutDialogs&clientWorkoutDialog=post");
+  await expect(page.getByTestId("client-harness-workout-dialogs")).toBeAttached({ timeout: 40_000 });
+  await expect(page.locator(".postWorkoutOverlay")).toBeVisible();
+  await expectTapTargets(page, [".postWorkoutGrid button"]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-post-workout-feedback-dialog.png");
+
+  assertNoRuntimeErrors();
+});

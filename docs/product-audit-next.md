@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.317`.
+Last updated at app version `v.1.318`.
 
 ## Evidence
 
@@ -8,12 +8,12 @@ Last updated at app version `v.1.317`.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd test`: passed with `212` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `33` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed with `35` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `4` passed.
 - `npx.cmd playwright test tests/e2e/client-ai-coach-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
-- `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js`: passed with `4` passed.
+- `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js`: passed with `6` passed.
 - `npx.cmd playwright test tests/e2e/trainer-visual.spec.js`: passed with `2` passed.
 - Harness audit covered mobile and desktop variants for:
   - client main;
@@ -69,6 +69,9 @@ The client workout visual audit now attaches screenshots for:
 - workout mode modal;
 - workout history modal;
 - empty assigned plan state.
+- workout draft restore dialog.
+- workout readiness dialog.
+- post-workout feedback dialog.
 
 The client AI Coach visual audit now attaches screenshots for:
 
@@ -141,6 +144,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 49. AI nutrition training-day buttons now keep stable mobile tap targets in the AI Coach onboarding state.
 50. AI Coach route CSS now loads through `ai-coach-lazy.css` instead of the core app stylesheet, with structural guards covering the lazy import.
 51. Nutrition AI plan and AI photo process CSS now load through `nutrition-ai-plan-lazy.css` in the nutrition lazy stack instead of the core app stylesheet.
+52. Workout draft/readiness/post-workout dialogs now have visual coverage and lazy-owned CSS in the client workout stack.
 
 ## P1: Next Product Fixes
 
@@ -170,6 +174,7 @@ Started in `v.1.250`.
    - Status: client workout flow late CSS moved behind the workout lazy entrypoint after workout visual guards were stable.
    - Status: client workout run polish and exercise notes CSS moved behind the workout lazy entrypoint under the same guards.
    - Status: client workout navigation/close and set-row CSS moved behind the workout lazy entrypoint under the same guards.
+   - Status: workout draft/readiness/post-workout dialog CSS moved behind the workout lazy entrypoint after adding dialog visual coverage.
    - Status: client AI Coach has visual coverage for overview and AI nutrition plan states, and its route-specific CSS is now behind `ai-coach-lazy.css`.
    - Status: nutrition AI plan/photo-process CSS is now behind `nutrition-ai-plan-lazy.css` in the nutrition lazy stack.
    - Status: core legacy stack cleanup continued by removing import-only aggregators after client primary/nutrition/workout visual guards passed.

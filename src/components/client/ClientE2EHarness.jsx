@@ -2,9 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
+import { POST_WORKOUT_FEEDBACK_OPTIONS } from "../../domain/workoutPresentation";
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import AiCoachPage from "../../features/client/ai/AiCoachPage";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
+import {
+  PostWorkoutFeedbackDialog,
+  WorkoutDraftRestoreDialog,
+  WorkoutReadinessDialog
+} from "../workout/WorkoutDialogs";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
 import ProfileProgressPhotosModal from "../../features/client/profile/ProfileProgressPhotosModal";
@@ -239,6 +245,7 @@ export default function ClientE2EHarness() {
     ? harnessParams.get("clientWorkoutState")
     : "";
   const harnessPageParam = harnessParams?.get("clientHarnessPage") || "";
+  const workoutDialogParam = harnessParams?.get("clientWorkoutDialog") || "draft";
   const nutritionPhotoNotFoundParam = harnessParams?.get("clientNutritionPhotoNotFound") === "1";
   const visibleHarnessWorkouts = workoutHarnessState === "empty" ? [] : harnessWorkouts;
 
@@ -269,6 +276,8 @@ export default function ClientE2EHarness() {
       ? "nutrition"
       : harnessPageParam === "aiCoach"
         ? "aiCoach"
+        : harnessPageParam === "workoutDialogs"
+          ? "workoutDialogs"
         : "main"
   );
   const [nutritionDateKey, setNutritionDateKey] = useState(HARNESS_DATE);
@@ -313,6 +322,7 @@ export default function ClientE2EHarness() {
   const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(false);
   const [workoutModeModalOpen, setWorkoutModeModalOpen] = useState(false);
   const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
+  const [workoutReadinessPending, setWorkoutReadinessPending] = useState(null);
   const [cabinetWorkoutHistoryOpen, setCabinetWorkoutHistoryOpen] = useState(false);
   const [cabinetWorkoutHistoryItemOpen, setCabinetWorkoutHistoryItemOpen] = useState("client_harness_history_1");
   const [cabinetMeasurementsOpen, setCabinetMeasurementsOpen] = useState(
@@ -520,6 +530,34 @@ export default function ClientE2EHarness() {
           onOpenIndividualWorkouts={() => {}}
           openCabinetWorkoutHistory={() => setPage("cabinet")}
           handleWorkoutDraftChoice={() => {}}
+        />
+      </main>
+    );
+  }
+
+  if (page === "workoutDialogs") {
+    return (
+      <main data-testid="client-harness-workout-dialogs">
+        <WorkoutDraftRestoreDialog
+          open={workoutDialogParam === "draft"}
+          blocked={false}
+          onRestart={() => {}}
+          onRestore={() => {}}
+        />
+        <WorkoutReadinessDialog
+          open={workoutDialogParam === "readiness"}
+          selectedWorkoutId="client_harness_day_1"
+          workoutStarted={false}
+          pendingOption={workoutReadinessPending}
+          onSelectOption={setWorkoutReadinessPending}
+          onBack={() => {}}
+          onApply={() => {}}
+        />
+        <PostWorkoutFeedbackDialog
+          open={workoutDialogParam === "post"}
+          options={POST_WORKOUT_FEEDBACK_OPTIONS}
+          isSaving={false}
+          onSelect={() => {}}
         />
       </main>
     );
