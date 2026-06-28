@@ -497,6 +497,12 @@ test("client workout warmup timer presets expose selected state", async () => {
   assert.match(warmupStage, /className=\{timerDuration === seconds \? "active" : ""\}[\s\S]*aria-pressed=\{timerDuration === seconds\}/);
 });
 
+test("trainer client training program cards expose selected state", async () => {
+  const trainingTab = await readText("src/features/trainer/TrainerClientTrainingTab.jsx");
+
+  assert.match(trainingTab, /className=\{isSelected \|\| isAssigned \? "adminSavedProgramCard active" : "adminSavedProgramCard"\}[\s\S]*aria-pressed=\{isSelected \|\| isAssigned\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

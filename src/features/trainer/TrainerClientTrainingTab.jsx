@@ -110,7 +110,9 @@ export default function TrainerClientTrainingTab({
               return (
                 <button
                   key={template.id}
+                  type="button"
                   className={isSelected || isAssigned ? "adminSavedProgramCard active" : "adminSavedProgramCard"}
+                  aria-pressed={isSelected || isAssigned}
                   onClick={() => setAdminSelectedTemplateId(template.id)}
                 >
                   <span>{isAssigned ? "Назначена" : "Готовая программа"}</span>

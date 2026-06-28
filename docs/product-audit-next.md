@@ -189,6 +189,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 92. Production trainer dashboard filters and client rows now expose selected state with `aria-pressed`, guarded by the app structure audit.
 93. Production trainer client workspace role toggle and tabs now expose selected state with `aria-pressed`, guarded by the app structure audit.
 94. Client workout warmup timer presets now expose selected state with `aria-pressed`, guarded by the app structure audit.
+95. Production trainer client training program cards now expose selected state with `aria-pressed`, guarded by the app structure audit.
 
 ## P1: Next Product Fixes
 
