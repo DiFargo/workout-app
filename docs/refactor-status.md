@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.345`.
+Last updated at app version `v.1.346`.
 
 ## Stable Now
 
@@ -81,6 +81,7 @@ Last updated at app version `v.1.345`.
 - AI Coach nutrition onboarding training-day and goal choices expose selected `aria-pressed` state under the AI Coach visual audit.
 - AI Coach feature cards expose selected `aria-pressed` state under the AI Coach visual audit.
 - Trainer workout day selector exposes selected `aria-pressed` state under trainer workspace and visual audits.
+- Trainer client photo view tabs expose selected `aria-pressed` state under trainer workspace and visual audits.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape

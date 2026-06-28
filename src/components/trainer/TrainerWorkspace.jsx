@@ -1139,7 +1139,7 @@ function ClientPhotos({ photos }) {
       <div className="trainerNextPanelTitle">
         <div><h2>Фото прогресса</h2><p>Фотосессии клиента по датам</p></div>
         <div className="trainerPhotoViewTabs">
-          {photoViews.map((item) => <button type="button" className={view === item.id ? "active" : ""} key={item.id} onClick={() => setView(item.id)}>{item.label}</button>)}
+          {photoViews.map((item) => <button type="button" className={view === item.id ? "active" : ""} aria-pressed={view === item.id} key={item.id} onClick={() => setView(item.id)}>{item.label}</button>)}
         </div>
       </div>
 
@@ -1191,7 +1191,7 @@ function ClientPhotos({ photos }) {
               <button type="button" onClick={() => setOpenPhotoId("")} aria-label="Закрыть"><X size={18} /></button>
             </header>
             <div className="trainerPhotoViewTabs">
-              {photoViews.map((item) => <button type="button" className={view === item.id ? "active" : ""} key={item.id} onClick={() => setView(item.id)}>{item.label}</button>)}
+              {photoViews.map((item) => <button type="button" className={view === item.id ? "active" : ""} aria-pressed={view === item.id} key={item.id} onClick={() => setView(item.id)}>{item.label}</button>)}
             </div>
             <div className="trainerPhotoPreviewImage">
               {getPhotoUrl(activePhoto) ? <img src={getPhotoUrl(activePhoto)} alt="Фото клиента крупно" /> : <Camera size={42} />}

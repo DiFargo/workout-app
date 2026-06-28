@@ -118,6 +118,12 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
+  await main.locator(".trainerNextClientTabs button").nth(3).click();
+  await expect(page.locator(".trainerClientBodyProgress")).toBeVisible();
+  await expect(page.locator(".trainerPhotoViewTabs").first().locator("button[aria-pressed='true']")).toHaveCount(1);
+  await expectNoHorizontalOverflow(page);
+  assertNoRuntimeErrors();
+
   await clickTrainerNav(page, "messages");
   await expect(page.locator(".trainerMessageCenter")).toBeVisible();
   await expect(main.locator("h1")).toHaveCount(1);
