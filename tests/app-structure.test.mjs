@@ -204,6 +204,7 @@ test("shared React hooks stay in the shared hooks layer", async () => {
 test("application styles use the modular styles entrypoint", async () => {
   const main = await readText("src/main.jsx");
   const indexCss = await readText("src/styles/index.css");
+  const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
   const appSource = await readText("src/App.jsx");
   const appCore = await readText("src/AppCore.jsx");
   const appRouter = await readText("src/app/AppRouter.jsx");
@@ -220,6 +221,7 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.doesNotMatch(appSource, /styles\.css/);
   assert.match(appCore, /['"]\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appCore, /['"]\.\/styles\/nutrition-stack\.css['"]/);
+  assert.match(nutritionStackCss, /@import "\.\/client-food-search-final\.css"/);
   assert.match(appRouter, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
@@ -280,7 +282,8 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-trainer-program-editor-late.css",
     "./legacy-trainer-light-workspace.css",
     "./legacy-trainer-light-audit.css",
-    "./nutrition-trainer-desktop.css"
+    "./nutrition-trainer-desktop.css",
+    "./client-food-search-final.css"
   ]) {
     assert.doesNotMatch(indexCss, new RegExp(`@import "${deferredImport.replace(".", "\\.")}"`));
   }

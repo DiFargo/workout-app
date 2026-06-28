@@ -6,7 +6,7 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1654.33 KiB` raw, `169.09 KiB` gzip.
+- Latest main CSS bundle: about `1620.74 KiB` raw, `166.03 KiB` gzip.
 - Latest source CSS report: `93` files, about `3504.68 KiB` total source CSS.
 
 ## Screenshot Coverage
@@ -67,6 +67,7 @@ Start mapping here before any cleanup:
    - Expanded in `v.1.284`: visual coverage now includes search results, product amount screen, product edit sheet and My Database.
    - Continued in `v.1.285`: removed an older duplicated product/edit action-bar block from `client-visual-unity-final.css`; later food search CSS owns those surfaces.
    - Fixed in `v.1.295`: nutrition week strip keeps readable weekday labels separated from day markers and is guarded by geometry checks in the nutrition visual audit.
+   - Continued in `v.1.300`: food-search/product polish CSS moved from the core app entrypoint into `nutrition-stack.css`, under the existing nutrition visual audit.
 
 4. Trainer workspace.
    - Reason: dashboard, clients, messages and programs have coverage; the CSS is large but route-scoped.
@@ -128,3 +129,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.298`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run build`, `npm.cmd run check:bundle` and `npm.cmd run report:css` passed before full verification.
 - `v.1.299`: added a structural guard so heavy admin CRM/program CSS cannot drift back into the production `admin-lazy.css` entrypoint, and gave the mobile login smoke enough room to wait for the 15s auth bootstrap fallback.
 - Verification for `v.1.299`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and repeated mobile `tests/e2e/client-smoke.spec.js` passed before full verification.
+- `v.1.300`: moved `client-food-search-final.css` from core `index.css` into the nutrition lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.300`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run build` and `npm.cmd run report:css` passed before full verification.
