@@ -207,7 +207,9 @@ export default function TrainerLegacyDashboardRoute({
               ].map(([id, label]) => (
                 <button
                   key={id}
+                  type="button"
                   className={adminClientTab === id ? "active" : ""}
+                  aria-pressed={adminClientTab === id}
                   onClick={() => setAdminClientTab(id)}
                 >
                   {label}

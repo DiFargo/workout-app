@@ -509,6 +509,12 @@ test("client workout next card exposes current step state", async () => {
   assert.match(workoutListPage, /className=\{`workoutSelectCard individualWorkoutCardPro[\s\S]*aria-current=\{activeNext \? "step" : undefined\}/);
 });
 
+test("trainer legacy dashboard tabs expose selected state", async () => {
+  const legacyDashboard = await readText("src/features/trainer/TrainerLegacyDashboardRoute.jsx");
+
+  assert.match(legacyDashboard, /className=\{adminClientTab === id \? "active" : ""\}[\s\S]*aria-pressed=\{adminClientTab === id\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

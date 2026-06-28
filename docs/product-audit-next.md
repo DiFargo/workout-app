@@ -191,6 +191,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 94. Client workout warmup timer presets now expose selected state with `aria-pressed`, guarded by the app structure audit.
 95. Production trainer client training program cards now expose selected state with `aria-pressed`, guarded by the app structure audit.
 96. Client workout next card now exposes current step state with `aria-current`, guarded by the app structure audit.
+97. Legacy trainer dashboard client tabs now expose selected state with `aria-pressed`, guarded by the app structure audit.
 
 ## P1: Next Product Fixes
 
