@@ -199,3 +199,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.329`: `tests/profile-progress.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.330`: strengthened legacy trainer workspace bottom navigation with active-page `aria-current` state.
 - Verification for `v.1.330`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.331`: strengthened trainer message filters with selected `aria-pressed` state.
+- Verification for `v.1.331`: `tests/app-structure.test.mjs`, `tests/trainer-attention.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

@@ -4036,6 +4036,7 @@ function TrainerUtilityPage({ section, clients = [], clientSummaries = {}, onNav
                   type="button"
                   key={item.id}
                   className={messageFilter === item.id ? "active" : ""}
+                  aria-pressed={messageFilter === item.id}
                   onClick={() => {
                     setMessageFilter(item.id);
                     setSelectedMessageId("");

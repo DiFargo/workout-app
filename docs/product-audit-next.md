@@ -159,6 +159,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 62. Cabinet workout history expand and delete actions now expose workout-specific accessible labels, guarded by the primary visual audit.
 63. Cabinet progress photo upload inputs now expose view-specific accessible labels, guarded by the primary visual audit.
 64. Legacy trainer workspace bottom navigation now exposes active-page state with `aria-current`.
+65. Trainer message filters now expose selected state with `aria-pressed`, guarded by trainer smoke and visual audits.
 
 ## P1: Next Product Fixes
 
