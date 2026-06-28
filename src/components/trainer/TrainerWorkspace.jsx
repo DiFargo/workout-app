@@ -501,13 +501,15 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
             <nav>
               {MOBILE_OVERFLOW_ITEMS.map((item) => {
                 const Icon = item.icon;
+                const active = activeSection === item.id;
                 return (
                   <button
                     type="button"
                     key={item.id}
                     data-section={item.id}
                     data-testid={`trainer-more-${item.id}`}
-                    className={activeSection === item.id ? "active" : ""}
+                    className={active ? "active" : ""}
+                    aria-current={active ? "page" : undefined}
                     onClick={() => {
                       setOverflowOpen(false);
                       onNavigate(item.id);
