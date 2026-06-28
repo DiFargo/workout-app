@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.280`.
+Last updated at app version `v.1.281`.
 
 ## Evidence
 
@@ -75,6 +75,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 8. Client main dashboard and cabinet have screenshot coverage with bottom navigation and card spacing checks.
 9. Admin panel hub has DEV-only harness coverage, screenshot coverage and a stable 40px back target.
 10. Admin lazy CSS cleanup started by removing the redundant `admin.css` alias file.
+11. Trainer lazy CSS cleanup continued by removing the redundant `trainer.css` alias file.
 
 ## P1: Next Product Fixes
 
@@ -100,7 +101,7 @@ Started in `v.1.250`.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
-   - Status: started for admin hub; `admin-lazy.css` now imports the hub CSS directly.
+   - Status: started for admin hub and trainer workspace; lazy entrypoints now import route CSS directly where an alias was redundant.
 
 ## Recommended Order
 

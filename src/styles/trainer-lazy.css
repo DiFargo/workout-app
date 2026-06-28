@@ -1,4 +1,4 @@
-@import "./trainer.css";
+@import "../components/trainer/trainer-workspace.css";
 @import "./nutrition-trainer-desktop.css";
 @import "./legacy-admin-stack.css";
 @import "./legacy-trainer-desktop-adaptation-late.css";
