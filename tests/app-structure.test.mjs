@@ -523,6 +523,12 @@ test("trainer admin history bulk selection exposes accessible state", async () =
   assert.match(historyTab, /type="checkbox"[\s\S]*checked=\{adminSelectedHistoryIds\.includes\(item\.id\)\}[\s\S]*aria-label=\{`Выбрать тренировку: \$\{item\.workout \|\| "Тренировка"\}`\}/);
 });
 
+test("trainer program overview cards expose selected state", async () => {
+  const overviewPage = await readText("src/features/trainer/TrainerProgramOverviewPage.jsx");
+
+  assert.match(overviewPage, /className=\{isSelected \? "programsOverviewCard selected" : "programsOverviewCard"\}[\s\S]*type="button"[\s\S]*aria-pressed=\{isSelected\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

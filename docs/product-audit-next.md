@@ -193,6 +193,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 96. Client workout next card now exposes current step state with `aria-current`, guarded by the app structure audit.
 97. Legacy trainer dashboard client tabs now expose selected state with `aria-pressed`, guarded by the app structure audit.
 98. Legacy trainer admin history bulk selection now exposes selected state and labeled workout checkboxes, guarded by the app structure audit.
+99. Production trainer program overview cards now expose selected state with `aria-pressed`, guarded by the app structure audit.
 
 ## P1: Next Product Fixes
 

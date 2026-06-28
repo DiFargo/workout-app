@@ -150,6 +150,7 @@ export default function TrainerProgramOverviewPage({
                 <button
                   className={isSelected ? "programsOverviewCard selected" : "programsOverviewCard"}
                   type="button"
+                  aria-pressed={isSelected}
                   key={template.id}
                   onClick={() => setAdminSelectedTemplateId(template.id)}
                 >
