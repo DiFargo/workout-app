@@ -133,6 +133,7 @@ import {
 import { buildTrainerExerciseLibraryItems } from "./utils/trainerExerciseLibrary";
 import { isClientE2EHarnessEnabled } from "./utils/clientHarness";
 import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
+import { isAdminE2EHarnessEnabled } from "./utils/adminHarness";
 import {
   formatTrainerSummaryDate,
   getTrainerSummaryDayStart,
@@ -294,10 +295,12 @@ const loadNutritionRoute = () => Promise.all([
   import("./features/client/nutrition/NutritionRoute")
 ]).then(([, module]) => module);
 const loadTrainerE2EHarness = () => import("./components/trainer/TrainerE2EHarness");
+const loadAdminE2EHarness = () => import("./components/admin/AdminE2EHarness");
 
 const ClientE2EHarness = lazy(loadClientE2EHarness);
 const NutritionRoute = lazy(loadNutritionRoute);
 const TrainerE2EHarness = lazy(loadTrainerE2EHarness);
+const AdminE2EHarness = lazy(loadAdminE2EHarness);
 
 const {
   ADMIN_EMAIL,
@@ -327,6 +330,7 @@ export default function App() {
 
   const showClientHarness = isClientE2EHarnessEnabled();
   const showTrainerHarness = isTrainerE2EHarnessEnabled();
+  const showAdminHarness = isAdminE2EHarnessEnabled();
 
   usePreventMobileZoom();
 
@@ -342,6 +346,14 @@ export default function App() {
     return (
       <Suspense fallback={<RouteFallback />}>
         <TrainerE2EHarness />
+      </Suspense>
+    );
+  }
+
+  if (showAdminHarness) {
+    return (
+      <Suspense fallback={<RouteFallback />}>
+        <AdminE2EHarness />
       </Suspense>
     );
   }

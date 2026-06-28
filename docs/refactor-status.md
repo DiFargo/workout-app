@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.275`.
+Last updated at app version `v.1.279`.
 
 ## Stable Now
 
@@ -11,6 +11,7 @@ Last updated at app version `v.1.275`.
 - CSS files are guarded so every CSS file under `src/styles` and `src/components` stays reachable from the core or approved lazy CSS entrypoints.
 - Shared hooks live in `src/shared/hooks`.
 - Main route, terminal route, nutrition route and E2E harness screens are lazy-loaded.
+- Client, trainer and admin hub harnesses cover the main local visual smoke surfaces.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
 
@@ -51,4 +52,4 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd run report:css`: passed.
-- `npm.cmd run test:e2e`: passed, `15` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed, `23` passed and `1` skipped.

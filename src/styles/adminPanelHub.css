@@ -46,6 +46,11 @@
     var(--bg);
 }
 
+.adminPanelHubPage .adminFixedMainBack {
+  min-height: 40px !important;
+  padding-block: 0 !important;
+}
+
 .adminPanelHubHero {
   text-align: center;
   margin-bottom: 18px;

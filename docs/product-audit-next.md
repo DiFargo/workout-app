@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.278`.
+Last updated at app version `v.1.279`.
 
 ## Evidence
 
@@ -8,7 +8,8 @@ Last updated at app version `v.1.278`.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd test`: passed with `212` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `21` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed with `23` passed and `1` skipped.
+- `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
 - `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js`: passed with `2` passed.
@@ -29,6 +30,11 @@ The client primary visual audit now attaches screenshots for:
 
 - client main dashboard;
 - client cabinet.
+
+The admin visual audit now attaches screenshots for:
+
+- admin panel hub;
+- admin access denied state.
 
 The nutrition visual audit now attaches screenshots for:
 
@@ -67,6 +73,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 6. Trainer compact action buttons, message filters and mobile route header buttons keep stable 40px tap targets.
 7. Client workout plan cards and workout modals have screenshot coverage and stable 40px tap targets for compact controls.
 8. Client main dashboard and cabinet have screenshot coverage with bottom navigation and card spacing checks.
+9. Admin panel hub has DEV-only harness coverage, screenshot coverage and a stable 40px back target.
 
 ## P1: Next Product Fixes
 
@@ -88,7 +95,7 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client main, client cabinet, client nutrition, client workouts and trainer workspace screenshot artifacts are covered.
+   - Status: client main, client cabinet, client nutrition, client workouts, trainer workspace and admin hub screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
@@ -96,5 +103,6 @@ Started in `v.1.250`.
 
 ## Recommended Order
 
-1. Continue route-by-route screenshot audits before any CSS cleanup.
-2. Start CSS cleanup only from a route whose screenshots are already stable.
+1. Use `docs/production-smoke-checklist.md` for production smoke before and after deploy-risk changes.
+2. Use `docs/css-cleanup-baseline.md` before route-by-route CSS cleanup.
+3. Start CSS cleanup only from a route whose screenshots are already stable.
