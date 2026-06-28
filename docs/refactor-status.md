@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.319`.
+Last updated at app version `v.1.320`.
 
 ## Stable Now
 
@@ -51,6 +51,7 @@ Last updated at app version `v.1.319`.
 - Client AI Coach route CSS is owned by `ai-coach-lazy.css` instead of the core app stylesheet.
 - Client nutrition AI plan and AI photo process CSS are owned by `nutrition-ai-plan-lazy.css` inside the nutrition lazy stack.
 - Client nutrition food icon editor and training-day calorie highlight CSS are owned by `nutrition-food-icon-lazy.css` inside the nutrition lazy stack.
+- Remaining profile body metrics and first setup core rules are owned by `legacy-profile-first-setup-core.css`; the old mixed AI/nutrition/workout stylesheet name is no longer imported.
 - Client nutrition flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition orbit CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition warm-light add-food/search cleanup CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.

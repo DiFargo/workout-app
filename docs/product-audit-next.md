@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.319`.
+Last updated at app version `v.1.320`.
 
 ## Evidence
 
@@ -146,6 +146,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 51. Nutrition AI plan and AI photo process CSS now load through `nutrition-ai-plan-lazy.css` in the nutrition lazy stack instead of the core app stylesheet.
 52. Workout draft/readiness/post-workout dialogs now have visual coverage and lazy-owned CSS in the client workout stack.
 53. Nutrition food icon editor and training-day calorie highlight CSS now load through `nutrition-food-icon-lazy.css` in the nutrition lazy stack.
+54. The former mixed AI/nutrition/workout stylesheet was retired; its remaining core profile/first-setup rules now live in `legacy-profile-first-setup-core.css`.
 
 ## P1: Next Product Fixes
 

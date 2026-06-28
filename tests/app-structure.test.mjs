@@ -223,6 +223,8 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(main, /['"]\.\/styles\/index\.css['"]/);
   assert.doesNotMatch(main, /['"]\.\/styles\.css['"]/);
   assert.doesNotMatch(appSource, /styles\.css/);
+  assert.match(indexCss, /@import "\.\/legacy-profile-first-setup-core\.css"/);
+  assert.doesNotMatch(indexCss, /legacy-ai-nutrition-workout-readiness\.css/);
   assert.match(appCore, /['"]\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appCore, /['"]\.\/styles\/nutrition-stack\.css['"]/);
   assert.match(appCore, /['"]\.\/styles\/ai-coach-lazy\.css['"]/);
