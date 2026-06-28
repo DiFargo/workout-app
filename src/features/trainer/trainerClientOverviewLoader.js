@@ -5,6 +5,7 @@ import { buildAdminClientNutritionStateFromRoot } from "../../utils/trainerClien
 import { getDefaultAdminCalendar } from "../../utils/adminClientCalendar";
 import { getMeasurementTimestampValue } from "../../utils/profileMeasurements";
 import { getTrainerSummaryTimestamp } from "../../utils/trainerSummaryDates";
+import { normalizeExercise, sortWorkoutDays } from "../../utils/workoutPlanNormalization";
 
 const STATUS_LOAD_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0434\u0430\u043d\u043d\u044b\u0435 \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
 
@@ -53,6 +54,7 @@ export function createTrainerClientOverviewLoader({
   setAdminPhotoCompareIds,
   setAdminTrainerNote,
   setAdminCalendarDraft,
+  setPlan,
   mirrorClientForTrainer,
   loadAdminTrainingTemplates
 }) {
@@ -69,6 +71,7 @@ export function createTrainerClientOverviewLoader({
     }
     setAdminClientLoading(true);
     setAdminClientStatus("");
+    setPlan?.({ workouts: [] });
     setAdminClientTasks([]);
     setAdminClientProgressPhotos([]);
     setAdminClientEvents([]);
@@ -115,6 +118,7 @@ export function createTrainerClientOverviewLoader({
       let historySnap = null;
       let nutritionSnap = null;
       let measurementsSnap = null;
+      let workoutsSnap = null;
 
       try {
         historySnap = await getDocs(collection(db, "users", client.id, "history"));
@@ -137,6 +141,13 @@ export function createTrainerClientOverviewLoader({
         measurementsSnap = null;
       }
 
+      try {
+        workoutsSnap = await getDocs(collection(db, "users", client.id, "workouts"));
+      } catch (workoutsError) {
+        console.error("Client workouts load failed:", workoutsError);
+        workoutsSnap = null;
+      }
+
       const [tasksResult, photosResult, eventsResult, paymentResult, privateNoteResult] = await Promise.allSettled([
         getDocs(collection(db, "users", client.id, "trainerTasks")),
         getDocs(collection(db, "users", client.id, "progressPhotos")),
@@ -147,6 +158,13 @@ export function createTrainerClientOverviewLoader({
 
       const clientHistory = getDocsAsItems(historySnap);
       clientHistory.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+      const clientWorkouts = sortWorkoutDays(getDocsAsItems(workoutsSnap).map((workout) => ({
+        ...workout,
+        name: workout.name || "\u0411\u0435\u0437 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f",
+        status: workout.status || "planned",
+        exercises: (workout.exercises || []).map(normalizeExercise)
+      })));
 
       const clientMeasurements = getDocsAsItems(measurementsSnap);
       clientMeasurements.sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
@@ -189,6 +207,7 @@ export function createTrainerClientOverviewLoader({
       const mergedNutritionState = buildAdminClientNutritionStateFromRoot(freshClient, nutritionState);
       const fullClientForView = {
         ...freshClient,
+        assignedWorkoutCount: Math.max(Number(freshClient.assignedWorkoutCount) || 0, clientWorkouts.length),
         nutritionGoals: freshClient.nutritionGoals || mergedNutritionState.goals,
         nutritionPlan: freshClient.nutritionPlan || mergedNutritionState.nutritionPlan,
         aiNutritionPlan: freshClient.aiNutritionPlan || mergedNutritionState.aiNutritionPlan
@@ -226,6 +245,12 @@ export function createTrainerClientOverviewLoader({
       ]);
       setAdminTrainerNote(privateTrainerNote);
       setAdminCalendarDraft(getDefaultAdminCalendar(freshClient));
+      setPlan?.({
+        assignedProgramId: fullClientForView.assignedProgramId || "",
+        assignedProgramName: fullClientForView.assignedProgramName || "",
+        assignedProgramUpdatedAt: fullClientForView.assignedProgramUpdatedAt || fullClientForView.assignedProgramAt || "",
+        workouts: clientWorkouts
+      });
       await loadAdminTrainingTemplates();
     } catch (error) {
       console.error("Client overview load failed:", error);

@@ -2055,6 +2055,7 @@ export default function App() {
     setAdminPhotoCompareIds,
     setAdminTrainerNote,
     setAdminCalendarDraft,
+    setPlan,
     mirrorClientForTrainer,
     loadAdminTrainingTemplates
   });

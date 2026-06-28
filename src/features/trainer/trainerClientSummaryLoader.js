@@ -6,6 +6,7 @@ import {
 } from "../../domain/clientInsights";
 import {
   buildTrainerClientRecentEvents,
+  getTrainerAssignedWorkoutCount,
   getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
   getTrainerCompletedWorkoutCountForAssignment,
@@ -47,17 +48,19 @@ export function createTrainerClientSummaryLoader({
     const { weekStart, sevenDayStart, thirtyDayStart } = getTrainerSummaryPeriodBounds();
 
     const loadClientSummary = async (client) => {
-      const [historyResult, nutritionResult, measurementsResult, paymentResult] = await Promise.allSettled([
+      const [historyResult, nutritionResult, measurementsResult, paymentResult, workoutsResult] = await Promise.allSettled([
         getDocs(collection(db, "users", client.id, "history")),
         getDoc(doc(db, "users", client.id, "nutrition", "state")),
         getDocs(collection(db, "users", client.id, "measurements")),
-        getDoc(doc(db, "users", client.id, "payments", "current"))
+        getDoc(doc(db, "users", client.id, "payments", "current")),
+        getDocs(collection(db, "users", client.id, "workouts"))
       ]);
       const readFailures = getTrainerSummaryReadFailures({
         history: historyResult,
         nutrition: nutritionResult,
         measurements: measurementsResult,
-        payment: paymentResult
+        payment: paymentResult,
+        workouts: workoutsResult
       });
 
       if (readFailures.names.length) {
@@ -71,6 +74,7 @@ export function createTrainerClientSummaryLoader({
       const clientMeasurements = getTrainerSortedMeasurements(
         getTrainerSettledCollectionItems(measurementsResult)
       );
+      const clientWorkouts = getTrainerSettledCollectionItems(workoutsResult);
 
       const nutritionState = getTrainerSettledDocumentData(nutritionResult, client?.nutritionState || null);
       const nutritionSummary = getTrainerNutritionSummary(nutritionState);
@@ -80,7 +84,7 @@ export function createTrainerClientSummaryLoader({
         assignedProgramUpdatedAt,
         client.workoutCalendar || {}
       );
-      const assignedWorkoutCount = Number(client.assignedWorkoutCount) || 0;
+      const assignedWorkoutCount = getTrainerAssignedWorkoutCount(client, clientWorkouts);
       const payment = getTrainerSettledDocumentData(paymentResult);
       const workoutActivitySummary = getTrainerWorkoutActivitySummary(clientHistory, {
         weekStart,

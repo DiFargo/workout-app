@@ -142,6 +142,16 @@ export function getTrainerProgramCompletionPercent(
   return Math.min(100, Math.round(completedCount / assignedCount * 100));
 }
 
+export function getTrainerAssignedWorkoutCount(client = {}, workouts = []) {
+  const rootCount = Number(client.assignedWorkoutCount) || 0;
+  const workoutCount = Array.isArray(workouts) ? workouts.length : 0;
+  const calendarPlannedCount = Array.isArray(client.workoutCalendar?.plannedWorkouts)
+    ? client.workoutCalendar.plannedWorkouts.length
+    : 0;
+
+  return Math.max(rootCount, workoutCount, calendarPlannedCount);
+}
+
 export function getTrainerSummaryReadFailures(readResults = {}) {
   const entries = Object.entries(readResults || {});
   return {
@@ -274,7 +284,7 @@ export function getTrainerClientEmptySummary(client = {}) {
     lastMeasurementAt: "",
     assignedProgramId: client.assignedProgramId || "",
     assignedProgramUpdatedAt: client.assignedProgramUpdatedAt || "",
-    assignedWorkoutCount: Number(client.assignedWorkoutCount) || 0,
+    assignedWorkoutCount: getTrainerAssignedWorkoutCount(client),
     completedWorkoutCount: 0,
     plateau: { isPlateau: false, days: 0, delta: null },
     payment: null,
@@ -305,11 +315,10 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
     previousSummary.completedWorkoutCount ??
     0
   ) || 0;
-  const assignedWorkoutCount = Number(
-    client.assignedWorkoutCount ??
-    previousSummary.assignedWorkoutCount ??
-    0
-  ) || 0;
+  const assignedWorkoutCount = Math.max(
+    getTrainerAssignedWorkoutCount(client),
+    Number(previousSummary.assignedWorkoutCount) || 0
+  );
   const explicitCompletion = Number(client.programCompletionPercent ?? previousSummary.programCompletionPercent);
 
   return {

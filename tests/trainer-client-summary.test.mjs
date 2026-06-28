@@ -6,6 +6,7 @@ import {
   buildTrainerDashboardSummary,
   getClientActivityStatus,
   getClientAttentionReasons,
+  getTrainerAssignedWorkoutCount,
   getTrainerCompletedWorkoutCountForAssignment,
   getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
@@ -148,6 +149,38 @@ test("trainer program completion percent stays bounded and optional", () => {
   assert.equal(getTrainerProgramCompletionPercent(8, 20), 100);
   assert.equal(getTrainerProgramCompletionPercent(0, 3), null);
   assert.equal(getTrainerProgramCompletionPercent(8, 3, false), null);
+});
+
+test("trainer assigned workout count prefers actual client workouts over stale root count", () => {
+  const workouts = Array.from({ length: 8 }, (_, index) => ({ id: `w${index + 1}` }));
+
+  assert.equal(getTrainerAssignedWorkoutCount({ assignedWorkoutCount: 4 }, workouts), 8);
+  assert.equal(getTrainerAssignedWorkoutCount({
+    assignedWorkoutCount: 4,
+    workoutCalendar: { plannedWorkouts: workouts }
+  }, []), 8);
+  assert.equal(getTrainerProgramCompletionPercent(getTrainerAssignedWorkoutCount({ assignedWorkoutCount: 4 }, workouts), 1), 13);
+});
+
+test("trainer fast summary keeps actual calendar plan count when root count is stale", () => {
+  const summary = getTrainerClientFastSummary({
+    id: "client_1",
+    assignedProgramId: "program_1",
+    assignedProgramUpdatedAt: "2026-06-20T10:00:00.000Z",
+    assignedWorkoutCount: 4,
+    workoutCalendar: {
+      assignedProgramUpdatedAt: "2026-06-20T10:00:00.000Z",
+      plannedWorkouts: Array.from({ length: 8 }, (_, index) => ({
+        workoutId: `w${index + 1}`,
+        order: index + 1,
+        status: index === 0 ? "completed" : "planned"
+      }))
+    }
+  });
+
+  assert.equal(summary.assignedWorkoutCount, 8);
+  assert.equal(summary.completedWorkoutCount, 1);
+  assert.equal(summary.programCompletionPercent, 13);
 });
 
 test("trainer summary read failures preserve failed names and reasons", () => {
