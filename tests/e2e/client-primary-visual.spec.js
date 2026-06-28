@@ -119,6 +119,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=measurements");
   await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetMeasurementModal")).toBeVisible();
+  await expect(page.locator(".cabinetMeasurementModalStart")).toHaveAttribute("aria-label", "Начать новый замер тела");
   await expectTapTargets(page, [
     ".cabinetMeasurementModalHead button",
     ".cabinetMeasurementModalStart"

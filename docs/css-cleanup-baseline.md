@@ -191,3 +191,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.325`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.326`: strengthened covered cabinet workout calendar date buttons with selected `aria-pressed` and current-date `aria-current` state.
 - Verification for `v.1.326`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.327`: strengthened the covered cabinet measurements modal start action with an explicit accessible label.
+- Verification for `v.1.327`: `tests/profile-measurements.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

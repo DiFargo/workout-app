@@ -155,6 +155,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 58. Cabinet settings harness now renders the real app-settings section, and theme/Telegram controls expose accessible action labels and selected state.
 59. Cabinet trainer notification items now expose task, status and due-date accessible labels, guarded by the primary visual audit.
 60. Cabinet workout calendar date buttons now expose selected and current-date accessibility state, guarded by the primary visual audit.
+61. Cabinet measurements modal start action now exposes an explicit accessible label, guarded by the primary visual audit.
 
 ## P1: Next Product Fixes
 

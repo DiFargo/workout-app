@@ -63,6 +63,7 @@ export default function ProfileMeasurementsModal({
         <button
           type="button"
           className="cabinetMeasurementModalStart"
+          aria-label="Начать новый замер тела"
           onClick={onStart}
         >
           📏 Начать замер

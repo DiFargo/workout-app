@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.326`.
+Last updated at app version `v.1.327`.
 
 ## Stable Now
 
@@ -62,6 +62,7 @@ Last updated at app version `v.1.326`.
 - Client cabinet settings visual harness renders the real app-settings section and guards theme/Telegram accessibility attributes.
 - Client cabinet trainer notification items expose task, status and due-date accessible labels under the primary visual audit.
 - Client cabinet workout calendar date buttons expose selected and current-date accessibility state under the primary visual audit.
+- Client cabinet measurements modal start action exposes an explicit accessible label under the primary visual audit.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape
