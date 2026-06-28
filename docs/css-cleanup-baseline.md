@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
-- Latest source CSS report: `99` files, about `3507.94 KiB` total source CSS.
+- Latest source CSS report: `99` files, about `3504.65 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -38,7 +38,7 @@ Start mapping here before any cleanup:
 - `src/styles/legacy-admin-client-dashboard-polish.css` - `97.12 KiB`
 - `src/styles/legacy-desktop-cabinet-polish.css` - `93.17 KiB`
 - `src/styles/legacy-client-workout-flow-late.css` - `87.59 KiB`
-- `src/styles/client-visual-unity-final.css` - `84.29 KiB`
+- `src/styles/client-visual-unity-final.css` - `80.04 KiB`
 - `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.79 KiB`
 
 ## Cleanup Order
@@ -57,6 +57,7 @@ Start mapping here before any cleanup:
    - Reason: densest route, already covered by modal screenshots.
    - Candidate files: `client-nutrition-grid-lock.css`, `legacy-food-editor-tail.css`, `nutrition.css`, `legacy-nutrition-late-layout.css`.
    - Expanded in `v.1.284`: visual coverage now includes search results, product amount screen, product edit sheet and My Database.
+   - Continued in `v.1.285`: removed an older duplicated product/edit action-bar block from `client-visual-unity-final.css`; later food search CSS owns those surfaces.
 
 4. Trainer workspace.
    - Reason: dashboard, clients, messages and programs have coverage; the CSS is large but route-scoped.
@@ -89,3 +90,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.283`: `tests/app-structure.test.mjs`, `tests/e2e/client-smoke.spec.js`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.284`: removed an obsolete product meal-button override from `client-visual-unity-final.css` after deeper nutrition visual coverage proved the later product CSS owns that state.
 - Verification for `v.1.284`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.285`: removed the older duplicated product/edit action-bar block from `client-visual-unity-final.css`; `client-food-search-final.css` keeps the current product and edit-sheet action bar rules.
+- Verification for `v.1.285`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
