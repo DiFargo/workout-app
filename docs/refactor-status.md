@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.331`.
+Last updated at app version `v.1.332`.
 
 ## Stable Now
 
@@ -67,6 +67,7 @@ Last updated at app version `v.1.331`.
 - Client cabinet progress photo upload inputs expose view-specific accessible labels under the primary visual audit.
 - Legacy trainer workspace bottom navigation exposes active-page `aria-current` state.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
+- Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape

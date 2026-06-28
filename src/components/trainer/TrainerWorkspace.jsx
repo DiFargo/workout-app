@@ -2068,11 +2068,24 @@ function NutritionAnalytics({ nutritionDays, target }) {
         </div>
         <div className="trainerNutritionPeriodButtons">
           {["7", "14", "30"].map((value) => (
-            <button type="button" className={period === value ? "active" : ""} key={value} onClick={() => setPeriod(value)}>
+            <button
+              type="button"
+              className={period === value ? "active" : ""}
+              aria-pressed={period === value}
+              key={value}
+              onClick={() => setPeriod(value)}
+            >
               {value} дней
             </button>
           ))}
-          <button type="button" className={period === "custom" ? "active" : ""} onClick={() => setPeriod("custom")}>Период</button>
+          <button
+            type="button"
+            className={period === "custom" ? "active" : ""}
+            aria-pressed={period === "custom"}
+            onClick={() => setPeriod("custom")}
+          >
+            Период
+          </button>
         </div>
         {period === "custom" ? (
           <div className="trainerNutritionCustomPeriod">
