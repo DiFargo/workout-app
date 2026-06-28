@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1654.33 KiB` raw, `169.09 KiB` gzip.
-- Latest source CSS report: `92` files, about `3503.88 KiB` total source CSS.
+- Latest source CSS report: `92` files, about `3504.59 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -18,12 +18,10 @@ Covered by Playwright visual audits:
 - Client nutrition main, food search, food results, product amount screen, product edit sheet, My Database, calendar, diary and analysis modal: `tests/e2e/client-nutrition-visual.spec.js`
 - Client workout cards, swipe, workout mode modal, workout history modal and empty assigned plan state: `tests/e2e/client-workout-visual.spec.js`
 - Trainer dashboard, clients, client card, messages and programs: `tests/e2e/trainer-visual.spec.js`
-- Admin panel hub and denied state: `tests/e2e/admin-visual.spec.js`
+- Admin panel hub, denied state, admin users CRM harness and admin programs overview harness: `tests/e2e/admin-visual.spec.js`
 
 Not covered deeply yet:
 
-- Full admin users/client CRM internals.
-- Full admin program editor internals.
 - Live production-only auth and Firestore permission edge cases.
 
 ## Largest CSS Files From Latest Report
@@ -75,10 +73,11 @@ Start mapping here before any cleanup:
    - Candidate file: `src/components/trainer/trainer-workspace.css`.
    - Started in `v.1.281`: removed the one-line `trainer.css` alias and imported `trainer-workspace.css` directly from `trainer-lazy.css`.
 
-5. Admin hub only.
-   - Reason: hub is covered; deep admin CRM internals need more harnessing first.
-   - Candidate files: `adminPanelHub.css`, hub-specific rules inside admin lazy stack.
+5. Admin hub and internals.
+   - Reason: hub, users CRM and program overview surfaces have harness coverage.
+   - Candidate files: `adminPanelHub.css`, admin CRM/program rules inside admin lazy stack.
    - Started in `v.1.280`: removed the one-line `admin.css` alias and imported `adminPanelHub.css` directly from `admin-lazy.css`.
+   - Expanded in `v.1.297`: admin visual coverage now includes DEV-only users CRM and programs overview harness surfaces with tap-target and overflow checks.
 
 ## Guardrails
 
@@ -87,7 +86,7 @@ Start mapping here before any cleanup:
 - Prefer moving route-specific CSS into existing lazy entrypoints over deleting uncertain legacy blocks.
 - After each route cleanup, run the matching targeted visual spec first.
 - Before committing, run `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css`.
-- Do not clean admin CRM internals until a deeper admin harness exists.
+- Clean admin CRM internals only under the deeper admin harness and targeted admin visual audit.
 
 ## Completed Cleanup
 
@@ -121,3 +120,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.295`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.296`: expanded the client primary visual audit to cover cabinet settings, trainer notifications and Telegram management modals, and fixed their compact close controls to stable 40px tap targets.
 - Verification for `v.1.296`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.297`: expanded the admin visual audit to cover DEV-only admin users CRM and programs overview harness surfaces, including CRM filter/action/tab tap targets.
+- Verification for `v.1.297`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and `npm.cmd run report:css` passed before full verification.

@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.296`.
+Last updated at app version `v.1.297`.
 
 ## Stable Now
 
@@ -11,7 +11,7 @@ Last updated at app version `v.1.296`.
 - CSS files are guarded so every CSS file under `src/styles` and `src/components` stays reachable from the core or approved lazy CSS entrypoints.
 - Shared hooks live in `src/shared/hooks`.
 - Main route, terminal route, nutrition route and E2E harness screens are lazy-loaded.
-- Client, trainer and admin hub harnesses cover the main local visual smoke surfaces.
+- Client, trainer, admin hub and admin internals harnesses cover the main local visual smoke surfaces.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
 - Admin lazy CSS no longer uses the redundant `admin.css` alias; `adminPanelHub.css` is imported directly.
@@ -31,6 +31,7 @@ Last updated at app version `v.1.296`.
 - Client cabinet progress photos modal is covered by the primary visual audit, including its upload steps and save action.
 - Client cabinet settings, trainer notifications and Telegram management modals are covered by the primary visual audit, including close/action tap targets.
 - Client nutrition visual audit now checks weekday strip geometry so labels cannot crowd day markers.
+- Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape
 
@@ -40,7 +41,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1654.33 KiB` raw, `169.09 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 92 total in the latest `npm.cmd run report:css` pass, about `3503.88 KiB` total source CSS.
+- CSS source files under `src`: 92 total in the latest `npm.cmd run report:css` pass, about `3504.59 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
@@ -69,4 +70,4 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd run report:css`: passed.
-- `npm.cmd run test:e2e`: passed, `25` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed, `27` passed and `1` skipped.

@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.296`.
+Last updated at app version `v.1.297`.
 
 ## Evidence
 
@@ -8,8 +8,8 @@ Last updated at app version `v.1.296`.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd test`: passed with `212` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `25` passed and `1` skipped.
-- `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `2` passed.
+- `npm.cmd run test:e2e`: passed with `27` passed and `1` skipped.
+- `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `4` passed.
 - `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
 - `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js`: passed with `4` passed.
@@ -43,6 +43,8 @@ The admin visual audit now attaches screenshots for:
 
 - admin panel hub;
 - admin access denied state.
+- admin users CRM harness;
+- admin programs overview harness.
 
 The nutrition visual audit now attaches screenshots for:
 
@@ -105,6 +107,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 25. Client cabinet progress photos modal now has screenshot coverage for the upload steps and save action.
 26. Nutrition week strip now keeps weekday labels separated from day markers, with a visual audit geometry guard.
 27. Client cabinet settings, trainer notifications and Telegram management modals now have screenshot coverage and stable close/action tap targets.
+28. Admin users CRM and programs overview internals now have DEV-only harness screenshot coverage with tap-target and overflow checks.
 
 ## P1: Next Product Fixes
 
@@ -129,11 +132,11 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, cabinet workout calendar modal, cabinet progress photos modal, cabinet settings modal, cabinet trainer notifications modal, cabinet Telegram management modal, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
+   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, cabinet workout calendar modal, cabinet progress photos modal, cabinet settings modal, cabinet trainer notifications modal, cabinet Telegram management modal, client nutrition, client workouts, workout empty state, trainer workspace, admin hub, admin users CRM harness and admin programs overview harness screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
-   - Status: started for admin hub, trainer workspace and core covered screens; entrypoints now import CSS directly where aliases or stack aggregators were redundant.
+   - Status: started for admin hub/internals, trainer workspace and core covered screens; entrypoints now import CSS directly where aliases or stack aggregators were redundant.
 
 ## Recommended Order
 

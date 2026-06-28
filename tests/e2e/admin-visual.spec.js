@@ -83,3 +83,44 @@ test("admin panel hub visual audit covers cards and denied state", async ({ page
   await expect(page.getByTestId("admin-harness-action")).toHaveText("page:main");
   assertNoRuntimeErrors();
 });
+
+test("admin visual audit covers CRM and program internals harness", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?adminHarness=1&adminSurface=users");
+  await expect(page.getByTestId("admin-users-harness")).toBeVisible();
+  await expect(page.locator(".adminUsersCrmHeader h1")).toBeVisible();
+  await expect(page.locator(".adminClientCard")).toHaveCount(3);
+  await expect(page.locator(".adminClientWorkspaceCrmPage")).toBeVisible();
+  await expectTapTargets(page, [
+    ".adminUsersFilterPills button",
+    ".adminClientCard",
+    ".adminClientWorkspaceActionsRender button",
+    ".adminClientTabsCrm button"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "admin-users-crm-harness.png");
+
+  await page.locator(".adminClientAddCard").click();
+  await expect(page.getByTestId("admin-harness-action")).toHaveText("create-client");
+  await page.locator(".adminClientWorkspaceActionsRender button").nth(1).click();
+  await expect(page.getByTestId("admin-harness-action")).toHaveText("assign");
+  assertNoRuntimeErrors();
+
+  await page.goto("/?adminHarness=1&adminSurface=programs");
+  await expect(page.getByTestId("admin-programs-harness")).toBeVisible();
+  await expect(page.locator(".programsCompactHeader h1")).toBeVisible();
+  await expect(page.locator(".programsOverviewCard")).toHaveCount(3);
+  await expectTapTargets(page, [
+    ".adminFixedMainBack",
+    ".programsOverviewCard"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "admin-programs-overview-harness.png");
+
+  await page.locator(".programsOverviewCard").nth(1).click();
+  await expect(page.getByTestId("admin-harness-action")).toHaveText("program:Fat Loss");
+  await page.locator(".adminFixedMainBack").click();
+  await expect(page.getByTestId("admin-harness-action")).toHaveText("programs-back");
+  assertNoRuntimeErrors();
+});
