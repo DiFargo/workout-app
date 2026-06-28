@@ -152,5 +152,18 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.locator(".cabinetUtilityModalHead button").click();
   await expect(page.locator(".cabinetProgressModal")).toBeHidden();
 
+  await page.goto("/?clientHarness=1&clientCabinetModal=photos");
+  await page.getByTestId("client-nav-cabinet").click();
+  await expect(page.locator(".cabinetProgressPhotosModal")).toBeVisible();
+  await expectTapTargets(page, [
+    ".cabinetProgressPhotosHead button",
+    ".cabinetProgressPhotoSteps label",
+    ".cabinetProgressPhotosSave"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-cabinet-progress-photos-modal.png");
+  await page.locator(".cabinetProgressPhotosHead button").click();
+  await expect(page.locator(".cabinetProgressPhotosModal")).toBeHidden();
+
   assertNoRuntimeErrors();
 });

@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.293`.
+Last updated at app version `v.1.294`.
 
 ## Evidence
 
@@ -34,6 +34,7 @@ The client primary visual audit now attaches screenshots for:
 - cabinet measurements modal.
 - cabinet nutrition modal.
 - cabinet workout calendar modal.
+- cabinet progress photos modal.
 
 The admin visual audit now attaches screenshots for:
 
@@ -98,6 +99,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 22. Client cabinet workout calendar modal now has screenshot coverage, and its close/month/edit/save controls keep stable 44px tap targets.
 23. Core CSS cleanup removed four import-only legacy stack aggregators; `index.css` imports the same child files directly and the CSS graph guard was updated.
 24. CSS cleanup removed the remaining import-only light, nutrition and admin stack aggregators from active style entrypoints.
+25. Client cabinet progress photos modal now has screenshot coverage for the upload steps and save action.
 
 ## P1: Next Product Fixes
 
@@ -122,7 +124,7 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, cabinet workout calendar modal, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
+   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, cabinet workout calendar modal, cabinet progress photos modal, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.

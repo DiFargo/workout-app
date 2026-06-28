@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.293`.
+Last updated at app version `v.1.294`.
 
 ## Stable Now
 
@@ -28,6 +28,7 @@ Last updated at app version `v.1.293`.
 - Client cabinet measurements modal is covered by the primary visual audit, including its close/start actions.
 - Client cabinet nutrition modal is covered by the primary visual audit, including its close, goal picker, save and week navigation actions.
 - Client cabinet workout calendar modal is covered by the primary visual audit, including its close, month navigation, history entry and edit actions.
+- Client cabinet progress photos modal is covered by the primary visual audit, including its upload steps and save action.
 
 ## Current Build Shape
 

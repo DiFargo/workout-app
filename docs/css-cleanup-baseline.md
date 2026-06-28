@@ -14,7 +14,7 @@ Current verified budget:
 Covered by Playwright visual audits:
 
 - Client main dashboard: `tests/e2e/client-primary-visual.spec.js`
-- Client cabinet, cabinet workout history modal, measurements modal, nutrition modal and workout calendar modal: `tests/e2e/client-primary-visual.spec.js`
+- Client cabinet, cabinet workout history modal, measurements modal, nutrition modal, workout calendar modal and progress photos modal: `tests/e2e/client-primary-visual.spec.js`
 - Client nutrition main, food search, food results, product amount screen, product edit sheet, My Database, calendar, diary and analysis modal: `tests/e2e/client-nutrition-visual.spec.js`
 - Client workout cards, swipe, workout mode modal, workout history modal and empty assigned plan state: `tests/e2e/client-workout-visual.spec.js`
 - Trainer dashboard, clients, client card, messages and programs: `tests/e2e/trainer-visual.spec.js`
@@ -54,6 +54,7 @@ Start mapping here before any cleanup:
    - Expanded in `v.1.291`: visual coverage now includes the cabinet workout calendar modal, history entry and edit controls.
    - Continued in `v.1.292`: removed four import-only legacy stack aggregator files by importing their child CSS directly from `index.css`.
    - Continued in `v.1.293`: removed remaining import-only light, nutrition and admin stack aggregators by importing their child CSS directly from the active entrypoints.
+   - Expanded in `v.1.294`: visual coverage now includes the cabinet progress photos modal, upload steps and save action.
 
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.
@@ -112,3 +113,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.292`: `tests/app-structure.test.mjs`, client primary/nutrition/workout visual specs and `npm.cmd run report:css` passed before full verification.
 - `v.1.293`: deleted import-only aggregators `legacy-light-stack.css`, `legacy-nutrition-stack.css` and `legacy-admin-stack.css`; `index.css`, `nutrition-stack.css` and `trainer-lazy.css` now import the same child CSS files directly.
 - Verification for `v.1.293`: `tests/app-structure.test.mjs`, client primary/nutrition, trainer and admin visual specs and `npm.cmd run report:css` passed before full verification.
+- `v.1.294`: expanded the client primary visual audit to cover the cabinet progress photos modal, upload step labels and save action.
+- Verification for `v.1.294`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.

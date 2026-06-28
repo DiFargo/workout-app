@@ -6,6 +6,7 @@ import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
+import ProfileProgressPhotosModal from "../../features/client/profile/ProfileProgressPhotosModal";
 import ProfileWorkoutCalendarModal from "../../features/client/profile/ProfileWorkoutCalendarModal";
 import ProfileWorkoutHistoryModal from "../../features/client/profile/ProfileWorkoutHistoryModal";
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
@@ -128,6 +129,11 @@ const harnessProfileNutritionWeekDays = [
 ];
 
 const harnessWorkoutScheduledDates = ["2026-06-02", "2026-06-05", "2026-06-09", "2026-06-12", "2026-06-16", "2026-06-19", "2026-06-23", "2026-06-26"];
+const harnessProgressPhotoCompareViews = [
+  { id: "front", label: "Спереди", urlKey: "frontUrl" },
+  { id: "side", label: "Сбоку", urlKey: "sideUrl" },
+  { id: "back", label: "Со спины", urlKey: "backUrl" }
+];
 
 function buildHarnessWorkoutCalendarDays(monthKey, selectedDateKey) {
   const [year, month] = monthKey.split("-").map(Number);
@@ -277,6 +283,9 @@ export default function ClientE2EHarness() {
   const [cabinetNutritionGoal, setCabinetNutritionGoal] = useState("recomp");
   const [cabinetCalendarOpen, setCabinetCalendarOpen] = useState(
     () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "calendar"
+  );
+  const [cabinetPhotosOpen, setCabinetPhotosOpen] = useState(
+    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "photos"
   );
   const [cabinetCalendarEditing, setCabinetCalendarEditing] = useState(false);
   const [cabinetCalendarSelectedDate, setCabinetCalendarSelectedDate] = useState("2026-06-05");
@@ -635,6 +644,28 @@ export default function ClientE2EHarness() {
           onSave={() => setCabinetCalendarEditing(false)}
           onDayClick={(day) => setCabinetCalendarSelectedDate(day.key)}
           onOpenHistory={() => setCabinetWorkoutHistoryOpen(true)}
+        />
+        <ProfileProgressPhotosModal
+          open={cabinetPhotosOpen}
+          uploading={false}
+          latestPhoto={null}
+          photos={[]}
+          files={{}}
+          previews={{}}
+          status=""
+          compareIds={["", ""]}
+          compareViews={harnessProgressPhotoCompareViews}
+          compareView="front"
+          activeCompareView={harnessProgressPhotoCompareViews[0]}
+          selectedBefore={null}
+          selectedAfter={null}
+          canSave={false}
+          formatPhotoDate={(photo) => photo?.date || ""}
+          onClose={() => setCabinetPhotosOpen(false)}
+          onSelectPhoto={() => {}}
+          onCompareIdsChange={() => {}}
+          onCompareViewChange={() => {}}
+          onSave={() => {}}
         />
       </>
     ));
