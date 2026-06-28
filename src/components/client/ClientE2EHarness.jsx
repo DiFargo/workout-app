@@ -15,6 +15,7 @@ import ProfileWorkoutHistoryModal from "../../features/client/profile/ProfileWor
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
 import {
   buildNutritionCalendarDays,
+  buildNutritionWeekDates,
   formatNutritionCalendarMonthLabel,
   shiftNutritionCalendarMonthKey
 } from "../../utils/nutritionCalendar";
@@ -222,20 +223,7 @@ function getHarnessNutritionTotals(day) {
 }
 
 function getHarnessWeekDates(selectedKey) {
-  const labels = ["П", "В", "С", "Ч", "П", "С", "В"];
-  const selectedDate = new Date(`${selectedKey}T12:00:00`);
-  const monday = new Date(selectedDate);
-  const day = monday.getDay() || 7;
-  monday.setDate(monday.getDate() - day + 1);
-
-  return labels.map((label, index) => {
-    const date = new Date(monday);
-    date.setDate(monday.getDate() + index);
-    return {
-      key: date.toISOString().slice(0, 10),
-      label
-    };
-  });
+  return buildNutritionWeekDates(selectedKey);
 }
 
 export default function ClientE2EHarness() {

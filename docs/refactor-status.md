@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.304`.
+Last updated at app version `v.1.306`.
 
 ## Stable Now
 
@@ -34,12 +34,14 @@ Last updated at app version `v.1.304`.
 - Client cabinet workout calendar modal is covered by the primary visual audit, including its close, month navigation, history entry and edit actions.
 - Client cabinet progress photos modal is covered by the primary visual audit, including its upload steps and save action.
 - Client cabinet settings, trainer notifications and Telegram management modals are covered by the primary visual audit, including close/action tap targets.
-- Client nutrition visual audit now checks weekday strip geometry so labels cannot crowd day markers.
+- Client nutrition visual audit now checks weekday strip geometry and marker sizes so labels cannot crowd day markers.
+- Client nutrition week labels now use unambiguous two-letter Russian weekdays.
 - Client nutrition food-search/product polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition AI photo not-found modal is covered by the nutrition visual audit, and its CSS is owned by `nutrition-stack.css`.
 - Client nutrition create product/dish choice modal is covered by the nutrition visual audit.
 - Client nutrition custom dish editor, ingredient picker and ingredient confirmation are covered by the nutrition visual audit.
 - Client nutrition flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client nutrition orbit CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape
@@ -48,9 +50,9 @@ From the latest verified build:
 
 - main app JS chunk: about `469.50 KiB` raw, `130.82 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1566.68 KiB` raw, `160.71 KiB` gzip.
+- main CSS bundle: about `1540.28 KiB` raw, `157.70 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 93 total in the latest `npm.cmd run report:css` pass, about `3504.68 KiB` total source CSS.
+- CSS source files under `src`: 93 total in the latest `npm.cmd run report:css` pass, about `3506.44 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1566.68 KiB` raw, `160.71 KiB` gzip.
-- Latest source CSS report: `93` files, about `3504.68 KiB` total source CSS.
+- Latest main CSS bundle: about `1540.28 KiB` raw, `157.70 KiB` gzip.
+- Latest source CSS report: `93` files, about `3506.44 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -72,6 +72,8 @@ Start mapping here before any cleanup:
    - Expanded in `v.1.302`: nutrition create product/dish choice modal has visual coverage before broader food-flow CSS cleanup.
    - Expanded in `v.1.303`: custom dish editor, ingredient picker and ingredient confirmation have visual coverage before broader food-flow CSS cleanup.
    - Continued in `v.1.304`: broad nutrition flow CSS moved from the core app entrypoint into `nutrition-stack.css`, under expanded nutrition visual coverage.
+   - Continued in `v.1.305`: nutrition orbit CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition main visual coverage.
+   - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
 
 4. Trainer workspace.
    - Reason: dashboard, clients, messages and programs have coverage; the CSS is large but route-scoped.
@@ -143,3 +145,7 @@ Start mapping here before any cleanup:
 - Verification for `v.1.303`: `tests/e2e/client-nutrition-visual.spec.js`, `tests/app-structure.test.mjs`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.304`: moved `legacy-nutrition-flow.css` from core `index.css` into the nutrition lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
 - Verification for `v.1.304`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.305`: moved `legacy-nutrition-orbit.css` from core `index.css` into the nutrition lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.305`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.306`: fixed the nutrition week strip by switching to two-letter weekday labels, reusing the shared calendar helper in the E2E harness and guarding marker sizes in `tests/e2e/client-nutrition-visual.spec.js`.
+- Verification for `v.1.306`: `tests/nutrition-calendar.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

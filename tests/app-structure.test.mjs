@@ -224,6 +224,7 @@ test("application styles use the modular styles entrypoint", async () => {
   for (const nutritionLazyImport of [
     "./client-food-search-final.css",
     "./legacy-nutrition-photo-not-found.css",
+    "./legacy-nutrition-orbit.css",
     "./legacy-nutrition-flow.css"
   ]) {
     assert.match(nutritionStackCss, new RegExp(`@import "${nutritionLazyImport.replace(".", "\\.")}"`));
@@ -291,6 +292,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./nutrition-trainer-desktop.css",
     "./client-food-search-final.css",
     "./legacy-nutrition-photo-not-found.css",
+    "./legacy-nutrition-orbit.css",
     "./legacy-nutrition-flow.css"
   ]) {
     assert.doesNotMatch(indexCss, new RegExp(`@import "${deferredImport.replace(".", "\\.")}"`));

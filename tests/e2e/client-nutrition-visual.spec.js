@@ -85,7 +85,10 @@ async function expectNutritionWeekStripReadable(page) {
         dayTop: Math.round(dayRect.top),
         dayBottom: Math.round(dayRect.bottom),
         labelBottom: Math.round(labelRect?.bottom || 0),
-        markerTop: Math.round(markerRect?.top || 0)
+        labelText: day.querySelector("small")?.textContent?.trim() || "",
+        markerTop: Math.round(markerRect?.top || 0),
+        markerWidth: Math.round(markerRect?.width || 0),
+        markerHeight: Math.round(markerRect?.height || 0)
       };
     });
 
@@ -97,10 +100,13 @@ async function expectNutritionWeekStripReadable(page) {
   });
 
   expect(metrics.days).toHaveLength(7);
+  expect(metrics.days.map((day) => day.labelText)).toEqual(["\u041f\u043d", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041f\u0442", "\u0421\u0431", "\u0412\u0441"]);
   for (const day of metrics.days) {
     expect(day.dayTop).toBeGreaterThanOrEqual(metrics.weekTop);
     expect(day.dayBottom).toBeLessThanOrEqual(metrics.weekBottom);
     expect(day.markerTop - day.labelBottom).toBeGreaterThanOrEqual(4);
+    expect(day.markerWidth).toBeLessThanOrEqual(34);
+    expect(day.markerHeight).toBeLessThanOrEqual(34);
   }
 }
 
