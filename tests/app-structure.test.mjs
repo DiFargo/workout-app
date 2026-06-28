@@ -207,6 +207,7 @@ test("application styles use the modular styles entrypoint", async () => {
   const clientWorkoutLazyCss = await readText("src/styles/client-workout-lazy.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
   const nutritionAiPlanLazyCss = await readText("src/styles/nutrition-ai-plan-lazy.css");
+  const nutritionFoodIconLazyCss = await readText("src/styles/nutrition-food-icon-lazy.css");
   const aiCoachLazyCss = await readText("src/styles/ai-coach-lazy.css");
   const appSource = await readText("src/App.jsx");
   const appCore = await readText("src/AppCore.jsx");
@@ -228,11 +229,15 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(aiCoachLazyCss, /\.aiCoachPage/);
   assert.match(aiCoachLazyCss, /\.aiNutritionPlanShell/);
   assert.match(nutritionStackCss, /@import "\.\/nutrition-ai-plan-lazy\.css"/);
+  assert.match(nutritionStackCss, /@import "\.\/nutrition-food-icon-lazy\.css"/);
   assert.match(nutritionAiPlanLazyCss, /\.nutritionAiPlanDashboard/);
   assert.match(nutritionAiPlanLazyCss, /\.nutritionAiHistoryPlanCard/);
+  assert.match(nutritionFoodIconLazyCss, /\.foodEditIconManualBox/);
+  assert.match(nutritionFoodIconLazyCss, /\.nutritionCaloriesRenderCard\.trainingDay/);
   assert.doesNotMatch(indexCss, /\.aiCoachPage/);
   assert.doesNotMatch(indexCss, /\.aiNutritionPlanShell/);
   assert.doesNotMatch(indexCss, /\.nutritionAiPlanDashboard/);
+  assert.doesNotMatch(indexCss, /\.foodEditIconManualBox/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-client-workout-flow-late\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-flow-polish\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-exercise-notes\.css"/);
@@ -304,6 +309,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-stack-final-polish.css",
     "./ai-coach-lazy.css",
     "./nutrition-ai-plan-lazy.css",
+    "./nutrition-food-icon-lazy.css",
     "./nutrition-stack.css",
     "./legacy-admin-stack.css",
     "./legacy-trainer-desktop-adaptation-late.css",

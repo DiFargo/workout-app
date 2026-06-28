@@ -175,3 +175,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.317`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.318`: added workout dialog visual coverage and moved draft restore, readiness and post-workout feedback CSS into `client-workout-dialogs-lazy.css` under the workout lazy stack.
 - Verification for `v.1.318`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.319`: moved nutrition food icon editor and training-day calorie highlight CSS into `nutrition-food-icon-lazy.css` under the nutrition lazy stack.
+- Verification for `v.1.319`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

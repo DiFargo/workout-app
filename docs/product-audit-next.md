@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.318`.
+Last updated at app version `v.1.319`.
 
 ## Evidence
 
@@ -145,6 +145,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 50. AI Coach route CSS now loads through `ai-coach-lazy.css` instead of the core app stylesheet, with structural guards covering the lazy import.
 51. Nutrition AI plan and AI photo process CSS now load through `nutrition-ai-plan-lazy.css` in the nutrition lazy stack instead of the core app stylesheet.
 52. Workout draft/readiness/post-workout dialogs now have visual coverage and lazy-owned CSS in the client workout stack.
+53. Nutrition food icon editor and training-day calorie highlight CSS now load through `nutrition-food-icon-lazy.css` in the nutrition lazy stack.
 
 ## P1: Next Product Fixes
 
@@ -177,6 +178,7 @@ Started in `v.1.250`.
    - Status: workout draft/readiness/post-workout dialog CSS moved behind the workout lazy entrypoint after adding dialog visual coverage.
    - Status: client AI Coach has visual coverage for overview and AI nutrition plan states, and its route-specific CSS is now behind `ai-coach-lazy.css`.
    - Status: nutrition AI plan/photo-process CSS is now behind `nutrition-ai-plan-lazy.css` in the nutrition lazy stack.
+   - Status: nutrition food icon editor CSS is now behind `nutrition-food-icon-lazy.css` in the nutrition lazy stack.
    - Status: core legacy stack cleanup continued by removing import-only aggregators after client primary/nutrition/workout visual guards passed.
    - Status: light, nutrition and admin stack aggregators were also removed after client primary/nutrition, trainer and admin visual guards passed.
 
