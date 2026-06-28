@@ -147,6 +147,8 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=calendar");
   await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetProgressModal")).toBeVisible();
+  await expect(page.locator(".cabinetWorkoutCalendarGrid button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".cabinetWorkoutCalendarGrid button[aria-current='date']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".cabinetUtilityModalHead button",
     ".cabinetWorkoutCalendarNav button",

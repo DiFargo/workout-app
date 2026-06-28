@@ -116,6 +116,8 @@ export default function ProfileWorkoutCalendarModal({
                     ].filter(Boolean).join(" ")}
                     disabled={editing && !day.isCurrentMonth}
                     onClick={() => onDayClick(day)}
+                    aria-pressed={day.key === selectedDate}
+                    aria-current={day.isToday ? "date" : undefined}
                     aria-label={[
                       day.date.toLocaleDateString("ru-RU"),
                       entryLabel ? `тренировка ${entryLabel}` : "",
