@@ -79,6 +79,7 @@ Start mapping here before any cleanup:
    - Started in `v.1.280`: removed the one-line `admin.css` alias and imported `adminPanelHub.css` directly from `admin-lazy.css`.
    - Expanded in `v.1.297`: admin visual coverage now includes DEV-only users CRM and programs overview harness surfaces with tap-target and overflow checks.
    - Continued in `v.1.298`: admin internals CSS moved behind `admin-internals-lazy.css` so the production admin hub chunk stays lightweight.
+   - Guarded in `v.1.299`: `tests/app-structure.test.mjs` now rejects heavy admin internals imports in the production admin hub CSS entrypoint.
 
 ## Guardrails
 
@@ -125,3 +126,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.297`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.298`: split admin internals CSS into `admin-internals-lazy.css` for the DEV-only harness; `admin-lazy.css` again keeps the production admin hub lightweight.
 - Verification for `v.1.298`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run build`, `npm.cmd run check:bundle` and `npm.cmd run report:css` passed before full verification.
+- `v.1.299`: added a structural guard so heavy admin CRM/program CSS cannot drift back into the production `admin-lazy.css` entrypoint, and gave the mobile login smoke enough room to wait for the 15s auth bootstrap fallback.
+- Verification for `v.1.299`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and repeated mobile `tests/e2e/client-smoke.spec.js` passed before full verification.

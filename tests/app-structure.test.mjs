@@ -211,6 +211,8 @@ test("application styles use the modular styles entrypoint", async () => {
   const trainerWorkspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
   const adminPanelHub = await readText("src/components/admin/AdminPanelHub.jsx");
   const adminE2EHarness = await readText("src/components/admin/AdminE2EHarness.jsx");
+  const adminLazyCss = await readText("src/styles/admin-lazy.css");
+  const adminInternalsLazyCss = await readText("src/styles/admin-internals-lazy.css");
 
   assert.equal(await pathExists("src/styles.css"), false);
   assert.match(main, /['"]\.\/styles\/index\.css['"]/);
@@ -223,6 +225,25 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
   assert.match(adminPanelHub, /['"]\.\.\/\.\.\/styles\/admin-lazy\.css['"]/);
   assert.match(adminE2EHarness, /['"]\.\.\/\.\.\/styles\/admin-internals-lazy\.css['"]/);
+  assert.match(adminLazyCss, /@import "\.\/adminPanelHub\.css"/);
+
+  for (const adminHeavyImport of [
+    "./legacy-admin-shell-crm-app46.css",
+    "./legacy-admin-program-editor-app49.css",
+    "./legacy-month-program-editor-early.css",
+    "./legacy-admin-client-page.css",
+    "./legacy-admin-dashboard-bars.css",
+    "./legacy-admin-programs-dashboard.css",
+    "./legacy-admin-client-dashboard-polish.css",
+    "./legacy-admin-calendar-reminders-late.css",
+    "./legacy-trainer-desktop-adaptation-late.css",
+    "./legacy-trainer-program-editor-late.css",
+    "./nutrition-trainer-desktop.css"
+  ]) {
+    const escapedImport = adminHeavyImport.replace(".", "\\.");
+    assert.doesNotMatch(adminLazyCss, new RegExp(`@import "${escapedImport}"`));
+    assert.match(adminInternalsLazyCss, new RegExp(`@import "${escapedImport}"`));
+  }
 
   for (const requiredImport of [
     "./tokens.css",

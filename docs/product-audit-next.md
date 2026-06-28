@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.298`.
+Last updated at app version `v.1.299`.
 
 ## Evidence
 
@@ -109,6 +109,8 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 27. Client cabinet settings, trainer notifications and Telegram management modals now have screenshot coverage and stable close/action tap targets.
 28. Admin users CRM and programs overview internals now have DEV-only harness screenshot coverage with tap-target and overflow checks.
 29. Admin internals CSS now loads through `admin-internals-lazy.css`, keeping the production admin hub CSS chunk lightweight while preserving harness coverage.
+30. Admin hub CSS split is guarded structurally so heavy CRM/program imports stay out of the production admin entrypoint.
+31. Mobile login smoke now waits past the auth bootstrap fallback window, reducing false failures when Firebase auth is slow to resolve.
 
 ## P1: Next Product Fixes
 
