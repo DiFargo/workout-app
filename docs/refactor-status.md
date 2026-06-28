@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.307`.
+Last updated at app version `v.1.308`.
 
 ## Stable Now
 
@@ -43,6 +43,7 @@ Last updated at app version `v.1.307`.
 - Client nutrition flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition orbit CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition warm-light add-food/search cleanup CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client nutrition dark-green food-flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape
@@ -51,7 +52,7 @@ From the latest verified build:
 
 - main app JS chunk: about `469.50 KiB` raw, `130.82 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1530.03 KiB` raw, `156.78 KiB` gzip.
+- main CSS bundle: about `1511.41 KiB` raw, `155.16 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - CSS source files under `src`: 93 total in the latest `npm.cmd run report:css` pass, about `3506.44 KiB` total source CSS.
 

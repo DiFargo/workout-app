@@ -267,7 +267,6 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-overrides.css",
     "./legacy-profile-nutrition-late.css",
     "./legacy-cabinet-calendar-insights.css",
-    "./legacy-dark-green-food-flow.css",
     "./legacy-client-screen-alignment.css"
   ]) {
     assert.match(indexCss, new RegExp(`@import "${requiredImport.replace(".", "\\.")}"`));
@@ -291,6 +290,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-trainer-light-workspace.css",
     "./legacy-trainer-light-audit.css",
     "./nutrition-trainer-desktop.css",
+    "./legacy-dark-green-food-flow.css",
     "./legacy-warm-light-add-food-search-cleanup.css",
     "./client-food-search-final.css",
     "./legacy-nutrition-photo-not-found.css",
@@ -345,7 +345,6 @@ test("modular CSS import graph resolves without cycles", async () => {
   assert.ok(visited.has(path.normalize("src/styles/trainer-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/admin-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/legacy-overrides.css")));
-  assert.ok(visited.has(path.normalize("src/styles/legacy-dark-green-food-flow.css")));
   assert.ok(visited.has(path.normalize("src/components/trainer/trainer-workspace.css")));
   assert.equal(await pathExists("src/styles.css"), false);
   assert.deepEqual(reachableCssFiles, allCssFiles);
@@ -353,9 +352,11 @@ test("modular CSS import graph resolves without cycles", async () => {
 
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
+  const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
   const darkGreenFoodFlow = await readText("src/styles/legacy-client-screen-alignment.css");
 
-  assert.match(indexCss, /@import "\.\/legacy-dark-green-food-flow\.css"/);
+  assert.doesNotMatch(indexCss, /@import "\.\/legacy-dark-green-food-flow\.css"/);
+  assert.match(nutritionStackCss, /@import "\.\/legacy-dark-green-food-flow\.css"/);
   assert.match(indexCss, /@import "\.\/legacy-client-screen-alignment\.css"/);
   assert.match(darkGreenFoodFlow, /nutritionHeroTitleV4 \.clientCorePageTitle/);
   assert.match(darkGreenFoodFlow, /nutritionWeekV4 \.nutritionDayV4 small/);
