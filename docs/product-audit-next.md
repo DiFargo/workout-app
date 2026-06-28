@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.310`.
+Last updated at app version `v.1.311`.
 
 ## Evidence
 
@@ -126,6 +126,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 41. Dark-green nutrition food-flow CSS now loads from the nutrition lazy stack instead of the core app stylesheet.
 42. Client workout visual audit now waits for the harness bottom navigation before clicking, reducing cold-start timeout flakes.
 43. Client harness, nutrition visual and primary visual audits now wait for client bottom navigation before route clicks.
+44. Trainer workspace and trainer visual audits now wait for trainer navigation controls before route clicks.
 
 ## P1: Next Product Fixes
 

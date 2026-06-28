@@ -159,3 +159,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.309`: `tests/e2e/client-workout-visual.spec.js`, `tests/app-structure.test.mjs`, `npm.cmd run build`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.310`: extended client harness nav waits across client harness, nutrition visual and primary visual audits.
 - Verification for `v.1.310`: client harness/nutrition/primary visual specs, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.311`: extended trainer navigation waits across trainer workspace and trainer visual audits.
+- Verification for `v.1.311`: trainer workspace/visual specs, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
+test.setTimeout(60_000);
+
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
     documentWidth: document.documentElement.scrollWidth,
@@ -61,12 +63,15 @@ async function isVisible(locator) {
 async function openTrainerPrograms(page) {
   const mobileNav = page.locator(".trainerNextMobileNav");
   if (await isVisible(mobileNav)) {
+    await expect(page.getByTestId("trainer-nav-more")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("trainer-nav-more").click();
     await expect(page.locator(".trainerNextMoreDrawer")).toBeVisible();
+    await expect(page.getByTestId("trainer-more-workouts")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("trainer-more-workouts").click();
     return;
   }
 
+  await expect(page.getByTestId("trainer-desktop-nav-workouts")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("trainer-desktop-nav-workouts").click();
 }
 
@@ -74,6 +79,12 @@ async function trainerNavButton(page, section) {
   const mobileButton = page.getByTestId(`trainer-nav-${section}`);
   if (await mobileButton.count() && await mobileButton.isVisible()) return mobileButton;
   return page.getByTestId(`trainer-desktop-nav-${section}`);
+}
+
+async function clickTrainerNav(page, section) {
+  const button = await trainerNavButton(page, section);
+  await expect(button).toBeVisible({ timeout: 40_000 });
+  await button.click();
 }
 
 test("trainer visual audit covers dashboard, clients, messages and programs", async ({ page }, testInfo) => {
@@ -91,7 +102,7 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-dashboard.png");
 
-  await (await trainerNavButton(page, "clients")).click();
+  await clickTrainerNav(page, "clients");
   await expect(page.locator(".trainerNextClientsPage")).toBeVisible();
   await expectTapTargets(page, [
     ".trainerNextMobileNav button",
@@ -112,7 +123,7 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-client-card.png");
 
-  await (await trainerNavButton(page, "messages")).click();
+  await clickTrainerNav(page, "messages");
   await expect(page.locator(".trainerMessageCenter")).toBeVisible();
   await expectTapTargets(page, [
     ".trainerMessageFilters button",

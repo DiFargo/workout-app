@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.310`.
+Last updated at app version `v.1.311`.
 
 ## Stable Now
 
@@ -21,6 +21,7 @@ Last updated at app version `v.1.310`.
 - Client smoke tests wait past the auth bootstrap fallback window, matching the app's signed-out loading behavior on slower mobile runs.
 - Client workout visual audit waits for the harness bottom navigation before clicking, reducing cold-start timeout flakes.
 - Client harness, nutrition visual and primary visual audits also wait for bottom navigation before route clicks.
+- Trainer workspace and trainer visual audits wait for trainer navigation controls before route clicks.
 - Trainer lazy CSS no longer uses the redundant `trainer.css` alias; `trainer-workspace.css` is imported directly.
 - Core CSS no longer uses the redundant `themes.css` and `client-main.css` aliases; `theme.css` and `auth.css` are imported directly.
 - Core CSS no longer uses the redundant `layout.css` and `components.css` grouping aliases; their child files are imported directly.
@@ -85,4 +86,4 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd run report:css`: passed.
-- `npm.cmd run test:e2e`: passed, `27` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed, `31` passed and `1` skipped.
