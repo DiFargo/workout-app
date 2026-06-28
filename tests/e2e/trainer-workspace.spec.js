@@ -108,6 +108,7 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
 
   await main.locator(".trainerNextClientTabs button").nth(2).click();
   await expect(page.locator(".trainerNutritionAnalytics")).toBeVisible();
+  await expect(page.locator(".trainerNextClientTabs button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".trainerNutritionPeriodButtons button[aria-pressed='true']")).toHaveCount(1);
   await main.locator(".trainerNextClientTabs button").nth(5).click();
   await expect(page.locator(".trainerNotificationCalendarGrid")).toBeVisible();

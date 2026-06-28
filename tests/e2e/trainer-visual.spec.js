@@ -115,6 +115,7 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   await page.getByRole("button", { name: /Germes/ }).first().click();
   await expect(page.getByRole("heading", { name: "Germes" })).toBeVisible();
   await expect(page.locator(".trainerNextClientTabs button")).toHaveCount(7);
+  await expect(page.locator(".trainerNextClientTabs button[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".trainerNextClientTabs button",
     ".trainerNextClientBackRow button",

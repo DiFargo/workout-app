@@ -2873,7 +2873,7 @@ function TrainerClientDetail({
       <nav className="trainerNextClientTabs">
         {CLIENT_TABS.map((tab) => {
           const active = activeTab === tab.id || (tab.id === "bodyProgress" && ["measurements", "photos"].includes(activeTab));
-          return <button type="button" key={tab.id} className={active ? "active" : ""} onClick={() => onTabChange(tab.id)}>{tab.label}</button>;
+          return <button type="button" key={tab.id} className={active ? "active" : ""} aria-pressed={active} onClick={() => onTabChange(tab.id)}>{tab.label}</button>;
         })}
       </nav>
 
