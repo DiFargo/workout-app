@@ -137,18 +137,25 @@ export function TrainerWorkspaceBottomBar({
       <button
         className={activeTab === "main" ? "active" : ""}
         type="button"
+        aria-current={activeTab === "main" ? "page" : undefined}
         onClick={onGoMain}
       >
         <span className="adminV3NavIcon">🏠</span>
         <span className="adminV3NavLabel">Главная</span>
       </button>
-      <button className={activeTab === "clients" ? "active" : ""} type="button" onClick={onOpenTrainerClients}>
+      <button
+        className={activeTab === "clients" ? "active" : ""}
+        type="button"
+        aria-current={activeTab === "clients" ? "page" : undefined}
+        onClick={onOpenTrainerClients}
+      >
         <span className="adminV3NavIcon">👥</span>
         <span className="adminV3NavLabel">Клиенты</span>
       </button>
       <button
         className={activeTab === "programs" ? "active" : ""}
         type="button"
+        aria-current={activeTab === "programs" ? "page" : undefined}
         onClick={onOpenTrainerPrograms}
       >
         <span className="adminV3NavIcon">📋</span>
@@ -157,6 +164,7 @@ export function TrainerWorkspaceBottomBar({
       <button
         className={activeTab === "cabinet" ? "active" : ""}
         type="button"
+        aria-current={activeTab === "cabinet" ? "page" : undefined}
         onClick={onLoadTrainerCabinet}
       >
         <span className="adminV3NavIcon">👤</span>

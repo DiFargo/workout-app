@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.329`.
+Last updated at app version `v.1.330`.
 
 ## Stable Now
 
@@ -65,13 +65,14 @@ Last updated at app version `v.1.329`.
 - Client cabinet measurements modal start action exposes an explicit accessible label under the primary visual audit.
 - Client cabinet workout history expand and delete actions expose workout-specific accessible labels under the primary visual audit.
 - Client cabinet progress photo upload inputs expose view-specific accessible labels under the primary visual audit.
+- Legacy trainer workspace bottom navigation exposes active-page `aria-current` state.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape
 
 From the latest verified build:
 
-- main app JS chunk: about `470.65 KiB` raw, `131.10 KiB` gzip.
+- main app JS chunk: about `470.82 KiB` raw, `131.11 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1337.88 KiB` raw, `134.35 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
