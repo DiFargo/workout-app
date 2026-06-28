@@ -193,6 +193,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=notifications");
   await clickClientCabinetNav(page);
   await expect(page.locator(".profileTrainerNotificationsModal")).toBeVisible();
+  await expect(page.locator(".profileTrainerNotificationItem").first()).toHaveAttribute("aria-label", /Задача тренера:/);
   await expectTapTargets(page, [
     ".profileTrainerNotificationsHead button",
     ".profileTrainerNotificationItem"

@@ -42,20 +42,22 @@ export default function ProfileTrainerNotificationsModal({
               {tasks.map((task) => {
                 const taskStatus = getTrainerTaskStatus(task);
                 const taskDestination = getTaskDestination(task);
+                const taskDueText = task.dueDate
+                  ? `До ${new Date(`${task.dueDate}T12:00:00`).toLocaleDateString("ru-RU")}`
+                  : "Без срока";
                 return (
                   <button
                     type="button"
                     key={task.id}
                     className={`profileTrainerNotificationItem ${taskStatus.id}${taskDestination ? " actionable" : ""}`}
+                    aria-label={`Задача тренера: ${task.title}. ${taskStatus.label}. ${taskDueText}`}
                     onClick={() => onOpenTask(task)}
                   >
                     <i aria-hidden="true">{taskStatus.id === "completed" ? "✓" : "!"}</i>
                     <span>
                       <strong>{task.title}</strong>
                       <small>
-                        {task.dueDate
-                          ? `До ${new Date(`${task.dueDate}T12:00:00`).toLocaleDateString("ru-RU")}`
-                          : "Без срока"}
+                        {taskDueText}
                       </small>
                     </span>
                     <em>{taskStatus.label}</em>

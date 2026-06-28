@@ -187,3 +187,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.323`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.324`: expanded the cabinet settings harness to render the real app-settings section and guarded theme/Telegram accessibility attributes.
 - Verification for `v.1.324`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.325`: strengthened covered cabinet trainer notification items with task, status and due-date accessible labels.
+- Verification for `v.1.325`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
