@@ -2159,7 +2159,7 @@ function NutritionDiary({ nutritionDays }) {
         {visibleDays.map((item, index) => {
           const date = getWorkspaceDate(item.date);
           return (
-            <button type="button" className={activeDay === index ? "active" : ""} key={item.date || index} onClick={() => setActiveDay(index)}>
+            <button type="button" className={activeDay === index ? "active" : ""} aria-pressed={activeDay === index} key={item.date || index} onClick={() => setActiveDay(index)}>
               <strong>{date ? date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }) : `День ${index + 1}`}</strong>
               <small>{Math.round(Number(item.totals?.calories) || 0)} ккал</small>
             </button>

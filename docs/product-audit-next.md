@@ -174,6 +174,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 77. AI Coach feature cards now expose selected state with `aria-pressed`, guarded by the AI Coach visual audit.
 78. Trainer workout day selector now exposes selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
 79. Trainer client photo view tabs now expose selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
+80. Trainer nutrition diary day buttons now expose selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
 
 ## P1: Next Product Fixes
 

@@ -127,6 +127,12 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-client-card.png");
 
+  await page.locator(".trainerNextClientTabs button").nth(2).click();
+  await expect(page.locator(".trainerNutritionAnalytics")).toBeVisible();
+  await page.locator(".trainerNutritionDiaryCollapsed").click();
+  await expect(page.locator(".trainerNutritionDiary aside button[aria-pressed='true']")).toHaveCount(1);
+  await expectNoHorizontalOverflow(page);
+
   await clickTrainerNav(page, "messages");
   await expect(page.locator(".trainerMessageCenter")).toBeVisible();
   await expect(page.locator(".trainerMessageFilters button[aria-pressed='true']")).toHaveCount(1);
