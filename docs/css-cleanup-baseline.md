@@ -195,3 +195,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.327`: `tests/profile-measurements.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.328`: strengthened the covered cabinet workout history expand and delete actions with workout-specific accessible labels.
 - Verification for `v.1.328`: `tests/workout-history-presentation.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.329`: strengthened the covered cabinet progress photo upload inputs with view-specific accessible labels.
+- Verification for `v.1.329`: `tests/profile-progress.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

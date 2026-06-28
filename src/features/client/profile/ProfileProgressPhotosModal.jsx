@@ -97,6 +97,7 @@ export default function ProfileProgressPhotosModal({
                   type="file"
                   accept="image/*"
                   capture="environment"
+                  aria-label={`Добавить фото: ${label}`}
                   disabled={uploading}
                   onChange={(event) => onSelectPhoto(view, event.target.files?.[0] || null)}
                 />
