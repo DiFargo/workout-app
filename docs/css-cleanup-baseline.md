@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1654.33 KiB` raw, `169.09 KiB` gzip.
-- Latest source CSS report: `92` files, about `3504.59 KiB` total source CSS.
+- Latest source CSS report: `93` files, about `3504.68 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -78,6 +78,7 @@ Start mapping here before any cleanup:
    - Candidate files: `adminPanelHub.css`, admin CRM/program rules inside admin lazy stack.
    - Started in `v.1.280`: removed the one-line `admin.css` alias and imported `adminPanelHub.css` directly from `admin-lazy.css`.
    - Expanded in `v.1.297`: admin visual coverage now includes DEV-only users CRM and programs overview harness surfaces with tap-target and overflow checks.
+   - Continued in `v.1.298`: admin internals CSS moved behind `admin-internals-lazy.css` so the production admin hub chunk stays lightweight.
 
 ## Guardrails
 
@@ -122,3 +123,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.296`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.297`: expanded the admin visual audit to cover DEV-only admin users CRM and programs overview harness surfaces, including CRM filter/action/tab tap targets.
 - Verification for `v.1.297`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.298`: split admin internals CSS into `admin-internals-lazy.css` for the DEV-only harness; `admin-lazy.css` again keeps the production admin hub lightweight.
+- Verification for `v.1.298`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run build`, `npm.cmd run check:bundle` and `npm.cmd run report:css` passed before full verification.

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "../../styles/admin-internals-lazy.css";
 import AdminPanelHub from "./AdminPanelHub";
 
 const harnessClients = [

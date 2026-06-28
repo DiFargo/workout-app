@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.297`.
+Last updated at app version `v.1.298`.
 
 ## Evidence
 
@@ -108,6 +108,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 26. Nutrition week strip now keeps weekday labels separated from day markers, with a visual audit geometry guard.
 27. Client cabinet settings, trainer notifications and Telegram management modals now have screenshot coverage and stable close/action tap targets.
 28. Admin users CRM and programs overview internals now have DEV-only harness screenshot coverage with tap-target and overflow checks.
+29. Admin internals CSS now loads through `admin-internals-lazy.css`, keeping the production admin hub CSS chunk lightweight while preserving harness coverage.
 
 ## P1: Next Product Fixes
 
@@ -136,7 +137,7 @@ Started in `v.1.250`.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
-   - Status: started for admin hub/internals, trainer workspace and core covered screens; entrypoints now import CSS directly where aliases or stack aggregators were redundant.
+   - Status: started for admin hub/internals, trainer workspace and core covered screens; entrypoints now import CSS directly where aliases or stack aggregators were redundant, with admin internals isolated from the production hub chunk.
 
 ## Recommended Order
 

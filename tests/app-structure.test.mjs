@@ -210,6 +210,7 @@ test("application styles use the modular styles entrypoint", async () => {
   const appTerminalRoutes = await readText("src/app/appTerminalRoutes.jsx");
   const trainerWorkspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
   const adminPanelHub = await readText("src/components/admin/AdminPanelHub.jsx");
+  const adminE2EHarness = await readText("src/components/admin/AdminE2EHarness.jsx");
 
   assert.equal(await pathExists("src/styles.css"), false);
   assert.match(main, /['"]\.\/styles\/index\.css['"]/);
@@ -221,6 +222,7 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
   assert.match(adminPanelHub, /['"]\.\.\/\.\.\/styles\/admin-lazy\.css['"]/);
+  assert.match(adminE2EHarness, /['"]\.\.\/\.\.\/styles\/admin-internals-lazy\.css['"]/);
 
   for (const requiredImport of [
     "./tokens.css",
@@ -269,7 +271,8 @@ test("application styles use the modular styles entrypoint", async () => {
     path.normalize("src/app/AppRouter.jsx"),
     path.normalize("src/app/appTerminalRoutes.jsx"),
     path.normalize("src/components/trainer/TrainerWorkspace.jsx"),
-    path.normalize("src/components/admin/AdminPanelHub.jsx")
+    path.normalize("src/components/admin/AdminPanelHub.jsx"),
+    path.normalize("src/components/admin/AdminE2EHarness.jsx")
   ]);
 
   for (const file of allSourceFiles) {
@@ -289,7 +292,8 @@ test("modular CSS import graph resolves without cycles", async () => {
     "src/styles/client-workout-lazy.css",
     "src/styles/nutrition-stack.css",
     "src/styles/trainer-lazy.css",
-    "src/styles/admin-lazy.css"
+    "src/styles/admin-lazy.css",
+    "src/styles/admin-internals-lazy.css"
   ]) {
     await walkCssImports(cssEntry, new Set(), visited);
   }

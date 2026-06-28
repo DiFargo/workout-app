@@ -8,7 +8,7 @@
 - Неделя 2 частично закрыта на production: клиентский вход, главная, тренировки, питание, замеры и кабинет проверены на тестовом клиенте.
 - Неделя 3 частично закрыта на production: тренерский dashboard, клиентская карточка и синхронизация назначенной программы проверены на тестовом тренере.
 - Найденные production-риски уже исправлены: localStorage quota fallback, синхронизация trainer/client plan counts, lazy nutrition CSS, service worker update flow и cache headers.
-- Локальные visual audits покрывают client main/cabinet, client nutrition, client workouts, trainer workspace и admin hub.
+- Локальные visual audits покрывают client main/cabinet, client nutrition, client workouts, trainer workspace, admin hub и DEV-only admin internals harness.
 - Production smoke оформлен в `docs/production-smoke-checklist.md`.
 - CSS cleanup baseline оформлен в `docs/css-cleanup-baseline.md`.
 - Route-by-route CSS cleanup started with the covered admin hub, trainer workspace and core client entry stacks.
@@ -57,7 +57,7 @@
 
 - Admin hub имеет DEV-only harness и visual audit.
 - Access denied state покрыт локальным e2e.
-- Глубокая admin CRM и program editor пока покрыты unit/structural тестами, но требуют отдельного глубокого harness перед агрессивной CSS-чисткой.
+- Admin CRM и programs overview покрыты DEV-only internals harness и visual audit; heavy internals CSS изолирован от production admin hub chunk.
 
 ## Неделя 4: адаптация на устройствах
 
