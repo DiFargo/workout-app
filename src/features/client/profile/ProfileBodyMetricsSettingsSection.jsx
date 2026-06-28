@@ -121,6 +121,7 @@ export default function ProfileBodyMetricsSettingsSection({
                 type="button"
                 key={sex.id}
                 className={draft.sex === sex.id ? "active" : ""}
+                aria-pressed={draft.sex === sex.id}
                 onClick={() => onDraftChange("sex", sex.id)}
               >
                 {sex.title}

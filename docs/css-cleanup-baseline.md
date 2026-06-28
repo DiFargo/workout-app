@@ -249,3 +249,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.354`: `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.355`: strengthened first setup sex, activity and goal choices with selected `aria-pressed` state.
 - Verification for `v.1.355`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.356`: strengthened profile body metric sex choices with selected `aria-pressed` state.
+- Verification for `v.1.356`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

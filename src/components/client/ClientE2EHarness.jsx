@@ -13,6 +13,7 @@ import {
   WorkoutReadinessDialog
 } from "../workout/WorkoutDialogs";
 import ProfileAppSettingsSection from "../../features/client/profile/ProfileAppSettingsSection";
+import ProfileBodyMetricsSettingsSection from "../../features/client/profile/ProfileBodyMetricsSettingsSection";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
 import ProfileProgressPhotosModal from "../../features/client/profile/ProfileProgressPhotosModal";
@@ -384,6 +385,15 @@ export default function ClientE2EHarness() {
   const [trainerNotificationsOpen, setTrainerNotificationsOpen] = useState(
     () => cabinetModalParam === "notifications"
   );
+  const [bodyMetricsDraft, setBodyMetricsDraft] = useState({
+    sex: "male",
+    weight: "88",
+    targetWeight: "84",
+    height: "181",
+    age: "32",
+    goal: "recomp",
+    activity: "medium"
+  });
   const [cabinetCalendarEditing, setCabinetCalendarEditing] = useState(false);
   const [cabinetCalendarSelectedDate, setCabinetCalendarSelectedDate] = useState("2026-06-05");
   const nutritionPhotoInputRef = useRef(null);
@@ -486,6 +496,10 @@ export default function ClientE2EHarness() {
       };
     });
     setDishIngredientPickerOpen(false);
+  }
+
+  function updateBodyMetricsDraft(field, value) {
+    setBodyMetricsDraft((current) => ({ ...current, [field]: value }));
   }
 
   function renderBottomBar(firstArg, secondArg = {}) {
@@ -906,6 +920,13 @@ export default function ClientE2EHarness() {
           <button type="button" className="profileDashboardButton" onClick={() => setTelegramModalOpen(true)}>
             Open Telegram
           </button>
+          <ProfileBodyMetricsSettingsSection
+            open
+            draft={bodyMetricsDraft}
+            onToggle={() => {}}
+            onDraftChange={updateBodyMetricsDraft}
+            onSave={() => {}}
+          />
         </ProfileSettingsModal>
         <ProfileTrainerNotificationsModal
           open={trainerNotificationsOpen}
