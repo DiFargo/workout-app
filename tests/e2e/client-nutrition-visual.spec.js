@@ -96,7 +96,9 @@ async function expectNutritionWeekStripReadable(page) {
         labelText: day.querySelector("small")?.textContent?.trim() || "",
         markerTop: Math.round(markerRect?.top || 0),
         markerWidth: Math.round(markerRect?.width || 0),
-        markerHeight: Math.round(markerRect?.height || 0)
+        markerHeight: Math.round(markerRect?.height || 0),
+        ariaLabel: day.getAttribute("aria-label") || "",
+        ariaPressed: day.getAttribute("aria-pressed") || ""
       };
     });
 
@@ -109,6 +111,8 @@ async function expectNutritionWeekStripReadable(page) {
 
   expect(metrics.days).toHaveLength(7);
   expect(metrics.days.map((day) => day.labelText)).toEqual(["\u041f\u043d", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041f\u0442", "\u0421\u0431", "\u0412\u0441"]);
+  expect(metrics.days.every((day) => day.ariaLabel.startsWith("Выбрать "))).toBe(true);
+  expect(metrics.days.some((day) => day.ariaPressed === "true")).toBe(true);
   for (const day of metrics.days) {
     expect(day.dayTop).toBeGreaterThanOrEqual(metrics.weekTop);
     expect(day.dayBottom).toBeLessThanOrEqual(metrics.weekBottom);

@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.320`.
+Last updated at app version `v.1.321`.
 
 ## Stable Now
 
@@ -56,6 +56,7 @@ Last updated at app version `v.1.320`.
 - Client nutrition orbit CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition warm-light add-food/search cleanup CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition dark-green food-flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client nutrition week day buttons expose full-date accessible labels and selected state, and the nutrition visual audit guards them.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape

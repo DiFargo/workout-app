@@ -42,6 +42,11 @@ export default function NutritionHeader({
           const dayHasFood = Boolean(nutrition.days?.[day.key]?.foods?.length);
           const isSelectedDay = day.key === nutritionDateKey;
           const isTodayDay = day.key === todayNutritionKey();
+          const dayAriaLabel = day.date.toLocaleDateString("ru-RU", {
+            weekday: "long",
+            day: "numeric",
+            month: "long"
+          });
 
           return (
             <button
@@ -49,6 +54,8 @@ export default function NutritionHeader({
               className={`nutritionDayV4 ${isSelectedDay ? "selected" : ""} ${dayHasFood ? "hasFood" : ""} ${isTodayDay ? "today" : ""}`}
               key={day.key}
               onClick={() => onSelectDate(day.key)}
+              aria-label={`Выбрать ${dayAriaLabel}`}
+              aria-pressed={isSelectedDay}
             >
               <span aria-hidden="true" />
               <small>{day.label}</small>
