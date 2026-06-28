@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.286`.
+Last updated at app version `v.1.287`.
 
 ## Evidence
 
@@ -87,6 +87,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 15. Nutrition product meal selector and edit close button now keep stable tap/click targets in the deeper visual audit.
 16. Nutrition CSS cleanup removed an older duplicated product/edit action-bar block after the deeper visual audit covered both surfaces.
 17. Client workout visual coverage now includes the empty assigned plan state for safer workout empty-state CSS cleanup.
+18. Client workout empty-state CSS now has one scoped owner after old global legacy duplicates were removed.
 
 ## P1: Next Product Fixes
 
@@ -105,6 +106,7 @@ Started in `v.1.250`.
    - Keep cleanup route-by-route, not by deleting legacy files blindly.
    - Start with nutrition or trainer screens only after screenshots/manual checks.
    - Status: nutrition cleanup continues under deeper visual coverage; older duplicate product/edit action-bar CSS was removed without blind file deletion.
+   - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.

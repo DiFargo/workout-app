@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
-- Latest source CSS report: `99` files, about `3504.65 KiB` total source CSS.
+- Latest source CSS report: `99` files, about `3502.12 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -53,6 +53,7 @@ Start mapping here before any cleanup:
    - Reason: workout cards and modals have visual coverage and fixed tap targets.
    - Candidate files: `client-workout-card-render.css`, `legacy-client-workout-flow-late.css`, workout-related blocks in broad legacy files.
    - Expanded in `v.1.286`: visual coverage now includes the empty assigned plan state before cleanup of workout empty-state CSS.
+   - Continued in `v.1.287`: removed old global empty-state rules from legacy files; `client-workout-empty-state.css` is the scoped owner.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.
@@ -93,3 +94,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.284`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.285`: removed the older duplicated product/edit action-bar block from `client-visual-unity-final.css`; `client-food-search-final.css` keeps the current product and edit-sheet action bar rules.
 - Verification for `v.1.285`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.287`: removed duplicated global `.workoutProgramEmptyState` and `.workoutProgramEmptyIcon` rules from `legacy-history-ai-search-late.css` and `legacy-admin-program-editor-app49.css`; the scoped `client-workout-empty-state.css` now owns the client workout empty plan state.
+- Verification for `v.1.287`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js` and `npm.cmd run report:css` passed before full verification.

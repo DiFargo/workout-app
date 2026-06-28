@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.286`.
+Last updated at app version `v.1.287`.
 
 ## Stable Now
 
@@ -21,6 +21,7 @@ Last updated at app version `v.1.286`.
 - Client nutrition visual coverage now includes search results, product amount/edit surfaces and My Database before deeper CSS cleanup.
 - Client nutrition CSS cleanup removed an older duplicated product/edit action-bar block; later food search CSS owns those product surfaces.
 - Client workout visual coverage now includes the empty assigned plan state before workout empty-state CSS cleanup.
+- Client workout empty-state styling now has one scoped owner in `client-workout-empty-state.css`; old global legacy duplicates were removed.
 
 ## Current Build Shape
 
@@ -30,7 +31,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1658.33 KiB` raw, `169.45 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 99 total in the latest `npm.cmd run report:css` pass, about `3504.65 KiB` total source CSS.
+- CSS source files under `src`: 99 total in the latest `npm.cmd run report:css` pass, about `3502.12 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
