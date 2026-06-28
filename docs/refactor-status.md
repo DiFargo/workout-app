@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.340`.
+Last updated at app version `v.1.341`.
 
 ## Stable Now
 
@@ -43,6 +43,7 @@ Last updated at app version `v.1.340`.
 - Client cabinet settings, trainer notifications and Telegram management modals are covered by the primary visual audit, including close/action tap targets.
 - Client nutrition visual audit now checks weekday strip geometry and marker sizes so labels cannot crowd day markers.
 - Client nutrition week labels now use unambiguous two-letter Russian weekdays.
+- Client nutrition weekday cells now lock label and marker centers to prevent mobile header drift.
 - Client nutrition food-search/product polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition AI photo not-found modal is covered by the nutrition visual audit, and its CSS is owned by `nutrition-stack.css`.
 - Client nutrition create product/dish choice modal is covered by the nutrition visual audit.

@@ -1254,9 +1254,11 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
   align-items: center !important;
   justify-content: center !important;
   min-width: 0 !important;
+  width: 100% !important;
   height: 48px !important;
   min-height: 48px !important;
   max-height: 48px !important;
+  padding: 0 !important;
   gap: 6px !important;
   border-radius: 14px !important;
 }
@@ -1267,21 +1269,30 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
 
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
   position: static !important;
+  top: auto !important;
+  display: block !important;
+  flex: 0 0 14px !important;
+  width: 100% !important;
   height: 14px !important;
+  margin: 0 !important;
   font-size: 12px !important;
   font-weight: 850 !important;
   line-height: 14px !important;
   letter-spacing: 0 !important;
+  text-align: center !important;
   white-space: nowrap !important;
 }
 
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
+  display: block !important;
+  flex: 0 0 30px !important;
   width: 30px !important;
   height: 30px !important;
   min-width: 30px !important;
   min-height: 30px !important;
   max-width: 30px !important;
   max-height: 30px !important;
+  margin: 0 auto !important;
   border-radius: 999px !important;
 }
 

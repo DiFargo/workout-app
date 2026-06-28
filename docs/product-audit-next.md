@@ -192,6 +192,7 @@ Started in `v.1.250`.
    - Status: broad nutrition flow CSS moved behind the nutrition lazy entrypoint after food search, create, photo fallback and custom dish screenshots were added.
    - Status: nutrition orbit CSS moved behind the nutrition lazy entrypoint after the nutrition visual audit guarded the main orbit screen.
    - Status: nutrition weekday labels now use `Пн`, `Вт`, `Ср`, `Чт`, `Пт`, `Сб`, `Вс` with marker-size guards in the visual audit.
+   - Status: nutrition weekday cells now keep labels and markers centered in the visual audit.
    - Status: warm-light add-food/search cleanup CSS moved behind the nutrition lazy entrypoint under the existing nutrition visual audit.
    - Status: dark-green nutrition food-flow CSS moved behind the nutrition lazy entrypoint with structural guards preserving readable dark nutrition overrides.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
