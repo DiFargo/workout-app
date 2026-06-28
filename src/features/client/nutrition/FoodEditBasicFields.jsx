@@ -124,6 +124,7 @@ export default function FoodEditBasicFields({
           <button
             type="button"
             className="foodEditPortionUnitToggle"
+            aria-pressed={portionUnit === "мл"}
             onClick={() => onUpdatePortionUnit(portionUnit === "г" ? "мл" : "г")}
             aria-label="Сменить единицу порции"
           >

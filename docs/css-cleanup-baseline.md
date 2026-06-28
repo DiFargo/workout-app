@@ -215,3 +215,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.337`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.338`: strengthened nutrition product icon presets with selected `aria-pressed` state.
 - Verification for `v.1.338`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.339`: strengthened nutrition product portion unit toggle with selected `aria-pressed` state.
+- Verification for `v.1.339`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
