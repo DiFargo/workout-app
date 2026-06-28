@@ -147,6 +147,23 @@ const harnessProgressPhotoCompareViews = [
   { id: "side", label: "Сбоку", urlKey: "sideUrl" },
   { id: "back", label: "Со спины", urlKey: "backUrl" }
 ];
+const harnessProgressPhotoDataUrl = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 180'%3E%3Crect width='120' height='180' rx='16' fill='%23ede9fe'/%3E%3Ccircle cx='60' cy='44' r='18' fill='%236552e6'/%3E%3Crect x='42' y='68' width='36' height='72' rx='18' fill='%236552e6'/%3E%3C/svg%3E";
+const harnessProgressPhotos = [
+  {
+    id: "photo_after",
+    date: "2026-06-22",
+    frontUrl: harnessProgressPhotoDataUrl,
+    sideUrl: harnessProgressPhotoDataUrl,
+    backUrl: harnessProgressPhotoDataUrl
+  },
+  {
+    id: "photo_before",
+    date: "2026-05-22",
+    frontUrl: harnessProgressPhotoDataUrl,
+    sideUrl: harnessProgressPhotoDataUrl,
+    backUrl: harnessProgressPhotoDataUrl
+  }
+];
 
 const harnessTrainerTasks = [
   {
@@ -815,17 +832,17 @@ export default function ClientE2EHarness() {
         <ProfileProgressPhotosModal
           open={cabinetPhotosOpen}
           uploading={false}
-          latestPhoto={null}
-          photos={[]}
+          latestPhoto={harnessProgressPhotos[0]}
+          photos={harnessProgressPhotos}
           files={{}}
           previews={{}}
           status=""
-          compareIds={["", ""]}
+          compareIds={[harnessProgressPhotos[1].id, harnessProgressPhotos[0].id]}
           compareViews={harnessProgressPhotoCompareViews}
           compareView="front"
           activeCompareView={harnessProgressPhotoCompareViews[0]}
-          selectedBefore={null}
-          selectedAfter={null}
+          selectedBefore={harnessProgressPhotos[1]}
+          selectedAfter={harnessProgressPhotos[0]}
           canSave={false}
           formatPhotoDate={(photo) => photo?.date || ""}
           onClose={() => setCabinetPhotosOpen(false)}

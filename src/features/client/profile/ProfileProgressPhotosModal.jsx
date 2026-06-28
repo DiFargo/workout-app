@@ -164,6 +164,7 @@ export default function ProfileProgressPhotosModal({
                       type="button"
                       role="tab"
                       aria-selected={compareView === view.id}
+                      aria-pressed={compareView === view.id}
                       className={compareView === view.id ? "active" : ""}
                       onClick={() => onCompareViewChange(view.id)}
                       key={view.id}

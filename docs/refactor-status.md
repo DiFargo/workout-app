@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.350`.
+Last updated at app version `v.1.351`.
 
 ## Stable Now
 
@@ -67,6 +67,7 @@ Last updated at app version `v.1.350`.
 - Client cabinet measurements modal start action exposes an explicit accessible label under the primary visual audit.
 - Client cabinet workout history expand and delete actions expose workout-specific accessible labels under the primary visual audit.
 - Client cabinet progress photo upload inputs expose view-specific accessible labels under the primary visual audit.
+- Client cabinet progress photo compare tabs expose selected `aria-pressed` state under the primary visual audit.
 - Legacy trainer workspace bottom navigation exposes active-page `aria-current` state.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.

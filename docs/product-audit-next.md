@@ -178,6 +178,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 81. Client nutrition weekday strip now keeps compact equal mobile cells and bounded markers, guarded by the nutrition visual audit.
 82. Trainer progress chart periods and exercise progress filters now expose selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
 83. Admin harness filter pills, client cards, workspace tabs and program cards now expose selected state with `aria-pressed`, guarded by the admin visual audit.
+84. Client cabinet progress photo compare tabs now expose selected state with `aria-pressed`, guarded by the primary visual audit.
 
 ## P1: Next Product Fixes
 

@@ -169,10 +169,12 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=photos");
   await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetProgressPhotosModal")).toBeVisible();
+  await expect(page.locator(".cabinetProgressPhotosCompareTabs button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".cabinetProgressPhotoSteps input").first()).toHaveAttribute("aria-label", /Добавить фото:/);
   await expectTapTargets(page, [
     ".cabinetProgressPhotosHead button",
     ".cabinetProgressPhotoSteps label",
+    ".cabinetProgressPhotosCompareTabs button",
     ".cabinetProgressPhotosSave"
   ]);
   await expectNoHorizontalOverflow(page);
