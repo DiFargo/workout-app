@@ -11,7 +11,13 @@ export default function ProfileAppSettingsSection({
   return (
     <section className="profileDashboardCard profileAppSettingsSection">
       <div className="profileSettingsActions">
-        <button type="button" className="profileThemeSwitchBtn" onClick={onToggleTheme}>
+        <button
+          type="button"
+          className="profileThemeSwitchBtn"
+          aria-label={isWarmLightTheme ? `Переключить оформление на ${darkThemeLabel}` : "Переключить оформление на светлый стиль"}
+          aria-pressed={isWarmLightTheme}
+          onClick={onToggleTheme}
+        >
           <span className="profileThemeIcon">{isWarmLightTheme ? "🌙" : "☀️"}</span>
           <span className="profileThemeText">
             <strong>Оформление</strong>
@@ -23,6 +29,7 @@ export default function ProfileAppSettingsSection({
         <button
           type="button"
           className={telegramProfile.connected ? "profileSettingsTelegramItem connected" : "profileSettingsTelegramItem"}
+          aria-label={telegramProfile.connected ? "Открыть настройки подключенного Telegram" : "Подключить Telegram"}
           onClick={onOpenTelegram}
         >
           <span className="profileSettingsTelegramAvatar">

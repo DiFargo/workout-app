@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.323`.
+Last updated at app version `v.1.324`.
 
 ## Evidence
 
@@ -152,6 +152,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 55. Nutrition week day buttons now expose full-date accessible labels and selected state, guarded by the nutrition visual audit.
 56. Cabinet Telegram management modal now exposes dialog semantics and an accessible close control, guarded by the primary visual audit.
 57. Cabinet nutrition goal picker now exposes accessible goal labels and selected state, guarded by the primary visual audit.
+58. Cabinet settings harness now renders the real app-settings section, and theme/Telegram controls expose accessible action labels and selected state.
 
 ## P1: Next Product Fixes
 

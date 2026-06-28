@@ -11,6 +11,7 @@ import {
   WorkoutDraftRestoreDialog,
   WorkoutReadinessDialog
 } from "../workout/WorkoutDialogs";
+import ProfileAppSettingsSection from "../../features/client/profile/ProfileAppSettingsSection";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
 import ProfileProgressPhotosModal from "../../features/client/profile/ProfileProgressPhotosModal";
@@ -344,6 +345,7 @@ export default function ClientE2EHarness() {
   const [telegramModalOpen, setTelegramModalOpen] = useState(
     () => cabinetModalParam === "telegram"
   );
+  const [harnessWarmLightTheme, setHarnessWarmLightTheme] = useState(true);
   const [trainerNotificationsOpen, setTrainerNotificationsOpen] = useState(
     () => cabinetModalParam === "notifications"
   );
@@ -837,10 +839,18 @@ export default function ClientE2EHarness() {
           section="settings"
           onClose={() => setCabinetSettingsOpen(false)}
         >
-          <div className="profileMainSummaryGrid">
-            <article><strong>Harness</strong><span>Profile settings shell</span></article>
-            <article><strong>Telegram</strong><span>Connected checks</span></article>
-          </div>
+          <ProfileAppSettingsSection
+            isWarmLightTheme={harnessWarmLightTheme}
+            telegramProfile={{
+              connected: true,
+              username: "harness_coach",
+              displayName: "Harness Athlete",
+              avatarUrl: ""
+            }}
+            onToggleTheme={() => setHarnessWarmLightTheme((current) => !current)}
+            onOpenTelegram={() => setTelegramModalOpen(true)}
+            onTelegramAvatarError={() => {}}
+          />
           <button type="button" className="profileDashboardButton" onClick={() => setTelegramModalOpen(true)}>
             Open Telegram
           </button>

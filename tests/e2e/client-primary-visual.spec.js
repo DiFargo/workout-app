@@ -177,9 +177,13 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=settings");
   await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetSettingsModal")).toBeVisible();
+  await expect(page.locator(".profileThemeSwitchBtn")).toHaveAttribute("aria-pressed", /^(true|false)$/);
+  await expect(page.locator(".profileSettingsTelegramItem")).toHaveAttribute("aria-label", /Telegram/);
   await expectTapTargets(page, [
     ".cabinetUtilityModalHead button",
-    ".cabinetSettingsModal .profileDashboardButton"
+    ".cabinetSettingsModal .profileDashboardButton",
+    ".profileThemeSwitchBtn",
+    ".profileSettingsTelegramItem"
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-cabinet-settings-modal.png");
