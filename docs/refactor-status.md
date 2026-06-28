@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.351`.
+Last updated at app version `v.1.352`.
 
 ## Stable Now
 
@@ -70,6 +70,7 @@ Last updated at app version `v.1.351`.
 - Client cabinet progress photo compare tabs expose selected `aria-pressed` state under the primary visual audit.
 - Legacy trainer workspace bottom navigation exposes active-page `aria-current` state.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
+- Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.

@@ -135,7 +135,9 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
   await expect(page.locator(".trainerMessageFilters")).toBeVisible();
   await expect(page.locator(".trainerMessageFilters button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".trainerMessageList > button")).toHaveCount(1);
+  await expect(page.locator(".trainerMessageList > button[aria-pressed='true']")).toHaveCount(1);
   await page.locator(".trainerMessageList > button").first().click();
+  await expect(page.locator(".trainerMessageList > button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".trainerMessageModal")).toBeVisible();
   await page.locator(".trainerMessageCoachHint button").first().click();
   await expect(page.locator(".trainerMessageModalSend")).toBeEnabled();

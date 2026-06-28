@@ -139,6 +139,7 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   await clickTrainerNav(page, "messages");
   await expect(page.locator(".trainerMessageCenter")).toBeVisible();
   await expect(page.locator(".trainerMessageFilters button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".trainerMessageList > button[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".trainerMessageFilters button",
     ".trainerMessageList > button",

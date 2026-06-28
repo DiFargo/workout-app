@@ -4067,6 +4067,7 @@ function TrainerUtilityPage({ section, clients = [], clientSummaries = {}, onNav
                 type="button"
                 key={item.id}
                 className={selectedMessage?.id === item.id ? "active" : ""}
+                aria-pressed={selectedMessage?.id === item.id}
                 onClick={() => {
                   setSelectedMessageId(item.id);
                   setMessageReplyOpen(true);
