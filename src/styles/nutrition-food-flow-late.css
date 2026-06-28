@@ -1302,3 +1302,12 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
   background: rgba(101, 82, 230, 0.10) !important;
 }
 
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4 small {
+  min-width: 2.1ch !important;
+  width: auto !important;
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  text-transform: uppercase !important;
+}
+

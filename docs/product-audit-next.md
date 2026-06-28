@@ -185,6 +185,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 88. First setup sex, activity and goal choices now expose selected state with `aria-pressed`, guarded by the client primary visual audit.
 89. Profile body metric sex choices now expose selected state with `aria-pressed`, guarded by the client primary visual audit.
 90. Production trainer admin user filters and client cards now expose selected state with `aria-pressed`, guarded by the app structure audit.
+91. Client nutrition weekday labels now render as unambiguous uppercase two-letter abbreviations, guarded by the nutrition visual audit.
 
 ## P1: Next Product Fixes
 

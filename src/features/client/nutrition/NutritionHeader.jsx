@@ -58,7 +58,7 @@ export default function NutritionHeader({
               aria-pressed={isSelectedDay}
             >
               <span aria-hidden="true" />
-              <small>{day.label}</small>
+              <small>{day.label.toLocaleUpperCase("ru-RU")}</small>
             </button>
           );
         })}

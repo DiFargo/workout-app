@@ -253,3 +253,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.356`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.357`: strengthened production trainer admin user filters and client cards with selected `aria-pressed` state.
 - Verification for `v.1.357`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.358`: stabilized client nutrition weekday labels as uppercase two-letter abbreviations.
+- Verification for `v.1.358`: `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
