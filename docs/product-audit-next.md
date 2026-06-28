@@ -188,6 +188,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 91. Client nutrition weekday labels now render as unambiguous uppercase two-letter abbreviations, guarded by the nutrition visual audit.
 92. Production trainer dashboard filters and client rows now expose selected state with `aria-pressed`, guarded by the app structure audit.
 93. Production trainer client workspace role toggle and tabs now expose selected state with `aria-pressed`, guarded by the app structure audit.
+94. Client workout warmup timer presets now expose selected state with `aria-pressed`, guarded by the app structure audit.
 
 ## P1: Next Product Fixes
 

@@ -491,6 +491,12 @@ test("trainer client workspace header selectors expose selected state", async ()
   assert.match(workspaceHeader, /className=\{adminUsersSelectedTab === id \? "active" : ""\}[\s\S]*aria-pressed=\{adminUsersSelectedTab === id\}/);
 });
 
+test("client workout warmup timer presets expose selected state", async () => {
+  const warmupStage = await readText("src/features/client/workouts/WorkoutWarmupStage.jsx");
+
+  assert.match(warmupStage, /className=\{timerDuration === seconds \? "active" : ""\}[\s\S]*aria-pressed=\{timerDuration === seconds\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

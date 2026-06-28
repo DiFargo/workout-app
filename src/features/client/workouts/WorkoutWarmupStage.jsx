@@ -67,6 +67,7 @@ export function WorkoutWarmupBody({
             <button
               type="button"
               className={timerDuration === seconds ? "active" : ""}
+              aria-pressed={timerDuration === seconds}
               key={seconds}
               onClick={() => onSetTimerPreset(seconds)}
             >
