@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.327`.
+Last updated at app version `v.1.328`.
 
 ## Stable Now
 
@@ -63,13 +63,14 @@ Last updated at app version `v.1.327`.
 - Client cabinet trainer notification items expose task, status and due-date accessible labels under the primary visual audit.
 - Client cabinet workout calendar date buttons expose selected and current-date accessibility state under the primary visual audit.
 - Client cabinet measurements modal start action exposes an explicit accessible label under the primary visual audit.
+- Client cabinet workout history expand and delete actions expose workout-specific accessible labels under the primary visual audit.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape
 
 From the latest verified build:
 
-- main app JS chunk: about `470.39 KiB` raw, `131.02 KiB` gzip.
+- main app JS chunk: about `470.61 KiB` raw, `131.09 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1337.88 KiB` raw, `134.35 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.

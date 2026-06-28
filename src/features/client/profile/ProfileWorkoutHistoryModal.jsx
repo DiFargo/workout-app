@@ -42,6 +42,14 @@ export default function ProfileWorkoutHistoryModal({
           {!loading && items.map((item) => {
             const isOpen = openItemId === item.id;
             const itemDate = getTimestampValue(item.date);
+            const workoutTitle = item.workout || "Тренировка";
+            const workoutDateLabel = itemDate
+              ? new Date(itemDate).toLocaleDateString("ru-RU", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric"
+                }).replace(".", "")
+              : "Без даты";
 
             return (
               <div
@@ -57,20 +65,12 @@ export default function ProfileWorkoutHistoryModal({
                   type="button"
                   onClick={() => onToggleItem(item.id)}
                   aria-expanded={isOpen}
+                  aria-label={`${isOpen ? "Свернуть" : "Развернуть"} тренировку: ${workoutTitle}. ${workoutDateLabel}`}
                 >
                   <span aria-hidden="true">{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
                   <div>
-                    <strong>{item.workout || "Тренировка"}</strong>
-                    <small>
-                      {itemDate
-                        ? new Date(itemDate).toLocaleDateString("ru-RU", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric"
-                          }).replace(".", "")
-                        : "Без даты"}
-                      {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
-                    </small>
+                    <strong>{workoutTitle}</strong>
+                    <small>{workoutDateLabel}{item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}</small>
                   </div>
                   <i>{isOpen ? "⌃" : "›"}</i>
                 </button>
@@ -105,6 +105,7 @@ export default function ProfileWorkoutHistoryModal({
                       className="cabinetWorkoutHistoryDelete"
                       onClick={() => onRequestDelete(item)}
                       disabled={deletingId === item.id}
+                      aria-label={`Удалить тренировку: ${workoutTitle}. ${workoutDateLabel}`}
                     >
                       {deletingId === item.id ? "Удаляю..." : "Удалить тренировку"}
                     </button>

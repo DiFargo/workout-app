@@ -106,6 +106,8 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
 
   await page.locator(".cabinetWorkoutHistoryHarnessButton").click();
   await expect(page.locator(".cabinetWorkoutHistoryModal")).toBeVisible();
+  await expect(page.locator(".cabinetWorkoutHistoryItem > button").first()).toHaveAttribute("aria-label", /тренировку:/);
+  await expect(page.locator(".cabinetWorkoutHistoryDelete").first()).toHaveAttribute("aria-label", /Удалить тренировку:/);
   await expectTapTargets(page, [
     ".workoutModeModalHeader button",
     ".cabinetWorkoutHistoryItem > button",
