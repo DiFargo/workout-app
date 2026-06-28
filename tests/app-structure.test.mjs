@@ -201,6 +201,9 @@ test("application styles use the modular styles entrypoint", async () => {
   const main = await readText("src/main.jsx");
   const indexCss = await readText("src/styles/index.css");
   const appSource = await readText("src/App.jsx");
+  const appCore = await readText("src/AppCore.jsx");
+  const appRouter = await readText("src/app/AppRouter.jsx");
+  const appTerminalRoutes = await readText("src/app/appTerminalRoutes.jsx");
   const trainerWorkspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
   const adminPanelHub = await readText("src/components/admin/AdminPanelHub.jsx");
 
@@ -208,6 +211,9 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(main, /['"]\.\/styles\/index\.css['"]/);
   assert.doesNotMatch(main, /['"]\.\/styles\.css['"]/);
   assert.doesNotMatch(appSource, /styles\.css/);
+  assert.match(appCore, /['"]\.\/styles\/client-workout-lazy\.css['"]/);
+  assert.match(appRouter, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
+  assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
   assert.match(adminPanelHub, /['"]\.\.\/\.\.\/styles\/admin-lazy\.css['"]/);
 
@@ -238,6 +244,9 @@ test("application styles use the modular styles entrypoint", async () => {
   const allSourceFiles = await collectFiles("src", [".js", ".jsx"]);
   const allowedCssImportFiles = new Set([
     path.normalize("src/main.jsx"),
+    path.normalize("src/AppCore.jsx"),
+    path.normalize("src/app/AppRouter.jsx"),
+    path.normalize("src/app/appTerminalRoutes.jsx"),
     path.normalize("src/components/trainer/TrainerWorkspace.jsx"),
     path.normalize("src/components/admin/AdminPanelHub.jsx")
   ]);
@@ -256,6 +265,7 @@ test("modular CSS import graph resolves without cycles", async () => {
   const visited = new Set();
   for (const cssEntry of [
     "src/styles/index.css",
+    "src/styles/client-workout-lazy.css",
     "src/styles/trainer-lazy.css",
     "src/styles/admin-lazy.css"
   ]) {
@@ -268,6 +278,7 @@ test("modular CSS import graph resolves without cycles", async () => {
   const reachableCssFiles = [...visited].sort();
 
   assert.ok(visited.has(path.normalize("src/styles/index.css")));
+  assert.ok(visited.has(path.normalize("src/styles/client-workout-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/trainer-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/admin-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/legacy-stack.css")));

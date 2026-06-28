@@ -7,7 +7,11 @@ const loadAiCoachPage = () => import("../features/client/ai/AiCoachPage");
 const loadBasicWorkoutQuizPage = () => import("../features/client/workouts/BasicWorkoutQuizPage");
 const loadMeasurementWizardPage = () => import("../features/client/measurements/MeasurementWizardPage");
 const loadWorkoutHistoryPage = () => import("../features/client/workouts/WorkoutHistoryPage");
-const loadWorkoutListPage = () => import("../features/client/workouts/WorkoutListPage");
+const loadWorkoutStyles = () => import("../styles/client-workout-lazy.css");
+const loadWorkoutListPage = () => Promise.all([
+  loadWorkoutStyles(),
+  import("../features/client/workouts/WorkoutListPage")
+]).then(([, module]) => module);
 const loadWorkoutModePage = () => import("../features/client/workouts/WorkoutModePage");
 const loadWorkoutPlanPage = () => import("../features/client/workouts/WorkoutPlanPage");
 

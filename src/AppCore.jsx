@@ -282,7 +282,11 @@ import {
   ClientTrainingBottomBar,
 } from "./shared/ui/BottomBar";
 
-const loadClientE2EHarness = () => import("./components/client/ClientE2EHarness");
+const loadWorkoutStyles = () => import("./styles/client-workout-lazy.css");
+const loadClientE2EHarness = () => Promise.all([
+  loadWorkoutStyles(),
+  import("./components/client/ClientE2EHarness")
+]).then(([, module]) => module);
 const loadNutritionRoute = () => import("./features/client/nutrition/NutritionRoute");
 const loadTrainerE2EHarness = () => import("./components/trainer/TrainerE2EHarness");
 

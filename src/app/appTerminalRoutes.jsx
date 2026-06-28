@@ -5,7 +5,11 @@ import RouteFallback from "./RouteFallback";
 const loadTrainerAdminWorkoutsRoute = () => import("../features/trainer/TrainerAdminWorkoutsRoute");
 const loadTrainerDashboardRoute = () => import("../features/trainer/TrainerDashboardRoute");
 const loadTrainerUsersRoute = () => import("../features/trainer/TrainerUsersRoute");
-const loadWorkoutRunRoute = () => import("../features/client/workouts/WorkoutRunRoute");
+const loadWorkoutStyles = () => import("../styles/client-workout-lazy.css");
+const loadWorkoutRunRoute = () => Promise.all([
+  loadWorkoutStyles(),
+  import("../features/client/workouts/WorkoutRunRoute")
+]).then(([, module]) => module);
 
 const TrainerAdminWorkoutsRoute = lazy(loadTrainerAdminWorkoutsRoute);
 const TrainerDashboardRoute = lazy(loadTrainerDashboardRoute);
