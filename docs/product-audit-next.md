@@ -163,6 +163,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 66. Trainer nutrition analytics period buttons now expose selected state with `aria-pressed`, guarded by trainer smoke.
 67. Workout readiness choices now expose selected state with `aria-pressed`, guarded by the workout visual audit.
 68. Workout mode picker choices now expose selected state with `aria-pressed`, guarded by the workout visual audit.
+69. Nutrition portion selector choices now expose selected state with `aria-pressed`, guarded by the nutrition visual audit.
 
 ## P1: Next Product Fixes
 

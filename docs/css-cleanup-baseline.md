@@ -207,3 +207,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.333`: `tests/workout-presentation.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.334`: strengthened workout mode picker choices with selected `aria-pressed` state.
 - Verification for `v.1.334`: `tests/workout-presentation.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.335`: strengthened nutrition portion selector choices with selected `aria-pressed` state.
+- Verification for `v.1.335`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

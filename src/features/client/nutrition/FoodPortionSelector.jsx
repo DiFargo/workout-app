@@ -18,6 +18,7 @@ export default function FoodPortionSelector({
       <button
         type="button"
         className={amountMode === "grams" ? "active weightModeButton" : "weightModeButton"}
+        aria-pressed={amountMode === "grams"}
         onClick={onUseGrams}
       >
         <span className="weightModeIcon">⚖</span>
@@ -41,6 +42,7 @@ export default function FoodPortionSelector({
                 type="button"
                 key={unit.id}
                 className={selectedUnitId === unit.id ? "active" : ""}
+                aria-pressed={selectedUnitId === unit.id}
                 onClick={() => onSelectUnit(unit)}
               >
                 <span>{unit.shortLabel || unit.label}</span>

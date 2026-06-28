@@ -174,6 +174,18 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await page.locator(".fatSearchResultCard").first().click();
   await expect(page.locator(".foodProductRenderScreen")).toBeVisible();
   await expect(page.locator(".foodProductAmountStepper")).toBeVisible();
+  await expect(page.locator(".weightModeButton")).toHaveAttribute("aria-pressed", /^(true|false)$/);
+  await page.locator(".foodEditPortionDropdownButton").click();
+  await expect(page.locator(".foodEditPortionDropdownMenu")).toBeVisible();
+  await expect(page.locator(".foodEditPortionDropdownMenu button")).toHaveAttribute("aria-pressed", /^(true|false)$/);
+  await page.locator(".foodEditPortionDropdownMenu button").first().click();
+  await expect(page.locator(".foodEditPortionDropdownMenu")).toBeHidden();
+  await expect(page.locator(".weightModeButton")).toHaveAttribute("aria-pressed", "false");
+  await page.locator(".foodEditPortionDropdownButton").click();
+  await expect(page.locator(".foodEditPortionDropdownMenu")).toBeVisible();
+  await expect(page.locator(".foodEditPortionDropdownMenu button[aria-pressed='true']")).toHaveCount(1);
+  await page.locator(".foodEditPortionDropdownButton").click();
+  await expect(page.locator(".foodEditPortionDropdownMenu")).toBeHidden();
   await expectTapTargets(page, [
     ".foodProductTopAction",
     ".foodEditInlineMealButton",
