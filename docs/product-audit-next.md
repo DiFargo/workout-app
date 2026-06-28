@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.322`.
+Last updated at app version `v.1.323`.
 
 ## Evidence
 
@@ -151,6 +151,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 54. The former mixed AI/nutrition/workout stylesheet was retired; its remaining core profile/first-setup rules now live in `legacy-profile-first-setup-core.css`.
 55. Nutrition week day buttons now expose full-date accessible labels and selected state, guarded by the nutrition visual audit.
 56. Cabinet Telegram management modal now exposes dialog semantics and an accessible close control, guarded by the primary visual audit.
+57. Cabinet nutrition goal picker now exposes accessible goal labels and selected state, guarded by the primary visual audit.
 
 ## P1: Next Product Fixes
 

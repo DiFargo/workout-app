@@ -131,6 +131,8 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=nutrition");
   await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetNutritionModal")).toBeVisible();
+  await expect(page.locator(".profileGoalPicker button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".profileGoalPicker button").first()).toHaveAttribute("aria-label", /Выбрать цель питания:/);
   await expectTapTargets(page, [
     ".cabinetNutritionModalHead button",
     ".profileGoalPicker button",

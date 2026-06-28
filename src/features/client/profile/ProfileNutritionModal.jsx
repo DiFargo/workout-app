@@ -84,6 +84,8 @@ export default function ProfileNutritionModal({
                     key={goal.id}
                     type="button"
                     className={profileDraft.goal === goal.id ? "active" : ""}
+                    aria-label={`Выбрать цель питания: ${goal.title}`}
+                    aria-pressed={profileDraft.goal === goal.id}
                     onClick={() => onGoalChange(goal.id)}
                   >
                     {goal.title}

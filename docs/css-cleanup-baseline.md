@@ -183,3 +183,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.321`: `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.322`: strengthened the covered cabinet Telegram management modal with dialog semantics and an accessible close button guard.
 - Verification for `v.1.322`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.323`: strengthened the covered cabinet nutrition goal picker with accessible goal labels and selected `aria-pressed` state.
+- Verification for `v.1.323`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

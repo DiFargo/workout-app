@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.322`.
+Last updated at app version `v.1.323`.
 
 ## Stable Now
 
@@ -58,13 +58,14 @@ Last updated at app version `v.1.322`.
 - Client nutrition dark-green food-flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition week day buttons expose full-date accessible labels and selected state, and the nutrition visual audit guards them.
 - Client cabinet Telegram management modal exposes dialog semantics and an accessible close control under the primary visual audit.
+- Client cabinet nutrition goal picker exposes accessible goal labels and selected state under the primary visual audit.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape
 
 From the latest verified build:
 
-- main app JS chunk: about `469.86 KiB` raw, `130.90 KiB` gzip.
+- main app JS chunk: about `469.95 KiB` raw, `130.92 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1337.88 KiB` raw, `134.35 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
