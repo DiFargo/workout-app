@@ -14,7 +14,7 @@ Current verified budget:
 Covered by Playwright visual audits:
 
 - Client main dashboard: `tests/e2e/client-primary-visual.spec.js`
-- Client cabinet and cabinet workout history modal: `tests/e2e/client-primary-visual.spec.js`
+- Client cabinet, cabinet workout history modal and measurements modal: `tests/e2e/client-primary-visual.spec.js`
 - Client nutrition main, food search, food results, product amount screen, product edit sheet, My Database, calendar, diary and analysis modal: `tests/e2e/client-nutrition-visual.spec.js`
 - Client workout cards, swipe, workout mode modal, workout history modal and empty assigned plan state: `tests/e2e/client-workout-visual.spec.js`
 - Trainer dashboard, clients, client card, messages and programs: `tests/e2e/trainer-visual.spec.js`
@@ -49,6 +49,7 @@ Start mapping here before any cleanup:
    - Started in `v.1.282`: removed one-line core aliases `themes.css` and `client-main.css`; `index.css` now imports `theme.css` and `auth.css` directly.
    - Continued in `v.1.283`: removed core aggregators `layout.css` and `components.css`; `index.css` now imports their base component CSS directly.
    - Expanded in `v.1.288`: visual coverage now includes the cabinet workout history modal and its compact delete action.
+   - Expanded in `v.1.289`: visual coverage now includes the cabinet measurements modal and its close/start actions.
 
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.
@@ -97,3 +98,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.285`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
 - `v.1.287`: removed duplicated global `.workoutProgramEmptyState` and `.workoutProgramEmptyIcon` rules from `legacy-history-ai-search-late.css` and `legacy-admin-program-editor-app49.css`; the scoped `client-workout-empty-state.css` now owns the client workout empty plan state.
 - Verification for `v.1.287`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.289`: expanded the client primary visual audit to cover the cabinet measurements modal and fixed its close button to a stable 44px tap target.
+- Verification for `v.1.289`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.

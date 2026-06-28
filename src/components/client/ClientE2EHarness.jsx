@@ -4,6 +4,7 @@ import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
+import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileWorkoutHistoryModal from "../../features/client/profile/ProfileWorkoutHistoryModal";
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
 import {
@@ -91,6 +92,21 @@ const harnessHistory = [
     ]
   }
 ];
+
+const harnessMeasurementFields = [
+  { id: "weight", label: "Вес", unit: "кг" },
+  { id: "chest", label: "Грудь", unit: "см" },
+  { id: "belly", label: "Живот", unit: "см" },
+  { id: "thigh", label: "Бедро", unit: "см" }
+];
+
+const harnessLatestMeasurement = {
+  date: "2026-06-22T12:00:00.000Z",
+  weight: 88.8,
+  chest: 108,
+  belly: 91,
+  thigh: 61
+};
 
 function buildHarnessNutrition() {
   return {
@@ -199,6 +215,9 @@ export default function ClientE2EHarness() {
   const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
   const [cabinetWorkoutHistoryOpen, setCabinetWorkoutHistoryOpen] = useState(false);
   const [cabinetWorkoutHistoryItemOpen, setCabinetWorkoutHistoryItemOpen] = useState("client_harness_history_1");
+  const [cabinetMeasurementsOpen, setCabinetMeasurementsOpen] = useState(
+    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("clientCabinetModal") === "measurements"
+  );
   const nutritionPhotoInputRef = useRef(null);
   const nutritionFoodSwipeMoved = useRef(false);
   const cabinetWorkoutHistoryItemRefs = useRef(new Map());
@@ -500,6 +519,15 @@ export default function ClientE2EHarness() {
           onClose={() => setCabinetWorkoutHistoryOpen(false)}
           onToggleItem={(itemId) => setCabinetWorkoutHistoryItemOpen((current) => current === itemId ? "" : itemId)}
           onRequestDelete={() => {}}
+        />
+        <ProfileMeasurementsModal
+          open={cabinetMeasurementsOpen}
+          latestMeasurement={harnessLatestMeasurement}
+          measurementFields={harnessMeasurementFields}
+          formatMeasurementDate={(measurement) => new Date(measurement.date).toLocaleDateString("ru-RU")}
+          getMeasurementValue={(measurement, field) => `${measurement[field.id]} ${field.unit}`}
+          onClose={() => setCabinetMeasurementsOpen(false)}
+          onStart={() => {}}
         />
       </>
     ));

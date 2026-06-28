@@ -109,5 +109,17 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.locator(".workoutModeModalHeader button").click();
   await expect(page.locator(".cabinetWorkoutHistoryModal")).toBeHidden();
 
+  await page.goto("/?clientHarness=1&clientCabinetModal=measurements");
+  await page.getByTestId("client-nav-cabinet").click();
+  await expect(page.locator(".cabinetMeasurementModal")).toBeVisible();
+  await expectTapTargets(page, [
+    ".cabinetMeasurementModalHead button",
+    ".cabinetMeasurementModalStart"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-cabinet-measurements-modal.png");
+  await page.locator(".cabinetMeasurementModalHead button").click();
+  await expect(page.locator(".cabinetMeasurementModal")).toBeHidden();
+
   assertNoRuntimeErrors();
 });
