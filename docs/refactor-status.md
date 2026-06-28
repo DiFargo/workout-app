@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.301`.
+Last updated at app version `v.1.302`.
 
 ## Stable Now
 
@@ -37,6 +37,7 @@ Last updated at app version `v.1.301`.
 - Client nutrition visual audit now checks weekday strip geometry so labels cannot crowd day markers.
 - Client nutrition food-search/product polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition AI photo not-found modal is covered by the nutrition visual audit, and its CSS is owned by `nutrition-stack.css`.
+- Client nutrition create product/dish choice modal is covered by the nutrition visual audit.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape

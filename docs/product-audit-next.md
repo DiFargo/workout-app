@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.301`.
+Last updated at app version `v.1.302`.
 
 ## Evidence
 
@@ -58,6 +58,7 @@ The nutrition visual audit now attaches screenshots for:
 - diary modal;
 - nutrition analysis modal.
 - AI photo not-found modal.
+- create product/dish choice modal.
 
 The client workout visual audit now attaches screenshots for:
 
@@ -115,6 +116,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 32. Nutrition food-search/product polish CSS now loads from the nutrition lazy stack instead of the core app stylesheet.
 33. Nutrition AI photo not-found modal now has screenshot coverage and lazy-owned CSS.
 34. Mobile login smoke now allows slow cold auth bootstrap runs that can take about 31 seconds in Playwright mobile.
+35. Nutrition create product/dish choice modal now has screenshot coverage and tap-target checks.
 
 ## P1: Next Product Fixes
 

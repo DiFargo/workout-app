@@ -69,6 +69,7 @@ Start mapping here before any cleanup:
    - Fixed in `v.1.295`: nutrition week strip keeps readable weekday labels separated from day markers and is guarded by geometry checks in the nutrition visual audit.
    - Continued in `v.1.300`: food-search/product polish CSS moved from the core app entrypoint into `nutrition-stack.css`, under the existing nutrition visual audit.
    - Expanded in `v.1.301`: AI photo not-found modal has visual coverage and its CSS moved from core into `nutrition-stack.css`.
+   - Expanded in `v.1.302`: nutrition create product/dish choice modal has visual coverage before broader food-flow CSS cleanup.
 
 4. Trainer workspace.
    - Reason: dashboard, clients, messages and programs have coverage; the CSS is large but route-scoped.
@@ -134,3 +135,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.300`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run build` and `npm.cmd run report:css` passed before full verification.
 - `v.1.301`: added nutrition AI photo not-found modal visual coverage, moved `legacy-nutrition-photo-not-found.css` into the nutrition lazy stack and extended mobile auth smoke waits for cold auth bootstrap runs.
 - Verification for `v.1.301`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, repeated mobile `tests/e2e/client-smoke.spec.js`, `npm.cmd run build` and `npm.cmd run report:css` passed before full verification.
+- `v.1.302`: expanded nutrition visual coverage to the create product/dish choice modal and its bottom-bar entry point.
+- Verification for `v.1.302`: `tests/e2e/client-nutrition-visual.spec.js`, `tests/app-structure.test.mjs`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

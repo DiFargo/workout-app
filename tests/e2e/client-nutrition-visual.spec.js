@@ -136,6 +136,18 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-food-search.png");
 
+  await page.locator(".fatSearchCreateAction").click();
+  await expect(page.locator(".nutritionCreateChoiceScreen")).toBeVisible();
+  await expectTapTargets(page, [
+    ".nutritionCreateChoiceClose",
+    ".nutritionCreateChoiceGrid button",
+    ".fatSearchBottomBar button"
+  ], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-create-choice.png");
+  await page.locator(".nutritionCreateChoiceClose").click();
+  await expect(page.locator(".nutritionCreateChoiceScreen")).toBeHidden();
+
   await page.locator(".fatSearchInputWrapPremium input").fill("yogurt");
   await expect(page.locator(".fatSearchResultCard")).toHaveCount(2);
   await expectTapTargets(page, [".fatSearchResultCard", ".foodSearchFixedPhotoAction", ".fatSearchBottomBar button"]);
