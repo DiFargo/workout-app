@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
+test.setTimeout(60_000);
+
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
     documentWidth: document.documentElement.scrollWidth,
@@ -12,7 +14,7 @@ async function expectNoHorizontalOverflow(page) {
 
 async function collectPrimaryLayoutMetric(page, navTestId, pageTestId, titleSelector) {
   if (navTestId) {
-    await page.getByTestId(navTestId).click();
+    await clickClientNav(page, navTestId);
   }
 
   await expect(page.getByTestId(pageTestId)).toBeVisible();
@@ -41,6 +43,11 @@ async function collectPrimaryLayoutMetric(page, navTestId, pageTestId, titleSele
       bottomNav: rectOf(document.querySelector(".clientBottomNav"))
     };
   }, titleSelector);
+}
+
+async function clickClientNav(page, navTestId) {
+  await expect(page.getByTestId(navTestId)).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId(navTestId).click();
 }
 
 function expectCloseToBaseline(value, baseline, tolerance = 2) {
@@ -93,7 +100,7 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     expectCloseToBaseline(metric.bottomNav.height, main.bottomNav.height);
   }
 
-  await page.getByTestId("client-nav-workouts").click();
+  await clickClientNav(page, "client-nav-workouts");
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
 
   const workoutCardMetric = await page.evaluate(() => {
@@ -136,7 +143,7 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await page.getByTestId("client-nav-workouts").click();
+  await clickClientNav(page, "client-nav-workouts");
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
   await expect(page.locator(".workoutSelectTitle")).toBeVisible();
   await expect(page.locator(".workoutSelectTitle")).toHaveText("Мой план");
@@ -169,7 +176,7 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await page.getByTestId("client-nav-nutrition").click();
+  await clickClientNav(page, "client-nav-nutrition");
   await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
   await expect(page.locator(".nutritionOrbitHitButton")).toBeVisible();
   await expectNoHorizontalOverflow(page);
@@ -198,7 +205,7 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await page.getByTestId("client-nav-cabinet").click();
+  await clickClientNav(page, "client-nav-cabinet");
   await expect(page.getByTestId("client-harness-cabinet")).toBeVisible();
   await expect(page.locator(".clientCorePageTitle")).toBeVisible();
   await expectNoHorizontalOverflow(page);

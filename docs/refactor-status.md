@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.309`.
+Last updated at app version `v.1.310`.
 
 ## Stable Now
 
@@ -20,6 +20,7 @@ Last updated at app version `v.1.309`.
 - Mobile client smoke waits long enough for slow cold auth bootstrap runs observed in Playwright mobile.
 - Client smoke tests wait past the auth bootstrap fallback window, matching the app's signed-out loading behavior on slower mobile runs.
 - Client workout visual audit waits for the harness bottom navigation before clicking, reducing cold-start timeout flakes.
+- Client harness, nutrition visual and primary visual audits also wait for bottom navigation before route clicks.
 - Trainer lazy CSS no longer uses the redundant `trainer.css` alias; `trainer-workspace.css` is imported directly.
 - Core CSS no longer uses the redundant `themes.css` and `client-main.css` aliases; `theme.css` and `auth.css` are imported directly.
 - Core CSS no longer uses the redundant `layout.css` and `components.css` grouping aliases; their child files are imported directly.

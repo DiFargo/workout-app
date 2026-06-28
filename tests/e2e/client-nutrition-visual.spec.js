@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
+test.setTimeout(60_000);
+
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
     documentWidth: document.documentElement.scrollWidth,
@@ -48,6 +50,12 @@ async function expectTapTargets(page, selectors, minSize = 44) {
   }, { targetSelectors: selectors, minimumSize: minSize });
 
   expect(failures).toEqual([]);
+}
+
+async function openClientNutritionHarness(page) {
+  await page.goto("/?clientHarness=1");
+  await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-nutrition").click();
 }
 
 async function expectAboveBottomBar(page, floatingSelector) {
@@ -113,8 +121,7 @@ async function expectNutritionWeekStripReadable(page) {
 test("client nutrition visual audit covers dense actions and modal entry points", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1");
-  await page.getByTestId("client-nav-nutrition").click();
+  await openClientNutritionHarness(page);
   await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
   await expect(page.locator(".nutritionHeroTitleV4 .clientCorePageTitle")).toBeVisible();
 
@@ -248,8 +255,7 @@ test("client nutrition visual audit covers AI photo not-found modal", async ({ p
 test("client nutrition visual audit covers custom dish ingredient picker", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1");
-  await page.getByTestId("client-nav-nutrition").click();
+  await openClientNutritionHarness(page);
   await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
 
   await page.locator(".nutritionHeaderIconButton").first().click();

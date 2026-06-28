@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
+test.setTimeout(60_000);
+
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
     documentWidth: document.documentElement.scrollWidth,
@@ -83,6 +85,11 @@ async function expectContentAboveBottomNav(page) {
   expect(metrics.card.bottom).toBeLessThanOrEqual(metrics.bottomNav.y + 1);
 }
 
+async function clickClientCabinetNav(page) {
+  await expect(page.getByTestId("client-nav-cabinet")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-cabinet").click();
+}
+
 test("client primary visual audit covers main dashboard and cabinet", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
@@ -92,7 +99,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await attachScreenshot(page, testInfo, "client-main-dashboard.png");
   assertNoRuntimeErrors();
 
-  await page.getByTestId("client-nav-cabinet").click();
+  await clickClientCabinetNav(page);
   await expectPrimaryChrome(page, "client-harness-cabinet");
   await expectContentAboveBottomNav(page);
   await attachScreenshot(page, testInfo, "client-cabinet.png");
@@ -110,7 +117,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".cabinetWorkoutHistoryModal")).toBeHidden();
 
   await page.goto("/?clientHarness=1&clientCabinetModal=measurements");
-  await page.getByTestId("client-nav-cabinet").click();
+  await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetMeasurementModal")).toBeVisible();
   await expectTapTargets(page, [
     ".cabinetMeasurementModalHead button",
@@ -122,7 +129,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".cabinetMeasurementModal")).toBeHidden();
 
   await page.goto("/?clientHarness=1&clientCabinetModal=nutrition");
-  await page.getByTestId("client-nav-cabinet").click();
+  await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetNutritionModal")).toBeVisible();
   await expectTapTargets(page, [
     ".cabinetNutritionModalHead button",
@@ -136,7 +143,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".cabinetNutritionModal")).toBeHidden();
 
   await page.goto("/?clientHarness=1&clientCabinetModal=calendar");
-  await page.getByTestId("client-nav-cabinet").click();
+  await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetProgressModal")).toBeVisible();
   await expectTapTargets(page, [
     ".cabinetUtilityModalHead button",
@@ -153,7 +160,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".cabinetProgressModal")).toBeHidden();
 
   await page.goto("/?clientHarness=1&clientCabinetModal=photos");
-  await page.getByTestId("client-nav-cabinet").click();
+  await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetProgressPhotosModal")).toBeVisible();
   await expectTapTargets(page, [
     ".cabinetProgressPhotosHead button",
@@ -166,7 +173,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".cabinetProgressPhotosModal")).toBeHidden();
 
   await page.goto("/?clientHarness=1&clientCabinetModal=settings");
-  await page.getByTestId("client-nav-cabinet").click();
+  await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetSettingsModal")).toBeVisible();
   await expectTapTargets(page, [
     ".cabinetUtilityModalHead button",
@@ -178,7 +185,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".cabinetSettingsModal")).toBeHidden();
 
   await page.goto("/?clientHarness=1&clientCabinetModal=notifications");
-  await page.getByTestId("client-nav-cabinet").click();
+  await clickClientCabinetNav(page);
   await expect(page.locator(".profileTrainerNotificationsModal")).toBeVisible();
   await expectTapTargets(page, [
     ".profileTrainerNotificationsHead button",
@@ -190,7 +197,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".profileTrainerNotificationsModal")).toBeHidden();
 
   await page.goto("/?clientHarness=1&clientCabinetModal=telegram");
-  await page.getByTestId("client-nav-cabinet").click();
+  await clickClientCabinetNav(page);
   await expect(page.locator(".profileTelegramManageModal")).toBeVisible();
   await expectTapTargets(page, [
     ".profileTelegramModalClose",
