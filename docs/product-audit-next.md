@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.283`.
+Last updated at app version `v.1.284`.
 
 ## Evidence
 
@@ -40,6 +40,10 @@ The nutrition visual audit now attaches screenshots for:
 
 - nutrition main screen;
 - food search;
+- food search results;
+- product amount screen;
+- product edit sheet;
+- My Database;
 - calendar modal;
 - diary modal;
 - nutrition analysis modal.
@@ -78,6 +82,8 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 11. Trainer lazy CSS cleanup continued by removing the redundant `trainer.css` alias file.
 12. Core CSS entrypoint cleanup removed redundant `themes.css` and `client-main.css` alias files.
 13. Core CSS entrypoint cleanup removed redundant `layout.css` and `components.css` grouping files.
+14. Nutrition product flow coverage now catches food search results, product amount/edit surfaces and My Database.
+15. Nutrition product meal selector and edit close button now keep stable tap/click targets in the deeper visual audit.
 
 ## P1: Next Product Fixes
 
@@ -95,7 +101,7 @@ Started in `v.1.250`.
 1. CSS bundle is still the largest structural debt.
    - Keep cleanup route-by-route, not by deleting legacy files blindly.
    - Start with nutrition or trainer screens only after screenshots/manual checks.
-   - Status: no blind CSS deletion was done in this pass.
+   - Status: nutrition cleanup has started under deeper visual coverage; no blind CSS deletion was done.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.

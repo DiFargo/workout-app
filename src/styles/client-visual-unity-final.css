@@ -1581,32 +1581,6 @@
     text-transform: uppercase !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodEditInlineMealButton {
-    width: 100% !important;
-    height: 18px !important;
-    min-height: 18px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: #171923 !important;
-    -webkit-text-fill-color: #171923 !important;
-    font-size: 14px !important;
-    line-height: 18px !important;
-    font-weight: 900 !important;
-    text-align: center !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodEditInlineMealButton::after {
-    display: none !important;
-    content: none !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader + .foodEditHeroRender.foodEditHeroEditable {
-    margin-top: 14px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodEditHeroRender.foodEditHeroEditable {
     box-sizing: border-box !important;
     width: 100% !important;

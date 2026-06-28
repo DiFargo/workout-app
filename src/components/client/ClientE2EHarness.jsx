@@ -13,6 +13,51 @@ import {
 
 const HARNESS_DATE = "2026-06-22";
 
+const harnessSearchFoods = [
+  {
+    id: "harness_greek_yogurt",
+    name: "Harness Greek Yogurt",
+    source: "AI/FatSecret",
+    icon: "GY",
+    calories: 95,
+    protein: 10,
+    fat: 3,
+    carbs: 4,
+    portion: "100 g",
+    portionAmount: 100
+  },
+  {
+    id: "harness_salmon_bowl",
+    name: "Harness Salmon Bowl",
+    source: "AI/FatSecret",
+    icon: "SB",
+    calories: 520,
+    protein: 36,
+    fat: 22,
+    carbs: 42,
+    portion: "1 bowl",
+    portionAmount: 320
+  }
+];
+
+const harnessMyFoods = {
+  harness_oat_bar: {
+    id: "harness_oat_bar",
+    foodId: "harness_oat_bar",
+    name: "Harness Oat Bar",
+    source: "Harness My Database",
+    icon: "OB",
+    calories: 210,
+    protein: 8,
+    fat: 7,
+    carbs: 28,
+    portion: "60 g",
+    portionAmount: 60,
+    amountMode: "grams",
+    lastAmount: 60
+  }
+};
+
 const harnessWorkouts = [
   {
     id: "client_harness_day_1",
@@ -55,6 +100,8 @@ function buildHarnessNutrition() {
       fat: 70,
       carbs: 235
     },
+    myFoods: harnessMyFoods,
+    recent: harnessSearchFoods,
     days: {
       [HARNESS_DATE]: {
         foods: [
@@ -127,6 +174,19 @@ export default function ClientE2EHarness() {
   const [expandedNutritionMeals, setExpandedNutritionMeals] = useState({});
   const [nutritionZoukExpanded, setNutritionZoukExpanded] = useState(false);
   const [isAiNutritionPlanExpanded, setIsAiNutritionPlanExpanded] = useState(false);
+  const [nutritionCreateChoiceOpen, setNutritionCreateChoiceOpen] = useState(false);
+  const [nutritionSearch, setNutritionSearch] = useState("");
+  const [nutritionSearchTab, setNutritionSearchTab] = useState("food");
+  const [nutritionSearchResultLimit, setNutritionSearchResultLimit] = useState(8);
+  const [showRecentNutritionFoods, setShowRecentNutritionFoods] = useState(false);
+  const [selectedNutritionFood, setSelectedNutritionFood] = useState(null);
+  const [editingNutritionItemId, setEditingNutritionItemId] = useState("");
+  const [nutritionEditPageOpen, setNutritionEditPageOpen] = useState(false);
+  const [nutritionMealMenuOpen, setNutritionMealMenuOpen] = useState(false);
+  const [nutritionAmount, setNutritionAmount] = useState("100");
+  const [nutritionAmountMode, setNutritionAmountMode] = useState("grams");
+  const [nutritionProductUnitMenuOpen, setNutritionProductUnitMenuOpen] = useState(false);
+  const [nutritionEditNote, setNutritionEditNote] = useState("");
   const [individualWorkoutIndex, setIndividualWorkoutIndex] = useState(0);
   const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(false);
   const [workoutModeModalOpen, setWorkoutModeModalOpen] = useState(false);
@@ -144,6 +204,38 @@ export default function ClientE2EHarness() {
     todayKey: HARNESS_DATE
   });
   const nutritionCalendarMonthLabel = formatNutritionCalendarMonthLabel(nutritionCalendarMonthKey);
+  const nutritionSearchResults = nutritionSearchTab === "my"
+    ? Object.values(nutrition.myFoods || {})
+    : nutritionSearch.trim().length >= 2
+      ? harnessSearchFoods
+      : [];
+  const visibleNutritionSearchResults = nutritionSearchResults.slice(0, nutritionSearchResultLimit);
+
+  function openHarnessSelectedFood(food) {
+    setSelectedNutritionFood({
+      ...food,
+      icon: food.icon || "HF",
+      source: food.source || "Harness"
+    });
+    setNutritionAmount(String(food.lastAmount || food.portionAmount || 100));
+    setNutritionAmountMode(food.amountMode || "grams");
+    setNutritionEditNote("");
+    setNutritionEditPageOpen(false);
+    setNutritionMealMenuOpen(false);
+    setShowRecentNutritionFoods(false);
+  }
+
+  function updateHarnessSelectedFoodField(field, value) {
+    setSelectedNutritionFood((current) => current ? { ...current, [field]: value } : current);
+  }
+
+  function closeHarnessSelectedFood() {
+    setSelectedNutritionFood(null);
+    setEditingNutritionItemId("");
+    setNutritionEditPageOpen(false);
+    setNutritionMealMenuOpen(false);
+    setNutritionProductUnitMenuOpen(false);
+  }
 
   function renderBottomBar(firstArg, secondArg = {}) {
     const props = typeof firstArg === "object"
@@ -234,7 +326,7 @@ export default function ClientE2EHarness() {
       <main data-testid="client-harness-nutrition">
         {renderNutritionRoute({
           activeNutritionSearchResultLimit: 8,
-          addNutritionFoodFromPicker: () => {},
+          addNutritionFoodFromPicker: openHarnessSelectedFood,
           addNutritionProductManuallyFromPhoto: () => {},
           addSelectedDishIngredientFromFood: () => {},
           aiNutritionProfile: { goal: "recomp", activity: "moderate", trainingDays: 3 },
@@ -242,10 +334,10 @@ export default function ClientE2EHarness() {
           aiNutritionSavedPlan: null,
           barcodeScannerOpen: false,
           canDeleteSelectedNutritionFood: () => false,
-          cancelNutritionEditPage: () => {},
-          closeSelectedNutritionFood: () => {},
-          confirmNutritionEditPage: () => {},
-          confirmNutritionFoodFromPicker: () => {},
+          cancelNutritionEditPage: () => setNutritionEditPageOpen(false),
+          closeSelectedNutritionFood: closeHarnessSelectedFood,
+          confirmNutritionEditPage: () => setNutritionEditPageOpen(false),
+          confirmNutritionFoodFromPicker: closeHarnessSelectedFood,
           createCustomNutritionDish: () => {},
           createCustomNutritionFood: () => {},
           deleteSelectedNutritionFood: () => {},
@@ -255,7 +347,7 @@ export default function ClientE2EHarness() {
           dishIngredientLoading: false,
           dishIngredientPickerOpen: false,
           dishIngredientSearch: "",
-          editingNutritionItemId: "",
+          editingNutritionItemId,
           expandedNutritionMeals,
           fatSecretError: "",
           fatSecretLoading: false,
@@ -268,23 +360,23 @@ export default function ClientE2EHarness() {
           isAiNutritionPlanExpanded,
           isNutritionToday: nutritionDateKey === HARNESS_DATE,
           nutrition,
-          nutritionAmount: "100",
+          nutritionAmount,
           nutritionAmountError: "",
-          nutritionAmountMode: "grams",
+          nutritionAmountMode,
           nutritionCalendarDays,
           nutritionCalendarMonthLabel,
           nutritionCalendarOpen,
-          nutritionCreateChoiceOpen: false,
+          nutritionCreateChoiceOpen,
           nutritionCurrentStreak: 4,
           nutritionDateKey,
           nutritionDeleteConfirmOpen: false,
-          nutritionEditNote: "",
-          nutritionEditPageOpen: false,
+          nutritionEditNote,
+          nutritionEditPageOpen,
           nutritionFallbackSuggestions: [],
           nutritionFoodSwipeMoved,
           nutritionFoodSwipeOffsets: {},
           nutritionMeal: "breakfast",
-          nutritionMealMenuOpen: false,
+          nutritionMealMenuOpen,
           nutritionPhotoAiCandidates: [],
           nutritionPhotoAiConfidence: 0,
           nutritionPhotoAiResult: null,
@@ -294,11 +386,11 @@ export default function ClientE2EHarness() {
           nutritionPhotoPreview: "",
           nutritionPickerOpen,
           nutritionProductErrors: {},
-          nutritionProductUnitMenuOpen: false,
-          nutritionSearch: "",
+          nutritionProductUnitMenuOpen,
+          nutritionSearch,
           nutritionSearchResultKey: "",
-          nutritionSearchResults: [],
-          nutritionSearchTab: "food",
+          nutritionSearchResults,
+          nutritionSearchTab,
           nutritionToday,
           nutritionTotals,
           nutritionUndoDelete: null,
@@ -306,12 +398,12 @@ export default function ClientE2EHarness() {
           nutritionZoukExpanded,
           openDishIngredientPicker: () => {},
           openNutritionCalendar: () => setNutritionCalendarOpen(true),
-          openNutritionEditPage: () => {},
+          openNutritionEditPage: () => setNutritionEditPageOpen(true),
           openNutritionFoodEditor: () => {},
           openNutritionPicker: () => setNutritionPickerOpen(true),
           pendingDishIngredient: null,
           pendingDishIngredientGrams: "100",
-          recentNutritionFoods: [],
+          recentNutritionFoods: harnessSearchFoods,
           removeSelectedDishIngredient: () => {},
           renderTrainerMainBottomBar: renderBottomBar,
           resetNutritionPhotoAiSearch: () => {},
@@ -320,45 +412,45 @@ export default function ClientE2EHarness() {
           retryNutritionPhotoFromNotFound: () => {},
           selectNutritionDate: setNutritionDateKey,
           selectNutritionPhotoAiCandidate: () => {},
-          selectedNutritionFood: null,
+          selectedNutritionFood,
           setBarcodeScannerOpen: () => {},
           setDishIngredientPickerOpen: () => {},
           setDishIngredientSearch: () => {},
-          setEditingNutritionItemId: () => {},
+          setEditingNutritionItemId,
           setExpandedNutritionMeals,
           setFatSecretError: () => {},
           setIsAiNutritionPlanExpanded,
-          setNutritionAmount: () => {},
+          setNutritionAmount,
           setNutritionAmountError: () => {},
-          setNutritionAmountMode: () => {},
+          setNutritionAmountMode,
           setNutritionCalendarOpen,
-          setNutritionCreateChoiceOpen: () => {},
+          setNutritionCreateChoiceOpen,
           setNutritionDeleteConfirmOpen: () => {},
           setNutritionEditDetailsOpen: () => {},
-          setNutritionEditNote: () => {},
-          setNutritionEditPageOpen: () => {},
+          setNutritionEditNote,
+          setNutritionEditPageOpen,
           setNutritionFallbackSuggestions: () => {},
           setNutritionMeal: () => {},
-          setNutritionMealMenuOpen: () => {},
+          setNutritionMealMenuOpen,
           setNutritionPickerOpen,
-          setNutritionProductUnitMenuOpen: () => {},
-          setNutritionSearch: () => {},
-          setNutritionSearchResultLimit: () => {},
-          setNutritionSearchTab: () => {},
+          setNutritionProductUnitMenuOpen,
+          setNutritionSearch,
+          setNutritionSearchResultLimit: ({ limit }) => setNutritionSearchResultLimit(limit),
+          setNutritionSearchTab,
           setNutritionZoukExpanded,
           setPendingDishIngredient: () => {},
           setPendingDishIngredientGrams: () => {},
-          setSelectedNutritionFood: () => {},
-          setShowRecentNutritionFoods: () => {},
+          setSelectedNutritionFood,
+          setShowRecentNutritionFoods,
           shiftNutritionCalendarMonth: (offset) => {
             setNutritionCalendarMonthKey((currentMonthKey) => shiftNutritionCalendarMonthKey(currentMonthKey, offset));
           },
-          showRecentNutritionFoods: false,
+          showRecentNutritionFoods,
           todayNutritionKey,
           updateSelectedDishTotalWeight: () => {},
-          updateSelectedNutritionFoodField: () => {},
-          updateSelectedNutritionPortionUnit: () => {},
-          visibleNutritionSearchResults: []
+          updateSelectedNutritionFoodField: updateHarnessSelectedFoodField,
+          updateSelectedNutritionPortionUnit: (unit) => updateHarnessSelectedFoodField("portion", `100 ${unit}`),
+          visibleNutritionSearchResults
         })}
       </main>
     );

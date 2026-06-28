@@ -540,8 +540,8 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
   grid-area: meal !important;
   width: min(328px, calc(100% - 34px)) !important;
   min-width: 0 !important;
-  min-height: 46px !important;
-  height: 46px !important;
+  min-height: 56px !important;
+  height: auto !important;
   margin: 0 auto !important;
   padding: 7px 14px 6px !important;
   display: flex !important;
@@ -568,10 +568,10 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodEditInlineMealButton {
-  width: auto !important;
-  min-height: 0 !important;
+  width: 100% !important;
+  min-height: 40px !important;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 8px 10px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -1688,7 +1688,19 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
 
 /* Product editor close/save and bottom bar occlusion lock v167 */
 html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader {
+  display: grid !important;
   grid-template-columns: 48px minmax(0, 1fr) 48px !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader .foodEditPageTitleCenter {
+  position: static !important;
+  grid-column: 2 !important;
+  z-index: 1 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  pointer-events: none !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderSpacer {
@@ -1697,6 +1709,9 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
 }
 
 html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderClose {
+  position: relative !important;
+  z-index: 3 !important;
+  grid-column: 3 !important;
   width: 48px !important;
   height: 48px !important;
   min-width: 48px !important;

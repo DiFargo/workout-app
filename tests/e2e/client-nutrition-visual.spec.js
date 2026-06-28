@@ -103,6 +103,46 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await expectAboveBottomBar(page, ".foodSearchFixedPhotoAction");
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-food-search.png");
+
+  await page.locator(".fatSearchInputWrapPremium input").fill("yogurt");
+  await expect(page.locator(".fatSearchResultCard")).toHaveCount(2);
+  await expectTapTargets(page, [".fatSearchResultCard", ".foodSearchFixedPhotoAction", ".fatSearchBottomBar button"]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-food-results.png");
+
+  await page.locator(".fatSearchResultCard").first().click();
+  await expect(page.locator(".foodProductRenderScreen")).toBeVisible();
+  await expect(page.locator(".foodProductAmountStepper")).toBeVisible();
+  await expectTapTargets(page, [
+    ".foodProductTopAction",
+    ".foodEditInlineMealButton",
+    ".foodEditRow",
+    ".foodProductActionBar button"
+  ], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-product-screen.png");
+
+  await page.locator(".foodProductTopEdit").click();
+  await expect(page.locator(".foodEditPageSheet")).toBeVisible();
+  await expectTapTargets(page, [
+    ".foodEditPageHeaderClose",
+    ".foodEditIconPresetRow button",
+    ".foodEditPageActionBar button"
+  ], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-product-edit-sheet.png");
+  await page.locator(".foodEditPageHeaderClose").click();
+  await expect(page.locator(".foodEditPageSheet")).toBeHidden();
+
+  await page.locator(".foodProductActionBar button").first().click();
+  await expect(page.locator(".foodProductRenderScreen")).toBeHidden();
+
+  await page.locator(".fatSearchMyProductsAction").click();
+  await expect(page.locator(".fatSearchResultCard")).toHaveCount(1);
+  await expectTapTargets(page, [".fatSearchResultCard", ".fatSearchBottomBar button"]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-my-products.png");
+
   await page.locator(".fatSearchClosePremium").click();
   await expect(page.locator(".fatFoodSearchScreenPremium")).toBeHidden();
 
