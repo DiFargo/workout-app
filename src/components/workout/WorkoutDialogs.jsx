@@ -112,6 +112,7 @@ export function WorkoutReadinessDialog({
                 type="button"
                 key={option.id}
                 className={pendingOption?.id === option.id ? "active" : ""}
+                aria-pressed={pendingOption?.id === option.id}
                 onClick={() => onSelectOption(option)}
               >
                 <span>{option.emoji}</span>

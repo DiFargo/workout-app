@@ -187,6 +187,7 @@ test("client workout visual audit covers AI workout dialogs", async ({ page }, t
   ]);
   await page.locator(".workoutReadinessGrid button").nth(1).click();
   await expect(page.locator(".workoutReadinessGrid button.active")).toBeVisible();
+  await expect(page.locator(".workoutReadinessGrid button[aria-pressed='true']")).toHaveCount(1);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-workout-readiness-dialog.png");
 
