@@ -102,6 +102,7 @@ test("AppCore stays a coordinator and does not re-import nutrition internals", a
 test("app entrypoints stay thin", async () => {
   const appSource = await readText("src/App.jsx");
   const mainSource = await readText("src/main.jsx");
+  const serviceWorkerSource = await readText("src/app/registerServiceWorker.js");
 
   assert.match(appSource, /import AppCore from ["']\.\/AppCore["']/);
   assert.match(appSource, /import AppErrorBoundary from ["']\.\/components\/common\/AppErrorBoundary["']/);
@@ -111,7 +112,10 @@ test("app entrypoints stay thin", async () => {
 
   assert.match(mainSource, /createRoot\(document\.getElementById\(['"]root['"]\)\)\.render/);
   assert.match(mainSource, /['"]\.\/styles\/index\.css['"]/);
-  assert.match(mainSource, /navigator\.serviceWorker\.register\(["']\/sw\.js["']\)/);
+  assert.match(mainSource, /registerServiceWorker\(\);/);
+  assert.match(serviceWorkerSource, /navigator\.serviceWorker\.register\(["']\/sw\.js["'],\s*\{\s*updateViaCache:\s*["']none["']\s*\}/);
+  assert.match(serviceWorkerSource, /controllerchange/);
+  assert.match(serviceWorkerSource, /registration\.update\(\)/);
   assert.doesNotMatch(mainSource, /AppCore/);
   assert.ok(mainSource.split(/\r?\n/).length <= 16, "main.jsx should remain a thin app entrypoint");
 });

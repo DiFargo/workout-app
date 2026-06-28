@@ -87,3 +87,19 @@ test("every configured API rewrite points to an exported function", () => {
     assert.match(functionsSource, new RegExp(`export const ${functionId}\\b`));
   });
 });
+
+test("hosting shell files are not cached across deploys", () => {
+  const headers = firebaseConfig.hosting?.headers || [];
+  const headerBySource = new Map(headers.map((entry) => [entry.source, entry.headers || []]));
+
+  for (const source of ["/", "/index.html", "/sw.js"]) {
+    const cacheControl = headerBySource
+      .get(source)
+      ?.find((header) => header.key === "Cache-Control")
+      ?.value || "";
+
+    assert.match(cacheControl, /no-cache/);
+    assert.match(cacheControl, /no-store/);
+    assert.match(cacheControl, /must-revalidate/);
+  }
+});
