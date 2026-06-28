@@ -91,7 +91,10 @@ test("admin visual audit covers CRM and program internals harness", async ({ pag
   await expect(page.getByTestId("admin-users-harness")).toBeVisible();
   await expect(page.locator(".adminUsersCrmHeader h1")).toBeVisible();
   await expect(page.locator(".adminClientCard")).toHaveCount(3);
+  await expect(page.locator(".adminUsersFilterPills button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".adminClientCardsGrid .adminClientCard[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".adminClientWorkspaceCrmPage")).toBeVisible();
+  await expect(page.locator(".adminClientTabsCrm button[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".adminUsersFilterPills button",
     ".adminClientCard",
@@ -111,6 +114,7 @@ test("admin visual audit covers CRM and program internals harness", async ({ pag
   await expect(page.getByTestId("admin-programs-harness")).toBeVisible();
   await expect(page.locator(".programsCompactHeader h1")).toBeVisible();
   await expect(page.locator(".programsOverviewCard")).toHaveCount(3);
+  await expect(page.locator(".programsOverviewCard[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".adminFixedMainBack",
     ".programsOverviewCard"

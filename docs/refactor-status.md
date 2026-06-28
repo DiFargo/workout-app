@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.349`.
+Last updated at app version `v.1.350`.
 
 ## Stable Now
 
@@ -85,6 +85,7 @@ Last updated at app version `v.1.349`.
 - Trainer client photo view tabs expose selected `aria-pressed` state under trainer workspace and visual audits.
 - Trainer nutrition diary day buttons expose selected `aria-pressed` state under trainer workspace and visual audits.
 - Trainer progress chart periods and exercise progress filters expose selected `aria-pressed` state under trainer workspace and visual audits.
+- Admin harness filter pills, client cards, workspace tabs and program cards expose selected `aria-pressed` state under the admin visual audit.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape

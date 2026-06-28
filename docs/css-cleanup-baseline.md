@@ -237,3 +237,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.348`: `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.349`: strengthened trainer progress chart periods and exercise progress filters with selected `aria-pressed` state.
 - Verification for `v.1.349`: `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.350`: strengthened admin harness filter pills, client cards, workspace tabs and program cards with selected `aria-pressed` state.
+- Verification for `v.1.350`: `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

@@ -53,7 +53,7 @@ function AdminUsersHarnessSurface({ onAction }) {
 
         <section className="adminUsersFilterPills" aria-label="Client filter">
           {["All", "Active", "Attention"].map((label, index) => (
-            <button key={label} type="button" className={index === 0 ? "active" : ""}>
+            <button key={label} type="button" className={index === 0 ? "active" : ""} aria-pressed={index === 0}>
               {label}
             </button>
           ))}
@@ -81,6 +81,7 @@ function AdminUsersHarnessSurface({ onAction }) {
                   key={client.id}
                   type="button"
                   className={selectedId === client.id ? "adminClientCard adminClientCardRect adminClientCardWide active" : "adminClientCard adminClientCardRect adminClientCardWide"}
+                  aria-pressed={selectedId === client.id}
                   onClick={() => setSelectedId(client.id)}
                 >
                   <span className="adminClientAvatar">HC</span>
@@ -140,7 +141,7 @@ function AdminUsersHarnessSurface({ onAction }) {
 
           <nav className="adminClientTabsCrm" aria-label="Client workspace tabs">
             {["Overview", "Training", "Nutrition", "Telegram"].map((label, index) => (
-              <button key={label} type="button" className={index === 0 ? "active" : ""}>{label}</button>
+              <button key={label} type="button" className={index === 0 ? "active" : ""} aria-pressed={index === 0}>{label}</button>
             ))}
           </nav>
 
@@ -173,6 +174,7 @@ function AdminProgramsHarnessSurface({ onAction }) {
               key={name}
               type="button"
               className={index === 0 ? "programsOverviewCard selected" : "programsOverviewCard"}
+              aria-pressed={index === 0}
               onClick={() => onAction(`program:${name}`)}
             >
               <div className="programsOverviewCardTitle">
