@@ -74,6 +74,7 @@ export default function TrainerClientCalendarNutritionTab({
               key={day.id}
               type="button"
               className={adminCalendarDraft.trainingDays?.includes(day.id) ? "active" : ""}
+              aria-pressed={adminCalendarDraft.trainingDays?.includes(day.id)}
               onClick={() => toggleAdminCalendarDay(day.id)}
             >
               <strong>{day.title}</strong>
@@ -130,6 +131,7 @@ export default function TrainerClientCalendarNutritionTab({
                   <button
                     type="button"
                     className={daySettings.hourReminderEnabled === true ? "adminCalendarHourReminder active" : "adminCalendarHourReminder"}
+                    aria-pressed={daySettings.hourReminderEnabled === true}
                     onClick={() => updateAdminCalendarDaySetting(dayId, "hourReminderEnabled", daySettings.hourReminderEnabled !== true)}
                   >
                     <span>Напомнить за час</span>
@@ -147,6 +149,7 @@ export default function TrainerClientCalendarNutritionTab({
           <button
             type="button"
             className={adminCalendarDraft.enabled !== false ? "active" : ""}
+            aria-pressed={adminCalendarDraft.enabled !== false}
             onClick={() => setAdminCalendarDraft((prev) => ({ ...prev, enabled: prev.enabled === false }))}
           >
             {adminCalendarDraft.enabled !== false ? "Напоминания вкл" : "Напоминания выкл"}
@@ -155,6 +158,7 @@ export default function TrainerClientCalendarNutritionTab({
           <button
             type="button"
             className={adminCalendarDraft.reminderEnabled !== false ? "active" : ""}
+            aria-pressed={adminCalendarDraft.reminderEnabled !== false}
             onClick={() => setAdminCalendarDraft((prev) => ({ ...prev, reminderEnabled: prev.reminderEnabled === false }))}
           >
             {adminCalendarDraft.reminderEnabled !== false ? "" : ""}

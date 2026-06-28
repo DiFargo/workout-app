@@ -181,6 +181,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 84. Client cabinet progress photo compare tabs now expose selected state with `aria-pressed`, guarded by the primary visual audit.
 85. Trainer message list items now expose selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
 86. Trainer notification reminder periods and workout calendar dates now expose selected state with `aria-pressed`, guarded by the trainer workspace audit.
+87. Admin trainer-calendar day, hour-reminder and reminder toggle controls now expose selected state with `aria-pressed`, with the mobile calendar panel clamped against horizontal overflow under the admin visual audit.
 
 ## P1: Next Product Fixes
 

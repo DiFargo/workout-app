@@ -4,10 +4,48 @@ import { failOnRuntimeErrors } from "./runtime-errors.js";
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
     documentWidth: document.documentElement.scrollWidth,
-    viewportWidth: window.innerWidth
+    viewportWidth: window.innerWidth,
+    overflowElements: [...document.querySelectorAll("body *")]
+      .map((node) => {
+        const rect = node.getBoundingClientRect();
+        const style = window.getComputedStyle(node);
+        const parents = [];
+        let parent = node.parentElement;
+        while (parent && parents.length < 4) {
+          const parentRect = parent.getBoundingClientRect();
+          parents.push({
+            tag: parent.tagName.toLowerCase(),
+            className: typeof parent.className === "string" ? parent.className : "",
+            width: Math.round(parentRect.width),
+            left: Math.round(parentRect.left),
+            right: Math.round(parentRect.right)
+          });
+          parent = parent.parentElement;
+        }
+        return {
+          tag: node.tagName.toLowerCase(),
+          className: typeof node.className === "string" ? node.className : "",
+          width: Math.round(rect.width),
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          computedWidth: style.width,
+          maxWidth: style.maxWidth,
+          boxSizing: style.boxSizing,
+          minWidth: style.minWidth,
+          display: style.display,
+          position: style.position,
+          paddingLeft: style.paddingLeft,
+          paddingRight: style.paddingRight,
+          marginLeft: style.marginLeft,
+          marginRight: style.marginRight,
+          parents
+        };
+      })
+      .filter((item) => item.right > window.innerWidth + 1 || item.left < -1 || item.width > window.innerWidth + 1)
+      .slice(0, 8)
   }));
 
-  expect(metrics.documentWidth).toBeLessThanOrEqual(metrics.viewportWidth + 1);
+  expect(metrics.documentWidth, JSON.stringify(metrics.overflowElements, null, 2)).toBeLessThanOrEqual(metrics.viewportWidth + 1);
 }
 
 async function attachScreenshot(page, testInfo, name) {
@@ -126,5 +164,27 @@ test("admin visual audit covers CRM and program internals harness", async ({ pag
   await expect(page.getByTestId("admin-harness-action")).toHaveText("program:Fat Loss");
   await page.locator(".adminFixedMainBack").click();
   await expect(page.getByTestId("admin-harness-action")).toHaveText("programs-back");
+  assertNoRuntimeErrors();
+
+  await page.goto("/?adminHarness=1&adminSurface=calendar");
+  await expect(page.getByTestId("admin-calendar-harness")).toBeVisible();
+  await expect(page.locator(".adminCalendarPanel")).toBeVisible();
+  await expect(page.locator(".adminCalendarDays button[aria-pressed='true']")).toHaveCount(3);
+  await expect(page.locator(".adminCalendarHourReminder[aria-pressed='true']")).toHaveCount(2);
+  await expect(page.locator(".adminCalendarToggles button[aria-pressed='true']")).toHaveCount(2);
+  await expectTapTargets(page, [
+    ".adminCalendarDays button",
+    ".adminCalendarHourReminder",
+    ".adminCalendarToggles button",
+    ".adminCalendarSaveButton",
+    ".adminCalendarTestButton"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "admin-calendar-harness.png");
+
+  await page.locator(".adminCalendarDays button").nth(1).click();
+  await expect(page.getByTestId("admin-calendar-days")).toContainText("tuesday");
+  await page.locator(".adminCalendarSaveButton").click();
+  await expect(page.getByTestId("admin-harness-action")).toHaveText("calendar-save");
   assertNoRuntimeErrors();
 });

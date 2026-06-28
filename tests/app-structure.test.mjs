@@ -471,6 +471,7 @@ test("trainer program editor keeps an explicit back action", async () => {
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([
+    path.normalize("src/components/admin/AdminE2EHarness.jsx"),
     path.normalize("src/components/client/ClientE2EHarness.jsx")
   ]);
   const violations = [];

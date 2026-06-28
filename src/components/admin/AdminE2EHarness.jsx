@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../../styles/admin-internals-lazy.css";
+import TrainerAdminCalendarTab from "../../features/trainer/TrainerAdminCalendarTab";
 import AdminPanelHub from "./AdminPanelHub";
 
 const harnessClients = [
@@ -24,6 +25,28 @@ const harnessClients = [
     calories: 1840
   }
 ];
+
+const adminCalendarDays = [
+  { id: "monday", title: "Пн", full: "Понедельник" },
+  { id: "tuesday", title: "Вт", full: "Вторник" },
+  { id: "wednesday", title: "Ср", full: "Среда" },
+  { id: "thursday", title: "Чт", full: "Четверг" },
+  { id: "friday", title: "Пт", full: "Пятница" },
+  { id: "saturday", title: "Сб", full: "Суббота" },
+  { id: "sunday", title: "Вс", full: "Воскресенье" }
+];
+
+const adminCalendarInitialDraft = {
+  enabled: true,
+  reminderEnabled: true,
+  workoutTime: "13:00",
+  trainingDays: ["monday", "wednesday", "friday"],
+  daySettings: {
+    monday: { workoutTime: "13:00", reminderBefore: "1 день", hourReminderEnabled: true },
+    wednesday: { workoutTime: "18:00", reminderBefore: "2 дня", hourReminderEnabled: false },
+    friday: { workoutTime: "12:30", reminderBefore: "1 день", hourReminderEnabled: true }
+  }
+};
 
 function getAdminHarnessAccess() {
   if (typeof window === "undefined") return true;
@@ -202,6 +225,58 @@ function AdminProgramsHarnessSurface({ onAction }) {
   );
 }
 
+function AdminCalendarHarnessSurface({ onAction }) {
+  const [draft, setDraft] = useState(adminCalendarInitialDraft);
+  const selectedClient = {
+    id: "admin_harness_client_1",
+    name: "Harness Client",
+    telegram: { connected: true }
+  };
+
+  function toggleDay(dayId) {
+    setDraft((current) => {
+      const trainingDays = Array.isArray(current.trainingDays) ? current.trainingDays : [];
+      const nextDays = trainingDays.includes(dayId)
+        ? trainingDays.filter((item) => item !== dayId)
+        : [...trainingDays, dayId];
+
+      return { ...current, trainingDays: nextDays };
+    });
+  }
+
+  function updateDaySetting(dayId, key, value) {
+    setDraft((current) => ({
+      ...current,
+      daySettings: {
+        ...(current.daySettings || {}),
+        [dayId]: {
+          ...(current.daySettings?.[dayId] || {}),
+          [key]: value
+        }
+      }
+    }));
+  }
+
+  return (
+    <main className="adminUsersCrmPage adminHarnessCrmSurface" data-testid="admin-calendar-harness">
+      <TrainerAdminCalendarTab
+        adminCalendarDays={adminCalendarDays}
+        adminCalendarDraft={draft}
+        adminCalendarSaving={false}
+        adminCalendarTesting={false}
+        getClientTelegramProfile={() => ({ connected: true })}
+        saveAdminClientCalendar={() => onAction("calendar-save")}
+        selectedClient={selectedClient}
+        sendAdminTestWorkoutReminder={() => onAction("calendar-test")}
+        setAdminCalendarDraft={setDraft}
+        toggleAdminCalendarDay={toggleDay}
+        updateAdminCalendarDaySetting={updateDaySetting}
+      />
+      <output hidden data-testid="admin-calendar-days">{draft.trainingDays.join(",")}</output>
+    </main>
+  );
+}
+
 export default function AdminE2EHarness() {
   const [lastAction, setLastAction] = useState("idle");
   const canAccessAdmin = getAdminHarnessAccess();
@@ -220,6 +295,15 @@ export default function AdminE2EHarness() {
     return (
       <main data-testid="admin-harness-root">
         <AdminProgramsHarnessSurface onAction={setLastAction} />
+        <output data-testid="admin-harness-action">{lastAction}</output>
+      </main>
+    );
+  }
+
+  if (surface === "calendar") {
+    return (
+      <main data-testid="admin-harness-root">
+        <AdminCalendarHarnessSurface onAction={setLastAction} />
         <output data-testid="admin-harness-action">{lastAction}</output>
       </main>
     );
