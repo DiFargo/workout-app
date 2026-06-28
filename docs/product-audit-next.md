@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.287`.
+Last updated at app version `v.1.288`.
 
 ## Evidence
 
@@ -29,7 +29,8 @@ No horizontal overflow was detected in the harness audit for the checked screens
 The client primary visual audit now attaches screenshots for:
 
 - client main dashboard;
-- client cabinet.
+- client cabinet;
+- cabinet workout history modal.
 
 The admin visual audit now attaches screenshots for:
 
@@ -88,6 +89,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 16. Nutrition CSS cleanup removed an older duplicated product/edit action-bar block after the deeper visual audit covered both surfaces.
 17. Client workout visual coverage now includes the empty assigned plan state for safer workout empty-state CSS cleanup.
 18. Client workout empty-state CSS now has one scoped owner after old global legacy duplicates were removed.
+19. Client cabinet workout history modal now has screenshot coverage, and its delete action keeps a stable 44px tap target.
 
 ## P1: Next Product Fixes
 
@@ -110,7 +112,7 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client main, client cabinet, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
+   - Status: client main, client cabinet, cabinet workout history modal, client nutrition, client workouts, workout empty state, trainer workspace and admin hub screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.

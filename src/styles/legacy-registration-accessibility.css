@@ -1913,7 +1913,7 @@ html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .
 
 .cabinetWorkoutHistoryDelete {
   width: 100%;
-  min-height: 38px;
+  min-height: 44px;
   border: 1px solid rgba(226, 84, 102, 0.28);
   border-radius: 10px;
   background: rgba(226, 84, 102, 0.1);

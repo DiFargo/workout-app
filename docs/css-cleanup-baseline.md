@@ -14,7 +14,7 @@ Current verified budget:
 Covered by Playwright visual audits:
 
 - Client main dashboard: `tests/e2e/client-primary-visual.spec.js`
-- Client cabinet: `tests/e2e/client-primary-visual.spec.js`
+- Client cabinet and cabinet workout history modal: `tests/e2e/client-primary-visual.spec.js`
 - Client nutrition main, food search, food results, product amount screen, product edit sheet, My Database, calendar, diary and analysis modal: `tests/e2e/client-nutrition-visual.spec.js`
 - Client workout cards, swipe, workout mode modal, workout history modal and empty assigned plan state: `tests/e2e/client-workout-visual.spec.js`
 - Trainer dashboard, clients, client card, messages and programs: `tests/e2e/trainer-visual.spec.js`
@@ -48,6 +48,7 @@ Start mapping here before any cleanup:
    - Candidate files: `client-primary-final-lock.css`, `client-render-target-lock.css`, `client-visual-unity-final.css`, `legacy-desktop-cabinet-polish.css`.
    - Started in `v.1.282`: removed one-line core aliases `themes.css` and `client-main.css`; `index.css` now imports `theme.css` and `auth.css` directly.
    - Continued in `v.1.283`: removed core aggregators `layout.css` and `components.css`; `index.css` now imports their base component CSS directly.
+   - Expanded in `v.1.288`: visual coverage now includes the cabinet workout history modal and its compact delete action.
 
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.

@@ -96,5 +96,18 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expectPrimaryChrome(page, "client-harness-cabinet");
   await expectContentAboveBottomNav(page);
   await attachScreenshot(page, testInfo, "client-cabinet.png");
+
+  await page.locator(".cabinetWorkoutHistoryHarnessButton").click();
+  await expect(page.locator(".cabinetWorkoutHistoryModal")).toBeVisible();
+  await expectTapTargets(page, [
+    ".workoutModeModalHeader button",
+    ".cabinetWorkoutHistoryItem > button",
+    ".cabinetWorkoutHistoryDelete"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-cabinet-workout-history-modal.png");
+  await page.locator(".workoutModeModalHeader button").click();
+  await expect(page.locator(".cabinetWorkoutHistoryModal")).toBeHidden();
+
   assertNoRuntimeErrors();
 });

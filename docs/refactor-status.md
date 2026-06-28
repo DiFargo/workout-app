@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.287`.
+Last updated at app version `v.1.288`.
 
 ## Stable Now
 
@@ -22,6 +22,7 @@ Last updated at app version `v.1.287`.
 - Client nutrition CSS cleanup removed an older duplicated product/edit action-bar block; later food search CSS owns those product surfaces.
 - Client workout visual coverage now includes the empty assigned plan state before workout empty-state CSS cleanup.
 - Client workout empty-state styling now has one scoped owner in `client-workout-empty-state.css`; old global legacy duplicates were removed.
+- Client cabinet workout history modal is covered by the primary visual audit, including its compact delete action.
 
 ## Current Build Shape
 
@@ -60,4 +61,4 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd run report:css`: passed.
-- `npm.cmd run test:e2e`: passed, `23` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed, `25` passed and `1` skipped.

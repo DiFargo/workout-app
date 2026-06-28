@@ -4,6 +4,7 @@ import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
+import ProfileWorkoutHistoryModal from "../../features/client/profile/ProfileWorkoutHistoryModal";
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
 import {
   buildNutritionCalendarDays,
@@ -196,8 +197,11 @@ export default function ClientE2EHarness() {
   const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(false);
   const [workoutModeModalOpen, setWorkoutModeModalOpen] = useState(false);
   const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
+  const [cabinetWorkoutHistoryOpen, setCabinetWorkoutHistoryOpen] = useState(false);
+  const [cabinetWorkoutHistoryItemOpen, setCabinetWorkoutHistoryItemOpen] = useState("client_harness_history_1");
   const nutritionPhotoInputRef = useRef(null);
   const nutritionFoodSwipeMoved = useRef(false);
+  const cabinetWorkoutHistoryItemRefs = useRef(new Map());
 
   const nutritionToday = nutrition.days[nutritionDateKey] || { foods: [] };
   const nutritionTotals = getHarnessNutritionTotals(nutritionToday);
@@ -462,6 +466,12 @@ export default function ClientE2EHarness() {
   }
 
   if (page === "cabinet") {
+    const cabinetHistoryItems = harnessHistory.map((item) => ({
+      ...item,
+      workout: item.workoutName,
+      durationSeconds: 2700
+    }));
+
     return renderHarnessChrome("cabinet", "Кабинет", (
       <>
         <p>Профиль, замеры, календарь и история тренировок.</p>
@@ -469,6 +479,28 @@ export default function ClientE2EHarness() {
           <article><strong>88.8 кг</strong><span>Текущий вес</span></article>
           <article><strong>4</strong><span>Тренировки</span></article>
         </div>
+        <button
+          type="button"
+          className="cabinetWorkoutHistoryHarnessButton"
+          onClick={() => setCabinetWorkoutHistoryOpen(true)}
+        >
+          История тренировок
+        </button>
+        <ProfileWorkoutHistoryModal
+          open={cabinetWorkoutHistoryOpen}
+          programScope={{
+            assignedProgramName: "Тестовая программа"
+          }}
+          loading={false}
+          items={cabinetHistoryItems}
+          openItemId={cabinetWorkoutHistoryItemOpen}
+          itemRefs={cabinetWorkoutHistoryItemRefs}
+          deletingId=""
+          getTimestampValue={(value) => value}
+          onClose={() => setCabinetWorkoutHistoryOpen(false)}
+          onToggleItem={(itemId) => setCabinetWorkoutHistoryItemOpen((current) => current === itemId ? "" : itemId)}
+          onRequestDelete={() => {}}
+        />
       </>
     ));
   }
