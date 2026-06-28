@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.292`.
+Last updated at app version `v.1.293`.
 
 ## Evidence
 
@@ -97,6 +97,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 21. Client cabinet nutrition modal now has screenshot coverage, accepts string date keys in nutrition planning helpers, and keeps close/goal/week controls at stable 44px tap targets.
 22. Client cabinet workout calendar modal now has screenshot coverage, and its close/month/edit/save controls keep stable 44px tap targets.
 23. Core CSS cleanup removed four import-only legacy stack aggregators; `index.css` imports the same child files directly and the CSS graph guard was updated.
+24. CSS cleanup removed the remaining import-only light, nutrition and admin stack aggregators from active style entrypoints.
 
 ## P1: Next Product Fixes
 
@@ -117,6 +118,7 @@ Started in `v.1.250`.
    - Status: nutrition cleanup continues under deeper visual coverage; older duplicate product/edit action-bar CSS was removed without blind file deletion.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
    - Status: core legacy stack cleanup continued by removing import-only aggregators after client primary/nutrition/workout visual guards passed.
+   - Status: light, nutrition and admin stack aggregators were also removed after client primary/nutrition, trainer and admin visual guards passed.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
