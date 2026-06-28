@@ -294,6 +294,10 @@ export default function ClientE2EHarness() {
   const [nutritionAmount, setNutritionAmount] = useState("100");
   const [nutritionAmountMode, setNutritionAmountMode] = useState("grams");
   const [nutritionProductUnitMenuOpen, setNutritionProductUnitMenuOpen] = useState(false);
+  const [dishIngredientPickerOpen, setDishIngredientPickerOpen] = useState(false);
+  const [dishIngredientSearch, setDishIngredientSearch] = useState("");
+  const [pendingDishIngredient, setPendingDishIngredient] = useState(null);
+  const [pendingDishIngredientGrams, setPendingDishIngredientGrams] = useState("100");
   const [nutritionPhotoNotFoundOpen, setNutritionPhotoNotFoundOpen] = useState(nutritionPhotoNotFoundParam);
   const [nutritionEditNote, setNutritionEditNote] = useState("");
   const [individualWorkoutIndex, setIndividualWorkoutIndex] = useState(0);
@@ -377,6 +381,55 @@ export default function ClientE2EHarness() {
     setNutritionEditPageOpen(false);
     setNutritionMealMenuOpen(false);
     setNutritionProductUnitMenuOpen(false);
+    setDishIngredientPickerOpen(false);
+    setPendingDishIngredient(null);
+  }
+
+  function openHarnessCustomDish() {
+    const dishId = `harness_dish_${Date.now()}`;
+    setSelectedNutritionFood({
+      id: dishId,
+      foodId: dishId,
+      type: "dish",
+      name: "Harness custom dish",
+      source: "Harness My Database",
+      icon: "🍲",
+      calories: 0,
+      protein: 0,
+      fat: 0,
+      carbs: 0,
+      portion: "100 g",
+      portionAmount: 100,
+      totalWeight: 100,
+      ingredients: []
+    });
+    setNutritionCreateChoiceOpen(false);
+    setNutritionEditPageOpen(true);
+    setDishIngredientPickerOpen(false);
+    setPendingDishIngredient(null);
+    setPendingDishIngredientGrams("100");
+  }
+
+  function addHarnessDishIngredient(food, grams) {
+    setSelectedNutritionFood((current) => {
+      if (!current) return current;
+
+      return {
+        ...current,
+        ingredients: [
+          ...(current.ingredients || []),
+          {
+            id: `harness_ing_${Date.now()}`,
+            name: food.name,
+            icon: food.icon,
+            grams,
+            baseAmount: food.portionAmount || 100,
+            baseCalories: food.calories || 0
+          }
+        ]
+      };
+    });
+    setDishIngredientPickerOpen(false);
   }
 
   function renderBottomBar(firstArg, secondArg = {}) {
@@ -470,7 +523,7 @@ export default function ClientE2EHarness() {
           activeNutritionSearchResultLimit: 8,
           addNutritionFoodFromPicker: openHarnessSelectedFood,
           addNutritionProductManuallyFromPhoto: () => {},
-          addSelectedDishIngredientFromFood: () => {},
+          addSelectedDishIngredientFromFood: addHarnessDishIngredient,
           aiNutritionProfile: { goal: "recomp", activity: "moderate", trainingDays: 3 },
           aiNutritionProfileDraft: { goal: "recomp", activity: "moderate", trainingDays: 3 },
           aiNutritionSavedPlan: null,
@@ -480,15 +533,15 @@ export default function ClientE2EHarness() {
           closeSelectedNutritionFood: closeHarnessSelectedFood,
           confirmNutritionEditPage: () => setNutritionEditPageOpen(false),
           confirmNutritionFoodFromPicker: closeHarnessSelectedFood,
-          createCustomNutritionDish: () => {},
+          createCustomNutritionDish: openHarnessCustomDish,
           createCustomNutritionFood: () => {},
           deleteSelectedNutritionFood: () => {},
           deletingNutritionFoodId: "",
-          dishIngredientExternalFoods: [],
+          dishIngredientExternalFoods: harnessSearchFoods,
           dishIngredientFallbackSuggestions: [],
           dishIngredientLoading: false,
-          dishIngredientPickerOpen: false,
-          dishIngredientSearch: "",
+          dishIngredientPickerOpen,
+          dishIngredientSearch,
           editingNutritionItemId,
           expandedNutritionMeals,
           fatSecretError: "",
@@ -538,13 +591,13 @@ export default function ClientE2EHarness() {
           nutritionUndoDelete: null,
           nutritionWeekDates,
           nutritionZoukExpanded,
-          openDishIngredientPicker: () => {},
+          openDishIngredientPicker: () => setDishIngredientPickerOpen(true),
           openNutritionCalendar: () => setNutritionCalendarOpen(true),
           openNutritionEditPage: () => setNutritionEditPageOpen(true),
           openNutritionFoodEditor: () => {},
           openNutritionPicker: () => setNutritionPickerOpen(true),
-          pendingDishIngredient: null,
-          pendingDishIngredientGrams: "100",
+          pendingDishIngredient,
+          pendingDishIngredientGrams,
           recentNutritionFoods: harnessSearchFoods,
           removeSelectedDishIngredient: () => {},
           renderTrainerMainBottomBar: renderBottomBar,
@@ -556,8 +609,8 @@ export default function ClientE2EHarness() {
           selectNutritionPhotoAiCandidate: () => {},
           selectedNutritionFood,
           setBarcodeScannerOpen: () => {},
-          setDishIngredientPickerOpen: () => {},
-          setDishIngredientSearch: () => {},
+          setDishIngredientPickerOpen,
+          setDishIngredientSearch,
           setEditingNutritionItemId,
           setExpandedNutritionMeals,
           setFatSecretError: () => {},
@@ -580,8 +633,8 @@ export default function ClientE2EHarness() {
           setNutritionSearchResultLimit: ({ limit }) => setNutritionSearchResultLimit(limit),
           setNutritionSearchTab,
           setNutritionZoukExpanded,
-          setPendingDishIngredient: () => {},
-          setPendingDishIngredientGrams: () => {},
+          setPendingDishIngredient,
+          setPendingDishIngredientGrams,
           setSelectedNutritionFood,
           setShowRecentNutritionFoods,
           shiftNutritionCalendarMonth: (offset) => {

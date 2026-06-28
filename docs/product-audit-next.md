@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.302`.
+Last updated at app version `v.1.303`.
 
 ## Evidence
 
@@ -59,6 +59,7 @@ The nutrition visual audit now attaches screenshots for:
 - nutrition analysis modal.
 - AI photo not-found modal.
 - create product/dish choice modal.
+- custom dish editor, ingredient picker and ingredient confirm modal.
 
 The client workout visual audit now attaches screenshots for:
 
@@ -117,6 +118,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 33. Nutrition AI photo not-found modal now has screenshot coverage and lazy-owned CSS.
 34. Mobile login smoke now allows slow cold auth bootstrap runs that can take about 31 seconds in Playwright mobile.
 35. Nutrition create product/dish choice modal now has screenshot coverage and tap-target checks.
+36. Nutrition custom dish ingredient flow now has screenshot coverage from dish editor through ingredient confirmation.
 
 ## P1: Next Product Fixes
 

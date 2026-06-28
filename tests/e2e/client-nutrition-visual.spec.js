@@ -238,3 +238,41 @@ test("client nutrition visual audit covers AI photo not-found modal", async ({ p
 
   assertNoRuntimeErrors();
 });
+
+test("client nutrition visual audit covers custom dish ingredient picker", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1");
+  await page.getByTestId("client-nav-nutrition").click();
+  await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
+
+  await page.locator(".nutritionHeaderIconButton").first().click();
+  await expect(page.locator(".fatFoodSearchScreenPremium")).toBeVisible();
+  await page.locator(".fatSearchCreateAction").click();
+  await expect(page.locator(".nutritionCreateChoiceScreen")).toBeVisible();
+  await page.locator(".nutritionCreateChoiceGrid button").nth(1).click();
+
+  await expect(page.locator(".foodEditPageSheet")).toBeVisible();
+  await expect(page.locator(".dishEditIngredientsBox")).toBeVisible();
+  await expectTapTargets(page, [".dishEditIngredientsHeader button", ".foodEditPageActionBar button"], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-custom-dish-editor.png");
+
+  await page.locator(".dishEditIngredientsHeader button").click();
+  await expect(page.locator(".dishIngredientPickerSheet")).toBeVisible();
+  await expect(page.locator(".dishIngredientResultCard")).not.toHaveCount(0);
+  await expectTapTargets(page, [".dishIngredientPickerHeader button", ".dishIngredientResultCard"], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-dish-ingredient-picker.png");
+
+  await page.locator(".dishIngredientResultCard").first().click();
+  await expect(page.locator(".dishIngredientConfirmCard")).toBeVisible();
+  await expectTapTargets(page, [".dishIngredientConfirmActions button"], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-dish-ingredient-confirm.png");
+
+  await page.locator(".dishIngredientConfirmAdd").click();
+  await expect(page.locator(".dishEditIngredientRow")).toHaveCount(1);
+
+  assertNoRuntimeErrors();
+});
