@@ -75,6 +75,9 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
   await page.getByRole("button", { name: /Germes/ }).first().click();
   await expect(page.getByRole("heading", { name: "Germes" })).toBeVisible();
   await expect(main.locator(".trainerNextClientTabs button")).toHaveCount(7);
+  await expect(page.locator(".trainerNextChartHead button[aria-pressed='true']")).toHaveCount(1);
+  await main.locator(".trainerNextClientTabs button").nth(4).click();
+  await expect(page.locator(".trainerExerciseProgressToolbar button[aria-pressed='true']")).toHaveCount(1);
 
   await main.locator(".trainerNextClientTabs button").nth(1).click();
   await expect(page.locator(".trainerWorkoutScheduleGrid")).toBeVisible();

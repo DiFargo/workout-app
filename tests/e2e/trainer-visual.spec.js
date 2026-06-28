@@ -116,6 +116,9 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   await expect(page.getByRole("heading", { name: "Germes" })).toBeVisible();
   await expect(page.locator(".trainerNextClientTabs button")).toHaveCount(7);
   await expect(page.locator(".trainerNextClientTabs button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".trainerNextChartHead button[aria-pressed='true']")).toHaveCount(1);
+  await page.locator(".trainerNextClientTabs button").nth(4).click();
+  await expect(page.locator(".trainerExerciseProgressToolbar button[aria-pressed='true']")).toHaveCount(1);
   await page.locator(".trainerNextClientTabs button").nth(3).click();
   await expect(page.locator(".trainerClientBodyProgress")).toBeVisible();
   await expect(page.locator(".trainerPhotoViewTabs").first().locator("button[aria-pressed='true']")).toHaveCount(1);

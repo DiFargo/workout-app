@@ -846,7 +846,7 @@ function ProgressChart({ measurements = [] }) {
     <div className="trainerNextProgressChart">
       <div className="trainerNextChartHead">
         <strong>Динамика прогресса</strong>
-        <div>{periods.map((item) => <button type="button" className={item.id === period ? "active" : ""} key={item.id} onClick={() => setPeriod(item.id)}>{item.label}</button>)}</div>
+        <div>{periods.map((item) => <button type="button" className={item.id === period ? "active" : ""} aria-pressed={item.id === period} key={item.id} onClick={() => setPeriod(item.id)}>{item.label}</button>)}</div>
       </div>
       {series.length ? (
         <>
@@ -1968,7 +1968,7 @@ function ClientExerciseProgress({ history = [] }) {
       <p className="trainerExerciseProgressInsight">{exerciseProgressInsight}</p>
       <div className="trainerExerciseProgressToolbar" aria-label="Фильтры прогресса упражнений">
         {exerciseProgressFilters.map((item) => (
-          <button type="button" className={filter === item.id ? "active" : ""} key={item.id} onClick={() => setFilter(item.id)}>
+          <button type="button" className={filter === item.id ? "active" : ""} aria-pressed={filter === item.id} key={item.id} onClick={() => setFilter(item.id)}>
             {item.label}<span>{item.count}</span>
           </button>
         ))}
