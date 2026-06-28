@@ -90,8 +90,11 @@ async function expectNutritionWeekStripReadable(page) {
       const markerRect = day.querySelector("span")?.getBoundingClientRect();
 
       return {
+        dayLeft: Math.round(dayRect.left),
+        dayRight: Math.round(dayRect.right),
         dayTop: Math.round(dayRect.top),
         dayBottom: Math.round(dayRect.bottom),
+        dayWidth: Math.round(dayRect.width),
         labelCenterX: Math.round((labelRect?.left || 0) + (labelRect?.width || 0) / 2),
         labelBottom: Math.round(labelRect?.bottom || 0),
         labelText: day.querySelector("small")?.textContent?.trim() || "",
@@ -105,6 +108,9 @@ async function expectNutritionWeekStripReadable(page) {
     });
 
     return {
+      weekLeft: Math.round(week?.left || 0),
+      weekRight: Math.round(week?.right || 0),
+      weekWidth: Math.round(week?.width || 0),
       weekTop: Math.round(week?.top || 0),
       weekBottom: Math.round(week?.bottom || 0),
       days
@@ -116,12 +122,15 @@ async function expectNutritionWeekStripReadable(page) {
   expect(metrics.days.every((day) => day.ariaLabel.startsWith("Выбрать "))).toBe(true);
   expect(metrics.days.some((day) => day.ariaPressed === "true")).toBe(true);
   for (const day of metrics.days) {
+    expect(day.dayLeft).toBeGreaterThanOrEqual(metrics.weekLeft);
+    expect(day.dayRight).toBeLessThanOrEqual(metrics.weekRight);
     expect(day.dayTop).toBeGreaterThanOrEqual(metrics.weekTop);
     expect(day.dayBottom).toBeLessThanOrEqual(metrics.weekBottom);
+    expect(day.dayWidth).toBeLessThanOrEqual(Math.ceil(metrics.weekWidth / 7));
     expect(day.markerTop - day.labelBottom).toBeGreaterThanOrEqual(4);
     expect(Math.abs(day.markerCenterX - day.labelCenterX)).toBeLessThanOrEqual(1);
-    expect(day.markerWidth).toBeLessThanOrEqual(34);
-    expect(day.markerHeight).toBeLessThanOrEqual(34);
+    expect(day.markerWidth).toBeLessThanOrEqual(28);
+    expect(day.markerHeight).toBeLessThanOrEqual(28);
   }
 }
 

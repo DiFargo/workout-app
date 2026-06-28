@@ -175,6 +175,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 78. Trainer workout day selector now exposes selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
 79. Trainer client photo view tabs now expose selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
 80. Trainer nutrition diary day buttons now expose selected state with `aria-pressed`, guarded by trainer workspace and visual audits.
+81. Client nutrition weekday strip now keeps compact equal mobile cells and bounded markers, guarded by the nutrition visual audit.
 
 ## P1: Next Product Fixes
 

@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.347`.
+Last updated at app version `v.1.348`.
 
 ## Stable Now
 
@@ -42,6 +42,7 @@ Last updated at app version `v.1.347`.
 - Client cabinet progress photos modal is covered by the primary visual audit, including its upload steps and save action.
 - Client cabinet settings, trainer notifications and Telegram management modals are covered by the primary visual audit, including close/action tap targets.
 - Client nutrition visual audit now checks weekday strip geometry and marker sizes so labels cannot crowd day markers.
+- Client nutrition weekday strip keeps compact equal mobile cells and bounded markers under the nutrition visual audit.
 - Client nutrition week labels now use unambiguous two-letter Russian weekdays.
 - Client nutrition weekday cells now lock label and marker centers to prevent mobile header drift.
 - Client nutrition food-search/product polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
