@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.333`.
+Last updated at app version `v.1.334`.
 
 ## Stable Now
 
@@ -69,6 +69,7 @@ Last updated at app version `v.1.333`.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
+- Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
 
 ## Current Build Shape

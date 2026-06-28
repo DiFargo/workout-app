@@ -128,6 +128,7 @@ test("client workout visual audit covers plan cards and workout modals", async (
 
   await page.locator(".workoutModeHeaderButton").click();
   await expect(page.locator(".workoutModeModal")).toBeVisible();
+  await expect(page.locator(".workoutModeModalOptions button[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".workoutModeModalHeader button",
     ".workoutModeOption",

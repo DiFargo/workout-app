@@ -40,6 +40,7 @@ export function WorkoutModePickerDialog({
           <button
             type="button"
             className={workoutModePreference.mode === "basic" ? "active" : ""}
+            aria-pressed={workoutModePreference.mode === "basic"}
             onClick={onOpenBasic}
           >
             <span>Б</span>
@@ -53,6 +54,7 @@ export function WorkoutModePickerDialog({
           <button
             type="button"
             className={workoutModePreference.mode === "individual" ? "active" : ""}
+            aria-pressed={workoutModePreference.mode === "individual"}
             onClick={onOpenIndividual}
           >
             <span>И</span>
