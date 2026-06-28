@@ -3,6 +3,7 @@ import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
+import AiCoachPage from "../../features/client/ai/AiCoachPage";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
@@ -19,6 +20,7 @@ import {
   formatNutritionCalendarMonthLabel,
   shiftNutritionCalendarMonthKey
 } from "../../utils/nutritionCalendar";
+import { buildAiNutritionMonthlyPlan } from "../../utils/aiNutritionPlanBuilder";
 
 const HARNESS_DATE = "2026-06-22";
 
@@ -236,6 +238,7 @@ export default function ClientE2EHarness() {
   const workoutHarnessState = typeof window !== "undefined"
     ? harnessParams.get("clientWorkoutState")
     : "";
+  const harnessPageParam = harnessParams?.get("clientHarnessPage") || "";
   const nutritionPhotoNotFoundParam = harnessParams?.get("clientNutritionPhotoNotFound") === "1";
   const visibleHarnessWorkouts = workoutHarnessState === "empty" ? [] : harnessWorkouts;
 
@@ -261,9 +264,27 @@ export default function ClientE2EHarness() {
     };
   }, []);
 
-  const [page, setPage] = useState(nutritionPhotoNotFoundParam ? "nutrition" : "main");
+  const [page, setPage] = useState(
+    nutritionPhotoNotFoundParam
+      ? "nutrition"
+      : harnessPageParam === "aiCoach"
+        ? "aiCoach"
+        : "main"
+  );
   const [nutritionDateKey, setNutritionDateKey] = useState(HARNESS_DATE);
   const [nutrition] = useState(buildHarnessNutrition);
+  const [selectedAiFeatureId, setSelectedAiFeatureId] = useState("recovery");
+  const [aiNutritionProfileDraft, setAiNutritionProfileDraft] = useState({
+    weight: "88",
+    height: "181",
+    age: "32",
+    sex: "male",
+    goal: "recomp",
+    activity: "moderate",
+    trainingDays: ["mon", "wed", "fri"]
+  });
+  const [aiNutritionSavedPlan, setAiNutritionSavedPlan] = useState(null);
+  const [aiNutritionAdaptedToday, setAiNutritionAdaptedToday] = useState(false);
   const [nutritionPickerOpen, setNutritionPickerOpen] = useState(nutritionPhotoNotFoundParam);
   const [nutritionCalendarOpen, setNutritionCalendarOpen] = useState(false);
   const [nutritionCalendarMonthKey, setNutritionCalendarMonthKey] = useState(HARNESS_DATE.slice(0, 7));
@@ -499,6 +520,33 @@ export default function ClientE2EHarness() {
           onOpenIndividualWorkouts={() => {}}
           openCabinetWorkoutHistory={() => setPage("cabinet")}
           handleWorkoutDraftChoice={() => {}}
+        />
+      </main>
+    );
+  }
+
+  if (page === "aiCoach") {
+    return (
+      <main data-testid="client-harness-ai-coach">
+        <AiCoachPage
+          onGoBack={() => setPage("main")}
+          onOpenProfile={() => setPage("cabinet")}
+          selectedAiFeatureId={selectedAiFeatureId}
+          setSelectedAiFeatureId={setSelectedAiFeatureId}
+          setAiNutritionProfileDraft={setAiNutritionProfileDraft}
+          saveAiNutritionPlan={(profile = aiNutritionProfileDraft) => {
+            setAiNutritionSavedPlan(buildAiNutritionMonthlyPlan(nutrition, profile, harnessHistory));
+          }}
+          resetAiNutritionPlan={() => setAiNutritionSavedPlan(null)}
+          aiNutritionAdaptedToday={aiNutritionAdaptedToday}
+          setAiNutritionAdaptedToday={setAiNutritionAdaptedToday}
+          aiNutritionSavedPlan={aiNutritionSavedPlan}
+          aiNutritionProfile={aiNutritionSavedPlan ? aiNutritionProfileDraft : null}
+          aiNutritionProfileDraft={aiNutritionProfileDraft}
+          nutrition={nutrition}
+          nutritionDateKey={nutritionDateKey}
+          history={harnessHistory}
+          plan={{ workouts: visibleHarnessWorkouts }}
         />
       </main>
     );

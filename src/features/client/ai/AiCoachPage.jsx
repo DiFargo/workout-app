@@ -279,6 +279,7 @@ export default function AiCoachPage({
           <button
             type="button"
             key={feature.id}
+            data-testid={`ai-coach-feature-${feature.id}`}
             className={`aiCoachFeatureCard ${feature.id === activeAiFeature.id ? "active" : ""}`}
             onClick={() => setSelectedAiFeatureId(feature.id)}
           >

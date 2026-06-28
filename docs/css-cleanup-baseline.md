@@ -167,3 +167,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.313`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.314`: moved `legacy-workout-navigation-close-early.css` and `client-workout-set-rows.css` from core `index.css` into the workout lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
 - Verification for `v.1.314`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.315`: added client AI Coach visual audit coverage for overview, AI nutrition onboarding and generated plan states before extracting mixed AI/nutrition/workout CSS, and fixed AI nutrition training-day tap targets.
+- Verification for `v.1.315`: `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

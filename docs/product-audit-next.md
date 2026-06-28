@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.314`.
+Last updated at app version `v.1.315`.
 
 ## Evidence
 
@@ -8,8 +8,9 @@ Last updated at app version `v.1.314`.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd test`: passed with `212` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `31` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed with `33` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `4` passed.
+- `npx.cmd playwright test tests/e2e/client-ai-coach-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
 - `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js`: passed with `4` passed.
@@ -68,6 +69,12 @@ The client workout visual audit now attaches screenshots for:
 - workout mode modal;
 - workout history modal;
 - empty assigned plan state.
+
+The client AI Coach visual audit now attaches screenshots for:
+
+- AI Coach overview;
+- AI nutrition onboarding;
+- generated AI nutrition plan with adapted-day state.
 
 The trainer visual audit now attaches screenshots for:
 
@@ -130,6 +137,8 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 45. Client workout flow late CSS now loads from the workout lazy stack instead of the core app stylesheet.
 46. Client workout run polish and exercise notes CSS now load from the workout lazy stack instead of the core app stylesheet.
 47. Client workout navigation/close and set-row CSS now load from the workout lazy stack instead of the core app stylesheet.
+48. Client AI Coach now has harness visual coverage for overview, AI nutrition onboarding and generated plan states before deeper mixed AI CSS cleanup.
+49. AI nutrition training-day buttons now keep stable mobile tap targets in the AI Coach onboarding state.
 
 ## P1: Next Product Fixes
 
@@ -159,12 +168,13 @@ Started in `v.1.250`.
    - Status: client workout flow late CSS moved behind the workout lazy entrypoint after workout visual guards were stable.
    - Status: client workout run polish and exercise notes CSS moved behind the workout lazy entrypoint under the same guards.
    - Status: client workout navigation/close and set-row CSS moved behind the workout lazy entrypoint under the same guards.
+   - Status: client AI Coach has visual coverage for overview and AI nutrition plan states before extracting the mixed AI/nutrition/workout stylesheet.
    - Status: core legacy stack cleanup continued by removing import-only aggregators after client primary/nutrition/workout visual guards passed.
    - Status: light, nutrition and admin stack aggregators were also removed after client primary/nutrition, trainer and admin visual guards passed.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, cabinet workout calendar modal, cabinet progress photos modal, cabinet settings modal, cabinet trainer notifications modal, cabinet Telegram management modal, client nutrition, client workouts, workout empty state, trainer workspace, admin hub, admin users CRM harness and admin programs overview harness screenshot artifacts are covered.
+   - Status: client main, client cabinet, cabinet workout history modal, cabinet measurements modal, cabinet nutrition modal, cabinet workout calendar modal, cabinet progress photos modal, cabinet settings modal, cabinet trainer notifications modal, cabinet Telegram management modal, client nutrition, client workouts, workout empty state, client AI Coach overview, AI nutrition onboarding, generated AI nutrition plan, trainer workspace, admin hub, admin users CRM harness and admin programs overview harness screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
