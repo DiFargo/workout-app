@@ -1,15 +1,16 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.250`.
+Last updated at app version `v.1.276`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `207` passed.
+- `npm.cmd test`: passed with `212` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `15` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed with `17` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed.
+- `npx.cmd playwright test tests/e2e/trainer-visual.spec.js`: passed with `2` passed.
 - Harness audit covered mobile and desktop variants for:
   - client main;
   - client workouts;
@@ -30,6 +31,14 @@ The nutrition visual audit now attaches screenshots for:
 - diary modal;
 - nutrition analysis modal.
 
+The trainer visual audit now attaches screenshots for:
+
+- trainer dashboard;
+- trainer clients;
+- trainer client card;
+- trainer messages;
+- trainer programs.
+
 ## P0
 
 No current P0 runtime blocker is known after the `v1003` E2E stabilization.
@@ -40,6 +49,8 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 2. Trainer clients, messages and programs screens now expose one primary `h1` in E2E checks.
 3. Client bottom navigation has a stable `client-bottom-nav` test id and `clientBottomNav` class for future audits.
 4. Trainer mobile navigation uses stable semantic test ids for the More drawer and Programs entry.
+5. Trainer workspace has a screenshot-based visual audit for dashboard, clients, messages and programs.
+6. Trainer compact action buttons, message filters and mobile route header buttons keep stable 40px tap targets.
 
 ## P1: Next Product Fixes
 
@@ -61,7 +72,7 @@ Started in `v.1.250`.
 
 2. Add screenshot-based audit for key routes.
    - Current e2e confirms usability, not pixel quality.
-   - Status: client nutrition screenshot artifacts were added first because this is the densest client route.
+   - Status: client nutrition and trainer workspace screenshot artifacts are covered.
 
 3. Consider route-specific CSS loading later.
    - Do this only when a route already owns enough UI and styles to move cleanly.
