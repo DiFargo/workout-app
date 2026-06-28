@@ -184,6 +184,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 87. Admin trainer-calendar day, hour-reminder and reminder toggle controls now expose selected state with `aria-pressed`, with the mobile calendar panel clamped against horizontal overflow under the admin visual audit.
 88. First setup sex, activity and goal choices now expose selected state with `aria-pressed`, guarded by the client primary visual audit.
 89. Profile body metric sex choices now expose selected state with `aria-pressed`, guarded by the client primary visual audit.
+90. Production trainer admin user filters and client cards now expose selected state with `aria-pressed`, guarded by the app structure audit.
 
 ## P1: Next Product Fixes
 

@@ -42,7 +42,9 @@ export default function TrainerAdminUsersClientGrid({
             return (
               <button
                 key={client.id}
+                type="button"
                 className={active ? "adminClientCard adminClientCardRect adminClientCardWide active" : "adminClientCard adminClientCardRect adminClientCardWide"}
+                aria-pressed={active}
                 onClick={() => loadAdminClientOverview(client, true)}
               >
                 <span className="adminClientAvatar">👤</span>

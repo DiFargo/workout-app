@@ -468,6 +468,14 @@ test("trainer program editor keeps an explicit back action", async () => {
   assert.match(managerView, /<TrainerProgramConstructor[\s\S]*?onBack=\{handleMonthProgramBack\}/);
 });
 
+test("trainer admin user selectors expose selected state", async () => {
+  const usersHeader = await readText("src/features/trainer/TrainerAdminUsersListHeader.jsx");
+  const usersGrid = await readText("src/features/trainer/TrainerAdminUsersClientGrid.jsx");
+
+  assert.match(usersHeader, /className=\{adminClientFilter === id \? "active" : ""\}[\s\S]*aria-pressed=\{adminClientFilter === id\}/);
+  assert.match(usersGrid, /className=\{active \? "adminClientCard[\s\S]*aria-pressed=\{active\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

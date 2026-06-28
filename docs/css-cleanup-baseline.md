@@ -251,3 +251,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.355`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.356`: strengthened profile body metric sex choices with selected `aria-pressed` state.
 - Verification for `v.1.356`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.357`: strengthened production trainer admin user filters and client cards with selected `aria-pressed` state.
+- Verification for `v.1.357`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
