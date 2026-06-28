@@ -204,6 +204,7 @@ test("shared React hooks stay in the shared hooks layer", async () => {
 test("application styles use the modular styles entrypoint", async () => {
   const main = await readText("src/main.jsx");
   const indexCss = await readText("src/styles/index.css");
+  const clientWorkoutLazyCss = await readText("src/styles/client-workout-lazy.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
   const appSource = await readText("src/App.jsx");
   const appCore = await readText("src/AppCore.jsx");
@@ -221,6 +222,7 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.doesNotMatch(appSource, /styles\.css/);
   assert.match(appCore, /['"]\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appCore, /['"]\.\/styles\/nutrition-stack\.css['"]/);
+  assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-client-workout-flow-late\.css"/);
   for (const nutritionLazyImport of [
     "./legacy-warm-light-add-food-search-cleanup.css",
     "./client-food-search-final.css",
@@ -290,6 +292,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-trainer-light-workspace.css",
     "./legacy-trainer-light-audit.css",
     "./nutrition-trainer-desktop.css",
+    "./legacy-client-workout-flow-late.css",
     "./legacy-dark-green-food-flow.css",
     "./legacy-warm-light-add-food-search-cleanup.css",
     "./client-food-search-final.css",

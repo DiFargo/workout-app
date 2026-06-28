@@ -161,3 +161,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.310`: client harness/nutrition/primary visual specs, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.311`: extended trainer navigation waits across trainer workspace and trainer visual audits.
 - Verification for `v.1.311`: trainer workspace/visual specs, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.312`: moved `legacy-client-workout-flow-late.css` from core `index.css` into the workout lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.312`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
