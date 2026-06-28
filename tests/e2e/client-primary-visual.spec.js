@@ -229,3 +229,34 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
 
   assertNoRuntimeErrors();
 });
+
+test("client first setup visual audit covers selected choices", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=1");
+  await expect(page.getByTestId("client-harness-first-setup")).toBeAttached();
+  await expect(page.locator(".firstSetupOverlay")).toBeVisible();
+  await expect(page.locator(".firstSetupSexGrid button[aria-pressed='true']")).toHaveCount(1);
+  await expectTapTargets(page, [".firstSetupSexGrid button", ".firstSetupPrimary", ".firstSetupSecondary"]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-first-setup-sex.png");
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=6");
+  await expect(page.getByTestId("client-harness-first-setup")).toBeAttached();
+  await expect(page.locator(".firstSetupOverlay")).toBeVisible();
+  await expect(page.locator(".firstSetupActivityList button[aria-pressed='true']")).toHaveCount(1);
+  await expectTapTargets(page, [".firstSetupActivityList button", ".firstSetupPrimary", ".firstSetupSecondary"]);
+  await expectNoHorizontalOverflow(page);
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=7");
+  await expect(page.getByTestId("client-harness-first-setup")).toBeAttached();
+  await expect(page.locator(".firstSetupOverlay")).toBeVisible();
+  await expect(page.locator(".firstSetupGoalGrid button[aria-pressed='true']")).toHaveCount(1);
+  await expectTapTargets(page, [".firstSetupGoalGrid button", ".firstSetupPrimary", ".firstSetupSecondary"]);
+  await expectNoHorizontalOverflow(page);
+
+  await page.locator(".firstSetupGoalGrid button").first().click();
+  await expect(page.locator(".firstSetupGoalGrid button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".firstSetupGoalGrid button").first()).toHaveAttribute("aria-pressed", "true");
+  assertNoRuntimeErrors();
+});

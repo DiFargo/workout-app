@@ -4,6 +4,7 @@ import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
 import { POST_WORKOUT_FEEDBACK_OPTIONS } from "../../domain/workoutPresentation";
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
+import FirstSetupOnboarding from "../../features/auth/FirstSetupOnboarding";
 import AiCoachPage from "../../features/client/ai/AiCoachPage";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
 import {
@@ -264,6 +265,10 @@ export default function ClientE2EHarness() {
     : "";
   const harnessPageParam = harnessParams?.get("clientHarnessPage") || "";
   const workoutDialogParam = harnessParams?.get("clientWorkoutDialog") || "draft";
+  const firstSetupStepValue = Number(harnessParams?.get("clientFirstSetupStep") || 1);
+  const firstSetupStepParam = Number.isFinite(firstSetupStepValue)
+    ? Math.min(9, Math.max(0, firstSetupStepValue))
+    : 1;
   const nutritionPhotoNotFoundParam = harnessParams?.get("clientNutritionPhotoNotFound") === "1";
   const visibleHarnessWorkouts = workoutHarnessState === "empty" ? [] : harnessWorkouts;
 
@@ -294,10 +299,23 @@ export default function ClientE2EHarness() {
       ? "nutrition"
       : harnessPageParam === "aiCoach"
         ? "aiCoach"
+        : harnessPageParam === "firstSetup"
+          ? "firstSetup"
         : harnessPageParam === "workoutDialogs"
           ? "workoutDialogs"
         : "main"
   );
+  const [firstSetupStep, setFirstSetupStep] = useState(firstSetupStepParam);
+  const [firstSetupProfileDraft, setFirstSetupProfileDraft] = useState({
+    sex: "male",
+    name: "Harness Athlete",
+    age: "32",
+    weight: "88",
+    height: "181",
+    activity: "medium",
+    goal: "recomp",
+    targetWeight: "84"
+  });
   const [nutritionDateKey, setNutritionDateKey] = useState(HARNESS_DATE);
   const [nutrition] = useState(buildHarnessNutrition);
   const [selectedAiFeatureId, setSelectedAiFeatureId] = useState("recovery");
@@ -577,6 +595,23 @@ export default function ClientE2EHarness() {
           options={POST_WORKOUT_FEEDBACK_OPTIONS}
           isSaving={false}
           onSelect={() => {}}
+        />
+      </main>
+    );
+  }
+
+  if (page === "firstSetup") {
+    return (
+      <main data-testid="client-harness-first-setup">
+        <FirstSetupOnboarding
+          open
+          onboardingStep={firstSetupStep}
+          profileDraft={firstSetupProfileDraft}
+          saveStatus=""
+          setOnboardingStep={setFirstSetupStep}
+          setProfileDraft={setFirstSetupProfileDraft}
+          onSubmit={() => {}}
+          onExit={() => {}}
         />
       </main>
     );

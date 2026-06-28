@@ -244,6 +244,7 @@ export default function FirstSetupOnboarding({
               <button
                 type="button"
                 className={profileDraft.sex === "male" ? "active" : ""}
+                aria-pressed={profileDraft.sex === "male"}
                 onClick={() => updateProfileDraft({ sex: "male" })}
               >
                 <span>👨🏻</span>
@@ -253,6 +254,7 @@ export default function FirstSetupOnboarding({
               <button
                 type="button"
                 className={profileDraft.sex === "female" ? "active" : ""}
+                aria-pressed={profileDraft.sex === "female"}
                 onClick={() => updateProfileDraft({ sex: "female" })}
               >
                 <span>👩🏻</span>
@@ -308,6 +310,7 @@ export default function FirstSetupOnboarding({
                   type="button"
                   key={id}
                   className={profileDraft.activity === id ? "active" : ""}
+                  aria-pressed={profileDraft.activity === id}
                   onClick={() => updateProfileDraft({ activity: id })}
                 >
                   <span>{icon}</span>
@@ -326,6 +329,7 @@ export default function FirstSetupOnboarding({
                     type="button"
                     key={id}
                     className={profileDraft.goal === id ? "active" : ""}
+                    aria-pressed={profileDraft.goal === id}
                     onClick={() => updateProfileDraft({ goal: id })}
                   >
                     <span>{icon}</span>

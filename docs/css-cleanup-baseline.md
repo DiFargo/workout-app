@@ -247,3 +247,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.353`: `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.354`: strengthened admin trainer-calendar day, hour-reminder and reminder toggle controls with selected `aria-pressed` state and clamped the mobile calendar panel against horizontal overflow.
 - Verification for `v.1.354`: `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.355`: strengthened first setup sex, activity and goal choices with selected `aria-pressed` state.
+- Verification for `v.1.355`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
