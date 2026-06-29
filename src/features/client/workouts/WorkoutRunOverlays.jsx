@@ -36,6 +36,7 @@ export function WorkoutFullscreenVideoOverlay({ videoSrc, onClose, onVideoError 
       <button
         type="button"
         onClick={onClose}
+        aria-label="Закрыть видео"
         style={{
           position: "absolute",
           top: "20px",

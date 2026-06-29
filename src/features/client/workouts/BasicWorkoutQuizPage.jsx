@@ -21,7 +21,7 @@ export default function BasicWorkoutQuizPage({
   return (
     <div className="basicQuizPage">
       <div className="appVersionBadge clientPageVersionBadge">{appVersion}</div>
-      <button className="workoutModeBack" type="button" onClick={onGoBackToMode}>
+      <button className="workoutModeBack" type="button" onClick={onGoBackToMode} aria-label="Назад к выбору режима">
         ←
       </button>
 

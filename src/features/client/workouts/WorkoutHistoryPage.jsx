@@ -50,7 +50,7 @@ export default function WorkoutHistoryPage({
           <p>{historyItems.length ? `Последняя: ${formatHistoryCardDate(latestHistoryWorkout?.date, true)}` : "Сохраняй тренировки — здесь будет прогресс."}</p>
         </div>
 
-        <button className="historyRefreshBtn historyCompactRefresh" type="button" onClick={loadHistory}>
+        <button className="historyRefreshBtn historyCompactRefresh" type="button" onClick={loadHistory} aria-label="Обновить историю тренировок">
           🔄
         </button>
       </section>

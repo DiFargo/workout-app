@@ -589,6 +589,22 @@ test("all JSX buttons declare an explicit type", async () => {
   assert.deepEqual(missingTypeButtons, []);
 });
 
+test("client icon-only actions expose accessible labels", async () => {
+  const aiCoach = await readText("src/features/client/ai/AiCoachPage.jsx");
+  const basicQuiz = await readText("src/features/client/workouts/BasicWorkoutQuizPage.jsx");
+  const workoutMode = await readText("src/features/client/workouts/WorkoutModePage.jsx");
+  const historyPage = await readText("src/features/client/workouts/WorkoutHistoryPage.jsx");
+  const runOverlays = await readText("src/features/client/workouts/WorkoutRunOverlays.jsx");
+  const dishPicker = await readText("src/features/client/nutrition/DishIngredientPicker.jsx");
+
+  assert.match(aiCoach, /aiCoachBackBtn" type="button"[\s\S]*aria-label="Назад"/);
+  assert.match(basicQuiz, /className="workoutModeBack" type="button"[\s\S]*aria-label="Назад к выбору режима"/);
+  assert.match(workoutMode, /className="workoutModeBack" type="button"[\s\S]*aria-label="Назад на главную"/);
+  assert.match(historyPage, /historyCompactRefresh" type="button"[\s\S]*aria-label="Обновить историю тренировок"/);
+  assert.match(runOverlays, /type="button"[\s\S]*onClick=\{onClose\}[\s\S]*aria-label="Закрыть видео"/);
+  assert.match(dishPicker, /type="button" onClick=\{onClose\} aria-label="Закрыть выбор ингредиента"/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

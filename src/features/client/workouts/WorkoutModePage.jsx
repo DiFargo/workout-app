@@ -17,7 +17,7 @@ export default function WorkoutModePage({
   return (
     <div className="workoutModePage">
       <div className="appVersionBadge clientPageVersionBadge">{appVersion}</div>
-      <button className="workoutModeBack" type="button" onClick={onBackToMain}>
+      <button className="workoutModeBack" type="button" onClick={onBackToMain} aria-label="Назад на главную">
         ←
       </button>
 

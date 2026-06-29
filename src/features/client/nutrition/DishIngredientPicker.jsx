@@ -101,7 +101,7 @@ export default function DishIngredientPicker({
         <div className="dishIngredientPickerOverlay" onClick={onClose}>
           <div className="dishIngredientPickerSheet" tabIndex={-1} onClick={(event) => event.stopPropagation()}>
             <div className="dishIngredientPickerHeader">
-              <button type="button" onClick={onClose}>×</button>
+              <button type="button" onClick={onClose} aria-label="Закрыть выбор ингредиента">×</button>
               <strong>Добавить ингредиент</strong>
             </div>
 

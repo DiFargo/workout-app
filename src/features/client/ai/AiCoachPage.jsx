@@ -43,7 +43,7 @@ export default function AiCoachPage({
 
   return (
     <div className="aiCoachPage">
-      <button className="backBtn universalFixedBackPointer aiCoachBackBtn" type="button" onClick={onGoBack}>←</button>
+      <button className="backBtn universalFixedBackPointer aiCoachBackBtn" type="button" onClick={onGoBack} aria-label="Назад">←</button>
 
       <section className="aiCoachHero">
         <div className="aiCoachBadge">AI ASSISTANT CORE</div>
