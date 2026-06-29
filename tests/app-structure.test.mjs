@@ -583,6 +583,15 @@ test("legacy food search CSS keeps quick actions hidden in root owners", async (
   );
 });
 
+test("nutrition food search actions CSS keeps one photo active transform owner", async () => {
+  const source = await readText("src/styles/nutrition-food-search-actions.css");
+
+  assert.equal(
+    (source.match(/\.fatSearchBottomBarFive \.fatSearchPhotoAction:active\s*\{\s*transform:\s*translateX\(-50%\) scale\(0\.97\) !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
   const source = await readText("src/styles/legacy-admin-shell-crm-app46.css");
 

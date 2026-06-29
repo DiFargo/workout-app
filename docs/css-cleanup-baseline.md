@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1195.58 KiB` raw, `117.97 KiB` gzip.
-- Latest source CSS report: `100` files, about `3499.57 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3499.45 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -361,3 +361,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.410`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.411`: removed duplicate narrow-media quick-action hide rules from legacy food search CSS; root hide owners remain.
 - Verification for `v.1.411`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.412`: removed the duplicate narrow-media food-search photo active transform; the root bottom-bar owner remains.
+- Verification for `v.1.412`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

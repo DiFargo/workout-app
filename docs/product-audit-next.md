@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.411`.
+Last updated at app version `v.1.412`.
 
 ## Evidence
 
@@ -240,6 +240,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 135. Client food search final CSS now keeps product hero spacing and narrow mobile x-locks in their latest owners.
 136. Admin calendar reminders CSS now keeps fixed back-label visibility in one root owner instead of repeating it in desktop media.
 137. Legacy food search CSS now keeps hidden quick-action ownership in root rules instead of repeating the same hide rules inside narrow media blocks.
+138. Nutrition food-search bottom bar CSS now keeps the photo active transform in one root owner instead of repeating it in narrow media.
 
 ## P1: Next Product Fixes
 
