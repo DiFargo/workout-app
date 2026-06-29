@@ -573,6 +573,15 @@ test("admin CRM CSS keeps client card grid breakpoints in the latest owner", asy
   assert.match(source, /@media\s*\(max-width:\s*1120px\)[\s\S]*?\.adminClientCardsGridFive\s*\{\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\) !important;/);
 });
 
+test("admin calendar reminders CSS keeps one fixed back label visibility owner", async () => {
+  const source = await readText("src/styles/legacy-admin-calendar-reminders-late.css");
+
+  assert.equal(
+    (source.match(/\.adminFixedMainBack b\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("nutrition calendar CSS keeps final size and label color locks in the final owner", async () => {
   const source = await readText("src/styles/legacy-history-ai-search-late.css");
   const premiumCalendarStart = source.indexOf("/* PREMIUM NUTRITION CALENDAR */");

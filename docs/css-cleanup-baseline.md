@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1195.58 KiB` raw, `117.97 KiB` gzip.
-- Latest source CSS report: `100` files, about `3499.85 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3499.78 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -357,3 +357,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.408`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.409`: removed stale early product hero spacing and narrow mobile x-locks from `client-food-search-final.css`; the later owners remain.
 - Verification for `v.1.409`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.410`: removed the duplicate desktop media fixed back-label visibility lock from `legacy-admin-calendar-reminders-late.css`; the root owner remains.
+- Verification for `v.1.410`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
