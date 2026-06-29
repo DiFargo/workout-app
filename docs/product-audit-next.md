@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.476`.
+Last updated at app version `v.1.477`.
 
 ## Evidence
 
@@ -305,6 +305,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 200. Client primary final CSS now keeps food edit product compact header rules in guarded root owners.
 201. Client primary final CSS now keeps profile AI hero pseudo-element hide rules in one guarded root owner.
 202. Client primary final CSS now keeps profile AI stats row spacing rules in one guarded owner.
+203. Client primary final CSS now keeps profile refresh button positioning rules in one guarded owner.
 
 ## P1: Next Product Fixes
 

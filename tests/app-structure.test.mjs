@@ -772,6 +772,10 @@ test("client primary final CSS keeps header action sizing in the final owner", a
   const source = await readText("src/styles/client-primary-final-lock.css");
 
   assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn\s*\{\s*position:\s*absolute !important;\s*top:\s*var\(--client-top\) !important;\s*right:\s*var\(--client-x\) !important;\s*z-index:\s*35 !important;\s*margin:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileTrainerNotificationsButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeaderIconButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutHeaderActions button\s*\{\s*width:\s*52px !important;\s*min-width:\s*52px !important;\s*max-width:\s*52px !important;\s*height:\s*52px !important;\s*min-height:\s*52px !important;\s*max-height:\s*52px !important;\s*border-radius:\s*18px !important;/g) || []).length,
     1
   );

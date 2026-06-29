@@ -4697,14 +4697,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     transform: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
-    position: absolute !important;
-    top: var(--client-top) !important;
-    right: var(--client-x) !important;
-    z-index: 35 !important;
-    margin: 0 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileCabinetSection,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetSection {
     width: 100% !important;
