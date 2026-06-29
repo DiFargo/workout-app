@@ -5,7 +5,7 @@ export function WorkoutExitDialog({ open, onStay, onLeave }) {
 
   return (
     <div className="workoutExitOverlay">
-      <div className="workoutExitCard" role="dialog" aria-modal="true">
+      <div className="workoutExitCard" role="dialog" aria-modal="true" aria-label="Выход из тренировки">
         <span className="workoutExitIcon" aria-hidden="true">↩</span>
         <h2>Выйти из тренировки?</h2>
         <p>Введённые данные сохранены в черновике. Ты сможешь продолжить позже.</p>

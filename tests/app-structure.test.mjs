@@ -727,6 +727,27 @@ test("admin and access denied navigation buttons declare button type", async () 
   assert.match(trainerWorkoutsRoute, /<button className="backBtn" type="button"[\s\S]*setPage\(APP_PAGES\.MAIN\)/);
 });
 
+test("modal dialogs expose modal semantics and readable names", async () => {
+  const sourceFiles = await collectFiles("src", [".js", ".jsx"]);
+  const unnamedDialogs = [];
+
+  for (const file of sourceFiles) {
+    const source = await readText(file);
+
+    for (const match of source.matchAll(/<[^>]+role=["']dialog["'][^>]*>/g)) {
+      const tag = match[0];
+      const hasModal = /aria-modal\s*=/.test(tag);
+      const hasName = /aria-label\s*=|aria-labelledby\s*=/.test(tag);
+      if (!hasModal || !hasName) {
+        const line = source.slice(0, match.index).split(/\r?\n/).length;
+        unnamedDialogs.push(`${file}:${line}`);
+      }
+    }
+  }
+
+  assert.deepEqual(unnamedDialogs, []);
+});
+
 test("all JSX buttons declare an explicit type", async () => {
   const jsxFiles = await collectFiles("src", [".jsx"]);
   const missingTypeButtons = [];

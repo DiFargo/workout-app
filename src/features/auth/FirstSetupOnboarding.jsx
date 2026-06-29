@@ -409,7 +409,7 @@ export default function FirstSetupOnboarding({
         </div>
 
         {exitConfirmOpen && (
-          <div className="firstSetupExitConfirm" role="dialog" aria-modal="true">
+          <div className="firstSetupExitConfirm" role="dialog" aria-modal="true" aria-label="Выход из опросника">
             <div className="firstSetupExitConfirmCard">
               <h3>Выйти из опросника?</h3>
               <p>Данные этого шага не сохранятся. Ты вернёшься на экран авторизации.</p>

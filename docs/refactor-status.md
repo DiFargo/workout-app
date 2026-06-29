@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.396`.
+Last updated at app version `v.1.397`.
 
 ## Stable Now
 
@@ -80,6 +80,7 @@ Last updated at app version `v.1.396`.
 - Client cabinet progress photo compare selectors expose readable labels under the primary visual audit.
 - Legacy trainer workspace bottom navigation exposes active-page `aria-current` state.
 - Trainer transfer, program assignment, nutrition preset, workout status and overview modal selectors expose readable labels under the app structure audit.
+- Modal dialogs now have a structure guard requiring `aria-modal` plus a readable `aria-label` or `aria-labelledby`.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
@@ -138,7 +139,7 @@ Last updated at app version `v.1.396`.
 
 From the latest verified build:
 
-- main app JS chunk: about `472.14 KiB` raw, `131.40 KiB` gzip.
+- main app JS chunk: about `472.18 KiB` raw, `131.40 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1197.05 KiB` raw, `118.05 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.

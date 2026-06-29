@@ -393,7 +393,7 @@ function TrainerAvatar({ client, size = "medium" }) {
 
 function TrainerConfirmDialog({ title, text, confirmLabel = "Удалить", onConfirm, onCancel }) {
   return (
-    <div className="trainerConfirmBackdrop" role="dialog" aria-modal="true" onMouseDown={(event) => {
+    <div className="trainerConfirmBackdrop" role="dialog" aria-modal="true" aria-label={title || "Подтверждение действия"} onMouseDown={(event) => {
       if (event.target === event.currentTarget) onCancel?.();
     }}>
       <section className="trainerConfirmDialog">
@@ -1186,7 +1186,7 @@ function ClientPhotos({ photos }) {
       </div>
 
       {activePhoto ? (
-        <div className="trainerClientModalBackdrop" role="dialog" aria-modal="true" onClick={() => setOpenPhotoId("")}>
+        <div className="trainerClientModalBackdrop" role="dialog" aria-modal="true" aria-label="Просмотр фото клиента" onClick={() => setOpenPhotoId("")}>
           <section className="trainerPhotoPreviewModal" onClick={(event) => event.stopPropagation()}>
             <header>
               <div><span>ФОТО КЛИЕНТА</span><h2>{formatCompactDate(activePhoto.date || activePhoto.createdAt)}</h2></div>
@@ -1885,7 +1885,7 @@ function ClientWorkoutPlan({
       </div>
 
       {editorOpen ? (
-        <div className="trainerClientModalBackdrop trainerWorkoutEditorModalBackdrop" role="dialog" aria-modal="true" onClick={() => setEditorOpen(false)}>
+        <div className="trainerClientModalBackdrop trainerWorkoutEditorModalBackdrop" role="dialog" aria-modal="true" aria-label="Редактор программы клиента" onClick={() => setEditorOpen(false)}>
           <section className="trainerWorkoutEditorModal" onClick={(event) => event.stopPropagation()}>
             <header>
               <div>
@@ -2928,7 +2928,7 @@ function TrainerClientDetail({
       {activeTab === "notes" ? <ClientNotes note={note} tasks={tasks} history={history} /> : null}
 
       {messageOpen ? (
-        <div className="trainerClientModalBackdrop" role="dialog" aria-modal="true">
+        <div className="trainerClientModalBackdrop" role="dialog" aria-modal="true" aria-label="Сообщение клиенту">
           <section className="trainerClientMessageModal">
             <header>
               <div><span>СООБЩЕНИЕ КЛИЕНТУ</span><h2>{name}</h2></div>
@@ -2946,7 +2946,7 @@ function TrainerClientDetail({
       ) : null}
 
       {actionsOpen ? (
-        <div className="trainerClientModalBackdrop" role="dialog" aria-modal="true">
+        <div className="trainerClientModalBackdrop" role="dialog" aria-modal="true" aria-label="Управление клиентом">
           <section className="trainerClientActionSheet">
             <header>
               <div><span>УПРАВЛЕНИЕ КЛИЕНТОМ</span><h2>{name}</h2></div>
