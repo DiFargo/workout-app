@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.405`.
+Last updated at app version `v.1.406`.
 
 ## Evidence
 
@@ -234,6 +234,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 129. Legacy nutrition header CSS now keeps one compact page padding owner instead of repeating the same mobile page padding across narrower breakpoints.
 130. Admin CRM CSS no longer keeps older duplicate client card grid breakpoints; the later workspace breakpoint owner remains guarded.
 131. Client food search final CSS now keeps one compact product meal-header width owner instead of repeating the same non-`:has()` mobile lock.
+132. Client food search final CSS now keeps one compact product title font-size owner instead of repeating the same non-`:has()` mobile lock.
 
 ## P1: Next Product Fixes
 

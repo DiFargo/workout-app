@@ -506,6 +506,15 @@ test("client food search final CSS keeps one compact meal header width owner", a
   assert.equal(nonHasMealHeaderCompactLocks.length, 1);
 });
 
+test("client food search final CSS keeps one compact product title owner", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+  const nonHasProductTitleCompactLocks = source.match(
+    /body #root \.fatFoodSearchOverlay \.foodProductRenderScreen \.foodProductFlowTitle h2\s*\{\s*font-size:\s*25px !important;\s*\}/g
+  ) || [];
+
+  assert.equal(nonHasProductTitleCompactLocks.length, 1);
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 
