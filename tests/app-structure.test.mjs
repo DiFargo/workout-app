@@ -784,6 +784,19 @@ test("client primary final CSS keeps header action layout in the final owner", a
   );
 });
 
+test("client primary final CSS keeps workout mobile hero and actions in one owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.workoutSelectHero\s*\{\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.workoutHeaderActions\s*\{\s*top:\s*0 !important;\s*right:\s*0 !important;\s*height:\s*52px !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps client page variables in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 

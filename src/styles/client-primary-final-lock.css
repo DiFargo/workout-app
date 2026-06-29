@@ -1009,17 +1009,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     padding-top: 0 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero {
-    display: flex !important;
-    align-items: center !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutHeaderActions {
-    top: 0 !important;
-    right: 0 !important;
-    height: 52px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNextBadge,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutWeek {
     min-width: 0 !important;
