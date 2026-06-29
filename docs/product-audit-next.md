@@ -196,6 +196,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 99. Production trainer program overview cards now expose selected state with `aria-pressed`, guarded by the app structure audit.
 100. Trainer mobile overflow navigation items now expose current-page state with `aria-current`, guarded by the app structure audit.
 101. Trainer workouts page active program tab now exposes selected state with `aria-pressed`, guarded by the app structure audit.
+102. Legacy trainer/admin action buttons now declare `type="button"` explicitly, guarded by the app structure audit.
 
 ## P1: Next Product Fixes
 

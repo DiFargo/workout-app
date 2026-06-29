@@ -541,6 +541,25 @@ test("trainer workouts page program tab exposes selected state", async () => {
   assert.match(workoutsRoute, /<button type="button" className="active" aria-pressed="true">[\s\S]*?<\/button>[\s\S]*openTrainerExerciseLibrary/);
 });
 
+test("legacy trainer admin action buttons declare button type", async () => {
+  const dangerZone = await readText("src/features/trainer/TrainerAdminDangerZone.jsx");
+  const notesTab = await readText("src/features/trainer/TrainerAdminNotesTab.jsx");
+  const programTab = await readText("src/features/trainer/TrainerAdminProgramTab.jsx");
+  const dashboardGrid = await readText("src/features/trainer/TrainerDashboardGrid.jsx");
+  const trainingTab = await readText("src/features/trainer/TrainerClientTrainingTab.jsx");
+
+  assert.match(dangerZone, /<button className="danger" type="button"[\s\S]*onDeleteClient/);
+  assert.match(notesTab, /<button className="adminV3OpenEditor" type="button"[\s\S]*saveAdminTrainerNote/);
+  assert.match(programTab, /<button type="button" onClick=\{createAdminTemplateFromCurrentPlan\}/);
+  assert.match(programTab, /<button type="button" onClick=\{\(\) => selectedClient && assignAdminTemplateToClient\(selectedClient\.id\)\}/);
+  assert.match(programTab, /<button type="button" onClick=\{\(\) => selectedClient && clearClientProgram\(selectedClient\.id\)\}/);
+  assert.match(programTab, /<button type="button" onClick=\{copyCurrentProgramToClient\}/);
+  assert.match(programTab, /<button className="adminV3OpenEditor" type="button"[\s\S]*onOpenDesktopEditor/);
+  assert.match(dashboardGrid, /<button type="button" onClick=\{\(\) => setPage\(APP_PAGES\.ADMIN_USERS\)\}/);
+  assert.match(trainingTab, /<button type="button" onClick=\{\(\) => \{[\s\S]*setPage\(trainerWorkoutsPage\)/);
+  assert.match(trainingTab, /<button type="button" onClick=\{\(\) => assignSavedProgramToClient\(selectedClient\.id\)\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

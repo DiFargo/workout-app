@@ -19,7 +19,7 @@ export default function TrainerDashboardGrid({
             <h2>Клиенты</h2>
             <p>Выбери клиента, чтобы открыть workspace.</p>
           </div>
-          <button onClick={() => setPage(APP_PAGES.ADMIN_USERS)}>Создать</button>
+          <button type="button" onClick={() => setPage(APP_PAGES.ADMIN_USERS)}>Создать</button>
         </div>
 
         <div className="adminV3ClientTable">

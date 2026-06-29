@@ -88,7 +88,7 @@ export default function TrainerClientTrainingTab({
               <p>Выбери готовую программу из библиотеки и назначь её клиенту.</p>
             </div>
 
-            <button onClick={() => {
+            <button type="button" onClick={() => {
               setSelectedUserId(selectedClient.id);
               loadWorkoutsFromFirebase(selectedClient.id);
               setPage(trainerWorkoutsPage);
@@ -140,7 +140,7 @@ export default function TrainerClientTrainingTab({
             </select>
 
             <div className="adminVisibleAssignActions">
-              <button onClick={() => assignSavedProgramToClient(selectedClient.id)}>
+              <button type="button" onClick={() => assignSavedProgramToClient(selectedClient.id)}>
                 Назначить программу
               </button>
 
