@@ -1252,15 +1252,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
       linear-gradient(180deg, #fbfbff 0%, #f6f7fc 100%) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero {
-    height: var(--client-page-title-height) !important;
-    min-height: var(--client-page-title-height) !important;
-    margin: var(--client-page-title-top) 0 14px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle {
     width: calc(100% - 118px) !important;
     max-width: calc(100% - 118px) !important;
