@@ -404,14 +404,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     border-radius: 14px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodSearchFixedPhotoAction {
-    left: var(--client-x) !important;
-    right: var(--client-x) !important;
-    bottom: calc(102px + env(safe-area-inset-bottom)) !important;
-    min-height: 76px !important;
-    border-radius: 18px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductFlowHeader {
     min-height: 128px !important;
     margin: 0 0 16px !important;

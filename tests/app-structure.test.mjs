@@ -524,6 +524,15 @@ test("client primary final CSS keeps food editor header layout in the final owne
   );
 });
 
+test("client primary final CSS keeps fixed photo action spacing in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.foodSearchFixedPhotoAction\s*\{\s*left:\s*var\(--client-x\) !important;\s*right:\s*var\(--client-x\) !important;\s*bottom:\s*calc\(102px \+ env\(safe-area-inset-bottom\)\) !important;\s*min-height:\s*76px !important;\s*border-radius:\s*18px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps main AI stats row in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
