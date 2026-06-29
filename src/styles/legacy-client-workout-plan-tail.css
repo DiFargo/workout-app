@@ -524,9 +524,6 @@
     letter-spacing: -0.72px !important;
   }
 
-  .nutritionCaloriesRenderCol strong {
-    font-size: 31px !important;
-  }
 }
 
 @media (max-width: 360px) {
@@ -542,9 +539,6 @@
     letter-spacing: -0.75px !important;
   }
 
-  .nutritionCaloriesRenderCol strong {
-    font-size: 29px !important;
-  }
 }
 
 /* =========================================================

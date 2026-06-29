@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1194.98 KiB` raw, `117.93 KiB` gzip.
-- Latest source CSS report: `100` files, about `3497.23 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3497.08 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -381,3 +381,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.420`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.421`: removed the older compact meal `fatPlusBtn` 24px duplicate from `legacy-nutrition-late-layout.css`; the later lower-height owner remains guarded.
 - Verification for `v.1.421`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.422`: removed early narrow calorie-number size duplicates from `legacy-client-workout-plan-tail.css`; the later compact-height owner remains guarded.
+- Verification for `v.1.422`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

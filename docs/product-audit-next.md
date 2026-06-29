@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.421`.
+Last updated at app version `v.1.422`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `267` passed.
+- `npm.cmd test`: passed with `268` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -250,6 +250,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 145. Nutrition calendar CSS now keeps compact grid gap and day-number size in the final compact owner instead of repeating them in the early narrow block.
 146. Nutrition late layout CSS no longer keeps no-op mobile duplicates for quick actions, meal card radius, meal kcal size, adjacent meal gap and expanded product-list bottom margin.
 147. Nutrition late layout CSS no longer keeps the older compact meal `fatPlusBtn` 24px duplicate before the later lower-height owner.
+148. Nutrition calories tail CSS now keeps compact number sizing in the later compact-height owner instead of repeating it in earlier narrow blocks.
 
 ## P1: Next Product Fixes
 

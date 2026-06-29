@@ -630,6 +630,33 @@ test("legacy food search calories CSS keeps compact dots in the latest mobile ow
   );
 });
 
+test("legacy client workout plan tail CSS keeps calorie number sizing in compact height owner", async () => {
+  const source = await readText("src/styles/legacy-client-workout-plan-tail.css");
+  const finalCleanStart = source.indexOf("CALORIES CARD FINAL CLEAN COPY TUNE");
+  const compactHeightStart = source.indexOf("CALORIES CARD COMPACT HEIGHT", finalCleanStart);
+  const extraCompactStart = source.indexOf("EXTRA COMPACT CALORIES CARD", compactHeightStart);
+
+  assert.ok(finalCleanStart >= 0);
+  assert.ok(compactHeightStart > finalCleanStart);
+  assert.ok(extraCompactStart > compactHeightStart);
+
+  const finalCleanBlock = source.slice(finalCleanStart, compactHeightStart);
+  const compactHeightBlock = source.slice(compactHeightStart, extraCompactStart);
+
+  assert.doesNotMatch(
+    finalCleanBlock,
+    /@media\s*\(max-width:\s*390px\)[\s\S]*?\.nutritionCaloriesRenderCol strong\s*\{\s*font-size:\s*31px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    finalCleanBlock,
+    /@media\s*\(max-width:\s*360px\)[\s\S]*?\.nutritionCaloriesRenderCol strong\s*\{\s*font-size:\s*29px !important;\s*\}/
+  );
+  assert.match(
+    compactHeightBlock,
+    /@media\s*\(max-width:\s*480px\)[\s\S]*?\.nutritionCaloriesRenderCol strong\s*\{\s*font-size:\s*31px !important;\s*\}[\s\S]*?@media\s*\(max-width:\s*390px\)[\s\S]*?\.nutritionCaloriesRenderCol strong\s*\{\s*font-size:\s*29px !important;\s*\}/
+  );
+});
+
 test("legacy food editor CSS keeps summary dot sizes in root owners", async () => {
   const source = await readText("src/styles/legacy-food-editor-tail.css");
 
