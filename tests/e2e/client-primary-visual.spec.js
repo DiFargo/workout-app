@@ -191,6 +191,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".cabinetSettingsModal")).toBeVisible();
   await expect(page.locator(".profileThemeSwitchBtn")).toHaveAttribute("aria-pressed", /^(true|false)$/);
   await expect(page.locator(".profileSexPicker button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".profileBodyMetricsGridTwo select[aria-label]")).toHaveCount(2);
   await expect(page.locator(".profileSettingsTelegramItem")).toHaveAttribute("aria-label", /Telegram/);
   await expectTapTargets(page, [
     ".cabinetUtilityModalHead button",

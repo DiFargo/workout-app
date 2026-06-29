@@ -133,6 +133,7 @@ export default function ProfileBodyMetricsSettingsSection({
             <label>
               <span>Твоя цель</span>
               <select
+                aria-label="Твоя цель"
                 value={draft.goal || "recomp"}
                 onChange={(event) => onDraftChange("goal", event.target.value)}
               >
@@ -144,6 +145,7 @@ export default function ProfileBodyMetricsSettingsSection({
             <label>
               <span>Активность</span>
               <select
+                aria-label="Активность"
                 value={draft.activity}
                 onChange={(event) => onDraftChange("activity", event.target.value)}
               >

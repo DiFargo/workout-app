@@ -708,6 +708,13 @@ test("client cabinet progress photo compare selects expose readable labels", asy
   assert.match(photosModal, /aria-label=\{`Выбрать фотосессию: \$\{label\.toLowerCase\(\)\}`\}/);
 });
 
+test("client profile body metric selectors expose readable labels", async () => {
+  const bodyMetrics = await readText("src/features/client/profile/ProfileBodyMetricsSettingsSection.jsx");
+
+  assert.match(bodyMetrics, /<select[\s\S]*aria-label="Твоя цель"[\s\S]*value=\{draft\.goal \|\| "recomp"\}/);
+  assert.match(bodyMetrics, /<select[\s\S]*aria-label="Активность"[\s\S]*value=\{draft\.activity\}/);
+});
+
 test("client cabinet Telegram modal keeps a contained dialog shell", async () => {
   const telegramModal = await readText("src/features/client/profile/ProfileTelegramModal.jsx");
 

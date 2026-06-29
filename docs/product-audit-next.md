@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.388`.
+Last updated at app version `v.1.389`.
 
 ## Evidence
 
@@ -46,6 +46,7 @@ The cabinet nutrition modal audit also guards readable day labels and today/curr
 The cabinet Telegram modal audit also guards the contained dialog shell and backdrop semantics.
 The cabinet measurements modal audit also guards readable labels for the latest measurement value cards.
 The cabinet progress photos modal audit also guards readable labels for the comparison photo-session selectors.
+The cabinet settings modal audit also guards readable labels for the profile goal and activity selectors.
 
 The admin visual audit now attaches screenshots for:
 

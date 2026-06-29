@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.388`.
+Last updated at app version `v.1.389`.
 
 ## Stable Now
 
@@ -84,6 +84,7 @@ Last updated at app version `v.1.388`.
 - Admin trainer-calendar day, hour-reminder and reminder toggle controls expose selected `aria-pressed` state, and the calendar panel is clamped against mobile overflow under the admin visual audit.
 - First setup sex, activity and goal choices expose selected `aria-pressed` state under the client primary visual audit.
 - Profile body metric sex choices expose selected `aria-pressed` state under the client primary visual audit.
+- Profile body metric goal and activity selectors expose readable labels under the client primary visual audit.
 - Production trainer admin user filters and client cards expose selected `aria-pressed` state under the app structure audit.
 - Production trainer dashboard filters and client rows expose selected `aria-pressed` state under the app structure audit.
 - Production trainer client workspace role toggle and tabs expose selected `aria-pressed` state under the app structure audit.
