@@ -224,6 +224,7 @@ export default function TrainerClientOverviewLegacyDetails({
               <div className="trainerPhotoCompareControls">
                 {[0, 1].map((slot) => (
                   <select
+                    aria-label={slot === 0 ? "Предыдущая фотосессия для сравнения" : "Новая фотосессия для сравнения"}
                     key={slot}
                     value={adminPhotoCompareIds[slot] || ""}
                     onChange={(event) => setAdminPhotoCompareIds((current) => {
@@ -274,7 +275,7 @@ export default function TrainerClientOverviewLegacyDetails({
             <label><span>Назначена от</span><input type="date" value={adminPaymentDraft.assignedFrom} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, assignedFrom: event.target.value }))} /></label>
             <label><span>Контроль до</span><input type="date" value={adminPaymentDraft.controlUntil} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, controlUntil: event.target.value }))} /></label>
             <label><span>Формат</span><input value={adminPaymentDraft.format} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, format: event.target.value }))} placeholder="Например: персональная · 4 недели" /></label>
-            <label><span>Состояние</span><select value={adminPaymentDraft.status} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, status: event.target.value }))}><option value="active">Активна</option><option value="review">Требует проверки</option><option value="paused">Приостановлена</option></select></label>
+            <label><span>Состояние</span><select aria-label="Состояние контроля программы" value={adminPaymentDraft.status} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, status: event.target.value }))}><option value="active">Активна</option><option value="review">Требует проверки</option><option value="paused">Приостановлена</option></select></label>
             <label className="wide"><span>Комментарий</span><input value={adminPaymentDraft.note} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, note: event.target.value }))} placeholder="Этап, ограничения или следующий контроль" /></label>
             <button type="button" onClick={saveAdminClientPayment}>Сохранить контроль программы</button>
           </div>

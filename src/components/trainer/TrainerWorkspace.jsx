@@ -1838,7 +1838,7 @@ function ClientWorkoutPlan({
           <label className="trainerClientProgramSelectLabel">
             <span>Назначить новую или отредактировать программу</span>
             <div className="trainerClientProgramSelectField">
-              <select value={selectedProgramId || ""} onChange={(event) => onSelectProgram(event.target.value)}>
+              <select aria-label="Назначить программу клиенту" value={selectedProgramId || ""} onChange={(event) => onSelectProgram(event.target.value)}>
                 <option value="">Выберите программу</option>
                 {programTemplates.map((program) => <option value={program.id} key={program.id}>{program.name || "Без названия"}</option>)}
               </select>
@@ -2307,7 +2307,7 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
         <div className="trainerNutritionPlanFields">
           <label className="trainerNutritionPreset">
             <span>Готовый вариант</span>
-            <select value={preset} onChange={(event) => selectPreset(event.target.value)}>
+            <select aria-label="Готовый вариант плана питания" value={preset} onChange={(event) => selectPreset(event.target.value)}>
               <option value="custom">Индивидуальные значения</option>
               {presetOptions.map((item) => (
                 <option key={item.id} value={normalizeNutritionPresetId(item.id)}>{item.name} · {item.calories} ккал · Б {item.protein} · Ж {item.fat} · У {item.carbs}</option>
@@ -3557,7 +3557,7 @@ function TrainerWorkoutEditor({
           </div>
           <label>
             <span>Загрузить программу клиенту</span>
-            <select value={selectedProgramId || ""} onChange={(event) => onSelectProgram(event.target.value)}>
+            <select aria-label="Загрузить программу клиенту" value={selectedProgramId || ""} onChange={(event) => onSelectProgram(event.target.value)}>
               <option value="">Выберите из библиотеки</option>
               {(programTemplates || []).map((program) => (
                 <option value={program.id} key={program.id}>{program.name || "Без названия"}</option>
@@ -3616,6 +3616,7 @@ function TrainerWorkoutEditor({
                 <label>
                   <span>Статус тренировки</span>
                   <select
+                    aria-label="Статус тренировки"
                     value={selectedWorkout.displayStatus || selectedWorkout.status || "planned"}
                     onChange={(event) => onUpdateWorkout(selectedWorkout.id, {
                       status: event.target.value,

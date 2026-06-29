@@ -583,6 +583,35 @@ test("trainer calendar reminder selectors expose readable labels", async () => {
   assert.match(clientCalendar, /<select[\s\S]*aria-label="Когда напомнить о тренировке"[\s\S]*className="adminReminderBeforeSelect"/);
 });
 
+test("trainer transfer selectors expose readable labels", async () => {
+  const transferTab = await readText("src/features/trainer/TrainerAdminTransferTab.jsx");
+  const overviewTools = await readText("src/features/trainer/TrainerClientOverviewAdminTools.jsx");
+
+  assert.match(transferTab, /<select aria-label="Источник данных для переноса"[\s\S]*value=\{adminTransferFromUid\}/);
+  assert.match(transferTab, /<select aria-label="Клиент-получатель данных"[\s\S]*value=\{adminTransferToUid\}/);
+  assert.match(overviewTools, /<select aria-label="Источник данных для переноса"[\s\S]*value=\{adminTransferFromUid\}/);
+  assert.match(overviewTools, /<select aria-label="Клиент-получатель данных"[\s\S]*value=\{adminTransferToUid \|\| selectedClient\.id\}/);
+});
+
+test("trainer workspace program and status selectors expose readable labels", async () => {
+  const workspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
+
+  assert.match(workspace, /<select aria-label="Назначить программу клиенту"[\s\S]*value=\{selectedProgramId \|\| ""\}/);
+  assert.match(workspace, /<select aria-label="Готовый вариант плана питания"[\s\S]*value=\{preset\}/);
+  assert.match(workspace, /<select aria-label="Загрузить программу клиенту"[\s\S]*value=\{selectedProgramId \|\| ""\}/);
+  assert.match(workspace, /<select[\s\S]*aria-label="Статус тренировки"[\s\S]*value=\{selectedWorkout\.displayStatus \|\| selectedWorkout\.status \|\| "planned"\}/);
+});
+
+test("trainer overview modal selectors expose readable labels", async () => {
+  const overviewModals = await readText("src/features/trainer/TrainerClientOverviewModals.jsx");
+  const legacyDetails = await readText("src/features/trainer/TrainerClientOverviewLegacyDetails.jsx");
+
+  for (const source of [overviewModals, legacyDetails]) {
+    assert.match(source, /aria-label=\{slot === 0 \? "Предыдущая фотосессия для сравнения" : "Новая фотосессия для сравнения"\}/);
+    assert.match(source, /<select aria-label="Состояние контроля программы"[\s\S]*value=\{adminPaymentDraft\.status\}/);
+  }
+});
+
 test("trainer progress photo compare selectors expose readable labels", async () => {
   const workspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
 

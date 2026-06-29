@@ -329,3 +329,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.394`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.395`: reinforced the client nutrition weekday strip so two-letter Russian labels cannot be clipped on narrow mobile screens.
 - Verification for `v.1.395`: `tests/app-structure.test.mjs`, `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.396`: strengthened trainer transfer, program, nutrition preset, workout status and overview modal selectors with readable labels.
+- Verification for `v.1.396`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

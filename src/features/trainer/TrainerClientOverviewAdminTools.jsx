@@ -42,7 +42,7 @@ export default function TrainerClientOverviewAdminTools({
           <div className="adminTransferGrid">
             <label>
               <span>Источник данных</span>
-              <select value={adminTransferFromUid} onChange={(event) => setAdminTransferFromUid(event.target.value)}>
+              <select aria-label="Источник данных для переноса" value={adminTransferFromUid} onChange={(event) => setAdminTransferFromUid(event.target.value)}>
                 <option value="">Выбери источник</option>
                 {adminAllUsersList.map((client) => (
                   <option key={client.id} value={client.id}>
@@ -54,7 +54,7 @@ export default function TrainerClientOverviewAdminTools({
 
             <label>
               <span>Клиент-получатель</span>
-              <select value={adminTransferToUid || selectedClient.id} onChange={(event) => setAdminTransferToUid(event.target.value)}>
+              <select aria-label="Клиент-получатель данных" value={adminTransferToUid || selectedClient.id} onChange={(event) => setAdminTransferToUid(event.target.value)}>
                 <option value="">Выбери клиента</option>
                 {usersList.map((client) => (
                   <option key={client.id} value={client.id}>{client.email || client.name || client.id}</option>

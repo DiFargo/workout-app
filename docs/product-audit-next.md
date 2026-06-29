@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.395`.
+Last updated at app version `v.1.396`.
 
 ## Evidence
 
@@ -224,6 +224,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 119. Trainer program assignment and nutrition preset selectors now expose readable labels under the app structure audit.
 120. Trainer calendar reminder-before selectors now expose readable labels under the app structure audit.
 121. Client nutrition weekday strip now preserves both letters of Russian day abbreviations on narrow mobile screens.
+122. Trainer transfer, program, nutrition preset, workout status and overview modal selectors now expose readable labels.
 
 ## P1: Next Product Fixes
 

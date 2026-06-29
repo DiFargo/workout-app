@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.395`.
+Last updated at app version `v.1.396`.
 
 ## Stable Now
 
@@ -79,6 +79,7 @@ Last updated at app version `v.1.395`.
 - Client cabinet progress photo compare tabs expose selected `aria-pressed` state under the primary visual audit.
 - Client cabinet progress photo compare selectors expose readable labels under the primary visual audit.
 - Legacy trainer workspace bottom navigation exposes active-page `aria-current` state.
+- Trainer transfer, program assignment, nutrition preset, workout status and overview modal selectors expose readable labels under the app structure audit.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
