@@ -4992,16 +4992,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     line-height: 1 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopCard,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-    min-height: 88px !important;
-    display: grid !important;
-    grid-template-columns: 62px minmax(0, 1fr) 24px !important;
-    align-items: center !important;
-    gap: 14px !important;
-    padding: 14px 18px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle {
     white-space: nowrap !important;
     overflow: visible !important;

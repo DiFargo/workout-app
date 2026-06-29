@@ -673,6 +673,10 @@ test("client primary final CSS keeps nutrition arrow sizing in the root owner", 
   const source = await readText("src/styles/client-primary-final-lock.css");
 
   assert.equal(
+    (source.match(/\.nutritionAiPlanTopCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionZoukHeader\s*\{\s*min-height:\s*88px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*62px minmax\(0, 1fr\) 24px !important;\s*align-items:\s*center !important;\s*gap:\s*14px !important;\s*padding:\s*14px 18px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.nutritionAiPlanCollapsedArrow,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionZoukMeta i\s*\{\s*width:\s*18px !important;\s*min-width:\s*18px !important;\s*height:\s*36px !important;\s*min-height:\s*36px !important;/g) || []).length,
     1
   );
