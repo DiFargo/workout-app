@@ -55,6 +55,8 @@ export default function NutritionCalendarModal({
                 day.isOverGoal ? "overGoal" : ""
               ].filter(Boolean).join(" ")}
               onClick={() => onSelectDate(day.key)}
+              aria-pressed={day.isSelected}
+              aria-current={day.isToday ? "date" : undefined}
             >
               <strong>{day.dayNumber}</strong>
               {day.hasFood && (

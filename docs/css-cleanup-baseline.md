@@ -305,3 +305,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.382`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-smoke.spec.js --project=desktop-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.383`: strengthened the client nutrition weekday strip with explicit current-date semantics while keeping the stabilized mobile geometry covered.
 - Verification for `v.1.383`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.384`: strengthened the client nutrition calendar modal with explicit selected-day and current-date semantics.
+- Verification for `v.1.384`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

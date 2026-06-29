@@ -261,6 +261,8 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await page.locator(".nutritionHeaderIconButton").nth(1).click();
   await expect(page.locator(".nutritionCalendarOverlay")).toBeVisible();
   await expect(page.locator(".nutritionCalendarDay")).toHaveCount(42);
+  await expect(page.locator(".nutritionCalendarDay[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator(".nutritionCalendarDay.today[aria-current='date']")).toHaveCount(1);
   await expectTapTargets(page, [".nutritionCalendarClose"], 42);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-calendar.png");

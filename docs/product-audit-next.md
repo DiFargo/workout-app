@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.383`.
+Last updated at app version `v.1.384`.
 
 ## Evidence
 
@@ -64,7 +64,7 @@ The nutrition visual audit now attaches screenshots for:
 - create product/dish choice modal.
 - custom dish editor, ingredient picker and ingredient confirm modal.
 
-The nutrition visual audit also guards the weekday strip labels, marker geometry, selected day state and today/current-date semantics.
+The nutrition visual audit also guards the weekday strip labels, marker geometry, selected day state, calendar selected day state and today/current-date semantics.
 
 The client workout visual audit now attaches screenshots for:
 

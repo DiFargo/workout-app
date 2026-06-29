@@ -578,6 +578,13 @@ test("client nutrition weekday strip exposes selected and current date state", a
   assert.match(nutritionHeader, /aria-current=\{isTodayDay \? "date" : undefined\}/);
 });
 
+test("client nutrition calendar days expose selected and current date state", async () => {
+  const nutritionCalendar = await readText("src/features/client/nutrition/NutritionCalendarModal.jsx");
+
+  assert.match(nutritionCalendar, /day\.isSelected \? "selected" : ""[\s\S]*aria-pressed=\{day\.isSelected\}/);
+  assert.match(nutritionCalendar, /aria-current=\{day\.isToday \? "date" : undefined\}/);
+});
+
 test("trainer legacy dashboard tabs expose selected state", async () => {
   const legacyDashboard = await readText("src/features/trainer/TrainerLegacyDashboardRoute.jsx");
 
