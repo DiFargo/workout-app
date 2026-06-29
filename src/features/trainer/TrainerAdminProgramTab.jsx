@@ -21,7 +21,7 @@ export default function TrainerAdminProgramTab({
         <div className="adminV3TemplateControls">
           <input value={adminTemplateName} onChange={(event) => setAdminTemplateName(event.target.value)} placeholder="Название шаблона" />
           <button type="button" onClick={createAdminTemplateFromCurrentPlan}>Создать из текущей программы</button>
-          <select value={adminSelectedTemplateId} onChange={(event) => setAdminSelectedTemplateId(event.target.value)}>
+          <select aria-label="Шаблон программы" value={adminSelectedTemplateId} onChange={(event) => setAdminSelectedTemplateId(event.target.value)}>
             <option value="">Выбери шаблон</option>
             {adminTrainingTemplates.map((template) => (
               <option key={template.id} value={template.id}>{template.name}</option>
@@ -29,7 +29,7 @@ export default function TrainerAdminProgramTab({
           </select>
           <button type="button" onClick={() => selectedClient && assignAdminTemplateToClient(selectedClient.id)}>Назначить выбранному</button>
           <button type="button" onClick={() => selectedClient && clearClientProgram(selectedClient.id)}>Сбросить программу клиента</button>
-          <select value={adminCopyTargetUserId} onChange={(event) => setAdminCopyTargetUserId(event.target.value)}>
+          <select aria-label="Клиент для копирования программы" value={adminCopyTargetUserId} onChange={(event) => setAdminCopyTargetUserId(event.target.value)}>
             <option value="">Копировать программу клиенту</option>
             {usersList.filter((client) => client.id !== selectedClient?.id).map((client) => (
               <option key={client.id} value={client.id}>{client.name || client.email}</option>

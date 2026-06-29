@@ -323,3 +323,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.391`: `tests/app-structure.test.mjs`, `tests/basic-workout-plan-builder.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.392`: strengthened trainer progress photo comparison selectors with readable labels.
 - Verification for `v.1.392`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.393`: strengthened trainer program assignment and nutrition preset selectors with readable labels.
+- Verification for `v.1.393`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

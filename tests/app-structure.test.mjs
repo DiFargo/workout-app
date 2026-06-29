@@ -565,6 +565,16 @@ test("trainer client training program cards expose selected state", async () => 
   assert.match(trainingTab, /className=\{isSelected \|\| isAssigned \? "adminSavedProgramCard active" : "adminSavedProgramCard"\}[\s\S]*aria-pressed=\{isSelected \|\| isAssigned\}/);
 });
 
+test("trainer program assignment selectors expose readable labels", async () => {
+  const programTab = await readText("src/features/trainer/TrainerAdminProgramTab.jsx");
+  const trainingTab = await readText("src/features/trainer/TrainerClientTrainingTab.jsx");
+
+  assert.match(programTab, /<select aria-label="Шаблон программы"[\s\S]*value=\{adminSelectedTemplateId\}/);
+  assert.match(programTab, /<select aria-label="Клиент для копирования программы"[\s\S]*value=\{adminCopyTargetUserId\}/);
+  assert.match(trainingTab, /<select aria-label="Сохранённая программа клиента"[\s\S]*value=\{adminSelectedTemplateId\}/);
+  assert.match(trainingTab, /<select[\s\S]*aria-label="Вариант плана питания"[\s\S]*value=\{adminSelectedNutritionPreset\}/);
+});
+
 test("trainer progress photo compare selectors expose readable labels", async () => {
   const workspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
 

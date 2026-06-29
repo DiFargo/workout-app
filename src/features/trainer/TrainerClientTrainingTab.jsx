@@ -132,7 +132,7 @@ export default function TrainerClientTrainingTab({
           </div>
 
           <div className="adminAssignProgramActions adminAssignProgramActionsCompact">
-            <select value={adminSelectedTemplateId} onChange={(event) => setAdminSelectedTemplateId(event.target.value)}>
+            <select aria-label="Сохранённая программа клиента" value={adminSelectedTemplateId} onChange={(event) => setAdminSelectedTemplateId(event.target.value)}>
               <option value="">Выбери сохранённую программу</option>
               {adminTrainingTemplates.map((template) => (
                 <option key={template.id} value={template.id}>{template.name}</option>
@@ -167,6 +167,7 @@ export default function TrainerClientTrainingTab({
           <label className="adminNutritionPlanSelect">
             <span>Вариант плана</span>
             <select
+              aria-label="Вариант плана питания"
               value={adminSelectedNutritionPreset}
               onChange={(event) => setAdminSelectedNutritionPreset(event.target.value)}
             >
