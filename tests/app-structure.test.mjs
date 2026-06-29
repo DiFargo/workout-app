@@ -468,6 +468,17 @@ test("client visual unity CSS does not keep exact duplicate blocks", async () =>
   assert.deepEqual(duplicateBlocks, []);
 });
 
+test("client render target CSS keeps a single workout set-row owner", async () => {
+  const source = await readText("src/styles/client-render-target-lock.css");
+
+  assert.doesNotMatch(source, /v127: absolute final override for workout set rows/);
+  assert.match(source, /v126: final set-row size\/state polish/);
+  assert.equal(
+    (source.match(/setRow\.workoutExercisePlanRow\s*\{\s*min-height: 58px !important;/g) || []).length,
+    1
+  );
+});
+
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");

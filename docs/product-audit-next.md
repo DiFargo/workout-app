@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.398`.
+Last updated at app version `v.1.399`.
 
 ## Evidence
 
@@ -227,6 +227,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 122. Trainer transfer, program, nutrition preset, workout status and overview modal selectors now expose readable labels.
 123. Trainer, workout and first-setup modal dialogs now expose readable dialog names under the app structure audit.
 124. Client visual unity CSS no longer keeps exact duplicate product-editor blocks from the older `v.1.100` cascade.
+125. Client render target CSS no longer keeps the duplicate workout set-row `v127` block; the later `v126` owner remains guarded.
 
 ## P1: Next Product Fixes
 
