@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1195.58 KiB` raw, `117.97 KiB` gzip.
-- Latest source CSS report: `100` files, about `3499.03 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3498.56 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -369,3 +369,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.414`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.415`: removed the duplicate old narrow-media compact calorie dot sizing from `legacy-food-search-calories-tuning.css`; the later mobile owner remains.
 - Verification for `v.1.415`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.416`: removed the stale old mobile AI stats sizing block from `legacy-profile-dashboard-telegram-late.css`; the compact owner and final mobile owner remain.
+- Verification for `v.1.416`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

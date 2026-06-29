@@ -674,6 +674,23 @@ test("admin client dashboard polish CSS has no empty media blocks", async () => 
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
+test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", async () => {
+  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+  const statsAlignmentStart = source.indexOf("/* STATS ALIGNMENT PERFECT */");
+  const compactStatsStart = source.indexOf("/* COMPACT STATS + AI TITLE */");
+  const oldStatsBlock = source.slice(statsAlignmentStart, compactStatsStart);
+  const compactStatsBlock = source.slice(compactStatsStart);
+
+  assert.doesNotMatch(
+    oldStatsBlock,
+    /@media\s*\(max-width:\s*420px\)[\s\S]*?\.profileAiStatsRow > div\s*\{\s*height:\s*82px !important;/
+  );
+  assert.match(
+    compactStatsBlock,
+    /\.profileAiStatsRow > div\s*\{\s*height:\s*72px !important;\s*min-height:\s*72px !important;[\s\S]*?@media\s*\(max-width:\s*420px\)[\s\S]*?\.profileAiStatsRow > div\s*\{\s*height:\s*66px !important;\s*min-height:\s*66px !important;/
+  );
+});
+
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");

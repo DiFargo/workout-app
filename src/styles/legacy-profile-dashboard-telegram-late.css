@@ -3470,28 +3470,6 @@
   display: none !important;
 }
 
-@media (max-width: 420px) {
-  .profileAiStatsRow > div {
-    height: 82px !important;
-    min-height: 82px !important;
-    padding: 8px 4px !important;
-  }
-
-  .profileAiStatsRow span {
-    font-size: 9px !important;
-    margin-bottom: 7px !important;
-  }
-
-  .profileAiStatsRow > div.goal strong {
-    font-size: 15px !important;
-  }
-
-  .profileAiStatsRow > div.weight strong,
-  .profileAiStatsRow > div.workouts strong {
-    font-size: 20px !important;
-  }
-}
-
 /* COMPACT STATS + AI TITLE */
 .profileAiStatsRow > div {
   height: 72px !important;
