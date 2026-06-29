@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1197.05 KiB` raw, `118.05 KiB` gzip.
-- Latest source CSS report: `100` files, about `3501.62 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3501.43 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -343,3 +343,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.401`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.402`: removed the older duplicate compact product title-wrap media lock from `client-food-search-final.css`; the later product header lock remains.
 - Verification for `v.1.402`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.403`: removed repeated mobile page padding locks from narrower nutrition breakpoints; the later `max-width: 480px` padding owner remains.
+- Verification for `v.1.403`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

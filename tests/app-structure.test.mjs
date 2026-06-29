@@ -497,6 +497,15 @@ test("client food search final CSS keeps one compact product title-wrap lock", a
   );
 });
 
+test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
+  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+
+  assert.equal(
+    (source.match(/\.fatSecretPage\s*\{\s*padding-left:\s*12px !important;\s*padding-right:\s*12px !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("admin client dashboard polish CSS has no empty media blocks", async () => {
   const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
 
