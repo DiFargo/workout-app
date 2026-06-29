@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1180.76 KiB` raw, `117.23 KiB` gzip.
-- Latest source CSS report: `100` files, about `3472.26 KiB` total source CSS.
+- Latest main CSS bundle: about `1179.80 KiB` raw, `117.21 KiB` gzip.
+- Latest source CSS report: `100` files, about `3471.19 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,7 +28,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `252.00 KiB`
+- `src/styles/client-primary-final-lock.css` - `250.93 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
@@ -423,3 +423,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.441`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.442`: removed duplicate primary header action sizing rules from `client-primary-final-lock.css`; the final header action owner remains guarded.
 - Verification for `v.1.442`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.443`: removed duplicate client title row sizing rules from `client-primary-final-lock.css`; the final client title row owner remains guarded.
+- Verification for `v.1.443`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

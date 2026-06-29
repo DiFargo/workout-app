@@ -89,25 +89,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumMy {
-    width: 100% !important;
-    min-height: var(--client-title-h) !important;
-    height: var(--client-title-h) !important;
-    margin: 0 0 16px !important;
-    padding: 0 !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 12px !important;
-    position: relative !important;
-    overflow: visible !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle,

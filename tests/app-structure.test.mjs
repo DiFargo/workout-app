@@ -573,6 +573,15 @@ test("client primary final CSS keeps header action sizing in the final owner", a
   );
 });
 
+test("client primary final CSS keeps client title row sizing in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetTitleRow,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumHome,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumMy\s*\{\s*width:\s*100% !important;\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 16px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client render target CSS keeps a single workout set-row owner", async () => {
   const source = await readText("src/styles/client-render-target-lock.css");
 
