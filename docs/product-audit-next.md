@@ -201,6 +201,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 104. All production JSX buttons now declare `type` explicitly, guarded by the app structure audit.
 105. Client icon-only back, close and refresh actions now expose accessible labels, guarded by the app structure audit.
 106. Profile legacy CSS is now owned by a client profile style entrypoint, guarded by the app structure audit.
+107. Additional profile/cabinet legacy CSS is now owned by the client profile style entrypoint, guarded by the app structure audit.
 
 ## P1: Next Product Fixes
 

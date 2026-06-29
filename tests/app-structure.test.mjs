@@ -265,7 +265,11 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-history-ai-search-late.css",
     "./legacy-profile-nutrition-late.css",
     "./legacy-profile-progress-late.css",
-    "./legacy-desktop-cabinet-polish.css"
+    "./legacy-desktop-cabinet-polish.css",
+    "./legacy-cabinet-calendar-insights.css",
+    "./legacy-profile-account-editor.css",
+    "./legacy-measurement-review.css",
+    "./legacy-progress-insights.css"
   ]) {
     assert.match(clientProfileLazyCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
     assert.doesNotMatch(indexCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
@@ -303,7 +307,6 @@ test("application styles use the modular styles entrypoint", async () => {
     "./workoutFlow.css",
     "./auth.css",
     "./legacy-overrides.css",
-    "./legacy-cabinet-calendar-insights.css",
     "./legacy-client-screen-alignment.css"
   ]) {
     assert.match(indexCss, new RegExp(`@import "${requiredImport.replace(".", "\\.")}"`));

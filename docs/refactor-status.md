@@ -93,6 +93,7 @@ Last updated at app version `v.1.370`.
 - All production JSX buttons declare explicit `type` under the app structure audit.
 - Client icon-only back, close and refresh actions expose accessible labels under the app structure audit.
 - Profile legacy CSS is owned by `client-profile-lazy.css` under the app structure audit.
+- Additional profile/cabinet CSS is owned by `client-profile-lazy.css` under the app structure audit.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.
