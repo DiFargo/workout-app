@@ -1498,11 +1498,6 @@
     gap: 4px !important;
   }
 
-  .nutritionCaloriesRenderGrid span {
-    width: 7px !important;
-    height: 7px !important;
-  }
-
   .nutritionCaloriesRenderCol span {
     font-size: 13px !important;
   }

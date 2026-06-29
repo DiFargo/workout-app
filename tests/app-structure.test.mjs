@@ -617,6 +617,19 @@ test("legacy food search calories CSS keeps early mobile column shift out of the
   );
 });
 
+test("legacy food search calories CSS keeps compact dots in the latest mobile owner", async () => {
+  const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
+
+  assert.equal(
+    (source.match(/\.nutritionCaloriesRenderGrid span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.match(
+    source,
+    /NUTRITION CALORIES RENDER CARD[\s\S]*?@media\s*\(max-width:\s*480px\)[\s\S]*?\.nutritionCaloriesRenderGrid span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/
+  );
+});
+
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
   const source = await readText("src/styles/legacy-admin-shell-crm-app46.css");
 

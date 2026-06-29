@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.414`.
+Last updated at app version `v.1.415`.
 
 ## Stable Now
 
@@ -98,6 +98,7 @@ Last updated at app version `v.1.414`.
 - Nutrition food-search bottom bar CSS now keeps the photo active transform in one root owner, guarded by app structure tests.
 - Legacy food search calories CSS no longer repeats the early mobile first-column shift before the later closer-to-grid owner.
 - Client workout set rows CSS now keeps the no-weight modal grid in one root owner, guarded by app structure tests.
+- Legacy food search calories CSS now keeps compact dot sizing in the latest mobile owner, guarded by app structure tests.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
@@ -158,9 +159,9 @@ From the latest verified build:
 
 - main app JS chunk: about `472.18 KiB` raw, `131.40 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1197.05 KiB` raw, `118.05 KiB` gzip.
+- main CSS bundle: about `1195.58 KiB` raw, `117.97 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3500.74 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3499.03 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

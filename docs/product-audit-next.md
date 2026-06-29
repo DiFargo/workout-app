@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.414`.
+Last updated at app version `v.1.415`.
 
 ## Evidence
 
@@ -243,6 +243,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 138. Nutrition food-search bottom bar CSS now keeps the photo active transform in one root owner instead of repeating it in narrow media.
 139. Legacy food search calories CSS no longer repeats the early mobile first-column shift before the later closer-to-grid owner.
 140. Client workout set rows CSS now keeps the no-weight modal grid in one root owner instead of repeating it in narrow media.
+141. Legacy food search calories CSS now keeps compact dot sizing in the latest mobile owner instead of repeating it in the old narrow block.
 
 ## P1: Next Product Fixes
 
