@@ -479,6 +479,15 @@ test("client render target CSS keeps a single workout set-row owner", async () =
   );
 });
 
+test("client workout card render CSS keeps card sizing in root locks", async () => {
+  const source = await readText("src/styles/client-workout-card-render.css");
+
+  assert.doesNotMatch(
+    source,
+    /individualWorkoutCardPro\s*\{\s*height:\s*100% !important;\s*min-height:\s*0 !important;\s*max-height:\s*none !important;\s*\}/
+  );
+});
+
 test("admin client dashboard polish CSS has no empty media blocks", async () => {
   const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
 

@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.400`.
+Last updated at app version `v.1.401`.
 
 ## Evidence
 
@@ -229,6 +229,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 124. Client visual unity CSS no longer keeps exact duplicate product-editor blocks from the older `v.1.100` cascade.
 125. Client render target CSS no longer keeps the duplicate workout set-row `v127` block; the later `v126` owner remains guarded.
 126. Admin, trainer and cabinet CSS cleanup removed empty media blocks and no-op duplicate layout rules under existing visual coverage.
+127. Client workout card render CSS no longer keeps repeated media-only card sizing blocks; the root card locks remain guarded.
 
 ## P1: Next Product Fixes
 
