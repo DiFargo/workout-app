@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.423`.
+Last updated at app version `v.1.424`.
 
 ## Evidence
 
@@ -252,6 +252,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 147. Nutrition late layout CSS no longer keeps the older compact meal `fatPlusBtn` 24px duplicate before the later lower-height owner.
 148. Nutrition calories tail CSS now keeps compact number sizing in the later compact-height owner instead of repeating it in earlier narrow blocks.
 149. Nutrition summary calories CSS now keeps compact gap and pixel sizes in the later final owners instead of older redesign blocks.
+150. Nutrition late layout CSS now keeps the compact calories-card top offset in the final gap owner instead of repeating it in the older micro-gap block.
 
 ## P1: Next Product Fixes
 

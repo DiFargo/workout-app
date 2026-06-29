@@ -759,6 +759,8 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   const source = await readText("src/styles/legacy-nutrition-late-layout.css");
   const tighterSpacingStart = source.indexOf("TIGHTER SEARCH TO CALORIES SPACING");
   const ultraSpacingStart = source.indexOf("ULTRA TIGHT TOP SPACING", tighterSpacingStart);
+  const microGapStart = source.indexOf("MICRO TOP GAP MATCH");
+  const actionPanelStart = source.indexOf("ACTION PANEL VERTICAL BALANCE", microGapStart);
   const mealRedesignStart = source.indexOf("MEAL CARDS PREMIUM REDESIGN");
   const compactMealStart = source.indexOf("COMPACT MEAL CARDS", mealRedesignStart);
   const ultraSmallGapStart = source.indexOf("ULTRA SMALL GAP BETWEEN MEAL CARDS");
@@ -768,6 +770,8 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
 
   assert.ok(tighterSpacingStart >= 0);
   assert.ok(ultraSpacingStart > tighterSpacingStart);
+  assert.ok(microGapStart >= 0);
+  assert.ok(actionPanelStart > microGapStart);
   assert.ok(mealRedesignStart >= 0);
   assert.ok(compactMealStart > mealRedesignStart);
   assert.ok(ultraSmallGapStart >= 0);
@@ -776,6 +780,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.ok(darkerOpenStart > bottomGapStart);
 
   const tighterSpacingBlock = source.slice(tighterSpacingStart, ultraSpacingStart);
+  const microGapBlock = source.slice(microGapStart, actionPanelStart);
   const mealRedesignBlock = source.slice(mealRedesignStart, compactMealStart);
   const ultraSmallGapBlock = source.slice(ultraSmallGapStart, balancedGapStart);
   const bottomGapBlock = source.slice(bottomGapStart, darkerOpenStart);
@@ -783,6 +788,10 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.doesNotMatch(
     tighterSpacingBlock,
     /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatQuickActions,\s*\.fatQuickActions\s*\{\s*margin-bottom:\s*0 !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    microGapBlock,
+    /\.fatSecretPage \.nutritionCaloriesRenderCard,\s*\.nutritionCaloriesRenderCard\s*\{\s*margin-top:\s*-13px !important;\s*\}/
   );
   assert.doesNotMatch(
     mealRedesignBlock,
@@ -805,6 +814,10 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
     /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatMealCard\.open \.fatMealItems\.productListWideFinal,\s*\.fatMealCard\.open \.productListExact\.productListWideFinal,\s*\.productListWideFinal\s*\{\s*margin-bottom:\s*0 !important;\s*\}/
   );
 
+  assert.match(
+    source,
+    /FINAL GAP \+ CALORIE NUMBERS TUNE[\s\S]*?@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.nutritionCaloriesRenderCard,\s*\.nutritionCaloriesRenderCard\s*\{\s*margin-top:\s*-13px !important;\s*\}/
+  );
   assert.match(
     source,
     /\.fatSecretPage \.fatQuickActions,\s*\.fatQuickActions\s*\{\s*margin-bottom:\s*0 !important;\s*\}/

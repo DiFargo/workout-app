@@ -144,11 +144,6 @@
   margin-bottom: -7px !important;
 }
 
-.fatSecretPage .nutritionCaloriesRenderCard,
-.nutritionCaloriesRenderCard {
-  margin-top: -13px !important;
-}
-
 @media (max-width: 480px) {
   .fatSecretPage .nutritionQuickActionsExact,
   .nutritionQuickActionsExact,
