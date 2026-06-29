@@ -573,6 +573,37 @@ test("legacy nutrition header CSS keeps one compact page padding owner", async (
   );
 });
 
+test("legacy nutrition header CSS keeps pixel meter span sizes in the later compact owner", async () => {
+  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const referenceStart = source.indexOf("NUTRITION PAGE");
+  const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
+  const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
+
+  assert.ok(referenceStart >= 0);
+  assert.ok(compactPolishStart > referenceStart);
+  assert.ok(narrowCompactStart > compactPolishStart);
+
+  const referenceBlock = source.slice(referenceStart, compactPolishStart);
+  const compactPolishBlock = source.slice(compactPolishStart, narrowCompactStart);
+
+  assert.doesNotMatch(
+    referenceBlock,
+    /@media\s*\(max-width:\s*370px\)[\s\S]*?\.fatPixelMeter span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/
+  );
+  assert.match(
+    compactPolishBlock,
+    /\.fatPixelMeter span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /@media\s*\(max-width:\s*430px\)[\s\S]*?\.fatPixelMeter span\s*\{\s*width:\s*6px !important;\s*height:\s*6px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /@media\s*\(max-width:\s*370px\)[\s\S]*?\.fatPixelMeter span\s*\{\s*width:\s*5px !important;\s*height:\s*5px !important;\s*\}/
+  );
+});
+
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
   const headerReference = await readText("src/styles/legacy-food-search-header-reference.css");
   const pickerBase = await readText("src/styles/legacy-food-picker-base.css");

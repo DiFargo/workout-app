@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1194.98 KiB` raw, `117.93 KiB` gzip.
-- Latest source CSS report: `100` files, about `3496.74 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3496.67 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -387,3 +387,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.423`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.424`: removed the older micro-gap calories-card top offset from `legacy-nutrition-late-layout.css`; the final gap owner remains guarded.
 - Verification for `v.1.424`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.425`: removed the older narrow pixel-meter span size duplicate from `legacy-nutrition-header-layout.css`; the later compact owner remains guarded.
+- Verification for `v.1.425`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

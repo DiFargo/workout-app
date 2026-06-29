@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.424`.
+Last updated at app version `v.1.425`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `269` passed.
+- `npm.cmd test`: passed with `270` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -253,6 +253,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 148. Nutrition calories tail CSS now keeps compact number sizing in the later compact-height owner instead of repeating it in earlier narrow blocks.
 149. Nutrition summary calories CSS now keeps compact gap and pixel sizes in the later final owners instead of older redesign blocks.
 150. Nutrition late layout CSS now keeps the compact calories-card top offset in the final gap owner instead of repeating it in the older micro-gap block.
+151. Nutrition header CSS now keeps pixel-meter span sizing in the later compact owner instead of repeating it in the older narrow reference block.
 
 ## P1: Next Product Fixes
 
