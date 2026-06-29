@@ -488,6 +488,15 @@ test("client workout card render CSS keeps card sizing in root locks", async () 
   );
 });
 
+test("client food search final CSS keeps one compact product title-wrap lock", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+
+  assert.equal(
+    (source.match(/fatSearchTitleWrap\s*\{\s*width:\s*min\(352px,\s*calc\(100vw - 24px\)\) !important;\s*max-width:\s*min\(352px,\s*calc\(100vw - 24px\)\) !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("admin client dashboard polish CSS has no empty media blocks", async () => {
   const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
 
