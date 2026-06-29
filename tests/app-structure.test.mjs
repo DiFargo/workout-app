@@ -666,6 +666,9 @@ test("nutrition calendar CSS keeps final size and label color locks in the final
   const premiumCalendarStart = source.indexOf("/* PREMIUM NUTRITION CALENDAR */");
   const premiumCalendarEnd = source.indexOf("@media (max-width: 380px)", premiumCalendarStart);
   const premiumCalendarBlock = source.slice(premiumCalendarStart, premiumCalendarEnd);
+  const earlyNarrowStart = source.indexOf("@media (max-width: 380px)", premiumCalendarStart);
+  const alignmentStart = source.indexOf("/* CALENDAR ALIGNMENT TUNING */", earlyNarrowStart);
+  const earlyNarrowBlock = source.slice(earlyNarrowStart, alignmentStart);
 
   assert.doesNotMatch(
     source,
@@ -675,9 +678,17 @@ test("nutrition calendar CSS keeps final size and label color locks in the final
     premiumCalendarBlock,
     /\.nutritionCalendarFooter button\s*\{[\s\S]*?min-height:\s*48px !important;[\s\S]*?border-radius:\s*18px !important;[\s\S]*?font-size:\s*14px !important;/
   );
+  assert.doesNotMatch(
+    earlyNarrowBlock,
+    /\.nutritionCalendarGrid\s*\{\s*gap:\s*5px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    earlyNarrowBlock,
+    /\.nutritionCalendarDay strong\s*\{\s*font-size:\s*14px !important;\s*\}/
+  );
   assert.match(
     source,
-    /\/\* CALENDAR FINAL TUNING \*\/[\s\S]*?\.nutritionCalendarDay small\s*\{\s*color:\s*rgba\(184,\s*215,\s*108,\s*0\.39\) !important;\s*\}[\s\S]*?\.nutritionCalendarFooter button\s*\{\s*min-height:\s*48px !important;\s*border-radius:\s*18px !important;\s*font-size:\s*14px !important;\s*\}/
+    /\/\* CALENDAR COMPACT PREMIUM TUNING \*\/[\s\S]*?\.nutritionCalendarGrid\s*\{\s*gap:\s*5px !important;\s*\}[\s\S]*?\.nutritionCalendarDay strong\s*\{\s*font-size:\s*14px !important;\s*\}[\s\S]*?\/\* CALENDAR FINAL TUNING \*\/[\s\S]*?\.nutritionCalendarDay small\s*\{\s*color:\s*rgba\(184,\s*215,\s*108,\s*0\.39\) !important;\s*\}[\s\S]*?\.nutritionCalendarFooter button\s*\{\s*min-height:\s*48px !important;\s*border-radius:\s*18px !important;\s*font-size:\s*14px !important;\s*\}/
   );
 });
 

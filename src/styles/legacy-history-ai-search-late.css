@@ -884,17 +884,9 @@
     border-radius: 26px !important;
   }
 
-  .nutritionCalendarGrid {
-    gap: 5px !important;
-  }
-
   .nutritionCalendarDay {
     min-height: 48px !important;
     border-radius: 14px !important;
-  }
-
-  .nutritionCalendarDay strong {
-    font-size: 14px !important;
   }
 
   .nutritionCalendarDay small {
