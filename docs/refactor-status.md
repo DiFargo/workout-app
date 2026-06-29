@@ -95,6 +95,7 @@ Last updated at app version `v.1.370`.
 - Profile legacy CSS is owned by `client-profile-lazy.css` under the app structure audit.
 - Additional profile/cabinet CSS is owned by `client-profile-lazy.css` under the app structure audit.
 - Measurement CSS is owned by `client-measurements-lazy.css` under the app structure audit.
+- Client cabinet action cards expose explicit accessible labels under the app structure audit.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.
@@ -146,7 +147,7 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 
 ## Recent Verification
 
-- `npm.cmd run test`: passed, `227` passed.
+- `npm.cmd run test`: passed, `228` passed.
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd run report:css`: passed.

@@ -632,6 +632,12 @@ test("client icon-only actions expose accessible labels", async () => {
   assert.match(dishPicker, /type="button" onClick=\{onClose\} aria-label="Закрыть выбор ингредиента"/);
 });
 
+test("client cabinet action cards expose explicit accessible labels", async () => {
+  const actionGrid = await readText("src/features/client/profile/ProfileCabinetActionGrid.jsx");
+
+  assert.match(actionGrid, /aria-label=\{`\$\{eyebrow\}: \$\{title\}`\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

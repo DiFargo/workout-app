@@ -1,6 +1,6 @@
 function ProfileCabinetActionCard({ className, icon, eyebrow, title, note, onClick }) {
   return (
-    <button type="button" className={`progressHubCard ${className}`} onClick={onClick}>
+    <button type="button" className={`progressHubCard ${className}`} onClick={onClick} aria-label={`${eyebrow}: ${title}`}>
       <span className="progressHubCardIcon">{icon}</span>
       <span className="progressHubCardText">
         <small>{eyebrow}</small>
