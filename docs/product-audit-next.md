@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.470`.
+Last updated at app version `v.1.471`.
 
 ## Evidence
 
@@ -299,6 +299,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 194. Client primary final CSS now keeps workout 42px badge pill rules in one guarded root owner.
 195. Client primary final CSS now keeps workout select line hide rules in one guarded root owner.
 196. Client primary final CSS now keeps profile AI hero compact cluster rules in guarded root owners.
+197. Client primary final CSS now keeps profile AI supporting compact rules in guarded root owners.
 
 ## P1: Next Product Fixes
 

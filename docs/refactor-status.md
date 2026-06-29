@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.470`.
+Last updated at app version `v.1.471`.
 
 ## Stable Now
 
@@ -207,6 +207,7 @@ Last updated at app version `v.1.470`.
 - Trainer progress chart periods and exercise progress filters expose selected `aria-pressed` state under trainer workspace and visual audits.
 - Admin harness filter pills, client cards, workspace tabs and program cards expose selected `aria-pressed` state under the admin visual audit.
 - Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
+- Client primary final CSS keeps profile AI supporting compact rules in guarded root owners after removing late duplicate blocks.
 
 ## Current Build Shape
 
@@ -214,9 +215,9 @@ From the latest verified build:
 
 - main app JS chunk: about `472.18 KiB` raw, `131.41 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1161.55 KiB` raw, `116.07 KiB` gzip.
+- main CSS bundle: about `1160.50 KiB` raw, `116.01 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3449.41 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3448.24 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

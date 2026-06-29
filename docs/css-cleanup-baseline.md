@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1161.55 KiB` raw, `116.07 KiB` gzip.
-- Latest source CSS report: `100` files, about `3449.41 KiB` total source CSS.
+- Latest main CSS bundle: about `1160.50 KiB` raw, `116.01 KiB` gzip.
+- Latest source CSS report: `100` files, about `3448.24 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,16 +28,17 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `229.15 KiB`
+- `src/styles/client-primary-final-lock.css` - `227.97 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
-- `src/styles/legacy-food-editor-tail.css` - `100.56 KiB`
+- `src/styles/legacy-food-editor-tail.css` - `100.37 KiB`
 - `src/styles/legacy-admin-client-dashboard-polish.css` - `97.32 KiB`
-- `src/styles/legacy-desktop-cabinet-polish.css` - `93.03 KiB`
+- `src/styles/legacy-desktop-cabinet-polish.css` - `92.82 KiB`
 - `src/styles/legacy-client-workout-flow-late.css` - `87.59 KiB`
+- `src/styles/legacy-month-program-editor-early.css` - `83.36 KiB`
+- `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.31 KiB`
 - `src/styles/client-visual-unity-final.css` - `78.41 KiB`
-- `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.78 KiB`
 
 ## Cleanup Order
 
@@ -479,3 +480,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.469`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.470`: removed duplicate profile AI hero compact cluster rules from `client-primary-final-lock.css`; the root AI hero compact owners stay guarded.
 - Verification for `v.1.470`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.471`: removed duplicate profile AI supporting compact rules from `client-primary-final-lock.css`; the root hero sizing, card color and avatar-ring owners stay guarded.
+- Verification for `v.1.471`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

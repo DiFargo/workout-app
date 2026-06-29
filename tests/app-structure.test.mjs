@@ -646,6 +646,18 @@ test("client primary final CSS keeps profile AI hero compact cluster in root own
     (source.match(/\.profileAiHeroText h1,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHeroText h1\s*\{\s*margin:\s*0 !important;\s*color:\s*var\(--client-ink\) !important;\s*-webkit-text-fill-color:\s*var\(--client-ink\) !important;\s*font-size:\s*21px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.12 !important;\s*letter-spacing:\s*0 !important;\s*text-shadow:\s*none !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*min-height:\s*94px !important;\s*padding:\s*16px 18px !important;\s*grid-template-columns:\s*72px minmax\(0, 1fr\) !important;\s*gap:\s*18px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiMiniCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileDashboardPage\.clientCorePageMain \.profileAiCoachInsight\.profileProgressInsightCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileDashboardPage\.clientCorePageMain \.mainMeasurementSnapshot\s*\{\s*background:\s*rgba\(255, 255, 255, 0\.94\) !important;\s*color:\s*#171923 !important;\s*-webkit-text-fill-color:\s*#171923 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiAvatarRing,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatarRing\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps profile AI split cards in the final owner", async () => {
