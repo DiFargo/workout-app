@@ -468,6 +468,23 @@ test("client visual unity CSS does not keep exact duplicate blocks", async () =>
   assert.deepEqual(duplicateBlocks, []);
 });
 
+test("client primary final CSS keeps bottom nav sizing in one owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.individualWorkoutMenuBar\.clientBottomNav\s*\{\s*position:\s*fixed !important;\s*left:\s*max\(10px, env\(safe-area-inset-left\)\) !important;\s*right:\s*max\(10px, env\(safe-area-inset-right\)\) !important;\s*bottom:\s*max\(10px, env\(safe-area-inset-bottom\)\) !important;\s*z-index:\s*80 !important;\s*width:\s*auto !important;\s*max-width:\s*none !important;\s*height:\s*84px !important;\s*min-height:\s*84px !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav > button\s*\{\s*width:\s*100% !important;\s*min-width:\s*0 !important;\s*height:\s*68px !important;\s*min-height:\s*68px !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav > button\.active\s*\{\s*border-color:\s*#ded7ff !important;\s*background:\s*#f0edff !important;\s*color:\s*#5d43e8 !important;/g) || []).length,
+    1
+  );
+});
+
 test("client render target CSS keeps a single workout set-row owner", async () => {
   const source = await readText("src/styles/client-render-target-lock.css");
 
