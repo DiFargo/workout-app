@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.397`.
+Last updated at app version `v.1.398`.
 
 ## Evidence
 
@@ -226,6 +226,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 121. Client nutrition weekday strip now preserves both letters of Russian day abbreviations on narrow mobile screens.
 122. Trainer transfer, program, nutrition preset, workout status and overview modal selectors now expose readable labels.
 123. Trainer, workout and first-setup modal dialogs now expose readable dialog names under the app structure audit.
+124. Client visual unity CSS no longer keeps exact duplicate product-editor blocks from the older `v.1.100` cascade.
 
 ## P1: Next Product Fixes
 

@@ -449,6 +449,25 @@ test("modular CSS import graph resolves without cycles", async () => {
   assert.deepEqual(reachableCssFiles, allCssFiles);
 });
 
+test("client visual unity CSS does not keep exact duplicate blocks", async () => {
+  const source = await readText("src/styles/client-visual-unity-final.css");
+  const seenBlocks = new Set();
+  const duplicateBlocks = [];
+
+  for (const match of source.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const selector = match[1].trim().replace(/\s+/g, " ");
+    const body = match[2].trim().replace(/\s+/g, " ");
+    const key = `${selector} { ${body} }`;
+    if (seenBlocks.has(key)) {
+      const line = source.slice(0, match.index).split(/\r?\n/).length;
+      duplicateBlocks.push(`src/styles/client-visual-unity-final.css:${line}`);
+    }
+    seenBlocks.add(key);
+  }
+
+  assert.deepEqual(duplicateBlocks, []);
+});
+
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");

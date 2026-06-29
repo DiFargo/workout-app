@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1197.05 KiB` raw, `118.05 KiB` gzip.
-- Latest source CSS report: `100` files, about `3508.53 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3506.90 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -36,7 +36,7 @@ Start mapping here before any cleanup:
 - `src/styles/legacy-admin-client-dashboard-polish.css` - `97.12 KiB`
 - `src/styles/legacy-desktop-cabinet-polish.css` - `93.22 KiB`
 - `src/styles/legacy-client-workout-flow-late.css` - `87.59 KiB`
-- `src/styles/client-visual-unity-final.css` - `80.04 KiB`
+- `src/styles/client-visual-unity-final.css` - `78.41 KiB`
 - `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.78 KiB`
 
 ## Cleanup Order
@@ -333,3 +333,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.396`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.397`: strengthened trainer, workout and first-setup modal dialog semantics with readable dialog names.
 - Verification for `v.1.397`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.398`: removed exact duplicate product-editor blocks from `client-visual-unity-final.css`; the later `v.1.102` cascade lock remains the owner.
+- Verification for `v.1.398`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

@@ -508,10 +508,6 @@
 
 /* v.1.100: finish product editor header rhythm without changing nutrition logic. */
 @media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay {
-    overflow: hidden !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
     --client-x: 26px;
     --client-top: 70px;
@@ -544,31 +540,6 @@
     overflow: visible !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
-    position: relative !important;
-    inset: auto !important;
-    box-sizing: border-box !important;
-    width: var(--client-action) !important;
-    min-width: var(--client-action) !important;
-    max-width: var(--client-action) !important;
-    height: var(--client-action) !important;
-    min-height: var(--client-action) !important;
-    max-height: var(--client-action) !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 1px solid var(--client-border, #dfe4ee) !important;
-    border-radius: 17px !important;
-    background: rgba(255, 255, 255, 0.94) !important;
-    box-shadow: 0 16px 36px rgba(36, 43, 66, 0.08) !important;
-    color: var(--client-title-color, #5f5744) !important;
-    -webkit-text-fill-color: var(--client-title-color, #5f5744) !important;
-    font-size: 22px !important;
-    line-height: 1 !important;
-    display: grid !important;
-    place-items: center !important;
-    transform: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageTitleCenter {
     position: static !important;
     box-sizing: border-box !important;
@@ -594,20 +565,6 @@
     transform: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageContent {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 0 !important;
-    padding: 0 0 12px !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    scrollbar-width: thin !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow {
-    display: none !important;
-  }
 }
 
 /* v.1.103: keep product editor title color in the same warm heading tone. */
