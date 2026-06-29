@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.453`.
+Last updated at app version `v.1.454`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `296` passed.
+- `npm.cmd test`: passed with `297` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -282,6 +282,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 177. Client primary final CSS now keeps workout stats layout in the final owner instead of repeating it in an early mobile block.
 178. Client primary final CSS now keeps fixed photo action spacing in the final owner instead of repeating it in an early mobile block.
 179. Client primary final CSS now keeps product flow title typography in the final owner instead of repeating it in an early mobile block.
+180. Client primary final CSS now keeps product flow header layout in the final owner instead of repeating it in an early mobile block.
 
 ## P1: Next Product Fixes
 

@@ -542,6 +542,15 @@ test("client primary final CSS keeps product flow title typography in the final 
   );
 });
 
+test("client primary final CSS keeps product flow header layout in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader\s*\{\s*min-height:\s*128px !important;\s*margin:\s*0 0 16px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 116px !important;\s*grid-template-areas:\s*"title actions"\s*"meal meal" !important;\s*gap:\s*14px 12px !important;\s*align-items:\s*start !important;/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps main AI stats row in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
