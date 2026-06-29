@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.393`.
+Last updated at app version `v.1.394`.
 
 ## Stable Now
 
@@ -83,6 +83,7 @@ Last updated at app version `v.1.393`.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
 - Trainer notification reminder periods and workout calendar dates expose selected `aria-pressed` state under trainer smoke.
 - Admin trainer-calendar day, hour-reminder and reminder toggle controls expose selected `aria-pressed` state, and the calendar panel is clamped against mobile overflow under the admin visual audit.
+- Trainer calendar reminder-before selectors expose readable labels under the app structure audit.
 - First setup sex, activity and goal choices expose selected `aria-pressed` state under the client primary visual audit.
 - Profile body metric sex choices expose selected `aria-pressed` state under the client primary visual audit.
 - Profile body metric goal and activity selectors expose readable labels under the client primary visual audit.

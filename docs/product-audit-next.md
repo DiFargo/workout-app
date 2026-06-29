@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.393`.
+Last updated at app version `v.1.394`.
 
 ## Evidence
 
@@ -222,6 +222,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 117. Basic workout quiz goal, experience and weekly workout selectors now expose readable labels under the app structure audit.
 118. Trainer progress photo comparison selectors now expose readable labels under the app structure audit.
 119. Trainer program assignment and nutrition preset selectors now expose readable labels under the app structure audit.
+120. Trainer calendar reminder-before selectors now expose readable labels under the app structure audit.
 
 ## P1: Next Product Fixes
 

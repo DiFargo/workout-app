@@ -575,6 +575,14 @@ test("trainer program assignment selectors expose readable labels", async () => 
   assert.match(trainingTab, /<select[\s\S]*aria-label="Вариант плана питания"[\s\S]*value=\{adminSelectedNutritionPreset\}/);
 });
 
+test("trainer calendar reminder selectors expose readable labels", async () => {
+  const adminCalendar = await readText("src/features/trainer/TrainerAdminCalendarTab.jsx");
+  const clientCalendar = await readText("src/features/trainer/TrainerClientCalendarNutritionTab.jsx");
+
+  assert.match(adminCalendar, /<select[\s\S]*aria-label="Когда напомнить о тренировке"[\s\S]*className="adminReminderBeforeSelect"/);
+  assert.match(clientCalendar, /<select[\s\S]*aria-label="Когда напомнить о тренировке"[\s\S]*className="adminReminderBeforeSelect"/);
+});
+
 test("trainer progress photo compare selectors expose readable labels", async () => {
   const workspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
 

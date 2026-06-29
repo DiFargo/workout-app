@@ -118,6 +118,7 @@ export default function TrainerClientCalendarNutritionTab({
                     <label className="adminCalendarReminderBeforeField">
                       <span>Напомнить за</span>
                       <select
+                        aria-label="Когда напомнить о тренировке"
                         className="adminReminderBeforeSelect"
                         value={daySettings.reminderBefore || daySettings.reminderTime || "1 день"}
                         onChange={(event) => updateAdminCalendarDaySetting(dayId, "reminderBefore", event.target.value)}
