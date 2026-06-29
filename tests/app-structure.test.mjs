@@ -510,6 +510,10 @@ test("client primary final CSS keeps food action bars in the final owner", async
     1
   );
   assert.equal(
+    (source.match(/\.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*0\.92fr 1\.58fr !important;\s*gap:\s*8px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar\s*\{\s*position:\s*fixed !important;\s*left:\s*50% !important;/g) || []).length,
     0
   );
