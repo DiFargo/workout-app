@@ -323,24 +323,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     letter-spacing: 0 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutStats {
-    display: grid !important;
-    gap: 18px !important;
-    margin-top: 26px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutStats span {
-    display: grid !important;
-    grid-template-columns: 42px minmax(0, 1fr) !important;
-    align-items: center !important;
-    gap: 12px !important;
-    color: #253047 !important;
-    -webkit-text-fill-color: #253047 !important;
-    font-size: 18px !important;
-    font-weight: 900 !important;
-    line-height: 1.2 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutStats b {
     width: 36px !important;
     height: 36px !important;

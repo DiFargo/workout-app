@@ -621,6 +621,19 @@ test("client primary final CSS keeps workout start button fixed styling in the f
   );
 });
 
+test("client primary final CSS keeps workout stats layout in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutStats\s*\{\s*display:\s*grid !important;\s*gap:\s*18px !important;\s*margin-top:\s*26px !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutStats span\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*42px minmax\(0, 1fr\) !important;\s*align-items:\s*center !important;\s*gap:\s*12px !important;\s*color:\s*#253047 !important;/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps header action layout in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
