@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.460`.
+Last updated at app version `v.1.461`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `300` passed.
+- `npm.cmd test`: passed with `301` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -289,6 +289,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 184. Client primary final CSS now keeps food search header, input and recent-grid layout rules in the final owner.
 185. Client primary final CSS now keeps profile AI split-card full-owner rules in the final owner.
 186. Client primary final CSS now keeps profile AI stats row child text rules in the remaining guarded owners.
+187. Client primary final CSS now keeps workout badge layout rules in the final owner.
 
 ## P1: Next Product Fixes
 

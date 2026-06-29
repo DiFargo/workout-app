@@ -256,14 +256,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     overflow: visible !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBadges {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.45fr) !important;
-    gap: 10px !important;
-    margin: 0 0 14px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNextBadge,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProgressBadge,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCompletedBadge,
