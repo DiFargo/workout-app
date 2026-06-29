@@ -492,23 +492,6 @@
   }
 }
 
-@media (max-width: 370px) {
-  .fatWeekRow .fatDayCell span {
-    width: 40px !important;
-    height: 40px !important;
-    font-size: 25px !important;
-  }
-
-  .fatQuickActions button {
-    font-size: 16px !important;
-  }
-
-  .fatMealMain {
-    grid-template-columns: 44px minmax(0, 1fr) 58px 34px 18px !important;
-    gap: 8px !important;
-  }
-}
-
 /* =========================================================
    NUTRITION PAGE â€” PIXEL-PERFECT REFERENCE RENDER OVERRIDE
    Ð Ð°Ð±Ð¾Ñ‚Ð°ÐµÑ‚ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ. Ð¢Ñ€ÐµÐ½Ð¸Ñ€Ð¾Ð²ÐºÐ¸ Ð½Ðµ Ñ‚Ñ€Ð¾Ð³Ð°Ñ‚ÑŒ.

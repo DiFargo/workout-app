@@ -702,6 +702,24 @@ test("legacy nutrition header CSS keeps early narrow meal text sizes out of the 
   );
 });
 
+test("legacy nutrition header CSS keeps early narrow layout sizes out of the old owner", async () => {
+  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
+
+  assert.ok(pixelReferenceStart > 0);
+
+  const refinedDarkBlock = source.slice(0, pixelReferenceStart);
+
+  assert.doesNotMatch(
+    refinedDarkBlock,
+    /@media\s*\(max-width:\s*370px\)[\s\S]*?\.fatWeekRow \.fatDayCell span\s*\{\s*width:\s*40px !important;\s*height:\s*40px !important;\s*font-size:\s*25px !important;\s*\}[\s\S]*?\.fatQuickActions button\s*\{\s*font-size:\s*16px !important;\s*\}[\s\S]*?\.fatMealMain\s*\{\s*grid-template-columns:\s*44px minmax\(0, 1fr\) 58px 34px 18px !important;\s*gap:\s*8px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /@media\s*\(max-width:\s*370px\)[\s\S]*?\.fatWeekRow \.fatDayCell span\s*\{\s*width:\s*32px !important;\s*height:\s*32px !important;\s*font-size:\s*21px !important;\s*\}[\s\S]*?\.fatQuickActions button\s*\{\s*min-height:\s*48px !important;\s*font-size:\s*13px !important;\s*\}[\s\S]*?\.fatMealMain\s*\{\s*grid-template-columns:\s*36px minmax\(0, 1fr\) 42px 30px 16px !important;\s*padding:\s*9px 11px !important;\s*gap:\s*7px !important;\s*\}/
+  );
+});
+
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
   const headerReference = await readText("src/styles/legacy-food-search-header-reference.css");
   const pickerBase = await readText("src/styles/legacy-food-picker-base.css");
