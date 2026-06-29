@@ -95,10 +95,6 @@
     margin-top: -3px !important;
   }
 
-  .fatSecretPage .fatQuickActions,
-  .fatQuickActions {
-    margin-bottom: 0 !important;
-  }
 }
 
 /* =========================================================
@@ -542,11 +538,6 @@
     margin-top: 9px !important;
   }
 
-  .fatSecretPage .fatMealCard,
-  .fatMealCard {
-    border-radius: 20px !important;
-  }
-
   .fatSecretPage .fatMealMain,
   .fatMealMain {
     min-height: 64px !important;
@@ -568,11 +559,6 @@
   .fatMealTitle strong {
     font-size: 18px !important;
     letter-spacing: -0.5px !important;
-  }
-
-  .fatSecretPage .fatMealKcal strong,
-  .fatMealKcal strong {
-    font-size: 16px !important;
   }
 
 }
@@ -1164,10 +1150,6 @@
     gap: 0 !important;
   }
 
-  .fatSecretPage .fatMealCard + .fatMealCard,
-  .fatMealCard + .fatMealCard {
-    margin-top: -1px !important;
-  }
 }
 
 /* =========================================================
@@ -2615,11 +2597,6 @@
     padding-bottom: 12px !important;
   }
 
-  .fatMealCard.open .fatMealItems.productListWideFinal,
-  .fatMealCard.open .productListExact.productListWideFinal,
-  .productListWideFinal {
-    margin-bottom: 0 !important;
-  }
 }
 
 /* =========================================================

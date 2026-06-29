@@ -1,14 +1,14 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.419`.
+Last updated at app version `v.1.420`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `212` passed.
+- `npm.cmd test`: passed with `267` passed.
 - `npm.cmd run lint:critical`: passed.
-- `npm.cmd run test:e2e`: passed with `35` passed and `1` skipped.
+- `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
 - `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`: passed.
 - `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `4` passed.
@@ -248,6 +248,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 143. Desktop cabinet CSS now keeps trainer client overview two-column locks in the broad mobile owner instead of repeating them in the narrow block.
 144. Legacy food editor CSS now keeps summary dot sizes in root owners instead of repeating identical span sizes inside mobile media blocks.
 145. Nutrition calendar CSS now keeps compact grid gap and day-number size in the final compact owner instead of repeating them in the early narrow block.
+146. Nutrition late layout CSS no longer keeps no-op mobile duplicates for quick actions, meal card radius, meal kcal size, adjacent meal gap and expanded product-list bottom margin.
 
 ## P1: Next Product Fixes
 

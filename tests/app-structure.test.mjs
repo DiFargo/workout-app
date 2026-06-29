@@ -692,6 +692,66 @@ test("nutrition calendar CSS keeps final size and label color locks in the final
   );
 });
 
+test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old owners", async () => {
+  const source = await readText("src/styles/legacy-nutrition-late-layout.css");
+  const tighterSpacingStart = source.indexOf("TIGHTER SEARCH TO CALORIES SPACING");
+  const ultraSpacingStart = source.indexOf("ULTRA TIGHT TOP SPACING", tighterSpacingStart);
+  const mealRedesignStart = source.indexOf("MEAL CARDS PREMIUM REDESIGN");
+  const compactMealStart = source.indexOf("COMPACT MEAL CARDS", mealRedesignStart);
+  const ultraSmallGapStart = source.indexOf("ULTRA SMALL GAP BETWEEN MEAL CARDS");
+  const balancedGapStart = source.indexOf("BALANCED GAP BETWEEN MEAL CARDS", ultraSmallGapStart);
+  const bottomGapStart = source.indexOf("REAL BOTTOM GAP FIX FOR EXPANDED MEAL");
+  const darkerOpenStart = source.indexOf("DARKER OPEN MEAL CARD", bottomGapStart);
+
+  assert.ok(tighterSpacingStart >= 0);
+  assert.ok(ultraSpacingStart > tighterSpacingStart);
+  assert.ok(mealRedesignStart >= 0);
+  assert.ok(compactMealStart > mealRedesignStart);
+  assert.ok(ultraSmallGapStart >= 0);
+  assert.ok(balancedGapStart > ultraSmallGapStart);
+  assert.ok(bottomGapStart >= 0);
+  assert.ok(darkerOpenStart > bottomGapStart);
+
+  const tighterSpacingBlock = source.slice(tighterSpacingStart, ultraSpacingStart);
+  const mealRedesignBlock = source.slice(mealRedesignStart, compactMealStart);
+  const ultraSmallGapBlock = source.slice(ultraSmallGapStart, balancedGapStart);
+  const bottomGapBlock = source.slice(bottomGapStart, darkerOpenStart);
+
+  assert.doesNotMatch(
+    tighterSpacingBlock,
+    /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatQuickActions,\s*\.fatQuickActions\s*\{\s*margin-bottom:\s*0 !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    mealRedesignBlock,
+    /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatMealCard,\s*\.fatMealCard\s*\{\s*border-radius:\s*20px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    mealRedesignBlock,
+    /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatMealKcal strong,\s*\.fatMealKcal strong\s*\{\s*font-size:\s*16px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    ultraSmallGapBlock,
+    /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatMealCard \+ \.fatMealCard,\s*\.fatMealCard \+ \.fatMealCard\s*\{\s*margin-top:\s*-1px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    bottomGapBlock,
+    /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatMealCard\.open \.fatMealItems\.productListWideFinal,\s*\.fatMealCard\.open \.productListExact\.productListWideFinal,\s*\.productListWideFinal\s*\{\s*margin-bottom:\s*0 !important;\s*\}/
+  );
+
+  assert.match(
+    source,
+    /\.fatSecretPage \.fatQuickActions,\s*\.fatQuickActions\s*\{\s*margin-bottom:\s*0 !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /LOWER MEAL CARD HEIGHT[\s\S]*?\.fatSecretPage \.fatPlusBtn,\s*\.fatPlusBtn\s*\{\s*width:\s*24px !important;\s*height:\s*24px !important;\s*min-width:\s*24px !important;\s*min-height:\s*24px !important;[\s\S]*?font-size:\s*18px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /REAL BOTTOM GAP FIX FOR EXPANDED MEAL[\s\S]*?\.fatMealCard\.open \.fatMealItems\.productListWideFinal,\s*\.fatMealCard\.open \.productListExact\.productListWideFinal,\s*\.productListWideFinal\s*\{\s*margin-bottom:\s*0 !important;\s*\}/
+  );
+});
+
 test("admin client dashboard polish CSS has no empty media blocks", async () => {
   const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
 
