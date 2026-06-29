@@ -220,6 +220,7 @@ test("application styles use the modular styles entrypoint", async () => {
   const trainerWorkspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
   const adminPanelHub = await readText("src/components/admin/AdminPanelHub.jsx");
   const adminE2EHarness = await readText("src/components/admin/AdminE2EHarness.jsx");
+  const trainerLazyCss = await readText("src/styles/trainer-lazy.css");
   const adminLazyCss = await readText("src/styles/admin-lazy.css");
   const adminInternalsLazyCss = await readText("src/styles/admin-internals-lazy.css");
 
@@ -302,6 +303,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-admin-shell-crm-app46.css",
     "./legacy-admin-program-editor-app49.css",
     "./legacy-month-program-editor-early.css",
+    "./legacy-exercise-weight-mode.css",
     "./legacy-admin-client-page.css",
     "./legacy-admin-dashboard-bars.css",
     "./legacy-admin-programs-dashboard.css",
@@ -314,6 +316,7 @@ test("application styles use the modular styles entrypoint", async () => {
     const escapedImport = adminHeavyImport.replace(".", "\\.");
     assert.doesNotMatch(adminLazyCss, new RegExp(`@import "${escapedImport}"`));
     assert.match(adminInternalsLazyCss, new RegExp(`@import "${escapedImport}"`));
+    assert.match(trainerLazyCss, new RegExp(`@import "${escapedImport}"`));
   }
 
   for (const requiredImport of [
@@ -356,6 +359,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./nutrition-trainer-desktop.css",
     "./legacy-client-workout-flow-late.css",
     "./workoutFlow.css",
+    "./legacy-exercise-weight-mode.css",
     "./legacy-workout-flow-polish.css",
     "./legacy-workout-exercise-notes.css",
     "./legacy-workout-navigation-close-early.css",

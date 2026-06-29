@@ -297,3 +297,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.378`: `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.379`: moved workout flow CSS ownership from `index.css` into `client-workout-lazy.css`.
 - Verification for `v.1.379`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.380`: moved exercise weight-mode CSS ownership from `index.css` into trainer/admin internals style entrypoints.
+- Verification for `v.1.380`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
