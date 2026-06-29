@@ -631,6 +631,23 @@ test("client primary final CSS keeps profile AI hero sizing in the final owner",
   );
 });
 
+test("client primary final CSS keeps profile AI hero compact cluster in root owners", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*border:\s*0 !important;\s*background:\s*transparent !important;\s*box-shadow:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileDashboardPage\.clientCorePageMain \.profileAiAvatar,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatar\s*\{\s*width:\s*72px !important;\s*height:\s*72px !important;\s*min-width:\s*72px !important;\s*min-height:\s*72px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileAiHeroText h1,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHeroText h1\s*\{\s*margin:\s*0 !important;\s*color:\s*var\(--client-ink\) !important;\s*-webkit-text-fill-color:\s*var\(--client-ink\) !important;\s*font-size:\s*21px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.12 !important;\s*letter-spacing:\s*0 !important;\s*text-shadow:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps profile AI split cards in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
