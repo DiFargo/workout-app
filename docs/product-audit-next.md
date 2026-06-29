@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.407`.
+Last updated at app version `v.1.408`.
 
 ## Evidence
 
@@ -236,6 +236,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 131. Client food search final CSS now keeps one compact product meal-header width owner instead of repeating the same non-`:has()` mobile lock.
 132. Client food search final CSS now keeps one compact product title font-size owner instead of repeating the same non-`:has()` mobile lock.
 133. Nutrition calendar CSS now keeps final label color and footer sizing locks in the final calendar owner instead of repeating stale early values.
+134. Client food search final CSS now keeps product title typography in the stable-flow owner instead of repeating stale early header locks.
 
 ## P1: Next Product Fixes
 

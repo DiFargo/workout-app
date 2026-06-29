@@ -515,6 +515,26 @@ test("client food search final CSS keeps one compact product title owner", async
   assert.equal(nonHasProductTitleCompactLocks.length, 1);
 });
 
+test("client food search final CSS keeps product title typography in stable flow owner", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+  const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
+  const hardLockStart = source.indexOf("/* Product page header/search alignment hard lock v160 */");
+  const stableFlowBlock = source.slice(stableFlowStart, hardLockStart);
+
+  assert.doesNotMatch(
+    source,
+    /\/\* Food product\/search alignment and amount behavior v156 \*\/[\s\S]*?\.foodProductFlowTitle h2\s*\{\s*font-size:\s*27px !important;\s*line-height:\s*1 !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\/\* Product page header exact lock v158 \*\/[\s\S]*?\.foodProductFlowTitle h2\s*\{\s*font-size:\s*27px !important;\s*line-height:\s*1 !important;\s*\}/
+  );
+  assert.match(
+    stableFlowBlock,
+    /\.foodProductFlowTitle h2\s*\{[\s\S]*?font-size:\s*27px !important;[\s\S]*?line-height:\s*1\.04 !important;/
+  );
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 
