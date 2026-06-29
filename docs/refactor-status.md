@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.426`.
+Last updated at app version `v.1.427`.
 
 ## Stable Now
 
@@ -110,6 +110,7 @@ Last updated at app version `v.1.426`.
 - Nutrition late layout CSS now keeps the compact calories-card top offset in the final gap owner, guarded by app structure tests.
 - Nutrition header CSS now keeps pixel-meter span sizing in the later compact owner, guarded by app structure tests.
 - Nutrition header CSS now keeps calorie-row font sizes in later compact owners, guarded by app structure tests.
+- Nutrition header CSS now keeps meal-title font sizes in later compact owners, guarded by app structure tests.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
@@ -172,7 +173,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1194.98 KiB` raw, `117.93 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3496.55 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3496.50 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
@@ -197,7 +198,7 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 
 ## Recent Verification
 
-- `npm.cmd run test`: passed, `271` passed.
+- `npm.cmd run test`: passed, `272` passed.
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd run report:css`: passed.

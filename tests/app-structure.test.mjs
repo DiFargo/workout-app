@@ -630,6 +630,32 @@ test("legacy nutrition header CSS keeps calorie row sizes in later compact owner
   );
 });
 
+test("legacy nutrition header CSS keeps meal title sizes in later compact owners", async () => {
+  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const referenceStart = source.indexOf("NUTRITION PAGE");
+  const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
+  const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
+
+  assert.ok(referenceStart >= 0);
+  assert.ok(compactPolishStart > referenceStart);
+  assert.ok(narrowCompactStart > compactPolishStart);
+
+  const referenceBlock = source.slice(referenceStart, compactPolishStart);
+
+  assert.doesNotMatch(
+    referenceBlock,
+    /@media\s*\(max-width:\s*370px\)[\s\S]*?\.fatMealTitle strong\s*\{\s*font-size:\s*20px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /@media\s*\(max-width:\s*430px\)[\s\S]*?\.fatMealTitle strong\s*\{\s*font-size:\s*19px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /@media\s*\(max-width:\s*370px\)[\s\S]*?\.fatMealTitle strong\s*\{\s*font-size:\s*17px !important;\s*\}/
+  );
+});
+
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
   const headerReference = await readText("src/styles/legacy-food-search-header-reference.css");
   const pickerBase = await readText("src/styles/legacy-food-picker-base.css");
