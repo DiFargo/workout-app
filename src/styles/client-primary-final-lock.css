@@ -415,14 +415,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     justify-self: center !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductTopActions {
-    top: var(--client-top) !important;
-    right: var(--client-x) !important;
-    left: auto !important;
-    display: flex !important;
-    gap: 10px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductTopAction {
     width: var(--client-action) !important;
     height: var(--client-action) !important;

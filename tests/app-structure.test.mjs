@@ -551,6 +551,15 @@ test("client primary final CSS keeps product flow header layout in the final own
   );
 });
 
+test("client primary final CSS keeps product top actions layout in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.foodProductTopActions\s*\{\s*top:\s*var\(--client-top\) !important;\s*right:\s*var\(--client-x\) !important;\s*left:\s*auto !important;\s*display:\s*flex !important;\s*gap:\s*10px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps main AI stats row in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
