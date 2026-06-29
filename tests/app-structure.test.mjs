@@ -520,6 +520,19 @@ test("client primary final CSS keeps main AI stats row in the final owner", asyn
   );
 });
 
+test("client primary final CSS keeps profile AI hero sizing in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*width:\s*100% !important;\s*height:\s*104px !important;\s*min-height:\s*104px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*74px minmax\(0, 1fr\) !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*border-radius:\s*var\(--client-radius\) !important;\s*box-shadow:\s*var\(--client-shadow\) !important;\s*margin:\s*0 0 12px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client render target CSS keeps a single workout set-row owner", async () => {
   const source = await readText("src/styles/client-render-target-lock.css");
 

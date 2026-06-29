@@ -181,29 +181,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     box-shadow: var(--client-shadow) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
-    width: 100% !important;
-    height: 104px !important;
-    min-height: 104px !important;
-    display: grid !important;
-    grid-template-columns: 74px minmax(0, 1fr) !important;
-    align-items: center !important;
-    column-gap: 16px !important;
-    padding: 16px 18px !important;
-    border: 1px solid var(--client-border) !important;
-    border-radius: var(--client-radius) var(--client-radius) 0 0 !important;
-    background: #ffffff !important;
-    box-shadow: none !important;
-    overflow: hidden !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
-    border-radius: var(--client-radius) !important;
-    box-shadow: var(--client-shadow) !important;
-    margin: 0 0 12px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileAiAvatarWrap,
   html:root[data-app-theme="warm-light"] body #root .profileAiAvatar {
     width: 70px !important;
