@@ -204,6 +204,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 107. Additional profile/cabinet legacy CSS is now owned by the client profile style entrypoint, guarded by the app structure audit.
 108. Measurement legacy CSS is now owned by a dedicated client measurements style entrypoint, guarded by the app structure audit.
 109. Client cabinet action cards now expose explicit accessible labels, guarded by the app structure audit.
+110. First setup CSS is now owned by a dedicated client first-setup style entrypoint, guarded by the app structure audit.
 
 ## P1: Next Product Fixes
 

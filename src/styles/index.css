@@ -13,7 +13,6 @@
 @import "./legacy-warm-light-food-edit-back-buttons.css";
 @import "./legacy-food-products-summary-early.css";
 @import "./legacy-food-editor-workout-close-late.css";
-@import "./legacy-profile-first-setup-core.css";
 @import "./legacy-light-final-surfaces.css";
 @import "./legacy-light-specificity-cleanup.css";
 @import "./legacy-light-nested-screens.css";
@@ -32,4 +31,3 @@
 @import "./client-bottom-safe-area-final.css";
 @import "./client-nutrition-grid-lock.css";
 @import "./client-main-final-overrides.css";
-@import "./client-questionnaire-sliders.css";

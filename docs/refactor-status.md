@@ -96,6 +96,7 @@ Last updated at app version `v.1.370`.
 - Additional profile/cabinet CSS is owned by `client-profile-lazy.css` under the app structure audit.
 - Measurement CSS is owned by `client-measurements-lazy.css` under the app structure audit.
 - Client cabinet action cards expose explicit accessible labels under the app structure audit.
+- First setup CSS is owned by `client-first-setup-lazy.css` under the app structure audit.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.
@@ -122,7 +123,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1337.88 KiB` raw, `134.35 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 99 total in the latest `npm.cmd run report:css` pass, about `3507.70 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3507.70 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
