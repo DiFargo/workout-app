@@ -209,6 +209,7 @@ test("application styles use the modular styles entrypoint", async () => {
   const nutritionAiPlanLazyCss = await readText("src/styles/nutrition-ai-plan-lazy.css");
   const nutritionFoodIconLazyCss = await readText("src/styles/nutrition-food-icon-lazy.css");
   const aiCoachLazyCss = await readText("src/styles/ai-coach-lazy.css");
+  const clientProfileLazyCss = await readText("src/styles/client-profile-lazy.css");
   const appSource = await readText("src/App.jsx");
   const appCore = await readText("src/AppCore.jsx");
   const appRouter = await readText("src/app/AppRouter.jsx");
@@ -258,6 +259,17 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(appRouter, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appRouter, /['"]\.\.\/styles\/ai-coach-lazy\.css['"]/);
   assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
+  assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-profile-lazy\.css['"]/);
+  for (const profileLazyImport of [
+    "./legacy-profile-dashboard-telegram-late.css",
+    "./legacy-history-ai-search-late.css",
+    "./legacy-profile-nutrition-late.css",
+    "./legacy-profile-progress-late.css",
+    "./legacy-desktop-cabinet-polish.css"
+  ]) {
+    assert.match(clientProfileLazyCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
+    assert.doesNotMatch(indexCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
+  }
   assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
   assert.match(adminPanelHub, /['"]\.\.\/\.\.\/styles\/admin-lazy\.css['"]/);
   assert.match(adminE2EHarness, /['"]\.\.\/\.\.\/styles\/admin-internals-lazy\.css['"]/);
@@ -291,7 +303,6 @@ test("application styles use the modular styles entrypoint", async () => {
     "./workoutFlow.css",
     "./auth.css",
     "./legacy-overrides.css",
-    "./legacy-profile-nutrition-late.css",
     "./legacy-cabinet-calendar-insights.css",
     "./legacy-client-screen-alignment.css"
   ]) {
@@ -312,6 +323,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./ai-coach-lazy.css",
     "./nutrition-ai-plan-lazy.css",
     "./nutrition-food-icon-lazy.css",
+    "./client-profile-lazy.css",
     "./nutrition-stack.css",
     "./legacy-admin-stack.css",
     "./legacy-trainer-desktop-adaptation-late.css",
@@ -361,6 +373,7 @@ test("modular CSS import graph resolves without cycles", async () => {
   for (const cssEntry of [
     "src/styles/index.css",
     "src/styles/ai-coach-lazy.css",
+    "src/styles/client-profile-lazy.css",
     "src/styles/client-workout-lazy.css",
     "src/styles/nutrition-stack.css",
     "src/styles/trainer-lazy.css",

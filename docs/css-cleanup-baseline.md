@@ -283,3 +283,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.371`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-ai-coach-visual.spec.js --project=mobile-chromium`, trainer/admin mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.372`: strengthened client icon-only back, close and refresh actions with accessible labels.
 - Verification for `v.1.372`: `tests/app-structure.test.mjs`, client AI Coach/workout/nutrition mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.373`: moved profile legacy CSS ownership from `index.css` into `client-profile-lazy.css`.
+- Verification for `v.1.373`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

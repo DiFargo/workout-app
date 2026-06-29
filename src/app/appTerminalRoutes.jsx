@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import ProfileDashboardRoute from "../features/client/profile/ProfileDashboardRoute";
+import "../styles/client-profile-lazy.css";
 import RouteFallback from "./RouteFallback";
 
 const loadTrainerAdminWorkoutsRoute = () => import("../features/trainer/TrainerAdminWorkoutsRoute");
