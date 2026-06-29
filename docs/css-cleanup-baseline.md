@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1176.89 KiB` raw, `116.99 KiB` gzip.
-- Latest source CSS report: `100` files, about `3467.85 KiB` total source CSS.
+- Latest main CSS bundle: about `1174.60 KiB` raw, `116.94 KiB` gzip.
+- Latest source CSS report: `100` files, about `3465.15 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,7 +28,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `247.59 KiB`
+- `src/styles/client-primary-final-lock.css` - `244.88 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
@@ -433,3 +433,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.446`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.447`: removed duplicate client page variable/background rules from `client-primary-final-lock.css`; the final client page variables owner remains guarded.
 - Verification for `v.1.447`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.448`: removed duplicate product-only food action bar rules from `client-primary-final-lock.css`; the unified product/editor action bar owner remains guarded.
+- Verification for `v.1.448`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
