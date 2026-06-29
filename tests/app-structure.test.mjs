@@ -623,6 +623,15 @@ test("client primary final CSS keeps profile AI hero sizing in the final owner",
   );
 });
 
+test("client primary final CSS keeps profile AI split cards in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiSplitCards\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*12px !important;\s*margin:\s*0 0 12px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps nutrition arrow sizing in the root owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
