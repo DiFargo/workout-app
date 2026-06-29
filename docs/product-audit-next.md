@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.467`.
+Last updated at app version `v.1.468`.
 
 ## Evidence
 
@@ -296,6 +296,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 191. Client primary final CSS now keeps workout card compact sizing and body radius rules in one guarded owner.
 192. Client primary final CSS now keeps workout compact shell rules in root owners instead of repeating no-op mobile media blocks.
 193. Client primary final CSS now keeps workout mobile hero and action placement rules in one guarded owner.
+194. Client primary final CSS now keeps workout 42px badge pill rules in one guarded root owner.
 
 ## P1: Next Product Fixes
 

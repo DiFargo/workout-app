@@ -4271,22 +4271,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     gap: 10px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNextBadge,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProgressBadge,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCompletedBadge,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutWeek {
-    height: 42px !important;
-    min-height: 42px !important;
-    padding: 0 14px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border-radius: 18px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardPro {
     width: 100% !important;
     height: clamp(458px, calc(100dvh - 304px), 548px) !important;
