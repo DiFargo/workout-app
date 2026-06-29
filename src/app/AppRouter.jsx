@@ -9,7 +9,11 @@ const loadAiCoachPage = () => Promise.all([
   import("../features/client/ai/AiCoachPage")
 ]).then(([, module]) => module);
 const loadBasicWorkoutQuizPage = () => import("../features/client/workouts/BasicWorkoutQuizPage");
-const loadMeasurementWizardPage = () => import("../features/client/measurements/MeasurementWizardPage");
+const loadMeasurementStyles = () => import("../styles/client-measurements-lazy.css");
+const loadMeasurementWizardPage = () => Promise.all([
+  loadMeasurementStyles(),
+  import("../features/client/measurements/MeasurementWizardPage")
+]).then(([, module]) => module);
 const loadWorkoutHistoryPage = () => import("../features/client/workouts/WorkoutHistoryPage");
 const loadWorkoutStyles = () => import("../styles/client-workout-lazy.css");
 const loadWorkoutListPage = () => Promise.all([

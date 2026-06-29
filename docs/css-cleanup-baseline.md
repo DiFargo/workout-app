@@ -287,3 +287,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.373`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.374`: moved additional profile/cabinet legacy CSS ownership from `index.css` into `client-profile-lazy.css`.
 - Verification for `v.1.374`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.375`: moved measurement legacy CSS ownership from `index.css` into `client-measurements-lazy.css`.
+- Verification for `v.1.375`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

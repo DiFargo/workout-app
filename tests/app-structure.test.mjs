@@ -209,6 +209,7 @@ test("application styles use the modular styles entrypoint", async () => {
   const nutritionAiPlanLazyCss = await readText("src/styles/nutrition-ai-plan-lazy.css");
   const nutritionFoodIconLazyCss = await readText("src/styles/nutrition-food-icon-lazy.css");
   const aiCoachLazyCss = await readText("src/styles/ai-coach-lazy.css");
+  const clientMeasurementsLazyCss = await readText("src/styles/client-measurements-lazy.css");
   const clientProfileLazyCss = await readText("src/styles/client-profile-lazy.css");
   const appSource = await readText("src/App.jsx");
   const appCore = await readText("src/AppCore.jsx");
@@ -258,8 +259,17 @@ test("application styles use the modular styles entrypoint", async () => {
   }
   assert.match(appRouter, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appRouter, /['"]\.\.\/styles\/ai-coach-lazy\.css['"]/);
+  assert.match(appRouter, /['"]\.\.\/styles\/client-measurements-lazy\.css['"]/);
   assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-profile-lazy\.css['"]/);
+  assert.match(clientProfileLazyCss, /@import "\.\/client-measurements-lazy\.css"/);
+  for (const measurementLazyImport of [
+    "./legacy-measurements-late.css",
+    "./legacy-measurement-review.css"
+  ]) {
+    assert.match(clientMeasurementsLazyCss, new RegExp(`@import "${measurementLazyImport.replace(".", "\\.")}"`));
+    assert.doesNotMatch(indexCss, new RegExp(`@import "${measurementLazyImport.replace(".", "\\.")}"`));
+  }
   for (const profileLazyImport of [
     "./legacy-profile-dashboard-telegram-late.css",
     "./legacy-history-ai-search-late.css",
@@ -268,7 +278,6 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-desktop-cabinet-polish.css",
     "./legacy-cabinet-calendar-insights.css",
     "./legacy-profile-account-editor.css",
-    "./legacy-measurement-review.css",
     "./legacy-progress-insights.css"
   ]) {
     assert.match(clientProfileLazyCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
@@ -326,6 +335,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./ai-coach-lazy.css",
     "./nutrition-ai-plan-lazy.css",
     "./nutrition-food-icon-lazy.css",
+    "./client-measurements-lazy.css",
     "./client-profile-lazy.css",
     "./nutrition-stack.css",
     "./legacy-admin-stack.css",
@@ -376,6 +386,7 @@ test("modular CSS import graph resolves without cycles", async () => {
   for (const cssEntry of [
     "src/styles/index.css",
     "src/styles/ai-coach-lazy.css",
+    "src/styles/client-measurements-lazy.css",
     "src/styles/client-profile-lazy.css",
     "src/styles/client-workout-lazy.css",
     "src/styles/nutrition-stack.css",
