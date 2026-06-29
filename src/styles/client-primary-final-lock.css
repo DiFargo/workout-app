@@ -481,38 +481,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     box-shadow: 0 14px 34px rgba(55, 64, 112, 0.12) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay {
-    align-items: stretch !important;
-    justify-content: center !important;
-    padding: 0 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
-    width: 100% !important;
-    max-width: none !important;
-    min-height: 100dvh !important;
-    max-height: none !important;
-    border-radius: 0 !important;
-    overflow-y: auto !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader {
-    min-height: var(--client-title-h) !important;
-    height: var(--client-title-h) !important;
-    margin: 0 0 18px !important;
-    padding: 0 0 0 calc(var(--client-action) + 12px) !important;
-    position: relative !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow {
     display: none !important;
   }

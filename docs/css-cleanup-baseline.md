@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1174.25 KiB` raw, `116.91 KiB` gzip.
-- Latest source CSS report: `100` files, about `3464.72 KiB` total source CSS.
+- Latest main CSS bundle: about `1173.35 KiB` raw, `116.88 KiB` gzip.
+- Latest source CSS report: `100` files, about `3463.65 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,7 +28,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `244.46 KiB`
+- `src/styles/client-primary-final-lock.css` - `243.38 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
@@ -437,3 +437,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.448`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.449`: removed duplicate profile AI hero heading typography from `client-primary-final-lock.css`; the final profile hero heading owner remains guarded.
 - Verification for `v.1.449`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.450`: removed duplicate food editor mobile header/sheet layout from `client-primary-final-lock.css`; the final food editor header owner remains guarded.
+- Verification for `v.1.450`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

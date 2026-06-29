@@ -515,6 +515,15 @@ test("client primary final CSS keeps food action bars in the final owner", async
   );
 });
 
+test("client primary final CSS keeps food editor header layout in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 18px !important;\s*padding:\s*0 0 0 calc\(var\(--client-action\) \+ 12px\) !important;\s*position:\s*relative !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps main AI stats row in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
