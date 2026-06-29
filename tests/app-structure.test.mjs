@@ -1026,6 +1026,18 @@ test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", 
   );
 });
 
+test("client main CSS keeps compact AI stat text rules in the later owner", async () => {
+  const source = await readText("src/styles/client-main-final-overrides.css");
+
+  assert.equal((source.match(/--main-home-primary-text-size:\s*16\.2px;/g) || []).length, 1);
+  assert.equal(
+    (source.match(/\.profileAiStatsRow\.profileAiStatsRow\.profileAiStatsRow > div\s*\{\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.match(source, /\.profileAiCoachHeadline span[\s\S]*?text-transform:\s*none !important;/);
+  assert.match(source, /\.profileAiCoachHeadline h2\s*\{\s*color:\s*var\(--main-nutrition-ink\) !important;[\s\S]*?font-size:\s*10\.25px !important;[\s\S]*?letter-spacing:\s*0 !important;\s*\}/);
+});
+
 test("desktop cabinet CSS keeps trainer client overview grid locks in the broad mobile owner", async () => {
   const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
   const trainerClientSectionStart = source.indexOf(".trainerClientDashboardModalOverlay");
