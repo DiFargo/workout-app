@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.390`.
+Last updated at app version `v.1.391`.
 
 ## Stable Now
 
@@ -112,6 +112,7 @@ Last updated at app version `v.1.390`.
 - Exercise weight-mode CSS is owned by trainer/admin internals style entrypoints.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
+- Basic workout quiz selectors expose readable labels under the app structure audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.
 - Nutrition food-search bottom bar tabs expose selected `aria-pressed` state under the nutrition visual audit.
 - Nutrition meal picker choices expose expanded and selected state under the nutrition visual audit.

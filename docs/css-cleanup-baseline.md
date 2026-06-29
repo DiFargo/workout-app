@@ -319,3 +319,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.389`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.390`: strengthened client nutrition header search, calendar and weekday action-label guards so readable Russian labels stay covered.
 - Verification for `v.1.390`: `tests/app-structure.test.mjs`, `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.391`: strengthened basic workout quiz goal, experience and weekly workout selectors with readable labels.
+- Verification for `v.1.391`: `tests/app-structure.test.mjs`, `tests/basic-workout-plan-builder.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

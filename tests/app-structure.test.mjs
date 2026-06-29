@@ -724,6 +724,14 @@ test("client profile body metric selectors expose readable labels", async () => 
   assert.match(bodyMetrics, /<select[\s\S]*aria-label="Активность"[\s\S]*value=\{draft\.activity\}/);
 });
 
+test("client basic workout quiz selectors expose readable labels", async () => {
+  const basicQuiz = await readText("src/features/client/workouts/BasicWorkoutQuizPage.jsx");
+
+  assert.match(basicQuiz, /<select[\s\S]*aria-label="Цель тренировки"[\s\S]*value=\{basicWorkoutQuiz\.goal\}/);
+  assert.match(basicQuiz, /<select[\s\S]*aria-label="Опыт тренировок"[\s\S]*value=\{basicWorkoutQuiz\.level\}/);
+  assert.match(basicQuiz, /<select[\s\S]*aria-label="Тренировок в неделю"[\s\S]*value=\{basicWorkoutQuiz\.days\}/);
+});
+
 test("client cabinet Telegram modal keeps a contained dialog shell", async () => {
   const telegramModal = await readText("src/features/client/profile/ProfileTelegramModal.jsx");
 

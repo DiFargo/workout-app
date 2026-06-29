@@ -35,6 +35,7 @@ export default function BasicWorkoutQuizPage({
         <label>
           <span>Цель</span>
           <select
+            aria-label="Цель тренировки"
             value={basicWorkoutQuiz.goal}
             onChange={(event) => onBasicWorkoutQuizChange((prev) => ({ ...prev, goal: event.target.value }))}
           >
@@ -46,6 +47,7 @@ export default function BasicWorkoutQuizPage({
         <label>
           <span>Опыт</span>
           <select
+            aria-label="Опыт тренировок"
             value={basicWorkoutQuiz.level}
             onChange={(event) => onBasicWorkoutQuizChange((prev) => ({ ...prev, level: event.target.value }))}
           >
@@ -57,6 +59,7 @@ export default function BasicWorkoutQuizPage({
         <label>
           <span>Сколько тренировок в неделю</span>
           <select
+            aria-label="Тренировок в неделю"
             value={basicWorkoutQuiz.days}
             onChange={(event) => onBasicWorkoutQuizChange((prev) => ({ ...prev, days: event.target.value }))}
           >
