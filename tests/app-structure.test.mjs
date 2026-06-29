@@ -564,6 +564,25 @@ test("legacy nutrition header CSS keeps one compact page padding owner", async (
   );
 });
 
+test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
+  const headerReference = await readText("src/styles/legacy-food-search-header-reference.css");
+  const pickerBase = await readText("src/styles/legacy-food-picker-base.css");
+  const caloriesTuning = await readText("src/styles/legacy-food-search-calories-tuning.css");
+
+  assert.equal(
+    (headerReference.match(/\.fatSecretPage \.fatQuickActions\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (pickerBase.match(/\.fatQuickActions\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (caloriesTuning.match(/\.fatSecretPage \.fatQuickActions,\s*\.fatQuickActions\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
   const source = await readText("src/styles/legacy-admin-shell-crm-app46.css");
 

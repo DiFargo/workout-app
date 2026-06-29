@@ -1643,8 +1643,6 @@
     border-radius: 22px !important;
   }
 
-  .fatQuickActions { display: none !important; }
-
   .fatQuickActions button {
     min-height: 42px !important;
     font-size: 10.5px !important;

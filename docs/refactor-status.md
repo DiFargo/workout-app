@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.410`.
+Last updated at app version `v.1.411`.
 
 ## Stable Now
 
@@ -94,6 +94,7 @@ Last updated at app version `v.1.410`.
 - Client food search final CSS now keeps product title typography in the stable-flow owner, guarded by app structure tests.
 - Client food search final CSS now keeps product hero spacing and narrow mobile x-locks in their latest owners.
 - Admin calendar reminders CSS now keeps fixed back-label visibility in one root owner, guarded by app structure tests.
+- Legacy food search CSS now keeps hidden quick-action ownership in root rules instead of repeating the same hide rules inside narrow media blocks.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.

@@ -853,8 +853,6 @@
       transform: translateX(-10px) translateY(1px) !important;
   }
 
-  .fatSecretPage .fatQuickActions,
-  .fatQuickActions { display: none !important; }
 }
 
 /* ===== CALORIES MOVE MORE LEFT ===== */
