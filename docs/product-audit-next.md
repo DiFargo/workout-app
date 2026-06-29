@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.412`.
+Last updated at app version `v.1.413`.
 
 ## Evidence
 
@@ -241,6 +241,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 136. Admin calendar reminders CSS now keeps fixed back-label visibility in one root owner instead of repeating it in desktop media.
 137. Legacy food search CSS now keeps hidden quick-action ownership in root rules instead of repeating the same hide rules inside narrow media blocks.
 138. Nutrition food-search bottom bar CSS now keeps the photo active transform in one root owner instead of repeating it in narrow media.
+139. Legacy food search calories CSS no longer repeats the early mobile first-column shift before the later closer-to-grid owner.
 
 ## P1: Next Product Fixes
 

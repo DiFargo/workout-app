@@ -869,11 +869,6 @@
 
 @media (max-width: 430px){
 
-  .fatSecretPage .fatCaloriesCard .fatCalorieRows > div:first-child,
-  .fatCaloriesCard .fatCalorieRows > div:first-child{
-      transform: translateX(-24px) !important;
-  }
-
   .fatSecretPage .fatCaloriesCard .fatCalorieRows > div:last-child,
   .fatCaloriesCard .fatCalorieRows > div:last-child{
       transform: translateX(-32px) !important;

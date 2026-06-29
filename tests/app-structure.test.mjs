@@ -592,6 +592,22 @@ test("nutrition food search actions CSS keeps one photo active transform owner",
   );
 });
 
+test("legacy food search calories CSS keeps early mobile column shift out of the old owner", async () => {
+  const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
+  const oldMoveStart = source.indexOf("/* ===== CALORIES MOVE MORE LEFT ===== */");
+  const centerAlignStart = source.indexOf("/* ===== PERFECT SCREEN CENTER ALIGN ===== */");
+  const oldMoveBlock = source.slice(oldMoveStart, centerAlignStart);
+
+  assert.doesNotMatch(
+    oldMoveBlock,
+    /\.fatCalorieRows > div:first-child[\s\S]*?transform:\s*translateX\(-24px\) !important;/
+  );
+  assert.match(
+    source,
+    /\/\* ===== LEFT CALORIES CLOSER TO GRID ===== \*\/[\s\S]*?\.fatCalorieRows > div:first-child[\s\S]*?transform:\s*translateX\(-24px\) !important;/
+  );
+});
+
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
   const source = await readText("src/styles/legacy-admin-shell-crm-app46.css");
 
