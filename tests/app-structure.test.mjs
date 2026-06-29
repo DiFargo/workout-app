@@ -695,6 +695,13 @@ test("client cabinet action cards expose explicit accessible labels", async () =
   assert.match(actionGrid, /aria-label=\{`\$\{eyebrow\}: \$\{title\}`\}/);
 });
 
+test("client cabinet Telegram modal keeps a contained dialog shell", async () => {
+  const telegramModal = await readText("src/features/client/profile/ProfileTelegramModal.jsx");
+
+  assert.match(telegramModal, /profileTelegramModalOverlay" role="presentation" onClick=\{onClose\}/);
+  assert.match(telegramModal, /className="profileTelegramModal profileTelegramManageModal"[\s\S]*role="dialog"[\s\S]*aria-modal="true"[\s\S]*onClick=\{\(event\) => event\.stopPropagation\(\)\}/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

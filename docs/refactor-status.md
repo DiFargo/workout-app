@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.385`.
+Last updated at app version `v.1.386`.
 
 ## Stable Now
 
@@ -65,6 +65,7 @@ Last updated at app version `v.1.385`.
 - Client food editor/search polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition week day buttons expose full-date accessible labels and selected state, and the nutrition visual audit guards them.
 - Client cabinet Telegram management modal exposes dialog semantics and an accessible close control under the primary visual audit.
+- Client cabinet Telegram management modal now uses the same contained dialog/backdrop shell as the other cabinet modals.
 - Client cabinet nutrition goal picker exposes accessible goal labels and selected state under the primary visual audit.
 - Client cabinet settings visual harness renders the real app-settings section and guards theme/Telegram accessibility attributes.
 - Client cabinet trainer notification items expose task, status and due-date accessible labels under the primary visual audit.

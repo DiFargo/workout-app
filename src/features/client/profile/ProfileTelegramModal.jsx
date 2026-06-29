@@ -16,12 +16,13 @@ export default function ProfileTelegramModal({
   }
 
   return (
-    <div className="profileTelegramModalOverlay">
+    <div className="profileTelegramModalOverlay" role="presentation" onClick={onClose}>
       <div
         className="profileTelegramModal profileTelegramManageModal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="profileTelegramManageTitle"
+        onClick={(event) => event.stopPropagation()}
       >
         <button
           type="button"
