@@ -711,6 +711,19 @@ test("client primary final CSS keeps workout start button fixed styling in the f
   );
 });
 
+test("client primary final CSS keeps workout card compact sizing in one owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutCardPro\s*\{\s*height:\s*clamp\(470px, calc\(100dvh - 292px\), 560px\) !important;\s*min-height:\s*470px !important;\s*max-height:\s*560px !important;\s*margin-bottom:\s*24px !important;\s*border-radius:\s*24px !important;\s*overflow:\s*hidden !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutProBody\s*\{\s*height:\s*100% !important;\s*border-radius:\s*22px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps workout stats layout in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 

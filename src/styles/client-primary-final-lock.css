@@ -1035,20 +1035,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     text-overflow: ellipsis !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardPro {
-    height: clamp(470px, calc(100dvh - 292px), 560px) !important;
-    min-height: 470px !important;
-    max-height: 560px !important;
-    margin-bottom: 24px !important;
-    border-radius: 24px !important;
-    overflow: hidden !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProBody {
-    height: 100% !important;
-    border-radius: 22px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNav {
     margin-top: 0 !important;
     margin-bottom: 4px !important;
