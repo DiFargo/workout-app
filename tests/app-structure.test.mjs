@@ -243,6 +243,7 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.doesNotMatch(indexCss, /\.aiNutritionPlanShell/);
   assert.doesNotMatch(indexCss, /\.nutritionAiPlanDashboard/);
   assert.doesNotMatch(indexCss, /\.foodEditIconManualBox/);
+  assert.match(clientWorkoutLazyCss, /@import "\.\/workoutFlow\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-client-workout-flow-late\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-flow-polish\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-exercise-notes\.css"/);
@@ -322,7 +323,6 @@ test("application styles use the modular styles entrypoint", async () => {
     "./app.css",
     "./menu.css",
     "./splash.css",
-    "./workoutFlow.css",
     "./auth.css",
     "./legacy-overrides.css",
     "./legacy-client-screen-alignment.css"
@@ -355,6 +355,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-trainer-light-audit.css",
     "./nutrition-trainer-desktop.css",
     "./legacy-client-workout-flow-late.css",
+    "./workoutFlow.css",
     "./legacy-workout-flow-polish.css",
     "./legacy-workout-exercise-notes.css",
     "./legacy-workout-navigation-close-early.css",

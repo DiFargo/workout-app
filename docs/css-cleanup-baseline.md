@@ -295,3 +295,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.377`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.378`: stabilized nutrition weekday labels as two-letter calendar model values.
 - Verification for `v.1.378`: `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.379`: moved workout flow CSS ownership from `index.css` into `client-workout-lazy.css`.
+- Verification for `v.1.379`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
