@@ -539,6 +539,10 @@ test("client primary final CSS keeps profile AI hero sizing in the final owner",
     (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*border-radius:\s*var\(--client-radius\) !important;\s*box-shadow:\s*var\(--client-shadow\) !important;\s*margin:\s*0 0 12px !important;/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.profileAiHeroText h1\s*\{\s*max-width:\s*100% !important;\s*margin:\s*0 !important;\s*color:\s*var\(--client-ink\) !important;\s*-webkit-text-fill-color:\s*var\(--client-ink\) !important;\s*font-size:\s*clamp\(23px, 6\.4vw, 30px\) !important;\s*line-height:\s*1\.08 !important;/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps nutrition arrow sizing in the root owner", async () => {

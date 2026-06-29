@@ -157,18 +157,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     display: block !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileAiHeroText h1 {
-    max-width: 100% !important;
-    margin: 0 !important;
-    color: var(--client-ink) !important;
-    -webkit-text-fill-color: var(--client-ink) !important;
-    font-size: clamp(23px, 6.4vw, 30px) !important;
-    line-height: 1.08 !important;
-    font-weight: 900 !important;
-    letter-spacing: 0 !important;
-    overflow-wrap: anywhere !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow .goal strong {
     font-size: clamp(15px, 4.7vw, 22px) !important;
   }

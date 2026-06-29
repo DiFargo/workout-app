@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.448`.
+Last updated at app version `v.1.449`.
 
 ## Evidence
 
@@ -277,6 +277,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 172. Client primary final CSS now keeps header action layout in the final owner instead of repeating it in an early mobile block.
 173. Client primary final CSS now keeps client page variables and background in the final owner instead of repeating them in an early mobile block.
 174. Client primary final CSS now keeps product and editor food action bars in the unified owner instead of repeating a product-only block.
+175. Client primary final CSS now keeps profile AI hero heading typography in the final owner instead of repeating it in an early mobile block.
 
 ## P1: Next Product Fixes
 
