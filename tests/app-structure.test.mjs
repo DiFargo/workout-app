@@ -244,6 +244,7 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.doesNotMatch(indexCss, /\.aiNutritionPlanShell/);
   assert.doesNotMatch(indexCss, /\.nutritionAiPlanDashboard/);
   assert.doesNotMatch(indexCss, /\.foodEditIconManualBox/);
+  assert.match(clientWorkoutLazyCss, /@import "\.\/workouts\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/workoutFlow\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-client-workout-flow-late\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-flow-polish\.css"/);
@@ -261,6 +262,15 @@ test("application styles use the modular styles entrypoint", async () => {
     assert.match(nutritionStackCss, new RegExp(`@import "${nutritionLazyImport.replace(".", "\\.")}"`));
   }
   assert.match(appRouter, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
+  for (const workoutRouteLoader of [
+    "loadBasicWorkoutQuizPage",
+    "loadWorkoutHistoryPage",
+    "loadWorkoutListPage",
+    "loadWorkoutModePage",
+    "loadWorkoutPlanPage"
+  ]) {
+    assert.match(appRouter, new RegExp(`const ${workoutRouteLoader} = \\(\\) => Promise\\.all\\(\\[[\\s\\S]*?loadWorkoutStyles\\(\\)`));
+  }
   assert.match(appRouter, /['"]\.\.\/styles\/ai-coach-lazy\.css['"]/);
   assert.match(appRouter, /['"]\.\.\/styles\/client-measurements-lazy\.css['"]/);
   assert.match(appStartupGate, /['"]\.\.\/styles\/client-first-setup-lazy\.css['"]/);
@@ -357,6 +367,7 @@ test("application styles use the modular styles entrypoint", async () => {
     "./legacy-trainer-light-workspace.css",
     "./legacy-trainer-light-audit.css",
     "./nutrition-trainer-desktop.css",
+    "./workouts.css",
     "./legacy-client-workout-flow-late.css",
     "./workoutFlow.css",
     "./legacy-exercise-weight-mode.css",

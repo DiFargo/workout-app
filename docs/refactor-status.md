@@ -99,6 +99,7 @@ Last updated at app version `v.1.370`.
 - First setup CSS is owned by `client-first-setup-lazy.css` under the app structure audit.
 - Nutrition weekday labels are stable two-letter values from `buildNutritionWeekDates`.
 - Workout flow CSS is owned by `client-workout-lazy.css` under workout visual audits.
+- Core workout CSS is owned by `client-workout-lazy.css`, including standalone workout route loaders.
 - Exercise weight-mode CSS is owned by trainer/admin internals style entrypoints.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
@@ -122,9 +123,9 @@ Last updated at app version `v.1.370`.
 
 From the latest verified build:
 
-- main app JS chunk: about `471.19 KiB` raw, `131.19 KiB` gzip.
+- main app JS chunk: about `471.32 KiB` raw, `131.19 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1327.45 KiB` raw, `132.68 KiB` gzip.
+- main CSS bundle: about `1286.90 KiB` raw, `126.93 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3507.74 KiB` total source CSS.
 

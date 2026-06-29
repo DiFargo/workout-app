@@ -4,24 +4,36 @@ import RouteFallback from "./RouteFallback";
 
 const loadAdminPanelHub = () => import("../components/admin/AdminPanelHub");
 const loadAiCoachStyles = () => import("../styles/ai-coach-lazy.css");
+const loadWorkoutStyles = () => import("../styles/client-workout-lazy.css");
 const loadAiCoachPage = () => Promise.all([
   loadAiCoachStyles(),
   import("../features/client/ai/AiCoachPage")
 ]).then(([, module]) => module);
-const loadBasicWorkoutQuizPage = () => import("../features/client/workouts/BasicWorkoutQuizPage");
+const loadBasicWorkoutQuizPage = () => Promise.all([
+  loadWorkoutStyles(),
+  import("../features/client/workouts/BasicWorkoutQuizPage")
+]).then(([, module]) => module);
 const loadMeasurementStyles = () => import("../styles/client-measurements-lazy.css");
 const loadMeasurementWizardPage = () => Promise.all([
   loadMeasurementStyles(),
   import("../features/client/measurements/MeasurementWizardPage")
 ]).then(([, module]) => module);
-const loadWorkoutHistoryPage = () => import("../features/client/workouts/WorkoutHistoryPage");
-const loadWorkoutStyles = () => import("../styles/client-workout-lazy.css");
+const loadWorkoutHistoryPage = () => Promise.all([
+  loadWorkoutStyles(),
+  import("../features/client/workouts/WorkoutHistoryPage")
+]).then(([, module]) => module);
 const loadWorkoutListPage = () => Promise.all([
   loadWorkoutStyles(),
   import("../features/client/workouts/WorkoutListPage")
 ]).then(([, module]) => module);
-const loadWorkoutModePage = () => import("../features/client/workouts/WorkoutModePage");
-const loadWorkoutPlanPage = () => import("../features/client/workouts/WorkoutPlanPage");
+const loadWorkoutModePage = () => Promise.all([
+  loadWorkoutStyles(),
+  import("../features/client/workouts/WorkoutModePage")
+]).then(([, module]) => module);
+const loadWorkoutPlanPage = () => Promise.all([
+  loadWorkoutStyles(),
+  import("../features/client/workouts/WorkoutPlanPage")
+]).then(([, module]) => module);
 
 const AdminPanelHub = lazy(loadAdminPanelHub);
 const AiCoachPage = lazy(loadAiCoachPage);
