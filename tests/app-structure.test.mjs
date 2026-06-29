@@ -657,6 +657,42 @@ test("legacy client workout plan tail CSS keeps calorie number sizing in compact
   );
 });
 
+test("legacy nutrition summary calories CSS keeps final compact calorie owners", async () => {
+  const source = await readText("src/styles/legacy-nutrition-summary-calories.css");
+  const compactRedesignStart = source.indexOf("NUTRITION SUMMARY COMPACT REDESIGN");
+  const premiumHarmonicStart = source.indexOf("CALORIES SUMMARY CARD", compactRedesignStart);
+  const referenceLayoutStart = source.indexOf("CALORIES CARD", premiumHarmonicStart);
+  const halfHeightStart = source.indexOf("HALF HEIGHT COMPACT FIX", referenceLayoutStart);
+  const squareGridStart = source.indexOf("SQUARE GRID + LEFT VALUE SHIFT RIGHT FINAL", halfHeightStart);
+
+  assert.ok(compactRedesignStart >= 0);
+  assert.ok(premiumHarmonicStart > compactRedesignStart);
+  assert.ok(referenceLayoutStart > premiumHarmonicStart);
+  assert.ok(halfHeightStart > referenceLayoutStart);
+  assert.ok(squareGridStart > halfHeightStart);
+
+  const compactRedesignBlock = source.slice(compactRedesignStart, premiumHarmonicStart);
+  const halfHeightBlock = source.slice(halfHeightStart, squareGridStart);
+  const squareGridBlock = source.slice(squareGridStart);
+
+  assert.doesNotMatch(
+    compactRedesignBlock,
+    /\.fatSecretPage \.fatCalorieRows\s*\{\s*gap:\s*7px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    halfHeightBlock,
+    /\.fatSecretPage \.fatCaloriesCard \.fatPixelMeter:not\(\.small\) span\s*\{\s*width:\s*6px !important;\s*height:\s*6px !important;\s*border-radius:\s*2px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatCalorieRows\s*\{\s*gap:\s*7px !important;\s*\}/
+  );
+  assert.match(
+    squareGridBlock,
+    /@media\s*\(max-width:\s*420px\)[\s\S]*?\.fatSecretPage \.fatCaloriesCard \.fatPixelMeter:not\(\.small\) span\s*\{\s*width:\s*6px !important;\s*height:\s*6px !important;\s*border-radius:\s*2px !important;\s*\}/
+  );
+});
+
 test("legacy food editor CSS keeps summary dot sizes in root owners", async () => {
   const source = await readText("src/styles/legacy-food-editor-tail.css");
 

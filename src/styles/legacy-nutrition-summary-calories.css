@@ -761,10 +761,6 @@
   border-radius: 1.5px !important;
 }
 
-.fatSecretPage .fatCalorieRows {
-  gap: 7px !important;
-}
-
 .fatSecretPage .fatCalorieRows div {
   min-height: 26px !important;
   grid-template-columns: minmax(0, 1fr) 66px !important;
@@ -1612,12 +1608,6 @@
   gap: 4px !important;
   opacity: 0.82 !important;
   filter: drop-shadow(0 6px 14px rgba(18, 227, 92, 0.10)) !important;
-}
-
-.fatSecretPage .fatCaloriesCard .fatPixelMeter:not(.small) span {
-  width: 6px !important;
-  height: 6px !important;
-  border-radius: 2px !important;
 }
 
 .fatSecretPage .fatCaloriesCard .fatCalorieRows {
