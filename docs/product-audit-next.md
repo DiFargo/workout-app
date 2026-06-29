@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.417`.
+Last updated at app version `v.1.418`.
 
 ## Evidence
 
@@ -246,6 +246,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 141. Legacy food search calories CSS now keeps compact dot sizing in the latest mobile owner instead of repeating it in the old narrow block.
 142. Profile dashboard CSS now keeps AI stat compact sizing in the latest compact owner instead of retaining the stale mobile pre-owner.
 143. Desktop cabinet CSS now keeps trainer client overview two-column locks in the broad mobile owner instead of repeating them in the narrow block.
+144. Legacy food editor CSS now keeps summary dot sizes in root owners instead of repeating identical span sizes inside mobile media blocks.
 
 ## P1: Next Product Fixes
 

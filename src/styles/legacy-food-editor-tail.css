@@ -1855,11 +1855,6 @@
     gap: 2.5px !important;
   }
 
-  .summaryDotGrid span {
-    width: 5px !important;
-    height: 5px !important;
-  }
-
   .summaryCaloriesRow span {
     font-size: 9px !important;
   }
@@ -1927,11 +1922,6 @@
 
   .summaryDotGrid {
     width: 31px !important;
-  }
-
-  .summaryDotGrid span {
-    width: 5.5px !important;
-    height: 5.5px !important;
   }
 
   .summaryCaloriesRow span {

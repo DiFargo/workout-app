@@ -630,6 +630,19 @@ test("legacy food search calories CSS keeps compact dots in the latest mobile ow
   );
 });
 
+test("legacy food editor CSS keeps summary dot sizes in root owners", async () => {
+  const source = await readText("src/styles/legacy-food-editor-tail.css");
+
+  assert.equal(
+    (source.match(/\.summaryDotGrid span\s*\{\s*width:\s*5px !important;\s*height:\s*5px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.summaryDotGrid span\s*\{\s*width:\s*5\.5px !important;\s*height:\s*5\.5px !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
   const source = await readText("src/styles/legacy-admin-shell-crm-app46.css");
 
