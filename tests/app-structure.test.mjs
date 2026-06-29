@@ -600,6 +600,15 @@ test("client primary final CSS keeps workout start button fixed styling in the f
   );
 });
 
+test("client primary final CSS keeps header action layout in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetTitleRow \.profileTrainerNotificationsButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeaderIconActions,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutHeaderActions\s*\{\s*position:\s*static !important;\s*justify-self:\s*end !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-end !important;\s*gap:\s*10px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client render target CSS keeps a single workout set-row owner", async () => {
   const source = await readText("src/styles/client-render-target-lock.css");
 
