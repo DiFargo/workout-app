@@ -1311,3 +1311,24 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
   text-transform: uppercase !important;
 }
 
+/* Preserve both letters in Russian weekday abbreviations on narrow mobile screens. */
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
+  grid-template-columns: repeat(7, minmax(34px, 1fr)) !important;
+  justify-items: center !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4 {
+  width: 100% !important;
+  max-width: 48px !important;
+  overflow: visible !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4 small {
+  flex-basis: 14px !important;
+  min-width: 2.4ch !important;
+  width: 2.4ch !important;
+  max-width: 2.4ch !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+

@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.394`.
+Last updated at app version `v.1.395`.
 
 ## Stable Now
 
@@ -45,6 +45,7 @@ Last updated at app version `v.1.394`.
 - Client nutrition weekday strip keeps compact equal mobile cells and bounded markers under the nutrition visual audit.
 - Client nutrition week labels now use unambiguous two-letter Russian weekdays.
 - Client nutrition week labels now render as uppercase two-letter abbreviations so the mobile header cannot collapse to ambiguous one-letter days.
+- Client nutrition weekday strip keeps both letters visible on narrow mobile screens with a dedicated CSS structure guard.
 - Client nutrition header action labels use readable Russian text under structure and nutrition visual audits.
 - Client nutrition weekday cells now lock label and marker centers to prevent mobile header drift.
 - Client nutrition weekday cells now expose selected day and current-date state through `aria-pressed` and `aria-current`.
@@ -136,11 +137,11 @@ Last updated at app version `v.1.394`.
 
 From the latest verified build:
 
-- main app JS chunk: about `471.32 KiB` raw, `131.19 KiB` gzip.
+- main app JS chunk: about `472.14 KiB` raw, `131.40 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1197.05 KiB` raw, `118.05 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3507.74 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3508.53 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

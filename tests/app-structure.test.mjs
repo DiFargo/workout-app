@@ -603,6 +603,15 @@ test("client nutrition weekday strip exposes selected and current date state", a
   assert.match(nutritionHeader, /aria-current=\{isTodayDay \? "date" : undefined\}/);
 });
 
+test("client nutrition weekday strip keeps two-letter labels visible", async () => {
+  const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
+  const nutritionCss = await readText("src/styles/nutrition-food-flow-late.css");
+
+  assert.match(nutritionCalendar, /NUTRITION_WEEK_LABELS = \["\\u041f\\u041d", "\\u0412\\u0422", "\\u0421\\u0420", "\\u0427\\u0422", "\\u041f\\u0422", "\\u0421\\u0411", "\\u0412\\u0421"\]/);
+  assert.match(nutritionCss, /Preserve both letters in Russian weekday abbreviations/);
+  assert.match(nutritionCss, /\.nutritionWeekV4 \.nutritionDayV4 small \{[\s\S]*min-width: 2\.4ch !important;[\s\S]*width: 2\.4ch !important;[\s\S]*white-space: nowrap !important;/);
+});
+
 test("client nutrition header labels stay readable Russian text", async () => {
   const nutritionHeader = await readText("src/features/client/nutrition/NutritionHeader.jsx");
 

@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1511.41 KiB` raw, `155.16 KiB` gzip.
-- Latest source CSS report: `93` files, about `3506.44 KiB` total source CSS.
+- Latest main CSS bundle: about `1197.05 KiB` raw, `118.05 KiB` gzip.
+- Latest source CSS report: `100` files, about `3508.53 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -327,3 +327,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.393`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.394`: strengthened trainer calendar reminder-before selectors with readable labels.
 - Verification for `v.1.394`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.395`: reinforced the client nutrition weekday strip so two-letter Russian labels cannot be clipped on narrow mobile screens.
+- Verification for `v.1.395`: `tests/app-structure.test.mjs`, `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
