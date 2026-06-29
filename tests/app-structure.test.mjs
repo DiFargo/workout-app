@@ -720,6 +720,30 @@ test("legacy nutrition header CSS keeps early narrow layout sizes out of the old
   );
 });
 
+test("legacy nutrition header CSS keeps reference narrow layout sizes in compact owners", async () => {
+  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
+  const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", pixelReferenceStart);
+
+  assert.ok(pixelReferenceStart > 0);
+  assert.ok(compactPolishStart > pixelReferenceStart);
+
+  const referenceBlock = source.slice(pixelReferenceStart, compactPolishStart);
+
+  assert.match(
+    referenceBlock,
+    /@media\s*\(max-width:\s*370px\)\s*\{\s*\.fatWeekRow\s*\{\s*gap:\s*7px !important;\s*\}\s*\}/
+  );
+  assert.doesNotMatch(
+    referenceBlock,
+    /\.fatWeekRow \.fatDayCell span\s*\{\s*width:\s*38px !important;\s*height:\s*38px !important;\s*font-size:\s*27px !important;\s*\}[\s\S]*?\.fatMealIcon\s*\{\s*width:\s*40px !important;\s*height:\s*40px !important;\s*font-size:\s*31px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /@media\s*\(max-width:\s*370px\)[\s\S]*?\.fatWeekRow \.fatDayCell span\s*\{\s*width:\s*32px !important;\s*height:\s*32px !important;\s*font-size:\s*21px !important;\s*\}[\s\S]*?\.fatMealIcon\s*\{\s*width:\s*31px !important;\s*height:\s*31px !important;\s*font-size:\s*24px !important;\s*\}/
+  );
+});
+
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
   const headerReference = await readText("src/styles/legacy-food-search-header-reference.css");
   const pickerBase = await readText("src/styles/legacy-food-picker-base.css");

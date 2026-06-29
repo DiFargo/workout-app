@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.430`.
+Last updated at app version `v.1.431`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `275` passed.
+- `npm.cmd test`: passed with `276` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -259,6 +259,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 154. Nutrition header CSS now keeps meal-kcal font sizes in the later compact owners instead of repeating them in the older narrow reference block.
 155. Nutrition header CSS now keeps narrow meal text sizes in the later compact owners instead of repeating them in the older refined block.
 156. Nutrition header CSS now keeps narrow layout sizes in the later compact owners instead of preserving the older refined narrow block.
+157. Nutrition header CSS now keeps reference narrow layout sizes in the later compact owners while preserving the remaining reference gap rule.
 
 ## P1: Next Product Fixes
 
