@@ -7,7 +7,7 @@ export default function AccessDeniedScreen({
   return (
     <div className="app">
       {onBack && (
-        <button className="backBtn" onClick={onBack}>
+        <button className="backBtn" type="button" onClick={onBack}>
           {backLabel}
         </button>
       )}

@@ -8,7 +8,7 @@ export default function AdminPanelHub({
   if (!canUseAdminFeatures()) {
     return (
       <div className="app">
-        <button className="backBtn" onClick={() => setPage("main")}>
+        <button className="backBtn" type="button" onClick={() => setPage("main")}>
           ← Главное меню
         </button>
         <div className="historyEmptyCard">
@@ -23,6 +23,7 @@ export default function AdminPanelHub({
     <div className="adminPanelHubPage">
       <button
         className="adminFixedMainBack"
+        type="button"
         onClick={() => setPage("main")}
         aria-label="Главное меню"
       >

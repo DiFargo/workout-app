@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.369`.
+Last updated at app version `v.1.370`.
 
 ## Stable Now
 
@@ -89,6 +89,7 @@ Last updated at app version `v.1.369`.
 - Trainer mobile overflow navigation items expose current-page `aria-current` state under the app structure audit.
 - Trainer workouts page active program tab exposes selected `aria-pressed` state under the app structure audit.
 - Legacy trainer/admin action buttons declare explicit `type="button"` under the app structure audit.
+- Admin and access-denied navigation buttons declare explicit `type="button"` under the app structure audit.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.

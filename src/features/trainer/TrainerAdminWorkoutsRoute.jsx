@@ -98,7 +98,7 @@ export default function TrainerAdminWorkoutsRoute({
   if (!canUseTrainerFeatures()) {
     return (
       <div className="app">
-        <button className="backBtn" onClick={() => setPage(APP_PAGES.MAIN)}>← Главное меню</button>
+        <button className="backBtn" type="button" onClick={() => setPage(APP_PAGES.MAIN)}>← Главное меню</button>
         <div className="historyEmptyCard">
           <h3>Доступ закрыт</h3>
           <p>Тренерская доступна админам и пользователям с ролью тренера.</p>
