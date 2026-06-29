@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.406`.
+Last updated at app version `v.1.407`.
 
 ## Evidence
 
@@ -235,6 +235,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 130. Admin CRM CSS no longer keeps older duplicate client card grid breakpoints; the later workspace breakpoint owner remains guarded.
 131. Client food search final CSS now keeps one compact product meal-header width owner instead of repeating the same non-`:has()` mobile lock.
 132. Client food search final CSS now keeps one compact product title font-size owner instead of repeating the same non-`:has()` mobile lock.
+133. Nutrition calendar CSS now keeps final label color and footer sizing locks in the final calendar owner instead of repeating stale early values.
 
 ## P1: Next Product Fixes
 

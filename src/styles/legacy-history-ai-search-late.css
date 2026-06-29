@@ -782,7 +782,6 @@
 
 .nutritionCalendarDay small {
   max-width: 100% !important;
-  color: rgba(184, 215, 108, 0.92) !important;
   font-size: 8px !important;
   font-weight: 900 !important;
   line-height: 1 !important;
@@ -862,12 +861,9 @@
 }
 
 .nutritionCalendarFooter button {
-  min-height: 48px !important;
-  border-radius: 18px !important;
   border: 1px solid rgba(255, 255, 255, 0.075) !important;
   background: rgba(255, 255, 255, 0.045) !important;
   color: rgba(247, 248, 251, 0.82) !important;
-  font-size: 14px !important;
   font-weight: 950 !important;
 }
 

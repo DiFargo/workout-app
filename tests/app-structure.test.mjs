@@ -533,6 +533,26 @@ test("admin CRM CSS keeps client card grid breakpoints in the latest owner", asy
   assert.match(source, /@media\s*\(max-width:\s*1120px\)[\s\S]*?\.adminClientCardsGridFive\s*\{\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\) !important;/);
 });
 
+test("nutrition calendar CSS keeps final size and label color locks in the final owner", async () => {
+  const source = await readText("src/styles/legacy-history-ai-search-late.css");
+  const premiumCalendarStart = source.indexOf("/* PREMIUM NUTRITION CALENDAR */");
+  const premiumCalendarEnd = source.indexOf("@media (max-width: 380px)", premiumCalendarStart);
+  const premiumCalendarBlock = source.slice(premiumCalendarStart, premiumCalendarEnd);
+
+  assert.doesNotMatch(
+    source,
+    /\.nutritionCalendarDay small\s*\{[\s\S]*?color:\s*rgba\(184,\s*215,\s*108,\s*0\.92\) !important;/
+  );
+  assert.doesNotMatch(
+    premiumCalendarBlock,
+    /\.nutritionCalendarFooter button\s*\{[\s\S]*?min-height:\s*48px !important;[\s\S]*?border-radius:\s*18px !important;[\s\S]*?font-size:\s*14px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* CALENDAR FINAL TUNING \*\/[\s\S]*?\.nutritionCalendarDay small\s*\{\s*color:\s*rgba\(184,\s*215,\s*108,\s*0\.39\) !important;\s*\}[\s\S]*?\.nutritionCalendarFooter button\s*\{\s*min-height:\s*48px !important;\s*border-radius:\s*18px !important;\s*font-size:\s*14px !important;\s*\}/
+  );
+});
+
 test("admin client dashboard polish CSS has no empty media blocks", async () => {
   const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
 

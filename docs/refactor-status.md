@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.406`.
+Last updated at app version `v.1.407`.
 
 ## Stable Now
 
@@ -90,6 +90,7 @@ Last updated at app version `v.1.406`.
 - Admin CRM CSS no longer keeps older duplicate client card grid breakpoints; the later workspace breakpoint owner remains guarded.
 - Client food search final CSS now keeps one compact product meal-header width owner instead of repeating the same non-`:has()` mobile lock.
 - Client food search final CSS now keeps one compact product title font-size owner instead of repeating the same non-`:has()` mobile lock.
+- Nutrition calendar CSS now keeps final label color and footer sizing locks in the final calendar owner, guarded by app structure tests.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
