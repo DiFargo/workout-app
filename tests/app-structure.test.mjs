@@ -507,6 +507,19 @@ test("client primary final CSS keeps food action bars in the final owner", async
   );
 });
 
+test("client primary final CSS keeps main AI stats row in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow\s*\{\s*width:\s*100% !important;\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*margin:\s*0 0 12px !important;\s*padding:\s*0 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow strong\s*\{\s*max-width:\s*100% !important;\s*color:\s*var\(--client-ink\) !important;\s*-webkit-text-fill-color:\s*var\(--client-ink\) !important;\s*font-size:\s*clamp\(18px, 5\.4vw, 25px\) !important;/g) || []).length,
+    1
+  );
+});
+
 test("client render target CSS keeps a single workout set-row owner", async () => {
   const source = await readText("src/styles/client-render-target-lock.css");
 

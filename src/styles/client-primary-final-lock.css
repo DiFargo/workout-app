@@ -230,57 +230,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     overflow-wrap: anywhere !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
-    width: 100% !important;
-    height: 78px !important;
-    min-height: 78px !important;
-    margin: 0 0 12px !important;
-    padding: 0 !important;
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    border: 1px solid var(--client-border) !important;
-    border-top: 0 !important;
-    border-radius: 0 0 var(--client-radius) var(--client-radius) !important;
-    background: #ffffff !important;
-    box-shadow: var(--client-shadow) !important;
-    overflow: hidden !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
-    min-width: 0 !important;
-    height: 100% !important;
-    padding: 10px 6px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-    gap: 5px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow span {
-    max-width: 100% !important;
-    color: var(--client-muted) !important;
-    -webkit-text-fill-color: var(--client-muted) !important;
-    font-size: 12px !important;
-    line-height: 1.1 !important;
-    font-weight: 800 !important;
-    white-space: nowrap !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
-    max-width: 100% !important;
-    color: var(--client-ink) !important;
-    -webkit-text-fill-color: var(--client-ink) !important;
-    font-size: clamp(18px, 5.4vw, 25px) !important;
-    line-height: 1.05 !important;
-    font-weight: 900 !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow .goal strong {
     font-size: clamp(15px, 4.7vw, 22px) !important;
   }
