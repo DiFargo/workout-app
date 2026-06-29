@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1172.57 KiB` raw, `116.80 KiB` gzip.
-- Latest source CSS report: `100` files, about `3462.71 KiB` total source CSS.
+- Latest main CSS bundle: about `1172.22 KiB` raw, `116.79 KiB` gzip.
+- Latest source CSS report: `100` files, about `3462.31 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,7 +28,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `242.45 KiB`
+- `src/styles/client-primary-final-lock.css` - `242.05 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
@@ -443,3 +443,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.451`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.452`: removed duplicate fixed photo action spacing from `client-primary-final-lock.css`; the final fixed photo action owner remains guarded.
 - Verification for `v.1.452`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.453`: removed duplicate product flow title typography from `client-primary-final-lock.css`; the final product flow title owner remains guarded.
+- Verification for `v.1.453`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

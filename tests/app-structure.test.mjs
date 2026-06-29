@@ -533,6 +533,15 @@ test("client primary final CSS keeps fixed photo action spacing in the final own
   );
 });
 
+test("client primary final CSS keeps product flow title typography in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.foodProductFlowHeader \.foodProductFlowTitle h2\s*\{\s*max-width:\s*100% !important;\s*color:\s*var\(--client-title-color\) !important;\s*-webkit-text-fill-color:\s*var\(--client-title-color\) !important;\s*font-size:\s*26px !important;\s*line-height:\s*1\.08 !important;\s*font-weight:\s*900 !important;\s*white-space:\s*normal !important;/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps main AI stats row in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 

@@ -421,16 +421,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     align-self: center !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductFlowHeader .foodProductFlowTitle h2 {
-    max-width: 100% !important;
-    color: var(--client-title-color) !important;
-    -webkit-text-fill-color: var(--client-title-color) !important;
-    font-size: 26px !important;
-    line-height: 1.08 !important;
-    font-weight: 900 !important;
-    white-space: normal !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductFlowHeader .foodEditInlineMealHeader {
     grid-area: meal !important;
     width: min(310px, 82%) !important;
