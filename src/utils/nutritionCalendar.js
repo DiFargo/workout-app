@@ -7,7 +7,7 @@ import {
 import { calculateNutritionFoodStreak } from "./auditSafety.js";
 import { sumNutritionFoods } from "./nutritionFoodTotals.js";
 
-const NUTRITION_WEEK_LABELS = ["\u041f\u043d", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041f\u0442", "\u0421\u0431", "\u0412\u0441"];
+const NUTRITION_WEEK_LABELS = ["\u041f\u041d", "\u0412\u0422", "\u0421\u0420", "\u0427\u0422", "\u041f\u0422", "\u0421\u0411", "\u0412\u0421"];
 
 function getCalendarNutritionDayTotals(day = {}) {
   return sumNutritionFoods(day.foods || []);

@@ -205,6 +205,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 108. Measurement legacy CSS is now owned by a dedicated client measurements style entrypoint, guarded by the app structure audit.
 109. Client cabinet action cards now expose explicit accessible labels, guarded by the app structure audit.
 110. First setup CSS is now owned by a dedicated client first-setup style entrypoint, guarded by the app structure audit.
+111. Nutrition weekday strip now receives stable two-letter labels from the calendar model, guarded by unit and visual audits.
 
 ## P1: Next Product Fixes
 

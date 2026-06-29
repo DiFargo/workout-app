@@ -25,7 +25,8 @@ test("nutrition week dates start on monday around selected date", () => {
     "2026-06-20",
     "2026-06-21"
   ]);
-  assert.deepEqual(week.map((day) => day.label), ["\u041f\u043d", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041f\u0442", "\u0421\u0431", "\u0412\u0441"]);
+  assert.deepEqual(week.map((day) => day.label), ["\u041f\u041d", "\u0412\u0422", "\u0421\u0420", "\u0427\u0422", "\u041f\u0422", "\u0421\u0411", "\u0412\u0421"]);
+  assert.ok(week.every((day) => day.label.length === 2), "nutrition weekday labels must stay two-letter");
 });
 
 test("nutrition current streak counts consecutive days with food", () => {

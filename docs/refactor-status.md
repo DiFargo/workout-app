@@ -97,6 +97,7 @@ Last updated at app version `v.1.370`.
 - Measurement CSS is owned by `client-measurements-lazy.css` under the app structure audit.
 - Client cabinet action cards expose explicit accessible labels under the app structure audit.
 - First setup CSS is owned by `client-first-setup-lazy.css` under the app structure audit.
+- Nutrition weekday labels are stable two-letter values from `buildNutritionWeekDates`.
 - Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
 - Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
 - Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.
