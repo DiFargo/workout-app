@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.434`.
+Last updated at app version `v.1.435`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `279` passed.
+- `npm.cmd test`: passed with `280` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -263,6 +263,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 158. Client main CSS now keeps compact AI stat text rules in the later owner instead of repeating them in an earlier mobile block.
 159. Client nutrition grid CSS now keeps progress insight spacing in the final owner instead of repeating the old progress spacing block.
 160. Client primary final CSS now keeps bottom navigation sizing in the later owner instead of repeating it in an earlier primary lock block.
+161. Client primary final CSS now keeps shared bottom/action bar sizing in the later mobile owner instead of repeating it in an early mobile block.
 
 ## P1: Next Product Fixes
 
