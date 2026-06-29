@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1197.05 KiB` raw, `118.05 KiB` gzip.
-- Latest source CSS report: `100` files, about `3503.17 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3502.82 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -29,12 +29,12 @@ Not covered deeply yet:
 Start mapping here before any cleanup:
 
 - `src/styles/client-primary-final-lock.css` - `266.70 KiB`
-- `src/components/trainer/trainer-workspace.css` - `179.26 KiB`
+- `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `170.85 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
 - `src/styles/legacy-food-editor-tail.css` - `100.56 KiB`
-- `src/styles/legacy-admin-client-dashboard-polish.css` - `97.12 KiB`
-- `src/styles/legacy-desktop-cabinet-polish.css` - `93.22 KiB`
+- `src/styles/legacy-admin-client-dashboard-polish.css` - `97.32 KiB`
+- `src/styles/legacy-desktop-cabinet-polish.css` - `93.03 KiB`
 - `src/styles/legacy-client-workout-flow-late.css` - `87.59 KiB`
 - `src/styles/client-visual-unity-final.css` - `78.41 KiB`
 - `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.78 KiB`
@@ -337,3 +337,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.398`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.399`: removed the duplicate workout set-row `v127` block from `client-render-target-lock.css`; the later `v126` set-row owner remains.
 - Verification for `v.1.399`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.400`: removed empty admin media blocks plus no-op duplicate trainer program and cabinet progress-photo CSS rules.
+- Verification for `v.1.400`: `tests/app-structure.test.mjs`, admin/trainer/client primary mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

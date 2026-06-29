@@ -864,10 +864,6 @@
   gap: 10px !important;
 }
 
-@media (max-width: 420px) {
-
-}
-
 /* Ãâ€”ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â ÃÂ²ÃÂ¾ÃÂ·ÃÂ²Ã‘â‚¬ÃÂ°Ã‘â€°Ã‘â€˜ÃÂ½ ÃÂ½ÃÂ°ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦; ÃÅ¸ÃÂ»ÃÂ°ÃÂ½ / Ãâ€”ÃÂ° ÃÂ¼ÃÂµÃ‘ÂÃ‘ÂÃ‘â€  ÃÂ¿ÃÂ¾ÃÂ´ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘â€˜ÃÂ¼ */
 
 .adminNutritionMonthPanel {
@@ -1048,10 +1044,6 @@
 .adminNutritionTrainingMark {
   font-size: 13px !important;
   line-height: 1 !important;
-}
-
-@media (max-width: 420px) {
-
 }
 
 /* === CALENDAR VISUAL ORDER FIX V44 === */

@@ -1487,10 +1487,6 @@ html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosSave {
 }
 
 @media (max-height: 800px) {
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview.hasProgressPhotos {
-    grid-template-rows: repeat(6, minmax(0, 1fr)) !important;
-  }
-
   .cabinetProgressPhotosModal {
     padding: 12px;
     gap: 9px;

@@ -5540,9 +5540,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     gap: 4px;
   }
 
-  .trainerProgramExerciseList .trainerNextExerciseEditor {
-    padding-left: 84px;
-  }
 }
 
 .trainerNextProgramControl > button:disabled {

@@ -479,6 +479,12 @@ test("client render target CSS keeps a single workout set-row owner", async () =
   );
 });
 
+test("admin client dashboard polish CSS has no empty media blocks", async () => {
+  const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
+
+  assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
+});
+
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
