@@ -313,3 +313,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.386`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.387`: strengthened the client cabinet measurements modal with readable labels for latest measurement value cards.
 - Verification for `v.1.387`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.388`: strengthened the client cabinet progress photos comparison controls with readable photo-session selector labels.
+- Verification for `v.1.388`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

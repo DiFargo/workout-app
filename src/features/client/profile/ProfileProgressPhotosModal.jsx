@@ -141,6 +141,7 @@ export default function ProfileProgressPhotosModal({
                     <label key={slot}>
                       <span>{label}</span>
                       <select
+                        aria-label={`Выбрать фотосессию: ${label.toLowerCase()}`}
                         value={compareIds[slot]}
                         onChange={(event) => onCompareIdsChange(slot, event.target.value)}
                       >

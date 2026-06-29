@@ -702,6 +702,12 @@ test("client cabinet measurement cards expose readable values", async () => {
   assert.match(measurementsModal, /aria-label=\{`\$\{field\.label\}: \$\{value\}`\}/);
 });
 
+test("client cabinet progress photo compare selects expose readable labels", async () => {
+  const photosModal = await readText("src/features/client/profile/ProfileProgressPhotosModal.jsx");
+
+  assert.match(photosModal, /aria-label=\{`Выбрать фотосессию: \$\{label\.toLowerCase\(\)\}`\}/);
+});
+
 test("client cabinet Telegram modal keeps a contained dialog shell", async () => {
   const telegramModal = await readText("src/features/client/profile/ProfileTelegramModal.jsx");
 

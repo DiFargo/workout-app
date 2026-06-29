@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.387`.
+Last updated at app version `v.1.388`.
 
 ## Stable Now
 
@@ -75,6 +75,7 @@ Last updated at app version `v.1.387`.
 - Client cabinet workout history expand and delete actions expose workout-specific accessible labels under the primary visual audit.
 - Client cabinet progress photo upload inputs expose view-specific accessible labels under the primary visual audit.
 - Client cabinet progress photo compare tabs expose selected `aria-pressed` state under the primary visual audit.
+- Client cabinet progress photo compare selectors expose readable labels under the primary visual audit.
 - Legacy trainer workspace bottom navigation exposes active-page `aria-current` state.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
