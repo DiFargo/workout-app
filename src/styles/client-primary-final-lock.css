@@ -1020,14 +1020,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     height: 52px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBadges {
-    min-height: 42px !important;
-    margin: 0 0 12px !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 0.45fr) minmax(0, 1fr) !important;
-    gap: 10px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNextBadge,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutWeek {
     min-width: 0 !important;

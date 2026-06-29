@@ -731,6 +731,10 @@ test("client primary final CSS keeps workout badge layout in the final owner", a
     (source.match(/\.clientCorePageWorkout \.individualWorkoutBadges\s*\{\s*width:\s*100% !important;\s*min-height:\s*42px !important;\s*margin:\s*0 0 12px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 0\.48fr\) minmax\(0, 1fr\) !important;\s*gap:\s*10px !important;/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutBadges\s*\{\s*min-height:\s*42px !important;\s*margin:\s*0 0 12px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 0\.45fr\) minmax\(0, 1fr\) !important;\s*gap:\s*10px !important;/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps header action layout in the final owner", async () => {

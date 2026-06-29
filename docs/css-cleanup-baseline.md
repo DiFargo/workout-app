@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1166.20 KiB` raw, `116.39 KiB` gzip.
-- Latest source CSS report: `100` files, about `3455.21 KiB` total source CSS.
+- Latest main CSS bundle: about `1165.95 KiB` raw, `116.36 KiB` gzip.
+- Latest source CSS report: `100` files, about `3454.92 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,7 +28,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `234.95 KiB`
+- `src/styles/client-primary-final-lock.css` - `234.65 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
@@ -463,3 +463,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.461`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.462`: removed duplicate workout badge compact layout rules from `client-primary-final-lock.css`; the remaining compact badge owner stays guarded.
 - Verification for `v.1.462`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.463`: removed duplicate workout badge narrow grid rules from `client-primary-final-lock.css`; the remaining narrow badge owner stays guarded.
+- Verification for `v.1.463`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
