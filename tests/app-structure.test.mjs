@@ -546,6 +546,15 @@ test("client primary final CSS keeps nutrition arrow sizing in the root owner", 
   );
 });
 
+test("client primary final CSS keeps primary page title typography in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4 \.clientCorePageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetPageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectTitle\s*\{\s*height:\s*var\(--client-page-title-height\) !important;\s*min-height:\s*var\(--client-page-title-height\) !important;\s*color:\s*var\(--client-page-title-color\) !important;/g) || []).length,
+    1
+  );
+});
+
 test("client render target CSS keeps a single workout set-row owner", async () => {
   const source = await readText("src/styles/client-render-target-lock.css");
 

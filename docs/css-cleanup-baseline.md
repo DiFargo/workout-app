@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1182.88 KiB` raw, `117.33 KiB` gzip.
-- Latest source CSS report: `100` files, about `3474.60 KiB` total source CSS.
+- Latest main CSS bundle: about `1182.01 KiB` raw, `117.31 KiB` gzip.
+- Latest source CSS report: `100` files, about `3473.64 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,7 +28,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `254.33 KiB`
+- `src/styles/client-primary-final-lock.css` - `253.37 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
@@ -417,3 +417,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.438`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.439`: removed duplicate narrow nutrition arrow and meta sizing rules from `client-primary-final-lock.css`; the root nutrition arrow owner remains guarded.
 - Verification for `v.1.439`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.440`: removed duplicate primary page title typography rules from `client-primary-final-lock.css`; the final page title typography owner remains guarded.
+- Verification for `v.1.440`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
