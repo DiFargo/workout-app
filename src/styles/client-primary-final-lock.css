@@ -3832,49 +3832,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
       inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen .foodProductFlowHeader {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) 116px !important;
-    grid-template-areas:
-      "title actions"
-      "meal meal" !important;
-    align-items: center !important;
-    gap: 12px 10px !important;
-    margin-bottom: 14px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen .foodProductFlowHeader .foodProductFlowTitle {
-    grid-area: title !important;
-    height: 52px !important;
-    min-height: 52px !important;
-    padding-right: 0 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen .foodProductFlowHeader .foodEditInlineMealHeader {
-    grid-area: meal !important;
-    width: min(270px, 100%) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen .foodProductFlowHeader .foodProductFlowTitle h2 {
-    font-size: 26px !important;
-    line-height: 1.05 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
-    padding-top: 16px !important;
-    padding-bottom: calc(104px + env(safe-area-inset-bottom)) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader {
-    min-height: 64px !important;
-    padding: 4px 54px 8px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
-    top: 2px !important;
-    width: 52px !important;
-    height: 52px !important;
-  }
 }
 
 /* v1.76b actual EOF override: canonical mobile client rhythm. */

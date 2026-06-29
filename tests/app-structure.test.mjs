@@ -526,6 +526,34 @@ test("client primary final CSS keeps food editor header layout in the final owne
     (source.match(/\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 18px !important;\s*padding:\s*0 0 0 calc\(var\(--client-action\) \+ 12px\) !important;\s*position:\s*relative !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen \.foodProductFlowHeader\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 116px !important;\s*grid-template-areas:\s*"title actions"\s*"meal meal" !important;\s*align-items:\s*center !important;\s*gap:\s*12px 10px !important;\s*margin-bottom:\s*14px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen \.foodProductFlowHeader \.foodProductFlowTitle\s*\{\s*grid-area:\s*title !important;\s*height:\s*52px !important;\s*min-height:\s*52px !important;\s*padding-right:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{\s*grid-area:\s*meal !important;\s*width:\s*min\(270px, 100%\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen \.foodProductFlowHeader \.foodProductFlowTitle h2\s*\{\s*font-size:\s*26px !important;\s*line-height:\s*1\.05 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*padding-top:\s*16px !important;\s*padding-bottom:\s*calc\(104px \+ env\(safe-area-inset-bottom\)\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*64px !important;\s*padding:\s*4px 54px 8px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay \.foodEditPageHeaderBack\s*\{\s*top:\s*2px !important;\s*width:\s*52px !important;\s*height:\s*52px !important;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps fixed photo action spacing in the final owner", async () => {

@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1158.70 KiB` raw, `115.87 KiB` gzip.
-- Latest source CSS report: `100` files, about `3446.12 KiB` total source CSS.
+- Latest main CSS bundle: about `1157.29 KiB` raw, `115.76 KiB` gzip.
+- Latest source CSS report: `100` files, about `3444.48 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,7 +28,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `225.85 KiB`
+- `src/styles/client-primary-final-lock.css` - `224.21 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
@@ -486,3 +486,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.472`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.473`: removed duplicate food search home header, title, close, input and recent-grid compact rules from `client-primary-final-lock.css`; the root food search compact owners stay guarded.
 - Verification for `v.1.473`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.474`: removed duplicate food edit product header, sheet and back-button compact rules from `client-primary-final-lock.css`; the root food edit compact owners stay guarded.
+- Verification for `v.1.474`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
