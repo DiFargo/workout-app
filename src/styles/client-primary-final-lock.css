@@ -245,11 +245,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     line-height: 1 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero > p,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectLine {
-    display: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle {
     min-width: 0 !important;
     white-space: nowrap !important;
@@ -3495,11 +3490,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     box-shadow: 0 14px 34px rgba(55, 64, 112, 0.1) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero > p,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectLine {
-    display: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutDeck {
     width: 100% !important;
     max-width: none !important;
@@ -4255,11 +4245,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     box-shadow: none !important;
     color: #6f7482 !important;
     -webkit-text-fill-color: #6f7482 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero > p,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectLine {
-    display: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBadges {
@@ -5068,11 +5053,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     align-items: center !important;
     gap: 14px !important;
     padding: 14px 18px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero > p,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectLine {
-    display: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle {

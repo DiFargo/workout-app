@@ -792,6 +792,10 @@ test("client primary final CSS keeps workout mobile hero and actions in one owne
   const source = await readText("src/styles/client-primary-final-lock.css");
 
   assert.equal(
+    (source.match(/\.clientCorePageWorkout \.workoutSelectHero > p,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectLine\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.clientCorePageWorkout \.workoutSelectHero\s*\{\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*\}/g) || []).length,
     1
   );
