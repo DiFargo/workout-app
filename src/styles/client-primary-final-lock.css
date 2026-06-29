@@ -702,39 +702,6 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCo
   overflow: hidden !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
-  min-width: 0 !important;
-  padding: 12px 8px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div:not(:last-child) {
-  border-right: 1px solid var(--client-card-border) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow span {
-  color: var(--client-muted) !important;
-  -webkit-text-fill-color: var(--client-muted) !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
-  line-height: 1.15 !important;
-  text-align: center !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
-  width: 100% !important;
-  color: var(--client-ink) !important;
-  -webkit-text-fill-color: var(--client-ink) !important;
-  font-size: 21px !important;
-  font-weight: 900 !important;
-  line-height: 1.1 !important;
-  text-align: center !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMeasurementSnapshot,

@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.459`.
+Last updated at app version `v.1.460`.
 
 ## Evidence
 
@@ -288,6 +288,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 183. Client primary final CSS now keeps the product flow header fallback group in one legacy owner before the final product header owner.
 184. Client primary final CSS now keeps food search header, input and recent-grid layout rules in the final owner.
 185. Client primary final CSS now keeps profile AI split-card full-owner rules in the final owner.
+186. Client primary final CSS now keeps profile AI stats row child text rules in the remaining guarded owners.
 
 ## P1: Next Product Fixes
 
