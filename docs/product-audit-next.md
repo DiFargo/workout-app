@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.384`.
+Last updated at app version `v.1.385`.
 
 ## Evidence
 
@@ -41,6 +41,8 @@ The client primary visual audit now attaches screenshots for:
 - cabinet settings modal.
 - cabinet trainer notifications modal.
 - cabinet Telegram management modal.
+
+The cabinet nutrition modal audit also guards readable day labels and today/current-date semantics for its weekly nutrition calendar.
 
 The admin visual audit now attaches screenshots for:
 

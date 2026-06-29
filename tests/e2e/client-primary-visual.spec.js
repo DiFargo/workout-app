@@ -136,6 +136,8 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".cabinetNutritionModal")).toBeVisible();
   await expect(page.locator(".profileGoalPicker button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".profileGoalPicker button").first()).toHaveAttribute("aria-label", /Выбрать цель питания:/);
+  await expect(page.locator(".profileNutritionMonthDay[aria-label]")).toHaveCount(7);
+  await expect(page.locator(".profileNutritionMonthDay.today[aria-current='date']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".cabinetNutritionModalHead button",
     ".profileGoalPicker button",

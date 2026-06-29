@@ -585,6 +585,14 @@ test("client nutrition calendar days expose selected and current date state", as
   assert.match(nutritionCalendar, /aria-current=\{day\.isToday \? "date" : undefined\}/);
 });
 
+test("client cabinet nutrition week cells expose readable day state", async () => {
+  const profileNutritionModal = await readText("src/features/client/profile/ProfileNutritionModal.jsx");
+
+  assert.match(profileNutritionModal, /function getProfileNutritionDayLabel/);
+  assert.match(profileNutritionModal, /aria-label=\{getProfileNutritionDayLabel\(day, plannedMacros, showPlan\)\}/);
+  assert.match(profileNutritionModal, /aria-current=\{day\.isToday \? "date" : undefined\}/);
+});
+
 test("trainer legacy dashboard tabs expose selected state", async () => {
   const legacyDashboard = await readText("src/features/trainer/TrainerLegacyDashboardRoute.jsx");
 

@@ -307,3 +307,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.383`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.384`: strengthened the client nutrition calendar modal with explicit selected-day and current-date semantics.
 - Verification for `v.1.384`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.385`: strengthened the client cabinet nutrition weekly calendar cells with readable summaries and current-date semantics.
+- Verification for `v.1.385`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

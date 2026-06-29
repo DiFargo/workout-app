@@ -27,6 +27,28 @@ function getGoalHint(goal) {
   return "КБЖУ будут пересчитаны под выбранную цель.";
 }
 
+function getProfileNutritionDayLabel(day, plannedMacros, showPlan) {
+  const date = day.date instanceof Date ? day.date : new Date(day.date || "");
+  const dateLabel = Number.isNaN(date.getTime())
+    ? `День ${day.dayNumber}`
+    : date.toLocaleDateString("ru-RU", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      });
+  const status = day.hasFood
+    ? `записано ${Math.round(day.calories)} ккал и ${Math.round(day.protein)} г белка`
+    : showPlan
+      ? `план ${Math.round(plannedMacros.calories)} ккал`
+      : "нет записей";
+  const flags = [
+    day.isSelected ? "выбранный день" : "",
+    day.isToday ? "сегодня" : ""
+  ].filter(Boolean).join(", ");
+
+  return [dateLabel, status, flags].filter(Boolean).join(", ");
+}
+
 export default function ProfileNutritionModal({
   open,
   profileDraft,
@@ -169,6 +191,8 @@ export default function ProfileNutritionModal({
                         day.isToday ? "today" : "",
                         day.isSelected ? "active" : ""
                       ].filter(Boolean).join(" ")}
+                      aria-label={getProfileNutritionDayLabel(day, plannedMacros, showPlan)}
+                      aria-current={day.isToday ? "date" : undefined}
                     >
                       <i
                         className="profileNutritionCalorieFill"
