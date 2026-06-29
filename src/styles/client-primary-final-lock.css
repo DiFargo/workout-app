@@ -1002,31 +1002,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEdi
   padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductFlowHeader {
-  min-height: 126px !important;
-  margin: 0 0 16px !important;
-  padding: 0 !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 116px !important;
-  grid-template-areas:
-    "title actions"
-    "meal meal" !important;
-  align-items: center !important;
-  gap: 14px 12px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductFlowHeader .foodProductFlowTitle {
-  grid-area: title !important;
-  min-width: 0 !important;
-  padding-right: 0 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductFlowHeader .foodEditInlineMealHeader {
-  grid-area: meal !important;
-  width: min(300px, 78%) !important;
-  justify-self: center !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay {
   align-items: stretch !important;
   justify-content: center !important;
