@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.386`.
+Last updated at app version `v.1.387`.
 
 ## Stable Now
 
@@ -71,6 +71,7 @@ Last updated at app version `v.1.386`.
 - Client cabinet trainer notification items expose task, status and due-date accessible labels under the primary visual audit.
 - Client cabinet workout calendar date buttons expose selected and current-date accessibility state under the primary visual audit.
 - Client cabinet measurements modal start action exposes an explicit accessible label under the primary visual audit.
+- Client cabinet measurements modal value cards expose readable measurement labels under the primary visual audit.
 - Client cabinet workout history expand and delete actions expose workout-specific accessible labels under the primary visual audit.
 - Client cabinet progress photo upload inputs expose view-specific accessible labels under the primary visual audit.
 - Client cabinet progress photo compare tabs expose selected `aria-pressed` state under the primary visual audit.

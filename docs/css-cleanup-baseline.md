@@ -311,3 +311,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.385`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.386`: aligned the client cabinet Telegram modal shell with the contained dialog/backdrop semantics used by the other cabinet modals.
 - Verification for `v.1.386`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.387`: strengthened the client cabinet measurements modal with readable labels for latest measurement value cards.
+- Verification for `v.1.387`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

@@ -46,13 +46,17 @@ export default function ProfileMeasurementsModal({
 
         {latestMeasurement ? (
           <div className="cabinetMeasurementModalGrid">
-            {measurementFields.map((field) => (
-              <div key={field.id}>
-                <span>{field.label}</span>
-                <strong>{getMeasurementValue(latestMeasurement, field)}</strong>
-                <small>{field.unit}</small>
-              </div>
-            ))}
+            {measurementFields.map((field) => {
+              const value = getMeasurementValue(latestMeasurement, field);
+
+              return (
+                <div key={field.id} aria-label={`${field.label}: ${value}`}>
+                  <span>{field.label}</span>
+                  <strong>{value}</strong>
+                  <small>{field.unit}</small>
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p className="cabinetMeasurementModalEmpty">

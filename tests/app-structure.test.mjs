@@ -695,6 +695,13 @@ test("client cabinet action cards expose explicit accessible labels", async () =
   assert.match(actionGrid, /aria-label=\{`\$\{eyebrow\}: \$\{title\}`\}/);
 });
 
+test("client cabinet measurement cards expose readable values", async () => {
+  const measurementsModal = await readText("src/features/client/profile/ProfileMeasurementsModal.jsx");
+
+  assert.match(measurementsModal, /const value = getMeasurementValue\(latestMeasurement, field\)/);
+  assert.match(measurementsModal, /aria-label=\{`\$\{field\.label\}: \$\{value\}`\}/);
+});
+
 test("client cabinet Telegram modal keeps a contained dialog shell", async () => {
   const telegramModal = await readText("src/features/client/profile/ProfileTelegramModal.jsx");
 
