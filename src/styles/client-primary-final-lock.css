@@ -1297,18 +1297,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     min-height: 82px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodProductActionBar,
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar {
-    width: min(374px, calc(100vw - 20px)) !important;
-    height: 78px !important;
-    border-radius: 20px !important;
-    background: rgba(255, 255, 255, 0.96) !important;
-    box-shadow:
-      0 18px 44px rgba(55, 64, 112, 0.16),
-      inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button,
   html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > button,
   html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar > button {

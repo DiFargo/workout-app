@@ -502,6 +502,10 @@ test("client primary final CSS keeps food action bars in the final owner", async
   const source = await readText("src/styles/client-primary-final-lock.css");
 
   assert.equal(
+    (source.match(/\.fatSearchBottomBar\.fatSearchBottomBarFour,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageActionBar\s*\{\s*width:\s*min\(374px, calc\(100vw - 20px\)\) !important;\s*height:\s*78px !important;\s*border-radius:\s*20px !important;\s*background:\s*rgba\(255, 255, 255, 0\.96\) !important;/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.fatSearchBottomBar\.fatSearchBottomBarFour,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar\s*\{\s*position:\s*fixed !important;\s*left:\s*max\(10px, env\(safe-area-inset-left\)\) !important;\s*right:\s*max\(10px, env\(safe-area-inset-right\)\) !important;\s*bottom:\s*max\(10px, env\(safe-area-inset-bottom\)\) !important;\s*z-index:\s*90 !important;\s*width:\s*auto !important;\s*max-width:\s*none !important;\s*height:\s*84px !important;\s*min-height:\s*84px !important;\s*padding:\s*8px !important;/g) || []).length,
     1
   );
