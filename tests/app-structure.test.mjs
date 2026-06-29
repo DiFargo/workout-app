@@ -591,6 +591,15 @@ test("client primary final CSS keeps client title action styling in the final ow
   );
 });
 
+test("client primary final CSS keeps workout start button fixed styling in the final owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*position:\s*absolute !important;\s*left:\s*20px !important;\s*right:\s*20px !important;\s*bottom:\s*22px !important;\s*width:\s*auto !important;\s*height:\s*76px !important;\s*min-height:\s*76px !important;\s*border-radius:\s*18px !important;\s*background:\s*linear-gradient\(135deg, #6b4ff4 0%, #2f72f0 100%\) !important;/g) || []).length,
+    1
+  );
+});
+
 test("client render target CSS keeps a single workout set-row owner", async () => {
   const source = await readText("src/styles/client-render-target-lock.css");
 

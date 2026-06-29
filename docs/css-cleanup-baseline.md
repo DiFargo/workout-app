@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1178.72 KiB` raw, `117.18 KiB` gzip.
-- Latest source CSS report: `100` files, about `3469.98 KiB` total source CSS.
+- Latest main CSS bundle: about `1178.26 KiB` raw, `117.10 KiB` gzip.
+- Latest source CSS report: `100` files, about `3469.41 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,7 +28,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `249.72 KiB`
+- `src/styles/client-primary-final-lock.css` - `249.15 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
@@ -427,3 +427,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.443`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.444`: removed duplicate client title action styling rules from `client-primary-final-lock.css`; the final client title action owner remains guarded.
 - Verification for `v.1.444`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.445`: removed duplicate workout start button fixed styling rules from `client-primary-final-lock.css`; the final workout start button owner remains guarded.
+- Verification for `v.1.445`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
