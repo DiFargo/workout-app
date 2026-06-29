@@ -301,3 +301,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.380`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.381`: moved core workout CSS ownership from `index.css` into `client-workout-lazy.css` and guarded standalone workout route style loading.
 - Verification for `v.1.381`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.382`: moved food editor/search polish CSS ownership from `index.css` into `nutrition-stack.css`.
+- Verification for `v.1.382`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-smoke.spec.js --project=desktop-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.

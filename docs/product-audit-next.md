@@ -209,6 +209,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 112. Workout flow CSS is now owned by the client workout lazy entrypoint, guarded by workout visual audits.
 113. Exercise weight-mode CSS is now owned by trainer/admin internals style entrypoints, guarded by structure and trainer/admin visual audits.
 114. Core workout CSS is now owned by the client workout lazy entrypoint, with standalone workout routes loading that entrypoint.
+115. Food editor/search polish CSS is now owned by the nutrition stack, guarded by nutrition visual audits.
 
 ## P1: Next Product Fixes
 

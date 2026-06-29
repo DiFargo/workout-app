@@ -59,6 +59,7 @@ Last updated at app version `v.1.370`.
 - Client nutrition orbit CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition warm-light add-food/search cleanup CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition dark-green food-flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client food editor/search polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition week day buttons expose full-date accessible labels and selected state, and the nutrition visual audit guards them.
 - Client cabinet Telegram management modal exposes dialog semantics and an accessible close control under the primary visual audit.
 - Client cabinet nutrition goal picker exposes accessible goal labels and selected state under the primary visual audit.
@@ -125,7 +126,7 @@ From the latest verified build:
 
 - main app JS chunk: about `471.32 KiB` raw, `131.19 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1286.90 KiB` raw, `126.93 KiB` gzip.
+- main CSS bundle: about `1197.05 KiB` raw, `118.05 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3507.74 KiB` total source CSS.
 
