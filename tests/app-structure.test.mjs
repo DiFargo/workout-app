@@ -724,6 +724,27 @@ test("client primary final CSS keeps workout card compact sizing in one owner", 
   );
 });
 
+test("client primary final CSS keeps workout compact shell no-op repeats out of media", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutDeck\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*gap:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*left:\s*18px !important;\s*right:\s*18px !important;\s*bottom:\s*18px !important;\s*width:\s*calc\(100% - 36px\) !important;\s*min-height:\s*58px !important;\s*border-radius:\s*16px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutBottomPanel\s*\{\s*margin-top:\s*0 !important;\s*padding-top:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutBottomProgress\s*\{\s*margin:\s*0 0 4px !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps workout stats layout in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 

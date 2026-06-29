@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.465`.
+Last updated at app version `v.1.466`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `302` passed.
+- `npm.cmd test`: passed with `303` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -294,6 +294,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 189. Client primary final CSS now keeps narrow workout badge grid rules in one guarded owner.
 190. Client primary final CSS now keeps the workout start button mobile bottom offset in one guarded owner.
 191. Client primary final CSS now keeps workout card compact sizing and body radius rules in one guarded owner.
+192. Client primary final CSS now keeps workout compact shell rules in root owners instead of repeating no-op mobile media blocks.
 
 ## P1: Next Product Fixes
 
