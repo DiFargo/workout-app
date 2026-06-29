@@ -417,7 +417,4 @@ html:root[data-app-theme="warm-light"] body #root .workoutSetEditDoneButton {
     gap: 9px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .workoutSetEditModalFields.withoutWeight {
-    grid-template-columns: 1fr !important;
-  }
 }
