@@ -1038,6 +1038,23 @@ test("client main CSS keeps compact AI stat text rules in the later owner", asyn
   assert.match(source, /\.profileAiCoachHeadline h2\s*\{\s*color:\s*var\(--main-nutrition-ink\) !important;[\s\S]*?font-size:\s*10\.25px !important;[\s\S]*?letter-spacing:\s*0 !important;\s*\}/);
 });
 
+test("client nutrition grid CSS keeps progress insight spacing in the final owner", async () => {
+  const source = await readText("src/styles/client-nutrition-grid-lock.css");
+  const earlyProgressStart = source.indexOf("/* v.1.200: progress card spacing only");
+  const finalProgressStart = source.indexOf("/* v.1.200 final position: progress card spacing only");
+
+  assert.equal(earlyProgressStart, -1);
+  assert.ok(finalProgressStart >= 0);
+  assert.equal(
+    (source.match(/\.profileAiCoachInsight\.profileProgressInsightCard\.profileProgressInsightCard\s*\{\s*height:\s*196px !important;\s*min-height:\s*196px !important;\s*max-height:\s*196px !important;\s*flex-basis:\s*196px !important;\s*padding:\s*20px 20px 16px !important;\s*gap:\s*12px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.match(
+    source.slice(finalProgressStart),
+    /\.profileProgressInsightBadge small\s*\{\s*font-size:\s*8\.5px !important;\s*line-height:\s*1 !important;\s*\}/
+  );
+});
+
 test("desktop cabinet CSS keeps trainer client overview grid locks in the broad mobile owner", async () => {
   const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
   const trainerClientSectionStart = source.indexOf(".trainerClientDashboardModalOverlay");
