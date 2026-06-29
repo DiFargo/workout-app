@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.474`.
+Last updated at app version `v.1.475`.
 
 ## Evidence
 
@@ -303,6 +303,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 198. Client primary final CSS now keeps nutrition AI/Zouk top card grid rules in one guarded root owner.
 199. Client primary final CSS now keeps food search home compact header rules in guarded root owners.
 200. Client primary final CSS now keeps food edit product compact header rules in guarded root owners.
+201. Client primary final CSS now keeps profile AI hero pseudo-element hide rules in one guarded root owner.
 
 ## P1: Next Product Fixes
 

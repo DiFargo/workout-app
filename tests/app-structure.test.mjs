@@ -710,6 +710,14 @@ test("client primary final CSS keeps profile AI hero compact cluster in root own
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiAvatarRing,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatarRing\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero::after,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero::after\s*\{\s*content:\s*none !important;\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileAiHero::after/g) || []).length,
+    2
+  );
 });
 
 test("client primary final CSS keeps profile AI split cards in the final owner", async () => {

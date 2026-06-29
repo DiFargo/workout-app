@@ -990,11 +990,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     pointer-events: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero::after {
-    content: none !important;
-    display: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetActionGrid {
     padding-bottom: 96px !important;
     clip-path: inset(0 0 86px 0 round 0) !important;
@@ -1303,11 +1298,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     cursor: default !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero::after {
-    content: none !important;
-    display: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
     isolation: isolate !important;
   }
@@ -1498,12 +1488,6 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
 }
 
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow small {
-  display: none !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero::after,
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero::after {
-  content: none !important;
   display: none !important;
 }
 
@@ -3761,11 +3745,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     pointer-events: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero::after {
-    content: none !important;
-    display: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero {
     display: flex !important;
     align-items: center !important;
@@ -4025,12 +4004,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
     border-radius: var(--client-radius) !important;
     pointer-events: none !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero::after,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero::after {
-    content: none !important;
-    display: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
