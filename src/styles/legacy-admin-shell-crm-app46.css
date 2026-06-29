@@ -2195,18 +2195,6 @@
   font-weight: 850;
 }
 
-@media (max-width: 1280px) {
-  .adminClientCardsGridFive {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  }
-}
-
-@media (max-width: 1020px) {
-  .adminClientCardsGridFive {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-}
-
 @media (max-width: 760px) {
   .adminUsersToolbarActions {
     width: 100%;

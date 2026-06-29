@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.403`.
+Last updated at app version `v.1.404`.
 
 ## Evidence
 
@@ -232,6 +232,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 127. Client workout card render CSS no longer keeps repeated media-only card sizing blocks; the root card locks remain guarded.
 128. Client food search final CSS no longer keeps the older duplicate compact product title-wrap media lock; the later product header lock remains guarded.
 129. Legacy nutrition header CSS now keeps one compact page padding owner instead of repeating the same mobile page padding across narrower breakpoints.
+130. Admin CRM CSS no longer keeps older duplicate client card grid breakpoints; the later workspace breakpoint owner remains guarded.
 
 ## P1: Next Product Fixes
 

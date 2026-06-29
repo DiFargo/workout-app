@@ -506,6 +506,15 @@ test("legacy nutrition header CSS keeps one compact page padding owner", async (
   );
 });
 
+test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
+  const source = await readText("src/styles/legacy-admin-shell-crm-app46.css");
+
+  assert.doesNotMatch(source, /@media\s*\(max-width:\s*1280px\)\s*\{\s*\.adminClientCardsGridFive/);
+  assert.doesNotMatch(source, /@media\s*\(max-width:\s*1020px\)\s*\{\s*\.adminClientCardsGridFive/);
+  assert.match(source, /@media\s*\(max-width:\s*1380px\)[\s\S]*?\.adminClientCardsGridFive\s*\{\s*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\) !important;/);
+  assert.match(source, /@media\s*\(max-width:\s*1120px\)[\s\S]*?\.adminClientCardsGridFive\s*\{\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\) !important;/);
+});
+
 test("admin client dashboard polish CSS has no empty media blocks", async () => {
   const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
 
