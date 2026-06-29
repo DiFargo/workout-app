@@ -1259,19 +1259,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     text-overflow: ellipsis !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileTrainerNotificationsButton,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconButton,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutHeaderActions button {
-    width: 52px !important;
-    min-width: 52px !important;
-    max-width: 52px !important;
-    height: 52px !important;
-    min-height: 52px !important;
-    max-height: 52px !important;
-    border-radius: 18px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
     top: var(--client-page-title-top) !important;
     right: var(--client-page-x) !important;
