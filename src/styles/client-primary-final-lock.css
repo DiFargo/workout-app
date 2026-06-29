@@ -3730,12 +3730,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     border-radius: var(--client-page-card-radius) var(--client-page-card-radius) 0 0 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
-    margin-top: -1px !important;
-    margin-bottom: 12px !important;
-    border-radius: 0 0 var(--client-page-card-radius) var(--client-page-card-radius) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
     text-align: center !important;

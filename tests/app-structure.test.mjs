@@ -653,6 +653,10 @@ test("client primary final CSS keeps main AI stats row in the final owner", asyn
     1
   );
   assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow\s*\{\s*margin-top:\s*-1px !important;\s*margin-bottom:\s*12px !important;\s*border-radius:\s*0 0 var\(--client-page-card-radius\) var\(--client-page-card-radius\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow strong\s*\{\s*max-width:\s*100% !important;\s*color:\s*var\(--client-ink\) !important;\s*-webkit-text-fill-color:\s*var\(--client-ink\) !important;\s*font-size:\s*clamp\(18px, 5\.4vw, 25px\) !important;/g) || []).length,
     1
   );
