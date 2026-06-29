@@ -1207,53 +1207,6 @@ html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction {
   box-shadow: var(--client-shadow) !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour,
-html:root[data-app-theme="warm-light"] body #root .foodProductActionBar,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar {
-  position: fixed !important;
-  left: max(10px, env(safe-area-inset-left)) !important;
-  right: max(10px, env(safe-area-inset-right)) !important;
-  bottom: max(10px, env(safe-area-inset-bottom)) !important;
-  z-index: 90 !important;
-  width: auto !important;
-  max-width: none !important;
-  height: 84px !important;
-  min-height: 84px !important;
-  padding: 8px !important;
-  border: 1px solid #dfe4ee !important;
-  border-radius: 20px !important;
-  background: rgba(255, 255, 255, 0.92) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
-  backdrop-filter: blur(18px) !important;
-  box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodProductActionBar,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar {
-  display: grid !important;
-  grid-template-columns: 0.92fr 1.58fr !important;
-  gap: 8px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button,
-html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > button,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar > button {
-  height: 68px !important;
-  min-height: 68px !important;
-  border-radius: 16px !important;
-  color: #737b91 !important;
-  -webkit-text-fill-color: #737b91 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button.active,
-html:root[data-app-theme="warm-light"] body #root .foodProductActionBar .foodProductAddAction,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar .foodEditPageConfirmAction {
-  border-color: #ded7ff !important;
-  background: #f0edff !important;
-  color: #5d43e8 !important;
-  -webkit-text-fill-color: #5d43e8 !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductTopActions {
   position: absolute !important;
   top: var(--client-title-top) !important;
