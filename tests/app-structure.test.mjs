@@ -730,6 +730,10 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
     /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatMealKcal strong,\s*\.fatMealKcal strong\s*\{\s*font-size:\s*16px !important;\s*\}/
   );
   assert.doesNotMatch(
+    mealRedesignBlock,
+    /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatPlusBtn,\s*\.fatPlusBtn\s*\{\s*width:\s*24px !important;\s*height:\s*24px !important;\s*min-width:\s*24px !important;\s*min-height:\s*24px !important;[\s\S]*?font-size:\s*18px !important;\s*\}/
+  );
+  assert.doesNotMatch(
     ultraSmallGapBlock,
     /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatMealCard \+ \.fatMealCard,\s*\.fatMealCard \+ \.fatMealCard\s*\{\s*margin-top:\s*-1px !important;\s*\}/
   );

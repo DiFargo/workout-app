@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.420`.
+Last updated at app version `v.1.421`.
 
 ## Evidence
 
@@ -249,6 +249,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 144. Legacy food editor CSS now keeps summary dot sizes in root owners instead of repeating identical span sizes inside mobile media blocks.
 145. Nutrition calendar CSS now keeps compact grid gap and day-number size in the final compact owner instead of repeating them in the early narrow block.
 146. Nutrition late layout CSS no longer keeps no-op mobile duplicates for quick actions, meal card radius, meal kcal size, adjacent meal gap and expanded product-list bottom margin.
+147. Nutrition late layout CSS no longer keeps the older compact meal `fatPlusBtn` 24px duplicate before the later lower-height owner.
 
 ## P1: Next Product Fixes
 
