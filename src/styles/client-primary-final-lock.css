@@ -3815,47 +3815,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     bottom: 20px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome):not(:has(.foodEditRenderScreen)) {
-    padding-top: 74px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) > .fatSearchTopPremiumHome {
-    min-height: 122px !important;
-    margin: 0 0 16px !important;
-    grid-template-columns: minmax(0, 1fr) 52px !important;
-    gap: 12px 10px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) .foodFlowSearchTitle h2 {
-    height: 52px !important;
-    min-height: 52px !important;
-    font-size: 30px !important;
-    font-weight: 900 !important;
-    line-height: 1.03 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) > .fatSearchTopPremiumHome .fatSearchClosePremium {
-    width: 52px !important;
-    min-width: 52px !important;
-    height: 52px !important;
-    min-height: 52px !important;
-    border-radius: 18px !important;
-    background: #ffffff !important;
-    background-image: none !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) .fatSearchInputWrapPremium {
-    min-height: 60px !important;
-    margin-bottom: 16px !important;
-    border-radius: 17px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodSearchRecentGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    grid-auto-rows: 78px !important;
-    gap: 9px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .foodSearchRecentCard {
     height: 78px !important;
     min-height: 78px !important;

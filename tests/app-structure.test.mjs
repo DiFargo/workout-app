@@ -591,6 +591,30 @@ test("client primary final CSS keeps food search header layout in the final owne
     (source.match(/\.foodSearchRecentGrid\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*gap:\s*10px !important;/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\):not\(:has\(\.foodEditRenderScreen\)\)\s*\{\s*padding-top:\s*74px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) > \.fatSearchTopPremiumHome\s*\{\s*min-height:\s*122px !important;\s*margin:\s*0 0 16px !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 52px !important;\s*gap:\s*12px 10px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) \.foodFlowSearchTitle h2\s*\{\s*height:\s*52px !important;\s*min-height:\s*52px !important;\s*font-size:\s*30px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.03 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) > \.fatSearchTopPremiumHome \.fatSearchClosePremium\s*\{\s*width:\s*52px !important;\s*min-width:\s*52px !important;\s*height:\s*52px !important;\s*min-height:\s*52px !important;\s*border-radius:\s*18px !important;\s*background:\s*#ffffff !important;\s*background-image:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) \.fatSearchInputWrapPremium\s*\{\s*min-height:\s*60px !important;\s*margin-bottom:\s*16px !important;\s*border-radius:\s*17px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodSearchRecentGrid\s*\{\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*grid-auto-rows:\s*78px !important;\s*gap:\s*9px !important;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps main AI stats row in the final owner", async () => {

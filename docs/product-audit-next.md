@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.472`.
+Last updated at app version `v.1.473`.
 
 ## Evidence
 
@@ -301,6 +301,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 196. Client primary final CSS now keeps profile AI hero compact cluster rules in guarded root owners.
 197. Client primary final CSS now keeps profile AI supporting compact rules in guarded root owners.
 198. Client primary final CSS now keeps nutrition AI/Zouk top card grid rules in one guarded root owner.
+199. Client primary final CSS now keeps food search home compact header rules in guarded root owners.
 
 ## P1: Next Product Fixes
 
