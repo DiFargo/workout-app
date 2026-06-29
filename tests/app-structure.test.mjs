@@ -498,6 +498,15 @@ test("client primary final CSS keeps shared action bar sizing in one owner", asy
   );
 });
 
+test("client primary final CSS keeps profile progress overview grid in one owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetProgressOverview\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*gap:\s*12px !important;\s*margin:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps food action bars in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 

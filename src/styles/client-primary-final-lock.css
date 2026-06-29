@@ -194,13 +194,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     box-shadow: var(--client-shadow) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetProgressOverview {
-    width: 100% !important;
-    display: grid !important;
-    gap: 12px !important;
-    margin: 0 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCard {
     min-height: 104px !important;
     padding: 16px 18px !important;
