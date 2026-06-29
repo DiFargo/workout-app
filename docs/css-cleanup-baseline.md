@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1156.01 KiB` raw, `115.71 KiB` gzip.
-- Latest source CSS report: `100` files, about `3442.71 KiB` total source CSS.
+- Latest main CSS bundle: about `1155.78 KiB` raw, `115.67 KiB` gzip.
+- Latest source CSS report: `100` files, about `3442.44 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,7 +28,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `222.44 KiB`
+- `src/styles/client-primary-final-lock.css` - `222.18 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
 - `src/styles/client-render-target-lock.css` - `112.95 KiB`
@@ -494,3 +494,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.476`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.477`: removed duplicate profile refresh button absolute-position rules from `client-primary-final-lock.css`; the remaining profile header action owner stays guarded.
 - Verification for `v.1.477`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.478`: removed duplicate profile avatar 70px sizing rules from `client-primary-final-lock.css`; the remaining mobile avatar sizing owner stays guarded.
+- Verification for `v.1.478`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

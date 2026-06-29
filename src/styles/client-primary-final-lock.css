@@ -4730,14 +4730,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     margin: 0 0 12px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileAiAvatarWrap,
-  html:root[data-app-theme="warm-light"] body #root .profileAiAvatar {
-    width: 70px !important;
-    height: 70px !important;
-    min-width: 70px !important;
-    min-height: 70px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileAiHeroText h1 {
     max-width: 100% !important;
     margin: 0 !important;
