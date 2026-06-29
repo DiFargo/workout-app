@@ -1180,11 +1180,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 }
 
 @media (max-width: 380px) {
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader .foodEditInlineMealHeader {
-    width: min(352px, calc(100vw - 36px)) !important;
-    max-width: min(352px, calc(100vw - 36px)) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowTitle h2 {
     font-size: 25px !important;
   }

@@ -497,6 +497,15 @@ test("client food search final CSS keeps one compact product title-wrap lock", a
   );
 });
 
+test("client food search final CSS keeps one compact meal header width owner", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+  const nonHasMealHeaderCompactLocks = source.match(
+    /body #root \.fatFoodSearchOverlay \.foodProductRenderScreen \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{\s*width:\s*min\(352px,\s*calc\(100vw - 36px\)\) !important;\s*max-width:\s*min\(352px,\s*calc\(100vw - 36px\)\) !important;\s*\}/g
+  ) || [];
+
+  assert.equal(nonHasMealHeaderCompactLocks.length, 1);
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 
