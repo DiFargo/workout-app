@@ -533,6 +533,19 @@ test("client primary final CSS keeps profile AI hero sizing in the final owner",
   );
 });
 
+test("client primary final CSS keeps nutrition arrow sizing in the root owner", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.nutritionAiPlanCollapsedArrow,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionZoukMeta i\s*\{\s*width:\s*18px !important;\s*min-width:\s*18px !important;\s*height:\s*36px !important;\s*min-height:\s*36px !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.nutritionZoukMeta\s*\{\s*width:\s*18px !important;\s*min-width:\s*18px !important;\s*height:\s*36px !important;\s*min-height:\s*36px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client render target CSS keeps a single workout set-row owner", async () => {
   const source = await readText("src/styles/client-render-target-lock.css");
 

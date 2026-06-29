@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.438`.
+Last updated at app version `v.1.439`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `283` passed.
+- `npm.cmd test`: passed with `284` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -267,6 +267,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 162. Client primary final CSS now keeps food action bar fixed sizing in the final owner instead of repeating it in an earlier block.
 163. Client primary final CSS now keeps main AI stats row sizing and text rules in the final owner instead of repeating them in an early mobile block.
 164. Client primary final CSS now keeps profile AI hero sizing in the final owner instead of repeating it in an early mobile block.
+165. Client primary final CSS now keeps nutrition arrow and meta sizing in the root owner instead of repeating it in a narrow media block.
 
 ## P1: Next Product Fixes
 

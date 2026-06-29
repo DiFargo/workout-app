@@ -1703,37 +1703,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     box-shadow: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanCollapsedArrow,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta i {
-    width: 18px !important;
-    min-width: 18px !important;
-    height: 36px !important;
-    min-height: 36px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    border: 0 !important;
-    color: #6f7482 !important;
-    box-shadow: none !important;
-    font-size: 34px !important;
-    font-style: normal !important;
-    font-weight: 800 !important;
-    line-height: 1 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta {
-    width: 18px !important;
-    min-width: 18px !important;
-    height: 36px !important;
-    min-height: 36px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    margin: 0 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta small {
     display: none !important;
   }
