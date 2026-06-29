@@ -717,15 +717,6 @@ html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workou
   display: none !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBadges {
-  width: 100% !important;
-  min-height: 42px !important;
-  margin: 0 0 12px !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 0.48fr) minmax(0, 1fr) !important;
-  gap: 10px !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNextBadge,
 html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProgressBadge,
 html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCompletedBadge,

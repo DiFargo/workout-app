@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.461`.
+Last updated at app version `v.1.462`.
 
 ## Evidence
 
@@ -290,6 +290,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 185. Client primary final CSS now keeps profile AI split-card full-owner rules in the final owner.
 186. Client primary final CSS now keeps profile AI stats row child text rules in the remaining guarded owners.
 187. Client primary final CSS now keeps workout badge layout rules in the final owner.
+188. Client primary final CSS now keeps compact workout badge layout rules in one guarded owner.
 
 ## P1: Next Product Fixes
 
