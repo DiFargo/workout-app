@@ -691,6 +691,31 @@ test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", 
   );
 });
 
+test("desktop cabinet CSS keeps trainer client overview grid locks in the broad mobile owner", async () => {
+  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const trainerClientSectionStart = source.indexOf(".trainerClientDashboardModalOverlay");
+  const broadMobileStart = source.indexOf("@media (max-width: 1100px)", trainerClientSectionStart);
+  const narrowMobileStart = source.indexOf("@media (max-width: 700px)", broadMobileStart);
+  const broadMobileBlock = source.slice(broadMobileStart, narrowMobileStart);
+  const narrowMobileBlock = source.slice(narrowMobileStart);
+
+  assert.ok(trainerClientSectionStart >= 0);
+  assert.ok(broadMobileStart >= 0);
+  assert.ok(narrowMobileStart >= 0);
+  assert.match(
+    broadMobileBlock,
+    /\.trainerClientAttentionStrip,\s*\.trainerClientKpiGrid\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/
+  );
+  assert.match(
+    broadMobileBlock,
+    /\.trainerClientKpiGrid > article:last-child\s*\{\s*grid-column:\s*1 \/ -1;/
+  );
+  assert.doesNotMatch(
+    narrowMobileBlock,
+    /\.trainerClientAttentionStrip,\s*\.trainerClientKpiGrid\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/
+  );
+});
+
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
