@@ -1183,22 +1183,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
 
 /* v1.75 client visual pass: one mobile rhythm for client shell and food flow. */
 @media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage {
-    --client-page-x: 22px;
-    --client-page-title-top: 54px;
-    --client-page-title-height: 52px;
-    --client-page-title-size: 30px;
-    --client-page-title-color: #5f5744;
-    --client-page-card-radius: 22px;
-    background:
-      radial-gradient(circle at 50% -10%, rgba(109, 77, 248, 0.06), transparent 34%),
-      linear-gradient(180deg, #fbfbff 0%, #f6f7fc 100%) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle {
     width: calc(100% - 118px) !important;
     max-width: calc(100% - 118px) !important;
