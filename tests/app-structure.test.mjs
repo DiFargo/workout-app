@@ -535,6 +535,26 @@ test("client food search final CSS keeps product title typography in stable flow
   );
 });
 
+test("client food search final CSS keeps product hero spacing in latest owners", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+  const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
+  const hardLockStart = source.indexOf("/* Product page header/search alignment hard lock v160 */");
+  const stableFlowBlock = source.slice(stableFlowStart, hardLockStart);
+
+  assert.equal(
+    (source.match(/\.foodProductRenderScreen \.foodProductFlowHeader \+ \.foodEditHeroRender\.foodEditHeroEditable\s*\{\s*margin-top:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.match(
+    stableFlowBlock,
+    /\.foodProductFlowHeader \+ \.foodEditHeroRender\.foodEditHeroEditable\s*\{\s*margin-top:\s*0 !important;\s*\}/
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductRenderScreen\s*\{\s*--food-product-x:\s*14px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 

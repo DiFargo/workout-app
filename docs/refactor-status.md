@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.408`.
+Last updated at app version `v.1.409`.
 
 ## Stable Now
 
@@ -92,6 +92,7 @@ Last updated at app version `v.1.408`.
 - Client food search final CSS now keeps one compact product title font-size owner instead of repeating the same non-`:has()` mobile lock.
 - Nutrition calendar CSS now keeps final label color and footer sizing locks in the final calendar owner, guarded by app structure tests.
 - Client food search final CSS now keeps product title typography in the stable-flow owner, guarded by app structure tests.
+- Client food search final CSS now keeps product hero spacing and narrow mobile x-locks in their latest owners.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
