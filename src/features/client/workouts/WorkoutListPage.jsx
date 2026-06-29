@@ -239,7 +239,7 @@ export default function WorkoutListPage({
             <div className="workoutProgramEmptyIcon">⏳</div>
             <h2>Тренировка ещё не назначена</h2>
             <p>Тренер пока не назначил тебе программу. Как только тренировка появится в твоём профиле, она отобразится здесь.</p>
-            <button onClick={onGoMain}>Вернуться в меню</button>
+            <button type="button" onClick={onGoMain}>Вернуться в меню</button>
           </div>
         ) : isIndividualWorkoutMode && activeIndividualWorkout ? (
           (() => {
@@ -387,6 +387,7 @@ export default function WorkoutListPage({
             return (
               <button
                 className="workoutSelectCard"
+                type="button"
                 key={w.id}
                 onClick={() => openWorkout(w.id)}
               >

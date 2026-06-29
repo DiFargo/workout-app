@@ -31,7 +31,7 @@ export default function TrainerClientOverviewAdminTools({
             onChange={(event) => setAdminTrainerNote(event.target.value)}
             placeholder="Заметки тренера по клиенту..."
           />
-          <button className="adminV3OpenEditor" onClick={saveAdminTrainerNote}>Сохранить заметку</button>
+          <button className="adminV3OpenEditor" type="button" onClick={saveAdminTrainerNote}>Сохранить заметку</button>
         </div>
 
         <div className="adminClientTabContent adminClientTransferBlock">
@@ -65,6 +65,7 @@ export default function TrainerClientOverviewAdminTools({
 
           <button
             className="adminV3OpenEditor"
+            type="button"
             disabled={adminTransferLoading}
             onClick={() => {
               transferClientDataBetweenAccounts(adminTransferFromUid, adminTransferToUid || selectedClient.id);

@@ -571,6 +571,24 @@ test("admin and access denied navigation buttons declare button type", async () 
   assert.match(trainerWorkoutsRoute, /<button className="backBtn" type="button"[\s\S]*setPage\(APP_PAGES\.MAIN\)/);
 });
 
+test("all JSX buttons declare an explicit type", async () => {
+  const jsxFiles = await collectFiles("src", [".jsx"]);
+  const missingTypeButtons = [];
+
+  for (const file of jsxFiles) {
+    const source = await readText(file);
+
+    for (const match of source.matchAll(/<button\b[\s\S]*?>/g)) {
+      if (/\btype\s*=/.test(match[0])) continue;
+
+      const line = source.slice(0, match.index).split(/\r?\n/).length;
+      missingTypeButtons.push(`${file}:${line}`);
+    }
+  }
+
+  assert.deepEqual(missingTypeButtons, []);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([

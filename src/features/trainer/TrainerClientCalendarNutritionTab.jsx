@@ -166,6 +166,7 @@ export default function TrainerClientCalendarNutritionTab({
         </div>
         <button
           className="adminV3OpenEditor"
+          type="button"
           disabled={adminCalendarSaving}
           onClick={() => saveAdminClientCalendar(selectedClient)}
         >

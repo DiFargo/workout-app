@@ -62,6 +62,7 @@ export default function TrainerAdminTransferTab({
 
         <button
           className="adminV3OpenEditor"
+          type="button"
           disabled={adminTransferLoading}
           onClick={transferClientDataBetweenAccounts}
         >

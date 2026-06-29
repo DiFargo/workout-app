@@ -198,6 +198,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 101. Trainer workouts page active program tab now exposes selected state with `aria-pressed`, guarded by the app structure audit.
 102. Legacy trainer/admin action buttons now declare `type="button"` explicitly, guarded by the app structure audit.
 103. Admin and access-denied navigation buttons now declare `type="button"` explicitly, guarded by the app structure audit.
+104. All production JSX buttons now declare `type` explicitly, guarded by the app structure audit.
 
 ## P1: Next Product Fixes
 

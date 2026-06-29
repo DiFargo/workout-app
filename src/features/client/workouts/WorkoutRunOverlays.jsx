@@ -2,7 +2,7 @@ export function WorkoutNotFoundPage({ onBackToMenu }) {
   return (
     <div className="app">
       <div className="workoutHeader">
-        <button className="backBtn universalFixedBackPointer" onClick={onBackToMenu}>
+        <button className="backBtn universalFixedBackPointer" type="button" onClick={onBackToMenu}>
           ← Главное меню
         </button>
 
@@ -34,6 +34,7 @@ export function WorkoutFullscreenVideoOverlay({ videoSrc, onClose, onVideoError 
       }}
     >
       <button
+        type="button"
         onClick={onClose}
         style={{
           position: "absolute",
@@ -83,6 +84,7 @@ export function WorkoutRunTopControls({ isSaving, showBackButton, onExit, onBack
         {showBackButton && (
           <button
             className="backIconBtn universalFixedBackPointer"
+            type="button"
             onClick={onBack}
             aria-label="Вернуться назад"
           >

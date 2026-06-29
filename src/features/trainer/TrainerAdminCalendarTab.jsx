@@ -139,6 +139,7 @@ export default function TrainerAdminCalendarTab({
 
         <button
           className="adminV3OpenEditor adminCalendarEqualButton adminCalendarSaveButton"
+          type="button"
           disabled={adminCalendarSaving}
           onClick={() => saveAdminClientCalendar(selectedClient)}
         >

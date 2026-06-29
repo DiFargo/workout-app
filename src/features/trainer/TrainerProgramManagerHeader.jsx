@@ -13,6 +13,7 @@ export default function TrainerProgramManagerHeader({
     <header className="programsCompactHeader">
       <button
         className="adminFixedMainBack"
+        type="button"
         onClick={() => {
           if (adminProgramLibraryTab === "editor") {
             handleMonthProgramBack();

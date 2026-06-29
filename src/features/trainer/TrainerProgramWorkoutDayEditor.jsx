@@ -128,7 +128,7 @@ export default function TrainerProgramWorkoutDayEditor({
         )}
       </div>
 
-      <button className="monthAddExerciseBtn" onClick={() => addMonthExercise(block.id, week.id, workout.id)}>
+      <button className="monthAddExerciseBtn" type="button" onClick={() => addMonthExercise(block.id, week.id, workout.id)}>
         + Добавить упражнение
       </button>
     </div>
