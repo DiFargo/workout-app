@@ -705,6 +705,10 @@ test("client primary final CSS keeps workout start button fixed styling in the f
     (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*position:\s*absolute !important;\s*left:\s*20px !important;\s*right:\s*20px !important;\s*bottom:\s*22px !important;\s*width:\s*auto !important;\s*height:\s*76px !important;\s*min-height:\s*76px !important;\s*border-radius:\s*18px !important;\s*background:\s*linear-gradient\(135deg, #6b4ff4 0%, #2f72f0 100%\) !important;/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*bottom:\s*20px !important;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps workout stats layout in the final owner", async () => {

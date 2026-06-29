@@ -1049,10 +1049,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     border-radius: 22px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardStartButton {
-    bottom: 20px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNav {
     margin-top: 0 !important;
     margin-bottom: 4px !important;
