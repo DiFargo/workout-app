@@ -682,6 +682,26 @@ test("legacy nutrition header CSS keeps meal kcal sizes in later compact owners"
   );
 });
 
+test("legacy nutrition header CSS keeps early narrow meal text sizes out of the old owner", async () => {
+  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
+  const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", pixelReferenceStart);
+
+  assert.ok(pixelReferenceStart > 0);
+  assert.ok(compactPolishStart > pixelReferenceStart);
+
+  const refinedDarkBlock = source.slice(0, pixelReferenceStart);
+
+  assert.doesNotMatch(
+    refinedDarkBlock,
+    /@media\s*\(max-width:\s*370px\)[\s\S]*?\.fatMealTitle strong\s*\{\s*font-size:\s*22px !important;\s*\}[\s\S]*?\.fatMealKcal strong\s*\{\s*font-size:\s*22px !important;\s*\}[\s\S]*?\.fatMealKcal span\s*\{\s*font-size:\s*13px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /@media\s*\(max-width:\s*370px\)[\s\S]*?\.fatMealTitle strong\s*\{\s*font-size:\s*17px !important;\s*\}[\s\S]*?\.fatMealKcal strong\s*\{\s*font-size:\s*16px !important;\s*\}[\s\S]*?\.fatMealKcal span\s*\{\s*font-size:\s*11px !important;\s*\}/
+  );
+});
+
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
   const headerReference = await readText("src/styles/legacy-food-search-header-reference.css");
   const pickerBase = await readText("src/styles/legacy-food-picker-base.css");

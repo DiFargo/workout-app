@@ -507,18 +507,6 @@
     grid-template-columns: 44px minmax(0, 1fr) 58px 34px 18px !important;
     gap: 8px !important;
   }
-
-  .fatMealTitle strong {
-    font-size: 22px !important;
-  }
-
-  .fatMealKcal strong {
-    font-size: 22px !important;
-  }
-
-  .fatMealKcal span {
-    font-size: 13px !important;
-  }
 }
 
 /* =========================================================
