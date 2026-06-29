@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.389`.
+Last updated at app version `v.1.390`.
 
 ## Stable Now
 
@@ -45,6 +45,7 @@ Last updated at app version `v.1.389`.
 - Client nutrition weekday strip keeps compact equal mobile cells and bounded markers under the nutrition visual audit.
 - Client nutrition week labels now use unambiguous two-letter Russian weekdays.
 - Client nutrition week labels now render as uppercase two-letter abbreviations so the mobile header cannot collapse to ambiguous one-letter days.
+- Client nutrition header action labels use readable Russian text under structure and nutrition visual audits.
 - Client nutrition weekday cells now lock label and marker centers to prevent mobile header drift.
 - Client nutrition weekday cells now expose selected day and current-date state through `aria-pressed` and `aria-current`.
 - Client nutrition calendar days now expose selected day and current-date state through `aria-pressed` and `aria-current`.

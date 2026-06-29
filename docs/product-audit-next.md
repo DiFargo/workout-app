@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.389`.
+Last updated at app version `v.1.390`.
 
 ## Evidence
 
@@ -70,7 +70,7 @@ The nutrition visual audit now attaches screenshots for:
 - create product/dish choice modal.
 - custom dish editor, ingredient picker and ingredient confirm modal.
 
-The nutrition visual audit also guards the weekday strip labels, marker geometry, selected day state, calendar selected day state and today/current-date semantics.
+The nutrition visual audit also guards the weekday strip labels, readable Russian action labels, marker geometry, selected day state, calendar selected day state and today/current-date semantics.
 
 The client workout visual audit now attaches screenshots for:
 
@@ -218,6 +218,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 113. Exercise weight-mode CSS is now owned by trainer/admin internals style entrypoints, guarded by structure and trainer/admin visual audits.
 114. Core workout CSS is now owned by the client workout lazy entrypoint, with standalone workout routes loading that entrypoint.
 115. Food editor/search polish CSS is now owned by the nutrition stack, guarded by nutrition visual audits.
+116. Nutrition header search, calendar and weekday action labels are now guarded as readable Russian text by structure and nutrition visual audits.
 
 ## P1: Next Product Fixes
 

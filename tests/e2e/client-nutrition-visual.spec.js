@@ -144,6 +144,8 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await openClientNutritionHarness(page);
   await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
   await expect(page.locator(".nutritionHeroTitleV4 .clientCorePageTitle")).toBeVisible();
+  await expect(page.getByLabel("Поиск еды")).toBeVisible();
+  await expect(page.getByLabel("Календарь")).toBeVisible();
 
   await expectNutritionWeekStripReadable(page);
   await expectNoHorizontalOverflow(page);

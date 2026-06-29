@@ -578,6 +578,15 @@ test("client nutrition weekday strip exposes selected and current date state", a
   assert.match(nutritionHeader, /aria-current=\{isTodayDay \? "date" : undefined\}/);
 });
 
+test("client nutrition header labels stay readable Russian text", async () => {
+  const nutritionHeader = await readText("src/features/client/nutrition/NutritionHeader.jsx");
+
+  assert.match(nutritionHeader, /aria-label="Поиск еды"/);
+  assert.match(nutritionHeader, /aria-label="Календарь"/);
+  assert.match(nutritionHeader, /aria-label=\{`Выбрать \$\{dayAriaLabel\}`\}/);
+  assert.doesNotMatch(nutritionHeader, /Ð|Ñ/);
+});
+
 test("client nutrition calendar days expose selected and current date state", async () => {
   const nutritionCalendar = await readText("src/features/client/nutrition/NutritionCalendarModal.jsx");
 
