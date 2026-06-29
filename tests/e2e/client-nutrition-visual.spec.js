@@ -103,7 +103,9 @@ async function expectNutritionWeekStripReadable(page) {
         markerWidth: Math.round(markerRect?.width || 0),
         markerHeight: Math.round(markerRect?.height || 0),
         ariaLabel: day.getAttribute("aria-label") || "",
-        ariaPressed: day.getAttribute("aria-pressed") || ""
+        ariaPressed: day.getAttribute("aria-pressed") || "",
+        ariaCurrent: day.getAttribute("aria-current") || "",
+        isToday: day.classList.contains("today")
       };
     });
 
@@ -122,6 +124,7 @@ async function expectNutritionWeekStripReadable(page) {
   expect(metrics.days.every((day) => day.labelText.length >= 2)).toBe(true);
   expect(metrics.days.every((day) => day.ariaLabel.startsWith("Выбрать "))).toBe(true);
   expect(metrics.days.some((day) => day.ariaPressed === "true")).toBe(true);
+  expect(metrics.days.filter((day) => day.ariaCurrent === "date")).toHaveLength(metrics.days.filter((day) => day.isToday).length);
   for (const day of metrics.days) {
     expect(day.dayLeft).toBeGreaterThanOrEqual(metrics.weekLeft);
     expect(day.dayRight).toBeLessThanOrEqual(metrics.weekRight);

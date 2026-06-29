@@ -571,6 +571,13 @@ test("client workout next card exposes current step state", async () => {
   assert.match(workoutListPage, /className=\{`workoutSelectCard individualWorkoutCardPro[\s\S]*aria-current=\{activeNext \? "step" : undefined\}/);
 });
 
+test("client nutrition weekday strip exposes selected and current date state", async () => {
+  const nutritionHeader = await readText("src/features/client/nutrition/NutritionHeader.jsx");
+
+  assert.match(nutritionHeader, /className=\{`nutritionDayV4 \$\{isSelectedDay \? "selected" : ""\}[\s\S]*aria-pressed=\{isSelectedDay\}/);
+  assert.match(nutritionHeader, /aria-current=\{isTodayDay \? "date" : undefined\}/);
+});
+
 test("trainer legacy dashboard tabs expose selected state", async () => {
   const legacyDashboard = await readText("src/features/trainer/TrainerLegacyDashboardRoute.jsx");
 

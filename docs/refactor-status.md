@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.370`.
+Last updated at app version `v.1.383`.
 
 ## Stable Now
 
@@ -46,6 +46,7 @@ Last updated at app version `v.1.370`.
 - Client nutrition week labels now use unambiguous two-letter Russian weekdays.
 - Client nutrition week labels now render as uppercase two-letter abbreviations so the mobile header cannot collapse to ambiguous one-letter days.
 - Client nutrition weekday cells now lock label and marker centers to prevent mobile header drift.
+- Client nutrition weekday cells now expose selected day and current-date state through `aria-pressed` and `aria-current`.
 - Client nutrition food-search/product polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition AI photo not-found modal is covered by the nutrition visual audit, and its CSS is owned by `nutrition-stack.css`.
 - Client nutrition create product/dish choice modal is covered by the nutrition visual audit.

@@ -56,6 +56,7 @@ export default function NutritionHeader({
               onClick={() => onSelectDate(day.key)}
               aria-label={`Выбрать ${dayAriaLabel}`}
               aria-pressed={isSelectedDay}
+              aria-current={isTodayDay ? "date" : undefined}
             >
               <span aria-hidden="true" />
               <small>{day.label.toLocaleUpperCase("ru-RU")}</small>

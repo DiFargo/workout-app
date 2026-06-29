@@ -303,3 +303,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.381`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
 - `v.1.382`: moved food editor/search polish CSS ownership from `index.css` into `nutrition-stack.css`.
 - Verification for `v.1.382`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-smoke.spec.js --project=desktop-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.383`: strengthened the client nutrition weekday strip with explicit current-date semantics while keeping the stabilized mobile geometry covered.
+- Verification for `v.1.383`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
