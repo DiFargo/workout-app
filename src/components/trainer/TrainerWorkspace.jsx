@@ -1151,11 +1151,11 @@ function ClientPhotos({ photos }) {
             <strong>Сравнить фотосессии</strong>
             <p>Выберите две даты и ракурс для крупного сравнения.</p>
           </div>
-          <select value={compareIds[0]} onChange={(event) => setCompareIds([event.target.value, compareIds[1]])}>
+          <select aria-label="Первая фотосессия для сравнения" value={compareIds[0]} onChange={(event) => setCompareIds([event.target.value, compareIds[1]])}>
             <option value="">Первая дата</option>
             {sortedPhotos.map((photo, index) => <option value={getPhotoId(photo, index)} key={`a-${getPhotoId(photo, index)}`}>{formatCompactDate(photo.date || photo.createdAt)}</option>)}
           </select>
-          <select value={compareIds[1]} onChange={(event) => setCompareIds([compareIds[0], event.target.value])}>
+          <select aria-label="Вторая фотосессия для сравнения" value={compareIds[1]} onChange={(event) => setCompareIds([compareIds[0], event.target.value])}>
             <option value="">Вторая дата</option>
             {sortedPhotos.map((photo, index) => <option value={getPhotoId(photo, index)} key={`b-${getPhotoId(photo, index)}`}>{formatCompactDate(photo.date || photo.createdAt)}</option>)}
           </select>

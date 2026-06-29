@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.391`.
+Last updated at app version `v.1.392`.
 
 ## Evidence
 
@@ -220,6 +220,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 115. Food editor/search polish CSS is now owned by the nutrition stack, guarded by nutrition visual audits.
 116. Nutrition header search, calendar and weekday action labels are now guarded as readable Russian text by structure and nutrition visual audits.
 117. Basic workout quiz goal, experience and weekly workout selectors now expose readable labels under the app structure audit.
+118. Trainer progress photo comparison selectors now expose readable labels under the app structure audit.
 
 ## P1: Next Product Fixes
 

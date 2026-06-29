@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.391`.
+Last updated at app version `v.1.392`.
 
 ## Stable Now
 
@@ -124,6 +124,7 @@ Last updated at app version `v.1.391`.
 - AI Coach feature cards expose selected `aria-pressed` state under the AI Coach visual audit.
 - Trainer workout day selector exposes selected `aria-pressed` state under trainer workspace and visual audits.
 - Trainer client photo view tabs expose selected `aria-pressed` state under trainer workspace and visual audits.
+- Trainer client progress photo comparison selectors expose readable labels under the app structure audit.
 - Trainer nutrition diary day buttons expose selected `aria-pressed` state under trainer workspace and visual audits.
 - Trainer progress chart periods and exercise progress filters expose selected `aria-pressed` state under trainer workspace and visual audits.
 - Admin harness filter pills, client cards, workspace tabs and program cards expose selected `aria-pressed` state under the admin visual audit.
