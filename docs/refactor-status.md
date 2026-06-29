@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.457`.
+Last updated at app version `v.1.458`.
 
 ## Stable Now
 
@@ -141,6 +141,7 @@ Last updated at app version `v.1.457`.
 - Client primary final CSS now keeps product top actions layout in the final owner, guarded by app structure tests.
 - Client primary final CSS now keeps the old food action bar shell in one legacy owner before the final fixed owner, guarded by app structure tests.
 - Client primary final CSS now keeps the product flow header fallback group in one legacy owner before the final product header owner, guarded by app structure tests.
+- Client primary final CSS now keeps food search header, input and recent-grid layout rules in the final owner, guarded by app structure tests.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
 - Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
@@ -201,9 +202,9 @@ From the latest verified build:
 
 - main app JS chunk: about `472.18 KiB` raw, `131.41 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1170.27 KiB` raw, `116.64 KiB` gzip.
+- main CSS bundle: about `1168.31 KiB` raw, `116.50 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3460.21 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3457.92 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
@@ -228,7 +229,7 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 
 ## Recent Verification
 
-- `npm.cmd run test`: passed with `298` passed.
+- `npm.cmd run test`: passed with `299` passed.
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd run report:css`: passed.
