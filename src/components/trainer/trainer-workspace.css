@@ -7170,7 +7170,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   margin-top: 16px;
 }
 
-.trainerNutritionPlanActions > button {
+.trainerNutritionPlanActions > button,
+.trainerNotificationActions button {
   min-height: 42px;
   display: inline-flex;
   align-items: center;
@@ -7790,20 +7791,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   display: flex;
   gap: 10px;
   margin-top: 18px;
-}
-
-.trainerNotificationActions button {
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 0 16px;
-  border: 1px solid var(--tn-line);
-  border-radius: 7px;
-  background: #fff;
-  color: var(--tn-text);
-  font-weight: 700;
 }
 
 .trainerNotificationActions button:disabled {
@@ -9329,7 +9316,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     display: grid;
   }
 
-  .trainerNutritionPlanActions > button {
+  .trainerNutritionPlanActions > button,
+  .trainerNotificationActions button {
     width: 100%;
   }
 
@@ -9452,10 +9440,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
   .trainerNotificationActions {
     display: grid;
-  }
-
-  .trainerNotificationActions button {
-    width: 100%;
   }
 
   .trainerWorkoutStatusPanel {

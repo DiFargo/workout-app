@@ -2735,6 +2735,19 @@ test("trainer workspace CSS keeps mobile bottom nav shell in one owner", async (
   );
 });
 
+test("trainer workspace CSS keeps nutrition and notification action buttons grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNutritionPlanActions > button,\s*\.trainerNotificationActions button\s*\{\s*min-height:\s*42px;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerNutritionPlanActions > button,\s*\.trainerNotificationActions button\s*\{\s*width:\s*100%;/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 
