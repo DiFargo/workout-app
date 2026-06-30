@@ -412,8 +412,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
   position: absolute !important;
   top: 46px !important;
   right: var(--food-product-x) !important;
-  z-index: 3 !important;
-  width: auto !important;
   height: 48px !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -465,8 +463,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader {
   width: 100% !important;
-  min-height: 114px !important;
-  height: 114px !important;
   margin: 0 0 16px !important;
   padding: 0 !important;
   display: grid !important;
@@ -503,9 +499,7 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
   overflow: hidden !important;
   color: var(--food-product-title) !important;
   -webkit-text-fill-color: var(--food-product-title) !important;
-  font-size: 28px !important;
   font-weight: 900 !important;
-  line-height: 1.06 !important;
   letter-spacing: 0 !important;
   text-align: left !important;
   text-overflow: ellipsis !important;
@@ -514,10 +508,7 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader .foodEditInlineMealHeader {
   grid-area: meal !important;
-  width: min(328px, calc(100% - 34px)) !important;
   min-width: 0 !important;
-  min-height: 56px !important;
-  height: auto !important;
   margin: 0 auto !important;
   padding: 7px 14px 6px !important;
   display: flex !important;
@@ -930,10 +921,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
 @media (max-width: 380px) {
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen {
     --food-product-x: 18px;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowTitle h2 {
-    font-size: 26px !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodEditMacrosCards {

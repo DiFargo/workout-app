@@ -1134,12 +1134,17 @@ test("client food search final CSS keeps product hero spacing in latest owners",
   const hardLockStart = source.indexOf("/* Product page header/search alignment hard lock v160 */");
   const finalLockStart = source.indexOf("/* Product page header/search alignment final lock v161 */");
   const mealSelectorStart = source.indexOf("/* Food search meal selector width final lock v162 */");
+  const productAddStart = source.indexOf("/* Food product add page v154 */");
+  const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */", productAddStart);
   const amountBehaviorBlock = source.slice(amountBehaviorStart, photoActionStart);
   const exactLockBlock = source.slice(exactLockStart, stableFlowStart);
   const hardLockBlock = source.slice(hardLockStart, finalLockStart);
   const finalLockBlock = source.slice(finalLockStart, mealSelectorStart);
   const stableFlowBlock = source.slice(stableFlowStart, hardLockStart);
+  const productAddBlock = source.slice(productAddStart, headerSizingStart);
 
+  assert.ok(productAddStart >= 0);
+  assert.ok(headerSizingStart > productAddStart);
   assert.ok(amountBehaviorStart >= 0);
   assert.ok(photoActionStart > amountBehaviorStart);
   assert.ok(exactLockStart > photoActionStart);
@@ -1147,6 +1152,13 @@ test("client food search final CSS keeps product hero spacing in latest owners",
   assert.ok(hardLockStart > stableFlowStart);
   assert.ok(finalLockStart > hardLockStart);
   assert.ok(mealSelectorStart > finalLockStart);
+  assert.doesNotMatch(productAddBlock, /\.foodProductFlowHeader\s*\{[^{}]*?height:\s*114px !important;/);
+  assert.doesNotMatch(productAddBlock, /\.foodProductTopActions\s*\{[^{}]*?z-index:\s*3 !important;/);
+  assert.doesNotMatch(productAddBlock, /\.foodProductTopActions\s*\{[^{}]*?width:\s*auto !important;/);
+  assert.doesNotMatch(productAddBlock, /\.foodProductFlowTitle h2\s*\{[^{}]*?font-size:\s*28px !important;/);
+  assert.doesNotMatch(productAddBlock, /\.foodProductFlowTitle h2\s*\{[^{}]*?line-height:\s*1\.06 !important;/);
+  assert.doesNotMatch(productAddBlock, /\.foodEditInlineMealHeader\s*\{[^{}]*?width:\s*min\(328px,/);
+  assert.doesNotMatch(productAddBlock, /\.foodEditInlineMealHeader\s*\{[^{}]*?min-height:\s*56px !important;/);
   assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductFlowHeader\s*\{/);
   assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductFlowTitle\s*\{/);
   assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductTopActions\s*\{/);
