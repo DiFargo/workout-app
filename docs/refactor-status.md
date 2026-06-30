@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.496`.
+Last updated at app version `v.1.497`.
 
 ## Stable Now
 
@@ -20,6 +20,7 @@ Last updated at app version `v.1.496`.
 - Admin hub and admin internals CSS entrypoints are now structurally guarded against accidental heavy import drift.
 - Admin client four-column grid breakpoint ownership stays in the later admin internals stylesheet instead of the earlier CRM shell.
 - Expanded nutrition product-list side spacing stays in the width owner, while the exact-spacing block keeps only its sibling gap fix.
+- Expanded nutrition product-list width tuning no longer carries obsolete intermediate reduce/minus sections.
 - Mobile client smoke waits long enough for slow cold auth bootstrap runs observed in Playwright mobile.
 - Client smoke tests wait past the auth bootstrap fallback window, matching the app's signed-out loading behavior on slower mobile runs.
 - Client workout visual audit waits for the harness bottom navigation before clicking, reducing cold-start timeout flakes.
