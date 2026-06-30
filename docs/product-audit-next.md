@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.495`.
+Last updated at app version `v.1.496`.
 
 ## Evidence
 
@@ -327,6 +327,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 219. Admin hub CSS no longer keeps unused trainer role button rules; trainer/admin internals keep the active owner.
 220. Workout select hero spacing now lives only in the workout lazy card-render owner instead of the core render-target lock.
 221. Admin client four-column card grid ownership now lives in the later month-program/admin internals stylesheet.
+222. Expanded nutrition product-list spacing no longer repeats bottom margin overrides in the exact-spacing block.
 
 ## P1: Next Product Fixes
 
