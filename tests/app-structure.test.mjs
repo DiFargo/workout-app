@@ -2058,6 +2058,10 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.doesNotMatch(
     source,
+    /\.adminCalendarPanelMerged \.adminCalendarTelegram\.connected\s*\{\s*background:\s*rgba\(92, 255, 84, \.08\) !important;\s*border-color:\s*rgba\(92, 255, 84, \.16\) !important;\s*color:\s*rgba\(220,255,210,\.9\) !important;\s*\}\s*\.adminCalendarPanelMerged \.adminCalendarEqualButton\s*\{[\s\S]*?height:\s*64px !important;/
+  );
+  assert.doesNotMatch(
+    source,
     /\.adminCalendarHourReminder i\s*\{\s*width:\s*38px !important;\s*height:\s*22px !important;\s*border-radius:\s*999px !important;\s*background:\s*rgba\(255,255,255,\.12\) !important;[\s\S]*?flex:\s*0 0 auto !important;\s*\}/
   );
   assert.doesNotMatch(
@@ -2146,6 +2150,10 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.match(
     source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarTelegram\.connected\s*\{\s*background:\s*rgba\(92, 255, 84, \.08\) !important;\s*border-color:\s*rgba\(92, 255, 84, \.16\) !important;\s*color:\s*rgba\(220,255,210,\.9\) !important;\s*\}/
+  );
+  assert.match(
+    source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarTelegram::before\s*\{\s*content:\s*"" !important;\s*width:\s*11px !important;\s*height:\s*11px !important;/
   );
   assert.match(
@@ -2214,7 +2222,11 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.match(
     source,
-    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarEqualButtonsWrap\s*\{\s*order:\s*5 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*12px !important;\s*width:\s*100% !important;\s*\}[\s\S]*?\.adminCalendarEqualButtonsWrap > button,\s*\.adminCalendarPanelMerged \.adminCalendarEqualButton,\s*\.adminCalendarPanelMerged \.adminV3OpenEditor,\s*\.adminCalendarPanelMerged \.adminCalendarTestButton\s*\{\s*width:\s*100% !important;\s*min-height:\s*62px !important;/
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarEqualButtonsWrap\s*\{\s*order:\s*5 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*12px !important;\s*width:\s*100% !important;\s*\}[\s\S]*?\.adminCalendarEqualButtonsWrap > button,\s*\.adminCalendarPanelMerged \.adminCalendarEqualButton,\s*\.adminCalendarPanelMerged \.adminV3OpenEditor,\s*\.adminCalendarPanelMerged \.adminCalendarTestButton\s*\{\s*width:\s*100% !important;\s*min-height:\s*62px !important;[\s\S]*?padding:\s*0 18px !important;\s*text-align:\s*center !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarTestButton\s*\{[\s\S]*?font-size:\s*14px !important;\s*line-height:\s*1\.1 !important;/
   );
 });
 

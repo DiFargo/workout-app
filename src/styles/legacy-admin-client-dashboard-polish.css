@@ -1912,82 +1912,6 @@
   }
 }
 
-/* ÃÂ ÃÂµÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂµ ÃÂºÃÂ»ÃÂ°Ã‘ÂÃ‘ÂÃ‘â€¹: ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ ÃÂ¾ÃÂ´ÃÂ½ÃÂ¾ÃÂ¹ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃ‘â€¹ + Telegram ÃÂ±ÃÂµÃÂ· ÃÂºÃÂ°ÃÂ²Ã‘â€¹Ã‘â€¡ÃÂµÃÂº */
-
-.adminCalendarPanelMerged .adminCalendarHead > div:first-child {
-  width: 100% !important;
-  text-align: center !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarHead span {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 0 6px !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarHead h3 {
-  width: 100% !important;
-  margin: 0 !important;
-  text-align: center !important;
-  font-size: 24px !important;
-  line-height: 1.05 !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarTelegram::before {
-  content: "" !important;
-  width: 8px !important;
-  height: 8px !important;
-  border-radius: 999px !important;
-  background: rgba(255,255,255,.34) !important;
-  box-shadow: none !important;
-  flex: 0 0 auto !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarTelegram.connected {
-  background: rgba(92, 255, 84, .08) !important;
-  border-color: rgba(92, 255, 84, .16) !important;
-  color: rgba(220,255,210,.9) !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarEqualButton {
-  width: 100% !important;
-  min-height: 64px !important;
-  height: 64px !important;
-  max-height: 64px !important;
-  padding: 0 18px !important;
-  border-radius: 22px !important;
-  box-sizing: border-box !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarTestButton {
-  background: #071b1d !important;
-  border: 1px solid rgba(255,255,255,.07) !important;
-  color: rgba(255,255,255,.72) !important;
-  box-shadow: none !important;
-  font-size: 11px !important;
-  line-height: 1.1 !important;
-  font-weight: 800 !important;
-}
-
-@media (max-width: 420px) {
-  .adminCalendarPanelMerged .adminCalendarEqualButton {
-    min-height: 60px !important;
-    height: 60px !important;
-    max-height: 60px !important;
-    border-radius: 20px !important;
-  }
-
-  .adminCalendarPanelMerged .adminCalendarTestButton {
-    font-size: 10px !important;
-  }
-}
-
 /* === CALENDAR MATCH RENDER V62 === */
 /* ÃÂ¤ÃÂ¸ÃÂ½ÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂ¹ ÃÂ²ÃÂ¸ÃÂ´ Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ Ã‘â€¹ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â ÃÂ¿ÃÂ¾ Ã‘â‚¬ÃÂµÃ‘â€žÃÂµÃ‘â‚¬ÃÂµÃÂ½Ã‘ÂÃ‘Æ’: Ã‘â‚¬ÃÂ°ÃÂ·ÃÂ¼ÃÂµÃ‘â‚¬Ã‘â€¹, Ã‘â‚¬ÃÂ°Ã‘ÂÃÂ¿ÃÂ¾ÃÂ»ÃÂ¾ÃÂ¶ÃÂµÃÂ½ÃÂ¸ÃÂµ, Ã‘â€žÃ‘Æ’ÃÂ½ÃÂºÃ‘â€ ÃÂ¸ÃÂ¾ÃÂ½ÃÂ°ÃÂ» */
 
@@ -2060,6 +1984,12 @@
   background: rgba(99,255,82,.08) !important;
   border: 1px solid rgba(99,255,82,.18) !important;
   color: rgba(190,255,160,.92) !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTelegram.connected {
+  background: rgba(92, 255, 84, .08) !important;
+  border-color: rgba(92, 255, 84, .16) !important;
+  color: rgba(220,255,210,.9) !important;
 }
 
 .adminCalendarPanelMerged .adminCalendarTelegram::before {
@@ -2314,6 +2244,8 @@
   justify-content: center !important;
   border-radius: 20px !important;
   box-sizing: border-box !important;
+  padding: 0 18px !important;
+  text-align: center !important;
   font-size: 16px !important;
   font-weight: 900 !important;
 }
@@ -2324,6 +2256,7 @@
   color: rgba(196,235,245,.78) !important;
   box-shadow: none !important;
   font-size: 14px !important;
+  line-height: 1.1 !important;
 }
 
 @media (max-width: 420px) {

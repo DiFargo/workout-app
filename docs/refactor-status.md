@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.552`.
+Last updated at app version `v.1.553`.
 
 ## Stable Now
 
@@ -274,6 +274,7 @@ Last updated at app version `v.1.552`.
 - Legacy admin client page CSS exact duplicate block scan now returns zero after removing duplicate mobile tab, metric and Telegram quick-message locks.
 - Legacy nutrition header CSS exact duplicate block scan now returns zero after removing duplicate compact calorie-row strong sizing.
 - Admin calendar CSS now keeps the equal-button stack and active reminder state in the final `V62` owner after removing another overwritten pre-final day-settings block.
+- Admin calendar CSS now keeps connected Telegram and final equal-button text spacing in the `V62` owner after removing the last pre-final equal-button shell.
 
 ## Current Build Shape
 
@@ -283,7 +284,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3367.75 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3365.58 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
