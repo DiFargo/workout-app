@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.505`.
+Last updated at app version `v.1.506`.
 
 ## Evidence
 
@@ -333,6 +333,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 225. Expanded nutrition product-list final width owner no longer carries bottom margin overrides owned by the real bottom-gap block.
 226. Expanded nutrition product-list guaranteed block no longer repeats width and side-margin values owned by the final width block.
 227. Expanded nutrition product-list force-width block no longer keeps earlier width and side-margin values overwritten inside the same section.
+228. Expanded nutrition product-list guaranteed block no longer repeats open-card overflow owned by the inline width support block.
 228. Expanded nutrition product-list no longer keeps the obsolete 10-percent-wider section before the force-width owner.
 229. Exact nutrition product-list rebuild keeps structure and visual styling while width values stay in later width owners.
 230. Expanded nutrition product-list force-width block no longer keeps a radius overwritten by the later hard-width owner.

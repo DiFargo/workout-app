@@ -2274,10 +2274,6 @@
    ÐœÐµÐ½ÑÐµÑ‚ Ð¸Ð¼ÐµÐ½Ð½Ð¾ Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð¾Ð² Ð²Ð½ÑƒÑ‚Ñ€Ð¸ Ñ€Ð°ÑÐºÑ€Ñ‹Ñ‚Ð¾Ð¹ ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸.
    ========================================================= */
 
-.fatMealCard.open {
-  overflow: visible !important;
-}
-
 .fatMealCard.open .fatMealItems.productListWideFinal,
 .fatMealCard.open .productListExact.productListWideFinal,
 .productListWideFinal {

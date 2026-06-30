@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.505`.
+Last updated at app version `v.1.506`.
 
 ## Stable Now
 
@@ -25,6 +25,7 @@ Last updated at app version `v.1.505`.
 - Expanded nutrition product-list final width owner no longer mixes in bottom margin ownership.
 - Expanded nutrition product-list guaranteed block now keeps only position and sizing support, leaving width values to the final owner.
 - Expanded nutrition product-list force-width block keeps only active overflow support while later rules own width and side margins.
+- Expanded nutrition product-list guaranteed block no longer repeats open-card overflow owned by the inline width support block.
 - Expanded nutrition product-list obsolete 10-percent-wider section is removed before the force-width owner.
 - Exact nutrition product-list rebuild keeps structure, spacing, and visuals without owning width values.
 - Expanded nutrition product-list radius now stays in the later hard-width owner instead of the force-width block.

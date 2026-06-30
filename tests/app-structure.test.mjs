@@ -1618,6 +1618,10 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.doesNotMatch(forceProductBlock, /margin-left:\s*-(?:22px|20px) !important;/);
   assert.doesNotMatch(forceProductBlock, /border-radius:\s*22px !important;/);
   assert.doesNotMatch(exactProductListBlock, /width:\s*calc\(100% - (?:4px|2px)\) !important;/);
+  assert.doesNotMatch(
+    guaranteedWidthBlock,
+    /\.fatMealCard\.open\s*\{\s*overflow:\s*visible !important;\s*\}/
+  );
 
   assert.match(
     source,
