@@ -2132,6 +2132,7 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
     source,
     /\.adminCalendarPanelMerged \.adminCalendarTestBtn,\s*\.adminCalendarPanelMerged button\[class\*="Test"\]\s*\{\s*max-width:\s*(?:320px|100%) !important;[\s\S]*?border-radius:\s*(?:20px|22px) !important;/
   );
+  assert.doesNotMatch(source, /\.adminCalendarPanelMerged \.adminCalendar(?:Toggle|SaveBtn|TestBtn)\b/);
   assert.doesNotMatch(
     source,
     /\.adminCalendarPanelMerged\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*(?:12px|16px) !important;/
@@ -2254,7 +2255,7 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.match(
     source,
-    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarToggle,\s*\.adminCalendarPanelMerged \.adminCalendarSaveBtn,\s*\.adminCalendarPanelMerged \.adminCalendarTestBtn,\s*\.adminCalendarPanelMerged button\[class\*="Toggle"\],\s*\.adminCalendarPanelMerged button\[class\*="Save"\],\s*\.adminCalendarPanelMerged button\[class\*="Test"\]\s*\{\s*width:\s*100% !important;\s*min-height:\s*64px !important;\s*height:\s*64px !important;\s*max-height:\s*64px !important;[\s\S]*?@media\s*\(max-width:\s*420px\)\s*\{[\s\S]*?\.adminCalendarPanelMerged button\[class\*="Test"\]\s*\{\s*min-height:\s*60px !important;\s*height:\s*60px !important;\s*max-height:\s*60px !important;\s*padding:\s*0 16px !important;\s*border-radius:\s*20px !important;/
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged button\[class\*="Toggle"\],\s*\.adminCalendarPanelMerged button\[class\*="Save"\],\s*\.adminCalendarPanelMerged button\[class\*="Test"\]\s*\{\s*width:\s*100% !important;\s*min-height:\s*64px !important;\s*height:\s*64px !important;\s*max-height:\s*64px !important;[\s\S]*?@media\s*\(max-width:\s*420px\)\s*\{[\s\S]*?\.adminCalendarPanelMerged button\[class\*="Test"\]\s*\{\s*min-height:\s*60px !important;\s*height:\s*60px !important;\s*max-height:\s*60px !important;\s*padding:\s*0 16px !important;\s*border-radius:\s*20px !important;/
   );
 });
 
