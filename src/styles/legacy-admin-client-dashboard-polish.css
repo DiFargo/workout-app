@@ -2291,32 +2291,6 @@
   letter-spacing: .12em !important;
 }
 
-.adminCalendarPanelMerged .adminCalendarHead h3 {
-  margin: 0 !important;
-  text-align: center !important;
-  font-size: 26px !important;
-  line-height: 1.05 !important;
-  letter-spacing: -.03em !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarTelegram {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  width: fit-content !important;
-  height: 30px !important;
-  min-height: 30px !important;
-  padding: 0 12px !important;
-  margin: 2px auto 0 !important;
-  border-radius: 999px !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  background: rgba(255,255,255,.055) !important;
-  border: 1px solid rgba(255,255,255,.08) !important;
-  color: rgba(255,255,255,.72) !important;
-}
-
 .adminCalendarPanelMerged .adminCalendarTelegram::before {
   content: "" !important;
   width: 8px !important;
@@ -2330,13 +2304,6 @@
   box-shadow: 0 0 10px rgba(99,255,82,.52) !important;
 }
 
-.adminCalendarPanelMerged .adminCalendarDays {
-  display: grid !important;
-  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
-  gap: 7px !important;
-  margin: 0 !important;
-}
-
 .adminCalendarPanelMerged .adminCalendarPerDaySettings {
   display: flex !important;
   flex-direction: column !important;
@@ -2345,37 +2312,10 @@
   margin: 0 !important;
 }
 
-.adminCalendarPanelMerged .adminCalendarDaySettingsRow {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 12px !important;
-  width: 100% !important;
-  padding: 14px !important;
-  border-radius: 22px !important;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025)) !important;
-  border: 1px solid rgba(255,255,255,.065) !important;
-  box-sizing: border-box !important;
-}
-
 .adminCalendarDaySettingsHeader {
   display: flex !important;
   align-items: center !important;
   gap: 10px !important;
-}
-
-.adminCalendarDaySettingsTitle {
-  width: 46px !important;
-  height: 42px !important;
-  border-radius: 15px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex: 0 0 46px !important;
-  background: rgba(127,159,58,.18) !important;
-  color: #d8ff95 !important;
-  font-size: 14px !important;
-  font-weight: 950 !important;
 }
 
 .adminCalendarDaySettingsName {
@@ -2410,33 +2350,6 @@
   color: rgba(255,255,255,.48) !important;
   white-space: nowrap !important;
   text-align: left !important;
-}
-
-.adminCalendarDaySettingsRow input {
-  width: 100% !important;
-  height: 42px !important;
-  min-height: 42px !important;
-  border-radius: 14px !important;
-  font-size: 15px !important;
-  font-weight: 900 !important;
-  text-align: center !important;
-}
-
-.adminCalendarHourReminder {
-  width: 100% !important;
-  height: 46px !important;
-  min-height: 46px !important;
-  padding: 0 14px !important;
-  border-radius: 16px !important;
-  border: 1px solid rgba(255,255,255,.08) !important;
-  background: rgba(255,255,255,.045) !important;
-  color: rgba(255,255,255,.68) !important;
-  font-size: 13px !important;
-  font-weight: 900 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  box-sizing: border-box !important;
 }
 
 .adminCalendarHourReminder i {

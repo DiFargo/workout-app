@@ -2040,6 +2040,26 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
     source,
     /\.adminCalendarPanelMerged \.adminCalendarDays\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\) !important;\s*gap:\s*7px !important;\s*\}/
   );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarHead h3\s*\{\s*margin:\s*0 !important;\s*text-align:\s*center !important;\s*font-size:\s*26px !important;\s*line-height:\s*1\.05 !important;\s*letter-spacing:\s*-.03em !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarDaySettingsRow\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*12px !important;\s*width:\s*100% !important;[\s\S]*?box-sizing:\s*border-box !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarDaySettingsTitle\s*\{\s*width:\s*46px !important;\s*height:\s*42px !important;\s*border-radius:\s*15px !important;[\s\S]*?font-size:\s*14px !important;\s*font-weight:\s*950 !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarDaySettingsRow input\s*\{\s*width:\s*100% !important;\s*height:\s*42px !important;\s*min-height:\s*42px !important;\s*border-radius:\s*14px !important;\s*font-size:\s*15px !important;\s*font-weight:\s*900 !important;\s*text-align:\s*center !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarHourReminder\s*\{\s*width:\s*100% !important;\s*height:\s*46px !important;\s*min-height:\s*46px !important;\s*padding:\s*0 14px !important;[\s\S]*?box-sizing:\s*border-box !important;\s*\}/
+  );
   assert.match(
     source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*14px !important;/
@@ -2055,6 +2075,22 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   assert.match(
     source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarDays\s*\{\s*order:\s*2 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\) !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarDaySettingsRow\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*64px minmax\(0, 1fr\) minmax\(0, 1fr\) !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarDaySettingsTitle\s*\{\s*width:\s*58px !important;\s*height:\s*58px !important;\s*border-radius:\s*18px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarDaySettingsRow input\s*\{\s*width:\s*100% !important;\s*height:\s*46px !important;\s*min-height:\s*46px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarHourReminder\s*\{\s*grid-area:\s*hour !important;\s*width:\s*100% !important;\s*height:\s*48px !important;/
   );
 });
 
