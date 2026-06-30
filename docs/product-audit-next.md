@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.480`.
+Last updated at app version `v.1.481`.
 
 ## Evidence
 
@@ -309,6 +309,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 204. Client primary final CSS now keeps profile avatar 70px mobile sizing rules in one guarded owner.
 205. Client primary final CSS now keeps food product/edit action bar grid rules in one guarded owner.
 206. Client primary final CSS now keeps profile progress overview grid rules in one guarded owner.
+207. Client primary final CSS now keeps profile AI goal-stat font sizing in one guarded owner.
 
 ## P1: Next Product Fixes
 

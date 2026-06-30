@@ -674,6 +674,10 @@ test("client primary final CSS keeps main AI stats row in the final owner", asyn
     1
   );
   assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow \.goal strong\s*\{\s*font-size:\s*clamp\(15px, 4\.7vw, 22px\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\s*\{\s*min-width:\s*0 !important;\s*padding:\s*12px 8px !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;/g) || []).length,
     1
   );

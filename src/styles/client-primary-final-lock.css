@@ -157,10 +157,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     display: block !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow .goal strong {
-    font-size: clamp(15px, 4.7vw, 22px) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard {
     min-width: 0 !important;
     min-height: 98px !important;
