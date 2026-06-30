@@ -1604,6 +1604,27 @@ test("client nutrition grid CSS keeps progress insight spacing in the final owne
   );
 });
 
+test("client nutrition grid CSS does not keep exact duplicate blocks", async () => {
+  const source = await readText("src/styles/client-nutrition-grid-lock.css");
+  const seenBlocks = new Set();
+  const duplicateBlocks = [];
+
+  for (const match of source.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const selector = match[1].trim().replace(/\s+/g, " ");
+    const body = match[2].trim().replace(/\s+/g, " ");
+    if (!body || selector.includes("@")) continue;
+    const key = `${selector} { ${body} }`;
+
+    if (seenBlocks.has(key)) {
+      const line = source.slice(0, match.index).split(/\r?\n/).length;
+      duplicateBlocks.push(`src/styles/client-nutrition-grid-lock.css:${line}`);
+    }
+    seenBlocks.add(key);
+  }
+
+  assert.deepEqual(duplicateBlocks, []);
+});
+
 test("desktop cabinet CSS keeps trainer client overview grid locks in the broad mobile owner", async () => {
   const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
   const trainerClientSectionStart = source.indexOf(".trainerClientDashboardModalOverlay");

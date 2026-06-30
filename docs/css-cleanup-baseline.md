@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1152.31 KiB` raw, `115.36 KiB` gzip.
-- Latest source CSS report: `100` files, about `3437.60 KiB` total source CSS.
+- Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
+- Latest source CSS report: `100` files, about `3421.08 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -30,7 +30,7 @@ Start mapping here before any cleanup:
 
 - `src/styles/client-primary-final-lock.css` - `217.80 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
-- `src/styles/client-nutrition-grid-lock.css` - `167.28 KiB`
+- `src/styles/client-nutrition-grid-lock.css` - `150.77 KiB`
 - `src/styles/client-render-target-lock.css` - `112.48 KiB`
 - `src/styles/legacy-food-editor-tail.css` - `100.37 KiB`
 - `src/styles/legacy-admin-client-dashboard-polish.css` - `97.32 KiB`
@@ -512,3 +512,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.485`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.486`: removed duplicate profile hero and avatar locks from `client-render-target-lock.css`; exact duplicate block scan for that file now returns zero.
 - Verification for `v.1.486`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.487`: removed duplicate main dashboard inner layout rules from `client-nutrition-grid-lock.css`; exact duplicate block scan for that file now returns zero.
+- Verification for `v.1.487`: `tests/app-structure.test.mjs`, mobile client primary/nutrition visual specs, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.

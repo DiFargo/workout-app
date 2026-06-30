@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.486`.
+Last updated at app version `v.1.487`.
 
 ## Stable Now
 
@@ -223,6 +223,7 @@ Last updated at app version `v.1.486`.
 - Client primary final CSS keeps max-640 product, food edit, workout title, refresh, profile hero and recent-card rules in guarded owners after removing duplicate blocks.
 - Client primary final CSS exact duplicate block scan now returns zero after removing final food edit and nutrition meta duplicate blocks.
 - Client render target CSS exact duplicate block scan now returns zero after removing duplicate profile hero and avatar locks.
+- Client nutrition grid CSS exact duplicate block scan now returns zero after removing duplicate main dashboard inner layout locks.
 
 ## Current Build Shape
 
@@ -230,9 +231,9 @@ From the latest verified build:
 
 - main app JS chunk: about `472.18 KiB` raw, `131.41 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1152.31 KiB` raw, `115.36 KiB` gzip.
+- main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3437.60 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3421.08 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
@@ -257,7 +258,7 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 
 ## Recent Verification
 
-- `npm.cmd run test`: passed with `305` passed.
+- `npm.cmd run test`: passed with `308` passed.
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd run report:css`: passed.
