@@ -2126,6 +2126,10 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.doesNotMatch(
     source,
+    /\.adminCalendarPanelMerged \.adminCalendarToggle,\s*\.adminCalendarPanelMerged \.adminCalendarSaveBtn,\s*\.adminCalendarPanelMerged \.adminCalendarTestBtn,\s*\.adminCalendarPanelMerged button\[class\*="Toggle"\],\s*\.adminCalendarPanelMerged button\[class\*="Save"\],\s*\.adminCalendarPanelMerged button\[class\*="Test"\]\s*\{\s*width:\s*100% !important;\s*min-height:\s*64px !important;\s*height:\s*64px !important;\s*padding:\s*14px 18px !important;/
+  );
+  assert.doesNotMatch(
+    source,
     /@media\s*\(max-width:\s*420px\)\s*\{\s*\.adminCalendarPanelMerged\s*\{\s*padding:\s*18px !important;\s*gap:\s*13px !important;\s*\}[\s\S]*?\.adminCalendarHourReminder\s*\{\s*height:\s*42px !important;\s*min-height:\s*42px !important;\s*font-size:\s*12px !important;\s*\}\s*\}/
   );
   assert.doesNotMatch(
@@ -2235,6 +2239,10 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   assert.match(
     source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarTestButton\s*\{[\s\S]*?font-size:\s*14px !important;\s*line-height:\s*1\.1 !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarToggle,\s*\.adminCalendarPanelMerged \.adminCalendarSaveBtn,\s*\.adminCalendarPanelMerged \.adminCalendarTestBtn,\s*\.adminCalendarPanelMerged button\[class\*="Toggle"\],\s*\.adminCalendarPanelMerged button\[class\*="Save"\],\s*\.adminCalendarPanelMerged button\[class\*="Test"\]\s*\{\s*width:\s*100% !important;\s*min-height:\s*64px !important;\s*height:\s*64px !important;\s*max-height:\s*64px !important;[\s\S]*?@media\s*\(max-width:\s*420px\)\s*\{[\s\S]*?\.adminCalendarPanelMerged button\[class\*="Test"\]\s*\{\s*min-height:\s*60px !important;\s*height:\s*60px !important;\s*max-height:\s*60px !important;\s*padding:\s*0 16px !important;\s*border-radius:\s*20px !important;/
   );
 });
 

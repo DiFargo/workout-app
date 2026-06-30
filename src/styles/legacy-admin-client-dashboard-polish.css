@@ -1744,121 +1744,6 @@
   overflow: hidden !important;
 }
 
-/* ÃÂ¢Ã‘â‚¬ÃÂ¸ ÃÂ¾Ã‘ÂÃÂ½ÃÂ¾ÃÂ²ÃÂ½Ã‘â€¹ÃÂµ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ ÃÂ¾ÃÂ´ÃÂ½ÃÂ¾ÃÂ³ÃÂ¾ Ã‘â‚¬ÃÂ°ÃÂ·ÃÂ¼ÃÂµÃ‘â‚¬ÃÂ°: ÃÂÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸Ã‘Â / ÃÂ¡ÃÂ¾Ã‘â€¦Ã‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€šÃ‘Å’ / ÃÂ¢ÃÂµÃ‘ÂÃ‘â€š */
-.adminCalendarPanelMerged .adminCalendarToggle,
-.adminCalendarPanelMerged .adminCalendarSaveBtn,
-.adminCalendarPanelMerged .adminCalendarTestBtn,
-.adminCalendarPanelMerged button[class*="Toggle"],
-.adminCalendarPanelMerged button[class*="Save"],
-.adminCalendarPanelMerged button[class*="Test"] {
-  width: 100% !important;
-  min-height: 64px !important;
-  height: 64px !important;
-  padding: 14px 18px !important;
-  border-radius: 22px !important;
-  box-sizing: border-box !important;
-}
-
-@media (max-width: 420px) {
-
-.adminCalendarPanelMerged .adminCalendarHead h3 {
-    font-size: 25px !important;
-  }
-
-  .adminCalendarPanelMerged .adminCalendarTelegram {
-    min-height: 28px !important;
-    padding: 6px 10px !important;
-    font-size: 11px !important;
-  }
-
-  .adminCalendarPanelMerged .adminCalendarToggle,
-  .adminCalendarPanelMerged .adminCalendarSaveBtn,
-  .adminCalendarPanelMerged .adminCalendarTestBtn,
-  .adminCalendarPanelMerged button[class*="Toggle"],
-  .adminCalendarPanelMerged button[class*="Save"],
-  .adminCalendarPanelMerged button[class*="Test"] {
-    min-height: 60px !important;
-    height: 60px !important;
-    padding: 12px 16px !important;
-    border-radius: 20px !important;
-  }
-
-}
-
-/* ÃÅ¡ÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ ÃÂ¾ÃÂ´ÃÂ¸ÃÂ½ÃÂ°ÃÂºÃÂ¾ÃÂ²ÃÂ¾ÃÂ¹ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃ‘â€¹: ÃÂÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸Ã‘Â / ÃÂ¡ÃÂ¾Ã‘â€¦Ã‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€šÃ‘Å’ Ã‘â‚¬ÃÂ°Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂ°ÃÂ½ÃÂ¸ÃÂµ / ÃÂ¢ÃÂµÃ‘ÂÃ‘â€šÃÂ¾ÃÂ²ÃÂ¾ÃÂµ Ã‘ÂÃÂ¾ÃÂ¾ÃÂ±Ã‘â€°ÃÂµÃÂ½ÃÂ¸ÃÂµ */
-.adminCalendarPanelMerged .adminCalendarToggle,
-.adminCalendarPanelMerged .adminCalendarSaveBtn,
-.adminCalendarPanelMerged .adminCalendarTestBtn,
-.adminCalendarPanelMerged button[class*="Toggle"],
-.adminCalendarPanelMerged button[class*="Save"],
-.adminCalendarPanelMerged button[class*="Test"] {
-  width: 100% !important;
-  min-height: 64px !important;
-  height: 64px !important;
-  max-height: 64px !important;
-  padding: 0 18px !important;
-  border-radius: 22px !important;
-  box-sizing: border-box !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* ÃÂ¢ÃÂµÃ‘ÂÃ‘â€šÃÂ¾ÃÂ²ÃÂ°Ã‘Â ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ° Ã‘â€šÃ‘â€˜ÃÂ¼ÃÂ½ÃÂ°Ã‘Â, Ã‘â€šÃÂµÃÂºÃ‘ÂÃ‘â€š ÃÂ¼ÃÂµÃÂ½Ã‘Å’Ã‘Ë†ÃÂµ */
-.adminCalendarPanelMerged .adminCalendarTestBtn,
-.adminCalendarPanelMerged button[class*="Test"] {
-  background: #071b1d !important;
-  border: 1px solid rgba(255,255,255,.07) !important;
-  color: rgba(255,255,255,.72) !important;
-  box-shadow: none !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarTestBtn *,
-.adminCalendarPanelMerged button[class*="Test"] * {
-  font-size: 12px !important;
-  line-height: 1.1 !important;
-  font-weight: 800 !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarTestBtn svg,
-.adminCalendarPanelMerged button[class*="Test"] svg {
-  width: 16px !important;
-  height: 16px !important;
-  opacity: .72 !important;
-}
-
-@media (max-width: 420px) {
-  .adminCalendarPanelMerged .adminCalendarHead span {
-    font-size: 12px !important;
-    letter-spacing: .1em !important;
-  }
-
-.adminCalendarPanelMerged .adminCalendarToggle,
-  .adminCalendarPanelMerged .adminCalendarSaveBtn,
-  .adminCalendarPanelMerged .adminCalendarTestBtn,
-  .adminCalendarPanelMerged button[class*="Toggle"],
-  .adminCalendarPanelMerged button[class*="Save"],
-  .adminCalendarPanelMerged button[class*="Test"] {
-    min-height: 60px !important;
-    height: 60px !important;
-    max-height: 60px !important;
-    padding: 0 16px !important;
-    border-radius: 20px !important;
-  }
-
-  .adminCalendarPanelMerged .adminCalendarTestBtn *,
-  .adminCalendarPanelMerged button[class*="Test"] * {
-    font-size: 11px !important;
-  }
-
-  .adminCalendarPanelMerged .adminCalendarTelegram {
-    min-height: 28px !important;
-    height: 28px !important;
-    padding: 0 10px !important;
-    font-size: 11px !important;
-  }
-}
-
 /* === CALENDAR MATCH RENDER V62 === */
 /* ÃÂ¤ÃÂ¸ÃÂ½ÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂ¹ ÃÂ²ÃÂ¸ÃÂ´ Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ Ã‘â€¹ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â ÃÂ¿ÃÂ¾ Ã‘â‚¬ÃÂµÃ‘â€žÃÂµÃ‘â‚¬ÃÂµÃÂ½Ã‘ÂÃ‘Æ’: Ã‘â‚¬ÃÂ°ÃÂ·ÃÂ¼ÃÂµÃ‘â‚¬Ã‘â€¹, Ã‘â‚¬ÃÂ°Ã‘ÂÃÂ¿ÃÂ¾ÃÂ»ÃÂ¾ÃÂ¶ÃÂµÃÂ½ÃÂ¸ÃÂµ, Ã‘â€žÃ‘Æ’ÃÂ½ÃÂºÃ‘â€ ÃÂ¸ÃÂ¾ÃÂ½ÃÂ°ÃÂ» */
 
@@ -2305,3 +2190,62 @@
   }
 }
 
+.adminCalendarPanelMerged .adminCalendarToggle,
+.adminCalendarPanelMerged .adminCalendarSaveBtn,
+.adminCalendarPanelMerged .adminCalendarTestBtn,
+.adminCalendarPanelMerged button[class*="Toggle"],
+.adminCalendarPanelMerged button[class*="Save"],
+.adminCalendarPanelMerged button[class*="Test"] {
+  width: 100% !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  max-height: 64px !important;
+  padding: 0 18px !important;
+  border-radius: 22px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn,
+.adminCalendarPanelMerged button[class*="Test"] {
+  background: #071b1d !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  color: rgba(255,255,255,.72) !important;
+  box-shadow: none !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn *,
+.adminCalendarPanelMerged button[class*="Test"] * {
+  font-size: 12px !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarTestBtn svg,
+.adminCalendarPanelMerged button[class*="Test"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  opacity: .72 !important;
+}
+
+@media (max-width: 420px) {
+  .adminCalendarPanelMerged .adminCalendarToggle,
+  .adminCalendarPanelMerged .adminCalendarSaveBtn,
+  .adminCalendarPanelMerged .adminCalendarTestBtn,
+  .adminCalendarPanelMerged button[class*="Toggle"],
+  .adminCalendarPanelMerged button[class*="Save"],
+  .adminCalendarPanelMerged button[class*="Test"] {
+    min-height: 60px !important;
+    height: 60px !important;
+    max-height: 60px !important;
+    padding: 0 16px !important;
+    border-radius: 20px !important;
+  }
+
+  .adminCalendarPanelMerged .adminCalendarTestBtn *,
+  .adminCalendarPanelMerged button[class*="Test"] * {
+    font-size: 11px !important;
+  }
+}
