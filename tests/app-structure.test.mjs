@@ -2034,6 +2034,22 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.doesNotMatch(
     source,
+    /\.adminCalendarPanelMerged\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*14px !important;\s*padding:\s*20px !important;\s*border-radius:\s*28px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarHead\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*gap:\s*8px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarHead span\s*\{\s*display:\s*block !important;\s*margin:\s*0 !important;\s*white-space:\s*nowrap !important;\s*text-align:\s*center !important;[\s\S]*?letter-spacing:\s*\.12em !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarPerDaySettings\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*12px !important;\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
     /\.adminCalendarPanelMerged \.adminCalendarTelegram\s*\{\s*display:\s*inline-flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*gap:\s*8px !important;\s*width:\s*fit-content !important;\s*min-height:\s*30px !important;/
   );
   assert.doesNotMatch(
@@ -2075,6 +2091,14 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   assert.match(
     source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarDays\s*\{\s*order:\s*2 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\) !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarHead span\s*\{\s*display:\s*none !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarPerDaySettings\s*\{\s*order:\s*4 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;/
   );
   assert.match(
     source,

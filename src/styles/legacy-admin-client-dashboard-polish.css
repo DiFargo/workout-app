@@ -2263,34 +2263,6 @@
 
 /* ÃÂÃÂºÃÂºÃ‘Æ’Ã‘â‚¬ÃÂ°Ã‘â€šÃÂ½Ã‘â€¹ÃÂ¹ ÃÂ±ÃÂ»ÃÂ¾ÃÂº ÃÂ½ÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸ÃÂ¹: Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ¾ÃÂºÃÂ¸ ÃÂ´ÃÂ½ÃÂµÃÂ¹, ÃÂ¿ÃÂ¾ÃÂ»Ã‘Â ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼ÃÂµÃÂ½ÃÂ¸ ÃÂ¸ ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂºÃÂ»Ã‘Å½Ã‘â€¡ÃÂ°Ã‘â€šÃÂµÃÂ»Ã‘Å’ ÃÂ·ÃÂ° Ã‘â€¡ÃÂ°Ã‘Â */
 
-.adminCalendarPanelMerged {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 14px !important;
-  padding: 20px !important;
-  border-radius: 28px !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarHead {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  gap: 8px !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarHead span {
-  display: block !important;
-  margin: 0 !important;
-  white-space: nowrap !important;
-  text-align: center !important;
-  color: #8eb64a !important;
-  font-size: 12px !important;
-  font-weight: 950 !important;
-  letter-spacing: .12em !important;
-}
-
 .adminCalendarPanelMerged .adminCalendarTelegram::before {
   content: "" !important;
   width: 8px !important;
@@ -2302,14 +2274,6 @@
 .adminCalendarPanelMerged .adminCalendarTelegram.connected::before {
   background: #63ff52 !important;
   box-shadow: 0 0 10px rgba(99,255,82,.52) !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarPerDaySettings {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 12px !important;
-  width: 100% !important;
-  margin: 0 !important;
 }
 
 .adminCalendarDaySettingsHeader {
