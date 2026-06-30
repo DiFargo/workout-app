@@ -2379,25 +2379,6 @@
 }
 
 /* =========================================================
-   MATCH BOTTOM SPACING
-   ========================================================= */
-
-.fatMealCard.open .fatMealItems.productListWideFinal,
-.fatMealCard.open .productListExact.productListWideFinal,
-.productListWideFinal {
-  margin-bottom: 12px !important;
-  padding-bottom: 0 !important;
-}
-
-@media (max-width: 480px) {
-  .fatMealCard.open .fatMealItems.productListWideFinal,
-  .fatMealCard.open .productListExact.productListWideFinal,
-  .productListWideFinal {
-    margin-bottom: 9px !important;
-  }
-}
-
-/* =========================================================
    PRODUCT BLOCK WIDTH +4% + MATCHED BOTTOM SPACING
    ========================================================= */
 

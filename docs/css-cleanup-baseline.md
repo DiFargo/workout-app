@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3410.34 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3409.77 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -527,3 +527,4 @@ Start mapping here before any cleanup:
 - `v.1.495`: removed the earlier duplicate admin client four-column grid breakpoint from `legacy-admin-shell-crm-app46.css`; `legacy-month-program-editor-early.css` remains the later owner.
 - `v.1.496`: removed repeated expanded nutrition product-list bottom/side spacing from `legacy-nutrition-late-layout.css`; the width owner and real bottom-gap owner remain separate.
 - `v.1.497`: removed obsolete expanded nutrition product-list reduce/minus width tuning from `legacy-nutrition-late-layout.css`; the final width owner remains in place.
+- `v.1.498`: removed obsolete expanded nutrition product-list match-bottom-spacing tuning from `legacy-nutrition-late-layout.css`; real bottom-gap ownership remains in place.

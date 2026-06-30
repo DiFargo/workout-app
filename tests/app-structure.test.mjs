@@ -1549,6 +1549,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH REDUCE AGAIN 10%"), -1);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH MINUS 7 PERCENT"), -1);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH MINUS 10 PERCENT AGAIN"), -1);
+  assert.equal(source.indexOf("MATCH BOTTOM SPACING"), -1);
 
   const tighterSpacingBlock = source.slice(tighterSpacingStart, ultraSpacingStart);
   const microGapBlock = source.slice(microGapStart, actionPanelStart);
