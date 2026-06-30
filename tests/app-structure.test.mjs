@@ -1413,6 +1413,9 @@ test("nutrition AI plan CSS keeps badge and conclusion colors in the final owner
   assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanCollapsedTop > div\s*\{[^}]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.035\);/);
   assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanCollapsedTop > div\.score\s*\{[^}]*?background:\s*rgba\(127,\s*159,\s*58,\s*0\.08\);/);
   assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanCollapsedMacros span\s*\{[^}]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.04\);/);
+  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanToggleBtn\s*\{[^}]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.035\);/);
+  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanToggleBtn\s*\{[^}]*?color:\s*rgba\(255,\s*255,\s*255,\s*0\.56\);/);
+  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanCollapsedCard\s*\{[^}]*?background:\s*rgba\(3,\s*10,\s*16,\s*0\.24\);/);
   assert.match(
     colorBlock,
     /\.nutritionAiPlanConclusion\s*\{[\s\S]*?background:\s*[\s\S]*?linear-gradient\(180deg,\s*rgba\(9,\s*20,\s*26,\s*0\.72\),\s*rgba\(5,\s*14,\s*18,\s*0\.78\)\) !important;[\s\S]*?border-color:\s*rgba\(255,\s*255,\s*255,\s*0\.06\) !important;/
@@ -1428,6 +1431,14 @@ test("nutrition AI plan CSS keeps badge and conclusion colors in the final owner
   assert.match(
     colorBlock,
     /\.nutritionAiPlanCollapsedTop > div\.score\s*\{[\s\S]*?background:\s*rgba\(127,\s*159,\s*58,\s*0\.10\) !important;[\s\S]*?border-color:\s*rgba\(127,\s*159,\s*58,\s*0\.18\) !important;/
+  );
+  assert.match(
+    colorBlock,
+    /\.nutritionAiPlanCollapsedCard,[\s\S]*?\.nutritionAiPlanConclusion\s*\{[\s\S]*?background:\s*[\s\S]*?linear-gradient\(180deg,\s*rgba\(9,\s*20,\s*26,\s*0\.72\),\s*rgba\(5,\s*14,\s*18,\s*0\.78\)\) !important;/
+  );
+  assert.match(
+    colorBlock,
+    /\.nutritionAiPlanToggleBtn\s*\{[\s\S]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.045\) !important;[\s\S]*?color:\s*rgba\(255,\s*255,\s*255,\s*0\.58\) !important;/
   );
 });
 
