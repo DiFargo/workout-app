@@ -837,6 +837,10 @@ test("client primary final CSS keeps workout card compact sizing in one owner", 
   const source = await readText("src/styles/client-primary-final-lock.css");
 
   assert.equal(
+    (source.match(/\.clientCorePageWorkout \.individualWorkoutDeck\s*\{\s*width:\s*100% !important;\s*margin:\s*0 0 46px !important;\s*padding:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutCardPro\s*\{\s*height:\s*clamp\(470px, calc\(100dvh - 292px\), 560px\) !important;\s*min-height:\s*470px !important;\s*max-height:\s*560px !important;\s*margin-bottom:\s*24px !important;\s*border-radius:\s*24px !important;\s*overflow:\s*hidden !important;/g) || []).length,
     1
   );

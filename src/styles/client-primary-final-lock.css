@@ -263,12 +263,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     text-overflow: ellipsis !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutDeck {
-    width: 100% !important;
-    margin: 0 0 46px !important;
-    padding: 0 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardPro {
     width: 100% !important;
     min-height: min(560px, calc(100dvh - 290px)) !important;
