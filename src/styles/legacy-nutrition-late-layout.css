@@ -2179,31 +2179,6 @@
 }
 
 /* =========================================================
-   PRODUCT LIST 10 PERCENT WIDER
-   ========================================================= */
-
-.fatSecretPage .productListExact,
-.productListExact {
-  width: calc(100% + 8px) !important;
-  max-width: calc(100% + 8px) !important;
-
-  margin-left: -4px !important;
-  margin-right: -4px !important;
-}
-
-@media (max-width: 480px) {
-
-  .fatSecretPage .productListExact,
-  .productListExact {
-    width: calc(100% + 6px) !important;
-    max-width: calc(100% + 6px) !important;
-
-    margin-left: -3px !important;
-    margin-right: -3px !important;
-  }
-}
-
-/* =========================================================
    FORCE PRODUCT BLOCK MUCH WIDER
    ========================================================= */
 

@@ -1556,6 +1556,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH REDUCE AGAIN 10%"), -1);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH MINUS 7 PERCENT"), -1);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH MINUS 10 PERCENT AGAIN"), -1);
+  assert.equal(source.indexOf("PRODUCT LIST 10 PERCENT WIDER"), -1);
   assert.equal(source.indexOf("MATCH BOTTOM SPACING"), -1);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH +4% + MATCHED BOTTOM SPACING"), -1);
 
