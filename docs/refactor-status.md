@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.490`.
+Last updated at app version `v.1.491`.
 
 ## Stable Now
 
@@ -23,6 +23,7 @@ Last updated at app version `v.1.490`.
 - Client workout flow late CSS is owned by `client-workout-lazy.css` instead of the core app stylesheet.
 - Client workout run polish and exercise notes CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
 - Client workout navigation/close and set-row CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
+- Client workout final set-row sizing is guarded in `client-workout-set-rows.css`, keeping that owner out of `client-render-target-lock.css`.
 - Client workout draft restore, readiness and post-workout feedback dialog CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
 - Client harness, nutrition visual and primary visual audits also wait for bottom navigation before route clicks.
 - Trainer workspace and trainer visual audits wait for trainer navigation controls before route clicks.

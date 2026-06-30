@@ -1004,13 +1004,18 @@ test("client primary final CSS keeps client page variables in the final owner", 
   );
 });
 
-test("client render target CSS keeps a single workout set-row owner", async () => {
-  const source = await readText("src/styles/client-render-target-lock.css");
+test("client workout set-row final sizing stays in the workout lazy owner", async () => {
+  const renderTarget = await readText("src/styles/client-render-target-lock.css");
+  const setRows = await readText("src/styles/client-workout-set-rows.css");
 
-  assert.doesNotMatch(source, /v127: absolute final override for workout set rows/);
-  assert.match(source, /v126: final set-row size\/state polish/);
+  assert.doesNotMatch(renderTarget, /v127: absolute final override for workout set rows/);
+  assert.doesNotMatch(renderTarget, /v126: final set-row size\/state polish/);
   assert.equal(
-    (source.match(/setRow\.workoutExercisePlanRow\s*\{\s*min-height: 58px !important;/g) || []).length,
+    (renderTarget.match(/setRow\.workoutExercisePlanRow\s*\{\s*min-height: 58px !important;/g) || []).length,
+    0
+  );
+  assert.equal(
+    (setRows.match(/setRow\.workoutExercisePlanRow\s*\{\s*min-height: 58px !important;/g) || []).length,
     1
   );
 });
