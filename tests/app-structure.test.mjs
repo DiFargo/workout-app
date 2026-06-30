@@ -1527,6 +1527,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   const compactMealStart = source.indexOf("COMPACT MEAL CARDS", mealRedesignStart);
   const ultraSmallGapStart = source.indexOf("ULTRA SMALL GAP BETWEEN MEAL CARDS");
   const balancedGapStart = source.indexOf("BALANCED GAP BETWEEN MEAL CARDS", ultraSmallGapStart);
+  const guaranteedWidthStart = source.indexOf("GUARANTEED WIDER INNER PRODUCT BLOCK");
   const productWidthSpacingStart = source.indexOf("PRODUCT BLOCK WIDTH +4% FINAL");
   const exactBottomSpacingStart = source.indexOf("EXACT BOTTOM SPACING MATCH", productWidthSpacingStart);
   const bottomGapStart = source.indexOf("REAL BOTTOM GAP FIX FOR EXPANDED MEAL");
@@ -1540,6 +1541,8 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.ok(compactMealStart > mealRedesignStart);
   assert.ok(ultraSmallGapStart >= 0);
   assert.ok(balancedGapStart > ultraSmallGapStart);
+  assert.ok(guaranteedWidthStart >= 0);
+  assert.ok(productWidthSpacingStart > guaranteedWidthStart);
   assert.ok(productWidthSpacingStart >= 0);
   assert.ok(exactBottomSpacingStart > productWidthSpacingStart);
   assert.ok(bottomGapStart >= 0);
@@ -1556,6 +1559,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   const microGapBlock = source.slice(microGapStart, actionPanelStart);
   const mealRedesignBlock = source.slice(mealRedesignStart, compactMealStart);
   const ultraSmallGapBlock = source.slice(ultraSmallGapStart, balancedGapStart);
+  const guaranteedWidthBlock = source.slice(guaranteedWidthStart, productWidthSpacingStart);
   const productWidthSpacingBlock = source.slice(productWidthSpacingStart, exactBottomSpacingStart);
   const exactBottomSpacingBlock = source.slice(exactBottomSpacingStart, bottomGapStart);
   const bottomGapBlock = source.slice(bottomGapStart, darkerOpenStart);
@@ -1596,6 +1600,8 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
     exactBottomSpacingBlock,
     /@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatMealCard\.open \.fatMealItems\.productListWideFinal,\s*\.fatMealCard\.open \.productListExact\.productListWideFinal,\s*\.productListWideFinal\s*\{[\s\S]*?margin-left:\s*-12px !important;[\s\S]*?margin-bottom:\s*12px !important;/
   );
+  assert.doesNotMatch(guaranteedWidthBlock, /width:\s*calc\(100% \+ (?:96px|72px)\) !important;/);
+  assert.doesNotMatch(guaranteedWidthBlock, /margin-left:\s*-(?:48px|36px) !important;/);
 
   assert.match(
     source,
