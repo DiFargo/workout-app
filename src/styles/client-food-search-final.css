@@ -1560,42 +1560,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageContent::-webkit-
 
 /* v169: search results must disappear under the fixed AI photo action instead of showing through it. */
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
-.fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)):not(:has(.fatSearchMyProductsAction.active)) .fatSearchListPremium {
-  padding-bottom: calc(210px + env(safe-area-inset-bottom, 0px)) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
-.fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)) .foodSearchFixedPhotoAction {
-  z-index: 38 !important;
-  overflow: visible !important;
-  isolation: isolate !important;
-  box-shadow:
-    0 92px 0 118px rgba(244, 247, 253, 0.98),
-    0 -10px 24px rgba(244, 247, 253, 0.88),
-    0 10px 24px rgba(76, 66, 134, 0.075),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
-.fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)) .foodSearchFixedPhotoAction::before {
-  content: "" !important;
-  position: absolute !important;
-  left: -14px !important;
-  right: -14px !important;
-  top: -10px !important;
-  bottom: calc(-118px - env(safe-area-inset-bottom, 0px)) !important;
-  border-radius: 20px 20px 0 0 !important;
-  background: linear-gradient(
-    180deg,
-    rgba(244, 247, 253, 0.9) 0%,
-    rgba(244, 247, 253, 0.98) 24%,
-    #f4f7fd 100%
-  ) !important;
-  pointer-events: none !important;
-  z-index: -1 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
 .fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)) .foodSearchFixedPhotoAction > * {
   position: relative !important;
   z-index: 1 !important;

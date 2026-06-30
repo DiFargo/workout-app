@@ -1249,6 +1249,26 @@ test("client food search final CSS keeps title button sizing in latest owner", a
   assert.match(headerSizingBlock, /\.fatSearchTitleButtonPremium strong\s*\{[\s\S]*?font-size:\s*16px !important;/);
 });
 
+test("client food search final CSS keeps fixed action bottom mask in latest owner", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+  const oldMaskStart = source.indexOf("/* v169: search results must disappear under the fixed AI photo action instead of showing through it. */");
+  const diaryRowsStart = source.indexOf("/* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */", oldMaskStart);
+  const finalMaskStart = source.indexOf("/* v171: polish nutrition fixed docks, inner scrollbars and safe bottom masking. */", diaryRowsStart);
+  const oldMaskBlock = source.slice(oldMaskStart, diaryRowsStart);
+  const finalMaskBlock = source.slice(finalMaskStart);
+
+  assert.ok(oldMaskStart >= 0);
+  assert.ok(diaryRowsStart > oldMaskStart);
+  assert.ok(finalMaskStart > diaryRowsStart);
+  assert.doesNotMatch(oldMaskBlock, /padding-bottom:\s*calc\(210px \+ env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
+  assert.doesNotMatch(oldMaskBlock, /z-index:\s*38 !important;/);
+  assert.doesNotMatch(oldMaskBlock, /left:\s*-14px !important;/);
+  assert.doesNotMatch(oldMaskBlock, /bottom:\s*calc\(-118px - env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
+  assert.match(finalMaskBlock, /padding-bottom:\s*calc\(198px \+ env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
+  assert.match(finalMaskBlock, /\.foodSearchFixedPhotoAction\s*\{[\s\S]*?z-index:\s*42 !important;[\s\S]*?isolation:\s*isolate !important;/);
+  assert.match(finalMaskBlock, /\.foodSearchFixedPhotoAction::before\s*\{[\s\S]*?left:\s*50% !important;[\s\S]*?bottom:\s*calc\(-128px - env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 

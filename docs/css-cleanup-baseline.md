@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3396.28 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3394.93 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -558,3 +558,4 @@ Start mapping here before any cleanup:
 - `v.1.526`: removed overwritten AI photo action intermediate sizing from `client-food-search-final.css`; the `v157` photo action owner remains guarded.
 - `v.1.527`: removed overwritten early AI photo action render-control sizing from `client-food-search-final.css`; the `v155/v157` final owners remain guarded.
 - `v.1.528`: removed overwritten early food search title-button sizing from `client-food-search-final.css`; the `v155` title button owner remains guarded.
+- `v.1.529`: removed overwritten fixed AI photo action bottom-mask rules from `client-food-search-final.css`; the `v171` safe bottom mask owner remains guarded.
