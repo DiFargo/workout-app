@@ -448,7 +448,6 @@
   min-height: 27px;
   padding: 7px 9px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
   border: 1px solid rgba(255, 255, 255, 0.055);
 }
 
@@ -807,17 +806,11 @@
   min-height: 52px;
   padding: 8px 7px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(255, 255, 255, 0.045);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.nutritionAiPlanCollapsedTop > div.score {
-  background: rgba(127, 159, 58, 0.08);
-  border-color: rgba(127, 159, 58, 0.13);
 }
 
 .nutritionAiPlanCollapsedTop span,
@@ -857,7 +850,6 @@
   min-height: 27px;
   padding: 7px 9px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.045);
 }
 
