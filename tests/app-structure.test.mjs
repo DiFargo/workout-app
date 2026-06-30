@@ -1209,6 +1209,16 @@ test("client workout close CSS keeps exercise close active state in the base own
   assert.equal((source.match(/transform:\s*scale\(0\.96\) !important;/g) || []).length, 2);
 });
 
+test("client workout close CSS keeps scoped exercise close position in one owner", async () => {
+  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+
+  assert.equal(
+    (source.match(/\.workoutRunPage \.exerciseCloseButton\s*\{[\s\S]*?position:\s*absolute !important;[\s\S]*?top:\s*16px !important;[\s\S]*?right:\s*16px !important;[\s\S]*?left:\s*auto !important;[\s\S]*?z-index:\s*80 !important;[\s\S]*?\}/g) || []).length,
+    1
+  );
+  assert.equal((source.match(/\.workoutRunPage \.exerciseCloseButton\s*\{/g) || []).length, 1);
+});
+
 test("workout flow CSS keeps slide animation shell grouped", async () => {
   const source = await readText("src/styles/workoutFlow.css");
 
