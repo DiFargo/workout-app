@@ -2035,7 +2035,6 @@
 
 .fatSecretPage .productListExact,
 .productListExact {
-  width: calc(100% - 4px) !important;
   margin: 8px auto 14px !important;
   padding: 0 !important;
 
@@ -2142,7 +2141,6 @@
 @media (max-width: 480px) {
   .fatSecretPage .productListExact,
   .productListExact {
-    width: calc(100% - 2px) !important;
     margin-top: 7px !important;
     margin-bottom: 13px !important;
     border-radius: 21px !important;

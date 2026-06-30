@@ -1527,6 +1527,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   const compactMealStart = source.indexOf("COMPACT MEAL CARDS", mealRedesignStart);
   const ultraSmallGapStart = source.indexOf("ULTRA SMALL GAP BETWEEN MEAL CARDS");
   const balancedGapStart = source.indexOf("BALANCED GAP BETWEEN MEAL CARDS", ultraSmallGapStart);
+  const exactProductListStart = source.indexOf("EXACT PRODUCT LIST REBUILD");
   const forceProductBlockStart = source.indexOf("FORCE PRODUCT BLOCK MUCH WIDER");
   const hardWidthStart = source.indexOf("HARD WIDTH OVERRIDE FOR PRODUCT BLOCK", forceProductBlockStart);
   const guaranteedWidthStart = source.indexOf("GUARANTEED WIDER INNER PRODUCT BLOCK");
@@ -1543,6 +1544,8 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.ok(compactMealStart > mealRedesignStart);
   assert.ok(ultraSmallGapStart >= 0);
   assert.ok(balancedGapStart > ultraSmallGapStart);
+  assert.ok(exactProductListStart >= 0);
+  assert.ok(forceProductBlockStart > exactProductListStart);
   assert.ok(forceProductBlockStart >= 0);
   assert.ok(hardWidthStart > forceProductBlockStart);
   assert.ok(guaranteedWidthStart >= 0);
@@ -1564,6 +1567,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   const microGapBlock = source.slice(microGapStart, actionPanelStart);
   const mealRedesignBlock = source.slice(mealRedesignStart, compactMealStart);
   const ultraSmallGapBlock = source.slice(ultraSmallGapStart, balancedGapStart);
+  const exactProductListBlock = source.slice(exactProductListStart, forceProductBlockStart);
   const forceProductBlock = source.slice(forceProductBlockStart, hardWidthStart);
   const guaranteedWidthBlock = source.slice(guaranteedWidthStart, productWidthSpacingStart);
   const productWidthSpacingBlock = source.slice(productWidthSpacingStart, exactBottomSpacingStart);
@@ -1610,6 +1614,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.doesNotMatch(guaranteedWidthBlock, /margin-left:\s*-(?:48px|36px) !important;/);
   assert.doesNotMatch(forceProductBlock, /width:\s*calc\(100% \+ (?:28px|24px)\) !important;/);
   assert.doesNotMatch(forceProductBlock, /margin-left:\s*-(?:14px|12px) !important;/);
+  assert.doesNotMatch(exactProductListBlock, /width:\s*calc\(100% - (?:4px|2px)\) !important;/);
 
   assert.match(
     source,
