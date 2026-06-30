@@ -3636,14 +3636,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     height: 52px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBadges {
-    min-height: 42px !important;
-    margin: 0 0 12px !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 0.45fr) minmax(0, 1fr) !important;
-    gap: 10px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardPro {
     height: clamp(470px, calc(100dvh - 292px), 560px) !important;
     min-height: 470px !important;
