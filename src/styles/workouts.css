@@ -1672,7 +1672,8 @@ button:active {
   line-height: 1;
 }
 
-.cabinetNutritionModalHead button {
+.cabinetNutritionModalHead button,
+.cabinetUtilityModalHead > button {
   flex: 0 0 44px;
   width: 44px;
   height: 44px;
@@ -1872,20 +1873,6 @@ button:active {
   margin: 2px 0 0;
   color: #fff;
   font-size: 21px;
-  line-height: 1;
-}
-
-.cabinetUtilityModalHead > button {
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  min-height: 44px;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 13px;
-  background: rgba(255, 255, 255, 0.045);
-  color: rgba(255, 255, 255, 0.74);
-  font-size: 23px;
   line-height: 1;
 }
 

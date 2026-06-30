@@ -2856,6 +2856,15 @@ test("client cabinet action cards expose explicit accessible labels", async () =
   assert.match(actionGrid, /aria-label=\{`\$\{eyebrow\}: \$\{title\}`\}/);
 });
 
+test("client cabinet modal close buttons keep shared sizing in one owner", async () => {
+  const source = await readText("src/styles/workouts.css");
+
+  assert.equal(
+    (source.match(/\.cabinetNutritionModalHead button,\s*\.cabinetUtilityModalHead > button\s*\{\s*flex:\s*0 0 44px;/g) || []).length,
+    1
+  );
+});
+
 test("client cabinet measurement cards expose readable values", async () => {
   const measurementsModal = await readText("src/features/client/profile/ProfileMeasurementsModal.jsx");
 

@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3322.17 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3321.89 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -56,6 +56,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.293`: removed remaining import-only light, nutrition and admin stack aggregators by importing their child CSS directly from the active entrypoints.
    - Expanded in `v.1.294`: visual coverage now includes the cabinet progress photos modal, upload steps and save action.
    - Expanded in `v.1.296`: visual coverage now includes cabinet settings, trainer notifications and Telegram management modals with close/action tap-target guards.
+   - Continued in `v.1.571`: grouped duplicate cabinet nutrition and utility modal close-button CSS in `workouts.css`.
 
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.

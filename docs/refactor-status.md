@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.570`.
+Last updated at app version `v.1.571`.
 
 ## Stable Now
 
@@ -80,6 +80,7 @@ Last updated at app version `v.1.570`.
 - Client cabinet measurements modal is covered by the primary visual audit, including its close/start actions.
 - Client cabinet nutrition modal is covered by the primary visual audit, including its close, goal picker, save and week navigation actions.
 - Client cabinet workout calendar modal is covered by the primary visual audit, including its close, month navigation, history entry and edit actions.
+- Client cabinet modal CSS now keeps nutrition and utility close button sizing in one owner.
 - Client cabinet progress photos modal is covered by the primary visual audit, including its upload steps and save action.
 - Client cabinet settings, trainer notifications and Telegram management modals are covered by the primary visual audit, including close/action tap targets.
 - Client nutrition visual audit now checks weekday strip geometry and marker sizes so labels cannot crowd day markers.
