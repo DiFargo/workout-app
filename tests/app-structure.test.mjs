@@ -1467,12 +1467,14 @@ test("legacy food editor CSS keeps summary dot sizes in root owners", async () =
 });
 
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
-  const source = await readText("src/styles/legacy-admin-shell-crm-app46.css");
+  const shellSource = await readText("src/styles/legacy-admin-shell-crm-app46.css");
+  const programSource = await readText("src/styles/legacy-month-program-editor-early.css");
 
-  assert.doesNotMatch(source, /@media\s*\(max-width:\s*1280px\)\s*\{\s*\.adminClientCardsGridFive/);
-  assert.doesNotMatch(source, /@media\s*\(max-width:\s*1020px\)\s*\{\s*\.adminClientCardsGridFive/);
-  assert.match(source, /@media\s*\(max-width:\s*1380px\)[\s\S]*?\.adminClientCardsGridFive\s*\{\s*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\) !important;/);
-  assert.match(source, /@media\s*\(max-width:\s*1120px\)[\s\S]*?\.adminClientCardsGridFive\s*\{\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\) !important;/);
+  assert.doesNotMatch(shellSource, /@media\s*\(max-width:\s*1280px\)\s*\{\s*\.adminClientCardsGridFive/);
+  assert.doesNotMatch(shellSource, /@media\s*\(max-width:\s*1020px\)\s*\{\s*\.adminClientCardsGridFive/);
+  assert.doesNotMatch(shellSource, /@media\s*\(max-width:\s*1380px\)[\s\S]*?\.adminClientCardsGridFive\s*\{\s*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\) !important;/);
+  assert.match(shellSource, /@media\s*\(max-width:\s*1120px\)[\s\S]*?\.adminClientCardsGridFive\s*\{\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\) !important;/);
+  assert.match(programSource, /@media\s*\(min-width:\s*980px\)\s*\{\s*\.adminClientCardsGridFive\s*\{\s*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\) !important;/);
 });
 
 test("admin calendar reminders CSS keeps one fixed back label visibility owner", async () => {
