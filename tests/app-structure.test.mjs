@@ -1015,6 +1015,19 @@ test("client render target CSS keeps a single workout set-row owner", async () =
   );
 });
 
+test("client render target CSS keeps profile hero locks in one owner", async () => {
+  const source = await readText("src/styles/client-render-target-lock.css");
+
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero\s*\{\s*border-bottom-left-radius:\s*0 !important;\s*border-bottom-right-radius:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileAiAvatar\s*\{\s*width:\s*62px !important;\s*height:\s*62px !important;\s*min-width:\s*62px !important;\s*min-height:\s*62px !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client workout set rows CSS keeps one no-weight modal grid owner", async () => {
   const source = await readText("src/styles/client-workout-set-rows.css");
 

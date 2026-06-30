@@ -872,14 +872,6 @@
     padding: 16px 18px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileAiAvatarWrap,
-  html:root[data-app-theme="warm-light"] body #root .profileAiAvatar {
-    width: 62px !important;
-    height: 62px !important;
-    min-width: 62px !important;
-    min-height: 62px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileAiHeroText h1 {
     font-size: 22px !important;
   }
@@ -951,11 +943,6 @@
     grid-template-columns: 62px minmax(0, 1fr) !important;
     gap: 14px !important;
     border-radius: 20px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero {
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileAiAvatarWrap,
