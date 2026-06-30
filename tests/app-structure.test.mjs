@@ -1174,6 +1174,16 @@ test("client workout close CSS keeps compact nav button sizes grouped", async ()
   );
 });
 
+test("client workout close CSS keeps pseudo resets grouped", async () => {
+  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+
+  assert.equal(
+    (source.match(/\.workoutRunPage \.exerciseNavigationRow \.exerciseBackButton::before,\s*\.workoutRunPage \.exerciseNavigationRow \.exercisePrevButton::before,\s*\.workoutRunPage \.workoutCloseButton::before\s*\{\s*content:\s*none !important;\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal((source.match(/content:\s*none !important;/g) || []).length, 1);
+});
+
 test("workout flow CSS keeps slide animation shell grouped", async () => {
   const source = await readText("src/styles/workoutFlow.css");
 

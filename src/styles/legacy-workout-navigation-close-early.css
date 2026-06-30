@@ -42,7 +42,9 @@
   backdrop-filter: none !important;
 }
 
-.workoutRunPage .exerciseNavigationRow .exerciseBackButton::before {
+.workoutRunPage .exerciseNavigationRow .exerciseBackButton::before,
+.workoutRunPage .exerciseNavigationRow .exercisePrevButton::before,
+.workoutRunPage .workoutCloseButton::before {
   content: none !important;
   display: none !important;
 }
@@ -108,11 +110,6 @@
 
   transform: none !important;
   backdrop-filter: none !important;
-}
-
-.workoutRunPage .exerciseNavigationRow .exercisePrevButton::before {
-  content: none !important;
-  display: none !important;
 }
 
 .workoutRunPage .exerciseNavigationRow .exercisePrevButton:active {
@@ -320,11 +317,6 @@
 
   transform: none !important;
   backdrop-filter: none !important;
-}
-
-.workoutRunPage .workoutCloseButton::before {
-  content: none !important;
-  display: none !important;
 }
 
 .workoutRunPage .workoutCloseButton:active {
