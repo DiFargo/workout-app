@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
-- Latest source CSS report: `100` files, about `3377.40 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3376.59 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -580,3 +580,4 @@ Start mapping here before any cleanup:
 - `v.1.548`: removed overwritten admin calendar panel/header/span/per-day shell blocks from `legacy-admin-client-dashboard-polish.css`; final calendar owner remains guarded.
 - `v.1.549`: removed overwritten admin calendar Telegram/toggle pseudo blocks from `legacy-admin-client-dashboard-polish.css`; final calendar owner remains guarded.
 - `v.1.550`: removed overwritten admin calendar label/time-grid/equal-button shell blocks from `legacy-admin-client-dashboard-polish.css`; final calendar owner remains guarded.
+- `v.1.551`: removed an overwritten pre-final narrow calendar mobile block from `legacy-admin-client-dashboard-polish.css`; final calendar owner remains guarded.

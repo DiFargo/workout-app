@@ -2254,43 +2254,6 @@
   color: #d8ff95 !important;
 }
 
-@media (max-width: 420px) {
-  .adminCalendarPanelMerged {
-    padding: 18px !important;
-    gap: 13px !important;
-  }
-
-  .adminCalendarPanelMerged .adminCalendarHead h3 {
-    font-size: 24px !important;
-  }
-
-  .adminCalendarPanelMerged .adminCalendarDaySettingsRow {
-    padding: 12px !important;
-    gap: 11px !important;
-    border-radius: 20px !important;
-  }
-
-  .adminCalendarDaySettingsTitle {
-    width: 42px !important;
-    height: 40px !important;
-    flex-basis: 42px !important;
-    font-size: 13px !important;
-  }
-
-  .adminCalendarDaySettingsRow input {
-    height: 40px !important;
-    min-height: 40px !important;
-    font-size: 13px !important;
-  }
-
-  .adminCalendarHourReminder {
-    height: 42px !important;
-    min-height: 42px !important;
-    font-size: 12px !important;
-  }
-
-}
-
 /* === CALENDAR MATCH RENDER V62 === */
 /* ÃÂ¤ÃÂ¸ÃÂ½ÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂ¹ ÃÂ²ÃÂ¸ÃÂ´ Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ Ã‘â€¹ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â ÃÂ¿ÃÂ¾ Ã‘â‚¬ÃÂµÃ‘â€žÃÂµÃ‘â‚¬ÃÂµÃÂ½Ã‘ÂÃ‘Æ’: Ã‘â‚¬ÃÂ°ÃÂ·ÃÂ¼ÃÂµÃ‘â‚¬Ã‘â€¹, Ã‘â‚¬ÃÂ°Ã‘ÂÃÂ¿ÃÂ¾ÃÂ»ÃÂ¾ÃÂ¶ÃÂµÃÂ½ÃÂ¸ÃÂµ, Ã‘â€žÃ‘Æ’ÃÂ½ÃÂºÃ‘â€ ÃÂ¸ÃÂ¾ÃÂ½ÃÂ°ÃÂ» */
 

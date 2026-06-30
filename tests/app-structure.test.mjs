@@ -2106,6 +2106,10 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.doesNotMatch(
     source,
+    /@media\s*\(max-width:\s*420px\)\s*\{\s*\.adminCalendarPanelMerged\s*\{\s*padding:\s*18px !important;\s*gap:\s*13px !important;\s*\}[\s\S]*?\.adminCalendarHourReminder\s*\{\s*height:\s*42px !important;\s*min-height:\s*42px !important;\s*font-size:\s*12px !important;\s*\}\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
     /\.adminCalendarPanelMerged \.adminCalendarDaySettingsRow\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*12px !important;\s*width:\s*100% !important;[\s\S]*?box-sizing:\s*border-box !important;\s*\}/
   );
   assert.doesNotMatch(
@@ -2191,6 +2195,10 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   assert.match(
     source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarHourReminder\s*\{\s*grid-area:\s*hour !important;\s*width:\s*100% !important;\s*height:\s*48px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?@media\s*\(max-width:\s*420px\)\s*\{[\s\S]*?\.adminCalendarPanelMerged\s*\{\s*padding:\s*18px 14px 16px !important;\s*gap:\s*12px !important;\s*border-radius:\s*26px !important;/
   );
   assert.match(
     source,
