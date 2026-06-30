@@ -1530,6 +1530,8 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   const exactProductListStart = source.indexOf("EXACT PRODUCT LIST REBUILD");
   const forceProductBlockStart = source.indexOf("FORCE PRODUCT BLOCK MUCH WIDER");
   const hardWidthStart = source.indexOf("HARD WIDTH OVERRIDE FOR PRODUCT BLOCK", forceProductBlockStart);
+  const inlineWidthStart = source.indexOf("INLINE WIDTH SUPPORT FOR PRODUCT BLOCK", hardWidthStart);
+  const widerInnerStart = source.indexOf("WIDER INNER PRODUCT BLOCK", inlineWidthStart);
   const guaranteedWidthStart = source.indexOf("GUARANTEED WIDER INNER PRODUCT BLOCK");
   const productWidthSpacingStart = source.indexOf("PRODUCT BLOCK WIDTH +4% FINAL");
   const exactBottomSpacingStart = source.indexOf("EXACT BOTTOM SPACING MATCH", productWidthSpacingStart);
@@ -1548,6 +1550,8 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.ok(forceProductBlockStart > exactProductListStart);
   assert.ok(forceProductBlockStart >= 0);
   assert.ok(hardWidthStart > forceProductBlockStart);
+  assert.ok(inlineWidthStart > hardWidthStart);
+  assert.ok(widerInnerStart > inlineWidthStart);
   assert.ok(guaranteedWidthStart >= 0);
   assert.ok(productWidthSpacingStart > guaranteedWidthStart);
   assert.ok(productWidthSpacingStart >= 0);
@@ -1569,6 +1573,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   const ultraSmallGapBlock = source.slice(ultraSmallGapStart, balancedGapStart);
   const exactProductListBlock = source.slice(exactProductListStart, forceProductBlockStart);
   const forceProductBlock = source.slice(forceProductBlockStart, hardWidthStart);
+  const inlineWidthBlock = source.slice(inlineWidthStart, widerInnerStart);
   const guaranteedWidthBlock = source.slice(guaranteedWidthStart, productWidthSpacingStart);
   const productWidthSpacingBlock = source.slice(productWidthSpacingStart, exactBottomSpacingStart);
   const exactBottomSpacingBlock = source.slice(exactBottomSpacingStart, bottomGapStart);
@@ -1618,6 +1623,10 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.doesNotMatch(forceProductBlock, /margin-left:\s*-(?:22px|20px) !important;/);
   assert.doesNotMatch(forceProductBlock, /border-radius:\s*22px !important;/);
   assert.doesNotMatch(exactProductListBlock, /width:\s*calc\(100% - (?:4px|2px)\) !important;/);
+  assert.doesNotMatch(
+    inlineWidthBlock,
+    /\.productRowExact\s*\{\s*box-sizing:\s*border-box !important;\s*max-width:\s*none !important;\s*\}/
+  );
   assert.doesNotMatch(
     guaranteedWidthBlock,
     /\.fatMealCard\.open\s*\{\s*overflow:\s*visible !important;\s*\}/
