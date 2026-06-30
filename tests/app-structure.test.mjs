@@ -1527,7 +1527,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   const compactMealStart = source.indexOf("COMPACT MEAL CARDS", mealRedesignStart);
   const ultraSmallGapStart = source.indexOf("ULTRA SMALL GAP BETWEEN MEAL CARDS");
   const balancedGapStart = source.indexOf("BALANCED GAP BETWEEN MEAL CARDS", ultraSmallGapStart);
-  const productWidthSpacingStart = source.indexOf("PRODUCT BLOCK WIDTH +4% + MATCHED BOTTOM SPACING");
+  const productWidthSpacingStart = source.indexOf("PRODUCT BLOCK WIDTH +4% FINAL");
   const exactBottomSpacingStart = source.indexOf("EXACT BOTTOM SPACING MATCH", productWidthSpacingStart);
   const bottomGapStart = source.indexOf("REAL BOTTOM GAP FIX FOR EXPANDED MEAL");
   const darkerOpenStart = source.indexOf("DARKER OPEN MEAL CARD", bottomGapStart);
@@ -1550,6 +1550,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH MINUS 7 PERCENT"), -1);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH MINUS 10 PERCENT AGAIN"), -1);
   assert.equal(source.indexOf("MATCH BOTTOM SPACING"), -1);
+  assert.equal(source.indexOf("PRODUCT BLOCK WIDTH +4% + MATCHED BOTTOM SPACING"), -1);
 
   const tighterSpacingBlock = source.slice(tighterSpacingStart, ultraSpacingStart);
   const microGapBlock = source.slice(microGapStart, actionPanelStart);
@@ -1616,6 +1617,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
     productWidthSpacingBlock,
     /\.fatMealCard\.open \.fatMealItems\.productListWideFinal,\s*\.fatMealCard\.open \.productListExact\.productListWideFinal,\s*\.productListWideFinal\s*\{[\s\S]*?width:\s*calc\(100% \+ 34px\) !important;[\s\S]*?margin-left:\s*-17px !important;[\s\S]*?@media\s*\(max-width:\s*480px\)[\s\S]*?width:\s*calc\(100% \+ 24px\) !important;[\s\S]*?margin-left:\s*-12px !important;/
   );
+  assert.doesNotMatch(productWidthSpacingBlock, /margin-bottom:\s*(?:17px|12px) !important;/);
   assert.match(
     exactBottomSpacingBlock,
     /\.fatMealCard\.open \.productListWideFinal \+ \*,\s*\.productListWideFinal \+ \*\s*\{\s*margin-top:\s*0 !important;\s*\}/

@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.498`.
+Last updated at app version `v.1.499`.
 
 ## Evidence
 
@@ -330,6 +330,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 222. Expanded nutrition product-list spacing no longer repeats bottom margin overrides in the exact-spacing block.
 223. Expanded nutrition product-list width now skips the obsolete reduce/minus tuning chain before the final owner.
 224. Expanded nutrition product-list bottom spacing no longer keeps the obsolete intermediate match-spacing section.
+225. Expanded nutrition product-list final width owner no longer carries bottom margin overrides owned by the real bottom-gap block.
 
 ## P1: Next Product Fixes
 
