@@ -273,9 +273,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap > .fatSearchTitleButtonPremium {
   width: 100% !important;
-  height: 46px !important;
-  min-height: 46px !important;
-  max-height: 46px !important;
   padding: 7px 14px 6px !important;
   display: flex !important;
   flex-direction: column !important;
@@ -283,7 +280,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   justify-content: center !important;
   gap: 1px !important;
   border: 1px solid rgba(106, 82, 255, 0.08) !important;
-  border-radius: 10px !important;
   background: linear-gradient(180deg, rgba(245, 240, 255, 0.98), rgba(249, 247, 255, 0.98)) !important;
   box-shadow: 0 10px 22px rgba(92, 75, 148, 0.055), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
   transform: none !important;
@@ -294,7 +290,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   padding: 0 !important;
   color: #6754f6 !important;
   -webkit-text-fill-color: #6754f6 !important;
-  font-size: 8px !important;
   font-weight: 900 !important;
   line-height: 1 !important;
   letter-spacing: 0 !important;
@@ -309,7 +304,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   justify-content: center !important;
   color: #171a26 !important;
   -webkit-text-fill-color: #171a26 !important;
-  font-size: 15px !important;
   font-weight: 900 !important;
   line-height: 1.05 !important;
   letter-spacing: 0 !important;

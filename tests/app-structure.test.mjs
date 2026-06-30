@@ -1224,6 +1224,31 @@ test("client food search final CSS keeps photo action sizing in latest owner", a
   assert.match(photoActionBlock, /\.foodSearchFixedPhotoAction small\s*\{[\s\S]*?font-size:\s*11px !important;/);
 });
 
+test("client food search final CSS keeps title button sizing in latest owner", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+  const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
+  const productAddStart = source.indexOf("/* Food product add page v154 */", renderControlsStart);
+  const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */", productAddStart);
+  const amountBehaviorStart = source.indexOf("/* Food product/search alignment and amount behavior v156 */", headerSizingStart);
+  const renderControlsBlock = source.slice(renderControlsStart, productAddStart);
+  const headerSizingBlock = source.slice(headerSizingStart, amountBehaviorStart);
+
+  assert.ok(renderControlsStart >= 0);
+  assert.ok(productAddStart > renderControlsStart);
+  assert.ok(headerSizingStart > productAddStart);
+  assert.ok(amountBehaviorStart > headerSizingStart);
+  assert.doesNotMatch(renderControlsBlock, /height:\s*46px !important;/);
+  assert.doesNotMatch(renderControlsBlock, /border-radius:\s*10px !important;/);
+  assert.doesNotMatch(renderControlsBlock, /\.fatSearchTitleButtonPremium span\s*\{[\s\S]*?font-size:\s*8px !important;/);
+  assert.doesNotMatch(renderControlsBlock, /\.fatSearchTitleButtonPremium strong\s*\{[\s\S]*?font-size:\s*15px !important;/);
+  assert.match(
+    headerSizingBlock,
+    /\.fatSearchTitleButtonPremium\s*\{[\s\S]*?height:\s*54px !important;[\s\S]*?border-radius:\s*15px !important;/
+  );
+  assert.match(headerSizingBlock, /\.fatSearchTitleButtonPremium span\s*\{[\s\S]*?font-size:\s*9px !important;/);
+  assert.match(headerSizingBlock, /\.fatSearchTitleButtonPremium strong\s*\{[\s\S]*?font-size:\s*16px !important;/);
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 
