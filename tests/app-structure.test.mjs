@@ -1383,13 +1383,15 @@ test("nutrition AI plan CSS keeps narrow score sizing in the final owner", async
   assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanScore\s*\{[\s\S]*?width:\s*118px;/);
   assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanScore::after\s*\{[\s\S]*?inset:\s*8px;/);
   assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanMacros div\s*\{[\s\S]*?min-height:\s*66px;/);
+  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanRskInfo\s*\{[^}]*?gap:\s*8px;/);
+  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanRskInfo strong\s*\{[^}]*?font-size:\s*18px;/);
   assert.match(
     finalNarrowBlock,
     /\.nutritionAiPlanScore\s*\{\s*width:\s*118px !important;\s*height:\s*118px !important;\s*\}/
   );
   assert.match(
     source,
-    /compact premium tuning 2026-05-20[\s\S]*?\.nutritionAiPlanGrid span\s*\{[\s\S]*?width:\s*9px !important;[\s\S]*?aspect-ratio:\s*auto !important;[\s\S]*?\.nutritionAiPlanGrid span\.active\s*\{[\s\S]*?box-shadow:\s*0 0 10px rgba\(127,\s*159,\s*58,\s*0\.18\) !important;[\s\S]*?\.nutritionAiPlanScore\s*\{[\s\S]*?width:\s*124px !important;[\s\S]*?\.nutritionAiPlanMacros div\s*\{[\s\S]*?min-height:\s*56px !important;/
+    /compact premium tuning 2026-05-20[\s\S]*?\.nutritionAiPlanGrid span\s*\{[\s\S]*?width:\s*9px !important;[\s\S]*?aspect-ratio:\s*auto !important;[\s\S]*?\.nutritionAiPlanGrid span\.active\s*\{[\s\S]*?box-shadow:\s*0 0 10px rgba\(127,\s*159,\s*58,\s*0\.18\) !important;[\s\S]*?\.nutritionAiPlanRskInfo\s*\{[\s\S]*?gap:\s*8px !important;[\s\S]*?\.nutritionAiPlanRskInfo strong\s*\{[\s\S]*?font-size:\s*19px !important;[\s\S]*?\.nutritionAiPlanScore\s*\{[\s\S]*?width:\s*124px !important;[\s\S]*?\.nutritionAiPlanMacros div\s*\{[\s\S]*?min-height:\s*56px !important;/
   );
 });
 
