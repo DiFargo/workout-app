@@ -218,10 +218,6 @@
 }
 
 /* FIRST EXERCISE CLOSE BUTTON â€” REAL */
-.workoutRunPage .exerciseSlideCard {
-  position: relative !important;
-}
-
 .workoutRunPage .exerciseCloseButton {
   position: absolute !important;
   top: 16px !important;

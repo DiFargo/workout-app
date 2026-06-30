@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3318.36 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3318.29 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -71,6 +71,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.580`: grouped compact exercise back/previous active-state CSS in `legacy-workout-navigation-close-early.css`.
    - Continued in `v.1.581`: removed duplicate exercise close active-state CSS from `legacy-workout-navigation-close-early.css`.
    - Continued in `v.1.582`: consolidated scoped exercise close positioning CSS in `legacy-workout-navigation-close-early.css`.
+   - Continued in `v.1.583`: grouped workout close slide relative positioning CSS in `legacy-workout-navigation-close-early.css`.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.
@@ -621,3 +622,4 @@ Start mapping here before any cleanup:
 - `v.1.580`: consolidated compact exercise back/previous active-state CSS in `legacy-workout-navigation-close-early.css`; the grouped owner is guarded by the app structure test.
 - `v.1.581`: removed duplicate exercise close active-state CSS from `legacy-workout-navigation-close-early.css`; the base close-button active owner is guarded by the app structure test.
 - `v.1.582`: consolidated scoped exercise close positioning CSS in `legacy-workout-navigation-close-early.css`; the single scoped owner is guarded by the app structure test.
+- `v.1.583`: consolidated workout close slide relative positioning CSS in `legacy-workout-navigation-close-early.css`; the shared start/exercise slide owner is guarded by the app structure test.

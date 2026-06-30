@@ -1219,6 +1219,19 @@ test("client workout close CSS keeps scoped exercise close position in one owner
   assert.equal((source.match(/\.workoutRunPage \.exerciseCloseButton\s*\{/g) || []).length, 1);
 });
 
+test("client workout close CSS keeps slide relative positioning grouped", async () => {
+  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+
+  assert.equal(
+    (source.match(/\.workoutRunPage \.startWorkoutSlide,\s*\.workoutRunPage \.exerciseSlideCard\s*\{\s*position:\s*relative !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.doesNotMatch(
+    source,
+    /\.workoutRunPage \.exerciseSlideCard\s*\{\s*position:\s*relative !important;\s*\}\s*\.workoutRunPage \.exerciseCloseButton/
+  );
+});
+
 test("workout flow CSS keeps slide animation shell grouped", async () => {
   const source = await readText("src/styles/workoutFlow.css");
 
