@@ -1090,14 +1090,6 @@
    REAL SINGLE BACK BUTTON FIX
    ========================================================= */
 
-/* Ð¿Ð¾Ð»Ð½Ð¾ÑÑ‚ÑŒÑŽ ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ ÑÑ‚Ð°Ñ€ÑƒÑŽ Ð²ÐµÑ€Ñ…Ð½ÑŽÑŽ Ð¿Ð°Ð½ÐµÐ»ÑŒ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ */
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) > .fatSearchTopPremium {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
 /* Ð¾Ð´Ð½Ð° Ð½Ð°ÑÑ‚Ð¾ÑÑ‰Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ° Ð½Ð°Ð·Ð°Ð´ */
 .foodEditBackOnly {
   position: fixed !important;
