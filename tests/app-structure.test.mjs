@@ -1295,6 +1295,16 @@ test("client workout flow CSS keeps select and warmup action controls grouped", 
   );
 });
 
+test("client workout flow CSS keeps start button sizing grouped", async () => {
+  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+
+  assert.equal(
+    (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutStartButton,\s*\.workoutRunPage \.startWorkoutBottomPanel \.startWorkoutButton\s*\{\s*width:\s*100% !important;\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*max-height:\s*78px !important;\s*margin:\s*0 !important;\s*padding:\s*0 18px !important;\s*border-radius:\s*24px !important;\s*font-size:\s*19px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal((source.match(/padding:\s*0 18px !important;/g) || []).length, 3);
+});
+
 test("client workout hero spacing stays in the workout lazy owner", async () => {
   const renderTarget = await readText("src/styles/client-render-target-lock.css");
   const cardRender = await readText("src/styles/client-workout-card-render.css");
