@@ -1102,7 +1102,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
   height: 124px !important;
   min-height: 124px !important;
   max-height: 124px !important;
-  margin: 0 0 16px !important;
   padding: 0 !important;
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) 120px !important;
@@ -1241,7 +1240,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   height: 124px !important;
   min-height: 124px !important;
   max-height: 124px !important;
-  margin: 0 0 16px !important;
   padding: 0 !important;
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) 120px !important;
