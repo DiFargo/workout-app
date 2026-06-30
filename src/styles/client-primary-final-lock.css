@@ -51,15 +51,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     padding: var(--client-top) var(--client-x) calc(112px + env(safe-area-inset-bottom)) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::before,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::before,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::before,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage::before,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage::before {
-    display: none !important;
-    content: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .appVersionBadge.clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
@@ -857,11 +848,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     padding: 16px 18px !important;
     grid-template-columns: 72px minmax(0, 1fr) !important;
     gap: 18px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero {
-    border-radius: var(--client-page-card-radius) var(--client-page-card-radius) 0 0 !important;
-    margin-bottom: 0 !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
@@ -3585,10 +3571,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     text-align: center !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
-    pointer-events: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero {
     display: flex !important;
     align-items: center !important;
@@ -4216,16 +4198,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
 
 /* v1.76c final alignment correction after measuring rendered mobile boxes. */
 @media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium,
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
-    --client-top: 70px;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
     width: 100% !important;
     height: var(--client-title-h) !important;

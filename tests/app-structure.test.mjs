@@ -766,8 +766,12 @@ test("client primary final CSS keeps profile AI hero sizing in the final owner",
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*width:\s*100% !important;\s*height:\s*104px !important;\s*min-height:\s*104px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*74px minmax\(0, 1fr\) !important;/g) || []).length,
     1
   );
+  assert.doesNotMatch(
+    source,
+    /\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*pointer-events:\s*none !important;\s*\}/
+  );
   assert.equal(
-    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*pointer-events:\s*none !important;\s*\}/g) || []).length,
+    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*border-radius:\s*var\(--client-radius\) !important;\s*pointer-events:\s*none !important;\s*\}/g) || []).length,
     1
   );
   assert.equal(
@@ -803,6 +807,14 @@ test("client primary final CSS keeps profile AI hero compact cluster in root own
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*min-height:\s*94px !important;\s*padding:\s*16px 18px !important;\s*grid-template-columns:\s*72px minmax\(0, 1fr\) !important;\s*gap:\s*18px !important;\s*\}/g) || []).length,
     1
   );
+  assert.doesNotMatch(
+    source,
+    /\.profileDashboardPage\.clientCorePageMain \.profileAiHero\s*\{\s*border-radius:\s*var\(--client-page-card-radius\) var\(--client-page-card-radius\) 0 0 !important;\s*margin-bottom:\s*0 !important;\s*\}/
+  );
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero\s*\{\s*margin-bottom:\s*0 !important;\s*border-radius:\s*var\(--client-page-card-radius\) var\(--client-page-card-radius\) 0 0 !important;\s*\}/g) || []).length,
+    1
+  );
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiMiniCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileDashboardPage\.clientCorePageMain \.profileAiCoachInsight\.profileProgressInsightCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileDashboardPage\.clientCorePageMain \.mainMeasurementSnapshot\s*\{\s*background:\s*rgba\(255, 255, 255, 0\.94\) !important;\s*color:\s*#171923 !important;\s*-webkit-text-fill-color:\s*#171923 !important;\s*\}/g) || []).length,
     1
@@ -813,6 +825,14 @@ test("client primary final CSS keeps profile AI hero compact cluster in root own
   );
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero::after,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero::after\s*\{\s*content:\s*none !important;\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.doesNotMatch(
+    source,
+    /\.profileDashboardPage\.clientCorePageMain::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\)::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage::before\s*\{\s*display:\s*none !important;\s*content:\s*none !important;\s*\}/
+  );
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\)::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage::before\s*\{\s*content:\s*none !important;\s*display:\s*none !important;\s*\}/g) || []).length,
     1
   );
   assert.equal(
@@ -1041,6 +1061,14 @@ test("client primary final CSS keeps client page variables in the final owner", 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage\s*\{\s*--client-page-x:\s*22px;\s*--client-page-title-top:\s*54px;\s*--client-page-title-height:\s*52px;\s*--client-page-title-size:\s*30px;\s*--client-page-title-color:\s*#5f5744;/g) || []).length,
     1
+  );
+  assert.doesNotMatch(
+    source,
+    /\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*--client-top:\s*70px;\s*\}/
+  );
+  assert.match(
+    source,
+    /\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*--client-x:\s*26px;\s*--client-top:\s*70px;/
   );
 });
 

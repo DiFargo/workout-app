@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1144.62 KiB` raw, `114.87 KiB` gzip.
-- Latest source CSS report: `100` files, about `3389.39 KiB` total source CSS.
+- Latest main CSS bundle: about `1143.00 KiB` raw, `114.79 KiB` gzip.
+- Latest source CSS report: `100` files, about `3387.63 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -573,3 +573,4 @@ Start mapping here before any cleanup:
 - `v.1.541`: removed overwritten workout header action layout rules from `client-primary-final-lock.css`; the later final header action owner remains guarded.
 - `v.1.542`: removed overwritten food search recent grid rules from `client-primary-final-lock.css`; the later final grid owners remain guarded.
 - `v.1.543`: removed overwritten food recent-card sizing and AI stats centering no-op rules from `client-primary-final-lock.css`; later owners remain guarded.
+- `v.1.544`: removed overwritten pseudo reset, profile hero radius, pointer-only, and top variable no-op rules from `client-primary-final-lock.css`; later owners remain guarded.
