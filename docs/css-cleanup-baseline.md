@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3319.13 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3318.93 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -65,6 +65,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.287`: removed old global empty-state rules from legacy files; `client-workout-empty-state.css` is the scoped owner.
    - Continued in `v.1.568`: grouped duplicate select and warmup bottom action-control CSS in `legacy-client-workout-flow-late.css`.
    - Continued in `v.1.572`: grouped duplicate compact exercise and finish navigation height CSS in `workouts.css`.
+   - Continued in `v.1.577`: grouped shared exercise and finish slide animation-shell CSS in `workoutFlow.css`.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.
@@ -609,3 +610,4 @@ Start mapping here before any cleanup:
 - `v.1.574`: consolidated shared inline and modal Zouk meal-shell rules in `legacy-nutrition-orbit.css`; the grouped owner is guarded by the app structure test.
 - `v.1.575`: removed the early compact meal-card sizing repeat from `nutrition.css`; the desktop compact owner is guarded by the app structure test.
 - `v.1.576`: consolidated shared trainer mobile page-shell rules across narrow and coarse landscape media in `trainer-workspace.css`; the grouped owner is guarded by the app structure test.
+- `v.1.577`: consolidated shared exercise and finish slide animation-shell rules in `workoutFlow.css`; the grouped owner is guarded by the app structure test.

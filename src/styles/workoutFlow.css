@@ -73,6 +73,17 @@
   display: none;
 }
 
+.exerciseSlideCard,
+.finishSlideWrap {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+
+  animation-duration: 560ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 0.9, 0.32, 1);
+}
+
 .exerciseSlideCard {
   width: 100%;
   max-width: 420px;
@@ -87,14 +98,6 @@
 
   overflow: visible;
   max-height: none;
-
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-
-  animation-duration: 560ms;
-  animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.22, 0.9, 0.32, 1);
 }
 
 .exerciseSlideCard::-webkit-scrollbar {
@@ -538,14 +541,6 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-
-  animation-duration: 560ms;
-  animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.22, 0.9, 0.32, 1);
 }
 
 .finishSlideWrap.slideFromBottom {

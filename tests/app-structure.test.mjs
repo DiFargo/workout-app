@@ -1157,6 +1157,16 @@ test("client workout close CSS has no overwritten border reset", async () => {
   );
 });
 
+test("workout flow CSS keeps slide animation shell grouped", async () => {
+  const source = await readText("src/styles/workoutFlow.css");
+
+  assert.equal(
+    (source.match(/\.exerciseSlideCard,\s*\.finishSlideWrap\s*\{\s*will-change:\s*transform,\s*opacity;\s*backface-visibility:\s*hidden;\s*transform:\s*translateZ\(0\);\s*animation-duration:\s*560ms;\s*animation-fill-mode:\s*both;\s*animation-timing-function:\s*cubic-bezier\(0\.22,\s*0\.9,\s*0\.32,\s*1\);/g) || []).length,
+    1
+  );
+  assert.equal((source.match(/animation-duration:\s*560ms;/g) || []).length, 1);
+});
+
 test("client workout flow CSS keeps shared bottom panel shell in one owner", async () => {
   const source = await readText("src/styles/legacy-client-workout-flow-late.css");
   const sharedPanelMatch = source.match(
