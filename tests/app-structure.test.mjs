@@ -1133,9 +1133,11 @@ test("client food search final CSS keeps product hero spacing in latest owners",
   const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
   const hardLockStart = source.indexOf("/* Product page header/search alignment hard lock v160 */");
   const finalLockStart = source.indexOf("/* Product page header/search alignment final lock v161 */");
+  const mealSelectorStart = source.indexOf("/* Food search meal selector width final lock v162 */");
   const amountBehaviorBlock = source.slice(amountBehaviorStart, photoActionStart);
   const exactLockBlock = source.slice(exactLockStart, stableFlowStart);
   const hardLockBlock = source.slice(hardLockStart, finalLockStart);
+  const finalLockBlock = source.slice(finalLockStart, mealSelectorStart);
   const stableFlowBlock = source.slice(stableFlowStart, hardLockStart);
 
   assert.ok(amountBehaviorStart >= 0);
@@ -1144,6 +1146,7 @@ test("client food search final CSS keeps product hero spacing in latest owners",
   assert.ok(stableFlowStart > exactLockStart);
   assert.ok(hardLockStart > stableFlowStart);
   assert.ok(finalLockStart > hardLockStart);
+  assert.ok(mealSelectorStart > finalLockStart);
   assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductFlowHeader\s*\{/);
   assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductFlowTitle\s*\{/);
   assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductTopActions\s*\{/);
@@ -1153,6 +1156,8 @@ test("client food search final CSS keeps product hero spacing in latest owners",
   assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowHeader\s*\{/);
   assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowTitle\s*\{/);
   assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductTopActions\s*\{/);
+  assert.doesNotMatch(finalLockBlock, /\.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{[\s\S]*?width:\s*min\(284px,/);
+  assert.doesNotMatch(finalLockBlock, /\.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{[\s\S]*?margin:\s*0 auto !important;/);
   assert.equal(
     (source.match(/\.foodProductRenderScreen \.foodProductFlowHeader \+ \.foodEditHeroRender\.foodEditHeroEditable\s*\{\s*margin-top:\s*0 !important;\s*\}/g) || []).length,
     1

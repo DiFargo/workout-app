@@ -1298,11 +1298,8 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductFlowHeader .foodEditInlineMealHeader {
   position: static !important;
   grid-area: meal !important;
-  width: min(284px, calc(100vw - 96px)) !important;
-  max-width: min(284px, calc(100vw - 96px)) !important;
   height: 54px !important;
   min-height: 54px !important;
-  margin: 0 auto !important;
   transform: none !important;
 }
 
