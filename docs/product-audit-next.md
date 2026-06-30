@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.491`.
+Last updated at app version `v.1.492`.
 
 ## Evidence
 
@@ -323,6 +323,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 215. Legacy nutrition header CSS exact duplicate block scan now returns zero after removing the repeated compact calorie-row strong sizing lock.
 216. Trainer visual audit now covers client notification calendar, expanded message modal and program exercise editor tap targets.
 217. Workout set-row final sizing CSS now lives only in the workout lazy owner instead of the core render-target lock.
+218. Client nutrition grid CSS no longer repeats dashboard icon and measurement chart locks owned by main final overrides.
 
 ## P1: Next Product Fixes
 

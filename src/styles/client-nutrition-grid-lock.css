@@ -2600,11 +2600,6 @@
     gap: 4px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow .profileAiStatLabel svg {
-    width: 14px !important;
-    height: 14px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow strong {
     font-size: 16px !important;
     line-height: 1 !important;
@@ -2636,12 +2631,6 @@
     white-space: normal !important;
     overflow: visible !important;
     text-overflow: clip !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards .profileAiMiniCard.profileAiMiniCard span svg {
-    width: 14px !important;
-    height: 14px !important;
-    flex: 0 0 14px !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards .profileAiMiniCard.profileAiMiniCard strong {
@@ -2703,11 +2692,6 @@
     padding: 16px 24px 12px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotHeader {
-    height: 16px !important;
-    margin-bottom: 8px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotHeader span {
     font-size: 13.5px !important;
     line-height: 1 !important;
@@ -2744,11 +2728,6 @@
     max-height: 54px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementChart svg {
-    height: 44px !important;
-    min-height: 44px !important;
-    max-height: 44px !important;
-  }
 }
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeta::after {
   content: none !important;

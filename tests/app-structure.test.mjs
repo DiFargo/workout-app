@@ -1634,6 +1634,23 @@ test("client main CSS keeps compact AI stat text rules in the later owner", asyn
   assert.match(source, /\.profileAiCoachHeadline h2\s*\{\s*color:\s*var\(--main-nutrition-ink\) !important;[\s\S]*?font-size:\s*10\.25px !important;[\s\S]*?letter-spacing:\s*0 !important;\s*\}/);
 });
 
+test("client nutrition grid CSS does not keep dashboard icon and chart duplicates", async () => {
+  const nutritionGrid = await readText("src/styles/client-nutrition-grid-lock.css");
+  const mainOverrides = await readText("src/styles/client-main-final-overrides.css");
+
+  const duplicateLocks = [
+    /\.profileAiStatsRow\.profileAiStatsRow\.profileAiStatsRow \.profileAiStatLabel svg\s*\{\s*width:\s*14px !important;\s*height:\s*14px !important;\s*\}/,
+    /\.profileAiSplitCards\.profileAiSplitCards\.profileAiSplitCards \.profileAiMiniCard\.profileAiMiniCard span svg\s*\{\s*width:\s*14px !important;\s*height:\s*14px !important;\s*flex:\s*0 0 14px !important;\s*\}/,
+    /\.mainMeasurementSnapshot\.mainMeasurementSnapshot \.mainMeasurementSnapshotHeader\s*\{\s*height:\s*16px !important;\s*margin-bottom:\s*8px !important;\s*\}/,
+    /\.mainMeasurementSnapshot\.mainMeasurementSnapshot \.mainMeasurementChart svg\s*\{\s*height:\s*44px !important;\s*min-height:\s*44px !important;\s*max-height:\s*44px !important;\s*\}/
+  ];
+
+  for (const lock of duplicateLocks) {
+    assert.doesNotMatch(nutritionGrid, lock);
+    assert.match(mainOverrides, lock);
+  }
+});
+
 test("client nutrition grid CSS keeps progress insight spacing in the final owner", async () => {
   const source = await readText("src/styles/client-nutrition-grid-lock.css");
   const earlyProgressStart = source.indexOf("/* v.1.200: progress card spacing only");
