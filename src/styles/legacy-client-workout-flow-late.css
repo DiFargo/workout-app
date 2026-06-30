@@ -273,7 +273,8 @@
   pointer-events: none;
 }
 
-.individualWorkoutSelectPage .individualWorkoutImageFallback {
+.individualWorkoutSelectPage .individualWorkoutImageFallback,
+.workoutRunPage .startWorkoutImageFallback {
   width: 100%;
   min-width: 0;
   padding: 18px 14px;
@@ -288,13 +289,15 @@
     linear-gradient(160deg, #172117 0%, #090d0a 72%);
 }
 
-.individualWorkoutSelectPage .individualWorkoutImageFallback b {
+.individualWorkoutSelectPage .individualWorkoutImageFallback b,
+.workoutRunPage .startWorkoutImageFallback b {
   color: rgba(224, 242, 182, 0.9);
   font-size: 15px;
   line-height: 1.15;
 }
 
-.individualWorkoutSelectPage .individualWorkoutImageFallback small {
+.individualWorkoutSelectPage .individualWorkoutImageFallback small,
+.workoutRunPage .startWorkoutImageFallback small {
   display: -webkit-box;
   overflow: hidden;
   color: rgba(255, 255, 255, 0.56);
@@ -587,37 +590,6 @@
   background:
     radial-gradient(circle at 50% 38%, rgba(127, 159, 58, 0.14), transparent 58%),
     #0b100c;
-}
-
-.workoutRunPage .startWorkoutImageFallback {
-  width: 100%;
-  min-width: 0;
-  padding: 18px 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-align: center;
-  background:
-    radial-gradient(circle at 50% 32%, rgba(153, 188, 73, 0.2), transparent 42%),
-    linear-gradient(160deg, #172117 0%, #090d0a 72%);
-}
-
-.workoutRunPage .startWorkoutImageFallback b {
-  color: rgba(224, 242, 182, 0.9);
-  font-size: 15px;
-  line-height: 1.15;
-}
-
-.workoutRunPage .startWorkoutImageFallback small {
-  display: -webkit-box;
-  overflow: hidden;
-  color: rgba(255, 255, 255, 0.56);
-  font-size: 11px;
-  line-height: 1.25;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 .workoutRunPage .startWorkoutTrainerTip {

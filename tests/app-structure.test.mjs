@@ -1172,6 +1172,23 @@ test("client workout flow CSS keeps shared bottom panel shell in one owner", asy
   assert.match(sharedPanelMatch[0], /background:\s*linear-gradient\(180deg,\s*#121712 0%,\s*#0d110d 100%\);/);
 });
 
+test("client workout flow CSS keeps fallback image styles grouped", async () => {
+  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+
+  assert.equal(
+    (source.match(/\.individualWorkoutSelectPage \.individualWorkoutImageFallback,\s*\.workoutRunPage \.startWorkoutImageFallback\s*\{\s*width:\s*100%;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.individualWorkoutSelectPage \.individualWorkoutImageFallback b,\s*\.workoutRunPage \.startWorkoutImageFallback b\s*\{\s*color:\s*rgba\(224,\s*242,\s*182,\s*0\.9\);/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.individualWorkoutSelectPage \.individualWorkoutImageFallback small,\s*\.workoutRunPage \.startWorkoutImageFallback small\s*\{\s*display:\s*-webkit-box;/g) || []).length,
+    1
+  );
+});
+
 test("client workout hero spacing stays in the workout lazy owner", async () => {
   const renderTarget = await readText("src/styles/client-render-target-lock.css");
   const cardRender = await readText("src/styles/client-workout-card-render.css");
