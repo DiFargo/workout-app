@@ -870,11 +870,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     border-radius: 0 0 var(--client-page-card-radius) var(--client-page-card-radius) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
-    justify-content: center !important;
-    text-align: center !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
     display: block !important;
     width: 100% !important;
@@ -3621,11 +3616,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
 
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardStartButton {
     bottom: 20px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodSearchRecentCard {
-    height: 78px !important;
-    min-height: 78px !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour,

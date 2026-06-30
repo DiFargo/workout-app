@@ -708,9 +708,9 @@ test("client primary final CSS keeps food search header layout in the final owne
     (source.match(/\.foodSearchRecentCard\s*\{\s*min-height:\s*78px !important;\s*height:\s*78px !important;\s*border-radius:\s*13px !important;\s*\}/g) || []).length,
     1
   );
-  assert.equal(
-    (source.match(/\.foodSearchRecentCard\s*\{\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*\}/g) || []).length,
-    1
+  assert.doesNotMatch(
+    source,
+    /\.foodSearchRecentCard\s*\{\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*\}/
   );
 });
 
@@ -740,6 +740,10 @@ test("client primary final CSS keeps main AI stats row in the final owner", asyn
   assert.doesNotMatch(
     source,
     /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\s*\{\s*min-width:\s*0 !important;\s*padding:\s*12px 8px !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\s*\{\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*\}/
   );
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow span\s*\{\s*color:\s*var\(--client-muted\) !important;\s*-webkit-text-fill-color:\s*var\(--client-muted\) !important;\s*font-size:\s*12px !important;\s*font-weight:\s*800 !important;\s*line-height:\s*1\.15 !important;\s*text-align:\s*center !important;/g) || []).length,
