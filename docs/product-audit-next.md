@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.509`.
+Last updated at app version `v.1.510`.
 
 ## Evidence
 
@@ -337,6 +337,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 229. Expanded nutrition product row exact sizing no longer repeats max-width and box sizing in the inline width support block.
 230. Admin program editor CSS no longer keeps an empty desktop media block.
 231. Nutrition delete rows no longer keep overwritten collapse/flash animation rules in the earlier late-layout stylesheet.
+232. Food search five-action bottom bar screen padding now has one final owner in `nutrition-food-search-actions.css`.
 228. Expanded nutrition product-list no longer keeps the obsolete 10-percent-wider section before the force-width owner.
 229. Exact nutrition product-list rebuild keeps structure and visual styling while width values stay in later width owners.
 230. Expanded nutrition product-list force-width block no longer keeps a radius overwritten by the later hard-width owner.

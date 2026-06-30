@@ -147,10 +147,6 @@
   white-space: normal !important;
 }
 
-.fatFoodSearchScreenPremium:has(.fatSearchBottomBarFive) {
-  padding-bottom: 138px !important;
-}
-
 @media (max-width: 390px) {
   .fatSearchBottomBar.fatSearchBottomBarFive {
     gap: 6px !important;

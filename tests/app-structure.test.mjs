@@ -1359,6 +1359,11 @@ test("nutrition food search actions CSS keeps one photo active transform owner",
     (source.match(/\.fatSearchBottomBarFive \.fatSearchPhotoAction:active\s*\{\s*transform:\s*translateX\(-50%\) scale\(0\.97\) !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchBottomBarFive\)\s*\{\s*padding-bottom:/g) || []).length,
+    1
+  );
+  assert.doesNotMatch(source, /padding-bottom:\s*138px !important;/);
 });
 
 test("legacy food search calories CSS keeps early mobile column shift out of the old owner", async () => {
