@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3397.08 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3396.46 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -556,3 +556,4 @@ Start mapping here before any cleanup:
 - `v.1.524`: removed overwritten product x-offset variable owners from `client-food-search-final.css`; the final compact product owner remains guarded.
 - `v.1.525`: removed the overwritten product header margin from `client-food-search-final.css`; the final compact product header margin remains guarded.
 - `v.1.526`: removed overwritten AI photo action intermediate sizing from `client-food-search-final.css`; the `v157` photo action owner remains guarded.
+- `v.1.527`: removed overwritten early AI photo action render-control sizing from `client-food-search-final.css`; the `v155/v157` final owners remain guarded.
