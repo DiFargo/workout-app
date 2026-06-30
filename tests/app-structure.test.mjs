@@ -1194,6 +1194,21 @@ test("client workout close CSS keeps compact nav active state grouped", async ()
   assert.equal((source.match(/transform:\s*scale\(0\.985\) !important;/g) || []).length, 1);
 });
 
+test("client workout close CSS keeps exercise close active state in the base owner", async () => {
+  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+
+  assert.equal(
+    (source.match(/\.exerciseCloseButton:active\s*\{\s*transform:\s*scale\(0\.96\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.workoutRunPage \.workoutCloseButton:active\s*\{\s*transform:\s*scale\(0\.96\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.doesNotMatch(source, /\.workoutRunPage \.exerciseCloseButton:active/);
+  assert.equal((source.match(/transform:\s*scale\(0\.96\) !important;/g) || []).length, 2);
+});
+
 test("workout flow CSS keeps slide animation shell grouped", async () => {
   const source = await readText("src/styles/workoutFlow.css");
 
