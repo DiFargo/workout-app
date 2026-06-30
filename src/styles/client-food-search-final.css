@@ -45,7 +45,8 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSear
   transform: translate(-2px, -3px) !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome .foodFlowTitleGroup.foodFlowSearchTitle h2 {
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome .foodFlowTitleGroup.foodFlowSearchTitle h2,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreen.fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .foodFlowTitleGroup.foodFlowSearchTitle > h2 {
   height: 48px !important;
   min-height: 48px !important;
   max-height: 48px !important;
@@ -189,23 +190,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   align-self: start !important;
   display: flex !important;
   align-items: center !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreen.fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .foodFlowTitleGroup.foodFlowSearchTitle > h2 {
-  height: 48px !important;
-  min-height: 48px !important;
-  max-height: 48px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  color: var(--render-title-color, #5f5848) !important;
-  -webkit-text-fill-color: var(--render-title-color, #5f5848) !important;
-  font-size: 28px !important;
-  font-weight: 900 !important;
-  line-height: 1.06 !important;
-  letter-spacing: 0 !important;
-  white-space: nowrap !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreen.fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap {

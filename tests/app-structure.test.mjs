@@ -1377,6 +1377,27 @@ test("client food search final CSS keeps header close shell grouped", async () =
   );
 });
 
+test("client food search final CSS keeps header title shell grouped", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.fatSearchTopPremiumHome \.foodFlowTitleGroup\.foodFlowSearchTitle h2,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreen\.fatFoodSearchScreenPremium > \.fatSearchTopPremium\.foodSearchHeaderExactMainAlign > \.foodFlowTitleGroup\.foodFlowSearchTitle > h2\s*\{\s*height:\s*48px !important;[\s\S]*?white-space:\s*nowrap !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (
+      source.match(
+        /height:\s*48px !important;\s*min-height:\s*48px !important;\s*max-height:\s*48px !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*color:\s*var\(--render-title-color,\s*#5f5848\) !important;\s*-webkit-text-fill-color:\s*var\(--render-title-color,\s*#5f5848\) !important;\s*font-size:\s*28px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.06 !important;\s*letter-spacing:\s*0 !important;\s*white-space:\s*nowrap !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+});
+
 test("client food search final CSS keeps product title typography in stable flow owner", async () => {
   const source = await readText("src/styles/client-food-search-final.css");
   const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
