@@ -9586,25 +9586,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     font-size: 20px;
   }
 
-  .trainerNextMobileNav {
-    position: fixed;
-    z-index: 1000;
-    left: max(10px, env(safe-area-inset-left));
-    right: max(10px, env(safe-area-inset-right));
-    bottom: max(8px, env(safe-area-inset-bottom));
-    height: 78px;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 4px;
-    padding: 7px;
-    border: 1px solid var(--tn-line);
-    border-radius: 20px;
-    background: rgba(255,255,255,.98);
-    box-shadow: 0 -10px 28px rgba(24, 27, 42, 0.08);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  }
-
   .trainerNextMobileNav button {
     height: 64px;
     display: grid;

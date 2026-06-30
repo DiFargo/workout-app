@@ -2726,6 +2726,15 @@ test("trainer mobile overflow navigation exposes current page state", async () =
   assert.match(workspace, /const active = activeSection === item\.id;[\s\S]*data-testid=\{`trainer-more-\$\{item\.id\}`\}[\s\S]*className=\{active \? "active" : ""\}[\s\S]*aria-current=\{active \? "page" : undefined\}/);
 });
 
+test("trainer workspace CSS keeps mobile bottom nav shell in one owner", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNextMobileNav\s*\{\s*position:\s*fixed;\s*z-index:\s*1000;[\s\S]*?grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\);/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 
