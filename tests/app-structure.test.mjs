@@ -1366,6 +1366,24 @@ test("nutrition food search actions CSS keeps one photo active transform owner",
   assert.doesNotMatch(source, /padding-bottom:\s*138px !important;/);
 });
 
+test("nutrition AI plan CSS keeps narrow score sizing in the final owner", async () => {
+  const source = await readText("src/styles/nutrition-ai-plan-lazy.css");
+  const compactStart = source.indexOf("compact premium tuning 2026-05-20");
+  const finalNarrowStart = source.indexOf("@media (max-width: 390px)", compactStart);
+  const twoStateStart = source.indexOf("two-state collapsed/expanded behavior", finalNarrowStart);
+  const finalNarrowBlock = source.slice(finalNarrowStart, twoStateStart);
+
+  assert.ok(compactStart >= 0);
+  assert.ok(finalNarrowStart > compactStart);
+  assert.ok(twoStateStart > finalNarrowStart);
+  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanScore\s*\{\s*width:\s*110px;\s*height:\s*110px;\s*\}/);
+  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanGrid\s*\{\s*gap:\s*3px;\s*\}/);
+  assert.match(
+    finalNarrowBlock,
+    /\.nutritionAiPlanScore\s*\{\s*width:\s*118px !important;\s*height:\s*118px !important;\s*\}/
+  );
+});
+
 test("legacy food search calories CSS keeps early mobile column shift out of the old owner", async () => {
   const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
   const oldMoveStart = source.indexOf("/* ===== CALORIES MOVE MORE LEFT ===== */");

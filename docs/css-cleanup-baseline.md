@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3406.70 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3406.33 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -540,3 +540,4 @@ Start mapping here before any cleanup:
 - `v.1.508`: removed an empty desktop media block from `legacy-admin-program-editor-app49.css` and guarded that file against empty media blocks.
 - `v.1.509`: removed overwritten nutrition delete collapse/flash animation rules from `legacy-nutrition-late-layout.css`; the following `legacy-food-editor-tail.css` import keeps the final no-collapse delete behavior.
 - `v.1.510`: removed the overwritten five-action food search bottom-bar screen padding from `nutrition-food-search-actions.css`; the later final spacing owner remains guarded.
+- `v.1.511`: removed overwritten narrow AI nutrition plan score/grid sizing from `nutrition-ai-plan-lazy.css`; the later compact tuning media owner remains guarded.

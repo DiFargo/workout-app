@@ -613,12 +613,6 @@
   .nutritionAiPlanTitleBox span { font-size: 17px; }
   .nutritionAiPlanHeader h2 { font-size: 10px; }
   .nutritionAiPlanMiniBtn { width: 32px; height: 32px; min-width: 32px; }
-  .nutritionAiPlanRsk { grid-template-columns: minmax(86px, 0.66fr) minmax(134px, 1fr); gap: 8px; padding: 9px; }
-  .nutritionAiPlanGrid { gap: 3px; }
-  .nutritionAiPlanRskInfo strong { font-size: 17px; }
-  .nutritionAiPlanScore { width: 110px; height: 110px; }
-  .nutritionAiPlanScore > div { width: 78px; height: 78px; }
-  .nutritionAiPlanScore strong { font-size: 29px; }
   .nutritionAiPlanMacros { gap: 6px; }
   .nutritionAiPlanMacros strong { font-size: 16px; }
 }
