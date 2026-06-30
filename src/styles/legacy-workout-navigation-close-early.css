@@ -58,7 +58,8 @@
 }
 
 @media (max-width: 480px) {
-  .workoutRunPage .exerciseNavigationRow .exerciseBackButton {
+  .workoutRunPage .exerciseNavigationRow .exerciseBackButton,
+  .workoutRunPage .exerciseNavigationRow .exercisePrevButton {
     min-height: 56px !important;
     border-radius: 20px !important;
     font-size: 19px !important;
@@ -122,14 +123,6 @@
 .workoutRunPage .exerciseNavigationRow .exercisePrevButton {
   color: #10120f !important;
   -webkit-text-fill-color: #10120f !important;
-}
-
-@media (max-width: 480px) {
-  .workoutRunPage .exerciseNavigationRow .exercisePrevButton {
-    min-height: 56px !important;
-    border-radius: 20px !important;
-    font-size: 19px !important;
-  }
 }
 
 /* EXERCISE NAV BUTTONS â€” EXACT SAME SIZE */

@@ -1157,6 +1157,23 @@ test("client workout close CSS has no overwritten border reset", async () => {
   );
 });
 
+test("client workout close CSS keeps compact nav button sizes grouped", async () => {
+  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+
+  assert.equal(
+    (source.match(/@media\s*\(max-width:\s*480px\)\s*\{\s*\.workoutRunPage \.exerciseNavigationRow \.exerciseBackButton,\s*\.workoutRunPage \.exerciseNavigationRow \.exercisePrevButton\s*\{\s*min-height:\s*56px !important;\s*border-radius:\s*20px !important;\s*font-size:\s*19px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.doesNotMatch(
+    source,
+    /@media\s*\(max-width:\s*480px\)\s*\{\s*\.workoutRunPage \.exerciseNavigationRow \.exerciseBackButton\s*\{\s*min-height:\s*56px !important;\s*border-radius:\s*20px !important;\s*font-size:\s*19px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /@media\s*\(max-width:\s*480px\)\s*\{\s*\.workoutRunPage \.exerciseNavigationRow \.exercisePrevButton\s*\{\s*min-height:\s*56px !important;\s*border-radius:\s*20px !important;\s*font-size:\s*19px !important;\s*\}/
+  );
+});
+
 test("workout flow CSS keeps slide animation shell grouped", async () => {
   const source = await readText("src/styles/workoutFlow.css");
 
