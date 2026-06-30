@@ -1397,6 +1397,28 @@ test("nutrition AI plan CSS keeps narrow score sizing in the final owner", async
   );
 });
 
+test("nutrition AI plan CSS keeps badge and conclusion colors in the final owner", async () => {
+  const source = await readText("src/styles/nutrition-ai-plan-lazy.css");
+  const colorStart = source.indexOf("AI PLAN COLORS MATCH MEAL CARDS");
+  const app43Start = source.indexOf("APP43 TARGETED UPDATE", colorStart);
+  const earlyBlock = source.slice(0, colorStart);
+  const colorBlock = source.slice(colorStart, app43Start);
+
+  assert.ok(colorStart >= 0);
+  assert.ok(app43Start > colorStart);
+  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanConclusion\s*\{[^}]*?background:\s*rgba\(127,\s*159,\s*58,\s*0\.075\);/);
+  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanBadges span\.good\s*\{[^}]*?background:\s*rgba\(127,\s*159,\s*58,\s*0\.1\);/);
+  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanBadges span\.warning,[\s\S]*?\.nutritionAiPlanBadges span\.warn\s*\{[^}]*?background:\s*rgba\(255,\s*191,\s*115,\s*0\.09\);/);
+  assert.match(
+    colorBlock,
+    /\.nutritionAiPlanConclusion\s*\{[\s\S]*?background:\s*[\s\S]*?linear-gradient\(180deg,\s*rgba\(9,\s*20,\s*26,\s*0\.72\),\s*rgba\(5,\s*14,\s*18,\s*0\.78\)\) !important;[\s\S]*?border-color:\s*rgba\(255,\s*255,\s*255,\s*0\.06\) !important;/
+  );
+  assert.match(
+    colorBlock,
+    /\.nutritionAiPlanBadges span\s*\{[\s\S]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.04\) !important;[\s\S]*?border-color:\s*rgba\(255,\s*255,\s*255,\s*0\.055\) !important;/
+  );
+});
+
 test("legacy food search calories CSS keeps early mobile column shift out of the old owner", async () => {
   const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
   const oldMoveStart = source.indexOf("/* ===== CALORIES MOVE MORE LEFT ===== */");
