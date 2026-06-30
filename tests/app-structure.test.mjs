@@ -2865,6 +2865,15 @@ test("client cabinet modal close buttons keep shared sizing in one owner", async
   );
 });
 
+test("workout navigation compact heights stay grouped", async () => {
+  const source = await readText("src/styles/workouts.css");
+
+  assert.equal(
+    (source.match(/\.exerciseNavigationRow \.exerciseBackButton,\s*\.exerciseNavigationRow \.exerciseNextButton,\s*\.workoutRunPage \.exerciseNavigationRow \.exerciseBackButton,\s*\.workoutRunPage \.exerciseNavigationRow \.exerciseNextButton,\s*\.finishNavigationRow \.finishBackButton,\s*\.finishNavigationRow \.finishWorkoutButton,\s*\.workoutRunPage \.finishNavigationRow \.finishBackButton,\s*\.workoutRunPage \.finishNavigationRow \.finishWorkoutButton\s*\{\s*height:\s*59px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client cabinet measurement cards expose readable values", async () => {
   const measurementsModal = await readText("src/features/client/profile/ProfileMeasurementsModal.jsx");
 

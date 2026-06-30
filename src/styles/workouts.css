@@ -2193,7 +2193,11 @@ button:active {
   .exerciseNavigationRow .exerciseBackButton,
   .exerciseNavigationRow .exerciseNextButton,
   .workoutRunPage .exerciseNavigationRow .exerciseBackButton,
-  .workoutRunPage .exerciseNavigationRow .exerciseNextButton {
+  .workoutRunPage .exerciseNavigationRow .exerciseNextButton,
+  .finishNavigationRow .finishBackButton,
+  .finishNavigationRow .finishWorkoutButton,
+  .workoutRunPage .finishNavigationRow .finishBackButton,
+  .workoutRunPage .finishNavigationRow .finishWorkoutButton {
     height: 59px !important;
     min-height: 59px !important;
     max-height: 59px !important;
@@ -2269,20 +2273,6 @@ button:active {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-}
-
-@media (max-height: 720px) {
-  .finishNavigationRow .finishBackButton,
-  .finishNavigationRow .finishWorkoutButton,
-  .workoutRunPage .finishNavigationRow .finishBackButton,
-  .workoutRunPage .finishNavigationRow .finishWorkoutButton {
-    height: 59px !important;
-    min-height: 59px !important;
-    max-height: 59px !important;
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
-    border-radius: 20px !important;
-  }
 }
 
 /* FINISH SCREEN BACK BUTTON â€” GREY FINAL OVERRIDE */

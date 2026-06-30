@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3321.89 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3321.63 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -64,6 +64,7 @@ Start mapping here before any cleanup:
    - Expanded in `v.1.286`: visual coverage now includes the empty assigned plan state before cleanup of workout empty-state CSS.
    - Continued in `v.1.287`: removed old global empty-state rules from legacy files; `client-workout-empty-state.css` is the scoped owner.
    - Continued in `v.1.568`: grouped duplicate select and warmup bottom action-control CSS in `legacy-client-workout-flow-late.css`.
+   - Continued in `v.1.572`: grouped duplicate compact exercise and finish navigation height CSS in `workouts.css`.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.
