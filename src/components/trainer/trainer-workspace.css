@@ -912,7 +912,7 @@
 }
 
 .trainerMessageCoachHint button {
-  min-height: 36px;
+  min-height: 40px;
   padding: 8px 10px;
   border: 1px solid #e5e2f7;
   border-radius: 11px;
@@ -1034,8 +1034,8 @@
 
 .trainerMessageModalHead button {
   flex: 0 0 auto;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -7519,7 +7519,7 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 }
 
 .trainerReminderPeriod button {
-  min-height: 38px;
+  min-height: 40px;
   padding: 0 8px;
   border: 0;
   border-right: 1px solid var(--tn-line);
@@ -7679,7 +7679,7 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 }
 
 .trainerNotificationCalendarGrid button {
-  min-height: 38px;
+  min-height: 40px;
   display: grid;
   align-content: center;
   justify-items: center;
@@ -8427,7 +8427,7 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 }
 
 .trainerNextVideoUpload {
-  min-height: 36px;
+  min-height: 40px;
   display: flex !important;
   align-items: center;
   justify-content: center;
@@ -8514,7 +8514,7 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 }
 
 .trainerNextAddSet {
-  min-height: 32px;
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9399,7 +9399,7 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   }
 
   .trainerReminderPeriod button {
-    min-height: 36px;
+    min-height: 40px;
     padding: 0 3px;
     font-size: 7px;
   }
@@ -9409,8 +9409,13 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     flex-direction: column;
   }
 
+  .trainerNotificationWeekdays,
+  .trainerNotificationCalendarGrid {
+    gap: 2px;
+  }
+
   .trainerNotificationCalendarGrid button {
-    min-height: 38px;
+    min-height: 40px;
   }
 
   .trainerNotificationSchedule {

@@ -52,6 +52,38 @@ async function expectTapTargets(page, selectors, minSize = 40) {
   expect(failures).toEqual([]);
 }
 
+async function expectMinHeights(page, selectors, minHeight = 40) {
+  const failures = await page.evaluate(({ targetSelectors, minimumHeight }) => {
+    const isVisible = (node) => {
+      const style = window.getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+
+      return (
+        style.visibility !== "hidden" &&
+        style.display !== "none" &&
+        rect.width > 0 &&
+        rect.height > 0
+      );
+    };
+
+    return targetSelectors.flatMap((selector) => (
+      [...document.querySelectorAll(selector)]
+        .filter(isVisible)
+        .map((node, index) => {
+          const rect = node.getBoundingClientRect();
+          return {
+            selector,
+            index,
+            height: Math.round(rect.height)
+          };
+        })
+        .filter((item) => item.height < minimumHeight)
+    ));
+  }, { targetSelectors: selectors, minimumHeight: minHeight });
+
+  expect(failures).toEqual([]);
+}
+
 async function isVisible(locator) {
   return locator.evaluate((element) => {
     const style = window.getComputedStyle(element);
@@ -136,6 +168,20 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   await expect(page.locator(".trainerNutritionDiary aside button[aria-pressed='true']")).toHaveCount(1);
   await expectNoHorizontalOverflow(page);
 
+  await page.locator(".trainerNextClientTabs button").nth(5).click();
+  await expect(page.locator(".trainerNotificationCalendarGrid")).toBeVisible();
+  await expect(page.locator(".trainerNotificationLegend")).toBeVisible();
+  await expect(page.locator(".trainerReminderPeriod button[aria-pressed='true']")).toHaveCount(2);
+  await expect(page.locator(".trainerNotificationCalendarGrid button[aria-pressed='true']")).not.toHaveCount(0);
+  await expectTapTargets(page, [
+    ".trainerReminderPeriod button",
+    ".trainerNotificationOffsets label",
+    ".trainerNotificationActions button"
+  ]);
+  await expectMinHeights(page, [".trainerNotificationCalendarGrid button"]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "trainer-client-notifications.png");
+
   await clickTrainerNav(page, "messages");
   await expect(page.locator(".trainerMessageCenter")).toBeVisible();
   await expect(page.locator(".trainerMessageFilters button[aria-pressed='true']")).toHaveCount(1);
@@ -147,6 +193,21 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-messages.png");
+
+  await page.locator(".trainerMessageList > button").first().click();
+  await expect(page.locator(".trainerMessageModal")).toBeVisible();
+  await expect(page.locator(".trainerMessageModalSend")).toBeDisabled();
+  await page.locator(".trainerMessageCoachHint button").first().click();
+  await expect(page.locator(".trainerMessageModalSend")).toBeEnabled();
+  await expectTapTargets(page, [
+    ".trainerMessageCoachHint button",
+    ".trainerMessageModalSend",
+    ".trainerMessageModalHead button"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "trainer-message-modal.png");
+  await page.locator(".trainerMessageModalHead button").click();
+  await expect(page.locator(".trainerMessageModal")).toBeHidden();
 
   await openTrainerPrograms(page);
   await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
@@ -161,6 +222,17 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-programs.png");
+
+  await page.locator(".trainerNextExerciseName").first().click();
+  await expect(page.locator(".trainerNextExerciseEditor")).toBeVisible();
+  await expect(page.locator(".trainerNextSetEditor input").first()).toBeVisible();
+  await page.locator(".trainerNextSetEditor input").first().fill("10");
+  await expectTapTargets(page, [
+    ".trainerNextAddSet",
+    ".trainerNextVideoUpload"
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "trainer-program-editor.png");
 
   assertNoRuntimeErrors();
 });

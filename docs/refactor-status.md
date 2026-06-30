@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.489`.
+Last updated at app version `v.1.490`.
 
 ## Stable Now
 
@@ -26,6 +26,7 @@ Last updated at app version `v.1.489`.
 - Client workout draft restore, readiness and post-workout feedback dialog CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
 - Client harness, nutrition visual and primary visual audits also wait for bottom navigation before route clicks.
 - Trainer workspace and trainer visual audits wait for trainer navigation controls before route clicks.
+- Trainer visual audit covers deeper client workflow states: notification calendar, expanded message modal and program exercise editor controls.
 - Trainer lazy CSS no longer uses the redundant `trainer.css` alias; `trainer-workspace.css` is imported directly.
 - Core CSS no longer uses the redundant `themes.css` and `client-main.css` aliases; `theme.css` and `auth.css` are imported directly.
 - Core CSS no longer uses the redundant `layout.css` and `components.css` grouping aliases; their child files are imported directly.

@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3420.54 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3420.63 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -29,7 +29,7 @@ Not covered deeply yet:
 Start mapping here before any cleanup:
 
 - `src/styles/client-primary-final-lock.css` - `217.80 KiB`
-- `src/components/trainer/trainer-workspace.css` - `179.18 KiB`
+- `src/components/trainer/trainer-workspace.css` - `179.26 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `150.77 KiB`
 - `src/styles/client-render-target-lock.css` - `112.48 KiB`
 - `src/styles/legacy-food-editor-tail.css` - `100.37 KiB`
@@ -519,3 +519,4 @@ Start mapping here before any cleanup:
 - Verification for `v.1.488`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
 - `v.1.489`: removed the remaining duplicate calorie-row strong sizing rule from `legacy-nutrition-header-layout.css`; exact duplicate block scan for that file now returns zero.
 - Verification for `v.1.489`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.490`: expanded trainer visual coverage for client notification calendar, message modal and program exercise editor, then raised related compact trainer tap targets to stable 40px heights.

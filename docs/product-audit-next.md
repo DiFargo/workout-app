@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.489`.
+Last updated at app version `v.1.490`.
 
 ## Evidence
 
@@ -94,8 +94,11 @@ The trainer visual audit now attaches screenshots for:
 - trainer dashboard;
 - trainer clients;
 - trainer client card;
+- trainer client notification calendar;
 - trainer messages;
-- trainer programs.
+- trainer message modal;
+- trainer programs;
+- trainer program exercise editor.
 
 ## P0
 
@@ -318,6 +321,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 213. Client nutrition grid CSS exact duplicate block scan now returns zero after removing repeated dashboard inner layout locks.
 214. Legacy admin client page CSS exact duplicate block scan now returns zero after removing repeated mobile tab, metric and Telegram quick-message locks.
 215. Legacy nutrition header CSS exact duplicate block scan now returns zero after removing the repeated compact calorie-row strong sizing lock.
+216. Trainer visual audit now covers client notification calendar, expanded message modal and program exercise editor tap targets.
 
 ## P1: Next Product Fixes
 
