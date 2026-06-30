@@ -271,11 +271,6 @@
     height: 16px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow strong,
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow .goal strong {
-    font-size: 18px !important;
-    line-height: 1 !important;
-  }
 }
 
 /* v203: final cascade lock for main greeting width. Header, nav, and gauge stay untouched. */

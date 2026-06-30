@@ -1078,11 +1078,6 @@
     gap: 8px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProTop {
-    height: 38px !important;
-    gap: 8px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutNextBadge,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutWeek {
     height: 38px !important;

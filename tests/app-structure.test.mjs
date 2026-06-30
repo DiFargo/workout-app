@@ -1101,6 +1101,19 @@ test("client render target CSS keeps profile hero locks in one owner", async () 
   );
 });
 
+test("client render target CSS keeps workout pro top sizing in the final owner", async () => {
+  const source = await readText("src/styles/client-render-target-lock.css");
+
+  assert.doesNotMatch(
+    source,
+    /\.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutProTop\s*\{\s*height:\s*38px !important;\s*gap:\s*8px !important;\s*\}/
+  );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutProTop\s*\{\s*width:\s*100% !important;\s*height:\s*38px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 0\.48fr\) minmax\(0, 1fr\) !important;\s*gap:\s*8px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client workout set rows CSS keeps one no-weight modal grid owner", async () => {
   const source = await readText("src/styles/client-workout-set-rows.css");
 
@@ -1785,6 +1798,14 @@ test("legacy food editor CSS keeps summary dot sizes in root owners", async () =
     source,
     /\.foodEditDeleteButton\s*\{[\s\S]*?border:\s*1px solid rgba\(255,\s*90,\s*90,\s*0\.18\)!important;/
   );
+  assert.doesNotMatch(
+    source,
+    /\.foodEditDeleteButton span:last-child\s*\{\s*font-size:\s*16px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /\.foodEditDeleteButton span:last-child\s*\{\s*font-size:\s*16px !important;\s*font-weight:\s*900 !important;\s*letter-spacing:\s*-0\.15px !important;\s*\}/
+  );
   assert.equal(
     (source.match(/\.summaryDotGrid span\s*\{\s*width:\s*5px !important;\s*height:\s*5px !important;\s*\}/g) || []).length,
     1
@@ -2071,6 +2092,15 @@ test("client nutrition grid CSS does not keep dashboard icon and chart duplicate
     assert.doesNotMatch(nutritionGrid, lock);
     assert.match(mainOverrides, lock);
   }
+
+  assert.doesNotMatch(
+    nutritionGrid,
+    /\.profileAiStatsRow\.profileAiStatsRow strong,\s*html:root\[data-app-theme="warm-light"\] body #root > \.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiStatsRow\.profileAiStatsRow \.goal strong\s*\{\s*font-size:\s*18px !important;\s*line-height:\s*1 !important;\s*\}/
+  );
+  assert.match(
+    nutritionGrid,
+    /\.profileAiStatsRow\.profileAiStatsRow strong,\s*html:root\[data-app-theme="warm-light"\] body #root > \.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiStatsRow\.profileAiStatsRow \.goal strong\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*color:\s*var\(--main-card-text\) !important;\s*font-size:\s*18px !important;\s*line-height:\s*1 !important;/
+  );
 });
 
 test("client nutrition grid CSS keeps progress insight spacing in the final owner", async () => {
