@@ -1221,6 +1221,8 @@ test("client food search final CSS keeps photo action sizing in latest owner", a
   assert.doesNotMatch(headerSizingBlock, /\.foodSearchModernActionIcon\s*\{\s*\}/);
   assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction strong\s*\{\s*\}/);
   assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction small\s*\{\s*\}/);
+  assert.doesNotMatch(headerSizingBlock, /\.fatSearchTitleWrap\s*\{[^{}]*?width:\s*100% !important;/);
+  assert.doesNotMatch(headerSizingBlock, /\.fatSearchTitleWrap\s*\{[^{}]*?max-width:\s*none !important;/);
   assert.doesNotMatch(headerSizingBlock, /\.foodSearchModernActionIcon\s*\{[\s\S]*?width:\s*38px !important;/);
   assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction strong\s*\{[\s\S]*?font-size:\s*13px !important;/);
   assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction small\s*\{[\s\S]*?font-size:\s*10\.5px !important;/);
@@ -1232,6 +1234,7 @@ test("client food search final CSS keeps photo action sizing in latest owner", a
     photoActionBlock,
     /\.foodSearchModernActionIcon\s*\{[\s\S]*?width:\s*46px !important;[\s\S]*?min-height:\s*46px !important;/
   );
+  assert.match(source, /\/\* Food product\/search alignment and amount behavior v156 \*\/[\s\S]*?\.fatSearchTitleWrap\s*\{[^{}]*?width:\s*min\(376px,\s*calc\(100vw - 24px\)\) !important;[^{}]*?max-width:\s*min\(376px,\s*calc\(100vw - 24px\)\) !important;/);
   assert.match(photoActionBlock, /\.foodSearchFixedPhotoAction strong\s*\{[\s\S]*?font-size:\s*14px !important;/);
   assert.match(photoActionBlock, /\.foodSearchFixedPhotoAction small\s*\{[\s\S]*?font-size:\s*11px !important;/);
 });

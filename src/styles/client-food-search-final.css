@@ -926,11 +926,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   max-height: 124px !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap {
-  width: 100% !important;
-  max-width: none !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap > .fatSearchTitleButtonPremium {
   height: 54px !important;
   min-height: 54px !important;
