@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3398.69 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3398.02 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -552,3 +552,4 @@ Start mapping here before any cleanup:
 - `v.1.520`: removed overwritten product food-search header layout locks from `client-food-search-final.css`; the later stable-flow owner remains guarded.
 - `v.1.521`: removed overwritten product food-search hard-lock header internals from `client-food-search-final.css`; the final product header owner remains guarded.
 - `v.1.522`: removed overwritten product inline meal-header width/margin values from `client-food-search-final.css`; the compact final owner remains guarded.
+- `v.1.523`: removed overwritten narrow product title, meal-header and x-offset values from `client-food-search-final.css`; later product owners remain guarded.
