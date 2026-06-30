@@ -773,22 +773,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSear
   gap: 14px 12px !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome .foodFlowSearchTitle {
-  grid-area: title !important;
-  min-width: 0 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome .fatSearchClosePremium {
-  grid-area: close !important;
-  justify-self: end !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome .fatSearchTitleWrap {
-  grid-area: meal !important;
-  width: min(300px, 78%) !important;
-  justify-self: center !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTitleButtonPremium,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditInlineMealHeader {
   width: 100% !important;
@@ -807,19 +791,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSear
   border-radius: 17px !important;
   background: #ffffff !important;
   box-shadow: 0 10px 28px rgba(55, 64, 112, 0.1) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodSearchRecentGrid {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  grid-auto-rows: 78px !important;
-  gap: 9px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodSearchRecentCard {
-  min-height: 78px !important;
-  height: 78px !important;
-  border-radius: 13px !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction {

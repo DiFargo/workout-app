@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.482`.
+Last updated at app version `v.1.483`.
 
 ## Evidence
 
@@ -311,6 +311,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 206. Client primary final CSS now keeps profile progress overview grid rules in one guarded owner.
 207. Client primary final CSS now keeps profile AI goal-stat font sizing in one guarded owner.
 208. Client primary final CSS now keeps workout deck spacing rules in one guarded owner.
+209. Client primary final CSS now keeps food search home child layout and recent-card rules in guarded owners.
 
 ## P1: Next Product Fixes
 

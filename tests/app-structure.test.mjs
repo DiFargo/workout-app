@@ -621,6 +621,18 @@ test("client primary final CSS keeps food search header layout in the final owne
   const source = await readText("src/styles/client-primary-final-lock.css");
 
   assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.fatSearchTopPremiumHome \.foodFlowSearchTitle\s*\{\s*grid-area:\s*title !important;\s*min-width:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.fatSearchTopPremiumHome \.fatSearchClosePremium\s*\{\s*grid-area:\s*close !important;\s*justify-self:\s*end !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.fatSearchTopPremiumHome \.fatSearchTitleWrap\s*\{\s*grid-area:\s*meal !important;\s*width:\s*min\(300px, 78%\) !important;\s*justify-self:\s*center !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.fatSearchTopPremiumHome,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumMy\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\) var\(--client-action\) !important;\s*grid-template-areas:\s*"title close"\s*"meal meal" !important;\s*height:\s*auto !important;\s*min-height:\s*128px !important;\s*align-items:\s*start !important;/g) || []).length,
     1
   );
@@ -654,6 +666,14 @@ test("client primary final CSS keeps food search header layout in the final owne
   );
   assert.equal(
     (source.match(/\.foodSearchRecentGrid\s*\{\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*grid-auto-rows:\s*78px !important;\s*gap:\s*9px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodSearchRecentGrid\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*grid-auto-rows:\s*78px !important;\s*gap:\s*9px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodSearchRecentCard\s*\{\s*min-height:\s*78px !important;\s*height:\s*78px !important;\s*border-radius:\s*13px !important;\s*\}/g) || []).length,
     1
   );
 });
