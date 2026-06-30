@@ -310,11 +310,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     padding-top: var(--client-top) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductFlowHeader .foodProductFlowTitle {
-    grid-area: title !important;
-    align-self: center !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductFlowHeader .foodEditInlineMealHeader {
     grid-area: meal !important;
     width: min(310px, 82%) !important;
@@ -329,10 +324,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     border-radius: 18px !important;
     background: #ffffff !important;
     box-shadow: 0 14px 34px rgba(55, 64, 112, 0.12) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow {
-    display: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .foodProductActionBar,
@@ -885,18 +876,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
 
 /* v1.75 client visual pass: one mobile rhythm for client shell and food flow. */
 @media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle {
-    width: calc(100% - 118px) !important;
-    max-width: calc(100% - 118px) !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
-    top: var(--client-page-title-top) !important;
-    right: var(--client-page-x) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
     min-height: 94px !important;
@@ -938,10 +917,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     background: rgba(255, 255, 255, 0.94) !important;
     color: #171923 !important;
     -webkit-text-fill-color: #171923 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
-    pointer-events: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetActionGrid {
@@ -1044,11 +1019,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     grid-auto-rows: 78px !important;
     gap: 9px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodSearchRecentCard {
-    height: 78px !important;
-    min-height: 78px !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction {

@@ -567,6 +567,10 @@ test("client primary final CSS keeps food editor header layout in the final owne
     (source.match(/\.foodEditPageOverlay \.foodEditPageHeaderBack\s*\{\s*top:\s*2px !important;\s*width:\s*52px !important;\s*height:\s*52px !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay \.foodEditIconPresetRow\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps fixed photo action spacing in the final owner", async () => {
@@ -596,6 +600,10 @@ test("client primary final CSS keeps product flow header layout in the final own
   );
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader \.foodProductFlowTitle\s*\{\s*grid-area:\s*title !important;\s*min-width:\s*0 !important;\s*padding-right:\s*0 !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader \.foodProductFlowTitle\s*\{\s*grid-area:\s*title !important;\s*align-self:\s*center !important;\s*\}/g) || []).length,
     1
   );
   assert.equal(
@@ -676,6 +684,10 @@ test("client primary final CSS keeps food search header layout in the final owne
     (source.match(/\.foodSearchRecentCard\s*\{\s*min-height:\s*78px !important;\s*height:\s*78px !important;\s*border-radius:\s*13px !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.foodSearchRecentCard\s*\{\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps main AI stats row in the final owner", async () => {
@@ -712,6 +724,10 @@ test("client primary final CSS keeps profile AI hero sizing in the final owner",
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*width:\s*100% !important;\s*height:\s*104px !important;\s*min-height:\s*104px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*74px minmax\(0, 1fr\) !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*pointer-events:\s*none !important;\s*\}/g) || []).length,
     1
   );
   assert.equal(
@@ -798,6 +814,10 @@ test("client primary final CSS keeps primary page title typography in the final 
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4 \.clientCorePageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetPageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectTitle\s*\{\s*height:\s*var\(--client-page-title-height\) !important;\s*min-height:\s*var\(--client-page-title-height\) !important;\s*color:\s*var\(--client-page-title-color\) !important;/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.clientCorePageWorkout \.workoutSelectTitle\s*\{\s*width:\s*calc\(100% - 118px\) !important;\s*max-width:\s*calc\(100% - 118px\) !important;\s*overflow:\s*hidden !important;\s*text-overflow:\s*ellipsis !important;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps page title row spacing in the final owner", async () => {
@@ -814,6 +834,10 @@ test("client primary final CSS keeps header action sizing in the final owner", a
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn\s*\{\s*position:\s*absolute !important;\s*top:\s*var\(--client-top\) !important;\s*right:\s*var\(--client-x\) !important;\s*z-index:\s*35 !important;\s*margin:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn\s*\{\s*top:\s*var\(--client-page-title-top\) !important;\s*right:\s*var\(--client-page-x\) !important;\s*\}/g) || []).length,
     1
   );
   assert.equal(
