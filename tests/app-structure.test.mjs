@@ -1558,6 +1558,27 @@ test("admin client dashboard polish CSS has no empty media blocks", async () => 
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
+test("legacy admin client page CSS does not keep exact duplicate blocks", async () => {
+  const source = await readText("src/styles/legacy-admin-client-page.css");
+  const seenBlocks = new Set();
+  const duplicateBlocks = [];
+
+  for (const match of source.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const selector = match[1].trim().replace(/\s+/g, " ");
+    const body = match[2].trim().replace(/\s+/g, " ");
+    if (!body || selector.includes("@")) continue;
+    const key = `${selector} { ${body} }`;
+
+    if (seenBlocks.has(key)) {
+      const line = source.slice(0, match.index).split(/\r?\n/).length;
+      duplicateBlocks.push(`src/styles/legacy-admin-client-page.css:${line}`);
+    }
+    seenBlocks.add(key);
+  }
+
+  assert.deepEqual(duplicateBlocks, []);
+});
+
 test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", async () => {
   const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
   const statsAlignmentStart = source.indexOf("/* STATS ALIGNMENT PERFECT */");
