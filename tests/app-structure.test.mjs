@@ -2134,6 +2134,14 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.doesNotMatch(
     source,
+    /\.adminCalendarPanelMerged\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*(?:12px|16px) !important;/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged > \.adminCalendarSettingsGrid\s*\{\s*order:\s*3 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;/
+  );
+  assert.doesNotMatch(
+    source,
     /@media\s*\(max-width:\s*420px\)\s*\{\s*\.adminCalendarPanelMerged\s*\{\s*padding:\s*18px !important;\s*gap:\s*13px !important;\s*\}[\s\S]*?\.adminCalendarHourReminder\s*\{\s*height:\s*42px !important;\s*min-height:\s*42px !important;\s*font-size:\s*12px !important;\s*\}\s*\}/
   );
   assert.doesNotMatch(

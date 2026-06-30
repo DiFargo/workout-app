@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
-- Latest source CSS report: `100` files, about `3355.14 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3343.77 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -586,3 +586,4 @@ Start mapping here before any cleanup:
 - `v.1.554`: removed another pre-final calendar header/Telegram shell from `legacy-admin-client-dashboard-polish.css`; header width and Telegram nowrap/order now live in the guarded `V62` owner.
 - `v.1.555`: removed pre-final calendar Save/Test/Toggle button shells from `legacy-admin-client-dashboard-polish.css`; high-specificity button sizing now lives in the guarded `V62` owner.
 - `v.1.556`: removed pre-final V52 calendar test-button and Telegram shells from `legacy-admin-client-dashboard-polish.css`; guarded `V62` remains the owner.
+- `v.1.557`: removed pre-final `adminCalendarPanelMerged` layout layers from `legacy-admin-client-dashboard-polish.css`; final `V62` calendar rules remain guarded.
