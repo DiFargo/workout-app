@@ -3678,18 +3678,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     gap: 10px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNextBadge,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutWeek {
-    height: 42px !important;
-    min-height: 42px !important;
-    padding: 0 16px !important;
-    justify-content: center !important;
-    border-radius: 18px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardPro {
     height: clamp(470px, calc(100dvh - 292px), 560px) !important;
     min-height: 470px !important;

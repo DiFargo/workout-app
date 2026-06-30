@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.532`.
+Last updated at app version `v.1.533`.
 
 ## Stable Now
 
@@ -180,6 +180,7 @@ Last updated at app version `v.1.532`.
 - Client primary final CSS now keeps workout compact shell rules in root owners instead of repeating no-op mobile media blocks.
 - Client primary final CSS now keeps workout mobile hero and action placement rules in one guarded owner.
 - Client primary final CSS now keeps workout 42px badge pill rules in one guarded root owner.
+- Client primary final CSS no longer keeps an overwritten mobile workout next/week badge sizing block before the final EOF owner.
 - Client primary final CSS now keeps workout select line hide rules in one guarded root owner.
 - Client primary final CSS now keeps profile AI hero compact cluster rules in guarded root owners.
 - Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
@@ -263,7 +264,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3393.77 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3393.29 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
