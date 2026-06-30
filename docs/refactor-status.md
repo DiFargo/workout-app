@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.536`.
+Last updated at app version `v.1.537`.
 
 ## Stable Now
 
@@ -150,6 +150,7 @@ Last updated at app version `v.1.536`.
 - Client primary final CSS now keeps food action bar fixed sizing in the final owner, guarded by app structure tests.
 - Client primary final CSS now keeps main AI stats row sizing and text rules in the final owner, guarded by app structure tests.
 - Client primary final CSS no longer keeps overwritten main AI stats text color/size rules before the later mobile owner.
+- Client primary final CSS no longer keeps an overwritten main AI stats child-layout block before the EOF owner.
 - Client primary final CSS now keeps profile AI hero sizing in the final owner, guarded by app structure tests.
 - Client primary final CSS now keeps nutrition arrow and meta sizing in the root owner, guarded by app structure tests.
 - Client primary final CSS now keeps primary page title typography in the final owner, guarded by app structure tests.
@@ -265,9 +266,9 @@ From the latest verified build:
 
 - main app JS chunk: about `472.18 KiB` raw, `131.41 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1146.50 KiB` raw, `114.98 KiB` gzip.
+- main CSS bundle: about `1146.20 KiB` raw, `114.97 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3392.04 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3391.68 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
