@@ -1051,6 +1051,19 @@ test("client workout card render CSS keeps card sizing in root locks", async () 
   );
 });
 
+test("client workout close CSS has no overwritten border reset", async () => {
+  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+
+  assert.doesNotMatch(
+    source,
+    /\.exerciseCloseButton\s*\{[\s\S]*?border:\s*none !important;[\s\S]*?border:\s*1px solid rgba\(127,\s*159,\s*58,\s*0\.18\) !important;/
+  );
+  assert.match(
+    source,
+    /\.exerciseCloseButton\s*\{[\s\S]*?border:\s*1px solid rgba\(127,\s*159,\s*58,\s*0\.18\) !important;/
+  );
+});
+
 test("client workout hero spacing stays in the workout lazy owner", async () => {
   const renderTarget = await readText("src/styles/client-render-target-lock.css");
   const cardRender = await readText("src/styles/client-workout-card-render.css");
@@ -1537,6 +1550,14 @@ test("legacy nutrition summary calories CSS keeps final compact calorie owners",
 test("legacy food editor CSS keeps summary dot sizes in root owners", async () => {
   const source = await readText("src/styles/legacy-food-editor-tail.css");
 
+  assert.doesNotMatch(
+    source,
+    /\.foodEditDeleteButton\s*\{[\s\S]*?border:\s*none!important;[\s\S]*?border:\s*1px solid rgba\(255,\s*90,\s*90,\s*0\.18\)!important;/
+  );
+  assert.match(
+    source,
+    /\.foodEditDeleteButton\s*\{[\s\S]*?border:\s*1px solid rgba\(255,\s*90,\s*90,\s*0\.18\)!important;/
+  );
   assert.equal(
     (source.match(/\.summaryDotGrid span\s*\{\s*width:\s*5px !important;\s*height:\s*5px !important;\s*\}/g) || []).length,
     1

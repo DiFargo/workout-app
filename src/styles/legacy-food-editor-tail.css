@@ -890,7 +890,6 @@
 
 .foodEditDeleteButton{
   min-height:74px!important;
-  border:none!important;
   border-radius:24px!important;
   background:
     linear-gradient(180deg, rgba(45,14,14,0.98), rgba(28,10,10,0.99))!important;
