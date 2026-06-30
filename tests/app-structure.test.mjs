@@ -1132,20 +1132,27 @@ test("client food search final CSS keeps product hero spacing in latest owners",
   const exactLockStart = source.indexOf("/* Product page header exact lock v158 */");
   const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
   const hardLockStart = source.indexOf("/* Product page header/search alignment hard lock v160 */");
+  const finalLockStart = source.indexOf("/* Product page header/search alignment final lock v161 */");
   const amountBehaviorBlock = source.slice(amountBehaviorStart, photoActionStart);
   const exactLockBlock = source.slice(exactLockStart, stableFlowStart);
+  const hardLockBlock = source.slice(hardLockStart, finalLockStart);
   const stableFlowBlock = source.slice(stableFlowStart, hardLockStart);
 
   assert.ok(amountBehaviorStart >= 0);
   assert.ok(photoActionStart > amountBehaviorStart);
   assert.ok(exactLockStart > photoActionStart);
   assert.ok(stableFlowStart > exactLockStart);
+  assert.ok(hardLockStart > stableFlowStart);
+  assert.ok(finalLockStart > hardLockStart);
   assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductFlowHeader\s*\{/);
   assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductFlowTitle\s*\{/);
   assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductTopActions\s*\{/);
   assert.doesNotMatch(exactLockBlock, /\.foodProductRenderScreen \.foodProductFlowHeader\s*\{/);
   assert.doesNotMatch(exactLockBlock, /\.foodProductRenderScreen \.foodProductFlowTitle\s*\{/);
   assert.doesNotMatch(exactLockBlock, /\.foodProductRenderScreen \.foodProductTopActions\s*\{/);
+  assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowHeader\s*\{/);
+  assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowTitle\s*\{/);
+  assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductTopActions\s*\{/);
   assert.equal(
     (source.match(/\.foodProductRenderScreen \.foodProductFlowHeader \+ \.foodEditHeroRender\.foodEditHeroEditable\s*\{\s*margin-top:\s*0 !important;\s*\}/g) || []).length,
     1
