@@ -1157,6 +1157,21 @@ test("client workout close CSS has no overwritten border reset", async () => {
   );
 });
 
+test("client workout flow CSS keeps shared bottom panel shell in one owner", async () => {
+  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+  const sharedPanelMatch = source.match(
+    /\.workoutRunPage \.startWorkoutBottomPanel,\s*\.workoutRunPage \.warmupBottomPanel,\s*\.workoutRunPage \.exerciseActionPanel,\s*\.workoutRunPage \.workoutFinishActionPanel\s*\{[\s\S]*?\n\}/
+  );
+
+  assert.ok(sharedPanelMatch);
+  assert.equal(
+    (source.match(/\.workoutRunPage \.startWorkoutBottomPanel,\s*\.workoutRunPage \.warmupBottomPanel,\s*\.workoutRunPage \.exerciseActionPanel,\s*\.workoutRunPage \.workoutFinishActionPanel\s*\{/g) || []).length,
+    1
+  );
+  assert.match(sharedPanelMatch[0], /bottom:\s*max\(26px,\s*calc\(env\(safe-area-inset-bottom\) \+ 18px\)\);/);
+  assert.match(sharedPanelMatch[0], /background:\s*linear-gradient\(180deg,\s*#121712 0%,\s*#0d110d 100%\);/);
+});
+
 test("client workout hero spacing stays in the workout lazy owner", async () => {
   const renderTarget = await readText("src/styles/client-render-target-lock.css");
   const cardRender = await readText("src/styles/client-workout-card-render.css");
