@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.555`.
+Last updated at app version `v.1.556`.
 
 ## Stable Now
 
@@ -277,6 +277,7 @@ Last updated at app version `v.1.555`.
 - Admin calendar CSS now keeps connected Telegram and final equal-button text spacing in the `V62` owner after removing the last pre-final equal-button shell.
 - Admin calendar CSS now keeps header width and Telegram nowrap/order in the `V62` owner after removing another pre-final header shell.
 - Admin calendar CSS now keeps high-specificity Save/Test/Toggle button sizing in the `V62` owner after removing pre-final button shells.
+- Admin calendar CSS no longer keeps pre-final V52 test-button and Telegram shells now covered by the guarded `V62` owner.
 
 ## Current Build Shape
 
@@ -286,7 +287,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3360.94 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3355.14 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

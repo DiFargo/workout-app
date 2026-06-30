@@ -2130,6 +2130,10 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.doesNotMatch(
     source,
+    /\.adminCalendarPanelMerged \.adminCalendarTestBtn,\s*\.adminCalendarPanelMerged button\[class\*="Test"\]\s*\{\s*max-width:\s*(?:320px|100%) !important;[\s\S]*?border-radius:\s*(?:20px|22px) !important;/
+  );
+  assert.doesNotMatch(
+    source,
     /@media\s*\(max-width:\s*420px\)\s*\{\s*\.adminCalendarPanelMerged\s*\{\s*padding:\s*18px !important;\s*gap:\s*13px !important;\s*\}[\s\S]*?\.adminCalendarHourReminder\s*\{\s*height:\s*42px !important;\s*min-height:\s*42px !important;\s*font-size:\s*12px !important;\s*\}\s*\}/
   );
   assert.doesNotMatch(
