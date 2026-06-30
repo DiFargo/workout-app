@@ -1158,6 +1158,8 @@ test("client food search final CSS keeps product hero spacing in latest owners",
   assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductTopActions\s*\{/);
   assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowTitle h2\s*\{/);
   assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{/);
+  assert.doesNotMatch(hardLockBlock, /--food-product-x:\s*15px;/);
+  assert.doesNotMatch(finalLockBlock, /--food-product-x:\s*15px;/);
   assert.doesNotMatch(finalLockBlock, /\.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{[\s\S]*?width:\s*min\(284px,/);
   assert.doesNotMatch(finalLockBlock, /\.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{[\s\S]*?margin:\s*0 auto !important;/);
   assert.doesNotMatch(finalLockBlock, /\.foodProductRenderScreen\s*\{\s*--food-product-x:\s*14px;/);
@@ -1170,6 +1172,10 @@ test("client food search final CSS keeps product hero spacing in latest owners",
     /\.foodProductFlowHeader \+ \.foodEditHeroRender\.foodEditHeroEditable\s*\{\s*margin-top:\s*0 !important;\s*\}/
   );
   assert.equal((finalLockBlock.match(/--food-product-x:\s*14px;/g) || []).length, 0);
+  assert.match(
+    source,
+    /\/\* Food product page compact alignment and inline edit feel v164 \*\/[\s\S]*?\.foodProductRenderScreen\s*\{\s*--food-product-x:\s*15px;/
+  );
 });
 
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {

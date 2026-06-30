@@ -1203,7 +1203,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen {
-  --food-product-x: 15px;
   width: 100% !important;
   max-width: none !important;
   min-height: 920px !important;
@@ -1223,7 +1222,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 
 /* Product page header/search alignment final lock v161 */
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen {
-  --food-product-x: 15px;
   padding-top: 55px !important;
 }
 
