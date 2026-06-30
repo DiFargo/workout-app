@@ -2748,6 +2748,19 @@ test("trainer workspace CSS keeps nutrition and notification action buttons grou
   );
 });
 
+test("trainer workspace CSS keeps shared form field shells grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientAssignmentControls label,\s*\.trainerNutritionPreset,\s*\.trainerNutritionGoalInputs label,\s*\.trainerNutritionPlanFields label,\s*\.trainerNutritionValidity label\s*\{\s*display:\s*grid;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerClientAssignmentControls select,\s*\.trainerNutritionPreset select,\s*\.trainerNutritionGoalInputs input,\s*\.trainerNutritionPlanFields input,\s*\.trainerNutritionValidity input\s*\{\s*width:\s*100%;/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 

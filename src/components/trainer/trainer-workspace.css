@@ -5625,7 +5625,9 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerClientAssignmentControls label,
 .trainerNutritionPreset,
-.trainerNutritionGoalInputs label {
+.trainerNutritionGoalInputs label,
+.trainerNutritionPlanFields label,
+.trainerNutritionValidity label {
   display: grid;
   gap: 6px;
   color: var(--tn-muted);
@@ -5634,7 +5636,9 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerClientAssignmentControls select,
 .trainerNutritionPreset select,
-.trainerNutritionGoalInputs input {
+.trainerNutritionGoalInputs input,
+.trainerNutritionPlanFields input,
+.trainerNutritionValidity input {
   width: 100%;
   height: 42px;
   padding: 0 12px;
@@ -5647,7 +5651,9 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerClientAssignmentControls select:focus,
 .trainerNutritionPreset select:focus,
-.trainerNutritionGoalInputs input:focus {
+.trainerNutritionGoalInputs input:focus,
+.trainerNutritionPlanFields input:focus,
+.trainerNutritionValidity input:focus {
   border-color: var(--tn-purple);
 }
 
@@ -7100,31 +7106,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: var(--tn-purple);
   font-size: 8px;
   font-weight: 800;
-}
-
-.trainerNutritionPlanFields label,
-.trainerNutritionValidity label {
-  display: grid;
-  gap: 6px;
-  color: var(--tn-muted);
-  font-size: 9px;
-}
-
-.trainerNutritionPlanFields input,
-.trainerNutritionValidity input {
-  width: 100%;
-  height: 42px;
-  padding: 0 12px;
-  border: 1px solid var(--tn-line);
-  border-radius: 7px;
-  outline: 0;
-  background: #fff;
-  color: var(--tn-text);
-}
-
-.trainerNutritionPlanFields input:focus,
-.trainerNutritionValidity input:focus {
-  border-color: var(--tn-purple);
 }
 
 .trainerNutritionGoalInputs {

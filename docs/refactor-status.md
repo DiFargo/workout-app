@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.572`.
+Last updated at app version `v.1.573`.
 
 ## Stable Now
 
@@ -68,6 +68,7 @@ Last updated at app version `v.1.572`.
 - Trainer visual audit covers deeper client workflow states: notification calendar, expanded message modal and program exercise editor controls.
 - Trainer workspace CSS now keeps the mobile bottom navigation shell in one owner.
 - Trainer workspace CSS now keeps nutrition plan and notification action button shells in one owner.
+- Trainer workspace CSS now keeps shared assignment and nutrition form field shells in one owner.
 - Trainer lazy CSS no longer uses the redundant `trainer.css` alias; `trainer-workspace.css` is imported directly.
 - Core CSS no longer uses the redundant `themes.css` and `client-main.css` aliases; `theme.css` and `auth.css` are imported directly.
 - Core CSS no longer uses the redundant `layout.css` and `components.css` grouping aliases; their child files are imported directly.
