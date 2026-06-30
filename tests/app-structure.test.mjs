@@ -2054,6 +2054,22 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.doesNotMatch(
     source,
+    /\.adminCalendarPanelMerged \.adminCalendarTelegram::before\s*\{\s*content:\s*"" !important;\s*width:\s*8px !important;\s*height:\s*8px !important;\s*border-radius:\s*999px !important;\s*background:\s*rgba\(255,255,255,\.34\) !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarHourReminder i\s*\{\s*width:\s*38px !important;\s*height:\s*22px !important;\s*border-radius:\s*999px !important;\s*background:\s*rgba\(255,255,255,\.12\) !important;[\s\S]*?flex:\s*0 0 auto !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarHourReminder i::before\s*\{\s*content:\s*"" !important;\s*position:\s*absolute !important;\s*width:\s*18px !important;\s*height:\s*18px !important;[\s\S]*?transition:\s*\.18s ease !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarHourReminder\.active i::before\s*\{\s*transform:\s*translateX\(16px\) !important;\s*background:\s*#fff !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
     /\.adminCalendarPanelMerged \.adminCalendarDays\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\) !important;\s*gap:\s*7px !important;\s*\}/
   );
   assert.doesNotMatch(
@@ -2087,6 +2103,22 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   assert.match(
     source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarTelegram\s*\{\s*display:\s*inline-flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*gap:\s*9px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarTelegram::before\s*\{\s*content:\s*"" !important;\s*width:\s*11px !important;\s*height:\s*11px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarHourReminder i\s*\{\s*width:\s*48px !important;\s*height:\s*28px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarHourReminder i::before\s*\{\s*content:\s*"" !important;\s*position:\s*absolute !important;\s*width:\s*24px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarHourReminder\.active i::before\s*\{\s*transform:\s*translateX\(20px\) !important;\s*background:\s*#fff !important;\s*\}/
   );
   assert.match(
     source,

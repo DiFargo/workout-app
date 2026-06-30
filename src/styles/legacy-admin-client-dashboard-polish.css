@@ -2263,19 +2263,6 @@
 
 /* ÃÂÃÂºÃÂºÃ‘Æ’Ã‘â‚¬ÃÂ°Ã‘â€šÃÂ½Ã‘â€¹ÃÂ¹ ÃÂ±ÃÂ»ÃÂ¾ÃÂº ÃÂ½ÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸ÃÂ¹: Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ¾ÃÂºÃÂ¸ ÃÂ´ÃÂ½ÃÂµÃÂ¹, ÃÂ¿ÃÂ¾ÃÂ»Ã‘Â ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼ÃÂµÃÂ½ÃÂ¸ ÃÂ¸ ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂºÃÂ»Ã‘Å½Ã‘â€¡ÃÂ°Ã‘â€šÃÂµÃÂ»Ã‘Å’ ÃÂ·ÃÂ° Ã‘â€¡ÃÂ°Ã‘Â */
 
-.adminCalendarPanelMerged .adminCalendarTelegram::before {
-  content: "" !important;
-  width: 8px !important;
-  height: 8px !important;
-  border-radius: 999px !important;
-  background: rgba(255,255,255,.34) !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarTelegram.connected::before {
-  background: #63ff52 !important;
-  box-shadow: 0 0 10px rgba(99,255,82,.52) !important;
-}
-
 .adminCalendarDaySettingsHeader {
   display: flex !important;
   align-items: center !important;
@@ -2316,40 +2303,10 @@
   text-align: left !important;
 }
 
-.adminCalendarHourReminder i {
-  width: 38px !important;
-  height: 22px !important;
-  border-radius: 999px !important;
-  background: rgba(255,255,255,.12) !important;
-  position: relative !important;
-  flex: 0 0 auto !important;
-}
-
-.adminCalendarHourReminder i::before {
-  content: "" !important;
-  position: absolute !important;
-  width: 18px !important;
-  height: 18px !important;
-  left: 2px !important;
-  top: 2px !important;
-  border-radius: 999px !important;
-  background: rgba(255,255,255,.7) !important;
-  transition: .18s ease !important;
-}
-
 .adminCalendarHourReminder.active {
   background: rgba(127,159,58,.16) !important;
   border-color: rgba(127,159,58,.30) !important;
   color: #d8ff95 !important;
-}
-
-.adminCalendarHourReminder.active i {
-  background: rgba(145, 205, 56, .55) !important;
-}
-
-.adminCalendarHourReminder.active i::before {
-  transform: translateX(16px) !important;
-  background: #fff !important;
 }
 
 .adminCalendarEqualButtonsWrap > button,
