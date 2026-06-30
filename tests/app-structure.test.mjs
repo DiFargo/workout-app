@@ -1806,14 +1806,10 @@ test("legacy food editor CSS keeps summary dot sizes in root owners", async () =
     source,
     /\.foodEditDeleteButton span:last-child\s*\{\s*font-size:\s*16px !important;\s*font-weight:\s*900 !important;\s*letter-spacing:\s*-0\.15px !important;\s*\}/
   );
-  assert.equal(
-    (source.match(/\.summaryDotGrid span\s*\{\s*width:\s*5px !important;\s*height:\s*5px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.summaryDotGrid span\s*\{\s*width:\s*5\.5px !important;\s*height:\s*5\.5px !important;\s*\}/g) || []).length,
-    1
-  );
+  assert.doesNotMatch(source, /\.summaryDotGrid\s*\{\s*width:\s*(?:30px|33px) !important;/);
+  assert.doesNotMatch(source, /\.summaryCaloriesCard\s*\{\s*grid-template-columns:\s*(?:36px|40px) minmax\(0, 1fr\) !important;/);
+  assert.match(source, /\.summaryDotGrid span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/);
+  assert.match(source, /\.summaryDotGrid span\s*\{\s*width:\s*6\.5px !important;\s*height:\s*6\.5px !important;\s*\}/);
 });
 
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {

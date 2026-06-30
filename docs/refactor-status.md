@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.558`.
+Last updated at app version `v.1.559`.
 
 ## Stable Now
 
@@ -22,6 +22,7 @@ Last updated at app version `v.1.558`.
 - Admin program editor CSS no longer keeps an empty desktop media block.
 - Admin calendar CSS no longer keeps pre-final `adminCalendarPanelMerged` layout layers before the final V62 owner.
 - Admin calendar button CSS no longer keeps unused exact selectors for removed `adminCalendarToggle`, `adminCalendarSaveBtn` and `adminCalendarTestBtn` classes.
+- Food editor summary CSS no longer keeps intermediate compact and first scale-up calorie grid tuning before the later second scale-up owner.
 - Expanded nutrition product-list side spacing stays in the width owner, while the exact-spacing block keeps only its sibling gap fix.
 - Expanded nutrition product-list width tuning no longer carries obsolete intermediate reduce/minus sections.
 - Expanded nutrition product-list bottom spacing skips the old match-spacing section and stays in the real bottom-gap owner.
@@ -289,7 +290,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3343.28 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3339.46 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
