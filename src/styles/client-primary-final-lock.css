@@ -342,22 +342,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
     overflow: visible !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutHeaderActions,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutHeaderActions {
-    position: static !important;
-    inset: auto !important;
-    justify-self: end !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 10px !important;
-    width: auto !important;
-    height: var(--client-action) !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    transform: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectTitle {
     width: auto !important;
