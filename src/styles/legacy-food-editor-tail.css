@@ -890,18 +890,6 @@
 
 /* ===== DELETE/SAVE BUTTON FINAL SIZE + ICON ===== */
 
-.foodEditBottomActions{
-  width:calc(100% - 34px)!important;
-  gap:10px!important;
-}
-
-.foodEditDeleteButton,
-.foodEditSaveRender{
-  min-height:60px!important;
-  border-radius:20px!important;
-  font-size:18px!important;
-}
-
 .foodEditDeleteButton{
   background:
     linear-gradient(180deg, rgba(20,24,28,0.98), rgba(10,13,16,0.995))!important;
@@ -922,37 +910,6 @@
   filter:none!important;
   opacity:0.95!important;
   transform:translateY(-1px)!important;
-}
-
-.foodEditDeleteButton span:last-child{
-  font-size:18px!important;
-  letter-spacing:-0.2px!important;
-}
-
-.foodEditSaveRender{
-  font-size:19px!important;
-}
-
-@media (max-width:480px){
-
-  .foodEditBottomActions{
-    width:calc(100% - 28px)!important;
-  }
-
-  .foodEditDeleteButton,
-  .foodEditSaveRender{
-    min-height:56px!important;
-    border-radius:18px!important;
-  }
-
-  .foodEditDeleteIcon{
-    font-size:25px!important;
-  }
-
-  .foodEditDeleteButton span:last-child,
-  .foodEditSaveRender{
-    font-size:17px!important;
-  }
 }
 
 /* =========================================================

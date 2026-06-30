@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
-- Latest source CSS report: `100` files, about `3336.56 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3335.77 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -590,3 +590,4 @@ Start mapping here before any cleanup:
 - `v.1.558`: removed unused exact admin calendar button selectors from `legacy-admin-client-dashboard-polish.css`; live wildcard button owners remain guarded.
 - `v.1.559`: removed intermediate food summary compact/first-scale calorie grid tuning from `legacy-food-editor-tail.css`; the later second scale-up owner remains guarded.
 - `v.1.560`: removed intermediate food editor product header/control/macro sizing from `legacy-food-editor-tail.css`; later pixel-tune owners remain guarded.
+- `v.1.561`: removed overwritten food editor delete/save bottom-action sizing from `legacy-food-editor-tail.css`; later functional owners remain guarded.

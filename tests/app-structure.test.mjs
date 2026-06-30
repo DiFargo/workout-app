@@ -1813,6 +1813,9 @@ test("legacy food editor CSS keeps summary dot sizes in root owners", async () =
   assert.doesNotMatch(source, /\.foodEditHeroRender\s*\{\s*min-height:\s*105px !important;/);
   assert.doesNotMatch(source, /\.foodEditSegmentRow button\s*\{\s*height:\s*44px !important;/);
   assert.doesNotMatch(source, /\.foodEditMacrosCards div\s*\{\s*min-height:\s*62px !important;/);
+  assert.doesNotMatch(source, /\.foodEditBottomActions\s*\{\s*width:calc\(100% - 34px\)!important;/);
+  assert.doesNotMatch(source, /\.foodEditDeleteButton,\s*\.foodEditSaveRender\s*\{\s*min-height:60px!important;/);
+  assert.doesNotMatch(source, /\.foodEditDeleteButton span:last-child\s*\{\s*font-size:18px!important;/);
 });
 
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
