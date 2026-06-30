@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.507`.
+Last updated at app version `v.1.508`.
 
 ## Stable Now
 
@@ -19,6 +19,7 @@ Last updated at app version `v.1.507`.
 - Admin internals CSS for DEV-only visual coverage is isolated in `admin-internals-lazy.css`, keeping the production admin hub chunk lightweight.
 - Admin hub and admin internals CSS entrypoints are now structurally guarded against accidental heavy import drift.
 - Admin client four-column grid breakpoint ownership stays in the later admin internals stylesheet instead of the earlier CRM shell.
+- Admin program editor CSS no longer keeps an empty desktop media block.
 - Expanded nutrition product-list side spacing stays in the width owner, while the exact-spacing block keeps only its sibling gap fix.
 - Expanded nutrition product-list width tuning no longer carries obsolete intermediate reduce/minus sections.
 - Expanded nutrition product-list bottom spacing skips the old match-spacing section and stays in the real bottom-gap owner.

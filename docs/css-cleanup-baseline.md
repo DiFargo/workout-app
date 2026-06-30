@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3407.44 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3407.41 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -537,3 +537,4 @@ Start mapping here before any cleanup:
 - `v.1.505`: removed overwritten expanded nutrition product-list width and side-margin values from the force-width block in `legacy-nutrition-late-layout.css`; later width owners remain in place.
 - `v.1.506`: removed the repeated open-card overflow owner from the guaranteed expanded nutrition product-list block in `legacy-nutrition-late-layout.css`; inline width support keeps the active owner.
 - `v.1.507`: removed repeated exact product-row max-width and box-sizing values from the inline width support block in `legacy-nutrition-late-layout.css`; the force product block remains the active owner.
+- `v.1.508`: removed an empty desktop media block from `legacy-admin-program-editor-app49.css` and guarded that file against empty media blocks.

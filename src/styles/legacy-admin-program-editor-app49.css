@@ -1025,10 +1025,6 @@
   color: rgba(235,250,195,.95);
 }
 
-@media (min-width: 1181px) {
-
-}
-
 @media (max-width: 720px) {
   .adminInspectorDrawerOverlay {
     pointer-events: auto !important;

@@ -1665,6 +1665,12 @@ test("admin client dashboard polish CSS has no empty media blocks", async () => 
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
+test("legacy admin program editor CSS has no empty media blocks", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
+});
+
 test("legacy admin client page CSS does not keep exact duplicate blocks", async () => {
   const source = await readText("src/styles/legacy-admin-client-page.css");
   const seenBlocks = new Set();
