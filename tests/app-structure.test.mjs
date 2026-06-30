@@ -1467,6 +1467,27 @@ test("nutrition orbit CSS keeps inline and modal meal shells grouped", async () 
   );
 });
 
+test("nutrition base CSS keeps compact meal card sizing in the desktop owner", async () => {
+  const source = await readText("src/styles/nutrition.css");
+  const viewportStart = source.indexOf("FIXED NUTRITION VIEWPORT V286");
+  const bottomNavStart = source.indexOf("UNIFIED CLIENT BOTTOM NAVIGATION V287", viewportStart);
+  const desktopCompactStart = source.indexOf("@media (min-width: 720px) and (max-height: 820px)");
+
+  assert.ok(viewportStart >= 0);
+  assert.ok(bottomNavStart > viewportStart);
+  assert.ok(desktopCompactStart > bottomNavStart);
+
+  const viewportBlock = source.slice(viewportStart, bottomNavStart);
+  assert.doesNotMatch(
+    viewportBlock,
+    /\.fatSecretPage\.nutritionFixedHeaderV3 \.fatMealCard\s*\{\s*height:\s*70px !important;\s*min-height:\s*70px !important;\s*padding:\s*12px 18px !important;\s*\}/
+  );
+  assert.match(
+    source.slice(desktopCompactStart),
+    /@media\s*\(min-width:\s*720px\) and \(max-height:\s*820px\)[\s\S]*?\.fatSecretPage\.nutritionFixedHeaderV3 \.fatMealCard\s*\{\s*height:\s*70px !important;\s*min-height:\s*70px !important;\s*padding:\s*12px 18px !important;\s*\}/
+  );
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 
