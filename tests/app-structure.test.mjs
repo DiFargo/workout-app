@@ -912,6 +912,10 @@ test("client primary final CSS keeps workout card compact sizing in one owner", 
     (source.match(/\.clientCorePageWorkout \.individualWorkoutCardPro\s*\{\s*height:\s*clamp\(470px, calc\(100dvh - 292px\), 560px\) !important;\s*min-height:\s*470px !important;\s*max-height:\s*560px !important;\s*margin-bottom:\s*24px !important;\s*border-radius:\s*24px !important;\s*overflow:\s*hidden !important;/g) || []).length,
     1
   );
+  assert.doesNotMatch(
+    source,
+    /\.clientCorePageWorkout \.individualWorkoutCardPro\s*\{\s*border:\s*1px solid #e0e4ef !important;\s*border-radius:\s*24px !important;\s*background:\s*rgba\(255, 255, 255, 0\.94\) !important;\s*box-shadow:\s*0 16px 38px rgba\(55, 64, 112, 0\.12\) !important;\s*overflow:\s*hidden !important;\s*\}/
+  );
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutProBody\s*\{\s*height:\s*100% !important;\s*border-radius:\s*22px !important;/g) || []).length,
     1

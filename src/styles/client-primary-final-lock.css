@@ -3395,14 +3395,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     margin-top: 0 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardPro {
-    border: 1px solid #e0e4ef !important;
-    border-radius: 24px !important;
-    background: rgba(255, 255, 255, 0.94) !important;
-    box-shadow: 0 16px 38px rgba(55, 64, 112, 0.12) !important;
-    overflow: hidden !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProBody {
     border-radius: 22px !important;
     overflow: hidden !important;
