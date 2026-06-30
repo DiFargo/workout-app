@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.587`.
+Last updated at app version `v.1.588`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `345` passed.
+- `npm.cmd test`: passed with `346` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -347,6 +347,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 239. Nutrition AI plan neutral macro/badge and collapsed-card backgrounds now stay in the later meal-card color owner.
 240. Nutrition AI plan collapsed card and toggle colors now stay in the later meal-card color owner.
 241. Nutrition AI plan muted span typography now stays in one grouped owner.
+242. Food search header close-button shell now stays in one grouped owner.
 228. Expanded nutrition product-list no longer keeps the obsolete 10-percent-wider section before the force-width owner.
 229. Exact nutrition product-list rebuild keeps structure and visual styling while width values stay in later width owners.
 230. Expanded nutrition product-list force-width block no longer keeps a radius overwritten by the later hard-width owner.

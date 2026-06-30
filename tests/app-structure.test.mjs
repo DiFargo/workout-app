@@ -1356,6 +1356,27 @@ test("client food search final CSS keeps one compact product title owner", async
   assert.equal(nonHasProductTitleCompactLocks.length, 1);
 });
 
+test("client food search final CSS keeps header close shell grouped", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.fatSearchTopPremiumHome \.fatSearchClosePremium,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreen\.fatFoodSearchScreenPremium > \.fatSearchTopPremium\.foodSearchHeaderExactMainAlign > button\.fatSearchClosePremium\.fatSearchClosePremium\s*\{\s*grid-area:\s*close !important;[\s\S]*?box-shadow:\s*0 16px 36px rgba\(36,\s*43,\s*66,\s*0\.08\),\s*inset 0 1px 0 rgba\(255,\s*255,\s*255,\s*0\.95\) !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (
+      source.match(
+        /grid-area:\s*close !important;\s*position:\s*static !important;\s*inset:\s*auto !important;\s*width:\s*48px !important;[\s\S]*?box-shadow:\s*0 16px 36px rgba\(36,\s*43,\s*66,\s*0\.08\),\s*inset 0 1px 0 rgba\(255,\s*255,\s*255,\s*0\.95\) !important;/g
+      ) || []
+    ).length,
+    1
+  );
+});
+
 test("client food search final CSS keeps product title typography in stable flow owner", async () => {
   const source = await readText("src/styles/client-food-search-final.css");
   const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
