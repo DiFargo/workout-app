@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3317.85 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3317.71 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -89,6 +89,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.305`: nutrition orbit CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition main visual coverage.
    - Continued in `v.1.574`: grouped shared inline and modal Zouk meal-shell CSS in `legacy-nutrition-orbit.css`.
    - Continued in `v.1.575`: removed the early compact meal-card sizing repeat from `nutrition.css`; desktop compact sizing remains in the later owner.
+   - Continued in `v.1.586`: grouped food search and product action active colors in `nutrition-food-search-actions.css`.
    - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
    - Continued in `v.1.307`: warm-light add-food/search cleanup CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition visual coverage.
    - Continued in `v.1.308`: dark-green nutrition food-flow CSS moved from the core app entrypoint into `nutrition-stack.css`, with the dark nutrition readability guard updated.
@@ -627,3 +628,4 @@ Start mapping here before any cleanup:
 - `v.1.583`: consolidated workout close slide relative positioning CSS in `legacy-workout-navigation-close-early.css`; the shared start/exercise slide owner is guarded by the app structure test.
 - `v.1.584`: consolidated select/start button sizing CSS in `legacy-client-workout-flow-late.css`; the grouped owner is guarded by the app structure test.
 - `v.1.585`: removed duplicate compact start-panel sizing CSS from `legacy-client-workout-flow-late.css`; the shared stage/start compact owner is guarded by the app structure test.
+- `v.1.586`: consolidated food search and product action active colors in `nutrition-food-search-actions.css`; the grouped owner is guarded by the app structure test.

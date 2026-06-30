@@ -41,7 +41,8 @@
   -webkit-text-fill-color: rgba(232, 237, 230, 0.62) !important;
 }
 
-.fatSearchBottomBarFive > button:not(.fatSearchPhotoAction):active {
+.fatSearchBottomBarFive > button:not(.fatSearchPhotoAction):active,
+.foodProductActionBar button:active:not(:disabled) {
   background: rgba(143, 188, 54, 0.055) !important;
   color: #aee94d !important;
   -webkit-text-fill-color: #aee94d !important;
@@ -544,12 +545,6 @@
   white-space: normal !important;
   overflow-wrap: anywhere !important;
   -webkit-text-fill-color: currentColor !important;
-}
-
-.foodProductActionBar button:active:not(:disabled) {
-  background: rgba(143, 188, 54, 0.055) !important;
-  color: #aee94d !important;
-  -webkit-text-fill-color: #aee94d !important;
 }
 
 .foodProductActionBar .foodProductDeleteAction:not(:disabled) {
