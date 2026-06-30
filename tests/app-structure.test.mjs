@@ -2773,6 +2773,19 @@ test("trainer workspace CSS keeps mobile bottom nav shell in one owner", async (
   );
 });
 
+test("trainer workspace CSS keeps mobile page shell grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/@media\s*\(max-width:\s*820px\),\s*\(hover:\s*none\) and \(pointer:\s*coarse\) and \(orientation:\s*landscape\)\s*\{[\s\S]*?\.trainerNextPage\s*\{\s*width:\s*100%;\s*min-height:\s*100dvh;\s*padding:\s*max\(20px,\s*env\(safe-area-inset-top\)\) 20px calc\(112px \+ env\(safe-area-inset-bottom\)\);\s*background:\s*#fff;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerNextPage\s*\{\s*width:\s*100%;\s*min-height:\s*100dvh;\s*padding:\s*max\(20px,\s*env\(safe-area-inset-top\)\) 20px calc\(112px \+ env\(safe-area-inset-bottom\)\);\s*background:\s*#fff;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps nutrition and notification action buttons grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 

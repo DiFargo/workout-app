@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3319.37 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3319.13 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -29,7 +29,7 @@ Not covered deeply yet:
 Start mapping here before any cleanup:
 
 - `src/styles/client-primary-final-lock.css` - `210.80 KiB`
-- `src/components/trainer/trainer-workspace.css` - `178.16 KiB`
+- `src/components/trainer/trainer-workspace.css` - `177.92 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `148.48 KiB`
 - `src/styles/client-render-target-lock.css` - `100.83 KiB`
 - `src/styles/legacy-desktop-cabinet-polish.css` - `92.82 KiB`
@@ -91,6 +91,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.569`: removed the duplicate narrow mobile bottom-nav shell from `trainer-workspace.css`.
    - Continued in `v.1.570`: grouped duplicate nutrition plan and notification action button CSS in `trainer-workspace.css`.
    - Continued in `v.1.573`: grouped shared assignment and nutrition form field shells in `trainer-workspace.css`.
+   - Continued in `v.1.576`: grouped the shared mobile page shell across narrow and coarse landscape trainer owners in `trainer-workspace.css`.
 
 5. Admin hub and internals.
    - Reason: hub, users CRM and program overview surfaces have harness coverage.
@@ -607,3 +608,4 @@ Start mapping here before any cleanup:
 - `v.1.567`: consolidated duplicate workout select/start fallback image styles in `legacy-client-workout-flow-late.css`; shared selector owners are guarded.
 - `v.1.574`: consolidated shared inline and modal Zouk meal-shell rules in `legacy-nutrition-orbit.css`; the grouped owner is guarded by the app structure test.
 - `v.1.575`: removed the early compact meal-card sizing repeat from `nutrition.css`; the desktop compact owner is guarded by the app structure test.
+- `v.1.576`: consolidated shared trainer mobile page-shell rules across narrow and coarse landscape media in `trainer-workspace.css`; the grouped owner is guarded by the app structure test.

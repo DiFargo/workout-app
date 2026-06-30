@@ -3421,11 +3421,7 @@
   }
 }
 
-@media (max-width: 820px) {
-  .trainerNextRoot {
-    background: #fff;
-  }
-
+@media (max-width: 820px), (hover: none) and (pointer: coarse) and (orientation: landscape) {
   .trainerNextSidebar {
     display: none;
   }
@@ -3443,6 +3439,12 @@
 
   .trainerNextDesktopPageHead {
     display: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .trainerNextRoot {
+    background: #fff;
   }
 
   .trainerNextMobileHeader {
@@ -9519,25 +9521,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 }
 
 @media (hover: none) and (pointer: coarse) and (orientation: landscape) {
-  .trainerNextSidebar {
-    display: none;
-  }
-
-  .trainerNextMain {
-    margin-left: 0;
-  }
-
-  .trainerNextPage {
-    width: 100%;
-    min-height: 100dvh;
-    padding: max(20px, env(safe-area-inset-top)) 20px calc(112px + env(safe-area-inset-bottom));
-    background: #fff;
-  }
-
-  .trainerNextDesktopPageHead {
-    display: none;
-  }
-
   .trainerNextMobileHeader {
     min-height: 54px;
     display: grid;
