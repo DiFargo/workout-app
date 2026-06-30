@@ -501,6 +501,10 @@ test("client primary final CSS keeps shared action bar sizing in one owner", asy
 test("client primary final CSS keeps profile progress overview grid in one owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
+  assert.doesNotMatch(
+    source,
+    /\.profileDashboardPage\.clientCorePageMain \.profileAiCoachInsight\.profileProgressInsightCard\s*\{\s*margin:\s*0 0 12px !important;\s*border:\s*1px solid var\(--client-border\) !important;\s*border-radius:\s*var\(--client-radius\) !important;\s*background:\s*#ffffff !important;\s*color:\s*var\(--client-ink\) !important;\s*box-shadow:\s*var\(--client-shadow\) !important;\s*\}/
+  );
   assert.equal(
     (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetProgressOverview\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*gap:\s*12px !important;\s*margin:\s*0 !important;\s*\}/g) || []).length,
     1
