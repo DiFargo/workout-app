@@ -271,14 +271,16 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   padding: 0 14px 14px;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeal {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeal,
+html body #root .nutritionZoukModalSheet .nutritionZoukMeal {
   overflow: hidden;
   border: 1px solid rgba(225, 229, 243, 0.9);
   border-radius: 20px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(249, 250, 255, 0.92));
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMealHead {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMealHead,
+html body #root .nutritionZoukModalSheet .nutritionZoukMealHead {
   min-height: 68px;
   display: grid;
   grid-template-columns: 48px 1fr 44px;
@@ -287,7 +289,8 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   padding: 10px 12px;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMealHead strong {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMealHead strong,
+html body #root .nutritionZoukModalSheet .nutritionZoukMealHead strong {
   display: block;
   color: #151a27;
   font-size: 18px;
@@ -295,7 +298,8 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   line-height: 1.1;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukAdd {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukAdd,
+html body #root .nutritionZoukModalSheet .nutritionZoukAdd {
   width: 42px;
   height: 42px;
   border: 0;
@@ -309,13 +313,15 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   cursor: pointer;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoods {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoods,
+html body #root .nutritionZoukModalSheet .nutritionZoukFoods {
   display: grid;
   gap: 8px;
   padding: 0 10px 10px;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFood {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFood,
+html body #root .nutritionZoukModalSheet .nutritionZoukFood {
   width: 100%;
   min-height: 58px;
   display: grid;
@@ -338,14 +344,16 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   font-size: 22px;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodText {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodText,
+html body #root .nutritionZoukModalSheet .nutritionZoukFoodText {
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodText strong {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodText strong,
+html body #root .nutritionZoukModalSheet .nutritionZoukFoodText strong {
   overflow: hidden;
   color: #151a27;
   font-size: 15px;
@@ -355,7 +363,8 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   white-space: nowrap;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodKcal {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodKcal,
+html body #root .nutritionZoukModalSheet .nutritionZoukFoodKcal {
   min-width: 48px;
   display: flex;
   flex-direction: column;
@@ -363,13 +372,15 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   color: #5d5749;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodKcal strong {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodKcal strong,
+html body #root .nutritionZoukModalSheet .nutritionZoukFoodKcal strong {
   font-size: 17px;
   font-weight: 950;
   line-height: 1;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukEmpty {
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukEmpty,
+html body #root .nutritionZoukModalSheet .nutritionZoukEmpty {
   width: calc(100% - 20px);
   min-height: 44px;
   margin: 0 10px 10px;
@@ -510,30 +521,6 @@ html body #root .nutritionZoukModalSheet .nutritionZoukContent {
   padding: 14px 14px calc(54px + env(safe-area-inset-bottom));
 }
 
-html body #root .nutritionZoukModalSheet .nutritionZoukMeal {
-  overflow: hidden;
-  border: 1px solid rgba(225, 229, 243, 0.9);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(249, 250, 255, 0.92));
-}
-
-html body #root .nutritionZoukModalSheet .nutritionZoukMealHead {
-  min-height: 68px;
-  display: grid;
-  grid-template-columns: 48px 1fr 44px;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-}
-
-html body #root .nutritionZoukModalSheet .nutritionZoukMealHead strong {
-  display: block;
-  color: #151a27;
-  font-size: 18px;
-  font-weight: 950;
-  line-height: 1.1;
-}
-
 html body #root .nutritionZoukModalSheet .nutritionZoukMealHead small,
 html body #root .nutritionZoukModalSheet .nutritionZoukFoodText small,
 html body #root .nutritionZoukModalSheet .nutritionZoukFoodKcal small {
@@ -543,91 +530,11 @@ html body #root .nutritionZoukModalSheet .nutritionZoukFoodKcal small {
   line-height: 1.2;
 }
 
-html body #root .nutritionZoukModalSheet .nutritionZoukAdd {
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 12px 26px rgba(36, 45, 85, 0.08);
-  color: #151a27;
-  font-size: 25px;
-  font-weight: 900;
-  line-height: 1;
-  cursor: pointer;
-}
-
-html body #root .nutritionZoukModalSheet .nutritionZoukFoods {
-  display: grid;
-  gap: 8px;
-  padding: 0 10px 10px;
-}
-
-html body #root .nutritionZoukModalSheet .nutritionZoukFood {
-  width: 100%;
-  min-height: 58px;
-  display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border: 1px solid rgba(228, 232, 244, 0.86);
-  border-radius: 17px;
-  background: rgba(255, 255, 255, 0.92);
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
 html body #root .nutritionZoukModalSheet .nutritionZoukFoodIcon {
   width: 42px;
   height: 42px;
   border-radius: 14px;
   font-size: 22px;
-}
-
-html body #root .nutritionZoukModalSheet .nutritionZoukFoodText {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-html body #root .nutritionZoukModalSheet .nutritionZoukFoodText strong {
-  overflow: hidden;
-  color: #151a27;
-  font-size: 15px;
-  font-weight: 900;
-  line-height: 1.15;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-html body #root .nutritionZoukModalSheet .nutritionZoukFoodKcal {
-  min-width: 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #5d5749;
-}
-
-html body #root .nutritionZoukModalSheet .nutritionZoukFoodKcal strong {
-  font-size: 17px;
-  font-weight: 950;
-  line-height: 1;
-}
-
-html body #root .nutritionZoukModalSheet .nutritionZoukEmpty {
-  width: calc(100% - 20px);
-  min-height: 44px;
-  margin: 0 10px 10px;
-  border: 1px dashed rgba(107, 71, 255, 0.36);
-  border-radius: 16px;
-  background: rgba(247, 244, 255, 0.78);
-  color: #5c36f5;
-  font-size: 14px;
-  font-weight: 900;
-  cursor: pointer;
 }
 
 @media (min-width: 720px) {

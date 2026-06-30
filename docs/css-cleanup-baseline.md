@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3321.35 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3319.52 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -78,6 +78,7 @@ Start mapping here before any cleanup:
    - Expanded in `v.1.303`: custom dish editor, ingredient picker and ingredient confirmation have visual coverage before broader food-flow CSS cleanup.
    - Continued in `v.1.304`: broad nutrition flow CSS moved from the core app entrypoint into `nutrition-stack.css`, under expanded nutrition visual coverage.
    - Continued in `v.1.305`: nutrition orbit CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition main visual coverage.
+   - Continued in `v.1.574`: grouped shared inline and modal Zouk meal-shell CSS in `legacy-nutrition-orbit.css`.
    - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
    - Continued in `v.1.307`: warm-light add-food/search cleanup CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition visual coverage.
    - Continued in `v.1.308`: dark-green nutrition food-flow CSS moved from the core app entrypoint into `nutrition-stack.css`, with the dark nutrition readability guard updated.
@@ -603,3 +604,4 @@ Start mapping here before any cleanup:
 - `v.1.565`: removed the old food-edit-only nutrition back hide rule from `legacy-food-editor-tail.css`; the broader food search overlay hide owner remains guarded.
 - `v.1.566`: consolidated the repeated workout run fixed bottom panel shell in `legacy-client-workout-flow-late.css`; the shared selector owner is guarded.
 - `v.1.567`: consolidated duplicate workout select/start fallback image styles in `legacy-client-workout-flow-late.css`; shared selector owners are guarded.
+- `v.1.574`: consolidated shared inline and modal Zouk meal-shell rules in `legacy-nutrition-orbit.css`; the grouped owner is guarded by the app structure test.

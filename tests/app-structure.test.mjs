@@ -1450,6 +1450,23 @@ test("client food search final CSS keeps diary swipe shell sizing in latest owne
   assert.match(diaryRowsBlock, /\.nutritionZoukSwipeShell \.productDeleteBg\s*\{[^{}]*?border-radius:\s*18px !important;/);
 });
 
+test("nutrition orbit CSS keeps inline and modal meal shells grouped", async () => {
+  const source = await readText("src/styles/legacy-nutrition-orbit.css");
+
+  assert.equal(
+    (source.match(/\.nutritionZoukBlock \.nutritionZoukMeal,\s*html body #root \.nutritionZoukModalSheet \.nutritionZoukMeal\s*\{\s*overflow:\s*hidden;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.nutritionZoukBlock \.nutritionZoukFood,\s*html body #root \.nutritionZoukModalSheet \.nutritionZoukFood\s*\{\s*width:\s*100%;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.nutritionZoukBlock \.nutritionZoukEmpty,\s*html body #root \.nutritionZoukModalSheet \.nutritionZoukEmpty\s*\{\s*width:\s*calc\(100% - 20px\);/g) || []).length,
+    1
+  );
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 
