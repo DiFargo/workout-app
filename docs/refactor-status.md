@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.545`.
+Last updated at app version `v.1.546`.
 
 ## Stable Now
 
@@ -112,6 +112,7 @@ Last updated at app version `v.1.545`.
 - Client visual unity CSS exact duplicate product-editor blocks were removed under the client nutrition visual audit.
 - Client render target CSS duplicate workout set-row block was removed; the remaining set-row owner is guarded by app structure tests.
 - Admin client dashboard polish CSS no longer keeps empty media blocks, and small no-op trainer/cabinet duplicates were removed under visual guards.
+- Admin client dashboard polish CSS no longer keeps overwritten calendar panel/header/telegram/day-grid no-op blocks before the final calendar owner.
 - Client workout card render CSS no longer keeps repeated media-only card sizing blocks; root sizing locks remain guarded.
 - Client food search final CSS no longer keeps the older duplicate compact product title-wrap media lock; the later product header lock remains guarded.
 - Legacy nutrition header CSS now keeps one compact page padding owner instead of repeating the same mobile page padding across narrower breakpoints.
@@ -276,7 +277,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3386.90 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3384.86 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

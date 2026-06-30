@@ -2021,6 +2021,43 @@ test("admin client dashboard polish CSS has no empty media blocks", async () => 
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
+test("admin client dashboard polish CSS keeps calendar layout in final owner", async () => {
+  const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
+
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarHead\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*gap:\s*8px !important;\s*text-align:\s*center !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*14px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarTelegram\s*\{\s*display:\s*inline-flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*gap:\s*8px !important;\s*width:\s*fit-content !important;\s*min-height:\s*30px !important;/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarDays\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\) !important;\s*gap:\s*7px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*14px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarHead\s*\{\s*order:\s*1 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarTelegram\s*\{\s*display:\s*inline-flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*gap:\s*9px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarDays\s*\{\s*order:\s*2 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\) !important;/
+  );
+});
+
 test("legacy admin program editor CSS has no empty media blocks", async () => {
   const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
 

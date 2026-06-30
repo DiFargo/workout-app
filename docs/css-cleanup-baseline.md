@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
-- Latest source CSS report: `100` files, about `3386.90 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3384.86 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -575,3 +575,4 @@ Start mapping here before any cleanup:
 - `v.1.543`: removed overwritten food recent-card sizing and AI stats centering no-op rules from `client-primary-final-lock.css`; later owners remain guarded.
 - `v.1.544`: removed overwritten pseudo reset, profile hero radius, pointer-only, and top variable no-op rules from `client-primary-final-lock.css`; later owners remain guarded.
 - `v.1.545`: removed small overwritten typography/layout no-op blocks from client nutrition grid, render-target and food editor CSS; later owners remain guarded.
+- `v.1.546`: removed overwritten admin calendar panel/header/telegram/day-grid no-op blocks from `legacy-admin-client-dashboard-polish.css`; final calendar owner remains guarded.
