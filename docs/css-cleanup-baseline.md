@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
-- Latest source CSS report: `100` files, about `3323.84 KiB` total source CSS.
+- Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
+- Latest source CSS report: `100` files, about `3322.99 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -28,18 +28,18 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `217.80 KiB`
+- `src/styles/client-primary-final-lock.css` - `210.80 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.26 KiB`
-- `src/styles/client-nutrition-grid-lock.css` - `148.92 KiB`
-- `src/styles/client-render-target-lock.css` - `108.61 KiB`
-- `src/styles/legacy-food-editor-tail.css` - `100.34 KiB`
-- `src/styles/legacy-admin-client-dashboard-polish.css` - `97.32 KiB`
+- `src/styles/client-nutrition-grid-lock.css` - `148.48 KiB`
+- `src/styles/client-render-target-lock.css` - `100.83 KiB`
 - `src/styles/legacy-desktop-cabinet-polish.css` - `92.82 KiB`
-- `src/styles/legacy-client-workout-flow-late.css` - `87.59 KiB`
+- `src/styles/legacy-food-editor-tail.css` - `91.55 KiB`
+- `src/styles/legacy-client-workout-flow-late.css` - `84.45 KiB`
 - `src/styles/legacy-month-program-editor-early.css` - `83.36 KiB`
 - `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.31 KiB`
 - `src/styles/legacy-admin-client-page.css` - `81.40 KiB`
 - `src/styles/client-visual-unity-final.css` - `78.41 KiB`
+- `src/styles/client-food-search-final.css` - `69.37 KiB`
 
 ## Cleanup Order
 
@@ -62,6 +62,7 @@ Start mapping here before any cleanup:
    - Candidate files: `client-workout-card-render.css`, `legacy-client-workout-flow-late.css`, workout-related blocks in broad legacy files.
    - Expanded in `v.1.286`: visual coverage now includes the empty assigned plan state before cleanup of workout empty-state CSS.
    - Continued in `v.1.287`: removed old global empty-state rules from legacy files; `client-workout-empty-state.css` is the scoped owner.
+   - Continued in `v.1.568`: grouped duplicate select and warmup bottom action-control CSS in `legacy-client-workout-flow-late.css`.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.

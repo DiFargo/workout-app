@@ -1189,6 +1189,27 @@ test("client workout flow CSS keeps fallback image styles grouped", async () => 
   );
 });
 
+test("client workout flow CSS keeps select and warmup action controls grouped", async () => {
+  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+
+  assert.equal(
+    (source.match(/\.individualWorkoutActionRow,\s*\.workoutRunPage \.warmupNavigationRow\s*\{\s*width:\s*100%;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutBackButton,\s*\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutStartButton,\s*\.workoutRunPage \.warmupBottomPanel \.warmupPreviousButton,\s*\.workoutRunPage \.warmupBottomPanel \.warmupReadyButton\s*\{[\s\S]*?height:\s*78px !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutBackButton,\s*\.workoutRunPage \.warmupBottomPanel \.warmupPreviousButton\s*\{\s*padding:\s*0 8px !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutStartButton,\s*\.workoutRunPage \.warmupBottomPanel \.warmupReadyButton\s*\{\s*padding:\s*0 14px !important;/g) || []).length,
+    1
+  );
+});
+
 test("client workout hero spacing stays in the workout lazy owner", async () => {
   const renderTarget = await readText("src/styles/client-render-target-lock.css");
   const cardRender = await readText("src/styles/client-workout-card-render.css");

@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.567`.
+Last updated at app version `v.1.568`.
 
 ## Stable Now
 
@@ -30,6 +30,7 @@ Last updated at app version `v.1.567`.
 - Client primary CSS no longer keeps an early main-only bottom pseudo-layer before the shared final rhythm owner.
 - Workout flow CSS now keeps the repeated fixed bottom panel shell in one shared selector group.
 - Workout flow CSS now keeps duplicate select/start fallback image styles in shared selector groups.
+- Workout flow CSS now keeps duplicate select and warmup bottom action controls in shared selector groups.
 - Workout set-row CSS no longer keeps the older core render-target lock before the workout lazy final set-row owner.
 - Expanded nutrition product-list side spacing stays in the width owner, while the exact-spacing block keeps only its sibling gap fix.
 - Expanded nutrition product-list width tuning no longer carries obsolete intermediate reduce/minus sections.
