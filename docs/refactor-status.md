@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.503`.
+Last updated at app version `v.1.504`.
 
 ## Stable Now
 
@@ -24,9 +24,10 @@ Last updated at app version `v.1.503`.
 - Expanded nutrition product-list bottom spacing skips the old match-spacing section and stays in the real bottom-gap owner.
 - Expanded nutrition product-list final width owner no longer mixes in bottom margin ownership.
 - Expanded nutrition product-list guaranteed block now keeps only position and sizing support, leaving width values to the final owner.
-- Expanded nutrition product-list force-width block keeps the useful radius while later rules own the actual width values.
+- Expanded nutrition product-list force-width block keeps only the active width and overflow support.
 - Expanded nutrition product-list obsolete 10-percent-wider section is removed before the force-width owner.
 - Exact nutrition product-list rebuild keeps structure, spacing, and visuals without owning width values.
+- Expanded nutrition product-list radius now stays in the later hard-width owner instead of the force-width block.
 - Mobile client smoke waits long enough for slow cold auth bootstrap runs observed in Playwright mobile.
 - Client smoke tests wait past the auth bootstrap fallback window, matching the app's signed-out loading behavior on slower mobile runs.
 - Client workout visual audit waits for the harness bottom navigation before clicking, reducing cold-start timeout flakes.

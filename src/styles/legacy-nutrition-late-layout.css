@@ -2182,11 +2182,6 @@
 
 .fatMealCard.open .productListExact,
 .productListExact {
-  border-radius: 22px !important;
-}
-
-.fatMealCard.open .productListExact,
-.productListExact {
   width: calc(100% + 44px) !important;
   max-width: none !important;
 
