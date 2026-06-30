@@ -539,6 +539,10 @@ test("client primary final CSS keeps food editor header layout in the final owne
     (source.match(/\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 18px !important;\s*padding:\s*0 0 0 calc\(var\(--client-action\) \+ 12px\) !important;\s*position:\s*relative !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;/g) || []).length,
     1
   );
+  assert.doesNotMatch(
+    source,
+    /\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 18px !important;\s*padding:\s*0 0 0 calc\(var\(--client-action\) \+ 12px\) !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;\s*position:\s*relative !important;\s*\}/
+  );
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen \.foodProductFlowHeader\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 116px !important;\s*grid-template-areas:\s*"title actions"\s*"meal meal" !important;\s*align-items:\s*center !important;\s*gap:\s*12px 10px !important;\s*margin-bottom:\s*14px !important;\s*\}/g) || []).length,
     1

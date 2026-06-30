@@ -4210,17 +4210,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     overflow-y: auto !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader {
-    min-height: var(--client-title-h) !important;
-    height: var(--client-title-h) !important;
-    margin: 0 0 18px !important;
-    padding: 0 0 0 calc(var(--client-action) + 12px) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    position: relative !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav,
