@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1145.08 KiB` raw, `114.92 KiB` gzip.
-- Latest source CSS report: `100` files, about `3389.93 KiB` total source CSS.
+- Latest main CSS bundle: about `1144.91 KiB` raw, `114.89 KiB` gzip.
+- Latest source CSS report: `100` files, about `3389.73 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -571,3 +571,4 @@ Start mapping here before any cleanup:
 - `v.1.539`: removed overwritten 0.45fr workout badge grid rules from `client-primary-final-lock.css`; the later 0.48fr badge grid owner remains guarded.
 - `v.1.540`: removed overwritten profile progress insight card shell rules from `client-primary-final-lock.css`; the later profile card owners remain guarded.
 - `v.1.541`: removed overwritten workout header action layout rules from `client-primary-final-lock.css`; the later final header action owner remains guarded.
+- `v.1.542`: removed overwritten food search recent grid rules from `client-primary-final-lock.css`; the later final grid owners remain guarded.

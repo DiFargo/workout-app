@@ -990,12 +990,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     border-radius: 17px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .foodSearchRecentGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    grid-auto-rows: 78px !important;
-    gap: 9px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction {
     bottom: max(98px, calc(env(safe-area-inset-bottom) + 96px)) !important;
     width: min(374px, calc(100vw - 20px)) !important;

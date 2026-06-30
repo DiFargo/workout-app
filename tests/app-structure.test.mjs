@@ -696,9 +696,9 @@ test("client primary final CSS keeps food search header layout in the final owne
     (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) \.fatSearchInputWrapPremium\s*\{\s*min-height:\s*60px !important;\s*margin-bottom:\s*16px !important;\s*border-radius:\s*17px !important;\s*\}/g) || []).length,
     1
   );
-  assert.equal(
-    (source.match(/\.foodSearchRecentGrid\s*\{\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*grid-auto-rows:\s*78px !important;\s*gap:\s*9px !important;\s*\}/g) || []).length,
-    1
+  assert.doesNotMatch(
+    source,
+    /\.foodSearchRecentGrid\s*\{\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*grid-auto-rows:\s*78px !important;\s*gap:\s*9px !important;\s*\}/
   );
   assert.equal(
     (source.match(/\.foodSearchRecentGrid\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*grid-auto-rows:\s*78px !important;\s*gap:\s*9px !important;\s*\}/g) || []).length,
