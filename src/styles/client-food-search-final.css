@@ -999,29 +999,7 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction {
   width: min(376px, calc(100vw - 24px)) !important;
-  height: 68px !important;
-  min-height: 68px !important;
-  max-height: 68px !important;
   bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important;
-  padding: 9px 12px !important;
-  grid-template-columns: 42px minmax(0, 1fr) 20px !important;
-  gap: 12px !important;
-  border-radius: 15px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction .foodSearchModernActionIcon {
-  width: 38px !important;
-  height: 38px !important;
-  min-width: 38px !important;
-  min-height: 38px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction strong {
-  font-size: 13px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction small {
-  font-size: 10.5px !important;
 }
 
 @media (max-width: 380px) {

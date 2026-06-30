@@ -1179,6 +1179,39 @@ test("client food search final CSS keeps product hero spacing in latest owners",
   );
 });
 
+test("client food search final CSS keeps photo action sizing in latest owner", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+  const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */");
+  const amountBehaviorStart = source.indexOf("/* Food product/search alignment and amount behavior v156 */", headerSizingStart);
+  const photoActionStart = source.indexOf("/* Food search AI photo action bar height v157 */", amountBehaviorStart);
+  const exactLockStart = source.indexOf("/* Product page header exact lock v158 */", photoActionStart);
+  const headerSizingBlock = source.slice(headerSizingStart, amountBehaviorStart);
+  const photoActionBlock = source.slice(photoActionStart, exactLockStart);
+
+  assert.ok(headerSizingStart >= 0);
+  assert.ok(amountBehaviorStart > headerSizingStart);
+  assert.ok(photoActionStart > amountBehaviorStart);
+  assert.ok(exactLockStart > photoActionStart);
+  assert.doesNotMatch(headerSizingBlock, /height:\s*68px !important;/);
+  assert.doesNotMatch(headerSizingBlock, /grid-template-columns:\s*42px minmax\(0,\s*1fr\) 20px !important;/);
+  assert.doesNotMatch(headerSizingBlock, /\.foodSearchModernActionIcon\s*\{\s*\}/);
+  assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction strong\s*\{\s*\}/);
+  assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction small\s*\{\s*\}/);
+  assert.doesNotMatch(headerSizingBlock, /\.foodSearchModernActionIcon\s*\{[\s\S]*?width:\s*38px !important;/);
+  assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction strong\s*\{[\s\S]*?font-size:\s*13px !important;/);
+  assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction small\s*\{[\s\S]*?font-size:\s*10\.5px !important;/);
+  assert.match(
+    photoActionBlock,
+    /\.foodSearchFixedPhotoAction\s*\{[\s\S]*?height:\s*84px !important;[\s\S]*?grid-template-columns:\s*52px minmax\(0,\s*1fr\) 22px !important;/
+  );
+  assert.match(
+    photoActionBlock,
+    /\.foodSearchModernActionIcon\s*\{[\s\S]*?width:\s*46px !important;[\s\S]*?min-height:\s*46px !important;/
+  );
+  assert.match(photoActionBlock, /\.foodSearchFixedPhotoAction strong\s*\{[\s\S]*?font-size:\s*14px !important;/);
+  assert.match(photoActionBlock, /\.foodSearchFixedPhotoAction small\s*\{[\s\S]*?font-size:\s*11px !important;/);
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 
