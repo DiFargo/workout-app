@@ -1281,6 +1281,26 @@ test("client food search final CSS keeps fixed action bottom mask in latest owne
   assert.match(finalMaskBlock, /\.foodSearchFixedPhotoAction::before\s*\{[\s\S]*?left:\s*50% !important;[\s\S]*?bottom:\s*calc\(-128px - env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
 });
 
+test("client food search final CSS keeps diary swipe shell sizing in latest owner", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+  const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
+  const diaryRowsStart = source.indexOf("/* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */");
+  const finalDocksStart = source.indexOf("/* v171: polish nutrition fixed docks, inner scrollbars and safe bottom masking. */", diaryRowsStart);
+  const earlyBlock = source.slice(0, renderControlsStart);
+  const diaryRowsBlock = source.slice(diaryRowsStart, finalDocksStart);
+
+  assert.ok(renderControlsStart >= 0);
+  assert.ok(diaryRowsStart > renderControlsStart);
+  assert.ok(finalDocksStart > diaryRowsStart);
+  assert.doesNotMatch(earlyBlock, /\.nutritionZoukSwipeShell\s*\{[^{}]*?min-height:\s*58px !important;/);
+  assert.doesNotMatch(earlyBlock, /\.nutritionZoukSwipeShell\s*\{[^{}]*?border-radius:\s*17px !important;/);
+  assert.doesNotMatch(earlyBlock, /\.nutritionZoukSwipeShell \+ \.nutritionZoukSwipeShell\s*\{[^{}]*?border-top:\s*0 !important;/);
+  assert.doesNotMatch(earlyBlock, /\.nutritionZoukSwipeShell \.productDeleteBg\s*\{[^{}]*?border-radius:\s*17px !important;/);
+  assert.match(diaryRowsBlock, /\.nutritionZoukSwipeShell\s*\{[^{}]*?min-height:\s*64px !important;[^{}]*?border-radius:\s*18px !important;/);
+  assert.match(diaryRowsBlock, /\.nutritionZoukSwipeShell \+ \.nutritionZoukSwipeShell\s*\{[^{}]*?border-top:\s*1px solid rgba\(224,\s*229,\s*243,\s*0\.92\) !important;/);
+  assert.match(diaryRowsBlock, /\.nutritionZoukSwipeShell \.productDeleteBg\s*\{[^{}]*?border-radius:\s*18px !important;/);
+});
+
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
 

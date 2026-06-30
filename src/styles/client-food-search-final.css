@@ -244,20 +244,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   justify-content: center !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell {
-  min-height: 58px !important;
-  border-top: 0 !important;
-  border-radius: 17px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell + .nutritionZoukSwipeShell {
-  border-top: 0 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .productDeleteBg {
-  border-radius: 17px !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFood {
   position: relative !important;
   z-index: 2 !important;
