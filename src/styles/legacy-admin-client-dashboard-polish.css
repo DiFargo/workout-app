@@ -1785,59 +1785,6 @@
 
 }
 
-.adminCalendarPanelMerged .adminCalendarHead span {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 0 6px !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-  color: #8eb64a !important;
-  font-size: 13px !important;
-  font-weight: 950 !important;
-  letter-spacing: .12em !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarHead h3 {
-  width: 100% !important;
-  margin: 0 !important;
-  text-align: center !important;
-  font-size: 26px !important;
-  line-height: 1.05 !important;
-  letter-spacing: -.035em !important;
-  color: #fff !important;
-}
-
-/* Badge Telegram: ÃÂ½ÃÂ°ÃÂ´ÃÂ¿ÃÂ¸Ã‘ÂÃ‘Å’ Telegram ÃÂ±ÃÂµÃÂ· ÃÂºÃÂ°ÃÂ²Ã‘â€¹Ã‘â€¡ÃÂµÃÂº + Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ° */
-.adminCalendarPanelMerged .adminCalendarTelegram {
-  order: 2 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  min-height: 30px !important;
-  height: 30px !important;
-  padding: 0 12px !important;
-  margin: 2px auto 0 !important;
-  border-radius: 999px !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-  background: rgba(255,255,255,.055) !important;
-  border: 1px solid rgba(255,255,255,.08) !important;
-  color: rgba(255,255,255,.72) !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarTelegram::before {
-  content: "" !important;
-  width: 8px !important;
-  height: 8px !important;
-  border-radius: 999px !important;
-  flex: 0 0 auto !important;
-  background: rgba(255,255,255,.34) !important;
-  box-shadow: none !important;
-}
-
 /* ÃÅ¡ÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ ÃÂ¾ÃÂ´ÃÂ¸ÃÂ½ÃÂ°ÃÂºÃÂ¾ÃÂ²ÃÂ¾ÃÂ¹ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃ‘â€¹: ÃÂÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸Ã‘Â / ÃÂ¡ÃÂ¾Ã‘â€¦Ã‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€šÃ‘Å’ Ã‘â‚¬ÃÂ°Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂ°ÃÂ½ÃÂ¸ÃÂµ / ÃÂ¢ÃÂµÃ‘ÂÃ‘â€šÃÂ¾ÃÂ²ÃÂ¾ÃÂµ Ã‘ÂÃÂ¾ÃÂ¾ÃÂ±Ã‘â€°ÃÂµÃÂ½ÃÂ¸ÃÂµ */
 .adminCalendarPanelMerged .adminCalendarToggle,
 .adminCalendarPanelMerged .adminCalendarSaveBtn,
@@ -1958,6 +1905,7 @@
 }
 
 .adminCalendarPanelMerged .adminCalendarHead h3 {
+  width: 100% !important;
   margin: 0 !important;
   text-align: center !important;
   font-size: 30px !important;
@@ -1968,6 +1916,7 @@
 }
 
 .adminCalendarPanelMerged .adminCalendarTelegram {
+  order: 2 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -1981,6 +1930,7 @@
   font-size: 15px !important;
   font-weight: 950 !important;
   line-height: 1 !important;
+  white-space: nowrap !important;
   background: rgba(99,255,82,.08) !important;
   border: 1px solid rgba(99,255,82,.18) !important;
   color: rgba(190,255,160,.92) !important;
