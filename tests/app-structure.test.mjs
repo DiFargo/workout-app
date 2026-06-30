@@ -1913,6 +1913,27 @@ test("nutrition AI plan CSS keeps badge and conclusion colors in the final owner
   );
 });
 
+test("nutrition AI plan CSS keeps muted span typography grouped", async () => {
+  const source = await readText("src/styles/nutrition-ai-plan-lazy.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.nutritionAiPlanRskInfo span,\s*\.nutritionAiPlanRskFoot span,\s*\.nutritionAiPlanMacros span,\s*\.nutritionAiPlanMacros small,\s*\.nutritionAiPlanMacroPercent span,\s*\.nutritionAiPlanCollapsedTop span,\s*\.nutritionAiPlanCollapsedMacros span\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.42\);\s*font-size:\s*10px;\s*font-weight:\s*950;\s*white-space:\s*nowrap;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (
+      source.match(
+        /color:\s*rgba\(255,\s*255,\s*255,\s*0\.42\);\s*font-size:\s*10px;\s*font-weight:\s*950;\s*white-space:\s*nowrap;/g
+      ) || []
+    ).length,
+    1
+  );
+});
+
 test("legacy food search calories CSS keeps early mobile column shift out of the old owner", async () => {
   const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
   const oldMoveStart = source.indexOf("/* ===== CALORIES MOVE MORE LEFT ===== */");

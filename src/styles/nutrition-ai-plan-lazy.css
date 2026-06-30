@@ -353,7 +353,9 @@
 .nutritionAiPlanRskFoot span,
 .nutritionAiPlanMacros span,
 .nutritionAiPlanMacros small,
-.nutritionAiPlanMacroPercent span {
+.nutritionAiPlanMacroPercent span,
+.nutritionAiPlanCollapsedTop span,
+.nutritionAiPlanCollapsedMacros span {
   color: rgba(255, 255, 255, 0.42);
   font-size: 10px;
   font-weight: 950;
@@ -808,14 +810,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.nutritionAiPlanCollapsedTop span,
-.nutritionAiPlanCollapsedMacros span {
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 10px;
-  font-weight: 950;
-  white-space: nowrap;
 }
 
 .nutritionAiPlanCollapsedTop strong {
