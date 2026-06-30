@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.492`.
+Last updated at app version `v.1.493`.
 
 ## Evidence
 
@@ -324,6 +324,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 216. Trainer visual audit now covers client notification calendar, expanded message modal and program exercise editor tap targets.
 217. Workout set-row final sizing CSS now lives only in the workout lazy owner instead of the core render-target lock.
 218. Client nutrition grid CSS no longer repeats dashboard icon and measurement chart locks owned by main final overrides.
+219. Admin hub CSS no longer keeps unused trainer role button rules; trainer/admin internals keep the active owner.
 
 ## P1: Next Product Fixes
 

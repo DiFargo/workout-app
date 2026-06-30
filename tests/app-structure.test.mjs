@@ -1992,6 +1992,17 @@ test("admin and access denied navigation buttons declare button type", async () 
   assert.match(trainerWorkoutsRoute, /<button className="backBtn" type="button"[\s\S]*setPage\(APP_PAGES\.MAIN\)/);
 });
 
+test("admin hub CSS does not keep trainer role button rules", async () => {
+  const adminHubCss = await readText("src/styles/adminPanelHub.css");
+  const adminCalendarCss = await readText("src/styles/legacy-admin-calendar-reminders-late.css");
+  const adminPanelHub = await readText("src/components/admin/AdminPanelHub.jsx");
+
+  assert.doesNotMatch(adminPanelHub, /adminTrainerRoleButton|adminClientStatusRender/);
+  assert.doesNotMatch(adminHubCss, /adminTrainerRoleButton|adminClientStatusRender/);
+  assert.match(adminCalendarCss, /\.adminTrainerRoleButton\s*\{/);
+  assert.match(adminCalendarCss, /\.adminTrainerRoleButton\.active\s*\{/);
+});
+
 test("modal dialogs expose modal semantics and readable names", async () => {
   const sourceFiles = await collectFiles("src", [".js", ".jsx"]);
   const unnamedDialogs = [];

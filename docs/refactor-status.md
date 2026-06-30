@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.492`.
+Last updated at app version `v.1.493`.
 
 ## Stable Now
 
@@ -15,6 +15,7 @@ Last updated at app version `v.1.492`.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
 - Admin lazy CSS no longer uses the redundant `admin.css` alias; `adminPanelHub.css` is imported directly.
+- Admin hub CSS no longer carries trainer role button rules that are only used by trainer/admin internals.
 - Admin internals CSS for DEV-only visual coverage is isolated in `admin-internals-lazy.css`, keeping the production admin hub chunk lightweight.
 - Admin hub and admin internals CSS entrypoints are now structurally guarded against accidental heavy import drift.
 - Mobile client smoke waits long enough for slow cold auth bootstrap runs observed in Playwright mobile.
