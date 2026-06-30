@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3405.43 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3405.25 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -544,3 +544,4 @@ Start mapping here before any cleanup:
 - `v.1.512`: removed overwritten AI nutrition plan grid dot and active-dot visuals from `nutrition-ai-plan-lazy.css`; the later compact tuning owner remains guarded.
 - `v.1.513`: removed overwritten AI nutrition plan score and macro card dimensions from `nutrition-ai-plan-lazy.css`; the later compact tuning owner remains guarded.
 - `v.1.514`: removed overwritten AI nutrition plan RSK info gap and strong typography from `nutrition-ai-plan-lazy.css`; the later compact tuning owner remains guarded.
+- `v.1.515`: removed overwritten AI nutrition plan RSK foot and score-block spacing from `nutrition-ai-plan-lazy.css`; the later compact tuning owner remains guarded.

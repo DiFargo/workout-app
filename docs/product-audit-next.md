@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.514`.
+Last updated at app version `v.1.515`.
 
 ## Evidence
 
@@ -342,6 +342,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 234. Nutrition AI plan dot and active-dot visuals now stay in the later compact tuning owner.
 235. Nutrition AI plan score and macro card dimensions now stay in the later compact tuning owner.
 236. Nutrition AI plan RSK info gap and strong typography now stay in the later compact tuning owner.
+237. Nutrition AI plan RSK foot and score-block spacing now stay in the later compact tuning owner.
 228. Expanded nutrition product-list no longer keeps the obsolete 10-percent-wider section before the force-width owner.
 229. Exact nutrition product-list rebuild keeps structure and visual styling while width values stay in later width owners.
 230. Expanded nutrition product-list force-width block no longer keeps a radius overwritten by the later hard-width owner.

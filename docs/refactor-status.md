@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.514`.
+Last updated at app version `v.1.515`.
 
 ## Stable Now
 
@@ -37,6 +37,7 @@ Last updated at app version `v.1.514`.
 - Nutrition AI plan dot and active-dot visuals now stay in the later compact tuning owner.
 - Nutrition AI plan score and macro card dimensions now stay in the later compact tuning owner.
 - Nutrition AI plan RSK info gap and strong typography now stay in the later compact tuning owner.
+- Nutrition AI plan RSK foot and score-block spacing now stay in the later compact tuning owner.
 - Mobile client smoke waits long enough for slow cold auth bootstrap runs observed in Playwright mobile.
 - Client smoke tests wait past the auth bootstrap fallback window, matching the app's signed-out loading behavior on slower mobile runs.
 - Client workout visual audit waits for the harness bottom navigation before clicking, reducing cold-start timeout flakes.

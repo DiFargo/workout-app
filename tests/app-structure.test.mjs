@@ -1385,13 +1385,15 @@ test("nutrition AI plan CSS keeps narrow score sizing in the final owner", async
   assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanMacros div\s*\{[\s\S]*?min-height:\s*66px;/);
   assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanRskInfo\s*\{[^}]*?gap:\s*8px;/);
   assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanRskInfo strong\s*\{[^}]*?font-size:\s*18px;/);
+  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanRskFoot\s*\{[^}]*?padding-top:\s*8px;/);
+  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanScoreBlock\s*\{[^}]*?gap:\s*7px;/);
   assert.match(
     finalNarrowBlock,
     /\.nutritionAiPlanScore\s*\{\s*width:\s*118px !important;\s*height:\s*118px !important;\s*\}/
   );
   assert.match(
     source,
-    /compact premium tuning 2026-05-20[\s\S]*?\.nutritionAiPlanGrid span\s*\{[\s\S]*?width:\s*9px !important;[\s\S]*?aspect-ratio:\s*auto !important;[\s\S]*?\.nutritionAiPlanGrid span\.active\s*\{[\s\S]*?box-shadow:\s*0 0 10px rgba\(127,\s*159,\s*58,\s*0\.18\) !important;[\s\S]*?\.nutritionAiPlanRskInfo\s*\{[\s\S]*?gap:\s*8px !important;[\s\S]*?\.nutritionAiPlanRskInfo strong\s*\{[\s\S]*?font-size:\s*19px !important;[\s\S]*?\.nutritionAiPlanScore\s*\{[\s\S]*?width:\s*124px !important;[\s\S]*?\.nutritionAiPlanMacros div\s*\{[\s\S]*?min-height:\s*56px !important;/
+    /compact premium tuning 2026-05-20[\s\S]*?\.nutritionAiPlanGrid span\s*\{[\s\S]*?width:\s*9px !important;[\s\S]*?aspect-ratio:\s*auto !important;[\s\S]*?\.nutritionAiPlanGrid span\.active\s*\{[\s\S]*?box-shadow:\s*0 0 10px rgba\(127,\s*159,\s*58,\s*0\.18\) !important;[\s\S]*?\.nutritionAiPlanRskInfo\s*\{[\s\S]*?gap:\s*8px !important;[\s\S]*?\.nutritionAiPlanRskInfo strong\s*\{[\s\S]*?font-size:\s*19px !important;[\s\S]*?\.nutritionAiPlanRskFoot\s*\{[\s\S]*?padding-top:\s*7px !important;[\s\S]*?\.nutritionAiPlanScoreBlock\s*\{[\s\S]*?gap:\s*8px !important;[\s\S]*?\.nutritionAiPlanScoreBlock > span\s*\{[\s\S]*?color:\s*rgba\(245,\s*247,\s*251,\s*0\.48\) !important;[\s\S]*?\.nutritionAiPlanScore\s*\{[\s\S]*?width:\s*124px !important;[\s\S]*?\.nutritionAiPlanMacros div\s*\{[\s\S]*?min-height:\s*56px !important;/
   );
 });
 
