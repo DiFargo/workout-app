@@ -1057,6 +1057,15 @@ test("client primary final CSS keeps workout mobile hero and actions in one owne
 
 test("client primary final CSS keeps client page variables in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
+  const rhythmStart = source.indexOf("/* v.1.39: final rhythm lock for the four primary client screens. */");
+  const beforeRhythmBlock = source.slice(0, rhythmStart);
+
+  assert.ok(rhythmStart >= 0);
+  assert.doesNotMatch(beforeRhythmBlock, /\.profileDashboardPage\.clientCorePageMain::after/);
+  assert.match(
+    source.slice(rhythmStart),
+    /\.profileDashboardPage\.clientCorePageMain::after,[\s\S]*?\.clientCorePageWorkout\.individualWorkoutSelectPage::after\s*\{[\s\S]*?height:\s*calc\(112px \+ env\(safe-area-inset-bottom\)\) !important;[\s\S]*?background:\s*linear-gradient\(180deg,\s*rgba\(246,\s*247,\s*252,\s*0\) 0%,\s*#f6f7fc 22%,\s*#f6f7fc 100%\) !important;/
+  );
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage\s*\{\s*--client-page-x:\s*22px;\s*--client-page-title-top:\s*54px;\s*--client-page-title-height:\s*52px;\s*--client-page-title-size:\s*30px;\s*--client-page-title-color:\s*#5f5744;/g) || []).length,

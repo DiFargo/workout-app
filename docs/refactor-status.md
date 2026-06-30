@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.563`.
+Last updated at app version `v.1.564`.
 
 ## Stable Now
 
@@ -26,6 +26,7 @@ Last updated at app version `v.1.563`.
 - Food editor CSS no longer keeps intermediate product header, control and macro sizing before the later pixel-tune owner.
 - Food editor bottom action CSS no longer keeps overwritten delete/save sizing before the later functional bottom-action owner.
 - Food editor back-panel CSS no longer keeps an early duplicate hide rule before the final hard back deduplication owner.
+- Client primary CSS no longer keeps an early main-only bottom pseudo-layer before the shared final rhythm owner.
 - Workout set-row CSS no longer keeps the older core render-target lock before the workout lazy final set-row owner.
 - Expanded nutrition product-list side spacing stays in the width owner, while the exact-spacing block keeps only its sibling gap fix.
 - Expanded nutrition product-list width tuning no longer carries obsolete intermediate reduce/minus sections.
@@ -294,7 +295,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3327.74 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3326.88 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
