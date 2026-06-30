@@ -2098,6 +2098,14 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.doesNotMatch(
     source,
+    /\.adminCalendarEqualButtonsWrap \.adminCalendarReminderButton,\s*\.adminCalendarEqualButtonsWrap \.adminCalendarSaveButton,\s*\.adminCalendarEqualButtonsWrap \.adminCalendarTestButton,[\s\S]*?height:\s*64px !important;[\s\S]*?padding:\s*0 18px !important;/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarDaySettingsRow\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*42px minmax\(0, 1fr\) minmax\(0, 1fr\) 76px !important;[\s\S]*?background:\s*rgba\(255,255,255,\.04\) !important;/
+  );
+  assert.doesNotMatch(
+    source,
     /\.adminCalendarPanelMerged \.adminCalendarDays\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\) !important;\s*gap:\s*7px !important;\s*\}/
   );
   assert.doesNotMatch(
@@ -2154,6 +2162,10 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.match(
     source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarHourReminder\.active\s*\{\s*background:\s*rgba\(127,159,58,\.16\) !important;\s*border-color:\s*rgba\(127,159,58,\.30\) !important;\s*color:\s*rgba\(255,255,255,\.92\) !important;/
+  );
+  assert.match(
+    source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarPanelMerged \.adminCalendarDays\s*\{\s*order:\s*2 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\) !important;/
   );
   assert.match(
@@ -2202,7 +2214,7 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.match(
     source,
-    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarEqualButtonsWrap > button,\s*\.adminCalendarPanelMerged \.adminCalendarEqualButton,\s*\.adminCalendarPanelMerged \.adminV3OpenEditor,\s*\.adminCalendarPanelMerged \.adminCalendarTestButton\s*\{\s*width:\s*100% !important;\s*min-height:\s*62px !important;/
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarEqualButtonsWrap\s*\{\s*order:\s*5 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*12px !important;\s*width:\s*100% !important;\s*\}[\s\S]*?\.adminCalendarEqualButtonsWrap > button,\s*\.adminCalendarPanelMerged \.adminCalendarEqualButton,\s*\.adminCalendarPanelMerged \.adminV3OpenEditor,\s*\.adminCalendarPanelMerged \.adminCalendarTestButton\s*\{\s*width:\s*100% !important;\s*min-height:\s*62px !important;/
   );
 });
 
