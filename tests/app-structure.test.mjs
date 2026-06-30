@@ -1537,6 +1537,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   const exactBottomSpacingStart = source.indexOf("EXACT BOTTOM SPACING MATCH", productWidthSpacingStart);
   const bottomGapStart = source.indexOf("REAL BOTTOM GAP FIX FOR EXPANDED MEAL");
   const darkerOpenStart = source.indexOf("DARKER OPEN MEAL CARD", bottomGapStart);
+  const productDeleteAnimationStart = source.indexOf("PRODUCT DELETE ANIMATION WITH RED TRASH BACKGROUND");
 
   assert.ok(tighterSpacingStart >= 0);
   assert.ok(ultraSpacingStart > tighterSpacingStart);
@@ -1559,6 +1560,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.ok(bottomGapStart >= 0);
   assert.ok(bottomGapStart > exactBottomSpacingStart);
   assert.ok(darkerOpenStart > bottomGapStart);
+  assert.ok(productDeleteAnimationStart >= 0);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH REDUCE 10%"), -1);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH REDUCE AGAIN 10%"), -1);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH MINUS 7 PERCENT"), -1);
@@ -1566,6 +1568,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   assert.equal(source.indexOf("PRODUCT LIST 10 PERCENT WIDER"), -1);
   assert.equal(source.indexOf("MATCH BOTTOM SPACING"), -1);
   assert.equal(source.indexOf("PRODUCT BLOCK WIDTH +4% + MATCHED BOTTOM SPACING"), -1);
+  assert.equal(source.indexOf("productDeleteFlash"), -1);
 
   const tighterSpacingBlock = source.slice(tighterSpacingStart, ultraSpacingStart);
   const microGapBlock = source.slice(microGapStart, actionPanelStart);
@@ -1631,6 +1634,9 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
     guaranteedWidthBlock,
     /\.fatMealCard\.open\s*\{\s*overflow:\s*visible !important;\s*\}/
   );
+  assert.doesNotMatch(source, /@keyframes\s+productDeleteCollapse/);
+  assert.doesNotMatch(source, /\.productSwipeShell\.deleting\s*\{\s*animation:\s*productDeleteCollapse/);
+  assert.doesNotMatch(source, /\.productRowExact\.deleting\s*\{\s*transform:\s*translateX\(-120%\) !important;\s*opacity:\s*0 !important;\s*\}/);
 
   assert.match(
     source,

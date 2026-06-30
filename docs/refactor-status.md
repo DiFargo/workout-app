@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.508`.
+Last updated at app version `v.1.509`.
 
 ## Stable Now
 
@@ -31,6 +31,7 @@ Last updated at app version `v.1.508`.
 - Expanded nutrition product-list obsolete 10-percent-wider section is removed before the force-width owner.
 - Exact nutrition product-list rebuild keeps structure, spacing, and visuals without owning width values.
 - Expanded nutrition product-list radius now stays in the later hard-width owner instead of the force-width block.
+- Nutrition delete rows no longer keep overwritten collapse/flash animation rules in the earlier late-layout stylesheet; the following food-editor tail stylesheet owns the final no-collapse behavior.
 - Mobile client smoke waits long enough for slow cold auth bootstrap runs observed in Playwright mobile.
 - Client smoke tests wait past the auth bootstrap fallback window, matching the app's signed-out loading behavior on slower mobile runs.
 - Client workout visual audit waits for the harness bottom navigation before clicking, reducing cold-start timeout flakes.

@@ -2578,43 +2578,6 @@
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22) !important;
 }
 
-.productSwipeShell.deleting {
-  animation: productDeleteCollapse 0.26s ease forwards !important;
-}
-
-.productSwipeShell.deleting .productDeleteBg {
-  animation: productDeleteFlash 0.22s ease forwards !important;
-}
-
-.productRowExact.deleting {
-  transform: translateX(-120%) !important;
-  opacity: 0 !important;
-}
-
-@keyframes productDeleteCollapse {
-  0% {
-    opacity: 1;
-    max-height: 90px;
-  }
-
-  100% {
-    opacity: 0;
-    max-height: 0;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-@keyframes productDeleteFlash {
-  0% {
-    opacity: 0.75;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
 @media (max-width: 480px) {
   .productDeleteBg {
     padding-right: 20px !important;
