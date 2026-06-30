@@ -2182,12 +2182,6 @@
 
 .fatMealCard.open .productListExact,
 .productListExact {
-  width: calc(100% + 44px) !important;
-  max-width: none !important;
-
-  margin-left: -22px !important;
-  margin-right: -22px !important;
-
   align-self: center !important;
   overflow: hidden !important;
 }
@@ -2202,15 +2196,6 @@
 .fatMealCard.open .fatMealItems,
 .fatMealItems {
   max-width: none !important;
-}
-
-@media (max-width: 480px) {
-  .fatMealCard.open .productListExact,
-  .productListExact {
-    width: calc(100% + 40px) !important;
-    margin-left: -20px !important;
-    margin-right: -20px !important;
-  }
 }
 
 /* =========================================================

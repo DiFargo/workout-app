@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3407.95 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3407.60 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -534,3 +534,4 @@ Start mapping here before any cleanup:
 - `v.1.502`: removed the obsolete expanded nutrition product-list 10-percent-wider section from `legacy-nutrition-late-layout.css`; the force-width owner remains in place.
 - `v.1.503`: removed overwritten exact nutrition product-list width values from `legacy-nutrition-late-layout.css`; later width owners remain in place.
 - `v.1.504`: removed an overwritten expanded nutrition product-list radius from the force-width block in `legacy-nutrition-late-layout.css`; the hard-width owner remains in place.
+- `v.1.505`: removed overwritten expanded nutrition product-list width and side-margin values from the force-width block in `legacy-nutrition-late-layout.css`; later width owners remain in place.
