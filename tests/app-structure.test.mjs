@@ -1078,6 +1078,9 @@ test("client workout set-row final sizing stays in the workout lazy owner", asyn
 
   assert.doesNotMatch(renderTarget, /v127: absolute final override for workout set rows/);
   assert.doesNotMatch(renderTarget, /v126: final set-row size\/state polish/);
+  assert.doesNotMatch(renderTarget, /Final lock for workout run set cards/);
+  assert.doesNotMatch(renderTarget, /setRow\.workoutExercisePlanRow\s*\{[\s\S]*?min-height:\s*86px !important;/);
+  assert.doesNotMatch(renderTarget, /grid-template-columns:\s*34px minmax\(0, 1fr\) 120px !important;/);
   assert.equal(
     (renderTarget.match(/setRow\.workoutExercisePlanRow\s*\{\s*min-height: 58px !important;/g) || []).length,
     0
