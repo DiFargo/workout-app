@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.488`.
+Last updated at app version `v.1.489`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `309` passed.
+- `npm.cmd test`: passed with `310` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -317,6 +317,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 212. Client render target CSS exact duplicate block scan now returns zero after profile hero/avatar duplicate cleanup.
 213. Client nutrition grid CSS exact duplicate block scan now returns zero after removing repeated dashboard inner layout locks.
 214. Legacy admin client page CSS exact duplicate block scan now returns zero after removing repeated mobile tab, metric and Telegram quick-message locks.
+215. Legacy nutrition header CSS exact duplicate block scan now returns zero after removing the repeated compact calorie-row strong sizing lock.
 
 ## P1: Next Product Fixes
 

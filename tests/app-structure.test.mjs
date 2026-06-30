@@ -1293,6 +1293,27 @@ test("legacy nutrition header CSS keeps reference narrow layout sizes in compact
   );
 });
 
+test("legacy nutrition header CSS does not keep exact duplicate blocks", async () => {
+  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const seenBlocks = new Set();
+  const duplicateBlocks = [];
+
+  for (const match of source.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const selector = match[1].trim().replace(/\s+/g, " ");
+    const body = match[2].trim().replace(/\s+/g, " ");
+    if (!body || selector.includes("@")) continue;
+    const key = `${selector} { ${body} }`;
+
+    if (seenBlocks.has(key)) {
+      const line = source.slice(0, match.index).split(/\r?\n/).length;
+      duplicateBlocks.push(`src/styles/legacy-nutrition-header-layout.css:${line}`);
+    }
+    seenBlocks.add(key);
+  }
+
+  assert.deepEqual(duplicateBlocks, []);
+});
+
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
   const headerReference = await readText("src/styles/legacy-food-search-header-reference.css");
   const pickerBase = await readText("src/styles/legacy-food-picker-base.css");
