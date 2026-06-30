@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1142.41 KiB` raw, `114.77 KiB` gzip.
-- Latest source CSS report: `100` files, about `3326.88 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3326.13 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -594,3 +594,4 @@ Start mapping here before any cleanup:
 - `v.1.562`: removed the older workout set-row core render-target lock from `client-render-target-lock.css`; final sizing remains in `client-workout-set-rows.css`.
 - `v.1.563`: removed the early duplicate food-edit top-panel hide rule from `legacy-food-editor-tail.css`; the final hard back deduplication block remains guarded.
 - `v.1.564`: removed the early main-only client bottom pseudo-layer from `client-primary-final-lock.css`; the shared final rhythm owner remains guarded.
+- `v.1.565`: removed the old food-edit-only nutrition back hide rule from `legacy-food-editor-tail.css`; the broader food search overlay hide owner remains guarded.

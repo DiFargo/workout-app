@@ -1836,6 +1836,11 @@ test("legacy food editor CSS keeps summary dot sizes in root owners", async () =
     source,
     /FINAL HARD BACK DEDUPLICATION[\s\S]*?\.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) > \.fatSearchTopPremium,[\s\S]*?display:\s*none !important;[\s\S]*?pointer-events:\s*none !important;/
   );
+  assert.doesNotMatch(source, /\.fatSecretPage:has\(\.foodEditRenderScreen\)[\s\S]*?\.nutritionBackTopLeftV3/);
+  assert.match(
+    source,
+    /\.fatSecretPage:has\(\.fatFoodSearchOverlay\) > \.nutritionBackTopLeftV3,[\s\S]*?\.fatSecretPage:has\(\.fatFoodSearchOverlay\) \.backBtn\.universalFixedBackPointer\s*\{[\s\S]*?display:\s*none !important;[\s\S]*?pointer-events:\s*none !important;/
+  );
 });
 
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
