@@ -3310,23 +3310,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     border-right: 0 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow span {
-    color: #7f8798 !important;
-    -webkit-text-fill-color: #7f8798 !important;
-    font-size: 11px !important;
-    font-weight: 750 !important;
-    line-height: 1.15 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
-    color: #171923 !important;
-    -webkit-text-fill-color: #171923 !important;
-    font-size: 19px !important;
-    font-weight: 900 !important;
-    line-height: 1.05 !important;
-    text-align: center !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiSplitCards {
     width: 100% !important;
     max-width: none !important;

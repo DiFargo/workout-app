@@ -733,6 +733,14 @@ test("client primary final CSS keeps main AI stats row in the final owner", asyn
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow span\s*\{\s*color:\s*var\(--client-muted\) !important;\s*-webkit-text-fill-color:\s*var\(--client-muted\) !important;\s*font-size:\s*12px !important;\s*font-weight:\s*800 !important;\s*line-height:\s*1\.15 !important;\s*text-align:\s*center !important;/g) || []).length,
     1
   );
+  assert.doesNotMatch(
+    source,
+    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow span\s*\{\s*color:\s*#7f8798 !important;\s*-webkit-text-fill-color:\s*#7f8798 !important;\s*font-size:\s*11px !important;\s*font-weight:\s*750 !important;\s*line-height:\s*1\.15 !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow strong\s*\{\s*color:\s*#171923 !important;\s*-webkit-text-fill-color:\s*#171923 !important;\s*font-size:\s*19px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.05 !important;\s*text-align:\s*center !important;\s*\}/
+  );
 });
 
 test("client primary final CSS keeps profile AI hero sizing in the final owner", async () => {

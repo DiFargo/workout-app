@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1147.03 KiB` raw, `115.00 KiB` gzip.
-- Latest source CSS report: `100` files, about `3392.67 KiB` total source CSS.
+- Latest main CSS bundle: about `1146.50 KiB` raw, `114.98 KiB` gzip.
+- Latest source CSS report: `100` files, about `3392.04 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -565,3 +565,4 @@ Start mapping here before any cleanup:
 - `v.1.533`: removed overwritten mobile workout next/week badge sizing from `client-primary-final-lock.css`; the `v1.77b` EOF workout badge owner remains guarded.
 - `v.1.534`: removed overwritten mobile workout start-button sizing from `client-primary-final-lock.css`; the `v1.77b` EOF workout button owner remains guarded.
 - `v.1.535`: removed overwritten mobile workout card visual-shell styling from `client-primary-final-lock.css`; the `v1.77b` EOF workout card owner remains guarded.
+- `v.1.536`: removed overwritten main AI stats text color/size rules from `client-primary-final-lock.css`; the later mobile stats text owner remains guarded.
