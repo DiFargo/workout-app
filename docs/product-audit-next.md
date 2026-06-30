@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.484`.
+Last updated at app version `v.1.485`.
 
 ## Evidence
 
@@ -313,6 +313,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 208. Client primary final CSS now keeps workout deck spacing rules in one guarded owner.
 209. Client primary final CSS now keeps food search home child layout and recent-card rules in guarded owners.
 210. Client primary final CSS now keeps max-640 product, food edit, workout title, refresh, profile hero and recent-card rules in guarded owners.
+211. Client primary final CSS exact duplicate block scan now returns zero after final food edit and nutrition meta duplicate cleanup.
 
 ## P1: Next Product Fixes
 

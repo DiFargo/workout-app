@@ -1214,10 +1214,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     box-shadow: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta small {
-    display: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
     cursor: default !important;
   }
@@ -4236,10 +4232,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     box-shadow: 0 12px 28px rgba(55, 64, 112, 0.12) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen {
-    padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductFlowHeader {
     min-height: 126px !important;
     margin: 0 0 16px !important;
@@ -4265,12 +4257,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     justify-self: center !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay {
-    align-items: stretch !important;
-    justify-content: center !important;
-    padding: 0 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
     width: 100% !important;
     min-height: 100dvh !important;
@@ -4289,16 +4275,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     align-items: center !important;
     justify-content: flex-start !important;
     position: relative !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
-    display: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav,
@@ -5025,12 +5001,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     gap: 10px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay {
-    align-items: stretch !important;
-    justify-content: center !important;
-    padding: 0 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
     width: 100% !important;
     max-width: none !important;
@@ -5049,12 +5019,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     display: flex !important;
     align-items: center !important;
     justify-content: flex-start !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow {

@@ -571,6 +571,22 @@ test("client primary final CSS keeps food editor header layout in the final owne
     (source.match(/\.foodEditPageOverlay \.foodEditIconPresetRow\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen\s*\{\s*padding-bottom:\s*calc\(110px \+ env\(safe-area-inset-bottom\)\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay\s*\{\s*align-items:\s*stretch !important;\s*justify-content:\s*center !important;\s*padding:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay \.foodEditPageHeaderBack\s*\{\s*position:\s*absolute !important;\s*top:\s*0 !important;\s*left:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/body #root \.foodEditIconPresetRow\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("client primary final CSS keeps fixed photo action spacing in the final owner", async () => {
@@ -803,6 +819,10 @@ test("client primary final CSS keeps nutrition arrow sizing in the root owner", 
   );
   assert.equal(
     (source.match(/\.nutritionZoukMeta\s*\{\s*width:\s*18px !important;\s*min-width:\s*18px !important;\s*height:\s*36px !important;\s*min-height:\s*36px !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.nutritionZoukMeta small\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
     1
   );
 });
