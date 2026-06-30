@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3318.65 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3318.60 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -68,6 +68,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.577`: grouped shared exercise and finish slide animation-shell CSS in `workoutFlow.css`.
    - Continued in `v.1.578`: grouped compact exercise back/previous button sizing in `legacy-workout-navigation-close-early.css`.
    - Continued in `v.1.579`: grouped workout back/previous/close pseudo reset CSS in `legacy-workout-navigation-close-early.css`.
+   - Continued in `v.1.580`: grouped compact exercise back/previous active-state CSS in `legacy-workout-navigation-close-early.css`.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.
@@ -615,3 +616,4 @@ Start mapping here before any cleanup:
 - `v.1.577`: consolidated shared exercise and finish slide animation-shell rules in `workoutFlow.css`; the grouped owner is guarded by the app structure test.
 - `v.1.578`: consolidated compact exercise back/previous button sizing in `legacy-workout-navigation-close-early.css`; the grouped owner is guarded by the app structure test.
 - `v.1.579`: consolidated workout back/previous/close pseudo reset CSS in `legacy-workout-navigation-close-early.css`; the grouped owner is guarded by the app structure test.
+- `v.1.580`: consolidated compact exercise back/previous active-state CSS in `legacy-workout-navigation-close-early.css`; the grouped owner is guarded by the app structure test.

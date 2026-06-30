@@ -49,7 +49,8 @@
   display: none !important;
 }
 
-.workoutRunPage .exerciseNavigationRow .exerciseBackButton:active {
+.workoutRunPage .exerciseNavigationRow .exerciseBackButton:active,
+.workoutRunPage .exerciseNavigationRow .exercisePrevButton:active {
   transform: scale(0.985) !important;
 }
 
@@ -110,10 +111,6 @@
 
   transform: none !important;
   backdrop-filter: none !important;
-}
-
-.workoutRunPage .exerciseNavigationRow .exercisePrevButton:active {
-  transform: scale(0.985) !important;
 }
 
 .workoutRunPage .exerciseNavigationRow .exercisePrevButton *,
