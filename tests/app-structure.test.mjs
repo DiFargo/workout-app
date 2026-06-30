@@ -2070,6 +2070,34 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.doesNotMatch(
     source,
+    /\.adminCalendarDaySettingsHeader\s*\{\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*gap:\s*10px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarDaySettingsName\s*\{\s*color:\s*rgba\(255,255,255,\.78\) !important;\s*font-size:\s*14px !important;\s*font-weight:\s*900 !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarDayTimeGrid\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*10px !important;\s*width:\s*100% !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarDaySettingsRow label\s*\{\s*display:\s*block !important;\s*min-height:\s*0 !important;\s*height:\s*auto !important;[\s\S]*?background:\s*transparent !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarDaySettingsRow label span\s*\{\s*display:\s*block !important;\s*margin:\s*0 0 7px !important;\s*font-size:\s*11px !important;[\s\S]*?text-align:\s*left !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarEqualButtonsWrap > button,\s*\.adminCalendarPanelMerged \.adminCalendarEqualButton,\s*\.adminCalendarPanelMerged \.adminV3OpenEditor,\s*\.adminCalendarPanelMerged \.adminCalendarTestButton\s*\{\s*width:\s*100% !important;\s*min-height:\s*64px !important;[\s\S]*?box-sizing:\s*border-box !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.adminCalendarPanelMerged \.adminCalendarTestButton\s*\{\s*background:\s*#071b1d !important;\s*border:\s*1px solid rgba\(255,255,255,\.07\) !important;\s*color:\s*rgba\(255,255,255,\.72\) !important;\s*box-shadow:\s*none !important;\s*font-size:\s*11px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
     /\.adminCalendarPanelMerged \.adminCalendarDays\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\) !important;\s*gap:\s*7px !important;\s*\}/
   );
   assert.doesNotMatch(
@@ -2138,6 +2166,22 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
   assert.match(
     source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarDaySettingsHeader\s*\{\s*grid-area:\s*day !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarDaySettingsName\s*\{\s*display:\s*none !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarDayTimeGrid\s*\{\s*display:\s*contents !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarDayTimeGrid label\s*\{\s*display:\s*block !important;\s*min-height:\s*0 !important;\s*height:\s*auto !important;/
+  );
+  assert.match(
+    source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarDaySettingsTitle\s*\{\s*width:\s*58px !important;\s*height:\s*58px !important;\s*border-radius:\s*18px !important;/
   );
   assert.match(
@@ -2147,6 +2191,10 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   assert.match(
     source,
     /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarHourReminder\s*\{\s*grid-area:\s*hour !important;\s*width:\s*100% !important;\s*height:\s*48px !important;/
+  );
+  assert.match(
+    source,
+    /\/\* === CALENDAR MATCH RENDER V62 === \*\/[\s\S]*?\.adminCalendarEqualButtonsWrap > button,\s*\.adminCalendarPanelMerged \.adminCalendarEqualButton,\s*\.adminCalendarPanelMerged \.adminV3OpenEditor,\s*\.adminCalendarPanelMerged \.adminCalendarTestButton\s*\{\s*width:\s*100% !important;\s*min-height:\s*62px !important;/
   );
 });
 

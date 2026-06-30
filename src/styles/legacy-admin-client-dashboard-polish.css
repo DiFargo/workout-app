@@ -2216,21 +2216,6 @@
   color: #d8ff95 !important;
 }
 
-/* ÃÅ¡ÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃÂ¸ */
-.adminCalendarEqualButtonsWrap > button,
-.adminCalendarPanelMerged .adminCalendarEqualButton,
-.adminCalendarPanelMerged .adminV3OpenEditor,
-.adminCalendarPanelMerged .adminCalendarTestButton {
-  width: 100% !important;
-  min-height: 64px !important;
-  height: 64px !important;
-  max-height: 64px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border-radius: 22px !important;
-}
-
 @media (max-width: 420px) {
   .adminCalendarPanelMerged .adminCalendarDaySettingsRow {
     grid-template-columns: 38px minmax(0, 1fr) minmax(0, 1fr) 62px !important;
@@ -2263,73 +2248,10 @@
 
 /* ÃÂÃÂºÃÂºÃ‘Æ’Ã‘â‚¬ÃÂ°Ã‘â€šÃÂ½Ã‘â€¹ÃÂ¹ ÃÂ±ÃÂ»ÃÂ¾ÃÂº ÃÂ½ÃÂ°ÃÂ¿ÃÂ¾ÃÂ¼ÃÂ¸ÃÂ½ÃÂ°ÃÂ½ÃÂ¸ÃÂ¹: Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ¾ÃÂºÃÂ¸ ÃÂ´ÃÂ½ÃÂµÃÂ¹, ÃÂ¿ÃÂ¾ÃÂ»Ã‘Â ÃÂ²Ã‘â‚¬ÃÂµÃÂ¼ÃÂµÃÂ½ÃÂ¸ ÃÂ¸ ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂºÃÂ»Ã‘Å½Ã‘â€¡ÃÂ°Ã‘â€šÃÂµÃÂ»Ã‘Å’ ÃÂ·ÃÂ° Ã‘â€¡ÃÂ°Ã‘Â */
 
-.adminCalendarDaySettingsHeader {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-}
-
-.adminCalendarDaySettingsName {
-  color: rgba(255,255,255,.78) !important;
-  font-size: 14px !important;
-  font-weight: 900 !important;
-}
-
-.adminCalendarDayTimeGrid {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 10px !important;
-  width: 100% !important;
-}
-
-.adminCalendarDaySettingsRow label {
-  display: block !important;
-  min-height: 0 !important;
-  height: auto !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-}
-
-.adminCalendarDaySettingsRow label span {
-  display: block !important;
-  margin: 0 0 7px !important;
-  font-size: 11px !important;
-  line-height: 1 !important;
-  font-weight: 900 !important;
-  color: rgba(255,255,255,.48) !important;
-  white-space: nowrap !important;
-  text-align: left !important;
-}
-
 .adminCalendarHourReminder.active {
   background: rgba(127,159,58,.16) !important;
   border-color: rgba(127,159,58,.30) !important;
   color: #d8ff95 !important;
-}
-
-.adminCalendarEqualButtonsWrap > button,
-.adminCalendarPanelMerged .adminCalendarEqualButton,
-.adminCalendarPanelMerged .adminV3OpenEditor,
-.adminCalendarPanelMerged .adminCalendarTestButton {
-  width: 100% !important;
-  min-height: 64px !important;
-  height: 64px !important;
-  max-height: 64px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border-radius: 22px !important;
-  box-sizing: border-box !important;
-}
-
-.adminCalendarPanelMerged .adminCalendarTestButton {
-  background: #071b1d !important;
-  border: 1px solid rgba(255,255,255,.07) !important;
-  color: rgba(255,255,255,.72) !important;
-  box-shadow: none !important;
-  font-size: 11px !important;
 }
 
 @media (max-width: 420px) {
@@ -2355,18 +2277,6 @@
     font-size: 13px !important;
   }
 
-  .adminCalendarDaySettingsName {
-    font-size: 13px !important;
-  }
-
-  .adminCalendarDayTimeGrid {
-    gap: 8px !important;
-  }
-
-  .adminCalendarDaySettingsRow label span {
-    font-size: 10px !important;
-  }
-
   .adminCalendarDaySettingsRow input {
     height: 40px !important;
     min-height: 40px !important;
@@ -2379,14 +2289,6 @@
     font-size: 12px !important;
   }
 
-  .adminCalendarEqualButtonsWrap > button,
-  .adminCalendarPanelMerged .adminCalendarEqualButton,
-  .adminCalendarPanelMerged .adminV3OpenEditor,
-  .adminCalendarPanelMerged .adminCalendarTestButton {
-    min-height: 60px !important;
-    height: 60px !important;
-    max-height: 60px !important;
-  }
 }
 
 /* === CALENDAR MATCH RENDER V62 === */
