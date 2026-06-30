@@ -3408,15 +3408,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     overflow: hidden !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardStartButton {
-    left: 18px !important;
-    right: 18px !important;
-    bottom: 22px !important;
-    height: 62px !important;
-    min-height: 62px !important;
-    border-radius: 16px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel {
     position: fixed !important;
     left: 50% !important;

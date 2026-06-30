@@ -895,6 +895,10 @@ test("client primary final CSS keeps workout start button fixed styling in the f
     (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*bottom:\s*20px !important;\s*\}/g) || []).length,
     1
   );
+  assert.doesNotMatch(
+    source,
+    /\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*left:\s*18px !important;\s*right:\s*18px !important;\s*bottom:\s*22px !important;\s*height:\s*62px !important;\s*min-height:\s*62px !important;\s*border-radius:\s*16px !important;\s*\}/
+  );
 });
 
 test("client primary final CSS keeps workout card compact sizing in one owner", async () => {

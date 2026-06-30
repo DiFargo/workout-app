@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3393.29 KiB` total source CSS.
+- Latest main CSS bundle: about `1147.29 KiB` raw, `115.02 KiB` gzip.
+- Latest source CSS report: `100` files, about `3393.00 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -563,3 +563,4 @@ Start mapping here before any cleanup:
 - `v.1.531`: removed overwritten diary swipe-shell sizing from `client-food-search-final.css`; the `v170` diary card owner remains guarded.
 - `v.1.532`: removed overwritten food search title-wrap width from `client-food-search-final.css`; the `v156/v158` title-wrap owners remain guarded.
 - `v.1.533`: removed overwritten mobile workout next/week badge sizing from `client-primary-final-lock.css`; the `v1.77b` EOF workout badge owner remains guarded.
+- `v.1.534`: removed overwritten mobile workout start-button sizing from `client-primary-final-lock.css`; the `v1.77b` EOF workout button owner remains guarded.
