@@ -1305,6 +1305,16 @@ test("client workout flow CSS keeps start button sizing grouped", async () => {
   assert.equal((source.match(/padding:\s*0 18px !important;/g) || []).length, 3);
 });
 
+test("client workout flow CSS keeps compact start panel sizing grouped", async () => {
+  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+
+  assert.equal(
+    (source.match(/\.workoutRunPage \.workoutStageActionPanel,\s*\.workoutRunPage \.startWorkoutBottomPanel\s*\{\s*left:\s*10px !important;\s*right:\s*10px !important;\s*width:\s*calc\(100vw - 20px\) !important;\s*padding-inline:\s*9px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal((source.match(/padding-inline:\s*9px !important;/g) || []).length, 1);
+});
+
 test("client workout hero spacing stays in the workout lazy owner", async () => {
   const renderTarget = await readText("src/styles/client-render-target-lock.css");
   const cardRender = await readText("src/styles/client-workout-card-render.css");

@@ -1045,13 +1045,6 @@
     font-size: 11px;
   }
 
-  .workoutRunPage .startWorkoutBottomPanel {
-    left: 10px !important;
-    right: 10px !important;
-    width: calc(100vw - 20px) !important;
-    padding-inline: 9px !important;
-  }
-
   .workoutRunPage .startWorkoutPrepRow {
     grid-template-columns: 92px minmax(0, 1fr);
   }

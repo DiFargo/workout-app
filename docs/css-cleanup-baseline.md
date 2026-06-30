@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3318.04 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3317.85 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -73,6 +73,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.582`: consolidated scoped exercise close positioning CSS in `legacy-workout-navigation-close-early.css`.
    - Continued in `v.1.583`: grouped workout close slide relative positioning CSS in `legacy-workout-navigation-close-early.css`.
    - Continued in `v.1.584`: grouped select/start button sizing CSS in `legacy-client-workout-flow-late.css`.
+   - Continued in `v.1.585`: removed duplicate compact start-panel sizing CSS from `legacy-client-workout-flow-late.css`.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.
@@ -625,3 +626,4 @@ Start mapping here before any cleanup:
 - `v.1.582`: consolidated scoped exercise close positioning CSS in `legacy-workout-navigation-close-early.css`; the single scoped owner is guarded by the app structure test.
 - `v.1.583`: consolidated workout close slide relative positioning CSS in `legacy-workout-navigation-close-early.css`; the shared start/exercise slide owner is guarded by the app structure test.
 - `v.1.584`: consolidated select/start button sizing CSS in `legacy-client-workout-flow-late.css`; the grouped owner is guarded by the app structure test.
+- `v.1.585`: removed duplicate compact start-panel sizing CSS from `legacy-client-workout-flow-late.css`; the shared stage/start compact owner is guarded by the app structure test.
