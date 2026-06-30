@@ -1728,10 +1728,6 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerci
     padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero {
-    margin-bottom: 10px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardPro {
     min-height: 0 !important;
     grid-template-rows: 38px auto !important;

@@ -1051,6 +1051,20 @@ test("client workout card render CSS keeps card sizing in root locks", async () 
   );
 });
 
+test("client workout hero spacing stays in the workout lazy owner", async () => {
+  const renderTarget = await readText("src/styles/client-render-target-lock.css");
+  const cardRender = await readText("src/styles/client-workout-card-render.css");
+
+  assert.doesNotMatch(
+    renderTarget,
+    /\.workoutSelectPage\.individualWorkoutSelectPage \.workoutSelectHero\s*\{\s*margin-bottom:\s*10px !important;\s*\}/
+  );
+  assert.equal(
+    (cardRender.match(/\.workoutSelectPage\.individualWorkoutSelectPage \.workoutSelectHero\s*\{\s*margin-bottom:\s*10px !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client food search final CSS keeps one compact product title-wrap lock", async () => {
   const source = await readText("src/styles/client-food-search-final.css");
 

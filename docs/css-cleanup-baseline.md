@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1152.31 KiB` raw, `115.37 KiB` gzip.
-- Latest source CSS report: `100` files, about `3414.34 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3414.17 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -31,7 +31,7 @@ Start mapping here before any cleanup:
 - `src/styles/client-primary-final-lock.css` - `217.80 KiB`
 - `src/components/trainer/trainer-workspace.css` - `179.26 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `148.92 KiB`
-- `src/styles/client-render-target-lock.css` - `108.78 KiB`
+- `src/styles/client-render-target-lock.css` - `108.61 KiB`
 - `src/styles/legacy-food-editor-tail.css` - `100.37 KiB`
 - `src/styles/legacy-admin-client-dashboard-polish.css` - `97.32 KiB`
 - `src/styles/legacy-desktop-cabinet-polish.css` - `92.82 KiB`
@@ -523,3 +523,4 @@ Start mapping here before any cleanup:
 - `v.1.491`: removed the final workout set-row 58px owner from `client-render-target-lock.css`; `client-workout-set-rows.css` now owns that lazy workout sizing guard.
 - `v.1.492`: removed dashboard icon and measurement chart duplicate locks from `client-nutrition-grid-lock.css`; `client-main-final-overrides.css` remains the later owner.
 - `v.1.493`: removed unused trainer role button rules from `adminPanelHub.css`; `legacy-admin-calendar-reminders-late.css` remains the trainer/admin internals owner.
+- `v.1.494`: removed duplicate workout select hero spacing from `client-render-target-lock.css`; `client-workout-card-render.css` remains the lazy workout owner.
