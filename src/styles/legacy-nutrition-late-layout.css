@@ -2209,25 +2209,7 @@
 
 .fatMealCard.open .productListExact,
 .productListExact {
-  width: calc(100% + 28px) !important;
-  max-width: calc(100% + 28px) !important;
-
-  margin-left: -14px !important;
-  margin-right: -14px !important;
-
   border-radius: 22px !important;
-}
-
-@media (max-width: 480px) {
-
-  .fatMealCard.open .productListExact,
-  .productListExact {
-    width: calc(100% + 24px) !important;
-    max-width: calc(100% + 24px) !important;
-
-    margin-left: -12px !important;
-    margin-right: -12px !important;
-  }
 }
 
 .fatMealCard.open .productListExact,
