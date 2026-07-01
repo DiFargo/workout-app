@@ -5595,7 +5595,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-weight: 800;
 }
 
-.trainerClientProgramEditButton:disabled {
+.trainerClientProgramEditButton:disabled,
+.trainerClientAssignedProgram > button:disabled {
   border-color: var(--tn-line);
   color: var(--tn-muted);
 }
@@ -5789,11 +5790,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #fff;
   color: var(--tn-purple);
   font-weight: 700;
-}
-
-.trainerClientAssignedProgram > button:disabled {
-  border-color: var(--tn-line);
-  color: var(--tn-muted);
 }
 
 .trainerClientWorkoutAnalytics,

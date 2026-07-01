@@ -3638,6 +3638,10 @@ test("trainer workspace CSS keeps shared disabled action states grouped", async 
     (source.match(/\.trainerMessageReply > button:disabled,\s*\.trainerMessageModalSend:disabled\s*\{\s*box-shadow:\s*none;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerClientProgramEditButton:disabled,\s*\.trainerClientAssignedProgram > button:disabled\s*\{\s*border-color:\s*var\(--tn-line\);\s*color:\s*var\(--tn-muted\);\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps client nutrition notification panel shells grouped", async () => {
