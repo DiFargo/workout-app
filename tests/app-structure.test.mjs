@@ -3274,6 +3274,9 @@ test("client nutrition weekday strip keeps two-letter labels visible", async () 
   assert.match(nutritionCss, /Preserve both letters in Russian weekday abbreviations/);
   assert.match(nutritionCss, /\.nutritionDayV4 \{[\s\S]*display: grid !important;[\s\S]*grid-template-areas:[\s\S]*"label"[\s\S]*"marker" !important;[\s\S]*grid-template-rows: 14px 26px !important;/);
   assert.match(nutritionCss, /\.nutritionWeekV4 \.nutritionDayV4 small \{[\s\S]*min-width: 2\.4ch !important;[\s\S]*width: 2\.4ch !important;[\s\S]*white-space: nowrap !important;/);
+  assert.doesNotMatch(nutritionCss, /Keep weekday labels visually separate from the day markers/);
+  assert.doesNotMatch(nutritionCss, /\.nutritionDayV4 \{[\s\S]*flex-direction: column-reverse !important;/);
+  assert.doesNotMatch(nutritionCss, /\.nutritionDayV4 span \{[\s\S]*width: 28px !important;/);
 });
 
 test("client nutrition header labels stay readable Russian text", async () => {

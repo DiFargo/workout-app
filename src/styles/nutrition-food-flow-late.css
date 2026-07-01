@@ -1177,67 +1177,6 @@
   background: linear-gradient(90deg, #5a49df 0 8%, #e5e8f1 8% 100%) !important;
 }
 
-/* Keep weekday labels visually separate from the day markers on compact nutrition headers. */
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
-  box-sizing: border-box !important;
-  height: 54px !important;
-  min-height: 54px !important;
-  padding: 4px 7px !important;
-  align-items: center !important;
-  overflow: hidden !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 {
-  box-sizing: border-box !important;
-  height: 46px !important;
-  min-height: 46px !important;
-  max-height: 46px !important;
-  gap: 5px !important;
-  justify-content: center !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
-  height: 13px !important;
-  font-size: 13px !important;
-  line-height: 13px !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  max-width: 28px !important;
-  max-height: 28px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
-  height: 56px !important;
-  min-height: 56px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 {
-  height: 48px !important;
-  min-height: 48px !important;
-  max-height: 48px !important;
-  gap: 7px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
-  height: 13px !important;
-  font-size: 13px !important;
-  line-height: 13px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  max-width: 28px !important;
-  max-height: 28px !important;
-}
-
 /* Keep the client nutrition week strip readable with two-letter weekday labels. */
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
   display: grid !important;
@@ -1302,10 +1241,6 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
   border-radius: 999px !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected {
-  background: rgba(101, 82, 230, 0.10) !important;
-}
-
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4 small {
   min-width: 2.1ch !important;
   width: auto !important;
@@ -1328,7 +1263,6 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
 }
 
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4 small {
-  flex-basis: 14px !important;
   min-width: 2.4ch !important;
   width: 2.4ch !important;
   max-width: 2.4ch !important;
