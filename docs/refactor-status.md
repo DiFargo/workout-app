@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.595`.
+Last updated at app version `v.1.596`.
 
 ## Stable Now
 
@@ -17,6 +17,7 @@ Last updated at app version `v.1.595`.
 - Client primary final CSS now shares the food action bar `strong` typography rule across search, product and editor bars, guarded by app structure tests.
 - Client nutrition late layout CSS now shares expanded meal/product text typography in one grouped owner, guarded by app structure tests.
 - Warm-light food edit CSS now shares food-search input/history surface shell styling in one grouped owner, guarded by app structure tests.
+- Warm-light food edit CSS now shares product edit content/grid label shell styling in one grouped owner, guarded by app structure tests.
 - Admin lazy CSS no longer uses the redundant `admin.css` alias; `adminPanelHub.css` is imported directly.
 - Admin hub CSS no longer carries trainer role button rules that are only used by trainer/admin internals.
 - Admin internals CSS for DEV-only visual coverage is isolated in `admin-internals-lazy.css`, keeping the production admin hub chunk lightweight.
@@ -326,7 +327,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1132.37 KiB` raw, `114.29 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3311.33 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3311.08 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

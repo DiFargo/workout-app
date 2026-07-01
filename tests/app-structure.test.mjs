@@ -1966,6 +1966,23 @@ test("warm light food edit CSS keeps search surface shells grouped", async () =>
   );
 });
 
+test("warm light food edit CSS keeps edit label shells grouped", async () => {
+  const source = await readText("src/styles/legacy-warm-light-food-edit-back-buttons.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.foodEditPageContent label,\s*:root\[data-app-theme="warm-light"\] \.foodEditPageGrid label\s*\{\s*background:\s*linear-gradient\(180deg, rgba\(255, 249, 215, 0\.96\) 0%, rgba\(246, 232, 174, 0\.86\) 100%\) !important;\s*border:\s*1px solid rgba\(94, 75, 30, 0\.10\) !important;\s*box-shadow:\s*0 10px 24px rgba\(88, 68, 24, 0\.08\) !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.doesNotMatch(
+    source,
+    /\.foodEditPageContent label\s*\{[\s\S]*?\.foodEditPageGrid label\s*\{\s*background:/
+  );
+});
+
 test("nutrition food search actions CSS keeps action active colors grouped", async () => {
   const source = await readText("src/styles/nutrition-food-search-actions.css");
 
