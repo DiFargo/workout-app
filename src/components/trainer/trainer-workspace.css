@@ -2340,7 +2340,8 @@
 }
 
 .trainerMeasurementChart header,
-.trainerMeasurementChart > div {
+.trainerMeasurementChart > div,
+.trainerWorkoutScheduleMonth {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6202,13 +6203,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border: 1px solid #eceaf3;
   border-radius: 9px;
   background: #fbfbfe;
-}
-
-.trainerWorkoutScheduleMonth {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
 }
 
 .trainerWorkoutScheduleMonth button {
