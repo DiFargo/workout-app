@@ -3599,6 +3599,10 @@ test("trainer workspace CSS keeps trainer calendar and notification controls gro
     1
   );
   assert.equal(
+    (source.match(/\.trainerWorkoutMonthWeekdays span,\s*\.trainerWorkoutScheduleWeekdays span\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*font-weight:\s*900;\s*text-align:\s*center;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerNotificationSwitch input,\s*\.trainerNotificationOffsets input,\s*\.trainerProgressReminderOptions input\s*\{\s*position:\s*absolute;\s*opacity:\s*0;\s*pointer-events:\s*none;\s*\}/g) || []).length,
     1
   );

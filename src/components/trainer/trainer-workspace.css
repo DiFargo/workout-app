@@ -6024,7 +6024,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   gap: 5px;
 }
 
-.trainerWorkoutMonthWeekdays span {
+.trainerWorkoutMonthWeekdays span,
+.trainerWorkoutScheduleWeekdays span {
   color: var(--tn-muted);
   font-size: 8px;
   font-weight: 900;
@@ -6238,13 +6239,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 12px;
   text-align: center;
   text-transform: capitalize;
-}
-
-.trainerWorkoutScheduleWeekdays span {
-  color: var(--tn-muted);
-  font-size: 8px;
-  font-weight: 900;
-  text-align: center;
 }
 
 .trainerWorkoutScheduleGrid button {
