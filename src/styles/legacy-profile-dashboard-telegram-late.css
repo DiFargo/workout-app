@@ -957,7 +957,8 @@
   background: rgba(42,171,238,.13);
 }
 
-.profileTelegramBotActions button:disabled {
+.profileTelegramBotActions button:disabled,
+.profileTelegramCheckButton:disabled {
   opacity: .55;
   cursor: not-allowed;
 }
@@ -1094,11 +1095,6 @@
   width: 100%;
   margin-bottom: 10px;
   font-size: 13px;
-}
-
-.profileTelegramCheckButton:disabled {
-  opacity: .55;
-  cursor: not-allowed;
 }
 
 /* ADMIN CALENDAR TELEGRAM REMINDERS V1 */

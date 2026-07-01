@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.613`.
+Last updated at app version `v.1.614`.
 
 ## Stable Now
 
@@ -73,6 +73,7 @@ Last updated at app version `v.1.613`.
 - Profile and admin Telegram avatar image-fit CSS now stays in one grouped profile dashboard owner.
 - Telegram action button text/cursor CSS now stays in one grouped profile dashboard owner.
 - Telegram bot/check action button shell CSS now stays in one grouped profile dashboard owner.
+- Telegram bot/check disabled-state CSS now stays in one grouped profile dashboard owner.
 - Trainer mobile page-shell CSS is now grouped across narrow and coarse landscape owners.
 - Nutrition orbit CSS now keeps shared inline and modal meal shells in one owner.
 - Nutrition base CSS now keeps compact meal-card sizing in the desktop compact owner.
