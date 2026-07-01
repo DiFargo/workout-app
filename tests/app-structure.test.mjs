@@ -2448,6 +2448,23 @@ test("legacy food editor CSS keeps warm-light ingredient surfaces grouped", asyn
   );
 });
 
+test("legacy food product summary CSS keeps product info in the final owner", async () => {
+  const source = await readText("src/styles/legacy-food-products-summary-early.css");
+
+  assert.doesNotMatch(
+    source,
+    /\.productInfoExact\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*justify-content:\s*center !important;\s*padding-left:\s*4px !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
+    /\.productInfoExact strong\s*\{\s*text-align:\s*left !important;\s*overflow:\s*hidden !important;\s*text-overflow:\s*ellipsis !important;\s*white-space:\s*nowrap !important;\s*\}/
+  );
+  assert.equal(
+    (source.match(/\.productInfoExact\s*\{\s*min-width:\s*0 !important;\s*padding-left:\s*4px !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*flex-start !important;\s*justify-content:\s*center !important;\s*text-align:\s*left !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
   const shellSource = await readText("src/styles/legacy-admin-shell-crm-app46.css");
   const programSource = await readText("src/styles/legacy-month-program-editor-early.css");

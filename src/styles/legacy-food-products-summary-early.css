@@ -138,27 +138,6 @@
   line-height: 1 !important;
 }
 
-.productInfoExact {
-  min-width: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-
-  padding-left: 4px !important;
-}
-
-.productInfoExact strong {
-  text-align: left !important;
-
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
-.productInfoExact span {
-  text-align: left !important;
-}
-
 .productArrowExact {
   align-self: center !important;
 }
