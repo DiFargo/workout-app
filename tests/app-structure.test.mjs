@@ -3668,6 +3668,10 @@ test("trainer workspace CSS keeps client section stacks grouped", async () => {
     (source.match(/\.trainerClientWorkoutPlan,\s*\.trainerNutritionAnalytics,\s*\.trainerNutritionPlan,\s*\.trainerClientNotifications\s*\{\s*gap:\s*11px;\s*padding-top:\s*12px;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerAnalyticsStack,\s*\.trainerNextClientSide,\s*\.trainerMeasurementDashboard,\s*\.trainerNextClientsStandalone,\s*\.trainerNextModal form,\s*\.trainerProgramConstructor,\s*\.trainerWorkoutSchedulePlanner,\s*\.trainerWorkoutScheduleBody\s*\{\s*display:\s*grid;\s*gap:\s*14px;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps inline text stacks grouped", async () => {

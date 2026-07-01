@@ -1105,7 +1105,14 @@
   gap: 12px;
 }
 
-.trainerAnalyticsStack {
+.trainerAnalyticsStack,
+.trainerNextClientSide,
+.trainerMeasurementDashboard,
+.trainerNextClientsStandalone,
+.trainerNextModal form,
+.trainerProgramConstructor,
+.trainerWorkoutSchedulePlanner,
+.trainerWorkoutScheduleBody {
   display: grid;
   gap: 14px;
 }
@@ -1961,11 +1968,6 @@
   text-align: center;
 }
 
-.trainerNextClientSide {
-  display: grid;
-  gap: 14px;
-}
-
 .trainerNextResultCard,
 .trainerNextActivityCard {
   padding: 16px;
@@ -2135,11 +2137,6 @@
 
 .trainerNextMeasurementGrid strong {
   font-size: 21px;
-}
-
-.trainerMeasurementDashboard {
-  display: grid;
-  gap: 14px;
 }
 
 .trainerMeasurementCollapsed {
@@ -2536,11 +2533,6 @@
   margin: 0;
   color: var(--tn-text);
   font-size: 12px;
-}
-
-.trainerNextClientsStandalone {
-  display: grid;
-  gap: 14px;
 }
 
 .trainerNextWorkoutPage .trainerNextPageTabs,
@@ -3125,11 +3117,6 @@
   margin: 0 0 18px;
   color: var(--tn-muted);
   font-size: 12px;
-}
-
-.trainerNextModal form {
-  display: grid;
-  gap: 14px;
 }
 
 .trainerNextModal label {
@@ -4811,11 +4798,6 @@
   z-index: 35;
 }
 
-.trainerProgramConstructor {
-  display: grid;
-  gap: 14px;
-}
-
 .trainerProgramConstructor button,
 .trainerProgramConstructor input {
   min-width: 0;
@@ -6010,11 +5992,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: var(--tn-purple);
 }
 
-.trainerWorkoutSchedulePlanner {
-  display: grid;
-  gap: 14px;
-}
-
 .trainerWorkoutSchedulePlanner > header p {
   max-width: 720px;
   margin: 5px 0 0;
@@ -6040,11 +6017,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerWorkoutSchedulePlanner > header > strong small {
   color: var(--tn-muted);
   font-size: 8px;
-}
-
-.trainerWorkoutScheduleBody {
-  display: grid;
-  gap: 14px;
 }
 
 .trainerWorkoutScheduleCalendar {
