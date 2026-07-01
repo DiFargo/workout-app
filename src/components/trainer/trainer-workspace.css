@@ -2251,7 +2251,9 @@
 .trainerMeasurementFieldGrid article,
 .trainerMeasurementInsight,
 .trainerMeasurementChart,
-.trainerMeasurementTimeline {
+.trainerMeasurementTimeline,
+.trainerProgramTree,
+.trainerProgramDayPanel {
   min-width: 0;
   border: 1px solid var(--tn-line);
   border-radius: 8px;
@@ -5008,14 +5010,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   grid-template-columns: 240px minmax(0, 1fr);
   align-items: start;
   gap: 14px;
-}
-
-.trainerProgramTree,
-.trainerProgramDayPanel {
-  min-width: 0;
-  border: 1px solid var(--tn-line);
-  border-radius: 8px;
-  background: #fff;
 }
 
 .trainerProgramTree {

@@ -3554,6 +3554,10 @@ test("trainer workspace CSS keeps mobile measurement grids grouped", async () =>
     (source.match(/\.trainerMeasurementCollapsed > div,\s*\.trainerWorkoutMonthStats\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);\s*gap:\s*8px;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerMeasurementSummaryGrid article,\s*\.trainerMeasurementFieldGrid article,\s*\.trainerMeasurementInsight,\s*\.trainerMeasurementChart,\s*\.trainerMeasurementTimeline,\s*\.trainerProgramTree,\s*\.trainerProgramDayPanel\s*\{\s*min-width:\s*0;\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*8px;\s*background:\s*#fff;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps nutrition muted micro labels grouped", async () => {
