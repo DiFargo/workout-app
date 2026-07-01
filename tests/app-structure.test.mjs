@@ -3539,6 +3539,10 @@ test("client cabinet modal shells keep shared CSS owners", async () => {
     0
   );
   assert.equal(
+    (cabinetPolish.match(/\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen > \.profileDashboardCard,\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileNutritionGoalModalHead\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileDashboardButton,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileDashboardButton\s*\{\s*border-color:\s*transparent !important;\s*background:\s*linear-gradient\(135deg, #6552e6, #2d6ff2\) !important;\s*color:\s*#ffffff !important;\s*box-shadow:\s*0 12px 26px rgba\(76, 68, 201, 0\.22\) !important;\s*\}/g) || []).length,
     1
   );

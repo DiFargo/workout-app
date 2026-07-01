@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.630`.
+Last updated at app version `v.1.631`.
 
 ## Evidence
 
@@ -408,6 +408,7 @@ Started in `v.1.250`.
    - Status: cabinet nutrition modal warm-light picker active/hint CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet nutrition modal warm-light neutral card/picker/macro surfaces are grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet nutrition modal calendar/macro micro-label typography CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
+   - Status: cabinet nutrition modal settings-open hidden legacy surfaces are grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet trainer notifications and progress photos modal shells are grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet trainer notifications and progress photos overlay CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet trainer notifications and progress photos warm-light surface CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.

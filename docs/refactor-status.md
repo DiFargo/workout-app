@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.630`.
+Last updated at app version `v.1.631`.
 
 ## Stable Now
 
@@ -72,6 +72,7 @@ Last updated at app version `v.1.630`.
 - Cabinet nutrition modal warm-light neutral card/picker/macro surfaces now stay in one grouped owner.
 - Cabinet nutrition modal warm-light picker active and hint CSS now stay in grouped owners.
 - Cabinet nutrition modal calendar/macro micro-label typography CSS now stays in grouped owners.
+- Cabinet nutrition modal settings-open hidden legacy surfaces now stay in one grouped owner.
 - Cabinet trainer notifications and progress photos modal warm-light shells now stay in one grouped owner.
 - Cabinet trainer notifications and progress photos warm-light overlays now stay in one grouped owner.
 - Cabinet trainer notifications and progress photos warm-light surface CSS now stays in one grouped owner.
@@ -359,9 +360,9 @@ From the latest verified build:
 
 - main app JS chunk: about `472.18 KiB` raw, `131.41 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1128.16 KiB` raw, `114.16 KiB` gzip.
+- main CSS bundle: about `1128.14 KiB` raw, `114.16 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3298.62 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3298.58 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

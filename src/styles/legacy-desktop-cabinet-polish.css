@@ -3092,10 +3092,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
 }
 
 /* Keep nutrition goal editing inside the existing cabinet modal. */
-.cabinetNutritionModal .profileNutritionSection.settingsOpen > .profileDashboardCard {
-  display: none !important;
-}
-
 .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileNutritionGoalModalOverlay {
   position: static !important;
   inset: auto !important;
@@ -3124,6 +3120,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
   box-shadow: none !important;
 }
 
+.cabinetNutritionModal .profileNutritionSection.settingsOpen > .profileDashboardCard,
 .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileNutritionGoalModalHead {
   display: none !important;
 }
