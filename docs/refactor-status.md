@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.650`.
+Last updated at app version `v.1.651`.
 
 ## Stable Now
 
@@ -15,6 +15,7 @@ Last updated at app version `v.1.650`.
 - Client, trainer, admin hub and admin internals harnesses cover the main local visual smoke surfaces.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
+- Client primary final CSS no longer keeps the early duplicate cabinet bottom pseudo-layer before the final rhythm owner.
 - Client primary final CSS now shares the food action bar `strong` typography rule across search, product and editor bars, guarded by app structure tests.
 - Client primary final CSS now keeps food search action stack shells in grouped owners.
 - Client primary final CSS now keeps food search create-action inactive/active colors in grouped owners.

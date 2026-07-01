@@ -1172,19 +1172,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     isolation: isolate !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::after {
-    content: "" !important;
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    z-index: 70 !important;
-    height: calc(112px + env(safe-area-inset-bottom)) !important;
-    pointer-events: none !important;
-    background:
-      linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f6f7fc 22%, #f6f7fc 100%) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .mainMenuBottomBar.profileBottomTabBar,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) nav.mainMenuBottomBar.profileBottomTabBar {
     z-index: 90 !important;

@@ -1244,6 +1244,7 @@ test("client primary final CSS keeps client page variables in the final owner", 
 
   assert.ok(rhythmStart >= 0);
   assert.doesNotMatch(beforeRhythmBlock, /\.profileDashboardPage\.clientCorePageMain::after/);
+  assert.doesNotMatch(beforeRhythmBlock, /\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\)::after/);
   assert.match(
     source.slice(rhythmStart),
     /\.profileDashboardPage\.clientCorePageMain::after,[\s\S]*?\.clientCorePageWorkout\.individualWorkoutSelectPage::after\s*\{[\s\S]*?height:\s*calc\(112px \+ env\(safe-area-inset-bottom\)\) !important;[\s\S]*?background:\s*linear-gradient\(180deg,\s*rgba\(246,\s*247,\s*252,\s*0\) 0%,\s*#f6f7fc 22%,\s*#f6f7fc 100%\) !important;/
