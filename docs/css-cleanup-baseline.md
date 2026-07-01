@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1126.96 KiB` raw, `114.13 KiB` gzip.
-- Latest source CSS report: `100` files, about `3285.63 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3284.72 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -29,7 +29,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `209.41 KiB`
+- `src/styles/client-primary-final-lock.css` - `208.50 KiB`
 - `src/components/trainer/trainer-workspace.css` - `168.45 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `146.79 KiB`
 - `src/styles/client-render-target-lock.css` - `100.83 KiB`
@@ -232,6 +232,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.716`: removed the early duplicate main profile AI hero grid owner before the more specific hero grid owner in `client-nutrition-grid-lock.css`.
    - Continued in `v.1.717`: removed the early duplicate main profile progress insight headline layout owner before the final headline layout owner in `client-nutrition-grid-lock.css`.
    - Continued in `v.1.718`: removed the early duplicate main measurement chart line owner before the final chart line owner in `client-nutrition-grid-lock.css`.
+   - Continued in `v.1.719`: removed the early duplicate food action bar button and active owners before the final shared action owners in `client-primary-final-lock.css`.
 
 5. Admin hub and internals.
    - Reason: hub, users CRM and program overview surfaces have harness coverage.
@@ -995,3 +996,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.717`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.718`: removed the early duplicate main measurement chart line owner before the final chart line owner in `client-nutrition-grid-lock.css`; the final owner is guarded by the app structure test.
 - Verification for `v.1.718`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.719`: removed the early duplicate food action bar button and active owners before the final shared action owners in `client-primary-final-lock.css`; the final owners are guarded by the app structure test.
+- Verification for `v.1.719`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

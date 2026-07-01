@@ -639,6 +639,32 @@ test("client primary final CSS keeps shared action bar sizing in one owner", asy
     (source.match(/\.nutritionBottomTabBar\.clientBottomNav > button,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSearchBottomBar\.fatSearchBottomBarFour > button,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodProductActionBar > button,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar > button\s*\{[^}]*height:\s*68px !important;[^}]*min-height:\s*68px !important;[^}]*border-radius:\s*16px !important;/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.nutritionBottomTabBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSearchBottomBar\.fatSearchBottomBarFour > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodProductActionBar \.foodProductAddAction,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar \.foodEditPageConfirmAction\s*\{\s*border-color:\s*#ded7ff !important;\s*background:\s*#f0edff !important;\s*color:\s*#5d43e8 !important;\s*-webkit-text-fill-color:\s*#5d43e8 !important;\s*\}/g) || []).length,
+    1
+  );
+  const normalizedBlocks = [...source.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
+    selector: match[1].trim().replace(/\s+/g, " "),
+    body: match[2].trim().replace(/\s+/g, " ")
+  }));
+  assert.ok(
+    !normalizedBlocks.some(
+      ({ selector, body }) =>
+        selector ===
+          'html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button, html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > button, html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar > button' &&
+        body ===
+          "height: 68px !important; min-height: 68px !important; border-radius: 16px !important; color: #737b91 !important; -webkit-text-fill-color: #737b91 !important;"
+    )
+  );
+  assert.ok(
+    !normalizedBlocks.some(
+      ({ selector, body }) =>
+        selector ===
+          'html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button.active, html:root[data-app-theme="warm-light"] body #root .foodProductActionBar .foodProductAddAction, html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar .foodEditPageConfirmAction' &&
+        body ===
+          "border-color: #ded7ff !important; background: #f0edff !important; color: #5d43e8 !important; -webkit-text-fill-color: #5d43e8 !important;"
+    )
+  );
 });
 
 test("client primary final CSS keeps profile progress overview grid in one owner", async () => {
