@@ -292,7 +292,8 @@
 /* ADD FOOD SEARCH SCREEN POLISH â€” WARM LIGHT ONLY */
 
 /* search input field: slightly yellow like calendar block */
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium {
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNames {
   background:
     radial-gradient(circle at 12% 0%, rgba(244, 224, 100, 0.18), transparent 42%),
     linear-gradient(180deg, rgba(255, 249, 215, 0.98) 0%, rgba(246, 232, 174, 0.86) 100%) !important;
@@ -314,17 +315,6 @@
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input::placeholder {
   color: rgba(95, 87, 68, 0.58) !important;
   -webkit-text-fill-color: rgba(95, 87, 68, 0.58) !important;
-}
-
-/* search history block same color as calendar/search cards */
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNames {
-  background:
-    radial-gradient(circle at 12% 0%, rgba(244, 224, 100, 0.18), transparent 42%),
-    linear-gradient(180deg, rgba(255, 249, 215, 0.98) 0%, rgba(246, 232, 174, 0.86) 100%) !important;
-  border: 1px solid rgba(94, 75, 30, 0.12) !important;
-  box-shadow:
-    0 14px 30px rgba(88, 68, 24, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
 }
 
 /* history results: same family, slightly darker */

@@ -1949,6 +1949,23 @@ test("warm light food edit CSS keeps gold action shell grouped", async () => {
   );
 });
 
+test("warm light food edit CSS keeps search surface shells grouped", async () => {
+  const source = await readText("src/styles/legacy-warm-light-food-edit-back-buttons.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.fatFoodSearchScreenPremium \.fatSearchInputWrapPremium,\s*:root\[data-app-theme="warm-light"\] \.fatFoodSearchScreenPremium \.fatSearchHistoryNames\s*\{\s*background:\s*radial-gradient\(circle at 12% 0%, rgba\(244, 224, 100, 0\.18\), transparent 42%\),\s*linear-gradient\(180deg, rgba\(255, 249, 215, 0\.98\) 0%, rgba\(246, 232, 174, 0\.86\) 100%\) !important;[\s\S]*?box-shadow:\s*0 14px 30px rgba\(88, 68, 24, 0\.12\),\s*inset 0 1px 0 rgba\(255, 255, 255, 0\.62\) !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.doesNotMatch(
+    source,
+    /\.fatSearchInputWrapPremium\s*\{[\s\S]*?\.fatSearchHistoryNames\s*\{\s*background:/
+  );
+});
+
 test("nutrition food search actions CSS keeps action active colors grouped", async () => {
   const source = await readText("src/styles/nutrition-food-search-actions.css");
 
