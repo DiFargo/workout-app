@@ -3631,6 +3631,10 @@ test("trainer workspace CSS keeps muted paragraph typography grouped", async () 
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
+    (source.match(/\.trainerAnalyticsPanel h3,\s*\.trainerNotificationFeed h3,\s*\.trainerNotificationsLayout h3,\s*\.trainerClientBlockHeading h2,\s*\.trainerClientAssignedInfo h2,\s*\.trainerNutritionCurrentPlan h2\s*\{\s*margin:\s*0;\s*font-size:\s*16px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerNextPanelTitle p,\s*\.trainerPhotoComparePanel p\s*\{\s*margin:\s*4px 0 0;\s*color:\s*var\(--tn-muted\);\s*font-size:\s*11px;\s*\}/g) || []).length,
     1
   );

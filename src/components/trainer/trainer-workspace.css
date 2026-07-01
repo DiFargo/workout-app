@@ -1162,7 +1162,10 @@
 
 .trainerAnalyticsPanel h3,
 .trainerNotificationFeed h3,
-.trainerNotificationsLayout h3 {
+.trainerNotificationsLayout h3,
+.trainerClientBlockHeading h2,
+.trainerClientAssignedInfo h2,
+.trainerNutritionCurrentPlan h2 {
   margin: 0;
   font-size: 16px;
 }
@@ -5343,12 +5346,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: var(--tn-purple);
 }
 
-.trainerClientBlockHeading h2,
-.trainerClientAssignedInfo h2 {
-  margin: 0;
-  font-size: 16px;
-}
-
 .trainerClientBlockHeading p,
 .trainerClientAssignedInfo p,
 .trainerWorkoutEditorModal p {
@@ -6531,11 +6528,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: var(--tn-purple);
   font-size: 8px;
   font-weight: 800;
-}
-
-.trainerNutritionCurrentPlan h2 {
-  margin: 0;
-  font-size: 16px;
 }
 
 .trainerNutritionCurrentPlan p {
