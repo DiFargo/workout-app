@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1127.79 KiB` raw, `114.14 KiB` gzip.
-- Latest source CSS report: `100` files, about `3296.13 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3295.90 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -29,7 +29,7 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `210.46 KiB`
+- `src/styles/client-primary-final-lock.css` - `210.23 KiB`
 - `src/components/trainer/trainer-workspace.css` - `176.21 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `148.48 KiB`
 - `src/styles/client-render-target-lock.css` - `100.83 KiB`
@@ -48,6 +48,7 @@ Start mapping here before any cleanup:
 1. Client primary screens.
    - Reason: main and cabinet now have direct screenshot coverage.
    - Candidate files: `client-primary-final-lock.css`, `client-render-target-lock.css`, `client-visual-unity-final.css`, `legacy-desktop-cabinet-polish.css`.
+   - Continued in `v.1.649`: grouped food search action stack shell CSS in `client-primary-final-lock.css`.
    - Started in `v.1.282`: removed one-line core aliases `themes.css` and `client-main.css`; `index.css` now imports `theme.css` and `auth.css` directly.
    - Continued in `v.1.283`: removed core aggregators `layout.css` and `components.css`; `index.css` now imports their base component CSS directly.
    - Expanded in `v.1.288`: visual coverage now includes the cabinet workout history modal and its compact delete action.
@@ -787,3 +788,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.647`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.648`: grouped trainer panel shell and scrollbar CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
 - Verification for `v.1.648`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.649`: grouped food search action stack shell CSS in `client-primary-final-lock.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.649`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

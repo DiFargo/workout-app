@@ -2169,7 +2169,8 @@ html:root[data-app-theme="warm-light"] body #root .foodSearchRecentCard strong {
   -webkit-text-fill-color: #151824 !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .foodSearchPopularList {
+html:root[data-app-theme="warm-light"] body #root .foodSearchPopularList,
+html:root[data-app-theme="warm-light"] body #root .foodSearchModernActions {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
@@ -2198,7 +2199,9 @@ html:root[data-app-theme="warm-light"] body #root .foodSearchPopularIcon {
   font-size: 22px !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .foodSearchPopularInfo {
+html:root[data-app-theme="warm-light"] body #root .foodSearchPopularInfo,
+html:root[data-app-theme="warm-light"] body #root .foodSearchModernActionCard > span:nth-child(2),
+html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction > span:nth-child(2) {
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -2261,12 +2264,6 @@ html:root[data-app-theme="warm-light"] body #root .foodSearchShowMoreModern {
   -webkit-text-fill-color: #5f5744 !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .foodSearchModernActions {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .foodSearchModernActionCard,
 html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction {
   min-height: 82px !important;
@@ -2303,15 +2300,6 @@ html:root[data-app-theme="warm-light"] body #root .foodSearchModernActionIcon {
   color: #5d43ee !important;
   font-size: 24px !important;
   -webkit-text-fill-color: #5d43ee !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodSearchModernActionCard > span:nth-child(2),
-html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction > span:nth-child(2) {
-  min-width: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 3px !important;
-  text-align: left !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .foodSearchModernActionCard strong,

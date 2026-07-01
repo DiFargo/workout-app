@@ -692,6 +692,19 @@ test("client primary final CSS keeps food action label typography grouped", asyn
   );
 });
 
+test("client primary final CSS keeps food search action stack shells grouped", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.foodSearchPopularList,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodSearchModernActions\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*8px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodSearchPopularInfo,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodSearchModernActionCard > span:nth-child\(2\),\s*html:root\[data-app-theme="warm-light"\] body #root \.foodSearchFixedPhotoAction > span:nth-child\(2\)\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*3px !important;\s*text-align:\s*left !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps food editor header layout in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
