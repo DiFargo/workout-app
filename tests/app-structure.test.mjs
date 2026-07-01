@@ -2110,6 +2110,27 @@ test("legacy food search CSS keeps quick actions hidden in root owners", async (
   );
 });
 
+test("legacy food picker CSS keeps empty-state text in the final owner", async () => {
+  const pickerBase = await readText("src/styles/legacy-food-picker-base.css");
+  const finalEmptyStateStart = pickerBase.indexOf("/* empty state */");
+  const oldEmptyStateBlock = pickerBase.slice(0, finalEmptyStateStart);
+  const finalEmptyStateBlock = pickerBase.slice(finalEmptyStateStart);
+
+  assert.ok(finalEmptyStateStart > 0);
+  assert.doesNotMatch(
+    oldEmptyStateBlock,
+    /\.fatSearchStatus strong\s*\{\s*display:\s*block;\s*margin-bottom:\s*8px;\s*color:\s*rgba\(244, 246, 242, 0\.88\);\s*font-size:\s*16px;\s*\}/
+  );
+  assert.doesNotMatch(
+    oldEmptyStateBlock,
+    /\.fatFallbackSuggestions\s*\{\s*width:\s*100%;\s*display:\s*flex;\s*flex-direction:\s*column;\s*gap:\s*9px;\s*margin-top:\s*14px;\s*\}/
+  );
+  assert.match(
+    finalEmptyStateBlock,
+    /\.fatSearchStatus strong\s*\{\s*display:\s*block;\s*margin-bottom:\s*8px;\s*color:\s*rgba\(244,246,242,0\.9\);\s*font-size:\s*16px;\s*font-weight:\s*900;\s*\}[\s\S]*?\.fatFallbackSuggestions\s*\{\s*width:\s*100%;\s*display:\s*flex;\s*flex-direction:\s*column;\s*gap:\s*9px;\s*margin-top:\s*13px;\s*\}/
+  );
+});
+
 test("nutrition food search actions CSS keeps one photo active transform owner", async () => {
   const source = await readText("src/styles/nutrition-food-search-actions.css");
 
