@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1128.93 KiB` raw, `114.17 KiB` gzip.
-- Latest source CSS report: `100` files, about `3299.82 KiB` total source CSS.
+- Latest main CSS bundle: about `1128.78 KiB` raw, `114.18 KiB` gzip.
+- Latest source CSS report: `100` files, about `3299.60 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -112,6 +112,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.606`: grouped warm-light nutrition header/calendar close shell CSS in `legacy-registration-accessibility.css`.
    - Continued in `v.1.607`: grouped client workout history modal/cabinet item text internals CSS in `legacy-registration-accessibility.css`.
    - Continued in `v.1.608`: grouped cabinet nutrition modal AI plan/goal card shells in `legacy-desktop-cabinet-polish.css`.
+   - Continued in `v.1.621`: grouped cabinet nutrition modal warm-light save button shell CSS in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.609`: grouped profile/admin Telegram status badge shells in `legacy-profile-dashboard-telegram-late.css`.
    - Continued in `v.1.610`: grouped profile/admin Telegram avatar shells in `legacy-profile-dashboard-telegram-late.css`.
    - Continued in `v.1.611`: grouped profile/admin Telegram avatar image-fit CSS in `legacy-profile-dashboard-telegram-late.css`.
@@ -703,3 +704,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.619`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.620`: removed the obsolete warm-light collapsed AI plan surface pre-owner from `nutrition.css`; the final white collapsed-summary owner is guarded by the app structure test.
 - Verification for `v.1.620`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.621`: grouped cabinet nutrition modal warm-light save button shell CSS in `legacy-desktop-cabinet-polish.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.621`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

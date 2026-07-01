@@ -3204,14 +3204,6 @@ html:root[data-app-theme="warm-light"] body #root
   color: #596176 !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root
-  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileDashboardButton {
-  border-color: transparent !important;
-  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
-  color: #ffffff !important;
-  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22) !important;
-}
-
 /* Unified weekly nutrition plan and goal editor. */
 .cabinetNutritionModal .cabinetNutritionCombined {
   height: auto !important;
@@ -3442,6 +3434,8 @@ html:root[data-app-theme="warm-light"] body #root
   color: #596176 !important;
 }
 
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileDashboardButton,
 html:root[data-app-theme="warm-light"] body #root
   .cabinetNutritionModal .cabinetNutritionCombined .profileDashboardButton {
   border-color: transparent !important;
