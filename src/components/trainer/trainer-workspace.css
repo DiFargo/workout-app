@@ -6414,7 +6414,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 }
 
 .trainerExerciseProgressName,
-.trainerExerciseProgressResult {
+.trainerExerciseProgressResult,
+.trainerWorkoutStatusPanel label {
   display: grid;
   gap: 5px;
 }
@@ -7765,11 +7766,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border: 1px solid #eceaf3;
   border-radius: 8px;
   background: #fbfaff;
-}
-
-.trainerWorkoutStatusPanel label {
-  display: grid;
-  gap: 5px;
 }
 
 .trainerWorkoutStatusPanel select,

@@ -3692,6 +3692,15 @@ test("trainer workspace CSS keeps list tail dividers grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps compact text field stacks grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerExerciseProgressName,\s*\.trainerExerciseProgressResult,\s*\.trainerWorkoutStatusPanel label\s*\{\s*display:\s*grid;\s*gap:\s*5px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps shared disabled action states grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
