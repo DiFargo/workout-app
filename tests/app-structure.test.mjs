@@ -468,6 +468,25 @@ test("client visual unity CSS does not keep exact duplicate blocks", async () =>
   assert.deepEqual(duplicateBlocks, []);
 });
 
+test("client visual unity CSS keeps goal stat typography in the final owner", async () => {
+  const source = await readText("src/styles/client-visual-unity-final.css");
+  const mobileFixStart = source.indexOf("v.1.89: final mobile alignment fixes");
+  const fullCardGoalStart = source.indexOf("v.1.90: override the older full-card goal selector", mobileFixStart);
+  const earlyBlock = source.slice(mobileFixStart, fullCardGoalStart);
+  const finalBlock = source.slice(fullCardGoalStart);
+
+  assert.ok(mobileFixStart >= 0);
+  assert.ok(fullCardGoalStart > mobileFixStart);
+  assert.doesNotMatch(
+    earlyBlock,
+    /\.profileAiStatsRow > div\.goal > strong,[\s\S]*?\{\s*display:\s*block !important;[\s\S]*?font-size:\s*14px !important;/
+  );
+  assert.match(
+    finalBlock,
+    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\.goal > strong,[\s\S]*?\.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection \.profileAiStatsRow > div\.goal > strong\s*\{\s*display:\s*block !important;[\s\S]*?font-size:\s*14px !important;[\s\S]*?word-break:\s*keep-all !important;/
+  );
+});
+
 test("client primary final CSS keeps bottom nav sizing in one owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 

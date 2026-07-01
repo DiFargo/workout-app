@@ -1225,28 +1225,6 @@
 
 /* v.1.89: final mobile alignment fixes after production visual check. */
 @media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div.goal > strong,
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow > div.goal > strong,
-  html:root[data-app-theme="warm-light"] body #root .profileAiStatsRow > div.goal > strong,
-  html:root[data-app-theme="warm-light"] body #root .profileAiStatsRow .goal strong {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    color: #171923 !important;
-    -webkit-text-fill-color: #171923 !important;
-    font-size: 14px !important;
-    line-height: 1.05 !important;
-    font-weight: 900 !important;
-    letter-spacing: 0 !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: clip !important;
-    overflow-wrap: normal !important;
-    word-break: keep-all !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress {
     top: -22px !important;
@@ -1262,6 +1240,10 @@
 
 /* v.1.90: override the older full-card goal selector that has higher specificity. */
 @media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div.goal > strong,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow > div.goal > strong,
+  html:root[data-app-theme="warm-light"] body #root .profileAiStatsRow > div.goal > strong,
+  html:root[data-app-theme="warm-light"] body #root .profileAiStatsRow .goal strong,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection .profileAiStatsRow > div.goal > strong,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection .profileAiStatsRow > div.goal > strong {
     display: block !important;
