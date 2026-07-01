@@ -6076,7 +6076,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   opacity: 0.38;
 }
 
-.trainerWorkoutMonthGrid .today {
+.trainerWorkoutMonthGrid .today,
+.trainerWorkoutScheduleGrid .today {
   border-color: var(--tn-purple-border);
   box-shadow: 0 0 0 3px rgba(100, 55, 245, 0.08);
 }
@@ -6295,11 +6296,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerWorkoutScheduleGrid .muted {
   opacity: 0.42;
-}
-
-.trainerWorkoutScheduleGrid .today {
-  border-color: var(--tn-purple-border);
-  box-shadow: 0 0 0 3px rgba(100, 55, 245, 0.08);
 }
 
 .trainerWorkoutScheduleGrid .selected {

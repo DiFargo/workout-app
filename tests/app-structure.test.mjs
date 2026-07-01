@@ -3608,6 +3608,10 @@ test("trainer workspace CSS keeps workout calendar status colors grouped", async
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
+    (source.match(/\.trainerWorkoutMonthGrid \.today,\s*\.trainerWorkoutScheduleGrid \.today\s*\{\s*border-color:\s*var\(--tn-purple-border\);\s*box-shadow:\s*0 0 0 3px rgba\(100,\s*55,\s*245,\s*0\.08\);\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerWorkoutMonthGrid \.completed,\s*\.trainerWorkoutSchedulePlanner > header > strong\.ready,\s*\.trainerWorkoutScheduleGrid button\.completed\s*\{\s*border-color:\s*#ccebd6;\s*background:\s*#f2fbf5;\s*color:\s*#16813d;\s*\}/g) || []).length,
     1
   );
