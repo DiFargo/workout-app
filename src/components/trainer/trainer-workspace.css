@@ -1673,7 +1673,10 @@
   font-weight: 800;
 }
 
-.trainerNextAvatar img {
+.trainerNextAvatar img,
+.trainerNextPhotoGrid img,
+.trainerNextExerciseImage img,
+.trainerNextExerciseImage video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -2434,12 +2437,6 @@
   cursor: pointer;
 }
 
-.trainerNextPhotoGrid img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .trainerNextPhotoGrid figcaption {
   position: absolute;
   left: 8px;
@@ -2770,18 +2767,6 @@
   border-radius: 7px;
   background: #f0f1f4;
   color: var(--tn-purple);
-}
-
-.trainerNextExerciseImage img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.trainerNextExerciseImage video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .trainerNextExerciseList article > strong {
