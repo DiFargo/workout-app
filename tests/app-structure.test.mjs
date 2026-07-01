@@ -3114,6 +3114,15 @@ test("desktop cabinet CSS keeps trainer client muted captions grouped", async ()
   );
 });
 
+test("desktop cabinet CSS keeps trainer client list shells grouped", async () => {
+  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientAiList,\s*\.trainerClientControlRows,\s*\.trainerClientActivityList\s*\{\s*display:\s*grid;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");

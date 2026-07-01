@@ -2586,7 +2586,9 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
   background: linear-gradient(90deg, #8dbd36, #b6e955);
 }
 
-.trainerClientAiList {
+.trainerClientAiList,
+.trainerClientControlRows,
+.trainerClientActivityList {
   display: grid;
 }
 
@@ -2728,10 +2730,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
   color: rgba(255, 255, 255, 0.86);
 }
 
-.trainerClientControlRows {
-  display: grid;
-}
-
 .trainerClientControlRows > div {
   min-height: 35px;
   display: flex;
@@ -2744,10 +2742,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
 .trainerClientControlRows strong {
   color: rgba(255, 255, 255, 0.84);
   font-size: 11px;
-}
-
-.trainerClientActivityList {
-  display: grid;
 }
 
 .trainerClientActivityList > div {

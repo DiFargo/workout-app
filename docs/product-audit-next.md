@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.634`.
+Last updated at app version `v.1.635`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `370` passed.
+- `npm.cmd test`: passed with `371` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -418,6 +418,7 @@ Started in `v.1.250`.
    - Status: trainer client KPI/macro metric caption typography CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
    - Status: trainer client attention/progress caption typography CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
    - Status: trainer client hero/section/control muted caption typography CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
+   - Status: trainer client AI/control/activity list shell CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
    - Status: warm-light add-food/search cleanup CSS moved behind the nutrition lazy entrypoint under the existing nutrition visual audit.
    - Status: dark-green nutrition food-flow CSS moved behind the nutrition lazy entrypoint with structural guards preserving readable dark nutrition overrides.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
