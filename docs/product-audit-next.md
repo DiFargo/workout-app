@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.609`.
+Last updated at app version `v.1.610`.
 
 ## Evidence
 
@@ -364,6 +364,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 256. Client workout history modal/cabinet item text internals now stay in grouped registration owners.
 257. Cabinet nutrition modal AI plan and goal card shells now stay in one high-specificity combined-section owner.
 258. Profile and admin Telegram status badge shells now stay in grouped profile dashboard owners.
+259. Profile and admin Telegram avatar shells now share one profile dashboard owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

@@ -577,11 +577,15 @@
   width: 54px;
   height: 54px;
   border-radius: 18px;
+  font-size: 26px;
+}
+
+.profileTelegramAvatar,
+.adminClientTelegramAvatar {
   display: grid;
   place-items: center;
   background: rgba(42,171,238,.14);
   border: 1px solid rgba(42,171,238,.18);
-  font-size: 26px;
 }
 
 .profileTelegramInfo strong {
@@ -794,10 +798,6 @@
   width: 48px;
   height: 48px;
   border-radius: 16px;
-  display: grid;
-  place-items: center;
-  background: rgba(42,171,238,.14);
-  border: 1px solid rgba(42,171,238,.18);
   font-size: 23px;
   overflow: hidden;
 }

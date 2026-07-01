@@ -2921,7 +2921,7 @@ test("profile dashboard CSS keeps AI coach label typography grouped", async () =
   );
 });
 
-test("profile dashboard CSS keeps Telegram badge shells grouped", async () => {
+test("profile dashboard CSS keeps Telegram shells grouped", async () => {
   const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
 
   assert.equal(
@@ -2936,6 +2936,14 @@ test("profile dashboard CSS keeps Telegram badge shells grouped", async () => {
     (
       source.match(
         /\.profileTelegramStatus\.connected,\s*\.adminClientTelegramBadge\.connected\s*\{\s*background:\s*rgba\(42,171,238,\.14\);\s*border:\s*1px solid rgba\(42,171,238,\.24\);\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (
+      source.match(
+        /\.profileTelegramAvatar,\s*\.adminClientTelegramAvatar\s*\{\s*display:\s*grid;\s*place-items:\s*center;\s*background:\s*rgba\(42,171,238,\.14\);\s*border:\s*1px solid rgba\(42,171,238,\.18\);\s*\}/g
       ) || []
     ).length,
     1
