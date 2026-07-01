@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.607`.
+Last updated at app version `v.1.608`.
 
 ## Evidence
 
@@ -362,6 +362,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 254. Client workout history modal/cabinet item icon and title styling now stay in grouped registration owners.
 255. Warm-light nutrition header/calendar close shell styling now stays in one grouped registration owner.
 256. Client workout history modal/cabinet item text internals now stay in grouped registration owners.
+257. Cabinet nutrition modal AI plan and goal card shells now stay in one high-specificity combined-section owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

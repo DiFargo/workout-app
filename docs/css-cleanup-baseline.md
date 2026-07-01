@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1131.56 KiB` raw, `114.28 KiB` gzip.
-- Latest source CSS report: `100` files, about `3308.48 KiB` total source CSS.
+- Latest main CSS bundle: about `1130.67 KiB` raw, `114.24 KiB` gzip.
+- Latest source CSS report: `100` files, about `3307.43 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -29,18 +29,19 @@ Not covered deeply yet:
 
 Start mapping here before any cleanup:
 
-- `src/styles/client-primary-final-lock.css` - `210.80 KiB`
+- `src/styles/client-primary-final-lock.css` - `210.46 KiB`
 - `src/components/trainer/trainer-workspace.css` - `177.92 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `148.48 KiB`
 - `src/styles/client-render-target-lock.css` - `100.83 KiB`
-- `src/styles/legacy-desktop-cabinet-polish.css` - `92.82 KiB`
+- `src/styles/legacy-desktop-cabinet-polish.css` - `91.77 KiB`
 - `src/styles/legacy-food-editor-tail.css` - `91.55 KiB`
-- `src/styles/legacy-client-workout-flow-late.css` - `84.45 KiB`
+- `src/styles/legacy-client-workout-flow-late.css` - `84.02 KiB`
 - `src/styles/legacy-month-program-editor-early.css` - `83.36 KiB`
-- `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.31 KiB`
+- `src/styles/legacy-profile-dashboard-telegram-late.css` - `83.05 KiB`
 - `src/styles/legacy-admin-client-page.css` - `81.40 KiB`
-- `src/styles/client-visual-unity-final.css` - `78.41 KiB`
-- `src/styles/client-food-search-final.css` - `69.37 KiB`
+- `src/styles/client-visual-unity-final.css` - `77.87 KiB`
+- `src/styles/legacy-registration-accessibility.css` - `68.14 KiB`
+- `src/styles/client-food-search-final.css` - `68.01 KiB`
 
 ## Cleanup Order
 
@@ -110,6 +111,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.605`: grouped client workout history modal/cabinet item icon and title CSS in `legacy-registration-accessibility.css`.
    - Continued in `v.1.606`: grouped warm-light nutrition header/calendar close shell CSS in `legacy-registration-accessibility.css`.
    - Continued in `v.1.607`: grouped client workout history modal/cabinet item text internals CSS in `legacy-registration-accessibility.css`.
+   - Continued in `v.1.608`: grouped cabinet nutrition modal AI plan/goal card shells in `legacy-desktop-cabinet-polish.css`.
    - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
    - Continued in `v.1.307`: warm-light add-food/search cleanup CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition visual coverage.
    - Continued in `v.1.308`: dark-green nutrition food-flow CSS moved from the core app entrypoint into `nutrition-stack.css`, with the dark nutrition readability guard updated.
@@ -670,3 +672,4 @@ Start mapping here before any cleanup:
 - `v.1.605`: consolidated client workout history modal/cabinet item icon and title CSS in `legacy-registration-accessibility.css`; the grouped owners are guarded by the app structure test.
 - `v.1.606`: consolidated warm-light nutrition header/calendar close shell CSS in `legacy-registration-accessibility.css`; the grouped owner is guarded by the app structure test.
 - `v.1.607`: consolidated client workout history modal/cabinet item text internals CSS in `legacy-registration-accessibility.css`; the grouped owners are guarded by the app structure test.
+- `v.1.608`: consolidated cabinet nutrition modal AI plan and goal card shells in `legacy-desktop-cabinet-polish.css`; the combined-section owner is guarded by the app structure test.

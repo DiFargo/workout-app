@@ -3229,8 +3229,12 @@ html:root[data-app-theme="warm-light"] body #root
   display: none;
 }
 
-.cabinetNutritionModal .cabinetNutritionCombined .profileAiNutritionPlanCard,
-.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionGoalCard {
+.cabinetNutritionModal
+  .profileNutritionSection.hasPlan.cabinetNutritionCombined
+  .profileAiNutritionPlanCard,
+.cabinetNutritionModal
+  .profileNutritionSection.hasPlan.cabinetNutritionCombined
+  .profileNutritionGoalCard {
   flex: 0 0 auto !important;
   min-height: 0 !important;
   height: auto !important;
@@ -3240,12 +3244,16 @@ html:root[data-app-theme="warm-light"] body #root
   background: rgba(255, 255, 255, 0.025) !important;
 }
 
-.cabinetNutritionModal .cabinetNutritionCombined .profileAiNutritionPlanCard {
+.cabinetNutritionModal
+  .profileNutritionSection.hasPlan.cabinetNutritionCombined
+  .profileAiNutritionPlanCard {
   order: 1 !important;
   overflow: visible !important;
 }
 
-.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionGoalCard {
+.cabinetNutritionModal
+  .profileNutritionSection.hasPlan.cabinetNutritionCombined
+  .profileNutritionGoalCard {
   order: 2 !important;
   padding: 12px !important;
   overflow: visible !important;
@@ -3440,45 +3448,6 @@ html:root[data-app-theme="warm-light"] body #root
   background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
   color: #ffffff !important;
   box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22) !important;
-}
-
-.cabinetNutritionModal
-  .profileNutritionSection.hasPlan.cabinetNutritionCombined
-  .profileAiNutritionPlanCard,
-.cabinetNutritionModal
-  .profileNutritionSection.hasPlan.cabinetNutritionCombined
-  .profileNutritionGoalCard {
-  min-height: 0 !important;
-  height: auto !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-  border-radius: 19px !important;
-  background: rgba(255, 255, 255, 0.025) !important;
-}
-
-.cabinetNutritionModal
-  .profileNutritionSection.hasPlan.cabinetNutritionCombined
-  .profileNutritionGoalCard {
-  padding: 12px !important;
-}
-
-.cabinetNutritionModal
-  .profileNutritionSection.hasPlan.cabinetNutritionCombined
-  .profileNutritionOverview {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root
-  .cabinetNutritionModal
-  .profileNutritionSection.hasPlan.cabinetNutritionCombined
-  .profileAiNutritionPlanCard,
-html:root[data-app-theme="warm-light"] body #root
-  .cabinetNutritionModal
-  .profileNutritionSection.hasPlan.cabinetNutritionCombined
-  .profileNutritionGoalCard {
-  border-color: #e1e4ef !important;
-  background: #ffffff !important;
 }
 
 @media (max-height: 720px) {

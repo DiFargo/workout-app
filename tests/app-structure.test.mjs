@@ -3420,12 +3420,26 @@ test("client cabinet action cards expose explicit accessible labels", async () =
   assert.match(actionGrid, /aria-label=\{`\$\{eyebrow\}: \$\{title\}`\}/);
 });
 
-test("client cabinet modal close buttons keep shared sizing in one owner", async () => {
+test("client cabinet modal shells keep shared CSS owners", async () => {
   const source = await readText("src/styles/workouts.css");
+  const cabinetPolish = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const nutritionModal = await readText("src/features/client/profile/ProfileNutritionModal.jsx");
 
   assert.equal(
     (source.match(/\.cabinetNutritionModalHead button,\s*\.cabinetUtilityModalHead > button\s*\{\s*flex:\s*0 0 44px;/g) || []).length,
     1
+  );
+  assert.match(
+    nutritionModal,
+    /className="profileDashboardGrid profileNutritionSection hasPlan cabinetNutritionCombined"/
+  );
+  assert.equal(
+    (cabinetPolish.match(/\.cabinetNutritionModal\s*\.profileNutritionSection\.hasPlan\.cabinetNutritionCombined\s*\.profileAiNutritionPlanCard,\s*\.cabinetNutritionModal\s*\.profileNutritionSection\.hasPlan\.cabinetNutritionCombined\s*\.profileNutritionGoalCard\s*\{\s*flex:\s*0 0 auto !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (cabinetPolish.match(/\.cabinetNutritionModal\s*\.cabinetNutritionCombined\s*\.profileAiNutritionPlanCard,\s*\.cabinetNutritionModal\s*\.cabinetNutritionCombined\s*\.profileNutritionGoalCard\s*\{/g) || []).length,
+    0
   );
 });
 
