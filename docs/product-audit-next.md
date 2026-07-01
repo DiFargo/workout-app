@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.732`.
+Last updated at app version `v.1.733`.
 
 ## Evidence
 
@@ -375,6 +375,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 267. Profile AI stats label layout now stays in the later full-width owner instead of repeating an older compact `span` block.
 268. Warm-light nutrition summary donut center now stays in the compact owner instead of repeating the older black-center visibility block.
 269. Food picker empty-state text and fallback suggestion layout now stay in the later empty-state owner instead of repeating older search-state blocks.
+270. Profile unified stats grid now stays in the horizontal stats owner instead of repeating the same three-column lock in the mobile media block.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

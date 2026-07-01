@@ -1801,10 +1801,6 @@
 }
 
 @media (max-width: 760px) {
-  .profileUnifiedStats {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
-
   .profileUnifiedStats > div {
     min-height: 72px !important;
     padding: 10px 8px !important;

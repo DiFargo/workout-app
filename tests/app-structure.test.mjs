@@ -3088,6 +3088,28 @@ test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", 
   );
 });
 
+test("profile dashboard CSS keeps unified stats grid in the horizontal owner", async () => {
+  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+  const horizontalStatsStart = source.indexOf("/* HORIZONTAL PROFILE STATS */");
+  const goalSplitStart = source.indexOf("/* GOAL SPLIT: MAINTAIN VS RECOMP */");
+  const horizontalStatsBlock = source.slice(horizontalStatsStart, goalSplitStart);
+
+  assert.ok(horizontalStatsStart > 0);
+  assert.ok(goalSplitStart > horizontalStatsStart);
+  assert.equal(
+    (source.match(/\.profileUnifiedStats\s*\{\s*grid-template-columns:\s*repeat\(3,\s*1fr\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.doesNotMatch(
+    horizontalStatsBlock,
+    /@media\s*\(max-width:\s*760px\)\s*\{\s*\.profileUnifiedStats\s*\{\s*grid-template-columns:\s*repeat\(3,\s*1fr\) !important;\s*\}/
+  );
+  assert.match(
+    horizontalStatsBlock,
+    /\.profileUnifiedStats\s*\{\s*grid-template-columns:\s*repeat\(3,\s*1fr\) !important;\s*\}[\s\S]*?@media\s*\(max-width:\s*760px\)\s*\{\s*\.profileUnifiedStats > div\s*\{\s*min-height:\s*72px !important;\s*padding:\s*10px 8px !important;\s*\}/
+  );
+});
+
 test("profile dashboard CSS keeps sex and goal active states grouped", async () => {
   const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
 
