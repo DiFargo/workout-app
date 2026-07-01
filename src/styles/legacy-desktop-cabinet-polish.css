@@ -1111,12 +1111,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsHe
   color: #5a49df;
 }
 
-html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsHead h2,
-html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem strong,
-html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsEmpty strong {
-  color: #151824;
-}
-
 html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsSummary,
 html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem small,
 html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem em,
@@ -1437,6 +1431,9 @@ html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosHead spa
   color: #5a49df;
 }
 
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsHead h2,
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem strong,
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsEmpty strong,
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosHead h2,
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosLatest strong,
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotoSteps strong {

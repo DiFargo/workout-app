@@ -3563,6 +3563,10 @@ test("client cabinet modal shells keep shared CSS owners", async () => {
     1
   );
   assert.equal(
+    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsHead h2,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationItem strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsEmpty strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosHead h2,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosLatest strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotoSteps strong\s*\{\s*color:\s*#151824;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsHead button,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationItem,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosHead button,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosIntro,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotoSteps label\s*\{\s*border-color:\s*#e1e4ef;\s*background:\s*#fff;\s*color:\s*#151824;\s*\}/g) || []).length,
     1
   );
