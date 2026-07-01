@@ -3817,6 +3817,10 @@ test("trainer workspace CSS keeps trainer calendar and notification controls gro
     (source.match(/\.trainerNotificationIcon\.connected,\s*\.trainerNotificationStatusCard > i\.connected\s*\{\s*background:\s*var\(--tn-green-soft\);\s*color:\s*var\(--tn-green\);\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerNextMetricFoot\.green small,\s*\.trainerNextResultCard \.positive,\s*\.trainerNextHistoryList article > svg,\s*\.trainerNextNutritionAnalysis svg\s*\{\s*color:\s*var\(--tn-green\);\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps workout calendar status colors grouped", async () => {

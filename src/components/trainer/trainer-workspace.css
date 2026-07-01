@@ -1407,7 +1407,10 @@
   color: var(--tn-muted);
 }
 
-.trainerNextMetricFoot.green small {
+.trainerNextMetricFoot.green small,
+.trainerNextResultCard .positive,
+.trainerNextHistoryList article > svg,
+.trainerNextNutritionAnalysis svg {
   color: var(--tn-green);
 }
 
@@ -2015,10 +2018,6 @@
   font-size: 11px;
 }
 
-.trainerNextResultCard .positive {
-  color: var(--tn-green);
-}
-
 .trainerNextActivityCard span,
 .trainerNotificationCalendar > header > div:last-child {
   display: inline-flex;
@@ -2124,10 +2123,6 @@
 
 .trainerNextWorkoutNotesTitle {
   margin-top: 16px;
-}
-
-.trainerNextHistoryList article > svg {
-  color: var(--tn-green);
 }
 
 .trainerNextMeasurementGrid article {
@@ -3069,10 +3064,6 @@
   gap: 8px;
   margin: 10px 0 0;
   font-size: 10px;
-}
-
-.trainerNextNutritionAnalysis svg {
-  color: var(--tn-green);
 }
 
 .trainerNextAiButton {
