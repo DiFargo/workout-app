@@ -1859,8 +1859,8 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
   .trainerEventsCard { grid-column: auto; }
   .trainerWorkspaceCard { padding: 15px; border-radius: 18px; }
   .trainerTaskCreate,
-  .trainerPhotoMetaRow { grid-template-columns: 1fr; }
-  .trainerPhotoCompare { grid-template-columns: 1fr; }
+  .trainerPhotoMetaRow,
+  .trainerPhotoCompare,
   .trainerPaymentGrid { grid-template-columns: 1fr; }
   .trainerPaymentGrid .wide,
   .trainerPaymentGrid button { grid-column: auto; }
