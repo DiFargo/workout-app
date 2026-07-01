@@ -1930,6 +1930,23 @@ test("legacy nutrition header CSS keeps pixel meter span sizes in the later comp
   );
 });
 
+test("nutrition summary calories CSS keeps pixel meter width after the header layer", async () => {
+  const headerSource = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const summarySource = await readText("src/styles/legacy-nutrition-summary-calories.css");
+  const headerMobileStart = headerSource.indexOf("@media (max-width: 480px)");
+  const headerMobileBlock = headerSource.slice(headerMobileStart);
+
+  assert.ok(headerMobileStart > 0);
+  assert.doesNotMatch(
+    headerMobileBlock,
+    /\.fatSecretPage \.fatPixelMeter:not\(\.small\)\s*\{\s*width:\s*52px !important;\s*min-width:\s*52px !important;\s*\}/
+  );
+  assert.match(
+    summarySource,
+    /\.fatSecretPage \.fatPixelMeter:not\(\.small\)\s*\{\s*width:\s*52px !important;\s*min-width:\s*52px !important;\s*\}[\s\S]*?@media\s*\(max-width:\s*480px\)[\s\S]*?\.fatSecretPage \.fatPixelMeter:not\(\.small\)\s*\{\s*width:\s*50px !important;\s*min-width:\s*50px !important;\s*\}/
+  );
+});
+
 test("legacy nutrition header CSS keeps calorie row sizes in later compact owners", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");

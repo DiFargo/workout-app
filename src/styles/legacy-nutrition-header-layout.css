@@ -1645,11 +1645,6 @@
     padding: 13px 12px !important;
   }
 
-  .fatSecretPage .fatPixelMeter:not(.small) {
-    width: 52px !important;
-    min-width: 52px !important;
-  }
-
   .fatSecretPage .fatCalorieRows div {
     grid-template-columns: minmax(0, 1fr) 74px !important;
     column-gap: 9px !important;
