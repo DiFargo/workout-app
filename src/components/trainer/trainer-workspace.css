@@ -1248,7 +1248,8 @@
   gap: 3px;
 }
 
-.trainerNotificationFeed strong {
+.trainerNotificationFeed strong,
+.trainerNextClientIdentity strong {
   overflow: hidden;
   color: var(--tn-text);
   font-size: 12px;
@@ -1664,14 +1665,6 @@
   min-width: 0;
   display: grid;
   gap: 3px;
-}
-
-.trainerNextClientIdentity strong {
-  overflow: hidden;
-  color: var(--tn-text);
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .trainerNextClientIdentity small {

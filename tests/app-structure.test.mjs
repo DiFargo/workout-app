@@ -3668,6 +3668,10 @@ test("trainer workspace CSS keeps panel shells and scrollbars grouped", async ()
     1
   );
   assert.equal(
+    (source.match(/\.trainerNotificationFeed strong,\s*\.trainerNextClientIdentity strong\s*\{\s*overflow:\s*hidden;\s*color:\s*var\(--tn-text\);\s*font-size:\s*12px;\s*text-overflow:\s*ellipsis;\s*white-space:\s*nowrap;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerMessageList::-webkit-scrollbar-track,\s*\.trainerMessageFilters::-webkit-scrollbar-track,\s*\.trainerNextWorkoutDays::-webkit-scrollbar-track\s*\{\s*background:\s*transparent;\s*\}/g) || []).length,
     1
   );
