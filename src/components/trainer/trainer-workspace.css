@@ -1632,7 +1632,8 @@
   font-size: 11px;
 }
 
-.trainerNextClientTable > button > span:not(.trainerNextClientIdentity):not(.trainerNextStatus) {
+.trainerNextClientTable > button > span:not(.trainerNextClientIdentity):not(.trainerNextStatus),
+.trainerNextHistoryList article div {
   display: grid;
   gap: 3px;
 }
@@ -2118,11 +2119,6 @@
   border-radius: 7px;
   background: var(--tn-purple-soft);
   color: var(--tn-purple);
-}
-
-.trainerNextHistoryList article div {
-  display: grid;
-  gap: 3px;
 }
 
 .trainerNextHistoryList article strong {

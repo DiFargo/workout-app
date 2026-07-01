@@ -3701,6 +3701,15 @@ test("trainer workspace CSS keeps compact text field stacks grouped", async () =
   );
 });
 
+test("trainer workspace CSS keeps compact row text stacks grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNextClientTable > button > span:not\(\.trainerNextClientIdentity\):not\(\.trainerNextStatus\),\s*\.trainerNextHistoryList article div\s*\{\s*display:\s*grid;\s*gap:\s*3px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps shared disabled action states grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
