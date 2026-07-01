@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.674`.
+Last updated at app version `v.1.675`.
 
 ## Evidence
 
@@ -461,6 +461,7 @@ Started in `v.1.250`.
    - Status: trainer mobile exercise editor layout CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer program and workout-day action hover CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer notification connected-state color CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
+   - Status: trainer drawer and photo preview modal micro-label typography CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: the early duplicate cabinet bottom pseudo-layer was removed from `client-primary-final-lock.css`; the final rhythm owner remains guarded under client primary visual coverage.
    - Status: food search action stack shell CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
    - Status: food search create-action inactive/active color CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.

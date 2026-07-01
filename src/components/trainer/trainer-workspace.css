@@ -228,7 +228,8 @@
   margin-bottom: 12px;
 }
 
-.trainerNextMoreDrawer header span {
+.trainerNextMoreDrawer header span,
+.trainerPhotoPreviewModal header span {
   color: var(--tn-purple);
   font-size: 11px;
   font-weight: 900;
@@ -2540,12 +2541,6 @@
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 22px 80px rgba(24, 27, 42, 0.22);
-}
-
-.trainerPhotoPreviewModal header span {
-  color: var(--tn-purple);
-  font-size: 11px;
-  font-weight: 900;
 }
 
 .trainerPhotoPreviewModal header h2 {

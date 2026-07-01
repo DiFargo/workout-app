@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1126.96 KiB` raw, `114.13 KiB` gzip.
-- Latest source CSS report: `100` files, about `3292.38 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3292.31 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -188,6 +188,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.672`: grouped trainer mobile exercise editor layout CSS in `trainer-workspace.css`.
    - Continued in `v.1.673`: grouped trainer program and workout-day action hover CSS in `trainer-workspace.css`.
    - Continued in `v.1.674`: grouped trainer notification connected-state color CSS in `trainer-workspace.css`.
+   - Continued in `v.1.675`: grouped trainer drawer and photo preview modal micro-label typography CSS in `trainer-workspace.css`.
 
 5. Admin hub and internals.
    - Reason: hub, users CRM and program overview surfaces have harness coverage.
@@ -863,3 +864,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.673`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.674`: grouped trainer notification connected-state color CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
 - Verification for `v.1.674`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.675`: grouped trainer drawer and photo preview modal micro-label typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.675`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
