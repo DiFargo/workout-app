@@ -1253,7 +1253,8 @@
   color: var(--tn-purple);
 }
 
-.trainerNotificationFeed span {
+.trainerNotificationFeed span,
+.trainerNextClientIdentity > span {
   min-width: 0;
   display: grid;
   gap: 3px;
@@ -1497,7 +1498,9 @@
   text-align: left;
 }
 
-.trainerAttentionList > button > span {
+.trainerAttentionList > button > span,
+.trainerNextProgramControl > div > span,
+.trainerNextProgramControl label {
   min-width: 0;
   display: grid;
   gap: 4px;
@@ -1655,12 +1658,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.trainerNextClientIdentity > span {
-  min-width: 0;
-  display: grid;
-  gap: 3px;
 }
 
 .trainerNextClientIdentity small {
@@ -4286,13 +4283,6 @@
 .trainerNextProgramControl > div > svg {
   flex: 0 0 auto;
   color: var(--tn-purple);
-}
-
-.trainerNextProgramControl > div > span,
-.trainerNextProgramControl label {
-  min-width: 0;
-  display: grid;
-  gap: 4px;
 }
 
 .trainerNextProgramControl small,

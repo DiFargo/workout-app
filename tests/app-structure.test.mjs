@@ -3657,6 +3657,19 @@ test("trainer workspace CSS keeps client section stacks grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps inline text stacks grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNotificationFeed span,\s*\.trainerNextClientIdentity > span\s*\{\s*min-width:\s*0;\s*display:\s*grid;\s*gap:\s*3px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerAttentionList > button > span,\s*\.trainerNextProgramControl > div > span,\s*\.trainerNextProgramControl label\s*\{\s*min-width:\s*0;\s*display:\s*grid;\s*gap:\s*4px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps shared disabled action states grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
