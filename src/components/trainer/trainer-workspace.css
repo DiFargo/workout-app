@@ -2184,7 +2184,8 @@
   gap: 10px;
 }
 
-.trainerMeasurementCollapsed > div {
+.trainerMeasurementCollapsed > div,
+.trainerWorkoutMonthStats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
@@ -5979,12 +5980,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 10px;
   text-align: center;
   text-transform: capitalize;
-}
-
-.trainerWorkoutMonthStats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
 }
 
 .trainerWorkoutMonthStats span {
