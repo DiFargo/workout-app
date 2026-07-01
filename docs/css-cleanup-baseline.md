@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1126.96 KiB` raw, `114.13 KiB` gzip.
-- Latest source CSS report: `100` files, about `3284.42 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3282.11 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -39,7 +39,7 @@ Start mapping here before any cleanup:
 - `src/styles/legacy-month-program-editor-early.css` - `83.36 KiB`
 - `src/styles/legacy-profile-dashboard-telegram-late.css` - `82.42 KiB`
 - `src/styles/legacy-admin-client-page.css` - `81.40 KiB`
-- `src/styles/client-visual-unity-final.css` - `77.87 KiB`
+- `src/styles/client-visual-unity-final.css` - `75.56 KiB`
 - `src/styles/legacy-registration-accessibility.css` - `68.14 KiB`
 - `src/styles/client-food-search-final.css` - `68.01 KiB`
 
@@ -234,6 +234,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.718`: removed the early duplicate main measurement chart line owner before the final chart line owner in `client-nutrition-grid-lock.css`.
    - Continued in `v.1.719`: removed the early duplicate food action bar button and active owners before the final shared action owners in `client-primary-final-lock.css`.
    - Continued in `v.1.720`: removed the early duplicate main AI stats row cell owner before the final stats row cell owner in `client-primary-final-lock.css`.
+   - Continued in `v.1.721`: removed the old `v.1.100` product editor header rhythm owner from `client-visual-unity-final.css`; the later `v.1.102` final cascade lock remains guarded.
 
 5. Admin hub and internals.
    - Reason: hub, users CRM and program overview surfaces have harness coverage.
@@ -1001,3 +1002,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.719`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.720`: removed the early duplicate main AI stats row cell owner before the final stats row cell owner in `client-primary-final-lock.css`; the final owner is guarded by the app structure test.
 - Verification for `v.1.720`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.721`: removed the old `v.1.100` product editor header rhythm owner from `client-visual-unity-final.css`; the later `v.1.102` final cascade lock is guarded by the app structure test.
+- Verification for `v.1.721`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

@@ -565,6 +565,27 @@ test("client visual unity CSS does not keep exact duplicate blocks", async () =>
   assert.deepEqual(duplicateBlocks, []);
 });
 
+test("client visual unity CSS keeps product editor header rhythm in the final owner", async () => {
+  const source = await readText("src/styles/client-visual-unity-final.css");
+  const finalStart = source.indexOf("v.1.102 final cascade lock: product editor must use the same top rhythm as nutrition flow.");
+  const finalBlock = source.slice(finalStart);
+
+  assert.doesNotMatch(source, /v\.1\.100: finish product editor header rhythm/);
+  assert.ok(finalStart >= 0);
+  assert.match(
+    finalBlock,
+    /\.foodEditPageOverlay \.foodEditPageSheet\s*\{[\s\S]*?--client-top:\s*84px;[\s\S]*?grid-template-rows:\s*calc\(var\(--client-top\) \+ var\(--client-title-h\) \+ 18px\) minmax\(0, 1fr\) !important;/
+  );
+  assert.match(
+    finalBlock,
+    /\.foodEditPageOverlay \.foodEditPageHeader\s*\{[\s\S]*?position:\s*relative !important;[\s\S]*?inset:\s*auto !important;[\s\S]*?grid-template-columns:\s*var\(--client-action\) minmax\(0, 1fr\) !important;/
+  );
+  assert.match(
+    finalBlock,
+    /\.foodEditPageOverlay \.foodEditPageTitleCenter\s*\{[\s\S]*?position:\s*static !important;[\s\S]*?inset:\s*auto !important;[\s\S]*?font-size:\s*clamp\(20px, 5\.6vw, 22px\) !important;/
+  );
+});
+
 test("client visual unity CSS keeps goal stat typography in the final owner", async () => {
   const source = await readText("src/styles/client-visual-unity-final.css");
   const mobileFixStart = source.indexOf("v.1.89: final mobile alignment fixes");
