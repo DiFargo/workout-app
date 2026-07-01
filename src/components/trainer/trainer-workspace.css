@@ -8357,14 +8357,15 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     justify-content: space-between;
   }
 
-  .trainerClientQualityMetrics,
-  .trainerNutritionMetricGrid,
-  .trainerExerciseProgressSummary,
-  .trainerNutritionGoalInputs,
-  .trainerNutritionCurrentGoals,
-  .trainerNutritionValidity {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.trainerClientQualityMetrics,
+.trainerNutritionMetricGrid,
+.trainerExerciseProgressSummary,
+.trainerNutritionGoalInputs,
+.trainerNutritionCurrentGoals,
+.trainerNutritionValidity,
+.trainerNotificationOffsets > div {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 
   .trainerExerciseProgressToolbar,
   .trainerNutritionCustomPeriod {
@@ -8645,10 +8646,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
   .trainerNotificationSchedule small {
     font-size: 7px;
-  }
-
-  .trainerNotificationOffsets > div {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .trainerProgressReminderOptions {

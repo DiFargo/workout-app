@@ -3547,7 +3547,7 @@ test("trainer workspace CSS keeps mobile metric grids grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
-    (source.match(/\.trainerClientQualityMetrics,\s*\.trainerNutritionMetricGrid,\s*\.trainerExerciseProgressSummary,\s*\.trainerNutritionGoalInputs,\s*\.trainerNutritionCurrentGoals,\s*\.trainerNutritionValidity\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);\s*\}/g) || []).length,
+    (source.match(/\.trainerClientQualityMetrics,\s*\.trainerNutritionMetricGrid,\s*\.trainerExerciseProgressSummary,\s*\.trainerNutritionGoalInputs,\s*\.trainerNutritionCurrentGoals,\s*\.trainerNutritionValidity,\s*\.trainerNotificationOffsets > div\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);\s*\}/g) || []).length,
     1
   );
 });
