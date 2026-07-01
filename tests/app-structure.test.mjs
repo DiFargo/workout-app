@@ -414,6 +414,21 @@ test("application styles use the modular styles entrypoint", async () => {
   }
 });
 
+test("client loading fallback CSS keeps warm-light panel and spinner shells grouped", async () => {
+  const source = await readText("src/styles/client-loading-fallback.css");
+
+  assert.equal(
+    (source.match(/\.clientRouteFallbackPanel,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientRouteFallbackPanel\s*\{\s*width:\s*64px;\s*height:\s*64px;\s*border:\s*1px solid rgba\(219, 223, 235, 0\.95\);\s*border-radius:\s*22px;\s*display:\s*grid;\s*place-items:\s*center;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.clientRouteFallbackSpinner,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientRouteFallbackSpinner\s*\{\s*width:\s*26px;\s*height:\s*26px;\s*border:\s*3px solid rgba\(109, 77, 248, 0\.16\);\s*border-top-color:\s*#6f55f2;\s*border-radius:\s*999px;\s*animation:\s*clientRouteFallbackSpin 0\.78s linear infinite;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal((source.match(/box-shadow:\s*0 18px 42px rgba\(33, 41, 66, 0\.12\);/g) || []).length, 1);
+  assert.equal((source.match(/animation:\s*clientRouteFallbackSpin 0\.78s linear infinite;/g) || []).length, 1);
+});
+
 test("modular CSS import graph resolves without cycles", async () => {
   const visited = new Set();
   for (const cssEntry of [

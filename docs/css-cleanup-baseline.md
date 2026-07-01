@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1132.37 KiB` raw, `114.29 KiB` gzip.
-- Latest source CSS report: `100` files, about `3310.83 KiB` total source CSS.
+- Latest main CSS bundle: about `1132.07 KiB` raw, `114.29 KiB` gzip.
+- Latest source CSS report: `100` files, about `3310.41 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -17,6 +17,7 @@ Covered by Playwright visual audits:
 - Client cabinet, cabinet workout history modal, measurements modal, nutrition modal, workout calendar modal and progress photos modal: `tests/e2e/client-primary-visual.spec.js`
 - Client nutrition main, food search, food results, product amount screen, product edit sheet, My Database, calendar, diary and analysis modal: `tests/e2e/client-nutrition-visual.spec.js`
 - Client workout cards, swipe, workout mode modal, workout history modal and empty assigned plan state: `tests/e2e/client-workout-visual.spec.js`
+- Client loading fallback: guarded structurally in `tests/app-structure.test.mjs` and exercised indirectly by lazy-route E2E coverage.
 - Trainer dashboard, clients, client card, messages and programs: `tests/e2e/trainer-visual.spec.js`
 - Admin panel hub, denied state, admin users CRM harness and admin programs overview harness: `tests/e2e/admin-visual.spec.js`
 
@@ -651,3 +652,4 @@ Start mapping here before any cleanup:
 - `v.1.595`: consolidated warm-light food search input/history surface shell CSS in `legacy-warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
 - `v.1.596`: consolidated warm-light product edit content/grid label shell CSS in `legacy-warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
 - `v.1.597`: consolidated warm-light product edit segment/macro card shell CSS in `legacy-warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
+- `v.1.598`: consolidated client loading fallback panel/spinner shell CSS in `client-loading-fallback.css`; the grouped owners are guarded by the app structure test.

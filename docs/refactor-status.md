@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.597`.
+Last updated at app version `v.1.598`.
 
 ## Stable Now
 
@@ -11,6 +11,7 @@ Last updated at app version `v.1.597`.
 - CSS files are guarded so every CSS file under `src/styles` and `src/components` stays reachable from the core or approved lazy CSS entrypoints.
 - Shared hooks live in `src/shared/hooks`.
 - Main route, terminal route, nutrition route and E2E harness screens are lazy-loaded.
+- Client loading fallback CSS now shares warm-light panel/spinner shells with the base fallback owner, guarded by app structure tests.
 - Client, trainer, admin hub and admin internals harnesses cover the main local visual smoke surfaces.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
@@ -326,9 +327,9 @@ From the latest verified build:
 
 - main app JS chunk: about `472.18 KiB` raw, `131.41 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1132.37 KiB` raw, `114.29 KiB` gzip.
+- main CSS bundle: about `1132.07 KiB` raw, `114.29 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3310.83 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3310.41 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
