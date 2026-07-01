@@ -7185,7 +7185,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 11px;
 }
 
-.trainerNotificationOffsets > p {
+.trainerNotificationOffsets > p,
+.trainerProgressReminderSettings > div:first-child > p {
   margin: 3px 0 10px;
   color: var(--tn-muted);
   font-size: 8px;
@@ -7288,12 +7289,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerProgressReminderSettings > div:first-child > strong {
   font-size: 11px;
-}
-
-.trainerProgressReminderSettings > div:first-child > p {
-  margin: 3px 0 10px;
-  color: var(--tn-muted);
-  font-size: 8px;
 }
 
 .trainerProgressReminderOptions {

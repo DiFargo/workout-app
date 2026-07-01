@@ -3639,6 +3639,10 @@ test("trainer workspace CSS keeps trainer calendar and notification controls gro
     1
   );
   assert.equal(
+    (source.match(/\.trainerNotificationOffsets > p,\s*\.trainerProgressReminderSettings > div:first-child > p\s*\{\s*margin:\s*3px 0 10px;\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerNotificationIcon\.connected,\s*\.trainerNotificationStatusCard > i\.connected\s*\{\s*background:\s*var\(--tn-green-soft\);\s*color:\s*var\(--tn-green\);\s*\}/g) || []).length,
     1
   );
