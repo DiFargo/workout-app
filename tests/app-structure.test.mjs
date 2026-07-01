@@ -3543,6 +3543,14 @@ test("client cabinet modal shells keep shared CSS owners", async () => {
     1
   );
   assert.equal(
+    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileGoalPicker button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileGoalPicker button\.active\s*\{\s*border-color:\s*#7565e8 !important;\s*background:\s*#efedff !important;\s*color:\s*#4f3dd2 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileGoalModeHint,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileGoalModeHint\s*\{\s*border-color:\s*#dedaf8 !important;\s*background:\s*#f3f1ff !important;\s*color:\s*#596176 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsModal,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosModal\s*\{\s*border-color:\s*#dfe3ef;\s*background:\s*radial-gradient\(circle at 50% -8%, rgba\(90, 73, 223, 0\.05\), transparent 32%\),\s*linear-gradient\(180deg, #ffffff 0%, #f7f8fd 100%\);\s*box-shadow:\s*0 24px 64px rgba\(43, 50, 92, 0\.18\);\s*\}/g) || []).length,
     1
   );
