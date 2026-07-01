@@ -6975,7 +6975,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: var(--tn-red);
 }
 
-.trainerNotificationIcon.connected {
+.trainerNotificationIcon.connected,
+.trainerNotificationStatusCard > i.connected {
   background: var(--tn-green-soft);
   color: var(--tn-green);
 }
@@ -7014,11 +7015,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 8px;
   font-style: normal;
   font-weight: 700;
-}
-
-.trainerNotificationStatusCard > i.connected {
-  background: var(--tn-green-soft);
-  color: var(--tn-green);
 }
 
 .trainerNotificationStatusCard > button {
