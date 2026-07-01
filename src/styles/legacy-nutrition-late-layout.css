@@ -1778,33 +1778,6 @@
   min-width: 0 !important;
 }
 
-.fatSecretPage .fatFoodItem strong,
-.fatFoodItem strong {
-  display: block !important;
-  max-width: 100% !important;
-
-  color: rgba(247, 248, 251, 0.94) !important;
-  font-size: 17px !important;
-  font-weight: 950 !important;
-  line-height: 1.12 !important;
-  letter-spacing: -0.35px !important;
-
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-.fatSecretPage .fatFoodItem span,
-.fatFoodItem span {
-  display: block !important;
-  margin-top: 6px !important;
-
-  color: rgba(30, 255, 111, 0.92) !important;
-  font-size: 17px !important;
-  font-weight: 950 !important;
-  line-height: 1 !important;
-}
-
 .fatSecretPage .fatFoodKcal,
 .fatFoodKcal {
   grid-column: 2 !important;
@@ -2090,7 +2063,9 @@
 }
 
 .fatSecretPage .productInfoExact strong,
-.productInfoExact strong {
+.productInfoExact strong,
+.fatSecretPage .fatFoodItem strong,
+.fatFoodItem strong {
   display: block !important;
   max-width: 100% !important;
 
@@ -2106,7 +2081,9 @@
 }
 
 .fatSecretPage .productInfoExact span,
-.productInfoExact span {
+.productInfoExact span,
+.fatSecretPage .fatFoodItem span,
+.fatFoodItem span {
   display: block !important;
   margin-top: 6px !important;
 

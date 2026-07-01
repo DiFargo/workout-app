@@ -2391,6 +2391,23 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   );
 });
 
+test("legacy nutrition late layout CSS keeps expanded product text grouped", async () => {
+  const source = await readText("src/styles/legacy-nutrition-late-layout.css");
+
+  assert.equal(
+    (source.match(/\.productInfoExact strong,\s*\.fatSecretPage \.fatFoodItem strong,\s*\.fatFoodItem strong\s*\{\s*display:\s*block !important;\s*max-width:\s*100% !important;[\s\S]*?font-size:\s*17px !important;[\s\S]*?text-overflow:\s*ellipsis !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.productInfoExact span,\s*\.fatSecretPage \.fatFoodItem span,\s*\.fatFoodItem span\s*\{\s*display:\s*block !important;\s*margin-top:\s*6px !important;[\s\S]*?font-size:\s*17px !important;[\s\S]*?line-height:\s*1 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/display:\s*block !important;\s*max-width:\s*100% !important;\s*color:\s*rgba\(247,\s*248,\s*251,\s*0\.94\) !important;\s*font-size:\s*17px !important;\s*font-weight:\s*950 !important;\s*line-height:\s*1\.12 !important;\s*letter-spacing:\s*-0\.35px !important;\s*white-space:\s*nowrap !important;\s*overflow:\s*hidden !important;\s*text-overflow:\s*ellipsis !important;/g) || []).length,
+    1
+  );
+});
+
 test("admin client dashboard polish CSS has no empty media blocks", async () => {
   const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
 
