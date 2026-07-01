@@ -9087,11 +9087,11 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   }
 
   .trainerClientQualityMetrics,
-  .trainerNutritionMetricGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .trainerExerciseProgressSummary {
+  .trainerNutritionMetricGrid,
+  .trainerExerciseProgressSummary,
+  .trainerNutritionGoalInputs,
+  .trainerNutritionCurrentGoals,
+  .trainerNutritionValidity {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -9227,10 +9227,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     overflow-wrap: anywhere;
   }
 
-  .trainerNutritionGoalInputs {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .trainerNutritionPeriod {
     align-items: stretch;
     flex-direction: column;
@@ -9261,10 +9257,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     padding: 14px;
   }
 
-  .trainerNutritionCurrentGoals {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .trainerNutritionCurrentMeta {
     align-items: stretch;
     flex-direction: column;
@@ -9278,10 +9270,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
   .trainerNutritionPlanFields {
     grid-template-columns: 1fr;
-  }
-
-  .trainerNutritionValidity {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .trainerNutritionValidity > small {

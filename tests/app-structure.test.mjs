@@ -3503,6 +3503,15 @@ test("trainer workspace CSS keeps cabinet and utility card shells grouped", asyn
   );
 });
 
+test("trainer workspace CSS keeps mobile metric grids grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientQualityMetrics,\s*\.trainerNutritionMetricGrid,\s*\.trainerExerciseProgressSummary,\s*\.trainerNutritionGoalInputs,\s*\.trainerNutritionCurrentGoals,\s*\.trainerNutritionValidity\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 

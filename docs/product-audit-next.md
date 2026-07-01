@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.641`.
+Last updated at app version `v.1.642`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `377` passed.
+- `npm.cmd test`: passed with `378` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -431,6 +431,7 @@ Started in `v.1.250`.
    - Status: client workout run polish and exercise notes CSS moved behind the workout lazy entrypoint under the same guards.
    - Status: client workout navigation/close and set-row CSS moved behind the workout lazy entrypoint under the same guards.
    - Status: trainer cabinet and utility card shell CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
+   - Status: trainer mobile metric/goal two-column grid CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: workout draft/readiness/post-workout dialog CSS moved behind the workout lazy entrypoint after adding dialog visual coverage.
    - Status: client AI Coach has visual coverage for overview and AI nutrition plan states, and its route-specific CSS is now behind `ai-coach-lazy.css`.
    - Status: nutrition AI plan/photo-process CSS is now behind `nutrition-ai-plan-lazy.css` in the nutrition lazy stack.
