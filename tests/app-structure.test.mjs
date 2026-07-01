@@ -3723,6 +3723,10 @@ test("trainer workspace CSS keeps micro copy typography grouped", async () => {
     (source.match(/\.trainerNextResultCard strong,\s*\.trainerNextLibrary article strong,\s*\.trainerProgramWeekRow strong,\s*\.trainerNutritionPeriod strong,\s*\.trainerNotificationOffsets > strong,\s*\.trainerProgressReminderSettings > div:first-child > strong,\s*\.trainerNotificationCalendar strong\s*\{\s*font-size:\s*11px;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerNextMacro b,\s*\.trainerNextMacro small,\s*\.trainerProgramEmptyDay span,\s*\.trainerClientBarChart b,\s*\.trainerWorkoutScheduleGrid button b,\s*\.trainerExerciseProgressList article strong,\s*\.trainerNutritionDiary > aside strong,\s*\.trainerNotificationSchedule b,\s*\.trainerNotificationOffsets b,\s*\.trainerProgressReminderOptions b,\s*\.trainerNextWorkoutPreview article div strong\s*\{\s*font-size:\s*10px;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps list tail dividers grouped", async () => {

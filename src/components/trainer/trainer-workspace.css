@@ -3019,7 +3019,16 @@
 }
 
 .trainerNextMacro b,
-.trainerNextMacro small {
+.trainerNextMacro small,
+.trainerProgramEmptyDay span,
+.trainerClientBarChart b,
+.trainerWorkoutScheduleGrid button b,
+.trainerExerciseProgressList article strong,
+.trainerNutritionDiary > aside strong,
+.trainerNotificationSchedule b,
+.trainerNotificationOffsets b,
+.trainerProgressReminderOptions b,
+.trainerNextWorkoutPreview article div strong {
   font-size: 10px;
 }
 
@@ -5317,10 +5326,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 14px;
 }
 
-.trainerProgramEmptyDay span {
-  font-size: 10px;
-}
-
 @media (max-width: 1260px) {
   .trainerProgramConstructorGrid {
     grid-template-columns: 230px minmax(0, 1fr);
@@ -5755,10 +5760,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #ef8d52;
 }
 
-.trainerClientBarChart b {
-  font-size: 10px;
-}
-
 .trainerClientBarChart small {
   min-height: 24px;
   color: var(--tn-muted);
@@ -6055,10 +6056,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   opacity: 0.36;
 }
 
-.trainerWorkoutScheduleGrid button b {
-  font-size: 10px;
-}
-
 .trainerWorkoutScheduleGrid button i {
   color: var(--tn-purple);
   font-size: 7px;
@@ -6309,10 +6306,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   min-width: 0;
 }
 
-.trainerExerciseProgressList article strong {
-  font-size: 10px;
-}
-
 .trainerExerciseProgressList article small {
   color: var(--tn-muted);
   font-size: 8px;
@@ -6536,10 +6529,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border-color: var(--tn-purple);
   background: #f8f5ff;
   color: var(--tn-purple);
-}
-
-.trainerNutritionDiary > aside strong {
-  font-size: 10px;
 }
 
 .trainerNutritionDiaryHead {
@@ -6945,10 +6934,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: var(--tn-purple);
 }
 
-.trainerNotificationSchedule b {
-  font-size: 10px;
-}
-
 .trainerNotificationOffsets,
 .trainerReminderPeriod {
   margin-top: 14px;
@@ -7007,10 +6992,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border-color: var(--tn-purple);
   background: var(--tn-purple);
   color: #fff;
-}
-
-.trainerNotificationOffsets b {
-  font-size: 10px;
 }
 
 .trainerReminderPeriod > strong {
@@ -7093,10 +7074,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border-radius: 8px;
   background: #eee9ff;
   color: var(--tn-purple);
-}
-
-.trainerProgressReminderOptions b {
-  font-size: 10px;
 }
 
 .trainerNotificationCalendar {
@@ -7988,10 +7965,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #efedf9;
   color: var(--tn-purple);
   font-size: 9px;
-}
-
-.trainerNextWorkoutPreview article div strong {
-  font-size: 10px;
 }
 
 @media (max-width: 760px) {
