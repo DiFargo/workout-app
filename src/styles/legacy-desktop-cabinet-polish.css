@@ -1856,14 +1856,14 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
 @media (max-width: 760px) {
   .trainerClientManagementGrid { grid-template-columns: 1fr; gap: 12px; }
   .trainerProgressPhotosCard,
-  .trainerEventsCard { grid-column: auto; }
+  .trainerEventsCard,
+  .trainerPaymentGrid .wide,
+  .trainerPaymentGrid button { grid-column: auto; }
   .trainerWorkspaceCard { padding: 15px; border-radius: 18px; }
   .trainerTaskCreate,
   .trainerPhotoMetaRow,
   .trainerPhotoCompare,
   .trainerPaymentGrid { grid-template-columns: 1fr; }
-  .trainerPaymentGrid .wide,
-  .trainerPaymentGrid button { grid-column: auto; }
   .clientTrainerTask { grid-template-columns: 32px minmax(0, 1fr); }
   .clientTrainerTask > em { grid-column: 2; }
 }
