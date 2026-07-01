@@ -1175,40 +1175,6 @@
    2-Ð¹ div = Ð£Ð¿Ð¾Ñ‚Ñ€ÐµÐ±Ð»ÐµÐ½Ð¾ ÐšÐ°Ð»Ð¾Ñ€Ð¸Ð¹ -> Ñ‡ÑƒÑ‚ÑŒ Ð»ÐµÐ²ÐµÐµ
    ========================================================= */
 
-.fatSecretPage .fatCaloriesCard .fatCalorieRows div:first-child span,
-.fatSecretPage .fatCaloriesCard .fatCalorieRows div:first-child strong {
-  transform: translateX(14px) !important;
-}
-
-.fatSecretPage .fatCaloriesCard .fatCalorieRows div:nth-child(2) span,
-.fatSecretPage .fatCaloriesCard .fatCalorieRows div:nth-child(2) strong {
-  transform: translateX(-8px) !important;
-}
-
-@media (max-width: 420px) {
-  .fatSecretPage .fatCaloriesCard .fatCalorieRows div:first-child span,
-  .fatSecretPage .fatCaloriesCard .fatCalorieRows div:first-child strong {
-    transform: translateX(10px) !important;
-  }
-
-  .fatSecretPage .fatCaloriesCard .fatCalorieRows div:nth-child(2) span,
-  .fatSecretPage .fatCaloriesCard .fatCalorieRows div:nth-child(2) strong {
-    transform: translateX(-7px) !important;
-  }
-}
-
-@media (max-width: 360px) {
-  .fatSecretPage .fatCaloriesCard .fatCalorieRows div:first-child span,
-  .fatSecretPage .fatCaloriesCard .fatCalorieRows div:first-child strong {
-    transform: translateX(8px) !important;
-  }
-
-  .fatSecretPage .fatCaloriesCard .fatCalorieRows div:nth-child(2) span,
-  .fatSecretPage .fatCaloriesCard .fatCalorieRows div:nth-child(2) strong {
-    transform: translateX(-6px) !important;
-  }
-}
-
 /* MICRO ALIGN UPDATE */
 .fatSecretPage .fatCaloriesCard .fatCalorieRows div:first-child span,
 .fatSecretPage .fatCaloriesCard .fatCalorieRows div:first-child strong {

@@ -2374,6 +2374,29 @@ test("legacy food search calories CSS keeps early mobile column shift out of the
   );
 });
 
+test("legacy food search calories CSS keeps row transforms in the micro owner", async () => {
+  const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
+  const finalFixStart = source.indexOf("FINAL FIX");
+  const microAlignStart = source.indexOf("/* MICRO ALIGN UPDATE */");
+  const finalRealFixStart = source.indexOf("FINAL REAL FIX", microAlignStart);
+  const oldTransformBlock = source.slice(finalFixStart, microAlignStart);
+  const microAlignBlock = source.slice(microAlignStart, finalRealFixStart);
+
+  assert.ok(finalFixStart > 0);
+  assert.ok(microAlignStart > 0);
+  assert.ok(finalRealFixStart > microAlignStart);
+  assert.doesNotMatch(oldTransformBlock, /transform:\s*translateX\(14px\) !important;/);
+  assert.doesNotMatch(oldTransformBlock, /transform:\s*translateX\(10px\) !important;/);
+  assert.doesNotMatch(oldTransformBlock, /transform:\s*translateX\(8px\) !important;/);
+  assert.doesNotMatch(oldTransformBlock, /transform:\s*translateX\(-8px\) !important;/);
+  assert.doesNotMatch(oldTransformBlock, /transform:\s*translateX\(-7px\) !important;/);
+  assert.doesNotMatch(oldTransformBlock, /transform:\s*translateX\(-6px\) !important;/);
+  assert.match(
+    microAlignBlock,
+    /\.fatSecretPage \.fatCaloriesCard \.fatCalorieRows div:first-child span,[\s\S]*?\.fatSecretPage \.fatCaloriesCard \.fatCalorieRows div:first-child strong\s*\{\s*transform:\s*translateX\(22px\) !important;\s*\}[\s\S]*?\.fatSecretPage \.fatCaloriesCard \.fatCalorieRows div:nth-child\(2\) span,[\s\S]*?\.fatSecretPage \.fatCaloriesCard \.fatCalorieRows div:nth-child\(2\) strong\s*\{\s*transform:\s*translateX\(-18px\) !important;\s*\}/
+  );
+});
+
 test("legacy food search calories CSS keeps compact dots in the latest mobile owner", async () => {
   const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
 
