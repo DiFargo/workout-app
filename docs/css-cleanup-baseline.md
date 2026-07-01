@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1122.63 KiB` raw, `113.90 KiB` gzip.
-- Latest source CSS report: `100` files, about `3281.14 KiB` total source CSS.
+- Latest main CSS bundle: about `1122.49 KiB` raw, `113.88 KiB` gzip.
+- Latest source CSS report: `100` files, about `3280.97 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -37,7 +37,7 @@ Start mapping here before any cleanup:
 - `src/styles/legacy-desktop-cabinet-polish.css` - `89.79 KiB`
 - `src/styles/legacy-client-workout-flow-late.css` - `84.02 KiB`
 - `src/styles/legacy-month-program-editor-early.css` - `83.36 KiB`
-- `src/styles/legacy-profile-dashboard-telegram-late.css` - `82.42 KiB`
+- `src/styles/legacy-profile-dashboard-telegram-late.css` - `82.26 KiB`
 - `src/styles/legacy-admin-client-page.css` - `81.40 KiB`
 - `src/styles/client-visual-unity-final.css` - `75.56 KiB`
 - `src/styles/legacy-registration-accessibility.css` - `68.14 KiB`
@@ -60,6 +60,7 @@ Start mapping here before any cleanup:
    - Expanded in `v.1.294`: visual coverage now includes the cabinet progress photos modal, upload steps and save action.
    - Expanded in `v.1.296`: visual coverage now includes cabinet settings, trainer notifications and Telegram management modals with close/action tap-target guards.
    - Continued in `v.1.571`: grouped duplicate cabinet nutrition and utility modal close-button CSS in `workouts.css`.
+   - Continued in `v.1.726`: removed the early duplicate AI stats row label layout owner from `legacy-profile-dashboard-telegram-late.css`; the final stats alignment owner remains guarded.
 
 2. Client workouts.
    - Reason: workout cards and modals have visual coverage and fixed tap targets.
@@ -1016,3 +1017,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.724`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.725`: removed the early duplicate calorie row grid owner from `legacy-nutrition-header-layout.css`; the later reference owner is guarded by the app structure test.
 - Verification for `v.1.725`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.726`: removed the early duplicate AI stats row label layout owner from `legacy-profile-dashboard-telegram-late.css`; the final stats alignment owner is guarded by the app structure test.
+- Verification for `v.1.726`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

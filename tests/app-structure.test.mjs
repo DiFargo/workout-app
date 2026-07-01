@@ -3011,12 +3011,24 @@ test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", 
   const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
   const statsAlignmentStart = source.indexOf("/* STATS ALIGNMENT PERFECT */");
   const compactStatsStart = source.indexOf("/* COMPACT STATS + AI TITLE */");
+  const oldStatsOwnerBlock = source.slice(0, statsAlignmentStart);
   const oldStatsBlock = source.slice(statsAlignmentStart, compactStatsStart);
   const compactStatsBlock = source.slice(compactStatsStart);
+
+  assert.ok(statsAlignmentStart > 0);
+  assert.ok(compactStatsStart > statsAlignmentStart);
 
   assert.doesNotMatch(
     oldStatsBlock,
     /@media\s*\(max-width:\s*420px\)[\s\S]*?\.profileAiStatsRow > div\s*\{\s*height:\s*82px !important;/
+  );
+  assert.doesNotMatch(
+    oldStatsOwnerBlock,
+    /\.profileAiStatsRow span\s*\{\s*min-height:\s*14px !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*\}/
+  );
+  assert.match(
+    oldStatsBlock,
+    /\.profileAiStatsRow span\s*\{\s*width:\s*100% !important;\s*min-height:\s*14px !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;[\s\S]*?font-size:\s*10px !important;[\s\S]*?margin-bottom:\s*8px !important;\s*\}/
   );
   assert.match(
     compactStatsBlock,

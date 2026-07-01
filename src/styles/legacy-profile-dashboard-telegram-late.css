@@ -2662,13 +2662,6 @@
   justify-content: flex-start !important;
 }
 
-.profileAiStatsRow span {
-  min-height: 14px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
 .profileAiStatsRow strong {
   margin-top: auto !important;
 }
