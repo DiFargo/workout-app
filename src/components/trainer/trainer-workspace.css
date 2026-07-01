@@ -1069,7 +1069,11 @@
   padding-top: 2px;
 }
 
-.trainerMessageHistory strong {
+.trainerMessageHistory strong,
+.trainerNextClientTable > button > span b,
+.trainerMeasurementFieldGrid strong,
+.trainerMeasurementTimeline strong,
+.trainerNutritionDiaryCollapsed strong {
   color: var(--tn-text);
   font-size: 12px;
 }
@@ -1104,7 +1108,9 @@
   text-align: center;
 }
 
-.trainerMessageEmpty strong {
+.trainerMessageEmpty strong,
+.trainerMeasurementCollapsed strong,
+.trainerWorkoutMonthStats b {
   color: var(--tn-text);
   font-size: 15px;
 }
@@ -1188,7 +1194,8 @@
   font-weight: 800;
 }
 
-.trainerAnalyticsSignals strong {
+.trainerAnalyticsSignals strong,
+.trainerExerciseProgressSummary strong {
   color: var(--tn-text);
   font-size: 18px;
 }
@@ -1623,11 +1630,6 @@
 .trainerNextClientTable > button > span:not(.trainerNextClientIdentity):not(.trainerNextStatus) {
   display: grid;
   gap: 3px;
-}
-
-.trainerNextClientTable > button > span b {
-  color: var(--tn-text);
-  font-size: 12px;
 }
 
 .trainerNextClientTable > button > span.positive {
@@ -2203,11 +2205,6 @@
   text-transform: uppercase;
 }
 
-.trainerMeasurementCollapsed strong {
-  color: var(--tn-text);
-  font-size: 15px;
-}
-
 .trainerMeasurementCollapsed small,
 .trainerMeasurementCollapsed p {
   color: var(--tn-muted);
@@ -2389,11 +2386,6 @@
   padding: 10px;
 }
 
-.trainerMeasurementFieldGrid strong {
-  color: var(--tn-text);
-  font-size: 12px;
-}
-
 .trainerMeasurementTimeline {
   display: grid;
   gap: 8px;
@@ -2411,11 +2403,6 @@
 
 .trainerMeasurementTimeline article:first-of-type {
   border-top: 0;
-}
-
-.trainerMeasurementTimeline strong {
-  color: var(--tn-text);
-  font-size: 12px;
 }
 
 .trainerNextPhotoGrid figure {
@@ -2947,11 +2934,6 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-}
-
-.trainerNutritionDiaryCollapsed strong {
-  color: var(--tn-text);
-  font-size: 12px;
 }
 
 .trainerNextNutritionLayout {
@@ -5922,11 +5904,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #faf9fd;
 }
 
-.trainerWorkoutMonthStats b {
-  color: var(--tn-text);
-  font-size: 15px;
-}
-
 .trainerWorkoutMonthStats small {
   color: var(--tn-muted);
   font-size: 8px;
@@ -6357,11 +6334,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border: 1px solid #eceaf3;
   border-radius: 8px;
   background: #faf9fd;
-}
-
-.trainerExerciseProgressSummary strong {
-  color: var(--tn-text);
-  font-size: 18px;
 }
 
 .trainerExerciseProgressSummary small,

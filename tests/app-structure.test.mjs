@@ -3627,6 +3627,23 @@ test("trainer workspace CSS keeps muted paragraph typography grouped", async () 
   );
 });
 
+test("trainer workspace CSS keeps emphasis typography grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerMessageHistory strong,\s*\.trainerNextClientTable > button > span b,\s*\.trainerMeasurementFieldGrid strong,\s*\.trainerMeasurementTimeline strong,\s*\.trainerNutritionDiaryCollapsed strong\s*\{\s*color:\s*var\(--tn-text\);\s*font-size:\s*12px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerMessageEmpty strong,\s*\.trainerMeasurementCollapsed strong,\s*\.trainerWorkoutMonthStats b\s*\{\s*color:\s*var\(--tn-text\);\s*font-size:\s*15px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerAnalyticsSignals strong,\s*\.trainerExerciseProgressSummary strong\s*\{\s*color:\s*var\(--tn-text\);\s*font-size:\s*18px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps shared disabled action states grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
