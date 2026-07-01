@@ -3683,6 +3683,15 @@ test("trainer workspace CSS keeps micro copy typography grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps list tail dividers grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNextClientTable > button:last-of-type,\s*\.trainerNextMealList article:last-child,\s*\.trainerExerciseProgressList article:last-child\s*\{\s*border-bottom:\s*0;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps shared disabled action states grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 

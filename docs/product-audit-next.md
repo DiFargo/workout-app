@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.686`.
+Last updated at app version `v.1.687`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `398` passed.
+- `npm.cmd test`: passed with `399` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -473,6 +473,7 @@ Started in `v.1.250`.
    - Status: trainer client section stack spacing CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer inline text stack spacing CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer micro-copy typography CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
+   - Status: trainer list-tail divider CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: the early duplicate cabinet bottom pseudo-layer was removed from `client-primary-final-lock.css`; the final rhythm owner remains guarded under client primary visual coverage.
    - Status: food search action stack shell CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
    - Status: food search create-action inactive/active color CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
