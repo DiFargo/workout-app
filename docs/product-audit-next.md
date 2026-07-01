@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.627`.
+Last updated at app version `v.1.628`.
 
 ## Evidence
 
@@ -411,6 +411,7 @@ Started in `v.1.250`.
    - Status: cabinet trainer notifications and progress photos overlay CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet trainer notifications and progress photos warm-light surface CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet trainer notifications and progress photos warm-light heading text CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
+   - Status: cabinet trainer notifications and progress photos base heading CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: warm-light add-food/search cleanup CSS moved behind the nutrition lazy entrypoint under the existing nutrition visual audit.
    - Status: dark-green nutrition food-flow CSS moved behind the nutrition lazy entrypoint with structural guards preserving readable dark nutrition overrides.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.

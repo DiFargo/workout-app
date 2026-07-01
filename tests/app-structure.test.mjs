@@ -3563,6 +3563,10 @@ test("client cabinet modal shells keep shared CSS owners", async () => {
     1
   );
   assert.equal(
+    (cabinetPolish.match(/\.profileTrainerNotificationsHead h2,\s*\.cabinetProgressPhotosHead h2\s*\{\s*margin:\s*0;\s*color:\s*#fff;\s*font-size:\s*22px;\s*line-height:\s*1\.05;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsHead h2,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationItem strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsEmpty strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosHead h2,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosLatest strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotoSteps strong\s*\{\s*color:\s*#151824;\s*\}/g) || []).length,
     1
   );
