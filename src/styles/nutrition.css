@@ -256,12 +256,6 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
 }
 
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanDashboard.collapsed {
-  border-color: rgba(96, 78, 27, 0.14) !important;
-  background: rgba(255, 250, 237, 0.72) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68) !important;
-}
-
 :root[data-app-theme="warm-light"] .nutritionAiPlanCollapsedIcon {
   background: rgba(85, 66, 216, 0.08);
 }

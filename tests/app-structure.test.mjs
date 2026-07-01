@@ -3279,6 +3279,19 @@ test("nutrition base CSS keeps warm-light page shell grouped", async () => {
   );
 });
 
+test("nutrition base CSS keeps warm-light collapsed AI plan surface in the final owner", async () => {
+  const nutritionBaseCss = await readText("src/styles/nutrition.css");
+
+  assert.equal(
+    (nutritionBaseCss.match(/:root\[data-app-theme="warm-light"\] \.fatSecretPage\.nutritionFixedHeaderV3 \.nutritionAiPlanDashboard\.collapsed\s*\{\s*border:\s*0 !important;\s*background:\s*#ffffff !important;\s*box-shadow:\s*0 9px 24px rgba\(55, 64, 112, 0\.075\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.doesNotMatch(
+    nutritionBaseCss,
+    /:root\[data-app-theme="warm-light"\] \.fatSecretPage\.nutritionFixedHeaderV3 \.nutritionAiPlanDashboard\.collapsed\s*\{\s*border-color:\s*rgba\(96, 78, 27, 0\.14\) !important;\s*background:\s*rgba\(255, 250, 237, 0\.72\) !important;\s*box-shadow:\s*inset 0 1px 0 rgba\(255, 255, 255, 0\.68\) !important;\s*\}/
+  );
+});
+
 test("client nutrition weekday strip keeps two-letter labels visible", async () => {
   const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
   const nutritionBaseCss = await readText("src/styles/nutrition.css");
