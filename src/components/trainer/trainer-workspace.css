@@ -4061,10 +4061,7 @@
     min-height: 420px;
   }
 
-  .trainerNextWorkoutPage .trainerNextMobileHeader {
-    grid-template-columns: 1fr 34px;
-  }
-
+  .trainerNextWorkoutPage .trainerNextMobileHeader,
   .trainerNextNutritionPage .trainerNextMobileHeader {
     grid-template-columns: 1fr 34px;
   }

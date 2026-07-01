@@ -3495,6 +3495,15 @@ test("trainer workspace CSS keeps mobile page shell grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps mobile header page grids grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNextWorkoutPage \.trainerNextMobileHeader,\s*\.trainerNextNutritionPage \.trainerNextMobileHeader\s*\{\s*grid-template-columns:\s*1fr 34px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps nutrition and notification action buttons grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
