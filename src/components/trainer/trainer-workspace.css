@@ -7185,7 +7185,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 8px;
 }
 
-.trainerNotificationOffsets {
+.trainerNotificationOffsets,
+.trainerReminderPeriod {
   margin-top: 14px;
   padding-top: 13px;
   border-top: 1px solid #eceaf3;
@@ -7249,12 +7250,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerNotificationOffsets b {
   font-size: 10px;
-}
-
-.trainerReminderPeriod {
-  margin-top: 14px;
-  padding-top: 13px;
-  border-top: 1px solid #eceaf3;
 }
 
 .trainerReminderPeriod > strong {

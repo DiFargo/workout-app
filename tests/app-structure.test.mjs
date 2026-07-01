@@ -3626,6 +3626,10 @@ test("trainer workspace CSS keeps trainer calendar and notification controls gro
     (source.match(/\.trainerNotificationSwitch input,\s*\.trainerNotificationOffsets input,\s*\.trainerProgressReminderOptions input\s*\{\s*position:\s*absolute;\s*opacity:\s*0;\s*pointer-events:\s*none;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerNotificationOffsets,\s*\.trainerReminderPeriod\s*\{\s*margin-top:\s*14px;\s*padding-top:\s*13px;\s*border-top:\s*1px solid #eceaf3;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps workout calendar status colors grouped", async () => {
