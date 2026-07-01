@@ -8440,7 +8440,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     width: 22px;
   }
 
-  .trainerNextExerciseEditor {
+  .trainerNextExerciseEditor,
+  .trainerProgramExerciseList .trainerNextExerciseEditor {
     grid-template-columns: 1fr;
     gap: 13px;
     padding: 12px 4px 14px;
@@ -8584,12 +8585,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   .trainerProgramExerciseList .trainerNextExerciseActions button:first-child {
     grid-column: auto;
     width: 22px;
-  }
-
-  .trainerProgramExerciseList .trainerNextExerciseEditor {
-    grid-template-columns: 1fr;
-    gap: 13px;
-    padding: 12px 4px 14px;
   }
 
   .trainerProgramAddExercise {
