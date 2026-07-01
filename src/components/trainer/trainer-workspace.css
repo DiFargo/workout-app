@@ -2579,10 +2579,7 @@
 }
 
 .trainerNextNutrition > .trainerNextPageTabs button.active {
-  border-color: var(--tn-purple);
-  background: var(--tn-purple);
   box-shadow: 0 5px 14px rgba(91, 54, 238, 0.2);
-  color: #fff;
 }
 
 .trainerNextWorkoutLayout {
@@ -6917,6 +6914,7 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerPhotoViewTabs button.active,
 .trainerNextProgramControl > button:nth-of-type(1),
 .trainerProgramSelectedBar > div button.primary,
+.trainerNextNutrition > .trainerNextPageTabs button.active,
 .trainerNutritionPeriodButtons button.active,
 .trainerNotificationOffsets label.active > span {
   border-color: var(--tn-purple);
