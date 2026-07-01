@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.621`.
+Last updated at app version `v.1.622`.
 
 ## Stable Now
 
@@ -69,6 +69,7 @@ Last updated at app version `v.1.621`.
 - Workout compact start-panel sizing CSS now stays in the shared stage/start owner.
 - Cabinet nutrition modal AI plan and goal card shells now stay in one combined-section CSS owner.
 - Cabinet nutrition modal warm-light save button shell CSS now stays in one grouped owner.
+- Cabinet trainer notifications and progress photos modal warm-light shells now stay in one grouped owner.
 - Profile and admin Telegram status badge shells now stay in grouped profile dashboard owners.
 - Profile and admin Telegram avatar shells now stay in one grouped profile dashboard owner.
 - Profile and admin Telegram avatar image-fit CSS now stays in one grouped profile dashboard owner.
@@ -350,9 +351,9 @@ From the latest verified build:
 
 - main app JS chunk: about `472.18 KiB` raw, `131.41 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1128.78 KiB` raw, `114.18 KiB` gzip.
+- main CSS bundle: about `1128.63 KiB` raw, `114.17 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3299.60 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3299.36 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

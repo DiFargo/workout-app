@@ -3542,6 +3542,10 @@ test("client cabinet modal shells keep shared CSS owners", async () => {
     (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileDashboardButton,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileDashboardButton\s*\{\s*border-color:\s*transparent !important;\s*background:\s*linear-gradient\(135deg, #6552e6, #2d6ff2\) !important;\s*color:\s*#ffffff !important;\s*box-shadow:\s*0 12px 26px rgba\(76, 68, 201, 0\.22\) !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsModal,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosModal\s*\{\s*border-color:\s*#dfe3ef;\s*background:\s*radial-gradient\(circle at 50% -8%, rgba\(90, 73, 223, 0\.05\), transparent 32%\),\s*linear-gradient\(180deg, #ffffff 0%, #f7f8fd 100%\);\s*box-shadow:\s*0 24px 64px rgba\(43, 50, 92, 0\.18\);\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("workout navigation compact heights stay grouped", async () => {

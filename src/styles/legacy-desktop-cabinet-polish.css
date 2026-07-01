@@ -1097,7 +1097,8 @@ html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsOv
   background: rgba(35, 40, 68, 0.2);
 }
 
-html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsModal {
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsModal,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosModal {
   border-color: #dfe3ef;
   background:
     radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.05), transparent 32%),
@@ -1440,14 +1441,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsEm
 
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosOverlay {
   background: rgba(35, 40, 68, 0.2);
-}
-
-html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosModal {
-  border-color: #dfe3ef;
-  background:
-    radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.05), transparent 32%),
-    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%);
-  box-shadow: 0 24px 64px rgba(43, 50, 92, 0.18);
 }
 
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosHead span {
