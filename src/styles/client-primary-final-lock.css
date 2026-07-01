@@ -2396,7 +2396,9 @@ html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > butt
   -webkit-text-fill-color: currentColor !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button strong {
+html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button strong,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodProductActionBar > button strong,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar > button strong {
   max-width: 100% !important;
   overflow: hidden !important;
   color: inherit !important;
@@ -2759,20 +2761,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
   font-size: 23px !important;
   font-weight: 850 !important;
   line-height: 1 !important;
-  -webkit-text-fill-color: currentColor !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodProductActionBar > button strong,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar > button strong {
-  max-width: 100% !important;
-  overflow: hidden !important;
-  color: inherit !important;
-  font-size: 10.5px !important;
-  font-weight: 850 !important;
-  line-height: 1.05 !important;
-  text-align: center !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
   -webkit-text-fill-color: currentColor !important;
 }
 

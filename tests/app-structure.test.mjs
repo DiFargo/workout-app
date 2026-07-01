@@ -582,6 +582,19 @@ test("client primary final CSS keeps food action bars in the final owner", async
   );
 });
 
+test("client primary final CSS keeps food action label typography grouped", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.fatSearchBottomBarFour > button strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar > button strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageActionBar > button strong\s*\{\s*max-width:\s*100% !important;\s*overflow:\s*hidden !important;\s*color:\s*inherit !important;\s*font-size:\s*10\.5px !important;\s*font-weight:\s*850 !important;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/max-width:\s*100% !important;\s*overflow:\s*hidden !important;\s*color:\s*inherit !important;\s*font-size:\s*10\.5px !important;\s*font-weight:\s*850 !important;\s*line-height:\s*1\.05 !important;\s*text-align:\s*center !important;\s*text-overflow:\s*ellipsis !important;\s*white-space:\s*nowrap !important;\s*-webkit-text-fill-color:\s*currentColor !important;/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps food editor header layout in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
