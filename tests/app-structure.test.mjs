@@ -3670,6 +3670,19 @@ test("trainer workspace CSS keeps inline text stacks grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps micro copy typography grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNextMealList article p,\s*\.trainerNotificationStatusCard p,\s*\.trainerNotificationSettings header p\s*\{\s*margin:\s*4px 0 0;\s*color:\s*var\(--tn-muted\);\s*font-size:\s*9px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerWorkoutMonthStats small,\s*\.trainerWorkoutStatusPanel label span\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*font-weight:\s*800;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps shared disabled action states grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 

@@ -3013,7 +3013,9 @@
   white-space: nowrap;
 }
 
-.trainerNextMealList article p {
+.trainerNextMealList article p,
+.trainerNotificationStatusCard p,
+.trainerNotificationSettings header p {
   margin: 4px 0 0;
   color: var(--tn-muted);
   font-size: 9px;
@@ -5890,7 +5892,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #faf9fd;
 }
 
-.trainerWorkoutMonthStats small {
+.trainerWorkoutMonthStats small,
+.trainerWorkoutStatusPanel label span {
   color: var(--tn-muted);
   font-size: 8px;
   font-weight: 800;
@@ -6911,13 +6914,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 15px;
 }
 
-.trainerNotificationStatusCard p,
-.trainerNotificationSettings header p {
-  margin: 4px 0 0;
-  color: var(--tn-muted);
-  font-size: 9px;
-}
-
 .trainerNotificationStatusCard > i {
   padding: 5px 8px;
   border-radius: 5px;
@@ -7786,12 +7782,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerWorkoutStatusPanel label {
   display: grid;
   gap: 5px;
-}
-
-.trainerWorkoutStatusPanel label span {
-  color: var(--tn-muted);
-  font-size: 8px;
-  font-weight: 800;
 }
 
 .trainerWorkoutStatusPanel select,
