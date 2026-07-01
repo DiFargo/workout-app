@@ -775,7 +775,10 @@
   line-height: 1.1;
 }
 
-.trainerMessageSectionHead small {
+.trainerMessageSectionHead small,
+.trainerMessageList > button small,
+.trainerAnalyticsRiskList small,
+.trainerNotificationFeed small {
   color: var(--tn-muted);
   font-size: 11px;
   font-weight: 750;
@@ -804,12 +807,6 @@
 .trainerMessageList > button strong {
   font-size: 14px;
   line-height: 1.2;
-}
-
-.trainerMessageList > button small {
-  color: var(--tn-muted);
-  font-size: 11px;
-  font-weight: 750;
 }
 
 .trainerMessageList > button p,
@@ -1207,12 +1204,6 @@
   font-weight: 900;
 }
 
-.trainerAnalyticsRiskList small {
-  color: var(--tn-muted);
-  font-size: 11px;
-  font-weight: 750;
-}
-
 .trainerNotificationsLayout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 0.85fr);
@@ -1256,12 +1247,6 @@
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.trainerNotificationFeed small {
-  color: var(--tn-muted);
-  font-size: 11px;
-  font-weight: 750;
 }
 
 .trainerNextHeadActions,
