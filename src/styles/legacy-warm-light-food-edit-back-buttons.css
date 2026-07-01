@@ -660,7 +660,9 @@
 }
 
 /* BOTTOM ACTION BUTTONS = WATER BUTTON STYLE */
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBar button {
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBar button,
+:root[data-app-theme="warm-light"] .foodEditPageSave,
+:root[data-app-theme="warm-light"] .foodEditPageBack {
   background:
     linear-gradient(180deg, #f4e064 0%, #e0c94d 100%) !important;
 
@@ -795,20 +797,6 @@
 
 /* GOLD DONE BUTTON + GOLD GRAMS BUTTON */
 
-:root[data-app-theme="warm-light"] .foodEditPageSave {
-  background:
-    linear-gradient(180deg, #f4e064 0%, #e0c94d 100%) !important;
-
-  border: 1px solid rgba(94,75,30,0.12) !important;
-
-  box-shadow:
-    0 12px 28px rgba(151,119,35,0.16),
-    inset 0 1px 0 rgba(255,255,255,0.38) !important;
-
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
-}
-
 /* grams/unit row aligned */
 :root[data-app-theme="warm-light"] .foodEditPortionUnitRow {
   display: flex !important;
@@ -841,19 +829,6 @@
 }
 
 /* GOLD BACK BUTTON ON PRODUCT EDIT PAGE */
-:root[data-app-theme="warm-light"] .foodEditPageBack {
-  background:
-    linear-gradient(180deg, #f4e064 0%, #e0c94d 100%) !important;
-
-  border: 1px solid rgba(94,75,30,0.12) !important;
-
-  box-shadow:
-    0 12px 28px rgba(151,119,35,0.16),
-    inset 0 1px 0 rgba(255,255,255,0.38) !important;
-
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
-}
 
 /* ALIGN GRAMS BUTTON TO LEFT */
 :root[data-app-theme="warm-light"] .foodEditPortionUnitRow {

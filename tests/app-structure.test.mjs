@@ -1915,6 +1915,27 @@ test("nutrition food search actions CSS keeps one photo active transform owner",
   assert.doesNotMatch(source, /padding-bottom:\s*138px !important;/);
 });
 
+test("warm light food edit CSS keeps gold action shell grouped", async () => {
+  const source = await readText("src/styles/legacy-warm-light-food-edit-back-buttons.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.fatFoodSearchScreenPremium \.fatSearchBottomBar button,\s*:root\[data-app-theme="warm-light"\] \.foodEditPageSave,\s*:root\[data-app-theme="warm-light"\] \.foodEditPageBack\s*\{\s*background:\s*linear-gradient\(180deg,\s*#f4e064 0%,\s*#e0c94d 100%\) !important;[\s\S]*?box-shadow:\s*0 12px 28px rgba\(151,119,35,0\.16\),\s*inset 0 1px 0 rgba\(255,255,255,0\.38\) !important;[\s\S]*?-webkit-text-fill-color:\s*#5f5744 !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.doesNotMatch(
+    source,
+    /\/\* GOLD DONE BUTTON \+ GOLD GRAMS BUTTON \*\/[\s\S]*?\.foodEditPageSave\s*\{\s*background:\s*linear-gradient\(180deg,\s*#f4e064 0%,\s*#e0c94d 100%\) !important;/
+  );
+  assert.doesNotMatch(
+    source,
+    /\/\* GOLD BACK BUTTON ON PRODUCT EDIT PAGE \*\/[\s\S]*?\.foodEditPageBack\s*\{\s*background:\s*linear-gradient\(180deg,\s*#f4e064 0%,\s*#e0c94d 100%\) !important;/
+  );
+});
+
 test("nutrition food search actions CSS keeps action active colors grouped", async () => {
   const source = await readText("src/styles/nutrition-food-search-actions.css");
 

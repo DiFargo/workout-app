@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1132.65 KiB` raw, `114.29 KiB` gzip.
-- Latest source CSS report: `100` files, about `3313.33 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3312.67 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -95,6 +95,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.587`: grouped AI plan muted span typography in `nutrition-ai-plan-lazy.css`.
    - Continued in `v.1.588`: grouped food search header close-button shell CSS in `client-food-search-final.css`.
    - Continued in `v.1.589`: grouped food search header title shell CSS in `client-food-search-final.css`.
+   - Continued in `v.1.592`: grouped warm-light food search/edit gold action shell CSS in `legacy-warm-light-food-edit-back-buttons.css`.
    - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
    - Continued in `v.1.307`: warm-light add-food/search cleanup CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition visual coverage.
    - Continued in `v.1.308`: dark-green nutrition food-flow CSS moved from the core app entrypoint into `nutrition-stack.css`, with the dark nutrition readability guard updated.
@@ -639,3 +640,4 @@ Start mapping here before any cleanup:
 - `v.1.589`: consolidated food search header title shell CSS in `client-food-search-final.css`; the grouped owner is guarded by the app structure test.
 - `v.1.590`: removed early duplicate bottom-bar button and label shells from `legacy-bottom-bars.css`; the final baseline owner is guarded by the app structure test.
 - `v.1.591`: moved duplicate main goal-stat typography to the final full-card owner in `client-visual-unity-final.css`; the final owner is guarded by the app structure test.
+- `v.1.592`: consolidated warm-light food search/edit gold action shell CSS in `legacy-warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
