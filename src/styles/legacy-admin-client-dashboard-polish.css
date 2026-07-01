@@ -854,16 +854,6 @@
   order: 3 !important;
 }
 
-.adminNutritionMonthHead .adminNutritionMonthSummary {
-  order: 4 !important;
-  margin-top: 14px !important;
-  width: 100% !important;
-
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 10px !important;
-}
-
 /* Ãâ€”ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â ÃÂ²ÃÂ¾ÃÂ·ÃÂ²Ã‘â‚¬ÃÂ°Ã‘â€°Ã‘â€˜ÃÂ½ ÃÂ½ÃÂ°ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦; ÃÅ¸ÃÂ»ÃÂ°ÃÂ½ / Ãâ€”ÃÂ° ÃÂ¼ÃÂµÃ‘ÂÃ‘ÂÃ‘â€  ÃÂ¿ÃÂ¾ÃÂ´ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘â€˜ÃÂ¼ */
 
 .adminNutritionMonthPanel {

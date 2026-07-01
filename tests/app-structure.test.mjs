@@ -2961,6 +2961,14 @@ test("admin client dashboard polish CSS keeps nutrition month summary shells gro
     source,
     /\.adminNutritionMonthSummaryBelow\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*10px !important;\s*margin-top:\s*14px !important;\s*width:\s*100% !important;\s*\}/
   );
+  assert.doesNotMatch(
+    source,
+    /\.adminNutritionMonthHead \.adminNutritionMonthSummary\s*\{\s*order:\s*4 !important;\s*margin-top:\s*14px !important;\s*width:\s*100% !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*10px !important;\s*\}/
+  );
+  assert.equal(
+    (source.match(/\.adminNutritionMonthHead \.adminNutritionMonthSummary\s*\{\s*order:\s*99 !important;\s*margin-top:\s*14px !important;\s*width:\s*100% !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*10px !important;\s*\}/g) || []).length,
+    1
+  );
   assert.equal(
     (source.match(/\.adminNutritionMonthSummaryBelow\s*\{\s*display:\s*grid !important;\s*order:\s*initial !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*10px !important;\s*margin-top:\s*14px !important;\s*width:\s*100% !important;\s*\}/g) || []).length,
     1
