@@ -3737,6 +3737,35 @@ test("trainer workspace CSS keeps shared header layouts grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps compact layout pairs grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNextActivityCard span,\s*\.trainerNotificationCalendar > header > div:last-child\s*\{\s*display:\s*inline-flex;\s*align-items:\s*center;\s*gap:\s*8px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerNextProgramsTab \.programsOverviewCardStats span svg,\s*\.trainerNextProgramsTab \.programsOverviewCreateCard svg\s*\{\s*grid-row:\s*1 \/ 3;\s*align-self:\s*center;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerWorkoutMonthLegend span,\s*\.trainerWorkoutScheduleLegend span\s*\{\s*display:\s*inline-flex;\s*align-items:\s*center;\s*gap:\s*5px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerWorkoutScheduleGrid button:disabled:not\(\.selected\),\s*\.trainerWorkoutSchedulePlanner\.editing \.trainerWorkoutScheduleGrid button:disabled:not\(\.selected\)\s*\{\s*cursor:\s*not-allowed;\s*opacity:\s*0\.36;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerProgramExerciseList \.trainerNextExerciseActions button:last-child:hover,\s*\.trainerNextExerciseList \.trainerNextExerciseActions button:last-child:hover\s*\{\s*background:\s*#fff1f1;\s*color:\s*#d44a4a;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerClientWorkoutCalendar > header,\s*\.trainerNotificationCalendar > header\s*\{\s*align-items:\s*stretch;\s*flex-direction:\s*column;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps shared four-column grids grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
