@@ -1867,7 +1867,13 @@
 .trainerNextSimplePanel,
 .trainerNextMealPanel,
 .trainerNextNutritionSummary > section,
-.trainerNextLibrary {
+.trainerNextLibrary,
+.trainerClientAssignment,
+.trainerClientAssignedProgram,
+.trainerClientAnalyticsCard,
+.trainerClientInlineEditor,
+.trainerNotificationStatusCard,
+.trainerNotificationSettings {
   border: 1px solid var(--tn-line);
   border-radius: 8px;
   background: #fff;
@@ -5312,17 +5318,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   margin: 8px 2px -4px;
   color: var(--tn-muted);
   font-size: 9px;
-}
-
-.trainerClientAssignment,
-.trainerClientAssignedProgram,
-.trainerClientAnalyticsCard,
-.trainerClientInlineEditor,
-.trainerNotificationStatusCard,
-.trainerNotificationSettings {
-  border: 1px solid var(--tn-line);
-  border-radius: 8px;
-  background: #fff;
 }
 
 .trainerClientAssignment,

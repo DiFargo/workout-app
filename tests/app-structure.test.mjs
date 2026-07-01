@@ -3785,7 +3785,7 @@ test("trainer workspace CSS keeps client nutrition notification panel shells gro
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
-    (source.match(/\.trainerClientAssignment,\s*\.trainerClientAssignedProgram,\s*\.trainerClientAnalyticsCard,\s*\.trainerClientInlineEditor,\s*\.trainerNotificationStatusCard,\s*\.trainerNotificationSettings\s*\{\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*8px;\s*background:\s*#fff;\s*\}/g) || []).length,
+    (source.match(/\.trainerNextProgressChart,\s*\.trainerNextResultCard,\s*\.trainerNextActivityCard,\s*\.trainerNextRecommendation,\s*\.trainerNextSimplePanel,\s*\.trainerNextMealPanel,\s*\.trainerNextNutritionSummary > section,\s*\.trainerNextLibrary,\s*\.trainerClientAssignment,\s*\.trainerClientAssignedProgram,\s*\.trainerClientAnalyticsCard,\s*\.trainerClientInlineEditor,\s*\.trainerNotificationStatusCard,\s*\.trainerNotificationSettings\s*\{\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*8px;\s*background:\s*#fff;\s*\}/g) || []).length,
     1
   );
 });

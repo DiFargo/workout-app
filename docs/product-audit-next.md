@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.711`.
+Last updated at app version `v.1.712`.
 
 ## Evidence
 
@@ -498,6 +498,7 @@ Started in `v.1.250`.
    - Status: trainer nutrition page tab active CSS is folded into the shared purple active owner in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer shared purple active glow CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer mobile two-column metric and notification-offset grids are grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
+   - Status: trainer shared white panel shell CSS is grouped across dashboard, nutrition, client and notification cards in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: the early duplicate cabinet bottom pseudo-layer was removed from `client-primary-final-lock.css`; the final rhythm owner remains guarded under client primary visual coverage.
    - Status: food search action stack shell CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
    - Status: food search create-action inactive/active color CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
