@@ -3045,6 +3045,18 @@ test("client nutrition grid CSS does not keep dashboard icon and chart duplicate
     nutritionGrid,
     /\.profileAiStatsRow\.profileAiStatsRow strong,\s*html:root\[data-app-theme="warm-light"\] body #root > \.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiStatsRow\.profileAiStatsRow \.goal strong\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*color:\s*var\(--main-card-text\) !important;\s*font-size:\s*18px !important;\s*line-height:\s*1 !important;/
   );
+  assert.equal(
+    (
+      nutritionGrid.match(
+        /\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.mainMeasurementChart line\s*\{\s*stroke:\s*#e6e9f2 !important;\s*stroke-width:\s*2 !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.doesNotMatch(
+    nutritionGrid,
+    /body #root > \.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.mainMeasurementChart line\s*\{\s*stroke:\s*#e6e9f2 !important;\s*stroke-width:\s*2 !important;\s*\}/
+  );
 });
 
 test("client nutrition grid CSS keeps progress insight spacing in the final owner", async () => {

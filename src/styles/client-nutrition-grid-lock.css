@@ -1113,11 +1113,6 @@
     display: block !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChart line {
-    stroke: #e6e9f2 !important;
-    stroke-width: 2 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChart polyline {
     fill: none !important;
     stroke: var(--main-card-purple) !important;
