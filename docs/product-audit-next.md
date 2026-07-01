@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.602`.
+Last updated at app version `v.1.603`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `360` passed.
+- `npm.cmd test`: passed with `361` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -357,6 +357,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 249. Warm-light custom dish ingredient picker/confirmation surfaces now stay in one grouped food editor owner.
 250. Warm-light profile refresh/theme action shells now stay in one grouped add-food cleanup owner.
 251. Client profile sex/goal active picker styling now stays in one grouped profile dashboard owner.
+252. Client profile AI coach insight/toggle label typography now stays in one grouped profile dashboard owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

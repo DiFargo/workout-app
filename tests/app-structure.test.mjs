@@ -2822,6 +2822,23 @@ test("profile dashboard CSS keeps sex and goal active states grouped", async () 
   );
 });
 
+test("profile dashboard CSS keeps AI coach label typography grouped", async () => {
+  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.profileAiCoachInsight span,\s*\.profileAiCoachToggle span\s*\{\s*color:\s*rgba\(145,173,78,\.98\);\s*font-size:\s*11px;\s*font-weight:\s*1000;\s*letter-spacing:\s*\.12em;\s*text-transform:\s*uppercase;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (source.match(/color:\s*rgba\(145,173,78,\.98\);\s*font-size:\s*11px;\s*font-weight:\s*1000;\s*letter-spacing:\s*\.12em;\s*text-transform:\s*uppercase;/g) || []).length,
+    1
+  );
+});
+
 test("client main CSS keeps compact AI stat text rules in the later owner", async () => {
   const source = await readText("src/styles/client-main-final-overrides.css");
 

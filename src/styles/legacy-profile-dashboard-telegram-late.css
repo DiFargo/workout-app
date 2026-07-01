@@ -2264,14 +2264,6 @@
   gap: 18px;
 }
 
-.profileAiCoachInsight span {
-  color: rgba(145,173,78,.98);
-  font-size: 11px;
-  font-weight: 1000;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-
 .profileAiCoachInsight h2 {
   margin: 9px 0 8px;
   color: #fff;
@@ -3615,6 +3607,7 @@
   cursor: pointer;
 }
 
+.profileAiCoachInsight span,
 .profileAiCoachToggle span {
   color: rgba(145,173,78,.98);
   font-size: 11px;
