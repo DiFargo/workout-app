@@ -514,10 +514,15 @@
 }
 
 .profileAvatarBig img,
-.profileTelegramAvatar img {
+.profileTelegramAvatar img,
+.adminClientTelegramAvatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.profileAvatarBig img,
+.profileTelegramAvatar img {
   border-radius: inherit;
   display: block;
 }
@@ -800,12 +805,6 @@
   border-radius: 16px;
   font-size: 23px;
   overflow: hidden;
-}
-
-.adminClientTelegramAvatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .adminClientTelegramBody strong {

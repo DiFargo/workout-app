@@ -2948,6 +2948,14 @@ test("profile dashboard CSS keeps Telegram shells grouped", async () => {
     ).length,
     1
   );
+  assert.equal(
+    (
+      source.match(
+        /\.profileAvatarBig img,\s*\.profileTelegramAvatar img,\s*\.adminClientTelegramAvatar img\s*\{\s*width:\s*100%;\s*height:\s*100%;\s*object-fit:\s*cover;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
 });
 
 test("client main CSS keeps compact AI stat text rules in the later owner", async () => {
