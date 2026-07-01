@@ -778,13 +778,6 @@
   line-height: 1 !important;
 }
 
-:root[data-app-theme="warm-light"] .nutritionHeaderIconActions button {
-  border-color: #e3e6f1;
-  background: #ffffff;
-  color: #151824;
-  box-shadow: 0 5px 14px rgba(55, 64, 112, 0.07);
-}
-
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4::before,
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4::after,
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span::before,
@@ -818,6 +811,7 @@
   line-height: 1;
 }
 
+:root[data-app-theme="warm-light"] .nutritionHeaderIconActions button,
 :root[data-app-theme="warm-light"] .nutritionCalendarClose {
   border-color: #e3e6f1;
   background: #ffffff;

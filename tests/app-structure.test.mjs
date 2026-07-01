@@ -469,6 +469,23 @@ test("legacy registration CSS keeps workout history item internals grouped", asy
   assert.equal((source.match(/font-size:\s*12px;\s*line-height:\s*1\.2;\s*text-overflow:\s*ellipsis;/g) || []).length, 1);
 });
 
+test("legacy registration CSS keeps warm-light nutrition icon shells grouped", async () => {
+  const source = await readText("src/styles/legacy-registration-accessibility.css");
+
+  assert.equal(
+    (
+      source.match(
+        /:root\[data-app-theme="warm-light"\] \.nutritionHeaderIconActions button,\s*:root\[data-app-theme="warm-light"\] \.nutritionCalendarClose\s*\{\s*border-color:\s*#e3e6f1;\s*background:\s*#ffffff;\s*color:\s*#151824;\s*box-shadow:\s*0 5px 14px rgba\(55, 64, 112, 0\.07\);\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (source.match(/box-shadow:\s*0 5px 14px rgba\(55, 64, 112, 0\.07\);/g) || []).length,
+    1
+  );
+});
+
 test("modular CSS import graph resolves without cycles", async () => {
   const visited = new Set();
   for (const cssEntry of [
