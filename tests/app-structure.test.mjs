@@ -3141,6 +3141,15 @@ test("desktop cabinet CSS keeps trainer mobile form columns grouped", async () =
   );
 });
 
+test("desktop cabinet CSS keeps trainer client mobile columns grouped", async () => {
+  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientPhotoCompareControls,\s*\.trainerClientPhotoCompare,\s*\.trainerClientHeroMeta,\s*\.trainerClientProgramProgress\s*\{\s*grid-template-columns:\s*1fr;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");

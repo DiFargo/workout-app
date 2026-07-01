@@ -2935,7 +2935,9 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
   }
 
   .trainerClientPhotoCompareControls,
-  .trainerClientPhotoCompare {
+  .trainerClientPhotoCompare,
+  .trainerClientHeroMeta,
+  .trainerClientProgramProgress {
     grid-template-columns: 1fr;
   }
 
@@ -2967,10 +2969,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
   .trainerClientHeroNameRow h2 {
     max-width: 100%;
     font-size: 22px !important;
-  }
-
-  .trainerClientHeroMeta {
-    grid-template-columns: 1fr;
   }
 
   .trainerClientHeroMeta > div {
@@ -3022,10 +3020,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
 
   .trainerClientMacroGrid > div:nth-child(4) {
     border-top: 1px solid rgba(255, 255, 255, 0.07);
-  }
-
-  .trainerClientProgramProgress {
-    grid-template-columns: 1fr;
   }
 
   .trainerClientActivityList > div {
