@@ -619,16 +619,24 @@
 }
 
 .profileTelegramActions button,
+.profileTelegramSave,
+.adminClientTelegramActions button,
+.adminTelegramSendButton,
+.profileTelegramBotActions button,
+.profileTelegramCheckButton {
+  color: rgba(205,239,255,.96);
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.profileTelegramActions button,
 .profileTelegramSave {
   min-height: 44px;
   padding: 0 13px;
   border-radius: 15px;
   border: 1px solid rgba(42,171,238,.28);
   background: rgba(42,171,238,.14);
-  color: rgba(205,239,255,.96);
   font-size: 13px;
-  font-weight: 950;
-  cursor: pointer;
 }
 
 .profileTelegramActions button.danger {
@@ -834,10 +842,7 @@
   border-radius: 14px;
   border: 1px solid rgba(42,171,238,.24);
   background: rgba(42,171,238,.12);
-  color: rgba(205,239,255,.96);
   font-size: 12px;
-  font-weight: 950;
-  cursor: pointer;
 }
 
 .adminClientTelegramActions button:disabled {
@@ -901,10 +906,7 @@
   border-radius: 14px;
   border: 1px solid rgba(42,171,238,.28);
   background: rgba(42,171,238,.16);
-  color: rgba(205,239,255,.96);
   font-size: 13px;
-  font-weight: 950;
-  cursor: pointer;
 }
 
 .adminTelegramSendButton:disabled,
@@ -948,10 +950,7 @@
   border-radius: 14px;
   border: 1px solid rgba(42,171,238,.26);
   background: rgba(42,171,238,.13);
-  color: rgba(205,239,255,.96);
   font-size: 12px;
-  font-weight: 950;
-  cursor: pointer;
 }
 
 .profileTelegramBotActions button:disabled {
@@ -1094,10 +1093,7 @@
   border-radius: 14px;
   border: 1px solid rgba(42,171,238,.26);
   background: rgba(42,171,238,.13);
-  color: rgba(205,239,255,.96);
   font-size: 13px;
-  font-weight: 950;
-  cursor: pointer;
 }
 
 .profileTelegramCheckButton:disabled {
