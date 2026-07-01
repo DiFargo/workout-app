@@ -3957,6 +3957,10 @@ test("trainer workspace CSS keeps purple active controls grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
+    (source.match(/\.trainerCabinetActions button:not\(\.danger\) svg,\s*\.trainerUtilityActions svg,\s*\.trainerNotificationFeed svg,\s*\.trainerNextMetricFoot\.purple small,\s*\.trainerNextClientTabs button\.active,\s*\.trainerNextPageTabs button\.active,\s*\.trainerNextActivityCard span svg,\s*\.trainerNextProgramsTab \.programCreateChoiceSheet > div > button svg,\s*\.trainerNextProgramsTab \.programAiImportFile svg,\s*\.trainerProgramSelectedBar > svg,\s*\.trainerProgramCycleRow > svg,\s*\.trainerProgramCycle\.selected \.trainerProgramCycleRow strong,\s*\.trainerProgramDay\.selected strong,\s*\.trainerWorkoutMonthControls button:hover,\s*\.trainerNextWorkoutDayItem\.active \.trainerNextWorkoutDaySelect\s*\{\s*color:\s*var\(--tn-purple\);\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerNextChartHead button\.active,\s*\.trainerPhotoViewTabs button\.active,\s*\.trainerNextProgramControl > button:nth-of-type\(1\),\s*\.trainerProgramSelectedBar > div button\.primary,\s*\.trainerNutritionPeriodButtons button\.active,\s*\.trainerNotificationOffsets label\.active > span\s*\{\s*border-color:\s*var\(--tn-purple\);\s*background:\s*var\(--tn-purple\);\s*color:\s*#fff;\s*\}/g) || []).length,
     1
   );

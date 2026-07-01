@@ -463,7 +463,21 @@
   box-shadow: 0 8px 22px rgba(30, 35, 55, 0.05);
 }
 
-.trainerCabinetActions button:not(.danger) svg {
+.trainerCabinetActions button:not(.danger) svg,
+.trainerUtilityActions svg,
+.trainerNotificationFeed svg,
+.trainerNextMetricFoot.purple small,
+.trainerNextClientTabs button.active,
+.trainerNextPageTabs button.active,
+.trainerNextActivityCard span svg,
+.trainerNextProgramsTab .programCreateChoiceSheet > div > button svg,
+.trainerNextProgramsTab .programAiImportFile svg,
+.trainerProgramSelectedBar > svg,
+.trainerProgramCycleRow > svg,
+.trainerProgramCycle.selected .trainerProgramCycleRow strong,
+.trainerProgramDay.selected strong,
+.trainerWorkoutMonthControls button:hover,
+.trainerNextWorkoutDayItem.active .trainerNextWorkoutDaySelect {
   color: var(--tn-purple);
 }
 
@@ -563,10 +577,6 @@
   background: #fff;
   color: var(--tn-text);
   font-weight: 800;
-}
-
-.trainerUtilityActions svg {
-  color: var(--tn-purple);
 }
 
 .trainerUtilityBody {
@@ -1240,10 +1250,6 @@
   background: #fbfcff;
 }
 
-.trainerNotificationFeed svg {
-  color: var(--tn-purple);
-}
-
 .trainerNotificationFeed span,
 .trainerNextClientIdentity > span {
   min-width: 0;
@@ -1403,10 +1409,6 @@
 
 .trainerNextMetricFoot.green small {
   color: var(--tn-green);
-}
-
-.trainerNextMetricFoot.purple small {
-  color: var(--tn-purple);
 }
 
 .trainerNextSparkline {
@@ -1835,11 +1837,6 @@
   background: transparent;
 }
 
-.trainerNextClientTabs button.active,
-.trainerNextPageTabs button.active {
-  color: var(--tn-purple);
-}
-
 .trainerNextClientTabs button.active::after,
 .trainerNextPageTabs button.active::after {
   background: var(--tn-purple);
@@ -2019,10 +2016,6 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-}
-
-.trainerNextActivityCard span svg {
-  color: var(--tn-purple);
 }
 
 .trainerNextRecommendation {
@@ -4673,10 +4666,6 @@
   text-align: left;
 }
 
-.trainerNextProgramsTab .programCreateChoiceSheet > div > button svg {
-  color: var(--tn-purple);
-}
-
 .trainerNextProgramsTab .programCreateChoiceSheet strong,
 .trainerNextProgramsTab .programCreateChoiceSheet small {
   display: block;
@@ -4756,10 +4745,6 @@
   cursor: pointer;
 }
 
-.trainerNextProgramsTab .programAiImportFile svg {
-  color: var(--tn-purple);
-}
-
 .trainerNextProgramsTab .programAiImportFile input {
   position: absolute;
   width: 1px;
@@ -4834,10 +4819,6 @@
   border: 1px solid var(--tn-line);
   border-radius: 8px;
   background: #fff;
-}
-
-.trainerProgramSelectedBar > svg {
-  color: var(--tn-purple);
 }
 
 .trainerProgramSelectedBar label {
@@ -5009,18 +4990,10 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   padding: 7px 8px;
 }
 
-.trainerProgramCycleRow > svg {
-  color: var(--tn-purple);
-}
-
 .trainerProgramCycleRow > div {
   display: flex;
   align-items: center;
   gap: 1px;
-}
-
-.trainerProgramCycle.selected .trainerProgramCycleRow strong {
-  color: var(--tn-purple);
 }
 
 .trainerProgramWeeks {
@@ -5082,10 +5055,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerProgramDay strong {
   color: inherit;
   font-size: 11px;
-}
-
-.trainerProgramDay.selected strong {
-  color: var(--tn-purple);
 }
 
 .trainerProgramDay small {
@@ -5792,10 +5761,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #fff;
   color: var(--tn-muted);
   cursor: pointer;
-}
-
-.trainerWorkoutMonthControls button:hover {
-  color: var(--tn-purple);
 }
 
 .trainerWorkoutMonthControls strong {
@@ -7479,10 +7444,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerNextWorkoutDayItem.active {
   border-color: var(--tn-purple);
   background: #fbfaff;
-}
-
-.trainerNextWorkoutDayItem.active .trainerNextWorkoutDaySelect {
-  color: var(--tn-purple);
 }
 
 .trainerNextWorkoutDayItem.completed {
