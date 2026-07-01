@@ -3564,6 +3564,19 @@ test("trainer workspace CSS keeps client nutrition notification panel shells gro
   );
 });
 
+test("trainer workspace CSS keeps trainer calendar and notification controls grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerWorkoutMonthWeekdays,\s*\.trainerWorkoutMonthGrid,\s*\.trainerWorkoutScheduleWeekdays,\s*\.trainerWorkoutScheduleGrid,\s*\.trainerNotificationWeekdays,\s*\.trainerNotificationCalendarGrid\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(7,\s*minmax\(0,\s*1fr\)\);\s*gap:\s*5px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerNotificationSwitch input,\s*\.trainerNotificationOffsets input,\s*\.trainerProgressReminderOptions input\s*\{\s*position:\s*absolute;\s*opacity:\s*0;\s*pointer-events:\s*none;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 

@@ -6069,7 +6069,11 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 }
 
 .trainerWorkoutMonthWeekdays,
-.trainerWorkoutMonthGrid {
+.trainerWorkoutMonthGrid,
+.trainerWorkoutScheduleWeekdays,
+.trainerWorkoutScheduleGrid,
+.trainerNotificationWeekdays,
+.trainerNotificationCalendarGrid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 5px;
@@ -6297,13 +6301,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 12px;
   text-align: center;
   text-transform: capitalize;
-}
-
-.trainerWorkoutScheduleWeekdays,
-.trainerWorkoutScheduleGrid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 5px;
 }
 
 .trainerWorkoutScheduleWeekdays span {
@@ -7258,7 +7255,9 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   cursor: pointer;
 }
 
-.trainerNotificationSwitch input {
+.trainerNotificationSwitch input,
+.trainerNotificationOffsets input,
+.trainerProgressReminderOptions input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
@@ -7430,12 +7429,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: var(--tn-purple);
 }
 
-.trainerNotificationOffsets input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
 .trainerNotificationOffsets label > span {
   width: 24px;
   height: 24px;
@@ -7544,12 +7537,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   box-shadow: 0 8px 18px rgba(103, 70, 255, 0.08);
 }
 
-.trainerProgressReminderOptions input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
 .trainerProgressReminderOptions label > span {
   width: 34px;
   height: 34px;
@@ -7618,13 +7605,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   min-width: 126px;
   text-align: center;
   font-size: 10px;
-}
-
-.trainerNotificationWeekdays,
-.trainerNotificationCalendarGrid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 5px;
 }
 
 .trainerNotificationWeekdays {
