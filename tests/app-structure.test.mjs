@@ -429,6 +429,23 @@ test("client loading fallback CSS keeps warm-light panel and spinner shells grou
   assert.equal((source.match(/animation:\s*clientRouteFallbackSpin 0\.78s linear infinite;/g) || []).length, 1);
 });
 
+test("legacy registration CSS keeps first setup active choices grouped", async () => {
+  const source = await readText("src/styles/legacy-registration-accessibility.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.firstSetupSexGrid button\.active,\s*\.firstSetupGoalGrid button\.active\s*\{\s*border-color:\s*#6b55e6 !important;\s*background:\s*#f6f4ff !important;\s*box-shadow:\s*inset 0 0 0 1px #6b55e6 !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (source.match(/border-color:\s*#6b55e6 !important;\s*background:\s*#f6f4ff !important;\s*box-shadow:\s*inset 0 0 0 1px #6b55e6 !important;/g) || []).length,
+    1
+  );
+});
+
 test("modular CSS import graph resolves without cycles", async () => {
   const visited = new Set();
   for (const cssEntry of [
