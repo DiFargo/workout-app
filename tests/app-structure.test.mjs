@@ -446,6 +446,29 @@ test("legacy registration CSS keeps first setup active choices grouped", async (
   );
 });
 
+test("legacy registration CSS keeps workout history item internals grouped", async () => {
+  const source = await readText("src/styles/legacy-registration-accessibility.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.workoutHistoryModalList > button > span,\s*\.workoutHistoryModalItem > span,\s*\.cabinetWorkoutHistoryItem > button > span\s*\{\s*width:\s*38px;\s*height:\s*38px;\s*display:\s*grid;\s*place-items:\s*center;\s*border-radius:\s*11px;\s*background:\s*rgba\(107, 92, 255, 0\.14\);\s*font-size:\s*18px;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (
+      source.match(
+        /\.workoutHistoryModalList strong,\s*\.cabinetWorkoutHistoryItem > button strong\s*\{\s*overflow:\s*hidden;\s*font-size:\s*12px;\s*line-height:\s*1\.2;\s*text-overflow:\s*ellipsis;\s*white-space:\s*nowrap;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal((source.match(/background:\s*rgba\(107, 92, 255, 0\.14\);\s*font-size:\s*18px;/g) || []).length, 1);
+  assert.equal((source.match(/font-size:\s*12px;\s*line-height:\s*1\.2;\s*text-overflow:\s*ellipsis;/g) || []).length, 1);
+});
+
 test("modular CSS import graph resolves without cycles", async () => {
   const visited = new Set();
   for (const cssEntry of [
