@@ -3878,6 +3878,10 @@ test("trainer workspace CSS keeps shared four-column grids grouped", async () =>
     1
   );
   assert.equal(
+    (source.match(/\.trainerNextExerciseList \.trainerNextExerciseActions button:first-child,\s*\.trainerProgramExerciseList \.trainerNextExerciseActions button:first-child\s*\{\s*grid-column:\s*auto;\s*width:\s*22px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerNextExerciseEditor,\s*\.trainerProgramExerciseList \.trainerNextExerciseEditor\s*\{\s*grid-template-columns:\s*1fr;\s*gap:\s*13px;\s*padding:\s*12px 4px 14px;\s*\}/g) || []).length,
     1
   );

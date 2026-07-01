@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.691`.
+Last updated at app version `v.1.692`.
 
 ## Evidence
 
@@ -478,6 +478,7 @@ Started in `v.1.250`.
    - Status: trainer compact text-field stack CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer compact row text stack CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer workout/nutrition mobile header grid CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
+   - Status: trainer exercise/program first action button sizing CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: the early duplicate cabinet bottom pseudo-layer was removed from `client-primary-final-lock.css`; the final rhythm owner remains guarded under client primary visual coverage.
    - Status: food search action stack shell CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
    - Status: food search create-action inactive/active color CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.

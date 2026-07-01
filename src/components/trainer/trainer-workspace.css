@@ -8272,7 +8272,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     height: 27px;
   }
 
-  .trainerNextExerciseList .trainerNextExerciseActions button:first-child {
+  .trainerNextExerciseList .trainerNextExerciseActions button:first-child,
+  .trainerProgramExerciseList .trainerNextExerciseActions button:first-child {
     grid-column: auto;
     width: 22px;
   }
@@ -8417,11 +8418,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   .trainerProgramExerciseList .trainerNextExerciseActions button {
     width: 22px;
     height: 25px;
-  }
-
-  .trainerProgramExerciseList .trainerNextExerciseActions button:first-child {
-    grid-column: auto;
-    width: 22px;
   }
 
   .trainerProgramAddExercise {
