@@ -3091,6 +3091,18 @@ test("client nutrition grid CSS does not keep exact duplicate blocks", async () 
     source,
     /\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutMenuBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button\.active\s*\{\s*background:\s*#f0edff !important;\s*border-color:\s*#ded7ff !important;\s*color:\s*#5d43e8 !important;\s*box-shadow:\s*inset 0 1px 0 rgba\(255, 255, 255, 0\.9\) !important;\s*\}/
   );
+  assert.equal(
+    (
+      source.match(
+        /\.profileAiHero\.profileAiHero\.profileAiHero\s*\{\s*grid-template-columns:\s*58px minmax\(0, 1fr\) 14px !important;\s*column-gap:\s*8px !important;\s*row-gap:\s*0 !important;\s*padding:\s*14px 14px 14px 20px !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.doesNotMatch(
+    source,
+    /\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiHero\.profileAiHero\s*\{\s*grid-template-columns:\s*58px minmax\(0, 1fr\) 14px !important;\s*column-gap:\s*8px !important;\s*row-gap:\s*0 !important;\s*padding:\s*14px 14px 14px 20px !important;\s*\}/
+  );
 });
 
 test("desktop cabinet CSS keeps trainer client overview grid locks in the broad mobile owner", async () => {
