@@ -2216,14 +2216,6 @@
   line-height: 1.35;
 }
 
-.trainerMeasurementCollapsed .positive {
-  color: #159947;
-}
-
-.trainerMeasurementCollapsed .negative {
-  color: #dc4f4f;
-}
-
 .trainerMeasurementCollapsed p {
   margin: 0;
   padding: 10px 12px;
@@ -2284,6 +2276,7 @@
   font-weight: 700;
 }
 
+.trainerMeasurementCollapsed .positive,
 .trainerMeasurementSummaryGrid .positive,
 .trainerMeasurementFieldGrid .positive,
 .trainerExerciseProgressSummary .positive,
@@ -2291,6 +2284,7 @@
   color: #159947;
 }
 
+.trainerMeasurementCollapsed .negative,
 .trainerMeasurementSummaryGrid .negative,
 .trainerMeasurementFieldGrid .negative,
 .trainerExerciseProgressSummary .negative,

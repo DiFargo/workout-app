@@ -3571,11 +3571,11 @@ test("trainer workspace CSS keeps mobile measurement grids grouped", async () =>
     1
   );
   assert.equal(
-    (source.match(/\.trainerMeasurementSummaryGrid \.positive,\s*\.trainerMeasurementFieldGrid \.positive,\s*\.trainerExerciseProgressSummary \.positive,\s*\.trainerExerciseProgressMetrics \.positive\s*\{\s*color:\s*#159947;\s*\}/g) || []).length,
+    (source.match(/\.trainerMeasurementCollapsed \.positive,\s*\.trainerMeasurementSummaryGrid \.positive,\s*\.trainerMeasurementFieldGrid \.positive,\s*\.trainerExerciseProgressSummary \.positive,\s*\.trainerExerciseProgressMetrics \.positive\s*\{\s*color:\s*#159947;\s*\}/g) || []).length,
     1
   );
   assert.equal(
-    (source.match(/\.trainerMeasurementSummaryGrid \.negative,\s*\.trainerMeasurementFieldGrid \.negative,\s*\.trainerExerciseProgressSummary \.negative,\s*\.trainerExerciseProgressMetrics \.negative\s*\{\s*color:\s*#dc4f4f;\s*\}/g) || []).length,
+    (source.match(/\.trainerMeasurementCollapsed \.negative,\s*\.trainerMeasurementSummaryGrid \.negative,\s*\.trainerMeasurementFieldGrid \.negative,\s*\.trainerExerciseProgressSummary \.negative,\s*\.trainerExerciseProgressMetrics \.negative\s*\{\s*color:\s*#dc4f4f;\s*\}/g) || []).length,
     1
   );
 });
