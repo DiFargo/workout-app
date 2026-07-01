@@ -3494,6 +3494,15 @@ test("trainer workspace CSS keeps shared form field shells grouped", async () =>
   );
 });
 
+test("trainer workspace CSS keeps cabinet and utility card shells grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerCabinetHero,\s*\.trainerCabinetStats,\s*\.trainerCabinetActions,\s*\.trainerUtilityCard,\s*\.trainerUtilityActions\s*\{\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*18px;\s*background:\s*#fff;\s*box-shadow:\s*var\(--tn-soft-shadow\);\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 

@@ -380,7 +380,9 @@
 
 .trainerCabinetHero,
 .trainerCabinetStats,
-.trainerCabinetActions {
+.trainerCabinetActions,
+.trainerUtilityCard,
+.trainerUtilityActions {
   border: 1px solid var(--tn-line);
   border-radius: 18px;
   background: #fff;
@@ -488,14 +490,6 @@
 
 .trainerUtilityPage {
   max-width: 980px;
-}
-
-.trainerUtilityCard,
-.trainerUtilityActions {
-  border: 1px solid var(--tn-line);
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: var(--tn-soft-shadow);
 }
 
 .trainerUtilityCard {
