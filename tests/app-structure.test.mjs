@@ -3543,6 +3543,10 @@ test("client cabinet modal shells keep shared CSS owners", async () => {
     1
   );
   assert.equal(
+    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileAiNutritionPlanCard,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileNutritionGoalCard,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileGoalPicker button,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileMacroGrid > div,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileGoalPicker button,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileMacroGrid > div\s*\{\s*border-color:\s*#e1e4ef !important;\s*background:\s*#ffffff !important;\s*color:\s*#596176 !important;\s*box-shadow:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileGoalPicker button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileGoalPicker button\.active\s*\{\s*border-color:\s*#7565e8 !important;\s*background:\s*#efedff !important;\s*color:\s*#4f3dd2 !important;\s*\}/g) || []).length,
     1
   );

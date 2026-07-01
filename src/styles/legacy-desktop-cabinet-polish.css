@@ -3170,16 +3170,6 @@ html:root[data-app-theme="warm-light"] body #root
   background: #f7f8fd !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root
-  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileGoalPicker button,
-html:root[data-app-theme="warm-light"] body #root
-  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileMacroGrid > div {
-  border-color: #e1e4ef !important;
-  background: #ffffff !important;
-  color: #596176 !important;
-  box-shadow: none !important;
-}
-
 /* Unified weekly nutrition plan and goal editor. */
 .cabinetNutritionModal .cabinetNutritionCombined {
   height: auto !important;
@@ -3376,6 +3366,10 @@ html:root[data-app-theme="warm-light"] body #root
   .cabinetNutritionModal .cabinetNutritionCombined .profileAiNutritionPlanCard,
 html:root[data-app-theme="warm-light"] body #root
   .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionGoalCard,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileGoalPicker button,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileMacroGrid > div,
 html:root[data-app-theme="warm-light"] body #root
   .cabinetNutritionModal .cabinetNutritionCombined .profileGoalPicker button,
 html:root[data-app-theme="warm-light"] body #root

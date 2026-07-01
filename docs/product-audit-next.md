@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.624`.
+Last updated at app version `v.1.625`.
 
 ## Evidence
 
@@ -406,6 +406,7 @@ Started in `v.1.250`.
    - Status: obsolete warm-light AI-plan collapsed surface CSS was removed from `nutrition.css`; the final collapsed-summary owner stays guarded.
    - Status: cabinet nutrition modal warm-light save button CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet nutrition modal warm-light picker active/hint CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
+   - Status: cabinet nutrition modal warm-light neutral card/picker/macro surfaces are grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet trainer notifications and progress photos modal shells are grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: cabinet trainer notifications and progress photos overlay CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
    - Status: warm-light add-food/search cleanup CSS moved behind the nutrition lazy entrypoint under the existing nutrition visual audit.
