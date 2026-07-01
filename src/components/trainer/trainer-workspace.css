@@ -146,11 +146,6 @@
   font-weight: 800;
 }
 
-.trainerNextSidebar nav {
-  display: grid;
-  gap: 4px;
-}
-
 .trainerNextSidebar nav button,
 .trainerNextMobileNav button {
   position: relative;
@@ -643,11 +638,6 @@
   border: 1px solid #edf0f7;
   border-radius: 13px;
   background: #fbfbff;
-}
-
-.trainerUtilityToggle span {
-  display: grid;
-  gap: 4px;
 }
 
 .trainerUtilityToggle strong {
@@ -2790,6 +2780,8 @@
   border-radius: 7px;
 }
 
+.trainerNextSidebar nav,
+.trainerUtilityToggle span,
 .trainerNextLibrary article div {
   display: grid;
   gap: 4px;

@@ -3694,6 +3694,10 @@ test("trainer workspace CSS keeps list and action stacks grouped", async () => {
     (source.match(/\.trainerNextMoreDrawer nav,\s*\.trainerMessageCoachHint > div,\s*\.trainerProgramCycles\s*\{\s*display:\s*grid;\s*gap:\s*7px;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerNextSidebar nav,\s*\.trainerUtilityToggle span,\s*\.trainerNextLibrary article div\s*\{\s*display:\s*grid;\s*gap:\s*4px;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps micro copy typography grouped", async () => {
