@@ -199,15 +199,6 @@
     display: block !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button.active,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button.active,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button.active {
-    background: #f0edff !important;
-    border-color: #ded7ff !important;
-    color: #5d43e8 !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button strong,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button strong,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button strong {
