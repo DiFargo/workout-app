@@ -997,7 +997,8 @@
   box-shadow: 0 28px 90px rgba(17, 21, 38, 0.28);
 }
 
-.trainerMessageModalHead {
+.trainerMessageModalHead,
+.trainerWorkoutSchedulePlanner > header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -6157,13 +6158,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerWorkoutSchedulePlanner {
   display: grid;
-  gap: 14px;
-}
-
-.trainerWorkoutSchedulePlanner > header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
   gap: 14px;
 }
 
