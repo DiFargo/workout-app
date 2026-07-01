@@ -2137,7 +2137,10 @@
   font-size: 21px;
 }
 
-.trainerMeasurementCollapsed {
+.trainerMeasurementCollapsed,
+.trainerNextProgramsTab .programCreateChoiceSheet > div,
+.trainerNutritionLegend,
+.trainerNextWorkoutPreview > div {
   display: grid;
   gap: 10px;
 }
@@ -4645,11 +4648,6 @@
   line-height: 1;
 }
 
-.trainerNextProgramsTab .programCreateChoiceSheet > div {
-  display: grid;
-  gap: 10px;
-}
-
 .trainerNextProgramsTab .programCreateChoiceSheet > div > button {
   min-height: 76px;
   display: grid;
@@ -6483,11 +6481,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   grid-area: 1 / 1;
   display: grid;
   justify-items: center;
-}
-
-.trainerNutritionLegend {
-  display: grid;
-  gap: 10px;
 }
 
 .trainerNutritionLegend span {
