@@ -1324,7 +1324,9 @@
 .trainerNextClientsTitle,
 .trainerNextSummaryHead,
 .trainerNextPanelTitle,
-.trainerNextChartHead {
+.trainerNextChartHead,
+.trainerPhotoPreviewModal header,
+.trainerNotificationCalendar > header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2567,13 +2569,6 @@
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 22px 80px rgba(24, 27, 42, 0.22);
-}
-
-.trainerPhotoPreviewModal header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
 }
 
 .trainerPhotoPreviewModal header span {
@@ -7474,13 +7469,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border: 1px solid #eceaf3;
   border-radius: 8px;
   background: #fbfaff;
-}
-
-.trainerNotificationCalendar > header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
 }
 
 .trainerNotificationCalendar strong {

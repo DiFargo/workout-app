@@ -3634,6 +3634,15 @@ test("trainer workspace CSS keeps workout schedule pill labels grouped", async (
   );
 });
 
+test("trainer workspace CSS keeps shared header layouts grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNextSectionTitle,\s*\.trainerNextClientsTitle,\s*\.trainerNextSummaryHead,\s*\.trainerNextPanelTitle,\s*\.trainerNextChartHead,\s*\.trainerPhotoPreviewModal header,\s*\.trainerNotificationCalendar > header\s*\{\s*display:\s*flex;\s*align-items:\s*center;\s*justify-content:\s*space-between;\s*gap:\s*14px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps panel shells and scrollbars grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
