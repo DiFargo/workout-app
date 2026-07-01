@@ -9485,10 +9485,7 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     height: 70px;
   }
 
-  .trainerMeasurementFieldGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
+  .trainerMeasurementFieldGrid,
   .trainerMeasurementCollapsed > div {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
