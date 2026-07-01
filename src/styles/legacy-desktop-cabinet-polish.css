@@ -3227,10 +3227,6 @@ html:root[data-app-theme="warm-light"] body #root
   gap: 4px !important;
 }
 
-.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionWeekday {
-  font-size: 9px !important;
-}
-
 .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay {
   width: 100% !important;
   height: 54px !important;
@@ -3239,17 +3235,13 @@ html:root[data-app-theme="warm-light"] body #root
   user-select: none;
 }
 
+.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionWeekday,
 .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay > span {
   font-size: 9px !important;
 }
 
 .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay > strong {
   font-size: 11px !important;
-}
-
-.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay > small,
-.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay > em {
-  font-size: 8px !important;
 }
 
 .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionCalendarLegend {
@@ -3316,6 +3308,8 @@ html:root[data-app-theme="warm-light"] body #root
   border-radius: 12px !important;
 }
 
+.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay > small,
+.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay > em,
 .cabinetNutritionModal .cabinetNutritionCombined .profileMacroGrid span {
   font-size: 8px !important;
 }
