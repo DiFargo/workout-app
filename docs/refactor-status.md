@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.724`.
+Last updated at app version `v.1.725`.
 
 ## Stable Now
 
@@ -483,7 +483,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1122.63 KiB` raw, `113.90 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3281.30 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3281.14 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
@@ -508,7 +508,7 @@ The JS side has already received the biggest low-risk win. The next meaningful s
 
 ## Recent Verification
 
-- `npm.cmd run test`: passed with `406` passed.
+- `npm.cmd run test`: passed with `407` passed.
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
 - `npm.cmd run report:css`: passed.

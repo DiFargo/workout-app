@@ -1878,6 +1878,27 @@ test("legacy nutrition header CSS keeps one compact page padding owner", async (
   );
 });
 
+test("legacy nutrition header CSS keeps calorie row grid in the later owner", async () => {
+  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
+  const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", pixelReferenceStart);
+
+  assert.ok(pixelReferenceStart > 0);
+  assert.ok(compactPolishStart > pixelReferenceStart);
+
+  const refinedDarkBlock = source.slice(0, pixelReferenceStart);
+  const referenceBlock = source.slice(pixelReferenceStart, compactPolishStart);
+
+  assert.doesNotMatch(
+    refinedDarkBlock,
+    /\.fatCalorieRows div\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*1fr auto !important;\s*gap:\s*18px !important;\s*align-items:\s*center !important;\s*\}/
+  );
+  assert.match(
+    referenceBlock,
+    /\.fatCalorieRows div\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*1fr auto !important;\s*align-items:\s*center !important;\s*gap:\s*18px !important;\s*\}/
+  );
+});
+
 test("legacy nutrition header CSS keeps pixel meter span sizes in the later compact owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");

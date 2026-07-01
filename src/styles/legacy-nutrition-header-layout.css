@@ -228,13 +228,6 @@
   gap: 17px !important;
 }
 
-.fatCalorieRows div {
-  display: grid !important;
-  grid-template-columns: 1fr auto !important;
-  gap: 18px !important;
-  align-items: center !important;
-}
-
 .fatCalorieRows span {
   min-width: 0 !important;
   color: rgba(255, 255, 255, 0.88) !important;
