@@ -3610,6 +3610,19 @@ test("trainer workspace CSS keeps nutrition typography grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps muted paragraph typography grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNextPanelTitle p,\s*\.trainerPhotoComparePanel p\s*\{\s*margin:\s*4px 0 0;\s*color:\s*var\(--tn-muted\);\s*font-size:\s*11px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerClientBlockHeading p,\s*\.trainerClientAssignedInfo p,\s*\.trainerWorkoutEditorModal p\s*\{\s*margin:\s*5px 0 0;\s*color:\s*var\(--tn-muted\);\s*font-size:\s*10px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps client nutrition notification panel shells grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 

@@ -2060,7 +2060,8 @@
   margin-bottom: 18px;
 }
 
-.trainerNextPanelTitle p {
+.trainerNextPanelTitle p,
+.trainerPhotoComparePanel p {
   margin: 4px 0 0;
   color: var(--tn-muted);
   font-size: 11px;
@@ -2475,12 +2476,6 @@
 
 .trainerPhotoComparePanel strong {
   font-size: 13px;
-}
-
-.trainerPhotoComparePanel p {
-  margin: 4px 0 0;
-  color: var(--tn-muted);
-  font-size: 11px;
 }
 
 .trainerPhotoComparePanel select {
@@ -5497,7 +5492,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 }
 
 .trainerClientBlockHeading p,
-.trainerClientAssignedInfo p {
+.trainerClientAssignedInfo p,
+.trainerWorkoutEditorModal p {
   margin: 5px 0 0;
   color: var(--tn-muted);
   font-size: 10px;
@@ -7570,12 +7566,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerWorkoutEditorModal h2 {
   margin: 0;
   font-size: 19px;
-}
-
-.trainerWorkoutEditorModal p {
-  margin: 5px 0 0;
-  color: var(--tn-muted);
-  font-size: 10px;
 }
 
 .trainerWorkoutEditorModal header button {
