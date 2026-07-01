@@ -5278,7 +5278,9 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   cursor: pointer;
 }
 
-.trainerProgramBreadcrumb > aside button:hover {
+.trainerProgramBreadcrumb > aside button:hover,
+.trainerProgramExerciseList .trainerNextExerciseActions button:hover,
+.trainerNextExerciseList .trainerNextExerciseActions button:hover {
   background: #f3f1ff;
   color: var(--tn-purple);
 }
@@ -5369,11 +5371,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: transparent;
   color: var(--tn-muted);
   cursor: pointer;
-}
-
-.trainerProgramExerciseList .trainerNextExerciseActions button:hover {
-  background: #f3f1ff;
-  color: var(--tn-purple);
 }
 
 .trainerProgramExerciseList .trainerNextExerciseActions button:last-child:hover {
@@ -8068,11 +8065,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border-radius: 5px;
   background: transparent;
   color: var(--tn-muted);
-}
-
-.trainerNextExerciseList .trainerNextExerciseActions button:hover {
-  background: #f3f1ff;
-  color: var(--tn-purple);
 }
 
 .trainerNextExerciseList .trainerNextExerciseActions button:last-child:hover {
