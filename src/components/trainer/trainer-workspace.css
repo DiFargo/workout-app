@@ -5054,7 +5054,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerProgramMonthRow button:hover,
 .trainerProgramCycleRow button:hover,
 .trainerProgramWeekRow button:hover,
-.trainerProgramDay > button:not(:first-child):hover {
+.trainerProgramDay > button:not(:first-child):hover,
+.trainerNextWorkoutDays .trainerNextWorkoutDayActions button:hover {
   background: #f1efff;
   color: var(--tn-purple);
 }
@@ -7839,11 +7840,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border-radius: 5px;
   background: transparent;
   color: var(--tn-muted);
-}
-
-.trainerNextWorkoutDays .trainerNextWorkoutDayActions button:hover {
-  background: #f1efff;
-  color: var(--tn-purple);
 }
 
 .trainerNextWorkoutName {

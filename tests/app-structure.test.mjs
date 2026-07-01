@@ -3748,6 +3748,10 @@ test("trainer workspace CSS keeps purple active controls grouped", async () => {
     (source.match(/\.trainerProgramBreadcrumb > aside button:hover,\s*\.trainerProgramExerciseList \.trainerNextExerciseActions button:hover,\s*\.trainerNextExerciseList \.trainerNextExerciseActions button:hover\s*\{\s*background:\s*#f3f1ff;\s*color:\s*var\(--tn-purple\);\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerProgramMonthRow button:hover,\s*\.trainerProgramCycleRow button:hover,\s*\.trainerProgramWeekRow button:hover,\s*\.trainerProgramDay > button:not\(:first-child\):hover,\s*\.trainerNextWorkoutDays \.trainerNextWorkoutDayActions button:hover\s*\{\s*background:\s*#f1efff;\s*color:\s*var\(--tn-purple\);\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workouts page program tab exposes selected state", async () => {
