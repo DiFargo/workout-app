@@ -1902,23 +1902,14 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .f
   box-shadow: none !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction {
-  color: rgba(97, 106, 128, 0.82) !important;
-  -webkit-text-fill-color: rgba(97, 106, 128, 0.82) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction.active {
-  color: #4834dd !important;
-  -webkit-text-fill-color: #4834dd !important;
-}
-
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction span,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction strong,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction strong {
   color: rgba(97, 106, 128, 0.82) !important;
   -webkit-text-fill-color: rgba(97, 106, 128, 0.82) !important;
 }
 
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction.active,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction.active span,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction.active strong {
   color: #4834dd !important;

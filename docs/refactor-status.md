@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.649`.
+Last updated at app version `v.1.650`.
 
 ## Stable Now
 
@@ -17,6 +17,7 @@ Last updated at app version `v.1.649`.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
 - Client primary final CSS now shares the food action bar `strong` typography rule across search, product and editor bars, guarded by app structure tests.
 - Client primary final CSS now keeps food search action stack shells in grouped owners.
+- Client primary final CSS now keeps food search create-action inactive/active colors in grouped owners.
 - Client nutrition late layout CSS now shares expanded meal/product text typography in one grouped owner, guarded by app structure tests.
 - Warm-light food edit CSS now shares food-search input/history surface shell styling in one grouped owner, guarded by app structure tests.
 - Warm-light food edit CSS now shares product edit content/grid label shell styling in one grouped owner, guarded by app structure tests.

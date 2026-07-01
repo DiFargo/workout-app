@@ -705,6 +705,19 @@ test("client primary final CSS keeps food search action stack shells grouped", a
   );
 });
 
+test("client primary final CSS keeps food search create action colors grouped", async () => {
+  const source = await readText("src/styles/client-primary-final-lock.css");
+
+  assert.equal(
+    (source.match(/\.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction span,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction strong\s*\{\s*color:\s*rgba\(97, 106, 128, 0\.82\) !important;\s*-webkit-text-fill-color:\s*rgba\(97, 106, 128, 0\.82\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction\.active span,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction\.active strong\s*\{\s*color:\s*#4834dd !important;\s*-webkit-text-fill-color:\s*#4834dd !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps food editor header layout in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
