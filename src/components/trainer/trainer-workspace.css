@@ -1200,11 +1200,6 @@
   font-size: 18px;
 }
 
-.trainerAnalyticsRiskList {
-  display: grid;
-  gap: 8px;
-}
-
 .trainerAnalyticsRiskList button {
   min-height: 44px;
   display: grid;
@@ -2093,11 +2088,6 @@
   font-size: 10px;
   font-weight: 800;
   cursor: pointer;
-}
-
-.trainerNextHistoryList {
-  display: grid;
-  gap: 8px;
 }
 
 .trainerNextHistoryList article {
@@ -5599,6 +5589,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   box-shadow: 0 12px 30px rgba(42, 32, 88, 0.05);
 }
 
+.trainerAnalyticsRiskList,
+.trainerNextHistoryList,
 .trainerClientProgramActionStack {
   display: grid;
   gap: 8px;

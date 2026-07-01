@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.692`.
+Last updated at app version `v.1.693`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `402` passed.
+- `npm.cmd test`: passed with `403` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -479,6 +479,7 @@ Started in `v.1.250`.
    - Status: trainer compact row text stack CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer workout/nutrition mobile header grid CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer exercise/program first action button sizing CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
+   - Status: trainer risk/history/action stack CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: the early duplicate cabinet bottom pseudo-layer was removed from `client-primary-final-lock.css`; the final rhythm owner remains guarded under client primary visual coverage.
    - Status: food search action stack shell CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
    - Status: food search create-action inactive/active color CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.

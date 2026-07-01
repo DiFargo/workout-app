@@ -3679,6 +3679,15 @@ test("trainer workspace CSS keeps inline text stacks grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps list and action stacks grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerAnalyticsRiskList,\s*\.trainerNextHistoryList,\s*\.trainerClientProgramActionStack\s*\{\s*display:\s*grid;\s*gap:\s*8px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps micro copy typography grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
