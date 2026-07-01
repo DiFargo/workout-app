@@ -761,9 +761,6 @@
 
 .trainerMessageFilters button.active {
   border-color: transparent;
-  background: var(--tn-purple);
-  color: #fff;
-  box-shadow: 0 8px 18px rgba(100, 55, 245, 0.16);
 }
 
 .trainerMessageSectionHead {
@@ -6203,6 +6200,10 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerExerciseProgressToolbar button.active {
   border-color: var(--tn-purple);
+}
+
+.trainerMessageFilters button.active,
+.trainerExerciseProgressToolbar button.active {
   background: var(--tn-purple);
   color: #fff;
   box-shadow: 0 8px 18px rgba(100, 55, 245, 0.16);
