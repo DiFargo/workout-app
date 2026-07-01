@@ -2055,7 +2055,10 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
   gap: 12px;
 }
 
-.trainerClientSectionHead > div {
+.trainerClientSectionHead > div,
+.trainerClientAttentionStrip article > div,
+.trainerClientAiList span,
+.trainerClientProgramSummary > span {
   min-width: 0;
   display: grid;
   gap: 3px;
@@ -2222,12 +2225,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
   background: rgba(255, 255, 255, 0.08);
   font-style: normal;
   font-weight: 950;
-}
-
-.trainerClientAttentionStrip article > div {
-  min-width: 0;
-  display: grid;
-  gap: 3px;
 }
 
 .trainerClientAttentionStrip strong,
@@ -2622,12 +2619,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
   background: #75a52d;
 }
 
-.trainerClientAiList span {
-  min-width: 0;
-  display: grid;
-  gap: 3px;
-}
-
 .trainerClientAiList strong {
   color: rgba(255, 255, 255, 0.86);
   font-size: 11px;
@@ -2687,12 +2678,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
   background: rgba(159, 202, 71, 0.12);
   color: #b5e655;
   font-style: normal;
-}
-
-.trainerClientProgramSummary > span {
-  min-width: 0;
-  display: grid;
-  gap: 3px;
 }
 
 .trainerClientProgramSummary small {
