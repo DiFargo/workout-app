@@ -3614,7 +3614,7 @@ test("trainer workspace CSS keeps nutrition typography grouped", async () => {
     1
   );
   assert.equal(
-    (source.match(/\.trainerNutritionReadonly,\s*\.trainerNutritionCurrentPlan p\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*9px;\s*\}/g) || []).length,
+    (source.match(/\.trainerNextLibrary article small,\s*\.trainerNextProgramControl small,\s*\.trainerNextProgramControl label > span,\s*\.trainerProgramWeekRow small,\s*\.trainerProgramWorkoutName span,\s*\.trainerNutritionReadonly,\s*\.trainerNutritionCurrentPlan p,\s*\.trainerNextWorkoutName label span,\s*\.trainerNextExerciseFields label > span,\s*\.trainerNextExerciseName small,\s*\.trainerNextWorkoutPreview article header span,\s*\.trainerNextWorkoutPreview article div small\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*9px;\s*\}/g) || []).length,
     1
   );
 });
