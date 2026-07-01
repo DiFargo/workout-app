@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1122.63 KiB` raw, `113.90 KiB` gzip.
-- Latest source CSS report: `100` files, about `3281.47 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3281.30 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -79,6 +79,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.585`: removed duplicate compact start-panel sizing CSS from `legacy-client-workout-flow-late.css`.
    - Continued in `v.1.590`: removed early duplicate bottom-bar button and label shells from `legacy-bottom-bars.css`.
    - Continued in `v.1.591`: moved duplicate main goal-stat typography to the final owner in `client-visual-unity-final.css`.
+   - Continued in `v.1.724`: removed the early duplicate individual workout badges layout owner from `legacy-month-program-editor-early.css`; the final badges owner remains guarded.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.
@@ -1010,3 +1011,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.722`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.723`: removed the early duplicate product info layout owner from `legacy-food-products-summary-early.css`; the final owner is guarded by the app structure test.
 - Verification for `v.1.723`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.724`: removed the early duplicate individual workout badges layout owner from `legacy-month-program-editor-early.css`; the final owner is guarded by the app structure test.
+- Verification for `v.1.724`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

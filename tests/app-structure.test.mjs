@@ -2952,6 +2952,19 @@ test("legacy admin program editor CSS has no empty media blocks", async () => {
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
+test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
+  const source = await readText("src/styles/legacy-month-program-editor-early.css");
+
+  assert.doesNotMatch(
+    source,
+    /\.individualWorkoutBadges\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*justify-content:\s*flex-start !important;\s*align-items:\s*center !important;\s*\}/
+  );
+  assert.equal(
+    (source.match(/\.individualWorkoutBadges\s*\{\s*width:\s*100% !important;\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("legacy admin client page CSS does not keep exact duplicate blocks", async () => {
   const source = await readText("src/styles/legacy-admin-client-page.css");
   const seenBlocks = new Set();

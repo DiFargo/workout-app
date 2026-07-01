@@ -2432,13 +2432,6 @@
   margin-bottom: 2px !important;
 }
 
-.individualWorkoutBadges {
-  min-width: 0 !important;
-  display: flex !important;
-  justify-content: flex-start !important;
-  align-items: center !important;
-}
-
 .individualWorkoutWeek {
   justify-self: end !important;
   max-width: none !important;
