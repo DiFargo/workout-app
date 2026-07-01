@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.719`.
+Last updated at app version `v.1.720`.
 
 ## Evidence
 
@@ -506,6 +506,7 @@ Started in `v.1.250`.
    - Status: the early duplicate main profile progress insight headline layout owner was removed from `client-nutrition-grid-lock.css`; the final headline layout owner remains guarded by structure and client visual coverage.
    - Status: the early duplicate main measurement chart line owner was removed from `client-nutrition-grid-lock.css`; the final chart line owner remains guarded by structure and client visual coverage.
    - Status: the early duplicate food action bar button and active owners were removed from `client-primary-final-lock.css`; the final shared action owners remain guarded by structure and client visual coverage.
+   - Status: the early duplicate main AI stats row cell owner was removed from `client-primary-final-lock.css`; the final stats row cell owner remains guarded by structure and client visual coverage.
    - Status: the early duplicate cabinet bottom pseudo-layer was removed from `client-primary-final-lock.css`; the final rhythm owner remains guarded under client primary visual coverage.
    - Status: food search action stack shell CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
    - Status: food search create-action inactive/active color CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.

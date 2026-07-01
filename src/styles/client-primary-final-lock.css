@@ -1110,14 +1110,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
     overflow: hidden !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
     width: 100% !important;
     text-align: center !important;

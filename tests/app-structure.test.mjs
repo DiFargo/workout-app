@@ -947,6 +947,10 @@ test("client primary final CSS keeps main AI stats row in the final owner", asyn
   );
   assert.doesNotMatch(
     source,
+    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
     /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\s*\{\s*min-width:\s*0 !important;\s*padding:\s*12px 8px !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*\}/
   );
   assert.doesNotMatch(

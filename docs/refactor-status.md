@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.719`.
+Last updated at app version `v.1.720`.
 
 ## Stable Now
 
@@ -83,6 +83,7 @@ Last updated at app version `v.1.719`.
 - Client nutrition grid CSS no longer keeps the early duplicate main profile progress insight headline layout owner before the final headline layout owner.
 - Client nutrition grid CSS no longer keeps the early duplicate main measurement chart line owner before the final chart line owner.
 - Client primary final CSS no longer keeps early duplicate food action bar button and active owners before the final shared action owners.
+- Client primary final CSS no longer keeps the early duplicate main AI stats row cell owner before the final stats row cell owner.
 - Client primary final CSS no longer keeps the early duplicate cabinet bottom pseudo-layer before the final rhythm owner.
 - Client primary final CSS now shares the food action bar `strong` typography rule across search, product and editor bars, guarded by app structure tests.
 - Client primary final CSS now keeps food search action stack shells in grouped owners.
