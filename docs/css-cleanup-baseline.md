@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1128.34 KiB` raw, `114.17 KiB` gzip.
-- Latest source CSS report: `100` files, about `3298.94 KiB` total source CSS.
+- Latest main CSS bundle: about `1128.29 KiB` raw, `114.17 KiB` gzip.
+- Latest source CSS report: `100` files, about `3298.86 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -34,7 +34,7 @@ Start mapping here before any cleanup:
 - `src/styles/client-nutrition-grid-lock.css` - `148.48 KiB`
 - `src/styles/client-render-target-lock.css` - `100.83 KiB`
 - `src/styles/legacy-food-editor-tail.css` - `91.55 KiB`
-- `src/styles/legacy-desktop-cabinet-polish.css` - `90.89 KiB`
+- `src/styles/legacy-desktop-cabinet-polish.css` - `90.81 KiB`
 - `src/styles/legacy-client-workout-flow-late.css` - `84.02 KiB`
 - `src/styles/legacy-month-program-editor-early.css` - `83.36 KiB`
 - `src/styles/legacy-profile-dashboard-telegram-late.css` - `82.42 KiB`
@@ -115,6 +115,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.621`: grouped cabinet nutrition modal warm-light save button shell CSS in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.624`: grouped cabinet nutrition modal warm-light picker active/hint CSS in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.625`: grouped cabinet nutrition modal warm-light neutral card/picker/macro surfaces in `legacy-desktop-cabinet-polish.css`.
+   - Continued in `v.1.626`: grouped trainer notifications and progress photos warm-light surface CSS in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.622`: grouped warm-light trainer notifications and progress photos modal shells in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.623`: grouped warm-light trainer notifications and progress photos overlay CSS in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.609`: grouped profile/admin Telegram status badge shells in `legacy-profile-dashboard-telegram-late.css`.
@@ -718,3 +719,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.624`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.625`: grouped cabinet nutrition modal warm-light neutral card/picker/macro surfaces in `legacy-desktop-cabinet-polish.css`; the shared owner is guarded by the app structure test.
 - Verification for `v.1.625`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.626`: grouped trainer notifications and progress photos warm-light surface CSS in `legacy-desktop-cabinet-polish.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.626`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

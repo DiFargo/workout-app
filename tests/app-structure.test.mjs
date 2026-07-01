@@ -3562,6 +3562,10 @@ test("client cabinet modal shells keep shared CSS owners", async () => {
     (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsOverlay,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosOverlay\s*\{\s*background:\s*rgba\(35, 40, 68, 0\.2\);\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsHead button,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationItem,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosHead button,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosIntro,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotoSteps label\s*\{\s*border-color:\s*#e1e4ef;\s*background:\s*#fff;\s*color:\s*#151824;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("workout navigation compact heights stay grouped", async () => {

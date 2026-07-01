@@ -1117,13 +1117,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsEm
   color: #151824;
 }
 
-html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsHead button,
-html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem {
-  border-color: #e1e4ef;
-  background: #fff;
-  color: #151824;
-}
-
 html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsSummary,
 html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem small,
 html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem em,
@@ -1457,6 +1450,8 @@ html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotoSteps sma
   color: #737b91;
 }
 
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsHead button,
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem,
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosHead button,
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosIntro,
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotoSteps label {
