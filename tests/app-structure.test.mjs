@@ -3062,6 +3062,18 @@ test("client nutrition grid CSS keeps progress insight spacing in the final owne
     source.slice(finalProgressStart),
     /\.profileProgressInsightBadge small\s*\{\s*font-size:\s*8\.5px !important;\s*line-height:\s*1 !important;\s*\}/
   );
+  assert.equal(
+    (
+      source.match(
+        /\.profileProgressInsightCard \.profileAiCoachHeadline\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*flex-start !important;\s*gap:\s*5px !important;\s*text-align:\s*left !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.doesNotMatch(
+    source,
+    /\.profileProgressInsightCard\.profileProgressInsightCard \.profileAiCoachHeadline\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*flex-start !important;\s*gap:\s*5px !important;\s*text-align:\s*left !important;\s*\}/
+  );
 });
 
 test("client nutrition grid CSS does not keep exact duplicate blocks", async () => {

@@ -935,15 +935,6 @@
     white-space: nowrap !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline {
-    min-width: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 5px !important;
-    text-align: left !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline span {
     color: #283044 !important;
     font-size: 10.5px !important;
