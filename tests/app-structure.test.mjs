@@ -3684,6 +3684,7 @@ test("trainer workspace CSS keeps client section stacks grouped", async () => {
     (source.match(/\.trainerMeasurementCollapsed,\s*\.trainerNextProgramsTab \.programCreateChoiceSheet > div,\s*\.trainerNutritionLegend,\s*\.trainerNextWorkoutPreview > div\s*\{\s*display:\s*grid;\s*gap:\s*10px;\s*\}/g) || []).length,
     1
   );
+  assert.equal((source.match(/\.trainerNextWorkoutPreview > div/g) || []).length, 1);
 });
 
 test("trainer workspace CSS keeps inline text stacks grouped", async () => {

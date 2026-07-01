@@ -7812,11 +7812,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 20px;
 }
 
-.trainerNextWorkoutPreview > div {
-  display: grid;
-  gap: 10px;
-}
-
 .trainerNextWorkoutPreview article {
   overflow: hidden;
   border: 1px solid var(--tn-line);
