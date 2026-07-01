@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.618`.
+Last updated at app version `v.1.619`.
 
 ## Stable Now
 
@@ -78,6 +78,7 @@ Last updated at app version `v.1.618`.
 - Nutrition food-flow CSS no longer keeps the obsolete pre-final flex weekday strip layer before the final grid owner.
 - Warm-light nutrition polish CSS no longer keeps the obsolete pre-final weekday selected/background layer before the visible polish owner.
 - Nutrition base CSS no longer keeps the obsolete 34px/28px weekday strip layer before the current compact and grid owners.
+- Nutrition base CSS now groups the warm-light nutrition/client page shell surface in one owner.
 - Trainer mobile page-shell CSS is now grouped across narrow and coarse landscape owners.
 - Nutrition orbit CSS now keeps shared inline and modal meal shells in one owner.
 - Nutrition base CSS now keeps compact meal-card sizing in the desktop compact owner.

@@ -3266,6 +3266,19 @@ test("client nutrition weekday strip exposes selected and current date state", a
   assert.match(nutritionHeader, /aria-current=\{isTodayDay \? "date" : undefined\}/);
 });
 
+test("nutrition base CSS keeps warm-light page shell grouped", async () => {
+  const nutritionBaseCss = await readText("src/styles/nutrition.css");
+
+  assert.equal(
+    (nutritionBaseCss.match(/:root\[data-app-theme="warm-light"\] \.fatSecretPage\.nutritionFixedHeaderV3,\s*:root\[data-app-theme="warm-light"\] \.clientCorePage\s*\{\s*border-color:\s*rgba\(96, 78, 27, 0\.24\) !important;[\s\S]*?linear-gradient\(180deg, #fffaf0 0%, #f4e8c8 100%\) !important;[\s\S]*?0 24px 60px rgba\(87, 68, 18, 0\.15\),[\s\S]*?inset 0 1px 0 rgba\(255, 255, 255, 0\.72\) !important;[\s\S]*?\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (nutritionBaseCss.match(/border-color:\s*rgba\(96, 78, 27, 0\.24\) !important;[\s\S]*?linear-gradient\(180deg, #fffaf0 0%, #f4e8c8 100%\) !important;[\s\S]*?0 24px 60px rgba\(87, 68, 18, 0\.15\),[\s\S]*?inset 0 1px 0 rgba\(255, 255, 255, 0\.72\) !important;/g) || []).length,
+    1
+  );
+});
+
 test("client nutrition weekday strip keeps two-letter labels visible", async () => {
   const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
   const nutritionBaseCss = await readText("src/styles/nutrition.css");

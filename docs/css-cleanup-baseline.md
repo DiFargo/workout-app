@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1130.44 KiB` raw, `114.28 KiB` gzip.
-- Latest source CSS report: `100` files, about `3300.44 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3300.10 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -122,6 +122,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.616`: removed the obsolete pre-final nutrition weekday strip flex layer from `nutrition-food-flow-late.css`.
    - Continued in `v.1.617`: removed the obsolete warm-light nutrition weekday selected/background layer from `legacy-warm-light-nutrition-polish.css`.
    - Continued in `v.1.618`: removed the obsolete 34px/28px nutrition weekday strip layer from `nutrition.css`.
+   - Continued in `v.1.619`: grouped the warm-light nutrition/client page shell surface in `nutrition.css`.
    - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
    - Continued in `v.1.307`: warm-light add-food/search cleanup CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition visual coverage.
    - Continued in `v.1.308`: dark-green nutrition food-flow CSS moved from the core app entrypoint into `nutrition-stack.css`, with the dark nutrition readability guard updated.
@@ -697,3 +698,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.617`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify` and `npm.cmd run test:e2e` passed.
 - `v.1.618`: removed the obsolete 34px/28px nutrition weekday strip layer from `nutrition.css`; later compact/grid owners now hold the active geometry and are guarded structurally.
 - Verification for `v.1.618`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify` and `npm.cmd run test:e2e` passed.
+- `v.1.619`: grouped the duplicate warm-light nutrition/client page shell surface in `nutrition.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.619`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
