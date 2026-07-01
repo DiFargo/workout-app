@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1122.49 KiB` raw, `113.88 KiB` gzip.
-- Latest source CSS report: `100` files, about `3280.50 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3279.65 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -1023,3 +1023,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.727`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.728`: removed the early duplicate admin nutrition month summary order owner from `legacy-admin-client-dashboard-polish.css`; the later final owner is guarded by the app structure test.
 - Verification for `v.1.728`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.729`: removed the early duplicate admin history checkbox visual owner from `legacy-history-ai-search-late.css`; the later visible-fix owner is guarded by the app structure test.
+- Verification for `v.1.729`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

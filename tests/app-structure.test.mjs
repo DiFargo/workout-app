@@ -2514,6 +2514,17 @@ test("admin calendar reminders CSS keeps one fixed back label visibility owner",
   );
 });
 
+test("admin history CSS keeps checkbox visuals in the final visible owner", async () => {
+  const source = await readText("src/styles/legacy-history-ai-search-late.css");
+
+  assert.doesNotMatch(source, /\.adminHistoryCheck\s*\{\s*position:\s*absolute;\s*left:\s*14px;\s*top:\s*50%;\s*transform:\s*translateY\(-50%\);\s*width:\s*28px;\s*height:\s*28px;\s*cursor:\s*pointer;\s*\}/);
+  assert.doesNotMatch(source, /\.adminHistoryCheck input:checked \+ i::after\s*\{[\s\S]*?color:\s*rgba\(255,\s*210,\s*210,\s*0\.98\);/);
+  assert.equal(
+    (source.match(/\.adminHistoryCheck input:checked \+ i::after\s*\{\s*content:\s*"[^"]+";\s*width:\s*100%;\s*height:\s*100%;\s*display:\s*grid;\s*place-items:\s*center;\s*color:\s*rgba\(255,\s*220,\s*220,\s*0\.98\);\s*font-size:\s*17px;\s*font-weight:\s*1000;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("nutrition calendar CSS keeps final size and label color locks in the final owner", async () => {
   const source = await readText("src/styles/legacy-history-ai-search-late.css");
   const premiumCalendarStart = source.indexOf("/* PREMIUM NUTRITION CALENDAR */");

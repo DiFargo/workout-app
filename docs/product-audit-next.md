@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.728`.
+Last updated at app version `v.1.729`.
 
 ## Evidence
 
@@ -371,6 +371,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 263. Telegram bot/check disabled states now share one profile dashboard owner.
 264. Nutrition product rows now keep the product icon wrapper sizing in the later final owner instead of repeating an older 62px wrapper block.
 265. Admin nutrition month summary order now stays in the later final owner instead of repeating an older `order: 4` block.
+266. Admin history checkbox visuals now stay in the later visible-fix owner instead of repeating the older non-important checkbox block.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.
