@@ -8424,7 +8424,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     white-space: normal;
   }
 
-  .trainerNextExerciseActions {
+  .trainerNextExerciseActions,
+  .trainerProgramExerciseList .trainerNextExerciseActions {
     display: grid;
     grid-template-columns: 22px 22px;
   }
@@ -8573,11 +8574,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
   .trainerProgramExerciseRow .trainerNextExerciseMetric {
     display: none;
-  }
-
-  .trainerProgramExerciseList .trainerNextExerciseActions {
-    display: grid;
-    grid-template-columns: 22px 22px;
   }
 
   .trainerProgramExerciseList .trainerNextExerciseActions button {
