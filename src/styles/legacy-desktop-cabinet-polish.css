@@ -2316,7 +2316,9 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
 }
 
 .trainerClientKpiGrid article > em,
-.trainerClientKpiGrid article > small {
+.trainerClientKpiGrid article > small,
+.trainerClientMacroGrid span,
+.trainerClientMacroGrid em {
   color: rgba(255, 255, 255, 0.46);
   font-size: 9px;
   font-style: normal;
@@ -2520,13 +2522,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
 
 .trainerClientMacroGrid > div:first-child {
   border-left: 0;
-}
-
-.trainerClientMacroGrid span,
-.trainerClientMacroGrid em {
-  color: rgba(255, 255, 255, 0.46);
-  font-size: 9px;
-  font-style: normal;
 }
 
 .trainerClientMacroGrid strong {

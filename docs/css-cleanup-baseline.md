@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1128.14 KiB` raw, `114.16 KiB` gzip.
-- Latest source CSS report: `100` files, about `3298.58 KiB` total source CSS.
+- Latest main CSS bundle: about `1128.09 KiB` raw, `114.16 KiB` gzip.
+- Latest source CSS report: `100` files, about `3298.49 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -34,7 +34,7 @@ Start mapping here before any cleanup:
 - `src/styles/client-nutrition-grid-lock.css` - `148.48 KiB`
 - `src/styles/client-render-target-lock.css` - `100.83 KiB`
 - `src/styles/legacy-food-editor-tail.css` - `91.55 KiB`
-- `src/styles/legacy-desktop-cabinet-polish.css` - `90.53 KiB`
+- `src/styles/legacy-desktop-cabinet-polish.css` - `90.44 KiB`
 - `src/styles/legacy-client-workout-flow-late.css` - `84.02 KiB`
 - `src/styles/legacy-month-program-editor-early.css` - `83.36 KiB`
 - `src/styles/legacy-profile-dashboard-telegram-late.css` - `82.42 KiB`
@@ -121,6 +121,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.629`: grouped trainer notifications and progress photos text-container grid CSS in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.630`: grouped cabinet nutrition modal calendar/macro micro-label typography CSS in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.631`: grouped cabinet nutrition modal settings-open hidden legacy surfaces in `legacy-desktop-cabinet-polish.css`.
+   - Continued in `v.1.632`: grouped trainer client KPI/macro metric caption typography CSS in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.622`: grouped warm-light trainer notifications and progress photos modal shells in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.623`: grouped warm-light trainer notifications and progress photos overlay CSS in `legacy-desktop-cabinet-polish.css`.
    - Continued in `v.1.609`: grouped profile/admin Telegram status badge shells in `legacy-profile-dashboard-telegram-late.css`.
@@ -736,3 +737,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.630`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.631`: grouped cabinet nutrition modal settings-open hidden legacy surfaces in `legacy-desktop-cabinet-polish.css`; the shared owner is guarded by the app structure test.
 - Verification for `v.1.631`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.632`: grouped trainer client KPI/macro metric caption typography CSS in `legacy-desktop-cabinet-polish.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.632`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

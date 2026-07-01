@@ -3083,6 +3083,19 @@ test("desktop cabinet CSS keeps trainer client overview grid locks in the broad 
   );
 });
 
+test("desktop cabinet CSS keeps trainer client metric captions grouped", async () => {
+  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientKpiGrid article > em,\s*\.trainerClientKpiGrid article > small,\s*\.trainerClientMacroGrid span,\s*\.trainerClientMacroGrid em\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.46\);\s*font-size:\s*9px;\s*font-style:\s*normal;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/color:\s*rgba\(255,\s*255,\s*255,\s*0\.46\);\s*font-size:\s*9px;\s*font-style:\s*normal;/g) || []).length,
+    1
+  );
+});
+
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
