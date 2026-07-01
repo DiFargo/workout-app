@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.616`.
+Last updated at app version `v.1.617`.
 
 ## Stable Now
 
@@ -76,6 +76,7 @@ Last updated at app version `v.1.616`.
 - Telegram bot/check disabled-state CSS now stays in one grouped profile dashboard owner.
 - Nutrition weekday strip CSS now uses an explicit label/marker grid so Russian two-letter day labels stay separated from circular markers.
 - Nutrition food-flow CSS no longer keeps the obsolete pre-final flex weekday strip layer before the final grid owner.
+- Warm-light nutrition polish CSS no longer keeps the obsolete pre-final weekday selected/background layer before the visible polish owner.
 - Trainer mobile page-shell CSS is now grouped across narrow and coarse landscape owners.
 - Nutrition orbit CSS now keeps shared inline and modal meal shells in one owner.
 - Nutrition base CSS now keeps compact meal-card sizing in the desktop compact owner.

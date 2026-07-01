@@ -3269,6 +3269,7 @@ test("client nutrition weekday strip exposes selected and current date state", a
 test("client nutrition weekday strip keeps two-letter labels visible", async () => {
   const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
   const nutritionCss = await readText("src/styles/nutrition-food-flow-late.css");
+  const warmLightNutritionCss = await readText("src/styles/legacy-warm-light-nutrition-polish.css");
 
   assert.match(nutritionCalendar, /NUTRITION_WEEK_LABELS = \["\\u041f\\u041d", "\\u0412\\u0422", "\\u0421\\u0420", "\\u0427\\u0422", "\\u041f\\u0422", "\\u0421\\u0411", "\\u0412\\u0421"\]/);
   assert.match(nutritionCss, /Preserve both letters in Russian weekday abbreviations/);
@@ -3277,6 +3278,8 @@ test("client nutrition weekday strip keeps two-letter labels visible", async () 
   assert.doesNotMatch(nutritionCss, /Keep weekday labels visually separate from the day markers/);
   assert.doesNotMatch(nutritionCss, /\.nutritionDayV4 \{[\s\S]*flex-direction: column-reverse !important;/);
   assert.doesNotMatch(nutritionCss, /\.nutritionDayV4 span \{[\s\S]*width: 28px !important;/);
+  assert.doesNotMatch(warmLightNutritionCss, /\.nutritionDayV4\.selected,[\s\S]*background: linear-gradient\(180deg, #f4e064 0%, #d8bd48 100%\) !important;/);
+  assert.match(warmLightNutritionCss, /\.nutritionDayV4\.selected span,[\s\S]*background: #f4e064 !important;/);
 });
 
 test("client nutrition header labels stay readable Russian text", async () => {
