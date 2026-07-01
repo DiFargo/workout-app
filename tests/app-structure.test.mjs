@@ -3698,6 +3698,10 @@ test("trainer workspace CSS keeps shared four-column grids grouped", async () =>
     (source.match(/\.trainerNextAvatar img,\s*\.trainerNextPhotoGrid img,\s*\.trainerNextExerciseImage img,\s*\.trainerNextExerciseImage video\s*\{\s*width:\s*100%;\s*height:\s*100%;\s*object-fit:\s*cover;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerExerciseProgressToolbar,\s*\.trainerNutritionCustomPeriod\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps panel shells and scrollbars grouped", async () => {

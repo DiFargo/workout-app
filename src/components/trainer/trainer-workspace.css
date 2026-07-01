@@ -8827,7 +8827,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .trainerExerciseProgressToolbar {
+  .trainerExerciseProgressToolbar,
+  .trainerNutritionCustomPeriod {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -8972,11 +8973,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
   .trainerNutritionPeriodButtons button {
     padding: 0 5px;
-  }
-
-  .trainerNutritionCustomPeriod {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .trainerNutritionCustomPeriod label {
