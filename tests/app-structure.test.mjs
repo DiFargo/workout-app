@@ -3642,6 +3642,15 @@ test("trainer workspace CSS keeps panel shells and scrollbars grouped", async ()
   );
 });
 
+test("trainer workspace CSS keeps purple active controls grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNextChartHead button\.active,\s*\.trainerPhotoViewTabs button\.active,\s*\.trainerNextProgramControl > button:nth-of-type\(1\),\s*\.trainerProgramSelectedBar > div button\.primary,\s*\.trainerNutritionPeriodButtons button\.active,\s*\.trainerNotificationOffsets label\.active > span\s*\{\s*border-color:\s*var\(--tn-purple\);\s*background:\s*var\(--tn-purple\);\s*color:\s*#fff;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 

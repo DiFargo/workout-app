@@ -1910,12 +1910,6 @@
   font-weight: 800;
 }
 
-.trainerNextChartHead button.active {
-  border-color: var(--tn-purple);
-  background: var(--tn-purple);
-  color: #fff;
-}
-
 .trainerNextProgressChart svg {
   width: 100%;
   height: 210px;
@@ -2491,12 +2485,6 @@
   color: var(--tn-muted);
   font-size: 11px;
   font-weight: 800;
-}
-
-.trainerPhotoViewTabs button.active {
-  border-color: var(--tn-purple);
-  background: var(--tn-purple);
-  color: #fff;
 }
 
 .trainerPhotoComparePanel {
@@ -4417,12 +4405,6 @@
   white-space: nowrap;
 }
 
-.trainerNextProgramControl > button:nth-of-type(1) {
-  border-color: var(--tn-purple);
-  background: var(--tn-purple);
-  color: #fff;
-}
-
 .trainerNextProgramsTab {
   min-width: 0;
   padding-bottom: 100px;
@@ -5036,12 +5018,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerProgramSelectedBar > div button.danger {
   border-color: #ff6d6d;
   color: #e43e3e;
-}
-
-.trainerProgramSelectedBar > div button.primary {
-  border-color: var(--tn-purple);
-  background: var(--tn-purple);
-  color: #fff;
 }
 
 .trainerProgramConstructorGrid {
@@ -6748,12 +6724,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 9px;
 }
 
-.trainerNutritionPeriodButtons button.active {
-  border-color: var(--tn-purple);
-  background: var(--tn-purple);
-  color: #fff;
-}
-
 .trainerNutritionCustomPeriod {
   display: flex;
   gap: 7px;
@@ -7375,6 +7345,11 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: transparent;
 }
 
+.trainerNextChartHead button.active,
+.trainerPhotoViewTabs button.active,
+.trainerNextProgramControl > button:nth-of-type(1),
+.trainerProgramSelectedBar > div button.primary,
+.trainerNutritionPeriodButtons button.active,
 .trainerNotificationOffsets label.active > span {
   border-color: var(--tn-purple);
   background: var(--tn-purple);
