@@ -3053,6 +3053,10 @@ test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", 
     oldStatsOwnerBlock,
     /\.profileAiStatsRow span\s*\{\s*min-height:\s*14px !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*\}/
   );
+  assert.doesNotMatch(
+    oldStatsOwnerBlock,
+    /\.profileAiStatsRow span\s*\{\s*min-height:\s*16px !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*font-size:\s*10px !important;\s*line-height:\s*1 !important;\s*\}/
+  );
   assert.match(
     oldStatsBlock,
     /\.profileAiStatsRow span\s*\{\s*width:\s*100% !important;\s*min-height:\s*14px !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;[\s\S]*?font-size:\s*10px !important;[\s\S]*?margin-bottom:\s*8px !important;\s*\}/
