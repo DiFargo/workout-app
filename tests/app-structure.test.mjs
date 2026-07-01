@@ -2911,6 +2911,14 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
 test("admin client dashboard polish CSS keeps nutrition month summary shells grouped", async () => {
   const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
 
+  assert.doesNotMatch(
+    source,
+    /\.adminNutritionMonthSummaryBelow\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*10px !important;\s*margin-top:\s*14px !important;\s*width:\s*100% !important;\s*\}/
+  );
+  assert.equal(
+    (source.match(/\.adminNutritionMonthSummaryBelow\s*\{\s*display:\s*grid !important;\s*order:\s*initial !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*10px !important;\s*margin-top:\s*14px !important;\s*width:\s*100% !important;\s*\}/g) || []).length,
+    1
+  );
   assert.equal(
     (source.match(/\.adminNutritionMonthSummary > div,\s*\.adminNutritionMonthSummaryBelow > div\s*\{\s*min-height:\s*74px !important;\s*padding:\s*14px !important;\s*border-radius:\s*20px !important;\s*background:\s*linear-gradient\(180deg, rgba\(20, 24, 20, \.98\), rgba\(12, 15, 12, \.98\)\) !important;\s*border:\s*1px solid rgba\(255,255,255,\.06\) !important;\s*\}/g) || []).length,
     1

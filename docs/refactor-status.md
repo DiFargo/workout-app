@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.721`.
+Last updated at app version `v.1.722`.
 
 ## Stable Now
 
@@ -86,6 +86,7 @@ Last updated at app version `v.1.721`.
 - Client primary final CSS no longer keeps the early duplicate main AI stats row cell owner before the final stats row cell owner.
 - Client visual unity CSS no longer keeps the old `v.1.100` product editor header rhythm owner before the `v.1.102` final cascade lock.
 - Client primary final CSS no longer keeps the early duplicate cabinet bottom pseudo-layer before the final rhythm owner.
+- Admin client dashboard polish CSS no longer keeps the early duplicate nutrition month summary-below layout owner before the final V44 owner.
 - Client primary final CSS now shares the food action bar `strong` typography rule across search, product and editor bars, guarded by app structure tests.
 - Client primary final CSS now keeps food search action stack shells in grouped owners.
 - Client primary final CSS now keeps food search create-action inactive/active colors in grouped owners.
