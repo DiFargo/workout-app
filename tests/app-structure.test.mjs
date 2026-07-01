@@ -2718,6 +2718,19 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
   );
 });
 
+test("admin client dashboard polish CSS keeps nutrition month summary shells grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
+
+  assert.equal(
+    (source.match(/\.adminNutritionMonthSummary > div,\s*\.adminNutritionMonthSummaryBelow > div\s*\{\s*min-height:\s*74px !important;\s*padding:\s*14px !important;\s*border-radius:\s*20px !important;\s*background:\s*linear-gradient\(180deg, rgba\(20, 24, 20, \.98\), rgba\(12, 15, 12, \.98\)\) !important;\s*border:\s*1px solid rgba\(255,255,255,\.06\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.adminNutritionMonthSummary span,\s*\.adminNutritionMonthSummaryBelow span\s*\{\s*color:\s*rgba\(255,255,255,\.48\) !important;\s*font-size:\s*11px !important;\s*font-weight:\s*900 !important;\s*text-transform:\s*uppercase !important;\s*letter-spacing:\s*\.04em !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("legacy admin program editor CSS has no empty media blocks", async () => {
   const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
 

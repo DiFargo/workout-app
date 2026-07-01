@@ -899,7 +899,8 @@
   gap: 10px !important;
 }
 
-.adminNutritionMonthSummary > div {
+.adminNutritionMonthSummary > div,
+.adminNutritionMonthSummaryBelow > div {
   min-height: 74px !important;
   padding: 14px !important;
   border-radius: 20px !important;
@@ -969,7 +970,8 @@
   border: 1px solid rgba(255,255,255,.06) !important;
 }
 
-.adminNutritionMonthSummary span {
+.adminNutritionMonthSummary span,
+.adminNutritionMonthSummaryBelow span {
   color: rgba(255,255,255,.48) !important;
   font-size: 11px !important;
   font-weight: 900 !important;
@@ -1077,23 +1079,6 @@
   gap: 10px !important;
   margin-top: 14px !important;
   width: 100% !important;
-}
-
-.adminNutritionMonthSummaryBelow > div {
-  min-height: 74px !important;
-  padding: 14px !important;
-  border-radius: 20px !important;
-  background:
-    linear-gradient(180deg, rgba(20, 24, 20, .98), rgba(12, 15, 12, .98)) !important;
-  border: 1px solid rgba(255,255,255,.06) !important;
-}
-
-.adminNutritionMonthSummaryBelow span {
-  color: rgba(255,255,255,.48) !important;
-  font-size: 11px !important;
-  font-weight: 900 !important;
-  text-transform: uppercase !important;
-  letter-spacing: .04em !important;
 }
 
 .adminNutritionMonthSummaryBelow strong {

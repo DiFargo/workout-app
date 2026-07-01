@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1132.07 KiB` raw, `114.29 KiB` gzip.
-- Latest source CSS report: `100` files, about `3310.41 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3309.96 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -653,3 +653,4 @@ Start mapping here before any cleanup:
 - `v.1.596`: consolidated warm-light product edit content/grid label shell CSS in `legacy-warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
 - `v.1.597`: consolidated warm-light product edit segment/macro card shell CSS in `legacy-warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
 - `v.1.598`: consolidated client loading fallback panel/spinner shell CSS in `client-loading-fallback.css`; the grouped owners are guarded by the app structure test.
+- `v.1.599`: consolidated admin client nutrition month summary shell/label CSS in `legacy-admin-client-dashboard-polish.css`; the grouped owners are guarded by the app structure test.

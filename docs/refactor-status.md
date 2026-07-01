@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.598`.
+Last updated at app version `v.1.599`.
 
 ## Stable Now
 
@@ -23,6 +23,7 @@ Last updated at app version `v.1.598`.
 - Admin lazy CSS no longer uses the redundant `admin.css` alias; `adminPanelHub.css` is imported directly.
 - Admin hub CSS no longer carries trainer role button rules that are only used by trainer/admin internals.
 - Admin internals CSS for DEV-only visual coverage is isolated in `admin-internals-lazy.css`, keeping the production admin hub chunk lightweight.
+- Admin client dashboard polish CSS now shares nutrition month summary shell/label styling across top and below sections, guarded by app structure tests.
 - Admin hub and admin internals CSS entrypoints are now structurally guarded against accidental heavy import drift.
 - Admin client four-column grid breakpoint ownership stays in the later admin internals stylesheet instead of the earlier CRM shell.
 - Admin program editor CSS no longer keeps an empty desktop media block.
@@ -329,7 +330,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1132.07 KiB` raw, `114.29 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3310.41 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3309.96 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
