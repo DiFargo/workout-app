@@ -106,16 +106,6 @@
   gap: 14px !important;
 }
 
-.productFoodIconWrap {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 4px !important;
-
-  width: 62px !important;
-}
-
 .productFoodIcon {
   width: 52px !important;
   height: 52px !important;

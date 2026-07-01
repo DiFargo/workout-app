@@ -2474,6 +2474,14 @@ test("legacy food product summary CSS keeps product info in the final owner", as
 
   assert.doesNotMatch(
     source,
+    /\.productFoodIconWrap\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*gap:\s*4px !important;\s*width:\s*62px !important;\s*\}/
+  );
+  assert.match(
+    source,
+    /\.productFoodIconWrap\s*\{\s*width:\s*70px !important;\s*min-width:\s*70px !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*gap:\s*4px !important;\s*align-self:\s*center !important;\s*\}/
+  );
+  assert.doesNotMatch(
+    source,
     /\.productInfoExact\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*justify-content:\s*center !important;\s*padding-left:\s*4px !important;\s*\}/
   );
   assert.doesNotMatch(

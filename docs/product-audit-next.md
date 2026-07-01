@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.726`.
+Last updated at app version `v.1.727`.
 
 ## Evidence
 
@@ -369,6 +369,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 261. Telegram action buttons now share one profile dashboard action-text owner.
 262. Telegram bot/check action buttons now share one profile dashboard button-shell owner.
 263. Telegram bot/check disabled states now share one profile dashboard owner.
+264. Nutrition product rows now keep the product icon wrapper sizing in the later final owner instead of repeating an older 62px wrapper block.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.
