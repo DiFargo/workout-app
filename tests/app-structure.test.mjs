@@ -2964,6 +2964,14 @@ test("profile dashboard CSS keeps Telegram shells grouped", async () => {
     ).length,
     1
   );
+  assert.equal(
+    (
+      source.match(
+        /\.profileTelegramBotActions button,\s*\.profileTelegramCheckButton\s*\{\s*min-height:\s*42px;\s*border-radius:\s*14px;\s*border:\s*1px solid rgba\(42,171,238,\.26\);\s*background:\s*rgba\(42,171,238,\.13\);\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
 });
 
 test("client main CSS keeps compact AI stat text rules in the later owner", async () => {

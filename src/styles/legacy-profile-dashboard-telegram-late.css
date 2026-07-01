@@ -946,11 +946,15 @@
 }
 
 .profileTelegramBotActions button {
+  font-size: 12px;
+}
+
+.profileTelegramBotActions button,
+.profileTelegramCheckButton {
   min-height: 42px;
   border-radius: 14px;
   border: 1px solid rgba(42,171,238,.26);
   background: rgba(42,171,238,.13);
-  font-size: 12px;
 }
 
 .profileTelegramBotActions button:disabled {
@@ -1088,11 +1092,7 @@
 
 .profileTelegramCheckButton {
   width: 100%;
-  min-height: 42px;
   margin-bottom: 10px;
-  border-radius: 14px;
-  border: 1px solid rgba(42,171,238,.26);
-  background: rgba(42,171,238,.13);
   font-size: 13px;
 }
 
