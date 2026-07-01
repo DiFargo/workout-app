@@ -1093,7 +1093,8 @@ html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsBu
   color: #fff;
 }
 
-html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsOverlay {
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsOverlay,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosOverlay {
   background: rgba(35, 40, 68, 0.2);
 }
 
@@ -1437,10 +1438,6 @@ html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsEm
 .cabinetProgressPhotosHead button:disabled {
   cursor: default;
   opacity: 0.58;
-}
-
-html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosOverlay {
-  background: rgba(35, 40, 68, 0.2);
 }
 
 html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosHead span {
