@@ -3521,6 +3521,15 @@ test("trainer workspace CSS keeps mobile measurement grids grouped", async () =>
   );
 });
 
+test("trainer workspace CSS keeps nutrition muted micro labels grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerNutritionPeriod small,\s*\.trainerNutritionDonut small,\s*\.trainerNutritionDiary > aside small,\s*\.trainerNutritionCurrentGoals small,\s*\.trainerNutritionCurrentMeta\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 

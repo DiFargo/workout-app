@@ -6789,7 +6789,11 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 11px;
 }
 
-.trainerNutritionPeriod small {
+.trainerNutritionPeriod small,
+.trainerNutritionDonut small,
+.trainerNutritionDiary > aside small,
+.trainerNutritionCurrentGoals small,
+.trainerNutritionCurrentMeta {
   color: var(--tn-muted);
   font-size: 8px;
 }
@@ -6878,11 +6882,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 18px;
 }
 
-.trainerNutritionDonut small {
-  color: var(--tn-muted);
-  font-size: 8px;
-}
-
 .trainerNutritionLegend {
   display: grid;
   gap: 10px;
@@ -6951,11 +6950,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerNutritionDiary > aside strong {
   font-size: 10px;
-}
-
-.trainerNutritionDiary > aside small {
-  color: var(--tn-muted);
-  font-size: 8px;
 }
 
 .trainerNutritionDiaryHead {
@@ -7053,12 +7047,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border: 1px solid #eceaf3;
   border-radius: 7px;
   background: #faf9fd;
-}
-
-.trainerNutritionCurrentGoals small,
-.trainerNutritionCurrentMeta {
-  color: var(--tn-muted);
-  font-size: 8px;
 }
 
 .trainerNutritionCurrentGoals strong {
