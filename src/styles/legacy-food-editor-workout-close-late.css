@@ -1126,7 +1126,8 @@
   background: rgba(93,77,33,0.20) !important;
 }
 
-:root[data-app-theme="warm-light"] .dishIngredientPickerSheet {
+:root[data-app-theme="warm-light"] .dishIngredientPickerSheet,
+:root[data-app-theme="warm-light"] .dishIngredientConfirmCard {
   border-color: rgba(94,75,30,0.12) !important;
   background:
     radial-gradient(circle at 50% 0%, rgba(244,224,100,0.38), transparent 62%),
@@ -1313,14 +1314,6 @@
 
   color: #10120f !important;
   -webkit-text-fill-color: #10120f !important;
-}
-
-/* warm light */
-:root[data-app-theme="warm-light"] .dishIngredientConfirmCard {
-  border-color: rgba(94,75,30,0.12) !important;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(244,224,100,0.38), transparent 62%),
-    linear-gradient(180deg, rgba(255,249,198,0.98), rgba(247,232,151,0.99)) !important;
 }
 
 :root[data-app-theme="warm-light"] .dishIngredientConfirmInfo strong,
