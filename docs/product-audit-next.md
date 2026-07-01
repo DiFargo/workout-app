@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.596`.
+Last updated at app version `v.1.597`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `354` passed.
+- `npm.cmd test`: passed with `355` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -350,6 +350,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 243. Expanded nutrition meal and product text typography now stays in one grouped late-layout owner.
 244. Warm-light food search input/history surface styling now stays in one grouped food edit owner.
 245. Warm-light product edit content/grid label styling now stays in one grouped food edit owner.
+246. Warm-light product edit segment/macro card styling now stays in one grouped food edit owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

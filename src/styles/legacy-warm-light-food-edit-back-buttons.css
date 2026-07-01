@@ -41,7 +41,9 @@
 }
 
 /* grams/portion buttons */
-:root[data-app-theme="warm-light"] .foodEditSegmentRow button {
+:root[data-app-theme="warm-light"] .foodEditSegmentRow button,
+:root[data-app-theme="warm-light"] .foodEditMacrosCards > div,
+:root[data-app-theme="warm-light"] .foodEditCaloriesMacroCard {
   background:
     linear-gradient(180deg, rgba(255,249,215,0.96) 0%, rgba(246,232,174,0.82) 100%) !important;
   border: 1px solid rgba(94,75,30,0.10) !important;
@@ -65,15 +67,6 @@
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-}
-
-/* macro cards */
-:root[data-app-theme="warm-light"] .foodEditMacrosCards > div,
-:root[data-app-theme="warm-light"] .foodEditCaloriesMacroCard {
-  background:
-    linear-gradient(180deg, rgba(255,249,215,0.96) 0%, rgba(246,232,174,0.82) 100%) !important;
-  border: 1px solid rgba(94,75,30,0.10) !important;
-  box-shadow: 0 10px 24px rgba(88,68,24,0.10) !important;
 }
 
 /* rows: ÐŸÑ€Ð¸Ñ‘Ð¼ Ð¿Ð¸Ñ‰Ð¸ / Ð—Ð°Ð¼ÐµÑ‚ÐºÐ° */

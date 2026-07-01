@@ -1983,6 +1983,23 @@ test("warm light food edit CSS keeps edit label shells grouped", async () => {
   );
 });
 
+test("warm light food edit CSS keeps form control shells grouped", async () => {
+  const source = await readText("src/styles/legacy-warm-light-food-edit-back-buttons.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.foodEditSegmentRow button,\s*:root\[data-app-theme="warm-light"\] \.foodEditMacrosCards > div,\s*:root\[data-app-theme="warm-light"\] \.foodEditCaloriesMacroCard\s*\{\s*background:\s*linear-gradient\(180deg, rgba\(255,249,215,0\.96\) 0%, rgba\(246,232,174,0\.82\) 100%\) !important;\s*border:\s*1px solid rgba\(94,75,30,0\.10\) !important;\s*box-shadow:\s*0 10px 24px rgba\(88,68,24,0\.10\) !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (source.match(/linear-gradient\(180deg, rgba\(255,249,215,0\.96\) 0%, rgba\(246,232,174,0\.82\) 100%\) !important;\s*border:\s*1px solid rgba\(94,75,30,0\.10\) !important;\s*box-shadow:\s*0 10px 24px rgba\(88,68,24,0\.10\) !important;/g) || []).length,
+    1
+  );
+});
+
 test("nutrition food search actions CSS keeps action active colors grouped", async () => {
   const source = await readText("src/styles/nutrition-food-search-actions.css");
 
