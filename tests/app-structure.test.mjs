@@ -3651,6 +3651,10 @@ test("trainer workspace CSS keeps emphasis typography grouped", async () => {
     (source.match(/\.trainerAnalyticsSignals strong,\s*\.trainerExerciseProgressSummary strong\s*\{\s*color:\s*var\(--tn-text\);\s*font-size:\s*18px;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerWorkoutScheduleFooter b,\s*\.trainerWorkoutStatusSummary b\s*\{\s*color:\s*var\(--tn-text\);\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps client section stacks grouped", async () => {

@@ -6220,10 +6220,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-weight: 800;
 }
 
-.trainerWorkoutScheduleFooter b {
-  color: var(--tn-text);
-}
-
 .trainerWorkoutScheduleFooter button {
   min-height: 38px;
   display: inline-flex;
@@ -7785,6 +7781,7 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   margin-top: 10px;
 }
 
+.trainerWorkoutScheduleFooter b,
 .trainerWorkoutStatusSummary b {
   color: var(--tn-text);
 }
