@@ -3644,6 +3644,19 @@ test("trainer workspace CSS keeps emphasis typography grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps client section stacks grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientBodyProgress,\s*\.trainerClientWorkoutPlan,\s*\.trainerNutritionAnalytics,\s*\.trainerNutritionPlan,\s*\.trainerClientNotifications\s*\{\s*display:\s*grid;\s*gap:\s*14px;\s*padding-top:\s*16px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerClientWorkoutPlan,\s*\.trainerNutritionAnalytics,\s*\.trainerNutritionPlan,\s*\.trainerClientNotifications\s*\{\s*gap:\s*11px;\s*padding-top:\s*12px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps shared disabled action states grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
