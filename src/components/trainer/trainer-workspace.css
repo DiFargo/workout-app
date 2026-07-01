@@ -605,7 +605,10 @@
 }
 
 .trainerUtilityGrid section,
-.trainerAnalyticsGrid article {
+.trainerAnalyticsGrid article,
+.trainerAnalyticsPanel,
+.trainerNotificationFeed,
+.trainerNotificationsLayout > section {
   border: 1px solid var(--tn-line);
   border-radius: 16px;
   background: #fff;
@@ -699,12 +702,20 @@
   width: 8px;
 }
 
-.trainerMessageList::-webkit-scrollbar-track {
+.trainerMessageList::-webkit-scrollbar-track,
+.trainerMessageFilters::-webkit-scrollbar-track,
+.trainerNextWorkoutDays::-webkit-scrollbar-track {
   background: transparent;
 }
 
 .trainerMessageList::-webkit-scrollbar-thumb {
   border: 2px solid #fff;
+}
+
+.trainerMessageList::-webkit-scrollbar-thumb,
+.trainerMessageFilters::-webkit-scrollbar-thumb,
+.trainerNextWorkoutDays::-webkit-scrollbar-thumb,
+.trainerWorkoutEditorModalBody::-webkit-scrollbar-thumb {
   border-radius: 999px;
   background: #c7bbff;
 }
@@ -728,15 +739,6 @@
 
 .trainerMessageFilters::-webkit-scrollbar {
   height: 5px;
-}
-
-.trainerMessageFilters::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.trainerMessageFilters::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: #c7bbff;
 }
 
 .trainerMessageFilters button {
@@ -1131,15 +1133,6 @@
   color: var(--tn-text);
   font-size: 30px;
   line-height: 1;
-}
-
-.trainerAnalyticsPanel,
-.trainerNotificationFeed,
-.trainerNotificationsLayout > section {
-  border: 1px solid var(--tn-line);
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: var(--tn-soft-shadow);
 }
 
 .trainerAnalyticsPanel {
@@ -2719,15 +2712,6 @@
 
 .trainerNextWorkoutDays::-webkit-scrollbar {
   width: 6px;
-}
-
-.trainerNextWorkoutDays::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.trainerNextWorkoutDays::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: #c7bbff;
 }
 
 .trainerNextWorkoutDays button,
@@ -7782,11 +7766,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerWorkoutEditorModalBody::-webkit-scrollbar {
   width: 7px;
-}
-
-.trainerWorkoutEditorModalBody::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: #c7bbff;
 }
 
 .trainerWorkoutEditorModal .trainerNextEmbeddedPlan {

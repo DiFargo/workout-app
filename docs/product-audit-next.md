@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.647`.
+Last updated at app version `v.1.648`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `384` passed.
+- `npm.cmd test`: passed with `385` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -437,6 +437,7 @@ Started in `v.1.250`.
    - Status: trainer nutrition typography and notification panel shell CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer calendar grid and notification hidden-input CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer workout calendar status color CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
+   - Status: trainer panel shell and scrollbar CSS is grouped in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: workout draft/readiness/post-workout dialog CSS moved behind the workout lazy entrypoint after adding dialog visual coverage.
    - Status: client AI Coach has visual coverage for overview and AI nutrition plan states, and its route-specific CSS is now behind `ai-coach-lazy.css`.
    - Status: nutrition AI plan/photo-process CSS is now behind `nutrition-ai-plan-lazy.css` in the nutrition lazy stack.

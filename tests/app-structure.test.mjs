@@ -3598,6 +3598,23 @@ test("trainer workspace CSS keeps workout calendar status colors grouped", async
   );
 });
 
+test("trainer workspace CSS keeps panel shells and scrollbars grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerUtilityGrid section,\s*\.trainerAnalyticsGrid article,\s*\.trainerAnalyticsPanel,\s*\.trainerNotificationFeed,\s*\.trainerNotificationsLayout > section\s*\{\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*16px;\s*background:\s*#fff;\s*box-shadow:\s*var\(--tn-soft-shadow\);\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerMessageList::-webkit-scrollbar-track,\s*\.trainerMessageFilters::-webkit-scrollbar-track,\s*\.trainerNextWorkoutDays::-webkit-scrollbar-track\s*\{\s*background:\s*transparent;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerMessageList::-webkit-scrollbar-thumb,\s*\.trainerMessageFilters::-webkit-scrollbar-thumb,\s*\.trainerNextWorkoutDays::-webkit-scrollbar-thumb,\s*\.trainerWorkoutEditorModalBody::-webkit-scrollbar-thumb\s*\{\s*border-radius:\s*999px;\s*background:\s*#c7bbff;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 
