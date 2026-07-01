@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1131.63 KiB` raw, `114.29 KiB` gzip.
-- Latest source CSS report: `100` files, about `3308.63 KiB` total source CSS.
+- Latest main CSS bundle: about `1131.56 KiB` raw, `114.28 KiB` gzip.
+- Latest source CSS report: `100` files, about `3308.48 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -109,6 +109,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.604`: grouped first setup sex/goal active choice CSS in `legacy-registration-accessibility.css`.
    - Continued in `v.1.605`: grouped client workout history modal/cabinet item icon and title CSS in `legacy-registration-accessibility.css`.
    - Continued in `v.1.606`: grouped warm-light nutrition header/calendar close shell CSS in `legacy-registration-accessibility.css`.
+   - Continued in `v.1.607`: grouped client workout history modal/cabinet item text internals CSS in `legacy-registration-accessibility.css`.
    - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
    - Continued in `v.1.307`: warm-light add-food/search cleanup CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition visual coverage.
    - Continued in `v.1.308`: dark-green nutrition food-flow CSS moved from the core app entrypoint into `nutrition-stack.css`, with the dark nutrition readability guard updated.
@@ -668,3 +669,4 @@ Start mapping here before any cleanup:
 - `v.1.604`: consolidated first setup sex/goal active choice CSS in `legacy-registration-accessibility.css`; the grouped owner is guarded by the app structure test.
 - `v.1.605`: consolidated client workout history modal/cabinet item icon and title CSS in `legacy-registration-accessibility.css`; the grouped owners are guarded by the app structure test.
 - `v.1.606`: consolidated warm-light nutrition header/calendar close shell CSS in `legacy-registration-accessibility.css`; the grouped owner is guarded by the app structure test.
+- `v.1.607`: consolidated client workout history modal/cabinet item text internals CSS in `legacy-registration-accessibility.css`; the grouped owners are guarded by the app structure test.

@@ -465,8 +465,33 @@ test("legacy registration CSS keeps workout history item internals grouped", asy
     ).length,
     1
   );
+  assert.equal(
+    (
+      source.match(
+        /\.workoutHistoryModalList > button div,\s*\.workoutHistoryModalItem > div,\s*\.cabinetWorkoutHistoryItem > button div\s*\{\s*min-width:\s*0;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (
+      source.match(
+        /\.workoutHistoryModalList strong,\s*\.workoutHistoryModalList small,\s*\.cabinetWorkoutHistoryItem > button strong,\s*\.cabinetWorkoutHistoryItem > button small\s*\{\s*display:\s*block;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (
+      source.match(
+        /\.workoutHistoryModalList small,\s*\.cabinetWorkoutHistoryItem > button small\s*\{\s*margin-top:\s*4px;\s*color:\s*rgba\(247, 248, 252, 0\.56\);\s*font-size:\s*10px;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
   assert.equal((source.match(/background:\s*rgba\(107, 92, 255, 0\.14\);\s*font-size:\s*18px;/g) || []).length, 1);
   assert.equal((source.match(/font-size:\s*12px;\s*line-height:\s*1\.2;\s*text-overflow:\s*ellipsis;/g) || []).length, 1);
+  assert.equal((source.match(/color:\s*rgba\(247, 248, 252, 0\.56\);\s*font-size:\s*10px;/g) || []).length, 1);
 });
 
 test("legacy registration CSS keeps warm-light nutrition icon shells grouped", async () => {

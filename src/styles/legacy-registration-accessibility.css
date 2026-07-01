@@ -1674,22 +1674,6 @@ html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .
   grid-template-columns: 38px minmax(0, 1fr);
 }
 
-.workoutHistoryModalList > button div,
-.workoutHistoryModalItem > div {
-  min-width: 0;
-}
-
-.workoutHistoryModalList strong,
-.workoutHistoryModalList small {
-  display: block;
-}
-
-.workoutHistoryModalList small {
-  margin-top: 4px;
-  color: rgba(247, 248, 252, 0.56);
-  font-size: 10px;
-}
-
 .workoutHistoryModalList i {
   color: rgba(247, 248, 252, 0.5);
   font-size: 19px;
@@ -1776,10 +1760,14 @@ html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .
   font-size: 18px;
 }
 
+.workoutHistoryModalList > button div,
+.workoutHistoryModalItem > div,
 .cabinetWorkoutHistoryItem > button div {
   min-width: 0;
 }
 
+.workoutHistoryModalList strong,
+.workoutHistoryModalList small,
 .cabinetWorkoutHistoryItem > button strong,
 .cabinetWorkoutHistoryItem > button small {
   display: block;
@@ -1794,6 +1782,7 @@ html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .
   white-space: nowrap;
 }
 
+.workoutHistoryModalList small,
 .cabinetWorkoutHistoryItem > button small {
   margin-top: 4px;
   color: rgba(247, 248, 252, 0.56);
