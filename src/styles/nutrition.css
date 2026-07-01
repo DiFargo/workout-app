@@ -419,47 +419,6 @@
   min-height: 24px !important;
 }
 
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
-  height: 34px !important;
-  min-height: 34px !important;
-  padding: 3px 5px !important;
-  border: 1px solid rgba(255, 255, 255, 0.065) !important;
-  border-radius: 9px !important;
-  background: rgba(255, 255, 255, 0.035) !important;
-  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1) !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 {
-  height: 28px !important;
-  min-height: 28px !important;
-  max-height: 28px !important;
-  gap: 2px !important;
-  display: flex !important;
-  flex-direction: column-reverse !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
-  height: 13px !important;
-  font-size: 9px !important;
-  font-weight: 800 !important;
-  line-height: 13px !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
-  width: 20px !important;
-  height: 3px !important;
-  min-width: 20px !important;
-  min-height: 3px !important;
-  border: 0 !important;
-  border-radius: 999px !important;
-  background: transparent !important;
-  color: transparent !important;
-  font-size: 0 !important;
-  box-shadow: none !important;
-}
-
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 {
   width: 100% !important;
   max-width: none !important;
@@ -476,22 +435,6 @@
   font-weight: 650 !important;
   line-height: 18px !important;
   text-align: left !important;
-}
-
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
-  border-color: #edf0f6 !important;
-  background: #ffffff !important;
-  box-shadow: 0 5px 15px rgba(55, 64, 112, 0.07) !important;
-}
-
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
-  border: 0 !important;
-  background: transparent !important;
-}
-
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected span,
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.hasFood span {
-  background: #6552e6 !important;
 }
 
 .nutritionMealModalOverlay {

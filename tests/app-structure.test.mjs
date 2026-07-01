@@ -3268,6 +3268,7 @@ test("client nutrition weekday strip exposes selected and current date state", a
 
 test("client nutrition weekday strip keeps two-letter labels visible", async () => {
   const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
+  const nutritionBaseCss = await readText("src/styles/nutrition.css");
   const nutritionCss = await readText("src/styles/nutrition-food-flow-late.css");
   const warmLightNutritionCss = await readText("src/styles/legacy-warm-light-nutrition-polish.css");
 
@@ -3278,6 +3279,8 @@ test("client nutrition weekday strip keeps two-letter labels visible", async () 
   assert.doesNotMatch(nutritionCss, /Keep weekday labels visually separate from the day markers/);
   assert.doesNotMatch(nutritionCss, /\.nutritionDayV4 \{[\s\S]*flex-direction: column-reverse !important;/);
   assert.doesNotMatch(nutritionCss, /\.nutritionDayV4 span \{[\s\S]*width: 28px !important;/);
+  assert.doesNotMatch(nutritionBaseCss, /\.nutritionDayV4 \{[\s\S]*height: 28px !important;[\s\S]*flex-direction: column-reverse !important;/);
+  assert.doesNotMatch(nutritionBaseCss, /\.nutritionDayV4 span \{[\s\S]*height: 3px !important;/);
   assert.doesNotMatch(warmLightNutritionCss, /\.nutritionDayV4\.selected,[\s\S]*background: linear-gradient\(180deg, #f4e064 0%, #d8bd48 100%\) !important;/);
   assert.match(warmLightNutritionCss, /\.nutritionDayV4\.selected span,[\s\S]*background: #f4e064 !important;/);
 });
