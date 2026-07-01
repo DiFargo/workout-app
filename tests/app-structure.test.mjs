@@ -3617,6 +3617,10 @@ test("trainer workspace CSS keeps nutrition typography grouped", async () => {
     (source.match(/\.trainerNextLibrary article small,\s*\.trainerNextProgramControl small,\s*\.trainerNextProgramControl label > span,\s*\.trainerProgramWeekRow small,\s*\.trainerProgramWorkoutName span,\s*\.trainerNutritionReadonly,\s*\.trainerNutritionCurrentPlan p,\s*\.trainerNextWorkoutName label span,\s*\.trainerNextExerciseFields label > span,\s*\.trainerNextExerciseName small,\s*\.trainerNextWorkoutPreview article header span,\s*\.trainerNextWorkoutPreview article div small\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*9px;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerNextTrainer small,\s*\.trainerNextActivityCard time,\s*\.trainerNextMeasurementGrid span,\s*\.trainerNextMeasurementGrid small,\s*\.trainerNextWorkoutDays button small,\s*\.trainerNextNutritionDays button small,\s*\.trainerProgramMonthRow small,\s*\.trainerProgramCycleRow small,\s*\.trainerClientAnalyticsCard header > strong,\s*\.trainerClientAnalyticsCard header > svg\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*10px;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps muted paragraph typography grouped", async () => {

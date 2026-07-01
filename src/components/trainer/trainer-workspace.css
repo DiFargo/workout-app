@@ -316,7 +316,16 @@
   display: grid;
 }
 
-.trainerNextTrainer small {
+.trainerNextTrainer small,
+.trainerNextActivityCard time,
+.trainerNextMeasurementGrid span,
+.trainerNextMeasurementGrid small,
+.trainerNextWorkoutDays button small,
+.trainerNextNutritionDays button small,
+.trainerProgramMonthRow small,
+.trainerProgramCycleRow small,
+.trainerClientAnalyticsCard header > strong,
+.trainerClientAnalyticsCard header > svg {
   color: var(--tn-muted);
   font-size: 10px;
 }
@@ -2010,11 +2019,6 @@
   color: var(--tn-purple);
 }
 
-.trainerNextActivityCard time {
-  color: var(--tn-muted);
-  font-size: 10px;
-}
-
 .trainerNextRecommendation {
   grid-column: 1;
   padding: 15px;
@@ -2127,12 +2131,6 @@
   padding: 14px;
   border: 1px solid var(--tn-line);
   border-radius: 7px;
-}
-
-.trainerNextMeasurementGrid span,
-.trainerNextMeasurementGrid small {
-  color: var(--tn-muted);
-  font-size: 10px;
 }
 
 .trainerNextMeasurementGrid strong {
@@ -2628,12 +2626,6 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-}
-
-.trainerNextWorkoutDays button small,
-.trainerNextNutritionDays button small {
-  color: var(--tn-muted);
-  font-size: 10px;
 }
 
 .trainerNextWorkoutDays button.active,
@@ -4959,12 +4951,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-weight: 750;
 }
 
-.trainerProgramMonthRow small,
-.trainerProgramCycleRow small {
-  color: var(--tn-muted);
-  font-size: 10px;
-}
-
 .trainerProgramMonthRow button,
 .trainerProgramCycleRow button,
 .trainerProgramWeekRow button,
@@ -5734,12 +5720,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerClientAnalyticsCard header h3 {
   margin: 0;
   font-size: 13px;
-}
-
-.trainerClientAnalyticsCard header > strong,
-.trainerClientAnalyticsCard header > svg {
-  color: var(--tn-muted);
-  font-size: 10px;
 }
 
 .trainerClientBarChart {
