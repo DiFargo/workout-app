@@ -3956,7 +3956,8 @@
     grid-template-columns: 1fr;
   }
 
-  .trainerMeasurementSummaryGrid {
+  .trainerMeasurementSummaryGrid,
+  .trainerNotificationSchedule {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
   }
@@ -3971,7 +3972,8 @@
     font-size: 9px;
   }
 
-  .trainerMeasurementCollapsed > div {
+  .trainerMeasurementCollapsed > div,
+  .trainerMeasurementFieldGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
   }
@@ -3998,11 +4000,6 @@
 
   .trainerMeasurementSummaryGrid strong {
     font-size: 16px;
-  }
-
-  .trainerMeasurementFieldGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
   }
 
   .trainerMeasurementFieldGrid article {
@@ -9075,11 +9072,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
   .trainerNotificationCalendarGrid button {
     min-height: 40px;
-  }
-
-  .trainerNotificationSchedule {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
   }
 
   .trainerNotificationSchedule > span {
