@@ -2000,7 +2000,13 @@
   font-size: 11px;
 }
 
-.trainerNextResultCard strong {
+.trainerNextResultCard strong,
+.trainerNextLibrary article strong,
+.trainerProgramWeekRow strong,
+.trainerNutritionPeriod strong,
+.trainerNotificationOffsets > strong,
+.trainerProgressReminderSettings > div:first-child > strong,
+.trainerNotificationCalendar strong {
   font-size: 11px;
 }
 
@@ -2772,10 +2778,6 @@
 .trainerNextLibrary article div {
   display: grid;
   gap: 4px;
-}
-
-.trainerNextLibrary article strong {
-  font-size: 11px;
 }
 
 .trainerNextLibrary article small,
@@ -5037,10 +5039,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   padding: 0;
 }
 
-.trainerProgramWeekRow strong {
-  font-size: 11px;
-}
-
 .trainerProgramDays {
   display: grid;
   gap: 3px;
@@ -6405,10 +6403,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   margin-right: auto;
 }
 
-.trainerNutritionPeriod strong {
-  font-size: 11px;
-}
-
 .trainerNutritionPeriodButtons {
   display: flex;
   gap: 6px;
@@ -6962,10 +6956,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border-top: 1px solid #eceaf3;
 }
 
-.trainerNotificationOffsets > strong {
-  font-size: 11px;
-}
-
 .trainerNotificationOffsets > p,
 .trainerProgressReminderSettings > div:first-child > p {
   margin: 3px 0 10px;
@@ -7068,10 +7058,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #fff;
 }
 
-.trainerProgressReminderSettings > div:first-child > strong {
-  font-size: 11px;
-}
-
 .trainerProgressReminderOptions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -7119,10 +7105,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border: 1px solid #eceaf3;
   border-radius: 8px;
   background: #fbfaff;
-}
-
-.trainerNotificationCalendar strong {
-  font-size: 11px;
 }
 
 .trainerNotificationCalendar p,

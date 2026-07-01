@@ -3719,6 +3719,10 @@ test("trainer workspace CSS keeps micro copy typography grouped", async () => {
     (source.match(/\.trainerWorkoutMonthStats small,\s*\.trainerWorkoutStatusPanel label span\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*font-weight:\s*800;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerNextResultCard strong,\s*\.trainerNextLibrary article strong,\s*\.trainerProgramWeekRow strong,\s*\.trainerNutritionPeriod strong,\s*\.trainerNotificationOffsets > strong,\s*\.trainerProgressReminderSettings > div:first-child > strong,\s*\.trainerNotificationCalendar strong\s*\{\s*font-size:\s*11px;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps list tail dividers grouped", async () => {
