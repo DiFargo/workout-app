@@ -5569,7 +5569,9 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerClientAssignment,
 .trainerClientAssignedProgram,
 .trainerClientAnalyticsCard,
-.trainerClientInlineEditor {
+.trainerClientInlineEditor,
+.trainerNotificationStatusCard,
+.trainerNotificationSettings {
   border: 1px solid var(--tn-line);
   border-radius: 8px;
   background: #fff;
@@ -6542,7 +6544,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 }
 
 .trainerClientQualityMetrics strong,
-.trainerNutritionMetricGrid strong {
+.trainerNutritionMetricGrid strong,
+.trainerNutritionDonut strong {
   font-size: 18px;
 }
 
@@ -6878,10 +6881,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   justify-items: center;
 }
 
-.trainerNutritionDonut strong {
-  font-size: 18px;
-}
-
 .trainerNutritionLegend {
   display: grid;
   gap: 10px;
@@ -6962,9 +6961,9 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerNutritionDiaryHead h2 {
   margin: 0;
-  font-size: 14px;
 }
 
+.trainerNutritionDiaryHead h2,
 .trainerNutritionDiaryHead > strong {
   font-size: 14px;
 }
@@ -6994,8 +6993,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   align-items: center;
   gap: 7px;
   margin: 12px 0 0;
-  color: var(--tn-muted);
-  font-size: 9px;
 }
 
 .trainerNutritionPreset {
@@ -7016,6 +7013,10 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerNutritionCurrentPlan .trainerClientBlockHeading small {
   display: block;
   margin-bottom: 4px;
+}
+
+.trainerNutritionCurrentPlan .trainerClientBlockHeading small,
+.trainerNutritionPresetPreview {
   color: var(--tn-purple);
   font-size: 8px;
   font-weight: 800;
@@ -7028,6 +7029,10 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerNutritionCurrentPlan p {
   margin: 4px 0 0;
+}
+
+.trainerNutritionReadonly,
+.trainerNutritionCurrentPlan p {
   color: var(--tn-muted);
   font-size: 9px;
 }
@@ -7086,12 +7091,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   margin-top: 0;
 }
 
-.trainerNutritionPresetPreview {
-  color: var(--tn-purple);
-  font-size: 8px;
-  font-weight: 800;
-}
-
 .trainerNutritionGoalInputs {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -7111,8 +7110,13 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   position: absolute;
   top: 50%;
   right: 12px;
-  color: var(--tn-muted);
   transform: translateY(-50%);
+}
+
+.trainerNutritionGoalInputs small,
+.trainerNutritionValidity > small {
+  color: var(--tn-muted);
+  font-size: 8px;
 }
 
 .trainerNutritionValidity {
@@ -7125,8 +7129,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerNutritionValidity > small {
   padding-bottom: 11px;
-  color: var(--tn-muted);
-  font-size: 8px;
 }
 
 .trainerNutritionPlanActions {
@@ -7159,13 +7161,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   display: grid;
   gap: 14px;
   padding-top: 16px;
-}
-
-.trainerNotificationStatusCard,
-.trainerNotificationSettings {
-  border: 1px solid var(--tn-line);
-  border-radius: 8px;
-  background: #fff;
 }
 
 .trainerNotificationStatusCard {

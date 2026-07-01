@@ -3530,6 +3530,40 @@ test("trainer workspace CSS keeps nutrition muted micro labels grouped", async (
   );
 });
 
+test("trainer workspace CSS keeps nutrition typography grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientQualityMetrics strong,\s*\.trainerNutritionMetricGrid strong,\s*\.trainerNutritionDonut strong\s*\{\s*font-size:\s*18px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerNutritionDiaryHead h2,\s*\.trainerNutritionDiaryHead > strong\s*\{\s*font-size:\s*14px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerNutritionCurrentPlan \.trainerClientBlockHeading small,\s*\.trainerNutritionPresetPreview\s*\{\s*color:\s*var\(--tn-purple\);\s*font-size:\s*8px;\s*font-weight:\s*800;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerNutritionReadonly,\s*\.trainerNutritionCurrentPlan p\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*9px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerNutritionGoalInputs small,\s*\.trainerNutritionValidity > small\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*\}/g) || []).length,
+    1
+  );
+});
+
+test("trainer workspace CSS keeps client nutrition notification panel shells grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientAssignment,\s*\.trainerClientAssignedProgram,\s*\.trainerClientAnalyticsCard,\s*\.trainerClientInlineEditor,\s*\.trainerNotificationStatusCard,\s*\.trainerNotificationSettings\s*\{\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*8px;\s*background:\s*#fff;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 
