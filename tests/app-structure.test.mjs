@@ -3577,6 +3577,27 @@ test("trainer workspace CSS keeps trainer calendar and notification controls gro
   );
 });
 
+test("trainer workspace CSS keeps workout calendar status colors grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerWorkoutMonthGrid \.completed,\s*\.trainerWorkoutSchedulePlanner > header > strong\.ready,\s*\.trainerWorkoutScheduleGrid button\.completed\s*\{\s*border-color:\s*#ccebd6;\s*background:\s*#f2fbf5;\s*color:\s*#16813d;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerWorkoutMonthGrid \.completedOffDate,\s*\.trainerWorkoutScheduleGrid button\.completedOffDate\s*\{\s*border-color:\s*#cfc6ff;\s*background:\s*#f6f3ff;\s*color:\s*var\(--tn-purple\);\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerWorkoutMonthGrid \.completed i,\s*\.trainerWorkoutMonthLegend i\.completed,\s*\.trainerWorkoutScheduleLegend i\.completed\s*\{\s*background:\s*#1fad54;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerWorkoutMonthGrid \.shifted i,\s*\.trainerWorkoutMonthLegend i\.shifted,\s*\.trainerWorkoutScheduleLegend i\.shifted\s*\{\s*background:\s*#d99a22;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workouts page program tab exposes selected state", async () => {
   const workoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 

@@ -6140,43 +6140,56 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #fbfaff;
 }
 
-.trainerWorkoutMonthGrid .completed {
+.trainerWorkoutMonthGrid .completed,
+.trainerWorkoutSchedulePlanner > header > strong.ready,
+.trainerWorkoutScheduleGrid button.completed {
   border-color: #ccebd6;
   background: #f2fbf5;
   color: #16813d;
 }
 
-.trainerWorkoutMonthGrid .completed i {
+.trainerWorkoutMonthGrid .completed i,
+.trainerWorkoutMonthLegend i.completed,
+.trainerWorkoutScheduleLegend i.completed {
   background: #1fad54;
 }
 
-.trainerWorkoutMonthGrid .completedOffDate {
+.trainerWorkoutMonthGrid .completedOffDate,
+.trainerWorkoutScheduleGrid button.completedOffDate {
   border-color: #cfc6ff;
   background: #f6f3ff;
   color: var(--tn-purple);
 }
 
-.trainerWorkoutMonthGrid .completedOffDate i {
+.trainerWorkoutMonthGrid .completedOffDate i,
+.trainerWorkoutMonthLegend i.completedOffDate,
+.trainerWorkoutScheduleLegend i.completedOffDate {
   background: #7b61ff;
 }
 
-.trainerWorkoutMonthGrid .missed {
+.trainerWorkoutMonthGrid .missed,
+.trainerWorkoutScheduleGrid button.missed {
   border-color: #ffd6d6;
   background: #fff6f6;
   color: #d53838;
 }
 
-.trainerWorkoutMonthGrid .missed i {
+.trainerWorkoutMonthGrid .missed i,
+.trainerWorkoutMonthLegend i.missed,
+.trainerWorkoutScheduleLegend i.missed {
   background: #ff5c5c;
 }
 
-.trainerWorkoutMonthGrid .shifted {
+.trainerWorkoutMonthGrid .shifted,
+.trainerWorkoutScheduleGrid button.shifted {
   border-color: #f5dfa4;
   background: #fffaf0;
   color: #9b6d12;
 }
 
-.trainerWorkoutMonthGrid .shifted i {
+.trainerWorkoutMonthGrid .shifted i,
+.trainerWorkoutMonthLegend i.shifted,
+.trainerWorkoutScheduleLegend i.shifted {
   background: #d99a22;
 }
 
@@ -6200,22 +6213,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   height: 8px;
   border-radius: 999px;
   background: var(--tn-purple);
-}
-
-.trainerWorkoutMonthLegend i.completed {
-  background: #1fad54;
-}
-
-.trainerWorkoutMonthLegend i.completedOffDate {
-  background: #7b61ff;
-}
-
-.trainerWorkoutMonthLegend i.missed {
-  background: #ff5c5c;
-}
-
-.trainerWorkoutMonthLegend i.shifted {
-  background: #d99a22;
 }
 
 .trainerWorkoutSchedulePlanner {
@@ -6250,12 +6247,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #faf9ff;
   color: var(--tn-purple);
   font-size: 20px;
-}
-
-.trainerWorkoutSchedulePlanner > header > strong.ready {
-  border-color: #ccebd6;
-  background: #f2fbf5;
-  color: #16813d;
 }
 
 .trainerWorkoutSchedulePlanner > header > strong small {
@@ -6381,30 +6372,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: var(--tn-purple);
 }
 
-.trainerWorkoutScheduleGrid button.completed {
-  border-color: #ccebd6;
-  background: #f2fbf5;
-  color: #16813d;
-}
-
-.trainerWorkoutScheduleGrid button.completedOffDate {
-  border-color: #cfc6ff;
-  background: #f6f3ff;
-  color: var(--tn-purple);
-}
-
-.trainerWorkoutScheduleGrid button.missed {
-  border-color: #ffd6d6;
-  background: #fff6f6;
-  color: #d53838;
-}
-
-.trainerWorkoutScheduleGrid button.shifted {
-  border-color: #f5dfa4;
-  background: #fffaf0;
-  color: #9b6d12;
-}
-
 .trainerWorkoutScheduleGrid button.hasWorkout i {
   padding: 1px 5px;
   border-radius: 999px;
@@ -6452,22 +6419,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   height: 7px;
   border-radius: 999px;
   background: var(--tn-purple);
-}
-
-.trainerWorkoutScheduleLegend i.completed {
-  background: #1fad54;
-}
-
-.trainerWorkoutScheduleLegend i.completedOffDate {
-  background: #7b61ff;
-}
-
-.trainerWorkoutScheduleLegend i.missed {
-  background: #ff5c5c;
-}
-
-.trainerWorkoutScheduleLegend i.shifted {
-  background: #d99a22;
 }
 
 .trainerWorkoutScheduleFooter {
