@@ -4516,7 +4516,22 @@
   font-size: 13px;
 }
 
-.trainerNextProgramsTab .programsOverviewCardStats small {
+.trainerNextProgramsTab .programsOverviewCardStats small,
+.trainerClientAssignedStats small,
+.trainerWorkoutSchedulePlanner > header > strong small,
+.trainerClientQualityMetrics span,
+.trainerNutritionMetricGrid span,
+.trainerNutritionMetricGrid small,
+.trainerNutritionPeriod small,
+.trainerNutritionDonut small,
+.trainerNutritionDiary > aside small,
+.trainerNutritionCurrentGoals small,
+.trainerNutritionCurrentMeta,
+.trainerNutritionGoalInputs small,
+.trainerNutritionValidity > small,
+.trainerNotificationSchedule small,
+.trainerProgressReminderOptions small,
+.trainerNextExerciseMetric small {
   color: var(--tn-muted);
   font-size: 8px;
 }
@@ -5685,11 +5700,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 12px;
 }
 
-.trainerClientAssignedStats small {
-  color: var(--tn-muted);
-  font-size: 8px;
-}
-
 .trainerClientAssignedProgram > button {
   min-height: 40px;
   display: inline-flex;
@@ -6014,11 +6024,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 20px;
 }
 
-.trainerWorkoutSchedulePlanner > header > strong small {
-  color: var(--tn-muted);
-  font-size: 8px;
-}
-
 .trainerWorkoutScheduleCalendar {
   min-width: 0;
   display: grid;
@@ -6218,13 +6223,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerNutritionMetricGrid strong,
 .trainerNutritionDonut strong {
   font-size: 18px;
-}
-
-.trainerClientQualityMetrics span,
-.trainerNutritionMetricGrid span,
-.trainerNutritionMetricGrid small {
-  color: var(--tn-muted);
-  font-size: 8px;
 }
 
 .trainerClientTrainingQuality > p,
@@ -6436,15 +6434,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerNutritionPeriod strong {
   font-size: 11px;
-}
-
-.trainerNutritionPeriod small,
-.trainerNutritionDonut small,
-.trainerNutritionDiary > aside small,
-.trainerNutritionCurrentGoals small,
-.trainerNutritionCurrentMeta {
-  color: var(--tn-muted);
-  font-size: 8px;
 }
 
 .trainerNutritionPeriodButtons {
@@ -6753,12 +6742,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   transform: translateY(-50%);
 }
 
-.trainerNutritionGoalInputs small,
-.trainerNutritionValidity > small {
-  color: var(--tn-muted);
-  font-size: 8px;
-}
-
 .trainerNutritionValidity {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 220px)) minmax(220px, 1fr);
@@ -7010,11 +6993,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 10px;
 }
 
-.trainerNotificationSchedule small {
-  color: var(--tn-muted);
-  font-size: 8px;
-}
-
 .trainerNotificationOffsets,
 .trainerReminderPeriod {
   margin-top: 14px;
@@ -7171,11 +7149,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 .trainerProgressReminderOptions b {
   font-size: 10px;
-}
-
-.trainerProgressReminderOptions small {
-  color: var(--tn-muted);
-  font-size: 8px;
 }
 
 .trainerNotificationCalendar {
@@ -7829,11 +7802,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.trainerNextExerciseMetric small {
-  color: var(--tn-muted);
-  font-size: 8px;
 }
 
 .trainerNextExerciseActions {

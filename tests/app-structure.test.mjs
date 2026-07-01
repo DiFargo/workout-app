@@ -3593,7 +3593,7 @@ test("trainer workspace CSS keeps nutrition muted micro labels grouped", async (
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
-    (source.match(/\.trainerNutritionPeriod small,\s*\.trainerNutritionDonut small,\s*\.trainerNutritionDiary > aside small,\s*\.trainerNutritionCurrentGoals small,\s*\.trainerNutritionCurrentMeta\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*\}/g) || []).length,
+    (source.match(/\.trainerNextProgramsTab \.programsOverviewCardStats small,\s*\.trainerClientAssignedStats small,\s*\.trainerWorkoutSchedulePlanner > header > strong small,\s*\.trainerClientQualityMetrics span,\s*\.trainerNutritionMetricGrid span,\s*\.trainerNutritionMetricGrid small,\s*\.trainerNutritionPeriod small,\s*\.trainerNutritionDonut small,\s*\.trainerNutritionDiary > aside small,\s*\.trainerNutritionCurrentGoals small,\s*\.trainerNutritionCurrentMeta,\s*\.trainerNutritionGoalInputs small,\s*\.trainerNutritionValidity > small,\s*\.trainerNotificationSchedule small,\s*\.trainerProgressReminderOptions small,\s*\.trainerNextExerciseMetric small\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*\}/g) || []).length,
     1
   );
 });
@@ -3615,10 +3615,6 @@ test("trainer workspace CSS keeps nutrition typography grouped", async () => {
   );
   assert.equal(
     (source.match(/\.trainerNutritionReadonly,\s*\.trainerNutritionCurrentPlan p\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*9px;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.trainerNutritionGoalInputs small,\s*\.trainerNutritionValidity > small\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*\}/g) || []).length,
     1
   );
 });
