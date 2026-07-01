@@ -2202,7 +2202,8 @@
   background: #fff;
 }
 
-.trainerMeasurementCollapsed span {
+.trainerMeasurementCollapsed span,
+.trainerExerciseProgressSummary span {
   color: var(--tn-muted);
   font-size: 8px;
   font-weight: 900;
@@ -6452,13 +6453,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border: 1px solid #eceaf3;
   border-radius: 8px;
   background: #faf9fd;
-}
-
-.trainerExerciseProgressSummary span {
-  color: var(--tn-muted);
-  font-size: 8px;
-  font-weight: 900;
-  text-transform: uppercase;
 }
 
 .trainerExerciseProgressSummary strong {
