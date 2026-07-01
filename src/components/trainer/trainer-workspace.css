@@ -1619,12 +1619,6 @@
   font-size: 12px;
 }
 
-.trainerNextClientTable > button > span small {
-  color: var(--tn-muted);
-  font-size: 9px;
-  font-weight: 700;
-}
-
 .trainerNextClientTable > button > span.positive {
   color: var(--tn-green);
   font-weight: 700;
@@ -2268,6 +2262,7 @@
   font-size: 20px;
 }
 
+.trainerNextClientTable > button > span small,
 .trainerMeasurementSummaryGrid small,
 .trainerMeasurementFieldGrid small,
 .trainerMeasurementChart small,

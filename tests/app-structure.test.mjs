@@ -3567,6 +3567,10 @@ test("trainer workspace CSS keeps mobile measurement grids grouped", async () =>
     1
   );
   assert.equal(
+    (source.match(/\.trainerNextClientTable > button > span small,\s*\.trainerMeasurementSummaryGrid small,\s*\.trainerMeasurementFieldGrid small,\s*\.trainerMeasurementChart small,\s*\.trainerMeasurementTimeline span\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*9px;\s*font-weight:\s*700;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerMeasurementSummaryGrid \.positive,\s*\.trainerMeasurementFieldGrid \.positive,\s*\.trainerExerciseProgressSummary \.positive,\s*\.trainerExerciseProgressMetrics \.positive\s*\{\s*color:\s*#159947;\s*\}/g) || []).length,
     1
   );
