@@ -3558,6 +3558,14 @@ test("trainer workspace CSS keeps mobile measurement grids grouped", async () =>
     (source.match(/\.trainerMeasurementSummaryGrid article,\s*\.trainerMeasurementFieldGrid article,\s*\.trainerMeasurementInsight,\s*\.trainerMeasurementChart,\s*\.trainerMeasurementTimeline,\s*\.trainerProgramTree,\s*\.trainerProgramDayPanel\s*\{\s*min-width:\s*0;\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*8px;\s*background:\s*#fff;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerMeasurementSummaryGrid \.positive,\s*\.trainerMeasurementFieldGrid \.positive,\s*\.trainerExerciseProgressSummary \.positive,\s*\.trainerExerciseProgressMetrics \.positive\s*\{\s*color:\s*#159947;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerMeasurementSummaryGrid \.negative,\s*\.trainerMeasurementFieldGrid \.negative,\s*\.trainerExerciseProgressSummary \.negative,\s*\.trainerExerciseProgressMetrics \.negative\s*\{\s*color:\s*#dc4f4f;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps nutrition muted micro labels grouped", async () => {

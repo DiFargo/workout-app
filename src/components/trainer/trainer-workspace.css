@@ -2292,12 +2292,16 @@
 }
 
 .trainerMeasurementSummaryGrid .positive,
-.trainerMeasurementFieldGrid .positive {
+.trainerMeasurementFieldGrid .positive,
+.trainerExerciseProgressSummary .positive,
+.trainerExerciseProgressMetrics .positive {
   color: #159947;
 }
 
 .trainerMeasurementSummaryGrid .negative,
-.trainerMeasurementFieldGrid .negative {
+.trainerMeasurementFieldGrid .negative,
+.trainerExerciseProgressSummary .negative,
+.trainerExerciseProgressMetrics .negative {
   color: #dc4f4f;
 }
 
@@ -6449,16 +6453,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 8px;
   font-weight: 700;
   line-height: 1.35;
-}
-
-.trainerExerciseProgressSummary .positive,
-.trainerExerciseProgressMetrics .positive {
-  color: #159947;
-}
-
-.trainerExerciseProgressSummary .negative,
-.trainerExerciseProgressMetrics .negative {
-  color: #dc4f4f;
 }
 
 .trainerExerciseProgressInsight {
