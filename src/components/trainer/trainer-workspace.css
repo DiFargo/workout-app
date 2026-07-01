@@ -1155,7 +1155,10 @@
   line-height: 1.4;
 }
 
-.trainerAnalyticsSignals {
+.trainerAnalyticsSignals,
+.trainerNextMeasurementGrid,
+.trainerNextPhotoGrid,
+.trainerMeasurementSummaryGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
@@ -2157,13 +2160,6 @@
   color: var(--tn-green);
 }
 
-.trainerNextMeasurementGrid,
-.trainerNextPhotoGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-
 .trainerNextMeasurementGrid article {
   min-height: 100px;
   display: grid;
@@ -2253,12 +2249,6 @@
   margin-bottom: 3px;
   color: var(--tn-text);
   font-size: 10px;
-}
-
-.trainerMeasurementSummaryGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
 }
 
 .trainerMeasurementSummaryGrid article,

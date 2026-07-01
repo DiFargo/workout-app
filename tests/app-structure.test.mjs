@@ -3643,6 +3643,15 @@ test("trainer workspace CSS keeps shared header layouts grouped", async () => {
   );
 });
 
+test("trainer workspace CSS keeps shared four-column grids grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerAnalyticsSignals,\s*\.trainerNextMeasurementGrid,\s*\.trainerNextPhotoGrid,\s*\.trainerMeasurementSummaryGrid\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\);\s*gap:\s*10px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps panel shells and scrollbars grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
