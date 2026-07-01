@@ -1028,15 +1028,6 @@ body[data-app-theme="warm-light"],
   overflow: hidden !important;
 }
 
-:root[data-app-theme="warm-light"] .summaryDonut span {
-  position: absolute !important;
-  inset: 22px !important;
-  border-radius: 50% !important;
-  display: block !important;
-  background: #050505 !important;
-  z-index: 2 !important;
-}
-
 /* COMPACT SUMMARY DONUT â€” WARM LIGHT ONLY */
 :root[data-app-theme="warm-light"] .summaryMacroCard {
   overflow: hidden !important;

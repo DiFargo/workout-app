@@ -3601,6 +3601,19 @@ test("nutrition base CSS keeps warm-light collapsed AI plan surface in the final
   );
 });
 
+test("warm-light nutrition CSS keeps summary donut center in the compact owner", async () => {
+  const warmLightNutritionCss = await readText("src/styles/legacy-warm-light-nutrition-polish.css");
+
+  assert.doesNotMatch(
+    warmLightNutritionCss,
+    /:root\[data-app-theme="warm-light"\] \.summaryDonut span\s*\{\s*position:\s*absolute !important;\s*inset:\s*22px !important;\s*border-radius:\s*50% !important;\s*display:\s*block !important;\s*background:\s*#050505 !important;\s*z-index:\s*2 !important;\s*\}/
+  );
+  assert.equal(
+    (warmLightNutritionCss.match(/:root\[data-app-theme="warm-light"\] \.summaryDonut span\s*\{\s*position:\s*absolute !important;\s*inset:\s*22px !important;\s*width:\s*auto !important;\s*height:\s*auto !important;[\s\S]*?linear-gradient\(180deg, rgba\(255,249,215,1\) 0%, rgba\(246,232,174,0\.95\) 100%\) !important;[\s\S]*?border:\s*0 !important;[\s\S]*?z-index:\s*2 !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client nutrition weekday strip keeps two-letter labels visible", async () => {
   const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
   const nutritionBaseCss = await readText("src/styles/nutrition.css");
