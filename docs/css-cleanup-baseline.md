@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1126.96 KiB` raw, `114.13 KiB` gzip.
-- Latest source CSS report: `100` files, about `3293.00 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3292.89 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -180,6 +180,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.664`: grouped trainer measurement and exercise progress status color CSS in `trainer-workspace.css`.
    - Continued in `v.1.665`: grouped trainer message, analytics and notification muted caption typography CSS in `trainer-workspace.css`.
    - Continued in `v.1.666`: grouped trainer avatar, photo and exercise media cover CSS in `trainer-workspace.css`.
+   - Continued in `v.1.667`: grouped trainer client identity/name and selected-program action row flex layout CSS in `trainer-workspace.css`.
 
 5. Admin hub and internals.
    - Reason: hub, users CRM and program overview surfaces have harness coverage.
@@ -839,3 +840,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.665`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.666`: grouped trainer avatar, photo and exercise media cover CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
 - Verification for `v.1.666`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.667`: grouped trainer client identity/name and selected-program action row flex layout CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.667`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

@@ -3677,6 +3677,10 @@ test("trainer workspace CSS keeps shared header layouts grouped", async () => {
     (source.match(/\.trainerMeasurementChart header,\s*\.trainerMeasurementChart > div,\s*\.trainerWorkoutScheduleMonth\s*\{\s*display:\s*flex;\s*align-items:\s*center;\s*justify-content:\s*space-between;\s*gap:\s*10px;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerNextClientIdentity,\s*\.trainerNextClientName,\s*\.trainerProgramSelectedBar > div\s*\{\s*display:\s*flex;\s*align-items:\s*center;\s*gap:\s*10px;\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps shared four-column grids grouped", async () => {

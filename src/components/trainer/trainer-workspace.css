@@ -1641,7 +1641,9 @@
   vertical-align: middle;
 }
 
-.trainerNextClientIdentity {
+.trainerNextClientIdentity,
+.trainerNextClientName,
+.trainerProgramSelectedBar > div {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1766,12 +1768,6 @@
 
 .trainerNextClientHeader > div {
   min-width: 0;
-}
-
-.trainerNextClientName {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .trainerNextClientName h1 {
@@ -4950,12 +4946,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-}
-
-.trainerProgramSelectedBar > div {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .trainerProgramSelectedBar > div button {
