@@ -1871,10 +1871,25 @@ test("nutrition base CSS keeps compact meal card sizing in the desktop owner", a
 
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
   const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const compactPremiumStart = source.indexOf("NUTRITION COMPACT PREMIUM ALIGNMENT");
+  const oldMobileBlock = source.slice(0, compactPremiumStart);
 
+  assert.ok(compactPremiumStart > 0);
+  assert.doesNotMatch(
+    oldMobileBlock,
+    /@media\s*\(max-width:\s*420px\)[\s\S]*?\.fatSecretPage\s*\{\s*padding-left:\s*14px !important;\s*padding-right:\s*14px !important;\s*\}/
+  );
   assert.equal(
     (source.match(/\.fatSecretPage\s*\{\s*padding-left:\s*12px !important;\s*padding-right:\s*12px !important;\s*\}/g) || []).length,
     1
+  );
+  assert.equal(
+    (source.match(/\.fatSecretPage\s*\{\s*padding-left:\s*14px !important;\s*padding-right:\s*14px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.match(
+    source.slice(compactPremiumStart),
+    /\.fatSecretPage\s*\{\s*padding-left:\s*14px !important;\s*padding-right:\s*14px !important;\s*\}/
   );
 });
 
