@@ -1707,7 +1707,9 @@ html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosSave {
 }
 
 .trainerProgressPhotosCard,
-.trainerEventsCard { grid-column: 1 / -1; }
+.trainerEventsCard,
+.trainerPaymentGrid .wide,
+.trainerPaymentGrid button { grid-column: 1 / -1; }
 
 .trainerPhotoUploadGrid {
   display: grid;
@@ -1771,8 +1773,6 @@ html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosSave {
 }
 .trainerPaymentGrid label { display: grid; gap: 5px; }
 .trainerPaymentGrid label > span { color: rgba(255, 255, 255, 0.52); font-size: 10px; }
-.trainerPaymentGrid .wide,
-.trainerPaymentGrid button { grid-column: 1 / -1; }
 
 .trainerEventList span { display: grid; gap: 3px; }
 .trainerEventList strong { color: #fff; font-size: 13px; }

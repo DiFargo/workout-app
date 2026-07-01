@@ -3150,6 +3150,15 @@ test("desktop cabinet CSS keeps trainer mobile auto columns grouped", async () =
   );
 });
 
+test("desktop cabinet CSS keeps trainer full-width columns grouped", async () => {
+  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+
+  assert.equal(
+    (source.match(/\.trainerProgressPhotosCard,\s*\.trainerEventsCard,\s*\.trainerPaymentGrid \.wide,\s*\.trainerPaymentGrid button\s*\{\s*grid-column:\s*1 \/ -1;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("desktop cabinet CSS keeps trainer client mobile columns grouped", async () => {
   const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
 
