@@ -2015,6 +2015,23 @@ test("warm light food edit CSS keeps form control shells grouped", async () => {
   );
 });
 
+test("warm light add food CSS keeps profile action shells grouped", async () => {
+  const source = await readText("src/styles/legacy-warm-light-add-food-search-cleanup.css");
+
+  assert.equal(
+    (
+      source.match(
+        /:root\[data-app-theme="warm-light"\] \.menuRefreshIconBtn,\s*:root\[data-app-theme="warm-light"\] \.profileThemeSwitchBtn\s*\{\s*background:\s*linear-gradient\(180deg, rgba\(255, 249, 215, 0\.96\) 0%, rgba\(246, 232, 174, 0\.82\) 100%\) !important;\s*color:\s*#5f5744 !important;\s*border-color:\s*rgba\(94,75,30,0\.12\) !important;\s*box-shadow:\s*0 12px 28px rgba\(88,68,24,0\.12\) !important;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (source.match(/box-shadow:\s*0 12px 28px rgba\(88,68,24,0\.12\) !important;/g) || []).length,
+    1
+  );
+});
+
 test("nutrition food search actions CSS keeps action active colors grouped", async () => {
   const source = await readText("src/styles/nutrition-food-search-actions.css");
 
