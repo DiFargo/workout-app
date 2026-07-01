@@ -79,37 +79,6 @@ html body #root nav.trainerRoleBottomBar {
   overflow: hidden !important;
 }
 
-html body #root .mainMenuBottomBar.profileBottomTabBar > button,
-html body #root .nutritionBottomTabBar > button,
-html body #root .individualWorkoutMenuBar > button,
-html body #root .workoutModeBottomBar > button,
-html body #root .trainerRoleBottomBar > button,
-html body #root .adminV3Nav.adminV3BottomBar > button,
-html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar > button,
-html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button,
-html body #root .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar > button,
-html body #root .mainDashboardPage nav.trainerRoleBottomBar > button,
-html body #root nav.mainMenuBottomBar.profileBottomTabBar > button,
-html body #root nav.trainerRoleBottomBar > button {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  height: 68px !important;
-  min-height: 68px !important;
-  max-height: 68px !important;
-  margin: 0 !important;
-  padding: 6px 2px 5px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 2px !important;
-  border: 1px solid transparent !important;
-  border-radius: 13px !important;
-  background: transparent !important;
-  color: rgba(232, 237, 230, 0.62) !important;
-}
-
 html body #root .mainMenuBottomBar.profileBottomTabBar > button span,
 html body #root .nutritionBottomTabBar > button span,
 html body #root .individualWorkoutMenuBar > button span,
@@ -133,33 +102,6 @@ html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > butt
   margin: 0 !important;
   transform: none !important;
 }
-
-html body #root .mainMenuBottomBar.profileBottomTabBar > button strong,
-html body #root .nutritionBottomTabBar > button strong,
-html body #root .individualWorkoutMenuBar > button strong,
-html body #root .workoutModeBottomBar > button strong,
-html body #root .trainerRoleBottomBar > button strong,
-html body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavLabel,
-html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar > button strong,
-html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button strong {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-height: 16px !important;
-  height: 16px !important;
-  max-height: 16px !important;
-  margin: 0 !important;
-  display: block !important;
-  overflow: hidden !important;
-  color: inherit !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  line-height: 16px !important;
-  text-align: center !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  transform: none !important;
-}
-
 
 /* V855: final one-pixel strict baseline for all bottom bars across all pages. */
 html body #root .mainMenuBottomBar.profileBottomTabBar,

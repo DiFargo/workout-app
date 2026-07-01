@@ -485,6 +485,33 @@ test("client primary final CSS keeps bottom nav sizing in one owner", async () =
   );
 });
 
+test("legacy bottom bars CSS keeps button shells in the final owner", async () => {
+  const source = await readText("src/styles/legacy-bottom-bars.css");
+  const normalizeStart = source.indexOf("V854: hard normalize all bottom navigation bars");
+  const finalStart = source.indexOf("V855: final one-pixel strict baseline", normalizeStart);
+  const normalizeBlock = source.slice(normalizeStart, finalStart);
+  const finalBlock = source.slice(finalStart);
+
+  assert.ok(normalizeStart >= 0);
+  assert.ok(finalStart > normalizeStart);
+  assert.doesNotMatch(
+    normalizeBlock,
+    /\.mainMenuBottomBar\.profileBottomTabBar > button,[\s\S]*?\{\s*box-sizing:\s*border-box !important;[\s\S]*?height:\s*68px !important;/
+  );
+  assert.doesNotMatch(
+    normalizeBlock,
+    /\.mainMenuBottomBar\.profileBottomTabBar > button strong,[\s\S]*?\{\s*width:\s*100% !important;[\s\S]*?font-size:\s*11px !important;/
+  );
+  assert.match(
+    finalBlock,
+    /\.mainMenuBottomBar\.profileBottomTabBar > button,[\s\S]*?\.programsBottomBar > button,[\s\S]*?\{\s*box-sizing:\s*border-box !important;[\s\S]*?height:\s*68px !important;/
+  );
+  assert.match(
+    finalBlock,
+    /\.mainMenuBottomBar\.profileBottomTabBar > button strong,[\s\S]*?\.programsBottomBar > button \.adminV3NavLabel,[\s\S]*?\{\s*width:\s*100% !important;[\s\S]*?font-size:\s*11px !important;/
+  );
+});
+
 test("client primary final CSS keeps shared action bar sizing in one owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 

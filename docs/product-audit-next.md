@@ -1,16 +1,15 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.589`.
+Last updated at app version `v.1.590`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `347` passed.
+- `npm.cmd test`: passed with `348` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
-- `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
-- `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`: passed.
+- `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js tests/e2e/client-nutrition-visual.spec.js tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`: passed with `8` passed.
 - `npx.cmd playwright test tests/e2e/admin-visual.spec.js`: passed with `4` passed.
 - `npx.cmd playwright test tests/e2e/client-ai-coach-visual.spec.js`: passed with `2` passed.
 - `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js`: passed with `2` passed.
@@ -349,6 +348,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 241. Nutrition AI plan muted span typography now stays in one grouped owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
+244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.
 228. Expanded nutrition product-list no longer keeps the obsolete 10-percent-wider section before the force-width owner.
 229. Exact nutrition product-list rebuild keeps structure and visual styling while width values stay in later width owners.
 230. Expanded nutrition product-list force-width block no longer keeps a radius overwritten by the later hard-width owner.

@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1135.13 KiB` raw, `114.34 KiB` gzip.
-- Latest source CSS report: `100` files, about `3316.24 KiB` total source CSS.
+- Latest main CSS bundle: about `1133.08 KiB` raw, `114.29 KiB` gzip.
+- Latest source CSS report: `100` files, about `3313.87 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -74,6 +74,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.583`: grouped workout close slide relative positioning CSS in `legacy-workout-navigation-close-early.css`.
    - Continued in `v.1.584`: grouped select/start button sizing CSS in `legacy-client-workout-flow-late.css`.
    - Continued in `v.1.585`: removed duplicate compact start-panel sizing CSS from `legacy-client-workout-flow-late.css`.
+   - Continued in `v.1.590`: removed early duplicate bottom-bar button and label shells from `legacy-bottom-bars.css`.
 
 3. Client nutrition.
    - Reason: densest route, already covered by modal screenshots.
@@ -635,3 +636,4 @@ Start mapping here before any cleanup:
 - `v.1.587`: consolidated AI plan muted span typography in `nutrition-ai-plan-lazy.css`; the grouped owner is guarded by the app structure test.
 - `v.1.588`: consolidated food search header close-button shell CSS in `client-food-search-final.css`; the grouped owner is guarded by the app structure test.
 - `v.1.589`: consolidated food search header title shell CSS in `client-food-search-final.css`; the grouped owner is guarded by the app structure test.
+- `v.1.590`: removed early duplicate bottom-bar button and label shells from `legacy-bottom-bars.css`; the final baseline owner is guarded by the app structure test.
