@@ -1,12 +1,12 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.608`.
+Last updated at app version `v.1.609`.
 
 ## Evidence
 
 - `npm.cmd run build`: passed.
 - `npm.cmd run check:bundle`: passed.
-- `npm.cmd test`: passed with `364` passed.
+- `npm.cmd test`: passed with `365` passed.
 - `npm.cmd run lint:critical`: passed.
 - `npm.cmd run test:e2e`: passed with `37` passed and `1` skipped.
 - `npx.cmd playwright test tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`: passed with `3` passed.
@@ -363,6 +363,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 255. Warm-light nutrition header/calendar close shell styling now stays in one grouped registration owner.
 256. Client workout history modal/cabinet item text internals now stay in grouped registration owners.
 257. Cabinet nutrition modal AI plan and goal card shells now stay in one high-specificity combined-section owner.
+258. Profile and admin Telegram status badge shells now stay in grouped profile dashboard owners.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

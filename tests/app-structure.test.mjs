@@ -2921,6 +2921,27 @@ test("profile dashboard CSS keeps AI coach label typography grouped", async () =
   );
 });
 
+test("profile dashboard CSS keeps Telegram badge shells grouped", async () => {
+  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.profileTelegramStatus,\s*\.adminClientTelegramBadge\s*\{\s*min-height:\s*32px;\s*padding:\s*0 10px;\s*border-radius:\s*999px;\s*display:\s*grid;\s*place-items:\s*center;\s*background:\s*rgba\(255,255,255,\.045\);\s*color:\s*rgba\(255,255,255,\.55\);\s*font-size:\s*10px;\s*font-weight:\s*950;\s*white-space:\s*nowrap;\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (
+      source.match(
+        /\.profileTelegramStatus\.connected,\s*\.adminClientTelegramBadge\.connected\s*\{\s*background:\s*rgba\(42,171,238,\.14\);\s*border:\s*1px solid rgba\(42,171,238,\.24\);\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+});
+
 test("client main CSS keeps compact AI stat text rules in the later owner", async () => {
   const source = await readText("src/styles/client-main-final-overrides.css");
 

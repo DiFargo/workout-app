@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.608`.
+Last updated at app version `v.1.609`.
 
 ## Stable Now
 
@@ -68,6 +68,7 @@ Last updated at app version `v.1.608`.
 - Workout select/start button sizing CSS now stays in one workout-flow owner.
 - Workout compact start-panel sizing CSS now stays in the shared stage/start owner.
 - Cabinet nutrition modal AI plan and goal card shells now stay in one combined-section CSS owner.
+- Profile and admin Telegram status badge shells now stay in grouped profile dashboard owners.
 - Trainer mobile page-shell CSS is now grouped across narrow and coarse landscape owners.
 - Nutrition orbit CSS now keeps shared inline and modal meal shells in one owner.
 - Nutrition base CSS now keeps compact meal-card sizing in the desktop compact owner.
