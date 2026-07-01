@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1126.96 KiB` raw, `114.13 KiB` gzip.
-- Latest source CSS report: `100` files, about `3287.94 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3287.80 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -30,7 +30,7 @@ Not covered deeply yet:
 Start mapping here before any cleanup:
 
 - `src/styles/client-primary-final-lock.css` - `209.41 KiB`
-- `src/components/trainer/trainer-workspace.css` - `169.06 KiB`
+- `src/components/trainer/trainer-workspace.css` - `168.93 KiB`
 - `src/styles/client-nutrition-grid-lock.css` - `148.48 KiB`
 - `src/styles/client-render-target-lock.css` - `100.83 KiB`
 - `src/styles/legacy-food-editor-tail.css` - `91.55 KiB`
@@ -219,6 +219,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.703`: grouped trainer shared 10px compact-label typography CSS in `trainer-workspace.css`.
    - Continued in `v.1.704`: grouped trainer shared purple color CSS in `trainer-workspace.css`.
    - Continued in `v.1.705`: grouped trainer shared purple focus-border CSS in `trainer-workspace.css`.
+   - Continued in `v.1.706`: grouped trainer shared min-width reset CSS in `trainer-workspace.css`.
 
 5. Admin hub and internals.
    - Reason: hub, users CRM and program overview surfaces have harness coverage.
@@ -956,3 +957,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.704`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.705`: grouped trainer shared purple focus-border CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
 - Verification for `v.1.705`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.706`: grouped trainer shared min-width reset CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.706`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

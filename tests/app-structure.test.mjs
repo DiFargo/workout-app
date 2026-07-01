@@ -3755,6 +3755,10 @@ test("trainer workspace CSS keeps compact row text stacks grouped", async () => 
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
+    (source.match(/\.trainerNextClientHeader > div,\s*\.trainerNextMealList article div,\s*\.trainerNextProgramsTab \.programsOverviewCardTitle > div,\s*\.trainerProgramConstructor button,\s*\.trainerProgramConstructor input,\s*\.trainerClientProgramCurrent \.trainerClientAssignedInfo,\s*\.trainerClientProgramSelectLabel,\s*\.trainerExerciseProgressList article > div,\s*\.trainerNotificationStatusCard > div:nth-child\(2\)\s*\{\s*min-width:\s*0;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerNextClientTable > button > span:not\(\.trainerNextClientIdentity\):not\(\.trainerNextStatus\),\s*\.trainerNextHistoryList article div\s*\{\s*display:\s*grid;\s*gap:\s*3px;\s*\}/g) || []).length,
     1
   );

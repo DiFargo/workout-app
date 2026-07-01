@@ -1767,7 +1767,15 @@
   min-height: 94px;
 }
 
-.trainerNextClientHeader > div {
+.trainerNextClientHeader > div,
+.trainerNextMealList article div,
+.trainerNextProgramsTab .programsOverviewCardTitle > div,
+.trainerProgramConstructor button,
+.trainerProgramConstructor input,
+.trainerClientProgramCurrent .trainerClientAssignedInfo,
+.trainerClientProgramSelectLabel,
+.trainerExerciseProgressList article > div,
+.trainerNotificationStatusCard > div:nth-child(2) {
   min-width: 0;
 }
 
@@ -2957,10 +2965,6 @@
   border-radius: 50%;
   background: #f3f3f5;
   font-size: 27px;
-}
-
-.trainerNextMealList article div {
-  min-width: 0;
 }
 
 .trainerNextMealList article small {
@@ -4451,10 +4455,6 @@
   color: var(--tn-purple);
 }
 
-.trainerNextProgramsTab .programsOverviewCardTitle > div {
-  min-width: 0;
-}
-
 .trainerNextProgramsTab .programsOverviewCardTitle strong {
   color: var(--tn-text);
   font-size: 20px;
@@ -4806,11 +4806,6 @@
 .trainerNextProgramsTab .programEditorBottomBar,
 .trainerNextProgramsTab .workoutEditorBottomBar {
   z-index: 35;
-}
-
-.trainerProgramConstructor button,
-.trainerProgramConstructor input {
-  min-width: 0;
 }
 
 .trainerProgramSelectedBar {
@@ -5489,10 +5484,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-.trainerClientProgramCurrent .trainerClientAssignedInfo {
-  min-width: 0;
-}
-
 .trainerClientProgramCurrent .trainerClientAssignedInfo > span {
   color: var(--tn-muted);
 }
@@ -5541,10 +5532,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: #fff;
   font-weight: 700;
   box-shadow: 0 12px 24px rgba(100, 55, 245, 0.16);
-}
-
-.trainerClientProgramSelectLabel {
-  min-width: 0;
 }
 
 .trainerClientProgramSelectLabel > span {
@@ -6263,10 +6250,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border-bottom: 1px solid var(--tn-line);
 }
 
-.trainerExerciseProgressList article > div {
-  min-width: 0;
-}
-
 .trainerExerciseProgressList article small {
   color: var(--tn-muted);
   font-size: 8px;
@@ -6708,10 +6691,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 .trainerNotificationStatusCard > i.connected {
   background: var(--tn-green-soft);
   color: var(--tn-green);
-}
-
-.trainerNotificationStatusCard > div:nth-child(2) {
-  min-width: 0;
 }
 
 .trainerNotificationStatusCard span,
