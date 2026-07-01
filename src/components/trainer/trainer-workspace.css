@@ -6394,7 +6394,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   gap: 7px;
 }
 
-.trainerWorkoutScheduleFooter span {
+.trainerWorkoutScheduleFooter span,
+.trainerWorkoutStatusSummary span {
   padding: 5px 8px;
   border: 1px solid #eceaf3;
   border-radius: 999px;
@@ -8064,16 +8065,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 10px;
-}
-
-.trainerWorkoutStatusSummary span {
-  padding: 5px 8px;
-  border: 1px solid #eceaf3;
-  border-radius: 999px;
-  background: #faf9ff;
-  color: var(--tn-muted);
-  font-size: 8px;
-  font-weight: 800;
 }
 
 .trainerWorkoutStatusSummary b {

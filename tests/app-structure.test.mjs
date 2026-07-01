@@ -3625,6 +3625,15 @@ test("trainer workspace CSS keeps workout calendar status colors grouped", async
   );
 });
 
+test("trainer workspace CSS keeps workout schedule pill labels grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerWorkoutScheduleFooter span,\s*\.trainerWorkoutStatusSummary span\s*\{\s*padding:\s*5px 8px;\s*border:\s*1px solid #eceaf3;\s*border-radius:\s*999px;\s*background:\s*#faf9ff;\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*font-weight:\s*800;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps panel shells and scrollbars grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
