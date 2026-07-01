@@ -252,12 +252,6 @@
   font-weight: 900;
 }
 
-.profileSexPicker button.active {
-  border-color: rgba(127,159,58,.32);
-  background: rgba(127,159,58,.15);
-  color: rgba(235,250,195,.96);
-}
-
 .profileBodySaveBtn {
   width: 100%;
   margin-top: 12px;
@@ -375,6 +369,7 @@
   cursor: pointer;
 }
 
+.profileSexPicker button.active,
 .profileGoalPicker button.active {
   border-color: rgba(127,159,58,.32);
   background: rgba(127,159,58,.15);

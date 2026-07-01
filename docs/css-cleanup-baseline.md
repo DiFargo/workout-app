@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1132.07 KiB` raw, `114.29 KiB` gzip.
-- Latest source CSS report: `100` files, about `3309.45 KiB` total source CSS.
+- Latest main CSS bundle: about `1132.10 KiB` raw, `114.30 KiB` gzip.
+- Latest source CSS report: `100` files, about `3309.33 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -104,6 +104,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.597`: grouped warm-light product edit segment/macro card shell CSS in `legacy-warm-light-food-edit-back-buttons.css`.
    - Continued in `v.1.600`: grouped warm-light custom dish ingredient picker/confirmation surface CSS in `legacy-food-editor-workout-close-late.css`.
    - Continued in `v.1.601`: grouped warm-light profile refresh/theme action shell CSS in `legacy-warm-light-add-food-search-cleanup.css`.
+   - Continued in `v.1.602`: grouped client profile sex/goal active picker CSS in `legacy-profile-dashboard-telegram-late.css`.
    - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
    - Continued in `v.1.307`: warm-light add-food/search cleanup CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition visual coverage.
    - Continued in `v.1.308`: dark-green nutrition food-flow CSS moved from the core app entrypoint into `nutrition-stack.css`, with the dark nutrition readability guard updated.
@@ -658,3 +659,4 @@ Start mapping here before any cleanup:
 - `v.1.599`: consolidated admin client nutrition month summary shell/label CSS in `legacy-admin-client-dashboard-polish.css`; the grouped owners are guarded by the app structure test.
 - `v.1.600`: consolidated warm-light custom dish ingredient picker/confirmation surface CSS in `legacy-food-editor-workout-close-late.css`; the grouped owner is guarded by the app structure test.
 - `v.1.601`: consolidated warm-light profile refresh/theme action shell CSS in `legacy-warm-light-add-food-search-cleanup.css`; the grouped owner is guarded by the app structure test.
+- `v.1.602`: consolidated client profile sex/goal active picker CSS in `legacy-profile-dashboard-telegram-late.css`; the grouped owner is guarded by the app structure test.

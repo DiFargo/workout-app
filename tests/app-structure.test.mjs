@@ -2805,6 +2805,23 @@ test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", 
   );
 });
 
+test("profile dashboard CSS keeps sex and goal active states grouped", async () => {
+  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+
+  assert.equal(
+    (
+      source.match(
+        /\.profileSexPicker button\.active,\s*\.profileGoalPicker button\.active\s*\{\s*border-color:\s*rgba\(127,159,58,\.32\);\s*background:\s*rgba\(127,159,58,\.15\);\s*color:\s*rgba\(235,250,195,\.96\);\s*\}/g
+      ) || []
+    ).length,
+    1
+  );
+  assert.equal(
+    (source.match(/border-color:\s*rgba\(127,159,58,\.32\);\s*background:\s*rgba\(127,159,58,\.15\);\s*color:\s*rgba\(235,250,195,\.96\);/g) || []).length,
+    1
+  );
+});
+
 test("client main CSS keeps compact AI stat text rules in the later owner", async () => {
   const source = await readText("src/styles/client-main-final-overrides.css");
 
