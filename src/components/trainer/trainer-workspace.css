@@ -255,11 +255,6 @@
   border-radius: 13px;
 }
 
-.trainerNextMoreDrawer nav {
-  display: grid;
-  gap: 7px;
-}
-
 .trainerNextMoreDrawer nav button {
   min-height: 48px;
   display: grid;
@@ -898,11 +893,6 @@
   font-size: 11px;
   font-weight: 800;
   line-height: 1.35;
-}
-
-.trainerMessageCoachHint > div {
-  display: grid;
-  gap: 7px;
 }
 
 .trainerMessageCoachHint button {
@@ -5003,6 +4993,8 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: var(--tn-purple);
 }
 
+.trainerNextMoreDrawer nav,
+.trainerMessageCoachHint > div,
 .trainerProgramCycles {
   display: grid;
   gap: 7px;
