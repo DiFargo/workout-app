@@ -1250,17 +1250,21 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
 }
 
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 {
-  display: flex !important;
-  flex-direction: column-reverse !important;
+  display: grid !important;
+  grid-template-areas:
+    "label"
+    "marker" !important;
+  grid-template-rows: 14px 26px !important;
   align-items: center !important;
   justify-content: center !important;
+  justify-items: center !important;
   min-width: 0 !important;
   width: 100% !important;
   height: 46px !important;
   min-height: 46px !important;
   max-height: 46px !important;
   padding: 0 !important;
-  gap: 4px !important;
+  gap: 6px !important;
   border-radius: 12px !important;
   overflow: hidden !important;
 }
@@ -1270,10 +1274,10 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
 }
 
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
+  grid-area: label !important;
   position: static !important;
   top: auto !important;
   display: block !important;
-  flex: 0 0 14px !important;
   width: 100% !important;
   height: 14px !important;
   margin: 0 !important;
@@ -1286,14 +1290,14 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
 }
 
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
+  grid-area: marker !important;
   display: block !important;
-  flex: 0 0 28px !important;
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  max-width: 28px !important;
-  max-height: 28px !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  max-width: 26px !important;
+  max-height: 26px !important;
   margin: 0 auto !important;
   border-radius: 999px !important;
 }
@@ -1319,7 +1323,7 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
 
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4 {
   width: 100% !important;
-  max-width: 48px !important;
+  max-width: 44px !important;
   overflow: visible !important;
 }
 

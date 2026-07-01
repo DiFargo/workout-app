@@ -3272,6 +3272,7 @@ test("client nutrition weekday strip keeps two-letter labels visible", async () 
 
   assert.match(nutritionCalendar, /NUTRITION_WEEK_LABELS = \["\\u041f\\u041d", "\\u0412\\u0422", "\\u0421\\u0420", "\\u0427\\u0422", "\\u041f\\u0422", "\\u0421\\u0411", "\\u0412\\u0421"\]/);
   assert.match(nutritionCss, /Preserve both letters in Russian weekday abbreviations/);
+  assert.match(nutritionCss, /\.nutritionDayV4 \{[\s\S]*display: grid !important;[\s\S]*grid-template-areas:[\s\S]*"label"[\s\S]*"marker" !important;[\s\S]*grid-template-rows: 14px 26px !important;/);
   assert.match(nutritionCss, /\.nutritionWeekV4 \.nutritionDayV4 small \{[\s\S]*min-width: 2\.4ch !important;[\s\S]*width: 2\.4ch !important;[\s\S]*white-space: nowrap !important;/);
 });
 

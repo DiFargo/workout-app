@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1130.44 KiB` raw, `114.28 KiB` gzip.
-- Latest source CSS report: `100` files, about `3306.80 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3306.90 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -118,6 +118,7 @@ Start mapping here before any cleanup:
    - Continued in `v.1.612`: grouped Telegram action button text/cursor CSS in `legacy-profile-dashboard-telegram-late.css`.
    - Continued in `v.1.613`: grouped Telegram bot/check action button shell CSS in `legacy-profile-dashboard-telegram-late.css`.
    - Continued in `v.1.614`: grouped Telegram bot/check disabled-state CSS in `legacy-profile-dashboard-telegram-late.css`.
+   - Fixed in `v.1.615`: nutrition weekday strip uses an explicit label/marker grid and smaller markers so compact Russian labels stay readable.
    - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
    - Continued in `v.1.307`: warm-light add-food/search cleanup CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition visual coverage.
    - Continued in `v.1.308`: dark-green nutrition food-flow CSS moved from the core app entrypoint into `nutrition-stack.css`, with the dark nutrition readability guard updated.
@@ -685,3 +686,5 @@ Start mapping here before any cleanup:
 - `v.1.612`: consolidated Telegram action button text/cursor CSS in `legacy-profile-dashboard-telegram-late.css`; the grouped owner is guarded by the app structure test.
 - `v.1.613`: consolidated Telegram bot/check action button shell CSS in `legacy-profile-dashboard-telegram-late.css`; the grouped owner is guarded by the app structure test.
 - `v.1.614`: consolidated Telegram bot/check disabled-state CSS in `legacy-profile-dashboard-telegram-late.css`; the grouped owner is guarded by the app structure test.
+- `v.1.615`: tightened the nutrition weekday strip into an explicit two-row label/marker grid in `nutrition-food-flow-late.css`; the geometry owner is guarded by structure and visual tests.
+- Verification for `v.1.615`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run report:css`, `npm.cmd run verify` and `npm.cmd run test:e2e` passed.
