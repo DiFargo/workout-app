@@ -3973,6 +3973,10 @@ test("trainer workspace CSS keeps purple active controls grouped", async () => {
     1
   );
   assert.equal(
+    (source.match(/\.trainerNextClientTabs button\.active::after,\s*\.trainerNextPageTabs button\.active::after,\s*\.trainerNotificationSwitch input:checked \+ i,\s*\.trainerNotificationDayBadges i\.workout,\s*\.trainerNotificationLegend i\.workout\s*\{\s*background:\s*var\(--tn-purple\);\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerNextChartHead button\.active,\s*\.trainerPhotoViewTabs button\.active,\s*\.trainerNextProgramControl > button:nth-of-type\(1\),\s*\.trainerProgramSelectedBar > div button\.primary,\s*\.trainerNutritionPeriodButtons button\.active,\s*\.trainerNotificationOffsets label\.active > span\s*\{\s*border-color:\s*var\(--tn-purple\);\s*background:\s*var\(--tn-purple\);\s*color:\s*#fff;\s*\}/g) || []).length,
     1
   );

@@ -1849,7 +1849,10 @@
 }
 
 .trainerNextClientTabs button.active::after,
-.trainerNextPageTabs button.active::after {
+.trainerNextPageTabs button.active::after,
+.trainerNotificationSwitch input:checked + i,
+.trainerNotificationDayBadges i.workout,
+.trainerNotificationLegend i.workout {
   background: var(--tn-purple);
 }
 
@@ -6771,10 +6774,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   transition: transform 0.2s ease;
 }
 
-.trainerNotificationSwitch input:checked + i {
-  background: var(--tn-purple);
-}
-
 .trainerNotificationSwitch input:checked + i::after {
   transform: translateX(18px);
 }
@@ -7123,11 +7122,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-style: normal;
   font-weight: 900;
   line-height: 1;
-}
-
-.trainerNotificationDayBadges i.workout,
-.trainerNotificationLegend i.workout {
-  background: var(--tn-purple);
 }
 
 .trainerNotificationDayBadges i.photo,
