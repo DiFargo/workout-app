@@ -2245,7 +2245,8 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
   font-size: 12px;
 }
 
-.trainerClientAttentionStrip small {
+.trainerClientAttentionStrip small,
+.trainerClientProgramProgress span {
   color: rgba(255, 255, 255, 0.48);
   font-size: 9px;
 }
@@ -2723,11 +2724,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
 
 .trainerClientProgramProgress > i {
   grid-column: 1 / -1;
-}
-
-.trainerClientProgramProgress span {
-  color: rgba(255, 255, 255, 0.48);
-  font-size: 9px;
 }
 
 .trainerClientProgramProgress strong {

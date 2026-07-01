@@ -3096,6 +3096,15 @@ test("desktop cabinet CSS keeps trainer client metric captions grouped", async (
   );
 });
 
+test("desktop cabinet CSS keeps trainer client progress captions grouped", async () => {
+  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientAttentionStrip small,\s*\.trainerClientProgramProgress span\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.48\);\s*font-size:\s*9px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
