@@ -2715,7 +2715,19 @@
   text-align: center;
 }
 
-.trainerNextExerciseList input:focus {
+.trainerNextExerciseList input:focus,
+.trainerNextModal label input:focus,
+.trainerNextProgramControl select:focus,
+.trainerClientAssignmentControls select:focus,
+.trainerNutritionPreset select:focus,
+.trainerNutritionGoalInputs input:focus,
+.trainerNutritionPlanFields input:focus,
+.trainerNutritionValidity input:focus,
+.trainerNotificationCalendarGrid button.today,
+.trainerClientMessageModal textarea:focus,
+.trainerNextWorkoutName input:focus,
+.trainerNextExerciseFields input:focus,
+.trainerNextSetRow input:focus {
   border-color: var(--tn-purple);
 }
 
@@ -3146,10 +3158,6 @@
   border: 1px solid var(--tn-line);
   border-radius: 7px;
   outline: 0;
-}
-
-.trainerNextModal label input:focus {
-  border-color: var(--tn-purple);
 }
 
 .trainerNextModal label > div {
@@ -4258,10 +4266,6 @@
   background: #fff;
   color: var(--tn-text);
   font-size: 10px;
-}
-
-.trainerNextProgramControl select:focus {
-  border-color: var(--tn-purple);
 }
 
 .trainerNextProgramControl > button {
@@ -5407,14 +5411,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   outline: 0;
   background: #fff;
   color: var(--tn-text);
-}
-
-.trainerClientAssignmentControls select:focus,
-.trainerNutritionPreset select:focus,
-.trainerNutritionGoalInputs input:focus,
-.trainerNutritionPlanFields input:focus,
-.trainerNutritionValidity input:focus {
-  border-color: var(--tn-purple);
 }
 
 .trainerClientAssignmentControls > button {
@@ -7109,10 +7105,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: #c3c6d1;
 }
 
-.trainerNotificationCalendarGrid button.today {
-  border-color: var(--tn-purple);
-}
-
 .trainerNotificationCalendarGrid button.active {
   border-color: var(--tn-purple);
   background: #f4f0ff;
@@ -7356,10 +7348,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font: inherit;
 }
 
-.trainerClientMessageModal textarea:focus {
-  border-color: var(--tn-purple);
-}
-
 .trainerClientMessageModal footer {
   display: flex;
   justify-content: flex-end;
@@ -7529,10 +7517,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: var(--tn-text);
   font-size: 15px;
   font-weight: 700;
-}
-
-.trainerNextWorkoutName input:focus {
-  border-color: var(--tn-purple);
 }
 
 .trainerNextWorkoutName > small {
@@ -7731,10 +7715,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-size: 10px;
 }
 
-.trainerNextExerciseFields input:focus {
-  border-color: var(--tn-purple);
-}
-
 .trainerNextWeightToggle {
   min-height: 36px;
   grid-template-columns: 1fr auto !important;
@@ -7809,10 +7789,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #fff;
   font-size: 10px;
   text-align: center;
-}
-
-.trainerNextSetRow input:focus {
-  border-color: var(--tn-purple);
 }
 
 .trainerNextSetRow input:disabled {

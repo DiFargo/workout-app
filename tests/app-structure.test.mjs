@@ -3528,6 +3528,10 @@ test("trainer workspace CSS keeps shared form field shells grouped", async () =>
     (source.match(/\.trainerClientAssignmentControls select,\s*\.trainerNutritionPreset select,\s*\.trainerNutritionGoalInputs input,\s*\.trainerNutritionPlanFields input,\s*\.trainerNutritionValidity input\s*\{\s*width:\s*100%;/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.trainerNextExerciseList input:focus,\s*\.trainerNextModal label input:focus,\s*\.trainerNextProgramControl select:focus,\s*\.trainerClientAssignmentControls select:focus,\s*\.trainerNutritionPreset select:focus,\s*\.trainerNutritionGoalInputs input:focus,\s*\.trainerNutritionPlanFields input:focus,\s*\.trainerNutritionValidity input:focus,\s*\.trainerNotificationCalendarGrid button\.today,\s*\.trainerClientMessageModal textarea:focus,\s*\.trainerNextWorkoutName input:focus,\s*\.trainerNextExerciseFields input:focus,\s*\.trainerNextSetRow input:focus\s*\{\s*border-color:\s*var\(--tn-purple\);\s*\}/g) || []).length,
+    1
+  );
 });
 
 test("trainer workspace CSS keeps cabinet and utility card shells grouped", async () => {
