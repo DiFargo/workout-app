@@ -965,9 +965,20 @@
 }
 
 .trainerMessageReply > button:disabled,
-.trainerMessageModalSend:disabled {
+.trainerMessageModalSend:disabled,
+.trainerNextProgramControl > button:disabled,
+.trainerClientAssignmentControls > button:disabled,
+.trainerClientProgramActionStack > button:disabled,
+.trainerWorkoutScheduleFooter button:disabled,
+.trainerNotificationActions button:disabled,
+.trainerNextLibrary article > button:disabled,
+.trainerNextOutlineAdd:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+.trainerMessageReply > button:disabled,
+.trainerMessageModalSend:disabled {
   box-shadow: none;
 }
 
@@ -5418,11 +5429,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
 
 }
 
-.trainerNextProgramControl > button:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
-}
-
 .trainerNextEmbeddedPlan {
   min-width: 0;
   padding-top: 12px;
@@ -5550,11 +5556,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   font-weight: 700;
 }
 
-.trainerClientAssignmentControls > button:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
-}
-
 .trainerClientProgramSummary {
   display: grid;
   grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.05fr);
@@ -5666,11 +5667,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   color: #fff;
   font-weight: 700;
   box-shadow: 0 12px 24px rgba(100, 55, 245, 0.16);
-}
-
-.trainerClientProgramActionStack > button:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
 }
 
 .trainerClientProgramSelectLabel {
@@ -6310,11 +6306,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   border: 0;
   border-radius: 8px;
   font-weight: 800;
-}
-
-.trainerWorkoutScheduleFooter button:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
 }
 
 .trainerWorkoutScheduleHint {
@@ -7497,11 +7488,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   margin-top: 18px;
 }
 
-.trainerNotificationActions button:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
-}
-
 .trainerNotificationHint {
   margin: 9px 0 0;
   color: var(--tn-red);
@@ -8198,12 +8184,6 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerP
   background: #fff;
   color: var(--tn-purple);
   font-size: 9px;
-}
-
-.trainerNextLibrary article > button:disabled,
-.trainerNextOutlineAdd:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
 }
 
 .trainerNextWorkoutPreview {

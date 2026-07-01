@@ -3627,6 +3627,19 @@ test("trainer workspace CSS keeps muted paragraph typography grouped", async () 
   );
 });
 
+test("trainer workspace CSS keeps shared disabled action states grouped", async () => {
+  const source = await readText("src/components/trainer/trainer-workspace.css");
+
+  assert.equal(
+    (source.match(/\.trainerMessageReply > button:disabled,\s*\.trainerMessageModalSend:disabled,\s*\.trainerNextProgramControl > button:disabled,\s*\.trainerClientAssignmentControls > button:disabled,\s*\.trainerClientProgramActionStack > button:disabled,\s*\.trainerWorkoutScheduleFooter button:disabled,\s*\.trainerNotificationActions button:disabled,\s*\.trainerNextLibrary article > button:disabled,\s*\.trainerNextOutlineAdd:disabled\s*\{\s*cursor:\s*not-allowed;\s*opacity:\s*0\.45;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.trainerMessageReply > button:disabled,\s*\.trainerMessageModalSend:disabled\s*\{\s*box-shadow:\s*none;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("trainer workspace CSS keeps client nutrition notification panel shells grouped", async () => {
   const source = await readText("src/components/trainer/trainer-workspace.css");
 
