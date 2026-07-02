@@ -1705,6 +1705,7 @@ test("client food search final CSS keeps product hero spacing in latest owners",
   assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowTitle h2\s*\{/);
   assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{/);
   assert.doesNotMatch(hardLockBlock, /--food-product-x:\s*15px;/);
+  assert.doesNotMatch(stableFlowBlock, /\.foodProductTopActions\s*\{/);
   assert.doesNotMatch(finalLockBlock, /--food-product-x:\s*15px;/);
   assert.doesNotMatch(finalLockBlock, /\.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{[\s\S]*?width:\s*min\(284px,/);
   assert.doesNotMatch(finalLockBlock, /\.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{[\s\S]*?margin:\s*0 auto !important;/);
