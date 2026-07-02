@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.776`.
+Last updated at app version `v.1.777`.
 
 ## Evidence
 
@@ -419,6 +419,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 311. Client main measurement snapshot keeps its header, weight block and chart in separate non-overlapping rows on mobile.
 312. Admin program editor form-control shell now stays in one grouped owner across editor and grid surfaces.
 313. Admin program editor stat value typography now stays in one grouped owner.
+314. Admin program editor empty-state typography now stays in one grouped owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

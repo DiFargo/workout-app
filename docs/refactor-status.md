@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.776`.
+Last updated at app version `v.1.777`.
 
 ## Stable Now
 
@@ -501,6 +501,7 @@ Last updated at app version `v.1.776`.
 - Legacy admin program editor CSS now groups the shared topbar shell across editor surfaces.
 - Legacy admin program editor CSS now groups the shared form-control shell across editor surfaces.
 - Legacy admin program editor CSS now groups stat value typography across editor surfaces.
+- Legacy admin program editor CSS now groups empty-state typography across editor surfaces.
 - Client primary final CSS keeps profile AI goal-stat font sizing in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps workout deck spacing rules in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps food search home child layout and recent-card rules in guarded owners after removing duplicate blocks.

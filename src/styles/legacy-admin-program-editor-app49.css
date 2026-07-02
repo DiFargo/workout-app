@@ -441,11 +441,13 @@
   padding: 24px;
 }
 
-.adminProgramEmptyDay strong {
+.adminProgramEmptyDay strong,
+.adminProgramEmptyExerciseList strong {
   font-size: 20px;
 }
 
-.adminProgramEmptyDay p {
+.adminProgramEmptyDay p,
+.adminProgramEmptyExerciseList p {
   margin: 0;
   color: rgba(255,255,255,.48);
   font-weight: 800;
@@ -1438,16 +1440,6 @@
   border: 1px dashed rgba(127,159,58,.25);
   background: rgba(127,159,58,.055);
   padding: 22px;
-}
-
-.adminProgramEmptyExerciseList strong {
-  font-size: 20px;
-}
-
-.adminProgramEmptyExerciseList p {
-  margin: 0;
-  color: rgba(255,255,255,.48);
-  font-weight: 800;
 }
 
 @media (max-width: 1320px) {

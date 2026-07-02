@@ -3345,6 +3345,19 @@ test("legacy admin program editor CSS keeps form controls grouped", async () => 
   );
 });
 
+test("legacy admin program editor CSS keeps empty-state typography grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramEmptyDay strong,\s*\.adminProgramEmptyExerciseList strong\s*\{\s*font-size:\s*20px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.adminProgramEmptyDay p,\s*\.adminProgramEmptyExerciseList p\s*\{\s*margin:\s*0;\s*color:\s*rgba\(255,255,255,\.48\);\s*font-weight:\s*800;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 
