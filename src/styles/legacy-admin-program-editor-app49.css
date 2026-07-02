@@ -93,7 +93,12 @@
 
 .adminProgramStatsRow,
 .adminProgramTemplateDock,
-.adminProgramLayout {
+.adminProgramLayout,
+.adminProgramGridTopbar,
+.adminProgramGridStats,
+.adminProgramTemplateStrip,
+.adminProgramGridSection,
+.adminProgramExerciseEditorBlock {
   max-width: 1680px;
   margin-left: auto;
   margin-right: auto;
@@ -1106,16 +1111,6 @@
     radial-gradient(circle at 14% 0%, rgba(127,159,58,.08), transparent 34%),
     linear-gradient(180deg, #070a07, #050705);
   color: #f4f6f2;
-}
-
-.adminProgramGridTopbar,
-.adminProgramGridStats,
-.adminProgramTemplateStrip,
-.adminProgramGridSection,
-.adminProgramExerciseEditorBlock {
-  max-width: 1680px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .adminProgramGridTopbar {

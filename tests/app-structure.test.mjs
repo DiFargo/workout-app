@@ -3216,6 +3216,19 @@ test("legacy admin program editor CSS keeps stats grids grouped", async () => {
   );
 });
 
+test("legacy admin program editor CSS keeps shared max width shell grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramStatsRow,\s*\.adminProgramTemplateDock,\s*\.adminProgramLayout,\s*\.adminProgramGridTopbar,\s*\.adminProgramGridStats,\s*\.adminProgramTemplateStrip,\s*\.adminProgramGridSection,\s*\.adminProgramExerciseEditorBlock\s*\{\s*max-width:\s*1680px;\s*margin-left:\s*auto;\s*margin-right:\s*auto;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/max-width:\s*1680px;\s*margin-left:\s*auto;\s*margin-right:\s*auto;/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 
