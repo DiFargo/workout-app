@@ -3205,6 +3205,7 @@ test("profile dashboard CSS keeps sex and goal active states grouped", async () 
 test("profile dashboard CSS keeps AI coach label typography grouped", async () => {
   const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
 
+  assert.doesNotMatch(source, /\.profileAiCoachStatusRow\.insideProgress strong,\s*\.profileAiCoachStatusRow\.insideProgress small\s*\{[\s\S]*?text-overflow:\s*ellipsis !important;/);
   assert.equal(
     (
       source.match(
