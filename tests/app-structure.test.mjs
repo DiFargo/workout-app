@@ -3268,6 +3268,23 @@ test("legacy admin program editor CSS keeps topbar shell grouped", async () => {
   );
 });
 
+test("legacy admin program editor CSS keeps micro-label typography grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramTitleBlock span,\s*\.adminProgramWorkoutHeader span\s*\{\s*display:\s*block;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.adminProgramTitleBlock span,\s*\.adminProgramWorkoutHeader span,\s*\.adminProgramGridTopbar span,\s*\.adminProgramGridSectionHead span\s*\{\s*color:\s*rgba\(145,173,78,\.92\);\s*font-size:\s*10px;\s*font-weight:\s*1000;\s*letter-spacing:\s*\.1em;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/color:\s*rgba\(145,173,78,\.92\);\s*font-size:\s*10px;\s*font-weight:\s*1000;\s*letter-spacing:\s*\.1em;/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 

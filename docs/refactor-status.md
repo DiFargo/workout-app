@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.770`.
+Last updated at app version `v.1.771`.
 
 ## Stable Now
 
@@ -102,6 +102,7 @@ Last updated at app version `v.1.770`.
 - Admin hub and admin internals CSS entrypoints are now structurally guarded against accidental heavy import drift.
 - Admin client four-column grid breakpoint ownership stays in the later admin internals stylesheet instead of the earlier CRM shell.
 - Admin program editor CSS no longer keeps an empty desktop media block.
+- Admin program editor CSS now keeps shared micro-label typography in one grouped owner.
 - Admin calendar CSS no longer keeps pre-final `adminCalendarPanelMerged` layout layers before the final V62 owner.
 - Admin calendar button CSS no longer keeps unused exact selectors for removed `adminCalendarToggle`, `adminCalendarSaveBtn` and `adminCalendarTestBtn` classes.
 - Food editor summary CSS no longer keeps intermediate compact and first scale-up calorie grid tuning before the later second scale-up owner.
@@ -527,7 +528,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1118.73 KiB` raw, `113.71 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3272.21 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3270.70 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
