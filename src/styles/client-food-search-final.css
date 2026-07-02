@@ -418,19 +418,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
   gap: 14px 12px !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowTitle {
-  grid-area: title !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  height: 48px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  text-align: left !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowTitle > span {
   display: none !important;
 }

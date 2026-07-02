@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1121.90 KiB` raw, `113.83 KiB` gzip.
-- Latest source CSS report: `100` files, about `3277.05 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3276.64 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -1045,3 +1045,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.738`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.739`: fixed the warm-light product edit modal action bar by resetting the inherited centered-bar transform in the card-sheet lock; nutrition visual coverage now asserts the editor action bar stays inside the sheet.
 - Verification for `v.1.739`: preview geometry check, `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.740`: removed the older product-add product flow title wrapper layout owner from `client-food-search-final.css`; the stable-flow owner remains guarded by the app structure test and nutrition visual coverage.
+- Verification for `v.1.740`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

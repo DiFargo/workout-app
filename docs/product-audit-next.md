@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.739`.
+Last updated at app version `v.1.740`.
 
 ## Evidence
 
@@ -382,6 +382,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 274. Nutrition render-grid dot sizing now stays in the wider mobile calories owner instead of repeating the same dot size inside the narrower tail block.
 275. Profile AI avatar broad sizing now stays in the render-target owner instead of repeating the same warm-light avatar lock in the primary layer.
 276. Product edit modal action bar now resets the inherited centered-bar transform so the bar stays inside the sheet.
+277. Product flow title wrapper layout now stays in the stable-flow owner instead of repeating in the older product-add section.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.
