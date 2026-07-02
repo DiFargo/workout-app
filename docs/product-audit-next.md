@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.749`.
+Last updated at app version `v.1.750`.
 
 ## Evidence
 
@@ -392,6 +392,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 284. Profile AI coach inside-progress text overflow now stays in the shared status-row text owner instead of repeating in the inside-progress subset.
 285. Profile AI avatar compact size now stays in the shared avatar owner instead of repeating in the page-specific subset owner.
 286. Trainer/cabinet strong text overflow now stays in one grouped desktop cabinet owner instead of repeating across task, notification and program summary rows.
+287. Trainer/cabinet header shell layout now stays in one grouped desktop cabinet owner instead of repeating across task, workspace and notification headers.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

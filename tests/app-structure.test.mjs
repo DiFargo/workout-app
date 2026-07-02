@@ -3467,6 +3467,19 @@ test("desktop cabinet CSS keeps trainer client list shells grouped", async () =>
   );
 });
 
+test("desktop cabinet CSS keeps trainer notification header shells grouped", async () => {
+  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+
+  assert.equal(
+    (source.match(/\.clientTrainerTasksHead,\s*\.trainerWorkspaceHead,\s*\.profileTrainerNotificationsHead\s*\{\s*display:\s*flex;\s*align-items:\s*center;\s*justify-content:\s*space-between;\s*gap:\s*12px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/display:\s*flex;\s*align-items:\s*center;\s*justify-content:\s*space-between;\s*gap:\s*12px;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("desktop cabinet CSS keeps trainer client text shells grouped", async () => {
   const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
 

@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1121.90 KiB` raw, `113.83 KiB` gzip.
-- Latest source CSS report: `100` files, about `3272.66 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3272.56 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -1065,3 +1065,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.748`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.749`: grouped trainer/cabinet strong text overflow in `legacy-desktop-cabinet-polish.css`; the task, notification and program summary row owners remain guarded by the app structure test and visual coverage.
 - Verification for `v.1.749`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js`, `tests/e2e/trainer-visual.spec.js` and `tests/e2e/trainer-workspace.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.750`: grouped trainer/cabinet header shell layout in `legacy-desktop-cabinet-polish.css`; task, workspace and notification headers remain guarded by the app structure test and visual coverage.
+- Verification for `v.1.750`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js`, `tests/e2e/trainer-visual.spec.js` and `tests/e2e/trainer-workspace.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
