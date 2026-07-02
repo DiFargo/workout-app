@@ -1368,6 +1368,11 @@ test("client render target CSS keeps profile hero locks in one owner", async () 
     (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileAiAvatar\s*\{\s*width:\s*62px !important;\s*height:\s*62px !important;\s*min-width:\s*62px !important;\s*min-height:\s*62px !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/body #root \.profileAiHeroText,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.progressHubCardText,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionAiPlanTopText,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionZoukText\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*flex-start !important;\s*justify-content:\s*center !important;\s*gap:\s*2px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal((source.match(/\.profileAiHeroText\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;/g) || []).length, 0);
   assert.doesNotMatch(source, /\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiAvatarWrap,[\s\S]*?\.profileDashboardPage\.profileTabbedPage\.clientCorePage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatar\s*\{[\s\S]*?width:\s*62px !important;/);
 });
 

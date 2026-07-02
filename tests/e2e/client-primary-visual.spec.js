@@ -62,6 +62,19 @@ async function expectPrimaryChrome(page, pageTestId) {
   await expectNoHorizontalOverflow(page);
 }
 
+async function expectMainDashboardContent(page) {
+  await expect(page.locator(".profileAiHero")).toBeVisible();
+  await expect(page.locator(".profileAiStatsRow")).toBeVisible();
+  await expect(page.locator(".profileAiCoachInsight")).toBeVisible();
+  await expect(page.locator(".mainMeasurementSnapshot")).toBeVisible();
+}
+
+async function expectCabinetContent(page) {
+  await expect(page.locator(".profileAiHero")).toBeVisible();
+  await expect(page.locator(".profileCabinetProgressOverview")).toBeVisible();
+  await expect(page.locator(".progressHubCard")).toHaveCount(6);
+}
+
 async function expectContentAboveBottomNav(page) {
   const initialScrollTop = await page.evaluate(() => {
     const scroller = document.querySelector(".clientCorePage");
@@ -110,12 +123,14 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
 
   await page.goto("/?clientHarness=1");
   await expectPrimaryChrome(page, "client-harness-main");
+  await expectMainDashboardContent(page);
   await expectContentAboveBottomNav(page);
   await attachScreenshot(page, testInfo, "client-main-dashboard.png");
   assertNoRuntimeErrors();
 
   await clickClientCabinetNav(page);
   await expectPrimaryChrome(page, "client-harness-cabinet");
+  await expectCabinetContent(page);
   await expectContentAboveBottomNav(page);
   await attachScreenshot(page, testInfo, "client-cabinet.png");
 

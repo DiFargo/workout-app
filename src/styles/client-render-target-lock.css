@@ -230,15 +230,6 @@
     display: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileAiHeroText {
-    min-width: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    gap: 2px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileAiHeroText h1 {
     color: var(--render-ink) !important;
     font-size: 24px !important;
@@ -445,6 +436,7 @@
     color: var(--render-accent) !important;
   }
 
+  html:root[data-app-theme="warm-light"] body #root .profileAiHeroText,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCardText,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopText,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukText {

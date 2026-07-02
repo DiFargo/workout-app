@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1119.67 KiB` raw, `113.73 KiB` gzip.
-- Latest source CSS report: `100` files, about `3273.27 KiB` total source CSS.
+- Latest main CSS bundle: about `1119.29 KiB` raw, `113.71 KiB` gzip.
+- Latest source CSS report: `100` files, about `3273.07 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -1079,3 +1079,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.756`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/trainer-workspace.spec.js` and `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.757`: grouped nutrition bottom nav active-state and icon sizing locks across the shared nutrition selector and fixed-header nutrition surface in `client-nutrition-grid-lock.css`; the grouped owners are guarded by the app structure test.
 - Verification for `v.1.757`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-nutrition-visual.spec.js` and `tests/e2e/client-primary-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.758`: grouped render-target hero and progress-card text stack rules across main, cabinet and nutrition cards in `client-render-target-lock.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.758`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js` and `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
