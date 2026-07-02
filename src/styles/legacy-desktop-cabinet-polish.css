@@ -801,7 +801,9 @@ html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrmPage .
 .trainerTaskRow.completed .trainerTaskCheck { background: #9fca47; }
 
 .clientTrainerTask > span { display: grid; gap: 3px; min-width: 0; }
-.clientTrainerTask strong {
+.clientTrainerTask strong,
+.profileTrainerNotificationItem strong,
+.trainerClientProgramSummary strong {
   overflow: hidden;
   color: #fff;
   font-size: 14px;
@@ -996,14 +998,6 @@ html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrmPage .
   min-width: 0;
   display: grid;
   gap: 3px;
-}
-
-.profileTrainerNotificationItem strong {
-  overflow: hidden;
-  color: #fff;
-  font-size: 14px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .profileTrainerNotificationItem small,
@@ -2683,14 +2677,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
 .trainerClientProgramSummary small {
   color: rgba(255, 255, 255, 0.42);
   font-size: 9px;
-}
-
-.trainerClientProgramSummary strong {
-  overflow: hidden;
-  color: #fff;
-  font-size: 14px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .trainerClientProgramSummary > b {

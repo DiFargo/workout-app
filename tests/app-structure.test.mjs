@@ -3471,6 +3471,14 @@ test("desktop cabinet CSS keeps trainer client text shells grouped", async () =>
   const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
 
   assert.equal(
+    (source.match(/\.clientTrainerTask strong,\s*\.profileTrainerNotificationItem strong,\s*\.trainerClientProgramSummary strong\s*\{\s*overflow:\s*hidden;\s*color:\s*#fff;\s*font-size:\s*14px;\s*text-overflow:\s*ellipsis;\s*white-space:\s*nowrap;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/overflow:\s*hidden;\s*color:\s*#fff;\s*font-size:\s*14px;\s*text-overflow:\s*ellipsis;\s*white-space:\s*nowrap;/g) || []).length,
+    1
+  );
+  assert.equal(
     (source.match(/\.trainerClientSectionHead > div,\s*\.trainerClientAttentionStrip article > div,\s*\.trainerClientAiList span,\s*\.trainerClientProgramSummary > span\s*\{\s*min-width:\s*0;\s*display:\s*grid;\s*gap:\s*3px;\s*\}/g) || []).length,
     1
   );
