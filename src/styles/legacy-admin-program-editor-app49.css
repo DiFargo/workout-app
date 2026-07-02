@@ -69,7 +69,9 @@
   letter-spacing: -1px;
 }
 
-.adminProgramTitleBlock p {
+.adminProgramTitleBlock p,
+.adminProgramGridTopbar p,
+.adminProgramGridSectionHead p {
   margin: 0;
   color: rgba(255,255,255,.48);
   font-size: 12px;
@@ -1142,14 +1144,6 @@
   margin: 4px 0 2px;
   font-size: 31px;
   line-height: 1;
-}
-
-.adminProgramGridTopbar p,
-.adminProgramGridSectionHead p {
-  margin: 0;
-  color: rgba(255,255,255,.48);
-  font-size: 12px;
-  font-weight: 850;
 }
 
 .adminProgramGridSave,
