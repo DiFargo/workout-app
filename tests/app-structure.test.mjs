@@ -3223,6 +3223,21 @@ test("legacy admin client page CSS does not keep exact duplicate blocks", async 
   assert.deepEqual(duplicateBlocks, []);
 });
 
+test("legacy admin client page CSS keeps Telegram render sizing grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-client-page.css");
+
+  assert.equal(
+    (source.match(/\.adminClientTelegramLogoRender,\s*\.adminClientTelegramAvatarRender\s*\{\s*width:\s*62px !important;\s*height:\s*62px !important;\s*flex:\s*none !important;\s*\}/g) || []).length,
+    1
+  );
+
+  const standaloneBlocks = [...source.matchAll(/([^{}]+)\{([^{}]+)\}/g)]
+    .filter((match) => /width:\s*62px !important;\s*height:\s*62px !important;\s*flex:\s*none !important;/.test(match[2]))
+    .map((match) => match[1].trim().replace(/\s+/g, " "));
+
+  assert.deepEqual(standaloneBlocks, [".adminClientTelegramLogoRender, .adminClientTelegramAvatarRender"]);
+});
+
 test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", async () => {
   const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
   const statsAlignmentStart = source.indexOf("/* STATS ALIGNMENT PERFECT */");

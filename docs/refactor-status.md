@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.763`.
+Last updated at app version `v.1.764`.
 
 ## Stable Now
 
@@ -488,6 +488,7 @@ Last updated at app version `v.1.763`.
 - Profile dashboard Telegram CSS now groups avatar image cover rules across profile, settings and manage surfaces.
 - Admin client dashboard polish CSS now groups nutrition month summary-below typography and mobile card sizing with the summary owners.
 - AI Coach lazy CSS now groups nutrition plan week and two-column grid layout in one owner.
+- Legacy admin client page CSS now groups Telegram render logo/avatar sizing in one owner.
 - Client primary final CSS keeps profile AI goal-stat font sizing in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps workout deck spacing rules in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps food search home child layout and recent-card rules in guarded owners after removing duplicate blocks.

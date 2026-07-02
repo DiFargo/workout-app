@@ -1399,7 +1399,8 @@
   gap: 18px !important;
 }
 
-.adminClientTelegramLogoRender {
+.adminClientTelegramLogoRender,
+.adminClientTelegramAvatarRender {
   width: 62px !important;
   height: 62px !important;
   flex: none !important;
@@ -1432,12 +1433,6 @@
   grid-template-columns: 62px minmax(0, 1fr) auto !important;
   gap: 18px !important;
   align-items: center !important;
-}
-
-.adminClientTelegramAvatarRender {
-  width: 62px !important;
-  height: 62px !important;
-  flex: none !important;
 }
 
 .adminClientTelegramUserRender strong {
