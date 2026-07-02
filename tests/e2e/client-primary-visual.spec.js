@@ -111,6 +111,47 @@ async function expectMainMeasurementSnapshotLayout(page) {
   expect(metrics.chartEscapesCard).toBe(false);
 }
 
+async function expectClientCardTextReadable(page, mode) {
+  const metrics = await page.evaluate((activeMode) => {
+    const rectOf = (selector) => {
+      const node = document.querySelector(selector);
+      const rect = node?.getBoundingClientRect();
+      return rect
+        ? {
+            x: rect.x,
+            right: rect.right
+          }
+        : null;
+    };
+    const clippedTexts = [
+      ".profileAiStatsRow strong",
+      ".profileAiMiniCard strong",
+      ".profileProgressInsightBadge small"
+    ].flatMap((selector) => (
+      [...document.querySelectorAll(selector)].map((node) => ({
+        selector,
+        text: node.textContent.trim(),
+        scrollWidth: Math.ceil(node.scrollWidth),
+        clientWidth: Math.ceil(node.clientWidth)
+      }))
+    )).filter((item) => item.scrollWidth > item.clientWidth + 1);
+
+    return {
+      skipped: window.innerWidth > 640,
+      avatar: rectOf(".profileAiAvatar"),
+      title: rectOf(".profileAiHeroText h1"),
+      clippedTexts: activeMode === "main" ? clippedTexts : []
+    };
+  }, mode);
+
+  if (metrics.skipped) return;
+
+  expect(metrics.avatar).not.toBeNull();
+  expect(metrics.title).not.toBeNull();
+  expect(metrics.title.x).toBeGreaterThanOrEqual(metrics.avatar.right + 8);
+  expect(metrics.clippedTexts).toEqual([]);
+}
+
 async function expectCabinetContent(page) {
   await expect(page.locator(".profileAiHero")).toBeVisible();
   await expect(page.locator(".profileCabinetProgressOverview")).toBeVisible();
@@ -167,6 +208,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expectPrimaryChrome(page, "client-harness-main");
   await expectMainDashboardContent(page);
   await expectMainMeasurementSnapshotLayout(page);
+  await expectClientCardTextReadable(page, "main");
   await expectContentAboveBottomNav(page);
   await attachScreenshot(page, testInfo, "client-main-dashboard.png");
   assertNoRuntimeErrors();
@@ -174,6 +216,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await clickClientCabinetNav(page);
   await expectPrimaryChrome(page, "client-harness-cabinet");
   await expectCabinetContent(page);
+  await expectClientCardTextReadable(page, "cabinet");
   await expectContentAboveBottomNav(page);
   await attachScreenshot(page, testInfo, "client-cabinet.png");
 

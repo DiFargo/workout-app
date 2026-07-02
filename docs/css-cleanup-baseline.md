@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1120.80 KiB` raw, `113.89 KiB` gzip.
-- Latest source CSS report: `100` files, about `3272.99 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3276.47 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -1121,3 +1121,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.777`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.778`: grouped admin program editor empty-state shell alignment across editor and grid surfaces in `legacy-admin-program-editor-app49.css`; the grouped owner is guarded by the app structure test.
 - Verification for `v.1.778`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.779`: restored readable mobile client main/cabinet card spacing in `client-main-final-overrides.css`; hero spacing and key text clipping are guarded by the client primary visual audit.
+- Verification for `v.1.779`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run report:css`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
