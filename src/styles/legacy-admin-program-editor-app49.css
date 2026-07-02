@@ -156,11 +156,15 @@
   text-overflow: ellipsis;
 }
 
-.adminProgramTemplateDock {
+.adminProgramTemplateDock,
+.adminProgramTemplateStrip {
   display: grid;
   grid-template-columns: minmax(180px, 1fr) auto minmax(190px, 1fr) auto;
   gap: 8px;
   margin-bottom: 12px;
+}
+
+.adminProgramTemplateDock {
   padding: 12px;
   border-radius: 22px;
   border: 1px solid rgba(255,255,255,.055);
@@ -1164,10 +1168,6 @@
 }
 
 .adminProgramTemplateStrip {
-  display: grid;
-  grid-template-columns: minmax(180px, 1fr) auto minmax(190px, 1fr) auto;
-  gap: 8px;
-  margin-bottom: 12px;
   padding: 10px;
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,.052);

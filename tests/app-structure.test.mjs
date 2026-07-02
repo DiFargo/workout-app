@@ -3298,6 +3298,19 @@ test("legacy admin program editor CSS keeps stat labels grouped", async () => {
   );
 });
 
+test("legacy admin program editor CSS keeps template layouts grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramTemplateDock,\s*\.adminProgramTemplateStrip\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*minmax\(180px, 1fr\) auto minmax\(190px, 1fr\) auto;\s*gap:\s*8px;\s*margin-bottom:\s*12px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/display:\s*grid;\s*grid-template-columns:\s*minmax\(180px, 1fr\) auto minmax\(190px, 1fr\) auto;\s*gap:\s*8px;\s*margin-bottom:\s*12px;/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 
