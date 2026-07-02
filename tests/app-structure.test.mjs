@@ -3255,6 +3255,19 @@ test("legacy admin program editor CSS keeps accent button states grouped", async
   );
 });
 
+test("legacy admin program editor CSS keeps topbar shell grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramTopbar,\s*\.adminProgramGridTopbar\s*\{\s*min-height:\s*78px;\s*padding:\s*14px;\s*border-radius:\s*24px;\s*border:\s*1px solid rgba\(255,255,255,\.055\);\s*background:\s*rgba\(255,255,255,\.032\);\s*display:\s*grid;\s*grid-template-columns:\s*auto 1fr auto;\s*gap:\s*16px;\s*align-items:\s*center;\s*backdrop-filter:\s*blur\(18px\);\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/min-height:\s*78px;\s*padding:\s*14px;\s*border-radius:\s*24px;\s*border:\s*1px solid rgba\(255,255,255,\.055\);\s*background:\s*rgba\(255,255,255,\.032\);\s*display:\s*grid;\s*grid-template-columns:\s*auto 1fr auto;\s*gap:\s*16px;\s*align-items:\s*center;\s*backdrop-filter:\s*blur\(18px\);/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 
