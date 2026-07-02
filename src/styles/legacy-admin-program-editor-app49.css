@@ -144,16 +144,20 @@
   font-weight: 900;
 }
 
-.adminProgramStatsRow strong {
+.adminProgramStatsRow strong,
+.adminProgramGridStats strong {
   display: block;
   margin-top: 7px;
   color: #fff;
-  font-size: 24px;
   line-height: 1;
   font-weight: 1000;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.adminProgramStatsRow strong {
+  font-size: 24px;
 }
 
 .adminProgramTemplateDock,
@@ -1168,15 +1172,7 @@
 }
 
 .adminProgramGridStats strong {
-  display: block;
-  margin-top: 7px;
-  color: #fff;
   font-size: 23px;
-  line-height: 1;
-  font-weight: 1000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .adminProgramTemplateStrip {

@@ -3298,6 +3298,19 @@ test("legacy admin program editor CSS keeps stat labels grouped", async () => {
   );
 });
 
+test("legacy admin program editor CSS keeps stat values grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramStatsRow strong,\s*\.adminProgramGridStats strong\s*\{\s*display:\s*block;\s*margin-top:\s*7px;\s*color:\s*#fff;\s*line-height:\s*1;\s*font-weight:\s*1000;\s*white-space:\s*nowrap;\s*overflow:\s*hidden;\s*text-overflow:\s*ellipsis;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/display:\s*block;\s*margin-top:\s*7px;\s*color:\s*#fff;\s*line-height:\s*1;\s*font-weight:\s*1000;\s*white-space:\s*nowrap;\s*overflow:\s*hidden;\s*text-overflow:\s*ellipsis;/g) || []).length,
+    1
+  );
+});
+
 test("legacy admin program editor CSS keeps template layouts grouped", async () => {
   const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
 
