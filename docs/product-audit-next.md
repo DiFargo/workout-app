@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.759`.
+Last updated at app version `v.1.760`.
 
 ## Evidence
 
@@ -402,6 +402,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 294. Nutrition bottom nav active/icon locks now stay in one grouped owner across the shared and fixed-header nutrition surfaces.
 295. Render-target hero and progress card text stack rules now stay in one grouped owner across main, cabinet and nutrition cards.
 296. Render-target main stats compact height now stays in the final owner without late height-only duplicate locks.
+297. Food editor details and portion-unit focus states now stay in one grouped owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

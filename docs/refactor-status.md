@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.759`.
+Last updated at app version `v.1.760`.
 
 ## Stable Now
 
@@ -484,6 +484,7 @@ Last updated at app version `v.1.759`.
 - Client nutrition grid CSS now groups nutrition bottom nav active and icon locks across shared and fixed-header surfaces.
 - Client render target CSS now groups hero and progress-card text stack rules across main, cabinet and nutrition surfaces.
 - Client render target CSS now keeps main stats compact height in one final owner after removing late height-only duplicate locks.
+- Legacy food editor CSS now groups details input/textarea and portion-unit select focus states in one owner.
 - Client primary final CSS keeps profile AI goal-stat font sizing in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps workout deck spacing rules in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps food search home child layout and recent-card rules in guarded owners after removing duplicate blocks.
@@ -516,7 +517,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1118.81 KiB` raw, `113.71 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3272.45 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3272.34 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

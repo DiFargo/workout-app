@@ -2331,6 +2331,19 @@ test("warm light add food CSS keeps profile action shells grouped", async () => 
   );
 });
 
+test("legacy food editor CSS keeps details and unit focus state grouped", async () => {
+  const source = await readText("src/styles/legacy-food-editor-tail.css");
+
+  assert.equal(
+    (source.match(/\.foodEditDetailsPanel input:focus,\s*\.foodEditDetailsPanel textarea:focus,\s*\.foodEditPortionUnitRow select:focus\s*\{\s*border-color:\s*rgba\(38,255,116,0\.42\) !important;\s*box-shadow:\s*0 0 0 3px rgba\(38,255,116,0\.055\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/border-color:\s*rgba\(38,255,116,0\.42\) !important;\s*box-shadow:\s*0 0 0 3px rgba\(38,255,116,0\.055\) !important;/g) || []).length,
+    1
+  );
+});
+
 test("nutrition food search actions CSS keeps action active colors grouped", async () => {
   const source = await readText("src/styles/nutrition-food-search-actions.css");
 

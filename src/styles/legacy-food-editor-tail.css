@@ -2699,7 +2699,8 @@
 }
 
 .foodEditDetailsPanel input:focus,
-.foodEditDetailsPanel textarea:focus {
+.foodEditDetailsPanel textarea:focus,
+.foodEditPortionUnitRow select:focus {
   border-color: rgba(38,255,116,0.42) !important;
   box-shadow: 0 0 0 3px rgba(38,255,116,0.055) !important;
 }
@@ -2924,11 +2925,6 @@
 
   text-align: center !important;
   text-align-last: center !important;
-}
-
-.foodEditPortionUnitRow select:focus {
-  border-color: rgba(38,255,116,0.42) !important;
-  box-shadow: 0 0 0 3px rgba(38,255,116,0.055) !important;
 }
 
 /* =========================================================
