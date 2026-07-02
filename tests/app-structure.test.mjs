@@ -3493,6 +3493,19 @@ test("desktop cabinet CSS keeps trainer notification header shells grouped", asy
   );
 });
 
+test("desktop cabinet CSS keeps accent micro labels grouped", async () => {
+  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+
+  assert.equal(
+    (source.match(/\.trainerClientDashboardModal > header span,\s*\.profileNutritionInlinePlanHead span\s*\{\s*color:\s*#b5e655;\s*font-size:\s*10px;\s*font-weight:\s*950;\s*letter-spacing:\s*0\.06em;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/color:\s*#b5e655;\s*font-size:\s*10px;\s*font-weight:\s*950;\s*letter-spacing:\s*0\.06em;/g) || []).length,
+    1
+  );
+});
+
 test("desktop cabinet CSS keeps trainer client text shells grouped", async () => {
   const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
 

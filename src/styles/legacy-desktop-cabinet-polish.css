@@ -2129,7 +2129,8 @@ html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
   gap: 5px;
 }
 
-.trainerClientDashboardModal > header span {
+.trainerClientDashboardModal > header span,
+.profileNutritionInlinePlanHead span {
   color: #b5e655;
   font-size: 10px;
   font-weight: 950;
@@ -3197,13 +3198,6 @@ html:root[data-app-theme="warm-light"] body #root
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-}
-
-.profileNutritionInlinePlanHead span {
-  color: #b5e655;
-  font-size: 10px;
-  font-weight: 950;
-  letter-spacing: 0.06em;
 }
 
 .profileNutritionInlinePlanHead strong {

@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1121.90 KiB` raw, `113.83 KiB` gzip.
-- Latest source CSS report: `100` files, about `3273.45 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3273.35 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -1069,3 +1069,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.750`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js`, `tests/e2e/trainer-visual.spec.js` and `tests/e2e/trainer-workspace.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.751`: hid the nutrition product render fullscreen scrollbar rail while preserving scroll; the product edit action bar remains visually checked in preview and guarded by the app structure test.
 - Verification for `v.1.751`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, preview browser product edit visual check, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.752`: grouped trainer/cabinet accent micro labels in `legacy-desktop-cabinet-polish.css`; trainer dashboard modal and inline nutrition plan header labels remain guarded by the app structure test and visual coverage.
+- Verification for `v.1.752`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js`, `tests/e2e/client-nutrition-visual.spec.js`, `tests/e2e/trainer-visual.spec.js` and `tests/e2e/trainer-workspace.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
