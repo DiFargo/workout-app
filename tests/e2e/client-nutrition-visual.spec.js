@@ -242,13 +242,20 @@ test("client nutrition visual audit covers dense actions and modal entry points"
       transform: actionBarStyle?.transform || "",
       leftInset: sheet && actionBar ? Math.round(actionBar.left - sheet.left) : null,
       rightInset: sheet && actionBar ? Math.round(sheet.right - actionBar.right) : null,
-      bottomInset: sheet && actionBar ? Math.round(sheet.bottom - actionBar.bottom) : null
+      bottomInset: sheet && actionBar ? Math.round(sheet.bottom - actionBar.bottom) : null,
+      actionBarWidth: actionBar ? Math.round(actionBar.width) : null,
+      sheetWidth: sheet ? Math.round(sheet.width) : null,
+      buttonOverflow: [...document.querySelectorAll(".foodEditPageActionBar button")]
+        .map((button) => button.getBoundingClientRect())
+        .some((button) => actionBar && (button.left < actionBar.left - 1 || button.right > actionBar.right + 1))
     };
   });
   expect(editActionBarMetrics.transform).toBe("none");
   expect(editActionBarMetrics.leftInset).toBeGreaterThanOrEqual(8);
   expect(editActionBarMetrics.rightInset).toBeGreaterThanOrEqual(8);
   expect(editActionBarMetrics.bottomInset).toBeGreaterThanOrEqual(8);
+  expect(editActionBarMetrics.actionBarWidth).toBeLessThan(editActionBarMetrics.sheetWidth);
+  expect(editActionBarMetrics.buttonOverflow).toBe(false);
   await expect(page.locator(".foodEditIconPresetRow button").first()).toHaveAttribute("aria-pressed", /^(true|false)$/);
   const firstIconPreset = await page.locator(".foodEditIconPresetRow button").first().textContent();
   await page.locator(".foodEditIconManualBox input").fill(firstIconPreset || "");

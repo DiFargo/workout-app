@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1119.67 KiB` raw, `113.73 KiB` gzip.
-- Latest source CSS report: `100` files, about `3273.14 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3273.58 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -1075,3 +1075,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.753`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js` and `tests/e2e/client-harness.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.754`: grouped compact workout run bottom action panel sizing across warmup, exercise and finish states in `legacy-client-workout-flow-late.css`; the grouped owner is guarded by the app structure test.
 - Verification for `v.1.754`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.756`: grouped trainer program editor nav label typography across top, programs, program editor and workout editor bars in `legacy-trainer-program-editor-late.css`, and locked the product editor action bar inside its edit sheet in `client-food-search-final.css`; both surfaces are guarded by structure/visual coverage.
+- Verification for `v.1.756`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/trainer-workspace.spec.js` and `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

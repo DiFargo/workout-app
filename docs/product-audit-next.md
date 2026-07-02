@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.754`.
+Last updated at app version `v.1.756`.
 
 ## Evidence
 
@@ -397,6 +397,8 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 289. Trainer/cabinet accent micro labels now stay in one grouped desktop cabinet owner instead of repeating across trainer dashboard and inline nutrition plan headers.
 290. Local client harness preview now shows populated main and cabinet screens instead of sparse placeholder cards, and remains local-only outside dev.
 291. Workout run compact bottom action panel sizing now stays in one grouped owner across warmup, exercise and finish states.
+292. Trainer program editor nav labels now stay in one grouped owner across top, programs, program editor and workout editor bars.
+293. Product editor action bar now stays locked inside the edit sheet across product and dish editor flows.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

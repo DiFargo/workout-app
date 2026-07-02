@@ -32,7 +32,10 @@
   line-height: 1;
 }
 
-.programsTopActionBar .adminV3NavLabel {
+.programsTopActionBar .adminV3NavLabel,
+nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button > .adminV3NavLabel,
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button > .adminV3NavLabel,
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button > .adminV3NavLabel {
   max-width: 100%;
   font-size: 10px;
   white-space: nowrap;
@@ -56,14 +59,6 @@ nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button {
 nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button > .adminV3NavIcon {
   font-size: 21px;
   line-height: 1;
-}
-
-nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button > .adminV3NavLabel {
-  max-width: 100%;
-  font-size: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 nav.adminV3Nav.adminV3BottomBar.programsBottomBar > button.programsBottomBarDelete {
@@ -276,14 +271,6 @@ nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button > .adminV3NavIco
   line-height: 1;
 }
 
-nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button > .adminV3NavLabel {
-  max-width: 100%;
-  font-size: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button.programEditorBottomBarSave {
   color: rgba(221, 242, 173, 0.96) !important;
 }
@@ -343,14 +330,6 @@ nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button {
 nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button > .adminV3NavIcon {
   font-size: 20px;
   line-height: 1;
-}
-
-nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button > .adminV3NavLabel {
-  max-width: 100%;
-  font-size: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button.workoutEditorBottomBarDelete {

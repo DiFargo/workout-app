@@ -726,6 +726,23 @@ test("client primary final CSS keeps food action bars in the final owner", async
   );
 });
 
+test("client food search CSS keeps product edit action bar sheet-locked", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*position:\s*relative !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay \.foodEditPageActionBar\s*\{\s*position:\s*absolute !important;\s*left:\s*14px !important;\s*right:\s*14px !important;\s*bottom:\s*calc\(14px \+ env\(safe-area-inset-bottom, 0px\)\) !important;\s*width:\s*auto !important;\s*max-width:\s*none !important;\s*box-sizing:\s*border-box !important;\s*transform:\s*none !important;\s*grid-template-columns:\s*minmax\(92px, 0\.78fr\) minmax\(0, 1\.82fr\) !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.foodEditPageOverlay \.foodEditPageActionBar > button\s*\{\s*min-width:\s*0 !important;\s*max-width:\s*100% !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client primary final CSS keeps food action label typography grouped", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
@@ -3651,6 +3668,19 @@ test("trainer program editor keeps an explicit back action", async () => {
   assert.match(workspace, /export function TrainerProgramConstructor\(\{[\s\S]*?\bonBack,/);
   assert.match(workspace, /onBack\s*\?\s*\([\s\S]*?<button type="button" onClick=\{onBack\}>[\s\S]*?<ArrowLeft/);
   assert.match(managerView, /<TrainerProgramConstructor[\s\S]*?onBack=\{handleMonthProgramBack\}/);
+});
+
+test("trainer program editor CSS keeps bottom bar labels grouped", async () => {
+  const source = await readText("src/styles/legacy-trainer-program-editor-late.css");
+
+  assert.equal(
+    (source.match(/\.programsTopActionBar \.adminV3NavLabel,\s*nav\.adminV3Nav\.adminV3BottomBar\.programsBottomBar > button > \.adminV3NavLabel,\s*nav\.adminV3Nav\.adminV3BottomBar\.programEditorBottomBar > button > \.adminV3NavLabel,\s*nav\.adminV3Nav\.adminV3BottomBar\.workoutEditorBottomBar > button > \.adminV3NavLabel\s*\{\s*max-width:\s*100%;\s*font-size:\s*10px;\s*white-space:\s*nowrap;\s*overflow:\s*hidden;\s*text-overflow:\s*ellipsis;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/max-width:\s*100%;\s*font-size:\s*10px;\s*white-space:\s*nowrap;\s*overflow:\s*hidden;\s*text-overflow:\s*ellipsis;/g) || []).length,
+    1
+  );
 });
 
 test("trainer admin user selectors expose selected state", async () => {
