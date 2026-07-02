@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.745`.
+Last updated at app version `v.1.746`.
 
 ## Evidence
 
@@ -388,6 +388,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 280. Product render top action layout now stays in the final owners instead of repeating in the older stable-flow section.
 281. Food search header close button sizing now stays in the grouped close-shell owner instead of repeating in a standalone button owner.
 282. Food search header meal title-wrap layout now stays in the shared header owner instead of repeating in the home-specific owner.
+283. Nutrition AI/Zouk top-card grid layout now stays in the shared header owner instead of repeating in the collapsed inline subset owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

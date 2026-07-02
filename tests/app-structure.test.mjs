@@ -1087,6 +1087,7 @@ test("client primary final CSS keeps profile AI split cards in the final owner",
 test("client primary final CSS keeps nutrition arrow sizing in the root owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
+  assert.doesNotMatch(source, /> \.nutritionAiPlanDashboard\.collapsed\.nutritionAiPlanTopInline \.nutritionAiPlanTopCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition > \.nutritionZoukBlock \.nutritionZoukHeader\s*\{/);
   assert.equal(
     (source.match(/\.nutritionAiPlanTopCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionZoukHeader\s*\{\s*min-height:\s*88px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*62px minmax\(0, 1fr\) 24px !important;\s*align-items:\s*center !important;\s*gap:\s*14px !important;\s*padding:\s*14px 18px !important;\s*\}/g) || []).length,
     1
