@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.753`.
+Last updated at app version `v.1.754`.
 
 ## Evidence
 
@@ -396,6 +396,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 288. Nutrition product render screens now hide the mobile fullscreen scrollbar rail while keeping product editing scrollable.
 289. Trainer/cabinet accent micro labels now stay in one grouped desktop cabinet owner instead of repeating across trainer dashboard and inline nutrition plan headers.
 290. Local client harness preview now shows populated main and cabinet screens instead of sparse placeholder cards, and remains local-only outside dev.
+291. Workout run compact bottom action panel sizing now stays in one grouped owner across warmup, exercise and finish states.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

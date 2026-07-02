@@ -1327,7 +1327,9 @@
     gap: 8px !important;
   }
 
-  .workoutRunPage .warmupBottomPanel {
+  .workoutRunPage .warmupBottomPanel,
+  .workoutRunPage .exerciseActionPanel,
+  .workoutRunPage .workoutFinishActionPanel {
     left: 10px;
     right: 10px;
     width: calc(100vw - 20px);
@@ -1850,13 +1852,6 @@
     border-radius: 30px !important;
   }
 
-  .workoutRunPage .exerciseActionPanel {
-    left: 10px;
-    right: 10px;
-    width: calc(100vw - 20px);
-    padding-inline: 9px;
-  }
-
   .workoutRunPage .exerciseActionPanel .exercisePrevButton,
   .workoutRunPage .exerciseActionPanel .exerciseNextButton {
     padding-inline: 8px !important;
@@ -2164,12 +2159,6 @@
     border-radius: 30px !important;
   }
 
-  .workoutRunPage .workoutFinishActionPanel {
-    left: 10px;
-    right: 10px;
-    width: calc(100vw - 20px);
-    padding-inline: 9px;
-  }
 }
 
 /* UNIFIED CLIENT WORKOUT STAGE FRAME V207 */
