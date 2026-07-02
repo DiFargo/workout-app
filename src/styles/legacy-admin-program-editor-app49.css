@@ -428,16 +428,20 @@
   padding: 0;
 }
 
-.adminProgramEmptyDay {
-  min-height: 260px;
-  border-radius: 22px;
-  border: 1px dashed rgba(127,159,58,.24);
+.adminProgramEmptyDay,
+.adminProgramEmptyExerciseList {
   background: rgba(127,159,58,.055);
   display: grid;
   place-content: center;
   justify-items: center;
   gap: 8px;
   text-align: center;
+}
+
+.adminProgramEmptyDay {
+  min-height: 260px;
+  border-radius: 22px;
+  border: 1px dashed rgba(127,159,58,.24);
   padding: 24px;
 }
 
@@ -1431,14 +1435,8 @@
 
 .adminProgramEmptyExerciseList {
   min-height: 220px;
-  display: grid;
-  place-content: center;
-  justify-items: center;
-  gap: 8px;
-  text-align: center;
   border-radius: 20px;
   border: 1px dashed rgba(127,159,58,.25);
-  background: rgba(127,159,58,.055);
   padding: 22px;
 }
 

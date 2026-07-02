@@ -3358,6 +3358,19 @@ test("legacy admin program editor CSS keeps empty-state typography grouped", asy
   );
 });
 
+test("legacy admin program editor CSS keeps empty-state shells grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramEmptyDay,\s*\.adminProgramEmptyExerciseList\s*\{\s*background:\s*rgba\(127,159,58,\.055\);\s*display:\s*grid;\s*place-content:\s*center;\s*justify-items:\s*center;\s*gap:\s*8px;\s*text-align:\s*center;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/background:\s*rgba\(127,159,58,\.055\);\s*display:\s*grid;\s*place-content:\s*center;\s*justify-items:\s*center;\s*gap:\s*8px;\s*text-align:\s*center;/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 
