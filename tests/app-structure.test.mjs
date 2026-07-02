@@ -3285,6 +3285,19 @@ test("legacy admin program editor CSS keeps micro-label typography grouped", asy
   );
 });
 
+test("legacy admin program editor CSS keeps stat labels grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramStatsRow span,\s*\.adminProgramGridStats span\s*\{\s*display:\s*block;\s*color:\s*rgba\(255,255,255,\.45\);\s*font-size:\s*11px;\s*font-weight:\s*900;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/display:\s*block;\s*color:\s*rgba\(255,255,255,\.45\);\s*font-size:\s*11px;\s*font-weight:\s*900;/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 

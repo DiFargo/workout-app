@@ -136,7 +136,8 @@
   background: rgba(255,255,255,.032);
 }
 
-.adminProgramStatsRow span {
+.adminProgramStatsRow span,
+.adminProgramGridStats span {
   display: block;
   color: rgba(255,255,255,.45);
   font-size: 11px;
@@ -1148,13 +1149,6 @@
   border-radius: 20px;
   background: rgba(255,255,255,.026);
   border: 1px solid rgba(255,255,255,.052);
-}
-
-.adminProgramGridStats span {
-  display: block;
-  color: rgba(255,255,255,.45);
-  font-size: 11px;
-  font-weight: 900;
 }
 
 .adminProgramGridStats strong {
