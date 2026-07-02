@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.779`.
+Last updated at app version `v.1.780`.
 
 ## Evidence
 
@@ -422,6 +422,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 314. Admin program editor empty-state typography now stays in one grouped owner.
 315. Admin program editor empty-state shell alignment now stays in one grouped owner.
 316. Client main and cabinet cards keep readable mobile text spacing without avatar/text collisions or clipped key labels.
+317. Client main menu and cabinet restore the `v.1.648` card composition: standalone greeting, main training summary/progress/measurements, and cabinet action list.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

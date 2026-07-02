@@ -52,11 +52,17 @@ async function expectTapTargets(page, selectors, minSize = 40) {
   expect(failures).toEqual([]);
 }
 
-async function expectPrimaryChrome(page, pageTestId) {
+async function expectPrimaryChrome(page, pageTestId, mode) {
   await expect(page.getByTestId(pageTestId)).toBeVisible();
   await expect(page.locator(".clientPageVersionBadge")).toBeVisible();
   await expect(page.locator(".clientCorePageTitle")).toBeVisible();
-  await expect(page.locator(".profileMainSummaryGrid article")).toHaveCount(2);
+  if (mode === "main") {
+    await expect(page.locator(".clientCorePageTitle")).toHaveText("Главное меню");
+    await expect(page.locator(".profileMainSummaryGrid article")).toHaveCount(2);
+  } else {
+    await expect(page.locator(".clientCorePageTitle")).toHaveText("Личный кабинет");
+    await expect(page.locator(".profileMainSummaryGrid article")).toHaveCount(0);
+  }
   await expect(page.getByTestId("client-bottom-nav")).toBeVisible();
   await expectTapTargets(page, [".clientBottomNav button"]);
   await expectNoHorizontalOverflow(page);
@@ -64,7 +70,7 @@ async function expectPrimaryChrome(page, pageTestId) {
 
 async function expectMainDashboardContent(page) {
   await expect(page.locator(".profileAiHero")).toBeVisible();
-  await expect(page.locator(".profileAiStatsRow")).toBeVisible();
+  await expect(page.locator(".profileAiSplitCards")).toBeVisible();
   await expect(page.locator(".profileAiCoachInsight")).toBeVisible();
   await expect(page.locator(".mainMeasurementSnapshot")).toBeVisible();
 }
@@ -205,7 +211,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
   await page.goto("/?clientHarness=1");
-  await expectPrimaryChrome(page, "client-harness-main");
+  await expectPrimaryChrome(page, "client-harness-main", "main");
   await expectMainDashboardContent(page);
   await expectMainMeasurementSnapshotLayout(page);
   await expectClientCardTextReadable(page, "main");
@@ -214,7 +220,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   assertNoRuntimeErrors();
 
   await clickClientCabinetNav(page);
-  await expectPrimaryChrome(page, "client-harness-cabinet");
+  await expectPrimaryChrome(page, "client-harness-cabinet", "cabinet");
   await expectCabinetContent(page);
   await expectClientCardTextReadable(page, "cabinet");
   await expectContentAboveBottomNav(page);

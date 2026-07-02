@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Bell, RefreshCw } from "lucide-react";
 import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
@@ -254,7 +255,7 @@ function getHarnessWeekDates(selectedKey) {
   return buildNutritionWeekDates(selectedKey);
 }
 
-function HarnessHero({ isMainDashboard }) {
+function HarnessHero() {
   return (
     <div className="profileAiHero">
       <div className="profileAiAvatarWrap">
@@ -267,8 +268,7 @@ function HarnessHero({ isMainDashboard }) {
       </div>
 
       <div className="profileAiHeroText">
-        {!isMainDashboard && <span>ЛИЧНЫЙ КАБИНЕТ</span>}
-        <h1>{isMainDashboard ? "Добрый день, атлет" : "Профиль клиента"} 👋</h1>
+        <h1>Добрый день, атлет 👋</h1>
       </div>
     </div>
   );
@@ -299,12 +299,12 @@ function HarnessMainSummary({ compact = false }) {
 
       <div className="profileMainSummaryGrid profileAiSplitCards">
         <article className="profileAiMiniCard">
-          <span>Твоя цель</span>
-          <strong>Рекомпозиция</strong>
+          <span>Последняя тренировка</span>
+          <strong>27 июня</strong>
         </article>
         <article className="profileAiMiniCard">
           <span>Следующая тренировка</span>
-          <strong>Завтра</strong>
+          <strong>4 июля</strong>
         </article>
       </div>
     </>
@@ -704,8 +704,32 @@ export default function ClientE2EHarness() {
         data-testid={`client-harness-${activeTab}`}
       >
         <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
-        <section className="profileUnifiedCard profileAiDashboardCard profileCabinetSection">
+        {activeTab === "main" && (
+          <button
+            type="button"
+            className="menuRefreshIconBtn"
+            aria-label="Обновить страницу"
+            title="Обновить страницу"
+          >
+            <RefreshCw aria-hidden="true" />
+          </button>
+        )}
+        {activeTab === "cabinet" ? (
+          <div className="profileCabinetTitleRow">
+            <h1 className={titleClass}>{title}</h1>
+            <button
+              type="button"
+              className="profileTrainerNotificationsButton"
+              aria-label="Уведомления тренера"
+              title="Уведомления тренера"
+            >
+              <Bell aria-hidden="true" />
+            </button>
+          </div>
+        ) : (
           <h1 className={titleClass}>{title}</h1>
+        )}
+        <section className="profileUnifiedCard profileAiDashboardCard profileCabinetSection">
           {children}
         </section>
         {renderBottomBar(activeTab, { className: "mainMenuBottomBar profileBottomTabBar" })}
@@ -972,11 +996,9 @@ export default function ClientE2EHarness() {
       durationSeconds: 2700
     }));
 
-    return renderHarnessChrome("cabinet", "Кабинет", (
+    return renderHarnessChrome("cabinet", "Личный кабинет", (
       <>
-        <p>Профиль, замеры, календарь и история тренировок.</p>
-        <HarnessHero isMainDashboard={false} />
-        <HarnessMainSummary compact />
+        <HarnessHero />
         <HarnessCabinetActions
           onOpenPhotos={() => setCabinetPhotosOpen(true)}
           onOpenMeasurements={() => setCabinetMeasurementsOpen(true)}
@@ -1130,11 +1152,10 @@ export default function ClientE2EHarness() {
     ));
   }
 
-  return renderHarnessChrome("main", "Главная", (
+  return renderHarnessChrome("main", "Главное меню", (
     <>
-      <p>Сегодня в фокусе питание, тренировка и прогресс.</p>
-      <HarnessHero isMainDashboard />
-      <HarnessMainSummary />
+      <HarnessHero />
+      <HarnessMainSummary compact />
       <HarnessProgressInsight />
       <HarnessMeasurementSnapshot />
     </>

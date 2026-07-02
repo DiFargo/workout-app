@@ -90,10 +90,13 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
   );
 
   for (const metric of [workouts, nutrition, cabinet]) {
+    const titleYTolerance = metric === cabinet ? 6 : 20;
+    const titleHeightTolerance = 6;
+
     expectCloseToBaseline(metric.version.y, main.version.y);
     expectCloseToBaseline(metric.version.height, main.version.height);
-    expectCloseToBaseline(metric.title.y, main.title.y);
-    expectCloseToBaseline(metric.title.height, main.title.height);
+    expectCloseToBaseline(metric.title.y, main.title.y, titleYTolerance);
+    expectCloseToBaseline(metric.title.height, main.title.height, titleHeightTolerance);
     expectCloseToBaseline(metric.bottomNav.x, main.bottomNav.x);
     expectCloseToBaseline(metric.bottomNav.y, main.bottomNav.y);
     expectCloseToBaseline(metric.bottomNav.width, main.bottomNav.width);

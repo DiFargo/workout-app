@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.779`.
+Last updated at app version `v.1.780`.
 
 ## Stable Now
 
@@ -14,6 +14,7 @@ Last updated at app version `v.1.779`.
 - Client loading fallback CSS now shares warm-light panel/spinner shells with the base fallback owner, guarded by app structure tests.
 - Client, trainer, admin hub and admin internals harnesses cover the main local visual smoke surfaces.
 - Client harness preview is available on local dev/preview only and now renders populated main and cabinet visual surfaces for manual checks.
+- Client main menu and cabinet now use the restored `v.1.648` card composition in both production route and local harness preview.
 - Client main measurement snapshot is guarded against mobile header/body overlap in the primary visual audit.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
