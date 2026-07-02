@@ -3311,6 +3311,27 @@ test("legacy admin program editor CSS keeps template layouts grouped", async () 
   );
 });
 
+test("legacy admin program editor CSS keeps form controls grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramTemplateDock input,\s*\.adminProgramTemplateDock select,\s*\.adminProgramWorkoutHeader input,\s*\.adminInspectorBody input,\s*\.adminProgramTemplateStrip input,\s*\.adminProgramTemplateStrip select,\s*\.adminProgramDayActions input,\s*\.adminExerciseNameCell input,\s*\.adminExerciseSetsCell input,\s*\.adminExerciseVideoCell input\s*\{\s*width:\s*100%;\s*border:\s*1px solid rgba\(255,255,255,\.075\);\s*color:\s*#fff;\s*padding:\s*0 12px;\s*font-weight:\s*850;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/width:\s*100%;\s*border:\s*1px solid rgba\(255,255,255,\.075\);\s*color:\s*#fff;\s*padding:\s*0 12px;\s*font-weight:\s*850;/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.adminProgramTemplateDock input,\s*\.adminProgramTemplateDock select,\s*\.adminProgramWorkoutHeader input,\s*\.adminInspectorBody input\s*\{\s*min-height:\s*42px;\s*border-radius:\s*14px;\s*background:\s*rgba\(0,0,0,\.2\);\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.adminProgramTemplateStrip input,\s*\.adminProgramTemplateStrip select,\s*\.adminProgramDayActions input,\s*\.adminExerciseNameCell input,\s*\.adminExerciseSetsCell input,\s*\.adminExerciseVideoCell input\s*\{\s*min-height:\s*40px;\s*border-radius:\s*13px;\s*background:\s*rgba\(0,0,0,\.22\);\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 

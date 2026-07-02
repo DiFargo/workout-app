@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.774`.
+Last updated at app version `v.1.775`.
 
 ## Stable Now
 
@@ -499,6 +499,7 @@ Last updated at app version `v.1.774`.
 - Legacy admin program editor CSS now groups muted header paragraph typography in one owner.
 - Legacy admin program editor CSS now groups accent button states across editor surfaces.
 - Legacy admin program editor CSS now groups the shared topbar shell across editor surfaces.
+- Legacy admin program editor CSS now groups the shared form-control shell across editor surfaces.
 - Client primary final CSS keeps profile AI goal-stat font sizing in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps workout deck spacing rules in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps food search home child layout and recent-card rules in guarded owners after removing duplicate blocks.

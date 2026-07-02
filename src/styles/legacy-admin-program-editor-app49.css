@@ -174,15 +174,27 @@
 .adminProgramTemplateDock input,
 .adminProgramTemplateDock select,
 .adminProgramWorkoutHeader input,
-.adminInspectorBody input {
-  min-height: 42px;
+.adminInspectorBody input,
+.adminProgramTemplateStrip input,
+.adminProgramTemplateStrip select,
+.adminProgramDayActions input,
+.adminExerciseNameCell input,
+.adminExerciseSetsCell input,
+.adminExerciseVideoCell input {
   width: 100%;
-  border-radius: 14px;
   border: 1px solid rgba(255,255,255,.075);
-  background: rgba(0,0,0,.2);
   color: #fff;
   padding: 0 12px;
   font-weight: 850;
+}
+
+.adminProgramTemplateDock input,
+.adminProgramTemplateDock select,
+.adminProgramWorkoutHeader input,
+.adminInspectorBody input {
+  min-height: 42px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.2);
 }
 
 .adminProgramLayout {
@@ -1181,13 +1193,8 @@
 .adminExerciseSetsCell input,
 .adminExerciseVideoCell input {
   min-height: 40px;
-  width: 100%;
   border-radius: 13px;
-  border: 1px solid rgba(255,255,255,.075);
   background: rgba(0,0,0,.22);
-  color: #fff;
-  padding: 0 12px;
-  font-weight: 850;
 }
 
 .adminProgramGridSection,
