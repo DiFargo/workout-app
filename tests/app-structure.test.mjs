@@ -3317,11 +3317,12 @@ test("profile dashboard CSS keeps Telegram shells grouped", async () => {
   assert.equal(
     (
       source.match(
-        /\.profileAvatarBig img,\s*\.profileTelegramAvatar img,\s*\.adminClientTelegramAvatar img\s*\{\s*width:\s*100%;\s*height:\s*100%;\s*object-fit:\s*cover;\s*\}/g
+        /\.profileAvatarBig img,\s*\.profileTelegramAvatar img,\s*\.adminClientTelegramAvatar img,\s*\.profileSettingsTelegramAvatar img,\s*\.profileTelegramManageAvatar img\s*\{\s*width:\s*100%;\s*height:\s*100%;\s*object-fit:\s*cover;\s*\}/g
       ) || []
     ).length,
     1
   );
+  assert.equal((source.match(/width:\s*100%;\s*height:\s*100%;\s*object-fit:\s*cover;/g) || []).length, 1);
   assert.equal(
     (
       source.match(
