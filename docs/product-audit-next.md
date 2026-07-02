@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.762`.
+Last updated at app version `v.1.763`.
 
 ## Evidence
 
@@ -405,6 +405,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 297. Food editor details and portion-unit focus states now stay in one grouped owner.
 298. Profile Telegram/avatar image cover rules now stay in one grouped owner.
 299. Admin nutrition month summary-below typography and mobile card sizing now stay in grouped summary owners.
+300. AI Coach nutrition plan week and two-column grids now stay in one grouped owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

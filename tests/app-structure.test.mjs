@@ -429,6 +429,19 @@ test("client loading fallback CSS keeps warm-light panel and spinner shells grou
   assert.equal((source.match(/animation:\s*clientRouteFallbackSpin 0\.78s linear infinite;/g) || []).length, 1);
 });
 
+test("AI coach CSS keeps nutrition plan grids grouped", async () => {
+  const source = await readText("src/styles/ai-coach-lazy.css");
+
+  assert.equal(
+    (source.match(/\.aiNutritionWeeksGrid,\s*\.aiNutritionTwoCol\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*1fr 1fr;\s*gap:\s*9px;\s*margin-top:\s*12px;\s*\}/g) || []).length,
+    1
+  );
+  const standaloneBlocks = [...source.matchAll(/([^{}]+)\{([^{}]+)\}/g)]
+    .map((match) => match[1].trim().replace(/\s+/g, " "));
+
+  assert.equal(standaloneBlocks.includes(".aiNutritionTwoCol"), false);
+});
+
 test("legacy registration CSS keeps first setup active choices grouped", async () => {
   const source = await readText("src/styles/legacy-registration-accessibility.css");
 
