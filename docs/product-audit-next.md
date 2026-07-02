@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.768`.
+Last updated at app version `v.1.769`.
 
 ## Evidence
 
@@ -411,6 +411,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 303. Admin program editor stats row/grid layout now stays in one grouped owner.
 304. Admin program editor shared max-width shell now stays in one grouped owner.
 305. Admin program editor muted header paragraph typography now stays in one grouped owner.
+306. Admin program editor accent button states now stay in one grouped owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

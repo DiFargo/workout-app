@@ -3242,6 +3242,19 @@ test("legacy admin program editor CSS keeps muted header paragraphs grouped", as
   );
 });
 
+test("legacy admin program editor CSS keeps accent button states grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramTopActions button:first-child,\s*\.adminProgramTemplateDock button,\s*\.adminProgramWorkoutHeader button:last-child,\s*\.adminProgramEmptyDay button,\s*\.adminInspectorPreviewButton,\s*\.adminProgramGridSave,\s*\.adminProgramTemplateStrip button,\s*\.adminProgramGridSectionHead button,\s*\.adminProgramEmptyExerciseList button\s*\{\s*border-color:\s*rgba\(127,159,58,\.28\);\s*background:\s*rgba\(127,159,58,\.14\);\s*color:\s*rgba\(235,250,195,\.95\);\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.adminProgramGridSave,\s*\.adminProgramTemplateStrip button,\s*\.adminProgramGridSectionHead button,\s*\.adminProgramEmptyExerciseList button/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 

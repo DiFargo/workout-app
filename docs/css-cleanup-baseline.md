@@ -7,7 +7,7 @@ Current verified budget:
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
 - Latest main CSS bundle: about `1118.73 KiB` raw, `113.71 KiB` gzip.
-- Latest source CSS report: `100` files, about `3271.11 KiB` total source CSS.
+- Latest source CSS report: `100` files, about `3270.99 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -1101,3 +1101,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.767`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.768`: grouped admin program editor muted header paragraph typography across editor and grid surfaces in `legacy-admin-program-editor-app49.css`; the grouped owner is guarded by the app structure test.
 - Verification for `v.1.768`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.769`: grouped admin program editor accent button states across editor and grid surfaces in `legacy-admin-program-editor-app49.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.769`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

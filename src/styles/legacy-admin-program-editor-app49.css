@@ -87,7 +87,11 @@
 .adminProgramTemplateDock button,
 .adminProgramWorkoutHeader button:last-child,
 .adminProgramEmptyDay button,
-.adminInspectorPreviewButton {
+.adminInspectorPreviewButton,
+.adminProgramGridSave,
+.adminProgramTemplateStrip button,
+.adminProgramGridSectionHead button,
+.adminProgramEmptyExerciseList button {
   border-color: rgba(127,159,58,.28);
   background: rgba(127,159,58,.14);
   color: rgba(235,250,195,.95);
@@ -1144,15 +1148,6 @@
   margin: 4px 0 2px;
   font-size: 31px;
   line-height: 1;
-}
-
-.adminProgramGridSave,
-.adminProgramTemplateStrip button,
-.adminProgramGridSectionHead button,
-.adminProgramEmptyExerciseList button {
-  border-color: rgba(127,159,58,.28);
-  background: rgba(127,159,58,.14);
-  color: rgba(235,250,195,.95);
 }
 
 .adminProgramGridStats div {
