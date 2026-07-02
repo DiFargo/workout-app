@@ -3425,11 +3425,19 @@ test("client nutrition grid CSS does not keep exact duplicate blocks", async () 
   assert.deepEqual(duplicateBlocks, []);
   assert.match(
     source,
-    /\.profileDashboardPage\.clientCorePageMain \.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.clientCorePageNutrition \.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutMenuBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.clientBottomNav > button\.active\s*\{\s*background:\s*#f0edff !important;\s*border-color:\s*#ded7ff !important;\s*color:\s*#5d43e8 !important;\s*box-shadow:\s*inset 0 1px 0 rgba\(255, 255, 255, 0\.9\) !important;\s*\}/
+    /\.profileDashboardPage\.clientCorePageMain \.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.clientCorePageNutrition \.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionBottomTabBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutMenuBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.clientBottomNav > button\.active\s*\{\s*background:\s*#f0edff !important;\s*border-color:\s*#ded7ff !important;\s*color:\s*#5d43e8 !important;\s*box-shadow:\s*inset 0 1px 0 rgba\(255, 255, 255, 0\.9\) !important;\s*\}/
   );
   assert.doesNotMatch(
     source,
     /\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutMenuBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button\.active\s*\{\s*background:\s*#f0edff !important;\s*border-color:\s*#ded7ff !important;\s*color:\s*#5d43e8 !important;\s*box-shadow:\s*inset 0 1px 0 rgba\(255, 255, 255, 0\.9\) !important;\s*\}/
+  );
+  assert.equal(
+    (source.match(/\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionBottomTabBar\.clientBottomNav > button\.active/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionBottomTabBar\.clientBottomNav > button svg/g) || []).length,
+    1
   );
   assert.equal(
     (

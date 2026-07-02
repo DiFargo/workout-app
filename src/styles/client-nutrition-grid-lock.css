@@ -148,6 +148,7 @@
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button.active,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .clientBottomNav > button.active,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button.active,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button.active,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button.active {
     background: #f0edff !important;
@@ -179,6 +180,7 @@
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button svg,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .clientBottomNav > button svg,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button svg,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button svg,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button svg {
     width: 24px !important;
@@ -2743,13 +2745,6 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
     box-sizing: border-box !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button.active {
-    background: #f0edff !important;
-    border-color: #ded7ff !important;
-    color: #5d43e8 !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button span {
     width: 24px !important;
     height: 30px !important;
@@ -2759,13 +2754,6 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
     color: currentColor !important;
     font-size: 25px !important;
     line-height: 25px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button svg {
-    width: 24px !important;
-    height: 24px !important;
-    color: currentColor !important;
-    stroke-width: 2.4px !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button strong {
