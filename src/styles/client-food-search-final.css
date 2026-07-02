@@ -352,20 +352,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
     #f8f9ff !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductTopActions {
-  position: absolute !important;
-  top: 46px !important;
-  right: var(--food-product-x) !important;
-  height: 48px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 12px !important;
-  pointer-events: auto !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductTopAction {
   width: 48px !important;
   min-width: 48px !important;
