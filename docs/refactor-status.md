@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.761`.
+Last updated at app version `v.1.762`.
 
 ## Stable Now
 
@@ -486,6 +486,7 @@ Last updated at app version `v.1.761`.
 - Client render target CSS now keeps main stats compact height in one final owner after removing late height-only duplicate locks.
 - Legacy food editor CSS now groups details input/textarea and portion-unit select focus states in one owner.
 - Profile dashboard Telegram CSS now groups avatar image cover rules across profile, settings and manage surfaces.
+- Admin client dashboard polish CSS now groups nutrition month summary-below typography and mobile card sizing with the summary owners.
 - Client primary final CSS keeps profile AI goal-stat font sizing in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps workout deck spacing rules in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps food search home child layout and recent-card rules in guarded owners after removing duplicate blocks.

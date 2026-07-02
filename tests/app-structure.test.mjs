@@ -3155,6 +3155,19 @@ test("admin client dashboard polish CSS keeps nutrition month summary shells gro
     (source.match(/\.adminNutritionMonthSummary span,\s*\.adminNutritionMonthSummaryBelow span\s*\{\s*color:\s*rgba\(255,255,255,\.48\) !important;\s*font-size:\s*11px !important;\s*font-weight:\s*900 !important;\s*text-transform:\s*uppercase !important;\s*letter-spacing:\s*\.04em !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (source.match(/\.adminNutritionMonthSummary strong,\s*\.adminNutritionMonthSummaryBelow strong\s*\{\s*color:\s*#fff !important;\s*font-size:\s*18px !important;\s*line-height:\s*1\.1 !important;\s*margin-top:\s*6px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.adminNutritionMonthSummary small,\s*\.adminNutritionMonthSummaryBelow small\s*\{\s*color:\s*rgba\(195,255,126,\.72\) !important;\s*font-size:\s*12px !important;\s*\}/g) || []).length,
+    1
+  );
+  const standaloneSummaryBelowBlocks = [...source.matchAll(/([^{}]+)\{([^{}]+)\}/g)]
+    .map((match) => match[1].trim().replace(/\s+/g, " "));
+
+  assert.equal(standaloneSummaryBelowBlocks.includes(".adminNutritionMonthSummaryBelow strong"), false);
+  assert.equal(standaloneSummaryBelowBlocks.includes(".adminNutritionMonthSummaryBelow small"), false);
 });
 
 test("legacy admin program editor CSS has no empty media blocks", async () => {
