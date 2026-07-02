@@ -1028,9 +1028,9 @@ test("client primary final CSS keeps profile AI hero compact cluster in root own
     (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileDashboardPage\.clientCorePageMain \.profileAiAvatar,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatar\s*\{\s*width:\s*72px !important;\s*height:\s*72px !important;\s*min-width:\s*72px !important;\s*min-height:\s*72px !important;\s*\}/g) || []).length,
     1
   );
-  assert.equal(
-    (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileAiAvatar\s*\{\s*width:\s*70px !important;\s*height:\s*70px !important;\s*min-width:\s*70px !important;\s*min-height:\s*70px !important;\s*\}/g) || []).length,
-    1
+  assert.doesNotMatch(
+    source,
+    /\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileAiAvatar\s*\{\s*width:\s*70px !important;\s*height:\s*70px !important;\s*min-width:\s*70px !important;\s*min-height:\s*70px !important;\s*\}/
   );
   assert.equal(
     (source.match(/\.profileAiHeroText h1,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHeroText h1\s*\{\s*margin:\s*0 !important;\s*color:\s*var\(--client-ink\) !important;\s*-webkit-text-fill-color:\s*var\(--client-ink\) !important;\s*font-size:\s*21px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.12 !important;\s*letter-spacing:\s*0 !important;\s*text-shadow:\s*none !important;\s*\}/g) || []).length,
@@ -1339,6 +1339,10 @@ test("client render target CSS keeps profile hero locks in one owner", async () 
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero\s*\{\s*border-bottom-left-radius:\s*0 !important;\s*border-bottom-right-radius:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileAiAvatar\s*\{\s*width:\s*70px !important;\s*height:\s*70px !important;\s*min-width:\s*70px !important;\s*min-height:\s*70px !important;\s*\}/g) || []).length,
     1
   );
   assert.equal(

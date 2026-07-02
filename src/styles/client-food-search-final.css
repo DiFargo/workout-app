@@ -1346,6 +1346,7 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
   right: 14px !important;
   bottom: 14px !important;
   width: auto !important;
+  transform: none !important;
 }
 
 /* Product editor close/save and bottom bar occlusion lock v167 */

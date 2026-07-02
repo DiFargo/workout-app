@@ -231,6 +231,24 @@ test("client nutrition visual audit covers dense actions and modal entry points"
 
   await page.locator(".foodProductTopEdit").click();
   await expect(page.locator(".foodEditPageSheet")).toBeVisible();
+  const editActionBarMetrics = await page.evaluate(() => {
+    const sheet = document.querySelector(".foodEditPageSheet")?.getBoundingClientRect();
+    const actionBar = document.querySelector(".foodEditPageActionBar")?.getBoundingClientRect();
+    const actionBarStyle = document.querySelector(".foodEditPageActionBar")
+      ? window.getComputedStyle(document.querySelector(".foodEditPageActionBar"))
+      : null;
+
+    return {
+      transform: actionBarStyle?.transform || "",
+      leftInset: sheet && actionBar ? Math.round(actionBar.left - sheet.left) : null,
+      rightInset: sheet && actionBar ? Math.round(sheet.right - actionBar.right) : null,
+      bottomInset: sheet && actionBar ? Math.round(sheet.bottom - actionBar.bottom) : null
+    };
+  });
+  expect(editActionBarMetrics.transform).toBe("none");
+  expect(editActionBarMetrics.leftInset).toBeGreaterThanOrEqual(8);
+  expect(editActionBarMetrics.rightInset).toBeGreaterThanOrEqual(8);
+  expect(editActionBarMetrics.bottomInset).toBeGreaterThanOrEqual(8);
   await expect(page.locator(".foodEditIconPresetRow button").first()).toHaveAttribute("aria-pressed", /^(true|false)$/);
   const firstIconPreset = await page.locator(".foodEditIconPresetRow button").first().textContent();
   await page.locator(".foodEditIconManualBox input").fill(firstIconPreset || "");

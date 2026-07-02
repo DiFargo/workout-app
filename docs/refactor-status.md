@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.737`.
+Last updated at app version `v.1.739`.
 
 ## Stable Now
 
@@ -348,6 +348,7 @@ Last updated at app version `v.1.737`.
 - Nutrition calorie row child transforms now stay in the micro-align owner, guarded by app structure tests.
 - Nutrition page compact padding now stays in the compact premium owner, guarded by app structure tests.
 - Nutrition render-grid dot sizing now stays in the wider mobile calories owner, guarded by app structure tests.
+- Profile AI avatar broad sizing now stays in the render-target owner, guarded by app structure tests.
 - Client nutrition grid CSS now keeps progress insight spacing in the final owner, guarded by app structure tests.
 - Client primary final CSS now keeps bottom navigation sizing in the later owner, guarded by app structure tests.
 - Client primary final CSS now keeps shared bottom/action bar sizing in the later mobile owner, guarded by app structure tests.
@@ -462,6 +463,7 @@ Last updated at app version `v.1.737`.
 - Client primary final CSS no longer keeps overwritten food recent-card sizing or AI stats centering no-op rules before later owners.
 - Client primary final CSS no longer keeps overwritten pseudo reset, hero radius, pointer-only, or top variable no-op rules before later owners.
 - Client nutrition grid, render-target, and food editor CSS no longer keep small overwritten typography/layout no-op blocks before later owners.
+- Nutrition product edit modal action bar now resets the inherited centered-bar transform in the card-sheet lock, with visual coverage guarding the bar inside the sheet.
 - Client primary final CSS keeps profile AI goal-stat font sizing in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps workout deck spacing rules in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps food search home child layout and recent-card rules in guarded owners after removing duplicate blocks.
@@ -494,7 +496,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1121.90 KiB` raw, `113.83 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3277.29 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3277.05 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 

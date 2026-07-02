@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.737`.
+Last updated at app version `v.1.739`.
 
 ## Evidence
 
@@ -380,6 +380,8 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 272. Nutrition calorie row child transforms now stay in the micro-align owner instead of carrying older base and narrow-screen transform owners.
 273. Nutrition page compact padding now stays in the compact premium owner instead of repeating the same padding inside the older mobile media block.
 274. Nutrition render-grid dot sizing now stays in the wider mobile calories owner instead of repeating the same dot size inside the narrower tail block.
+275. Profile AI avatar broad sizing now stays in the render-target owner instead of repeating the same warm-light avatar lock in the primary layer.
+276. Product edit modal action bar now resets the inherited centered-bar transform so the bar stays inside the sheet.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.
