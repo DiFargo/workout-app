@@ -422,21 +422,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodPro
   display: none !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowTitle h2 {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  color: var(--food-product-title) !important;
-  -webkit-text-fill-color: var(--food-product-title) !important;
-  font-weight: 900 !important;
-  letter-spacing: 0 !important;
-  text-align: left !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader .foodEditInlineMealHeader {
   grid-area: meal !important;
   min-width: 0 !important;
