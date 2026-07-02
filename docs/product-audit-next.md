@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.736`.
+Last updated at app version `v.1.737`.
 
 ## Evidence
 
@@ -379,6 +379,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 271. Nutrition calorie pixel-meter width now stays in the summary calories owner instead of repeating the same width in the header mobile block.
 272. Nutrition calorie row child transforms now stay in the micro-align owner instead of carrying older base and narrow-screen transform owners.
 273. Nutrition page compact padding now stays in the compact premium owner instead of repeating the same padding inside the older mobile media block.
+274. Nutrition render-grid dot sizing now stays in the wider mobile calories owner instead of repeating the same dot size inside the narrower tail block.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

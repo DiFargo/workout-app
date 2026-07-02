@@ -2414,14 +2414,23 @@ test("legacy food search calories CSS keeps row transforms in the micro owner", 
 
 test("legacy food search calories CSS keeps compact dots in the latest mobile owner", async () => {
   const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
+  const tailSource = await readText("src/styles/legacy-client-workout-plan-tail.css");
 
   assert.equal(
     (source.match(/\.nutritionCaloriesRenderGrid span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/g) || []).length,
     1
   );
+  assert.equal(
+    (tailSource.match(/\.nutritionCaloriesRenderGrid span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/g) || []).length,
+    0
+  );
   assert.match(
     source,
     /NUTRITION CALORIES RENDER CARD[\s\S]*?@media\s*\(max-width:\s*480px\)[\s\S]*?\.nutritionCaloriesRenderGrid span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/
+  );
+  assert.match(
+    tailSource,
+    /@media\s*\(max-width:\s*390px\)[\s\S]*?\.nutritionCaloriesRenderGrid\s*\{\s*width:\s*50px !important;\s*min-width:\s*50px !important;[\s\S]*?gap:\s*4px !important;\s*\}[\s\S]*?\.nutritionCaloriesRenderCol span\s*\{\s*font-size:\s*11\.8px !important;/
   );
 });
 

@@ -514,11 +514,6 @@
     gap: 4px !important;
   }
 
-  .nutritionCaloriesRenderGrid span {
-    width: 7px !important;
-    height: 7px !important;
-  }
-
   .nutritionCaloriesRenderCol span {
     font-size: 11.8px !important;
     letter-spacing: -0.72px !important;
