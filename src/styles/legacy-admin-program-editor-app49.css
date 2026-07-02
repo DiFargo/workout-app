@@ -33,7 +33,13 @@
 .adminProgramDaysPanel button,
 .adminProgramWorkoutHeader button,
 .adminProgramEmptyDay button,
-.adminInspectorPreviewButton {
+.adminInspectorPreviewButton,
+.adminProgramGridBack,
+.adminProgramGridSave,
+.adminProgramTemplateStrip button,
+.adminProgramDayActions button,
+.adminProgramGridSectionHead button,
+.adminProgramEmptyExerciseList button {
   min-height: 42px;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,.07);
@@ -1148,21 +1154,6 @@
   color: rgba(255,255,255,.48);
   font-size: 12px;
   font-weight: 850;
-}
-
-.adminProgramGridBack,
-.adminProgramGridSave,
-.adminProgramTemplateStrip button,
-.adminProgramDayActions button,
-.adminProgramGridSectionHead button,
-.adminProgramEmptyExerciseList button {
-  min-height: 42px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.07);
-  background: rgba(255,255,255,.045);
-  color: rgba(255,255,255,.82);
-  font-weight: 950;
-  cursor: pointer;
 }
 
 .adminProgramGridSave,

@@ -3189,6 +3189,20 @@ test("legacy admin program editor CSS has no empty media blocks", async () => {
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
+test("legacy admin program editor CSS keeps shared button shell grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramBack,\s*\.adminProgramTopActions button,\s*\.adminProgramTemplateDock button,\s*\.adminProgramDaysPanel button,\s*\.adminProgramWorkoutHeader button,\s*\.adminProgramEmptyDay button,\s*\.adminInspectorPreviewButton,\s*\.adminProgramGridBack,\s*\.adminProgramGridSave,\s*\.adminProgramTemplateStrip button,\s*\.adminProgramDayActions button,\s*\.adminProgramGridSectionHead button,\s*\.adminProgramEmptyExerciseList button\s*\{\s*min-height:\s*42px;\s*border-radius:\s*14px;\s*border:\s*1px solid rgba\(255,255,255,\.07\);\s*background:\s*rgba\(255,255,255,\.045\);\s*color:\s*rgba\(255,255,255,\.82\);\s*font-weight:\s*950;\s*cursor:\s*pointer;\s*\}/g) || []).length,
+    1
+  );
+
+  assert.equal(
+    (source.match(/min-height:\s*42px;\s*border-radius:\s*14px;\s*border:\s*1px solid rgba\(255,255,255,\.07\);\s*background:\s*rgba\(255,255,255,\.045\);\s*color:\s*rgba\(255,255,255,\.82\);\s*font-weight:\s*950;\s*cursor:\s*pointer;/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 
