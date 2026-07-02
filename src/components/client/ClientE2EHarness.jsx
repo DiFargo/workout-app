@@ -254,6 +254,173 @@ function getHarnessWeekDates(selectedKey) {
   return buildNutritionWeekDates(selectedKey);
 }
 
+function HarnessHero({ isMainDashboard }) {
+  return (
+    <div className="profileAiHero">
+      <div className="profileAiAvatarWrap">
+        <div className="profileAvatarBig profileUnifiedAvatar profileAiAvatar">
+          <span>👤</span>
+        </div>
+        <div className="profileAiAvatarRing">
+          <strong>82%</strong>
+        </div>
+      </div>
+
+      <div className="profileAiHeroText">
+        {!isMainDashboard && <span>ЛИЧНЫЙ КАБИНЕТ</span>}
+        <h1>{isMainDashboard ? "Добрый день, атлет" : "Профиль клиента"} 👋</h1>
+      </div>
+    </div>
+  );
+}
+
+function HarnessMainSummary({ compact = false }) {
+  return (
+    <>
+      {!compact && (
+        <div className="profileAiStatsRow">
+          <div className="goal">
+            <span className="profileAiStatLabel">Цель</span>
+            <strong>Рекомпозиция</strong>
+            <small>&nbsp;</small>
+          </div>
+          <div>
+            <span className="profileAiStatLabel">Вес</span>
+            <strong>88.8 кг</strong>
+            <small>&nbsp;</small>
+          </div>
+          <div>
+            <span className="profileAiStatLabel">Тренировки</span>
+            <strong>4</strong>
+            <small>&nbsp;</small>
+          </div>
+        </div>
+      )}
+
+      <div className="profileMainSummaryGrid profileAiSplitCards">
+        <article className="profileAiMiniCard">
+          <span>Твоя цель</span>
+          <strong>Рекомпозиция</strong>
+        </article>
+        <article className="profileAiMiniCard">
+          <span>Следующая тренировка</span>
+          <strong>Завтра</strong>
+        </article>
+      </div>
+    </>
+  );
+}
+
+function HarnessProgressInsight() {
+  return (
+    <div className="profileAiCoachInsight profileProgressInsightCard positive">
+      <button type="button" className="profileAiCoachToggle">
+        <div className="profileAiCoachSummary">
+          <div
+            className="profileProgressGauge"
+            style={{
+              "--progress-score": 82,
+              "--progress-fill": "295deg",
+              "--progress-color": "rgba(123, 111, 232, 1)",
+              "--progress-glow": "rgba(123, 111, 232, 0.24)"
+            }}
+            role="img"
+            aria-label="Оценка прогресса 82 из 100"
+          >
+            <div className="profileProgressGaugeDial">
+              <i />
+              <strong>82</strong>
+            </div>
+            <small>из 100</small>
+          </div>
+
+          <div className="profileAiCoachHeadline">
+            <span>Оценка прогресса</span>
+            <h2>Хороший темп</h2>
+            <p>Питание и тренировки идут ровно, продолжай держать режим.</p>
+          </div>
+        </div>
+      </button>
+
+      <div className="profileAiCoachPreview profileProgressInsightBadges">
+        <span className="profileProgressInsightBadge">
+          <b>🔥 Серия</b>
+          <small>4 тренировки за период</small>
+        </span>
+        <span className="profileProgressInsightBadge">
+          <b>⚖ Вес</b>
+          <small>88.8 кг, цель под контролем</small>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function HarnessMeasurementSnapshot() {
+  return (
+    <section className="mainMeasurementSnapshot singlePointTrend" aria-label="Последние замеры веса">
+      <div className="mainMeasurementSnapshotHeader">
+        <span>Последние замеры</span>
+        <i aria-hidden="true">›</i>
+      </div>
+      <div className="mainMeasurementSnapshotBody">
+        <div className="mainMeasurementWeight">
+          <span>Текущий вес</span>
+          <strong>88.8 кг</strong>
+          <em>-0.4 кг</em>
+          <small>к прошлому замеру</small>
+        </div>
+        <div className="mainMeasurementChart">
+          <div className="mainMeasurementSingle">
+            <strong>Динамика сохранена</strong>
+            <span>Следующий замер покажет тренд за неделю.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HarnessCabinetActions({
+  onOpenPhotos,
+  onOpenMeasurements,
+  onOpenNutrition,
+  onOpenCalendar,
+  onOpenHistory,
+  onOpenSettings
+}) {
+  const actions = [
+    ["photos", "📷", "Контроль тела", "Фото прогресса", "Последние: 22.06.2026", onOpenPhotos],
+    ["measurements", "📏", "Контроль тела", "Замеры", "22.06.2026", onOpenMeasurements],
+    ["nutrition", "🍽", "План питания", "КБЖУ", "2409 ккал · Рекомпозиция", onOpenNutrition],
+    ["progress", "📅", "Тренировки", "Календарь", "4 тренировки сохранено", onOpenCalendar],
+    ["history cabinetWorkoutHistoryHarnessButton", "◷", "Тренировки", "История", "Открыть журнал", onOpenHistory],
+    ["settings", "⚙", "Параметры", "Настройки", "Тема и Telegram", onOpenSettings]
+  ];
+
+  return (
+    <div className="progressHubOverview profileCabinetProgressOverview hasProgressPhotos">
+      {actions.map(([className, icon, eyebrow, title, note, onClick]) => (
+        <button
+          key={title}
+          type="button"
+          className={`progressHubCard ${className}`}
+          onClick={onClick}
+          aria-label={`${eyebrow}: ${title}`}
+        >
+          <span className="progressHubCardIcon">{icon}</span>
+          <span className="progressHubCardText">
+            <small>{eyebrow}</small>
+            <strong>{title}</strong>
+            <em>{note}</em>
+          </span>
+          <i aria-hidden="true">›</i>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function ClientE2EHarness() {
   const harnessParams = typeof window !== "undefined"
     ? new URLSearchParams(window.location.search)
@@ -524,6 +691,11 @@ export default function ClientE2EHarness() {
       : activeTab === "cabinet"
         ? " clientCorePageCabinet"
         : "";
+    const titleClass = activeTab === "main"
+      ? "mainDashboardTitle clientCorePageTitle"
+      : activeTab === "cabinet"
+        ? "profileCabinetPageTitle clientCorePageTitle"
+        : "clientCorePageTitle";
 
     return (
       <main
@@ -533,7 +705,7 @@ export default function ClientE2EHarness() {
       >
         <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
         <section className="profileUnifiedCard profileAiDashboardCard profileCabinetSection">
-          <h1 className="clientCorePageTitle">{title}</h1>
+          <h1 className={titleClass}>{title}</h1>
           {children}
         </section>
         {renderBottomBar(activeTab, { className: "mainMenuBottomBar profileBottomTabBar" })}
@@ -803,17 +975,16 @@ export default function ClientE2EHarness() {
     return renderHarnessChrome("cabinet", "Кабинет", (
       <>
         <p>Профиль, замеры, календарь и история тренировок.</p>
-        <div className="profileMainSummaryGrid">
-          <article><strong>88.8 кг</strong><span>Текущий вес</span></article>
-          <article><strong>4</strong><span>Тренировки</span></article>
-        </div>
-        <button
-          type="button"
-          className="cabinetWorkoutHistoryHarnessButton"
-          onClick={() => setCabinetWorkoutHistoryOpen(true)}
-        >
-          История тренировок
-        </button>
+        <HarnessHero isMainDashboard={false} />
+        <HarnessMainSummary compact />
+        <HarnessCabinetActions
+          onOpenPhotos={() => setCabinetPhotosOpen(true)}
+          onOpenMeasurements={() => setCabinetMeasurementsOpen(true)}
+          onOpenNutrition={() => setCabinetNutritionOpen(true)}
+          onOpenCalendar={() => setCabinetCalendarOpen(true)}
+          onOpenHistory={() => setCabinetWorkoutHistoryOpen(true)}
+          onOpenSettings={() => setCabinetSettingsOpen(true)}
+        />
         <ProfileWorkoutHistoryModal
           open={cabinetWorkoutHistoryOpen}
           programScope={{
@@ -962,10 +1133,10 @@ export default function ClientE2EHarness() {
   return renderHarnessChrome("main", "Главная", (
     <>
       <p>Сегодня в фокусе питание, тренировка и прогресс.</p>
-      <div className="profileMainSummaryGrid">
-        <article><strong>Рекомпозиция</strong><span>Твоя цель</span></article>
-        <article><strong>Завтра</strong><span>Следующая тренировка</span></article>
-      </div>
+      <HarnessHero isMainDashboard />
+      <HarnessMainSummary />
+      <HarnessProgressInsight />
+      <HarnessMeasurementSnapshot />
     </>
   ));
 }

@@ -63,6 +63,16 @@ async function expectPrimaryChrome(page, pageTestId) {
 }
 
 async function expectContentAboveBottomNav(page) {
+  const initialScrollTop = await page.evaluate(() => {
+    const scroller = document.querySelector(".clientCorePage");
+    return scroller?.scrollTop || 0;
+  });
+
+  await page.evaluate(() => {
+    const scroller = document.querySelector(".clientCorePage");
+    scroller?.scrollTo(0, scroller.scrollHeight);
+  });
+
   const metrics = await page.evaluate(() => {
     const rectOf = (node) => {
       const rect = node?.getBoundingClientRect();
@@ -79,6 +89,11 @@ async function expectContentAboveBottomNav(page) {
       bottomNav: rectOf(document.querySelector(".clientBottomNav"))
     };
   });
+
+  await page.evaluate((scrollTop) => {
+    const scroller = document.querySelector(".clientCorePage");
+    scroller?.scrollTo(0, scrollTop);
+  }, initialScrollTop);
 
   expect(metrics.card).not.toBeNull();
   expect(metrics.bottomNav).not.toBeNull();

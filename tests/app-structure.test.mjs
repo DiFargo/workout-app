@@ -4603,6 +4603,14 @@ test("client cabinet Telegram modal keeps a contained dialog shell", async () =>
   assert.match(telegramModal, /className="profileTelegramModal profileTelegramManageModal"[\s\S]*role="dialog"[\s\S]*aria-modal="true"[\s\S]*onClick=\{\(event\) => event\.stopPropagation\(\)\}/);
 });
 
+test("client harness stays local-only outside dev", async () => {
+  const source = await readText("src/utils/clientHarness.js");
+
+  assert.match(source, /import\.meta\.env\.DEV/);
+  assert.match(source, /\["localhost",\s*"127\.0\.0\.1",\s*"::1"\]\.includes\(window\.location\.hostname\)/);
+  assert.doesNotMatch(source, /return\s+harnessRequested\s*;/);
+});
+
 test("production components do not import feature layers back", async () => {
   const componentFiles = await collectFiles("src/components", [".js", ".jsx"]);
   const allowedFeatureImports = new Set([
