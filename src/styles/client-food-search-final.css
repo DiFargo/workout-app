@@ -91,18 +91,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   box-shadow: 0 16px 36px rgba(36, 43, 66, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremium.fatSearchTopPremiumHome button.fatSearchClosePremium {
-  width: 48px !important;
-  min-width: 48px !important;
-  max-width: 48px !important;
-  height: 48px !important;
-  min-height: 48px !important;
-  max-height: 48px !important;
-  position: static !important;
-  inset: auto !important;
-  transform: none !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome .fatSearchTitleWrap {
   grid-area: meal !important;
   width: min(306px, 78%) !important;

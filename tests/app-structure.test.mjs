@@ -1597,6 +1597,7 @@ test("client food search final CSS keeps one compact product title owner", async
 test("client food search final CSS keeps header close shell grouped", async () => {
   const source = await readText("src/styles/client-food-search-final.css");
 
+  assert.doesNotMatch(source, /\.fatSearchTopPremium\.fatSearchTopPremiumHome button\.fatSearchClosePremium\s*\{/);
   assert.equal(
     (
       source.match(
