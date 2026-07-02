@@ -1984,13 +1984,6 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:ha
   -webkit-text-fill-color: #5f5744 !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) .fatSearchTopPremiumHome .fatSearchTitleWrap {
-  grid-area: meal !important;
-  width: min(270px, 100%) !important;
-  margin: 0 auto !important;
-  justify-content: center !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) .fatSearchTopPremiumHome .fatSearchTitleButtonPremium {
   width: 100% !important;
   min-height: 48px !important;

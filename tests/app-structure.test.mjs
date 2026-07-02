@@ -881,6 +881,7 @@ test("client primary final CSS keeps product top actions layout in the final own
 test("client primary final CSS keeps food search header layout in the final owner", async () => {
   const source = await readText("src/styles/client-primary-final-lock.css");
 
+  assert.doesNotMatch(source, /\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) \.fatSearchTopPremiumHome \.fatSearchTitleWrap\s*\{/);
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.fatSearchTopPremiumHome \.foodFlowSearchTitle\s*\{\s*grid-area:\s*title !important;\s*min-width:\s*0 !important;\s*\}/g) || []).length,
     1
