@@ -1351,6 +1351,7 @@ test("client render target CSS keeps profile hero locks in one owner", async () 
     (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileAiAvatar\s*\{\s*width:\s*62px !important;\s*height:\s*62px !important;\s*min-width:\s*62px !important;\s*min-height:\s*62px !important;\s*\}/g) || []).length,
     1
   );
+  assert.doesNotMatch(source, /\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiAvatarWrap,[\s\S]*?\.profileDashboardPage\.profileTabbedPage\.clientCorePage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatar\s*\{[\s\S]*?width:\s*62px !important;/);
 });
 
 test("client render target CSS keeps workout pro top sizing in the final owner", async () => {

@@ -1253,16 +1253,6 @@
     gap: 14px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiAvatarWrap,
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiAvatar,
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileAiAvatarWrap,
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileAiAvatar {
-    width: 62px !important;
-    height: 62px !important;
-    min-width: 62px !important;
-    min-height: 62px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow {
     height: 70px !important;
     min-height: 70px !important;

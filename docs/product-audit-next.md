@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.747`.
+Last updated at app version `v.1.748`.
 
 ## Evidence
 
@@ -390,6 +390,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 282. Food search header meal title-wrap layout now stays in the shared header owner instead of repeating in the home-specific owner.
 283. Nutrition AI/Zouk top-card grid layout now stays in the shared header owner instead of repeating in the collapsed inline subset owner.
 284. Profile AI coach inside-progress text overflow now stays in the shared status-row text owner instead of repeating in the inside-progress subset.
+285. Profile AI avatar compact size now stays in the shared avatar owner instead of repeating in the page-specific subset owner.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.
