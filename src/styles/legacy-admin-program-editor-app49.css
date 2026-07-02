@@ -99,7 +99,8 @@
   margin-right: auto;
 }
 
-.adminProgramStatsRow {
+.adminProgramStatsRow,
+.adminProgramGridStats {
   display: grid;
   grid-template-columns: repeat(4, minmax(130px, 1fr));
   gap: 10px;
@@ -1163,13 +1164,6 @@
   border-color: rgba(127,159,58,.28);
   background: rgba(127,159,58,.14);
   color: rgba(235,250,195,.95);
-}
-
-.adminProgramGridStats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(130px, 1fr));
-  gap: 10px;
-  margin-bottom: 10px;
 }
 
 .adminProgramGridStats div {

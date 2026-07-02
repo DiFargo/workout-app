@@ -3203,6 +3203,19 @@ test("legacy admin program editor CSS keeps shared button shell grouped", async 
   );
 });
 
+test("legacy admin program editor CSS keeps stats grids grouped", async () => {
+  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+
+  assert.equal(
+    (source.match(/\.adminProgramStatsRow,\s*\.adminProgramGridStats\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(4, minmax\(130px, 1fr\)\);\s*gap:\s*10px;\s*margin-bottom:\s*10px;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/display:\s*grid;\s*grid-template-columns:\s*repeat\(4, minmax\(130px, 1fr\)\);\s*gap:\s*10px;\s*margin-bottom:\s*10px;/g) || []).length,
+    1
+  );
+});
+
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
   const source = await readText("src/styles/legacy-month-program-editor-early.css");
 
