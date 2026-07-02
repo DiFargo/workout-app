@@ -69,6 +69,48 @@ async function expectMainDashboardContent(page) {
   await expect(page.locator(".mainMeasurementSnapshot")).toBeVisible();
 }
 
+async function expectMainMeasurementSnapshotLayout(page) {
+  const metrics = await page.evaluate(() => {
+    const rectOf = (selector) => {
+      const node = document.querySelector(selector);
+      const rect = node?.getBoundingClientRect();
+      return rect
+        ? {
+            x: rect.x,
+            y: rect.y,
+            right: rect.right,
+            bottom: rect.bottom
+          }
+        : null;
+    };
+    const overlaps = (a, b) => Boolean(a && b && a.x < b.right && a.right > b.x && a.y < b.bottom && a.bottom > b.y);
+
+    const card = rectOf(".mainMeasurementSnapshot");
+    const header = rectOf(".mainMeasurementSnapshotHeader span");
+    const weightLabel = rectOf(".mainMeasurementWeight span");
+    const chart = rectOf(".mainMeasurementChart");
+
+    return {
+      skipped: window.innerWidth > 640,
+      card,
+      header,
+      weightLabel,
+      chart,
+      headerOverlapsWeight: overlaps(header, weightLabel),
+      chartEscapesCard: Boolean(card && chart && chart.bottom > card.bottom + 1)
+    };
+  });
+
+  if (metrics.skipped) return;
+
+  expect(metrics.card).not.toBeNull();
+  expect(metrics.header).not.toBeNull();
+  expect(metrics.weightLabel).not.toBeNull();
+  expect(metrics.chart).not.toBeNull();
+  expect(metrics.headerOverlapsWeight).toBe(false);
+  expect(metrics.chartEscapesCard).toBe(false);
+}
+
 async function expectCabinetContent(page) {
   await expect(page.locator(".profileAiHero")).toBeVisible();
   await expect(page.locator(".profileCabinetProgressOverview")).toBeVisible();
@@ -124,6 +166,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1");
   await expectPrimaryChrome(page, "client-harness-main");
   await expectMainDashboardContent(page);
+  await expectMainMeasurementSnapshotLayout(page);
   await expectContentAboveBottomNav(page);
   await attachScreenshot(page, testInfo, "client-main-dashboard.png");
   assertNoRuntimeErrors();

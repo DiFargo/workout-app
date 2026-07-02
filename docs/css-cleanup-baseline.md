@@ -6,8 +6,8 @@ Current verified budget:
 
 - Main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- Latest main CSS bundle: about `1118.73 KiB` raw, `113.71 KiB` gzip.
-- Latest source CSS report: `100` files, about `3270.51 KiB` total source CSS.
+- Latest main CSS bundle: about `1120.80 KiB` raw, `113.89 KiB` gzip.
+- Latest source CSS report: `100` files, about `3273.14 KiB` total source CSS.
 
 ## Screenshot Coverage
 
@@ -1111,3 +1111,5 @@ Start mapping here before any cleanup:
 - Verification for `v.1.772`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
 - `v.1.773`: grouped admin program editor template dock/strip layout across editor and grid surfaces in `legacy-admin-program-editor-app49.css`; the grouped owner is guarded by the app structure test.
 - Verification for `v.1.773`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.774`: fixed the client main measurement snapshot mobile layout so the header, weight block and chart stay in separate non-overlapping rows; the layout is guarded by the client primary visual audit.
+- Verification for `v.1.774`: client measurement snapshot rect-check, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

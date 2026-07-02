@@ -895,3 +895,76 @@
     margin-top: 2px !important;
   }
 }
+
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root#root > .clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot {
+    height: 184px !important;
+    min-height: 184px !important;
+    max-height: 184px !important;
+    flex: 0 0 184px !important;
+    flex-basis: 184px !important;
+    padding: 20px 24px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > .clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotHeader {
+    position: static !important;
+    width: 100% !important;
+    height: 18px !important;
+    min-height: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > .clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotBody {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 116px !important;
+    min-height: 116px !important;
+    max-height: 116px !important;
+    margin: 0 !important;
+    display: grid !important;
+    grid-template-columns: 112px minmax(0, 1fr) !important;
+    gap: 14px !important;
+    align-items: stretch !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > .clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementWeight {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    width: 112px !important;
+    height: 116px !important;
+    min-height: 116px !important;
+    align-self: stretch !important;
+    justify-content: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > .clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementChart {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    position: relative !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 116px !important;
+    min-height: 116px !important;
+    max-height: 116px !important;
+    align-self: stretch !important;
+    justify-self: stretch !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > .clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSingle {
+    height: 100% !important;
+    min-height: 0 !important;
+    padding: 10px 12px !important;
+  }
+}

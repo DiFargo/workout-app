@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.773`.
+Last updated at app version `v.1.774`.
 
 ## Stable Now
 
@@ -14,6 +14,7 @@ Last updated at app version `v.1.773`.
 - Client loading fallback CSS now shares warm-light panel/spinner shells with the base fallback owner, guarded by app structure tests.
 - Client, trainer, admin hub and admin internals harnesses cover the main local visual smoke surfaces.
 - Client harness preview is available on local dev/preview only and now renders populated main and cabinet visual surfaces for manual checks.
+- Client main measurement snapshot is guarded against mobile header/body overlap in the primary visual audit.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
 - Trainer workspace CSS now keeps workout schedule/status pill-label shells in one grouped owner.
@@ -528,9 +529,9 @@ From the latest verified build:
 
 - main app JS chunk: about `472.34 KiB` raw, `131.46 KiB` gzip.
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
-- main CSS bundle: about `1118.73 KiB` raw, `113.71 KiB` gzip.
+- main CSS bundle: about `1120.80 KiB` raw, `113.89 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3270.51 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3273.14 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
