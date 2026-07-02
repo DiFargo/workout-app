@@ -1269,18 +1269,6 @@
     font-size: 11px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow {
-    height: 70px !important;
-    min-height: 70px !important;
-    max-height: 70px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection .profileAiStatsRow.profileAiStatsRow {
-    height: 70px !important;
-    min-height: 70px !important;
-    max-height: 70px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard {
     min-height: 132px !important;
     padding: 14px 16px 10px !important;

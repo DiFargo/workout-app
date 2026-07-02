@@ -1373,6 +1373,11 @@ test("client render target CSS keeps profile hero locks in one owner", async () 
     1
   );
   assert.equal((source.match(/\.profileAiHeroText\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;/g) || []).length, 0);
+  assert.equal(
+    (source.match(/\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiStatsRow\s*\{\s*height:\s*70px !important;\s*min-height:\s*70px !important;\s*max-height:\s*70px !important;\s*margin-bottom:\s*14px !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal((source.match(/\.profileAiStatsRow\.profileAiStatsRow\s*\{\s*height:\s*70px !important;\s*min-height:\s*70px !important;\s*max-height:\s*70px !important;\s*\}/g) || []).length, 0);
   assert.doesNotMatch(source, /\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiAvatarWrap,[\s\S]*?\.profileDashboardPage\.profileTabbedPage\.clientCorePage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatar\s*\{[\s\S]*?width:\s*62px !important;/);
 });
 
