@@ -1823,6 +1823,19 @@ test("client food search final CSS keeps fixed action bottom mask in latest owne
   assert.match(finalMaskBlock, /\.foodSearchFixedPhotoAction::before\s*\{[\s\S]*?left:\s*50% !important;[\s\S]*?bottom:\s*calc\(-128px - env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
 });
 
+test("client food search final CSS hides the mobile product render scrollbar", async () => {
+  const source = await readText("src/styles/client-food-search-final.css");
+
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay:has\(\.foodProductRenderScreen\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.foodProductRenderScreen\s*\{\s*scrollbar-width:\s*none !important;\s*scrollbar-gutter:\s*auto !important;\s*\}/g) || []).length,
+    1
+  );
+  assert.equal(
+    (source.match(/\.fatFoodSearchOverlay:has\(\.foodProductRenderScreen\)::-webkit-scrollbar,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\)::-webkit-scrollbar,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.foodProductRenderScreen::-webkit-scrollbar\s*\{\s*display:\s*none !important;\s*width:\s*0 !important;\s*\}/g) || []).length,
+    1
+  );
+});
+
 test("client food search final CSS keeps diary swipe shell sizing in latest owner", async () => {
   const source = await readText("src/styles/client-food-search-final.css");
   const renderControlsStart = source.indexOf("/* Food search render controls v153 */");

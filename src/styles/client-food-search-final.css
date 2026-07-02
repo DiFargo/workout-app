@@ -1415,6 +1415,21 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageContent::-webkit-
   border: 1px solid rgba(255, 255, 255, 0.64) !important;
 }
 
+/* v175: product render is fullscreen on mobile; keep scrolling but hide the desktop scrollbar rail. */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay:has(.foodProductRenderScreen),
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.foodProductRenderScreen),
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen {
+  scrollbar-width: none !important;
+  scrollbar-gutter: auto !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay:has(.foodProductRenderScreen)::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.foodProductRenderScreen)::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
 /* v169: search results must disappear under the fixed AI photo action instead of showing through it. */
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
 .fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)) .foodSearchFixedPhotoAction > * {

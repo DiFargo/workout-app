@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.750`.
+Last updated at app version `v.1.751`.
 
 ## Stable Now
 
@@ -475,6 +475,7 @@ Last updated at app version `v.1.750`.
 - Client render target CSS no longer repeats compact profile AI avatar sizing in the page-specific subset owner after the shared avatar owner.
 - Legacy desktop cabinet polish CSS now groups trainer/cabinet strong text overflow across task, notification and program summary rows.
 - Legacy desktop cabinet polish CSS now groups trainer/cabinet header shell layout across task, workspace and notification headers.
+- Client food search CSS now hides the product render fullscreen scrollbar rail while preserving scroll on mobile product editing.
 - Client primary final CSS keeps profile AI goal-stat font sizing in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps workout deck spacing rules in one guarded owner after removing a duplicate block.
 - Client primary final CSS keeps food search home child layout and recent-card rules in guarded owners after removing duplicate blocks.
@@ -507,7 +508,7 @@ From the latest verified build:
 - main JS budget: `600 KiB` raw, `170 KiB` gzip.
 - main CSS bundle: about `1121.90 KiB` raw, `113.83 KiB` gzip.
 - CSS budget: `2100 KiB` raw, `270 KiB` gzip.
-- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3272.56 KiB` total source CSS.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3273.45 KiB` total source CSS.
 
 The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
 
