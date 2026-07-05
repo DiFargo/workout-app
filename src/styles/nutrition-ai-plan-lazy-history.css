@@ -1,0 +1,36 @@
+/* Nutrition AI plan CSS loaded with the nutrition route. */
+
+/* =========================================================
+   AI NUTRITION HISTORY PLAN â€” FATSECRET MARCH/APRIL BASELINE
+   ========================================================= */
+.nutritionAiHistoryPlanCard {
+  width: calc(100% - 20px);
+  max-width: 520px;
+  margin: 12px auto 16px;
+  padding: 16px;
+  border-radius: 26px;
+  border: 1px solid rgba(157, 245, 76, 0.14);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(157, 245, 76, 0.12), transparent 38%),
+    linear-gradient(180deg, rgba(25, 31, 25, 0.94), rgba(12, 15, 12, 0.96));
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.nutritionAiHistoryBadges span.good {
+  border-color: rgba(157, 245, 76, 0.18);
+  background: rgba(157, 245, 76, 0.075);
+}
+
+.nutritionAiHistoryBadges span.warning {
+  border-color: rgba(255, 180, 90, 0.2);
+  background: rgba(255, 180, 90, 0.075);
+}
+
+@media (max-width: 430px) {
+  .nutritionAiHistoryPlanCard {
+    width: calc(100% - 16px);
+    padding: 14px;
+    border-radius: 24px;
+  }
+}
+

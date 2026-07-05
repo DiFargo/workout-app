@@ -233,7 +233,7 @@ test("application styles use the modular styles entrypoint", async () => {
   const indexCss = await readText("src/styles/index.css");
   const clientWorkoutLazyCss = await readText("src/styles/client-workout-lazy.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
-  const nutritionAiPlanLazyCss = await readText("src/styles/nutrition-ai-plan-lazy.css");
+  const nutritionAiPlanLazyCss = await readCssWithImports("src/styles/nutrition-ai-plan-lazy.css");
   const nutritionFoodIconLazyCss = await readText("src/styles/nutrition-food-icon-lazy.css");
   const aiCoachLazyCss = await readText("src/styles/ai-coach-lazy.css");
   const clientFirstSetupLazyCss = await readText("src/styles/client-first-setup-lazy.css");
@@ -2394,7 +2394,7 @@ test("nutrition food search actions CSS keeps action active colors grouped", asy
 });
 
 test("nutrition AI plan CSS keeps narrow score sizing in the final owner", async () => {
-  const source = await readText("src/styles/nutrition-ai-plan-lazy.css");
+  const source = await readCssWithImports("src/styles/nutrition-ai-plan-lazy.css");
   const compactStart = source.indexOf("compact premium tuning 2026-05-20");
   const finalNarrowStart = source.indexOf("@media (max-width: 390px)", compactStart);
   const twoStateStart = source.indexOf("two-state collapsed/expanded behavior", finalNarrowStart);
@@ -2425,7 +2425,7 @@ test("nutrition AI plan CSS keeps narrow score sizing in the final owner", async
 });
 
 test("nutrition AI plan CSS keeps badge and conclusion colors in the final owner", async () => {
-  const source = await readText("src/styles/nutrition-ai-plan-lazy.css");
+  const source = await readCssWithImports("src/styles/nutrition-ai-plan-lazy.css");
   const colorStart = source.indexOf("AI PLAN COLORS MATCH MEAL CARDS");
   const app43Start = source.indexOf("APP43 TARGETED UPDATE", colorStart);
   const earlyBlock = source.slice(0, colorStart);
@@ -2470,7 +2470,7 @@ test("nutrition AI plan CSS keeps badge and conclusion colors in the final owner
 });
 
 test("nutrition AI plan CSS keeps muted span typography grouped", async () => {
-  const source = await readText("src/styles/nutrition-ai-plan-lazy.css");
+  const source = await readCssWithImports("src/styles/nutrition-ai-plan-lazy.css");
 
   assert.equal(
     (
