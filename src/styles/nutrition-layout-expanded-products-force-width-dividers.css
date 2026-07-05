@@ -1,0 +1,93 @@
+/* =========================================================
+   FORCE PRODUCT LIST DIVIDERS + WIDTH
+   ========================================================= */
+
+/* Ð±Ð»Ð¾Ðº Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð¾Ð² ÑˆÐ¸Ñ€Ðµ */
+.fatSecretPage .fatMealCard.open .fatMealItems,
+.fatMealCard.open .fatMealItems,
+.fatSecretPage .fatMealItems,
+.fatMealItems {
+  width: calc(100% - 4px) !important;
+  max-width: none !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+
+  border-top: none !important;
+  padding-top: 0 !important;
+}
+
+/* Ð¿Ð¾Ð»Ð½Ð¾ÑÑ‚ÑŒÑŽ ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ Ð²ÐµÑ€Ñ…Ð½ÑŽÑŽ Ð»Ð¸Ð½Ð¸ÑŽ Ñƒ Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° */
+.fatSecretPage .fatMealCard.open .fatFoodItem:first-child,
+.fatMealCard.open .fatFoodItem:first-child,
+.fatSecretPage .fatFoodItem:first-child,
+.fatFoodItem:first-child {
+  border-top: none !important;
+}
+
+.fatSecretPage .fatMealCard.open .fatFoodItem:first-child::before,
+.fatMealCard.open .fatFoodItem:first-child::before,
+.fatSecretPage .fatFoodItem:first-child::before,
+.fatFoodItem:first-child::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ Ð»ÑŽÐ±Ñ‹Ðµ ÑÑ‚Ð°Ñ€Ñ‹Ðµ border Ñƒ ÑÐ°Ð¼Ð¸Ñ… ÑÑ‚Ñ€Ð¾Ðº */
+.fatSecretPage .fatMealCard.open .fatFoodItem,
+.fatMealCard.open .fatFoodItem,
+.fatSecretPage .fatFoodItem,
+.fatFoodItem {
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* Ñ€ÐµÐ°Ð»ÑŒÐ½Ñ‹Ðµ Ð»Ð¸Ð½Ð¸Ð¸ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¼ÐµÐ¶Ð´Ñƒ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°Ð¼Ð¸ */
+.fatSecretPage .fatMealCard.open .fatFoodItem + .fatFoodItem,
+.fatMealCard.open .fatFoodItem + .fatFoodItem,
+.fatSecretPage .fatFoodItem + .fatFoodItem,
+.fatFoodItem + .fatFoodItem {
+  border-top: 1px solid rgba(255, 255, 255, 0.11) !important;
+}
+
+/* ÐµÑÐ»Ð¸ ÑÑ‚Ð°Ñ€Ñ‹Ð¹ ÑÑ‚Ð¸Ð»ÑŒ Ñ€Ð¸ÑÑƒÐµÑ‚ Ð»Ð¸Ð½Ð¸ÑŽ Ñ‡ÐµÑ€ÐµÐ· Ð¿ÑÐµÐ²Ð´Ð¾ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ â€” Ð¾Ñ‚ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ */
+.fatSecretPage .fatFoodItem::before,
+.fatFoodItem::before,
+.fatSecretPage .fatFoodItem::after,
+.fatFoodItem::after {
+  pointer-events: none !important;
+}
+
+/* Ð»Ð¸Ð½Ð¸Ñ Ð¼ÐµÐ¶Ð´Ñƒ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°Ð¼Ð¸ Ñ‡ÐµÑ€ÐµÐ· after Ð´Ð»Ñ Ð½Ð°Ð´ÐµÐ¶Ð½Ð¾ÑÑ‚Ð¸ */
+.fatSecretPage .fatMealCard.open .fatFoodItem:not(:last-child)::after,
+.fatMealCard.open .fatFoodItem:not(:last-child)::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 16px !important;
+  right: 16px !important;
+  bottom: 0 !important;
+  height: 1px !important;
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Ñƒ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½ÐµÐ³Ð¾ Ð»Ð¸Ð½Ð¸Ð¸ Ð½ÐµÑ‚ */
+.fatSecretPage .fatMealCard.open .fatFoodItem:last-child::after,
+.fatMealCard.open .fatFoodItem:last-child::after {
+  display: none !important;
+  content: none !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .fatMealCard.open .fatMealItems,
+  .fatMealCard.open .fatMealItems,
+  .fatSecretPage .fatMealItems,
+  .fatMealItems {
+    width: calc(100% - 2px) !important;
+  }
+
+  .fatSecretPage .fatMealCard.open .fatFoodItem:not(:last-child)::after,
+  .fatMealCard.open .fatFoodItem:not(:last-child)::after {
+    left: 14px !important;
+    right: 14px !important;
+  }
+}
