@@ -1,0 +1,112 @@
+/* =========================================================
+   FINAL WARM LIGHT PREMIUM SKIN â€” 2026-05-18
+   Targeted layer only. Applies ONLY when appTheme === "warm-light".
+   Goal: one unified cream/wellness style across all pages:
+   loading, main, workouts, nutrition, search, calendar, create/edit product,
+   admin, history and overlays.
+   ========================================================= */
+
+:root[data-app-theme="warm-light"],
+body[data-app-theme="warm-light"] {
+  color-scheme: light !important;
+
+  /* calm yellow from user's reference, softened for UI */
+  --warm-yellow: #f4e064;
+  --warm-yellow-soft: rgba(244, 224, 100, 0.42);
+  --warm-yellow-muted: #d8bd48;
+  --warm-yellow-deep: #b7952d;
+
+  --bg: #f3e8c7 !important;
+  --card: #fff8df !important;
+  --card-2: #f7edcf !important;
+  --line: rgba(72, 58, 29, 0.14) !important;
+  --text: #211b12 !important;
+  --muted: rgba(76, 64, 42, 0.64) !important;
+
+  --accent: var(--warm-yellow) !important;
+  --accent-2: #ecd35a !important;
+  --danger: #bc514f !important;
+  --success: #66a94d !important;
+
+  --warm-page:
+    radial-gradient(circle at 50% -10%, rgba(244, 224, 100, 0.32), transparent 38%),
+    radial-gradient(circle at 10% 14%, rgba(255, 255, 255, 0.42), transparent 28%),
+    linear-gradient(180deg, #fbf3d7 0%, #f3e8c7 48%, #ead8a8 100%);
+
+  --warm-card:
+    linear-gradient(180deg, rgba(255, 252, 237, 0.98) 0%, rgba(248, 239, 211, 0.98) 100%);
+
+  --warm-card-strong:
+    radial-gradient(circle at 18% 0%, rgba(244, 224, 100, 0.18), transparent 38%),
+    linear-gradient(180deg, rgba(255, 252, 235, 0.99) 0%, rgba(245, 232, 196, 0.99) 100%);
+
+  --warm-dark-card:
+    linear-gradient(180deg, #253022 0%, #101810 100%);
+
+  --warm-shadow-sm: 0 8px 20px rgba(88, 68, 24, 0.09);
+  --warm-shadow-md: 0 14px 34px rgba(88, 68, 24, 0.13), inset 0 1px 0 rgba(255,255,255,0.62);
+  --warm-shadow-lg: 0 24px 70px rgba(88, 68, 24, 0.18), inset 0 1px 0 rgba(255,255,255,0.68);
+
+  --food-green: var(--warm-yellow-muted) !important;
+  --food-text: var(--text) !important;
+  --food-muted: var(--muted) !important;
+  --food-card: #fff8df !important;
+  --food-line: var(--line) !important;
+}
+
+/* root surfaces */
+:root[data-app-theme="warm-light"] body,
+body[data-app-theme="warm-light"],
+:root[data-app-theme="warm-light"] #root,
+:root[data-app-theme="warm-light"] .app,
+:root[data-app-theme="warm-light"] .menuPage,
+:root[data-app-theme="warm-light"] .loginPage,
+:root[data-app-theme="warm-light"] .nutritionPage,
+:root[data-app-theme="warm-light"] .fatSecretPage,
+:root[data-app-theme="warm-light"] .historyPage,
+:root[data-app-theme="warm-light"] .adminPage,
+:root[data-app-theme="warm-light"] .workoutPage {
+  background: var(--warm-page) !important;
+  color: var(--text) !important;
+}
+
+/* splash */
+:root[data-app-theme="warm-light"] .appSplash {
+  background: var(--warm-page) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashInner {
+  background: linear-gradient(180deg, rgba(255, 252, 235, 0.84), rgba(239, 223, 181, 0.74)) !important;
+  border-color: rgba(72, 58, 29, 0.12) !important;
+  box-shadow: var(--warm-shadow-lg) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashMark {
+  background: linear-gradient(180deg, rgba(244, 224, 100, 0.44), rgba(244, 224, 100, 0.20)) !important;
+  border-color: rgba(72, 58, 29, 0.12) !important;
+  box-shadow: var(--warm-shadow-sm) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashLogo {
+  color: #b9902e !important;
+  text-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .splashText {
+  color: var(--muted) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashProgress {
+  background: rgba(72, 58, 29, 0.08) !important;
+  border-color: rgba(72, 58, 29, 0.08) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashProgress span {
+  background: linear-gradient(90deg, #c9a436, var(--warm-yellow), #e0c24e) !important;
+  box-shadow: 0 0 18px rgba(244, 224, 100, 0.46) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashDots i {
+  background: #c8aa3b !important;
+}
+

@@ -1,0 +1,88 @@
+/* overlays and modals */
+
+:root[data-app-theme="warm-light"] .modalCard,
+:root[data-app-theme="warm-light"] .fatModalCard,
+:root[data-app-theme="warm-light"] .nutritionModal,
+:root[data-app-theme="warm-light"] .barcodeScannerBox,
+:root[data-app-theme="warm-light"] .calendarSheet,
+:root[data-app-theme="warm-light"] .mealPickerMenu,
+:root[data-app-theme="warm-light"] .fatMealPicker {
+  background: var(--warm-card-strong) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+  box-shadow: var(--warm-shadow-lg) !important;
+}
+
+/* active tabs and selected states */
+:root[data-app-theme="warm-light"] .active,
+:root[data-app-theme="warm-light"] .selected,
+:root[data-app-theme="warm-light"] .fatTab.active,
+:root[data-app-theme="warm-light"] .fatTab.selected,
+:root[data-app-theme="warm-light"] .nutritionTab.active,
+:root[data-app-theme="warm-light"] .nutritionTab.selected {
+  border-color: rgba(183,149,45,0.32) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatTab.active,
+:root[data-app-theme="warm-light"] .fatTab.selected,
+:root[data-app-theme="warm-light"] .nutritionTab.active,
+:root[data-app-theme="warm-light"] .nutritionTab.selected {
+  background: rgba(244, 224, 100, 0.32) !important;
+  color: var(--text) !important;
+}
+
+/* keep destructive actions red */
+
+/* charts / donuts */
+:root[data-app-theme="warm-light"] .fatDonut,
+:root[data-app-theme="warm-light"] .fatDonutRing,
+:root[data-app-theme="warm-light"] .summaryDonut {
+  filter: saturate(0.92) brightness(1.02) !important;
+}
+
+/* reduce old hard green glows in warm mode */
+:root[data-app-theme="warm-light"] * {
+  scrollbar-color: rgba(183,149,45,0.46) rgba(255,252,237,0.24);
+}
+
+:root[data-app-theme="warm-light"] *:focus {
+  outline-color: rgba(183,149,45,0.34) !important;
+}
+
+:root[data-app-theme="warm-light"] .appLogo,
+:root[data-app-theme="warm-light"] .finishIcon,
+:root[data-app-theme="warm-light"] .startWorkoutIcon,
+:root[data-app-theme="warm-light"] .saveToastIcon {
+  background: linear-gradient(180deg, rgba(244,224,100,0.42), rgba(244,224,100,0.18)) !important;
+  color: #211b12 !important;
+  border-color: rgba(72, 58, 29, 0.12) !important;
+}
+
+/* mobile polish */
+@media (max-width: 480px) {
+  :root[data-app-theme="warm-light"] .fatCaloriesCard,
+  :root[data-app-theme="warm-light"] .fatSummaryCard,
+  :root[data-app-theme="warm-light"] .fatMealCard,
+  :root[data-app-theme="warm-light"] .fatSearchPanel,
+  :root[data-app-theme="warm-light"] .fatPickerSheet {
+    border-radius: 28px !important;
+  }
+
+  :root[data-app-theme="warm-light"] .fatSearchBottomBar,
+  :root[data-app-theme="warm-light"] .fatBottomActions {
+    border-radius: 28px 28px 0 0 !important;
+  }
+}
+
+/* final safety: any old dark nutrition panels inside warm mode */
+:root[data-app-theme="warm-light"] .fatSecretPage [class*="Card"],
+:root[data-app-theme="warm-light"] .fatSecretPage [class*="Panel"],
+:root[data-app-theme="warm-light"] .fatSecretPage [class*="Sheet"],
+:root[data-app-theme="warm-light"] .fatSecretPage [class*="Modal"],
+:root[data-app-theme="warm-light"] .nutritionPage [class*="Card"],
+:root[data-app-theme="warm-light"] .nutritionPage [class*="Panel"],
+:root[data-app-theme="warm-light"] .nutritionPage [class*="Sheet"],
+:root[data-app-theme="warm-light"] .nutritionPage [class*="Modal"] {
+  border-color: var(--line) !important;
+}
+

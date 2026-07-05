@@ -1,0 +1,120 @@
+/* text hierarchy */
+:root[data-app-theme="warm-light"] h1,
+:root[data-app-theme="warm-light"] h2,
+:root[data-app-theme="warm-light"] h3,
+:root[data-app-theme="warm-light"] h4,
+:root[data-app-theme="warm-light"] .menuTitle,
+:root[data-app-theme="warm-light"] .workoutTitle,
+:root[data-app-theme="warm-light"] .workoutTitleInline,
+:root[data-app-theme="warm-light"] .fatDateTitle h1,
+:root[data-app-theme="warm-light"] .fatSummaryTitle,
+:root[data-app-theme="warm-light"] .fatMealTitle strong,
+:root[data-app-theme="warm-light"] .fatMealKcal strong,
+:root[data-app-theme="warm-light"] .fatCaloriesCard strong,
+:root[data-app-theme="warm-light"] .fatSummaryCard strong,
+:root[data-app-theme="warm-light"] .fatFoodInfo strong,
+:root[data-app-theme="warm-light"] .productInfoExact strong,
+:root[data-app-theme="warm-light"] .adminUserRow strong,
+:root[data-app-theme="warm-light"] .historyCardHeader strong,
+:root[data-app-theme="warm-light"] .finishStatBox strong {
+  color: var(--text) !important;
+  text-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] p,
+:root[data-app-theme="warm-light"] small,
+:root[data-app-theme="warm-light"] label,
+:root[data-app-theme="warm-light"] .daySub,
+:root[data-app-theme="warm-light"] .fatStreakLineTop,
+:root[data-app-theme="warm-light"] .fatStreakLineTop span,
+:root[data-app-theme="warm-light"] .fatMealTitle span,
+:root[data-app-theme="warm-light"] .fatMealKcal span,
+:root[data-app-theme="warm-light"] .fatCaloriesCard span,
+:root[data-app-theme="warm-light"] .fatSummaryCard span,
+:root[data-app-theme="warm-light"] .fatFoodInfo span,
+:root[data-app-theme="warm-light"] .productInfoExact span,
+:root[data-app-theme="warm-light"] .previousInfo,
+:root[data-app-theme="warm-light"] .finishWorkoutSubtext,
+:root[data-app-theme="warm-light"] .loginHint {
+  color: var(--muted) !important;
+}
+
+/* unified cards across pages */
+:root[data-app-theme="warm-light"] .bigButton,
+:root[data-app-theme="warm-light"] .loginCard,
+:root[data-app-theme="warm-light"] .exercise,
+:root[data-app-theme="warm-light"] .exerciseSlideCard,
+:root[data-app-theme="warm-light"] .startWorkoutSlide,
+:root[data-app-theme="warm-light"] .finishWorkoutCard,
+:root[data-app-theme="warm-light"] .finishSummaryCard,
+:root[data-app-theme="warm-light"] .finishStatBox,
+:root[data-app-theme="warm-light"] .historyCard,
+:root[data-app-theme="warm-light"] .historyExercise,
+:root[data-app-theme="warm-light"] .adminCard,
+:root[data-app-theme="warm-light"] .adminPanel,
+:root[data-app-theme="warm-light"] .adminUserRow,
+:root[data-app-theme="warm-light"] .nutritionHeroCard,
+:root[data-app-theme="warm-light"] .nutritionAddCard,
+:root[data-app-theme="warm-light"] .nutritionDiaryCard,
+:root[data-app-theme="warm-light"] .nutritionMiniCard,
+:root[data-app-theme="warm-light"] .fatCaloriesCard,
+:root[data-app-theme="warm-light"] .fatSummaryCard,
+:root[data-app-theme="warm-light"] .fatMealCard,
+:root[data-app-theme="warm-light"] .fatMealMain,
+:root[data-app-theme="warm-light"] .fatWaterCard,
+:root[data-app-theme="warm-light"] .fatSearchCard,
+:root[data-app-theme="warm-light"] .fatSearchPanel,
+:root[data-app-theme="warm-light"] .fatSearchModal,
+:root[data-app-theme="warm-light"] .fatPickerSheet,
+:root[data-app-theme="warm-light"] .fatProductCreator,
+:root[data-app-theme="warm-light"] .fatProductEditor,
+:root[data-app-theme="warm-light"] .fatFoodItem,
+:root[data-app-theme="warm-light"] .fatFoodItemEditable,
+:root[data-app-theme="warm-light"] .productListWideFinal,
+:root[data-app-theme="warm-light"] .saveToast,
+:root[data-app-theme="warm-light"] .finishCard {
+  background: var(--warm-card) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--warm-shadow-md) !important;
+}
+
+/* open meal / large nutrition panels need stronger unified cream */
+:root[data-app-theme="warm-light"] .fatMealCard.open,
+:root[data-app-theme="warm-light"] .fatMealCard.open .fatMealMain,
+:root[data-app-theme="warm-light"] .fatSummaryCard,
+:root[data-app-theme="warm-light"] .fatCaloriesCard,
+:root[data-app-theme="warm-light"] .productListWideFinal,
+:root[data-app-theme="warm-light"] .fatSearchPanel,
+:root[data-app-theme="warm-light"] .fatSearchModal,
+:root[data-app-theme="warm-light"] .fatPickerSheet,
+:root[data-app-theme="warm-light"] .fatProductCreator,
+:root[data-app-theme="warm-light"] .fatProductEditor {
+  background: var(--warm-card-strong) !important;
+}
+
+/* workout menu should not stay dark green */
+:root[data-app-theme="warm-light"] .menuPage .bigButton,
+:root[data-app-theme="warm-light"] .workoutMenuCard,
+:root[data-app-theme="warm-light"] .workoutSelectCard,
+:root[data-app-theme="warm-light"] .trainingCard,
+:root[data-app-theme="warm-light"] .workoutCard {
+  background: var(--warm-card) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+  box-shadow: var(--warm-shadow-md) !important;
+}
+
+:root[data-app-theme="warm-light"] .menuTitle::after,
+:root[data-app-theme="warm-light"] .workoutTitle::after {
+  background: var(--warm-yellow-muted) !important;
+}
+
+/* keep text visible on dark media thumbnails */
+:root[data-app-theme="warm-light"] .dayTitle,
+:root[data-app-theme="warm-light"] .bigButton span,
+:root[data-app-theme="warm-light"] .workoutMenuCard span,
+:root[data-app-theme="warm-light"] .workoutSelectCard span {
+  color: var(--text) !important;
+}
+
