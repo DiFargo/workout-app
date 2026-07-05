@@ -1,0 +1,21 @@
+@media (max-height: 620px) {
+  .firstSetupCard .firstSetupHeader p {
+    display: none;
+  }
+
+  .firstSetupGoalStep {
+    gap: 7px;
+  }
+
+  .firstSetupCard .firstSetupGoalGrid {
+    gap: 6px !important;
+  }
+
+  .firstSetupCard .firstSetupGoalGrid button {
+    min-height: 65px !important;
+  }
+
+  .firstSetupCard .firstSetupGoalGrid button small {
+    display: none;
+  }
+}

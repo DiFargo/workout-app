@@ -1,0 +1,78 @@
+@media (max-height: 720px) {
+  .firstSetupCard {
+    height: calc(100dvh - 12px) !important;
+    max-height: calc(100dvh - 12px) !important;
+    padding: 14px 14px 12px !important;
+  }
+
+  .firstSetupHeader {
+    margin-top: 16px;
+  }
+
+  .firstSetupCard .firstSetupHeader h2 {
+    font-size: 22px !important;
+  }
+
+  .firstSetupCard .firstSetupHeader p {
+    margin-top: 6px !important;
+    font-size: 11px !important;
+  }
+
+  .firstSetupBody {
+    margin: 9px 0 !important;
+  }
+
+  .firstSetupWelcomeVisual {
+    height: 175px;
+  }
+
+  .firstSetupClipboard {
+    font-size: 84px;
+  }
+
+  .firstSetupSexGrid button {
+    height: 145px !important;
+  }
+
+  .firstSetupSexGrid button span {
+    font-size: 60px;
+  }
+
+  .firstSetupActivityList {
+    gap: 5px;
+  }
+
+  .firstSetupActivityList button {
+    min-height: 52px;
+    padding-block: 5px;
+  }
+
+  .firstSetupGoalGrid button {
+    min-height: 78px !important;
+    padding: 7px 5px !important;
+  }
+
+  .firstSetupGoalGrid button > span {
+    font-size: 20px;
+  }
+
+  .firstSetupGoalGrid button strong {
+    font-size: 11px;
+  }
+
+  .firstSetupGoalGrid button small {
+    font-size: 8.5px;
+  }
+
+  .firstSetupInput,
+  .firstSetupPrimary,
+  .firstSetupSecondary {
+    height: 50px !important;
+    min-height: 50px !important;
+  }
+
+  .firstSetupReview > div {
+    min-height: 35px;
+  }
+}
+

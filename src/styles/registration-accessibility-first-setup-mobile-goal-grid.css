@@ -1,0 +1,6 @@
+@media (max-width: 520px) {
+  .firstSetupCard .firstSetupGoalGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
