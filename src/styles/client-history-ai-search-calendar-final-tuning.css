@@ -1,0 +1,19 @@
+/* CALENDAR FINAL TUNING */
+.nutritionCalendarDay small {
+  color: rgba(184, 215, 108, 0.39) !important;
+}
+
+.nutritionCalendarDay.overGoal:not(.selected) small {
+  color: rgba(255, 126, 126, 0.39) !important;
+}
+
+.nutritionCalendarDay.selected small {
+  color: rgba(12, 15, 10, 0.42) !important;
+}
+
+.nutritionCalendarFooter button {
+  min-height: 48px !important;
+  border-radius: 18px !important;
+  font-size: 14px !important;
+}
+

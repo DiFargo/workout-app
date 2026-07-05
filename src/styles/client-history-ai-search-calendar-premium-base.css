@@ -1,0 +1,261 @@
+/* PREMIUM NUTRITION CALENDAR */
+.nutritionCalendarOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9997 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  padding: 16px 14px max(16px, env(safe-area-inset-bottom)) !important;
+}
+
+.nutritionCalendarBackdrop {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: rgba(0, 0, 0, 0.62) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.nutritionCalendarSheet {
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(100%, 430px) !important;
+  max-height: min(86vh, 690px) !important;
+  padding: 10px 14px 14px !important;
+  border-radius: 30px !important;
+  border: 1px solid rgba(127, 159, 58, 0.18) !important;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(127, 159, 58, 0.16), transparent 38%),
+    radial-gradient(circle at 88% 8%, rgba(255, 255, 255, 0.04), transparent 34%),
+    linear-gradient(180deg, rgba(13, 20, 16, 0.98), rgba(5, 10, 8, 0.995)) !important;
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+  overflow: hidden !important;
+  animation: nutritionCalendarIn 220ms ease both !important;
+}
+
+@keyframes nutritionCalendarIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.nutritionCalendarGrabber {
+  width: 44px !important;
+  height: 5px !important;
+  margin: 0 auto 12px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+
+.nutritionCalendarHeader {
+  display: grid !important;
+  grid-template-columns: 42px 1fr 42px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  margin-bottom: 14px !important;
+}
+
+.nutritionCalendarHeader button {
+  width: 42px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(247, 248, 251, 0.82) !important;
+  font-size: 30px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+.nutritionCalendarHeader div {
+  min-width: 0 !important;
+  text-align: center !important;
+}
+
+.nutritionCalendarHeader span {
+  display: block !important;
+  color: rgba(247, 248, 251, 0.43) !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+.nutritionCalendarHeader strong {
+  display: block !important;
+  margin-top: 4px !important;
+  color: rgba(247, 248, 251, 0.94) !important;
+  font-size: 20px !important;
+  font-weight: 950 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.4px !important;
+  text-transform: capitalize !important;
+}
+
+.nutritionCalendarWeekdays,
+.nutritionCalendarGrid {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+}
+
+.nutritionCalendarWeekdays {
+  gap: 6px !important;
+  margin-bottom: 8px !important;
+}
+
+.nutritionCalendarWeekdays span {
+  text-align: center !important;
+  color: rgba(247, 248, 251, 0.36) !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+}
+
+.nutritionCalendarGrid {
+  gap: 6px !important;
+}
+
+.nutritionCalendarDay {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 52px !important;
+  padding: 7px 3px 6px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  color: rgba(247, 248, 251, 0.88) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  text-align: center !important;
+  overflow: hidden !important;
+}
+
+.nutritionCalendarDay strong {
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+.nutritionCalendarDay small {
+  max-width: 100% !important;
+  font-size: 8px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.nutritionCalendarDay i {
+  position: absolute !important;
+  right: 4px !important;
+  top: 4px !important;
+  min-width: 14px !important;
+  height: 14px !important;
+  padding: 0 4px !important;
+  border-radius: 999px !important;
+  background: rgba(127, 159, 58, 0.18) !important;
+  color: rgba(184, 215, 108, 0.95) !important;
+  font-size: 8px !important;
+  font-style: normal !important;
+  font-weight: 950 !important;
+  line-height: 14px !important;
+}
+
+.nutritionCalendarDay.muted {
+  opacity: 0.32 !important;
+}
+
+.nutritionCalendarDay.hasFood {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.13), transparent 58%),
+    rgba(255, 255, 255, 0.045) !important;
+  border-color: rgba(127, 159, 58, 0.13) !important;
+}
+
+.nutritionCalendarDay.today {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.nutritionCalendarDay.today::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 5px !important;
+  width: 4px !important;
+  height: 4px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  transform: translateX(-50%) !important;
+}
+
+.nutritionCalendarDay.selected {
+  background: linear-gradient(135deg, rgba(127,159,58,0.96), rgba(145,173,78,0.92)) !important;
+  border-color: rgba(184, 215, 108, 0.66) !important;
+  color: #10120f !important;
+  box-shadow: 0 10px 24px rgba(127, 159, 58, 0.24) !important;
+}
+
+.nutritionCalendarDay.selected small,
+.nutritionCalendarDay.selected i {
+  color: #10120f !important;
+}
+
+.nutritionCalendarDay.selected i {
+  background: rgba(16, 18, 15, 0.14) !important;
+}
+
+.nutritionCalendarDay.overGoal:not(.selected) small {
+  color: rgba(255, 126, 126, 0.92) !important;
+}
+
+.nutritionCalendarFooter {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-top: 14px !important;
+}
+
+.nutritionCalendarFooter button {
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(247, 248, 251, 0.82) !important;
+  font-weight: 950 !important;
+}
+
+.nutritionCalendarFooter button:last-child {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  border-color: rgba(127, 159, 58, 0.26) !important;
+  color: #10120f !important;
+}
+
+@media (max-width: 380px) {
+  .nutritionCalendarOverlay {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .nutritionCalendarSheet {
+    padding: 10px 10px 12px !important;
+    border-radius: 26px !important;
+  }
+
+  .nutritionCalendarDay {
+    min-height: 48px !important;
+    border-radius: 14px !important;
+  }
+
+  .nutritionCalendarDay small {
+    font-size: 7.5px !important;
+  }
+}
+
