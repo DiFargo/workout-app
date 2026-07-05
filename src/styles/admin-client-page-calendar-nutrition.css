@@ -1,0 +1,424 @@
+/* ADMIN CLIENT Ã¢â‚¬â€ COMBINED CALENDAR + NUTRITION MONTH VIEW */
+.adminClientWorkspaceCrmPage .adminClientTabsCrm {
+  grid-template-columns: 1fr 1fr 1.35fr .95fr .95fr .95fr !important;
+}
+
+.adminClientNutritionCalendarContent {
+  padding: 28px !important;
+  display: grid !important;
+  gap: 22px !important;
+  background: rgba(6, 10, 8, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top: none !important;
+  border-radius: 0 0 26px 26px !important;
+}
+
+.adminNutritionMonthPanel,
+.adminCalendarPanelMerged {
+  width: 100% !important;
+  padding: 24px !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at top left, rgba(127, 159, 58, 0.09), transparent 34%),
+    linear-gradient(180deg, rgba(18, 23, 21, 0.94), rgba(8, 12, 10, 0.94)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), 0 18px 38px rgba(0, 0, 0, 0.22) !important;
+}
+
+.adminNutritionMonthHead {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 20px !important;
+  align-items: start !important;
+  margin-bottom: 18px !important;
+}
+
+.adminNutritionMonthHead span,
+.adminCalendarPanelMerged .adminCalendarHead span {
+  display: inline-block !important;
+  margin-bottom: 8px !important;
+  color: rgba(145, 173, 78, 0.92) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+}
+
+.adminNutritionMonthHead h3,
+.adminCalendarPanelMerged .adminCalendarHead h3 {
+  margin: 0 !important;
+  color: #fff !important;
+  font-size: 28px !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.4px !important;
+}
+
+.adminNutritionMonthHead p,
+.adminCalendarPanelMerged .adminCalendarHead p {
+  max-width: 720px !important;
+  margin: 10px 0 0 !important;
+  color: rgba(255, 255, 255, 0.62) !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+}
+
+.adminNutritionMonthSummary {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(132px, 1fr)) !important;
+  gap: 10px !important;
+  min-width: 300px !important;
+}
+
+.adminNutritionMonthSummary div {
+  padding: 14px 16px !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.adminNutritionMonthSummary div span {
+  margin: 0 0 8px !important;
+  color: rgba(255, 255, 255, 0.44) !important;
+  font-size: 11px !important;
+  letter-spacing: 0 !important;
+}
+
+.adminNutritionMonthSummary strong {
+  display: block !important;
+  color: #fff !important;
+  font-size: 18px !important;
+  line-height: 1.1 !important;
+}
+
+.adminNutritionMonthSummary small {
+  display: block !important;
+  margin-top: 5px !important;
+  color: rgba(255, 255, 255, 0.48) !important;
+  font-size: 12px !important;
+}
+
+.adminNutritionCalendarLegend,
+.adminNutritionCalendarMonthTitle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+
+.adminNutritionCalendarLegend {
+  justify-content: flex-start !important;
+  margin-bottom: 14px !important;
+}
+
+.adminNutritionCalendarLegend span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 32px !important;
+  padding: 0 12px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  color: rgba(255, 255, 255, 0.68) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+.adminNutritionCalendarLegend i {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 999px !important;
+  display: inline-block !important;
+}
+
+.adminNutritionCalendarLegend .calorieOk {
+  background: rgba(145, 173, 78, 0.95) !important;
+}
+
+.adminNutritionCalendarLegend .calorieHigh {
+  background: rgba(230, 74, 74, 0.95) !important;
+}
+
+.adminNutritionCalendarLegend .proteinFill {
+  background: #8a6df1 !important;
+}
+
+.adminNutritionCalendarLegend .carbsFill {
+  background: #43a7ff !important;
+}
+
+.adminNutritionCalendarLegend .fatFill {
+  background: #f3c84b !important;
+}
+
+.adminNutritionCalendarMonthTitle {
+  margin: 4px 0 14px !important;
+}
+
+.adminNutritionCalendarMonthTitle strong {
+  color: #fff !important;
+  font-size: 20px !important;
+  text-transform: capitalize !important;
+}
+
+.adminNutritionCalendarMonthTitle span {
+  color: rgba(255, 255, 255, 0.52) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+.adminNutritionMonthGrid {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.adminNutritionWeekday {
+  min-height: 28px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: rgba(255, 255, 255, 0.42) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.adminNutritionDayCell {
+  position: relative !important;
+  min-height: 104px !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+}
+
+.adminNutritionDayCell.muted {
+  opacity: 0.36 !important;
+}
+
+.adminNutritionDayCell.today {
+  border-color: rgba(145, 173, 78, 0.55) !important;
+  box-shadow: 0 0 0 1px rgba(145, 173, 78, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.adminNutritionDayCalorieFill,
+.adminNutritionDayProteinFill,
+.adminNutritionDayCarbsFill,
+.adminNutritionDayFatFill {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  pointer-events: none !important;
+  transition: height 0.2s ease !important;
+}
+
+.adminNutritionDayCalorieFill {
+  background: linear-gradient(180deg, rgba(145, 173, 78, 0.18), rgba(145, 173, 78, 0.36)) !important;
+}
+
+.adminNutritionDayCell.highCalories .adminNutritionDayCalorieFill {
+  background: linear-gradient(180deg, rgba(230, 74, 74, 0.18), rgba(230, 74, 74, 0.43)) !important;
+}
+
+.adminNutritionDayProteinFill {
+  right: auto !important;
+  width: 5px !important;
+  left: 0 !important;
+  border-radius: 0 5px 0 18px !important;
+  background: #8a6df1 !important;
+  opacity: 0.94 !important;
+}
+
+.adminNutritionDayCarbsFill {
+  right: auto !important;
+  width: 5px !important;
+  left: 6px !important;
+  border-radius: 5px 5px 0 0 !important;
+  background: #43a7ff !important;
+  opacity: 0.94 !important;
+}
+
+.adminNutritionDayFatFill {
+  right: auto !important;
+  width: 5px !important;
+  left: 12px !important;
+  border-radius: 5px 5px 0 0 !important;
+  background: #f3c84b !important;
+  opacity: 0.96 !important;
+}
+
+.adminNutritionDayContent {
+  position: relative !important;
+  z-index: 1 !important;
+  min-height: 104px !important;
+  padding: 11px 10px !important;
+  display: grid !important;
+  grid-template-rows: auto 1fr auto !important;
+  align-items: center !important;
+}
+
+.adminNutritionDayContent span {
+  justify-self: start !important;
+  color: rgba(255, 255, 255, 0.56) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.adminNutritionDayContent strong {
+  align-self: end !important;
+  color: #fff !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.adminNutritionDayContent small,
+.adminNutritionDayContent em {
+  align-self: end !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  font-size: 11px !important;
+  font-style: normal !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+}
+
+.adminCalendarPanelMerged {
+  padding: 22px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 16px !important;
+  align-items: start !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays {
+  margin-top: 18px !important;
+}
+
+@media (max-width: 980px) {
+  .adminClientWorkspaceCrmPage .adminClientTabsCrm {
+    display: flex !important;
+  }
+
+  .adminClientNutritionCalendarContent {
+    padding: 18px !important;
+  }
+
+  .adminNutritionMonthHead,
+  .adminCalendarPanelMerged .adminCalendarHead {
+    grid-template-columns: 1fr !important;
+  }
+
+  .adminNutritionMonthSummary {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .adminNutritionMonthGrid {
+    gap: 8px !important;
+  }
+
+  .adminNutritionDayCell,
+  .adminNutritionDayContent {
+    min-height: 92px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .adminClientNutritionCalendarContent {
+    padding: 12px !important;
+    gap: 14px !important;
+  }
+
+  .adminNutritionMonthPanel,
+  .adminCalendarPanelMerged {
+    padding: 14px !important;
+    border-radius: 20px !important;
+  }
+
+  .adminNutritionMonthHead h3,
+  .adminCalendarPanelMerged .adminCalendarHead h3 {
+    font-size: 22px !important;
+  }
+
+  .adminNutritionMonthHead p,
+  .adminCalendarPanelMerged .adminCalendarHead p {
+    font-size: 12px !important;
+  }
+
+  .adminNutritionMonthSummary {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .adminNutritionMonthSummary div {
+    padding: 10px !important;
+  }
+
+  .adminNutritionMonthSummary strong {
+    font-size: 14px !important;
+  }
+
+  .adminNutritionCalendarLegend span {
+    min-height: 28px !important;
+    padding: 0 9px !important;
+    font-size: 10px !important;
+  }
+
+  .adminNutritionCalendarMonthTitle strong {
+    font-size: 16px !important;
+  }
+
+  .adminNutritionCalendarMonthTitle span {
+    font-size: 11px !important;
+  }
+
+  .adminNutritionMonthGrid {
+    gap: 5px !important;
+  }
+
+  .adminNutritionWeekday {
+    font-size: 10px !important;
+    min-height: 22px !important;
+  }
+
+  .adminNutritionDayCell,
+  .adminNutritionDayContent {
+    min-height: 66px !important;
+    border-radius: 12px !important;
+  }
+
+  .adminNutritionDayContent {
+    padding: 6px 4px !important;
+  }
+
+  .adminNutritionDayContent span {
+    font-size: 9px !important;
+  }
+
+  .adminNutritionDayContent strong {
+    font-size: 12px !important;
+  }
+
+  .adminNutritionDayContent small,
+  .adminNutritionDayContent em {
+    font-size: 8px !important;
+  }
+
+  .adminNutritionDayProteinFill,
+  .adminNutritionDayCarbsFill,
+  .adminNutritionDayFatFill {
+    width: 3px !important;
+  }
+
+  .adminNutritionDayCarbsFill {
+    left: 4px !important;
+  }
+
+  .adminNutritionDayFatFill {
+    left: 8px !important;
+  }
+}

@@ -1,0 +1,272 @@
+/* ADMIN CLIENT PROGRAM TAB Ã‚Â· program + nutrition assignment + progress diagrams */
+.adminClientTabsCrm button.active,
+.adminClientTabsCrm button:hover {
+  color: #d8ff86;
+}
+
+.adminProgramClientTab {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.adminProgramAssignGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.adminProgramAssignCard,
+.adminNutritionAssignCard,
+.adminProgressDiagramsPanel {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.085);
+  background:
+    radial-gradient(circle at top left, rgba(127, 159, 58, 0.09), transparent 34%),
+    linear-gradient(180deg, rgba(19, 24, 21, 0.92), rgba(8, 11, 10, 0.96));
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.adminNutritionAssignCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.adminSavedProgramsGridCompact {
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 4px;
+  scrollbar-width: none;
+}
+
+.adminSavedProgramsGridCompact::-webkit-scrollbar {
+  display: none;
+}
+
+.adminAssignProgramActionsCompact {
+  margin-top: 14px;
+}
+
+.adminNutritionPlanPreview span,
+.adminProgressDiagramsHead span,
+.adminProgressDiagramCard > span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.35px;
+  text-transform: uppercase;
+}
+
+.adminNutritionAssignButton {
+  width: 100%;
+  min-height: 54px;
+  margin-top: auto;
+  border-radius: 17px;
+  border: 1px solid rgba(145, 173, 78, 0.5);
+  background: rgba(127, 159, 58, 0.16);
+  color: #d8ff86;
+  font-size: 15px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.adminProgressDiagramsPanel {
+  padding: 18px;
+}
+
+.adminProgressDiagramsHead {
+  margin-bottom: 14px;
+}
+
+.adminProgressDiagramsHead h3 {
+  margin: 4px 0 4px;
+  color: #fff;
+  font-size: 21px;
+  font-weight: 950;
+}
+
+.adminProgressDiagramsHead p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.adminProgressDiagramGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(180px, 0.9fr) minmax(180px, 0.9fr);
+  gap: 14px;
+}
+
+.adminProgressDiagramCard {
+  min-height: 220px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(255, 255, 255, 0.035);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.adminProgressBarsChart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.adminProgressBarsChart div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1.2fr 54px;
+  align-items: center;
+  gap: 10px;
+}
+
+.adminProgressBarsChart small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.adminProgressBarsChart i {
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.adminProgressBarsChart i b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(127, 159, 58, 0.75), rgba(216, 255, 134, 0.95));
+}
+
+.adminProgressBarsChart strong {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 950;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.adminProgressBarsChart em {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.adminProgressMiniColumns {
+  height: 150px;
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  align-items: end;
+}
+
+.adminProgressMiniColumns div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 7px;
+}
+
+.adminProgressMiniColumns i {
+  width: 100%;
+  min-height: 8px;
+  border-radius: 999px 999px 8px 8px;
+  background: linear-gradient(180deg, rgba(127, 159, 58, 0.95), rgba(127, 159, 58, 0.25));
+  box-shadow: 0 0 18px rgba(127, 159, 58, 0.14);
+}
+
+.adminProgressMiniColumnsProtein i {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.24));
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.12);
+}
+
+.adminProgressMiniColumns small {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.adminNutritionDayCell.trainingDay {
+  border-color: rgba(127, 159, 58, 0.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(127, 159, 58, 0.18),
+    0 0 0 1px rgba(127, 159, 58, 0.12),
+    0 12px 28px rgba(127, 159, 58, 0.08);
+}
+
+.adminNutritionDayCell.trainingDay::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  bottom: 6px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(127, 159, 58, 0.95), rgba(216, 255, 134, 0.95));
+  box-shadow: 0 0 14px rgba(127, 159, 58, 0.28);
+  z-index: 4;
+}
+
+.adminNutritionTrainingMark {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 5;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(127, 159, 58, 0.22);
+  border: 1px solid rgba(127, 159, 58, 0.42);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.adminNutritionCalendarLegend .trainingFill {
+  background: linear-gradient(90deg, rgba(127, 159, 58, 0.95), rgba(216, 255, 134, 0.95));
+}
+
+@media (max-width: 980px) {
+  .adminProgramAssignGrid,
+  .adminProgressDiagramGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .adminProgramAssignCard,
+  .adminNutritionAssignCard,
+  .adminProgressDiagramsPanel {
+    border-radius: 20px;
+  }
+
+  .adminProgressDiagramsPanel {
+    padding: 14px;
+  }
+
+  .adminProgressBarsChart div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .adminProgressBarsChart strong {
+    text-align: left;
+  }
+}

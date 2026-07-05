@@ -3411,7 +3411,7 @@ test("legacy month program editor CSS keeps workout badges in the final owner", 
 });
 
 test("legacy admin client page CSS does not keep exact duplicate blocks", async () => {
-  const source = await readText("src/styles/admin-client-page.css");
+  const source = await readCssWithImports("src/styles/admin-client-page.css");
   const seenBlocks = new Set();
   const duplicateBlocks = [];
 
@@ -3432,7 +3432,7 @@ test("legacy admin client page CSS does not keep exact duplicate blocks", async 
 });
 
 test("legacy admin client page CSS keeps Telegram render sizing grouped", async () => {
-  const source = await readText("src/styles/admin-client-page.css");
+  const source = await readCssWithImports("src/styles/admin-client-page.css");
 
   assert.equal(
     (source.match(/\.adminClientTelegramLogoRender,\s*\.adminClientTelegramAvatarRender\s*\{\s*width:\s*62px !important;\s*height:\s*62px !important;\s*flex:\s*none !important;\s*\}/g) || []).length,

@@ -1,0 +1,657 @@
+/* ADMIN CLIENT PAGE Ã¢â‚¬â€ PREMIUM RENDER STYLE UPDATE */
+.adminUsersCrmMainClientPage {
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  padding: 18px 18px 72px !important;
+}
+
+.adminClientWorkspaceCrmPage {
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.adminClientRenderTopbar {
+  width: 100%;
+  margin: 0 0 28px;
+  display: flex;
+  align-items: center;
+}
+
+.adminClientBackToList {
+  min-height: 52px !important;
+  padding: 0 24px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.11) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025)) !important;
+  color: rgba(255,255,255,.94) !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+  cursor: pointer;
+}
+
+.adminClientWorkspaceHeaderRender {
+  width: 100%;
+  margin-bottom: 34px;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: center !important;
+}
+
+.adminClientIdentityRender {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 104px minmax(0, auto) auto;
+  gap: 24px;
+  align-items: center;
+  justify-content: start;
+}
+
+.adminClientInitialsRender {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(145, 230, 78, .42);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145,230,78,.20), transparent 54%),
+    rgba(127,159,58,.08);
+  color: rgba(218,255,126,.96);
+  font-size: 34px;
+  font-weight: 1000;
+  box-shadow: 0 0 42px rgba(127,159,58,.12);
+}
+
+.adminClientWorkspaceHeaderRender h2 {
+  margin: 0 0 10px !important;
+  color: #fff;
+  font-size: clamp(34px, 4.2vw, 50px) !important;
+  line-height: .95 !important;
+  letter-spacing: -1.6px;
+}
+
+.adminClientWorkspaceHeaderRender p {
+  margin: 0 !important;
+  color: rgba(255,255,255,.62) !important;
+  font-size: 18px !important;
+  font-weight: 850 !important;
+}
+
+.adminClientStatusRender {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(182, 255, 104, .96);
+  font-size: 18px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.adminClientStatusRender i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #7dff4f;
+  box-shadow: 0 0 18px rgba(125,255,79,.78);
+}
+
+.adminClientWorkspaceActionsRender {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(108px, auto)) !important;
+  gap: 12px !important;
+  width: auto !important;
+}
+
+.adminClientWorkspaceActionsRender button {
+  min-height: 58px !important;
+  padding: 0 24px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(145,173,78,.45) !important;
+  background: linear-gradient(180deg, rgba(127,159,58,.20), rgba(127,159,58,.09)) !important;
+  color: rgba(244,255,202,.98) !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.adminClientWorkspaceActionsRender button.danger {
+  border-color: rgba(255,95,95,.54) !important;
+  background: linear-gradient(180deg, rgba(255,95,95,.20), rgba(255,95,95,.08)) !important;
+  color: #ff8787 !important;
+}
+
+.adminClientWorkspaceCrmPage .adminClientTabsCrm {
+  margin: 0 0 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0 !important;
+  border-radius: 24px 24px 0 0;
+  border: 1px solid rgba(255,255,255,.09);
+  background: linear-gradient(180deg, rgba(20,25,22,.88), rgba(12,15,13,.92));
+  overflow: hidden;
+  backdrop-filter: blur(18px);
+  position: relative !important;
+  top: auto !important;
+}
+
+.adminClientWorkspaceCrmPage .adminClientTabsCrm button {
+  min-height: 72px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-right: 1px solid rgba(255,255,255,.055) !important;
+  background: transparent !important;
+  color: rgba(255,255,255,.72) !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+}
+
+.adminClientWorkspaceCrmPage .adminClientTabsCrm button.active {
+  color: rgba(213,255,112,.98) !important;
+  background: linear-gradient(180deg, rgba(127,159,58,.18), rgba(127,159,58,.05)) !important;
+  box-shadow: inset 0 -3px 0 rgba(145,230,78,.9);
+}
+
+.adminClientTabContentRender {
+  padding: 30px !important;
+  border-radius: 0 0 26px 26px !important;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  border-top: none !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(79, 137, 255, .045), transparent 32%),
+    linear-gradient(180deg, rgba(16,20,18,.84), rgba(7,10,8,.94)) !important;
+}
+
+.adminClientMetricGridRender {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+}
+
+.adminClientMetricCardRender {
+  min-height: 132px !important;
+  padding: 22px 24px !important;
+  border-radius: 20px !important;
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 18px;
+  align-content: center;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,.06), transparent 42%),
+    rgba(255,255,255,.035) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 14px 32px rgba(0,0,0,.18);
+}
+
+.adminClientMetricCardRender i {
+  grid-row: 1 / 3;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: rgba(127,159,58,.13);
+  color: rgba(187,255,86,.95);
+  font-style: normal;
+  font-size: 24px;
+}
+
+.adminClientMetricCardRender span {
+  color: rgba(255,255,255,.58) !important;
+  font-size: 16px !important;
+  font-weight: 850 !important;
+}
+
+.adminClientMetricCardRender strong {
+  margin: 8px 0 0 !important;
+  color: #fff;
+  font-size: 24px !important;
+  line-height: 1.05;
+  font-weight: 1000 !important;
+}
+
+.adminClientMetricCardWideRender {
+  grid-column: span 1;
+}
+
+.adminClientTelegramPanelRender {
+  margin-top: 32px;
+  padding: 28px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(51, 157, 255, .28) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(51,157,255,.14), transparent 32%),
+    linear-gradient(180deg, rgba(12,24,32,.82), rgba(8,12,13,.96)) !important;
+  box-shadow: 0 18px 46px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.adminClientTelegramHeadRender {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.adminClientTelegramTitleRender {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.adminClientTelegramLogoRender {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, #2fb5ff, #0079c8);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 0 34px rgba(0,136,204,.32);
+  font-size: 30px;
+}
+
+.adminClientTelegramHeadRender h3 {
+  margin: 0 0 6px;
+  color: #fff;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.adminClientTelegramHeadRender p,
+.adminClientTelegramDescriptionRender {
+  margin: 0;
+  color: rgba(255,255,255,.64);
+  font-size: 16px;
+  font-weight: 760;
+  line-height: 1.35;
+}
+
+.adminClientTelegramBadge {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.045);
+  color: rgba(255,255,255,.68);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.adminClientTelegramBadge.connected {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.15);
+  color: rgba(213,255,112,.98);
+}
+
+.adminClientTelegramBodyRender {
+  margin-top: 26px;
+  min-height: 92px;
+  padding: 18px !important;
+  border-radius: 20px !important;
+  display: grid !important;
+  grid-template-columns: 62px minmax(0, 1fr) auto !important;
+  gap: 18px !important;
+  align-items: center !important;
+  border: 1px solid rgba(255,255,255,.085) !important;
+  background: rgba(255,255,255,.035) !important;
+}
+
+.adminClientTelegramAvatarRender {
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(145,230,78,.46) !important;
+  background: radial-gradient(circle at 50% 0%, rgba(145,230,78,.19), transparent 60%), rgba(127,159,58,.08) !important;
+  display: grid;
+  place-items: center;
+  color: rgba(218,255,126,.96) !important;
+  font-size: 20px !important;
+  font-weight: 1000;
+}
+
+.adminClientTelegramAvatarRender img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.adminClientTelegramUserRender strong {
+  display: block;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 1000;
+}
+
+.adminClientTelegramUserRender small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(255,255,255,.58);
+  font-size: 14px;
+  font-weight: 820;
+}
+
+.adminClientTelegramActionsRender {
+  display: grid !important;
+  grid-template-columns: 190px 180px;
+  gap: 12px !important;
+}
+
+.adminClientTelegramActionsRender button,
+.adminTelegramSendButton {
+  min-height: 54px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(51,157,255,.48) !important;
+  background: rgba(51,157,255,.11) !important;
+  color: #8fd0ff !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+}
+
+.adminClientTelegramActionsRender button.danger {
+  border-color: rgba(255,95,95,.42) !important;
+  background: rgba(255,95,95,.10) !important;
+  color: #ff8585 !important;
+}
+
+.adminTelegramComposerRender {
+  margin-top: 24px;
+  display: grid;
+  gap: 20px;
+}
+
+.adminTelegramTextareaWrapRender {
+  min-height: 128px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.085);
+  background: rgba(0,0,0,.18);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-rows: 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.adminTelegramTextareaWrapRender textarea {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 68px;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  color: #fff;
+  resize: vertical;
+  outline: none;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.adminTelegramTextareaWrapRender span {
+  grid-column: 2;
+  color: rgba(255,255,255,.50);
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.adminTelegramTextareaWrapRender .adminTelegramSendButton {
+  grid-column: 3;
+  min-width: 190px;
+}
+
+.adminTelegramQuickMessagesRender {
+  display: grid;
+  gap: 12px;
+}
+
+.adminTelegramQuickMessagesRender > strong {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 1000;
+}
+
+.adminTelegramQuickMessagesRender > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.adminTelegramQuickMessagesRender button {
+  min-height: 78px !important;
+  padding: 14px 16px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.095) !important;
+  background: rgba(255,255,255,.04) !important;
+  color: #fff !important;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 8px;
+  text-align: left;
+}
+
+.adminTelegramQuickMessagesRender button span {
+  grid-row: 1 / 3;
+  color: #ffdf57;
+}
+
+.adminTelegramQuickMessagesRender button b {
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.adminTelegramQuickMessagesRender button small {
+  color: rgba(255,255,255,.52);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.adminClientTelegramSavedRender {
+  min-height: 68px;
+  padding: 0 22px;
+  border-radius: 17px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.035);
+  color: rgba(255,255,255,.72);
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  text-align: left;
+  font-weight: 950;
+}
+
+.adminClientTelegramSavedRender span {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.085);
+  color: rgba(255,255,255,.66);
+}
+
+.adminClientTelegramSavedRender i {
+  font-style: normal;
+  font-size: 28px;
+  color: rgba(255,255,255,.55);
+}
+
+.adminClientRecommendationsRender {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  margin-top: 22px !important;
+}
+
+.adminClientRecommendationsRender div {
+  min-height: 96px;
+  padding: 20px 24px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(127,159,58,.22) !important;
+  background: linear-gradient(90deg, rgba(127,159,58,.14), rgba(127,159,58,.035)) !important;
+  display: grid !important;
+  grid-template-columns: 48px 1fr auto !important;
+  align-items: center;
+  gap: 18px !important;
+}
+
+.adminClientRecommendationsRender span {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: rgba(213,255,112,.96);
+  border: 1px solid rgba(127,159,58,.28);
+  background: rgba(127,159,58,.08);
+  font-size: 28px;
+}
+
+.adminClientRecommendationsRender p {
+  margin: 0 !important;
+  color: rgba(255,255,255,.86) !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+}
+
+.adminClientRecommendationsRender button {
+  min-height: 56px;
+  padding: 0 28px;
+  border-radius: 14px;
+  border: 1px solid rgba(127,159,58,.34);
+  background: rgba(127,159,58,.13);
+  color: rgba(213,255,112,.96);
+  font-weight: 950;
+}
+
+@media (max-width: 1080px) {
+  .adminClientWorkspaceHeaderRender {
+    grid-template-columns: 1fr;
+  }
+
+  .adminClientWorkspaceActionsRender {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .adminClientMetricGridRender {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .adminTelegramQuickMessagesRender > div {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .adminUsersCrmMainClientPage {
+    padding: 14px 10px 52px !important;
+  }
+
+  .adminClientRenderTopbar {
+    margin-bottom: 20px;
+  }
+
+  .adminClientIdentityRender {
+    grid-template-columns: 76px 1fr;
+    gap: 14px;
+  }
+
+  .adminClientInitialsRender {
+    width: 76px;
+    height: 76px;
+    font-size: 25px;
+  }
+
+  .adminClientStatusRender {
+    grid-column: 2;
+    font-size: 14px;
+  }
+
+  .adminClientWorkspaceHeaderRender h2 {
+    font-size: 32px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender p {
+    font-size: 14px !important;
+  }
+
+  .adminClientWorkspaceActionsRender {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .adminClientWorkspaceActionsRender button {
+    min-height: 48px !important;
+    font-size: 13px !important;
+    padding: 0 12px !important;
+  }
+
+  .adminClientWorkspaceCrmPage .adminClientTabsCrm {
+    display: flex !important;
+    overflow-x: auto;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .adminClientWorkspaceCrmPage .adminClientTabsCrm button {
+    min-width: 116px;
+    min-height: 58px !important;
+    font-size: 12px !important;
+  }
+
+  .adminClientTabContentRender {
+    padding: 14px !important;
+  }
+
+  .adminClientMetricGridRender {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .adminClientMetricCardRender,
+  .adminClientMetricCardSplitRender {
+    grid-column: span 1 !important;
+    min-height: 104px !important;
+  }
+
+  .adminClientTelegramPanelRender {
+    padding: 16px !important;
+  }
+
+  .adminClientTelegramBodyRender {
+    grid-template-columns: 56px 1fr !important;
+  }
+
+  .adminClientTelegramActionsRender {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .adminTelegramTextareaWrapRender {
+    grid-template-columns: 1fr;
+  }
+
+  .adminTelegramTextareaWrapRender span,
+  .adminTelegramTextareaWrapRender .adminTelegramSendButton {
+    grid-column: 1;
+  }
+
+  .adminClientRecommendationsRender div {
+    grid-template-columns: 42px 1fr !important;
+  }
+
+  .adminClientRecommendationsRender button {
+    grid-column: 1 / -1;
+  }
+}
