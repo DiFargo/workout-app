@@ -7,6 +7,33 @@ async function readText(path) {
   return fs.readFile(path, "utf8");
 }
 
+async function readCssWithImports(entryPath, seen = new Set()) {
+  const normalizedEntry = path.normalize(entryPath);
+  assert.equal(seen.has(normalizedEntry), false, `CSS import cycle detected at ${normalizedEntry}`);
+
+  const source = await readText(normalizedEntry);
+  const importPattern = /@import\s+["']([^"']+\.css)["']\s*;/g;
+  const chunks = [];
+  let cursor = 0;
+
+  seen.add(normalizedEntry);
+
+  for (const match of source.matchAll(importPattern)) {
+    chunks.push(source.slice(cursor, match.index));
+
+    const resolved = path.normalize(path.join(path.dirname(normalizedEntry), match[1]));
+    assert.equal(await pathExists(resolved), true, `Missing CSS import ${match[1]} from ${normalizedEntry}`);
+    chunks.push(await readCssWithImports(resolved, seen));
+
+    cursor = match.index + match[0].length;
+  }
+
+  chunks.push(source.slice(cursor));
+  seen.delete(normalizedEntry);
+
+  return chunks.join("\n");
+}
+
 async function pathExists(path) {
   try {
     await fs.access(path);
@@ -618,7 +645,7 @@ test("client visual unity CSS keeps goal stat typography in the final owner", as
 });
 
 test("client primary final CSS keeps bottom nav sizing in one owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.individualWorkoutMenuBar\.clientBottomNav\s*\{\s*position:\s*fixed !important;\s*left:\s*max\(10px, env\(safe-area-inset-left\)\) !important;\s*right:\s*max\(10px, env\(safe-area-inset-right\)\) !important;\s*bottom:\s*max\(10px, env\(safe-area-inset-bottom\)\) !important;\s*z-index:\s*80 !important;\s*width:\s*auto !important;\s*max-width:\s*none !important;\s*height:\s*84px !important;\s*min-height:\s*84px !important;/g) || []).length,
@@ -662,7 +689,7 @@ test("legacy bottom bars CSS keeps button shells in the final owner", async () =
 });
 
 test("client primary final CSS keeps shared action bar sizing in one owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.nutritionBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSearchBottomBar\.fatSearchBottomBarFour,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar\s*\{\s*position:\s*fixed !important;\s*left:\s*max\(10px, env\(safe-area-inset-left\)\) !important;\s*right:\s*max\(10px, env\(safe-area-inset-right\)\) !important;\s*bottom:\s*max\(10px, env\(safe-area-inset-bottom\)\) !important;\s*z-index:\s*90 !important;/g) || []).length,
@@ -701,7 +728,7 @@ test("client primary final CSS keeps shared action bar sizing in one owner", asy
 });
 
 test("client primary final CSS keeps profile progress overview grid in one owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.doesNotMatch(
     source,
@@ -714,7 +741,7 @@ test("client primary final CSS keeps profile progress overview grid in one owner
 });
 
 test("client primary final CSS keeps food action bars in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatSearchBottomBar\.fatSearchBottomBarFour,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageActionBar\s*\{\s*width:\s*min\(374px, calc\(100vw - 20px\)\) !important;\s*height:\s*78px !important;\s*border-radius:\s*20px !important;\s*background:\s*rgba\(255, 255, 255, 0\.96\) !important;/g) || []).length,
@@ -756,7 +783,7 @@ test("client food search CSS keeps product edit action bar sheet-locked", async 
 });
 
 test("client primary final CSS keeps food action label typography grouped", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatSearchBottomBarFour > button strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar > button strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageActionBar > button strong\s*\{\s*max-width:\s*100% !important;\s*overflow:\s*hidden !important;\s*color:\s*inherit !important;\s*font-size:\s*10\.5px !important;\s*font-weight:\s*850 !important;/g) || []).length,
@@ -769,7 +796,7 @@ test("client primary final CSS keeps food action label typography grouped", asyn
 });
 
 test("client primary final CSS keeps food search action stack shells grouped", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.foodSearchPopularList,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodSearchModernActions\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*8px !important;\s*\}/g) || []).length,
@@ -782,7 +809,7 @@ test("client primary final CSS keeps food search action stack shells grouped", a
 });
 
 test("client primary final CSS keeps food search create action colors grouped", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction span,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction strong\s*\{\s*color:\s*rgba\(97, 106, 128, 0\.82\) !important;\s*-webkit-text-fill-color:\s*rgba\(97, 106, 128, 0\.82\) !important;\s*\}/g) || []).length,
@@ -795,7 +822,7 @@ test("client primary final CSS keeps food search create action colors grouped", 
 });
 
 test("client primary final CSS keeps food editor header layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 18px !important;\s*padding:\s*0 0 0 calc\(var\(--client-action\) \+ 12px\) !important;\s*position:\s*relative !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;/g) || []).length,
@@ -856,7 +883,7 @@ test("client primary final CSS keeps food editor header layout in the final owne
 });
 
 test("client primary final CSS keeps fixed photo action spacing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.foodSearchFixedPhotoAction\s*\{\s*left:\s*var\(--client-x\) !important;\s*right:\s*var\(--client-x\) !important;\s*bottom:\s*calc\(102px \+ env\(safe-area-inset-bottom\)\) !important;\s*min-height:\s*76px !important;\s*border-radius:\s*18px !important;/g) || []).length,
@@ -865,7 +892,7 @@ test("client primary final CSS keeps fixed photo action spacing in the final own
 });
 
 test("client primary final CSS keeps product flow title typography in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.foodProductFlowHeader \.foodProductFlowTitle h2\s*\{\s*max-width:\s*100% !important;\s*color:\s*var\(--client-title-color\) !important;\s*-webkit-text-fill-color:\s*var\(--client-title-color\) !important;\s*font-size:\s*26px !important;\s*line-height:\s*1\.08 !important;\s*font-weight:\s*900 !important;\s*white-space:\s*normal !important;/g) || []).length,
@@ -874,7 +901,7 @@ test("client primary final CSS keeps product flow title typography in the final 
 });
 
 test("client primary final CSS keeps product flow header layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader\s*\{\s*min-height:\s*126px !important;\s*margin:\s*0 0 16px !important;\s*padding:\s*0 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 116px !important;\s*grid-template-areas:\s*"title actions"\s*"meal meal" !important;\s*align-items:\s*center !important;\s*gap:\s*14px 12px !important;/g) || []).length,
@@ -899,7 +926,7 @@ test("client primary final CSS keeps product flow header layout in the final own
 });
 
 test("client primary final CSS keeps product top actions layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.foodProductTopActions\s*\{\s*top:\s*var\(--client-top\) !important;\s*right:\s*var\(--client-x\) !important;\s*left:\s*auto !important;\s*display:\s*flex !important;\s*gap:\s*10px !important;/g) || []).length,
@@ -908,7 +935,7 @@ test("client primary final CSS keeps product top actions layout in the final own
 });
 
 test("client primary final CSS keeps food search header layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.doesNotMatch(source, /\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) \.fatSearchTopPremiumHome \.fatSearchTitleWrap\s*\{/);
   assert.equal(
@@ -974,7 +1001,7 @@ test("client primary final CSS keeps food search header layout in the final owne
 });
 
 test("client primary final CSS keeps main AI stats row in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow\s*\{\s*width:\s*100% !important;\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*margin:\s*0 0 12px !important;\s*padding:\s*0 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;/g) || []).length,
@@ -1023,7 +1050,7 @@ test("client primary final CSS keeps main AI stats row in the final owner", asyn
 });
 
 test("client primary final CSS keeps profile AI hero sizing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*width:\s*100% !important;\s*height:\s*104px !important;\s*min-height:\s*104px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*74px minmax\(0, 1fr\) !important;/g) || []).length,
@@ -1048,7 +1075,7 @@ test("client primary final CSS keeps profile AI hero sizing in the final owner",
 });
 
 test("client primary final CSS keeps profile AI hero compact cluster in root owners", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*border:\s*0 !important;\s*background:\s*transparent !important;\s*box-shadow:\s*none !important;\s*\}/g) || []).length,
@@ -1105,7 +1132,7 @@ test("client primary final CSS keeps profile AI hero compact cluster in root own
 });
 
 test("client primary final CSS keeps profile AI split cards in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiSplitCards\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*12px !important;\s*margin:\s*0 0 12px !important;/g) || []).length,
@@ -1114,7 +1141,7 @@ test("client primary final CSS keeps profile AI split cards in the final owner",
 });
 
 test("client primary final CSS keeps nutrition arrow sizing in the root owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.doesNotMatch(source, /> \.nutritionAiPlanDashboard\.collapsed\.nutritionAiPlanTopInline \.nutritionAiPlanTopCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition > \.nutritionZoukBlock \.nutritionZoukHeader\s*\{/);
   assert.equal(
@@ -1136,7 +1163,7 @@ test("client primary final CSS keeps nutrition arrow sizing in the root owner", 
 });
 
 test("client primary final CSS keeps primary page title typography in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4 \.clientCorePageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetPageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectTitle\s*\{\s*height:\s*var\(--client-page-title-height\) !important;\s*min-height:\s*var\(--client-page-title-height\) !important;\s*color:\s*var\(--client-page-title-color\) !important;/g) || []).length,
@@ -1149,7 +1176,7 @@ test("client primary final CSS keeps primary page title typography in the final 
 });
 
 test("client primary final CSS keeps page title row spacing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetTitleRow,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectHero\s*\{[^}]*margin:\s*var\(--client-page-title-top\) 0 14px !important;/g) || []).length,
@@ -1158,7 +1185,7 @@ test("client primary final CSS keeps page title row spacing in the final owner",
 });
 
 test("client primary final CSS keeps header action sizing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn\s*\{\s*position:\s*absolute !important;\s*top:\s*var\(--client-top\) !important;\s*right:\s*var\(--client-x\) !important;\s*z-index:\s*35 !important;\s*margin:\s*0 !important;\s*\}/g) || []).length,
@@ -1175,7 +1202,7 @@ test("client primary final CSS keeps header action sizing in the final owner", a
 });
 
 test("client primary final CSS keeps client title row sizing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetTitleRow,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumHome,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumMy\s*\{\s*width:\s*100% !important;\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 16px !important;/g) || []).length,
@@ -1184,7 +1211,7 @@ test("client primary final CSS keeps client title row sizing in the final owner"
 });
 
 test("client primary final CSS keeps client title action styling in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileTrainerNotificationsButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeaderIconButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutHeaderActions button,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchClosePremium,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageHeaderBack,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.foodProductTopAction\s*\{\s*width:\s*var\(--client-action\) !important;\s*height:\s*var\(--client-action\) !important;\s*min-width:\s*var\(--client-action\) !important;\s*min-height:\s*var\(--client-action\) !important;/g) || []).length,
@@ -1193,7 +1220,7 @@ test("client primary final CSS keeps client title action styling in the final ow
 });
 
 test("client primary final CSS keeps workout start button fixed styling in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*position:\s*absolute !important;\s*left:\s*20px !important;\s*right:\s*20px !important;\s*bottom:\s*22px !important;\s*width:\s*auto !important;\s*height:\s*76px !important;\s*min-height:\s*76px !important;\s*border-radius:\s*18px !important;\s*background:\s*linear-gradient\(135deg, #6b4ff4 0%, #2f72f0 100%\) !important;/g) || []).length,
@@ -1210,7 +1237,7 @@ test("client primary final CSS keeps workout start button fixed styling in the f
 });
 
 test("client primary final CSS keeps workout card compact sizing in one owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutDeck\s*\{\s*width:\s*100% !important;\s*margin:\s*0 0 46px !important;\s*padding:\s*0 !important;\s*\}/g) || []).length,
@@ -1231,7 +1258,7 @@ test("client primary final CSS keeps workout card compact sizing in one owner", 
 });
 
 test("client primary final CSS keeps workout compact shell no-op repeats out of media", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutDeck\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*gap:\s*0 !important;\s*\}/g) || []).length,
@@ -1252,7 +1279,7 @@ test("client primary final CSS keeps workout compact shell no-op repeats out of 
 });
 
 test("client primary final CSS keeps workout stats layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutStats\s*\{\s*display:\s*grid !important;\s*gap:\s*18px !important;\s*margin-top:\s*26px !important;/g) || []).length,
@@ -1265,7 +1292,7 @@ test("client primary final CSS keeps workout stats layout in the final owner", a
 });
 
 test("client primary final CSS keeps workout badge layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutBadges\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 0\.78fr\) minmax\(0, 1\.45fr\) !important;\s*gap:\s*10px !important;\s*margin:\s*0 0 14px !important;/g) || []).length,
@@ -1290,7 +1317,7 @@ test("client primary final CSS keeps workout badge layout in the final owner", a
 });
 
 test("client primary final CSS keeps header action layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.doesNotMatch(
     source,
@@ -1303,7 +1330,7 @@ test("client primary final CSS keeps header action layout in the final owner", a
 });
 
 test("client primary final CSS keeps workout mobile hero and actions in one owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.workoutSelectHero > p,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectLine\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
@@ -1320,7 +1347,7 @@ test("client primary final CSS keeps workout mobile hero and actions in one owne
 });
 
 test("client primary final CSS keeps client page variables in the final owner", async () => {
-  const source = await readText("src/styles/client-primary.css");
+  const source = await readCssWithImports("src/styles/client-primary.css");
   const rhythmStart = source.indexOf("/* v.1.39: final rhythm lock for the four primary client screens. */");
   const beforeRhythmBlock = source.slice(0, rhythmStart);
 
