@@ -1,0 +1,183 @@
+/* APP49 PROGRAM GRID SCHEME */
+
+.adminProgramGridTopbar {
+  margin-bottom: 12px;
+  position: sticky;
+  top: 10px;
+  z-index: 30;
+}
+
+.adminProgramGridTopbar h1 {
+  margin: 4px 0 2px;
+  font-size: 31px;
+  line-height: 1;
+}
+
+.adminProgramGridStats div {
+  min-height: 72px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.026);
+  border: 1px solid rgba(255,255,255,.052);
+}
+
+.adminProgramGridStats strong {
+  font-size: 23px;
+}
+
+.adminProgramTemplateStrip {
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.052);
+  background: rgba(255,255,255,.022);
+}
+
+.adminProgramTemplateStrip input,
+.adminProgramTemplateStrip select,
+.adminProgramDayActions input,
+.adminExerciseNameCell input,
+.adminExerciseSetsCell input,
+.adminExerciseVideoCell input {
+  min-height: 40px;
+  border-radius: 13px;
+  background: rgba(0,0,0,.22);
+}
+
+.adminProgramGridSection,
+.adminProgramExerciseEditorBlock {
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,.055);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.032), rgba(255,255,255,.02));
+  box-shadow: 0 18px 48px rgba(0,0,0,.14);
+}
+
+.adminProgramGridSectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.adminProgramGridSectionHead h2 {
+  margin: 4px 0 4px;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.adminProgramCard:hover,
+.adminProgramDayCard:hover,
+.adminProgramCard.active,
+.adminProgramDayCard.active {
+  transform: translateY(-2px);
+  border-color: rgba(127,159,58,.3);
+  background: rgba(127,159,58,.1);
+}
+
+.adminProgramDayActions {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.adminProgramDayActions button.danger {
+  border-color: rgba(255,90,90,.25);
+  background: rgba(255,90,90,.13);
+  color: #ff9b9b;
+}
+
+.adminExerciseNameCell small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(235,250,195,.62);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.adminExerciseSetsCell {
+  display: grid;
+  gap: 6px;
+}
+
+.adminExerciseSetsCell div {
+  display: grid;
+  grid-template-columns: 24px 1fr 1fr;
+  gap: 6px;
+  align-items: center;
+}
+
+.adminExerciseSetsCell span {
+  color: rgba(255,255,255,.5);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.adminExerciseSetsCell input,
+.adminExerciseVideoCell input {
+  min-height: 34px;
+  border-radius: 11px !important;
+}
+
+.adminExerciseVideoCell {
+  display: grid;
+  gap: 6px;
+}
+
+.adminExerciseVideoCell label,
+.adminExerciseVideoCell button,
+.adminExerciseDelete {
+  min-height: 32px;
+  border-radius: 11px !important;
+  border: 1px solid rgba(255,255,255,.065);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.72);
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.adminExerciseVideoCell label input {
+  display: none;
+}
+
+.adminExerciseVideoCell button {
+  border-color: rgba(127,159,58,.25);
+  background: rgba(127,159,58,.12);
+  color: rgba(235,250,195,.9);
+}
+
+.adminProgramEmptyExerciseList {
+  min-height: 220px;
+  border-radius: 20px;
+  border: 1px dashed rgba(127,159,58,.25);
+  padding: 22px;
+}
+
+@media (max-width: 1080px) {
+
+  .adminProgramTemplateStrip,
+  .adminProgramGridTopbar,
+  .adminProgramDayActions {
+    grid-template-columns: 1fr;
+  }
+
+  .adminExerciseSetsCell,
+  .adminExerciseVideoCell,
+  .adminExerciseDelete {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 720px) {
+
+  .adminProgramGridStats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

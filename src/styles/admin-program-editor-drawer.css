@@ -1,0 +1,145 @@
+/* APP49 PROGRAM EDITOR V3 â€” DRAWER + COMPACT WORKFLOW */
+
+.adminProgramTopbar {
+  min-height: 62px !important;
+  padding: 10px 12px !important;
+  border-radius: 20px !important;
+  top: 8px !important;
+}
+
+.adminProgramTitleBlock h1 {
+  font-size: 24px !important;
+}
+
+.adminProgramTitleBlock p {
+  font-size: 11px !important;
+}
+
+.adminProgramTopActions button,
+.adminProgramBack {
+  min-height: 36px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+}
+
+.adminProgramStatsRow {
+  grid-template-columns: repeat(4, minmax(100px, 1fr)) !important;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.adminProgramStatsRow div {
+  min-height: 60px !important;
+  padding: 10px 12px !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,.026) !important;
+  box-shadow: none !important;
+}
+
+.adminProgramStatsRow strong {
+  margin-top: 5px !important;
+  font-size: 20px !important;
+}
+
+.adminProgramTemplateDock {
+  padding: 9px !important;
+  border-radius: 18px !important;
+  margin-bottom: 10px !important;
+  background: rgba(255,255,255,.02) !important;
+}
+
+.adminProgramTemplateDock input,
+.adminProgramTemplateDock select {
+  min-height: 38px !important;
+  border-radius: 12px !important;
+}
+
+.adminProgramTemplateDock button {
+  min-height: 38px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+}
+
+.adminProgramLayout {
+  grid-template-columns: 220px minmax(720px, 1fr) !important;
+  gap: 10px !important;
+}
+
+.adminProgramDaysPanel {
+  top: 92px !important;
+  padding: 12px !important;
+  border-radius: 20px !important;
+  background: rgba(255,255,255,.026) !important;
+  box-shadow: none !important;
+}
+
+.adminProgramDayTabs button.active {
+  background: rgba(127,159,58,.1) !important;
+}
+
+.adminProgramWorkoutHeader {
+  grid-template-columns: minmax(260px, 1fr) auto !important;
+  margin-bottom: 10px !important;
+}
+
+.adminProgramWorkoutHeader input {
+  min-height: 42px !important;
+  font-size: 18px !important;
+  border-radius: 13px !important;
+}
+
+.adminProgramWorkoutHeader button {
+  min-height: 38px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+}
+
+.adminProgramExerciseRow:hover,
+.adminProgramExerciseRow.active {
+  transform: none !important;
+  border-color: rgba(127,159,58,.26) !important;
+  background: rgba(127,159,58,.072) !important;
+}
+
+.adminDrawerTabs button.active {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.16);
+  color: rgba(235,250,195,.95);
+}
+
+@keyframes adminDrawerFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes adminDrawerSlideIn {
+  from { transform: translateX(28px); opacity: .7; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@media (max-width: 1180px) {
+  .adminProgramLayout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .adminProgramDaysPanel {
+    position: static !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .adminProgramStatsRow {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* APP49 DRAWER FIX â€” NON-BLOCKING INSPECTOR */
+
+/* APP49 DRAWER HARD FIX â€” REMOVE FULLSCREEN BLOCKING LAYER */
+
+@media (min-width: 1181px) {
+  .adminProgramLayout {
+    padding-right: 430px !important;
+  }
+}
+

@@ -1,0 +1,19 @@
+/* APP49 PROGRAMS -> DAYS -> EXERCISES FIX */
+.adminProgramDayActions {
+  grid-template-columns: minmax(240px, 1fr) auto auto !important;
+}
+
+.adminProgramGridSave {
+  white-space: nowrap;
+}
+
+.adminProgramExerciseEditorBlock .adminProgramGridSectionHead {
+  align-items: center;
+}
+
+@media (max-width: 1080px) {
+  .adminProgramDayActions {
+    grid-template-columns: 1fr !important;
+  }
+}
+

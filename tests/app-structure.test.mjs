@@ -3210,13 +3210,13 @@ test("admin client dashboard polish CSS keeps nutrition month summary shells gro
 });
 
 test("legacy admin program editor CSS has no empty media blocks", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
 test("legacy admin program editor CSS keeps shared button shell grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramBack,\s*\.adminProgramTopActions button,\s*\.adminProgramTemplateDock button,\s*\.adminProgramDaysPanel button,\s*\.adminProgramWorkoutHeader button,\s*\.adminProgramEmptyDay button,\s*\.adminInspectorPreviewButton,\s*\.adminProgramGridBack,\s*\.adminProgramGridSave,\s*\.adminProgramTemplateStrip button,\s*\.adminProgramDayActions button,\s*\.adminProgramGridSectionHead button,\s*\.adminProgramEmptyExerciseList button\s*\{\s*min-height:\s*42px;\s*border-radius:\s*14px;\s*border:\s*1px solid rgba\(255,255,255,\.07\);\s*background:\s*rgba\(255,255,255,\.045\);\s*color:\s*rgba\(255,255,255,\.82\);\s*font-weight:\s*950;\s*cursor:\s*pointer;\s*\}/g) || []).length,
@@ -3230,7 +3230,7 @@ test("legacy admin program editor CSS keeps shared button shell grouped", async 
 });
 
 test("legacy admin program editor CSS keeps stats grids grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramStatsRow,\s*\.adminProgramGridStats\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(4, minmax\(130px, 1fr\)\);\s*gap:\s*10px;\s*margin-bottom:\s*10px;\s*\}/g) || []).length,
@@ -3243,7 +3243,7 @@ test("legacy admin program editor CSS keeps stats grids grouped", async () => {
 });
 
 test("legacy admin program editor CSS keeps shared max width shell grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramStatsRow,\s*\.adminProgramTemplateDock,\s*\.adminProgramLayout,\s*\.adminProgramGridTopbar,\s*\.adminProgramGridStats,\s*\.adminProgramTemplateStrip,\s*\.adminProgramGridSection,\s*\.adminProgramExerciseEditorBlock\s*\{\s*max-width:\s*1680px;\s*margin-left:\s*auto;\s*margin-right:\s*auto;\s*\}/g) || []).length,
@@ -3256,7 +3256,7 @@ test("legacy admin program editor CSS keeps shared max width shell grouped", asy
 });
 
 test("legacy admin program editor CSS keeps muted header paragraphs grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTitleBlock p,\s*\.adminProgramGridTopbar p,\s*\.adminProgramGridSectionHead p\s*\{\s*margin:\s*0;\s*color:\s*rgba\(255,255,255,\.48\);\s*font-size:\s*12px;\s*font-weight:\s*850;\s*\}/g) || []).length,
@@ -3269,7 +3269,7 @@ test("legacy admin program editor CSS keeps muted header paragraphs grouped", as
 });
 
 test("legacy admin program editor CSS keeps accent button states grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTopActions button:first-child,\s*\.adminProgramTemplateDock button,\s*\.adminProgramWorkoutHeader button:last-child,\s*\.adminProgramEmptyDay button,\s*\.adminInspectorPreviewButton,\s*\.adminProgramGridSave,\s*\.adminProgramTemplateStrip button,\s*\.adminProgramGridSectionHead button,\s*\.adminProgramEmptyExerciseList button\s*\{\s*border-color:\s*rgba\(127,159,58,\.28\);\s*background:\s*rgba\(127,159,58,\.14\);\s*color:\s*rgba\(235,250,195,\.95\);\s*\}/g) || []).length,
@@ -3282,7 +3282,7 @@ test("legacy admin program editor CSS keeps accent button states grouped", async
 });
 
 test("legacy admin program editor CSS keeps topbar shell grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTopbar,\s*\.adminProgramGridTopbar\s*\{\s*min-height:\s*78px;\s*padding:\s*14px;\s*border-radius:\s*24px;\s*border:\s*1px solid rgba\(255,255,255,\.055\);\s*background:\s*rgba\(255,255,255,\.032\);\s*display:\s*grid;\s*grid-template-columns:\s*auto 1fr auto;\s*gap:\s*16px;\s*align-items:\s*center;\s*backdrop-filter:\s*blur\(18px\);\s*\}/g) || []).length,
@@ -3295,7 +3295,7 @@ test("legacy admin program editor CSS keeps topbar shell grouped", async () => {
 });
 
 test("legacy admin program editor CSS keeps micro-label typography grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTitleBlock span,\s*\.adminProgramWorkoutHeader span\s*\{\s*display:\s*block;\s*\}/g) || []).length,
@@ -3312,7 +3312,7 @@ test("legacy admin program editor CSS keeps micro-label typography grouped", asy
 });
 
 test("legacy admin program editor CSS keeps stat labels grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramStatsRow span,\s*\.adminProgramGridStats span\s*\{\s*display:\s*block;\s*color:\s*rgba\(255,255,255,\.45\);\s*font-size:\s*11px;\s*font-weight:\s*900;\s*\}/g) || []).length,
@@ -3325,7 +3325,7 @@ test("legacy admin program editor CSS keeps stat labels grouped", async () => {
 });
 
 test("legacy admin program editor CSS keeps stat values grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramStatsRow strong,\s*\.adminProgramGridStats strong\s*\{\s*display:\s*block;\s*margin-top:\s*7px;\s*color:\s*#fff;\s*line-height:\s*1;\s*font-weight:\s*1000;\s*white-space:\s*nowrap;\s*overflow:\s*hidden;\s*text-overflow:\s*ellipsis;\s*\}/g) || []).length,
@@ -3338,7 +3338,7 @@ test("legacy admin program editor CSS keeps stat values grouped", async () => {
 });
 
 test("legacy admin program editor CSS keeps template layouts grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTemplateDock,\s*\.adminProgramTemplateStrip\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*minmax\(180px, 1fr\) auto minmax\(190px, 1fr\) auto;\s*gap:\s*8px;\s*margin-bottom:\s*12px;\s*\}/g) || []).length,
@@ -3351,7 +3351,7 @@ test("legacy admin program editor CSS keeps template layouts grouped", async () 
 });
 
 test("legacy admin program editor CSS keeps form controls grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTemplateDock input,\s*\.adminProgramTemplateDock select,\s*\.adminProgramWorkoutHeader input,\s*\.adminInspectorBody input,\s*\.adminProgramTemplateStrip input,\s*\.adminProgramTemplateStrip select,\s*\.adminProgramDayActions input,\s*\.adminExerciseNameCell input,\s*\.adminExerciseSetsCell input,\s*\.adminExerciseVideoCell input\s*\{\s*width:\s*100%;\s*border:\s*1px solid rgba\(255,255,255,\.075\);\s*color:\s*#fff;\s*padding:\s*0 12px;\s*font-weight:\s*850;\s*\}/g) || []).length,
@@ -3372,7 +3372,7 @@ test("legacy admin program editor CSS keeps form controls grouped", async () => 
 });
 
 test("legacy admin program editor CSS keeps empty-state typography grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramEmptyDay strong,\s*\.adminProgramEmptyExerciseList strong\s*\{\s*font-size:\s*20px;\s*\}/g) || []).length,
@@ -3385,7 +3385,7 @@ test("legacy admin program editor CSS keeps empty-state typography grouped", asy
 });
 
 test("legacy admin program editor CSS keeps empty-state shells grouped", async () => {
-  const source = await readText("src/styles/admin-program-editor.css");
+  const source = await readCssWithImports("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramEmptyDay,\s*\.adminProgramEmptyExerciseList\s*\{\s*background:\s*rgba\(127,159,58,\.055\);\s*display:\s*grid;\s*place-content:\s*center;\s*justify-items:\s*center;\s*gap:\s*8px;\s*text-align:\s*center;\s*\}/g) || []).length,
