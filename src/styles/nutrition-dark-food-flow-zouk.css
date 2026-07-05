@@ -1,0 +1,149 @@
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukBlock,
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalHeader,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukMeal,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukFood,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukEmpty,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukAdd {
+  border-color: var(--line) !important;
+  background: var(--card) !important;
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukBlock {
+  box-shadow: var(--nutrition-flow-shadow) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukIcon,
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMealIcon,
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukFoodIcon,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalHeader .nutritionZoukIcon,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukMealIcon,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukFoodIcon {
+  border-color: var(--line) !important;
+  background: var(--card-2) !important;
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle strong,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalHeader h2,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukMealHead strong,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukFoodText strong {
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle small,
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta small,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalHeader small,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalHeader strong,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukMealHead small,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukFoodText small,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukFoodKcal small,
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta i {
+  color: var(--muted) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukFoodKcal,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukFoodKcal {
+  color: var(--muted) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMealHead,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukMealHead,
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukFoodText,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukFoodText {
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta i,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukMeta i {
+  border-color: var(--line) !important;
+  background: var(--card-2) !important;
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukMeta i,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukFoodKcal {
+  color: var(--muted) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukMeal,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukFood {
+  background: var(--card-2) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukAdd {
+  background: var(--card-2) !important;
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.16) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukEmpty {
+  border: 1px dashed var(--accent) !important;
+  background: var(--card-2) !important;
+  color: var(--accent) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalOverlay,
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalBackdrop {
+  background: rgba(10, 13, 10, 0.74) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalBackdrop {
+  background: rgba(12, 15, 12, 0.56) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet {
+  background: var(--card) !important;
+  box-shadow: var(--nutrition-flow-shadow) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet::-webkit-scrollbar-thumb {
+  background: var(--accent) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalHeader {
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--card) !important;
+  color: var(--text) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalHeader button {
+  border-color: var(--line) !important;
+  background: var(--card-2) !important;
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukModalSheet .nutritionZoukFoodKcal strong {
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroV4 .nutritionHeroTitleV4 .clientCorePageTitle {
+  background: transparent !important;
+  color: rgba(246, 248, 255, 0.92) !important;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.22) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4 small {
+  color: rgba(98, 106, 126, 0.86) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4.today small {
+  color: rgba(58, 66, 86, 0.9) !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 .nutritionDayV4.selected small {
+  color: #6d4df8 !important;
+}
+
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4,
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 span {
+  background: transparent !important;
+  color: rgba(232, 236, 248, 0.68) !important;
+}
+
+
