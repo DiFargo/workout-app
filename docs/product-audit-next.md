@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.782`.
+Last updated at app version `v.1.783`.
 
 ## Evidence
 
@@ -425,6 +425,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 317. Client main menu and cabinet restore the `v.1.648` card composition: standalone greeting, main training summary/progress/measurements, and cabinet action list.
 318. Client harness main measurement snapshot renders the restored `v.1.648` style trend chart instead of the single-point placeholder.
 319. Client harness main preview is tuned closer to the `v.1.648` reference: ILYA greeting, two workout summary cards, purple progress ring, three progress badges and two-column measurement chart.
+320. Client harness main preview keeps the ILYA greeting on one line and prevents the measurement chart title from clipping at the 430px local preview width.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

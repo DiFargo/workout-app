@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.782`.
+Last updated at app version `v.1.783`.
 
 ## Stable Now
 
@@ -17,6 +17,7 @@ Last updated at app version `v.1.782`.
 - Client main menu and cabinet now use the restored `v.1.648` card composition in both production route and local harness preview.
 - Client harness main measurement snapshot now uses populated trend-chart data so the preview matches the restored `v.1.648` main screen.
 - Client harness main preview now matches the `v.1.648` reference rhythm more closely with ILYA greeting, workout summary, purple progress ring and two-column measurement chart.
+- Client harness main preview now has a compact 430px lock so the greeting stays on one line and the measurement title remains inside its chart column.
 - Client main measurement snapshot is guarded against mobile header/body overlap in the primary visual audit.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
