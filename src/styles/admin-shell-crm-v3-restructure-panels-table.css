@@ -1,0 +1,145 @@
+.adminV3DashboardGrid {
+  display: grid;
+  grid-template-columns: minmax(560px, 1.45fr) minmax(320px, .8fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.adminV3Panel,
+.adminV3Workspace,
+.adminV3ProfileCard {
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.036), rgba(255,255,255,.022));
+  border: 1px solid rgba(255,255,255,.055);
+  box-shadow: 0 18px 48px rgba(0,0,0,.18);
+}
+
+.adminV3Panel {
+  padding: 16px;
+}
+
+.adminV3PanelHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.adminV3PanelHead h2,
+.adminV3ProfileCard h3 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.adminV3PanelHead p {
+  margin: 5px 0 0;
+}
+
+.adminV3PanelHead button {
+  min-height: 34px;
+  padding: 0 11px;
+  font-size: 11px;
+}
+
+.adminV3ClientTable {
+  display: grid;
+  gap: 6px;
+}
+
+.adminV3ClientTableHead,
+.adminV3ClientTable button {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 110px 60px 84px;
+  gap: 8px;
+  align-items: center;
+}
+
+.adminV3ClientTableHead {
+  padding: 0 12px 5px;
+  color: rgba(255,255,255,.38);
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.adminV3ClientTable button {
+  min-height: 58px;
+  padding: 9px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.055);
+  background: rgba(255,255,255,.03);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.adminV3ClientTable button.active {
+  border-color: rgba(127,159,58,.3);
+  background: rgba(127,159,58,.105);
+}
+
+.adminV3ClientTable strong {
+  display: block;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminV3ClientTable small {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255,255,255,.42);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminV3ClientTable em,
+.adminV3ClientTable i {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 900;
+  color: rgba(255,255,255,.62);
+}
+
+.adminV3ClientTable i {
+  padding: 6px 8px;
+  border-radius: 999px;
+  text-align: center;
+  background: rgba(127,159,58,.12);
+  color: rgba(235,250,195,.84);
+}
+
+.adminV3Alerts {
+  display: grid;
+  gap: 8px;
+}
+
+.adminV3Alerts div {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.032);
+  border: 1px solid rgba(255,255,255,.05);
+}
+
+.adminV3Alerts p {
+  margin: 0;
+  color: rgba(255,255,255,.7);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.adminV3Alerts.compact {
+  grid-template-columns: repeat(2, 1fr);
+}
+

@@ -1,0 +1,36 @@
+.adminV3TemplateControls {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto;
+  gap: 9px;
+}
+
+.adminV3TemplateControls input,
+.adminV3TemplateControls select,
+.adminV3Note {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.075);
+  background: rgba(0,0,0,.22);
+  color: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  font-weight: 850;
+}
+
+.adminV3OpenEditor {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 12px;
+}
+
+.adminV3Note {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.adminV3Status {
+  margin: 12px 0 0;
+  color: rgba(235,250,195,.82);
+  font-size: 12px;
+  font-weight: 850;
+}
+

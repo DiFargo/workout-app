@@ -1,0 +1,65 @@
+.adminV3KpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.adminV3KpiGrid div {
+  min-height: 92px;
+  padding: 15px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.055);
+}
+
+.adminV3KpiGrid span,
+.adminV3ProfileGrid span {
+  display: block;
+  color: rgba(255,255,255,.44);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.adminV3KpiGrid strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.adminV3KpiGrid small {
+  display: block;
+  margin-top: 7px;
+  color: rgba(255,255,255,.4);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.adminV3Filters {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.adminV3Filters button,
+.adminV3Tabs button {
+  min-height: 34px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(255,255,255,.035);
+  color: rgba(255,255,255,.66);
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.adminV3Filters button.active,
+.adminV3Tabs button.active {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.16);
+  color: rgba(235,250,195,.95);
+}
+
