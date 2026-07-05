@@ -1,0 +1,39 @@
+/* APP47 ADMIN V2 EXTENSIONS */
+
+.adminFilterRow button.active {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.16);
+  color: rgba(235,250,195,.95);
+}
+
+.adminTemplateControls input,
+.adminTemplateControls select,
+.adminTrainerNote,
+.adminWorkoutTemplateBar input,
+.adminWorkoutTemplateBar select {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.075);
+  background: rgba(0,0,0,.22);
+  color: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  font-weight: 850;
+}
+
+.adminTrainerNote {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.adminWorkoutsDesktopPage .exercise {
+  margin-bottom: 0;
+}
+
+.adminWorkoutsDesktopPage .exerciseSlideCard {
+  max-width: none;
+  width: 100%;
+  padding: 14px;
+  border-radius: 22px;
+  margin-top: 12px;
+}
+

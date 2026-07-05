@@ -2697,7 +2697,7 @@ test("legacy food product summary CSS keeps product info in the final owner", as
 });
 
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
-  const shellSource = await readText("src/styles/admin-shell-crm.css");
+  const shellSource = await readCssWithImports("src/styles/admin-shell-crm.css");
   const programSource = await readCssWithImports("src/styles/trainer-month-program-editor.css");
 
   assert.doesNotMatch(shellSource, /@media\s*\(max-width:\s*1280px\)\s*\{\s*\.adminClientCardsGridFive/);

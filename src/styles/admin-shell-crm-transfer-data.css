@@ -1,0 +1,90 @@
+/* APP47 ADMIN TRANSFER DATA */
+.adminTransferCard {
+  max-width: 980px;
+}
+
+.adminV3TransferText,
+.adminV3TransferWarning {
+  margin: 0 0 14px;
+  color: rgba(255,255,255,.52);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.adminV3TransferWarning {
+  margin: 12px 0 0;
+  color: rgba(255, 204, 128, .72);
+}
+
+.adminTransferGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.adminTransferGrid label {
+  display: grid;
+  gap: 7px;
+}
+
+.adminTransferGrid label span {
+  color: rgba(255,255,255,.48);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.adminTransferGrid select {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.075);
+  background: rgba(0,0,0,.22);
+  color: #fff;
+  padding: 0 12px;
+  font-weight: 850;
+}
+
+.adminTransferPreview {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.adminTransferPreview div {
+  min-height: 72px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.055);
+}
+
+.adminTransferPreview span {
+  display: block;
+  color: rgba(255,255,255,.45);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.adminTransferPreview strong {
+  display: block;
+  margin-top: 7px;
+  color: rgba(255,255,255,.86);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.adminV3OpenEditor:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 820px) {
+  .adminTransferGrid,
+  .adminTransferPreview {
+    grid-template-columns: 1fr;
+  }
+}
+

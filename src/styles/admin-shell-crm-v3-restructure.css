@@ -1,0 +1,658 @@
+/* APP47 ADMIN V3 RESTRUCTURE */
+.adminV3Shell {
+  min-height: 100dvh;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(127,159,58,.09), transparent 34%),
+    linear-gradient(180deg, #070a07 0%, #050705 100%);
+  color: #f4f6f2;
+}
+
+.adminV3Sidebar {
+  min-height: 100dvh;
+  padding: 20px 14px;
+  border-right: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.025);
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.adminV3Back,
+.adminV3Nav button,
+.adminV3HeaderActions button,
+.adminV3PanelHead button,
+.adminV3WorkspaceActions button,
+.adminV3OpenEditor,
+.adminV3TemplateControls button {
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(255,255,255,.045);
+  color: rgba(255,255,255,.82);
+  border-radius: 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.adminV3Brand {
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.adminV3Brand span {
+  display: block;
+  font-size: 30px;
+}
+
+.adminV3Brand strong {
+  display: block;
+  margin-top: 9px;
+  font-size: 20px;
+  font-weight: 1000;
+}
+
+.adminV3Brand small,
+.adminV3SidebarNote p,
+.adminV3Header p,
+.adminV3PanelHead p,
+.adminV3WorkspaceHead p {
+  color: rgba(255,255,255,.48);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.adminV3Nav {
+  display: grid;
+  gap: 8px;
+}
+
+.adminV3Nav button {
+  min-height: 42px;
+  padding: 0 12px;
+  text-align: left;
+}
+
+.adminV3Nav button.active,
+.adminV3HeaderActions button.primary,
+.adminV3PanelHead button,
+.adminV3WorkspaceActions button:not(.danger),
+.adminV3OpenEditor,
+.adminV3TemplateControls button {
+  border-color: rgba(127,159,58,.25);
+  background: rgba(127,159,58,.13);
+  color: rgba(235,250,195,.94);
+}
+
+.adminV3Main {
+  min-width: 0;
+  max-width: 1440px;
+  padding: 26px 28px 60px;
+}
+
+.adminV3Header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.adminV3Header span,
+.adminV3WorkspaceHead span {
+  color: rgba(145,173,78,.9);
+  font-size: 10px;
+  font-weight: 1000;
+  letter-spacing: .09em;
+}
+
+.adminV3Header h1 {
+  margin: 6px 0 8px;
+  font-size: clamp(34px, 4vw, 54px);
+  line-height: .95;
+  letter-spacing: -1.8px;
+}
+
+.adminV3HeaderActions,
+.adminV3WorkspaceActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.adminV3HeaderActions button,
+.adminV3WorkspaceActions button {
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+.adminV3WorkspaceActions button.danger {
+  border-color: rgba(255,90,90,.22);
+  background: rgba(255,90,90,.11);
+  color: #ff9b9b;
+}
+
+.adminV3KpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.adminV3KpiGrid div {
+  min-height: 92px;
+  padding: 15px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.055);
+}
+
+.adminV3KpiGrid span,
+.adminV3ProfileGrid span {
+  display: block;
+  color: rgba(255,255,255,.44);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.adminV3KpiGrid strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.adminV3KpiGrid small {
+  display: block;
+  margin-top: 7px;
+  color: rgba(255,255,255,.4);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.adminV3Filters {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.adminV3Filters button,
+.adminV3Tabs button {
+  min-height: 34px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(255,255,255,.035);
+  color: rgba(255,255,255,.66);
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.adminV3Filters button.active,
+.adminV3Tabs button.active {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.16);
+  color: rgba(235,250,195,.95);
+}
+
+.adminV3DashboardGrid {
+  display: grid;
+  grid-template-columns: minmax(560px, 1.45fr) minmax(320px, .8fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.adminV3Panel,
+.adminV3Workspace,
+.adminV3ProfileCard {
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.036), rgba(255,255,255,.022));
+  border: 1px solid rgba(255,255,255,.055);
+  box-shadow: 0 18px 48px rgba(0,0,0,.18);
+}
+
+.adminV3Panel {
+  padding: 16px;
+}
+
+.adminV3PanelHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.adminV3PanelHead h2,
+.adminV3ProfileCard h3 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.adminV3PanelHead p {
+  margin: 5px 0 0;
+}
+
+.adminV3PanelHead button {
+  min-height: 34px;
+  padding: 0 11px;
+  font-size: 11px;
+}
+
+.adminV3ClientTable {
+  display: grid;
+  gap: 6px;
+}
+
+.adminV3ClientTableHead,
+.adminV3ClientTable button {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 110px 60px 84px;
+  gap: 8px;
+  align-items: center;
+}
+
+.adminV3ClientTableHead {
+  padding: 0 12px 5px;
+  color: rgba(255,255,255,.38);
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.adminV3ClientTable button {
+  min-height: 58px;
+  padding: 9px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.055);
+  background: rgba(255,255,255,.03);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.adminV3ClientTable button.active {
+  border-color: rgba(127,159,58,.3);
+  background: rgba(127,159,58,.105);
+}
+
+.adminV3ClientTable strong {
+  display: block;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminV3ClientTable small {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255,255,255,.42);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminV3ClientTable em,
+.adminV3ClientTable i {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 900;
+  color: rgba(255,255,255,.62);
+}
+
+.adminV3ClientTable i {
+  padding: 6px 8px;
+  border-radius: 999px;
+  text-align: center;
+  background: rgba(127,159,58,.12);
+  color: rgba(235,250,195,.84);
+}
+
+.adminV3Alerts {
+  display: grid;
+  gap: 8px;
+}
+
+.adminV3Alerts div {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.032);
+  border: 1px solid rgba(255,255,255,.05);
+}
+
+.adminV3Alerts p {
+  margin: 0;
+  color: rgba(255,255,255,.7);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.adminV3Alerts.compact {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.adminV3Workspace {
+  margin-top: 14px;
+  padding: 18px;
+}
+
+.adminV3WorkspaceHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.adminV3WorkspaceHead h2 {
+  margin: 5px 0 3px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.adminV3WorkspaceHead p {
+  margin: 0;
+}
+
+.adminV3Tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0 14px;
+}
+
+.adminV3TabGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.adminV3Wide {
+  grid-column: 1 / -1;
+}
+
+.adminV3ProfileCard {
+  padding: 16px;
+}
+
+.adminV3ProfileCard h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.adminV3ProfileGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+}
+
+.adminV3ProfileGrid div {
+  min-height: 66px;
+  padding: 11px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.14);
+  border: 1px solid rgba(255,255,255,.045);
+}
+
+.adminV3ProfileGrid strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminV3MiniChart {
+  height: 150px;
+  display: flex;
+  align-items: end;
+  gap: 8px;
+  padding: 12px 6px 0;
+  border-radius: 18px;
+  background: rgba(0,0,0,.12);
+}
+
+.adminV3MiniChart span {
+  position: relative;
+  flex: 1;
+  min-height: 10px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, rgba(145,173,78,.88), rgba(127,159,58,.4));
+}
+
+.adminV3MiniChart em {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 4px;
+  color: rgba(255,255,255,.55);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.adminV3MiniChart p,
+.adminV3Empty {
+  margin: auto;
+  color: rgba(255,255,255,.42);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.adminV3NutritionList {
+  display: grid;
+  gap: 8px;
+  max-height: 420px;
+  overflow: auto;
+}
+
+.adminV3NutritionList details {
+  padding: 11px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.13);
+  border: 1px solid rgba(255,255,255,.05);
+}
+
+.adminV3NutritionList summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.adminV3NutritionList summary strong {
+  font-size: 13px;
+}
+
+.adminV3NutritionList summary span {
+  color: rgba(255,255,255,.48);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.adminV3NutritionList details div {
+  margin-top: 10px;
+  display: grid;
+  gap: 7px;
+}
+
+.adminV3NutritionList p {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(255,255,255,.7);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.adminV3Timeline {
+  display: grid;
+  gap: 8px;
+}
+
+.adminV3Timeline div {
+  display: grid;
+  grid-template-columns: 28px minmax(160px, 1fr) 130px auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.13);
+  border: 1px solid rgba(255,255,255,.05);
+}
+
+.adminV3Timeline strong {
+  font-size: 13px;
+}
+
+.adminV3Timeline small,
+.adminV3Timeline em {
+  color: rgba(255,255,255,.47);
+  font-size: 11px;
+  font-weight: 850;
+  font-style: normal;
+}
+
+.adminV3ExerciseProgress {
+  display: grid;
+  gap: 8px;
+}
+
+.adminV3ExerciseProgress div {
+  position: relative;
+  min-height: 46px;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.13);
+  overflow: hidden;
+}
+
+.adminV3ExerciseProgress span,
+.adminV3ExerciseProgress strong {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.adminV3ExerciseProgress span {
+  color: rgba(255,255,255,.72);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.adminV3ExerciseProgress strong {
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.adminV3ExerciseProgress i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(145,173,78,.84);
+}
+
+.adminV3TemplateControls {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto;
+  gap: 9px;
+}
+
+.adminV3TemplateControls input,
+.adminV3TemplateControls select,
+.adminV3Note {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.075);
+  background: rgba(0,0,0,.22);
+  color: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  font-weight: 850;
+}
+
+.adminV3OpenEditor {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 12px;
+}
+
+.adminV3Note {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.adminV3Status {
+  margin: 12px 0 0;
+  color: rgba(235,250,195,.82);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+@media (max-width: 1100px) {
+  .adminV3Shell {
+    grid-template-columns: 1fr;
+  }
+
+  .adminV3Sidebar {
+    min-height: auto;
+    position: static;
+  }
+
+  .adminV3DashboardGrid,
+  .adminV3TabGrid,
+  .adminV3ProfileGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .adminV3KpiGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .adminV3TemplateControls {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .adminV3Main {
+    padding: 18px 14px 46px;
+  }
+
+  .adminV3Header,
+  .adminV3WorkspaceHead {
+    flex-direction: column;
+  }
+
+  .adminV3KpiGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .adminV3ClientTableHead {
+    display: none;
+  }
+
+  .adminV3ClientTable button,
+  .adminV3Timeline div {
+    grid-template-columns: 1fr;
+  }
+}
+
