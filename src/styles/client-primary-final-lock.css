@@ -4364,6 +4364,10 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     margin: 0 0 12px !important;
   }
 
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHeroText {
+    margin-left: 5px !important;
+  }
+
   html:root[data-app-theme="warm-light"] body #root .profileAiHeroText h1 {
     max-width: 100% !important;
     margin: 0 !important;

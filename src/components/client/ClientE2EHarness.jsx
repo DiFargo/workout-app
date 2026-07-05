@@ -15,8 +15,12 @@ import {
 } from "../workout/WorkoutDialogs";
 import ProfileAppSettingsSection from "../../features/client/profile/ProfileAppSettingsSection";
 import ProfileBodyMetricsSettingsSection from "../../features/client/profile/ProfileBodyMetricsSettingsSection";
+import ProfileHeroCard from "../../features/client/profile/ProfileHeroCard";
+import ProfileMainMeasurementSnapshot from "../../features/client/profile/ProfileMainMeasurementSnapshot";
+import ProfileMainSummaryCards from "../../features/client/profile/ProfileMainSummaryCards";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
+import ProfileProgressInsightCard from "../../features/client/profile/ProfileProgressInsightCard";
 import ProfileProgressPhotosModal from "../../features/client/profile/ProfileProgressPhotosModal";
 import ProfileSettingsModal from "../../features/client/profile/ProfileSettingsModal";
 import ProfileTelegramModal from "../../features/client/profile/ProfileTelegramModal";
@@ -771,9 +775,9 @@ export default function ClientE2EHarness() {
         : "clientCorePageTitle";
 
     return (
-      <main
+      <div
         className={`profileDashboardPage profileTabbedPage clientCorePage${pageClass}`}
-        data-profile-tab={activeTab === "cabinet" ? "cabinet" : undefined}
+        data-profile-tab={activeTab === "main" || activeTab === "cabinet" ? "cabinet" : undefined}
         data-testid={`client-harness-${activeTab}`}
       >
         <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
@@ -806,7 +810,7 @@ export default function ClientE2EHarness() {
           {children}
         </section>
         {renderBottomBar(activeTab, { className: "mainMenuBottomBar profileBottomTabBar" })}
-      </main>
+      </div>
     );
   }
 
@@ -1071,7 +1075,14 @@ export default function ClientE2EHarness() {
 
     return renderHarnessChrome("cabinet", "Личный кабинет", (
       <>
-        <HarnessHero withStats={false} />
+        <ProfileHeroCard
+          isMainDashboard={false}
+          telegramProfile={{ connected: false }}
+          avatarUrl=""
+          progressScore={90}
+          greetingName="ILYA"
+          onOpenAccount={() => {}}
+        />
         <HarnessCabinetActions
           onOpenPhotos={() => setCabinetPhotosOpen(true)}
           onOpenMeasurements={() => setCabinetMeasurementsOpen(true)}
@@ -1227,10 +1238,68 @@ export default function ClientE2EHarness() {
 
   return renderHarnessChrome("main", "Главное меню", (
     <>
-      <HarnessHero />
-      <HarnessMainSummary compact />
-      <HarnessProgressInsight />
-      <HarnessMeasurementSnapshot />
+      <div className="profileMainHeroStatsCard">
+        <ProfileHeroCard
+          isMainDashboard
+          telegramProfile={{ connected: false }}
+          avatarUrl=""
+          progressScore={90}
+          greetingName="ILYA"
+          onOpenAccount={() => {}}
+        />
+        <ProfileMainSummaryCards
+          activeGoalLabel="Сушка"
+          targetWeight={89}
+          weight={89}
+          currentGoalId="cut"
+          totalWorkouts={12}
+          lastWorkoutDate="27 июня"
+          nextTrainingText="Сегодня"
+          showSplitCards={false}
+        />
+      </div>
+
+      <ProfileMainSummaryCards
+        activeGoalLabel="Сушка"
+        targetWeight={89}
+        weight={89}
+        currentGoalId="cut"
+        totalWorkouts={12}
+        lastWorkoutDate="27 июня"
+        nextTrainingText="Сегодня"
+        showStats={false}
+      />
+
+      <ProfileProgressInsightCard
+        isMainDashboard
+        progressInsight={{
+          score: 90,
+          tone: "positive",
+          scoreLabel: "Отличный темп",
+          scoreSummary: "Регулярность: данные ведутся стабильно. Продолжай в том же ритме."
+        }}
+        expanded={false}
+        statuses={[
+          { icon: "⚡", title: "Тренировка", text: "Сегодня" },
+          { icon: "📏", title: "Замер", text: "Пора обновить" },
+          { icon: "🍽", title: "Питание", text: "По плану" }
+        ]}
+        currentGoalId="cut"
+        totalWorkouts={12}
+        onToggle={() => {}}
+      />
+
+      <ProfileMainMeasurementSnapshot
+        measurementSeries={[
+          { dateLabel: "09.06", weight: 88.5 },
+          { dateLabel: "10.06", weight: 89.5 },
+          { dateLabel: "10.06", weight: 89.5 },
+          { dateLabel: "16.06", weight: 89 }
+        ]}
+        latestMeasurement={{ date: "2026-06-16T12:00:00.000Z", weight: 89 }}
+        latestWeight={89}
+        weightChange={-0.5}
+      />
     </>
   ));
 }

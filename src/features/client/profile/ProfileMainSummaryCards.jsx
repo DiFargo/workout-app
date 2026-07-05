@@ -46,16 +46,16 @@ export default function ProfileMainSummaryCards({
       )}
 
       {showSplitCards && (
-      <div className="profileAiSplitCards">
-        <div className="profileAiMiniCard">
+      <div className="profileMainSummaryGrid profileAiSplitCards">
+        <article className="profileAiMiniCard">
           <span><CalendarDays aria-hidden="true" />Последняя тренировка</span>
           <strong>{lastWorkoutDate || "Нет данных"}</strong>
-        </div>
+        </article>
 
-        <div className="profileAiMiniCard">
+        <article className="profileAiMiniCard">
           <span><Zap aria-hidden="true" />Следующая тренировка</span>
           <strong>{nextTrainingText}</strong>
-        </div>
+        </article>
       </div>
       )}
     </>

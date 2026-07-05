@@ -348,19 +348,31 @@ export default function ProfileDashboardRoute(ctx) {
       )}
 
       <section className="profileUnifiedCard profileAiDashboardCard profileCabinetSection">
-        {isMainDashboard && (
-          <ProfileHeroCard
-            isMainDashboard={isMainDashboard}
-            canOpenAccount={!canUseTrainerFeatures()}
-            telegramProfile={telegramProfile}
-            avatarUrl={profileAvatarUrl}
-            progressScore={progressInsight.score}
-            greetingName={greetingName}
-            onOpenAccount={() => {
-              setProfileProgressModalOpen(false);
-              openProfileAccount();
-            }}
-          />
+        {visibleProfileTab === "cabinet" && isMainDashboard && (
+          <div className="profileMainHeroStatsCard">
+            <ProfileHeroCard
+              isMainDashboard={isMainDashboard}
+              canOpenAccount={!canUseTrainerFeatures()}
+              telegramProfile={telegramProfile}
+              avatarUrl={profileAvatarUrl}
+              progressScore={progressInsight.score}
+              greetingName={greetingName}
+              onOpenAccount={() => {
+                setProfileProgressModalOpen(false);
+                openProfileAccount();
+              }}
+            />
+            <ProfileMainSummaryCards
+              activeGoalLabel={activeGoalLabel}
+              targetWeight={activeProfile?.targetWeight}
+              weight={activeProfile?.weight}
+              currentGoalId={currentGoalId}
+              totalWorkouts={totalWorkouts}
+              lastWorkoutDate={lastWorkoutDate}
+              nextTrainingText={nextTrainingText}
+              showSplitCards={false}
+            />
+          </div>
         )}
 
         {visibleProfileTab === "cabinet" && !isMainDashboard && (
