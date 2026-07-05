@@ -1,0 +1,270 @@
+/* PROFILE TABS: FINAL RHYTHM AND MEASUREMENT WIZARD V257 */
+.profileTabbedPage:not(.mainDashboardPage) {
+  padding-bottom: calc(118px + env(safe-area-inset-bottom)) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: calc(100dvh - 154px) !important;
+  overflow-y: auto !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHistoryButton {
+  margin-top: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHeroText > span,
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardTop span,
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionAccordionHead span,
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle span,
+.profileTabbedPage[data-profile-tab="settings"] .profileAccordionHead span {
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  text-transform: uppercase !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow span,
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard span,
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachToggle p,
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardTop small,
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardIconWrap p,
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionAccordionHead small,
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle small,
+.profileTabbedPage[data-profile-tab="settings"] .profileAccordionHead small,
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeText small,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramText small {
+  color: rgba(255, 255, 255, 0.58) !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow > div {
+  min-height: 74px !important;
+  padding: 10px 8px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow strong {
+  font-size: clamp(18px, 5vw, 22px) !important;
+  line-height: 1 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard {
+  min-height: 78px !important;
+  padding: 12px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard strong {
+  margin-top: 6px !important;
+  font-size: clamp(18px, 5vw, 22px) !important;
+  line-height: 1.08 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachToggle {
+  min-height: 94px !important;
+  padding: 14px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachToggle h2 {
+  margin-top: 6px !important;
+  font-size: clamp(19px, 5.2vw, 23px) !important;
+  line-height: 1.05 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachPreview {
+  margin-top: 8px !important;
+  gap: 6px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachPreview span {
+  min-height: 30px !important;
+  padding: 7px 10px !important;
+  font-size: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardTop strong,
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionCalendarHead h2,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsPageTitle {
+  font-size: 24px !important;
+  line-height: 1.05 !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardCard {
+  min-height: 126px !important;
+  padding: 12px !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementLastGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementStartBtn,
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionGoalSettingsBtn,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodySaveBtn,
+.profileTabbedPage[data-profile-tab="settings"] .profileLogoutBtn {
+  min-height: 52px !important;
+  border-radius: 18px !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionSection.hasPlan {
+  overflow: hidden !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionCalendarHead,
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionCalendarMonthTitle {
+  min-height: 38px !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionMonthDay {
+  border-radius: 12px !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionDayPlan {
+  gap: 6px !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionDayPlan div {
+  min-height: 52px !important;
+  border-radius: 14px !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionGoalSettingsBtn {
+  width: 100% !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle,
+.profileTabbedPage[data-profile-tab="settings"] .profileAccordionHead,
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+  min-height: 68px !important;
+  padding: 12px 14px !important;
+  border-radius: 18px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle:focus,
+.profileTabbedPage[data-profile-tab="settings"] .profileAccordionHead:focus,
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn:focus,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem:focus {
+  outline: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle:focus-visible,
+.profileTabbedPage[data-profile-tab="settings"] .profileAccordionHead:focus-visible,
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn:focus-visible,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem:focus-visible {
+  outline: 2px solid rgba(181, 230, 85, 0.58) !important;
+  outline-offset: 2px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeActions,
+.profileTabbedPage[data-profile-tab="settings"] .profileSexPicker {
+  gap: 7px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeActions button,
+.profileTabbedPage[data-profile-tab="settings"] .profileSexPicker button {
+  min-height: 46px !important;
+  border-radius: 15px !important;
+}
+
+.measurementFullscreenPage {
+  max-width: none !important;
+  padding:
+    max(22px, calc(env(safe-area-inset-top) + 14px))
+    10px
+    calc(116px + env(safe-area-inset-bottom))
+    10px !important;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(127, 159, 58, 0.13), transparent 34%),
+    linear-gradient(180deg, #081008 0%, #040704 100%) !important;
+}
+
+.measurementFullscreenHeader,
+.measurementFullscreenBody {
+  width: min(560px, calc(100vw - 20px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.measurementFullscreenHeader {
+  margin-bottom: 10px !important;
+}
+
+.measurementFullscreenProgress {
+  gap: 7px !important;
+}
+
+.measurementFullscreenProgress span {
+  font-size: 12px !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+}
+
+.measurementFullscreenProgress i {
+  height: 7px !important;
+}
+
+.measurementFullscreenCard {
+  padding: 14px !important;
+  border-radius: 30px !important;
+  border-color: rgba(127, 159, 58, 0.22) !important;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(127, 159, 58, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+}
+
+.measurementFullscreenText h2,
+.measurementFullscreenCard h2 {
+  font-size: clamp(27px, 7vw, 34px) !important;
+  letter-spacing: 0 !important;
+}
+
+.measurementFullscreenText p,
+.measurementFullscreenCard p {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
+
+.measurementFullscreenNav {
+  width: min(560px, calc(100vw - 20px)) !important;
+  grid-template-columns: minmax(92px, 1fr) minmax(0, 3fr) !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  border-radius: 28px !important;
+  border-color: rgba(127, 159, 58, 0.18) !important;
+  background: linear-gradient(180deg, #171c18 0%, #101410 100%) !important;
+}
+
+.measurementFullscreenNav button {
+  min-height: 64px !important;
+  border-radius: 20px !important;
+  font-size: 16px !important;
+}
+
+.measurementFullscreenNav button.next {
+  border-color: rgba(145, 173, 78, 0.34) !important;
+  background: linear-gradient(180deg, rgba(154, 190, 75, 0.96), rgba(127, 159, 58, 0.96)) !important;
+  color: #10140c !important;
+  box-shadow:
+    0 12px 28px rgba(84, 113, 35, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+@media (max-width: 390px) {
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  .measurementFullscreenImageFrame {
+    min-height: 220px !important;
+  }
+
+  .measurementFullscreenNav {
+    width: calc(100vw - 18px) !important;
+  }
+}
+

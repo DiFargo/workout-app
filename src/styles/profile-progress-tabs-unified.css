@@ -1,0 +1,243 @@
+/* PROFILE TABS: UNIFIED WORKOUT VISUAL SYSTEM V257 */
+.profileTabbedPage:not(.mainDashboardPage) {
+  --profile-workout-width: min(560px, calc(100vw - 28px));
+  min-height: 100dvh !important;
+  padding-top: 22px !important;
+  overflow-x: hidden !important;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(127, 159, 58, 0.13), transparent 34%),
+    linear-gradient(180deg, #081008 0%, #040704 100%) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileCabinetSection,
+.profileTabbedPage:not(.mainDashboardPage) .profileNutritionSection,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection,
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  box-sizing: border-box !important;
+  width: var(--profile-workout-width) !important;
+  max-width: 560px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  border-color: rgba(127, 159, 58, 0.22) !important;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(127, 159, 58, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileCabinetSection {
+  border-radius: 30px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+  min-height: min(690px, calc(100dvh - 154px)) !important;
+  margin-top: 0 !important;
+  padding: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection::-webkit-scrollbar {
+  display: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHero {
+  min-height: 94px !important;
+  padding: 8px 6px 10px !important;
+  align-items: center !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHeroText > span,
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardTop span,
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionCalendarHead h2,
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle span,
+.profileTabbedPage[data-profile-tab="settings"] .profileAccordionHead span {
+  color: rgba(181, 230, 85, 0.78) !important;
+  letter-spacing: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHeroText h1 {
+  max-width: 260px !important;
+  font-size: clamp(21px, 5.8vw, 25px) !important;
+  line-height: 1.02 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow,
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiSplitCards {
+  gap: 7px !important;
+  margin-top: 8px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow > div,
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard,
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachInsight,
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardCard,
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementLastGrid div,
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeSettingsSection,
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+  border: 1px solid rgba(255, 255, 255, 0.065) !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow > div,
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard {
+  border-radius: 17px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachInsight {
+  margin-top: 8px !important;
+  border-radius: 20px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHistoryButton {
+  min-height: 54px !important;
+  margin-top: auto !important;
+  border: 1px solid rgba(127, 159, 58, 0.24) !important;
+  border-radius: 18px !important;
+  background: rgba(127, 159, 58, 0.11) !important;
+  box-shadow: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection {
+  border-color: rgba(127, 159, 58, 0.22) !important;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(127, 159, 58, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardCard {
+  border-radius: 19px !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementLastGrid div {
+  border-radius: 14px !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementStartBtn,
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionGoalSettingsBtn {
+  border-color: rgba(145, 173, 78, 0.34) !important;
+  background: linear-gradient(180deg, rgba(154, 190, 75, 0.96), rgba(127, 159, 58, 0.96)) !important;
+  color: #10140c !important;
+  box-shadow:
+    0 12px 28px rgba(84, 113, 35, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionCalendarHead h2 {
+  color: #fff !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionSection.hasPlan {
+  margin-top: 0 !important;
+  border: 1px solid rgba(127, 159, 58, 0.22) !important;
+  border-radius: 30px !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileAiNutritionPlanCard {
+  border: 0 !important;
+  border-radius: 29px 29px 0 0 !important;
+  background: transparent !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionGoalCard {
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+  border-radius: 0 0 29px 29px !important;
+  background: rgba(0, 0, 0, 0.12) !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] {
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"]::-webkit-scrollbar {
+  display: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileCabinetSection {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 16px 12px 10px !important;
+  border-radius: 30px 30px 0 0 !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsPageTitle {
+  margin: 2px 0 12px !important;
+  font-size: clamp(24px, 6.5vw, 28px) !important;
+  line-height: 1.02 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeSettingsSection {
+  border-radius: 20px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection {
+  margin-top: -1px !important;
+  margin-bottom: 0 !important;
+  padding: 10px 12px !important;
+  border-top-color: rgba(255, 255, 255, 0.055) !important;
+  border-bottom-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  margin-top: -1px !important;
+  padding: 10px 12px 12px !important;
+  border-top-color: rgba(255, 255, 255, 0.055) !important;
+  border-radius: 0 0 30px 30px !important;
+  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.36) !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead {
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button:focus {
+  outline: none !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button:focus-visible {
+  outline: 2px solid rgba(181, 230, 85, 0.58) !important;
+  outline-offset: -3px !important;
+}
+
+@media (max-width: 390px) {
+  .profileTabbedPage:not(.mainDashboardPage) {
+    --profile-workout-width: calc(100vw - 20px);
+  }
+
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+    min-height: calc(100dvh - 154px) !important;
+    padding: 10px !important;
+    border-radius: 28px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionSection.hasPlan {
+    border-radius: 28px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="settings"] .profileCabinetSection {
+    border-radius: 28px 28px 0 0 !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+    border-radius: 0 0 28px 28px !important;
+  }
+}
+
