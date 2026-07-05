@@ -358,7 +358,7 @@ function HarnessProgressInsight() {
 
 function HarnessMeasurementSnapshot() {
   return (
-    <section className="mainMeasurementSnapshot singlePointTrend" aria-label="Последние замеры веса">
+    <section className="mainMeasurementSnapshot" aria-label="Последние замеры веса">
       <div className="mainMeasurementSnapshotHeader">
         <span>Последние замеры</span>
         <i aria-hidden="true">›</i>
@@ -371,10 +371,41 @@ function HarnessMeasurementSnapshot() {
           <small>к прошлому замеру</small>
         </div>
         <div className="mainMeasurementChart">
-          <div className="mainMeasurementSingle">
-            <strong>Динамика сохранена</strong>
-            <span>Следующий замер покажет тренд за неделю.</span>
-          </div>
+          <svg
+            className="mainMeasurementChartTrend"
+            viewBox="0 0 280 118"
+            role="img"
+            aria-label="Динамика веса по последним замерам"
+          >
+            <defs>
+              <linearGradient id="harnessMeasurementLineGradient" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stopColor="#6354f4" />
+                <stop offset="100%" stopColor="#7a4cff" />
+              </linearGradient>
+            </defs>
+            <line className="mainMeasurementCurrentGuide" x1="238" y1="47" x2="238" y2="96" />
+            <polyline
+              className="mainMeasurementTrendLine"
+              points="28,72 98,52 168,52 238,47"
+            />
+            <text className="mainMeasurementPointLabel" x="28" y="54">89.2 кг</text>
+            <text className="mainMeasurementPointLabel" x="98" y="34">89 кг</text>
+            <text className="mainMeasurementPointLabel" x="168" y="34">89 кг</text>
+            <text className="mainMeasurementPointLabel" x="238" y="29">88.8 кг</text>
+            <circle className="mainMeasurementTrendPoint" cx="28" cy="72" r="4.8" />
+            <circle className="mainMeasurementTrendPoint" cx="98" cy="52" r="4.8" />
+            <circle className="mainMeasurementTrendPoint" cx="168" cy="52" r="4.8" />
+            <circle className="mainMeasurementTrendPoint current" cx="238" cy="47" r="7" />
+            <g className="mainMeasurementCurrentBubble">
+              <rect x="209" y="5" width="58" height="25" rx="7" />
+              <path d="M 231 29 L 245 29 L 238 40 Z" />
+              <text x="238" y="22">88.8 кг</text>
+            </g>
+            <text className="mainMeasurementDateLabel" x="28" y="110">09.06</text>
+            <text className="mainMeasurementDateLabel" x="98" y="110">10.06</text>
+            <text className="mainMeasurementDateLabel" x="168" y="110">16.06</text>
+            <text className="mainMeasurementDateLabel" x="238" y="110">22.06</text>
+          </svg>
         </div>
       </div>
     </section>
