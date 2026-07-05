@@ -2717,7 +2717,7 @@ test("admin calendar reminders CSS keeps one fixed back label visibility owner",
 });
 
 test("admin history CSS keeps checkbox visuals in the final visible owner", async () => {
-  const source = await readText("src/styles/client-history-ai-search.css");
+  const source = await readCssWithImports("src/styles/client-history-ai-search.css");
 
   assert.doesNotMatch(source, /\.adminHistoryCheck\s*\{\s*position:\s*absolute;\s*left:\s*14px;\s*top:\s*50%;\s*transform:\s*translateY\(-50%\);\s*width:\s*28px;\s*height:\s*28px;\s*cursor:\s*pointer;\s*\}/);
   assert.doesNotMatch(source, /\.adminHistoryCheck input:checked \+ i::after\s*\{[\s\S]*?color:\s*rgba\(255,\s*210,\s*210,\s*0\.98\);/);
@@ -2728,7 +2728,7 @@ test("admin history CSS keeps checkbox visuals in the final visible owner", asyn
 });
 
 test("nutrition calendar CSS keeps final size and label color locks in the final owner", async () => {
-  const source = await readText("src/styles/client-history-ai-search.css");
+  const source = await readCssWithImports("src/styles/client-history-ai-search.css");
   const premiumCalendarStart = source.indexOf("/* PREMIUM NUTRITION CALENDAR */");
   const premiumCalendarEnd = source.indexOf("@media (max-width: 380px)", premiumCalendarStart);
   const premiumCalendarBlock = source.slice(premiumCalendarStart, premiumCalendarEnd);
