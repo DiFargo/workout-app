@@ -1374,7 +1374,7 @@ test("client primary final CSS keeps client page variables in the final owner", 
 });
 
 test("client workout set-row final sizing stays in the workout lazy owner", async () => {
-  const renderTarget = await readText("src/styles/client-render-target.css");
+  const renderTarget = await readCssWithImports("src/styles/client-render-target.css");
   const setRows = await readText("src/styles/client-workout-set-rows.css");
 
   assert.doesNotMatch(renderTarget, /v127: absolute final override for workout set rows/);
@@ -1393,7 +1393,7 @@ test("client workout set-row final sizing stays in the workout lazy owner", asyn
 });
 
 test("client render target CSS keeps profile hero locks in one owner", async () => {
-  const source = await readText("src/styles/client-render-target.css");
+  const source = await readCssWithImports("src/styles/client-render-target.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero\s*\{\s*border-bottom-left-radius:\s*0 !important;\s*border-bottom-right-radius:\s*0 !important;\s*\}/g) || []).length,
@@ -1421,7 +1421,7 @@ test("client render target CSS keeps profile hero locks in one owner", async () 
 });
 
 test("client render target CSS keeps workout pro top sizing in the final owner", async () => {
-  const source = await readText("src/styles/client-render-target.css");
+  const source = await readCssWithImports("src/styles/client-render-target.css");
 
   assert.doesNotMatch(
     source,
@@ -1636,7 +1636,7 @@ test("client workout flow CSS keeps compact run action panel sizing grouped", as
 });
 
 test("client workout hero spacing stays in the workout lazy owner", async () => {
-  const renderTarget = await readText("src/styles/client-render-target.css");
+  const renderTarget = await readCssWithImports("src/styles/client-render-target.css");
   const cardRender = await readText("src/styles/client-workout-card-render.css");
 
   assert.doesNotMatch(
