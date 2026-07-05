@@ -1,0 +1,16 @@
+/* Final primary client screen locks: version badge, cabinet bottom clipping, route polish. */
+html:root[data-app-theme="warm-light"] body #root .clientCorePage .appVersionBadge.clientPageVersionBadge,
+html:root[data-app-theme="warm-light"] body #root .clientCorePage .clientPageVersionBadge,
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge,
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .appVersionBadge.clientPageVersionBadge,
+html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge {
+  color: #737b91 !important;
+  -webkit-text-fill-color: #737b91 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: none !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: #e1e4ef !important;
+}
+

@@ -1,0 +1,68 @@
+/* v1.77c conflict fixes for older high-specificity mobile rules. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectHero {
+    width: 100% !important;
+    height: var(--client-title-h) !important;
+    min-height: var(--client-title-h) !important;
+    margin: 0 0 16px !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 12px !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectTitle {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: var(--client-title-h) !important;
+    min-height: var(--client-title-h) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    color: var(--client-title-color) !important;
+    -webkit-text-fill-color: var(--client-title-color) !important;
+    font-size: var(--client-title-fz) !important;
+    line-height: 1.06 !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutBottomPanel,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutBottomPanel {
+    position: fixed !important;
+    left: max(10px, env(safe-area-inset-left)) !important;
+    right: max(10px, env(safe-area-inset-right)) !important;
+    bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    z-index: 90 !important;
+    width: auto !important;
+    height: 84px !important;
+    min-height: 84px !important;
+    max-height: 84px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav {
+    position: relative !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: 84px !important;
+    min-height: 84px !important;
+    max-height: 84px !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+}
+
