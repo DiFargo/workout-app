@@ -4175,7 +4175,7 @@ test("trainer mobile overflow navigation exposes current page state", async () =
 });
 
 test("trainer workspace CSS keeps mobile bottom nav shell in one owner", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNextMobileNav\s*\{\s*position:\s*fixed;\s*z-index:\s*1000;[\s\S]*?grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\);/g) || []).length,
@@ -4184,7 +4184,7 @@ test("trainer workspace CSS keeps mobile bottom nav shell in one owner", async (
 });
 
 test("trainer workspace CSS keeps mobile page shell grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/@media\s*\(max-width:\s*820px\),\s*\(hover:\s*none\) and \(pointer:\s*coarse\) and \(orientation:\s*landscape\)\s*\{[\s\S]*?\.trainerNextPage\s*\{\s*width:\s*100%;\s*min-height:\s*100dvh;\s*padding:\s*max\(20px,\s*env\(safe-area-inset-top\)\) 20px calc\(112px \+ env\(safe-area-inset-bottom\)\);\s*background:\s*#fff;\s*\}/g) || []).length,
@@ -4197,7 +4197,7 @@ test("trainer workspace CSS keeps mobile page shell grouped", async () => {
 });
 
 test("trainer workspace CSS keeps mobile header page grids grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNextWorkoutPage \.trainerNextMobileHeader,\s*\.trainerNextNutritionPage \.trainerNextMobileHeader\s*\{\s*grid-template-columns:\s*1fr 34px;\s*\}/g) || []).length,
@@ -4206,7 +4206,7 @@ test("trainer workspace CSS keeps mobile header page grids grouped", async () =>
 });
 
 test("trainer workspace CSS keeps nutrition and notification action buttons grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNutritionPlanActions > button,\s*\.trainerNotificationActions button\s*\{\s*min-height:\s*42px;/g) || []).length,
@@ -4219,7 +4219,7 @@ test("trainer workspace CSS keeps nutrition and notification action buttons grou
 });
 
 test("trainer workspace CSS keeps shared form field shells grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerClientAssignmentControls label,\s*\.trainerNutritionPreset,\s*\.trainerNutritionGoalInputs label,\s*\.trainerNutritionPlanFields label,\s*\.trainerNutritionValidity label\s*\{\s*display:\s*grid;/g) || []).length,
@@ -4236,7 +4236,7 @@ test("trainer workspace CSS keeps shared form field shells grouped", async () =>
 });
 
 test("trainer workspace CSS keeps cabinet and utility card shells grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerCabinetHero,\s*\.trainerCabinetStats,\s*\.trainerCabinetActions,\s*\.trainerUtilityCard,\s*\.trainerUtilityActions\s*\{\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*18px;\s*background:\s*#fff;\s*box-shadow:\s*var\(--tn-soft-shadow\);\s*\}/g) || []).length,
@@ -4245,7 +4245,7 @@ test("trainer workspace CSS keeps cabinet and utility card shells grouped", asyn
 });
 
 test("trainer workspace CSS keeps mobile metric grids grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerClientQualityMetrics,\s*\.trainerNutritionMetricGrid,\s*\.trainerExerciseProgressSummary,\s*\.trainerNutritionGoalInputs,\s*\.trainerNutritionCurrentGoals,\s*\.trainerNutritionValidity,\s*\.trainerNotificationOffsets > div\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);\s*\}/g) || []).length,
@@ -4254,7 +4254,7 @@ test("trainer workspace CSS keeps mobile metric grids grouped", async () => {
 });
 
 test("trainer workspace CSS keeps mobile measurement grids grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerMeasurementFieldGrid,\s*\.trainerMeasurementCollapsed > div\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);\s*\}/g) || []).length,
@@ -4295,7 +4295,7 @@ test("trainer workspace CSS keeps mobile measurement grids grouped", async () =>
 });
 
 test("trainer workspace CSS keeps nutrition muted micro labels grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNextProgramsTab \.programsOverviewCardStats small,\s*\.trainerClientAssignedStats small,\s*\.trainerWorkoutSchedulePlanner > header > strong small,\s*\.trainerClientQualityMetrics span,\s*\.trainerNutritionMetricGrid span,\s*\.trainerNutritionMetricGrid small,\s*\.trainerNutritionPeriod small,\s*\.trainerNutritionDonut small,\s*\.trainerNutritionDiary > aside small,\s*\.trainerNutritionCurrentGoals small,\s*\.trainerNutritionCurrentMeta,\s*\.trainerNutritionGoalInputs small,\s*\.trainerNutritionValidity > small,\s*\.trainerNotificationSchedule small,\s*\.trainerProgressReminderOptions small,\s*\.trainerNextExerciseMetric small\s*\{\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*\}/g) || []).length,
@@ -4304,7 +4304,7 @@ test("trainer workspace CSS keeps nutrition muted micro labels grouped", async (
 });
 
 test("trainer workspace CSS keeps nutrition typography grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerClientQualityMetrics strong,\s*\.trainerNutritionMetricGrid strong,\s*\.trainerNutritionDonut strong\s*\{\s*font-size:\s*18px;\s*\}/g) || []).length,
@@ -4329,7 +4329,7 @@ test("trainer workspace CSS keeps nutrition typography grouped", async () => {
 });
 
 test("trainer workspace CSS keeps muted paragraph typography grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerAnalyticsPanel h3,\s*\.trainerNotificationFeed h3,\s*\.trainerNotificationsLayout h3,\s*\.trainerClientBlockHeading h2,\s*\.trainerClientAssignedInfo h2,\s*\.trainerNutritionCurrentPlan h2\s*\{\s*margin:\s*0;\s*font-size:\s*16px;\s*\}/g) || []).length,
@@ -4346,7 +4346,7 @@ test("trainer workspace CSS keeps muted paragraph typography grouped", async () 
 });
 
 test("trainer workspace CSS keeps emphasis typography grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerMessageHistory strong,\s*\.trainerNextClientTable > button > span b,\s*\.trainerMeasurementFieldGrid strong,\s*\.trainerMeasurementTimeline strong,\s*\.trainerNutritionDiaryCollapsed strong\s*\{\s*color:\s*var\(--tn-text\);\s*font-size:\s*12px;\s*\}/g) || []).length,
@@ -4367,7 +4367,7 @@ test("trainer workspace CSS keeps emphasis typography grouped", async () => {
 });
 
 test("trainer workspace CSS keeps client section stacks grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerClientBodyProgress,\s*\.trainerClientWorkoutPlan,\s*\.trainerNutritionAnalytics,\s*\.trainerNutritionPlan,\s*\.trainerClientNotifications\s*\{\s*display:\s*grid;\s*gap:\s*14px;\s*padding-top:\s*16px;\s*\}/g) || []).length,
@@ -4389,7 +4389,7 @@ test("trainer workspace CSS keeps client section stacks grouped", async () => {
 });
 
 test("trainer workspace CSS keeps inline text stacks grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNotificationFeed span,\s*\.trainerNextClientIdentity > span\s*\{\s*min-width:\s*0;\s*display:\s*grid;\s*gap:\s*3px;\s*\}/g) || []).length,
@@ -4402,7 +4402,7 @@ test("trainer workspace CSS keeps inline text stacks grouped", async () => {
 });
 
 test("trainer workspace CSS keeps list and action stacks grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerAnalyticsRiskList,\s*\.trainerNextHistoryList,\s*\.trainerClientProgramActionStack\s*\{\s*display:\s*grid;\s*gap:\s*8px;\s*\}/g) || []).length,
@@ -4419,7 +4419,7 @@ test("trainer workspace CSS keeps list and action stacks grouped", async () => {
 });
 
 test("trainer workspace CSS keeps micro copy typography grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNextMealList article p,\s*\.trainerNotificationStatusCard p,\s*\.trainerNotificationSettings header p\s*\{\s*margin:\s*4px 0 0;\s*color:\s*var\(--tn-muted\);\s*font-size:\s*9px;\s*\}/g) || []).length,
@@ -4440,7 +4440,7 @@ test("trainer workspace CSS keeps micro copy typography grouped", async () => {
 });
 
 test("trainer workspace CSS keeps list tail dividers grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNextClientTable > button:last-of-type,\s*\.trainerNextMealList article:last-child,\s*\.trainerExerciseProgressList article:last-child\s*\{\s*border-bottom:\s*0;\s*\}/g) || []).length,
@@ -4449,7 +4449,7 @@ test("trainer workspace CSS keeps list tail dividers grouped", async () => {
 });
 
 test("trainer workspace CSS keeps compact text field stacks grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerExerciseProgressName,\s*\.trainerExerciseProgressResult,\s*\.trainerWorkoutStatusPanel label\s*\{\s*display:\s*grid;\s*gap:\s*5px;\s*\}/g) || []).length,
@@ -4458,7 +4458,7 @@ test("trainer workspace CSS keeps compact text field stacks grouped", async () =
 });
 
 test("trainer workspace CSS keeps compact row text stacks grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNextClientHeader > div,\s*\.trainerNextMealList article div,\s*\.trainerNextProgramsTab \.programsOverviewCardTitle > div,\s*\.trainerProgramConstructor button,\s*\.trainerProgramConstructor input,\s*\.trainerClientProgramCurrent \.trainerClientAssignedInfo,\s*\.trainerClientProgramSelectLabel,\s*\.trainerExerciseProgressList article > div,\s*\.trainerNotificationStatusCard > div:nth-child\(2\)\s*\{\s*min-width:\s*0;\s*\}/g) || []).length,
@@ -4471,7 +4471,7 @@ test("trainer workspace CSS keeps compact row text stacks grouped", async () => 
 });
 
 test("trainer workspace CSS keeps shared disabled action states grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerMessageReply > button:disabled,\s*\.trainerMessageModalSend:disabled,\s*\.trainerNextProgramControl > button:disabled,\s*\.trainerClientAssignmentControls > button:disabled,\s*\.trainerClientProgramActionStack > button:disabled,\s*\.trainerWorkoutScheduleFooter button:disabled,\s*\.trainerNotificationActions button:disabled,\s*\.trainerNextLibrary article > button:disabled,\s*\.trainerNextOutlineAdd:disabled\s*\{\s*cursor:\s*not-allowed;\s*opacity:\s*0\.45;\s*\}/g) || []).length,
@@ -4488,7 +4488,7 @@ test("trainer workspace CSS keeps shared disabled action states grouped", async 
 });
 
 test("trainer workspace CSS keeps client nutrition notification panel shells grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNextProgressChart,\s*\.trainerNextResultCard,\s*\.trainerNextActivityCard,\s*\.trainerNextRecommendation,\s*\.trainerNextSimplePanel,\s*\.trainerNextMealPanel,\s*\.trainerNextNutritionSummary > section,\s*\.trainerNextLibrary,\s*\.trainerClientAssignment,\s*\.trainerClientAssignedProgram,\s*\.trainerClientAnalyticsCard,\s*\.trainerClientInlineEditor,\s*\.trainerNotificationStatusCard,\s*\.trainerNotificationSettings\s*\{\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*8px;\s*background:\s*#fff;\s*\}/g) || []).length,
@@ -4497,7 +4497,7 @@ test("trainer workspace CSS keeps client nutrition notification panel shells gro
 });
 
 test("trainer workspace CSS keeps trainer calendar and notification controls grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerWorkoutMonthWeekdays,\s*\.trainerWorkoutMonthGrid,\s*\.trainerWorkoutScheduleWeekdays,\s*\.trainerWorkoutScheduleGrid,\s*\.trainerNotificationWeekdays,\s*\.trainerNotificationCalendarGrid\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(7,\s*minmax\(0,\s*1fr\)\);\s*gap:\s*5px;\s*\}/g) || []).length,
@@ -4530,7 +4530,7 @@ test("trainer workspace CSS keeps trainer calendar and notification controls gro
 });
 
 test("trainer workspace CSS keeps workout calendar status colors grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerWorkoutMonthGrid \.today,\s*\.trainerWorkoutScheduleGrid \.today\s*\{\s*border-color:\s*var\(--tn-purple-border\);\s*box-shadow:\s*0 0 0 3px rgba\(100,\s*55,\s*245,\s*0\.08\);\s*\}/g) || []).length,
@@ -4555,7 +4555,7 @@ test("trainer workspace CSS keeps workout calendar status colors grouped", async
 });
 
 test("trainer workspace CSS keeps workout schedule pill labels grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerWorkoutScheduleFooter span,\s*\.trainerWorkoutStatusSummary span\s*\{\s*padding:\s*5px 8px;\s*border:\s*1px solid #eceaf3;\s*border-radius:\s*999px;\s*background:\s*#faf9ff;\s*color:\s*var\(--tn-muted\);\s*font-size:\s*8px;\s*font-weight:\s*800;\s*\}/g) || []).length,
@@ -4564,7 +4564,7 @@ test("trainer workspace CSS keeps workout schedule pill labels grouped", async (
 });
 
 test("trainer workspace CSS keeps shared header layouts grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNextSectionTitle,\s*\.trainerNextClientsTitle,\s*\.trainerNextSummaryHead,\s*\.trainerNextPanelTitle,\s*\.trainerNextChartHead,\s*\.trainerPhotoPreviewModal header,\s*\.trainerNotificationCalendar > header\s*\{\s*display:\s*flex;\s*align-items:\s*center;\s*justify-content:\s*space-between;\s*gap:\s*14px;\s*\}/g) || []).length,
@@ -4585,7 +4585,7 @@ test("trainer workspace CSS keeps shared header layouts grouped", async () => {
 });
 
 test("trainer workspace CSS keeps compact layout pairs grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerNextActivityCard span,\s*\.trainerNotificationCalendar > header > div:last-child\s*\{\s*display:\s*inline-flex;\s*align-items:\s*center;\s*gap:\s*8px;\s*\}/g) || []).length,
@@ -4614,7 +4614,7 @@ test("trainer workspace CSS keeps compact layout pairs grouped", async () => {
 });
 
 test("trainer workspace CSS keeps shared four-column grids grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerAnalyticsSignals,\s*\.trainerNextMeasurementGrid,\s*\.trainerNextPhotoGrid,\s*\.trainerMeasurementSummaryGrid\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\);\s*gap:\s*10px;\s*\}/g) || []).length,
@@ -4643,7 +4643,7 @@ test("trainer workspace CSS keeps shared four-column grids grouped", async () =>
 });
 
 test("trainer workspace CSS keeps panel shells and scrollbars grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerUtilityGrid section,\s*\.trainerAnalyticsGrid article,\s*\.trainerAnalyticsPanel,\s*\.trainerNotificationFeed,\s*\.trainerNotificationsLayout > section\s*\{\s*border:\s*1px solid var\(--tn-line\);\s*border-radius:\s*16px;\s*background:\s*#fff;\s*box-shadow:\s*var\(--tn-soft-shadow\);\s*\}/g) || []).length,
@@ -4672,7 +4672,7 @@ test("trainer workspace CSS keeps panel shells and scrollbars grouped", async ()
 });
 
 test("trainer workspace CSS keeps purple active controls grouped", async () => {
-  const source = await readText("src/components/trainer/trainer-workspace.css");
+  const source = await readCssWithImports("src/components/trainer/trainer-workspace.css");
 
   assert.equal(
     (source.match(/\.trainerCabinetActions button:not\(\.danger\) svg,\s*\.trainerUtilityActions svg,\s*\.trainerNotificationFeed svg,\s*\.trainerNextMetricFoot\.purple small,\s*\.trainerNextClientTabs button\.active,\s*\.trainerNextPageTabs button\.active,\s*\.trainerNextActivityCard span svg,\s*\.trainerNextProgramsTab \.programCreateChoiceSheet > div > button svg,\s*\.trainerNextProgramsTab \.programAiImportFile svg,\s*\.trainerProgramSelectedBar > svg,\s*\.trainerProgramCycleRow > svg,\s*\.trainerProgramCycle\.selected \.trainerProgramCycleRow strong,\s*\.trainerProgramDay\.selected strong,\s*\.trainerWorkoutMonthControls button:hover,\s*\.trainerNextWorkoutDayItem\.active \.trainerNextWorkoutDaySelect\s*\{\s*color:\s*var\(--tn-purple\);\s*\}/g) || []).length,
