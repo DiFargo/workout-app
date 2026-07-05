@@ -2759,7 +2759,7 @@ test("nutrition calendar CSS keeps final size and label color locks in the final
 });
 
 test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old owners", async () => {
-  const source = await readText("src/styles/nutrition-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-layout.css");
   const tighterSpacingStart = source.indexOf("TIGHTER SEARCH TO CALORIES SPACING");
   const ultraSpacingStart = source.indexOf("ULTRA TIGHT TOP SPACING", tighterSpacingStart);
   const microGapStart = source.indexOf("MICRO TOP GAP MATCH");
@@ -2907,7 +2907,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
 });
 
 test("legacy nutrition late layout CSS keeps expanded product text grouped", async () => {
-  const source = await readText("src/styles/nutrition-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-layout.css");
 
   assert.equal(
     (source.match(/\.productInfoExact strong,\s*\.fatSecretPage \.fatFoodItem strong,\s*\.fatFoodItem strong\s*\{\s*display:\s*block !important;\s*max-width:\s*100% !important;[\s\S]*?font-size:\s*17px !important;[\s\S]*?text-overflow:\s*ellipsis !important;\s*\}/g) || []).length,

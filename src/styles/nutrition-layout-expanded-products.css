@@ -1,0 +1,485 @@
+/* =========================================================
+   EXPANDED MEAL PRODUCTS REDESIGN
+   ========================================================= */
+
+.fatSecretPage .fatMealCard.open,
+.fatMealCard.open {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(31, 219, 95, 0.10), transparent 34%),
+    linear-gradient(180deg, rgba(15, 39, 36, 0.92), rgba(8, 24, 23, 0.96)) !important;
+  border-color: rgba(72, 255, 137, 0.18) !important;
+}
+
+.fatSecretPage .fatMealItems,
+.fatMealItems {
+  width: calc(100% - 28px) !important;
+  margin: 4px auto 12px !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.fatSecretPage .fatFoodItem,
+.fatFoodItem {
+  width: 100% !important;
+  min-height: 54px !important;
+  padding: 10px 14px !important;
+
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+
+  border-radius: 17px !important;
+  border: 1px solid rgba(255, 255, 255, 0.065) !important;
+
+  background:
+    radial-gradient(circle at 15% 0%, rgba(255, 255, 255, 0.04), transparent 42%),
+    linear-gradient(180deg, rgba(20, 43, 42, 0.94), rgba(12, 29, 29, 0.96)) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 8px 18px rgba(0, 0, 0, 0.16) !important;
+}
+
+.fatSecretPage .fatFoodItem strong,
+.fatFoodItem strong {
+  display: block !important;
+  max-width: 100% !important;
+
+  color: rgba(247, 248, 251, 0.90) !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.25px !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.fatSecretPage .fatFoodItem span,
+.fatFoodItem span {
+  display: block !important;
+  margin-top: 4px !important;
+
+  color: rgba(31, 255, 112, 0.88) !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage .fatFoodItem button,
+.fatFoodItem button {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+
+  border: 0 !important;
+  background: transparent !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ÑÐºÑ€Ñ‹Ð²Ð°ÐµÑ‚ Ð»ÑŽÐ±Ð¾Ð¹ Ñ‚ÐµÐºÑÑ‚ Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ, ÐµÑÐ»Ð¸ Ð¾Ð½ Ð¾ÑÑ‚Ð°Ð»ÑÑ Ð² swipe-ÑÐ»Ð¾Ðµ */
+.fatSecretPage .fatFoodItem [aria-label*="Ð£Ð´Ð°Ð»"],
+.fatSecretPage .fatFoodItem [title*="Ð£Ð´Ð°Ð»"],
+.fatFoodItem [aria-label*="Ð£Ð´Ð°Ð»"],
+.fatFoodItem [title*="Ð£Ð´Ð°Ð»"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .fatMealItems,
+  .fatMealItems {
+    width: calc(100% - 24px) !important;
+    margin-top: 3px !important;
+    margin-bottom: 11px !important;
+    gap: 7px !important;
+  }
+
+  .fatSecretPage .fatFoodItem,
+  .fatFoodItem {
+    min-height: 52px !important;
+    padding: 9px 13px !important;
+    border-radius: 16px !important;
+  }
+
+  .fatSecretPage .fatFoodItem strong,
+  .fatFoodItem strong {
+    font-size: 13px !important;
+  }
+
+  .fatSecretPage .fatFoodItem span,
+  .fatFoodItem span {
+    font-size: 17px !important;
+  }
+}
+
+/* =========================================================
+   PRODUCT CARDS WIDER + LOWER
+   ========================================================= */
+
+.fatSecretPage .fatMealItems,
+.fatMealItems {
+  width: calc(100% - 12px) !important;
+  margin: 2px auto 10px !important;
+  gap: 6px !important;
+}
+
+.fatSecretPage .fatFoodItem,
+.fatFoodItem {
+  min-height: 28px !important;
+  padding: 6px 12px !important;
+
+  border-radius: 14px !important;
+
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+}
+
+.fatSecretPage .fatFoodItem strong,
+.fatFoodItem strong {
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage .fatFoodItem span,
+.fatFoodItem span {
+  margin-top: 2px !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+
+  .fatSecretPage .fatMealItems,
+  .fatMealItems {
+    width: calc(100% - 10px) !important;
+    gap: 5px !important;
+  }
+
+  .fatSecretPage .fatFoodItem,
+  .fatFoodItem {
+    min-height: 26px !important;
+    padding: 5px 11px !important;
+    border-radius: 13px !important;
+  }
+
+  .fatSecretPage .fatFoodItem strong,
+  .fatFoodItem strong {
+    font-size: 12px !important;
+  }
+
+  .fatSecretPage .fatFoodItem span,
+  .fatFoodItem span {
+    font-size: 13px !important;
+  }
+}
+
+/* =========================================================
+   EXPANDED MEAL PRODUCTS â€” RENDER STYLE
+   ========================================================= */
+
+.fatSecretPage .fatMealCard.open,
+.fatMealCard.open {
+  border-radius: 24px !important;
+  border: 1px solid rgba(82, 255, 146, 0.18) !important;
+  background:
+    radial-gradient(circle at 24% 4%, rgba(51, 255, 143, 0.105), transparent 38%),
+    linear-gradient(180deg, rgba(13, 34, 32, 0.94), rgba(7, 22, 22, 0.98)) !important;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+}
+
+.fatSecretPage .fatMealItems,
+.fatMealItems {
+  width: calc(100% - 34px) !important;
+  margin: 8px auto 14px !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+
+  overflow: hidden !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.035), transparent 44%),
+    linear-gradient(180deg, rgba(15, 35, 35, 0.96), rgba(10, 28, 28, 0.98)) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 10px 24px rgba(0, 0, 0, 0.22) !important;
+}
+
+.fatSecretPage .fatFoodItem,
+.fatFoodItem {
+  width: 100% !important;
+  min-height: 68px !important;
+  padding: 13px 18px !important;
+
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 54px 18px !important;
+  align-items: center !important;
+  gap: 12px !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.fatSecretPage .fatFoodItem + .fatFoodItem,
+.fatFoodItem + .fatFoodItem {
+  border-top: 1px solid rgba(255, 255, 255, 0.065) !important;
+}
+
+.fatSecretPage .fatFoodInfo,
+.fatFoodInfo,
+.fatSecretPage .fatFoodItem > div:first-child,
+.fatFoodItem > div:first-child {
+  min-width: 0 !important;
+}
+
+.fatSecretPage .fatFoodKcal,
+.fatFoodKcal {
+  grid-column: 2 !important;
+  justify-self: end !important;
+
+  color: rgba(247, 248, 251, 0.72) !important;
+  font-size: 22px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.4px !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.fatSecretPage .fatFoodItem button,
+.fatFoodItem button {
+  grid-column: 3 !important;
+
+  width: 18px !important;
+  min-width: 18px !important;
+  max-width: 18px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+.fatSecretPage .fatFoodItem button::after,
+.fatFoodItem button::after {
+  content: "â€º" !important;
+  color: rgba(247, 248, 251, 0.72) !important;
+  font-size: 30px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .fatMealItems,
+  .fatMealItems {
+    width: calc(100% - 28px) !important;
+    margin-top: 7px !important;
+    margin-bottom: 13px !important;
+    border-radius: 21px !important;
+  }
+
+  .fatSecretPage .fatFoodItem,
+  .fatFoodItem {
+    min-height: 64px !important;
+    padding: 12px 16px !important;
+    grid-template-columns: minmax(0, 1fr) 48px 16px !important;
+    gap: 10px !important;
+  }
+
+  .fatSecretPage .fatFoodItem strong,
+  .fatFoodItem strong {
+    font-size: 16px !important;
+  }
+
+  .fatSecretPage .fatFoodItem span,
+  .fatFoodItem span {
+    margin-top: 5px !important;
+    font-size: 16px !important;
+  }
+
+  .fatSecretPage .fatFoodKcal,
+  .fatFoodKcal {
+    font-size: 20px !important;
+  }
+
+  .fatSecretPage .fatFoodItem button::after,
+  .fatFoodItem button::after {
+    font-size: 28px !important;
+  }
+}
+
+/* =========================================================
+   PRODUCT LIST WIDTH + DIVIDERS FIX
+   ========================================================= */
+
+/* ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ Ð²ÐµÑ€Ñ…Ð½ÑŽÑŽ Ð»Ð¸Ð½Ð¸ÑŽ */
+.fatSecretPage .fatMealItems,
+.fatMealItems {
+  width: calc(100% - 12px) !important;
+  border-top: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Ð»Ð¸Ð½Ð¸Ð¸ Ð¼ÐµÐ¶Ð´Ñƒ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°Ð¼Ð¸ */
+.fatSecretPage .fatFoodItem,
+.fatFoodItem {
+  position: relative !important;
+}
+
+.fatSecretPage .fatFoodItem + .fatFoodItem,
+.fatFoodItem + .fatFoodItem {
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* Ð³Ð°Ñ€Ð°Ð½Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾ ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ Ð»Ð¸Ð½Ð¸ÑŽ ÑÐ²ÐµÑ€Ñ…Ñƒ Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾ */
+.fatSecretPage .fatFoodItem:first-child,
+.fatFoodItem:first-child {
+  border-top: 0 !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .fatMealItems,
+  .fatMealItems {
+    width: calc(100% - 10px) !important;
+  }
+}
+
+/* =========================================================
+   FORCE PRODUCT LIST DIVIDERS + WIDTH
+   ========================================================= */
+
+/* Ð±Ð»Ð¾Ðº Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð¾Ð² ÑˆÐ¸Ñ€Ðµ */
+.fatSecretPage .fatMealCard.open .fatMealItems,
+.fatMealCard.open .fatMealItems,
+.fatSecretPage .fatMealItems,
+.fatMealItems {
+  width: calc(100% - 4px) !important;
+  max-width: none !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+
+  border-top: none !important;
+  padding-top: 0 !important;
+}
+
+/* Ð¿Ð¾Ð»Ð½Ð¾ÑÑ‚ÑŒÑŽ ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ Ð²ÐµÑ€Ñ…Ð½ÑŽÑŽ Ð»Ð¸Ð½Ð¸ÑŽ Ñƒ Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° */
+.fatSecretPage .fatMealCard.open .fatFoodItem:first-child,
+.fatMealCard.open .fatFoodItem:first-child,
+.fatSecretPage .fatFoodItem:first-child,
+.fatFoodItem:first-child {
+  border-top: none !important;
+}
+
+.fatSecretPage .fatMealCard.open .fatFoodItem:first-child::before,
+.fatMealCard.open .fatFoodItem:first-child::before,
+.fatSecretPage .fatFoodItem:first-child::before,
+.fatFoodItem:first-child::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ Ð»ÑŽÐ±Ñ‹Ðµ ÑÑ‚Ð°Ñ€Ñ‹Ðµ border Ñƒ ÑÐ°Ð¼Ð¸Ñ… ÑÑ‚Ñ€Ð¾Ðº */
+.fatSecretPage .fatMealCard.open .fatFoodItem,
+.fatMealCard.open .fatFoodItem,
+.fatSecretPage .fatFoodItem,
+.fatFoodItem {
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* Ñ€ÐµÐ°Ð»ÑŒÐ½Ñ‹Ðµ Ð»Ð¸Ð½Ð¸Ð¸ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¼ÐµÐ¶Ð´Ñƒ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°Ð¼Ð¸ */
+.fatSecretPage .fatMealCard.open .fatFoodItem + .fatFoodItem,
+.fatMealCard.open .fatFoodItem + .fatFoodItem,
+.fatSecretPage .fatFoodItem + .fatFoodItem,
+.fatFoodItem + .fatFoodItem {
+  border-top: 1px solid rgba(255, 255, 255, 0.11) !important;
+}
+
+/* ÐµÑÐ»Ð¸ ÑÑ‚Ð°Ñ€Ñ‹Ð¹ ÑÑ‚Ð¸Ð»ÑŒ Ñ€Ð¸ÑÑƒÐµÑ‚ Ð»Ð¸Ð½Ð¸ÑŽ Ñ‡ÐµÑ€ÐµÐ· Ð¿ÑÐµÐ²Ð´Ð¾ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ â€” Ð¾Ñ‚ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ */
+.fatSecretPage .fatFoodItem::before,
+.fatFoodItem::before,
+.fatSecretPage .fatFoodItem::after,
+.fatFoodItem::after {
+  pointer-events: none !important;
+}
+
+/* Ð»Ð¸Ð½Ð¸Ñ Ð¼ÐµÐ¶Ð´Ñƒ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°Ð¼Ð¸ Ñ‡ÐµÑ€ÐµÐ· after Ð´Ð»Ñ Ð½Ð°Ð´ÐµÐ¶Ð½Ð¾ÑÑ‚Ð¸ */
+.fatSecretPage .fatMealCard.open .fatFoodItem:not(:last-child)::after,
+.fatMealCard.open .fatFoodItem:not(:last-child)::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 16px !important;
+  right: 16px !important;
+  bottom: 0 !important;
+  height: 1px !important;
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Ñƒ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½ÐµÐ³Ð¾ Ð»Ð¸Ð½Ð¸Ð¸ Ð½ÐµÑ‚ */
+.fatSecretPage .fatMealCard.open .fatFoodItem:last-child::after,
+.fatMealCard.open .fatFoodItem:last-child::after {
+  display: none !important;
+  content: none !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .fatMealCard.open .fatMealItems,
+  .fatMealCard.open .fatMealItems,
+  .fatSecretPage .fatMealItems,
+  .fatMealItems {
+    width: calc(100% - 2px) !important;
+  }
+
+  .fatSecretPage .fatMealCard.open .fatFoodItem:not(:last-child)::after,
+  .fatMealCard.open .fatFoodItem:not(:last-child)::after {
+    left: 14px !important;
+    right: 14px !important;
+  }
+}

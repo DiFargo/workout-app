@@ -1,0 +1,358 @@
+/* =========================================================
+   EXACT PRODUCT LIST REBUILD
+   ÐÐ¾Ð²Ñ‹Ð¹ Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ñ‹Ð¹ ÑÐ¿Ð¸ÑÐ¾Ðº Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð¾Ð² Ð±ÐµÐ· ÑÑ‚Ð°Ñ€Ñ‹Ñ… swipe/ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ ÑÑ‚Ð¸Ð»ÐµÐ¹
+   ========================================================= */
+
+.fatSecretPage .productListExact,
+.productListExact {
+  margin: 8px auto 14px !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+
+  overflow: hidden !important;
+
+  border-radius: 22px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  border-top: 0 !important;
+
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.035), transparent 44%),
+    linear-gradient(180deg, rgba(15, 35, 35, 0.96), rgba(10, 28, 28, 0.98)) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.025),
+    0 10px 24px rgba(0, 0, 0, 0.22) !important;
+}
+
+.fatSecretPage .productRowExact,
+.productRowExact {
+  width: 100% !important;
+  min-height: 64px !important;
+  padding: 12px 18px !important;
+
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 56px 18px !important;
+  align-items: center !important;
+  gap: 12px !important;
+
+  position: relative !important;
+
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.fatSecretPage .productRowExact:first-child,
+.productRowExact:first-child {
+  border-top: 0 !important;
+}
+
+.fatSecretPage .productRowExact + .productRowExact,
+.productRowExact + .productRowExact {
+  border-top: 1px solid rgba(255, 255, 255, 0.11) !important;
+}
+
+.fatSecretPage .productInfoExact,
+.productInfoExact {
+  min-width: 0 !important;
+}
+
+.fatSecretPage .productInfoExact strong,
+.productInfoExact strong,
+.fatSecretPage .fatFoodItem strong,
+.fatFoodItem strong {
+  display: block !important;
+  max-width: 100% !important;
+
+  color: rgba(247, 248, 251, 0.94) !important;
+  font-size: 17px !important;
+  font-weight: 950 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.35px !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.fatSecretPage .productInfoExact span,
+.productInfoExact span,
+.fatSecretPage .fatFoodItem span,
+.fatFoodItem span {
+  display: block !important;
+  margin-top: 6px !important;
+
+  color: rgba(30, 255, 111, 0.92) !important;
+  font-size: 17px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage .productKcalExact,
+.productKcalExact {
+  justify-self: end !important;
+
+  color: rgba(247, 248, 251, 0.72) !important;
+  font-size: 22px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.4px !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.fatSecretPage .productArrowExact,
+.productArrowExact {
+  justify-self: end !important;
+
+  color: rgba(247, 248, 251, 0.72) !important;
+  font-size: 30px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .productListExact,
+  .productListExact {
+    margin-top: 7px !important;
+    margin-bottom: 13px !important;
+    border-radius: 21px !important;
+  }
+
+  .fatSecretPage .productRowExact,
+  .productRowExact {
+    min-height: 60px !important;
+    padding: 11px 16px !important;
+    grid-template-columns: minmax(0, 1fr) 50px 16px !important;
+    gap: 10px !important;
+  }
+
+  .fatSecretPage .productInfoExact strong,
+  .productInfoExact strong {
+    font-size: 16px !important;
+  }
+
+  .fatSecretPage .productInfoExact span,
+  .productInfoExact span {
+    margin-top: 5px !important;
+    font-size: 16px !important;
+  }
+
+  .fatSecretPage .productKcalExact,
+  .productKcalExact {
+    font-size: 20px !important;
+  }
+
+  .fatSecretPage .productArrowExact,
+  .productArrowExact {
+    font-size: 28px !important;
+  }
+}
+
+/* =========================================================
+   FORCE PRODUCT BLOCK MUCH WIDER
+   ========================================================= */
+
+.fatMealCard.open .productListExact,
+.productListExact {
+  align-self: center !important;
+  overflow: hidden !important;
+}
+
+.fatMealCard.open .productRowExact,
+.productRowExact {
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+}
+
+.fatMealCard.open .fatMealItems,
+.fatMealItems {
+  max-width: none !important;
+}
+
+/* =========================================================
+   HARD WIDTH OVERRIDE FOR PRODUCT BLOCK
+   ========================================================= */
+
+.fatMealCard.open .productListExact,
+.productListExact {
+  position: relative !important;
+
+  width: 100vw !important;
+  max-width: 100vw !important;
+
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+
+  border-radius: 20px !important;
+}
+
+.fatMealCard.open .productRowExact,
+.productRowExact {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+@media (max-width: 480px) {
+  .fatMealCard.open .productListExact,
+  .productListExact {
+    width: calc(100vw - 12px) !important;
+    max-width: calc(100vw - 12px) !important;
+  }
+}
+
+/* =========================================================
+   INLINE WIDTH SUPPORT FOR PRODUCT BLOCK
+   ========================================================= */
+
+.fatMealCard.open,
+.fatSecretPage .fatMealCard.open {
+  overflow: visible !important;
+}
+
+.productListExact {
+  box-sizing: border-box !important;
+  max-width: none !important;
+}
+
+/* =========================================================
+   WIDER INNER PRODUCT BLOCK
+   ========================================================= */
+
+.productListExact {
+  width: calc(100% + 120px) !important;
+  margin-left: -60px !important;
+  margin-right: -60px !important;
+}
+
+@media (max-width: 480px) {
+  .productListExact {
+    width: calc(100% + 80px) !important;
+    margin-left: -40px !important;
+    margin-right: -40px !important;
+  }
+}
+
+/* =========================================================
+   GUARANTEED WIDER INNER PRODUCT BLOCK
+   ÐœÐµÐ½ÑÐµÑ‚ Ð¸Ð¼ÐµÐ½Ð½Ð¾ Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð¾Ð² Ð²Ð½ÑƒÑ‚Ñ€Ð¸ Ñ€Ð°ÑÐºÑ€Ñ‹Ñ‚Ð¾Ð¹ ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸.
+   ========================================================= */
+
+.fatMealCard.open .fatMealItems.productListWideFinal,
+.fatMealCard.open .productListExact.productListWideFinal,
+.productListWideFinal {
+  position: relative !important;
+  left: 0 !important;
+  transform: none !important;
+
+  box-sizing: border-box !important;
+}
+
+.fatMealCard.open .productListWideFinal .productRowExact,
+.productListWideFinal .productRowExact {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* =========================================================
+   PRODUCT BLOCK WIDTH +4% FINAL
+   ========================================================= */
+
+.fatMealCard.open .fatMealItems.productListWideFinal,
+.fatMealCard.open .productListExact.productListWideFinal,
+.productListWideFinal {
+  width: calc(100% + 34px) !important;
+  max-width: calc(100% + 34px) !important;
+
+  margin-left: -17px !important;
+  margin-right: -17px !important;
+
+  padding-bottom: 0 !important;
+}
+
+@media (max-width: 480px) {
+  .fatMealCard.open .fatMealItems.productListWideFinal,
+  .fatMealCard.open .productListExact.productListWideFinal,
+  .productListWideFinal {
+    width: calc(100% + 24px) !important;
+    max-width: calc(100% + 24px) !important;
+
+    margin-left: -12px !important;
+    margin-right: -12px !important;
+
+  }
+}
+
+/* =========================================================
+   EXACT BOTTOM SPACING MATCH
+   ÐÐ¸Ð¶Ð½Ð¸Ð¹ Ð¾Ñ‚ÑÑ‚ÑƒÐ¿ = Ð±Ð¾ÐºÐ¾Ð²Ð¾Ð¹ Ð¾Ñ‚ÑÑ‚ÑƒÐ¿ Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð½ÐµÐ³Ð¾ Ð±Ð»Ð¾ÐºÐ°
+   ========================================================= */
+
+.fatMealCard.open .productListWideFinal + *,
+.productListWideFinal + * {
+  margin-top: 0 !important;
+}
+
+/* =========================================================
+   REAL BOTTOM GAP FIX FOR EXPANDED MEAL
+   ÐÐ¸Ð¶Ð½Ð¸Ð¹ Ð·Ð°Ð·Ð¾Ñ€ Ð´ÐµÐ»Ð°ÐµÑ‚ÑÑ Ñ‡ÐµÑ€ÐµÐ· padding-bottom Ñ€Ð°ÑÐºÑ€Ñ‹Ñ‚Ð¾Ð¹ ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸,
+   Ð° Ð½Ðµ Ñ‡ÐµÑ€ÐµÐ· margin Ñƒ Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð½ÐµÐ³Ð¾ Ð±Ð»Ð¾ÐºÐ°.
+   ========================================================= */
+
+.fatMealCard.open,
+.fatSecretPage .fatMealCard.open {
+  padding-bottom: 17px !important;
+}
+
+.fatMealCard.open .fatMealItems.productListWideFinal,
+.fatMealCard.open .productListExact.productListWideFinal,
+.productListWideFinal {
+  margin-bottom: 0 !important;
+}
+
+@media (max-width: 480px) {
+  .fatMealCard.open,
+  .fatSecretPage .fatMealCard.open {
+    padding-bottom: 12px !important;
+  }
+
+}
+
+/* =========================================================
+   DARKER OPEN MEAL CARD WITH SOFT GREEN TINT
+   ========================================================= */
+
+.fatMealCard.open,
+.fatSecretPage .fatMealCard.open {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(41, 255, 123, 0.045), transparent 40%),
+    linear-gradient(180deg,
+      rgba(12, 24, 22, 0.97),
+      rgba(8, 18, 18, 0.985)
+    ) !important;
+
+  border-color: rgba(67, 255, 136, 0.10) !important;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.02) !important;
+}
+
+/* Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ñ‚Ð¾Ð¶Ðµ Ñ‚ÐµÐ¼Ð½ÐµÐµ */
+.productListWideFinal,
+.fatMealCard.open .productListWideFinal {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(35, 255, 116, 0.03), transparent 42%),
+    linear-gradient(180deg,
+      rgba(13, 26, 25, 0.985),
+      rgba(9, 20, 20, 0.99)
+    ) !important;
+
+  border-color: rgba(255,255,255,0.05) !important;
+}

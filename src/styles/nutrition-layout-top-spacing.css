@@ -1,0 +1,326 @@
+﻿/* =========================================================
+   FINAL COMPACT SPACING â€” NUTRITION TOP BLOCKS
+   Ð£Ð¼ÐµÐ½ÑŒÑˆÐ°ÐµÑ‚ Ð¸ Ð²Ñ‹Ñ€Ð°Ð²Ð½Ð¸Ð²Ð°ÐµÑ‚ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ñ Ð¼ÐµÐ¶Ð´Ñƒ:
+   ÑÐµÑ€Ð¸Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸ ÐµÐ´Ñ‹ / Ð¿Ð¾Ð¸ÑÐº ÐµÐ´Ñ‹-ÐºÐ°Ð»ÐµÐ½Ð´Ð°Ñ€ÑŒ / Ð±Ð»Ð¾Ðº ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹
+   ========================================================= */
+
+.fatSecretPage .nutritionStreakV4,
+.nutritionStreakV4 {
+  margin-top: 6px !important;
+  margin-bottom: 4px !important;
+}
+
+.fatSecretPage .nutritionQuickActionsExact,
+.nutritionQuickActionsExact {
+  margin-top: 0 !important;
+  margin-bottom: 4px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.fatSecretPage .nutritionCaloriesRenderCard,
+.nutritionCaloriesRenderCard {
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
+}
+
+/* ÑÑ‚Ñ€Ð°Ñ…Ð¾Ð²ÐºÐ°, ÐµÑÐ»Ð¸ ÑÑ‚Ð°Ñ€Ñ‹Ð¹ Ð±Ð»Ð¾Ðº Ð¿Ð¾Ð¸ÑÐºÐ° Ð²ÑÑ‘ ÐµÑ‰Ñ‘ Ð³Ð´Ðµ-Ñ‚Ð¾ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ÑÑ */
+.fatSecretPage .fatQuickActions,
+.fatQuickActions {
+  margin-top: 0 !important;
+  margin-bottom: 4px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionStreakV4,
+  .nutritionStreakV4 {
+    margin-top: 5px !important;
+    margin-bottom: 3px !important;
+  }
+
+  .fatSecretPage .nutritionQuickActionsExact,
+  .nutritionQuickActionsExact {
+    margin-top: 0 !important;
+    margin-bottom: 3px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .fatSecretPage .nutritionCaloriesRenderCard,
+  .nutritionCaloriesRenderCard {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .fatSecretPage .fatQuickActions,
+  .fatQuickActions {
+    margin-top: 0 !important;
+    margin-bottom: 3px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+/* =========================================================
+   TIGHTER SEARCH TO CALORIES SPACING
+   Ð£Ð¼ÐµÐ½ÑŒÑˆÐ°ÐµÑ‚ Ð¸Ð¼ÐµÐ½Ð½Ð¾ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ðµ Ð¼ÐµÐ¶Ð´Ñƒ:
+   ÐŸÐ¾Ð¸ÑÐº ÐµÐ´Ñ‹ / ÐšÐ°Ð»ÐµÐ½Ð´Ð°Ñ€ÑŒ -> Ð±Ð»Ð¾Ðº ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹
+   ========================================================= */
+
+.fatSecretPage .nutritionQuickActionsExact,
+.nutritionQuickActionsExact {
+  margin-bottom: 0 !important;
+}
+
+.fatSecretPage .nutritionCaloriesRenderCard,
+.nutritionCaloriesRenderCard {
+  margin-top: -2px !important;
+}
+
+.fatSecretPage .fatQuickActions,
+.fatQuickActions {
+  margin-bottom: 0 !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionQuickActionsExact,
+  .nutritionQuickActionsExact {
+    margin-bottom: 0 !important;
+  }
+
+  .fatSecretPage .nutritionCaloriesRenderCard,
+  .nutritionCaloriesRenderCard {
+    margin-top: -3px !important;
+  }
+
+}
+
+/* =========================================================
+   ULTRA TIGHT TOP SPACING
+   Ð•Ñ‰Ðµ ÑÐ¸Ð»ÑŒÐ½ÐµÐµ ÑƒÐ¼ÐµÐ½ÑŒÑˆÐ°ÐµÑ‚ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ðµ:
+   Ð¿Ð¾Ð¸ÑÐº ÐµÐ´Ñ‹ -> Ð±Ð»Ð¾Ðº ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹
+   ========================================================= */
+
+.fatSecretPage .nutritionQuickActionsExact,
+.nutritionQuickActionsExact,
+.fatSecretPage .fatQuickActions,
+.fatQuickActions {
+  margin-bottom: -4px !important;
+}
+
+.fatSecretPage .nutritionCaloriesRenderCard,
+.nutritionCaloriesRenderCard {
+  margin-top: -8px !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionQuickActionsExact,
+  .nutritionQuickActionsExact,
+  .fatSecretPage .fatQuickActions,
+  .fatQuickActions {
+    margin-bottom: -5px !important;
+  }
+
+  .fatSecretPage .nutritionCaloriesRenderCard,
+  .nutritionCaloriesRenderCard {
+    margin-top: -10px !important;
+  }
+}
+
+/* =========================================================
+   MICRO TOP GAP MATCH
+   Ð”ÐµÐ»Ð°ÐµÑ‚ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ðµ:
+   Ð¿Ð¾Ð¸ÑÐº ÐµÐ´Ñ‹ -> ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¸
+   Ñ‚Ð°ÐºÐ¸Ð¼ Ð¶Ðµ ÐºÐ°Ðº:
+   ÑÐµÑ€Ð¸Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸ -> Ð¿Ð¾Ð¸ÑÐº ÐµÐ´Ñ‹
+   ========================================================= */
+
+.fatSecretPage .nutritionQuickActionsExact,
+.nutritionQuickActionsExact,
+.fatSecretPage .fatQuickActions,
+.fatQuickActions {
+  margin-bottom: -7px !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionQuickActionsExact,
+  .nutritionQuickActionsExact,
+  .fatSecretPage .fatQuickActions,
+  .fatQuickActions {
+    margin-bottom: -8px !important;
+  }
+
+  .fatSecretPage .nutritionCaloriesRenderCard,
+  .nutritionCaloriesRenderCard {
+    margin-top: -15px !important;
+  }
+}
+
+/* =========================================================
+   ACTION PANEL VERTICAL BALANCE
+   Ð”ÐµÐ»Ð°ÐµÑ‚ Ð¾Ð´Ð¸Ð½Ð°ÐºÐ¾Ð²Ñ‹Ð¹ Ð²Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ñ‹Ð¹ Ð·Ð°Ð·Ð¾Ñ€ ÑÐ²ÐµÑ€Ñ…Ñƒ Ð¸ ÑÐ½Ð¸Ð·Ñƒ
+   Ñƒ Ð±Ð»Ð¾ÐºÐ° ÐŸÐ¾Ð¸ÑÐº ÐµÐ´Ñ‹ / ÐšÐ°Ð»ÐµÐ½Ð´Ð°Ñ€ÑŒ
+   ========================================================= */
+
+.fatSecretPage .nutritionQuickActionsExact,
+.nutritionQuickActionsExact,
+.fatSecretPage .fatQuickActions,
+.fatQuickActions {
+  margin-top: 2px !important;
+  margin-bottom: -4px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionQuickActionsExact,
+  .nutritionQuickActionsExact,
+  .fatSecretPage .fatQuickActions,
+  .fatQuickActions {
+    margin-top: 2px !important;
+    margin-bottom: -5px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+  }
+}
+
+/* =========================================================
+   FINAL GAP + CALORIE NUMBERS TUNE
+   +10% Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð·Ð°Ð·Ð¾Ñ€ Ñƒ Ð±Ð»Ð¾ÐºÐ° ÐŸÐ¾Ð¸ÑÐº/ÐšÐ°Ð»ÐµÐ½Ð´Ð°Ñ€ÑŒ
+   Ð¸ Ñ‡ÑƒÑ‚ÑŒ Ð¼ÐµÐ½ÑŒÑˆÐµ/Ð¿Ñ€Ð¸Ð³Ð»ÑƒÑˆÑ‘Ð½Ð½ÐµÐµ Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð² Ð±Ð»Ð¾ÐºÐµ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹
+   ========================================================= */
+
+.fatSecretPage .nutritionQuickActionsExact,
+.nutritionQuickActionsExact,
+.fatSecretPage .fatQuickActions,
+.fatQuickActions {
+  margin-bottom: -3px !important;
+}
+
+.fatSecretPage .nutritionCaloriesRenderCard,
+.nutritionCaloriesRenderCard {
+  margin-top: -11px !important;
+}
+
+.fatSecretPage .nutritionCaloriesRenderCol strong,
+.nutritionCaloriesRenderCol strong {
+  font-size: 31px !important;
+  color: rgba(247, 248, 251, 0.58) !important;
+  letter-spacing: -1.25px !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionQuickActionsExact,
+  .nutritionQuickActionsExact,
+  .fatSecretPage .fatQuickActions,
+  .fatQuickActions {
+    margin-bottom: -4px !important;
+  }
+
+  .fatSecretPage .nutritionCaloriesRenderCard,
+  .nutritionCaloriesRenderCard {
+    margin-top: -13px !important;
+  }
+
+  .fatSecretPage .nutritionCaloriesRenderCol strong,
+  .nutritionCaloriesRenderCol strong {
+    font-size: 26px !important;
+    color: rgba(247, 248, 251, 0.56) !important;
+  }
+}
+
+/* =========================================================
+   SMALLER CALORIE NUMBERS
+   ÐÐµÐ¼Ð½Ð¾Ð³Ð¾ ÑƒÐ¼ÐµÐ½ÑŒÑˆÐ°ÐµÑ‚ Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð² Ð±Ð»Ð¾ÐºÐµ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹
+   ========================================================= */
+
+.fatSecretPage .nutritionCaloriesRenderCol strong,
+.nutritionCaloriesRenderCol strong {
+  font-size: 28px !important;
+  letter-spacing: -1.1px !important;
+  color: rgba(247, 248, 251, 0.54) !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionCaloriesRenderCol strong,
+  .nutritionCaloriesRenderCol strong {
+    font-size: 24px !important;
+    letter-spacing: -0.9px !important;
+    color: rgba(247, 248, 251, 0.52) !important;
+  }
+}
+
+/* =========================================================
+   EVEN SMALLER CALORIE NUMBERS
+   ========================================================= */
+
+.fatSecretPage .nutritionCaloriesRenderCol strong,
+.nutritionCaloriesRenderCol strong {
+  font-size: 25px !important;
+  letter-spacing: -0.95px !important;
+  color: rgba(247, 248, 251, 0.50) !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionCaloriesRenderCol strong,
+  .nutritionCaloriesRenderCol strong {
+    font-size: 21px !important;
+    letter-spacing: -0.75px !important;
+    color: rgba(247, 248, 251, 0.48) !important;
+  }
+}
+
+/* =========================================================
+   CALORIES CARD + TODAY TITLE TUNE
+   ========================================================= */
+
+/* ÑÐµÑ‚ÐºÐ° ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð¼ÐµÐ½ÑŒÑˆÐµ */
+.fatSecretPage .nutritionCaloriesRenderGrid,
+.nutritionCaloriesRenderGrid,
+.fatSecretPage .nutritionCaloriesGrid,
+.nutritionCaloriesGrid {
+  transform: scale(0.93) !important;
+  transform-origin: center center !important;
+}
+
+/* Ð±Ð»Ð¾Ðº ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð½Ð¸Ð¶Ðµ */
+.fatSecretPage .nutritionCaloriesRenderCard,
+.nutritionCaloriesRenderCard {
+  min-height: 84px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* TODAY Ñ‡ÑƒÑ‚ÑŒ ÑˆÐ¸Ñ€Ðµ */
+.fatSecretPage .todayTitle,
+.todayTitle,
+.fatSecretPage .nutritionTodayTitle,
+.nutritionTodayTitle {
+  letter-spacing: 0.55px !important;
+}
+
+@media (max-width: 480px) {
+
+  .fatSecretPage .nutritionCaloriesRenderGrid,
+  .nutritionCaloriesRenderGrid,
+  .fatSecretPage .nutritionCaloriesGrid,
+  .nutritionCaloriesGrid {
+    transform: scale(0.90) !important;
+  }
+
+  .fatSecretPage .nutritionCaloriesRenderCard,
+  .nutritionCaloriesRenderCard {
+    min-height: 78px !important;
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+  }
+
+  .fatSecretPage .todayTitle,
+  .todayTitle,
+  .fatSecretPage .nutritionTodayTitle,
+  .nutritionTodayTitle {
+    letter-spacing: 0.7px !important;
+  }
+}
