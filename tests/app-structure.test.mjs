@@ -2672,7 +2672,7 @@ test("legacy food editor CSS keeps warm-light ingredient surfaces grouped", asyn
 });
 
 test("legacy food product summary CSS keeps product info in the final owner", async () => {
-  const source = await readText("src/styles/nutrition-food-products-summary.css");
+  const source = await readCssWithImports("src/styles/nutrition-food-products-summary.css");
 
   assert.doesNotMatch(
     source,

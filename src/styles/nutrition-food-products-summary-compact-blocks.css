@@ -1,0 +1,70 @@
+/* SUMMARY BLOCKS â€” MORE COMPACT HEIGHT */
+
+/* Ð Ð¡Ðš / calories block */
+.summaryCaloriesCard {
+  min-height: 108px !important;
+  padding: 14px 16px !important;
+  grid-template-columns: 66px minmax(0, 1fr) !important;
+  gap: 14px !important;
+  border-radius: 20px !important;
+}
+
+.summaryDotGrid {
+  width: 54px !important;
+  grid-template-columns: repeat(5, 9px) !important;
+  grid-auto-rows: 9px !important;
+  gap: 4px !important;
+}
+
+.summaryDotGrid span {
+  width: 9px !important;
+  height: 9px !important;
+}
+
+/* percent / macro block */
+
+.summaryDonut {
+  width: 62px !important;
+  height: 62px !important;
+}
+
+.summaryDonut span {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+/* BJU grams blocks */
+
+/* water block */
+
+@media (max-width: 480px) {
+
+  .summaryCaloriesCard {
+    min-height: 102px !important;
+    padding: 13px 14px !important;
+    grid-template-columns: 60px minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .summaryDotGrid {
+    grid-template-columns: repeat(5, 8px) !important;
+    grid-auto-rows: 8px !important;
+    gap: 4px !important;
+  }
+
+  .summaryDotGrid span {
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  .summaryDonut {
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .summaryDonut span {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+

@@ -1,0 +1,103 @@
+/* PRODUCT TEXT STARTS AFTER ICON + 2 LINES */
+.fatMealCard .productInfoExact {
+  padding-left: 10px !important;
+  justify-content: center !important;
+}
+
+.fatMealCard .productInfoExact strong {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+
+  max-width: 100% !important;
+  line-height: 1.08 !important;
+
+  margin-bottom: 4px !important;
+}
+
+/* PRODUCT TEXT ALIGNMENT FIX */
+.fatMealCard .productRowExact {
+  grid-template-columns: 54px minmax(0, 1fr) 24px !important;
+  column-gap: 6px !important;
+  align-items: center !important;
+}
+
+.fatMealCard .productInfoExact {
+  padding-left: 2px !important;
+  align-self: center !important;
+  justify-content: center !important;
+  transform: translateY(-2px) !important;
+}
+
+.fatMealCard .productInfoExact strong {
+  max-width: 100% !important;
+  font-size: 16px !important;
+  line-height: 1.12 !important;
+  margin-bottom: 5px !important;
+}
+
+.fatMealCard .productInfoExact span {
+  font-size: 15px !important;
+  line-height: 1 !important;
+  margin-top: 0 !important;
+}
+
+.fatMealCard .productArrowExact {
+  align-self: center !important;
+}
+
+/* PRODUCT TEXT SMALLER + MORE LEFT */
+.fatMealCard .productRowExact {
+  column-gap: 2px !important;
+}
+
+.fatMealCard .productInfoExact {
+  padding-left: 0px !important;
+  margin-left: -6px !important;
+}
+
+.fatMealCard .productInfoExact strong {
+  font-size: 13px !important;
+  line-height: 1.1 !important;
+}
+
+.fatMealCard .productInfoExact span {
+  font-size: 12px !important;
+  opacity: 0.72 !important;
+}
+
+/* PRODUCT TEXT EVEN MORE LEFT */
+.fatMealCard .productInfoExact {
+  margin-left: -12px !important;
+}
+
+.fatMealCard .productRowExact {
+  column-gap: 0px !important;
+}
+
+/* PRODUCT BLOCK FULL WIDTH + TEXT MORE LEFT */
+.fatMealCard .productListExact.productListWideFinal {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.fatMealCard .productSwipeShell {
+  width: 100% !important;
+}
+
+.fatMealCard .productRowExact {
+  width: 100% !important;
+  border-radius: 0 !important;
+
+  padding-left: 6px !important;
+  padding-right: 10px !important;
+}
+
+.fatMealCard .productInfoExact {
+  margin-left: -18px !important;
+}
+
