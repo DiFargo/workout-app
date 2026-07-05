@@ -1,0 +1,131 @@
+/* Nutrition AI plan follows the active client theme. */
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanDashboard {
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  background: rgba(255, 255, 255, 0.026) !important;
+  color: #f4f6f2 !important;
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+}
+
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedCard,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiTrainingDayPill,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanRsk,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanMacros > div,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanConclusion,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanWater {
+  border-color: rgba(255, 255, 255, 0.065) !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  color: #f4f6f2 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanTitleBox span,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedTop strong,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanRskInfo strong,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanMacros strong,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanConclusion p,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanWater strong {
+  color: #f4f6f2 !important;
+  -webkit-text-fill-color: #f4f6f2 !important;
+}
+
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanTitleBox h2,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiTrainingDayPill,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiTrainingDayPill small,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedTop span,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedCard p,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanRskInfo span,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanRskFoot,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanMacros span,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanMacros small,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanConclusion > span,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanWater span {
+  color: rgba(255, 255, 255, 0.58) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.58) !important;
+}
+
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanToggleBtn,
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanWater button {
+  border-color: rgba(181, 230, 85, 0.2) !important;
+  background: rgba(127, 159, 58, 0.1) !important;
+  color: #b5e655 !important;
+  -webkit-text-fill-color: #b5e655 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanDashboard {
+  border: 1px solid #e3e6f1 !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 9px 24px rgba(55, 64, 112, 0.075) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedCard,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiTrainingDayPill,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanRsk,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanMacros > div,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanConclusion,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanWater {
+  border-color: #e5e7f0 !important;
+  background: #f7f8fc !important;
+  color: #151824 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanTitleBox span,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedTop strong,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanRskInfo strong,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanMacros strong,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanConclusion p,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanWater strong {
+  color: #151824 !important;
+  -webkit-text-fill-color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanTitleBox h2,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiTrainingDayPill,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiTrainingDayPill small,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedTop span,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedCard p,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanRskInfo span,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanRskFoot,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanMacros span,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanMacros small,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanConclusion > span,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanWater span {
+  color: #737b91 !important;
+  -webkit-text-fill-color: #737b91 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedTop > div,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedMacros span,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanMacroPercent span,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanBadges span {
+  border-color: #e3e6f1 !important;
+  background: #ffffff !important;
+  color: #596176 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanCollapsedTop > div.score,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanBadges span.good {
+  border-color: #ddd9fa !important;
+  background: #efedff !important;
+  color: #5542d8 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanToggleBtn,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanWater button {
+  border-color: #ddd9fa !important;
+  background: #efedff !important;
+  color: #5542d8 !important;
+  -webkit-text-fill-color: #5542d8 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanScore::after,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanScore > div {
+  border-color: #e3e6f1 !important;
+  background: #ffffff !important;
+}
+
