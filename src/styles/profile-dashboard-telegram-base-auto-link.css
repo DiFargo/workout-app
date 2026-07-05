@@ -1,0 +1,33 @@
+/* APP50 TELEGRAM AUTO LINK V2 */
+
+.profileTelegramBotActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.profileTelegramBotActions button {
+  font-size: 12px;
+}
+
+.profileTelegramBotActions button,
+.profileTelegramCheckButton {
+  min-height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(42,171,238,.26);
+  background: rgba(42,171,238,.13);
+}
+
+.profileTelegramBotActions button:disabled,
+.profileTelegramCheckButton:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 420px) {
+  .profileTelegramBotActions {
+    grid-template-columns: 1fr;
+  }
+}
+

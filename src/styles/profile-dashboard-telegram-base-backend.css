@@ -1,0 +1,57 @@
+/* APP50 TELEGRAM BACKEND UI V1 */
+.adminTelegramComposer {
+  display: grid;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.adminTelegramComposer textarea {
+  width: 100%;
+  min-height: 84px;
+  resize: vertical;
+  padding: 11px 12px;
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,.075);
+  background: rgba(0,0,0,.18);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  outline: none;
+}
+
+.adminTelegramComposer textarea:disabled {
+  opacity: .45;
+}
+
+.adminTelegramQuickMessages {
+  display: grid;
+  gap: 6px;
+}
+
+.adminTelegramQuickMessages button {
+  min-height: 32px;
+  padding: 7px 9px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.035);
+  color: rgba(255,255,255,.68);
+  font-size: 11px;
+  font-weight: 850;
+  text-align: left;
+  cursor: pointer;
+}
+
+.adminTelegramSendButton {
+  min-height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(42,171,238,.28);
+  background: rgba(42,171,238,.16);
+  font-size: 13px;
+}
+
+.adminTelegramSendButton:disabled,
+.adminTelegramQuickMessages button:disabled {
+  opacity: .42;
+  cursor: not-allowed;
+}
+

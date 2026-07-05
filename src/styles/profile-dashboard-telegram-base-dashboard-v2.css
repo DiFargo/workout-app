@@ -1,0 +1,36 @@
+/* APP50 PROFILE DASHBOARD V2 */
+.profileGoalPicker {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+  margin: 14px 0;
+}
+
+.profileGoalPicker button {
+  min-height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.075);
+  background: rgba(255,255,255,.035);
+  color: rgba(255,255,255,.64);
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.profileSexPicker button.active,
+.profileGoalPicker button.active {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.15);
+  color: rgba(235,250,195,.96);
+}
+
+.profileNutritionGoalCard .profileMacroGrid {
+  margin-top: 10px;
+}
+
+@media (max-width: 420px) {
+  .profileGoalPicker {
+    grid-template-columns: 1fr;
+  }
+}
+

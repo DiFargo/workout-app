@@ -1,0 +1,21 @@
+/* TEST WORKOUT REMINDER BUTTON */
+.adminCalendarTestButton {
+  width: 100%;
+  min-height: 58px;
+  margin-top: 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(42, 171, 238, 0.24);
+  background:
+    radial-gradient(circle at top, rgba(42, 171, 238, 0.16), transparent 55%),
+    rgba(42, 171, 238, 0.08);
+  color: rgba(205, 239, 255, 0.96);
+  font-size: 16px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.adminCalendarTestButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+

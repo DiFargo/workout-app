@@ -1,0 +1,14 @@
+/* APP50 PROFILE NUTRITION ACCORDION */
+
+.profileNutritionGoalExpanded .profileMacroGrid {
+  margin-top: 10px;
+}
+
+/* APP50 PROFILE NUTRITION COMPACT COLLAPSED */
+.profileNutritionGoalCard {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+/* APP50 PROFILE GOAL READONLY */
+
