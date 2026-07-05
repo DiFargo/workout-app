@@ -1,0 +1,97 @@
+/* FINISH SAVED ANIMATION */
+.finishNavigationRow {
+  grid-template-columns: 1fr !important;
+}
+
+.finishNavigationRow .finishBackButton {
+  display: none !important;
+}
+
+.workoutSavedFloatingCard {
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  z-index: 2147483647 !important;
+
+  width: min(330px, calc(100vw - 40px)) !important;
+  padding: 24px 20px !important;
+
+  transform: translate(-50%, -50%) scale(0.94) !important;
+
+  border-radius: 28px !important;
+  border: 1px solid rgba(127,159,58,0.28) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127,159,58,0.22), transparent 62%),
+    rgba(13,18,14,0.96) !important;
+
+  color: rgba(255,255,255,0.94) !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+
+  box-shadow:
+    0 26px 70px rgba(0,0,0,0.52),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+
+  backdrop-filter: blur(16px) !important;
+
+  animation: workoutSavedPop 1.8s ease forwards !important;
+}
+
+.workoutSavedCheck {
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+  -webkit-text-fill-color: #10120f !important;
+
+  font-size: 38px !important;
+  font-weight: 950 !important;
+}
+
+.workoutSavedFloatingCard strong {
+  margin-top: 6px !important;
+  font-size: 24px !important;
+  font-weight: 950 !important;
+  line-height: 1.05 !important;
+  text-align: center !important;
+}
+
+.workoutSavedFloatingCard span {
+  color: rgba(255,255,255,0.56) !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+}
+
+@keyframes workoutSavedPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.88);
+  }
+
+  18% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  78% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -54%) scale(0.96);
+  }
+}
+

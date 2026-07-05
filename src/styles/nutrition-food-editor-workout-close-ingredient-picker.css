@@ -1,0 +1,271 @@
+/* DISH INGREDIENT SEARCH PICKER */
+.dishIngredientPickerOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483602 !important;
+
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+
+  padding: 14px !important;
+
+  background: rgba(0,0,0,0.48) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.dishIngredientPickerSheet {
+  width: min(520px, 100%) !important;
+  max-height: min(78dvh, 720px) !important;
+
+  padding: 16px !important;
+  border-radius: 28px !important;
+
+  border: 1px solid rgba(255,255,255,0.10) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127,159,58,0.14), transparent 58%),
+    linear-gradient(180deg, rgba(16,25,20,0.98), rgba(7,11,9,0.99)) !important;
+
+  box-shadow:
+    0 26px 70px rgba(0,0,0,0.46),
+    inset 0 1px 0 rgba(255,255,255,0.05) !important;
+
+  overflow: hidden !important;
+}
+
+.dishIngredientPickerHeader {
+  min-height: 42px !important;
+  display: grid !important;
+  grid-template-columns: 42px 1fr 42px !important;
+  align-items: center !important;
+}
+
+.dishIngredientPickerHeader button {
+  width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important;
+
+  border-radius: 50% !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  background: rgba(255,255,255,0.06) !important;
+
+  color: rgba(255,255,255,0.80) !important;
+  -webkit-text-fill-color: rgba(255,255,255,0.80) !important;
+
+  font-size: 24px !important;
+  font-weight: 900 !important;
+}
+
+.dishIngredientPickerHeader strong {
+  text-align: center !important;
+  color: rgba(255,255,255,0.94) !important;
+  font-size: 20px !important;
+  font-weight: 950 !important;
+}
+
+.dishIngredientSearchBox {
+  height: 58px !important;
+  margin-top: 12px !important;
+
+  display: grid !important;
+  grid-template-columns: 44px 1fr !important;
+  align-items: center !important;
+
+  border-radius: 20px !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(127,159,58,0.12), transparent 54%),
+    rgba(255,255,255,0.055) !important;
+}
+
+.dishIngredientSearchBox span {
+  text-align: center !important;
+  color: rgba(255,255,255,0.56) !important;
+  font-size: 25px !important;
+  font-weight: 900 !important;
+}
+
+.dishIngredientSearchBox input {
+  width: 100% !important;
+  height: 100% !important;
+
+  border: 0 !important;
+  background: transparent !important;
+  outline: none !important;
+
+  color: rgba(255,255,255,0.90) !important;
+  font-size: 17px !important;
+  font-weight: 850 !important;
+}
+
+.dishIngredientResults {
+  max-height: calc(min(78dvh, 720px) - 142px) !important;
+  margin-top: 12px !important;
+  padding-right: 2px !important;
+
+  overflow-y: auto !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.dishIngredientResultCard {
+  width: 100% !important;
+  min-height: 66px !important;
+  padding: 10px 12px !important;
+
+  display: grid !important;
+  grid-template-columns: 46px minmax(0,1fr) 34px !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+
+  background: rgba(255,255,255,0.045) !important;
+  color: rgba(255,255,255,0.88) !important;
+  text-align: left !important;
+}
+
+.dishIngredientResultCard > span {
+  width: 42px !important;
+  height: 42px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 14px !important;
+  background: rgba(0,0,0,0.16) !important;
+
+  font-size: 24px !important;
+}
+
+.dishIngredientResultCard div {
+  min-width: 0 !important;
+}
+
+.dishIngredientResultCard strong,
+.dishIngredientResultCard small {
+  display: block !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.dishIngredientResultCard strong {
+  color: rgba(255,255,255,0.92) !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+.dishIngredientResultCard small {
+  margin-top: 4px !important;
+  color: rgba(255,255,255,0.46) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+.dishIngredientResultCard em {
+  width: 34px !important;
+  height: 34px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+
+  color: #10120f !important;
+  -webkit-text-fill-color: #10120f !important;
+
+  font-style: normal !important;
+  font-size: 22px !important;
+  font-weight: 950 !important;
+}
+
+.dishIngredientEmpty {
+  min-height: 80px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  color: rgba(255,255,255,0.46) !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+}
+
+/* updated ingredient list row with icon + kcal */
+.dishEditIngredientRow {
+  grid-template-columns: 34px minmax(0,1fr) auto 34px !important;
+}
+
+.dishEditIngredientRow em {
+  width: 30px !important;
+  height: 30px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 10px !important;
+  background: rgba(0,0,0,0.14) !important;
+
+  font-style: normal !important;
+  font-size: 18px !important;
+}
+
+.dishEditIngredientRow strong {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 2px !important;
+}
+
+.dishEditIngredientRow strong small {
+  display: block !important;
+  font-size: 10px !important;
+  font-weight: 850 !important;
+  opacity: 0.72 !important;
+}
+
+/* warm-light */
+:root[data-app-theme="warm-light"] .dishIngredientPickerOverlay {
+  background: rgba(93,77,33,0.20) !important;
+}
+
+:root[data-app-theme="warm-light"] .dishIngredientPickerSheet,
+:root[data-app-theme="warm-light"] .dishIngredientConfirmCard {
+  border-color: rgba(94,75,30,0.12) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244,224,100,0.38), transparent 62%),
+    linear-gradient(180deg, rgba(255,249,198,0.98), rgba(247,232,151,0.99)) !important;
+}
+
+:root[data-app-theme="warm-light"] .dishIngredientPickerHeader strong,
+:root[data-app-theme="warm-light"] .dishIngredientSearchBox input,
+:root[data-app-theme="warm-light"] .dishIngredientResultCard strong {
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+:root[data-app-theme="warm-light"] .dishIngredientPickerHeader button,
+:root[data-app-theme="warm-light"] .dishIngredientSearchBox span,
+:root[data-app-theme="warm-light"] .dishIngredientResultCard small,
+:root[data-app-theme="warm-light"] .dishIngredientEmpty {
+  color: rgba(95,87,68,0.62) !important;
+  -webkit-text-fill-color: rgba(95,87,68,0.62) !important;
+}
+
+:root[data-app-theme="warm-light"] .dishIngredientSearchBox,
+:root[data-app-theme="warm-light"] .dishIngredientResultCard,
+:root[data-app-theme="warm-light"] .dishIngredientResultCard > span {
+  border-color: rgba(94,75,30,0.09) !important;
+  background: rgba(255,255,255,0.28) !important;
+}
+

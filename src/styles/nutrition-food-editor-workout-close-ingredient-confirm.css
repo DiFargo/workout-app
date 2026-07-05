@@ -1,0 +1,179 @@
+/* DISH INGREDIENT CONFIRM CARD */
+.dishIngredientConfirmOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483605 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 18px !important;
+
+  background: rgba(0,0,0,0.38) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.dishIngredientConfirmCard {
+  width: min(420px, 100%) !important;
+  padding: 18px !important;
+
+  border-radius: 28px !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127,159,58,0.15), transparent 60%),
+    linear-gradient(180deg, rgba(18,28,22,0.98), rgba(8,13,10,0.99)) !important;
+
+  box-shadow:
+    0 26px 70px rgba(0,0,0,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+.dishIngredientConfirmTop {
+  display: grid !important;
+  grid-template-columns: 60px minmax(0,1fr) !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.dishIngredientConfirmIcon {
+  width: 60px !important;
+  height: 60px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 18px !important;
+  background: rgba(255,255,255,0.06) !important;
+
+  font-size: 32px !important;
+}
+
+.dishIngredientConfirmInfo strong,
+.dishIngredientConfirmInfo span {
+  display: block !important;
+}
+
+.dishIngredientConfirmInfo strong {
+  color: rgba(255,255,255,0.94) !important;
+  font-size: 22px !important;
+  font-weight: 950 !important;
+  line-height: 1.05 !important;
+}
+
+.dishIngredientConfirmInfo span {
+  margin-top: 5px !important;
+  color: rgba(255,255,255,0.48) !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+.dishIngredientConfirmInput {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+
+  margin-top: 18px !important;
+}
+
+.dishIngredientConfirmInput > span {
+  color: rgba(255,255,255,0.82) !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.dishIngredientConfirmInput div {
+  position: relative !important;
+}
+
+.dishIngredientConfirmInput input {
+  width: 100% !important;
+  height: 62px !important;
+
+  padding: 0 82px 0 18px !important;
+
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  background: rgba(255,255,255,0.05) !important;
+
+  color: rgba(255,255,255,0.94) !important;
+  font-size: 24px !important;
+  font-weight: 950 !important;
+}
+
+.dishIngredientConfirmInput em {
+  position: absolute !important;
+  right: 8px !important;
+  top: 8px !important;
+  bottom: 8px !important;
+
+  width: 62px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+
+  color: #10120f !important;
+  -webkit-text-fill-color: #10120f !important;
+
+  font-style: normal !important;
+  font-size: 22px !important;
+  font-weight: 950 !important;
+}
+
+.dishIngredientConfirmActions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+
+  margin-top: 18px !important;
+}
+
+.dishIngredientConfirmActions button {
+  min-height: 56px !important;
+  border-radius: 20px !important;
+
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+.dishIngredientConfirmCancel {
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  background: rgba(255,255,255,0.05) !important;
+
+  color: rgba(255,255,255,0.74) !important;
+}
+
+.dishIngredientConfirmAdd {
+  border: 0 !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+
+  color: #10120f !important;
+  -webkit-text-fill-color: #10120f !important;
+}
+
+:root[data-app-theme="warm-light"] .dishIngredientConfirmInfo strong,
+:root[data-app-theme="warm-light"] .dishIngredientConfirmInput > span,
+:root[data-app-theme="warm-light"] .dishIngredientConfirmInput input {
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+:root[data-app-theme="warm-light"] .dishIngredientConfirmInfo span,
+:root[data-app-theme="warm-light"] .dishIngredientConfirmCancel {
+  color: rgba(95,87,68,0.62) !important;
+  -webkit-text-fill-color: rgba(95,87,68,0.62) !important;
+}
+
+:root[data-app-theme="warm-light"] .dishIngredientConfirmInput input,
+:root[data-app-theme="warm-light"] .dishIngredientConfirmCancel {
+  border-color: rgba(94,75,30,0.10) !important;
+  background: rgba(255,255,255,0.28) !important;
+}
+

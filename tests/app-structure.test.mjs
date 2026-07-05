@@ -2659,7 +2659,7 @@ test("legacy food editor CSS keeps summary dot sizes in root owners", async () =
 });
 
 test("legacy food editor CSS keeps warm-light ingredient surfaces grouped", async () => {
-  const source = await readText("src/styles/nutrition-food-editor-workout-close.css");
+  const source = await readCssWithImports("src/styles/nutrition-food-editor-workout-close.css");
 
   assert.equal(
     (source.match(/\.dishIngredientPickerSheet,\s*:root\[data-app-theme="warm-light"\] \.dishIngredientConfirmCard\s*\{\s*border-color:\s*rgba\(94,75,30,0\.12\) !important;\s*background:\s*radial-gradient\(circle at 50% 0%, rgba\(244,224,100,0\.38\), transparent 62%\),\s*linear-gradient\(180deg, rgba\(255,249,198,0\.98\), rgba\(247,232,151,0\.99\)\) !important;\s*\}/g) || []).length,

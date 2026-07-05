@@ -1,0 +1,152 @@
+/* CREATE PRODUCT / DISH CHOICE */
+.nutritionCreateChoiceOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483600 !important;
+
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+
+  padding: 18px !important;
+
+  background: rgba(0,0,0,0.46) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.nutritionCreateChoiceSheet {
+  width: min(520px, 100%) !important;
+  padding: 22px 18px 18px !important;
+
+  position: relative !important;
+
+  border-radius: 28px !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127,159,58,0.15), transparent 58%),
+    linear-gradient(180deg, rgba(18,28,22,0.98), rgba(8,13,10,0.99)) !important;
+
+  box-shadow:
+    0 26px 70px rgba(0,0,0,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+.nutritionCreateChoiceSheet h3 {
+  margin: 0 !important;
+  text-align: center !important;
+
+  color: rgba(255,255,255,0.95) !important;
+  font-size: 25px !important;
+  font-weight: 950 !important;
+  line-height: 1.05 !important;
+}
+
+.nutritionCreateChoiceSheet p {
+  margin: 8px auto 16px !important;
+  max-width: 330px !important;
+
+  text-align: center !important;
+  color: rgba(255,255,255,0.52) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+
+.nutritionCreateChoiceClose {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+
+  width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important;
+
+  border-radius: 50% !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  background: rgba(255,255,255,0.05) !important;
+
+  color: rgba(255,255,255,0.78) !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+}
+
+.nutritionCreateChoiceGrid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+
+.nutritionCreateChoiceGrid button {
+  min-height: 132px !important;
+  padding: 15px 10px !important;
+
+  border-radius: 22px !important;
+  border: 1px solid rgba(127,159,58,0.18) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127,159,58,0.18), transparent 55%),
+    rgba(255,255,255,0.055) !important;
+
+  color: rgba(255,255,255,0.92) !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+}
+
+.nutritionCreateChoiceGrid button span {
+  font-size: 32px !important;
+  line-height: 1 !important;
+}
+
+.nutritionCreateChoiceGrid button strong {
+  font-size: 18px !important;
+  font-weight: 950 !important;
+}
+
+.nutritionCreateChoiceGrid button small {
+  max-width: 130px !important;
+  color: rgba(255,255,255,0.48) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 1.18 !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceOverlay {
+  background: rgba(93,77,33,0.20) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceSheet {
+  border-color: rgba(94,75,30,0.12) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244,224,100,0.40), transparent 62%),
+    linear-gradient(180deg, rgba(255,249,198,0.98), rgba(247,232,151,0.99)) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceSheet h3,
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceGrid button strong {
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceSheet p,
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceGrid button small {
+  color: rgba(95,87,68,0.62) !important;
+  -webkit-text-fill-color: rgba(95,87,68,0.62) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceGrid button {
+  border-color: rgba(94,75,30,0.10) !important;
+  background:
+    linear-gradient(180deg, rgba(244,224,100,0.34), rgba(255,245,178,0.78)) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceClose {
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+  background: rgba(255,255,255,0.34) !important;
+}
+

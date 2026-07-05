@@ -1,0 +1,132 @@
+/* WORKOUT CLOSE BUTTON â€” START / WARMUP / EXERCISE 1 ONLY */
+.startWorkoutSlide,
+.exerciseSlideCard,
+.warmupExerciseCard {
+  position: relative !important;
+}
+
+.workoutCloseButtonTopRight,
+.workoutRunPage .workoutCloseButtonTopRight,
+.exerciseSlideCard .workoutCloseButtonTopRight,
+.startWorkoutSlide .workoutCloseButtonTopRight,
+.warmupExerciseCard .workoutCloseButtonTopRight {
+  position: absolute !important;
+  top: 14px !important;
+  right: 14px !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 999 !important;
+
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  max-width: 44px !important;
+  max-height: 44px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border-radius: 50% !important;
+  border: 1px solid rgba(127, 159, 58, 0.24) !important;
+
+  background:
+    radial-gradient(circle at top, rgba(127,159,58,0.22), transparent 58%),
+    rgba(12, 16, 12, 0.88) !important;
+
+  color: rgba(255, 255, 255, 0.88) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.88) !important;
+
+  font-size: 25px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+
+  transform: none !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+@media (max-width: 480px) {
+  .workoutCloseButtonTopRight,
+  .workoutRunPage .workoutCloseButtonTopRight,
+  .exerciseSlideCard .workoutCloseButtonTopRight,
+  .startWorkoutSlide .workoutCloseButtonTopRight,
+  .warmupExerciseCard .workoutCloseButtonTopRight {
+    top: 12px !important;
+    right: 12px !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
+    font-size: 24px !important;
+  }
+}
+
+/* FORCE WORKOUT CLOSE BUTTON TO SCREEN TOP RIGHT */
+.workoutCloseButtonTopRight,
+.workoutRunPage .workoutCloseButtonTopRight,
+.exerciseDeck .workoutCloseButtonTopRight,
+.exerciseSlideCard .workoutCloseButtonTopRight,
+.startWorkoutSlide .workoutCloseButtonTopRight,
+.warmupExerciseCard .workoutCloseButtonTopRight {
+  position: fixed !important;
+
+  top: max(14px, calc(env(safe-area-inset-top) + 10px)) !important;
+  right: max(14px, calc(env(safe-area-inset-right) + 14px)) !important;
+
+  left: auto !important;
+  bottom: auto !important;
+
+  z-index: 2147483647 !important;
+
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  max-width: 44px !important;
+  max-height: 44px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  transform: none !important;
+}
+
+@media (max-width: 480px) {
+  .workoutCloseButtonTopRight,
+  .workoutRunPage .workoutCloseButtonTopRight,
+  .exerciseDeck .workoutCloseButtonTopRight,
+  .exerciseSlideCard .workoutCloseButtonTopRight,
+  .startWorkoutSlide .workoutCloseButtonTopRight,
+  .warmupExerciseCard .workoutCloseButtonTopRight {
+    top: max(12px, calc(env(safe-area-inset-top) + 8px)) !important;
+    right: max(12px, calc(env(safe-area-inset-right) + 12px)) !important;
+
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
+  }
+}
+
+/* FINAL FIX â€” CLOSE BUTTON AS SCREEN OVERLAY, NOT CARD ELEMENT */
+.exerciseSlideCard .workoutCloseButtonTopRight,
+.startWorkoutSlide .workoutCloseButtonTopRight,
+.warmupExerciseCard .workoutCloseButtonTopRight,
+.exerciseSlideCard .workoutCloseButton,
+.startWorkoutSlide .workoutCloseButton,
+.warmupExerciseCard .workoutCloseButton {
+  display: none !important;
+}
+
