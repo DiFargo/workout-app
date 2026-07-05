@@ -1,9 +1,9 @@
-@import "./legacy-profile-dashboard-telegram-late.css";
-@import "./legacy-history-ai-search-late.css";
-@import "./legacy-profile-nutrition-late.css";
-@import "./legacy-profile-progress-late.css";
-@import "./legacy-desktop-cabinet-polish.css";
+@import "./profile-dashboard-telegram.css";
+@import "./client-history-ai-search.css";
+@import "./profile-nutrition.css";
+@import "./profile-progress.css";
+@import "./client-cabinet-desktop.css";
 @import "./client-measurements-lazy.css";
-@import "./legacy-cabinet-calendar-insights.css";
-@import "./legacy-profile-account-editor.css";
-@import "./legacy-progress-insights.css";
+@import "./cabinet-calendar-insights.css";
+@import "./profile-account-editor.css";
+@import "./profile-progress-insights.css";

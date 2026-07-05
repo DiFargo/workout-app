@@ -160,7 +160,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 51. Nutrition AI plan and AI photo process CSS now load through `nutrition-ai-plan-lazy.css` in the nutrition lazy stack instead of the core app stylesheet.
 52. Workout draft/readiness/post-workout dialogs now have visual coverage and lazy-owned CSS in the client workout stack.
 53. Nutrition food icon editor and training-day calorie highlight CSS now load through `nutrition-food-icon-lazy.css` in the nutrition lazy stack.
-54. The former mixed AI/nutrition/workout stylesheet was retired; its remaining core profile/first-setup rules now live in `legacy-profile-first-setup-core.css`.
+54. The former mixed AI/nutrition/workout stylesheet was retired; its remaining core profile/first-setup rules now live in `profile-first-setup-core.css`.
 55. Nutrition week day buttons now expose full-date accessible labels and selected state, guarded by the nutrition visual audit.
 56. Cabinet Telegram management modal now exposes dialog semantics and an accessible close control, guarded by the primary visual audit.
 57. Cabinet nutrition goal picker now exposes accessible goal labels and selected state, guarded by the primary visual audit.
@@ -469,26 +469,26 @@ Started in `v.1.250`.
    - Status: nutrition weekday cells now keep labels and markers centered in the visual audit.
    - Status: warm-light nutrition/client page shell CSS is grouped in `nutrition.css` under structure and nutrition visual guards.
    - Status: obsolete warm-light AI-plan collapsed surface CSS was removed from `nutrition.css`; the final collapsed-summary owner stays guarded.
-   - Status: cabinet nutrition modal warm-light save button CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet nutrition modal warm-light picker active/hint CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet nutrition modal warm-light neutral card/picker/macro surfaces are grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet nutrition modal calendar/macro micro-label typography CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet nutrition modal settings-open hidden legacy surfaces are grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet trainer notifications and progress photos modal shells are grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet trainer notifications and progress photos overlay CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet trainer notifications and progress photos warm-light surface CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet trainer notifications and progress photos warm-light heading text CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet trainer notifications and progress photos base heading CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: cabinet trainer notifications and progress photos text-container grid CSS is grouped in `legacy-desktop-cabinet-polish.css` under cabinet visual coverage.
-   - Status: trainer client KPI/macro metric caption typography CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
-   - Status: trainer client attention/progress caption typography CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
-   - Status: trainer client hero/section/control muted caption typography CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
-   - Status: trainer client AI/control/activity list shell CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
-   - Status: trainer client section/attention/AI/program text shell CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
-   - Status: trainer mobile task/photo/payment form column CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
-   - Status: trainer client mobile photo/hero/progress column CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
-   - Status: trainer mobile progress/event/payment auto-column CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
-   - Status: trainer progress/event/payment full-width column CSS is grouped in `legacy-desktop-cabinet-polish.css` under trainer visual coverage.
+   - Status: cabinet nutrition modal warm-light save button CSS is grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet nutrition modal warm-light picker active/hint CSS is grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet nutrition modal warm-light neutral card/picker/macro surfaces are grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet nutrition modal calendar/macro micro-label typography CSS is grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet nutrition modal settings-open hidden legacy surfaces are grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet trainer notifications and progress photos modal shells are grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet trainer notifications and progress photos overlay CSS is grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet trainer notifications and progress photos warm-light surface CSS is grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet trainer notifications and progress photos warm-light heading text CSS is grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet trainer notifications and progress photos base heading CSS is grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: cabinet trainer notifications and progress photos text-container grid CSS is grouped in `client-cabinet-desktop.css` under cabinet visual coverage.
+   - Status: trainer client KPI/macro metric caption typography CSS is grouped in `client-cabinet-desktop.css` under trainer visual coverage.
+   - Status: trainer client attention/progress caption typography CSS is grouped in `client-cabinet-desktop.css` under trainer visual coverage.
+   - Status: trainer client hero/section/control muted caption typography CSS is grouped in `client-cabinet-desktop.css` under trainer visual coverage.
+   - Status: trainer client AI/control/activity list shell CSS is grouped in `client-cabinet-desktop.css` under trainer visual coverage.
+   - Status: trainer client section/attention/AI/program text shell CSS is grouped in `client-cabinet-desktop.css` under trainer visual coverage.
+   - Status: trainer mobile task/photo/payment form column CSS is grouped in `client-cabinet-desktop.css` under trainer visual coverage.
+   - Status: trainer client mobile photo/hero/progress column CSS is grouped in `client-cabinet-desktop.css` under trainer visual coverage.
+   - Status: trainer mobile progress/event/payment auto-column CSS is grouped in `client-cabinet-desktop.css` under trainer visual coverage.
+   - Status: trainer progress/event/payment full-width column CSS is grouped in `client-cabinet-desktop.css` under trainer visual coverage.
    - Status: warm-light add-food/search cleanup CSS moved behind the nutrition lazy entrypoint under the existing nutrition visual audit.
    - Status: dark-green nutrition food-flow CSS moved behind the nutrition lazy entrypoint with structural guards preserving readable dark nutrition overrides.
    - Status: workout cleanup has started under the empty-state visual guard; legacy global empty-state duplicates were removed.
@@ -566,17 +566,17 @@ Started in `v.1.250`.
    - Status: trainer shared white panel shell CSS is grouped across dashboard, nutrition, client and notification cards in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: trainer shared 16px title typography CSS is grouped across analytics, notification, client and nutrition cards in `trainer-workspace.css` under trainer workspace and visual coverage.
    - Status: the duplicate trainer workout preview stack owner was removed from `trainer-workspace.css`; the grouped stack owner remains guarded under trainer workspace and visual coverage.
-   - Status: the duplicate client bottom nav active owner was removed from `client-nutrition-grid-lock.css`; the shared active owner remains guarded by structure and client visual coverage.
-   - Status: the early duplicate main profile AI hero grid owner was removed from `client-nutrition-grid-lock.css`; the specific hero grid owner remains guarded by structure and client visual coverage.
-   - Status: the early duplicate main profile progress insight headline layout owner was removed from `client-nutrition-grid-lock.css`; the final headline layout owner remains guarded by structure and client visual coverage.
-   - Status: the early duplicate main measurement chart line owner was removed from `client-nutrition-grid-lock.css`; the final chart line owner remains guarded by structure and client visual coverage.
-   - Status: the early duplicate food action bar button and active owners were removed from `client-primary-final-lock.css`; the final shared action owners remain guarded by structure and client visual coverage.
-   - Status: the early duplicate main AI stats row cell owner was removed from `client-primary-final-lock.css`; the final stats row cell owner remains guarded by structure and client visual coverage.
-   - Status: the old `v.1.100` product editor header rhythm owner was removed from `client-visual-unity-final.css`; the later `v.1.102` final cascade lock remains guarded by structure and nutrition visual coverage.
-   - Status: the early duplicate admin nutrition month summary-below layout owner was removed from `legacy-admin-client-dashboard-polish.css`; the final V44 owner remains guarded by structure and admin visual coverage.
-   - Status: the early duplicate cabinet bottom pseudo-layer was removed from `client-primary-final-lock.css`; the final rhythm owner remains guarded under client primary visual coverage.
-   - Status: food search action stack shell CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
-   - Status: food search create-action inactive/active color CSS is grouped in `client-primary-final-lock.css` under client primary and nutrition visual coverage.
+   - Status: the duplicate client bottom nav active owner was removed from `client-nutrition-grid.css`; the shared active owner remains guarded by structure and client visual coverage.
+   - Status: the early duplicate main profile AI hero grid owner was removed from `client-nutrition-grid.css`; the specific hero grid owner remains guarded by structure and client visual coverage.
+   - Status: the early duplicate main profile progress insight headline layout owner was removed from `client-nutrition-grid.css`; the final headline layout owner remains guarded by structure and client visual coverage.
+   - Status: the early duplicate main measurement chart line owner was removed from `client-nutrition-grid.css`; the final chart line owner remains guarded by structure and client visual coverage.
+   - Status: the early duplicate food action bar button and active owners were removed from `client-primary.css`; the final shared action owners remain guarded by structure and client visual coverage.
+   - Status: the early duplicate main AI stats row cell owner was removed from `client-primary.css`; the final stats row cell owner remains guarded by structure and client visual coverage.
+   - Status: the old `v.1.100` product editor header rhythm owner was removed from `client-visual-unity.css`; the later `v.1.102` final cascade lock remains guarded by structure and nutrition visual coverage.
+   - Status: the early duplicate admin nutrition month summary-below layout owner was removed from `admin-client-dashboard.css`; the final V44 owner remains guarded by structure and admin visual coverage.
+   - Status: the early duplicate cabinet bottom pseudo-layer was removed from `client-primary.css`; the final rhythm owner remains guarded under client primary visual coverage.
+   - Status: food search action stack shell CSS is grouped in `client-primary.css` under client primary and nutrition visual coverage.
+   - Status: food search create-action inactive/active color CSS is grouped in `client-primary.css` under client primary and nutrition visual coverage.
    - Status: workout draft/readiness/post-workout dialog CSS moved behind the workout lazy entrypoint after adding dialog visual coverage.
    - Status: client AI Coach has visual coverage for overview and AI nutrition plan states, and its route-specific CSS is now behind `ai-coach-lazy.css`.
    - Status: nutrition AI plan/photo-process CSS is now behind `nutrition-ai-plan-lazy.css` in the nutrition lazy stack.

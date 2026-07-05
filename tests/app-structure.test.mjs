@@ -246,21 +246,21 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.doesNotMatch(indexCss, /\.foodEditIconManualBox/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/workouts\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/workoutFlow\.css"/);
-  assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-client-workout-flow-late\.css"/);
-  assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-flow-polish\.css"/);
-  assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-exercise-notes\.css"/);
-  assert.match(clientWorkoutLazyCss, /@import "\.\/legacy-workout-navigation-close-early\.css"/);
+  assert.match(clientWorkoutLazyCss, /@import "\.\/client-workout-flow\.css"/);
+  assert.match(clientWorkoutLazyCss, /@import "\.\/workout-flow-layout\.css"/);
+  assert.match(clientWorkoutLazyCss, /@import "\.\/workout-exercise-notes\.css"/);
+  assert.match(clientWorkoutLazyCss, /@import "\.\/workout-navigation-close\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/client-workout-set-rows\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/client-workout-dialogs-lazy\.css"/);
   for (const nutritionLazyImport of [
-    "./legacy-food-products-summary-early.css",
-    "./legacy-food-editor-workout-close-late.css",
-    "./legacy-warm-light-food-edit-back-buttons.css",
-    "./legacy-warm-light-add-food-search-cleanup.css",
-    "./client-food-search-final.css",
-    "./legacy-nutrition-photo-not-found.css",
-    "./legacy-nutrition-orbit.css",
-    "./legacy-nutrition-flow.css"
+    "./nutrition-food-products-summary.css",
+    "./nutrition-food-editor-workout-close.css",
+    "./warm-light-food-edit-back-buttons.css",
+    "./warm-light-add-food-search.css",
+    "./client-food-search.css",
+    "./nutrition-photo-not-found.css",
+    "./nutrition-orbit.css",
+    "./nutrition-flow.css"
   ]) {
     assert.match(nutritionStackCss, new RegExp(`@import "${nutritionLazyImport.replace(".", "\\.")}"`));
   }
@@ -278,7 +278,7 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(appRouter, /['"]\.\.\/styles\/client-measurements-lazy\.css['"]/);
   assert.match(appStartupGate, /['"]\.\.\/styles\/client-first-setup-lazy\.css['"]/);
   for (const firstSetupLazyImport of [
-    "./legacy-profile-first-setup-core.css",
+    "./profile-first-setup-core.css",
     "./client-questionnaire-sliders.css"
   ]) {
     assert.match(clientFirstSetupLazyCss, new RegExp(`@import "${firstSetupLazyImport.replace(".", "\\.")}"`));
@@ -288,21 +288,21 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-profile-lazy\.css['"]/);
   assert.match(clientProfileLazyCss, /@import "\.\/client-measurements-lazy\.css"/);
   for (const measurementLazyImport of [
-    "./legacy-measurements-late.css",
-    "./legacy-measurement-review.css"
+    "./client-measurements.css",
+    "./client-measurement-review.css"
   ]) {
     assert.match(clientMeasurementsLazyCss, new RegExp(`@import "${measurementLazyImport.replace(".", "\\.")}"`));
     assert.doesNotMatch(indexCss, new RegExp(`@import "${measurementLazyImport.replace(".", "\\.")}"`));
   }
   for (const profileLazyImport of [
-    "./legacy-profile-dashboard-telegram-late.css",
-    "./legacy-history-ai-search-late.css",
-    "./legacy-profile-nutrition-late.css",
-    "./legacy-profile-progress-late.css",
-    "./legacy-desktop-cabinet-polish.css",
-    "./legacy-cabinet-calendar-insights.css",
-    "./legacy-profile-account-editor.css",
-    "./legacy-progress-insights.css"
+    "./profile-dashboard-telegram.css",
+    "./client-history-ai-search.css",
+    "./profile-nutrition.css",
+    "./profile-progress.css",
+    "./client-cabinet-desktop.css",
+    "./cabinet-calendar-insights.css",
+    "./profile-account-editor.css",
+    "./profile-progress-insights.css"
   ]) {
     assert.match(clientProfileLazyCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
     assert.doesNotMatch(indexCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
@@ -313,17 +313,17 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(adminLazyCss, /@import "\.\/adminPanelHub\.css"/);
 
   for (const adminHeavyImport of [
-    "./legacy-admin-shell-crm-app46.css",
-    "./legacy-admin-program-editor-app49.css",
-    "./legacy-month-program-editor-early.css",
-    "./legacy-exercise-weight-mode.css",
-    "./legacy-admin-client-page.css",
-    "./legacy-admin-dashboard-bars.css",
-    "./legacy-admin-programs-dashboard.css",
-    "./legacy-admin-client-dashboard-polish.css",
-    "./legacy-admin-calendar-reminders-late.css",
-    "./legacy-trainer-desktop-adaptation-late.css",
-    "./legacy-trainer-program-editor-late.css",
+    "./admin-shell-crm.css",
+    "./admin-program-editor.css",
+    "./trainer-month-program-editor.css",
+    "./trainer-exercise-weight-mode.css",
+    "./admin-client-page.css",
+    "./admin-dashboard-bars.css",
+    "./admin-programs-dashboard.css",
+    "./admin-client-dashboard.css",
+    "./admin-calendar-reminders.css",
+    "./trainer-desktop-adaptation.css",
+    "./trainer-program-editor.css",
     "./nutrition-trainer-desktop.css"
   ]) {
     const escapedImport = adminHeavyImport.replace(".", "\\.");
@@ -340,8 +340,8 @@ test("application styles use the modular styles entrypoint", async () => {
     "./menu.css",
     "./splash.css",
     "./auth.css",
-    "./legacy-overrides.css",
-    "./legacy-client-screen-alignment.css"
+    "./compatibility.css",
+    "./client-screen-alignment.css"
   ]) {
     assert.match(indexCss, new RegExp(`@import "${requiredImport.replace(".", "\\.")}"`));
   }
@@ -350,7 +350,6 @@ test("application styles use the modular styles entrypoint", async () => {
     "./trainer.css",
     "./admin.css",
     "./themes.css",
-    "./client-main.css",
     "./layout.css",
     "./components.css",
     "./legacy-stack.css",
@@ -365,29 +364,29 @@ test("application styles use the modular styles entrypoint", async () => {
     "./client-profile-lazy.css",
     "./nutrition-stack.css",
     "./legacy-admin-stack.css",
-    "./legacy-trainer-desktop-adaptation-late.css",
-    "./legacy-trainer-program-editor-late.css",
-    "./legacy-trainer-light-workspace.css",
-    "./legacy-trainer-light-audit.css",
+    "./trainer-desktop-adaptation.css",
+    "./trainer-program-editor.css",
+    "./trainer-light-workspace.css",
+    "./trainer-light-audit.css",
     "./nutrition-trainer-desktop.css",
     "./workouts.css",
-    "./legacy-client-workout-flow-late.css",
+    "./client-workout-flow.css",
     "./workoutFlow.css",
-    "./legacy-exercise-weight-mode.css",
-    "./legacy-workout-flow-polish.css",
-    "./legacy-workout-exercise-notes.css",
-    "./legacy-workout-navigation-close-early.css",
+    "./trainer-exercise-weight-mode.css",
+    "./workout-flow-layout.css",
+    "./workout-exercise-notes.css",
+    "./workout-navigation-close.css",
     "./client-workout-set-rows.css",
     "./client-workout-dialogs-lazy.css",
-    "./legacy-dark-green-food-flow.css",
-    "./legacy-food-products-summary-early.css",
-    "./legacy-food-editor-workout-close-late.css",
-    "./legacy-warm-light-food-edit-back-buttons.css",
-    "./legacy-warm-light-add-food-search-cleanup.css",
-    "./client-food-search-final.css",
-    "./legacy-nutrition-photo-not-found.css",
-    "./legacy-nutrition-orbit.css",
-    "./legacy-nutrition-flow.css"
+    "./nutrition-dark-food-flow.css",
+    "./nutrition-food-products-summary.css",
+    "./nutrition-food-editor-workout-close.css",
+    "./warm-light-food-edit-back-buttons.css",
+    "./warm-light-add-food-search.css",
+    "./client-food-search.css",
+    "./nutrition-photo-not-found.css",
+    "./nutrition-orbit.css",
+    "./nutrition-flow.css"
   ]) {
     assert.doesNotMatch(indexCss, new RegExp(`@import "${deferredImport.replace(".", "\\.")}"`));
   }
@@ -443,7 +442,7 @@ test("AI coach CSS keeps nutrition plan grids grouped", async () => {
 });
 
 test("legacy registration CSS keeps first setup active choices grouped", async () => {
-  const source = await readText("src/styles/legacy-registration-accessibility.css");
+  const source = await readText("src/styles/registration-accessibility.css");
 
   assert.equal(
     (
@@ -460,7 +459,7 @@ test("legacy registration CSS keeps first setup active choices grouped", async (
 });
 
 test("legacy registration CSS keeps workout history item internals grouped", async () => {
-  const source = await readText("src/styles/legacy-registration-accessibility.css");
+  const source = await readText("src/styles/registration-accessibility.css");
 
   assert.equal(
     (
@@ -508,7 +507,7 @@ test("legacy registration CSS keeps workout history item internals grouped", asy
 });
 
 test("legacy registration CSS keeps warm-light nutrition icon shells grouped", async () => {
-  const source = await readText("src/styles/legacy-registration-accessibility.css");
+  const source = await readText("src/styles/registration-accessibility.css");
 
   assert.equal(
     (
@@ -553,14 +552,14 @@ test("modular CSS import graph resolves without cycles", async () => {
   assert.ok(visited.has(path.normalize("src/styles/nutrition-stack.css")));
   assert.ok(visited.has(path.normalize("src/styles/trainer-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/admin-lazy.css")));
-  assert.ok(visited.has(path.normalize("src/styles/legacy-overrides.css")));
+  assert.ok(visited.has(path.normalize("src/styles/compatibility.css")));
   assert.ok(visited.has(path.normalize("src/components/trainer/trainer-workspace.css")));
   assert.equal(await pathExists("src/styles.css"), false);
   assert.deepEqual(reachableCssFiles, allCssFiles);
 });
 
 test("client visual unity CSS does not keep exact duplicate blocks", async () => {
-  const source = await readText("src/styles/client-visual-unity-final.css");
+  const source = await readText("src/styles/client-visual-unity.css");
   const seenBlocks = new Set();
   const duplicateBlocks = [];
 
@@ -570,7 +569,7 @@ test("client visual unity CSS does not keep exact duplicate blocks", async () =>
     const key = `${selector} { ${body} }`;
     if (seenBlocks.has(key)) {
       const line = source.slice(0, match.index).split(/\r?\n/).length;
-      duplicateBlocks.push(`src/styles/client-visual-unity-final.css:${line}`);
+      duplicateBlocks.push(`src/styles/client-visual-unity.css:${line}`);
     }
     seenBlocks.add(key);
   }
@@ -579,7 +578,7 @@ test("client visual unity CSS does not keep exact duplicate blocks", async () =>
 });
 
 test("client visual unity CSS keeps product editor header rhythm in the final owner", async () => {
-  const source = await readText("src/styles/client-visual-unity-final.css");
+  const source = await readText("src/styles/client-visual-unity.css");
   const finalStart = source.indexOf("v.1.102 final cascade lock: product editor must use the same top rhythm as nutrition flow.");
   const finalBlock = source.slice(finalStart);
 
@@ -600,7 +599,7 @@ test("client visual unity CSS keeps product editor header rhythm in the final ow
 });
 
 test("client visual unity CSS keeps goal stat typography in the final owner", async () => {
-  const source = await readText("src/styles/client-visual-unity-final.css");
+  const source = await readText("src/styles/client-visual-unity.css");
   const mobileFixStart = source.indexOf("v.1.89: final mobile alignment fixes");
   const fullCardGoalStart = source.indexOf("v.1.90: override the older full-card goal selector", mobileFixStart);
   const earlyBlock = source.slice(mobileFixStart, fullCardGoalStart);
@@ -619,7 +618,7 @@ test("client visual unity CSS keeps goal stat typography in the final owner", as
 });
 
 test("client primary final CSS keeps bottom nav sizing in one owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.individualWorkoutMenuBar\.clientBottomNav\s*\{\s*position:\s*fixed !important;\s*left:\s*max\(10px, env\(safe-area-inset-left\)\) !important;\s*right:\s*max\(10px, env\(safe-area-inset-right\)\) !important;\s*bottom:\s*max\(10px, env\(safe-area-inset-bottom\)\) !important;\s*z-index:\s*80 !important;\s*width:\s*auto !important;\s*max-width:\s*none !important;\s*height:\s*84px !important;\s*min-height:\s*84px !important;/g) || []).length,
@@ -636,7 +635,7 @@ test("client primary final CSS keeps bottom nav sizing in one owner", async () =
 });
 
 test("legacy bottom bars CSS keeps button shells in the final owner", async () => {
-  const source = await readText("src/styles/legacy-bottom-bars.css");
+  const source = await readText("src/styles/bottom-bars.css");
   const normalizeStart = source.indexOf("V854: hard normalize all bottom navigation bars");
   const finalStart = source.indexOf("V855: final one-pixel strict baseline", normalizeStart);
   const normalizeBlock = source.slice(normalizeStart, finalStart);
@@ -663,7 +662,7 @@ test("legacy bottom bars CSS keeps button shells in the final owner", async () =
 });
 
 test("client primary final CSS keeps shared action bar sizing in one owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.nutritionBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSearchBottomBar\.fatSearchBottomBarFour,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar\s*\{\s*position:\s*fixed !important;\s*left:\s*max\(10px, env\(safe-area-inset-left\)\) !important;\s*right:\s*max\(10px, env\(safe-area-inset-right\)\) !important;\s*bottom:\s*max\(10px, env\(safe-area-inset-bottom\)\) !important;\s*z-index:\s*90 !important;/g) || []).length,
@@ -702,7 +701,7 @@ test("client primary final CSS keeps shared action bar sizing in one owner", asy
 });
 
 test("client primary final CSS keeps profile progress overview grid in one owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.doesNotMatch(
     source,
@@ -715,7 +714,7 @@ test("client primary final CSS keeps profile progress overview grid in one owner
 });
 
 test("client primary final CSS keeps food action bars in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatSearchBottomBar\.fatSearchBottomBarFour,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageActionBar\s*\{\s*width:\s*min\(374px, calc\(100vw - 20px\)\) !important;\s*height:\s*78px !important;\s*border-radius:\s*20px !important;\s*background:\s*rgba\(255, 255, 255, 0\.96\) !important;/g) || []).length,
@@ -740,7 +739,7 @@ test("client primary final CSS keeps food action bars in the final owner", async
 });
 
 test("client food search CSS keeps product edit action bar sheet-locked", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
 
   assert.equal(
     (source.match(/\.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*position:\s*relative !important;\s*\}/g) || []).length,
@@ -757,7 +756,7 @@ test("client food search CSS keeps product edit action bar sheet-locked", async 
 });
 
 test("client primary final CSS keeps food action label typography grouped", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatSearchBottomBarFour > button strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar > button strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageActionBar > button strong\s*\{\s*max-width:\s*100% !important;\s*overflow:\s*hidden !important;\s*color:\s*inherit !important;\s*font-size:\s*10\.5px !important;\s*font-weight:\s*850 !important;/g) || []).length,
@@ -770,7 +769,7 @@ test("client primary final CSS keeps food action label typography grouped", asyn
 });
 
 test("client primary final CSS keeps food search action stack shells grouped", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.foodSearchPopularList,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodSearchModernActions\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*8px !important;\s*\}/g) || []).length,
@@ -783,7 +782,7 @@ test("client primary final CSS keeps food search action stack shells grouped", a
 });
 
 test("client primary final CSS keeps food search create action colors grouped", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction span,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium \.fatSearchBottomBarFive \.fatSearchCreateAction strong\s*\{\s*color:\s*rgba\(97, 106, 128, 0\.82\) !important;\s*-webkit-text-fill-color:\s*rgba\(97, 106, 128, 0\.82\) !important;\s*\}/g) || []).length,
@@ -796,7 +795,7 @@ test("client primary final CSS keeps food search create action colors grouped", 
 });
 
 test("client primary final CSS keeps food editor header layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 18px !important;\s*padding:\s*0 0 0 calc\(var\(--client-action\) \+ 12px\) !important;\s*position:\s*relative !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;/g) || []).length,
@@ -857,7 +856,7 @@ test("client primary final CSS keeps food editor header layout in the final owne
 });
 
 test("client primary final CSS keeps fixed photo action spacing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.foodSearchFixedPhotoAction\s*\{\s*left:\s*var\(--client-x\) !important;\s*right:\s*var\(--client-x\) !important;\s*bottom:\s*calc\(102px \+ env\(safe-area-inset-bottom\)\) !important;\s*min-height:\s*76px !important;\s*border-radius:\s*18px !important;/g) || []).length,
@@ -866,7 +865,7 @@ test("client primary final CSS keeps fixed photo action spacing in the final own
 });
 
 test("client primary final CSS keeps product flow title typography in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.foodProductFlowHeader \.foodProductFlowTitle h2\s*\{\s*max-width:\s*100% !important;\s*color:\s*var\(--client-title-color\) !important;\s*-webkit-text-fill-color:\s*var\(--client-title-color\) !important;\s*font-size:\s*26px !important;\s*line-height:\s*1\.08 !important;\s*font-weight:\s*900 !important;\s*white-space:\s*normal !important;/g) || []).length,
@@ -875,7 +874,7 @@ test("client primary final CSS keeps product flow title typography in the final 
 });
 
 test("client primary final CSS keeps product flow header layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader\s*\{\s*min-height:\s*126px !important;\s*margin:\s*0 0 16px !important;\s*padding:\s*0 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 116px !important;\s*grid-template-areas:\s*"title actions"\s*"meal meal" !important;\s*align-items:\s*center !important;\s*gap:\s*14px 12px !important;/g) || []).length,
@@ -900,7 +899,7 @@ test("client primary final CSS keeps product flow header layout in the final own
 });
 
 test("client primary final CSS keeps product top actions layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay \.foodProductTopActions\s*\{\s*top:\s*var\(--client-top\) !important;\s*right:\s*var\(--client-x\) !important;\s*left:\s*auto !important;\s*display:\s*flex !important;\s*gap:\s*10px !important;/g) || []).length,
@@ -909,7 +908,7 @@ test("client primary final CSS keeps product top actions layout in the final own
 });
 
 test("client primary final CSS keeps food search header layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.doesNotMatch(source, /\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) \.fatSearchTopPremiumHome \.fatSearchTitleWrap\s*\{/);
   assert.equal(
@@ -975,7 +974,7 @@ test("client primary final CSS keeps food search header layout in the final owne
 });
 
 test("client primary final CSS keeps main AI stats row in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow\s*\{\s*width:\s*100% !important;\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*margin:\s*0 0 12px !important;\s*padding:\s*0 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;/g) || []).length,
@@ -1024,7 +1023,7 @@ test("client primary final CSS keeps main AI stats row in the final owner", asyn
 });
 
 test("client primary final CSS keeps profile AI hero sizing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*width:\s*100% !important;\s*height:\s*104px !important;\s*min-height:\s*104px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*74px minmax\(0, 1fr\) !important;/g) || []).length,
@@ -1049,7 +1048,7 @@ test("client primary final CSS keeps profile AI hero sizing in the final owner",
 });
 
 test("client primary final CSS keeps profile AI hero compact cluster in root owners", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*border:\s*0 !important;\s*background:\s*transparent !important;\s*box-shadow:\s*none !important;\s*\}/g) || []).length,
@@ -1106,7 +1105,7 @@ test("client primary final CSS keeps profile AI hero compact cluster in root own
 });
 
 test("client primary final CSS keeps profile AI split cards in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiSplitCards\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*12px !important;\s*margin:\s*0 0 12px !important;/g) || []).length,
@@ -1115,7 +1114,7 @@ test("client primary final CSS keeps profile AI split cards in the final owner",
 });
 
 test("client primary final CSS keeps nutrition arrow sizing in the root owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.doesNotMatch(source, /> \.nutritionAiPlanDashboard\.collapsed\.nutritionAiPlanTopInline \.nutritionAiPlanTopCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition > \.nutritionZoukBlock \.nutritionZoukHeader\s*\{/);
   assert.equal(
@@ -1137,7 +1136,7 @@ test("client primary final CSS keeps nutrition arrow sizing in the root owner", 
 });
 
 test("client primary final CSS keeps primary page title typography in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4 \.clientCorePageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetPageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectTitle\s*\{\s*height:\s*var\(--client-page-title-height\) !important;\s*min-height:\s*var\(--client-page-title-height\) !important;\s*color:\s*var\(--client-page-title-color\) !important;/g) || []).length,
@@ -1150,7 +1149,7 @@ test("client primary final CSS keeps primary page title typography in the final 
 });
 
 test("client primary final CSS keeps page title row spacing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetTitleRow,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectHero\s*\{[^}]*margin:\s*var\(--client-page-title-top\) 0 14px !important;/g) || []).length,
@@ -1159,7 +1158,7 @@ test("client primary final CSS keeps page title row spacing in the final owner",
 });
 
 test("client primary final CSS keeps header action sizing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn\s*\{\s*position:\s*absolute !important;\s*top:\s*var\(--client-top\) !important;\s*right:\s*var\(--client-x\) !important;\s*z-index:\s*35 !important;\s*margin:\s*0 !important;\s*\}/g) || []).length,
@@ -1176,7 +1175,7 @@ test("client primary final CSS keeps header action sizing in the final owner", a
 });
 
 test("client primary final CSS keeps client title row sizing in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetTitleRow,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumHome,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumMy\s*\{\s*width:\s*100% !important;\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 16px !important;/g) || []).length,
@@ -1185,7 +1184,7 @@ test("client primary final CSS keeps client title row sizing in the final owner"
 });
 
 test("client primary final CSS keeps client title action styling in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileTrainerNotificationsButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeaderIconButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutHeaderActions button,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchClosePremium,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageHeaderBack,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.foodProductTopAction\s*\{\s*width:\s*var\(--client-action\) !important;\s*height:\s*var\(--client-action\) !important;\s*min-width:\s*var\(--client-action\) !important;\s*min-height:\s*var\(--client-action\) !important;/g) || []).length,
@@ -1194,7 +1193,7 @@ test("client primary final CSS keeps client title action styling in the final ow
 });
 
 test("client primary final CSS keeps workout start button fixed styling in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*position:\s*absolute !important;\s*left:\s*20px !important;\s*right:\s*20px !important;\s*bottom:\s*22px !important;\s*width:\s*auto !important;\s*height:\s*76px !important;\s*min-height:\s*76px !important;\s*border-radius:\s*18px !important;\s*background:\s*linear-gradient\(135deg, #6b4ff4 0%, #2f72f0 100%\) !important;/g) || []).length,
@@ -1211,7 +1210,7 @@ test("client primary final CSS keeps workout start button fixed styling in the f
 });
 
 test("client primary final CSS keeps workout card compact sizing in one owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutDeck\s*\{\s*width:\s*100% !important;\s*margin:\s*0 0 46px !important;\s*padding:\s*0 !important;\s*\}/g) || []).length,
@@ -1232,7 +1231,7 @@ test("client primary final CSS keeps workout card compact sizing in one owner", 
 });
 
 test("client primary final CSS keeps workout compact shell no-op repeats out of media", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutDeck\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*gap:\s*0 !important;\s*\}/g) || []).length,
@@ -1253,7 +1252,7 @@ test("client primary final CSS keeps workout compact shell no-op repeats out of 
 });
 
 test("client primary final CSS keeps workout stats layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutStats\s*\{\s*display:\s*grid !important;\s*gap:\s*18px !important;\s*margin-top:\s*26px !important;/g) || []).length,
@@ -1266,7 +1265,7 @@ test("client primary final CSS keeps workout stats layout in the final owner", a
 });
 
 test("client primary final CSS keeps workout badge layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.individualWorkoutBadges\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 0\.78fr\) minmax\(0, 1\.45fr\) !important;\s*gap:\s*10px !important;\s*margin:\s*0 0 14px !important;/g) || []).length,
@@ -1291,7 +1290,7 @@ test("client primary final CSS keeps workout badge layout in the final owner", a
 });
 
 test("client primary final CSS keeps header action layout in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.doesNotMatch(
     source,
@@ -1304,7 +1303,7 @@ test("client primary final CSS keeps header action layout in the final owner", a
 });
 
 test("client primary final CSS keeps workout mobile hero and actions in one owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.clientCorePageWorkout \.workoutSelectHero > p,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectLine\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
@@ -1321,7 +1320,7 @@ test("client primary final CSS keeps workout mobile hero and actions in one owne
 });
 
 test("client primary final CSS keeps client page variables in the final owner", async () => {
-  const source = await readText("src/styles/client-primary-final-lock.css");
+  const source = await readText("src/styles/client-primary.css");
   const rhythmStart = source.indexOf("/* v.1.39: final rhythm lock for the four primary client screens. */");
   const beforeRhythmBlock = source.slice(0, rhythmStart);
 
@@ -1348,7 +1347,7 @@ test("client primary final CSS keeps client page variables in the final owner", 
 });
 
 test("client workout set-row final sizing stays in the workout lazy owner", async () => {
-  const renderTarget = await readText("src/styles/client-render-target-lock.css");
+  const renderTarget = await readText("src/styles/client-render-target.css");
   const setRows = await readText("src/styles/client-workout-set-rows.css");
 
   assert.doesNotMatch(renderTarget, /v127: absolute final override for workout set rows/);
@@ -1367,7 +1366,7 @@ test("client workout set-row final sizing stays in the workout lazy owner", asyn
 });
 
 test("client render target CSS keeps profile hero locks in one owner", async () => {
-  const source = await readText("src/styles/client-render-target-lock.css");
+  const source = await readText("src/styles/client-render-target.css");
 
   assert.equal(
     (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero\s*\{\s*border-bottom-left-radius:\s*0 !important;\s*border-bottom-right-radius:\s*0 !important;\s*\}/g) || []).length,
@@ -1395,7 +1394,7 @@ test("client render target CSS keeps profile hero locks in one owner", async () 
 });
 
 test("client render target CSS keeps workout pro top sizing in the final owner", async () => {
-  const source = await readText("src/styles/client-render-target-lock.css");
+  const source = await readText("src/styles/client-render-target.css");
 
   assert.doesNotMatch(
     source,
@@ -1426,7 +1425,7 @@ test("client workout card render CSS keeps card sizing in root locks", async () 
 });
 
 test("client workout close CSS has no overwritten border reset", async () => {
-  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+  const source = await readText("src/styles/workout-navigation-close.css");
 
   assert.doesNotMatch(
     source,
@@ -1439,7 +1438,7 @@ test("client workout close CSS has no overwritten border reset", async () => {
 });
 
 test("client workout close CSS keeps compact nav button sizes grouped", async () => {
-  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+  const source = await readText("src/styles/workout-navigation-close.css");
 
   assert.equal(
     (source.match(/@media\s*\(max-width:\s*480px\)\s*\{\s*\.workoutRunPage \.exerciseNavigationRow \.exerciseBackButton,\s*\.workoutRunPage \.exerciseNavigationRow \.exercisePrevButton\s*\{\s*min-height:\s*56px !important;\s*border-radius:\s*20px !important;\s*font-size:\s*19px !important;\s*\}/g) || []).length,
@@ -1456,7 +1455,7 @@ test("client workout close CSS keeps compact nav button sizes grouped", async ()
 });
 
 test("client workout close CSS keeps pseudo resets grouped", async () => {
-  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+  const source = await readText("src/styles/workout-navigation-close.css");
 
   assert.equal(
     (source.match(/\.workoutRunPage \.exerciseNavigationRow \.exerciseBackButton::before,\s*\.workoutRunPage \.exerciseNavigationRow \.exercisePrevButton::before,\s*\.workoutRunPage \.workoutCloseButton::before\s*\{\s*content:\s*none !important;\s*display:\s*none !important;\s*\}/g) || []).length,
@@ -1466,7 +1465,7 @@ test("client workout close CSS keeps pseudo resets grouped", async () => {
 });
 
 test("client workout close CSS keeps compact nav active state grouped", async () => {
-  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+  const source = await readText("src/styles/workout-navigation-close.css");
 
   assert.equal(
     (source.match(/\.workoutRunPage \.exerciseNavigationRow \.exerciseBackButton:active,\s*\.workoutRunPage \.exerciseNavigationRow \.exercisePrevButton:active\s*\{\s*transform:\s*scale\(0\.985\) !important;\s*\}/g) || []).length,
@@ -1476,7 +1475,7 @@ test("client workout close CSS keeps compact nav active state grouped", async ()
 });
 
 test("client workout close CSS keeps exercise close active state in the base owner", async () => {
-  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+  const source = await readText("src/styles/workout-navigation-close.css");
 
   assert.equal(
     (source.match(/\.exerciseCloseButton:active\s*\{\s*transform:\s*scale\(0\.96\) !important;\s*\}/g) || []).length,
@@ -1491,7 +1490,7 @@ test("client workout close CSS keeps exercise close active state in the base own
 });
 
 test("client workout close CSS keeps scoped exercise close position in one owner", async () => {
-  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+  const source = await readText("src/styles/workout-navigation-close.css");
 
   assert.equal(
     (source.match(/\.workoutRunPage \.exerciseCloseButton\s*\{[\s\S]*?position:\s*absolute !important;[\s\S]*?top:\s*16px !important;[\s\S]*?right:\s*16px !important;[\s\S]*?left:\s*auto !important;[\s\S]*?z-index:\s*80 !important;[\s\S]*?\}/g) || []).length,
@@ -1501,7 +1500,7 @@ test("client workout close CSS keeps scoped exercise close position in one owner
 });
 
 test("client workout close CSS keeps slide relative positioning grouped", async () => {
-  const source = await readText("src/styles/legacy-workout-navigation-close-early.css");
+  const source = await readText("src/styles/workout-navigation-close.css");
 
   assert.equal(
     (source.match(/\.workoutRunPage \.startWorkoutSlide,\s*\.workoutRunPage \.exerciseSlideCard\s*\{\s*position:\s*relative !important;\s*\}/g) || []).length,
@@ -1524,7 +1523,7 @@ test("workout flow CSS keeps slide animation shell grouped", async () => {
 });
 
 test("client workout flow CSS keeps shared bottom panel shell in one owner", async () => {
-  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+  const source = await readText("src/styles/client-workout-flow.css");
   const sharedPanelMatch = source.match(
     /\.workoutRunPage \.startWorkoutBottomPanel,\s*\.workoutRunPage \.warmupBottomPanel,\s*\.workoutRunPage \.exerciseActionPanel,\s*\.workoutRunPage \.workoutFinishActionPanel\s*\{[\s\S]*?\n\}/
   );
@@ -1539,7 +1538,7 @@ test("client workout flow CSS keeps shared bottom panel shell in one owner", asy
 });
 
 test("client workout flow CSS keeps fallback image styles grouped", async () => {
-  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+  const source = await readText("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.individualWorkoutSelectPage \.individualWorkoutImageFallback,\s*\.workoutRunPage \.startWorkoutImageFallback\s*\{\s*width:\s*100%;/g) || []).length,
@@ -1556,7 +1555,7 @@ test("client workout flow CSS keeps fallback image styles grouped", async () => 
 });
 
 test("client workout flow CSS keeps select and warmup action controls grouped", async () => {
-  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+  const source = await readText("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.individualWorkoutActionRow,\s*\.workoutRunPage \.warmupNavigationRow\s*\{\s*width:\s*100%;/g) || []).length,
@@ -1577,7 +1576,7 @@ test("client workout flow CSS keeps select and warmup action controls grouped", 
 });
 
 test("client workout flow CSS keeps start button sizing grouped", async () => {
-  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+  const source = await readText("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutStartButton,\s*\.workoutRunPage \.startWorkoutBottomPanel \.startWorkoutButton\s*\{\s*width:\s*100% !important;\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*max-height:\s*78px !important;\s*margin:\s*0 !important;\s*padding:\s*0 18px !important;\s*border-radius:\s*24px !important;\s*font-size:\s*19px !important;\s*\}/g) || []).length,
@@ -1587,7 +1586,7 @@ test("client workout flow CSS keeps start button sizing grouped", async () => {
 });
 
 test("client workout flow CSS keeps compact start panel sizing grouped", async () => {
-  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+  const source = await readText("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.workoutRunPage \.workoutStageActionPanel,\s*\.workoutRunPage \.startWorkoutBottomPanel\s*\{\s*left:\s*10px !important;\s*right:\s*10px !important;\s*width:\s*calc\(100vw - 20px\) !important;\s*padding-inline:\s*9px !important;\s*\}/g) || []).length,
@@ -1597,7 +1596,7 @@ test("client workout flow CSS keeps compact start panel sizing grouped", async (
 });
 
 test("client workout flow CSS keeps compact run action panel sizing grouped", async () => {
-  const source = await readText("src/styles/legacy-client-workout-flow-late.css");
+  const source = await readText("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.workoutRunPage \.warmupBottomPanel,\s*\.workoutRunPage \.exerciseActionPanel,\s*\.workoutRunPage \.workoutFinishActionPanel\s*\{\s*left:\s*10px;\s*right:\s*10px;\s*width:\s*calc\(100vw - 20px\);\s*padding-inline:\s*9px;\s*\}/g) || []).length,
@@ -1610,7 +1609,7 @@ test("client workout flow CSS keeps compact run action panel sizing grouped", as
 });
 
 test("client workout hero spacing stays in the workout lazy owner", async () => {
-  const renderTarget = await readText("src/styles/client-render-target-lock.css");
+  const renderTarget = await readText("src/styles/client-render-target.css");
   const cardRender = await readText("src/styles/client-workout-card-render.css");
 
   assert.doesNotMatch(
@@ -1624,7 +1623,7 @@ test("client workout hero spacing stays in the workout lazy owner", async () => 
 });
 
 test("client food search final CSS keeps one compact product title-wrap lock", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
 
   assert.equal(
     (source.match(/fatSearchTitleWrap\s*\{\s*width:\s*min\(352px,\s*calc\(100vw - 24px\)\) !important;\s*max-width:\s*min\(352px,\s*calc\(100vw - 24px\)\) !important;\s*\}/g) || []).length,
@@ -1633,7 +1632,7 @@ test("client food search final CSS keeps one compact product title-wrap lock", a
 });
 
 test("client food search final CSS keeps one compact meal header width owner", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
   const nonHasMealHeaderCompactLocks = source.match(
     /body #root \.fatFoodSearchOverlay \.foodProductRenderScreen \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{\s*width:\s*min\(352px,\s*calc\(100vw - 36px\)\) !important;\s*max-width:\s*min\(352px,\s*calc\(100vw - 36px\)\) !important;\s*\}/g
   ) || [];
@@ -1642,7 +1641,7 @@ test("client food search final CSS keeps one compact meal header width owner", a
 });
 
 test("client food search final CSS keeps one compact product title owner", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
   const nonHasProductTitleCompactLocks = source.match(
     /body #root \.fatFoodSearchOverlay \.foodProductRenderScreen \.foodProductFlowTitle h2\s*\{\s*font-size:\s*25px !important;\s*\}/g
   ) || [];
@@ -1651,7 +1650,7 @@ test("client food search final CSS keeps one compact product title owner", async
 });
 
 test("client food search final CSS keeps header close shell grouped", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
 
   assert.doesNotMatch(source, /\.fatSearchTopPremium\.fatSearchTopPremiumHome button\.fatSearchClosePremium\s*\{/);
   assert.equal(
@@ -1673,7 +1672,7 @@ test("client food search final CSS keeps header close shell grouped", async () =
 });
 
 test("client food search final CSS keeps header title shell grouped", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
 
   assert.equal(
     (
@@ -1694,7 +1693,7 @@ test("client food search final CSS keeps header title shell grouped", async () =
 });
 
 test("client food search final CSS keeps product title typography in stable flow owner", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
   const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
   const hardLockStart = source.indexOf("/* Product page header/search alignment hard lock v160 */");
   const stableFlowBlock = source.slice(stableFlowStart, hardLockStart);
@@ -1714,7 +1713,7 @@ test("client food search final CSS keeps product title typography in stable flow
 });
 
 test("client food search final CSS keeps product hero spacing in latest owners", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
   const amountBehaviorStart = source.indexOf("/* Food product/search alignment and amount behavior v156 */");
   const photoActionStart = source.indexOf("/* Food search AI photo action bar height v157 */", amountBehaviorStart);
   const exactLockStart = source.indexOf("/* Product page header exact lock v158 */");
@@ -1784,7 +1783,7 @@ test("client food search final CSS keeps product hero spacing in latest owners",
 });
 
 test("client food search final CSS keeps photo action sizing in latest owner", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
   const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
   const productAddStart = source.indexOf("/* Food product add page v154 */", renderControlsStart);
   const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */");
@@ -1832,7 +1831,7 @@ test("client food search final CSS keeps photo action sizing in latest owner", a
 });
 
 test("client food search final CSS keeps title button sizing in latest owner", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
   const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
   const productAddStart = source.indexOf("/* Food product add page v154 */", renderControlsStart);
   const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */", productAddStart);
@@ -1857,7 +1856,7 @@ test("client food search final CSS keeps title button sizing in latest owner", a
 });
 
 test("client food search final CSS keeps fixed action bottom mask in latest owner", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
   const oldMaskStart = source.indexOf("/* v169: search results must disappear under the fixed AI photo action instead of showing through it. */");
   const diaryRowsStart = source.indexOf("/* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */", oldMaskStart);
   const finalMaskStart = source.indexOf("/* v171: polish nutrition fixed docks, inner scrollbars and safe bottom masking. */", diaryRowsStart);
@@ -1877,7 +1876,7 @@ test("client food search final CSS keeps fixed action bottom mask in latest owne
 });
 
 test("client food search final CSS hides the mobile product render scrollbar", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay:has\(\.foodProductRenderScreen\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.foodProductRenderScreen\s*\{\s*scrollbar-width:\s*none !important;\s*scrollbar-gutter:\s*auto !important;\s*\}/g) || []).length,
@@ -1890,7 +1889,7 @@ test("client food search final CSS hides the mobile product render scrollbar", a
 });
 
 test("client food search final CSS keeps diary swipe shell sizing in latest owner", async () => {
-  const source = await readText("src/styles/client-food-search-final.css");
+  const source = await readText("src/styles/client-food-search.css");
   const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
   const diaryRowsStart = source.indexOf("/* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */");
   const finalDocksStart = source.indexOf("/* v171: polish nutrition fixed docks, inner scrollbars and safe bottom masking. */", diaryRowsStart);
@@ -1910,7 +1909,7 @@ test("client food search final CSS keeps diary swipe shell sizing in latest owne
 });
 
 test("nutrition orbit CSS keeps inline and modal meal shells grouped", async () => {
-  const source = await readText("src/styles/legacy-nutrition-orbit.css");
+  const source = await readText("src/styles/nutrition-orbit.css");
 
   assert.equal(
     (source.match(/\.nutritionZoukBlock \.nutritionZoukMeal,\s*html body #root \.nutritionZoukModalSheet \.nutritionZoukMeal\s*\{\s*overflow:\s*hidden;/g) || []).length,
@@ -1948,7 +1947,7 @@ test("nutrition base CSS keeps compact meal card sizing in the desktop owner", a
 });
 
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const compactPremiumStart = source.indexOf("NUTRITION COMPACT PREMIUM ALIGNMENT");
   const oldMobileBlock = source.slice(0, compactPremiumStart);
 
@@ -1972,7 +1971,7 @@ test("legacy nutrition header CSS keeps one compact page padding owner", async (
 });
 
 test("legacy nutrition header CSS keeps calorie row grid in the later owner", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", pixelReferenceStart);
 
@@ -1993,7 +1992,7 @@ test("legacy nutrition header CSS keeps calorie row grid in the later owner", as
 });
 
 test("legacy nutrition header CSS keeps pixel meter span sizes in the later compact owner", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
   const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
@@ -2024,8 +2023,8 @@ test("legacy nutrition header CSS keeps pixel meter span sizes in the later comp
 });
 
 test("nutrition summary calories CSS keeps pixel meter width after the header layer", async () => {
-  const headerSource = await readText("src/styles/legacy-nutrition-header-layout.css");
-  const summarySource = await readText("src/styles/legacy-nutrition-summary-calories.css");
+  const headerSource = await readText("src/styles/nutrition-header-layout.css");
+  const summarySource = await readText("src/styles/nutrition-summary-calories.css");
   const headerMobileStart = headerSource.indexOf("@media (max-width: 480px)");
   const headerMobileBlock = headerSource.slice(headerMobileStart);
 
@@ -2041,7 +2040,7 @@ test("nutrition summary calories CSS keeps pixel meter width after the header la
 });
 
 test("legacy nutrition header CSS keeps calorie row sizes in later compact owners", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
   const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
@@ -2067,7 +2066,7 @@ test("legacy nutrition header CSS keeps calorie row sizes in later compact owner
 });
 
 test("legacy nutrition header CSS keeps meal title sizes in later compact owners", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
   const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
@@ -2093,7 +2092,7 @@ test("legacy nutrition header CSS keeps meal title sizes in later compact owners
 });
 
 test("legacy nutrition header CSS keeps meal kcal sizes in later compact owners", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
   const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
@@ -2119,7 +2118,7 @@ test("legacy nutrition header CSS keeps meal kcal sizes in later compact owners"
 });
 
 test("legacy nutrition header CSS keeps early narrow meal text sizes out of the old owner", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", pixelReferenceStart);
 
@@ -2139,7 +2138,7 @@ test("legacy nutrition header CSS keeps early narrow meal text sizes out of the 
 });
 
 test("legacy nutrition header CSS keeps early narrow layout sizes out of the old owner", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
 
   assert.ok(pixelReferenceStart > 0);
@@ -2157,7 +2156,7 @@ test("legacy nutrition header CSS keeps early narrow layout sizes out of the old
 });
 
 test("legacy nutrition header CSS keeps reference narrow layout sizes in compact owners", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", pixelReferenceStart);
 
@@ -2181,7 +2180,7 @@ test("legacy nutrition header CSS keeps reference narrow layout sizes in compact
 });
 
 test("legacy nutrition header CSS does not keep exact duplicate blocks", async () => {
-  const source = await readText("src/styles/legacy-nutrition-header-layout.css");
+  const source = await readText("src/styles/nutrition-header-layout.css");
   const seenBlocks = new Set();
   const duplicateBlocks = [];
 
@@ -2193,7 +2192,7 @@ test("legacy nutrition header CSS does not keep exact duplicate blocks", async (
 
     if (seenBlocks.has(key)) {
       const line = source.slice(0, match.index).split(/\r?\n/).length;
-      duplicateBlocks.push(`src/styles/legacy-nutrition-header-layout.css:${line}`);
+      duplicateBlocks.push(`src/styles/nutrition-header-layout.css:${line}`);
     }
     seenBlocks.add(key);
   }
@@ -2202,9 +2201,9 @@ test("legacy nutrition header CSS does not keep exact duplicate blocks", async (
 });
 
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
-  const headerReference = await readText("src/styles/legacy-food-search-header-reference.css");
-  const pickerBase = await readText("src/styles/legacy-food-picker-base.css");
-  const caloriesTuning = await readText("src/styles/legacy-food-search-calories-tuning.css");
+  const headerReference = await readText("src/styles/nutrition-food-search-header.css");
+  const pickerBase = await readText("src/styles/nutrition-food-picker-base.css");
+  const caloriesTuning = await readText("src/styles/nutrition-food-search-calories.css");
 
   assert.equal(
     (headerReference.match(/\.fatSecretPage \.fatQuickActions\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
@@ -2221,7 +2220,7 @@ test("legacy food search CSS keeps quick actions hidden in root owners", async (
 });
 
 test("legacy food picker CSS keeps empty-state text in the final owner", async () => {
-  const pickerBase = await readText("src/styles/legacy-food-picker-base.css");
+  const pickerBase = await readText("src/styles/nutrition-food-picker-base.css");
   const finalEmptyStateStart = pickerBase.indexOf("/* empty state */");
   const oldEmptyStateBlock = pickerBase.slice(0, finalEmptyStateStart);
   const finalEmptyStateBlock = pickerBase.slice(finalEmptyStateStart);
@@ -2256,7 +2255,7 @@ test("nutrition food search actions CSS keeps one photo active transform owner",
 });
 
 test("warm light food edit CSS keeps gold action shell grouped", async () => {
-  const source = await readText("src/styles/legacy-warm-light-food-edit-back-buttons.css");
+  const source = await readText("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (
@@ -2277,7 +2276,7 @@ test("warm light food edit CSS keeps gold action shell grouped", async () => {
 });
 
 test("warm light food edit CSS keeps search surface shells grouped", async () => {
-  const source = await readText("src/styles/legacy-warm-light-food-edit-back-buttons.css");
+  const source = await readText("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (
@@ -2294,7 +2293,7 @@ test("warm light food edit CSS keeps search surface shells grouped", async () =>
 });
 
 test("warm light food edit CSS keeps edit label shells grouped", async () => {
-  const source = await readText("src/styles/legacy-warm-light-food-edit-back-buttons.css");
+  const source = await readText("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (
@@ -2311,7 +2310,7 @@ test("warm light food edit CSS keeps edit label shells grouped", async () => {
 });
 
 test("warm light food edit CSS keeps form control shells grouped", async () => {
-  const source = await readText("src/styles/legacy-warm-light-food-edit-back-buttons.css");
+  const source = await readText("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (
@@ -2328,7 +2327,7 @@ test("warm light food edit CSS keeps form control shells grouped", async () => {
 });
 
 test("warm light add food CSS keeps profile action shells grouped", async () => {
-  const source = await readText("src/styles/legacy-warm-light-add-food-search-cleanup.css");
+  const source = await readText("src/styles/warm-light-add-food-search.css");
 
   assert.equal(
     (
@@ -2345,7 +2344,7 @@ test("warm light add food CSS keeps profile action shells grouped", async () => 
 });
 
 test("legacy food editor CSS keeps details and unit focus state grouped", async () => {
-  const source = await readText("src/styles/legacy-food-editor-tail.css");
+  const source = await readText("src/styles/nutrition-food-editor.css");
 
   assert.equal(
     (source.match(/\.foodEditDetailsPanel input:focus,\s*\.foodEditDetailsPanel textarea:focus,\s*\.foodEditPortionUnitRow select:focus\s*\{\s*border-color:\s*rgba\(38,255,116,0\.42\) !important;\s*box-shadow:\s*0 0 0 3px rgba\(38,255,116,0\.055\) !important;\s*\}/g) || []).length,
@@ -2465,7 +2464,7 @@ test("nutrition AI plan CSS keeps muted span typography grouped", async () => {
 });
 
 test("legacy food search calories CSS keeps early mobile column shift out of the old owner", async () => {
-  const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
+  const source = await readText("src/styles/nutrition-food-search-calories.css");
   const oldMoveStart = source.indexOf("/* ===== CALORIES MOVE MORE LEFT ===== */");
   const centerAlignStart = source.indexOf("/* ===== PERFECT SCREEN CENTER ALIGN ===== */");
   const oldMoveBlock = source.slice(oldMoveStart, centerAlignStart);
@@ -2481,7 +2480,7 @@ test("legacy food search calories CSS keeps early mobile column shift out of the
 });
 
 test("legacy food search calories CSS keeps row transforms in the micro owner", async () => {
-  const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
+  const source = await readText("src/styles/nutrition-food-search-calories.css");
   const finalFixStart = source.indexOf("FINAL FIX");
   const microAlignStart = source.indexOf("/* MICRO ALIGN UPDATE */");
   const finalRealFixStart = source.indexOf("FINAL REAL FIX", microAlignStart);
@@ -2504,8 +2503,8 @@ test("legacy food search calories CSS keeps row transforms in the micro owner", 
 });
 
 test("legacy food search calories CSS keeps compact dots in the latest mobile owner", async () => {
-  const source = await readText("src/styles/legacy-food-search-calories-tuning.css");
-  const tailSource = await readText("src/styles/legacy-client-workout-plan-tail.css");
+  const source = await readText("src/styles/nutrition-food-search-calories.css");
+  const tailSource = await readText("src/styles/client-workout-plan-tail.css");
 
   assert.equal(
     (source.match(/\.nutritionCaloriesRenderGrid span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/g) || []).length,
@@ -2526,7 +2525,7 @@ test("legacy food search calories CSS keeps compact dots in the latest mobile ow
 });
 
 test("legacy client workout plan tail CSS keeps calorie number sizing in compact height owner", async () => {
-  const source = await readText("src/styles/legacy-client-workout-plan-tail.css");
+  const source = await readText("src/styles/client-workout-plan-tail.css");
   const finalCleanStart = source.indexOf("CALORIES CARD FINAL CLEAN COPY TUNE");
   const compactHeightStart = source.indexOf("CALORIES CARD COMPACT HEIGHT", finalCleanStart);
   const extraCompactStart = source.indexOf("EXTRA COMPACT CALORIES CARD", compactHeightStart);
@@ -2553,7 +2552,7 @@ test("legacy client workout plan tail CSS keeps calorie number sizing in compact
 });
 
 test("legacy nutrition summary calories CSS keeps final compact calorie owners", async () => {
-  const source = await readText("src/styles/legacy-nutrition-summary-calories.css");
+  const source = await readText("src/styles/nutrition-summary-calories.css");
   const compactRedesignStart = source.indexOf("NUTRITION SUMMARY COMPACT REDESIGN");
   const premiumHarmonicStart = source.indexOf("CALORIES SUMMARY CARD", compactRedesignStart);
   const referenceLayoutStart = source.indexOf("CALORIES CARD", premiumHarmonicStart);
@@ -2589,7 +2588,7 @@ test("legacy nutrition summary calories CSS keeps final compact calorie owners",
 });
 
 test("legacy food editor CSS keeps summary dot sizes in root owners", async () => {
-  const source = await readText("src/styles/legacy-food-editor-tail.css");
+  const source = await readText("src/styles/nutrition-food-editor.css");
 
   assert.doesNotMatch(
     source,
@@ -2633,7 +2632,7 @@ test("legacy food editor CSS keeps summary dot sizes in root owners", async () =
 });
 
 test("legacy food editor CSS keeps warm-light ingredient surfaces grouped", async () => {
-  const source = await readText("src/styles/legacy-food-editor-workout-close-late.css");
+  const source = await readText("src/styles/nutrition-food-editor-workout-close.css");
 
   assert.equal(
     (source.match(/\.dishIngredientPickerSheet,\s*:root\[data-app-theme="warm-light"\] \.dishIngredientConfirmCard\s*\{\s*border-color:\s*rgba\(94,75,30,0\.12\) !important;\s*background:\s*radial-gradient\(circle at 50% 0%, rgba\(244,224,100,0\.38\), transparent 62%\),\s*linear-gradient\(180deg, rgba\(255,249,198,0\.98\), rgba\(247,232,151,0\.99\)\) !important;\s*\}/g) || []).length,
@@ -2646,7 +2645,7 @@ test("legacy food editor CSS keeps warm-light ingredient surfaces grouped", asyn
 });
 
 test("legacy food product summary CSS keeps product info in the final owner", async () => {
-  const source = await readText("src/styles/legacy-food-products-summary-early.css");
+  const source = await readText("src/styles/nutrition-food-products-summary.css");
 
   assert.doesNotMatch(
     source,
@@ -2671,8 +2670,8 @@ test("legacy food product summary CSS keeps product info in the final owner", as
 });
 
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
-  const shellSource = await readText("src/styles/legacy-admin-shell-crm-app46.css");
-  const programSource = await readText("src/styles/legacy-month-program-editor-early.css");
+  const shellSource = await readText("src/styles/admin-shell-crm.css");
+  const programSource = await readText("src/styles/trainer-month-program-editor.css");
 
   assert.doesNotMatch(shellSource, /@media\s*\(max-width:\s*1280px\)\s*\{\s*\.adminClientCardsGridFive/);
   assert.doesNotMatch(shellSource, /@media\s*\(max-width:\s*1020px\)\s*\{\s*\.adminClientCardsGridFive/);
@@ -2682,7 +2681,7 @@ test("admin CRM CSS keeps client card grid breakpoints in the latest owner", asy
 });
 
 test("admin calendar reminders CSS keeps one fixed back label visibility owner", async () => {
-  const source = await readText("src/styles/legacy-admin-calendar-reminders-late.css");
+  const source = await readText("src/styles/admin-calendar-reminders.css");
 
   assert.equal(
     (source.match(/\.adminFixedMainBack b\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
@@ -2691,7 +2690,7 @@ test("admin calendar reminders CSS keeps one fixed back label visibility owner",
 });
 
 test("admin history CSS keeps checkbox visuals in the final visible owner", async () => {
-  const source = await readText("src/styles/legacy-history-ai-search-late.css");
+  const source = await readText("src/styles/client-history-ai-search.css");
 
   assert.doesNotMatch(source, /\.adminHistoryCheck\s*\{\s*position:\s*absolute;\s*left:\s*14px;\s*top:\s*50%;\s*transform:\s*translateY\(-50%\);\s*width:\s*28px;\s*height:\s*28px;\s*cursor:\s*pointer;\s*\}/);
   assert.doesNotMatch(source, /\.adminHistoryCheck input:checked \+ i::after\s*\{[\s\S]*?color:\s*rgba\(255,\s*210,\s*210,\s*0\.98\);/);
@@ -2702,7 +2701,7 @@ test("admin history CSS keeps checkbox visuals in the final visible owner", asyn
 });
 
 test("nutrition calendar CSS keeps final size and label color locks in the final owner", async () => {
-  const source = await readText("src/styles/legacy-history-ai-search-late.css");
+  const source = await readText("src/styles/client-history-ai-search.css");
   const premiumCalendarStart = source.indexOf("/* PREMIUM NUTRITION CALENDAR */");
   const premiumCalendarEnd = source.indexOf("@media (max-width: 380px)", premiumCalendarStart);
   const premiumCalendarBlock = source.slice(premiumCalendarStart, premiumCalendarEnd);
@@ -2733,7 +2732,7 @@ test("nutrition calendar CSS keeps final size and label color locks in the final
 });
 
 test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old owners", async () => {
-  const source = await readText("src/styles/legacy-nutrition-late-layout.css");
+  const source = await readText("src/styles/nutrition-layout.css");
   const tighterSpacingStart = source.indexOf("TIGHTER SEARCH TO CALORIES SPACING");
   const ultraSpacingStart = source.indexOf("ULTRA TIGHT TOP SPACING", tighterSpacingStart);
   const microGapStart = source.indexOf("MICRO TOP GAP MATCH");
@@ -2881,7 +2880,7 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
 });
 
 test("legacy nutrition late layout CSS keeps expanded product text grouped", async () => {
-  const source = await readText("src/styles/legacy-nutrition-late-layout.css");
+  const source = await readText("src/styles/nutrition-layout.css");
 
   assert.equal(
     (source.match(/\.productInfoExact strong,\s*\.fatSecretPage \.fatFoodItem strong,\s*\.fatFoodItem strong\s*\{\s*display:\s*block !important;\s*max-width:\s*100% !important;[\s\S]*?font-size:\s*17px !important;[\s\S]*?text-overflow:\s*ellipsis !important;\s*\}/g) || []).length,
@@ -2898,13 +2897,13 @@ test("legacy nutrition late layout CSS keeps expanded product text grouped", asy
 });
 
 test("admin client dashboard polish CSS has no empty media blocks", async () => {
-  const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
+  const source = await readText("src/styles/admin-client-dashboard.css");
 
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
 test("admin client dashboard polish CSS keeps calendar layout in final owner", async () => {
-  const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
+  const source = await readText("src/styles/admin-client-dashboard.css");
 
   assert.doesNotMatch(
     source,
@@ -3142,7 +3141,7 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
 });
 
 test("admin client dashboard polish CSS keeps nutrition month summary shells grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-client-dashboard-polish.css");
+  const source = await readText("src/styles/admin-client-dashboard.css");
 
   assert.doesNotMatch(
     source,
@@ -3184,13 +3183,13 @@ test("admin client dashboard polish CSS keeps nutrition month summary shells gro
 });
 
 test("legacy admin program editor CSS has no empty media blocks", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
 test("legacy admin program editor CSS keeps shared button shell grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramBack,\s*\.adminProgramTopActions button,\s*\.adminProgramTemplateDock button,\s*\.adminProgramDaysPanel button,\s*\.adminProgramWorkoutHeader button,\s*\.adminProgramEmptyDay button,\s*\.adminInspectorPreviewButton,\s*\.adminProgramGridBack,\s*\.adminProgramGridSave,\s*\.adminProgramTemplateStrip button,\s*\.adminProgramDayActions button,\s*\.adminProgramGridSectionHead button,\s*\.adminProgramEmptyExerciseList button\s*\{\s*min-height:\s*42px;\s*border-radius:\s*14px;\s*border:\s*1px solid rgba\(255,255,255,\.07\);\s*background:\s*rgba\(255,255,255,\.045\);\s*color:\s*rgba\(255,255,255,\.82\);\s*font-weight:\s*950;\s*cursor:\s*pointer;\s*\}/g) || []).length,
@@ -3204,7 +3203,7 @@ test("legacy admin program editor CSS keeps shared button shell grouped", async 
 });
 
 test("legacy admin program editor CSS keeps stats grids grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramStatsRow,\s*\.adminProgramGridStats\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(4, minmax\(130px, 1fr\)\);\s*gap:\s*10px;\s*margin-bottom:\s*10px;\s*\}/g) || []).length,
@@ -3217,7 +3216,7 @@ test("legacy admin program editor CSS keeps stats grids grouped", async () => {
 });
 
 test("legacy admin program editor CSS keeps shared max width shell grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramStatsRow,\s*\.adminProgramTemplateDock,\s*\.adminProgramLayout,\s*\.adminProgramGridTopbar,\s*\.adminProgramGridStats,\s*\.adminProgramTemplateStrip,\s*\.adminProgramGridSection,\s*\.adminProgramExerciseEditorBlock\s*\{\s*max-width:\s*1680px;\s*margin-left:\s*auto;\s*margin-right:\s*auto;\s*\}/g) || []).length,
@@ -3230,7 +3229,7 @@ test("legacy admin program editor CSS keeps shared max width shell grouped", asy
 });
 
 test("legacy admin program editor CSS keeps muted header paragraphs grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTitleBlock p,\s*\.adminProgramGridTopbar p,\s*\.adminProgramGridSectionHead p\s*\{\s*margin:\s*0;\s*color:\s*rgba\(255,255,255,\.48\);\s*font-size:\s*12px;\s*font-weight:\s*850;\s*\}/g) || []).length,
@@ -3243,7 +3242,7 @@ test("legacy admin program editor CSS keeps muted header paragraphs grouped", as
 });
 
 test("legacy admin program editor CSS keeps accent button states grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTopActions button:first-child,\s*\.adminProgramTemplateDock button,\s*\.adminProgramWorkoutHeader button:last-child,\s*\.adminProgramEmptyDay button,\s*\.adminInspectorPreviewButton,\s*\.adminProgramGridSave,\s*\.adminProgramTemplateStrip button,\s*\.adminProgramGridSectionHead button,\s*\.adminProgramEmptyExerciseList button\s*\{\s*border-color:\s*rgba\(127,159,58,\.28\);\s*background:\s*rgba\(127,159,58,\.14\);\s*color:\s*rgba\(235,250,195,\.95\);\s*\}/g) || []).length,
@@ -3256,7 +3255,7 @@ test("legacy admin program editor CSS keeps accent button states grouped", async
 });
 
 test("legacy admin program editor CSS keeps topbar shell grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTopbar,\s*\.adminProgramGridTopbar\s*\{\s*min-height:\s*78px;\s*padding:\s*14px;\s*border-radius:\s*24px;\s*border:\s*1px solid rgba\(255,255,255,\.055\);\s*background:\s*rgba\(255,255,255,\.032\);\s*display:\s*grid;\s*grid-template-columns:\s*auto 1fr auto;\s*gap:\s*16px;\s*align-items:\s*center;\s*backdrop-filter:\s*blur\(18px\);\s*\}/g) || []).length,
@@ -3269,7 +3268,7 @@ test("legacy admin program editor CSS keeps topbar shell grouped", async () => {
 });
 
 test("legacy admin program editor CSS keeps micro-label typography grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTitleBlock span,\s*\.adminProgramWorkoutHeader span\s*\{\s*display:\s*block;\s*\}/g) || []).length,
@@ -3286,7 +3285,7 @@ test("legacy admin program editor CSS keeps micro-label typography grouped", asy
 });
 
 test("legacy admin program editor CSS keeps stat labels grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramStatsRow span,\s*\.adminProgramGridStats span\s*\{\s*display:\s*block;\s*color:\s*rgba\(255,255,255,\.45\);\s*font-size:\s*11px;\s*font-weight:\s*900;\s*\}/g) || []).length,
@@ -3299,7 +3298,7 @@ test("legacy admin program editor CSS keeps stat labels grouped", async () => {
 });
 
 test("legacy admin program editor CSS keeps stat values grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramStatsRow strong,\s*\.adminProgramGridStats strong\s*\{\s*display:\s*block;\s*margin-top:\s*7px;\s*color:\s*#fff;\s*line-height:\s*1;\s*font-weight:\s*1000;\s*white-space:\s*nowrap;\s*overflow:\s*hidden;\s*text-overflow:\s*ellipsis;\s*\}/g) || []).length,
@@ -3312,7 +3311,7 @@ test("legacy admin program editor CSS keeps stat values grouped", async () => {
 });
 
 test("legacy admin program editor CSS keeps template layouts grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTemplateDock,\s*\.adminProgramTemplateStrip\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*minmax\(180px, 1fr\) auto minmax\(190px, 1fr\) auto;\s*gap:\s*8px;\s*margin-bottom:\s*12px;\s*\}/g) || []).length,
@@ -3325,7 +3324,7 @@ test("legacy admin program editor CSS keeps template layouts grouped", async () 
 });
 
 test("legacy admin program editor CSS keeps form controls grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramTemplateDock input,\s*\.adminProgramTemplateDock select,\s*\.adminProgramWorkoutHeader input,\s*\.adminInspectorBody input,\s*\.adminProgramTemplateStrip input,\s*\.adminProgramTemplateStrip select,\s*\.adminProgramDayActions input,\s*\.adminExerciseNameCell input,\s*\.adminExerciseSetsCell input,\s*\.adminExerciseVideoCell input\s*\{\s*width:\s*100%;\s*border:\s*1px solid rgba\(255,255,255,\.075\);\s*color:\s*#fff;\s*padding:\s*0 12px;\s*font-weight:\s*850;\s*\}/g) || []).length,
@@ -3346,7 +3345,7 @@ test("legacy admin program editor CSS keeps form controls grouped", async () => 
 });
 
 test("legacy admin program editor CSS keeps empty-state typography grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramEmptyDay strong,\s*\.adminProgramEmptyExerciseList strong\s*\{\s*font-size:\s*20px;\s*\}/g) || []).length,
@@ -3359,7 +3358,7 @@ test("legacy admin program editor CSS keeps empty-state typography grouped", asy
 });
 
 test("legacy admin program editor CSS keeps empty-state shells grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-program-editor-app49.css");
+  const source = await readText("src/styles/admin-program-editor.css");
 
   assert.equal(
     (source.match(/\.adminProgramEmptyDay,\s*\.adminProgramEmptyExerciseList\s*\{\s*background:\s*rgba\(127,159,58,\.055\);\s*display:\s*grid;\s*place-content:\s*center;\s*justify-items:\s*center;\s*gap:\s*8px;\s*text-align:\s*center;\s*\}/g) || []).length,
@@ -3372,7 +3371,7 @@ test("legacy admin program editor CSS keeps empty-state shells grouped", async (
 });
 
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
-  const source = await readText("src/styles/legacy-month-program-editor-early.css");
+  const source = await readText("src/styles/trainer-month-program-editor.css");
 
   assert.doesNotMatch(
     source,
@@ -3385,7 +3384,7 @@ test("legacy month program editor CSS keeps workout badges in the final owner", 
 });
 
 test("legacy admin client page CSS does not keep exact duplicate blocks", async () => {
-  const source = await readText("src/styles/legacy-admin-client-page.css");
+  const source = await readText("src/styles/admin-client-page.css");
   const seenBlocks = new Set();
   const duplicateBlocks = [];
 
@@ -3397,7 +3396,7 @@ test("legacy admin client page CSS does not keep exact duplicate blocks", async 
 
     if (seenBlocks.has(key)) {
       const line = source.slice(0, match.index).split(/\r?\n/).length;
-      duplicateBlocks.push(`src/styles/legacy-admin-client-page.css:${line}`);
+      duplicateBlocks.push(`src/styles/admin-client-page.css:${line}`);
     }
     seenBlocks.add(key);
   }
@@ -3406,7 +3405,7 @@ test("legacy admin client page CSS does not keep exact duplicate blocks", async 
 });
 
 test("legacy admin client page CSS keeps Telegram render sizing grouped", async () => {
-  const source = await readText("src/styles/legacy-admin-client-page.css");
+  const source = await readText("src/styles/admin-client-page.css");
 
   assert.equal(
     (source.match(/\.adminClientTelegramLogoRender,\s*\.adminClientTelegramAvatarRender\s*\{\s*width:\s*62px !important;\s*height:\s*62px !important;\s*flex:\s*none !important;\s*\}/g) || []).length,
@@ -3421,7 +3420,7 @@ test("legacy admin client page CSS keeps Telegram render sizing grouped", async 
 });
 
 test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", async () => {
-  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+  const source = await readText("src/styles/profile-dashboard-telegram.css");
   const statsAlignmentStart = source.indexOf("/* STATS ALIGNMENT PERFECT */");
   const compactStatsStart = source.indexOf("/* COMPACT STATS + AI TITLE */");
   const oldStatsOwnerBlock = source.slice(0, statsAlignmentStart);
@@ -3454,7 +3453,7 @@ test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", 
 });
 
 test("profile dashboard CSS keeps unified stats grid in the horizontal owner", async () => {
-  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+  const source = await readText("src/styles/profile-dashboard-telegram.css");
   const horizontalStatsStart = source.indexOf("/* HORIZONTAL PROFILE STATS */");
   const goalSplitStart = source.indexOf("/* GOAL SPLIT: MAINTAIN VS RECOMP */");
   const horizontalStatsBlock = source.slice(horizontalStatsStart, goalSplitStart);
@@ -3476,7 +3475,7 @@ test("profile dashboard CSS keeps unified stats grid in the horizontal owner", a
 });
 
 test("profile dashboard CSS keeps sex and goal active states grouped", async () => {
-  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+  const source = await readText("src/styles/profile-dashboard-telegram.css");
 
   assert.equal(
     (
@@ -3493,7 +3492,7 @@ test("profile dashboard CSS keeps sex and goal active states grouped", async () 
 });
 
 test("profile dashboard CSS keeps AI coach label typography grouped", async () => {
-  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+  const source = await readText("src/styles/profile-dashboard-telegram.css");
 
   assert.doesNotMatch(source, /\.profileAiCoachStatusRow\.insideProgress strong,\s*\.profileAiCoachStatusRow\.insideProgress small\s*\{[\s\S]*?text-overflow:\s*ellipsis !important;/);
   assert.equal(
@@ -3511,7 +3510,7 @@ test("profile dashboard CSS keeps AI coach label typography grouped", async () =
 });
 
 test("profile dashboard CSS keeps Telegram shells grouped", async () => {
-  const source = await readText("src/styles/legacy-profile-dashboard-telegram-late.css");
+  const source = await readText("src/styles/profile-dashboard-telegram.css");
 
   assert.equal(
     (
@@ -3573,7 +3572,7 @@ test("profile dashboard CSS keeps Telegram shells grouped", async () => {
 });
 
 test("client main CSS keeps compact AI stat text rules in the later owner", async () => {
-  const source = await readText("src/styles/client-main-final-overrides.css");
+  const source = await readText("src/styles/client-main.css");
 
   assert.equal((source.match(/--main-home-primary-text-size:\s*16\.2px;/g) || []).length, 1);
   assert.equal(
@@ -3585,8 +3584,8 @@ test("client main CSS keeps compact AI stat text rules in the later owner", asyn
 });
 
 test("client nutrition grid CSS does not keep dashboard icon and chart duplicates", async () => {
-  const nutritionGrid = await readText("src/styles/client-nutrition-grid-lock.css");
-  const mainOverrides = await readText("src/styles/client-main-final-overrides.css");
+  const nutritionGrid = await readText("src/styles/client-nutrition-grid.css");
+  const mainOverrides = await readText("src/styles/client-main.css");
 
   const duplicateLocks = [
     /\.profileAiStatsRow\.profileAiStatsRow\.profileAiStatsRow \.profileAiStatLabel svg\s*\{\s*width:\s*14px !important;\s*height:\s*14px !important;\s*\}/,
@@ -3623,7 +3622,7 @@ test("client nutrition grid CSS does not keep dashboard icon and chart duplicate
 });
 
 test("client nutrition grid CSS keeps progress insight spacing in the final owner", async () => {
-  const source = await readText("src/styles/client-nutrition-grid-lock.css");
+  const source = await readText("src/styles/client-nutrition-grid.css");
   const earlyProgressStart = source.indexOf("/* v.1.200: progress card spacing only");
   const finalProgressStart = source.indexOf("/* v.1.200 final position: progress card spacing only");
 
@@ -3652,7 +3651,7 @@ test("client nutrition grid CSS keeps progress insight spacing in the final owne
 });
 
 test("client nutrition grid CSS does not keep exact duplicate blocks", async () => {
-  const source = await readText("src/styles/client-nutrition-grid-lock.css");
+  const source = await readText("src/styles/client-nutrition-grid.css");
   const seenBlocks = new Set();
   const duplicateBlocks = [];
 
@@ -3664,7 +3663,7 @@ test("client nutrition grid CSS does not keep exact duplicate blocks", async () 
 
     if (seenBlocks.has(key)) {
       const line = source.slice(0, match.index).split(/\r?\n/).length;
-      duplicateBlocks.push(`src/styles/client-nutrition-grid-lock.css:${line}`);
+      duplicateBlocks.push(`src/styles/client-nutrition-grid.css:${line}`);
     }
     seenBlocks.add(key);
   }
@@ -3701,7 +3700,7 @@ test("client nutrition grid CSS does not keep exact duplicate blocks", async () 
 });
 
 test("desktop cabinet CSS keeps trainer client overview grid locks in the broad mobile owner", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
   const trainerClientSectionStart = source.indexOf(".trainerClientDashboardModalOverlay");
   const broadMobileStart = source.indexOf("@media (max-width: 1100px)", trainerClientSectionStart);
   const narrowMobileStart = source.indexOf("@media (max-width: 700px)", broadMobileStart);
@@ -3726,7 +3725,7 @@ test("desktop cabinet CSS keeps trainer client overview grid locks in the broad 
 });
 
 test("desktop cabinet CSS keeps trainer client metric captions grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientKpiGrid article > em,\s*\.trainerClientKpiGrid article > small,\s*\.trainerClientMacroGrid span,\s*\.trainerClientMacroGrid em\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.46\);\s*font-size:\s*9px;\s*font-style:\s*normal;\s*\}/g) || []).length,
@@ -3739,7 +3738,7 @@ test("desktop cabinet CSS keeps trainer client metric captions grouped", async (
 });
 
 test("desktop cabinet CSS keeps trainer client progress captions grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientAttentionStrip small,\s*\.trainerClientProgramProgress span\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.48\);\s*font-size:\s*9px;\s*\}/g) || []).length,
@@ -3748,7 +3747,7 @@ test("desktop cabinet CSS keeps trainer client progress captions grouped", async
 });
 
 test("desktop cabinet CSS keeps trainer client muted captions grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientHeroMeta span,\s*\.trainerClientHeroMeta small,\s*\.trainerClientSectionHead small,\s*\.trainerClientControlRows span\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.48\);\s*font-size:\s*10px;\s*\}/g) || []).length,
@@ -3757,7 +3756,7 @@ test("desktop cabinet CSS keeps trainer client muted captions grouped", async ()
 });
 
 test("desktop cabinet CSS keeps trainer client list shells grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientAiList,\s*\.trainerClientControlRows,\s*\.trainerClientActivityList\s*\{\s*display:\s*grid;\s*\}/g) || []).length,
@@ -3766,7 +3765,7 @@ test("desktop cabinet CSS keeps trainer client list shells grouped", async () =>
 });
 
 test("desktop cabinet CSS keeps trainer notification header shells grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.clientTrainerTasksHead,\s*\.trainerWorkspaceHead,\s*\.profileTrainerNotificationsHead\s*\{\s*display:\s*flex;\s*align-items:\s*center;\s*justify-content:\s*space-between;\s*gap:\s*12px;\s*\}/g) || []).length,
@@ -3779,7 +3778,7 @@ test("desktop cabinet CSS keeps trainer notification header shells grouped", asy
 });
 
 test("desktop cabinet CSS keeps accent micro labels grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientDashboardModal > header span,\s*\.profileNutritionInlinePlanHead span\s*\{\s*color:\s*#b5e655;\s*font-size:\s*10px;\s*font-weight:\s*950;\s*letter-spacing:\s*0\.06em;\s*\}/g) || []).length,
@@ -3792,7 +3791,7 @@ test("desktop cabinet CSS keeps accent micro labels grouped", async () => {
 });
 
 test("desktop cabinet CSS keeps trainer client text shells grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.clientTrainerTask strong,\s*\.profileTrainerNotificationItem strong,\s*\.trainerClientProgramSummary strong\s*\{\s*overflow:\s*hidden;\s*color:\s*#fff;\s*font-size:\s*14px;\s*text-overflow:\s*ellipsis;\s*white-space:\s*nowrap;\s*\}/g) || []).length,
@@ -3809,7 +3808,7 @@ test("desktop cabinet CSS keeps trainer client text shells grouped", async () =>
 });
 
 test("desktop cabinet CSS keeps trainer mobile form columns grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerTaskCreate,\s*\.trainerPhotoMetaRow,\s*\.trainerPhotoCompare,\s*\.trainerPaymentGrid\s*\{\s*grid-template-columns:\s*1fr;\s*\}/g) || []).length,
@@ -3818,7 +3817,7 @@ test("desktop cabinet CSS keeps trainer mobile form columns grouped", async () =
 });
 
 test("desktop cabinet CSS keeps trainer mobile auto columns grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerProgressPhotosCard,\s*\.trainerEventsCard,\s*\.trainerPaymentGrid \.wide,\s*\.trainerPaymentGrid button\s*\{\s*grid-column:\s*auto;\s*\}/g) || []).length,
@@ -3827,7 +3826,7 @@ test("desktop cabinet CSS keeps trainer mobile auto columns grouped", async () =
 });
 
 test("desktop cabinet CSS keeps trainer full-width columns grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerProgressPhotosCard,\s*\.trainerEventsCard,\s*\.trainerPaymentGrid \.wide,\s*\.trainerPaymentGrid button\s*\{\s*grid-column:\s*1 \/ -1;\s*\}/g) || []).length,
@@ -3836,7 +3835,7 @@ test("desktop cabinet CSS keeps trainer full-width columns grouped", async () =>
 });
 
 test("desktop cabinet CSS keeps trainer client mobile columns grouped", async () => {
-  const source = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const source = await readText("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientPhotoCompareControls,\s*\.trainerClientPhotoCompare,\s*\.trainerClientHeroMeta,\s*\.trainerClientProgramProgress\s*\{\s*grid-template-columns:\s*1fr;\s*\}/g) || []).length,
@@ -3847,11 +3846,11 @@ test("desktop cabinet CSS keeps trainer client mobile columns grouped", async ()
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
-  const darkGreenFoodFlow = await readText("src/styles/legacy-client-screen-alignment.css");
+  const darkGreenFoodFlow = await readText("src/styles/client-screen-alignment.css");
 
-  assert.doesNotMatch(indexCss, /@import "\.\/legacy-dark-green-food-flow\.css"/);
-  assert.match(nutritionStackCss, /@import "\.\/legacy-dark-green-food-flow\.css"/);
-  assert.match(indexCss, /@import "\.\/legacy-client-screen-alignment\.css"/);
+  assert.doesNotMatch(indexCss, /@import "\.\/nutrition-dark-food-flow\.css"/);
+  assert.match(nutritionStackCss, /@import "\.\/nutrition-dark-food-flow\.css"/);
+  assert.match(indexCss, /@import "\.\/client-screen-alignment\.css"/);
   assert.match(darkGreenFoodFlow, /nutritionHeroTitleV4 \.clientCorePageTitle/);
   assert.match(darkGreenFoodFlow, /nutritionWeekV4 \.nutritionDayV4 small/);
   assert.match(darkGreenFoodFlow, /nutritionStreakV4 span/);
@@ -3926,7 +3925,7 @@ test("trainer program editor keeps an explicit back action", async () => {
 });
 
 test("trainer program editor CSS keeps bottom bar labels grouped", async () => {
-  const source = await readText("src/styles/legacy-trainer-program-editor-late.css");
+  const source = await readText("src/styles/trainer-program-editor.css");
 
   assert.equal(
     (source.match(/\.programsTopActionBar \.adminV3NavLabel,\s*nav\.adminV3Nav\.adminV3BottomBar\.programsBottomBar > button > \.adminV3NavLabel,\s*nav\.adminV3Nav\.adminV3BottomBar\.programEditorBottomBar > button > \.adminV3NavLabel,\s*nav\.adminV3Nav\.adminV3BottomBar\.workoutEditorBottomBar > button > \.adminV3NavLabel\s*\{\s*max-width:\s*100%;\s*font-size:\s*10px;\s*white-space:\s*nowrap;\s*overflow:\s*hidden;\s*text-overflow:\s*ellipsis;\s*\}/g) || []).length,
@@ -4067,7 +4066,7 @@ test("nutrition base CSS keeps warm-light collapsed AI plan surface in the final
 });
 
 test("warm-light nutrition CSS keeps summary donut center in the compact owner", async () => {
-  const warmLightNutritionCss = await readText("src/styles/legacy-warm-light-nutrition-polish.css");
+  const warmLightNutritionCss = await readText("src/styles/warm-light-nutrition.css");
 
   assert.doesNotMatch(
     warmLightNutritionCss,
@@ -4082,8 +4081,8 @@ test("warm-light nutrition CSS keeps summary donut center in the compact owner",
 test("client nutrition weekday strip keeps two-letter labels visible", async () => {
   const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
   const nutritionBaseCss = await readText("src/styles/nutrition.css");
-  const nutritionCss = await readText("src/styles/nutrition-food-flow-late.css");
-  const warmLightNutritionCss = await readText("src/styles/legacy-warm-light-nutrition-polish.css");
+  const nutritionCss = await readText("src/styles/nutrition-food-flow.css");
+  const warmLightNutritionCss = await readText("src/styles/warm-light-nutrition.css");
 
   assert.match(nutritionCalendar, /NUTRITION_WEEK_LABELS = \["\\u041f\\u041d", "\\u0412\\u0422", "\\u0421\\u0420", "\\u0427\\u0422", "\\u041f\\u0422", "\\u0421\\u0411", "\\u0412\\u0421"\]/);
   assert.match(nutritionCss, /Preserve both letters in Russian weekday abbreviations/);
@@ -4712,7 +4711,7 @@ test("admin and access denied navigation buttons declare button type", async () 
 
 test("admin hub CSS does not keep trainer role button rules", async () => {
   const adminHubCss = await readText("src/styles/adminPanelHub.css");
-  const adminCalendarCss = await readText("src/styles/legacy-admin-calendar-reminders-late.css");
+  const adminCalendarCss = await readText("src/styles/admin-calendar-reminders.css");
   const adminPanelHub = await readText("src/components/admin/AdminPanelHub.jsx");
 
   assert.doesNotMatch(adminPanelHub, /adminTrainerRoleButton|adminClientStatusRender/);
@@ -4784,7 +4783,7 @@ test("client cabinet action cards expose explicit accessible labels", async () =
 
 test("client cabinet modal shells keep shared CSS owners", async () => {
   const source = await readText("src/styles/workouts.css");
-  const cabinetPolish = await readText("src/styles/legacy-desktop-cabinet-polish.css");
+  const cabinetPolish = await readText("src/styles/client-cabinet-desktop.css");
   const nutritionModal = await readText("src/features/client/profile/ProfileNutritionModal.jsx");
 
   assert.equal(

@@ -200,8 +200,8 @@ Last updated at app version `v.1.791`.
 - Client workout flow late CSS is owned by `client-workout-lazy.css` instead of the core app stylesheet.
 - Client workout run polish and exercise notes CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
 - Client workout navigation/close and set-row CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
-- Client workout final set-row sizing is guarded in `client-workout-set-rows.css`, keeping that owner out of `client-render-target-lock.css`.
-- Client workout select hero spacing is guarded in `client-workout-card-render.css`, keeping that owner out of `client-render-target-lock.css`.
+- Client workout final set-row sizing is guarded in `client-workout-set-rows.css`, keeping that owner out of `client-render-target.css`.
+- Client workout select hero spacing is guarded in `client-workout-card-render.css`, keeping that owner out of `client-render-target.css`.
 - Client workout draft restore, readiness and post-workout feedback dialog CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
 - Client harness, nutrition visual and primary visual audits also wait for bottom navigation before route clicks.
 - Trainer workspace and trainer visual audits wait for trainer navigation controls before route clicks.
@@ -273,7 +273,7 @@ Last updated at app version `v.1.791`.
 - Client nutrition weekday cells now expose selected day and current-date state through `aria-pressed` and `aria-current`.
 - Client nutrition calendar days now expose selected day and current-date state through `aria-pressed` and `aria-current`.
 - Client cabinet nutrition week cells now expose readable day summaries and current-date state under the primary visual audit.
-- Client nutrition grid CSS no longer repeats main dashboard icon and measurement chart locks owned by `client-main-final-overrides.css`.
+- Client nutrition grid CSS no longer repeats main dashboard icon and measurement chart locks owned by `client-main.css`.
 - Client nutrition food-search/product polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition AI photo not-found modal is covered by the nutrition visual audit, and its CSS is owned by `nutrition-stack.css`.
 - Client nutrition create product/dish choice modal is covered by the nutrition visual audit.
@@ -290,7 +290,7 @@ Last updated at app version `v.1.791`.
 - Client AI Coach route CSS is owned by `ai-coach-lazy.css` instead of the core app stylesheet.
 - Client nutrition AI plan and AI photo process CSS are owned by `nutrition-ai-plan-lazy.css` inside the nutrition lazy stack.
 - Client nutrition food icon editor and training-day calorie highlight CSS are owned by `nutrition-food-icon-lazy.css` inside the nutrition lazy stack.
-- Remaining profile body metrics and first setup core rules are owned by `legacy-profile-first-setup-core.css`; the old mixed AI/nutrition/workout stylesheet name is no longer imported.
+- Remaining profile body metrics and first setup core rules are owned by `profile-first-setup-core.css`; the old mixed AI/nutrition/workout stylesheet name is no longer imported.
 - Client nutrition flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition orbit CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
 - Client nutrition warm-light add-food/search cleanup CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
