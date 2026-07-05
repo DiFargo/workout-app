@@ -1,0 +1,152 @@
+/* COOL LIGHT THEME V355 - trainer and admin workspace */
+html:root[data-app-theme="warm-light"] body #root .adminV3Shell,
+html:root[data-app-theme="warm-light"] body #root .adminUsersCrmPage,
+html:root[data-app-theme="warm-light"] body #root .adminPanelHubPage,
+html:root[data-app-theme="warm-light"] body #root .adminProgramsPage,
+html:root[data-app-theme="warm-light"] body #root .adminProgramGridPage,
+html:root[data-app-theme="warm-light"] body #root .adminProgramEditorPage,
+html:root[data-app-theme="warm-light"] body #root .monthProgramEditorPage.monthProgramPremium {
+  --accent: #5a49df !important;
+  --accent-2: #2d6ff2 !important;
+  --text: #151824 !important;
+  --muted: #737b91 !important;
+  --line: #e1e4ef !important;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.055), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminV3Shell h1,
+html:root[data-app-theme="warm-light"] body #root .adminV3Shell h2,
+html:root[data-app-theme="warm-light"] body #root .adminV3Shell h3,
+html:root[data-app-theme="warm-light"] body #root .adminV3Shell strong,
+html:root[data-app-theme="warm-light"] body #root .adminUsersCrmPage h1,
+html:root[data-app-theme="warm-light"] body #root .adminUsersCrmPage h2,
+html:root[data-app-theme="warm-light"] body #root .adminUsersCrmPage h3,
+html:root[data-app-theme="warm-light"] body #root .adminUsersCrmPage strong,
+html:root[data-app-theme="warm-light"] body #root .adminPanelHubPage h1,
+html:root[data-app-theme="warm-light"] body #root .adminPanelHubPage h2,
+html:root[data-app-theme="warm-light"] body #root .adminPanelHubPage h3,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium h1,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium h2,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium h3,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium strong {
+  color: #151824 !important;
+  text-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminV3Header p,
+html:root[data-app-theme="warm-light"] body #root .adminUsersCrmHeader p,
+html:root[data-app-theme="warm-light"] body #root .adminPanelHubPage p,
+html:root[data-app-theme="warm-light"] body #root .adminV3Empty,
+html:root[data-app-theme="warm-light"] body #root .adminDashboardMiniDesc,
+html:root[data-app-theme="warm-light"] body #root .adminClientCardMeta,
+html:root[data-app-theme="warm-light"] body #root .adminClientIdentityRender p,
+html:root[data-app-theme="warm-light"] body #root .adminClientTelegramDescriptionRender,
+html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsHead p,
+html:root[data-app-theme="warm-light"] body #root .adminV3TransferText,
+html:root[data-app-theme="warm-light"] body #root .adminCalendarDaysHintText,
+html:root[data-app-theme="warm-light"] body #root .adminCalendarNoDaysHint,
+html:root[data-app-theme="warm-light"] body #root .programsOverviewEmpty,
+html:root[data-app-theme="warm-light"] body #root .monthProgramEmpty {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminV3Sidebar,
+html:root[data-app-theme="warm-light"] body #root .adminV3Brand,
+html:root[data-app-theme="warm-light"] body #root .adminV3SidebarNote,
+html:root[data-app-theme="warm-light"] body #root .adminV3Panel,
+html:root[data-app-theme="warm-light"] body #root .adminV3Workspace,
+html:root[data-app-theme="warm-light"] body #root .adminV3ProfileCard,
+html:root[data-app-theme="warm-light"] body #root .adminFocusCard,
+html:root[data-app-theme="warm-light"] body #root .adminDashboardSection,
+html:root[data-app-theme="warm-light"] body #root .adminDashboardMiniItem,
+html:root[data-app-theme="warm-light"] body #root .adminDashboardTimelineItem,
+html:root[data-app-theme="warm-light"] body #root .adminPanelHubCard,
+html:root[data-app-theme="warm-light"] body #root .adminV3KpiGrid > *,
+html:root[data-app-theme="warm-light"] body #root .adminUsersClientsPanel,
+html:root[data-app-theme="warm-light"] body #root .adminUsersCreatePanel,
+html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrm,
+html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceHeaderRender,
+html:root[data-app-theme="warm-light"] body #root .adminClientCard,
+html:root[data-app-theme="warm-light"] body #root .adminClientTabContent,
+html:root[data-app-theme="warm-light"] body #root .adminClientMetricCardRender,
+html:root[data-app-theme="warm-light"] body #root .adminClientRecommendations > div,
+html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsBlock,
+html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementItem,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionMonthPanel,
+html:root[data-app-theme="warm-light"] body #root .adminProgressDiagramsPanel,
+html:root[data-app-theme="warm-light"] body #root .adminProgressDiagramCard,
+html:root[data-app-theme="warm-light"] body #root .adminAssignProgramPanel,
+html:root[data-app-theme="warm-light"] body #root .adminSavedProgramCard,
+html:root[data-app-theme="warm-light"] body #root .adminTrainingMonthPanel,
+html:root[data-app-theme="warm-light"] body #root .adminCalendarPanel,
+html:root[data-app-theme="warm-light"] body #root .adminClientTelegramPanel,
+html:root[data-app-theme="warm-light"] body #root .adminClientNotesBlock,
+html:root[data-app-theme="warm-light"] body #root .adminClientTransferBlock,
+html:root[data-app-theme="warm-light"] body #root .adminTransferPreview,
+html:root[data-app-theme="warm-light"] body #root .adminClientDangerZoneBottom,
+html:root[data-app-theme="warm-light"] body #root .adminProgramGridTopbar,
+html:root[data-app-theme="warm-light"] body #root .adminProgramGridStats > div,
+html:root[data-app-theme="warm-light"] body #root .adminProgramTemplateStrip,
+html:root[data-app-theme="warm-light"] body #root .adminProgramGridSection,
+html:root[data-app-theme="warm-light"] body #root .adminProgramExerciseEditorBlock,
+html:root[data-app-theme="warm-light"] body #root .adminProgramCard,
+html:root[data-app-theme="warm-light"] body #root .adminProgramDayCard,
+html:root[data-app-theme="warm-light"] body #root .adminExerciseEditorRow,
+html:root[data-app-theme="warm-light"] body #root .programsOverviewSection,
+html:root[data-app-theme="warm-light"] body #root .programsOverviewCard,
+html:root[data-app-theme="warm-light"] body #root .monthProgramEditorNameField,
+html:root[data-app-theme="warm-light"] body #root .monthProgramMonth,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumBlock,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumWeek,
+html:root[data-app-theme="warm-light"] body #root .weekEditorDayCard,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumExercise,
+html:root[data-app-theme="warm-light"] body #root .monthExerciseSearchResults,
+html:root[data-app-theme="warm-light"] body #root .monthExerciseVideoBlock {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminClientCard.active,
+html:root[data-app-theme="warm-light"] body #root .adminSavedProgramCard.active,
+html:root[data-app-theme="warm-light"] body #root .programsOverviewCard.selected,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumExercise.selected,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumBlock.expanded,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumWeek.expanded {
+  border-color: #7565e8 !important;
+  background: #efedff !important;
+  box-shadow: 0 0 0 3px rgba(90, 73, 223, 0.07) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminFocusLabel,
+html:root[data-app-theme="warm-light"] body #root .adminClientMetricCardRender span,
+html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementItem span,
+html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementItem em,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionWeekday,
+html:root[data-app-theme="warm-light"] body #root .adminTrainingWeekday,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionMonthSummary,
+html:root[data-app-theme="warm-light"] body #root .adminCurrentProgramBadge,
+html:root[data-app-theme="warm-light"] body #root .programsOverviewCardStats,
+html:root[data-app-theme="warm-light"] body #root .monthProgramAccordionHead span,
+html:root[data-app-theme="warm-light"] body #root .monthProgramAccordionHead small,
+html:root[data-app-theme="warm-light"] body #root .weekEditorToggle small,
+html:root[data-app-theme="warm-light"] body #root .weekEditorDayOpen span,
+html:root[data-app-theme="warm-light"] body #root .monthExerciseListItem span,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumSetLegend {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminDashboardMiniStatus,
+html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsHead span,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionTrainingMark,
+html:root[data-app-theme="warm-light"] body #root .adminProgramGridSectionHead span,
+html:root[data-app-theme="warm-light"] body #root .monthProgramEditorNameField span,
+html:root[data-app-theme="warm-light"] body #root .monthProgramMonthHead span,
+html:root[data-app-theme="warm-light"] body #root .programCopyTargetMonth h3 {
+  color: #5a49df !important;
+}
+
