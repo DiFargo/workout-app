@@ -2698,7 +2698,7 @@ test("legacy food product summary CSS keeps product info in the final owner", as
 
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
   const shellSource = await readText("src/styles/admin-shell-crm.css");
-  const programSource = await readText("src/styles/trainer-month-program-editor.css");
+  const programSource = await readCssWithImports("src/styles/trainer-month-program-editor.css");
 
   assert.doesNotMatch(shellSource, /@media\s*\(max-width:\s*1280px\)\s*\{\s*\.adminClientCardsGridFive/);
   assert.doesNotMatch(shellSource, /@media\s*\(max-width:\s*1020px\)\s*\{\s*\.adminClientCardsGridFive/);
@@ -3398,7 +3398,7 @@ test("legacy admin program editor CSS keeps empty-state shells grouped", async (
 });
 
 test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
-  const source = await readText("src/styles/trainer-month-program-editor.css");
+  const source = await readCssWithImports("src/styles/trainer-month-program-editor.css");
 
   assert.doesNotMatch(
     source,

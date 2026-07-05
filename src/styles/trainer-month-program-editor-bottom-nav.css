@@ -1,0 +1,242 @@
+/* BOTTOM NAV SEPARATED LAYOUT FIX */
+.individualWorkoutSelectPage {
+  padding-bottom: max(168px, calc(env(safe-area-inset-bottom) + 168px)) !important;
+}
+
+.individualWorkoutBottomPanel {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: max(8px, env(safe-area-inset-bottom)) !important;
+  transform: translateX(-50%) !important;
+  z-index: 90 !important;
+
+  width: min(452px, calc(100vw - 22px)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  pointer-events: auto !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutNav {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  width: 100% !important;
+
+  display: grid !important;
+  grid-template-columns: 64px minmax(0, 1fr) 64px !important;
+  gap: 12px !important;
+  align-items: center !important;
+  justify-content: stretch !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutNav > button {
+  width: 64px !important;
+  height: 64px !important;
+  min-height: 64px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border-radius: 20px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+  background: rgba(18, 22, 18, 0.96) !important;
+  color: rgba(255,255,255,0.92) !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 30px !important;
+  font-weight: 950 !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.26) !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutCenterNav {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutCounter {
+  color: rgba(255,255,255,0.94) !important;
+  font-size: 17px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutDots {
+  width: 100% !important;
+  max-width: 230px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 7px !important;
+  overflow: hidden !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutDots span {
+  width: 7px !important;
+  height: 7px !important;
+  flex: 0 0 auto !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,0.24) !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutDots span.active {
+  width: 9px !important;
+  height: 9px !important;
+  background: var(--accent) !important;
+  box-shadow: 0 0 12px rgba(170, 210, 74, 0.45) !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutStartButton {
+  width: 100% !important;
+  height: 74px !important;
+  min-height: 74px !important;
+  max-height: 74px !important;
+  padding: 0 18px !important;
+  margin: 0 !important;
+
+  border: none !important;
+  border-radius: 26px !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 20px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.3px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+
+  box-shadow: 0 16px 34px rgba(127,159,58,0.24) !important;
+}
+
+@media (max-width: 420px) {
+  .individualWorkoutBottomPanel {
+    width: calc(100vw - 18px) !important;
+    gap: 9px !important;
+  }
+
+  .individualWorkoutBottomPanel .individualWorkoutNav {
+    grid-template-columns: 58px minmax(0, 1fr) 58px !important;
+    gap: 9px !important;
+  }
+
+  .individualWorkoutBottomPanel .individualWorkoutNav > button {
+    width: 58px !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    border-radius: 18px !important;
+    font-size: 28px !important;
+  }
+
+  .individualWorkoutBottomPanel .individualWorkoutStartButton {
+    height: 68px !important;
+    min-height: 68px !important;
+    max-height: 68px !important;
+    border-radius: 24px !important;
+    font-size: 18px !important;
+  }
+
+  .individualWorkoutBottomPanel .individualWorkoutDots {
+    max-width: 190px !important;
+    gap: 6px !important;
+  }
+
+  .individualWorkoutBottomPanel .individualWorkoutDots span {
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  .individualWorkoutBottomPanel .individualWorkoutDots span.active {
+    width: 8px !important;
+    height: 8px !important;
+  }
+}
+
+/* SPACING POLISH FIX */
+.individualWorkoutSelectPage .workoutSelectHero {
+  padding-top: 22px !important;
+}
+
+.individualWorkoutDeck {
+  margin-bottom: 6px !important;
+}
+
+.individualWorkoutCardPro {
+  margin-bottom: 2px !important;
+}
+
+.individualWorkoutBottomPanel {
+  gap: 6px !important;
+  bottom: max(6px, env(safe-area-inset-bottom)) !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutNav {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 420px) {
+  .individualWorkoutSelectPage .workoutSelectHero {
+    padding-top: 26px !important;
+  }
+
+  .individualWorkoutBottomPanel {
+    gap: 5px !important;
+  }
+}
+
+/* EXTRA SPACING TUNING */
+.individualWorkoutSelectPage .workoutSelectHero {
+  padding-top: 38px !important;
+}
+
+.individualWorkoutDeck {
+  margin-bottom: 0 !important;
+}
+
+.individualWorkoutCardPro {
+  margin-bottom: -8px !important;
+}
+
+.individualWorkoutBottomPanel {
+  gap: 3px !important;
+  bottom: max(4px, env(safe-area-inset-bottom)) !important;
+}
+
+@media (max-width: 420px) {
+  .individualWorkoutSelectPage .workoutSelectHero {
+    padding-top: 42px !important;
+  }
+
+  .individualWorkoutCardPro {
+    margin-bottom: -10px !important;
+  }
+
+  .individualWorkoutBottomPanel {
+    gap: 2px !important;
+  }
+}
