@@ -1,0 +1,133 @@
+/* Splash, login and onboarding */
+html:root[data-app-theme="warm-light"] .appSplash,
+html:root[data-app-theme="warm-light"] .loginPage,
+html:root[data-app-theme="warm-light"] .firstSetupOverlay {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(90, 73, 223, 0.07), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f6f7fc 100%) !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] .splashInner,
+html:root[data-app-theme="warm-light"] .loginCard,
+html:root[data-app-theme="warm-light"] .firstSetupCard {
+  border-color: #dfe3ef !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #151824 !important;
+  box-shadow:
+    0 24px 64px rgba(45, 53, 98, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94) !important;
+}
+
+html:root[data-app-theme="warm-light"] .splashMark,
+html:root[data-app-theme="warm-light"] .appLogo {
+  border-color: #dedafb !important;
+  background: #efedff !important;
+  color: #5542d8 !important;
+  box-shadow: 0 10px 25px rgba(77, 68, 199, 0.14) !important;
+}
+
+html:root[data-app-theme="warm-light"] .splashLogo {
+  color: #5a49df !important;
+  text-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] .splashText,
+html:root[data-app-theme="warm-light"] .loginHero p,
+html:root[data-app-theme="warm-light"] .loginHint,
+html:root[data-app-theme="warm-light"] .firstSetupStep,
+html:root[data-app-theme="warm-light"] .firstSetupCard p {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] .splashProgress {
+  border-color: #e2e5ef !important;
+  background: #e9ebf3 !important;
+}
+
+html:root[data-app-theme="warm-light"] .splashProgress span {
+  background: linear-gradient(90deg, #5a49df, #2d6ff2) !important;
+  box-shadow: 0 0 18px rgba(74, 78, 222, 0.2) !important;
+}
+
+html:root[data-app-theme="warm-light"] .splashDots i {
+  background: #6c5ce5 !important;
+}
+
+html:root[data-app-theme="warm-light"] .loginHero h1,
+html:root[data-app-theme="warm-light"] .loginCard h2,
+html:root[data-app-theme="warm-light"] .firstSetupCard h2 {
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] .loginCard input,
+html:root[data-app-theme="warm-light"] .firstSetupInput {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] .loginBtn,
+html:root[data-app-theme="warm-light"] .firstSetupPrimary {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22) !important;
+}
+
+html:root[data-app-theme="warm-light"] .firstSetupSecondary,
+html:root[data-app-theme="warm-light"] .firstSetupChoiceGrid button,
+html:root[data-app-theme="warm-light"] .firstSetupGoalGrid button,
+html:root[data-app-theme="warm-light"] .firstSetupDays button {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  color: #596176 !important;
+}
+
+html:root[data-app-theme="warm-light"] .firstSetupChoiceGrid button.active,
+html:root[data-app-theme="warm-light"] .firstSetupGoalGrid button.active,
+html:root[data-app-theme="warm-light"] .firstSetupDays button.active {
+  border-color: #7565e8 !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
+html:root[data-app-theme="warm-light"] .cabinetSettingsModal .profileThemeSwitchBtn {
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) 18px !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-align: left !important;
+}
+
+html:root[data-app-theme="warm-light"] .cabinetSettingsModal .profileThemeText {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 3px !important;
+}
+
+html:root[data-app-theme="warm-light"] .cabinetSettingsModal .profileThemeText strong {
+  color: #151824 !important;
+  font-size: 16px !important;
+}
+
+html:root[data-app-theme="warm-light"] .cabinetSettingsModal .profileThemeText small {
+  overflow: hidden !important;
+  color: #737b91 !important;
+  font-size: 11px !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html:root[data-app-theme="warm-light"] .cabinetSettingsModal .profileThemeSwitchBtn > i {
+  color: #7d8498 !important;
+  font-size: 24px !important;
+  font-style: normal !important;
+}
+
+html:root[data-app-theme="warm-light"] .cabinetSettingsModal .profileWorkoutModeToggle em {
+  border-color: #ddd9fa !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
