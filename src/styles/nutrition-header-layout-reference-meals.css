@@ -1,0 +1,125 @@
+.fatMealList {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.fatMealCard {
+  width: 100% !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  border: 0 !important;
+  background:
+    radial-gradient(circle at 17% 0%, rgba(255,255,255,0.06), transparent 44%),
+    linear-gradient(180deg, rgba(27, 37, 45, 0.88), rgba(17, 25, 31, 0.9)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.045),
+    0 16px 34px rgba(0,0,0,0.2) !important;
+}
+
+.fatMealMain {
+  min-height: 100px !important;
+  padding: 18px 24px !important;
+  display: grid !important;
+  grid-template-columns: 72px minmax(0, 1fr) 78px 52px 28px !important;
+  gap: 16px !important;
+  align-items: center !important;
+}
+
+.fatMealIcon {
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  font-size: 44px !important;
+  line-height: 1 !important;
+  background: transparent !important;
+  filter: saturate(1.12) contrast(1.04) !important;
+}
+
+.fatMealTitle strong {
+  color: #ffffff !important;
+  font-size: clamp(25px, 5.7vw, 34px) !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.85px !important;
+  line-height: 1.02 !important;
+}
+
+.fatMealTitle span {
+  display: block !important;
+  margin-top: 10px !important;
+  color: rgba(236, 242, 250, 0.68) !important;
+  font-size: clamp(20px, 4.4vw, 25px) !important;
+  font-weight: 800 !important;
+}
+
+.fatMealKcal {
+  min-width: 76px !important;
+  text-align: center !important;
+}
+
+.fatMealKcal strong {
+  color: #ffffff !important;
+  font-size: clamp(27px, 5.9vw, 35px) !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.8px !important;
+}
+
+.fatMealKcal span {
+  display: block !important;
+  margin-top: 10px !important;
+  color: rgba(236, 242, 250, 0.76) !important;
+  font-size: clamp(17px, 3.9vw, 22px) !important;
+  font-weight: 500 !important;
+}
+
+.fatPlusBtn {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  min-height: 52px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--food-green) !important;
+  font-size: 56px !important;
+  font-weight: 800 !important;
+  line-height: 0.76 !important;
+  padding: 0 0 4px !important;
+}
+
+.fatMealToggle {
+  width: 28px !important;
+  height: 34px !important;
+  min-width: 28px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: rgba(238, 244, 252, 0.56) !important;
+  font-size: 34px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.fatMealCard.open .fatMealMain,
+.fatMealCard.collapsed .fatMealMain {
+  background: transparent !important;
+}
+
+.fatMealItems {
+  background: rgba(5, 12, 18, 0.5) !important;
+  border-top: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+.fatFoodItem {
+  padding: 14px 20px !important;
+  border-top: 1px solid rgba(255,255,255,0.045) !important;
+}
+
+.fatFoodItem strong { color: #fff !important; }
+.fatFoodItem span { color: rgba(18, 227, 92, 0.82) !important; }
+

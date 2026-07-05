@@ -1,0 +1,51 @@
+.fatWeekRow {
+  width: 100% !important;
+  margin: 0 auto 34px !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 14px !important;
+  align-items: start !important;
+}
+
+.fatDayCell {
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 15px !important;
+  box-shadow: none !important;
+}
+
+.fatWeekRow .fatDayCell span {
+  width: clamp(48px, 10.4vw, 62px) !important;
+  height: clamp(48px, 10.4vw, 62px) !important;
+  border-radius: 50% !important;
+  border: 3px solid rgba(218, 225, 235, 0.48) !important;
+  background: rgba(4, 10, 15, 0.16) !important;
+  color: var(--food-green) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: clamp(33px, 8vw, 46px) !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  box-shadow: inset 0 0 18px rgba(255,255,255,0.018) !important;
+}
+
+.fatWeekRow .fatDayCell span.done,
+.fatWeekRow .fatDayCell.hasFood span,
+.fatWeekRow .fatDayCell.selected.hasFood span {
+  border-color: var(--food-green) !important;
+  box-shadow: 0 0 0 1px rgba(18, 227, 92, 0.08), inset 0 0 16px rgba(18, 227, 92, 0.05) !important;
+}
+
+.fatWeekRow .fatDayCell small {
+  color: rgba(236, 242, 250, 0.66) !important;
+  font-size: clamp(18px, 4.2vw, 24px) !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
