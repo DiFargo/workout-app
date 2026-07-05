@@ -1550,7 +1550,7 @@ test("workout flow CSS keeps slide animation shell grouped", async () => {
 });
 
 test("client workout flow CSS keeps shared bottom panel shell in one owner", async () => {
-  const source = await readText("src/styles/client-workout-flow.css");
+  const source = await readCssWithImports("src/styles/client-workout-flow.css");
   const sharedPanelMatch = source.match(
     /\.workoutRunPage \.startWorkoutBottomPanel,\s*\.workoutRunPage \.warmupBottomPanel,\s*\.workoutRunPage \.exerciseActionPanel,\s*\.workoutRunPage \.workoutFinishActionPanel\s*\{[\s\S]*?\n\}/
   );
@@ -1565,7 +1565,7 @@ test("client workout flow CSS keeps shared bottom panel shell in one owner", asy
 });
 
 test("client workout flow CSS keeps fallback image styles grouped", async () => {
-  const source = await readText("src/styles/client-workout-flow.css");
+  const source = await readCssWithImports("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.individualWorkoutSelectPage \.individualWorkoutImageFallback,\s*\.workoutRunPage \.startWorkoutImageFallback\s*\{\s*width:\s*100%;/g) || []).length,
@@ -1582,7 +1582,7 @@ test("client workout flow CSS keeps fallback image styles grouped", async () => 
 });
 
 test("client workout flow CSS keeps select and warmup action controls grouped", async () => {
-  const source = await readText("src/styles/client-workout-flow.css");
+  const source = await readCssWithImports("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.individualWorkoutActionRow,\s*\.workoutRunPage \.warmupNavigationRow\s*\{\s*width:\s*100%;/g) || []).length,
@@ -1603,7 +1603,7 @@ test("client workout flow CSS keeps select and warmup action controls grouped", 
 });
 
 test("client workout flow CSS keeps start button sizing grouped", async () => {
-  const source = await readText("src/styles/client-workout-flow.css");
+  const source = await readCssWithImports("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutStartButton,\s*\.workoutRunPage \.startWorkoutBottomPanel \.startWorkoutButton\s*\{\s*width:\s*100% !important;\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*max-height:\s*78px !important;\s*margin:\s*0 !important;\s*padding:\s*0 18px !important;\s*border-radius:\s*24px !important;\s*font-size:\s*19px !important;\s*\}/g) || []).length,
@@ -1613,7 +1613,7 @@ test("client workout flow CSS keeps start button sizing grouped", async () => {
 });
 
 test("client workout flow CSS keeps compact start panel sizing grouped", async () => {
-  const source = await readText("src/styles/client-workout-flow.css");
+  const source = await readCssWithImports("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.workoutRunPage \.workoutStageActionPanel,\s*\.workoutRunPage \.startWorkoutBottomPanel\s*\{\s*left:\s*10px !important;\s*right:\s*10px !important;\s*width:\s*calc\(100vw - 20px\) !important;\s*padding-inline:\s*9px !important;\s*\}/g) || []).length,
@@ -1623,7 +1623,7 @@ test("client workout flow CSS keeps compact start panel sizing grouped", async (
 });
 
 test("client workout flow CSS keeps compact run action panel sizing grouped", async () => {
-  const source = await readText("src/styles/client-workout-flow.css");
+  const source = await readCssWithImports("src/styles/client-workout-flow.css");
 
   assert.equal(
     (source.match(/\.workoutRunPage \.warmupBottomPanel,\s*\.workoutRunPage \.exerciseActionPanel,\s*\.workoutRunPage \.workoutFinishActionPanel\s*\{\s*left:\s*10px;\s*right:\s*10px;\s*width:\s*calc\(100vw - 20px\);\s*padding-inline:\s*9px;\s*\}/g) || []).length,

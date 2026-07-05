@@ -1,0 +1,286 @@
+/* WARMUP + INDIVIDUAL PLAN VISUAL CONTINUITY V195 */
+.workoutRunPage .exerciseDeck:has(.warmupExerciseCard) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 600px !important;
+  height: calc(100dvh - 58px) !important;
+  padding: 8px 14px calc(154px + env(safe-area-inset-bottom)) !important;
+  align-items: stretch !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain !important;
+  touch-action: pan-y !important;
+}
+
+.workoutRunPage .exerciseDeck:has(.warmupExerciseCard) > .exerciseCounter {
+  display: none !important;
+}
+
+.workoutRunPage .warmupExerciseCard {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 560px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 auto !important;
+  padding: 18px !important;
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 12px !important;
+  overflow: visible !important;
+  border: 1px solid rgba(127, 159, 58, 0.24) !important;
+  border-radius: 34px !important;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(127, 159, 58, 0.2), transparent 38%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+  text-align: left !important;
+}
+
+.workoutRunPage .warmupPlanHeader {
+  display: block;
+  padding: 2px 2px 4px;
+}
+
+.workoutRunPage .warmupPlanMeta {
+  min-height: 30px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.workoutRunPage .warmupPlanBadge {
+  min-height: 28px;
+  padding: 6px 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(145, 173, 78, 0.2);
+  border-radius: 999px;
+  background: rgba(145, 173, 78, 0.14);
+  color: rgba(224, 250, 162, 0.92);
+  font-size: 10.5px;
+  font-weight: 950;
+  letter-spacing: 0.55px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.workoutRunPage .warmupPlanWorkout {
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  text-align: right;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.workoutRunPage .warmupExerciseCard .warmupExerciseTitle {
+  margin: 0 !important;
+  color: rgba(255, 255, 255, 0.97) !important;
+  font-size: clamp(34px, 9vw, 44px) !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+}
+
+.workoutRunPage .warmupPlanAccent {
+  width: 66px;
+  height: 6px;
+  margin-top: 14px;
+  display: block;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 10px rgba(170, 210, 74, 0.24);
+}
+
+.workoutRunPage .warmupPlanSummary {
+  margin-top: 10px;
+  display: block;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.workoutRunPage .warmupExerciseHero {
+  width: 100%;
+  margin: 0 !important;
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  overflow: visible !important;
+}
+
+.workoutRunPage .warmupExerciseIntro {
+  box-sizing: border-box !important;
+  min-height: 64px !important;
+  padding: 10px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 11px !important;
+  border: 0 !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.workoutRunPage .warmupExerciseIntro > span {
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(145, 173, 78, 0.72);
+  border-radius: 50%;
+  color: rgba(217, 242, 154, 0.96);
+  font-size: 15px !important;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.workoutRunPage .warmupExerciseIntro strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.workoutRunPage .warmupExerciseIntro p {
+  margin: 3px 0 0 !important;
+  color: rgba(255, 255, 255, 0.66) !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+  line-height: 1.3 !important;
+}
+
+.workoutRunPage .warmupExerciseSteps {
+  overflow: hidden;
+  border-radius: 19px;
+  background: rgba(255, 255, 255, 0.032);
+}
+
+.workoutRunPage .warmupExerciseItem {
+  box-sizing: border-box !important;
+  min-height: 62px !important;
+  padding: 10px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.workoutRunPage .warmupExerciseItem + .warmupExerciseItem {
+  border-top: 1px solid rgba(255, 255, 255, 0.065) !important;
+}
+
+.workoutRunPage .warmupExerciseItem > span {
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(127, 159, 58, 0.18);
+  color: rgba(217, 242, 154, 0.94);
+  font-size: 11px !important;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.workoutRunPage .warmupExerciseItem strong {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  line-height: 1.2 !important;
+}
+
+.workoutRunPage .warmupExerciseItem small {
+  margin-top: 3px !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+  line-height: 1.25 !important;
+}
+
+.workoutRunPage .warmupBottomPanel .warmupReadyButton {
+  width: 100% !important;
+  height: 78px !important;
+  min-height: 78px !important;
+  max-height: 78px !important;
+  margin: 0 !important;
+  padding: 0 18px !important;
+  border: 0 !important;
+  border-radius: 24px !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+  font-size: 19px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0 !important;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+.workoutRunPage .workoutCloseFixedScreen.warmupBackButton {
+  left: max(14px, calc(env(safe-area-inset-left) + 14px)) !important;
+  right: auto !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  font-size: 24px !important;
+}
+
+@media (max-width: 390px) {
+  .workoutRunPage .exerciseDeck:has(.warmupExerciseCard) {
+    padding-inline: 10px !important;
+  }
+
+  .workoutRunPage .warmupExerciseCard {
+    padding: 15px !important;
+    gap: 11px !important;
+    border-radius: 30px !important;
+  }
+
+  .workoutRunPage .warmupPlanMeta {
+    margin-bottom: 13px;
+  }
+
+  .workoutRunPage .warmupExerciseCard .warmupExerciseTitle {
+    font-size: 32px !important;
+  }
+
+  .workoutRunPage .warmupExerciseHero {
+    gap: 8px !important;
+  }
+
+  .workoutRunPage .warmupBottomPanel,
+  .workoutRunPage .exerciseActionPanel,
+  .workoutRunPage .workoutFinishActionPanel {
+    left: 10px;
+    right: 10px;
+    width: calc(100vw - 20px);
+    padding-inline: 9px;
+  }
+}

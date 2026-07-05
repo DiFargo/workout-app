@@ -1,0 +1,324 @@
+/* UNIFIED CLIENT WORKOUT STAGE FRAME V207 */
+.workoutRunPage {
+  --workout-stage-card-height: clamp(
+    420px,
+    calc(100dvh - 236px - max(26px, calc(env(safe-area-inset-bottom) + 18px))),
+    680px
+  );
+  --workout-stage-card-max-width: 560px;
+  --workout-stage-card-radius: 34px;
+  --workout-stage-panel-height: 98px;
+  --workout-stage-panel-bottom: max(26px, calc(env(safe-area-inset-bottom) + 18px));
+}
+
+.workoutRunPage.workoutRunPageNoHeader {
+  --workout-stage-card-height: clamp(
+    464px,
+    calc(
+      100dvh
+      - max(14px, calc(env(safe-area-inset-top) + 10px))
+      - 178px
+      - var(--workout-stage-panel-bottom)
+    ),
+    724px
+  );
+}
+
+.workoutRunPage.workoutRunPageNoHeader .workoutHeaderCompact {
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.workoutRunPage.workoutRunPageNoHeader .exerciseDeck.workoutStageDeck {
+  height: calc(100dvh - max(14px, calc(env(safe-area-inset-top) + 10px))) !important;
+  padding-bottom: calc(
+    var(--workout-stage-panel-height) + var(--workout-stage-panel-bottom) + 14px
+  ) !important;
+}
+
+.workoutRunPage .exerciseDeck.workoutStageDeck {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 600px !important;
+  height: calc(100dvh - 58px) !important;
+  margin: 0 auto !important;
+  padding: 6px 14px calc(152px + env(safe-area-inset-bottom)) !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+
+.workoutRunPage .workoutStageTitle {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--workout-stage-card-max-width);
+  height: 56px;
+  min-height: 56px;
+  margin: 0 auto 4px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+}
+
+.workoutRunPage .workoutStageTitle > span {
+  display: -webkit-box;
+  max-width: 100%;
+  max-height: 2.04em;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.97);
+  font-size: clamp(24px, 6.2vw, 27px);
+  font-weight: 950;
+  line-height: 1.02;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.workoutRunPage .workoutStageCard,
+.workoutRunPage .startWorkoutSlide {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: var(--workout-stage-card-max-width) !important;
+  height: var(--workout-stage-card-height) !important;
+  min-height: var(--workout-stage-card-height) !important;
+  max-height: var(--workout-stage-card-height) !important;
+  margin: 0 auto !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border: 1px solid rgba(127, 159, 58, 0.24) !important;
+  border-radius: var(--workout-stage-card-radius) !important;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(127, 159, 58, 0.2), transparent 38%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.workoutRunPage .workoutStageCard::-webkit-scrollbar,
+.workoutRunPage .startWorkoutSlide::-webkit-scrollbar {
+  display: none;
+}
+
+.workoutRunPage .workoutFinishScreen {
+  height: var(--workout-stage-card-height) !important;
+  min-height: var(--workout-stage-card-height) !important;
+  max-height: var(--workout-stage-card-height) !important;
+  overflow: hidden !important;
+}
+
+.workoutRunPage .workoutFinishCard.workoutStageCard {
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+}
+
+.workoutRunPage .workoutFinishResult p {
+  margin: 0 !important;
+}
+
+.workoutRunPage .workoutStageActionPanel,
+.workoutRunPage .startWorkoutBottomPanel {
+  box-sizing: border-box !important;
+  position: fixed !important;
+  left: 12px !important;
+  right: 12px !important;
+  bottom: var(--workout-stage-panel-bottom) !important;
+  z-index: 9500 !important;
+  width: calc(100vw - 24px) !important;
+  max-width: var(--workout-stage-card-max-width) !important;
+  height: var(--workout-stage-panel-height) !important;
+  min-height: var(--workout-stage-panel-height) !important;
+  max-height: var(--workout-stage-panel-height) !important;
+  margin: 0 auto !important;
+  padding: 9px 10px 11px !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 30px !important;
+  background: linear-gradient(180deg, #121712 0%, #0d110d 100%) !important;
+  box-shadow:
+    0 -18px 44px rgba(0, 0, 0, 0.66),
+    0 0 0 1px rgba(255, 255, 255, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 390px) {
+  .workoutRunPage {
+    --workout-stage-card-radius: 30px;
+  }
+
+  .workoutRunPage .exerciseDeck.workoutStageDeck {
+    padding-inline: 10px !important;
+  }
+
+  .workoutRunPage .workoutStageActionPanel,
+  .workoutRunPage .startWorkoutBottomPanel {
+    left: 10px !important;
+    right: 10px !important;
+    width: calc(100vw - 20px) !important;
+    padding-inline: 9px !important;
+  }
+}
+
+/* INDIVIDUAL PLAN SPLIT BOTTOM ACTION V209 */
+.individualWorkoutSelectPage {
+  padding-bottom: calc(178px + env(safe-area-inset-bottom)) !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
+  overflow: visible !important;
+}
+
+.individualWorkoutBottomProgress {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: -25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10.5px;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.individualWorkoutBottomProgress span:first-child {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.individualWorkoutActionRow,
+.workoutRunPage .warmupNavigationRow {
+  width: 100%;
+  height: 78px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  gap: 9px;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutBackButton,
+.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutStartButton,
+.workoutRunPage .warmupBottomPanel .warmupPreviousButton,
+.workoutRunPage .warmupBottomPanel .warmupReadyButton {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 78px !important;
+  min-height: 78px !important;
+  max-height: 78px !important;
+  margin: 0 !important;
+  border-radius: 24px !important;
+  font-size: 17px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutBackButton,
+.workoutRunPage .warmupBottomPanel .warmupPreviousButton {
+  padding: 0 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  box-shadow: none !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutStartButton,
+.workoutRunPage .warmupBottomPanel .warmupReadyButton {
+  padding: 0 14px !important;
+}
+
+@media (max-width: 390px) {
+  .individualWorkoutBottomProgress {
+    left: 9px;
+    right: 9px;
+  }
+
+  .individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutBackButton,
+  .individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutStartButton,
+  .workoutRunPage .warmupBottomPanel .warmupPreviousButton,
+  .workoutRunPage .warmupBottomPanel .warmupReadyButton {
+    font-size: 16px !important;
+  }
+}
+
+/* INDIVIDUAL PLAN ALIGNED CONTENT WITHOUT SWIPE PROGRESS V211 */
+.individualWorkoutSelectPage .individualWorkoutCardPro {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: 30px minmax(0, 1fr) 62px !important;
+  align-items: stretch !important;
+  align-content: stretch !important;
+  gap: 12px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProTop,
+.individualWorkoutSelectPage .individualWorkoutProBody,
+.individualWorkoutSelectPage .individualWorkoutTrainerTip {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProTop {
+  height: 30px !important;
+  min-height: 30px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProBody {
+  height: 100% !important;
+  min-height: 0 !important;
+  align-self: stretch !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProInfo,
+.individualWorkoutSelectPage .individualWorkoutProImage {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutStats {
+  width: 100% !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutStats > span {
+  min-height: 32px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutTrainerTip {
+  height: 62px !important;
+  min-height: 62px !important;
+  max-height: 62px !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutNav {
+  margin-top: 6px !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutNav .individualWorkoutCenterNav {
+  gap: 0 !important;
+}
+
+@media (max-width: 700px) {
+  .individualWorkoutSelectPage > .individualWorkoutNav:not(:has(.individualWorkoutSwipeHint)) {
+    display: none !important;
+  }
+}

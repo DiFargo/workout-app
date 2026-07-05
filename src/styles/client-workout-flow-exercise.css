@@ -1,0 +1,522 @@
+/* WORKOUT EXERCISE + INDIVIDUAL PLAN VISUAL CONTINUITY V202 */
+.workoutRunPage .exerciseDeck:has(.workoutExerciseCard) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 600px !important;
+  height: calc(100dvh - 58px) !important;
+  padding: 6px 14px calc(158px + env(safe-area-inset-bottom)) !important;
+  align-items: stretch !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain !important;
+  touch-action: pan-y !important;
+}
+
+.workoutRunPage .exerciseDeck:has(.workoutExerciseCard) > .exerciseCounter {
+  display: none !important;
+}
+
+.workoutRunPage .workoutExerciseCard {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 560px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - 216px) !important;
+  margin: 0 auto !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 7px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain !important;
+  scrollbar-width: none;
+  border: 1px solid rgba(127, 159, 58, 0.24) !important;
+  border-radius: 34px !important;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(127, 159, 58, 0.2), transparent 38%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+  text-align: left !important;
+}
+
+.workoutRunPage .workoutExerciseCard::-webkit-scrollbar {
+  display: none;
+}
+
+.workoutRunPage .workoutExerciseMeta {
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.35px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.workoutRunPage .workoutExerciseMeta b {
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(127, 159, 58, 0.17);
+  color: rgba(217, 242, 154, 0.94);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.workoutRunPage .workoutExerciseVideoFrame {
+  box-sizing: border-box;
+  position: relative;
+  width: min(100%, clamp(230px, 33dvh, 286px));
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  overflow: hidden;
+  flex: 0 0 auto;
+  border: 1px solid rgba(127, 159, 58, 0.23);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(127, 159, 58, 0.14), transparent 58%),
+    #0b100c;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+  cursor: default;
+}
+
+.workoutRunPage .workoutExerciseVideoFrame .exerciseVideo {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  margin: 0 !important;
+  display: block !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.workoutRunPage .workoutExerciseVideoFrame::after {
+  content: none !important;
+  display: none !important;
+}
+
+.workoutRunPage .workoutExerciseVideoFrame .exerciseVideo {
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton {
+  box-sizing: border-box !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  z-index: 2 !important;
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  min-height: 58px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: translate(-50%, -50%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 50% !important;
+  background: rgba(5, 8, 6, 0.5) !important;
+  color: rgba(255, 255, 255, 0.86) !important;
+  line-height: 1 !important;
+  opacity: 0.58;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: blur(10px);
+  transition: opacity 160ms ease, transform 160ms ease, background 160ms ease !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton:hover,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton:active,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton:hover,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton:active {
+  opacity: 0.9;
+  background: rgba(5, 8, 6, 0.68) !important;
+  transform: translate(-50%, -50%) scale(1.04) !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton.is-hidden,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton.is-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translate(-50%, -50%) scale(0.96) !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton > span {
+  padding-left: 2px;
+  font-size: 22px;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton > span {
+  font-size: 18px;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseFullscreenButton {
+  box-sizing: border-box !important;
+  position: absolute !important;
+  top: auto !important;
+  right: 10px !important;
+  bottom: 10px !important;
+  z-index: 3 !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  background: rgba(5, 8, 6, 0.5) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  opacity: 0.62;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px);
+  transition: opacity 160ms ease, background 160ms ease !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseFullscreenButton > span {
+  font-size: 17px;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseFullscreenButton:hover,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseFullscreenButton:active {
+  opacity: 0.95;
+  background: rgba(5, 8, 6, 0.72) !important;
+}
+
+.workoutRunPage .workoutExerciseVideoFallback {
+  width: 100%;
+  height: 100%;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(153, 188, 73, 0.18), transparent 44%),
+    linear-gradient(160deg, #172117 0%, #090d0a 72%);
+}
+
+.workoutRunPage .workoutExerciseVideoFallback strong {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.workoutRunPage .workoutExerciseVideoFallback small {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.workoutRunPage .workoutExerciseHeading {
+  padding: 0 2px;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseHeading h3 {
+  display: -webkit-box !important;
+  max-height: 2.08em !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  color: rgba(255, 255, 255, 0.97) !important;
+  font-size: clamp(21px, 5.8vw, 28px) !important;
+  font-weight: 950 !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.workoutRunPage .workoutExerciseHeading > span {
+  width: 52px;
+  height: 4px;
+  margin-top: 6px;
+  display: block;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.workoutRunPage .workoutExerciseSetsList {
+  overflow: hidden;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.032);
+}
+
+.workoutRunPage .workoutExerciseSetsList .setRow {
+  box-sizing: border-box;
+  min-height: 50px !important;
+  margin: 0 !important;
+  padding: 4px 9px !important;
+  display: grid !important;
+  grid-template-columns: 34px minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 8px !important;
+  align-items: center !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.workoutRunPage .workoutExerciseSetsList .setRow + .setRow {
+  border-top: 1px solid rgba(255, 255, 255, 0.065);
+}
+
+.workoutRunPage .workoutExerciseSetNumber {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(127, 159, 58, 0.17);
+  color: rgba(217, 242, 154, 0.94);
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.workoutRunPage .workoutExerciseSetsList label {
+  min-width: 0;
+  display: block;
+}
+
+.workoutRunPage .workoutExerciseSetsList label > small {
+  display: block;
+  margin: 0 0 2px 2px;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 9px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.workoutRunPage .workoutExerciseSetsList .setRow input {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 6px 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 13px !important;
+  background: rgba(5, 7, 5, 0.86) !important;
+  color: rgba(255, 255, 255, 0.96) !important;
+  font-size: 17px !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+.workoutRunPage .workoutExerciseSetsList .setRow input::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+  opacity: 1 !important;
+}
+
+.workoutRunPage .workoutExerciseSetsList .setRow input:focus {
+  border-color: rgba(145, 173, 78, 0.62) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(127, 159, 58, 0.12) !important;
+}
+
+.workoutRunPage .workoutExerciseWeightLabel {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.workoutRunPage .workoutExerciseWeightLabel .workoutAiSetWeightNote {
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(183, 215, 105, 0.68);
+  font-size: 8.5px;
+  font-weight: 750;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workoutRunPage .workoutAiSharedWeightNote {
+  display: block;
+  margin: 4px 2px 0;
+  color: rgba(183, 215, 105, 0.68);
+  font-size: 9.5px;
+  font-weight: 750;
+  line-height: 1.1;
+  text-align: right;
+}
+
+.workoutRunPage .workoutExerciseSupport {
+  min-height: 14px;
+  padding: 0 2px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px 8px;
+}
+
+.workoutRunPage .workoutExerciseSupport .previousInfo {
+  min-height: 0 !important;
+  margin: 0 !important;
+  color: rgba(255, 255, 255, 0.48) !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+
+.workoutRunPage .workoutExerciseSupport .workoutAiAdjustHint {
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  color: rgba(183, 215, 105, 0.7) !important;
+  font-size: 10px !important;
+  font-weight: 750 !important;
+  line-height: 1.2 !important;
+}
+
+.workoutRunPage .exerciseActionPanel .exerciseNavigationRow {
+  width: 100% !important;
+  height: 78px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr) !important;
+  gap: 9px !important;
+}
+
+.workoutRunPage .exerciseActionPanel .exercisePrevButton,
+.workoutRunPage .exerciseActionPanel .exerciseNextButton {
+  box-sizing: border-box !important;
+  position: static !important;
+  width: 100% !important;
+  height: 78px !important;
+  min-width: 0 !important;
+  min-height: 78px !important;
+  max-width: none !important;
+  max-height: 78px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 24px !important;
+  font-size: 17px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+.workoutRunPage .exerciseActionPanel .exercisePrevButton {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.88) !important;
+  box-shadow: none !important;
+}
+
+.workoutRunPage .exerciseActionPanel .exerciseNextButton {
+  border: 0 !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+  -webkit-text-fill-color: #10120f !important;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+@media (max-height: 740px) {
+  .workoutRunPage .workoutExerciseCard {
+    gap: 6px !important;
+    padding: 9px 11px !important;
+  }
+
+  .workoutRunPage .workoutExerciseVideoFrame {
+    width: min(100%, clamp(205px, 29dvh, 225px));
+    border-radius: 21px;
+  }
+
+  .workoutRunPage .workoutExerciseCard .workoutExerciseHeading h3 {
+    font-size: 20px !important;
+  }
+
+  .workoutRunPage .workoutExerciseHeading > span {
+    margin-top: 5px;
+  }
+
+  .workoutRunPage .workoutExerciseSetsList .setRow {
+    min-height: 46px !important;
+    padding-block: 2px !important;
+  }
+
+  .workoutRunPage .workoutExerciseSetsList .setRow input {
+    height: 33px !important;
+    min-height: 33px !important;
+  }
+}
+
+@media (min-width: 701px) and (max-height: 740px) {
+  .workoutRunPage .workoutExerciseVideoFrame {
+    width: min(100%, 190px);
+  }
+
+  .workoutRunPage .workoutExerciseSetsList .setRow {
+    min-height: 44px !important;
+    padding-block: 2px !important;
+  }
+
+  .workoutRunPage .workoutExerciseSetsList .setRow input {
+    height: 31px !important;
+    min-height: 31px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .workoutRunPage .exerciseDeck:has(.workoutExerciseCard) {
+    padding-inline: 10px !important;
+  }
+
+  .workoutRunPage .workoutExerciseCard {
+    border-radius: 30px !important;
+  }
+
+  .workoutRunPage .exerciseActionPanel .exercisePrevButton,
+  .workoutRunPage .exerciseActionPanel .exerciseNextButton {
+    padding-inline: 8px !important;
+    font-size: 16px !important;
+  }
+
+}
