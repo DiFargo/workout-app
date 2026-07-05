@@ -1,0 +1,10 @@
+/* COOL LIGHT THEME V354 - nested screens */
+html:root[data-app-theme="warm-light"] body #root .measurementFullscreenPage,
+html:root[data-app-theme="warm-light"] body #root .app.workoutRunPage,
+html:root[data-app-theme="warm-light"] body #root .progressHistoryPage {
+  background:
+    radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.055), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
+  color: #151824 !important;
+}
+

@@ -1,0 +1,43 @@
+/* Cabinet profile form */
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileBodyMetricsSettingsSection,
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileBodyMetricsAccordion {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileAccordionHead span {
+  color: #5a49df !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileAccordionHead strong,
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileBodyMetricsGrid label > span {
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileAccordionHead small {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileBodyMetricsGrid input,
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileBodyMetricsGrid select,
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileGoalReadonlyValue,
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileSexPicker button {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileSexPicker button.active {
+  border-color: #7565e8 !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetUtilityModal .profileBodySaveBtn {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22) !important;
+}
+

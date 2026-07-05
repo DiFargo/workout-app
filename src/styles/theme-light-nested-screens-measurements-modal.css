@@ -1,0 +1,56 @@
+/* Measurements: cabinet modal */
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalOverlay {
+  background: rgba(35, 40, 68, 0.2) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModal {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 24px 64px rgba(43, 50, 92, 0.18) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalHead span {
+  color: #5a49df !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalHead h2 {
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalHead small,
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalSummary p,
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalGrid span {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalHead button,
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalSummary,
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalGrid div {
+  border-color: #e2e5ef !important;
+  background: #f7f8fc !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalSummary span {
+  border-color: #ddd9fa !important;
+  background: #efedff !important;
+  color: #5542d8 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalGrid strong {
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalGrid small {
+  color: #5a49df !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetMeasurementModalStart {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22) !important;
+}
+
