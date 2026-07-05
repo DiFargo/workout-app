@@ -235,7 +235,7 @@ test("application styles use the modular styles entrypoint", async () => {
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
   const nutritionAiPlanLazyCss = await readCssWithImports("src/styles/nutrition-ai-plan-lazy.css");
   const nutritionFoodIconLazyCss = await readText("src/styles/nutrition-food-icon-lazy.css");
-  const aiCoachLazyCss = await readText("src/styles/ai-coach-lazy.css");
+  const aiCoachLazyCss = await readCssWithImports("src/styles/ai-coach-lazy.css");
   const clientFirstSetupLazyCss = await readText("src/styles/client-first-setup-lazy.css");
   const clientMeasurementsLazyCss = await readText("src/styles/client-measurements-lazy.css");
   const clientProfileLazyCss = await readText("src/styles/client-profile-lazy.css");
@@ -456,7 +456,7 @@ test("client loading fallback CSS keeps warm-light panel and spinner shells grou
 });
 
 test("AI coach CSS keeps nutrition plan grids grouped", async () => {
-  const source = await readText("src/styles/ai-coach-lazy.css");
+  const source = await readCssWithImports("src/styles/ai-coach-lazy.css");
 
   assert.equal(
     (source.match(/\.aiNutritionWeeksGrid,\s*\.aiNutritionTwoCol\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*1fr 1fr;\s*gap:\s*9px;\s*margin-top:\s*12px;\s*\}/g) || []).length,
