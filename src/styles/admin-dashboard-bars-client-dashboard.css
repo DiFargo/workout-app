@@ -1,0 +1,144 @@
+/* === ADMIN CLIENT DASHBOARD REAL FIX V4 === */
+/* ÃÂ¡Ã‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ ÃÂ° ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° / ÃÂ¾ÃÂ±ÃÂ·ÃÂ¾Ã‘â‚¬: solid Ã‘â€žÃÂ¾ÃÂ½ + ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃÂ° ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¾ÃÂ² ÃÂºÃÂ°ÃÂº ÃÂ² dashboard ÃÂ¸ Ãâ€ÃÂ¾ÃÂ±ÃÂ°ÃÂ²ÃÂ¸Ã‘â€šÃ‘Å’ ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ´Ã‘Æ’ÃÂºÃ‘â€š */
+
+.adminClientPage,
+.adminClientWorkspace,
+.adminClientDashboard,
+.adminClientOverview,
+.clientWorkspace,
+.clientDashboard,
+.clientOverview,
+.adminV3ClientPage,
+.adminV3ClientWorkspace,
+.adminV3ClientDashboard,
+.adminV3ClientOverview {
+  background: #0d0f0d !important;
+  background-color: #0d0f0d !important;
+  background-image: none !important;
+}
+
+/* ÃÂ£ÃÂ±ÃÂ¸Ã‘â‚¬ÃÂ°ÃÂµÃÂ¼ glass-ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ·Ã‘â‚¬ÃÂ°Ã‘â€¡ÃÂ½ÃÂ¾Ã‘ÂÃ‘â€šÃ‘Å’ ÃÂ½ÃÂ° Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ ÃÂµ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° */
+.adminClientPage,
+.adminClientWorkspace,
+.adminClientDashboard,
+.adminClientOverview,
+.clientWorkspace,
+.clientDashboard,
+.clientOverview,
+.adminV3ClientPage,
+.adminV3ClientWorkspace,
+.adminV3ClientDashboard,
+.adminV3ClientOverview,
+.adminClientPage *,
+.adminClientWorkspace *,
+.adminClientDashboard *,
+.adminClientOverview *,
+.clientWorkspace *,
+.clientDashboard *,
+.clientOverview *,
+.adminV3ClientPage *,
+.adminV3ClientWorkspace *,
+.adminV3ClientDashboard *,
+.adminV3ClientOverview * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ÃÅ¾Ã‘ÂÃÂ½ÃÂ¾ÃÂ²ÃÂ½Ã‘â€¹ÃÂµ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃ‘ÂÃÂºÃÂ¸ÃÂµ ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ Ã¢â‚¬â€ solid product/dashboard style */
+.adminClientPage .adminV3Panel,
+.adminClientPage .adminV3Workspace,
+.adminClientPage .adminV3ProfileCard,
+.adminClientPage .adminV3KpiGrid > *,
+.adminClientPage .adminStatsGrid > *,
+.adminClientPage .clientOverviewList,
+.adminClientPage .clientOverviewCard,
+.adminClientPage .clientMetricCard,
+.adminClientPage .clientInfoCard,
+.adminClientPage .clientTelegramCard,
+.adminClientWorkspace .adminV3Panel,
+.adminClientWorkspace .adminV3Workspace,
+.adminClientWorkspace .adminV3ProfileCard,
+.adminClientWorkspace .adminV3KpiGrid > *,
+.adminClientWorkspace .adminStatsGrid > *,
+.adminClientWorkspace .clientOverviewList,
+.adminClientWorkspace .clientOverviewCard,
+.adminClientWorkspace .clientMetricCard,
+.adminClientWorkspace .clientInfoCard,
+.adminClientWorkspace .clientTelegramCard,
+.clientDashboard .adminV3Panel,
+.clientDashboard .adminV3Workspace,
+.clientDashboard .adminV3ProfileCard,
+.clientDashboard .adminV3KpiGrid > *,
+.clientDashboard .adminStatsGrid > *,
+.clientDashboard .clientOverviewList,
+.clientDashboard .clientOverviewCard,
+.clientDashboard .clientMetricCard,
+.clientDashboard .clientInfoCard,
+.clientDashboard .clientTelegramCard,
+.clientOverview .adminV3Panel,
+.clientOverview .adminV3Workspace,
+.clientOverview .adminV3ProfileCard,
+.clientOverview .adminV3KpiGrid > *,
+.clientOverview .adminStatsGrid > *,
+.clientOverview .clientOverviewList,
+.clientOverview .clientOverviewCard,
+.clientOverview .clientMetricCard,
+.clientOverview .clientInfoCard,
+.clientOverview .clientTelegramCard {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
+    linear-gradient(180deg, #171a17 0%, #111511 100%) !important;
+  background-color: #171a17 !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+}
+
+/* Ãâ€¢ÃÂ´ÃÂ¸ÃÂ½Ã‘â€¹ÃÂ¹ Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂ¾ÃÂº ÃÅ¾ÃÂ±ÃÂ·ÃÂ¾Ã‘â‚¬ Ã¢â‚¬â€ ÃÂ²Ã‘â€¹Ã‘Ë†ÃÂµ ÃÂ¸ ÃÂ°ÃÂºÃÂºÃ‘Æ’Ã‘â‚¬ÃÂ°Ã‘â€šÃÂ½ÃÂµÃÂµ */
+
+/* ÃÅ¸Ã‘Æ’ÃÂ½ÃÂºÃ‘â€šÃ‘â€¹ Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂºÃÂ° ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° Ã¢â‚¬â€ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃÂ° ÃÂºÃÂ°ÃÂº ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ´Ã‘Æ’ÃÂºÃ‘â€šÃÂ¾ÃÂ²Ã‘â€¹ÃÂ¹ Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂ¾ÃÂº */
+
+/* ÃÅ“ÃÂ°ÃÂ»Ã‘â€¹ÃÂµ ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ¸ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ°, ÃÂµÃ‘ÂÃÂ»ÃÂ¸ ÃÂ³ÃÂ´ÃÂµ-Ã‘â€šÃÂ¾ ÃÂ¾Ã‘ÂÃ‘â€šÃÂ°ÃÂ»ÃÂ¸Ã‘ÂÃ‘Å’ grid-ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ¸ */
+.clientMetricCard,
+.clientInfoCard,
+.adminClientMetricCard,
+.adminClientInfoCard,
+.adminV3ClientMetricCard,
+.adminV3ClientInfoCard {
+  min-height: 126px !important;
+  padding: 18px 16px !important;
+  border-radius: 24px !important;
+}
+
+/* Ãâ€˜ÃÂ¾ÃÂ»Ã‘Å’Ã‘Ë†ÃÂ¸ÃÂµ ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° */
+
+/* ÃÂÃÂ¸ÃÂ¶ÃÂ½ÃÂ¸ÃÂ¹ bar ÃÂ½ÃÂ° Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ ÃÂµ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° ÃÂ½ÃÂµ ÃÂ´ÃÂ¾ÃÂ»ÃÂ¶ÃÂµÃÂ½ ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂºÃ‘â‚¬Ã‘â€¹ÃÂ²ÃÂ°Ã‘â€šÃ‘Å’ ÃÂºÃÂ¾ÃÂ½Ã‘â€šÃÂµÃÂ½Ã‘â€š */
+.adminClientPage,
+.adminClientWorkspace,
+.adminClientDashboard,
+.clientDashboard,
+.clientOverview {
+  padding-bottom: 132px !important;
+}
+
+@media (max-width: 720px) {
+
+  .clientMetricCard,
+  .clientInfoCard,
+  .adminClientMetricCard,
+  .adminClientInfoCard,
+  .adminV3ClientMetricCard,
+  .adminV3ClientInfoCard {
+    min-height: 118px !important;
+    padding: 16px 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .adminClientPage,
+  .adminClientWorkspace,
+  .adminClientDashboard,
+  .clientDashboard,
+  .clientOverview {
+    padding-bottom: 148px !important;
+  }
+}
+

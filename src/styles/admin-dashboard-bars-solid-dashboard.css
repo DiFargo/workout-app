@@ -1,0 +1,173 @@
+/* Ãâ€ÃÂ°Ã‘Ë†ÃÂ±ÃÂ¾Ã‘â‚¬ÃÂ´: ÃÂ½ÃÂµÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ·Ã‘â‚¬ÃÂ°Ã‘â€¡ÃÂ½Ã‘â€¹ÃÂ¹ Ã‘â€žÃÂ¾ÃÂ½ + ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃÂ° ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¾ÃÂ² ÃÂºÃÂ°ÃÂº ÃÂ² ÃÂ´ÃÂ¾ÃÂ±ÃÂ°ÃÂ²ÃÂ»ÃÂµÃÂ½ÃÂ¸ÃÂ¸ ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ´Ã‘Æ’ÃÂºÃ‘â€šÃÂ° */
+
+.adminPage,
+.adminDesktopPage,
+.adminV3Page,
+.adminDashboardPage,
+.adminV3Dashboard,
+.adminV3Workspace,
+.adminV3Main,
+.adminV3Content,
+.adminShell,
+.adminMain,
+.adminDashboardShell {
+  background: #0d0f0d !important;
+  background-color: #0d0f0d !important;
+}
+
+/* ÃÅ¸ÃÂ¾ÃÂ»ÃÂ½ÃÂ¾Ã‘ÂÃ‘â€šÃ‘Å’Ã‘Å½ Ã‘Æ’ÃÂ±ÃÂ¸Ã‘â‚¬ÃÂ°ÃÂµÃÂ¼ ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ·Ã‘â‚¬ÃÂ°Ã‘â€¡ÃÂ½ÃÂ¾Ã‘ÂÃ‘â€šÃ‘Å’/glass Ã‘Æ’ dashboard-ÃÂ¾ÃÂ±ÃÂ»ÃÂ°Ã‘ÂÃ‘â€šÃÂµÃÂ¹ */
+.adminPage,
+.adminDesktopPage,
+.adminV3Page,
+.adminDashboardPage,
+.adminV3Dashboard,
+.adminV3Workspace,
+.adminV3Main,
+.adminV3Content,
+.adminShell,
+.adminMain,
+.adminDashboardShell,
+.adminDashboardPage *,
+.adminV3Dashboard *,
+.adminV3Workspace * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Ãâ€¢ÃÂ´ÃÂ¸ÃÂ½Ã‘â€¹ÃÂ¹ solid-card Ã‘ÂÃ‘â€šÃÂ¸ÃÂ»Ã‘Å’ ÃÂºÃÂ°ÃÂº ÃÂ² ÃÂ´ÃÂ¾ÃÂ±ÃÂ°ÃÂ²ÃÂ»ÃÂµÃÂ½ÃÂ¸ÃÂ¸ ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ´Ã‘Æ’ÃÂºÃ‘â€šÃÂ° */
+.adminDashboardPage .adminPanelCard,
+.adminDashboardPage .adminStatCard,
+.adminDashboardPage .adminV3Panel,
+.adminDashboardPage .adminV3ProfileCard,
+.adminDashboardPage .adminV3KpiGrid > *,
+.adminDashboardPage .adminStatsGrid > *,
+.adminDashboardPage .adminClientCard,
+.adminDashboardPage .adminUserCard,
+.adminDashboardPage .clientCard,
+.adminV3Dashboard .adminPanelCard,
+.adminV3Dashboard .adminStatCard,
+.adminV3Dashboard .adminV3Panel,
+.adminV3Dashboard .adminV3ProfileCard,
+.adminV3Dashboard .adminV3KpiGrid > *,
+.adminV3Dashboard .adminStatsGrid > *,
+.adminV3Dashboard .adminClientCard,
+.adminV3Dashboard .adminUserCard,
+.adminV3Dashboard .clientCard,
+.adminV3Workspace .adminPanelCard,
+.adminV3Workspace .adminStatCard,
+.adminV3Workspace .adminV3Panel,
+.adminV3Workspace .adminV3ProfileCard,
+.adminV3Workspace .adminV3KpiGrid > *,
+.adminV3Workspace .adminStatsGrid > *,
+.adminV3Workspace .adminClientCard,
+.adminV3Workspace .adminUserCard,
+.adminV3Workspace .clientCard {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
+    linear-gradient(180deg, #171a17 0%, #111511 100%) !important;
+  background-color: #171a17 !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+}
+
+/* ÃÅ“ÃÂ°ÃÂ»Ã‘â€¹ÃÂµ ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ dashboard Ã¢â‚¬â€ ÃÂ²Ã‘â€¹Ã‘Ë†ÃÂµ ÃÂ¸ Ã‘â‚¬ÃÂ¾ÃÂ²ÃÂ½ÃÂµÃÂµ */
+.adminDashboardPage .adminV3KpiGrid > *,
+.adminDashboardPage .adminStatsGrid > *,
+.adminDashboardPage .adminStatCard,
+.adminV3Dashboard .adminV3KpiGrid > *,
+.adminV3Dashboard .adminStatsGrid > *,
+.adminV3Dashboard .adminStatCard,
+.adminV3Workspace .adminV3KpiGrid > *,
+.adminV3Workspace .adminStatsGrid > *,
+.adminV3Workspace .adminStatCard {
+  min-height: 112px !important;
+  padding: 18px 16px !important;
+  border-radius: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+/* Ãâ€˜ÃÂ¾ÃÂ»Ã‘Å’Ã‘Ë†ÃÂ¸ÃÂµ dashboard-ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ Ã¢â‚¬â€ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃÂ° ÃÂºÃÂ°ÃÂº ÃÂ² product/add UI */
+.adminDashboardPage .adminPanelCard,
+.adminDashboardPage .adminV3Panel,
+.adminDashboardPage .adminV3ProfileCard,
+.adminV3Dashboard .adminPanelCard,
+.adminV3Dashboard .adminV3Panel,
+.adminV3Dashboard .adminV3ProfileCard,
+.adminV3Workspace .adminPanelCard,
+.adminV3Workspace .adminV3Panel,
+.adminV3Workspace .adminV3ProfileCard {
+  min-height: 168px !important;
+  padding: 18px !important;
+  border-radius: 26px !important;
+}
+
+/* ÃÅ¡ÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ¸ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° ÃÂ² dashboard Ã¢â‚¬â€ Ã‘Æ’ÃÂ²ÃÂµÃÂ»ÃÂ¸Ã‘â€¡ÃÂµÃÂ½Ã‘â€¹ ÃÂ´ÃÂ¾ Ã‘â€šÃÂ°ÃÂºÃÂ¾ÃÂ¹ ÃÂ¶ÃÂµ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃ‘â€¹ */
+.adminDashboardPage .adminClientCard,
+.adminDashboardPage .adminUserCard,
+.adminDashboardPage .clientCard,
+.adminV3Dashboard .adminClientCard,
+.adminV3Dashboard .adminUserCard,
+.adminV3Dashboard .clientCard,
+.adminV3Workspace .adminClientCard,
+.adminV3Workspace .adminUserCard,
+.adminV3Workspace .clientCard {
+  min-height: 168px !important;
+  padding: 18px !important;
+  border-radius: 26px !important;
+}
+
+/* ÃÂ¢ÃÂµÃÂºÃ‘ÂÃ‘â€š ÃÂ²ÃÂ½Ã‘Æ’Ã‘â€šÃ‘â‚¬ÃÂ¸ ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¾ÃÂ² Ã¢â‚¬â€ ÃÂ°ÃÂºÃÂºÃ‘Æ’Ã‘â‚¬ÃÂ°Ã‘â€šÃÂ½ÃÂµÃÂµ ÃÂ¿ÃÂ¾ ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€šÃÂ¸ÃÂºÃÂ°ÃÂ»ÃÂ¸ */
+.adminDashboardPage .adminStatCard strong,
+.adminV3Dashboard .adminStatCard strong,
+.adminV3Workspace .adminStatCard strong {
+  line-height: 1.05 !important;
+}
+
+.adminDashboardPage .adminStatCard span,
+.adminV3Dashboard .adminStatCard span,
+.adminV3Workspace .adminStatCard span {
+  line-height: 1.25 !important;
+}
+
+/* Mobile tuning */
+@media (max-width: 700px) {
+  .adminDashboardPage .adminV3KpiGrid > *,
+  .adminDashboardPage .adminStatsGrid > *,
+  .adminDashboardPage .adminStatCard,
+  .adminV3Dashboard .adminV3KpiGrid > *,
+  .adminV3Dashboard .adminStatsGrid > *,
+  .adminV3Dashboard .adminStatCard,
+  .adminV3Workspace .adminV3KpiGrid > *,
+  .adminV3Workspace .adminStatsGrid > *,
+  .adminV3Workspace .adminStatCard {
+    min-height: 104px !important;
+    padding: 16px 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .adminDashboardPage .adminPanelCard,
+  .adminDashboardPage .adminV3Panel,
+  .adminDashboardPage .adminV3ProfileCard,
+  .adminV3Dashboard .adminPanelCard,
+  .adminV3Dashboard .adminV3Panel,
+  .adminV3Dashboard .adminV3ProfileCard,
+  .adminV3Workspace .adminPanelCard,
+  .adminV3Workspace .adminV3Panel,
+  .adminV3Workspace .adminV3ProfileCard,
+  .adminDashboardPage .adminClientCard,
+  .adminDashboardPage .adminUserCard,
+  .adminDashboardPage .clientCard,
+  .adminV3Dashboard .adminClientCard,
+  .adminV3Dashboard .adminUserCard,
+  .adminV3Dashboard .clientCard,
+  .adminV3Workspace .adminClientCard,
+  .adminV3Workspace .adminUserCard,
+  .adminV3Workspace .clientCard {
+    min-height: 156px !important;
+    padding: 16px !important;
+    border-radius: 24px !important;
+  }
+}
+
