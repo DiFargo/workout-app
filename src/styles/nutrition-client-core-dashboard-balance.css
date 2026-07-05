@@ -1,0 +1,149 @@
+/* === MAIN DASHBOARD BALANCE V312 === */
+.profileDashboardPage.clientCorePageMain .appVersionBadge {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: rgba(222, 229, 218, 0.42) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  border-color: rgba(151, 184, 74, 0.18) !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.025) !important;
+  box-shadow: none !important;
+  opacity: 0.68 !important;
+  font-size: 15px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileCabinetSection {
+  padding: 12px !important;
+  gap: 9px !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+  border-color: rgba(145, 173, 78, 0.2) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.008)),
+    rgba(7, 14, 8, 0.72) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileCabinetSection input,
+.profileDashboardPage.clientCorePageMain .profileCabinetSection textarea,
+.profileDashboardPage.clientCorePageMain .profileCabinetSection [contenteditable="true"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiHero {
+  min-height: 76px !important;
+  padding: 4px 3px 6px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiHeroText h1 {
+  max-width: 230px !important;
+  margin: 0 !important;
+  font-size: 20px !important;
+  line-height: 1.12 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiStatsRow {
+  margin: 0 !important;
+  gap: 7px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
+  height: 68px !important;
+  min-height: 68px !important;
+  padding: 9px 6px !important;
+  border-color: rgba(255, 255, 255, 0.075) !important;
+  border-radius: 15px !important;
+  background: rgba(255, 255, 255, 0.018) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiMiniCard {
+  min-height: 76px !important;
+  padding: 11px 9px !important;
+  border-color: rgba(255, 255, 255, 0.075) !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.018) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight {
+  min-height: 0 !important;
+  padding: 14px !important;
+  justify-content: center !important;
+  gap: 14px !important;
+  border-color: rgba(145, 173, 78, 0.18) !important;
+  border-radius: 19px !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(132, 169, 56, 0.08), transparent 45%),
+    rgba(255, 255, 255, 0.014) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle {
+  min-height: 0 !important;
+  flex: 0 0 auto !important;
+  padding: 0 !important;
+  cursor: default !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle h2 {
+  margin: 6px 0 5px !important;
+  font-size: 19px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle p {
+  max-width: 280px !important;
+  margin: 0 !important;
+  color: rgba(226, 231, 222, 0.57) !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview {
+  margin: 0 !important;
+  flex-wrap: nowrap !important;
+  gap: 7px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview span {
+  min-height: 28px !important;
+  padding: 6px 9px !important;
+  border-color: rgba(255, 255, 255, 0.075) !important;
+  background: rgba(255, 255, 255, 0.025) !important;
+  font-size: 9px !important;
+  white-space: nowrap !important;
+}
+
+@media (max-height: 800px) {
+  .profileDashboardPage.clientCorePageMain .profileCabinetSection {
+    gap: 7px !important;
+  }
+
+  .profileDashboardPage.clientCorePageMain .profileAiHero {
+    min-height: 68px !important;
+  }
+
+  .profileDashboardPage.clientCorePageMain .profileAiHeroText h1 {
+    font-size: 18px !important;
+  }
+
+  .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
+    height: 62px !important;
+    min-height: 62px !important;
+  }
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight {
+    padding: 11px !important;
+    gap: 9px !important;
+  }
+}
+

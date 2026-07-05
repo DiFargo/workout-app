@@ -1,0 +1,95 @@
+/* Cabinet */
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetSection {
+  height: calc(100% - 54px) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHero {
+  box-sizing: border-box !important;
+  flex: 0 0 90px !important;
+  min-height: 90px !important;
+  padding: 12px 14px !important;
+  grid-template-columns: 62px minmax(0, 1fr) !important;
+  gap: 13px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.026) !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHero::after {
+  content: "â€º";
+  align-self: center;
+  color: rgba(237, 241, 235, 0.58);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHero {
+  grid-template-columns: 62px minmax(0, 1fr) 14px !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatarWrap,
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatar {
+  width: 60px !important;
+  height: 60px !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatar {
+  border-radius: 50% !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatarRing {
+  display: none !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHeroText h1 {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  line-height: 1.18 !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview {
+  flex: 0 0 auto !important;
+  margin-top: 10px !important;
+  grid-template-rows: repeat(5, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 11px 14px !important;
+  grid-template-columns: 44px minmax(0, 1fr) 14px !important;
+  gap: 12px !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.026) !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardIcon {
+  width: 44px !important;
+  height: 44px !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-size: 28px !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText small {
+  color: rgba(230, 235, 227, 0.5) !important;
+  font-size: 9px !important;
+  font-weight: 500 !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText strong {
+  font-size: 17px !important;
+  font-weight: 650 !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText em {
+  color: rgba(230, 235, 227, 0.6) !important;
+  font-size: 10px !important;
+}
+

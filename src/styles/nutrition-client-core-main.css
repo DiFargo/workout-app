@@ -1,0 +1,247 @@
+/* Main */
+.profileDashboardPage.clientCorePageMain .appVersionBadge {
+  display: none !important;
+}
+
+.profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
+  top: 17px !important;
+  right: 20px !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  border-radius: 12px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .mainDashboardTitle {
+  padding-right: 44px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileCabinetSection {
+  height: calc(100% - 54px) !important;
+  padding: 0 !important;
+  gap: 9px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiHero {
+  box-sizing: border-box !important;
+  min-height: 82px !important;
+  padding: 10px 12px !important;
+  grid-template-columns: 58px minmax(0, 1fr) !important;
+  gap: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.026) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiAvatarWrap,
+.profileDashboardPage.clientCorePageMain .profileAiAvatar {
+  width: 56px !important;
+  height: 56px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiAvatar {
+  border-radius: 50% !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiAvatarRing {
+  display: none !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiHeroText h1 {
+  max-width: 250px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiStatsRow {
+  min-height: 76px !important;
+  padding: 8px 4px !important;
+  gap: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.024) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
+  position: relative !important;
+  height: 58px !important;
+  min-height: 58px !important;
+  padding: 6px 7px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiStatsRow > div:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 0;
+  bottom: 8px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.075);
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiStatsRow span,
+.profileDashboardPage.clientCorePageMain .profileAiMiniCard span {
+  color: rgba(225, 231, 222, 0.58) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
+  font-size: 18px !important;
+  font-weight: 750 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiSplitCards {
+  gap: 8px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiMiniCard {
+  min-height: 78px !important;
+  padding: 11px 10px !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.024) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiMiniCard strong {
+  font-size: 18px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight {
+  min-height: 158px !important;
+  flex: 0 0 158px !important;
+  padding: 14px !important;
+  justify-content: flex-start !important;
+  gap: 13px !important;
+  overflow: visible !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.024) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle h2 {
+  font-size: 18px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview span {
+  min-height: 28px !important;
+  border-radius: 999px !important;
+}
+
+.mainMeasurementSnapshot {
+  box-sizing: border-box;
+  min-height: 118px;
+  flex: 1 1 118px;
+  padding: 12px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.024);
+}
+
+.mainMeasurementSnapshotHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mainMeasurementSnapshotHeader > div,
+.mainMeasurementSnapshotHeader > strong {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mainMeasurementSnapshotHeader span {
+  color: #aee94d;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.mainMeasurementSnapshotHeader small {
+  color: rgba(229, 234, 226, 0.45);
+  font-size: 9px;
+}
+
+.mainMeasurementSnapshotHeader strong {
+  align-items: flex-end;
+  color: #fff;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.mainMeasurementSnapshotHeader em {
+  color: #aee94d;
+  font-size: 9px;
+  font-style: normal;
+}
+
+.mainMeasurementChart {
+  margin-top: 5px;
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainMeasurementChart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 58px;
+  flex: 1 1 auto;
+  overflow: visible;
+}
+
+.mainMeasurementChart line {
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 1;
+}
+
+.mainMeasurementChart polyline {
+  fill: none;
+  stroke: #9fdc3d;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 5px rgba(159, 220, 61, 0.24));
+}
+
+.mainMeasurementChart circle {
+  fill: #b6ed56;
+  stroke: #243516;
+  stroke-width: 2;
+}
+
+.mainMeasurementSnapshot.emptyTrend {
+  flex: 1 1 126px;
+  min-height: 126px;
+  max-height: 220px;
+}
+
+.mainMeasurementEmpty {
+  box-sizing: border-box;
+  min-height: 58px;
+  flex: 1 1 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(157, 205, 67, 0.16);
+  border-radius: 13px;
+  background: rgba(157, 205, 67, 0.025);
+  color: rgba(229, 235, 226, 0.48);
+  font-size: 10px;
+  line-height: 1.35;
+  text-align: center;
+}
+

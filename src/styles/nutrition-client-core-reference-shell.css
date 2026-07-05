@@ -1,0 +1,115 @@
+/* === REFERENCE CLIENT SCREENS V314 === */
+.clientCorePage {
+  --client-page-title-size: 27px;
+  --client-card-title-size: 19px;
+  width: min(410px, calc(100vw - 4px)) !important;
+  max-width: 410px !important;
+  height: calc(100dvh - 4px) !important;
+  min-height: calc(100dvh - 4px) !important;
+  max-height: calc(100dvh - 4px) !important;
+  margin: 2px auto !important;
+  padding: 20px 20px 94px !important;
+  border-color: rgba(151, 184, 74, 0.34) !important;
+  border-radius: 16px !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(100, 138, 45, 0.08), transparent 27%),
+    linear-gradient(180deg, #050d08 0%, #020805 100%) !important;
+  box-shadow:
+    0 22px 64px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.02) !important;
+}
+
+.clientCorePage .clientCorePageTitle {
+  min-height: 46px !important;
+  margin: 0 0 8px !important;
+  justify-content: flex-start !important;
+  font-size: var(--client-page-title-size) !important;
+  font-weight: 800 !important;
+  line-height: 1.05 !important;
+  text-align: left !important;
+}
+
+.profileBottomTabBar,
+.individualWorkoutMenuBar {
+  box-sizing: border-box !important;
+  width: min(394px, calc(100vw - 16px)) !important;
+  max-width: 394px !important;
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+  bottom: max(6px, env(safe-area-inset-bottom)) !important;
+  padding: 5px 6px !important;
+  gap: 3px !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  border-radius: 16px !important;
+  background: rgba(12, 20, 14, 0.97) !important;
+  box-shadow:
+    0 -12px 32px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+.mainDashboardPage .mainMenuBottomBar.profileBottomTabBar {
+  bottom: max(16px, calc(env(safe-area-inset-bottom) + 10px)) !important;
+}
+
+.profileBottomTabBar > button,
+.individualWorkoutMenuBar > button {
+  height: 68px !important;
+  min-height: 68px !important;
+  max-height: 68px !important;
+  padding: 6px 2px 5px !important;
+  border-radius: 13px !important;
+  color: rgba(232, 237, 230, 0.62) !important;
+}
+
+.profileBottomTabBar > button span,
+.individualWorkoutMenuBar > button span {
+  height: 31px !important;
+  min-height: 31px !important;
+  max-height: 31px !important;
+  font-size: 26px !important;
+  line-height: 31px !important;
+  filter: grayscale(1) saturate(0) opacity(0.78) !important;
+}
+
+.profileBottomTabBar > button strong,
+.individualWorkoutMenuBar > button strong {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+.profileBottomTabBar > button.active,
+.individualWorkoutMenuBar > button.active {
+  border-color: transparent !important;
+  background: rgba(143, 188, 54, 0.055) !important;
+  color: #aee94d !important;
+}
+
+.profileBottomTabBar > button.active span,
+.individualWorkoutMenuBar > button.active span {
+  filter: none !important;
+}
+
+.trainerRoleBottomBar {
+  border-color: rgba(102, 190, 173, 0.14) !important;
+  background: linear-gradient(180deg, rgba(13, 28, 24, 0.98), rgba(8, 17, 15, 0.99)) !important;
+}
+
+.trainerRoleBottomBar > button.active {
+  background: rgba(78, 181, 155, 0.09) !important;
+  color: #80dfc2 !important;
+}
+
+.adminV3Nav.adminV3BottomBar.trainerRoleWorkspaceBar button.active {
+  border-color: rgba(102, 190, 173, 0.2) !important;
+  background: rgba(78, 181, 155, 0.11) !important;
+  color: #80dfc2 !important;
+}
+
+.profileBottomTabBar > button:focus,
+.profileBottomTabBar > button:focus-visible,
+.individualWorkoutMenuBar > button:focus,
+.individualWorkoutMenuBar > button:focus-visible {
+  outline: none !important;
+}
+

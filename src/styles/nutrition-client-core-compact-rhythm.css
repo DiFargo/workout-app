@@ -1,0 +1,64 @@
+/* === NUTRITION COMPACT RHYTHM V311 === */
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealList {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  flex: 0 0 auto !important;
+  grid-template-rows: repeat(4, 90px) !important;
+  grid-auto-rows: unset !important;
+  gap: 8px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealCard {
+  height: 90px !important;
+  min-height: 90px !important;
+  max-height: 90px !important;
+  padding: 9px 12px !important;
+  border-color: rgba(255, 255, 255, 0.085) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.032), rgba(255, 255, 255, 0.016)),
+    rgba(8, 15, 9, 0.78) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealMain {
+  height: 70px !important;
+  min-height: 70px !important;
+  align-items: center !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealTitle strong {
+  max-width: 100% !important;
+  font-size: clamp(16px, 4.5vw, 18px) !important;
+  line-height: 1.08 !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealTitle span,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealKcal span {
+  font-size: 9px !important;
+  line-height: 1.1 !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealKcal strong {
+  font-size: 14px !important;
+}
+
+@media (max-height: 800px) {
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealList {
+    grid-template-rows: repeat(4, 84px) !important;
+    gap: 7px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealCard {
+    height: 84px !important;
+    min-height: 84px !important;
+    max-height: 84px !important;
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealMain {
+    height: 68px !important;
+    min-height: 68px !important;
+  }
+}
+

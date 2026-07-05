@@ -1,0 +1,378 @@
+/* Individual workout plan */
+.clientCorePageWorkout {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 20px 20px 94px !important;
+}
+
+.clientCorePageWorkout .workoutSelectHero {
+  flex: 0 0 66px !important;
+  min-height: 66px !important;
+  margin: 0 0 8px !important;
+}
+
+.clientCorePageWorkout .workoutSelectTitle {
+  min-height: 62px !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  text-align: left !important;
+}
+
+.clientCorePageWorkout .workoutSelectTitle span,
+.clientCorePageWorkout .workoutSelectTitle strong {
+  font-size: 27px !important;
+  line-height: 0.98 !important;
+  text-align: left !important;
+}
+
+.clientCorePageWorkout .individualWorkoutDeck {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin-bottom: 30px !important;
+  flex: 1 1 auto !important;
+}
+
+.clientCorePageWorkout .individualWorkoutCardPro {
+  position: relative !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-rows: 38px minmax(0, 1fr) !important;
+  gap: 10px !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.clientCorePageWorkout .individualWorkoutProTop {
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 !important;
+  align-items: center !important;
+}
+
+.clientCorePageWorkout .individualWorkoutNextBadge,
+.clientCorePageWorkout .individualWorkoutProgressBadge,
+.clientCorePageWorkout .individualWorkoutCompletedBadge,
+.clientCorePageWorkout .individualWorkoutWeek {
+  min-height: 34px !important;
+  padding: 8px 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(239, 243, 236, 0.72) !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+}
+
+.clientCorePageWorkout .individualWorkoutWeek {
+  justify-self: end !important;
+}
+
+.clientCorePageWorkout .individualWorkoutProBody {
+  position: relative !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 24px 18px 96px !important;
+  display: block !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(151, 184, 74, 0.24) !important;
+  border-radius: 24px !important;
+  background: #071009 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.025),
+    0 14px 30px rgba(0, 0, 0, 0.24) !important;
+}
+
+.clientCorePageWorkout .individualWorkoutProBody::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(4, 10, 6, 0.97) 0%, rgba(4, 10, 6, 0.88) 37%, rgba(4, 10, 6, 0.3) 68%, rgba(4, 10, 6, 0.05) 100%),
+    linear-gradient(0deg, rgba(3, 8, 5, 0.82) 0%, transparent 44%);
+}
+
+.clientCorePageWorkout .individualWorkoutProImage {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #071009 !important;
+}
+
+.clientCorePageWorkout .individualWorkoutProImage img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center 45% !important;
+  background: transparent !important;
+}
+
+.clientCorePageWorkout .individualWorkoutProInfo {
+  position: relative !important;
+  z-index: 2 !important;
+  width: 58% !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.clientCorePageWorkout .individualWorkoutTitle {
+  max-height: 2.2em !important;
+  font-size: 27px !important;
+  font-weight: 750 !important;
+  line-height: 1.05 !important;
+}
+
+.clientCorePageWorkout .individualWorkoutAccentLine {
+  width: 58px !important;
+  height: 4px !important;
+  margin: 13px 0 18px !important;
+  border-radius: 999px !important;
+}
+
+.clientCorePageWorkout .individualWorkoutStats {
+  gap: 10px !important;
+}
+
+.clientCorePageWorkout .individualWorkoutStats > span {
+  min-height: 30px !important;
+  color: rgba(247, 249, 245, 0.9) !important;
+  font-size: 12px !important;
+}
+
+.clientCorePageWorkout .individualWorkoutStats b {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+}
+
+.clientCorePageWorkout .individualWorkoutCardStartButton {
+  position: absolute !important;
+  left: 18px !important;
+  right: 18px !important;
+  bottom: 18px !important;
+  z-index: 4 !important;
+  width: auto !important;
+  height: 62px !important;
+  min-height: 62px !important;
+  margin: 0 !important;
+  border-radius: 14px !important;
+  background: linear-gradient(180deg, #b7ea58 0%, #99d13d 100%) !important;
+  color: #071006 !important;
+  box-shadow: 0 12px 24px rgba(126, 173, 49, 0.2) !important;
+  font-size: 17px !important;
+  font-weight: 850 !important;
+}
+
+.clientCorePageWorkout > .individualWorkoutNav {
+  display: none !important;
+}
+
+.clientCorePageWorkout .individualWorkoutSwipeHint,
+.clientCorePageWorkout .individualWorkoutSwipeAffordance {
+  color: rgba(234, 239, 231, 0.35) !important;
+  font-size: 9px !important;
+}
+
+.clientCorePageWorkout .individualWorkoutBottomProgress {
+  left: 10px !important;
+  right: 10px !important;
+  bottom: 86px !important;
+  padding: 0 4px 8px !important;
+  color: rgba(236, 240, 233, 0.62) !important;
+  font-size: 10px !important;
+}
+
+.clientCorePageWorkout .individualWorkoutBottomProgress::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 2px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #9fdc3d 0 8%, rgba(255, 255, 255, 0.08) 8% 100%);
+}
+
+@media (max-height: 800px) {
+  .clientCorePage {
+    padding-top: 14px !important;
+  }
+
+  .clientCorePage .clientCorePageTitle {
+    min-height: 42px !important;
+    margin-bottom: 6px !important;
+    font-size: 25px !important;
+  }
+
+  .profileDashboardPage.clientCorePageMain .profileCabinetSection,
+  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetSection {
+    height: calc(100% - 48px) !important;
+  }
+
+  .profileDashboardPage.clientCorePageMain .profileAiHero {
+    min-height: 72px !important;
+  }
+
+  .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
+    min-height: 68px !important;
+  }
+
+  .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
+    height: 52px !important;
+    min-height: 52px !important;
+  }
+
+  .profileDashboardPage.clientCorePageMain .profileAiMiniCard {
+    min-height: 68px !important;
+  }
+
+  .profileDashboardPage.clientCorePageMain .profileAiCoachInsight {
+    min-height: 144px !important;
+    flex-basis: 144px !important;
+    padding: 11px !important;
+    gap: 9px !important;
+  }
+
+  .mainMeasurementSnapshot {
+    min-height: 104px;
+    padding-top: 9px;
+  }
+
+  .mainMeasurementChart svg {
+    height: 48px;
+  }
+
+  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHero {
+    flex-basis: 82px !important;
+    min-height: 82px !important;
+  }
+
+  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview {
+    margin-top: 8px !important;
+    grid-template-rows: repeat(5, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+
+  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
+    padding-top: 14px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+    height: 42px !important;
+    min-height: 42px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4,
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 {
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCard {
+    height: 78px !important;
+    min-height: 78px !important;
+    max-height: 78px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealList {
+    grid-template-rows: repeat(4, 72px) !important;
+    gap: 7px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealCard {
+    height: 72px !important;
+    min-height: 72px !important;
+    max-height: 72px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealMain {
+    height: 54px !important;
+    min-height: 54px !important;
+  }
+
+  .clientCorePageWorkout {
+    padding-top: 14px !important;
+  }
+
+  .clientCorePageWorkout .workoutSelectHero {
+    flex-basis: 58px !important;
+    min-height: 58px !important;
+  }
+
+  .clientCorePageWorkout .workoutSelectTitle {
+    min-height: 56px !important;
+  }
+
+  .clientCorePageWorkout .workoutSelectTitle span,
+  .clientCorePageWorkout .workoutSelectTitle strong {
+    font-size: 25px !important;
+  }
+
+  .clientCorePageWorkout .individualWorkoutCardPro {
+    grid-template-rows: 34px minmax(0, 1fr) !important;
+    gap: 7px !important;
+  }
+
+  .clientCorePageWorkout .individualWorkoutProTop {
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+
+  .clientCorePageWorkout .individualWorkoutProBody {
+    padding-top: 18px !important;
+  }
+
+  .clientCorePageWorkout .individualWorkoutTitle {
+    font-size: 24px !important;
+  }
+
+  .clientCorePageWorkout .individualWorkoutAccentLine {
+    margin: 10px 0 13px !important;
+  }
+}
+
+@media (max-width: 370px) {
+  .clientCorePage,
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
+  .clientCorePageWorkout {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .profileBottomTabBar > button strong,
+  .individualWorkoutMenuBar > button strong {
+    font-size: 10px !important;
+  }
+
+  .clientCorePageWorkout .individualWorkoutProInfo {
+    width: 62% !important;
+  }
+
+  .clientCorePageWorkout .individualWorkoutTitle {
+    font-size: 22px !important;
+  }
+}
+
