@@ -1,0 +1,505 @@
+/* v1.74 primary client visual contract: shared rhythm for main, workouts, nutrition, cabinet. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root {
+    background:
+      radial-gradient(circle at 50% -8%, rgba(109, 77, 248, 0.07), transparent 34%),
+      linear-gradient(180deg, #fbfbff 0%, #f6f7fc 100%) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage {
+    --client-page-x: 22px;
+    --client-page-title-top: 56px;
+    --client-page-title-height: 54px;
+    --client-page-title-size: 31px;
+    --client-page-title-color: #5f5744;
+    --client-page-card-radius: 22px;
+    min-height: 100dvh !important;
+    box-sizing: border-box !important;
+    padding-right: var(--client-page-x) !important;
+    padding-left: var(--client-page-x) !important;
+    padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
+    overflow-x: hidden !important;
+    background:
+      radial-gradient(circle at 50% -8%, rgba(109, 77, 248, 0.07), transparent 34%),
+      linear-gradient(180deg, #fbfbff 0%, #f6f7fc 100%) !important;
+    color: #171923 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::before,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::before,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::before,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage::before,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::after,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::after,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::after,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage::after,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage::after {
+    content: "" !important;
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 70 !important;
+    height: calc(118px + env(safe-area-inset-bottom)) !important;
+    pointer-events: none !important;
+    background: linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f6f7fc 25%, #f6f7fc 100%) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePage .appVersionBadge.clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePage .clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .appVersionBadge.clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge {
+    position: absolute !important;
+    top: 18px !important;
+    left: var(--client-page-x) !important;
+    right: auto !important;
+    width: auto !important;
+    min-width: 44px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    margin: 0 !important;
+    padding: 0 9px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid #e3e6ef !important;
+    border-radius: 999px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 8px 20px rgba(55, 64, 112, 0.07) !important;
+    color: #8a90a0 !important;
+    -webkit-text-fill-color: #8a90a0 !important;
+    font-size: 11px !important;
+    font-weight: 850 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    opacity: 1 !important;
+    z-index: 30 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle {
+    width: calc(100% - 116px) !important;
+    max-width: calc(100% - 116px) !important;
+    height: var(--client-page-title-height) !important;
+    min-height: var(--client-page-title-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    color: var(--client-page-title-color) !important;
+    -webkit-text-fill-color: var(--client-page-title-color) !important;
+    font-size: var(--client-page-title-size) !important;
+    font-weight: 900 !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+    text-align: left !important;
+    text-shadow: none !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero {
+    position: relative !important;
+    height: var(--client-page-title-height) !important;
+    min-height: var(--client-page-title-height) !important;
+    margin: var(--client-page-title-top) 0 16px !important;
+    padding: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle {
+    margin-right: 116px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow {
+    width: 100% !important;
+    max-width: none !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 52px !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconActions,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutHeaderActions {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    width: auto !important;
+    height: 52px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileTrainerNotificationsButton,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconButton,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionQuickActionExact,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutHeaderActions button {
+    box-sizing: border-box !important;
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    border: 1px solid #e0e4ef !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    box-shadow: 0 14px 34px rgba(55, 64, 112, 0.11) !important;
+    color: #5f5744 !important;
+    -webkit-text-fill-color: #5f5744 !important;
+    font-size: 21px !important;
+    line-height: 1 !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
+    position: absolute !important;
+    top: var(--client-page-title-top) !important;
+    right: var(--client-page-x) !important;
+    z-index: 35 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileCabinetSection {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 92px !important;
+    margin: 0 0 0 !important;
+    padding: 18px !important;
+    display: grid !important;
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 18px !important;
+    border: 1px solid #e0e4ef !important;
+    border-radius: var(--client-page-card-radius) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    box-shadow: 0 14px 34px rgba(55, 64, 112, 0.1) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiAvatarWrap,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiAvatar,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiAvatarWrap,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiAvatar {
+    width: 72px !important;
+    min-width: 72px !important;
+    height: 72px !important;
+    min-height: 72px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHeroText h1,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHeroText h1 {
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    line-height: 1.12 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 78px !important;
+    margin: 0 0 12px !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    border: 1px solid #e0e4ef !important;
+    border-top: 0 !important;
+    border-radius: 0 0 var(--client-page-card-radius) var(--client-page-card-radius) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    box-shadow: 0 14px 34px rgba(55, 64, 112, 0.1) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero + .profileAiStatsRow {
+    margin-top: -1px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
+    min-width: 0 !important;
+    min-height: 78px !important;
+    padding: 10px 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    text-align: center !important;
+    border-right: 1px solid #e0e4ef !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiSplitCards {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 0 12px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard {
+    min-height: 104px !important;
+    padding: 16px 12px !important;
+    border: 1px solid #e0e4ef !important;
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    box-shadow: 0 14px 34px rgba(55, 64, 112, 0.1) !important;
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard span {
+    color: #7f8798 !important;
+    -webkit-text-fill-color: #7f8798 !important;
+    font-size: 12px !important;
+    font-weight: 750 !important;
+    line-height: 1.25 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard strong {
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+    font-size: 23px !important;
+    font-weight: 900 !important;
+    line-height: 1.05 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 154px !important;
+    margin: 0 0 14px !important;
+    padding: 18px !important;
+    border: 1px solid #e0e4ef !important;
+    border-radius: var(--client-page-card-radius) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    box-shadow: 0 14px 34px rgba(55, 64, 112, 0.1) !important;
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMeasurementSnapshot,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetActionGridItem,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCard,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopCard,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
+    border: 1px solid #e0e4ef !important;
+    border-radius: var(--client-page-card-radius) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    box-shadow: 0 14px 34px rgba(55, 64, 112, 0.1) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutDeck {
+    width: 100% !important;
+    max-width: none !important;
+    margin-top: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProBody {
+    border-radius: 22px !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel {
+    position: fixed !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: max(10px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+    z-index: 90 !important;
+    width: min(380px, calc(100vw - 20px)) !important;
+    max-width: 380px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: translateX(-50%) !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomProgress {
+    width: 100% !important;
+    min-height: 18px !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    color: #7f8798 !important;
+    -webkit-text-fill-color: #7f8798 !important;
+    font-size: 12px !important;
+    font-weight: 850 !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel .individualWorkoutMenuBar,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav {
+    position: fixed !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: max(10px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+    z-index: 90 !important;
+    width: min(380px, calc(100vw - 20px)) !important;
+    max-width: 380px !important;
+    height: 80px !important;
+    min-height: 80px !important;
+    max-height: 80px !important;
+    margin: 0 !important;
+    padding: 6px !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+    border: 1px solid #dce2ed !important;
+    border-radius: 20px !important;
+    background: rgba(248, 251, 255, 0.94) !important;
+    box-shadow:
+      0 18px 44px rgba(55, 64, 112, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    transform: translateX(-50%) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel .individualWorkoutMenuBar {
+    position: relative !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button,
+  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav > button,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel .individualWorkoutMenuBar > button,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button {
+    min-width: 0 !important;
+    width: 100% !important;
+    height: 68px !important;
+    min-height: 68px !important;
+    max-height: 68px !important;
+    margin: 0 !important;
+    padding: 5px 2px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    border: 1px solid transparent !important;
+    border-radius: 15px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #7b8396 !important;
+    -webkit-text-fill-color: #7b8396 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button span,
+  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav > button span,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel .individualWorkoutMenuBar > button span,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button span {
+    width: auto !important;
+    min-width: 0 !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: 27px !important;
+    line-height: 1 !important;
+    filter: saturate(0.82) opacity(0.78) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel .individualWorkoutMenuBar > button strong,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button strong {
+    max-width: 100% !important;
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-size: 12px !important;
+    font-weight: 850 !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button.active,
+  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav > button.active,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel .individualWorkoutMenuBar > button.active,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button.active {
+    border-color: #ded8ff !important;
+    background: #f0edff !important;
+    color: #4f35e8 !important;
+    -webkit-text-fill-color: #4f35e8 !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button.active span,
+  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav > button.active span,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel .individualWorkoutMenuBar > button.active span,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button.active span {
+    filter: saturate(1) opacity(1) !important;
+  }
+}
+

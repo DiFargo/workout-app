@@ -1,0 +1,50 @@
+/* v1.76c final alignment correction after measuring rendered mobile boxes. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
+    width: 100% !important;
+    height: var(--client-title-h) !important;
+    min-height: var(--client-title-h) !important;
+    margin: 38px 0 12px !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 12px !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconActions {
+    position: static !important;
+    inset: auto !important;
+    justify-self: end !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    width: auto !important;
+    height: var(--client-action) !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour,
+  html:root[data-app-theme="warm-light"] body #root .foodProductActionBar,
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar {
+    left: max(10px, env(safe-area-inset-left)) !important;
+    right: max(10px, env(safe-area-inset-right)) !important;
+    bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    max-width: none !important;
+    height: 84px !important;
+    min-height: 84px !important;
+    max-height: 84px !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+}
+
