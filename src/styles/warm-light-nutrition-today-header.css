@@ -1,0 +1,173 @@
+/* LOADING GYM COLOR FIX â€” USER YELLOW SAMPLE */
+:root[data-app-theme="warm-light"] .splashLogo {
+  color: #f4e064 !important;
+  text-shadow:
+    0 10px 26px rgba(120, 92, 20, 0.16),
+    0 0 18px rgba(244, 224, 100, 0.18) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashProgress span,
+:root[data-app-theme="warm-light"] .splashDots i {
+  background: #f4e064 !important;
+}
+
+:root[data-app-theme="warm-light"] .splashProgress span {
+  box-shadow: 0 0 18px rgba(244, 224, 100, 0.45) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashMark {
+  background:
+    linear-gradient(180deg, rgba(244, 224, 100, 0.34), rgba(244, 224, 100, 0.14)) !important;
+}
+
+/* CLEAN TODAY HEADER â€” WARM LIGHT ONLY */
+
+:root[data-app-theme="warm-light"] .fatWeekRow,
+:root[data-app-theme="warm-light"] .fatDayCell {
+  border: none !important;
+  box-shadow: none !important;
+  background: rgba(255,252,237,0.42) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatDayCell.active,
+:root[data-app-theme="warm-light"] .fatDayCell.done,
+:root[data-app-theme="warm-light"] .fatDayCell.selected {
+  background: linear-gradient(180deg,#f4e064 0%,#d8bd48 100%) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatWeekRow::before,
+:root[data-app-theme="warm-light"] .fatWeekRow::after {
+  display:none !important;
+}
+
+/* REAL TODAY HEADER FIX â€” WARM LIGHT ONLY â€” 2026-05-18
+   Uses actual JSX classes:
+   .nutritionHeroV4 / .nutritionHeroTitleV4 / .nutritionWeekV4 / .nutritionDayV4
+*/
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroV4 {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  padding-top: 20px !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroV4::before,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroV4::after,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4::before,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4::after,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionWeekV4::before,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionWeekV4::after {
+  display: none !important;
+  content: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  margin-bottom: 14px !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1 {
+  color: #211b12 !important;
+  text-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionStreakV4 {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionsExact {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionsDivider {
+  background: rgba(72, 58, 29, 0.10) !important;
+  width: 1px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* WARM LIGHT NUTRITION HEADER FIX â€” visible polish 2026-05-18
+   Only light theme. Dark style is not touched.
+*/
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionWeekV4 {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) > .fatSearchTopPremium {
+  height: 101px !important;
+  min-height: 101px !important;
+}
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) > .fatSearchTopPremium {
+  display: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4 {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  border-radius: 0 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4::before,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4::after {
+  display: none !important;
+  content: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4 span {
+  background: rgba(121, 109, 77, 0.26) !important;
+  color: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4.selected,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4.today.selected,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4.hasFood.selected {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4.selected span,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4.today.selected span,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4.hasFood span {
+  background: #f4e064 !important;
+  color: #241d14 !important;
+  border: 0 !important;
+  box-shadow:
+    0 0 0 8px rgba(244, 224, 100, 0.20),
+    0 8px 18px rgba(151, 119, 35, 0.16) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4 small {
+  color: rgba(33, 27, 18, 0.62) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4.selected small,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4.today.selected small {
+  color: rgba(33, 27, 18, 0.72) !important;
+}
+

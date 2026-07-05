@@ -1,0 +1,99 @@
+/* SUMMARY DONUT SAME AS DARK THEME â€” WARM LIGHT ONLY */
+:root[data-app-theme="warm-light"] .summaryDonut {
+  background:
+    conic-gradient(
+      #67d8ff 0deg calc(var(--carbs-angle, 120deg)),
+      #f2de7b calc(var(--carbs-angle, 120deg)) calc(var(--fat-angle, 240deg)),
+      #ff6b7d calc(var(--fat-angle, 240deg)) 360deg
+    ) !important;
+
+  box-shadow:
+    0 10px 24px rgba(88, 68, 24, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.42) !important;
+}
+
+:root[data-app-theme="warm-light"] .summaryDonut span {
+  background: #101010 !important;
+  border: 6px solid rgba(255,248,220,0.95) !important;
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,0.45),
+    0 2px 8px rgba(0,0,0,0.12) !important;
+}
+
+:root[data-app-theme="warm-light"] .summaryMacroLegend i.carbs {
+  background: #67d8ff !important;
+}
+
+:root[data-app-theme="warm-light"] .summaryMacroLegend i.fat {
+  background: #f2de7b !important;
+}
+
+:root[data-app-theme="warm-light"] .summaryMacroLegend i.protein {
+  background: #ff6b7d !important;
+}
+
+/* FIX SUMMARY DONUT VISIBILITY â€” WARM LIGHT ONLY */
+:root[data-app-theme="warm-light"] .summaryDonut {
+  width: 140px !important;
+  height: 140px !important;
+  border-radius: 50% !important;
+
+  background:
+    conic-gradient(
+      #67d8ff 0deg 165deg,
+      #f2de7b 165deg 320deg,
+      #ff6b7d 320deg 360deg
+    ) !important;
+
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* COMPACT SUMMARY DONUT â€” WARM LIGHT ONLY */
+
+:root[data-app-theme="warm-light"] .summaryDonut {
+  width: 88px !important;
+  height: 88px !important;
+  min-width: 88px !important;
+  min-height: 88px !important;
+  max-width: 88px !important;
+  max-height: 88px !important;
+
+  border-radius: 50% !important;
+  flex: 0 0 88px !important;
+
+  background:
+    conic-gradient(
+      #67d8ff 0deg 165deg,
+      #f2de7b 165deg 320deg,
+      #ff6b7d 320deg 360deg
+    ) !important;
+
+  position: relative !important;
+  overflow: hidden !important;
+
+  box-shadow:
+    0 8px 18px rgba(88, 68, 24, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.42) !important;
+}
+
+:root[data-app-theme="warm-light"] .summaryDonut span {
+  position: absolute !important;
+  inset: 22px !important;
+  width: auto !important;
+  height: auto !important;
+
+  display: block !important;
+  border-radius: 50% !important;
+
+  background:
+    linear-gradient(180deg, rgba(255,249,215,1) 0%, rgba(246,232,174,0.95) 100%) !important;
+
+  border: 0 !important;
+  box-shadow:
+    inset 0 1px 4px rgba(255,255,255,0.6),
+    0 2px 6px rgba(88,68,24,0.10) !important;
+
+  z-index: 2 !important;
+}
+

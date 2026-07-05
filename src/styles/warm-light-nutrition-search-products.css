@@ -1,0 +1,129 @@
+/* SEARCH ICON + MEAL TOGGLE CLEANUP â€” WARM LIGHT ONLY */
+:root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon {
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon::before,
+:root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon::after {
+  border-color: #5f5744 !important;
+  background: #5f5744 !important;
+  box-shadow: none !important;
+}
+
+/* if icon is drawn by mask/background */
+:root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* remove accent/background around expand arrow */
+:root[data-app-theme="warm-light"] .fatSecretPage .fatMealToggle,
+:root[data-app-theme="warm-light"] .fatSecretPage .mealToggleUnderCount {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage .fatMealToggle::before,
+:root[data-app-theme="warm-light"] .fatSecretPage .fatMealToggle::after,
+:root[data-app-theme="warm-light"] .fatSecretPage .mealToggleUnderCount::before,
+:root[data-app-theme="warm-light"] .fatSecretPage .mealToggleUnderCount::after {
+  display: none !important;
+  content: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ===== WARM LIGHT FINAL PRODUCT LIST FIX ===== */
+
+/* product rows slightly darker than parent meal block */
+:root[data-app-theme="warm-light"] .productRowExact,
+:root[data-app-theme="warm-light"] .fatFoodItem {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(232, 214, 120, 0.42) 0%,
+      rgba(223, 204, 104, 0.34) 100%
+    ) !important;
+
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* remove white square behind arrow */
+:root[data-app-theme="warm-light"] .productArrowExact,
+:root[data-app-theme="warm-light"] .fatFoodArrow {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  color: #5f5744 !important;
+}
+
+:root[data-app-theme="warm-light"] .productArrowExact::before,
+:root[data-app-theme="warm-light"] .productArrowExact::after,
+:root[data-app-theme="warm-light"] .fatFoodArrow::before,
+:root[data-app-theme="warm-light"] .fatFoodArrow::after {
+  display: none !important;
+  content: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* hollow search icon */
+
+/* FIX PRODUCT ROWS + HOLLOW SEARCH ICON */
+
+/* slightly darker than block, but warm yellow not orange */
+:root[data-app-theme="warm-light"] .productRowExact,
+:root[data-app-theme="warm-light"] .fatFoodItem {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(236, 222, 145, 0.82) 0%,
+      rgba(229, 214, 128, 0.74) 100%
+    ) !important;
+
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* hollow magnifier icon */
+
+/* fallback if icon font */
+
+/* WARM LIGHT â€” PRODUCT ROWS EXACT COLOR LIKE REFERENCE */
+:root[data-app-theme="warm-light"] .productRowExact,
+:root[data-app-theme="warm-light"] .fatFoodItem,
+:root[data-app-theme="warm-light"] .productSwipeShell .productRowExact {
+  background: linear-gradient(
+    180deg,
+    rgba(248, 238, 191, 0.98) 0%,
+    rgba(244, 232, 176, 0.96) 100%
+  ) !important;
+
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* remove extra white backgrounds around rows */
+:root[data-app-theme="warm-light"] .productSwipeShell,
+:root[data-app-theme="warm-light"] .fatMealItems {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* SEARCH ICON EXACT LIKE REFERENCE */
+
