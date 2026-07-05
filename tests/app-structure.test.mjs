@@ -662,7 +662,7 @@ test("client primary final CSS keeps bottom nav sizing in one owner", async () =
 });
 
 test("legacy bottom bars CSS keeps button shells in the final owner", async () => {
-  const source = await readText("src/styles/bottom-bars.css");
+  const source = await readCssWithImports("src/styles/bottom-bars.css");
   const normalizeStart = source.indexOf("V854: hard normalize all bottom navigation bars");
   const finalStart = source.indexOf("V855: final one-pixel strict baseline", normalizeStart);
   const normalizeBlock = source.slice(normalizeStart, finalStart);

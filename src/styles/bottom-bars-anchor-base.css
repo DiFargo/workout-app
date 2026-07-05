@@ -1,0 +1,105 @@
+/* === V853: unified bottom bar anchor across pages (main / nutrition / cabinet / training) === */
+html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .nutritionBottomTabBar,
+html body #root .fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar,
+html body #root .individualWorkoutMenuBar,
+html body #root .adminV3Nav.adminV3BottomBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .mainDashboardPage .trainerRoleBottomBar,
+html body #root .mainTabbedProfileWrapper .mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  margin-inline: auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  z-index: 12000 !important;
+}
+
+@media (max-width: 430px) {
+  html body #root .mainMenuBottomBar.profileBottomTabBar,
+  html body #root .fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar,
+  html body #root .nutritionBottomTabBar,
+  html body #root .individualWorkoutMenuBar,
+  html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar,
+  html body #root .workoutModeBottomBar,
+  html body #root .trainerRoleBottomBar,
+  html body #root .adminV3Nav.adminV3BottomBar,
+  html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+  html body #root .mainDashboardPage .trainerRoleBottomBar,
+  html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+  html body #root nav.trainerRoleBottomBar {
+    width: min(394px, calc(100vw - 20px)) !important;
+    max-width: 394px !important;
+    height: 80px !important;
+    min-height: 80px !important;
+    max-height: 80px !important;
+  }
+}
+
+/* === V854: hard normalize all bottom navigation bars so they stay visually identical === */
+html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .nutritionBottomTabBar,
+html body #root .fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar,
+html body #root .individualWorkoutMenuBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar,
+html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .mainDashboardPage .trainerRoleBottomBar,
+html body #root .mainTabbedProfileWrapper .mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar {
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  border-radius: 16px !important;
+  background: rgba(12, 20, 14, 0.97) !important;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button span,
+html body #root .nutritionBottomTabBar > button span,
+html body #root .individualWorkoutMenuBar > button span,
+html body #root .workoutModeBottomBar > button span,
+html body #root .trainerRoleBottomBar > button span,
+html body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavIcon,
+html body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavLabel,
+html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar > button span,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button span {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  max-height: 31px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 26px !important;
+  line-height: 31px !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+

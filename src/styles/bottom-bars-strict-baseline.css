@@ -1,0 +1,214 @@
+/* V855: final one-pixel strict baseline for all bottom bars across all pages. */
+html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .nutritionBottomTabBar,
+html body #root .fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar,
+html body #root .individualWorkoutMenuBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.trainerRoleWorkspaceBar,
+html body #root .adminV3Nav.adminV3BottomBar.trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.programEditorBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.workoutEditorBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.programsBottomBar,
+html body #root .trainerRoleWorkspaceBar,
+html body #root .programEditorBottomBar,
+html body #root .workoutEditorBottomBar,
+html body #root .programsBottomBar,
+html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .mainDashboardPage .trainerRoleBottomBar,
+html body #root .mainTabbedProfileWrapper .mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  margin-inline: auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  z-index: 12000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  border-radius: 16px !important;
+  background: rgba(12, 20, 14, 0.97) !important;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button,
+html body #root .nutritionBottomTabBar > button,
+html body #root .individualWorkoutMenuBar > button,
+html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar > button,
+html body #root .workoutModeBottomBar > button,
+html body #root .trainerRoleBottomBar > button,
+html body #root .adminV3Nav.adminV3BottomBar > button,
+html body #root .adminV3Nav.adminV3BottomBar .adminV3NavButton,
+html body #root .trainerRoleWorkspaceBar > button,
+html body #root .programEditorBottomBar > button,
+html body #root .workoutEditorBottomBar > button,
+html body #root .programsBottomBar > button,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button,
+html body #root .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar > button,
+html body #root .mainDashboardPage nav.trainerRoleBottomBar > button,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar > button,
+html body #root nav.trainerRoleBottomBar > button {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 68px !important;
+  min-height: 68px !important;
+  max-height: 68px !important;
+  margin: 0 !important;
+  padding: 6px 2px 5px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  border: 1px solid transparent !important;
+  border-radius: 13px !important;
+  background: transparent !important;
+  color: rgba(232, 237, 230, 0.62) !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button span,
+html body #root .nutritionBottomTabBar > button span,
+html body #root .individualWorkoutMenuBar > button span,
+html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar > button span,
+html body #root .workoutModeBottomBar > button span,
+html body #root .trainerRoleBottomBar > button span,
+html body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavIcon,
+html body #root .trainerRoleWorkspaceBar > button .adminV3NavIcon,
+html body #root .programEditorBottomBar > button .adminV3NavIcon,
+html body #root .workoutEditorBottomBar > button .adminV3NavIcon,
+html body #root .programsBottomBar > button .adminV3NavIcon,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button span {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  max-height: 31px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  transform: none !important;
+  font-size: 26px !important;
+  line-height: 31px !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button strong,
+html body #root .nutritionBottomTabBar > button strong,
+html body #root .individualWorkoutMenuBar > button strong,
+html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar > button strong,
+html body #root .workoutModeBottomBar > button strong,
+html body #root .trainerRoleBottomBar > button strong,
+html body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavLabel,
+html body #root .adminV3Nav.adminV3BottomBar > button > .adminV3NavLabel,
+html body #root .trainerRoleWorkspaceBar > button .adminV3NavLabel,
+html body #root .programEditorBottomBar > button .adminV3NavLabel,
+html body #root .workoutEditorBottomBar > button .adminV3NavLabel,
+html body #root .programsBottomBar > button .adminV3NavLabel,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button strong {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 16px !important;
+  height: 16px !important;
+  max-height: 16px !important;
+  margin: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  color: inherit !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 16px !important;
+  text-align: center !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  transform: none !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button.active,
+html body #root .nutritionBottomTabBar > button.active,
+html body #root .individualWorkoutMenuBar > button.active,
+html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar > button.active,
+html body #root .workoutModeBottomBar > button.active,
+html body #root .trainerRoleBottomBar > button.active,
+html body #root .adminV3Nav.adminV3BottomBar > button.active,
+html body #root .trainerRoleWorkspaceBar > button.active,
+html body #root .programEditorBottomBar > button.active,
+html body #root .workoutEditorBottomBar > button.active,
+html body #root .programsBottomBar > button.active,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button.active {
+  color: #f4f8f0 !important;
+}
+
+html body #root .adminV3Nav.adminV3BottomBar .adminV3NavIcon,
+html body #root .adminV3Nav.adminV3BottomBar .adminV3NavLabel,
+html body #root .trainerRoleWorkspaceBar .adminV3NavIcon,
+html body #root .trainerRoleWorkspaceBar .adminV3NavLabel,
+html body #root .programEditorBottomBar .adminV3NavIcon,
+html body #root .programEditorBottomBar .adminV3NavLabel,
+html body #root .workoutEditorBottomBar .adminV3NavIcon,
+html body #root .workoutEditorBottomBar .adminV3NavLabel,
+html body #root .programsBottomBar .adminV3NavIcon,
+html body #root .programsBottomBar .adminV3NavLabel {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+  color: inherit !important;
+  font-size: 20px !important;
+  line-height: 30px !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  max-height: 31px !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+@media (max-width: 430px) {
+  html body #root .mainMenuBottomBar.profileBottomTabBar,
+  html body #root .nutritionBottomTabBar,
+  html body #root .fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar,
+  html body #root .individualWorkoutMenuBar,
+  html body #root .workoutModeBottomBar,
+  html body #root .trainerRoleBottomBar,
+  html body #root .adminV3Nav.adminV3BottomBar,
+  html body #root .adminV3Nav.adminV3BottomBar.trainerRoleWorkspaceBar,
+  html body #root .adminV3Nav.adminV3BottomBar.trainerRoleBottomBar,
+  html body #root .adminV3Nav.adminV3BottomBar.programEditorBottomBar,
+  html body #root .adminV3Nav.adminV3BottomBar.workoutEditorBottomBar,
+  html body #root .adminV3Nav.adminV3BottomBar.programsBottomBar,
+  html body #root .trainerRoleWorkspaceBar,
+  html body #root .programEditorBottomBar,
+  html body #root .workoutEditorBottomBar,
+  html body #root .programsBottomBar,
+  html body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar,
+  html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+  html body #root .mainDashboardPage .trainerRoleBottomBar,
+  html body #root .mainTabbedProfileWrapper .mainMenuBottomBar.profileBottomTabBar,
+  html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+  html body #root nav.trainerRoleBottomBar {
+    width: min(394px, calc(100vw - 16px)) !important;
+  }
+}
+
