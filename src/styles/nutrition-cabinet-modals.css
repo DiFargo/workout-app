@@ -1,0 +1,262 @@
+/* === CABINET MEASUREMENTS MODAL V296 === */
+.cabinetMeasurementModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  padding:
+    max(16px, env(safe-area-inset-top))
+    16px
+    max(16px, env(safe-area-inset-bottom));
+  background: rgba(2, 5, 3, 0.76);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cabinetMeasurementModal {
+  box-sizing: border-box;
+  width: min(100%, 390px);
+  max-height: calc(100dvh - 32px);
+  padding: 18px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(181, 230, 85, 0.22);
+  border-radius: 24px;
+  background: linear-gradient(180deg, #182019 0%, #0d140f 100%);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.58);
+  scrollbar-width: none;
+}
+
+.cabinetMeasurementModal::-webkit-scrollbar {
+  display: none;
+}
+
+.cabinetMeasurementModalHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.cabinetMeasurementModalHead span,
+.cabinetMeasurementModalHead h2,
+.cabinetMeasurementModalHead small {
+  display: block;
+}
+
+.cabinetMeasurementModalHead span {
+  color: #b5e655;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.cabinetMeasurementModalHead h2 {
+  margin: 5px 0 2px;
+  color: #fff;
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.cabinetMeasurementModalHead small {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cabinetMeasurementModalHead button {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 23px;
+  line-height: 1;
+}
+
+.cabinetMeasurementModalSummary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 14px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.cabinetMeasurementModalSummary span {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(181, 230, 85, 0.3);
+  border-radius: 15px;
+  background: rgba(181, 230, 85, 0.07);
+  font-size: 23px;
+}
+
+.cabinetMeasurementModalSummary p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.cabinetMeasurementModalGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.cabinetMeasurementModalGrid div {
+  min-height: 68px;
+  box-sizing: border-box;
+  padding: 9px 6px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 14px;
+  background: rgba(4, 9, 6, 0.48);
+}
+
+.cabinetMeasurementModalGrid span,
+.cabinetMeasurementModalGrid strong,
+.cabinetMeasurementModalGrid small {
+  display: block;
+}
+
+.cabinetMeasurementModalGrid span {
+  min-height: 26px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.cabinetMeasurementModalGrid strong {
+  display: inline;
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.cabinetMeasurementModalGrid small {
+  display: inline;
+  margin-left: 3px;
+  color: #b5e655;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.cabinetMeasurementModalEmpty {
+  margin: 0;
+  padding: 20px 16px;
+  text-align: center;
+  border: 1px dashed rgba(181, 230, 85, 0.18);
+  border-radius: 16px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.cabinetMeasurementModalStart {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 14px;
+  border: 1px solid rgba(181, 230, 85, 0.38);
+  border-radius: 17px;
+  background: linear-gradient(180deg, rgba(151, 193, 66, 0.22), rgba(76, 105, 31, 0.14));
+  color: #fff;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+@media (max-height: 720px) {
+  .cabinetMeasurementModal {
+    padding: 14px;
+  }
+
+  .cabinetMeasurementModalSummary {
+    margin: 12px 0 10px;
+    padding: 9px 10px;
+  }
+
+  .cabinetMeasurementModalSummary span {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .cabinetMeasurementModalGrid div {
+    min-height: 58px;
+    padding: 7px 4px;
+  }
+
+  .cabinetMeasurementModalGrid span {
+    min-height: 22px;
+    font-size: 9px;
+  }
+
+  .cabinetMeasurementModalStart {
+    min-height: 48px;
+    margin-top: 10px;
+  }
+}
+
+/* Keep the moved nutrition content compact inside the cabinet modal. */
+.cabinetNutritionModal {
+  height: auto;
+  max-height: calc(100dvh - 20px);
+}
+
+.cabinetNutritionModal .profileNutritionSection,
+.cabinetNutritionModal .profileNutritionSection.hasPlan {
+  height: auto !important;
+  max-height: calc(100dvh - 96px) !important;
+}
+
+.cabinetNutritionModal .profileNutritionSection.hasPlan .profileAiNutritionPlanCard {
+  flex: 0 1 auto !important;
+}
+
+.cabinetNutritionModal .profileNutritionSection.hasPlan .profileNutritionOverview {
+  height: auto !important;
+  max-height: min(390px, calc(100dvh - 330px)) !important;
+  padding: 8px 10px !important;
+}
+
+.cabinetNutritionModal .profileNutritionCalendarHead {
+  display: none !important;
+}
+
+.cabinetNutritionModal .profileNutritionMacroLine {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+}
+
+.cabinetNutritionModal .profileNutritionMacroLine > div {
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.cabinetNutritionModal .profileNutritionMacroLine span,
+.cabinetNutritionModal .profileNutritionMacroLine strong {
+  display: block !important;
+  width: 100%;
+  overflow: hidden;
+  line-height: 1.05 !important;
+  text-align: center !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

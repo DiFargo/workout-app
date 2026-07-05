@@ -1953,7 +1953,7 @@ test("nutrition orbit CSS keeps inline and modal meal shells grouped", async () 
 });
 
 test("nutrition base CSS keeps compact meal card sizing in the desktop owner", async () => {
-  const source = await readText("src/styles/nutrition.css");
+  const source = await readCssWithImports("src/styles/nutrition.css");
   const viewportStart = source.indexOf("FIXED NUTRITION VIEWPORT V286");
   const bottomNavStart = source.indexOf("UNIFIED CLIENT BOTTOM NAVIGATION V287", viewportStart);
   const desktopCompactStart = source.indexOf("@media (min-width: 720px) and (max-height: 820px)");
@@ -4067,7 +4067,7 @@ test("client nutrition weekday strip exposes selected and current date state", a
 });
 
 test("nutrition base CSS keeps warm-light page shell grouped", async () => {
-  const nutritionBaseCss = await readText("src/styles/nutrition.css");
+  const nutritionBaseCss = await readCssWithImports("src/styles/nutrition.css");
 
   assert.equal(
     (nutritionBaseCss.match(/:root\[data-app-theme="warm-light"\] \.fatSecretPage\.nutritionFixedHeaderV3,\s*:root\[data-app-theme="warm-light"\] \.clientCorePage\s*\{\s*border-color:\s*rgba\(96, 78, 27, 0\.24\) !important;[\s\S]*?linear-gradient\(180deg, #fffaf0 0%, #f4e8c8 100%\) !important;[\s\S]*?0 24px 60px rgba\(87, 68, 18, 0\.15\),[\s\S]*?inset 0 1px 0 rgba\(255, 255, 255, 0\.72\) !important;[\s\S]*?\}/g) || []).length,
@@ -4080,7 +4080,7 @@ test("nutrition base CSS keeps warm-light page shell grouped", async () => {
 });
 
 test("nutrition base CSS keeps warm-light collapsed AI plan surface in the final owner", async () => {
-  const nutritionBaseCss = await readText("src/styles/nutrition.css");
+  const nutritionBaseCss = await readCssWithImports("src/styles/nutrition.css");
 
   assert.equal(
     (nutritionBaseCss.match(/:root\[data-app-theme="warm-light"\] \.fatSecretPage\.nutritionFixedHeaderV3 \.nutritionAiPlanDashboard\.collapsed\s*\{\s*border:\s*0 !important;\s*background:\s*#ffffff !important;\s*box-shadow:\s*0 9px 24px rgba\(55, 64, 112, 0\.075\) !important;\s*\}/g) || []).length,
@@ -4107,7 +4107,7 @@ test("warm-light nutrition CSS keeps summary donut center in the compact owner",
 
 test("client nutrition weekday strip keeps two-letter labels visible", async () => {
   const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
-  const nutritionBaseCss = await readText("src/styles/nutrition.css");
+  const nutritionBaseCss = await readCssWithImports("src/styles/nutrition.css");
   const nutritionCss = await readText("src/styles/nutrition-food-flow.css");
   const warmLightNutritionCss = await readText("src/styles/warm-light-nutrition.css");
 

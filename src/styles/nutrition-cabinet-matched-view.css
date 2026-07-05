@@ -1,0 +1,296 @@
+/* === NUTRITION CABINET-MATCHED VIEW V308 === */
+.fatSecretPage.nutritionFixedHeaderV3 {
+  box-sizing: border-box !important;
+  width: min(390px, calc(100vw - 20px)) !important;
+  max-width: 390px !important;
+  height: calc(100dvh - 12px) !important;
+  min-height: calc(100dvh - 12px) !important;
+  max-height: calc(100dvh - 12px) !important;
+  margin: 6px auto !important;
+  padding: 16px 14px 98px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(145, 173, 78, 0.26) !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(127, 159, 58, 0.12), transparent 30%),
+    linear-gradient(180deg, #0c130d 0%, #071008 100%) !important;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroV4 {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 0 8px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 {
+  height: 42px !important;
+  min-height: 42px !important;
+  margin: 0 0 7px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1 {
+  top: auto !important;
+  font-size: 31px !important;
+  line-height: 42px !important;
+  color: #fff !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionWeekV4 {
+  height: 50px !important;
+  min-height: 50px !important;
+  margin: 0 0 5px !important;
+  padding: 0 2px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4 {
+  height: 50px !important;
+  min-height: 50px !important;
+  max-height: 50px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4 span {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionStreakV4 {
+  height: 24px !important;
+  min-height: 24px !important;
+  margin: 10px 0 4px !important;
+  padding: 4px 0 !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionsExact {
+  min-height: 54px !important;
+  margin: 0 !important;
+  padding: 2px 0 !important;
+  column-gap: 8px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionExact {
+  height: 50px !important;
+  min-height: 50px !important;
+  padding: 0 10px !important;
+  gap: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  border-radius: 15px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+  font-size: 14px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickSearchIcon,
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickCalendarIcon {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickCalendarIcon {
+  font-size: 20px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickSearchIcon::before {
+  width: 14px !important;
+  height: 14px !important;
+  border-width: 2px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickSearchIcon::after {
+  left: 16px !important;
+  top: 17px !important;
+  width: 9px !important;
+  height: 2px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard {
+  width: 100% !important;
+  height: 70px !important;
+  min-height: 70px !important;
+  max-height: 70px !important;
+  margin: 0 0 7px !important;
+  padding: 8px 12px !important;
+  gap: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderGrid {
+  transform: scale(0.82) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCol strong {
+  font-size: 23px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCol {
+  min-width: 0 !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCol span {
+  font-size: 9px !important;
+  white-space: nowrap !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .fatMealList {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-auto-rows: 74px !important;
+  gap: 7px !important;
+  overflow: visible !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .fatMealCard {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 74px !important;
+  min-height: 74px !important;
+  max-height: 74px !important;
+  margin: 0 !important;
+  padding: 9px 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .fatMealMain {
+  height: 54px !important;
+  min-height: 54px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .fatMealIcon {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  border-radius: 13px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .fatMealTitle strong {
+  font-size: 18px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .fatMealKcal strong {
+  font-size: 14px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .mealPlusExact {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  font-size: 24px !important;
+}
+
+@media (max-height: 800px) {
+  .fatSecretPage.nutritionFixedHeaderV3 {
+    padding-top: 10px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 {
+    height: 38px !important;
+    min-height: 38px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1 {
+    font-size: 28px !important;
+    line-height: 38px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionWeekV4,
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4 {
+    height: 46px !important;
+    min-height: 46px !important;
+    max-height: 46px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionsExact {
+    min-height: 50px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionExact {
+    height: 46px !important;
+    min-height: 46px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard {
+    height: 64px !important;
+    min-height: 64px !important;
+    max-height: 64px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .fatMealList {
+    grid-auto-rows: 66px !important;
+    gap: 6px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .fatMealCard {
+    height: 66px !important;
+    min-height: 66px !important;
+    max-height: 66px !important;
+    padding: 6px 10px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .fatMealMain {
+    height: 52px !important;
+    min-height: 52px !important;
+  }
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3,
+:root[data-app-theme="warm-light"] .clientCorePage {
+  border-color: rgba(96, 78, 27, 0.24) !important;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(244, 224, 100, 0.2), transparent 30%),
+    linear-gradient(180deg, #fffaf0 0%, #f4e8c8 100%) !important;
+  box-shadow:
+    0 24px 60px rgba(87, 68, 18, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1 {
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionExact,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard,
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .fatMealCard {
+  border-color: rgba(96, 78, 27, 0.14) !important;
+  background: rgba(255, 250, 237, 0.72) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68) !important;
+}
+
+/* Keep the calories dot grid anchored across mobile widths. */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard {
+  grid-template-columns: 76px 1px minmax(0, 1fr) 1px minmax(0, 1fr) !important;
+  column-gap: 8px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderGrid {
+  width: 51px !important;
+  min-width: 51px !important;
+  grid-template-columns: repeat(5, 7px) !important;
+  grid-auto-rows: 7px !important;
+  gap: 4px !important;
+  justify-self: center !important;
+  transform: none !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderGrid span {
+  width: 7px !important;
+  height: 7px !important;
+}
