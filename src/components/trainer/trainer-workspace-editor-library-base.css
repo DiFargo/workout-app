@@ -1,0 +1,352 @@
+/* Hybrid workout editor */
+.trainerNextProgramControl {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(230px, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerNextProgramControl > div {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trainerNextProgramControl > div > svg {
+  flex: 0 0 auto;
+  color: var(--tn-purple);
+}
+
+.trainerNextProgramControl strong {
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerNextProgramControl select {
+  width: 100%;
+  height: 36px;
+  padding: 0 30px 0 10px;
+  border: 1px solid var(--tn-line);
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+  color: var(--tn-text);
+  font-size: 10px;
+}
+
+.trainerNextProgramControl > button {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--tn-text);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.trainerNextProgramsTab {
+  min-width: 0;
+  padding-bottom: 100px;
+}
+
+.trainerNextProgramsTab > .trainerProgramManager {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 14px 0 0;
+  background: transparent;
+}
+
+.trainerNextProgramsTab > .trainerProgramManager.monthProgramEditorPage.monthProgramPremium {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 14px 0 0 !important;
+  overflow-x: visible !important;
+}
+
+.trainerNextProgramsTab .programsCompactHeader {
+  display: none;
+}
+
+.trainerNextProgramsTab .programsOverviewPage,
+.trainerNextProgramsTab .monthProgramEditorNameField,
+.trainerNextProgramsTab .monthProgramMonths {
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.trainerNextRoot .trainerNextProgramsTab .trainerProgramManager.monthProgramOverviewMode .programsOverviewPage {
+  width: 100% !important;
+  max-width: none !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+.trainerNextProgramsTab .programsTopActionBar {
+  width: max-content;
+  max-width: 100%;
+  margin: -58px 0 28px auto;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(142px, auto);
+  grid-template-columns: none;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.trainerNextProgramsTab .programsTopActionBar > button {
+  min-height: 44px;
+  flex-direction: row;
+  gap: 8px;
+  padding: 0 18px;
+  border: 1px solid var(--tn-line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--tn-text);
+  font-size: 10px;
+  box-shadow: 0 10px 24px rgba(39, 43, 63, 0.07);
+}
+
+.trainerNextProgramsTab .programsTopActionBar > button:last-child {
+  border-right: 1px solid var(--tn-line);
+}
+
+.trainerNextProgramsTab .programsTopActionBar > button.danger {
+  border-color: rgba(226, 82, 82, 0.28);
+  color: var(--tn-red);
+}
+
+.trainerNextProgramsTab .programsTopActionBar .adminV3NavLabel {
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.trainerNextProgramsTab .programsOverviewSection {
+  min-height: 560px;
+  padding: 26px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerNextProgramsTab .programsOverviewSectionHead {
+  align-items: flex-start;
+  margin-bottom: 26px;
+}
+
+.trainerNextProgramsTab .programsOverviewSectionHead span {
+  color: var(--tn-purple);
+  font-size: 10px;
+}
+
+.trainerNextProgramsTab .programsOverviewSectionHead h2 {
+  margin-top: 7px;
+  color: var(--tn-text);
+  font-size: 20px;
+}
+
+.trainerNextProgramsTab .programsOverviewSectionHead p {
+  margin: 7px 0 0;
+  color: var(--tn-muted);
+  font-size: 10px;
+}
+
+.trainerNextProgramsTab .programsOverviewSectionHead > button {
+  width: auto;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+  color: #555d70;
+  font-size: 10px;
+}
+
+.trainerNextProgramsTab .programsOverviewGrid {
+  width: min(620px, 100%);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.trainerNextProgramsTab .programsOverviewCard {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--tn-purple-border);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #fff 0%, #f8f5ff 58%, #f1edff 100%);
+  color: var(--tn-text);
+  box-shadow: 0 8px 25px rgba(80, 56, 184, 0.06);
+}
+
+.trainerNextProgramsTab .programsOverviewCard.selected {
+  border-color: #9e88ff;
+  background: linear-gradient(135deg, #fff 0%, #f7f3ff 52%, #eee8ff 100%);
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle {
+  min-height: 106px;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px 8px;
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle > i {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #eae4ff;
+  color: var(--tn-purple);
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle strong {
+  color: var(--tn-text);
+  font-size: 20px;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle p {
+  margin: 8px 0 0;
+  color: var(--tn-muted);
+  font-size: 10px;
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle > span {
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  background: #eee9ff;
+  color: var(--tn-purple);
+  font-size: 9px;
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle > span b {
+  width: 17px;
+  height: 17px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--tn-purple);
+  color: #fff;
+  font-size: 10px;
+}
+
+.trainerNextProgramsTab .programsOverviewCardStats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 10px 20px 18px;
+}
+
+.trainerNextProgramsTab .programsOverviewCardStats span {
+  min-height: 54px;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  align-content: center;
+  justify-content: start;
+  gap: 0 8px;
+  padding: 8px 10px;
+  border: 1px solid #ebe9f5;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--tn-purple);
+}
+
+.trainerNextProgramsTab .programsOverviewCardStats span svg,
+.trainerNextProgramsTab .programsOverviewCreateCard svg {
+  grid-row: 1 / 3;
+  align-self: center;
+}
+
+.trainerNextProgramsTab .programsOverviewCardStats b {
+  color: var(--tn-text);
+  font-size: 13px;
+}
+
+.trainerNextProgramsTab .programsOverviewCardStats small,
+.trainerClientAssignedStats small,
+.trainerWorkoutSchedulePlanner > header > strong small,
+.trainerClientQualityMetrics span,
+.trainerNutritionMetricGrid span,
+.trainerNutritionMetricGrid small,
+.trainerNutritionPeriod small,
+.trainerNutritionDonut small,
+.trainerNutritionDiary > aside small,
+.trainerNutritionCurrentGoals small,
+.trainerNutritionCurrentMeta,
+.trainerNutritionGoalInputs small,
+.trainerNutritionValidity > small,
+.trainerNotificationSchedule small,
+.trainerProgressReminderOptions small,
+.trainerNextExerciseMetric small {
+  color: var(--tn-muted);
+  font-size: 8px;
+}
+
+.trainerNextProgramsTab .programsOverviewCard footer {
+  min-height: 50px;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 28px;
+  padding: 0 20px;
+  border-top: 1px solid #e8e5f1;
+  color: var(--tn-muted);
+  font-size: 9px;
+}
+
+.trainerNextProgramsTab .programsOverviewCard footer b {
+  justify-self: end;
+  color: #687085;
+  letter-spacing: 2px;
+}
+
+.trainerNextProgramsTab .programsOverviewCreateCard {
+  width: 100%;
+  min-width: 0;
+  min-height: 96px;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-rows: auto auto;
+  align-content: center;
+  justify-content: center;
+  gap: 3px 8px;
+  padding: 14px;
+  border: 1px dashed #a994ff;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--tn-purple);
+  text-align: center;
+}
+

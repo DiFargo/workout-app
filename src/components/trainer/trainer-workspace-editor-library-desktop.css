@@ -1,0 +1,714 @@
+/* Keep the trainer library in one readable column on desktop. */
+.trainerNextProgramsTab .trainerProgramManager.monthProgramOverviewMode .programsOverviewGrid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.trainerNextProgramsTab .trainerProgramManager.monthProgramOverviewMode .programsOverviewCard {
+  min-height: 0;
+  padding: 0;
+}
+
+.trainerNextProgramsTab .programsOverviewCreateCard strong {
+  justify-self: start;
+  font-size: 12px;
+}
+
+.trainerNextProgramsTab .programsOverviewCreateCard span {
+  grid-column: 2 / 4;
+  justify-self: start;
+  color: var(--tn-muted);
+  font-size: 9px;
+}
+
+.trainerNextProgramsTab .programCreateChoiceOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2200;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(22, 24, 35, 0.28);
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet {
+  width: min(460px, 100%);
+  padding: 18px;
+  border: 1px solid var(--tn-line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(24, 27, 42, 0.22);
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet header span {
+  color: var(--tn-purple);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet header h2 {
+  margin: 4px 0 0;
+  color: var(--tn-text);
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet header button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--tn-line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--tn-text);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet > div > button {
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #e3e5ee;
+  border-radius: 15px;
+  background: #fff;
+  color: var(--tn-text);
+  text-align: left;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet strong,
+.trainerNextProgramsTab .programCreateChoiceSheet small {
+  display: block;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet strong {
+  font-size: 15px;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet small {
+  margin-top: 4px;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.trainerNextProgramsTab .programAiImportSheet {
+  width: min(560px, 100%);
+}
+
+.trainerNextProgramsTab .programAiImportHint {
+  margin: -2px 0 14px;
+  color: var(--tn-muted);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.trainerNextProgramsTab .programAiImportText {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.trainerNextProgramsTab .programAiImportText > span {
+  color: var(--tn-purple);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.trainerNextProgramsTab .programAiImportText textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  padding: 12px 13px;
+  border: 1px solid #e3e5ee;
+  border-radius: 16px;
+  background: #f8f9fd;
+  color: var(--tn-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.4;
+  outline: none;
+}
+
+.trainerNextProgramsTab .programAiImportText textarea:focus {
+  border-color: rgba(104, 68, 245, 0.45);
+  box-shadow: 0 0 0 4px rgba(104, 68, 245, 0.08);
+}
+
+.trainerNextProgramsTab .programAiImportFile {
+  position: relative;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px dashed rgba(104, 68, 245, 0.32);
+  border-radius: 16px;
+  background: #f6f3ff;
+  color: var(--tn-text);
+  cursor: pointer;
+}
+
+.trainerNextProgramsTab .programAiImportFile input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.trainerNextProgramsTab .programAiImportError {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(223, 82, 102, 0.25);
+  border-radius: 13px;
+  background: #fff0f3;
+  color: #b6364e;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions {
+  display: grid;
+  grid-template-columns: minmax(116px, 0.4fr) minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions > button {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  gap: 0;
+  padding: 0 14px;
+  border: 1px solid #e3e5ee;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--tn-muted);
+  font-size: 13px;
+  font-weight: 950;
+  text-align: center;
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions > button:last-child {
+  border-color: transparent;
+  background: linear-gradient(135deg, #6844f5, #2d6ff2);
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(76, 68, 201, 0.18);
+}
+
+.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions > button:disabled {
+  opacity: 0.62;
+  cursor: wait;
+}
+
+.trainerNextProgramsTab .programEditorBottomBar,
+.trainerNextProgramsTab .workoutEditorBottomBar {
+  z-index: 35;
+}
+
+.trainerProgramSelectedBar {
+  min-height: 82px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 20px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerProgramSelectedBar label {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  text-align: left !important;
+}
+
+.trainerProgramSelectedBar label span {
+  color: var(--tn-text);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.trainerProgramSelectedBar label input {
+  width: min(430px, 100%);
+  height: auto !important;
+  padding: 0;
+  border: 0 !important;
+  outline: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--tn-text);
+  font-size: 18px;
+  font-weight: 750;
+}
+
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerProgramSelectedBar label input,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerProgramMonthRow input,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .trainerProgramCycleRow input {
+  height: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.trainerProgramSelectedBar > div button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 17px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.trainerProgramSelectedBar > div button.danger {
+  border-color: #ff6d6d;
+  color: #e43e3e;
+}
+
+.trainerProgramConstructorGrid {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.trainerProgramTree {
+  overflow: hidden;
+  padding: 10px;
+}
+
+.trainerProgramTree button,
+.trainerProgramTree input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+.trainerProgramTree button {
+  cursor: pointer;
+}
+
+.trainerProgramTree > section + section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--tn-line);
+}
+
+.trainerProgramMonthRow {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+}
+
+.trainerProgramMonthRow > svg {
+  color: #394051;
+}
+
+.trainerProgramMonthRow label,
+.trainerProgramCycleRow label {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.trainerProgramMonthRow input,
+.trainerProgramCycleRow strong {
+  width: 100%;
+  height: auto !important;
+  padding: 0;
+  border: 0 !important;
+  outline: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--tn-text);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.trainerProgramMonthRow button,
+.trainerProgramCycleRow button,
+.trainerProgramWeekRow button,
+.trainerProgramDay > button:not(:first-child) {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 5px;
+  color: #515869;
+}
+
+.trainerProgramMonthRow button:hover,
+.trainerProgramCycleRow button:hover,
+.trainerProgramWeekRow button:hover,
+.trainerProgramDay > button:not(:first-child):hover,
+.trainerNextWorkoutDays .trainerNextWorkoutDayActions button:hover {
+  background: #f1efff;
+  color: var(--tn-purple);
+}
+
+.trainerNextMoreDrawer nav,
+.trainerMessageCoachHint > div,
+.trainerProgramCycles {
+  display: grid;
+  gap: 7px;
+}
+
+.trainerProgramCycle {
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 7px;
+}
+
+.trainerProgramCycle.selected {
+  border-color: var(--tn-purple-border);
+  background: linear-gradient(100deg, #faf9ff, #f1edff);
+}
+
+.trainerProgramCycleRow {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 8px;
+}
+
+.trainerProgramCycleRow > div {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.trainerProgramWeeks {
+  display: grid;
+  gap: 2px;
+  padding: 0 8px 8px;
+}
+
+.trainerProgramWeek {
+  border-top: 1px solid rgba(229, 231, 237, 0.8);
+}
+
+.trainerProgramWeekRow {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto 24px;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 1px;
+}
+
+.trainerProgramWeekRow > button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+}
+
+.trainerProgramDays {
+  display: grid;
+  gap: 3px;
+  padding: 0 0 7px 30px;
+}
+
+.trainerProgramDay {
+  min-height: 52px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 7px;
+}
+
+.trainerProgramDay.selected {
+  border-color: var(--tn-purple-border);
+  background: #f2efff;
+}
+
+.trainerProgramDay > button:first-child {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  justify-items: start;
+  gap: 2px;
+  padding: 7px 10px;
+  color: var(--tn-text);
+  text-align: left;
+}
+
+.trainerProgramDay strong {
+  color: inherit;
+  font-size: 11px;
+}
+
+.trainerProgramDay small {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--tn-muted);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerProgramTreeAdd {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  color: var(--tn-purple);
+  font-size: 9px;
+}
+
+.trainerProgramAddCycle,
+.trainerProgramAddMonth {
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  border: 1px solid var(--tn-purple-border) !important;
+  border-radius: 7px;
+  color: var(--tn-purple);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.trainerProgramAddMonth {
+  min-height: 36px;
+  border-style: dashed !important;
+  font-size: 10px;
+}
+
+.trainerProgramDayPanel {
+  overflow: hidden;
+  padding: 0 12px 12px;
+}
+
+.trainerProgramBreadcrumb {
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-bottom: 1px solid var(--tn-line);
+}
+
+.trainerProgramBreadcrumb > div,
+.trainerProgramBreadcrumb > aside {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.trainerProgramBreadcrumb > div {
+  overflow: hidden;
+  gap: 8px;
+  color: var(--tn-purple);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.trainerProgramBreadcrumb > div span,
+.trainerProgramBreadcrumb > div strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trainerProgramBreadcrumb > div strong {
+  padding: 21px 6px 18px;
+  border-bottom: 3px solid var(--tn-purple);
+  color: var(--tn-text);
+}
+
+.trainerProgramBreadcrumb > aside {
+  flex: 0 0 auto;
+  gap: 4px;
+}
+
+.trainerProgramBreadcrumb > aside strong {
+  margin-right: 10px;
+  font-size: 10px;
+}
+
+.trainerProgramBreadcrumb > aside button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #4b5365;
+  cursor: pointer;
+}
+
+.trainerProgramBreadcrumb > aside button:hover,
+.trainerProgramExerciseList .trainerNextExerciseActions button:hover,
+.trainerNextExerciseList .trainerNextExerciseActions button:hover {
+  background: #f3f1ff;
+  color: var(--tn-purple);
+}
+
+.trainerProgramBreadcrumb > aside button:last-child:hover {
+  background: #fff1f1;
+  color: var(--tn-red);
+}
+
+.trainerProgramWorkoutName {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 10px 6px 5px;
+}
+
+.trainerProgramWorkoutName input {
+  width: 100%;
+  height: 32px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  outline: none;
+  background: #fbfbfd;
+  color: var(--tn-text);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.trainerProgramWorkoutName input:focus {
+  border-color: var(--tn-purple-border);
+  background: #fff;
+}
+
+.trainerProgramExerciseHead {
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 54px 64px 64px 66px 72px;
+  align-items: center;
+  padding-left: 84px;
+  color: var(--tn-muted);
+  font-size: 9px;
+  text-align: center;
+}
+
+.trainerProgramExerciseHead span:first-child {
+  text-align: left;
+}
+
+.trainerProgramExerciseList article {
+  display: block;
+  min-height: 0;
+  border-top: 1px solid var(--tn-line);
+}
+
+.trainerProgramExerciseRow {
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: 30px 46px minmax(120px, 1fr) 54px 64px 64px 66px 72px;
+  align-items: center;
+  gap: 4px;
+}
+
+.trainerProgramExerciseList article.expanded {
+  background: #fbfbfe;
+}
+
+.trainerProgramExerciseList .trainerNextExerciseActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1px;
+}
+
+.trainerProgramExerciseList .trainerNextExerciseActions button {
+  width: 26px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--tn-muted);
+  cursor: pointer;
+}
+
+.trainerProgramExerciseList .trainerNextExerciseActions button:last-child:hover,
+.trainerNextExerciseList .trainerNextExerciseActions button:last-child:hover {
+  background: #fff1f1;
+  color: #d44a4a;
+}
+
+.trainerProgramExerciseList .trainerNextExerciseEditor {
+  padding-left: 84px;
+}
+
+.trainerProgramAddExercise {
+  width: 100%;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  border: 1px solid var(--tn-purple);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--tn-purple);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.trainerProgramEmptyDay {
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  color: var(--tn-muted);
+  text-align: center;
+}
+
+.trainerProgramEmptyDay strong {
+  color: var(--tn-text);
+  font-size: 14px;
+}
+
