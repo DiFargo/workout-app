@@ -1,0 +1,63 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow {
+    border: 0 !important;
+    border-top: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow > div {
+    border: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow > div::before,
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow > div::after,
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow::before,
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow::after {
+    display: none !important;
+    content: none !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiHero.profileAiHero .profileAiAvatarWrap,
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiHero.profileAiHero .profileAiAvatar,
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiHero.profileAiHero .profileAiAvatar img {
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow > div {
+    padding-top: 3px !important;
+    padding-bottom: 8px !important;
+    transform: translateY(-2px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards .profileAiMiniCard.profileAiMiniCard span {
+    display: grid !important;
+    grid-template-columns: 14px 74px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    column-gap: 4px !important;
+    width: 96px !important;
+    max-width: 96px !important;
+    min-height: 24px !important;
+    margin: 0 auto !important;
+    text-align: left !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    line-height: 1.05 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards .profileAiMiniCard.profileAiMiniCard span svg {
+    align-self: center !important;
+    justify-self: center !important;
+  }
+}

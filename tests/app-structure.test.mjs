@@ -3599,7 +3599,7 @@ test("profile dashboard CSS keeps Telegram shells grouped", async () => {
 });
 
 test("client main CSS keeps compact AI stat text rules in the later owner", async () => {
-  const source = await readText("src/styles/client-main.css");
+  const source = await readCssWithImports("src/styles/client-main.css");
 
   assert.equal((source.match(/--main-home-primary-text-size:\s*16\.2px;/g) || []).length, 1);
   assert.equal(
@@ -3612,7 +3612,7 @@ test("client main CSS keeps compact AI stat text rules in the later owner", asyn
 
 test("client nutrition grid CSS does not keep dashboard icon and chart duplicates", async () => {
   const nutritionGrid = await readCssWithImports("src/styles/client-nutrition-grid.css");
-  const mainOverrides = await readText("src/styles/client-main.css");
+  const mainOverrides = await readCssWithImports("src/styles/client-main.css");
 
   const duplicateLocks = [
     /\.profileAiStatsRow\.profileAiStatsRow\.profileAiStatsRow \.profileAiStatLabel svg\s*\{\s*width:\s*14px !important;\s*height:\s*14px !important;\s*\}/,
