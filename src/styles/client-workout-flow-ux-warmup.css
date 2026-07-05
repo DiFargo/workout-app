@@ -1,0 +1,105 @@
+.workoutRunPage .warmupExerciseCard button.warmupExerciseItem:not(.showVideoBtn) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 62px !important;
+  max-height: none !important;
+  padding: 10px 12px !important;
+  display: grid !important;
+  grid-template-columns: 34px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  line-height: normal !important;
+  text-align: left !important;
+  cursor: pointer;
+}
+
+.workoutRunPage .warmupExerciseCard button.warmupExerciseItem.completed:not(.showVideoBtn) {
+  background: rgba(127, 159, 58, 0.09) !important;
+}
+
+.workoutRunPage .warmupExerciseItem.completed > span:first-child {
+  background: rgba(139, 181, 58, 0.72);
+  color: #10130d;
+}
+
+.workoutRunPage .warmupExerciseItem > span:last-child {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  flex: 1 1 auto !important;
+  min-width: 0;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: normal !important;
+}
+
+.workoutRunPage .warmupExerciseItem strong,
+.workoutRunPage .warmupExerciseItem small {
+  display: block !important;
+  position: static !important;
+  width: 100% !important;
+  height: auto !important;
+  margin-left: 0 !important;
+  transform: none !important;
+}
+
+.workoutRunPage .warmupTimer {
+  padding: 10px 11px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.workoutRunPage .warmupTimer > div:first-child span,
+.workoutRunPage .warmupTimer > div:first-child strong {
+  display: block;
+}
+
+.workoutRunPage .warmupTimer > div:first-child span {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.workoutRunPage .warmupTimer > div:first-child strong {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 19px;
+}
+
+.workoutRunPage .warmupTimerControls {
+  display: flex;
+  gap: 5px;
+}
+
+.workoutRunPage .warmupExerciseCard .warmupTimerControls button:not(.showVideoBtn) {
+  width: auto !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 0 9px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10px !important;
+  font-weight: 850;
+}
+
+.workoutRunPage .warmupExerciseCard .warmupTimerControls button.active {
+  border-color: rgba(145, 173, 78, 0.45);
+  color: rgba(222, 244, 170, 0.94);
+}
+
