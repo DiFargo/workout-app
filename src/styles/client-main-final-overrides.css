@@ -1771,6 +1771,203 @@
   }
 }
 
+/* v1.786: keep the harness main header on the shared client chrome rhythm. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] > .mainDashboardTitle.clientCorePageTitle {
+    height: var(--client-title-h) !important;
+    min-height: var(--client-title-h) !important;
+    margin: var(--client-top) 0 16px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    color: var(--client-title-color) !important;
+    -webkit-text-fill-color: var(--client-title-color) !important;
+    font-size: var(--client-title-fz) !important;
+    line-height: 1.06 !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] > .menuRefreshIconBtn {
+    top: var(--client-top) !important;
+    right: var(--client-x) !important;
+    width: var(--client-action) !important;
+    min-width: var(--client-action) !important;
+    max-width: var(--client-action) !important;
+    height: var(--client-action) !important;
+    min-height: var(--client-action) !important;
+    max-height: var(--client-action) !important;
+    border-radius: 17px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] > .menuRefreshIconBtn svg {
+    width: 24px !important;
+    height: 24px !important;
+    stroke-width: 2.5 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileAiMiniCard:first-child span svg {
+    color: #6f52ff !important;
+    stroke: #6f52ff !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileAiMiniCard:last-child span svg {
+    color: #ff7a3d !important;
+    stroke: #ff7a3d !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileAiMiniCard span svg {
+    width: 16px !important;
+    min-width: 16px !important;
+    height: 16px !important;
+    min-height: 16px !important;
+    stroke-width: 2.6 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileAiCoachSummary {
+    grid-template-columns: 164px minmax(0, 1fr) !important;
+    gap: 24px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGauge {
+    width: 124px !important;
+    min-width: 124px !important;
+    max-width: 124px !important;
+    height: 108px !important;
+    min-height: 108px !important;
+    max-height: 108px !important;
+    justify-self: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial {
+    width: 124px !important;
+    min-width: 124px !important;
+    max-width: 124px !important;
+    height: 108px !important;
+    min-height: 108px !important;
+    max-height: 108px !important;
+    overflow: visible !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 6px !important;
+    top: 0 !important;
+    width: 112px !important;
+    height: 112px !important;
+    border-radius: 999px !important;
+    background: conic-gradient(from 214deg, #ef635f 0deg 34deg, #f7ac26 34deg 84deg, #6fd79c 84deg 178deg, transparent 178deg 360deg) !important;
+    -webkit-mask: radial-gradient(circle, transparent 0 60%, #000 61% 73%, transparent 74% 100%) !important;
+    mask: radial-gradient(circle, transparent 0 60%, #000 61% 73%, transparent 74% 100%) !important;
+    box-shadow: none !important;
+    z-index: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 24px !important;
+    display: block !important;
+    border: 5px solid rgba(104, 71, 255, 0.12) !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    z-index: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial i {
+    position: absolute !important;
+    display: block !important;
+    left: 33px !important;
+    top: 54px !important;
+    width: 54px !important;
+    height: 5px !important;
+    border-radius: 999px !important;
+    background: #6847ff !important;
+    transform-origin: right center !important;
+    transform: rotate(var(--progress-angle, 180deg)) !important;
+    z-index: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial i::before {
+    content: "" !important;
+    position: absolute !important;
+    left: -4px !important;
+    top: -5px !important;
+    display: block !important;
+    width: 15px !important;
+    height: 15px !important;
+    border-radius: 999px !important;
+    background: #6847ff !important;
+    box-shadow: 0 8px 16px rgba(104, 71, 255, 0.22) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial i::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial strong {
+    top: 50% !important;
+    color: #6847ff !important;
+    -webkit-text-fill-color: #6847ff !important;
+    font-size: 31px !important;
+    z-index: 2 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGauge > small {
+    top: 70px !important;
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+    font-size: 10px !important;
+    z-index: 3 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .harnessLegacyMeasurementSnapshot .mainMeasurementCurrentBubble rect,
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .harnessLegacyMeasurementSnapshot .mainMeasurementCurrentBubble path {
+    fill: #654df3 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .harnessLegacyMeasurementSnapshot .mainMeasurementCurrentBubble text {
+    fill: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    text-anchor: middle !important;
+  }
+}
+
+@media (max-width: 519px) {
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileAiCoachSummary {
+    grid-template-columns: 118px minmax(0, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGauge,
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial {
+    width: 112px !important;
+    min-width: 112px !important;
+    max-width: 112px !important;
+    height: 102px !important;
+    min-height: 102px !important;
+    max-height: 102px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial::before {
+    left: 2px !important;
+    width: 108px !important;
+    height: 108px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressGaugeDial i {
+    left: 28px !important;
+    top: 52px !important;
+    width: 52px !important;
+  }
+}
+
 @media (max-width: 360px) {
   html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage section.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .profileAiHero.profileAiHero {
     grid-template-columns: 56px minmax(0, 1fr) !important;

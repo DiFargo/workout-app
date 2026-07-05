@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Bell, Dumbbell, RefreshCw, Scale, Target } from "lucide-react";
+import { Bell, CalendarDays, Dumbbell, RefreshCw, Scale, Target, Zap } from "lucide-react";
 import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
@@ -338,11 +338,11 @@ function HarnessMainSummary({ compact = false }) {
 
       <div className="profileMainSummaryGrid profileAiSplitCards">
         <article className="profileAiMiniCard">
-          <span><i aria-hidden="true">📅</i>Последняя тренировка</span>
+          <span><CalendarDays aria-hidden="true" />Последняя тренировка</span>
           <strong>27 июня</strong>
         </article>
         <article className="profileAiMiniCard">
-          <span><i aria-hidden="true">⚡</i>Следующая тренировка</span>
+          <span><Zap aria-hidden="true" />Следующая тренировка</span>
           <strong>4 июля</strong>
         </article>
       </div>
@@ -360,6 +360,7 @@ function HarnessProgressInsight() {
             style={{
               "--progress-score": 90,
               "--progress-fill": "324deg",
+              "--progress-angle": "178deg",
               "--progress-color": "rgba(123, 111, 232, 1)",
               "--progress-glow": "rgba(123, 111, 232, 0.24)"
             }}

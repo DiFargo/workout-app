@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.785`.
+Last updated at app version `v.1.786`.
 
 ## Evidence
 
@@ -428,6 +428,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 320. Client harness main preview keeps the ILYA greeting on one line and prevents the measurement chart title from clipping at the 430px local preview width.
 321. Client harness main progress gauge keeps the `из 100` caption centered inside the restored purple score ring.
 322. Client harness main preview restores the archived main-menu composition with the hero stats inside the greeting card and compact reference block positions.
+323. Client harness main preview keeps the header on shared client chrome rules, restores SVG date icons, segmented progress gauge and the purple measurement tooltip.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.
