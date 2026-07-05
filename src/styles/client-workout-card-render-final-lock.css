@@ -1,0 +1,155 @@
+/* Final adaptive lock for the individual workout picker.
+   Keep this at the end so old fixed-bottom workout rules cannot stretch the card area. */
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage {
+  --workout-picker-nav: 40px;
+  --workout-picker-progress: 28px;
+  --workout-picker-bottom-reserve: 102px;
+  min-height: 100svh !important;
+  height: 100svh !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 25px calc(var(--workout-picker-bottom-reserve) + env(safe-area-inset-bottom, 0px)) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: auto minmax(0, 1fr) var(--workout-picker-nav) var(--workout-picker-progress) !important;
+  align-items: stretch !important;
+  justify-items: stretch !important;
+  align-content: stretch !important;
+  justify-content: stretch !important;
+  row-gap: 8px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero {
+  grid-row: 1 !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-bottom: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectList.individualWorkoutDeck,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutDeck {
+  grid-row: 2 !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: stretch !important;
+  overflow: visible !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardPro {
+  height: 100% !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  grid-template-rows: 44px minmax(0, 1fr) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProBody {
+  height: 100% !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding-bottom: 92px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardStartButton {
+  left: 18px !important;
+  right: 18px !important;
+  bottom: 18px !important;
+  height: clamp(56px, 8.4svh, 72px) !important;
+  min-height: 0 !important;
+  padding: 0 12px 0 70px !important;
+  justify-content: flex-start !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: clamp(16px, 4vw, 19px) !important;
+  line-height: 1 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardStartButton::before {
+  left: 16px !important;
+  width: clamp(42px, 7.2svh, 52px) !important;
+  height: clamp(42px, 7.2svh, 52px) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardStartButton::after {
+  left: clamp(34px, 7vw, 40px) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage > .individualWorkoutNav {
+  grid-row: 3 !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: var(--workout-picker-nav) !important;
+  min-height: var(--workout-picker-nav) !important;
+  max-height: var(--workout-picker-nav) !important;
+  margin: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage > .individualWorkoutNav > button {
+  min-width: 40px !important;
+  min-height: 40px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
+  grid-row: 4 !important;
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: var(--workout-picker-progress) !important;
+  min-height: 0 !important;
+  max-height: var(--workout-picker-progress) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  overflow: visible !important;
+  transform: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutBottomProgress {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  height: var(--workout-picker-progress) !important;
+  min-height: var(--workout-picker-progress) !important;
+  max-height: var(--workout-picker-progress) !important;
+  margin: 0 !important;
+  padding: 0 4px 8px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage > .individualWorkoutBottomPanel nav.individualWorkoutMenuBar.clientBottomNav {
+  position: fixed !important;
+  left: 10px !important;
+  right: 10px !important;
+  bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+  width: auto !important;
+  height: 76px !important;
+  min-height: 76px !important;
+  max-height: 76px !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeModalHeader > button {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+}
+

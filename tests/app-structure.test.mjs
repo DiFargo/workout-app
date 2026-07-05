@@ -1443,7 +1443,7 @@ test("client workout set rows CSS keeps one no-weight modal grid owner", async (
 });
 
 test("client workout card render CSS keeps card sizing in root locks", async () => {
-  const source = await readText("src/styles/client-workout-card-render.css");
+  const source = await readCssWithImports("src/styles/client-workout-card-render.css");
 
   assert.doesNotMatch(
     source,
@@ -1637,7 +1637,7 @@ test("client workout flow CSS keeps compact run action panel sizing grouped", as
 
 test("client workout hero spacing stays in the workout lazy owner", async () => {
   const renderTarget = await readCssWithImports("src/styles/client-render-target.css");
-  const cardRender = await readText("src/styles/client-workout-card-render.css");
+  const cardRender = await readCssWithImports("src/styles/client-workout-card-render.css");
 
   assert.doesNotMatch(
     renderTarget,

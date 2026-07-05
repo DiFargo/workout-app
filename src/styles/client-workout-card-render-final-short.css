@@ -1,0 +1,83 @@
+@media (max-height: 760px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage {
+    --workout-picker-nav: 40px;
+    --workout-picker-progress: 26px;
+    --workout-picker-bottom-reserve: 96px;
+    row-gap: 6px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProBody {
+    padding-top: 18px !important;
+    padding-bottom: 80px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutTitle {
+    font-size: clamp(29px, 8.8vw, 38px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutStats {
+    gap: 9px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutStats > span {
+    min-height: 46px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardStartButton {
+    bottom: 14px !important;
+    height: 56px !important;
+    padding-left: 68px !important;
+    font-size: clamp(15px, 3.9vw, 18px) !important;
+  }
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardStartButton {
+  --workout-start-icon-size: clamp(42px, 7.2svh, 52px);
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardStartButton::before {
+  left: 16px !important;
+  width: var(--workout-start-icon-size) !important;
+  height: var(--workout-start-icon-size) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardStartButton::after {
+  left: calc(16px + (var(--workout-start-icon-size) / 2) - 5px) !important;
+  top: 50% !important;
+  transform: translate(0, -50%) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutBottomProgress::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 4px !important;
+  right: 4px !important;
+  bottom: 0 !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(
+      90deg,
+      #6b4df7 0 var(--completed-workouts-progress, 0%),
+      #dfe3ee var(--completed-workouts-progress, 0%) 100%
+    ) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutStats {
+  width: clamp(270px, 67vw, 345px) !important;
+  max-width: calc(100vw - 84px) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutStats > span {
+  box-sizing: border-box !important;
+  grid-template-columns: 48px minmax(0, 1fr) !important;
+  gap: 13px !important;
+  padding-right: 18px !important;
+  overflow: hidden !important;
+  font-size: clamp(20px, 4.5vw, 24px) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProImage img {
+  object-position: 56% 44% !important;
+  opacity: 0.5 !important;
+}

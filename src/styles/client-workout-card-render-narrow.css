@@ -1,0 +1,26 @@
+@media (max-width: 370px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage {
+    --workout-picker-header: 116px;
+    --workout-picker-nav: 26px;
+    --workout-picker-progress: 30px;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutDeck {
+    height: clamp(
+      430px,
+      calc(100svh - var(--workout-picker-header) - var(--workout-picker-nav) - var(--workout-picker-progress) - var(--workout-picker-bottom-bar)),
+      600px
+    ) !important;
+    min-height: 430px !important;
+    max-height: 600px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProBody {
+    padding: 22px 16px 86px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutStats {
+    gap: 11px !important;
+  }
+}
+
