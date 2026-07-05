@@ -1,0 +1,250 @@
+/* v1.71 unify product and editor bottom bars with the food search bar. */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodProductActionBar,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: max(10px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  z-index: 99990 !important;
+  width: min(374px, calc(100vw - 20px)) !important;
+  max-width: 374px !important;
+  height: 78px !important;
+  min-height: 78px !important;
+  padding: 6px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) !important;
+  gap: 6px !important;
+  border: 1px solid #dce2ed !important;
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow:
+    0 18px 44px rgba(55, 64, 112, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  transform: translateX(-50%) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodProductActionBar > button,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar > button {
+  min-width: 0 !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  padding: 6px 4px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  border: 1px solid transparent !important;
+  border-radius: 15px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #7b8396 !important;
+  -webkit-text-fill-color: #7b8396 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodProductActionBar > button span,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar > button span {
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: block !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: inherit !important;
+  font-size: 23px !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodProductActionBar .foodProductAddAction,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar .foodEditPageConfirmAction:not(:disabled) {
+  border-color: #ded8ff !important;
+  background: #f0edff !important;
+  color: #4f35e8 !important;
+  -webkit-text-fill-color: #4f35e8 !important;
+  box-shadow: none !important;
+}
+
+/* v1.72 repair the product editor form controls after the nutrition bar restyle. */
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 54px !important;
+  height: 54px !important;
+  margin: 8px 0 0 !important;
+  padding: 2px 4px 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow::-webkit-scrollbar {
+  display: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow button {
+  flex: 0 0 48px !important;
+  width: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid #e2e5ef !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(55, 64, 112, 0.06) !important;
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+  font: 850 22px/1 var(--app-font-family, inherit) !important;
+  letter-spacing: 0 !important;
+  overflow: hidden !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow button.active {
+  border-color: #d9d1ff !important;
+  background: #f0edff !important;
+  color: #4f35e8 !important;
+  -webkit-text-fill-color: #4f35e8 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionLabel {
+  gap: 8px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionInlineUnit,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionUnitRow {
+  width: 100% !important;
+  min-height: 68px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 88px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border: 1px solid #e2e5ef !important;
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  box-shadow: 0 12px 30px rgba(55, 64, 112, 0.08) !important;
+  overflow: visible !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionInlineUnit input,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionUnitRow input {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  margin: 0 !important;
+  padding: 0 16px !important;
+  display: block !important;
+  border: 1px solid #e8ebf3 !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+  font: 850 22px/1 var(--app-font-family, inherit) !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionInlineUnit .foodEditPortionUnitToggle,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionUnitRow .foodEditPortionUnitToggle,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionUnitRow button.foodEditPortionUnitToggle {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid #e8ebf3 !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+  font: 850 18px/1 var(--app-font-family, inherit) !important;
+  letter-spacing: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageContent textarea {
+  min-height: 124px !important;
+  height: 124px !important;
+  padding: 16px 18px !important;
+  border-radius: 20px !important;
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+  font: 650 16px/1.35 var(--app-font-family, inherit) !important;
+  letter-spacing: 0 !important;
+  resize: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageContent textarea::placeholder {
+  color: #a4a9b7 !important;
+  -webkit-text-fill-color: #a4a9b7 !important;
+  font: 650 16px/1.35 var(--app-font-family, inherit) !important;
+  letter-spacing: 0 !important;
+  opacity: 1 !important;
+}
+
+/* v1.73 keep the product editor compact: no quick icon row, duplicate top back button. */
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader {
+  position: relative !important;
+  min-height: 72px !important;
+  padding: 8px 56px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
+  position: absolute !important;
+  left: 0 !important;
+  top: 4px !important;
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  min-height: 52px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid #dfe4ef !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 12px 28px rgba(55, 64, 112, 0.1) !important;
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+  font: 900 25px/1 var(--app-font-family, inherit) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack:active {
+  transform: translateY(1px) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
