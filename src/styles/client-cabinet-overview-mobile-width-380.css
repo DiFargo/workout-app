@@ -1,0 +1,352 @@
+@media (max-width: 380px) {
+  .profileCabinetTitleRow .profileCabinetPageTitle {
+    padding-right: 40px !important;
+    padding-left: 40px !important;
+    font-size: 26px !important;
+  }
+
+  .profileTrainerNotificationsModal {
+    padding: 15px;
+    border-radius: 22px;
+  }
+
+  .profileTrainerNotificationItem {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .profileTrainerNotificationItem > em {
+    grid-column: 2;
+  }
+}
+
+.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview.hasProgressPhotos {
+  grid-template-rows: repeat(6, minmax(0, 1fr)) !important;
+}
+
+.cabinetProgressPhotosOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 15500;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  padding:
+    max(12px, env(safe-area-inset-top))
+    12px
+    max(12px, env(safe-area-inset-bottom));
+  background: rgba(2, 5, 3, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cabinetProgressPhotosModal {
+  box-sizing: border-box;
+  width: min(100%, 430px);
+  max-height: min(820px, calc(100dvh - 24px));
+  padding: 15px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(159, 202, 71, 0.24);
+  border-radius: 27px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(127, 159, 58, 0.16), transparent 34%),
+    linear-gradient(180deg, #111a12 0%, #071008 100%);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.64);
+}
+
+.cabinetProgressPhotosHead {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 2px 0 5px;
+}
+
+.cabinetProgressPhotosHead > div {
+  display: grid;
+  gap: 2px;
+}
+
+.cabinetProgressPhotosHead span {
+  color: #9fca47;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.profileTrainerNotificationsHead h2,
+.cabinetProgressPhotosHead h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+.cabinetProgressPhotosHead small {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+}
+
+.cabinetProgressPhotosHead button {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.cabinetProgressPhotosBody {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.cabinetProgressPhotosBody::-webkit-scrollbar {
+  display: none;
+}
+
+.cabinetProgressPhotosIntro {
+  min-height: 70px;
+  padding: 11px 13px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.cabinetProgressPhotosIntro > i {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(159, 202, 71, 0.28);
+  border-radius: 14px;
+  background: rgba(159, 202, 71, 0.08);
+  font-size: 20px;
+  font-style: normal;
+}
+
+.cabinetProgressPhotosIntro p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.cabinetProgressPhotosLatest {
+  padding: 11px 13px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(159, 202, 71, 0.15);
+  border-radius: 17px;
+  background: rgba(159, 202, 71, 0.045);
+}
+
+.profileTrainerNotificationsHead > div,
+.cabinetProgressPhotosLatest > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.cabinetProgressPhotosLatest span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.cabinetProgressPhotosLatest strong {
+  color: #fff;
+  font-size: 14px;
+}
+
+.cabinetProgressPhotosLatest > div:last-child {
+  display: flex;
+  gap: 4px;
+}
+
+.cabinetProgressPhotosLatest img {
+  width: 34px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.cabinetProgressPhotoSteps {
+  display: grid;
+  gap: 8px;
+}
+
+.cabinetProgressPhotoSteps label {
+  position: relative;
+  min-height: 82px;
+  padding: 9px 12px;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 26px;
+  align-items: center;
+  gap: 11px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.028);
+  cursor: pointer;
+}
+
+.cabinetProgressPhotoSteps label.selected {
+  border-color: rgba(159, 202, 71, 0.34);
+  background: rgba(159, 202, 71, 0.065);
+}
+
+.cabinetProgressPhotoSteps input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cabinetProgressPhotoSteps label > img,
+.cabinetProgressPhotoSteps label > i {
+  width: 58px;
+  height: 64px;
+  border-radius: 13px;
+}
+
+.cabinetProgressPhotoSteps label > img {
+  object-fit: cover;
+}
+
+.cabinetProgressPhotoSteps label > i {
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(159, 202, 71, 0.36);
+  background: rgba(159, 202, 71, 0.07);
+  color: #b5e655;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.cabinetProgressPhotoSteps label > span {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.cabinetProgressPhotoSteps strong {
+  color: #fff;
+  font-size: 15px;
+}
+
+.cabinetProgressPhotoSteps small {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.cabinetProgressPhotoSteps label > em {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(159, 202, 71, 0.32);
+  border-radius: 50%;
+  color: #b5e655;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.cabinetProgressPhotoStatus {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 123, 114, 0.22);
+  border-radius: 13px;
+  background: rgba(255, 123, 114, 0.07);
+  color: #ff9b95;
+  font-size: 11px;
+  text-align: center;
+}
+
+.cabinetProgressPhotoStatus.success {
+  border-color: rgba(159, 202, 71, 0.24);
+  background: rgba(159, 202, 71, 0.08);
+  color: #b5e655;
+}
+
+.cabinetProgressPhotosSave {
+  min-height: 54px;
+  border: 0;
+  border-radius: 17px;
+  background: #9fca47;
+  color: #101a08;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.cabinetProgressPhotosSave:disabled,
+.cabinetProgressPhotosHead button:disabled {
+  cursor: default;
+  opacity: 0.58;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosHead span {
+  color: #5a49df;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsHead h2,
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem strong,
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsEmpty strong,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosHead h2,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosLatest strong,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotoSteps strong {
+  color: #151824;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosHead small,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosIntro p,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosLatest span,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotoSteps small {
+  color: #737b91;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsHead button,
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationItem,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosHead button,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosIntro,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotoSteps label {
+  border-color: #e1e4ef;
+  background: #fff;
+  color: #151824;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosLatest,
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotoSteps label.selected {
+  border-color: rgba(96, 69, 223, 0.2);
+  background: #f3f1ff;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosSave {
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+}
+
