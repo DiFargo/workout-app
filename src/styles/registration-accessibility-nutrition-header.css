@@ -1,0 +1,338 @@
+/* Final compact nutrition header overrides. */
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroV4 {
+  padding-top: 6px !important;
+  margin-bottom: 6px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  height: 24px !important;
+  min-height: 24px !important;
+  max-height: 24px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
+  margin-bottom: 4px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  font-size: 18px !important;
+  line-height: 24px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 3px 5px !important;
+  border-radius: 9px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 {
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  gap: 2px !important;
+  flex-direction: column-reverse !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
+  height: 13px !important;
+  font-size: 9px !important;
+  line-height: 13px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
+  width: 20px !important;
+  height: 3px !important;
+  min-width: 20px !important;
+  min-height: 3px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  font-size: 0 !important;
+  box-shadow: none !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected span,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.hasFood span {
+  background: #6552e6 !important;
+  box-shadow: 0 2px 5px rgba(90, 73, 223, 0.22) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 {
+  width: 100% !important;
+  max-width: none !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  max-height: 18px !important;
+  margin: 2px 0 3px !important;
+  display: flex !important;
+  place-items: unset !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 span {
+  width: 100% !important;
+  font-family: Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+  line-height: 12px !important;
+  letter-spacing: -0.42px !important;
+  text-align: center !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  font-family: Arial, sans-serif !important;
+  font-size: 21px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.55px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
+  font-family: Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+  line-height: 14px !important;
+  letter-spacing: -0.42px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected {
+  border-radius: 7px !important;
+  background: rgba(101, 82, 230, 0.09) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected {
+  background: rgba(101, 82, 230, 0.09) !important;
+}
+
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected {
+  background: rgba(181, 230, 85, 0.09) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  width: auto !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  line-height: 42px !important;
+}
+
+.nutritionHeaderIconActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .nutritionHeaderIconActions button {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  transform: none !important;
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  place-items: center;
+  box-shadow: none;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .nutritionHeaderIconButton {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
+  margin: 0 !important;
+  gap: 0 !important;
+}
+
+.nutritionHeaderIconActions .nutritionQuickSearchIcon {
+  width: 19px !important;
+  height: 19px !important;
+  min-width: 19px !important;
+  min-height: 19px !important;
+}
+
+.nutritionHeaderIconActions .nutritionQuickCalendarIcon {
+  width: auto !important;
+  height: auto !important;
+  font-size: 19px !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4::before,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4::after,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span::before,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span::after {
+  content: none !important;
+  display: none !important;
+}
+
+.nutritionCalendarSheet {
+  position: relative;
+}
+
+.nutritionCalendarClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+:root[data-app-theme="warm-light"] .nutritionHeaderIconActions button,
+:root[data-app-theme="warm-light"] .nutritionCalendarClose {
+  border-color: #e3e6f1;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: 0 5px 14px rgba(55, 64, 112, 0.07);
+}
+
+.fatFoodSearchOverlay .fatFoodSearchScreenPremium {
+  position: relative;
+}
+
+.fatFoodSearchOverlay .fatSearchTopPremium .fatSearchClosePremium {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  font-size: 23px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCol strong {
+  font-size: 20px !important;
+}
+
+.nutritionCalendarSheet .nutritionCalendarHeader {
+  margin-top: 32px !important;
+}
+
+.fatFoodSearchOverlay .fatSearchTopPremium .fatSearchClosePremium {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+  padding: 0 !important;
+  font-size: 24px !important;
+  line-height: 24px !important;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .foodFlowTitleGroup {
+  width: 100% !important;
+  padding: 0 42px !important;
+  text-align: center !important;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .foodFlowTitleGroup h2 {
+  font-size: 27px !important;
+  line-height: 1.08 !important;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchTitleWrap {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchTitleButtonPremium {
+  margin: 0 auto !important;
+}
+
+.fatFoodSearchScreenPremium .fatPhotoAiSearchProcess,
+.fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview {
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 18px !important;
+  background: var(--food-flow-card) !important;
+  box-shadow: none !important;
+}
+
+.fatFoodSearchScreenPremium .fatPhotoAiSearchProcess strong,
+.fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview strong {
+  color: var(--food-flow-text) !important;
+}
+
+.fatFoodSearchScreenPremium .fatPhotoAiSearchProcess p,
+.fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview span,
+.fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview small {
+  color: var(--food-flow-muted) !important;
+}
+
+.fatSearchBottomBarFive .fatSearchBackAction {
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.fatSearchBottomBarFive .fatSearchBackAction span,
+.fatSearchBottomBarFive .fatSearchBackAction strong {
+  position: static !important;
+  left: auto !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  text-align: center !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiSearchProcess,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  box-shadow: 0 9px 25px rgba(55, 64, 112, 0.075) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiSearchProcess strong,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview strong {
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiSearchProcess p,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview span,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview small {
+  color: #737b91 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchPhotoAction {
+  border-color: #dedcf3 !important;
+  background: #eeecfb !important;
+  color: #5542d8 !important;
+  box-shadow: 0 8px 20px rgba(78, 67, 203, 0.14) !important;
+}

@@ -469,7 +469,7 @@ test("AI coach CSS keeps nutrition plan grids grouped", async () => {
 });
 
 test("legacy registration CSS keeps first setup active choices grouped", async () => {
-  const source = await readText("src/styles/registration-accessibility.css");
+  const source = await readCssWithImports("src/styles/registration-accessibility.css");
 
   assert.equal(
     (
@@ -486,7 +486,7 @@ test("legacy registration CSS keeps first setup active choices grouped", async (
 });
 
 test("legacy registration CSS keeps workout history item internals grouped", async () => {
-  const source = await readText("src/styles/registration-accessibility.css");
+  const source = await readCssWithImports("src/styles/registration-accessibility.css");
 
   assert.equal(
     (
@@ -534,7 +534,7 @@ test("legacy registration CSS keeps workout history item internals grouped", asy
 });
 
 test("legacy registration CSS keeps warm-light nutrition icon shells grouped", async () => {
-  const source = await readText("src/styles/registration-accessibility.css");
+  const source = await readCssWithImports("src/styles/registration-accessibility.css");
 
   assert.equal(
     (
