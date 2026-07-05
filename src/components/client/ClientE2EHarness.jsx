@@ -356,19 +356,17 @@ function HarnessProgressInsight() {
       <button type="button" className="profileAiCoachToggle">
         <div className="profileAiCoachSummary">
           <div
-            className="profileProgressGauge"
+            className="harnessReferenceProgressGauge"
             style={{
               "--progress-score": 90,
               "--progress-fill": "324deg",
-              "--progress-angle": "178deg",
               "--progress-color": "rgba(123, 111, 232, 1)",
               "--progress-glow": "rgba(123, 111, 232, 0.24)"
             }}
             role="img"
             aria-label="Оценка прогресса 90 из 100"
           >
-            <div className="profileProgressGaugeDial">
-              <i />
+            <div className="harnessReferenceProgressGaugeDial">
               <strong>90</strong>
             </div>
             <small>из 100</small>
