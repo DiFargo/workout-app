@@ -1,0 +1,797 @@
+/* v.1.193: main dashboard render lock. Nutrition remains the visual anchor. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain {
+    --main-render-text: #121625;
+    --main-render-muted: #73809a;
+    --main-render-card: #ffffff;
+    --main-render-border: #e7eaf3;
+    --main-render-purple: #6847ff;
+    --main-render-shadow: 0 18px 38px rgba(44, 52, 92, 0.11);
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
+    box-sizing: border-box !important;
+    width: calc(100% - 32px) !important;
+    max-width: 528px !important;
+    margin: 0 auto !important;
+    padding: 0 0 calc(112px + env(safe-area-inset-bottom, 0px)) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHero {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 126px !important;
+    min-height: 126px !important;
+    max-height: 126px !important;
+    margin: 0 !important;
+    padding: 20px 26px !important;
+    display: grid !important;
+    grid-template-columns: 74px minmax(0, 1fr) 18px !important;
+    gap: 18px !important;
+    align-items: center !important;
+    background: var(--main-render-card) !important;
+    border: 1px solid var(--main-render-border) !important;
+    border-bottom: 0 !important;
+    border-radius: 24px 24px 0 0 !important;
+    box-shadow: var(--main-render-shadow) !important;
+    color: var(--main-render-text) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiAvatarWrap {
+    width: 74px !important;
+    height: 74px !important;
+    min-width: 74px !important;
+    margin: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiAvatar {
+    width: 74px !important;
+    height: 74px !important;
+    min-width: 74px !important;
+    border-radius: 50% !important;
+    box-shadow: 0 14px 22px rgba(52, 62, 108, 0.16) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiAvatarRing {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHeroText {
+    min-width: 0 !important;
+    display: block !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHeroText h1 {
+    margin: 0 !important;
+    max-width: 100% !important;
+    color: var(--main-render-text) !important;
+    font-size: 20px !important;
+    line-height: 1.15 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    white-space: normal !important;
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHeroChevron {
+    color: #8a93a8 !important;
+    font-size: 34px !important;
+    line-height: 1 !important;
+    font-weight: 700 !important;
+    justify-self: end !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 82px !important;
+    min-height: 82px !important;
+    max-height: 82px !important;
+    margin: -18px 0 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    background: var(--main-render-card) !important;
+    border: 1px solid var(--main-render-border) !important;
+    border-top: 1px solid #edf0f7 !important;
+    border-radius: 0 0 24px 24px !important;
+    box-shadow: var(--main-render-shadow) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow > div {
+    box-sizing: border-box !important;
+    height: 82px !important;
+    min-width: 0 !important;
+    padding: 12px 8px 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow > div:not(:last-child) {
+    border-right: 1px solid #e7eaf3 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatLabel,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow span {
+    width: 100% !important;
+    min-width: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    color: var(--main-render-muted) !important;
+    font-size: 12px !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatLabel svg {
+    width: 18px !important;
+    height: 18px !important;
+    color: var(--main-render-purple) !important;
+    stroke-width: 2.4 !important;
+    flex: 0 0 auto !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow strong,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow .goal strong {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    color: var(--main-render-text) !important;
+    font-size: 18px !important;
+    line-height: 1.05 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow small {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiSplitCards {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 92px !important;
+    min-height: 92px !important;
+    max-height: 92px !important;
+    margin: 12px 0 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    background: var(--main-render-card) !important;
+    border: 1px solid var(--main-render-border) !important;
+    border-radius: 24px !important;
+    box-shadow: var(--main-render-shadow) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 92px !important;
+    min-height: 92px !important;
+    max-height: 92px !important;
+    margin: 0 !important;
+    padding: 20px 18px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 9px !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-align: left !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard:first-child {
+    border-right: 1px solid #e7eaf3 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard span {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--main-render-muted) !important;
+    font-size: 13px !important;
+    line-height: 1.15 !important;
+    font-weight: 800 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard span svg {
+    width: 20px !important;
+    height: 20px !important;
+    color: var(--main-render-purple) !important;
+    stroke-width: 2.4 !important;
+    flex: 0 0 auto !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard:last-child span svg {
+    color: #ff981f !important;
+    fill: rgba(255, 152, 31, 0.12) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard strong {
+    color: var(--main-render-text) !important;
+    font-size: 22px !important;
+    line-height: 1.05 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 214px !important;
+    min-height: 214px !important;
+    max-height: 214px !important;
+    margin: 10px 0 0 !important;
+    padding: 24px 22px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    background: var(--main-render-card) !important;
+    background-image: none !important;
+    border: 1px solid var(--main-render-border) !important;
+    border-radius: 24px !important;
+    box-shadow: var(--main-render-shadow) !important;
+    color: var(--main-render-text) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileAiCoachToggle {
+    width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    cursor: default !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileAiCoachSummary {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 150px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 18px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileProgressGauge {
+    width: 136px !important;
+    height: 112px !important;
+    margin: 0 !important;
+    position: relative !important;
+    display: grid !important;
+    place-items: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileProgressGaugeDial {
+    width: 128px !important;
+    height: 128px !important;
+    border-radius: 50% !important;
+    position: relative !important;
+    display: grid !important;
+    place-items: center !important;
+    background:
+      radial-gradient(circle at center, #ffffff 0 45%, transparent 46%),
+      conic-gradient(from 220deg, #6847ff 0 21%, #f05f5f 21% 28%, #f6a21e 28% 44%, #64d99d 44% 72%, transparent 72% 100%) !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileProgressGaugeDial::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 22px !important;
+    border: 9px solid rgba(104, 71, 255, 0.13) !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    z-index: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileProgressGaugeDial i {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileProgressGaugeDial strong {
+    position: relative !important;
+    z-index: 1 !important;
+    color: var(--main-render-purple) !important;
+    font-size: 33px !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePageMain .profileProgressInsightCard .profileProgressGauge small,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileProgressGauge small {
+    position: absolute !important;
+    left: 50% !important;
+    top: 82px !important;
+    transform: translateX(-50%) !important;
+    z-index: 2 !important;
+    color: var(--main-render-text) !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileAiCoachHeadline {
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 5px !important;
+    text-align: left !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileAiCoachHeadline span {
+    color: #283044 !important;
+    font-size: 11px !important;
+    line-height: 1.1 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    text-transform: uppercase !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileAiCoachHeadline h2 {
+    margin: 0 !important;
+    color: var(--main-render-text) !important;
+    font-size: 20px !important;
+    line-height: 1.05 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileAiCoachHeadline p {
+    margin: 0 !important;
+    color: #283044 !important;
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileAiCoachPreview.profileProgressInsightBadges {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileProgressInsightBadge {
+    height: 46px !important;
+    min-height: 46px !important;
+    padding: 7px 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    border-radius: 16px !important;
+    background: #fafbff !important;
+    border: 1px solid #e8ebf5 !important;
+    box-shadow: none !important;
+    color: var(--main-render-text) !important;
+    overflow: hidden !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileProgressInsightBadge b {
+    max-width: 100% !important;
+    color: var(--main-render-text) !important;
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.07em !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileProgressInsightCard .profileProgressInsightBadge small {
+    max-width: 100% !important;
+    color: var(--main-render-muted) !important;
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    font-weight: 800 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSnapshot {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 186px !important;
+    min-height: 186px !important;
+    max-height: 186px !important;
+    margin: 8px 0 0 !important;
+    padding: 22px 26px 18px !important;
+    background: var(--main-render-card) !important;
+    border: 1px solid var(--main-render-border) !important;
+    border-radius: 24px !important;
+    box-shadow: var(--main-render-shadow) !important;
+    color: var(--main-render-text) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSnapshotHeader {
+    margin: 0 0 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSnapshotHeader span {
+    color: var(--main-render-text) !important;
+    font-size: 16px !important;
+    line-height: 1.15 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSnapshotHeader i {
+    color: #8a93a8 !important;
+    font-size: 28px !important;
+    line-height: 1 !important;
+    font-style: normal !important;
+    font-weight: 800 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSnapshotBody {
+    display: grid !important;
+    grid-template-columns: 120px minmax(0, 1fr) !important;
+    gap: 18px !important;
+    align-items: end !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementWeight {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-end !important;
+    min-width: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementWeight strong {
+    color: var(--main-render-text) !important;
+    font-size: 28px !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementWeight em {
+    margin-top: 5px !important;
+    color: #6847ff !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementWeight small {
+    margin-top: 8px !important;
+    color: #283044 !important;
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    font-weight: 700 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChart {
+    min-width: 0 !important;
+    height: 98px !important;
+    min-height: 98px !important;
+    max-height: 98px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChart svg {
+    width: 100% !important;
+    height: 74px !important;
+    min-height: 74px !important;
+    display: block !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChart line {
+    stroke: #e6e9f2 !important;
+    stroke-width: 2 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChart polyline {
+    fill: none !important;
+    stroke: #6847ff !important;
+    stroke-width: 3.5 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChart circle {
+    fill: #6847ff !important;
+    stroke: #ffffff !important;
+    stroke-width: 2 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChartDates {
+    margin-top: -2px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    color: #5f6578 !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    font-weight: 700 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementEmpty,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSingle {
+    height: 78px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: var(--main-render-muted) !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+  }
+}
+
+/* v.1.193 hard lock: beat older imported client dashboard rules. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 18px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiHero.profileAiHero,
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiStatsRow.profileAiStatsRow,
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiSplitCards.profileAiSplitCards,
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard,
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiStatsRow.profileAiStatsRow {
+    height: 82px !important;
+    min-height: 82px !important;
+    max-height: 82px !important;
+    flex: 0 0 82px !important;
+    margin-top: -18px !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 0 24px 24px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiStatsRow.profileAiStatsRow > div {
+    height: 82px !important;
+    min-height: 82px !important;
+    max-height: 82px !important;
+    padding: 12px 8px 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiSplitCards.profileAiSplitCards {
+    height: 92px !important;
+    min-height: 92px !important;
+    max-height: 92px !important;
+    flex: 0 0 92px !important;
+    margin-top: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiMiniCard.profileAiMiniCard {
+    height: 92px !important;
+    min-height: 92px !important;
+    max-height: 92px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard {
+    height: 214px !important;
+    min-height: 214px !important;
+    max-height: 214px !important;
+    padding: 24px 22px 16px !important;
+    margin-top: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot {
+    height: 186px !important;
+    min-height: 186px !important;
+    max-height: 186px !important;
+    padding: 22px 26px 18px !important;
+    margin-top: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > div.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow {
+    height: 82px !important;
+    min-height: 82px !important;
+    max-height: 82px !important;
+    margin-top: -18px !important;
+    margin-bottom: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > div.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow > div {
+    height: 82px !important;
+    min-height: 82px !important;
+    max-height: 82px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > div.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow .profileAiStatLabel,
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > div.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow span {
+    gap: 4px !important;
+    font-size: 10.5px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > div.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow .profileAiStatLabel svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection .profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline p {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    -webkit-line-clamp: unset !important;
+    -webkit-box-orient: initial !important;
+  }
+
+  /* v.1.194 main render precision: final dashboard card alignment. */
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiMiniCard.profileAiMiniCard span {
+    width: 100% !important;
+    max-width: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+    color: #778197 !important;
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiAvatarBadge {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiMiniCard.profileAiMiniCard span svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiMiniCard.profileAiMiniCard strong {
+    font-size: 22px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileAiCoachSummary {
+    grid-template-columns: 134px minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileProgressGauge {
+    width: 128px !important;
+    height: 106px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial {
+    width: 122px !important;
+    height: 122px !important;
+    background:
+      radial-gradient(circle at center, #ffffff 0 48%, transparent 49%),
+      conic-gradient(from 138deg, #6847ff 0 17%, #ef635f 17% 24%, transparent 24% 29%, #f5a321 29% 45%, #66d39a 45% 80%, transparent 80% 100%) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial::after {
+    inset: 24px !important;
+    border-width: 7px !important;
+    border-color: rgba(104, 71, 255, 0.12) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial strong {
+    font-size: 32px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePageMain.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileProgressGauge small,
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileProgressGauge small {
+    top: 77px !important;
+    font-size: 11px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline p {
+    font-size: 11.5px !important;
+    line-height: 1.35 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot {
+    height: 174px !important;
+    min-height: 174px !important;
+    max-height: 174px !important;
+    padding: 20px 26px 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .mainMeasurementSnapshotHeader span {
+    width: auto !important;
+    max-width: none !important;
+    white-space: nowrap !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .mainMeasurementSnapshotBody {
+    grid-template-columns: 104px minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .mainMeasurementWeight strong {
+    font-size: 27px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .mainMeasurementChart {
+    height: 88px !important;
+    min-height: 88px !important;
+    max-height: 88px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .mainMeasurementChart svg {
+    height: 66px !important;
+    min-height: 66px !important;
+  }
+
+}
+

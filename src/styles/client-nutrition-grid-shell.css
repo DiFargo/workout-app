@@ -1,0 +1,553 @@
+/* Align primary client screens to the Nutrition page header and bottom bar. */
+@media (max-width: 900px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
+    --nutrition-grid-x: 25px;
+    --nutrition-grid-title-y: 53px;
+    --nutrition-grid-title-color: #5f5848;
+    padding-left: var(--nutrition-grid-x) !important;
+    padding-right: var(--nutrition-grid-x) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientPageVersionBadge {
+    top: 15px !important;
+    left: 27px !important;
+    height: 22px !important;
+    min-width: 44px !important;
+    padding: 0 6px !important;
+    border-radius: 999px !important;
+    color: #8a90a0 !important;
+    font-size: 12px !important;
+    font-weight: 850 !important;
+    line-height: 20px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain > h1.mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero.workoutSelectHero,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow.profileCabinetTitleRow {
+    margin-top: var(--nutrition-grid-title-y) !important;
+    margin-bottom: 18px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    padding: 0 !important;
+    align-items: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain > h1.mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle.clientCorePageTitle {
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    color: var(--nutrition-grid-title-color) !important;
+    font-size: 28px !important;
+    font-weight: 900 !important;
+    line-height: 29.68px !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain > h1.mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle.clientCorePageTitle {
+    transform: translate(-1px, -1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectTitle.clientCorePageTitle {
+    transform: translate(-1px, -3px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .menuRefreshIconBtn.menuRefreshIconBtn,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileTrainerNotificationsButton.profileTrainerNotificationsButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions > button.workoutHistoryHeaderButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions > button.workoutModeHeaderButton {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
+    border-radius: 16px !important;
+    color: var(--nutrition-grid-title-color) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .menuRefreshIconBtn.menuRefreshIconBtn {
+    top: var(--nutrition-grid-title-y) !important;
+    right: var(--nutrition-grid-x) !important;
+    transform: translate(1px, -1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileTrainerNotificationsButton.profileTrainerNotificationsButton {
+    transform: translate(1px, -1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions > button.workoutHistoryHeaderButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions > button.workoutModeHeaderButton {
+    transform: translate(1px, -3px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .clientPageVersionBadge {
+    transform: translate(-1px, -1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow.profileCabinetTitleRow {
+    grid-template-columns: minmax(0, 1fr) 48px !important;
+    column-gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions {
+    gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .mainMenuBottomBar.profileBottomTabBar.clientBottomNav {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    padding: 7px !important;
+    gap: 4px !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    border-radius: 20px !important;
+    background: rgba(248, 251, 255, 0.94) !important;
+    border-color: #dce2ed !important;
+    box-shadow:
+      0 18px 44px rgba(55, 64, 112, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .clientBottomNav > button,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button {
+    height: 60px !important;
+    min-height: 60px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    gap: 2px !important;
+    padding: 5px 2px 4px !important;
+    border-radius: 16px !important;
+    border: 1px solid transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
+    color: #737b91 !important;
+    line-height: 13.3333px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button.active,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .clientBottomNav > button.active,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button.active,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button.active,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button.active {
+    background: #f0edff !important;
+    border-color: #ded7ff !important;
+    color: #5d43e8 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button span,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .clientBottomNav > button span,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button span,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button span {
+    width: 24px !important;
+    height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #737b91 !important;
+    font-size: 25px !important;
+    line-height: 25px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button.active span,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .clientBottomNav > button.active span,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button.active span,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button.active span {
+    color: #5d43e8 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button svg,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .clientBottomNav > button svg,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button svg,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button svg,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button svg {
+    width: 24px !important;
+    height: 24px !important;
+    color: currentColor !important;
+    stroke-width: 2.4px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button strong {
+    color: currentColor !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    line-height: 11px !important;
+    height: 16px !important;
+    display: block !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button strong {
+    transform: translateY(-1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button strong {
+    transform: none !important;
+  }
+}
+
+/* v201: main inner render lock, excludes header/nav and gauge drawing. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiDashboardCard {
+    gap: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHero.profileAiHero .profileAiHeroText h1 {
+    max-width: 100% !important;
+    font-size: clamp(15px, 4.15vw, 17px) !important;
+    line-height: 1.12 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHero.profileAiHero .profileAiHeroChevron {
+    width: 14px !important;
+    min-width: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow,
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow > div {
+    height: 82px !important;
+    min-height: 82px !important;
+    max-height: 82px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow > div {
+    padding: 12px 5px 10px !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow .profileAiStatLabel,
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow span {
+    font-size: 11px !important;
+    line-height: 1.05 !important;
+    gap: 5px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow .profileAiStatLabel svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+}
+
+/* v203: final cascade lock for main greeting width. Header, nav, and gauge stay untouched. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHero.profileAiHero.profileAiHero {
+    grid-template-columns: 58px minmax(0, 1fr) 14px !important;
+    column-gap: 8px !important;
+    row-gap: 0 !important;
+    padding: 14px 14px 14px 20px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHero.profileAiHero.profileAiHero .profileAiHeroText {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHero.profileAiHero.profileAiHero .profileAiHeroText h1 {
+    width: auto !important;
+    max-width: none !important;
+    font-size: clamp(15px, 4.15vw, 17px) !important;
+    line-height: 1.12 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+}
+
+/* v.1.200 final position: progress card spacing only; gauge drawing remains unchanged. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard {
+    height: 196px !important;
+    min-height: 196px !important;
+    max-height: 196px !important;
+    flex-basis: 196px !important;
+    padding: 20px 20px 16px !important;
+    gap: 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline span {
+    font-size: 10px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline h2 {
+    font-size: 18px !important;
+    line-height: 1.08 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline p {
+    font-size: 10.5px !important;
+    line-height: 1.26 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressInsightBadge {
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 5px 7px !important;
+    border-radius: 17px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressInsightBadge b {
+    font-size: 9.4px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressInsightBadge small {
+    font-size: 8.5px !important;
+    line-height: 1 !important;
+  }
+}
+
+/* v.1.197: high-specificity inner dashboard lock. Does not touch page header or bottom navigation. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection {
+    gap: 15px !important;
+    padding-bottom: calc(122px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiHero.profileAiHero {
+    height: 106px !important;
+    min-height: 106px !important;
+    max-height: 106px !important;
+    grid-template-columns: 62px minmax(0, 1fr) 18px !important;
+    padding: 16px 23px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiHero.profileAiHero .profileAiAvatarWrap,
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiHero.profileAiHero .profileAiAvatar {
+    width: 62px !important;
+    height: 62px !important;
+    min-width: 62px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow {
+    height: 68px !important;
+    min-height: 68px !important;
+    max-height: 68px !important;
+    flex-basis: 68px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow > div {
+    height: 68px !important;
+    min-height: 68px !important;
+    max-height: 68px !important;
+    padding: 8px 5px 7px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow .profileAiStatLabel,
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow span {
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow strong {
+    font-size: 17px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards {
+    height: 78px !important;
+    min-height: 78px !important;
+    max-height: 78px !important;
+    flex-basis: 78px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards .profileAiMiniCard.profileAiMiniCard {
+    height: 78px !important;
+    min-height: 78px !important;
+    max-height: 78px !important;
+    padding: 13px 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards .profileAiMiniCard.profileAiMiniCard span {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    font-size: 10px !important;
+    line-height: 1.12 !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards .profileAiMiniCard.profileAiMiniCard strong {
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard {
+    height: 178px !important;
+    min-height: 178px !important;
+    max-height: 178px !important;
+    flex-basis: 178px !important;
+    padding: 17px 22px 13px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileAiCoachSummary {
+    grid-template-columns: 114px minmax(0, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressGauge {
+    width: 108px !important;
+    height: 88px !important;
+    position: relative !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial {
+    width: 108px !important;
+    height: 78px !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial::before {
+    width: 108px !important;
+    height: 88px !important;
+    left: 0 !important;
+    top: 0 !important;
+    border-radius: 0 !important;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 88'%3E%3Cpath d='M18 70 A36 36 0 0 1 90 70' fill='none' stroke='%23ece8ff' stroke-width='7' stroke-linecap='round'/%3E%3Cpath d='M18 70 A36 36 0 0 1 22 55' fill='none' stroke='%23ef635f' stroke-width='8' stroke-linecap='round'/%3E%3Cpath d='M22 55 A36 36 0 0 1 44 36' fill='none' stroke='%23f7ac26' stroke-width='8' stroke-linecap='round'/%3E%3Cpath d='M44 36 A36 36 0 0 1 90 70' fill='none' stroke='%236bd89c' stroke-width='8' stroke-linecap='round'/%3E%3Cpath d='M18 70 A36 36 0 0 0 54 82' fill='none' stroke='%236847ff' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat !important;
+    -webkit-mask: none !important;
+    mask: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial::after {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial strong {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 20px !important;
+    z-index: 3 !important;
+    font-size: 29px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressGauge small {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 63px !important;
+    z-index: 4 !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial i {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial i::after,
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressGaugeDial i::after {
+    content: "" !important;
+    position: absolute !important;
+    left: -6px !important;
+    top: -5px !important;
+    width: 15px !important;
+    height: 15px !important;
+    border-radius: 999px !important;
+    background: #6847ff !important;
+    box-shadow: 0 8px 16px rgba(104, 71, 255, 0.2) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline p {
+    font-size: 10.5px !important;
+    line-height: 1.18 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressInsightBadge {
+    height: 36px !important;
+    min-height: 36px !important;
+    padding: 5px 7px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot {
+    height: 136px !important;
+    min-height: 136px !important;
+    max-height: 136px !important;
+    flex-basis: 136px !important;
+    padding: 16px 26px 12px !important;
+    display: block !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotHeader {
+    display: flex !important;
+    height: 18px !important;
+    margin-bottom: 9px !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotBody {
+    display: grid !important;
+    grid-template-columns: 102px minmax(0, 1fr) !important;
+    height: 82px !important;
+    gap: 14px !important;
+    align-items: center !important;
+    margin-top: 8px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementWeight strong {
+    font-size: 25px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementChart {
+    position: absolute !important;
+    right: 26px !important;
+    bottom: 22px !important;
+    width: 186px !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementChart svg {
+    height: 46px !important;
+    min-height: 46px !important;
+    max-height: 46px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementChartDates {
+    margin-top: -6px !important;
+    font-size: 9px !important;
+  }
+}
+

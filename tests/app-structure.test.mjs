@@ -3611,7 +3611,7 @@ test("client main CSS keeps compact AI stat text rules in the later owner", asyn
 });
 
 test("client nutrition grid CSS does not keep dashboard icon and chart duplicates", async () => {
-  const nutritionGrid = await readText("src/styles/client-nutrition-grid.css");
+  const nutritionGrid = await readCssWithImports("src/styles/client-nutrition-grid.css");
   const mainOverrides = await readText("src/styles/client-main.css");
 
   const duplicateLocks = [
@@ -3649,7 +3649,7 @@ test("client nutrition grid CSS does not keep dashboard icon and chart duplicate
 });
 
 test("client nutrition grid CSS keeps progress insight spacing in the final owner", async () => {
-  const source = await readText("src/styles/client-nutrition-grid.css");
+  const source = await readCssWithImports("src/styles/client-nutrition-grid.css");
   const earlyProgressStart = source.indexOf("/* v.1.200: progress card spacing only");
   const finalProgressStart = source.indexOf("/* v.1.200 final position: progress card spacing only");
 
@@ -3678,7 +3678,7 @@ test("client nutrition grid CSS keeps progress insight spacing in the final owne
 });
 
 test("client nutrition grid CSS does not keep exact duplicate blocks", async () => {
-  const source = await readText("src/styles/client-nutrition-grid.css");
+  const source = await readCssWithImports("src/styles/client-nutrition-grid.css");
   const seenBlocks = new Set();
   const duplicateBlocks = [];
 
