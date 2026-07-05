@@ -1,0 +1,228 @@
+/* UNIFIED FOOD FLOW V346 */
+.fatFoodSearchScreenPremium {
+  --food-flow-border: rgba(255, 255, 255, 0.075);
+  --food-flow-card: rgba(255, 255, 255, 0.035);
+  --food-flow-card-strong: rgba(255, 255, 255, 0.052);
+  --food-flow-muted: rgba(232, 237, 230, 0.56);
+  --food-flow-text: rgba(248, 248, 246, 0.96);
+  --food-flow-accent: #aee94d;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) {
+  width: min(560px, 100%) !important;
+  margin: 0 auto !important;
+  padding:
+    max(20px, calc(env(safe-area-inset-top) + 16px))
+    16px
+    calc(116px + env(safe-area-inset-bottom)) !important;
+  background:
+    linear-gradient(180deg, rgba(8, 20, 12, 0.97), rgba(3, 10, 7, 0.99)) !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchTopPremium {
+  position: relative !important;
+  top: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 0 14px !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 12px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.foodFlowTitleGroup,
+.foodProductFlowTitle {
+  min-width: 0 !important;
+}
+
+.foodFlowTitleGroup > span,
+.foodProductFlowTitle > span {
+  display: block !important;
+  margin-bottom: 4px !important;
+  color: var(--food-flow-accent) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.1 !important;
+  text-transform: uppercase !important;
+}
+
+.foodFlowTitleGroup h2,
+.foodProductFlowTitle h2 {
+  margin: 0 !important;
+  color: var(--food-flow-text) !important;
+  font-size: clamp(27px, 7vw, 34px) !important;
+  font-weight: 950 !important;
+  line-height: 1.02 !important;
+  letter-spacing: 0 !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchTitleWrap {
+  position: relative !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchTitleButtonPremium {
+  min-height: 42px !important;
+  padding: 7px 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 14px !important;
+  background: var(--food-flow-card) !important;
+  box-shadow: none !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchTitleButtonPremium span,
+.fatFoodSearchScreenPremium .fatSearchTitleButtonPremium strong {
+  color: var(--food-flow-muted) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchTitleButtonPremium strong {
+  color: var(--food-flow-text) !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchInputWrapPremium {
+  width: 100% !important;
+  min-height: 56px !important;
+  margin: 0 0 12px !important;
+  padding: 0 12px !important;
+  gap: 9px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 18px !important;
+  background: var(--food-flow-card) !important;
+  box-shadow: none !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchInputWrapPremium > span {
+  color: var(--food-flow-muted) !important;
+  font-size: 24px !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchInputWrapPremium input {
+  min-height: 54px !important;
+  padding: 0 !important;
+  color: var(--food-flow-text) !important;
+  font-size: 16px !important;
+  font-weight: 750 !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchInputWrapPremium input::placeholder {
+  color: rgba(232, 237, 230, 0.38) !important;
+  font-weight: 650 !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchHistoryNames,
+.fatFoodSearchScreenPremium .fatRecentFoods,
+.fatFoodSearchScreenPremium .fatSearchStatus {
+  margin: 0 0 12px !important;
+  padding: 14px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 18px !important;
+  background: var(--food-flow-card) !important;
+  box-shadow: none !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchHistoryNamesTitle,
+.fatFoodSearchScreenPremium .fatRecentFoodsTitle {
+  margin-bottom: 10px !important;
+  color: var(--food-flow-muted) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchHistoryNamesList {
+  gap: 7px !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchHistoryNameButton {
+  min-height: 34px !important;
+  padding: 7px 11px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.025) !important;
+  color: rgba(232, 237, 230, 0.7) !important;
+  box-shadow: none !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchListPremium {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchResultCard,
+.fatFoodSearchScreenPremium .fatRecentFoodButton {
+  width: 100% !important;
+  min-height: 72px !important;
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 18px !important;
+  background: var(--food-flow-card) !important;
+  box-shadow: none !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchResultCard:active {
+  border-color: rgba(174, 233, 77, 0.25) !important;
+  background: rgba(143, 188, 54, 0.07) !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchResultIcon {
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  border-radius: 14px !important;
+  background: rgba(143, 188, 54, 0.075) !important;
+  font-size: 24px !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchResultInfo strong {
+  color: var(--food-flow-text) !important;
+  font-size: 15px !important;
+  line-height: 1.15 !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchResultInfo span,
+.fatFoodSearchScreenPremium .fatSearchResultInfo small {
+  color: var(--food-flow-muted) !important;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchResultCheck {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(174, 233, 77, 0.18) !important;
+  border-radius: 12px !important;
+  background: rgba(143, 188, 54, 0.06) !important;
+}
+
+.fatFoodSearchScreenPremium .fatSearchResultCheck::before {
+  content: "+" !important;
+  color: var(--food-flow-accent) !important;
+  font-size: 22px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+

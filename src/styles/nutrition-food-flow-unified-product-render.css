@@ -1,0 +1,142 @@
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) {
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+.foodEditRenderScreen {
+  width: min(560px, 100%) !important;
+  margin: 0 auto !important;
+  padding:
+    max(20px, calc(env(safe-area-inset-top) + 16px))
+    16px
+    calc(112px + env(safe-area-inset-bottom)) !important;
+}
+
+.foodProductFlowHeader {
+  width: 100% !important;
+  margin: 0 0 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
+}
+
+.foodProductFlowHeader .foodProductFlowTitle {
+  width: 100% !important;
+  text-align: center !important;
+}
+
+.foodProductFlowHeader .foodProductFlowTitle > span {
+  display: none !important;
+}
+
+.foodProductFlowHeader .foodProductFlowTitle h2 {
+  font-size: clamp(28px, 7vw, 34px) !important;
+}
+
+.foodProductFlowHeader .foodEditInlineMealHeader {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 76px !important;
+  margin: 0 !important;
+  padding: 10px 13px 9px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 16px !important;
+  background: var(--food-flow-card) !important;
+  box-shadow: none !important;
+}
+
+.foodProductFlowHeader .foodEditInlineMealLabel {
+  width: 100% !important;
+  color: var(--food-flow-muted) !important;
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.05em !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+}
+
+.foodProductFlowHeader .foodEditInlineMealButton {
+  width: 100% !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  text-align: center !important;
+  color: var(--food-flow-text) !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.foodProductFlowHeader + .foodEditHeroRender.foodEditHeroEditable {
+  margin-top: 14px !important;
+}
+
+.foodEditHeroRender.foodEditHeroEditable,
+.foodEditAmountCard,
+.foodEditRowsCard {
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 18px !important;
+  background: var(--food-flow-card) !important;
+  box-shadow: none !important;
+}
+
+.foodEditHeroRender.foodEditHeroEditable {
+  min-height: 128px !important;
+  padding: 18px !important;
+}
+
+.foodEditHeroRender.foodEditHeroEditable > strong {
+  color: var(--food-flow-text) !important;
+  font-size: clamp(24px, 6.5vw, 31px) !important;
+  line-height: 1.05 !important;
+}
+
+.foodEditSegmentRow {
+  margin-top: 10px !important;
+}
+
+.foodEditAmountCard {
+  min-height: 72px !important;
+  margin-top: 10px !important;
+  padding: 12px 16px !important;
+}
+
+.foodEditMacrosCards {
+  margin-top: 10px !important;
+  gap: 8px !important;
+}
+
+.foodEditMacrosCards > div {
+  min-height: 76px !important;
+  padding: 10px 6px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 16px !important;
+  background: var(--food-flow-card) !important;
+  box-shadow: none !important;
+}
+
+.foodEditMacrosCards span {
+  color: var(--food-flow-muted) !important;
+  font-size: 10px !important;
+}
+
+.foodEditMacrosCards strong {
+  color: var(--food-flow-text) !important;
+}
+
+.foodEditRowsCard {
+  margin-top: 10px !important;
+}
+
