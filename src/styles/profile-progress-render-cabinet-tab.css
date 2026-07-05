@@ -1,0 +1,183 @@
+.profileTabbedPage[data-profile-tab="cabinet"] {
+  overflow: hidden !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+  height: 100% !important;
+  max-height: none !important;
+  padding: 24px 14px 10px !important;
+  overflow-y: auto !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHero {
+  min-height: 92px !important;
+  padding: 10px 6px 8px !important;
+  display: grid !important;
+  grid-template-columns: 72px minmax(0, 1fr) !important;
+  gap: 16px !important;
+  align-items: center !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiAvatarWrap {
+  width: 72px !important;
+  height: 72px !important;
+  margin: 0 !important;
+  align-self: center !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiAvatar {
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 50% !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiAvatarRing {
+  display: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHeroText {
+  min-height: 0 !important;
+  padding: 0 !important;
+  justify-content: center !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHeroText > span {
+  margin-bottom: 9px !important;
+  color: #a9d13f !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHeroText h1 {
+  max-width: 245px !important;
+  margin: 0 !important;
+  font-size: clamp(20px, 5.5vw, 23px) !important;
+  font-weight: 700 !important;
+  line-height: 1.18 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow,
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiSplitCards {
+  gap: 8px !important;
+  margin-top: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow > div,
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard,
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachInsight {
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.012)),
+    rgba(10, 17, 11, 0.72) !important;
+  box-shadow: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow > div {
+  height: 82px !important;
+  min-height: 82px !important;
+  padding: 11px 5px !important;
+  border-radius: 15px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow span {
+  margin-bottom: 8px !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  font-size: 9px !important;
+  font-weight: 500 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow strong {
+  font-size: 19px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard {
+  min-height: 96px !important;
+  padding: 14px 10px !important;
+  border-radius: 16px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard span {
+  max-width: 122px !important;
+  margin-bottom: 13px !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard strong {
+  margin: 0 !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachInsight {
+  margin-top: 12px !important;
+  border-radius: 17px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachToggle {
+  min-height: 124px !important;
+  padding: 17px 14px 12px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachToggle span {
+  color: #a9d13f !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachToggle h2 {
+  margin: 13px 0 8px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachToggle p {
+  max-width: 250px !important;
+  color: rgba(255, 255, 255, 0.62) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachToggle em {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachPreview {
+  padding: 0 14px 15px !important;
+  gap: 7px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachPreview span {
+  min-height: 31px !important;
+  padding: 0 10px !important;
+  color: rgba(255, 255, 255, 0.68) !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHistoryButton {
+  flex: 0 0 58px !important;
+  width: 100% !important;
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+  margin-top: auto !important;
+  margin-bottom: 3px !important;
+  padding: 0 16px !important;
+  border: 1px solid rgba(145, 173, 78, 0.34) !important;
+  border-radius: 15px !important;
+  background: rgba(127, 159, 58, 0.075) !important;
+  color: #fff !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+

@@ -1,0 +1,45 @@
+@media (max-height: 860px) {
+  .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementLastGrid div {
+    min-height: 96px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionMonthDay {
+    height: 47px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle,
+  .profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead {
+    min-height: 108px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn,
+  .profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+    min-height: 90px !important;
+  }
+}
+
+@media (max-width: 380px) and (max-height: 820px) {
+  .profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionSection.hasPlan {
+    padding: 28px 12px 1px !important;
+    gap: 8px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionCalendarHead small {
+    margin-top: 4px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionCalendarLegend {
+    margin-top: 10px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionCalendarMonthTitle {
+    min-height: 40px !important;
+    margin-top: 5px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionDayPlan {
+    margin-top: 7px !important;
+  }
+
+}
+
