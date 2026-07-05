@@ -1,0 +1,23 @@
+/* Light theme controls and feedback */
+:root[data-app-theme="warm-light"] .menuRefreshIconBtn,
+:root[data-app-theme="warm-light"] .backIconBtn,
+:root[data-app-theme="warm-light"] .universalFixedBackPointer,
+:root[data-app-theme="warm-light"] .fatSearchClosePremium {
+  border-color: #e1e4ef !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #434b61 !important;
+  box-shadow: 0 8px 22px rgba(55, 64, 112, 0.09) !important;
+}
+
+:root[data-app-theme="warm-light"] .appVersionBadge {
+  color: #8a91a4 !important;
+}
+
+:root[data-app-theme="warm-light"] button:focus-visible,
+:root[data-app-theme="warm-light"] input:focus-visible,
+:root[data-app-theme="warm-light"] textarea:focus-visible,
+:root[data-app-theme="warm-light"] select:focus-visible {
+  outline: 3px solid rgba(90, 73, 223, 0.2) !important;
+  outline-offset: 2px !important;
+}
+

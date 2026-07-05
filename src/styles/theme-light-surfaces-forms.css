@@ -1,0 +1,25 @@
+/* Forms and settings */
+:root[data-app-theme="warm-light"] input,
+:root[data-app-theme="warm-light"] select,
+:root[data-app-theme="warm-light"] textarea {
+  caret-color: #5a49df;
+}
+
+:root[data-app-theme="warm-light"] .profileDashboardPage input,
+:root[data-app-theme="warm-light"] .profileDashboardPage select,
+:root[data-app-theme="warm-light"] .profileDashboardPage textarea,
+:root[data-app-theme="warm-light"] .adminV3Shell input,
+:root[data-app-theme="warm-light"] .adminV3Shell select,
+:root[data-app-theme="warm-light"] .adminV3Shell textarea {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .profileDashboardPage input::placeholder,
+:root[data-app-theme="warm-light"] .profileDashboardPage textarea::placeholder,
+:root[data-app-theme="warm-light"] .adminV3Shell input::placeholder,
+:root[data-app-theme="warm-light"] .adminV3Shell textarea::placeholder {
+  color: #9aa1b3 !important;
+}
+

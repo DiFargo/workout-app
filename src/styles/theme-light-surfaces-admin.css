@@ -1,0 +1,53 @@
+/* Trainer and admin surfaces */
+:root[data-app-theme="warm-light"] .adminV3Sidebar,
+:root[data-app-theme="warm-light"] .adminV3Panel,
+:root[data-app-theme="warm-light"] .adminV3Workspace,
+:root[data-app-theme="warm-light"] .adminV3ProfileCard,
+:root[data-app-theme="warm-light"] .adminFocusCard,
+:root[data-app-theme="warm-light"] .adminDashboardSection,
+:root[data-app-theme="warm-light"] .adminDashboardMiniItem,
+:root[data-app-theme="warm-light"] .adminPanelHubCard,
+:root[data-app-theme="warm-light"] .adminV3KpiGrid > *,
+:root[data-app-theme="warm-light"] .adminClientCardCrm,
+:root[data-app-theme="warm-light"] .adminCalendarPanel {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08) !important;
+}
+
+:root[data-app-theme="warm-light"] .adminV3Sidebar button,
+:root[data-app-theme="warm-light"] .adminV3Tabs button,
+:root[data-app-theme="warm-light"] .adminV3Filters button {
+  color: #60697f !important;
+}
+
+:root[data-app-theme="warm-light"] .adminV3Sidebar button.active,
+:root[data-app-theme="warm-light"] .adminV3Tabs button.active,
+:root[data-app-theme="warm-light"] .adminV3Filters button.active {
+  border-color: #dedafb !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
+:root[data-app-theme="warm-light"] .adminFocusValue,
+:root[data-app-theme="warm-light"] .adminDashboardSectionTitle,
+:root[data-app-theme="warm-light"] .adminDashboardMiniName,
+:root[data-app-theme="warm-light"] .adminV3PanelHead strong,
+:root[data-app-theme="warm-light"] .adminV3ProfileCard h3 {
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .adminFocusLabel,
+:root[data-app-theme="warm-light"] .adminDashboardMiniDesc,
+:root[data-app-theme="warm-light"] .adminV3ProfileCard p,
+:root[data-app-theme="warm-light"] .adminV3ProfileCard small {
+  color: #737b91 !important;
+}
+
+:root[data-app-theme="warm-light"] .adminDashboardMiniStatus,
+:root[data-app-theme="warm-light"] .adminV3OpenEditor,
+:root[data-app-theme="warm-light"] .adminSummaryLink small {
+  color: #5a49df !important;
+}
+
