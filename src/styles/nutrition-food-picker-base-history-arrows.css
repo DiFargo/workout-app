@@ -1,0 +1,33 @@
+/* SEARCH HISTORY ARROWS + HIDE LOCAL DATABASE RESULTS â€” FINAL */
+.fatSearchHistoryNameButton {
+  display: grid !important;
+  grid-template-columns: 28px 1fr 28px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 54px !important;
+  padding: 0 14px !important;
+}
+
+.fatSearchHistoryNameButton::before {
+  content: "â—·" !important;
+  color: rgba(255, 255, 255, 0.48) !important;
+  font-size: 23px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.fatSearchHistoryNameButton::after {
+  content: "â†–" !important;
+  color: rgba(255, 255, 255, 0.48) !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.fatSearchHistoryNameButton span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+

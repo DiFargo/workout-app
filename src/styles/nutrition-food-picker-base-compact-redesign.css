@@ -1,0 +1,205 @@
+/* PREMIUM ADD FOOD SEARCH PAGE â€” COMPACT REDESIGN */
+
+.fatSearchHeader,
+.nutritionSearchHeader,
+.foodSearchHeader {
+  padding-top: 10px;
+  margin-bottom: 12px;
+}
+
+.fatSearchHeader h2,
+.nutritionSearchHeader h2,
+.foodSearchHeader h2 {
+  margin: 0;
+  font-size: clamp(25px, 7vw, 34px);
+  line-height: 1.05;
+  letter-spacing: -0.8px;
+}
+
+.fatSearchHeader p,
+.nutritionSearchHeader p,
+.foodSearchHeader p {
+  margin: 7px 0 0;
+  color: rgba(244, 246, 242, 0.48);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.fatSearchInputWrap,
+.nutritionSearchInputWrap,
+.foodSearchInputWrap {
+  display: grid;
+  grid-template-columns: 1fr 42px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.fatSearchInputWrap input,
+.nutritionSearchInputWrap input,
+.foodSearchInputWrap input {
+  width: 100%;
+  min-height: 50px;
+  padding: 13px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(0, 0, 0, 0.34);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 800;
+  outline: none;
+}
+
+.fatSearchInputWrap input::placeholder,
+.nutritionSearchInputWrap input::placeholder,
+.foodSearchInputWrap input::placeholder {
+  color: rgba(255, 255, 255, 0.32);
+  font-weight: 800;
+}
+
+.fatSearchInputWrap button,
+.nutritionSearchInputWrap button,
+.foodSearchInputWrap button {
+  width: 42px;
+  height: 42px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.fatQuickActions button {
+  min-height: 48px !important;
+  padding: 8px 8px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(127, 159, 58, 0.16) !important;
+  background: rgba(127, 159, 58, 0.08) !important;
+  color: rgba(244, 246, 242, 0.78) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1.12 !important;
+  box-shadow: none !important;
+}
+
+.fatQuickSuggestions button:active,
+.fatQuickActions button:active {
+  transform: scale(0.975);
+}
+
+/* Make old big photo/search blocks compact if present */
+
+/* Result cards */
+.fatSearchResults,
+.nutritionSearchResults,
+.foodSearchResults {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-bottom: 18px;
+}
+
+.fatFoodCard,
+.fatSearchResultCard,
+.nutritionFoodCard,
+.foodResultCard {
+  position: relative;
+  width: 100%;
+  min-height: 76px;
+  padding: 13px 58px 13px 14px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  background:
+    radial-gradient(circle at left, rgba(127, 159, 58, 0.10), transparent 45%),
+    linear-gradient(180deg, rgba(22, 27, 22, 0.98), rgba(10, 13, 10, 0.98)) !important;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22) !important;
+}
+
+.fatFoodCard strong,
+.fatSearchResultCard strong,
+.nutritionFoodCard strong,
+.foodResultCard strong {
+  display: block;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.16;
+  letter-spacing: -0.2px;
+  padding-right: 32px;
+}
+
+.fatFoodCard span,
+.fatSearchResultCard span,
+.nutritionFoodCard span,
+.foodResultCard span {
+  color: rgba(244, 246, 242, 0.46);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.fatFoodCard button,
+.fatSearchResultCard button,
+.nutritionFoodCard button,
+.foodResultCard button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  border-radius: 15px !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+/* Empty / loading states */
+.fatSearchStatus {
+  width: 100%;
+  padding: 18px 14px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top, rgba(127, 159, 58, 0.10), transparent 55%),
+    rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  color: rgba(244, 246, 242, 0.54);
+  font-size: 14px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.fatFallbackSuggestions button {
+  width: 100%;
+  min-height: 46px;
+  border-radius: 18px;
+  border: 1px solid rgba(127, 159, 58, 0.20);
+  background: rgba(127, 159, 58, 0.08);
+  color: rgba(244, 246, 242, 0.82);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+@media (max-width: 420px) {
+
+.fatQuickActions button {
+    min-height: 45px !important;
+    font-size: 11px !important;
+    border-radius: 16px !important;
+  }
+
+  .fatFoodCard,
+  .fatSearchResultCard,
+  .nutritionFoodCard,
+  .foodResultCard {
+    border-radius: 20px !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+}
+

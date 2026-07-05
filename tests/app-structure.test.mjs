@@ -2229,7 +2229,7 @@ test("legacy nutrition header CSS does not keep exact duplicate blocks", async (
 
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
   const headerReference = await readText("src/styles/nutrition-food-search-header.css");
-  const pickerBase = await readText("src/styles/nutrition-food-picker-base.css");
+  const pickerBase = await readCssWithImports("src/styles/nutrition-food-picker-base.css");
   const caloriesTuning = await readCssWithImports("src/styles/nutrition-food-search-calories.css");
 
   assert.equal(
@@ -2247,7 +2247,7 @@ test("legacy food search CSS keeps quick actions hidden in root owners", async (
 });
 
 test("legacy food picker CSS keeps empty-state text in the final owner", async () => {
-  const pickerBase = await readText("src/styles/nutrition-food-picker-base.css");
+  const pickerBase = await readCssWithImports("src/styles/nutrition-food-picker-base.css");
   const finalEmptyStateStart = pickerBase.indexOf("/* empty state */");
   const oldEmptyStateBlock = pickerBase.slice(0, finalEmptyStateStart);
   const finalEmptyStateBlock = pickerBase.slice(finalEmptyStateStart);
