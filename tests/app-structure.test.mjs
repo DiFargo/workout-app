@@ -2230,7 +2230,7 @@ test("legacy nutrition header CSS does not keep exact duplicate blocks", async (
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
   const headerReference = await readText("src/styles/nutrition-food-search-header.css");
   const pickerBase = await readText("src/styles/nutrition-food-picker-base.css");
-  const caloriesTuning = await readText("src/styles/nutrition-food-search-calories.css");
+  const caloriesTuning = await readCssWithImports("src/styles/nutrition-food-search-calories.css");
 
   assert.equal(
     (headerReference.match(/\.fatSecretPage \.fatQuickActions\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
@@ -2491,7 +2491,7 @@ test("nutrition AI plan CSS keeps muted span typography grouped", async () => {
 });
 
 test("legacy food search calories CSS keeps early mobile column shift out of the old owner", async () => {
-  const source = await readText("src/styles/nutrition-food-search-calories.css");
+  const source = await readCssWithImports("src/styles/nutrition-food-search-calories.css");
   const oldMoveStart = source.indexOf("/* ===== CALORIES MOVE MORE LEFT ===== */");
   const centerAlignStart = source.indexOf("/* ===== PERFECT SCREEN CENTER ALIGN ===== */");
   const oldMoveBlock = source.slice(oldMoveStart, centerAlignStart);
@@ -2507,7 +2507,7 @@ test("legacy food search calories CSS keeps early mobile column shift out of the
 });
 
 test("legacy food search calories CSS keeps row transforms in the micro owner", async () => {
-  const source = await readText("src/styles/nutrition-food-search-calories.css");
+  const source = await readCssWithImports("src/styles/nutrition-food-search-calories.css");
   const finalFixStart = source.indexOf("FINAL FIX");
   const microAlignStart = source.indexOf("/* MICRO ALIGN UPDATE */");
   const finalRealFixStart = source.indexOf("FINAL REAL FIX", microAlignStart);
@@ -2530,7 +2530,7 @@ test("legacy food search calories CSS keeps row transforms in the micro owner", 
 });
 
 test("legacy food search calories CSS keeps compact dots in the latest mobile owner", async () => {
-  const source = await readText("src/styles/nutrition-food-search-calories.css");
+  const source = await readCssWithImports("src/styles/nutrition-food-search-calories.css");
   const tailSource = await readText("src/styles/client-workout-plan-tail.css");
 
   assert.equal(

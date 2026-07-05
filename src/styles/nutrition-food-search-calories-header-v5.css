@@ -1,0 +1,109 @@
+/* NUTRITION HEADER V5 â€” final visual tuning from screenshot */
+.fatSecretPage .nutritionHeroV4 {
+  padding-top: 4px !important;
+  margin-bottom: 22px !important;
+}
+
+.fatSecretPage .nutritionHeroTitleV4 {
+  min-height: 58px !important;
+  margin-bottom: 18px !important;
+}
+
+.fatSecretPage .nutritionHeroTitleV4 h1 {
+  font-size: clamp(56px, 15vw, 78px) !important;
+  line-height: 0.9 !important;
+  letter-spacing: -3px !important;
+  color: rgba(248, 248, 246, 0.96) !important;
+  text-shadow: 0 18px 44px rgba(0, 0, 0, 0.66) !important;
+}
+
+.fatSecretPage .nutritionWeekV4 {
+  margin-bottom: 26px !important;
+  gap: clamp(8px, 2.6vw, 18px) !important;
+}
+
+.fatSecretPage .nutritionDayV4 {
+  gap: 12px !important;
+}
+
+.fatSecretPage .nutritionDayV4 span {
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  min-height: 46px !important;
+  max-width: 46px !important;
+  max-height: 46px !important;
+  border-radius: 50% !important;
+  border: 1.6px solid rgba(255,255,255,0.25) !important;
+  background: rgba(4, 13, 16, 0.32) !important;
+  color: rgba(246,249,251,0.95) !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+  position: relative !important;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+.fatSecretPage .nutritionDayV4 span::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 12px !important;
+  height: 21px !important;
+  border-right: 3.2px solid currentColor !important;
+  border-bottom: 3.2px solid currentColor !important;
+  border-radius: 1px !important;
+  transform: translate(-50%, -58%) rotate(45deg) !important;
+  display: block !important;
+}
+
+.fatSecretPage .nutritionDayV4:not(.hasFood):not(.selected) span::before {
+  display: none !important;
+}
+
+.fatSecretPage .nutritionDayV4.selected span {
+  background: linear-gradient(135deg, #9cf24a 0%, #55df4d 100%) !important;
+  border-color: rgba(157, 245, 76, 0.98) !important;
+  color: #061108 !important;
+  box-shadow: 0 16px 34px rgba(81, 224, 70, 0.34), inset 0 1px 0 rgba(255,255,255,0.3) !important;
+}
+
+.fatSecretPage .nutritionDayV4 small {
+  font-size: clamp(18px, 4.7vw, 24px) !important;
+  font-weight: 950 !important;
+  color: rgba(246,249,251,0.92) !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage .nutritionStreakV4 {
+  margin-bottom: 30px !important;
+}
+
+@media (max-width: 430px) {
+  .fatSecretPage .nutritionHeroV4 {
+    padding-top: 0 !important;
+  }
+
+  .fatSecretPage .nutritionHeroTitleV4 {
+    min-height: 54px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .fatSecretPage .nutritionHeroTitleV4 h1 {
+    font-size: 58px !important;
+  }
+
+  .fatSecretPage .nutritionDayV4 span {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    max-width: 44px !important;
+    max-height: 44px !important;
+  }
+
+  .fatSecretPage .nutritionDayV4 small {
+    font-size: 19px !important;
+  }
+}
+

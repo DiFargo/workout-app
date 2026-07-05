@@ -1,0 +1,36 @@
+/* ===== WEEK ICON FIX ===== */
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span,
+.nutritionWeekV4 .nutritionDayV4 span{
+    width: 30px !important;
+    height: 30px !important;
+
+    min-width: 30px !important;
+    min-height: 30px !important;
+
+    max-width: 30px !important;
+    max-height: 30px !important;
+
+    border-width: 1.5px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span svg,
+.nutritionWeekV4 .nutritionDayV4 span svg{
+    width: 13px !important;
+    height: 13px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatDateHeaderNoArrows .fatDateTitle h1,
+.nutritionHeroV4 .nutritionHeroTitleV4 h1{
+    top:-18px !important;
+
+    font-size:34px !important;
+
+    color:rgba(255,255,255,0.74)!important;
+}
+
+.fatStreakLineTop,
+.nutritionStreakV4{
+    margin-bottom:10px!important;
+}
+

@@ -1,0 +1,199 @@
+/* ===== FINAL ACTIVE NUTRITION HEADER FIX ===== */
+
+/* Ð“Ð°Ð»Ð¾Ñ‡ÐºÐ¸ Ð² Ð´Ð½ÑÑ… Ð½ÐµÐ´ÐµÐ»Ð¸ â€” Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð² 2 Ñ€Ð°Ð·Ð°, ÐºÑ€ÑƒÐ¶ÐºÐ¸ Ð½Ðµ Ñ‚Ñ€Ð¾Ð³Ð°ÐµÐ¼ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span::before {
+  width: 4.5px !important;
+  height: 7.5px !important;
+  border-right-width: 1.5px !important;
+  border-bottom-width: 1.5px !important;
+}
+
+.fatSecretPage .nutritionDayV4 span::before,
+.nutritionWeekV4 .nutritionDayV4 span::before {
+  width: 6px !important;
+  height: 10.5px !important;
+  border-right-width: 1.6px !important;
+  border-bottom-width: 1.6px !important;
+}
+
+/* ÐœÐµÐ½ÑŒÑˆÐµ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ðµ Ð¼ÐµÐ¶Ð´Ñƒ Ð±Ð»Ð¾ÐºÐ¾Ð¼ Ð´Ð½ÐµÐ¹ Ð½ÐµÐ´ÐµÐ»Ð¸ Ð¸ ÑÐµÑ€Ð¸ÐµÐ¹ Ð·Ð°Ð¿Ð¸ÑÐ¸ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow {
+  margin-bottom: 12px !important;
+}
+
+.fatSecretPage .nutritionWeekV4,
+.nutritionWeekV4 {
+  margin-bottom: 12px !important;
+}
+
+/* ÐœÐµÐ½ÑŒÑˆÐµ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ðµ Ð¼ÐµÐ¶Ð´Ñƒ ÑÐµÑ€Ð¸ÐµÐ¹ Ð·Ð°Ð¿Ð¸ÑÐ¸ Ð¸ ÑÐ»ÐµÐ´ÑƒÑŽÑ‰Ð¸Ð¼ Ð±Ð»Ð¾ÐºÐ¾Ð¼ */
+.fatSecretPage .nutritionStreakV4,
+.nutritionStreakV4,
+.fatStreakLineTop {
+  margin-top: 0 !important;
+  margin-bottom: 10px !important;
+}
+
+.fatSecretPage .fatQuickActions + .fatCaloriesCard,
+.fatQuickActions + .fatCaloriesCard,
+.fatSecretPage .fatCaloriesCard,
+.fatCaloriesCard {
+  margin-top: 6px !important;
+}
+
+/* Ð±Ð»Ð¾Ðº Ð½Ð¸Ð¶Ðµ Ð¿Ð¾ Ð²Ñ‹ÑÐ¾Ñ‚Ðµ */
+.fatSecretPage .fatCaloriesCard,
+.fatCaloriesCard {
+  height: 88px !important;
+  min-height: 88px !important;
+  max-height: 88px !important;
+
+  padding: 10px 16px !important;
+  margin-bottom: 12px !important;
+
+  display: grid !important;
+  grid-template-columns: 76px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 8px !important;
+
+  overflow: hidden !important;
+}
+
+/* ÑÐµÑ‚ÐºÑƒ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð½ÐµÐ¼Ð½Ð¾Ð³Ð¾ Ð¿Ñ€Ð°Ð²ÐµÐµ Ð¸ ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÐµÐµ */
+.fatSecretPage .fatCaloriesCard .fatPixelMeter:not(.small),
+.fatCaloriesCard .fatPixelMeter:not(.small) {
+  width: 38px !important;
+  min-width: 38px !important;
+
+  transform: translateX(22px) translateY(1px) !important;
+
+  grid-template-columns: repeat(5, 5px) !important;
+  grid-auto-rows: 5px !important;
+  gap: 3px !important;
+}
+
+/* ÐºÐ¾Ð»Ð¾Ð½ÐºÐ¸ */
+.fatSecretPage .fatCaloriesCard .fatCalorieRows,
+.fatCaloriesCard .fatCalorieRows {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Ñ€Ð°Ð·Ð´ÐµÐ»Ð¸Ñ‚ÐµÐ»ÑŒ Ð¿Ð¾Ð´ ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÑƒÑŽ Ð²Ñ‹ÑÐ¾Ñ‚Ñƒ */
+.fatSecretPage .fatCaloriesCard .fatCalorieRows::before,
+.fatCaloriesCard .fatCalorieRows::before {
+  height: 46px !important;
+}
+
+/* ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ð¼Ð¾Ðµ ÐºÐ¾Ð»Ð¾Ð½Ð¾Ðº */
+.fatSecretPage .fatCaloriesCard .fatCalorieRows div,
+.fatCaloriesCard .fatCalorieRows div {
+  min-height: 54px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 4px !important;
+  text-align: center !important;
+}
+
+/* Ð¿Ð¾Ð´Ð¿Ð¸ÑÐ¸: ÑƒÐ¿Ð¾Ñ‚Ñ€ÐµÐ±Ð»ÐµÐ½Ð¾ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð² Ð¾Ð´Ð½Ñƒ ÑÑ‚Ñ€Ð¾ÐºÑƒ */
+.fatSecretPage .fatCaloriesCard .fatCalorieRows span,
+.fatCaloriesCard .fatCalorieRows span {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+
+  font-size: 10px !important;
+  line-height: 1 !important;
+  letter-spacing: -0.55px !important;
+  font-weight: 850 !important;
+}
+
+/* Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¸ Ð¿Ð¾ Ñ†ÐµÐ½Ñ‚Ñ€Ñƒ Ð¿Ð¾Ð´ Ð¿Ð¾Ð´Ð¿Ð¸ÑÑÐ¼Ð¸ */
+.fatSecretPage .fatCaloriesCard .fatCalorieRows strong,
+.fatCaloriesCard .fatCalorieRows strong {
+  display: block !important;
+  width: 100% !important;
+
+  text-align: center !important;
+
+  font-size: 28px !important;
+  line-height: 0.92 !important;
+  letter-spacing: -1.2px !important;
+  font-weight: 900 !important;
+}
+
+/* ÑÐ»ÐµÐ´ÑƒÑŽÑ‰Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð±Ð»Ð¸Ð¶Ðµ, Ð½Ð¾ Ð±ÐµÐ· Ð¿Ñ€Ð¸Ð»Ð¸Ð¿Ð°Ð½Ð¸Ñ */
+.fatSecretPage .fatCaloriesCard + *,
+.fatCaloriesCard + * {
+  margin-top: 10px !important;
+}
+
+@media (max-width: 430px) {
+  .fatSecretPage .fatCaloriesCard,
+  .fatCaloriesCard {
+    height: 82px !important;
+    min-height: 82px !important;
+    max-height: 82px !important;
+
+    padding: 9px 14px !important;
+    grid-template-columns: 70px minmax(0, 1fr) !important;
+    gap: 7px !important;
+  }
+
+  .fatSecretPage .fatCaloriesCard .fatPixelMeter:not(.small),
+  .fatCaloriesCard .fatPixelMeter:not(.small) {
+    width: 35px !important;
+    min-width: 35px !important;
+
+    transform: translateX(20px) translateY(1px) !important;
+
+    grid-template-columns: repeat(5, 4.5px) !important;
+    grid-auto-rows: 4.5px !important;
+    gap: 2.8px !important;
+  }
+
+  .fatSecretPage .fatCaloriesCard .fatPixelMeter:not(.small) span,
+  .fatCaloriesCard .fatPixelMeter:not(.small) span {
+    width: 4.5px !important;
+    height: 4.5px !important;
+  }
+
+  .fatSecretPage .fatCaloriesCard .fatCalorieRows,
+  .fatCaloriesCard .fatCalorieRows {
+    gap: 6px !important;
+  }
+
+  .fatSecretPage .fatCaloriesCard .fatCalorieRows div,
+  .fatCaloriesCard .fatCalorieRows div {
+    min-height: 50px !important;
+    gap: 4px !important;
+  }
+
+  .fatSecretPage .fatCaloriesCard .fatCalorieRows span,
+  .fatCaloriesCard .fatCalorieRows span {
+    font-size: 9.2px !important;
+    letter-spacing: -0.65px !important;
+  }
+
+  .fatSecretPage .fatCaloriesCard .fatCalorieRows strong,
+  .fatCaloriesCard .fatCalorieRows strong {
+    font-size: 25px !important;
+    letter-spacing: -1px !important;
+  }
+}
+

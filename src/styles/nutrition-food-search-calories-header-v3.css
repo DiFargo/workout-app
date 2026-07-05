@@ -1,0 +1,249 @@
+/* =========================================================
+   REAL FINAL HEADER FIX V3 â€” DO NOT MOVE BELOW
+   Fixes old duplicated overrides on nutrition header.
+   ========================================================= */
+
+.fatSecretPage.nutritionFixedHeaderV3 {
+  padding-top: max(78px, calc(env(safe-area-inset-top) + 70px)) !important;
+}
+
+/* Ð¡Ñ‚Ñ€ÐµÐ»ÐºÐ° Ð½Ð°Ð·Ð°Ð´ â€” ÑÑ‚Ñ€Ð¾Ð³Ð¾ Ð²ÐµÑ€Ñ…Ð½Ð¸Ð¹ Ð»ÐµÐ²Ñ‹Ð¹ ÑƒÐ³Ð¾Ð» */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionBackTopLeftV3,
+.fatSecretPage.nutritionFixedHeaderV3 button.nutritionBackTopLeftV3.backBtn.universalFixedBackPointer {
+  position: fixed !important;
+  top: max(14px, calc(env(safe-area-inset-top) + 12px)) !important;
+  left: 16px !important;
+
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  min-height: 54px !important;
+  max-width: 54px !important;
+  max-height: 54px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+  border: 1px solid rgba(255,255,255,0.16) !important;
+  background: rgba(4, 14, 17, 0.52) !important;
+
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+
+  transform: none !important;
+  translate: none !important;
+
+  z-index: 2147483647 !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionBackTopLeftV3::before,
+.fatSecretPage.nutritionFixedHeaderV3 button.nutritionBackTopLeftV3.backBtn.universalFixedBackPointer::before {
+  content: "â†" !important;
+  display: block !important;
+  color: rgba(255,255,255,0.95) !important;
+  font-size: 42px !important;
+  font-weight: 900 !important;
+  line-height: 0.8 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Ð’ÐµÑ€Ñ…Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 {
+  margin: 0 0 22px !important;
+  padding: 0 !important;
+}
+
+/* Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ Ñ‡ÑƒÑ‚ÑŒ Ð²Ñ‹ÑˆÐµ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatDateHeaderNoArrows,
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatDateHeaderNoArrows .fatDateTitle {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatDateHeaderNoArrows .fatDateTitle h1 {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 32px !important;
+  padding: 0 !important;
+
+  position: relative !important;
+  top: -18px !important;
+  transform: none !important;
+
+  color: rgba(248,248,246,0.96) !important;
+  text-align: center !important;
+  font-size: clamp(42px, 12vw, 64px) !important;
+  font-weight: 950 !important;
+  line-height: 0.92 !important;
+  letter-spacing: -2px !important;
+}
+
+/* Ð”Ð½Ð¸ Ð½ÐµÐ´ÐµÐ»Ð¸ Ñ€Ð¾Ð²Ð½Ð¾ Ð¼ÐµÐ¶Ð´Ñƒ Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ Ð¸ Ð¡ÐµÑ€Ð¸ÐµÐ¹ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow {
+  width: 100% !important;
+  margin: 6px auto 38px !important;
+  padding: 0 !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  align-items: start !important;
+  justify-items: center !important;
+  gap: clamp(8px, 3vw, 18px) !important;
+
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+/* ÐŸÐ¾Ð½ÐµÐ´ÐµÐ»ÑŒÐ½Ð¸Ðº ÐÐ• ÑÐºÑ€Ñ‹Ð²Ð°Ñ‚ÑŒ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell:first-child,
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+
+  width: 100% !important;
+  min-width: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+
+  gap: 12px !important;
+  transform: none !important;
+}
+
+/* ÐšÑ€ÑƒÐ¶ÐºÐ¸ Ð¼ÐµÐ½ÑŒÑˆÐµ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+
+  border-radius: 50% !important;
+  border: 1.4px solid rgba(255,255,255,0.24) !important;
+  background: rgba(5, 13, 16, 0.36) !important;
+
+  color: rgba(246,249,251,0.95) !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Ð’Ñ‹Ð±Ñ€Ð°Ð½Ð½Ñ‹Ð¹ Ð´ÐµÐ½ÑŒ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell.selected span,
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell.selected.hasFood span {
+  background: linear-gradient(135deg, #9cf24a 0%, #52d74f 100%) !important;
+  color: #071009 !important;
+  border-color: rgba(151, 246, 76, 0.92) !important;
+}
+
+/* Ð“Ð°Ð»Ð¾Ñ‡ÐºÐ° ÑÑ‚Ñ€Ð¾Ð³Ð¾ Ð² Ñ†ÐµÐ½Ñ‚Ñ€Ðµ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span::before {
+  content: "" !important;
+
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+
+  width: 9px !important;
+  height: 15px !important;
+
+  border-right: 3px solid currentColor !important;
+  border-bottom: 3px solid currentColor !important;
+  border-radius: 1px !important;
+
+  transform: translate(-50%, -58%) rotate(45deg) !important;
+  display: block !important;
+}
+
+/* ÐŸÑƒÑÑ‚Ñ‹Ðµ Ð±ÑƒÐ´ÑƒÑ‰Ð¸Ðµ Ð´Ð½Ð¸ Ð±ÐµÐ· Ð³Ð°Ð»Ð¾Ñ‡ÐºÐ¸ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell:not(.hasFood):not(.selected) span::before {
+  display: none !important;
+}
+
+/* Ð‘ÑƒÐºÐ²Ñ‹ Ð´Ð½ÐµÐ¹ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell small {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: rgba(246,249,251,0.92) !important;
+  font-size: clamp(16px, 4.2vw, 21px) !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  letter-spacing: -0.2px !important;
+}
+
+/* Ð¡ÐµÑ€Ð¸Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸ */
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatStreakLineTop,
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatStreak {
+  margin-top: 0 !important;
+  margin-bottom: 30px !important;
+}
+
+/* Ð ÐµÐ°Ð»ÑŒÐ½Ñ‹Ðµ ÑƒÐ·ÐºÐ¸Ðµ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½Ñ‹ */
+@media (max-width: 430px) {
+  .fatSecretPage.nutritionFixedHeaderV3 {
+    padding-top: max(72px, calc(env(safe-area-inset-top) + 64px)) !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatDateHeaderNoArrows .fatDateTitle h1 {
+    top: -16px !important;
+    margin-bottom: 30px !important;
+    font-size: 44px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow {
+    margin-top: 8px !important;
+    margin-bottom: 36px !important;
+    gap: 8px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    max-width: 34px !important;
+    max-height: 34px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell small {
+    font-size: 16px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionBackTopLeftV3,
+  .fatSecretPage.nutritionFixedHeaderV3 button.nutritionBackTopLeftV3.backBtn.universalFixedBackPointer {
+    top: max(12px, calc(env(safe-area-inset-top) + 10px)) !important;
+    left: 14px !important;
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    min-height: 50px !important;
+    max-width: 50px !important;
+    max-height: 50px !important;
+  }
+}
+
