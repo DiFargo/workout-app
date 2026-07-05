@@ -1,0 +1,59 @@
+/* Individual workout plan */
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutNextBadge,
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutProgressBadge,
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutCompletedBadge,
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutWeek {
+  border-color: #e0e3ef !important;
+  background: #f2f1fd !important;
+  color: #5b4ae0 !important;
+}
+
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutProBody {
+  border-color: #e0e3ef !important;
+  background: #ffffff !important;
+  box-shadow: 0 15px 36px rgba(53, 61, 105, 0.12) !important;
+}
+
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutProBody::after {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.91) 38%, rgba(255, 255, 255, 0.28) 69%, rgba(255, 255, 255, 0.02) 100%),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.62) 0%, transparent 42%) !important;
+}
+
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutProImage {
+  background: #eff1f8 !important;
+}
+
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutStats > span {
+  color: #333a50 !important;
+}
+
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutStats b {
+  background: #efedff !important;
+  color: #5a49df !important;
+}
+
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutAccentLine {
+  background: linear-gradient(90deg, #5a49df, #2d6ff2) !important;
+}
+
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutCardStartButton,
+:root[data-app-theme="warm-light"] .workoutRunPage .primaryAction,
+:root[data-app-theme="warm-light"] .workoutRunPage .next,
+:root[data-app-theme="warm-light"] .warmupBottomPanel button:last-child {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6 0%, #2d6ff2 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 26px rgba(77, 69, 202, 0.23) !important;
+}
+
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutBottomProgress,
+:root[data-app-theme="warm-light"] .individualWorkoutSwipeHint,
+:root[data-app-theme="warm-light"] .individualWorkoutSwipeAffordance {
+  color: #777f93 !important;
+}
+
+:root[data-app-theme="warm-light"] .clientCorePageWorkout .individualWorkoutBottomProgress::after {
+  background: linear-gradient(90deg, #5a49df 0 8%, #e5e8f1 8% 100%) !important;
+}
+

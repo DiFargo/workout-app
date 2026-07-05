@@ -1,0 +1,81 @@
+/* Shared light cards */
+:root[data-app-theme="warm-light"] .profileAiHero,
+:root[data-app-theme="warm-light"] .profileAiStatsRow > div,
+:root[data-app-theme="warm-light"] .profileAiMiniCard,
+:root[data-app-theme="warm-light"] .profileAiCoachInsight,
+:root[data-app-theme="warm-light"] .mainMeasurementSnapshot,
+:root[data-app-theme="warm-light"] .progressHubCard,
+:root[data-app-theme="warm-light"] .profileDashboardCard,
+:root[data-app-theme="warm-light"] .profileWorkoutModeCard,
+:root[data-app-theme="warm-light"] .profileThemeSwitchBtn,
+:root[data-app-theme="warm-light"] .profileSettingsTelegramItem,
+:root[data-app-theme="warm-light"] .nutritionQuickActionExact,
+:root[data-app-theme="warm-light"] .nutritionCaloriesRenderCard,
+:root[data-app-theme="warm-light"] .fatMealCard,
+:root[data-app-theme="warm-light"] .warmupExerciseCard,
+:root[data-app-theme="warm-light"] .exerciseCard,
+:root[data-app-theme="warm-light"] .workoutCompletionCard,
+:root[data-app-theme="warm-light"] .fatSearchHistoryNames,
+:root[data-app-theme="warm-light"] .fatSearchResultCard,
+:root[data-app-theme="warm-light"] .foodEditHeroRender,
+:root[data-app-theme="warm-light"] .foodEditAmountCard,
+:root[data-app-theme="warm-light"] .foodEditRowsCard,
+:root[data-app-theme="warm-light"] .foodEditMacrosCards > div,
+:root[data-app-theme="warm-light"] .nutritionCreateChoiceGrid > button {
+  border-color: #e3e6f1 !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 10px 28px rgba(55, 64, 112, 0.08) !important;
+}
+
+:root[data-app-theme="warm-light"] .profileCabinetSection,
+:root[data-app-theme="warm-light"] .profileUnifiedCard {
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .profileAiAvatar,
+:root[data-app-theme="warm-light"] .profileAvatarBig {
+  border-color: rgba(90, 73, 223, 0.22) !important;
+  background: #f0effd !important;
+  box-shadow: 0 8px 20px rgba(68, 61, 132, 0.12) !important;
+}
+
+:root[data-app-theme="warm-light"] .profileAiAvatarRing {
+  border-color: #5a49df !important;
+  background: #ffffff !important;
+  color: #5a49df !important;
+}
+
+:root[data-app-theme="warm-light"] .profileAiCoachPreview span,
+:root[data-app-theme="warm-light"] .profileAiCoachStatusRow > div,
+:root[data-app-theme="warm-light"] .profileAiCoachMetrics > div {
+  border-color: #e3e6f1 !important;
+  background: #f7f8fd !important;
+  color: #515a70 !important;
+}
+
+:root[data-app-theme="warm-light"] .mainMeasurementChart line {
+  stroke: #e7e9f2 !important;
+}
+
+:root[data-app-theme="warm-light"] .mainMeasurementChart polyline {
+  stroke: #2d6ff2 !important;
+  filter: drop-shadow(0 2px 4px rgba(45, 111, 242, 0.18)) !important;
+}
+
+:root[data-app-theme="warm-light"] .mainMeasurementChart circle {
+  fill: #5a49df !important;
+  stroke: #ffffff !important;
+}
+
+:root[data-app-theme="warm-light"] .mainMeasurementSnapshotHeader em {
+  color: #2d6ff2 !important;
+}
+
+:root[data-app-theme="warm-light"] .mainMeasurementEmpty,
+:root[data-app-theme="warm-light"] .mainMeasurementSingle {
+  border-color: #dfe3f0 !important;
+  background: #f7f8fd !important;
+  color: #737b91 !important;
+}
+

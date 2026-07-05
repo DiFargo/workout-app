@@ -4108,7 +4108,7 @@ test("warm-light nutrition CSS keeps summary donut center in the compact owner",
 test("client nutrition weekday strip keeps two-letter labels visible", async () => {
   const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
   const nutritionBaseCss = await readCssWithImports("src/styles/nutrition.css");
-  const nutritionCss = await readText("src/styles/nutrition-food-flow.css");
+  const nutritionCss = await readCssWithImports("src/styles/nutrition-food-flow.css");
   const warmLightNutritionCss = await readCssWithImports("src/styles/warm-light-nutrition.css");
 
   assert.match(nutritionCalendar, /NUTRITION_WEEK_LABELS = \["\\u041f\\u041d", "\\u0412\\u0422", "\\u0421\\u0420", "\\u0427\\u0422", "\\u041f\\u0422", "\\u0421\\u0411", "\\u0412\\u0421"\]/);

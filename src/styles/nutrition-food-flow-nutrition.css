@@ -1,0 +1,99 @@
+/* Nutrition */
+:root[data-app-theme="warm-light"] .nutritionDayV4 span {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  color: transparent !important;
+  box-shadow: inset 0 0 0 1px rgba(69, 77, 113, 0.04) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionDayV4 small {
+  color: #596176 !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionDayV4.selected span,
+:root[data-app-theme="warm-light"] .nutritionDayV4.hasFood span {
+  border-color: #5a49df !important;
+  background: linear-gradient(135deg, #6552e6, #3f65ec) !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(90, 73, 223, 0.22) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionDayV4.selected small {
+  color: #5a49df !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionStreakV4,
+:root[data-app-theme="warm-light"] .nutritionStreakV4 span {
+  color: #626b82 !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionQuickActionExact {
+  border: 1px solid #e3e6f1 !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 8px 22px rgba(55, 64, 112, 0.07) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span {
+  background: #dce3f6 !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span.isActive {
+  background: #2d6ff2 !important;
+  box-shadow: 0 2px 5px rgba(45, 111, 242, 0.18) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCard::after {
+  background:
+    linear-gradient(90deg, #2d6ff2 0 var(--nutrition-calorie-progress), #e8eaf2 var(--nutrition-calorie-progress) 100%) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatMealIcon {
+  border-color: #e6e8f2 !important;
+  background: #f4f5fb !important;
+}
+
+:root[data-app-theme="warm-light"] .mealPlusExact,
+:root[data-app-theme="warm-light"] .fatPlusBtn {
+  border-color: #dfe2ef !important;
+  background: #ffffff !important;
+  color: #5a49df !important;
+  box-shadow: 0 6px 16px rgba(55, 64, 112, 0.08) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCalendarBackdrop,
+:root[data-app-theme="warm-light"] .nutritionMealModalBackdrop,
+:root[data-app-theme="warm-light"] .cabinetMeasurementModalOverlay {
+  background: rgba(35, 40, 68, 0.18) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCalendarSheet,
+:root[data-app-theme="warm-light"] .nutritionMealModalSheet,
+:root[data-app-theme="warm-light"] .cabinetMeasurementModal {
+  border-color: #e0e4ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 24px 60px rgba(43, 50, 92, 0.18) !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCalendarDay,
+:root[data-app-theme="warm-light"] .nutritionMealModalList .productRowExact {
+  border-color: #e5e8f1 !important;
+  background: #f8f9fd !important;
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionCalendarDay.selected {
+  border-color: #5a49df !important;
+  background: #efedff !important;
+  color: #4c3bd0 !important;
+}
+
+:root[data-app-theme="warm-light"] .nutritionMealModalAdd,
+:root[data-app-theme="warm-light"] .nutritionCalendarFooter button:last-child {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+}
+
