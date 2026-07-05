@@ -1,0 +1,11 @@
+/* === ACTIVE ADMIN BAR V16 === */
+/* ÃÅ¸ÃÂ¾ÃÂ´Ã‘ÂÃÂ²ÃÂµÃ‘â€šÃÂºÃÂ° ÃÂ°ÃÂºÃ‘â€šÃÂ¸ÃÂ²ÃÂ½ÃÂ¾ÃÂ¹ Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ Ã‘â€¹ ÃÂ² ÃÂµÃÂ´ÃÂ¸ÃÂ½ÃÂ¾ÃÂ¼ admin bottom bar */
+
+.adminV3Nav.adminV3BottomBar button:not(.active) {
+  opacity: 1 !important;
+}
+
+.adminV3Nav.adminV3BottomBar button.active {
+  color: #f4f6f2 !important;
+}
+

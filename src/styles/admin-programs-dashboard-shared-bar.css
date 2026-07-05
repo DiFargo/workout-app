@@ -1,0 +1,12 @@
+/* === SAME DASHBOARD BAR EVERYWHERE V14 === */
+/* ÃÂÃÂ° ÃÂ°ÃÂ´ÃÂ¼ÃÂ¸ÃÂ½-Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ ÃÂ°Ã‘â€¦ ÃÂ¸Ã‘ÂÃÂ¿ÃÂ¾ÃÂ»Ã‘Å’ÃÂ·Ã‘Æ’ÃÂµÃ‘â€šÃ‘ÂÃ‘Â ÃÂ¾ÃÂ´ÃÂ¸ÃÂ½ ÃÂ¸ Ã‘â€šÃÂ¾Ã‘â€š ÃÂ¶ÃÂµ adminV3Nav adminV3BottomBar */
+
+.adminUsersCrmMain,
+.adminUsersCrmGrid,
+.adminUsersClientsPanel,
+.adminV3Main,
+.adminWorkoutsPage,
+.adminStatsPage {
+  padding-bottom: 190px !important;
+}
+
