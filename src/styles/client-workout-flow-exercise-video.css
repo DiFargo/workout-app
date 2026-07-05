@@ -1,0 +1,165 @@
+.workoutRunPage .workoutExerciseVideoFrame {
+  box-sizing: border-box;
+  position: relative;
+  width: min(100%, clamp(230px, 33dvh, 286px));
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  overflow: hidden;
+  flex: 0 0 auto;
+  border: 1px solid rgba(127, 159, 58, 0.23);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(127, 159, 58, 0.14), transparent 58%),
+    #0b100c;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+  cursor: default;
+}
+
+.workoutRunPage .workoutExerciseVideoFrame .exerciseVideo {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  margin: 0 !important;
+  display: block !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.workoutRunPage .workoutExerciseVideoFrame::after {
+  content: none !important;
+  display: none !important;
+}
+
+.workoutRunPage .workoutExerciseVideoFrame .exerciseVideo {
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton {
+  box-sizing: border-box !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  z-index: 2 !important;
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  min-height: 58px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: translate(-50%, -50%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 50% !important;
+  background: rgba(5, 8, 6, 0.5) !important;
+  color: rgba(255, 255, 255, 0.86) !important;
+  line-height: 1 !important;
+  opacity: 0.58;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: blur(10px);
+  transition: opacity 160ms ease, transform 160ms ease, background 160ms ease !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton:hover,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton:active,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton:hover,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton:active {
+  opacity: 0.9;
+  background: rgba(5, 8, 6, 0.68) !important;
+  transform: translate(-50%, -50%) scale(1.04) !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton.is-hidden,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton.is-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translate(-50%, -50%) scale(0.96) !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePlayButton > span {
+  padding-left: 2px;
+  font-size: 22px;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseInlinePauseButton > span {
+  font-size: 18px;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseFullscreenButton {
+  box-sizing: border-box !important;
+  position: absolute !important;
+  top: auto !important;
+  right: 10px !important;
+  bottom: 10px !important;
+  z-index: 3 !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  background: rgba(5, 8, 6, 0.5) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  opacity: 0.62;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px);
+  transition: opacity 160ms ease, background 160ms ease !important;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseFullscreenButton > span {
+  font-size: 17px;
+}
+
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseFullscreenButton:hover,
+.workoutRunPage .workoutExerciseCard .workoutExerciseVideoFrame > button.workoutExerciseFullscreenButton:active {
+  opacity: 0.95;
+  background: rgba(5, 8, 6, 0.72) !important;
+}
+
+.workoutRunPage .workoutExerciseVideoFallback {
+  width: 100%;
+  height: 100%;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(153, 188, 73, 0.18), transparent 44%),
+    linear-gradient(160deg, #172117 0%, #090d0a 72%);
+}
+
+.workoutRunPage .workoutExerciseVideoFallback strong {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.workoutRunPage .workoutExerciseVideoFallback small {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
