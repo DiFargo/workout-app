@@ -1,0 +1,132 @@
+/* =========================================
+   DARK STYLE SYSTEM â†’ WARM LIGHT CLONE
+   Product Edit Screen
+========================================= */
+
+:root[data-app-theme="warm-light"] .foodEditPageOverlay {
+  background:
+    radial-gradient(circle at top, rgba(244,224,100,0.18), transparent 36%),
+    linear-gradient(180deg, #fff8dd 0%, #f3e4ad 100%) !important;
+}
+
+/* page shell */
+:root[data-app-theme="warm-light"] .foodEditPageSheet {
+  background: transparent !important;
+  color: #5f5744 !important;
+}
+
+/* header */
+:root[data-app-theme="warm-light"] .foodEditPageHeader {
+  margin-bottom: 18px !important;
+}
+
+:root[data-app-theme="warm-light"] .foodEditPageHeader strong {
+  color: #4e4638 !important;
+  -webkit-text-fill-color: #4e4638 !important;
+  text-shadow: none !important;
+  font-weight: 900 !important;
+}
+
+/* top buttons */
+:root[data-app-theme="warm-light"] .foodEditPageBack,
+:root[data-app-theme="warm-light"] .foodEditPageSave {
+  background:
+    radial-gradient(circle at top, rgba(244,224,100,0.14), transparent 60%),
+    linear-gradient(180deg, rgba(255,247,205,0.96) 0%, rgba(240,223,154,0.92) 100%) !important;
+
+  border: 1px solid rgba(94,75,30,0.10) !important;
+  border-radius: 24px !important;
+
+  box-shadow:
+    0 14px 32px rgba(151,119,35,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.52) !important;
+
+  color: #5f5744 !important;
+}
+
+/* ALL INPUT CARDS */
+:root[data-app-theme="warm-light"] .foodEditPageContent label,
+:root[data-app-theme="warm-light"] .foodEditPageGrid label,
+:root[data-app-theme="warm-light"] .foodEditAmountCard {
+  background:
+    radial-gradient(circle at top, rgba(244,224,100,0.12), transparent 65%),
+    linear-gradient(180deg, rgba(255,247,205,0.98) 0%, rgba(240,223,154,0.92) 100%) !important;
+
+  border: 1px solid rgba(94,75,30,0.10) !important;
+  border-radius: 28px !important;
+
+  box-shadow:
+    0 16px 38px rgba(151,119,35,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.52) !important;
+
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* spacing */
+:root[data-app-theme="warm-light"] .foodEditPageGrid {
+  gap: 18px !important;
+}
+
+:root[data-app-theme="warm-light"] .foodEditPageContent {
+  gap: 18px !important;
+}
+
+/* input text */
+:root[data-app-theme="warm-light"] .foodEditPageContent input,
+:root[data-app-theme="warm-light"] .foodEditPageContent textarea {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+
+  color: #4f4739 !important;
+  -webkit-text-fill-color: #4f4739 !important;
+
+  font-weight: 800 !important;
+}
+
+/* placeholders */
+:root[data-app-theme="warm-light"] .foodEditPageContent input::placeholder,
+:root[data-app-theme="warm-light"] .foodEditPageContent textarea::placeholder {
+  color: rgba(95,87,68,0.48) !important;
+  -webkit-text-fill-color: rgba(95,87,68,0.48) !important;
+}
+
+/* labels */
+:root[data-app-theme="warm-light"] .foodEditPageContent label span {
+  color: rgba(95,87,68,0.82) !important;
+  -webkit-text-fill-color: rgba(95,87,68,0.82) !important;
+  font-weight: 800 !important;
+}
+
+/* textarea */
+:root[data-app-theme="warm-light"] .foodEditPageContent textarea {
+  min-height: 180px !important;
+  border-radius: 26px !important;
+
+  background:
+    radial-gradient(circle at top, rgba(244,224,100,0.10), transparent 65%),
+    linear-gradient(180deg, rgba(255,247,205,0.94) 0%, rgba(240,223,154,0.86) 100%) !important;
+
+  box-shadow:
+    0 16px 38px rgba(151,119,35,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.44) !important;
+}
+
+/* unit button */
+:root[data-app-theme="warm-light"] .foodEditPortionUnitToggle {
+  background:
+    radial-gradient(circle at top, rgba(244,224,100,0.16), transparent 60%),
+    linear-gradient(180deg, rgba(255,247,205,0.98) 0%, rgba(240,223,154,0.92) 100%) !important;
+
+  border: 1px solid rgba(94,75,30,0.10) !important;
+  border-radius: 26px !important;
+
+  box-shadow:
+    0 14px 32px rgba(151,119,35,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.52) !important;
+
+  color: #5f5744 !important;
+  font-weight: 900 !important;
+}
+

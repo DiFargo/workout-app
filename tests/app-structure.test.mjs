@@ -2282,7 +2282,7 @@ test("nutrition food search actions CSS keeps one photo active transform owner",
 });
 
 test("warm light food edit CSS keeps gold action shell grouped", async () => {
-  const source = await readText("src/styles/warm-light-food-edit-back-buttons.css");
+  const source = await readCssWithImports("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (
@@ -2303,7 +2303,7 @@ test("warm light food edit CSS keeps gold action shell grouped", async () => {
 });
 
 test("warm light food edit CSS keeps search surface shells grouped", async () => {
-  const source = await readText("src/styles/warm-light-food-edit-back-buttons.css");
+  const source = await readCssWithImports("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (
@@ -2320,7 +2320,7 @@ test("warm light food edit CSS keeps search surface shells grouped", async () =>
 });
 
 test("warm light food edit CSS keeps edit label shells grouped", async () => {
-  const source = await readText("src/styles/warm-light-food-edit-back-buttons.css");
+  const source = await readCssWithImports("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (
@@ -2337,7 +2337,7 @@ test("warm light food edit CSS keeps edit label shells grouped", async () => {
 });
 
 test("warm light food edit CSS keeps form control shells grouped", async () => {
-  const source = await readText("src/styles/warm-light-food-edit-back-buttons.css");
+  const source = await readCssWithImports("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (

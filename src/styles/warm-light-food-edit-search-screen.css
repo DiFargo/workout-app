@@ -1,0 +1,150 @@
+/* ADD FOOD SEARCH SCREEN POLISH â€” WARM LIGHT ONLY */
+
+/* search input field: slightly yellow like calendar block */
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNames {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(244, 224, 100, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(255, 249, 215, 0.98) 0%, rgba(246, 232, 174, 0.86) 100%) !important;
+  border: 1px solid rgba(94, 75, 30, 0.12) !important;
+  box-shadow:
+    0 14px 30px rgba(88, 68, 24, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input::placeholder {
+  color: rgba(95, 87, 68, 0.58) !important;
+  -webkit-text-fill-color: rgba(95, 87, 68, 0.58) !important;
+}
+
+/* history results: same family, slightly darker */
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNameButton {
+  background:
+    linear-gradient(180deg, rgba(248, 238, 191, 0.98) 0%, rgba(244, 232, 176, 0.96) 100%) !important;
+  border: 1px solid rgba(94, 75, 30, 0.08) !important;
+  box-shadow: 0 8px 18px rgba(88, 68, 24, 0.08) !important;
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNameButton span {
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+/* bottom bar background like calendar block */
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBar {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(244, 224, 100, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(255, 249, 215, 0.98) 0%, rgba(246, 232, 174, 0.86) 100%) !important;
+  border: 1px solid rgba(94, 75, 30, 0.12) !important;
+  box-shadow:
+    0 14px 30px rgba(88, 68, 24, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+}
+
+/* bottom bar buttons: pleasant yellow */
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBar button {
+  background:
+    linear-gradient(180deg, rgba(244, 224, 100, 0.58) 0%, rgba(224, 201, 77, 0.48) 100%) !important;
+  border: 1px solid rgba(94, 75, 30, 0.10) !important;
+  box-shadow:
+    0 10px 22px rgba(151, 119, 35, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.36) !important;
+  color: #5f5744 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+/* SEARCH BAR MORE YELLOW + REMOVE BOTTOM LINE */
+
+/* more warm yellow search bar */
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(244, 224, 100, 0.24), transparent 42%),
+    linear-gradient(
+      180deg,
+      rgba(255, 246, 190, 0.99) 0%,
+      rgba(244, 227, 145, 0.92) 100%
+    ) !important;
+
+  border: 1px solid rgba(94, 75, 30, 0.10) !important;
+
+  box-shadow:
+    0 14px 30px rgba(151, 119, 35, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.58) !important;
+}
+
+/* remove ugly bottom rectangle/line */
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium::after,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium::before,
+:root[data-app-theme="warm-light"] .fatSearchBottomBar::after,
+:root[data-app-theme="warm-light"] .fatSearchBottomBar::before {
+  display: none !important;
+  content: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchBottomBar {
+  border-bottom: 0 !important;
+}
+
+/* REMOVE LIGHT STRIP BETWEEN HISTORY AND BOTTOM BAR */
+:root[data-app-theme="warm-light"] .fatSearchListPremium {
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchListPremium::after,
+:root[data-app-theme="warm-light"] .fatSearchListPremium::before,
+:root[data-app-theme="warm-light"] .fatRecentFoods::after,
+:root[data-app-theme="warm-light"] .fatRecentFoods::before {
+  display: none !important;
+  content: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchBottomBar {
+  margin-top: 0 !important;
+}
+
+/* FORCE REMOVE WHITE DIVIDER ABOVE BOTTOM ACTION BAR */
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium {
+  padding-bottom: 160px !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchBottomBar {
+  border-top: 0 !important;
+  outline: 0 !important;
+  box-shadow:
+    0 -8px 24px rgba(151,119,35,0.08) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSearchBottomBar::before,
+:root[data-app-theme="warm-light"] .fatSearchBottomBar::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* actual separator line */
+
+/* remove white strip area */
+:root[data-app-theme="warm-light"] .fatSearchListPremium {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: 0 !important;
+  background: transparent !important;
+}
+
