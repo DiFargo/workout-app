@@ -1,0 +1,93 @@
+/* v1.77b EOF guard: final winning geometry for client mobile screens. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutCardPro,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro {
+    height: clamp(430px, calc(100dvh - 310px), 560px) !important;
+    min-height: clamp(430px, calc(100dvh - 310px), 560px) !important;
+    max-height: clamp(430px, calc(100dvh - 310px), 560px) !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutDeck,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutDeck {
+    margin-bottom: 42px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress {
+    top: -28px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage > .individualWorkoutNav,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage > .individualWorkoutNav {
+    position: fixed !important;
+    left: var(--client-x) !important;
+    right: var(--client-x) !important;
+    bottom: calc(126px + env(safe-area-inset-bottom)) !important;
+    z-index: 82 !important;
+    width: auto !important;
+    height: 20px !important;
+    min-height: 20px !important;
+    margin: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    pointer-events: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage > .individualWorkoutNav > button,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage > .individualWorkoutNav > button {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutSwipeHint,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutSwipeHint {
+    margin: 0 !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    color: #7b8294 !important;
+    -webkit-text-fill-color: #7b8294 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutSwipeAffordance,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutSwipeAffordance {
+    margin-top: 2px !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    color: #6f7390 !important;
+    -webkit-text-fill-color: #6f7390 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectHero {
+    height: var(--client-title-h) !important;
+    min-height: var(--client-title-h) !important;
+    margin-top: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 16px !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 12px !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutHeaderActions,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutHeaderActions {
+    position: static !important;
+    inset: auto !important;
+    justify-self: end !important;
+    align-self: center !important;
+    width: auto !important;
+    height: var(--client-action) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    transform: none !important;
+  }
+}
