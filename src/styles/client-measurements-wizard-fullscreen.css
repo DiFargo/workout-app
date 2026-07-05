@@ -1,0 +1,396 @@
+/* === V109 FULLSCREEN MEASUREMENT WIZARD === */
+
+.measurementFullscreenPage {
+  height: 100dvh !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  max-width: 560px !important;
+  margin: 0 auto !important;
+  padding:
+    max(28px, calc(env(safe-area-inset-top) + 18px))
+    14px
+    calc(116px + env(safe-area-inset-bottom))
+    14px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145,173,78,.16), transparent 38%),
+    linear-gradient(180deg, #0d130d 0%, #060906 100%) !important;
+  color: var(--text) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.measurementFullscreenHeader {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto 12px !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+.measurementFullscreenBack,
+.measurementFullscreenClose {
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(145,173,78,.14) !important;
+  background: rgba(9,13,9,.86) !important;
+  color: #76ff8a !important;
+  font-size: 34px !important;
+  font-weight: 950 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,.28) !important;
+}
+
+.measurementFullscreenClose {
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 16px !important;
+  color: rgba(255,255,255,.66) !important;
+  font-size: 25px !important;
+  line-height: 1 !important;
+  z-index: 2 !important;
+}
+
+.measurementFullscreenProgress {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 9px !important;
+  width: min(calc(100% - 108px), 330px) !important;
+}
+
+.measurementFullscreenProgress span {
+  color: rgba(255,255,255,.62) !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  text-align: center !important;
+}
+
+.measurementFullscreenProgress i {
+  height: 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.06) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255,255,255,.035) !important;
+}
+
+.measurementFullscreenProgress i em {
+  display: block !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  background: linear-gradient(90deg, #7f9f3a, #b5e655) !important;
+  box-shadow: 0 0 18px rgba(181,230,85,.34) !important;
+}
+
+.measurementFullscreenBody {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  overflow: hidden !important;
+}
+
+.measurementFullscreenCard {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 16px !important;
+  border-radius: 34px !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145,173,78,.13), transparent 48%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)) !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
+}
+
+.measurementFullscreenCard::-webkit-scrollbar {
+  display: none !important;
+}
+
+.measurementFullscreenPreload {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.measurementFullscreenImageFrame {
+  height: min(43vh, 330px) !important;
+  min-height: 260px !important;
+  width: 100% !important;
+  border-radius: 30px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(181,230,85,.18), transparent 62%),
+    rgba(0,0,0,.22) !important;
+  border: 1px solid rgba(145,173,78,.16) !important;
+}
+
+.measurementFullscreenImageFrame::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), transparent 35%, rgba(0,0,0,.20)),
+    radial-gradient(circle at 50% 50%, transparent 50%, rgba(0,0,0,.24) 100%) !important;
+}
+
+.measurementFullscreenImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  filter: drop-shadow(0 0 22px rgba(145,173,78,.30)) !important;
+  transform: scale(1.18) !important;
+}
+
+.measurementFullscreenImageFrame.zone-biceps .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-forearm .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-wrist .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-thigh .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-calf .measurementFullscreenImage,
+.measurementFullscreenImageFrame.zone-ankle .measurementFullscreenImage {
+  transform: scale(1.30) !important;
+}
+
+.measurementFullscreenText h2,
+.measurementFullscreenCard h2 {
+  margin: 0 !important;
+  color: #fff !important;
+  font-size: clamp(32px, 8vw, 42px) !important;
+  font-weight: 950 !important;
+  line-height: 1.03 !important;
+  text-align: center !important;
+  letter-spacing: -1px !important;
+}
+
+.measurementFullscreenText p,
+.measurementFullscreenCard p {
+  max-width: 350px !important;
+  margin: 8px auto 0 !important;
+  color: rgba(255,255,255,.56) !important;
+  font-size: 15px !important;
+  font-weight: 850 !important;
+  line-height: 1.38 !important;
+  text-align: center !important;
+}
+
+.measurementFullscreenInput {
+  margin-top: auto !important;
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.measurementFullscreenInput div {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 66px !important;
+  gap: 8px !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 80px !important;
+  padding: 9px 10px !important;
+  box-sizing: border-box !important;
+  border-radius: 26px !important;
+  background: #070a07 !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+}
+
+.measurementFullscreenInput input {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  padding: 0 8px !important;
+  box-sizing: border-box !important;
+  height: 62px !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  color: #fff !important;
+  text-align: center !important;
+  font-size: 36px !important;
+  font-weight: 950 !important;
+}
+
+.measurementFullscreenInput em {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  min-height: 46px !important;
+  border-radius: 16px !important;
+  background: rgba(145,173,78,.10) !important;
+  color: rgba(229,255,175,.92) !important;
+  font-size: 15px !important;
+  font-style: normal !important;
+  font-weight: 950 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.measurementFullscreenPrevious {
+  color: rgba(255,255,255,.40) !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.measurementFullscreenNav {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 12px)) !important;
+  transform: translateX(-50%) !important;
+  width: min(calc(100vw - 24px), 536px) !important;
+  z-index: 9800 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  padding: 10px !important;
+  border-radius: 30px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: linear-gradient(180deg, #121712 0%, #0d110d 100%) !important;
+  box-shadow: 0 -18px 44px rgba(0,0,0,.66) !important;
+}
+
+.measurementFullscreenNav button {
+  min-height: 66px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,.075) !important;
+  background: linear-gradient(180deg, #191d19 0%, #111511 100%) !important;
+  color: rgba(255,255,255,.72) !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+}
+
+.measurementFullscreenNav button.next {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127,159,58,.32), transparent 62%),
+    linear-gradient(180deg, #253018 0%, #1b2416 100%) !important;
+  border-color: rgba(127,159,58,.44) !important;
+  color: #f4f6f2 !important;
+}
+
+.measurementFullscreenNav button:disabled {
+  opacity: .38 !important;
+}
+
+.measurementFullscreenReviewGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 9px !important;
+  max-height: 42vh !important;
+  overflow-y: auto !important;
+  padding-right: 2px !important;
+}
+
+.measurementFullscreenReviewGrid div {
+  min-height: 66px !important;
+  padding: 12px !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.035) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.measurementFullscreenReviewGrid span {
+  display: block !important;
+  color: rgba(255,255,255,.46) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.measurementFullscreenReviewGrid strong {
+  margin-top: 5px !important;
+  display: inline-block !important;
+  color: #fff !important;
+  font-size: 21px !important;
+  font-weight: 950 !important;
+}
+
+.measurementFullscreenReviewGrid small {
+  margin-left: 4px !important;
+  color: rgba(181,230,85,.78) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.measurementFullscreenStatus {
+  margin: 12px 0 0 !important;
+  color: rgba(255,255,255,.58) !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.measurementIntroVisual {
+  height: min(38vh, 300px) !important;
+}
+
+@media (max-width: 390px) {
+  .measurementFullscreenPage {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .measurementFullscreenHeader {
+    width: min(100%, 300px) !important;
+  }
+
+  .measurementFullscreenCard {
+    padding: 14px !important;
+  }
+
+  .measurementFullscreenImageFrame {
+    height: min(41vh, 292px) !important;
+    min-height: 236px !important;
+  }
+
+  .measurementFullscreenText h2,
+  .measurementFullscreenCard h2 {
+    font-size: 32px !important;
+  }
+
+  .measurementFullscreenInput input {
+    font-size: 32px !important;
+  }
+
+  .measurementFullscreenNav {
+    width: calc(100vw - 18px) !important;
+    padding: 9px !important;
+  }
+
+  .measurementFullscreenNav button {
+    min-height: 62px !important;
+    border-radius: 22px !important;
+    font-size: 17px !important;
+  }
+}
+

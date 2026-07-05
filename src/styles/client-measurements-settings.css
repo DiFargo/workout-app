@@ -1,0 +1,183 @@
+/* === V104 BODY METRICS MOVED TO SETTINGS === */
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileBodyMetricsSettingsSection {
+  display: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection {
+  display: block !important;
+  margin-top: 14px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  margin-top: 14px !important;
+}
+
+/* === PROFILE SETTINGS COMPACT OVERVIEW === */
+
+.profileTabbedPage[data-profile-tab="settings"] .profileCabinetSection {
+  padding: 18px 14px 0 !important;
+  gap: 10px !important;
+}
+
+.profileSettingsPageTitle {
+  margin: 0 0 4px !important;
+  color: #fff !important;
+  font-size: clamp(28px, 8vw, 36px) !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeSettingsSection,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection,
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  width: calc(100% - 28px) !important;
+  max-width: 692px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  border-radius: 24px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeSettingsSection {
+  width: 100% !important;
+  margin-top: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection,
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  margin-top: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead {
+  min-height: 82px !important;
+  padding: 13px 15px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle span,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead span {
+  font-size: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle strong,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead strong {
+  margin: 4px 0 3px !important;
+  font-size: 18px !important;
+  line-height: 1.08 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle small,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead small {
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle em,
+.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection .profileAccordionHead em {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 14px !important;
+  font-size: 20px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+  padding: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsActions {
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+  min-height: 68px !important;
+  margin: 0 !important;
+  padding: 9px 12px !important;
+  border-radius: 18px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn {
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) 18px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  text-align: left !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeIcon,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramAvatar {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 14px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeText {
+  display: grid !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeText strong {
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeText small {
+  color: rgba(255,255,255,.48) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn i {
+  color: rgba(255,255,255,.36) !important;
+  font-size: 26px !important;
+  font-style: normal !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+  grid-template-columns: 42px minmax(0, 1fr) auto 16px !important;
+  gap: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramText strong {
+  font-size: 16px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramText small {
+  font-size: 11px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem em {
+  min-height: 26px !important;
+  padding: 0 8px !important;
+  font-size: 9px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileLogoutBtn {
+  min-height: 50px !important;
+  border-radius: 17px !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+}
+
+@media (max-width: 370px) {
+  .profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem em {
+    display: none !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+    grid-template-columns: 42px minmax(0, 1fr) 16px !important;
+  }
+}
+
+/* Ð¡Ñ‚Ð°Ñ€Ñ‹Ð¹ ÐºÐ»Ð°ÑÑ Ð°Ð½ÐºÐµÑ‚Ñ‹ Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½Ðµ Ð´Ð¾Ð»Ð¶ÐµÐ½ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°Ñ‚ÑŒÑÑ Ð² Ð·Ð°Ð¼ÐµÑ€Ð°Ñ…, ÐµÑÐ»Ð¸ Ð±Ñ€Ð°ÑƒÐ·ÐµÑ€ Ð´ÐµÑ€Ð¶Ð¸Ñ‚ ÑÑ‚Ð°Ñ€Ñ‹Ð¹ CSS */
+.profileTabbedPage[data-profile-tab="measurements"] .profileBodyMetricsMeasurementsSection {
+  display: none !important;
+}
+

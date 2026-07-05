@@ -1,0 +1,14 @@
+/* === V112 LAST MEASUREMENT VALUES === */
+
+.profileMeasurementLastGrid strong {
+  min-height: 30px !important;
+}
+
+.profileMeasurementLastGrid div {
+  justify-content: center !important;
+}
+
+.profileMeasurementDashboardTop small {
+  min-height: 16px !important;
+}
+
