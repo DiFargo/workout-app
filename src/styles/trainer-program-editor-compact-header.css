@@ -1,0 +1,27 @@
+/* PROGRAMS COMPACT HEADER V146 */
+.monthProgramPremium .programsCompactHeader {
+  width: 100%;
+  min-height: 38px;
+  margin: 0 0 10px;
+  padding: 4px 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.monthProgramPremium .programsCompactHeader h1 {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 950;
+  text-align: center;
+}
+
+.monthProgramPremium.monthProgramOverviewMode .programsOverviewPage {
+  padding-top: 0;
+}
+

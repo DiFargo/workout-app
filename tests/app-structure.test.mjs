@@ -3952,7 +3952,7 @@ test("trainer program editor keeps an explicit back action", async () => {
 });
 
 test("trainer program editor CSS keeps bottom bar labels grouped", async () => {
-  const source = await readText("src/styles/trainer-program-editor.css");
+  const source = await readCssWithImports("src/styles/trainer-program-editor.css");
 
   assert.equal(
     (source.match(/\.programsTopActionBar \.adminV3NavLabel,\s*nav\.adminV3Nav\.adminV3BottomBar\.programsBottomBar > button > \.adminV3NavLabel,\s*nav\.adminV3Nav\.adminV3BottomBar\.programEditorBottomBar > button > \.adminV3NavLabel,\s*nav\.adminV3Nav\.adminV3BottomBar\.workoutEditorBottomBar > button > \.adminV3NavLabel\s*\{\s*max-width:\s*100%;\s*font-size:\s*10px;\s*white-space:\s*nowrap;\s*overflow:\s*hidden;\s*text-overflow:\s*ellipsis;\s*\}/g) || []).length,

@@ -1,0 +1,33 @@
+/* MONTH PROGRAM EDITOR BOTTOM BAR V160 */
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button {
+  min-width: 0 !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button > .adminV3NavIcon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button.programEditorBottomBarSave {
+  color: rgba(221, 242, 173, 0.96) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button.programEditorBottomBarDelete,
+nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar > button.programEditorBottomBarDelete .adminV3NavIcon {
+  color: rgba(255, 142, 142, 0.92) !important;
+}
+
+@media (min-width: 701px) {
+  nav.adminV3Nav.adminV3BottomBar.programEditorBottomBar {
+    width: calc(100vw - 24px) !important;
+    max-width: 560px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+

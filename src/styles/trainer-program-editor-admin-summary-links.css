@@ -1,0 +1,37 @@
+/* ADMIN CLIENT SUMMARY LINKS V181 */
+.adminSummaryLink {
+  appearance: none;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease;
+}
+
+.adminSummaryLink:hover {
+  border-color: rgba(164, 196, 91, 0.28) !important;
+}
+
+.adminSummaryLink:active {
+  transform: translateY(1px);
+}
+
+.adminSummaryLink:focus-visible {
+  outline: 2px solid rgba(164, 196, 91, 0.7);
+  outline-offset: 2px;
+}
+
+.adminV3KpiGrid > button.adminSummaryLink {
+  min-height: 92px;
+  padding: 15px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  background: rgba(255, 255, 255, 0.035);
+  color: inherit;
+  text-align: left;
+}
+
+.adminUsersCrmMain .adminUsersFilterPills {
+  display: flex !important;
+  width: min(100%, 1120px);
+  margin: 0 auto 12px !important;
+}
+

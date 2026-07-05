@@ -1,0 +1,60 @@
+/* MONTH WORKOUT EDITOR BOTTOM BAR V151 */
+.monthProgramPremium.monthProgramPremiumDayMode .programsCompactHeader,
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBackToOverview,
+.monthProgramPremium.monthProgramPremiumDayMode .monthAddExerciseBtn {
+  display: none !important;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode {
+  padding-top: max(14px, env(safe-area-inset-top)) !important;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumExercise {
+  cursor: pointer;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumExercise.selected {
+  border-color: rgba(145, 173, 78, 0.5) !important;
+  background: rgba(127, 159, 58, 0.1) !important;
+  box-shadow: inset 0 0 0 1px rgba(145, 173, 78, 0.12);
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthExerciseRow.compact {
+  grid-template-columns: minmax(0, 1fr) 76px !important;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthExerciseRow.compact > button {
+  display: none !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button {
+  min-width: 0 !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button > .adminV3NavIcon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button.workoutEditorBottomBarDelete {
+  color: rgba(255, 183, 183, 0.9) !important;
+}
+
+nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar > button.workoutEditorBottomBarDelete .adminV3NavIcon {
+  color: rgba(255, 142, 142, 0.94) !important;
+}
+
+@media (min-width: 701px) {
+  nav.adminV3Nav.adminV3BottomBar.workoutEditorBottomBar {
+    width: calc(100vw - 24px) !important;
+    max-width: 560px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+

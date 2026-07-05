@@ -1,0 +1,178 @@
+/* MONTH PROGRAM HIERARCHY V155 */
+.monthProgramPremium .monthProgramMonths {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.monthProgramPremium .monthProgramMonth {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.monthProgramPremium .monthProgramMonthHead {
+  min-height: 42px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.monthProgramPremium .monthProgramMonthHead span,
+.monthProgramPremium .monthProgramMonthHead h2 {
+  display: block;
+  margin: 0;
+}
+
+.monthProgramPremium .monthProgramMonthHead span {
+  color: rgba(164, 196, 91, 0.76);
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.monthProgramPremium .monthProgramMonthHead h2 {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.monthProgramPremium .monthProgramMonthHead > button,
+.monthProgramPremium .monthProgramBlockControls button {
+  min-height: 32px;
+  padding: 0 9px;
+  border: 1px solid rgba(145, 173, 78, 0.2);
+  border-radius: 9px;
+  background: rgba(127, 159, 58, 0.12);
+  color: rgba(221, 242, 173, 0.92);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.monthProgramPremium .monthProgramMonth .monthProgramPremiumBlocks {
+  gap: 8px;
+}
+
+.monthProgramPremium .monthProgramMonthAddBlock {
+  min-height: 32px;
+  margin: 8px 0 0 auto;
+  padding: 0 10px;
+  display: block;
+  border: 1px solid rgba(145, 173, 78, 0.2);
+  border-radius: 9px;
+  background: rgba(127, 159, 58, 0.12);
+  color: rgba(221, 242, 173, 0.92);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.monthProgramPremium .monthProgramBlockHeaderRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.monthProgramPremium .monthProgramBlockHeaderRow .monthProgramAccordionHead {
+  min-width: 0;
+}
+
+.monthProgramPremium .monthProgramBlockControls {
+  padding-right: 9px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.monthProgramPremium .monthProgramBlockControls button {
+  min-height: 29px;
+  padding: 0 7px;
+  font-size: 9px;
+}
+
+.monthProgramPremium .monthProgramBlockControls .monthProgramHeaderToggle,
+.monthProgramPremium .weekEditorHeaderToggle {
+  min-height: 29px;
+  padding: 0 7px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.monthProgramPremium .weekEditorHeadActions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.monthProgramPremium .monthProgramBlockControls .monthProgramCopyIcon {
+  width: 30px;
+  min-width: 30px;
+  padding: 0;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramMonth:not(.active),
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramMonth.active > .monthProgramMonthHead,
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramMonth.active > .monthProgramMonthAddBlock,
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBlock.active > .monthProgramBlockHeaderRow {
+  display: none;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramMonth.active {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBlocks > .programEditorSwipeRow:not(.active) {
+  display: none;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBlocks > .programEditorSwipeRow.active {
+  padding-right: 0;
+}
+
+.monthProgramPremium.monthProgramPremiumDayMode .monthProgramPremiumBlocks > .programEditorSwipeRow.active > .programEditorSwipeDelete {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  .monthProgramPremium .monthProgramBlockHeaderRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .monthProgramPremium .monthProgramBlockControls {
+    padding: 0 7px 0 0;
+    justify-content: flex-end;
+  }
+
+  .monthProgramPremium .monthProgramBlockControls button,
+  .monthProgramPremium .weekEditorHeadActions button {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    font-size: 8px !important;
+  }
+}
+
+@media (min-width: 761px) {
+  .monthProgramPremium .monthProgramMonths {
+    gap: 14px;
+  }
+
+  .monthProgramPremium .monthProgramMonth {
+    padding: 12px;
+  }
+}
+
