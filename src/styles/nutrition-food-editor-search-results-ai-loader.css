@@ -1,0 +1,44 @@
+/* =========================================================
+   SEARCH ORDER FIX: MY RESULTS FIRST, AI LOADER BELOW
+   ========================================================= */
+
+/* ÑÑ‚Ð°Ñ€Ñ‹Ðµ Ð±Ð¾Ð»ÑŒÑˆÐ¸Ðµ Ð¿ÑƒÑÑ‚Ñ‹Ðµ skeleton-ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸ Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½Ðµ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð·Ð°Ð½Ð¸Ð¼Ð°Ñ‚ÑŒ Ð²ÐµÑ€Ñ… */
+
+/* ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½Ñ‹Ð¹ loader Ð¿Ð¾ÑÐ»Ðµ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¾Ð² Ð¼Ð¾ÐµÐ¹ Ð±Ð°Ð·Ñ‹ */
+.fatAiLoadingBelow {
+  width: 100% !important;
+  min-height: 52px !important;
+  margin: 8px 0 4px !important;
+  padding: 12px 14px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(157,245,76,0.11) !important;
+  background:
+    radial-gradient(circle at 0% 50%, rgba(157,245,76,0.05), transparent 44%),
+    rgba(255,255,255,0.025) !important;
+}
+
+.fatAiLoadingBelow span {
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(157,245,76,0.24) !important;
+  border-top-color: rgba(157,245,76,0.9) !important;
+  animation: fatAiSpin 0.8s linear infinite !important;
+  flex: 0 0 auto !important;
+}
+
+.fatAiLoadingBelow strong {
+  color: rgba(248,248,246,0.58) !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+  line-height: 1.2 !important;
+}
+
+@keyframes fatAiSpin {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,194 @@
+/* =========================================================
+   FOOD SEARCH â€” CLOSER TO MAIN NUTRITION STYLE
+   ========================================================= */
+
+/* Ð²ÑÑ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ð° Ð¿Ð¾Ð¸ÑÐºÐ° Ð±Ð»Ð¸Ð¶Ðµ Ðº ÑÑ‚Ð¸Ð»ÑŽ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ: ÑÑ‚ÐµÐºÐ»Ð¾, Ð¼ÑÐ³ÐºÐ¸Ðµ Ð³Ñ€Ð°Ð½Ð¸Ñ†Ñ‹ */
+.fatFoodSearchScreenPremium {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38, 255, 116, 0.055), transparent 34%),
+    linear-gradient(180deg, rgba(3, 13, 17, 0.99), rgba(3, 9, 11, 1)) !important;
+}
+
+/* Ð²ÐµÑ€Ñ…Ð½ÑÑ Ð·Ð¾Ð½Ð° ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÐµÐµ Ð¸ Ñ‡Ð¸Ñ‰Ðµ */
+.fatFoodSearchScreenPremium .fatSearchTopPremium {
+  margin-bottom: 16px !important;
+}
+
+/* Ð¿Ð¾Ð¸ÑÐº ÐºÐ°Ðº premium-ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ° Ð¸Ð· Ð¾ÑÐ½Ð¾Ð²Ð½Ð¾Ð³Ð¾ ÑÐºÑ€Ð°Ð½Ð° */
+.fatSearchInputWrapPremium {
+  min-height: 64px !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(255,255,255,0.105) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(38,255,116,0.06), transparent 44%),
+    linear-gradient(180deg, rgba(17, 27, 29, 0.96), rgba(9, 15, 17, 0.985)) !important;
+  box-shadow:
+    0 16px 34px rgba(0,0,0,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.035) !important;
+}
+
+.fatSearchInputWrapPremium input {
+  font-size: 23px !important;
+  font-weight: 850 !important;
+  color: rgba(248,248,246,0.94) !important;
+}
+
+/* ÑÐ¿Ð¸ÑÐ¾Ðº Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¾Ð² ÐºÐ°Ðº Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð¾Ð² Ð² Ñ€Ð°ÑÐºÑ€Ñ‹Ñ‚Ð¾Ð¼ Ð¿Ñ€Ð¸Ñ‘Ð¼Ðµ Ð¿Ð¸Ñ‰Ð¸ */
+.fatSearchResultCard {
+  min-height: 86px !important;
+  padding: 14px 16px !important;
+  grid-template-columns: 48px minmax(0, 1fr) 36px !important;
+  gap: 14px !important;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(38,255,116,0.035), transparent 42%),
+    linear-gradient(180deg, rgba(13, 27, 25, 0.86), rgba(7, 16, 15, 0.96)) !important;
+
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+.fatSearchResultCard:first-of-type {
+  border-top-left-radius: 24px !important;
+  border-top-right-radius: 24px !important;
+}
+
+.fatSearchResultCard:last-of-type {
+  border-bottom-left-radius: 24px !important;
+  border-bottom-right-radius: 24px !important;
+}
+
+/* Ð¸ÐºÐ¾Ð½ÐºÐ° ÑÐ»ÐµÐ²Ð° Ð¼ÑÐ³Ñ‡Ðµ, ÐºÐ°Ðº Ð¿Ð»Ð¸Ñ‚ÐºÐ°/ÑÐ¼Ð¾Ð´Ð·Ð¸ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ */
+.fatSearchResultIcon {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 16px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.20), transparent 66%),
+    rgba(38,255,116,0.075) !important;
+  color: rgba(38,255,116,0.92) !important;
+  font-size: 18px !important;
+}
+
+/* Ð½Ð°Ð·Ð²Ð°Ð½Ð¸Ðµ Ð¶Ð¸Ñ€Ð½ÐµÐµ, Ð±Ð»Ð¸Ð¶Ðµ Ðº Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°Ð¼ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ ÐžÐ±ÐµÐ´Ð° */
+.fatSearchResultInfo strong {
+  font-size: 20px !important;
+  font-weight: 950 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.55px !important;
+  color: rgba(248,248,246,0.96) !important;
+}
+
+/* Ð½Ð¸Ð¶Ð½ÑÑ ÑÑ‚Ñ€Ð¾ÐºÐ°: Ð·ÐµÐ»Ñ‘Ð½Ð°Ñ Ð¿Ð¾Ñ€Ñ†Ð¸Ñ + Ð¿Ñ€Ð¸Ð³Ð»ÑƒÑˆÑ‘Ð½Ð½Ñ‹Ð¹ Ð Ð¡Ðš */
+.fatSearchResultInfo span {
+  gap: 10px !important;
+}
+
+.fatSearchResultInfo span em {
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  color: rgba(38,255,116,0.92) !important;
+}
+
+.fatSearchResultInfo span small {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: rgba(248,248,246,0.50) !important;
+}
+
+/* ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚ ÑÐ¿Ñ€Ð°Ð²Ð° ÐºÐ°Ðº Ð°ÐºÐºÑƒÑ€Ð°Ñ‚Ð½Ñ‹Ð¹ action-Ñ‡ÐµÐº */
+.fatSearchResultCheck {
+  width: 25px !important;
+  height: 25px !important;
+  border-radius: 7px !important;
+  border: 2px solid rgba(157,245,76,0.72) !important;
+  opacity: 0.9 !important;
+}
+
+/* Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð±Ð°Ñ€ Ð±Ð»Ð¸Ð¶Ðµ Ðº Ð±Ð¾Ð»ÑŒÑˆÐ¸Ð¼ premium-ÐºÐ½Ð¾Ð¿ÐºÐ°Ð¼ */
+.fatSearchBottomBar {
+  width: min(calc(100% - 28px), 430px) !important;
+  min-height: 96px !important;
+  padding: 9px !important;
+  gap: 10px !important;
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 56%),
+    linear-gradient(180deg, rgba(22, 31, 27, 0.97), rgba(11, 17, 14, 0.99)) !important;
+  border: 1px solid rgba(157,245,76,0.16) !important;
+  box-shadow:
+    0 22px 56px rgba(0,0,0,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+
+.fatSearchBottomBar button {
+  min-height: 78px !important;
+  border-radius: 20px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(157,245,76,0.10), transparent 62%),
+    rgba(255,255,255,0.035) !important;
+  border: 1px solid rgba(157,245,76,0.13) !important;
+}
+
+.fatSearchBottomBar button span {
+  font-size: 25px !important;
+  color: rgba(157,245,76,0.96) !important;
+}
+
+.fatSearchBottomBar button strong {
+  font-size: 10px !important;
+  font-weight: 950 !important;
+  line-height: 1.08 !important;
+  color: rgba(248,248,246,0.88) !important;
+}
+
+/* Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ‹ Ð½Ðµ Ð¿Ñ€ÑÑ‚Ð°Ð»Ð¸ÑÑŒ Ð¿Ð¾Ð´ Ð±Ð°Ñ€ */
+.fatFoodSearchScreenPremium {
+  padding-bottom: 118px !important;
+}
+
+@media (max-width: 390px) {
+  .fatSearchInputWrapPremium {
+    min-height: 58px !important;
+    border-radius: 24px !important;
+  }
+
+  .fatSearchInputWrapPremium input {
+    font-size: 20px !important;
+  }
+
+  .fatSearchResultCard {
+    min-height: 78px !important;
+    padding: 12px 13px !important;
+    grid-template-columns: 42px minmax(0, 1fr) 30px !important;
+    gap: 11px !important;
+  }
+
+  .fatSearchResultIcon {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 14px !important;
+  }
+
+  .fatSearchResultInfo strong {
+    font-size: 17px !important;
+  }
+
+  .fatSearchResultInfo span em {
+    font-size: 13px !important;
+  }
+
+  .fatSearchResultInfo span small {
+    font-size: 12px !important;
+  }
+
+  .fatSearchBottomBar {
+    min-height: 88px !important;
+    gap: 7px !important;
+  }
+
+  .fatSearchBottomBar button {
+    min-height: 70px !important;
+    border-radius: 17px !important;
+  }
+}
+

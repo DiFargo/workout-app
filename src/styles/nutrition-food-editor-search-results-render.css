@@ -1,0 +1,176 @@
+/* =========================================================
+   FOOD SEARCH RESULTS â€” RENDER STYLE
+   ========================================================= */
+
+.fatFoodSearchScreenPremium .fatSearchResults,
+.fatFoodSearchScreenPremium .fatSearchResultList {
+  border-radius: 22px !important;
+  overflow: hidden !important;
+}
+
+.fatSearchResultCard {
+  width: 100% !important;
+  min-height: 76px !important;
+  padding: 12px 14px !important;
+  margin: 0 !important;
+
+  display: grid !important;
+  grid-template-columns: 44px minmax(0, 1fr) 34px !important;
+  gap: 13px !important;
+  align-items: center !important;
+
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.075) !important;
+
+  background:
+    radial-gradient(circle at 0% 50%, rgba(157,245,76,0.035), transparent 36%),
+    linear-gradient(180deg, rgba(12, 18, 14, 0.96), rgba(7, 12, 10, 0.98)) !important;
+
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
+.fatSearchResultCard:first-of-type {
+  border-top-left-radius: 22px !important;
+  border-top-right-radius: 22px !important;
+}
+
+.fatSearchResultCard:last-of-type {
+  border-bottom: 0 !important;
+  border-bottom-left-radius: 22px !important;
+  border-bottom-right-radius: 22px !important;
+}
+
+.fatSearchResultIcon {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background: rgba(157,245,76,0.09) !important;
+  color: rgba(176, 234, 104, 0.94) !important;
+
+  font-size: 17px !important;
+  line-height: 1 !important;
+}
+
+.fatSearchResultInfo {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.fatSearchResultInfo strong {
+  display: block !important;
+  max-width: 100% !important;
+
+  color: rgba(248,248,246,0.94) !important;
+  font-size: 17px !important;
+  font-weight: 750 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.25px !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.fatSearchResultInfo span {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+
+  color: rgba(247,248,251,0.54) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+
+.fatSearchResultInfo span em {
+  flex: 0 0 auto !important;
+  color: rgba(130, 240, 118, 0.92) !important;
+  font-style: normal !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+.fatSearchResultInfo span small {
+  min-width: 0 !important;
+  color: rgba(247,248,251,0.50) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.fatSearchResultCheck {
+  width: 24px !important;
+  height: 24px !important;
+  justify-self: end !important;
+
+  border-radius: 6px !important;
+  border: 2px solid rgba(157,245,76,0.78) !important;
+  background: transparent !important;
+  box-shadow: 0 0 10px rgba(157,245,76,0.08) !important;
+}
+
+/* bottom bar closer to render */
+.fatSearchBottomBar {
+  min-height: 86px !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(180deg, rgba(32, 38, 31, 0.94), rgba(16, 21, 17, 0.985)) !important;
+  border-color: rgba(157,245,76,0.13) !important;
+}
+
+.fatSearchBottomBar button {
+  min-height: 70px !important;
+  border-radius: 14px !important;
+  background: rgba(157,245,76,0.045) !important;
+  border: 1px solid rgba(157,245,76,0.10) !important;
+}
+
+.fatSearchBottomBar button span {
+  color: rgba(157,245,76,0.92) !important;
+  font-size: 22px !important;
+}
+
+.fatSearchBottomBar button strong {
+  color: rgba(248,248,246,0.86) !important;
+  font-size: 10px !important;
+  line-height: 1.12 !important;
+  text-transform: uppercase !important;
+}
+
+@media (max-width: 390px) {
+  .fatSearchResultCard {
+    min-height: 70px !important;
+    padding: 10px 12px !important;
+    grid-template-columns: 40px minmax(0, 1fr) 30px !important;
+    gap: 10px !important;
+  }
+
+  .fatSearchResultInfo strong {
+    font-size: 15px !important;
+  }
+
+  .fatSearchResultInfo span em,
+  .fatSearchResultInfo span small {
+    font-size: 12px !important;
+  }
+
+  .fatSearchResultCheck {
+    width: 22px !important;
+    height: 22px !important;
+  }
+}
+

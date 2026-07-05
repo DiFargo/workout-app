@@ -1,0 +1,16 @@
+/* =========================================================
+   SEARCH RESULTS: MY DATABASE FIRST + AI/FATSECRET BELOW
+   ========================================================= */
+
+.fatSearchResultInfo span small {
+  color: rgba(248,248,246,0.48) !important;
+}
+
+.fatSearchResultCard {
+  position: relative !important;
+}
+
+.fatSearchResultCard:active {
+  transform: scale(0.988) !important;
+}
+
