@@ -1,0 +1,20 @@
+@media (max-width: 430px) {
+  :root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar,
+  :root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar,
+  :root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar,
+  :root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar,
+  :root[data-app-theme="warm-light"] body #root .fatSearchBottomBar,
+  :root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFive,
+  :root[data-app-theme="warm-light"] body #root .workoutModeBottomBar,
+  :root[data-app-theme="warm-light"] body #root .trainerRoleBottomBar,
+  :root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar,
+  :root[data-app-theme="warm-light"] body #root .individualWorkoutBottomPanel .individualWorkoutMenuBar,
+  :root[data-app-theme="warm-light"] body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+  :root[data-app-theme="warm-light"] body #root .mainDashboardPage .trainerRoleBottomBar,
+  :root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar,
+  :root[data-app-theme="warm-light"] body #root nav.trainerRoleBottomBar {
+    width: min(394px, calc(100vw - 16px)) !important;
+    max-width: 394px !important;
+  }
+}
+
