@@ -1,0 +1,58 @@
+/* FATSECRET MEAL COLLAPSE â€” BASE 2026-05-12 */
+.fatMealCard {
+  cursor: default;
+}
+
+.fatMealMain {
+  position: relative;
+  cursor: pointer;
+  grid-template-columns: 48px 1fr auto 44px 34px;
+}
+
+.fatMealCard.collapsed .fatMealItems {
+  display: none !important;
+}
+
+.fatMealToggle {
+  width: 34px;
+  height: 34px;
+  margin-left: -6px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 25px;
+  font-weight: 900;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.fatMealToggle:active {
+  transform: scale(0.94);
+}
+
+.fatMealCard.open .fatMealMain {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fatMealCard.collapsed .fatMealMain {
+  border-bottom: none;
+}
+
+@media (max-width: 480px) {
+  .fatMealMain {
+    grid-template-columns: 44px 1fr auto 40px 28px !important;
+  }
+
+  .fatMealToggle {
+    width: 28px;
+    height: 32px;
+    font-size: 23px;
+  }
+}
+
