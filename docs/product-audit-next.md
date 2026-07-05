@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.787`.
+Last updated at app version `v.1.788`.
 
 ## Evidence
 
@@ -430,6 +430,7 @@ No current P0 runtime blocker is known after the `v1003` E2E stabilization.
 322. Client harness main preview restores the archived main-menu composition with the hero stats inside the greeting card and compact reference block positions.
 323. Client harness main preview keeps the header on shared client chrome rules, restores SVG date icons and the purple measurement tooltip.
 324. Client harness main progress preview now uses an isolated reference score-ring class so old progress-gauge variants no longer affect the local main render.
+325. Client harness main preview restores the compact archived block proportions, aligns the header with the cabinet chrome, starts the progress ring at 6 o'clock and keeps the greeting text inside the hero card.
 242. Food search header close-button shell now stays in one grouped owner.
 243. Food search header title shell now stays in one grouped owner.
 244. Legacy bottom bar button and label shell CSS now stays in the final baseline owner.

@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.787`.
+Last updated at app version `v.1.788`.
 
 ## Stable Now
 
@@ -21,6 +21,7 @@ Last updated at app version `v.1.787`.
 - Client harness main preview now centers the progress `из 100` caption inside the restored purple score ring.
 - Client harness main preview now restores the archived hero composition: greeting plus goal, target weight and workout count inside one card, followed by the compact date, progress and measurement cards.
 - Client harness main preview now keeps its header on the shared client chrome rhythm, restores the reference SVG date icons and uses an isolated reference score-ring class so old progress-gauge variants no longer affect the local render.
+- Client harness main preview now restores the compact archived block proportions, aligns the main header with the cabinet chrome, starts the reference score ring at 6 o'clock and keeps the greeting inside the hero card.
 - Client main measurement snapshot is guarded against mobile header/body overlap in the primary visual audit.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
