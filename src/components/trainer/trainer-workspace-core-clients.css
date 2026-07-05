@@ -1,0 +1,549 @@
+.trainerNextHeadActions,
+.trainerNextMobileActions,
+.trainerNextClientBackRow > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trainerNextHeadActions > button,
+.trainerNextClientBackRow > div > button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.trainerNextPrimary {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 17px;
+  border: 0 !important;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #7550f7, #5425ec) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(100, 55, 245, 0.18);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.trainerNextMobileHeader,
+.trainerNextMobileActions,
+.trainerNextMobileNav {
+  display: none;
+}
+
+.trainerNextSectionTitle,
+.trainerNextClientsTitle,
+.trainerNextSummaryHead,
+.trainerNextPanelTitle,
+.trainerNextChartHead,
+.trainerPhotoPreviewModal header,
+.trainerNotificationCalendar > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.trainerNextSectionTitle {
+  margin: 0 0 12px;
+}
+
+.trainerNextSectionTitle h2,
+.trainerNextClientsTitle h2,
+.trainerNextPanelTitle h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 750;
+}
+
+.trainerNextSectionTitle button,
+.trainerNextSummaryHead button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--tn-purple);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.trainerNextMetrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.trainerNextMetric {
+  min-width: 0;
+  min-height: 126px;
+  padding: 16px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerNextMetricHead {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--tn-muted);
+  font-size: 11px;
+}
+
+.trainerNextMetric > strong {
+  display: block;
+  margin-top: 13px;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.trainerNextMetricFoot {
+  min-height: 35px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--tn-muted);
+}
+
+.trainerNextMetricFoot.green small,
+.trainerNextResultCard .positive,
+.trainerNextHistoryList article > svg,
+.trainerNextNutritionAnalysis svg {
+  color: var(--tn-green);
+}
+
+.trainerNextSparkline {
+  width: 94px;
+  height: 34px;
+  overflow: visible;
+}
+
+.trainerNextSparkline polyline {
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trainerNextSparkline.green polyline {
+  stroke: var(--tn-green);
+}
+
+.trainerNextSparkline.purple polyline {
+  stroke: var(--tn-purple);
+}
+
+.trainerNextSparkline.red polyline {
+  stroke: var(--tn-red);
+}
+
+.trainerNextClientsSection,
+.trainerNextClientsStandalone {
+  margin-top: 24px;
+}
+
+.trainerNextClientsTitle {
+  margin-bottom: 13px;
+}
+
+.trainerNextClientsTitle p {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+}
+
+.trainerNextClientsTitle button {
+  min-width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--tn-purple);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.trainerAttentionListSection {
+  margin-top: 24px;
+}
+
+.trainerAttentionList {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--tn-soft-shadow);
+}
+
+.trainerAttentionList > button {
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #eef0f6;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff 0%, #fbfbff 100%);
+  color: var(--tn-text);
+  text-align: left;
+}
+
+.trainerAttentionList > button > span,
+.trainerNextProgramControl > div > span,
+.trainerNextProgramControl label {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.trainerAttentionList > button strong {
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerAttentionList > button small {
+  color: var(--tn-muted);
+  font-size: 11px;
+}
+
+.trainerNextFilters button.active {
+  border-color: var(--tn-purple);
+  color: var(--tn-purple);
+  background: var(--tn-purple-soft);
+}
+
+.trainerNextSearch {
+  width: 0;
+  min-height: 38px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0 solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+  opacity: 0;
+  transition: width 160ms ease, opacity 160ms ease, padding 160ms ease;
+}
+
+.trainerNextSearch.open {
+  width: 245px;
+  padding: 0 12px;
+  border-width: 1px;
+  opacity: 1;
+}
+
+.trainerNextSearch input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--tn-text);
+  font-size: 12px;
+}
+
+.trainerNextClientTable {
+  overflow: hidden;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerNextClientTableHead,
+.trainerNextClientTable > button {
+  display: grid;
+  grid-template-columns: minmax(190px, 1.5fr) minmax(120px, 0.85fr) 86px 82px 100px 130px;
+  align-items: center;
+  gap: 12px;
+}
+
+.trainerNextClientTableHead {
+  min-height: 42px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--tn-line);
+  color: var(--tn-muted);
+  font-size: 10px;
+}
+
+.trainerNextClientTable > button {
+  width: 100%;
+  min-height: 56px;
+  padding: 7px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--tn-line);
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trainerNextClientTable > button:last-of-type,
+.trainerNextMealList article:last-child,
+.trainerExerciseProgressList article:last-child {
+  border-bottom: 0;
+}
+
+.trainerNextClientTable > button:hover {
+  background: #fbfaff;
+}
+
+.trainerNextClientTable > button > span {
+  min-width: 0;
+  color: #4f5360;
+  font-size: 11px;
+}
+
+.trainerNextClientTable > button > span:not(.trainerNextClientIdentity):not(.trainerNextStatus),
+.trainerNextHistoryList article div {
+  display: grid;
+  gap: 3px;
+}
+
+.trainerNextClientTable > button > span.positive {
+  color: var(--tn-green);
+  font-weight: 700;
+}
+
+.trainerNextClientTable > button > span.negative {
+  color: var(--tn-red);
+  font-weight: 700;
+}
+
+.trainerNextClientTable .trainerNextSparkline {
+  width: 62px;
+  height: 22px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.trainerNextClientIdentity,
+.trainerNextClientName,
+.trainerProgramSelectedBar > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trainerNextClientIdentity small {
+  overflow: hidden;
+  color: var(--tn-muted);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerNextAvatar {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #dcdfe6;
+  border-radius: 50%;
+  background: #f0f1f5;
+  color: #59606f;
+  font-weight: 800;
+}
+
+.trainerNextAvatar img,
+.trainerNextPhotoGrid img,
+.trainerNextExerciseImage img,
+.trainerNextExerciseImage video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trainerNextAvatar.small {
+  width: 34px;
+  height: 34px;
+  font-size: 11px;
+}
+
+.trainerNextAvatar.medium {
+  width: 48px;
+  height: 48px;
+}
+
+.trainerNextAvatar.large {
+  width: 84px;
+  height: 84px;
+  font-size: 20px;
+}
+
+.trainerNextStatus {
+  width: max-content;
+  max-width: 125px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.trainerNextStatus.active {
+  color: #11883b;
+  background: var(--tn-green-soft);
+}
+
+.trainerNextStatus.attention,
+.trainerNextStatus.noProgram {
+  color: #c77000;
+  background: #fff4df;
+}
+
+.trainerNextStatus.lost {
+  color: #d43737;
+  background: #fff0f0;
+}
+
+.trainerNextEmpty {
+  width: 100%;
+  padding: 24px;
+  color: var(--tn-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.trainerNextClientBackRow {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.trainerNextClientBackRow > button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.trainerNextClientHeader {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 94px;
+}
+
+.trainerNextClientHeader > div,
+.trainerNextMealList article div,
+.trainerNextProgramsTab .programsOverviewCardTitle > div,
+.trainerProgramConstructor button,
+.trainerProgramConstructor input,
+.trainerClientProgramCurrent .trainerClientAssignedInfo,
+.trainerClientProgramSelectLabel,
+.trainerExerciseProgressList article > div,
+.trainerNotificationStatusCard > div:nth-child(2) {
+  min-width: 0;
+}
+
+.trainerNextClientName h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.trainerNextClientName span {
+  padding: 5px 8px;
+  border-radius: 7px;
+  color: #11883b;
+  background: var(--tn-green-soft);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.trainerNextClientHeader p {
+  margin: 8px 0 4px;
+  color: #343742;
+  font-size: 12px;
+}
+
+.trainerNextClientHeader strong {
+  color: #353842;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.trainerNextMobileMore {
+  display: none;
+}
+
+.trainerNextClientTabs,
+.trainerNextPageTabs {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--tn-line);
+}
+
+.trainerNextClientTabs {
+  margin-top: 14px;
+}
+
+.trainerNextClientTabs button,
+.trainerNextPageTabs button {
+  position: relative;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  background: transparent;
+  color: #555965;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.trainerNextClientTabs button::after,
+.trainerNextPageTabs button::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -1px;
+  height: 2px;
+  background: transparent;
+}
+
+.trainerNextClientTabs button.active::after,
+.trainerNextPageTabs button.active::after,
+.trainerNotificationSwitch input:checked + i,
+.trainerNotificationDayBadges i.workout,
+.trainerNotificationLegend i.workout {
+  background: var(--tn-purple);
+}
+

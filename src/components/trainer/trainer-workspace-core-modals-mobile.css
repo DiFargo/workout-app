@@ -1,0 +1,187 @@
+.trainerNextModalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(15, 16, 22, 0.48);
+}
+
+.trainerNextModal {
+  position: relative;
+  width: min(100%, 430px);
+  max-height: min(760px, calc(100dvh - 36px));
+  overflow: auto;
+  padding: 28px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 22px 70px rgba(15, 16, 22, 0.22);
+}
+
+.trainerNextModalClose {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--tn-line);
+  border-radius: 50%;
+  background: #fff;
+  font-size: 22px;
+}
+
+.trainerNextModalIcon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--tn-purple-soft);
+  color: var(--tn-purple);
+}
+
+.trainerNextModal h2 {
+  margin: 17px 0 5px;
+  font-size: 22px;
+}
+
+.trainerNextModal > p {
+  margin: 0 0 18px;
+  color: var(--tn-muted);
+  font-size: 12px;
+}
+
+.trainerNextModal label {
+  display: grid;
+  gap: 6px;
+}
+
+.trainerNextModal label > span {
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.trainerNextModal label input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+  outline: 0;
+}
+
+.trainerNextModal label > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.trainerNextModal label > div button {
+  padding: 0 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+}
+
+.trainerNextModalSubmit {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.trainerNextModalStatus {
+  margin: 0;
+  color: var(--tn-green);
+  font-size: 11px;
+}
+
+.trainerConfirmBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 6200;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(15, 16, 22, 0.46);
+  backdrop-filter: blur(6px);
+}
+
+.trainerConfirmDialog {
+  width: min(100%, 430px);
+  padding: 22px;
+  border: 1px solid var(--tn-line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(15, 16, 22, 0.24);
+}
+
+.trainerConfirmDialog header span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--tn-purple);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.trainerConfirmDialog h2 {
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.trainerConfirmDialog p {
+  margin: 9px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.trainerConfirmDialog footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.trainerConfirmDialog footer button {
+  min-height: 44px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--tn-text);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.trainerConfirmDialog footer button.danger {
+  border-color: #ffd4d4;
+  background: #fff4f4;
+  color: #d73535;
+}
+
+.trainerNextCredentials {
+  padding: 12px;
+  border: 1px solid var(--tn-purple-border);
+  border-radius: 7px;
+  background: var(--tn-purple-soft);
+}
+
+.trainerNextCredentials strong,
+.trainerNextCredentials code {
+  display: block;
+}
+
+.trainerNextCredentials code {
+  margin-top: 7px;
+  color: #3e286f;
+  font-size: 11px;
+}
+
+.trainerNextMobileNav {
+  display: none;
+}
+
