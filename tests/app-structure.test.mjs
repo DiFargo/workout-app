@@ -1375,7 +1375,7 @@ test("client primary final CSS keeps client page variables in the final owner", 
 
 test("client workout set-row final sizing stays in the workout lazy owner", async () => {
   const renderTarget = await readCssWithImports("src/styles/client-render-target.css");
-  const setRows = await readText("src/styles/client-workout-set-rows.css");
+  const setRows = await readCssWithImports("src/styles/client-workout-set-rows.css");
 
   assert.doesNotMatch(renderTarget, /v127: absolute final override for workout set rows/);
   assert.doesNotMatch(renderTarget, /v126: final set-row size\/state polish/);
@@ -1434,7 +1434,7 @@ test("client render target CSS keeps workout pro top sizing in the final owner",
 });
 
 test("client workout set rows CSS keeps one no-weight modal grid owner", async () => {
-  const source = await readText("src/styles/client-workout-set-rows.css");
+  const source = await readCssWithImports("src/styles/client-workout-set-rows.css");
 
   assert.equal(
     (source.match(/\.workoutSetEditModalFields\.withoutWeight\s*\{\s*grid-template-columns:\s*1fr !important;\s*\}/g) || []).length,

@@ -1,0 +1,99 @@
+html:root[data-app-theme="warm-light"] body #root .workoutSetWheelPicker {
+  --workout-set-wheel-item-height: 42px;
+  position: relative !important;
+  width: 100% !important;
+  height: calc(var(--workout-set-wheel-item-height) * 5) !important;
+  padding: calc(var(--workout-set-wheel-item-height) * 2) 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.1) 33%, rgba(255, 255, 255, 0.1) 67%, rgba(255, 255, 255, 0.96) 100%),
+    #f8f7ff !important;
+  scroll-snap-type: y mandatory !important;
+  scrollbar-width: none !important;
+  overscroll-behavior: contain !important;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%) !important;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutSetWheelPicker::-webkit-scrollbar {
+  display: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutSetWheelPicker::before,
+html:root[data-app-theme="warm-light"] body #root .workoutSetWheelPicker::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 2 !important;
+  display: block !important;
+  height: 1px !important;
+  background: rgba(210, 215, 229, 0.92) !important;
+  pointer-events: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutSetWheelPicker::before {
+  top: calc(50% - (var(--workout-set-wheel-item-height) / 2)) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutSetWheelPicker::after {
+  top: calc(50% + (var(--workout-set-wheel-item-height) / 2)) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutSetWheelOption {
+  width: 100% !important;
+  height: var(--workout-set-wheel-item-height) !important;
+  min-height: var(--workout-set-wheel-item-height) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 13px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: rgba(21, 24, 36, 0.48) !important;
+  display: grid !important;
+  place-items: center !important;
+  font-size: 20px !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+  scroll-snap-align: center !important;
+  cursor: pointer !important;
+  transition: color 120ms ease, font-size 120ms ease, opacity 120ms ease, transform 120ms ease !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutSetWheelOption.active {
+  color: #356ff2 !important;
+  font-size: 23px !important;
+  font-weight: 950 !important;
+  transform: scale(1.02) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutSetWheelPicker:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 4px rgba(99, 85, 246, 0.12) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutSetEditDoneButton {
+  width: 100% !important;
+  height: 50px !important;
+  margin-top: 13px !important;
+  border: 0 !important;
+  border-radius: 17px !important;
+  background: linear-gradient(135deg, #7b55ff 0%, #356ff2 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px rgba(93, 71, 244, 0.22) !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+@media (max-width: 370px) {
+  html:root[data-app-theme="warm-light"] body #root .workoutSetEditModal {
+    padding: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutSetEditModalFields {
+    gap: 9px !important;
+  }
+
+}
