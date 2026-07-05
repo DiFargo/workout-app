@@ -2102,6 +2102,19 @@
     box-shadow: none !important;
   }
 
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileMainHeroStats.profileAiStatsRow::before,
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileMainHeroStats.profileAiStatsRow::after,
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileMainHeroStats.profileAiStatsRow > div::before,
+  html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileMainHeroStats.profileAiStatsRow > div::after {
+    content: none !important;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
   html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileMainHeroStats .profileAiStatLabel {
     display: flex !important;
     align-items: center !important;
@@ -2158,6 +2171,7 @@
     min-height: 158px !important;
     height: 158px !important;
     padding: 16px 26px 13px !important;
+    gap: 4px !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileAiCoachSummary {
@@ -2187,11 +2201,11 @@
   }
 
   html:root[data-app-theme="warm-light"] body #root#root > main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileProgressInsightCard .profileProgressInsightBadges {
-    position: absolute !important;
-    left: 26px !important;
-    right: 26px !important;
-    bottom: 14px !important;
-    width: auto !important;
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
     margin-top: 0 !important;
     gap: 8px !important;
   }
