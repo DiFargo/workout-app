@@ -1,0 +1,361 @@
+/* === PROFILE NUTRITION COMPACT OVERVIEW === */
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionSection {
+  width: min(100%, 720px) !important;
+  margin: 18px auto 0 !important;
+  padding: 0 14px calc(118px + env(safe-area-inset-bottom)) !important;
+  gap: 12px !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button:nth-child(3) strong {
+  font-size: 10px !important;
+  white-space: nowrap !important;
+}
+
+.profileNutritionGoalCard {
+  padding: 15px !important;
+  border-radius: 26px !important;
+}
+
+.profileNutritionGoalCard .profileNutritionAccordionHead {
+  margin-bottom: 10px !important;
+}
+
+.profileAiNutritionPlanCard {
+  border-radius: 26px !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionPageTitle {
+  order: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionSection.hasPlan {
+  position: relative !important;
+  height: auto !important;
+  max-height: calc(100dvh - 176px) !important;
+  margin-top: 12px !important;
+  padding-bottom: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+
+.profileNutritionSection.hasPlan .profileAiNutritionPlanCard {
+  order: 1 !important;
+  flex: 0 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: calc(100dvh - 340px) !important;
+  margin-bottom: 0 !important;
+  border-radius: 26px 26px 0 0 !important;
+  border-bottom-color: transparent !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionGoalCard {
+  order: 2 !important;
+  flex: 0 0 164px !important;
+  min-height: 0 !important;
+  height: 164px !important;
+  margin: -1px 0 0 !important;
+  padding: 6px 12px !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
+  border-radius: 0 0 26px 26px !important;
+  border-top-color: rgba(255,255,255,.075) !important;
+  box-shadow: none !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionGoalCard::-webkit-scrollbar {
+  display: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="nutrition"] {
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  overflow: hidden !important;
+}
+
+.profileNutritionOverview {
+  padding: 16px !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionOverview {
+  height: auto !important;
+  max-height: 100% !important;
+  padding: 6px 10px !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionOverview::-webkit-scrollbar {
+  display: none !important;
+}
+
+.profileNutritionCalendarHead {
+  display: grid !important;
+  justify-items: center !important;
+  gap: 0 !important;
+  text-align: center !important;
+}
+
+.profileNutritionCalendarHead > div {
+  text-align: center !important;
+}
+
+.profileNutritionCalendarHead span {
+  display: block !important;
+  color: rgba(181,230,85,.78) !important;
+  font-size: 9px !important;
+  font-weight: 950 !important;
+}
+
+.profileNutritionCalendarHead h2 {
+  margin: 0 !important;
+  color: #fff !important;
+  font-size: 19px !important;
+  font-weight: 950 !important;
+}
+
+.profileNutritionCalendarHead small {
+  color: rgba(255,255,255,.46) !important;
+  font-size: 9px !important;
+  font-weight: 850 !important;
+  text-transform: lowercase !important;
+  text-align: center !important;
+}
+
+.profileNutritionCalendarLegend {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  margin-top: 4px !important;
+}
+
+.profileNutritionCalendarLegend span {
+  min-height: 20px !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.055) !important;
+  background: rgba(255,255,255,.03) !important;
+  color: rgba(255,255,255,.5) !important;
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.profileNutritionCalendarLegend i {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+}
+
+.profileNutritionCalendarLegend .calorieOk {
+  background: rgba(145,173,78,.95) !important;
+}
+
+.profileNutritionCalendarLegend .proteinFill {
+  background: rgba(255,255,255,.88) !important;
+}
+
+.profileNutritionCalendarLegend .caloriePlan {
+  border: 1px solid rgba(181,230,85,.72) !important;
+  background: transparent !important;
+}
+
+.profileNutritionCalendarMonthTitle {
+  min-height: 26px !important;
+  margin-top: 2px !important;
+  display: grid !important;
+  grid-template-columns: 34px minmax(0, 1fr) 34px !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.profileNutritionCalendarMonthTitle button {
+  width: 26px !important;
+  height: 26px !important;
+  padding: 0 !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(255,255,255,.055) !important;
+  background: rgba(255,255,255,.03) !important;
+  color: rgba(255,255,255,.7) !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+}
+
+.profileNutritionCalendarMonthTitle strong {
+  min-width: 0 !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  text-align: center !important;
+  text-transform: capitalize !important;
+}
+
+.profileNutritionMonthGrid {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 3px !important;
+}
+
+.profileNutritionWeekday {
+  min-height: 14px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: rgba(255,255,255,.36) !important;
+  font-size: 8px !important;
+  font-weight: 900 !important;
+}
+
+.profileNutritionMonthDay {
+  position: relative !important;
+  min-width: 0 !important;
+  height: 44px !important;
+  padding: 4px 3px !important;
+  overflow: hidden !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(255,255,255,.055) !important;
+  background: rgba(255,255,255,.025) !important;
+  color: #fff !important;
+  display: grid !important;
+  grid-template-rows: auto 1fr auto !important;
+  align-items: center !important;
+}
+
+.profileNutritionMonthDay.muted {
+  opacity: .28 !important;
+}
+
+.profileNutritionMonthDay.today {
+  border-color: rgba(181,230,85,.38) !important;
+}
+
+.profileNutritionMonthDay.active {
+  border-color: rgba(216,255,134,.72) !important;
+  box-shadow: inset 0 0 0 1px rgba(181,230,85,.16), 0 0 12px rgba(127,159,58,.1) !important;
+}
+
+.profileNutritionMonthDay.planned {
+  border-color: rgba(145,173,78,.12) !important;
+  background: rgba(127,159,58,.035) !important;
+}
+
+.profileNutritionMonthDay.planned > strong {
+  color: rgba(225,248,168,.82) !important;
+}
+
+.profileNutritionMonthDay.planned > small {
+  color: rgba(181,230,85,.5) !important;
+}
+
+.profileNutritionMonthDay > span,
+.profileNutritionMonthDay > strong,
+.profileNutritionMonthDay > small,
+.profileNutritionMonthDay > em {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.profileNutritionMonthDay > span {
+  justify-self: start !important;
+  color: rgba(255,255,255,.55) !important;
+  font-size: 8px !important;
+  font-weight: 950 !important;
+}
+
+.profileNutritionMonthDay > strong {
+  align-self: end !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+}
+
+.profileNutritionMonthDay > small,
+.profileNutritionMonthDay > em {
+  align-self: end !important;
+  color: rgba(255,255,255,.58) !important;
+  font-size: 7px !important;
+  line-height: 1 !important;
+  font-style: normal !important;
+  font-weight: 850 !important;
+}
+
+.profileNutritionMonthDay > i {
+  position: absolute !important;
+  bottom: 0 !important;
+  pointer-events: none !important;
+}
+
+.profileNutritionCalorieFill {
+  left: 0 !important;
+  right: 0 !important;
+  background: linear-gradient(180deg, rgba(145,173,78,.13), rgba(145,173,78,.32)) !important;
+}
+
+.profileNutritionMonthDay.highCalories .profileNutritionCalorieFill {
+  background: linear-gradient(180deg, rgba(230,74,74,.13), rgba(230,74,74,.34)) !important;
+}
+
+.profileNutritionProteinFill {
+  left: 0 !important;
+  width: 3px !important;
+  background: rgba(255,255,255,.75) !important;
+  border-radius: 0 5px 0 11px !important;
+}
+
+.profileNutritionCalendarWeek button.filled i {
+  background: rgba(181,230,85,.72) !important;
+}
+
+.profileNutritionCalendarWeek button.active {
+  border-color: rgba(181,230,85,.34) !important;
+  background: rgba(127,159,58,.16) !important;
+  color: #dfff9b !important;
+}
+
+.profileNutritionCalendarWeek button.active strong {
+  color: #fff !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionGoalCard .profileNutritionAccordionHead {
+  margin-bottom: 3px !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionAccordionHead span {
+  font-size: 9px !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionAccordionHead strong {
+  margin: 2px 0 1px !important;
+  font-size: 17px !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionAccordionHead small {
+  font-size: 10px !important;
+  line-height: 1.1 !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionMacroLine {
+  min-height: 40px !important;
+  padding: 0 9px !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionMacroLine strong {
+  font-size: 14px !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionMacroLine span {
+  font-size: 11px !important;
+}
+
+.profileNutritionSection.hasPlan .profileNutritionGoalSettingsBtn {
+  min-height: 36px !important;
+  margin-top: 4px !important;
+  font-size: 12px !important;
+}
+
