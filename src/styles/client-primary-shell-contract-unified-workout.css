@@ -1,0 +1,65 @@
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero > p,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectLine {
+  display: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNextBadge,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProgressBadge,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCompletedBadge,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutWeek {
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 18px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutDeck {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardPro {
+  width: 100% !important;
+  height: clamp(458px, calc(100dvh - 304px), 548px) !important;
+  min-height: 458px !important;
+  max-height: 548px !important;
+  margin: 0 0 12px !important;
+  border: 1px solid var(--client-card-border) !important;
+  border-radius: 26px !important;
+  overflow: hidden !important;
+  box-shadow: var(--client-shadow) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProBody,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProImage,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutProImage img {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardStartButton {
+  left: 18px !important;
+  right: 18px !important;
+  bottom: 18px !important;
+  width: calc(100% - 36px) !important;
+  min-height: 58px !important;
+  border-radius: 16px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomProgress {
+  margin: 0 0 4px !important;
+}
+
