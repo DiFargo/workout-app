@@ -1,0 +1,8 @@
+/* Meal cards like reference */
+.fatSecretPage .fatMealCard {
+  min-height: 104px !important;
+  margin-bottom: 18px !important;
+  border-radius: 28px !important;
+  padding: 20px 24px !important;
+}
+

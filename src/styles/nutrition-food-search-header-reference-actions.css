@@ -1,0 +1,9 @@
+/* Search/calendar block proportions */
+.fatSecretPage .fatQuickActions { display: none !important; }
+
+.fatSecretPage .fatActionBtn {
+  min-height: 84px !important;
+  border-radius: 24px !important;
+  padding: 14px 16px !important;
+}
+

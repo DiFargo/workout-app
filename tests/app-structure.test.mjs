@@ -2228,7 +2228,7 @@ test("legacy nutrition header CSS does not keep exact duplicate blocks", async (
 });
 
 test("legacy food search CSS keeps quick actions hidden in root owners", async () => {
-  const headerReference = await readText("src/styles/nutrition-food-search-header.css");
+  const headerReference = await readCssWithImports("src/styles/nutrition-food-search-header.css");
   const pickerBase = await readCssWithImports("src/styles/nutrition-food-picker-base.css");
   const caloriesTuning = await readCssWithImports("src/styles/nutrition-food-search-calories.css");
 
