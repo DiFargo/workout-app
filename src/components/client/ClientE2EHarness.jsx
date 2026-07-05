@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Bell, RefreshCw } from "lucide-react";
+import { Bell, Dumbbell, RefreshCw, Scale, Target } from "lucide-react";
 import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
@@ -255,20 +255,59 @@ function getHarnessWeekDates(selectedKey) {
   return buildNutritionWeekDates(selectedKey);
 }
 
-function HarnessHero() {
+function HarnessHero({ withStats = true } = {}) {
+  if (!withStats) {
+    return (
+      <div className="profileAiHero">
+        <div className="profileAiAvatarWrap">
+          <div className="profileAvatarBig profileUnifiedAvatar profileAiAvatar harnessLegacyPortrait">
+            <span aria-hidden="true" />
+          </div>
+          <div className="profileAiAvatarRing">
+            <strong>90%</strong>
+          </div>
+        </div>
+
+        <div className="profileAiHeroText">
+          <h1>Добрый вечер, ILYA 👋</h1>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="profileAiHero">
-      <div className="profileAiAvatarWrap">
-        <div className="profileAvatarBig profileUnifiedAvatar profileAiAvatar harnessLegacyPortrait">
-          <span aria-hidden="true" />
+      <div className="profileAiHeroGreeting">
+        <div className="profileAiAvatarWrap">
+          <div className="profileAvatarBig profileUnifiedAvatar profileAiAvatar harnessLegacyPortrait">
+            <span aria-hidden="true" />
+          </div>
+          <div className="profileAiAvatarRing">
+            <strong>90%</strong>
+          </div>
         </div>
-        <div className="profileAiAvatarRing">
-          <strong>79%</strong>
+
+        <div className="profileAiHeroText">
+          <h1>Добрый вечер, ILYA 👋</h1>
         </div>
       </div>
 
-      <div className="profileAiHeroText">
-        <h1>Добрый день, ILYA 👋</h1>
+      <div className="profileAiStatsRow profileMainHeroStats">
+        <div className="goal">
+          <span className="profileAiStatLabel"><Target aria-hidden="true" />Твоя цель</span>
+          <strong>Сушка</strong>
+          <small>&nbsp;</small>
+        </div>
+        <div>
+          <span className="profileAiStatLabel"><Scale aria-hidden="true" />Целевой вес</span>
+          <strong>89 кг</strong>
+          <small>&nbsp;</small>
+        </div>
+        <div>
+          <span className="profileAiStatLabel"><Dumbbell aria-hidden="true" />Тренировок</span>
+          <strong>12</strong>
+          <small>&nbsp;</small>
+        </div>
       </div>
     </div>
   );
@@ -319,24 +358,24 @@ function HarnessProgressInsight() {
           <div
             className="profileProgressGauge"
             style={{
-              "--progress-score": 79,
-              "--progress-fill": "284deg",
+              "--progress-score": 90,
+              "--progress-fill": "324deg",
               "--progress-color": "rgba(123, 111, 232, 1)",
               "--progress-glow": "rgba(123, 111, 232, 0.24)"
             }}
             role="img"
-            aria-label="Оценка прогресса 79 из 100"
+            aria-label="Оценка прогресса 90 из 100"
           >
             <div className="profileProgressGaugeDial">
               <i />
-              <strong>79</strong>
+              <strong>90</strong>
             </div>
             <small>из 100</small>
           </div>
 
           <div className="profileAiCoachHeadline">
             <span>Оценка прогресса</span>
-            <h2>Хороший прогресс</h2>
+            <h2>Отличный темп</h2>
             <p>Регулярность: данные ведутся стабильно. Продолжай в том же ритме.</p>
           </div>
         </div>
@@ -345,7 +384,7 @@ function HarnessProgressInsight() {
       <div className="profileAiCoachPreview profileProgressInsightBadges">
         <span className="profileProgressInsightBadge">
           <b>⚡ Тренировка</b>
-          <small>5 дн. назад</small>
+          <small>Сегодня</small>
         </span>
         <span className="profileProgressInsightBadge">
           <b>📏 Замер</b>
@@ -353,7 +392,7 @@ function HarnessProgressInsight() {
         </span>
         <span className="profileProgressInsightBadge">
           <b>🍽 Питание</b>
-          <small>Нет записей</small>
+          <small>По плану</small>
         </span>
       </div>
     </div>
@@ -1033,7 +1072,7 @@ export default function ClientE2EHarness() {
 
     return renderHarnessChrome("cabinet", "Личный кабинет", (
       <>
-        <HarnessHero />
+        <HarnessHero withStats={false} />
         <HarnessCabinetActions
           onOpenPhotos={() => setCabinetPhotosOpen(true)}
           onOpenMeasurements={() => setCabinetMeasurementsOpen(true)}

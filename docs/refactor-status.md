@@ -1,6 +1,6 @@
 # Refactor Status
 
-Last updated at app version `v.1.783`.
+Last updated at app version `v.1.785`.
 
 ## Stable Now
 
@@ -18,6 +18,8 @@ Last updated at app version `v.1.783`.
 - Client harness main measurement snapshot now uses populated trend-chart data so the preview matches the restored `v.1.648` main screen.
 - Client harness main preview now matches the `v.1.648` reference rhythm more closely with ILYA greeting, workout summary, purple progress ring and two-column measurement chart.
 - Client harness main preview now has a compact 430px lock so the greeting stays on one line and the measurement title remains inside its chart column.
+- Client harness main preview now centers the progress `из 100` caption inside the restored purple score ring.
+- Client harness main preview now restores the archived hero composition: greeting plus goal, target weight and workout count inside one card, followed by the compact date, progress and measurement cards.
 - Client main measurement snapshot is guarded against mobile header/body overlap in the primary visual audit.
 - `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
 - Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
