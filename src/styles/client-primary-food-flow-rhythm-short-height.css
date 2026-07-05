@@ -1,0 +1,12 @@
+@media (max-height: 820px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutCardPro {
+    grid-template-rows: 38px 458px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutProBody {
+    height: 458px !important;
+    min-height: 458px !important;
+    max-height: 458px !important;
+  }
+}
+

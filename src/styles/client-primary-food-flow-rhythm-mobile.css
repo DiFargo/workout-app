@@ -1,0 +1,200 @@
+/* v1.75 client visual pass: one mobile rhythm for client shell and food flow. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
+    min-height: 94px !important;
+    padding: 16px 18px !important;
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+    gap: 18px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
+    margin-top: -1px !important;
+    margin-bottom: 12px !important;
+    border-radius: 0 0 var(--client-page-card-radius) var(--client-page-card-radius) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiSplitCards {
+    margin-bottom: 12px !important;
+    gap: 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMeasurementSnapshot {
+    background: rgba(255, 255, 255, 0.94) !important;
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetActionGrid {
+    padding-bottom: 96px !important;
+    clip-path: inset(0 0 86px 0 round 0) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage {
+    padding-top: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNextBadge,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutWeek {
+    min-width: 0 !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 18px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutNav {
+    margin-top: 0 !important;
+    margin-bottom: 4px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopCard,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
+    border-radius: var(--client-page-card-radius) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopExpand,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukExpand {
+    width: auto !important;
+    min-width: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #5f5744 !important;
+    -webkit-text-fill-color: #5f5744 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) {
+    width: min(390px, calc(100vw - 20px)) !important;
+    height: calc(100dvh - 12px) !important;
+    max-height: calc(100dvh - 12px) !important;
+    margin: 6px auto !important;
+    padding-right: 18px !important;
+    padding-left: 18px !important;
+    border-radius: 24px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome):not(:has(.foodEditRenderScreen)) {
+    padding-top: 74px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) > .fatSearchTopPremiumHome {
+    min-height: 122px !important;
+    margin: 0 0 16px !important;
+    grid-template-columns: minmax(0, 1fr) 52px !important;
+    gap: 12px 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) .foodFlowSearchTitle h2 {
+    height: 52px !important;
+    min-height: 52px !important;
+    font-size: 30px !important;
+    font-weight: 900 !important;
+    line-height: 1.03 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) > .fatSearchTopPremiumHome .fatSearchClosePremium {
+    width: 52px !important;
+    min-width: 52px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    border-radius: 18px !important;
+    background: #ffffff !important;
+    background-image: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) .fatSearchTopPremiumHome .fatSearchTitleButtonPremium,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodProductFlowHeader .foodEditInlineMealHeader {
+    min-height: 52px !important;
+    border-radius: 15px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) .fatSearchInputWrapPremium {
+    min-height: 60px !important;
+    margin-bottom: 16px !important;
+    border-radius: 17px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction {
+    bottom: max(98px, calc(env(safe-area-inset-bottom) + 96px)) !important;
+    width: min(374px, calc(100vw - 20px)) !important;
+    min-height: 82px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button,
+  html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > button,
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar > button {
+    min-height: 64px !important;
+    height: 64px !important;
+    border-radius: 15px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen .foodProductFlowHeader {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 116px !important;
+    grid-template-areas:
+      "title actions"
+      "meal meal" !important;
+    align-items: center !important;
+    gap: 12px 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen .foodProductTopActions {
+    top: 0 !important;
+    right: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen .foodProductFlowHeader .foodProductFlowTitle {
+    grid-area: title !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    padding-right: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen .foodProductFlowHeader .foodEditInlineMealHeader {
+    grid-area: meal !important;
+    width: min(270px, 100%) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen .foodProductFlowHeader .foodProductFlowTitle h2 {
+    font-size: 26px !important;
+    line-height: 1.05 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
+    padding-top: 16px !important;
+    padding-bottom: calc(104px + env(safe-area-inset-bottom)) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader {
+    min-height: 64px !important;
+    padding: 4px 54px 8px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
+    top: 2px !important;
+    width: 52px !important;
+    height: 52px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageTitleCenter {
+    font-size: 24px !important;
+    line-height: 1.08 !important;
+  }
+}
+
