@@ -1,0 +1,43 @@
+/* =========================================================
+   EXTRA COMPACT CALORIES CARD
+   ========================================================= */
+
+.nutritionCaloriesRenderCard {
+  min-height: 108px !important;
+  padding-top: 11px !important;
+  padding-bottom: 11px !important;
+}
+
+.nutritionCaloriesRenderCol {
+  gap: 5px !important;
+}
+
+.nutritionCaloriesRenderCol strong {
+  font-size: 33px !important;
+  color: rgba(247, 248, 251, 0.68) !important;
+  letter-spacing: -1.45px !important;
+}
+
+@media (max-width: 480px) {
+  .nutritionCaloriesRenderCard {
+    min-height: 94px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+
+  .nutritionCaloriesRenderCol strong {
+    font-size: 28px !important;
+    color: rgba(247, 248, 251, 0.64) !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .nutritionCaloriesRenderCard {
+    min-height: 90px !important;
+  }
+
+  .nutritionCaloriesRenderCol strong {
+    font-size: 26px !important;
+  }
+}
+

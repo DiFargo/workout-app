@@ -2531,7 +2531,7 @@ test("legacy food search calories CSS keeps row transforms in the micro owner", 
 
 test("legacy food search calories CSS keeps compact dots in the latest mobile owner", async () => {
   const source = await readCssWithImports("src/styles/nutrition-food-search-calories.css");
-  const tailSource = await readText("src/styles/client-workout-plan-tail.css");
+  const tailSource = await readCssWithImports("src/styles/client-workout-plan-tail.css");
 
   assert.equal(
     (source.match(/\.nutritionCaloriesRenderGrid span\s*\{\s*width:\s*7px !important;\s*height:\s*7px !important;\s*\}/g) || []).length,
@@ -2552,7 +2552,7 @@ test("legacy food search calories CSS keeps compact dots in the latest mobile ow
 });
 
 test("legacy client workout plan tail CSS keeps calorie number sizing in compact height owner", async () => {
-  const source = await readText("src/styles/client-workout-plan-tail.css");
+  const source = await readCssWithImports("src/styles/client-workout-plan-tail.css");
   const finalCleanStart = source.indexOf("CALORIES CARD FINAL CLEAN COPY TUNE");
   const compactHeightStart = source.indexOf("CALORIES CARD COMPACT HEIGHT", finalCleanStart);
   const extraCompactStart = source.indexOf("EXTRA COMPACT CALORIES CARD", compactHeightStart);

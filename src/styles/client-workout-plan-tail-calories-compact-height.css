@@ -1,0 +1,54 @@
+/* =========================================================
+   CALORIES CARD COMPACT HEIGHT
+   ========================================================= */
+
+.nutritionCaloriesRenderCard {
+  min-height: 118px !important;
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}
+
+.nutritionCaloriesRenderCol {
+  gap: 7px !important;
+}
+
+.nutritionCaloriesRenderCol span {
+  font-size: 15px !important;
+  line-height: 1 !important;
+}
+
+.nutritionCaloriesRenderCol strong {
+  font-size: 36px !important;
+  line-height: 0.9 !important;
+}
+
+@media (max-width: 480px) {
+  .nutritionCaloriesRenderCard {
+    min-height: 104px !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .nutritionCaloriesRenderCol {
+    gap: 6px !important;
+  }
+
+  .nutritionCaloriesRenderCol span {
+    font-size: 12px !important;
+  }
+
+  .nutritionCaloriesRenderCol strong {
+    font-size: 31px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .nutritionCaloriesRenderCard {
+    min-height: 98px !important;
+  }
+
+  .nutritionCaloriesRenderCol strong {
+    font-size: 29px !important;
+  }
+}
+
