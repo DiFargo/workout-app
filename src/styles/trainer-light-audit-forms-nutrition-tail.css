@@ -1,0 +1,86 @@
+html:root[data-app-theme="warm-light"] body #root .adminTransferGrid select,
+html:root[data-app-theme="warm-light"] body #root .adminAssignProgramActions select,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionPlanSelect select,
+html:root[data-app-theme="warm-light"] body #root .adminCalendarSettingsGrid input,
+html:root[data-app-theme="warm-light"] body #root .monthProgramSummary input,
+html:root[data-app-theme="warm-light"] body #root .monthWorkoutHead input,
+html:root[data-app-theme="warm-light"] body #root .monthExerciseRow input,
+html:root[data-app-theme="warm-light"] body #root .monthProgramModePanel select {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminTransferGrid label span,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionPlanSelect span,
+html:root[data-app-theme="warm-light"] body #root .adminAssignProgramHead p {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminClientCardBottom i,
+html:root[data-app-theme="warm-light"] body #root .adminClientTelegramAvatarRender {
+  border-color: #ddd9fa !important;
+  background: #efedff !important;
+  color: #5542d8 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminClientCardBottom b,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionDayContent span,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionPlanPreview strong {
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminNutritionDayCalorieFill {
+  background: linear-gradient(180deg, rgba(63, 190, 104, 0.72), #27a95d) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminNutritionDayProteinFill {
+  background: linear-gradient(180deg, #9d86f5, #7153de) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminNutritionDayCarbsFill {
+  background: linear-gradient(180deg, #71c4ff, #258ee8) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminNutritionDayFatFill {
+  background: linear-gradient(180deg, #ffe17b, #e8b82d) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminNutritionDayCell.highCalories .adminNutritionDayCalorieFill {
+  background: linear-gradient(180deg, rgba(242, 99, 99, 0.76), #df4848) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminClientTelegramActionsRender button,
+html:root[data-app-theme="warm-light"] body #root .adminTelegramSendButton {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminTrainerRoleButton {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminTrainerRoleButton.active {
+  border-color: #7565e8 !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminHistoryCheck i {
+  border-color: #cfd4e2 !important;
+  background: #ffffff !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminHistoryCheck input:checked + i {
+  border-color: #6552e6 !important;
+  background: #6552e6 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty span {
+  color: #5a49df !important;
+}
+

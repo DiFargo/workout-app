@@ -1,0 +1,80 @@
+html:root[data-app-theme="warm-light"] body #root .adminV3ClientTableHead,
+html:root[data-app-theme="warm-light"] body #root .adminV3ProfileGrid > div,
+html:root[data-app-theme="warm-light"] body #root .adminClientMetricGrid > div,
+html:root[data-app-theme="warm-light"] body #root .adminClientNutritionCharts > div,
+html:root[data-app-theme="warm-light"] body #root .adminClientRecommendationsRender > div,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionPlanPreview > div,
+html:root[data-app-theme="warm-light"] body #root .adminClientTelegramPanelRender,
+html:root[data-app-theme="warm-light"] body #root .adminClientTelegramBodyRender,
+html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty,
+html:root[data-app-theme="warm-light"] body #root .monthProgramModePanel,
+html:root[data-app-theme="warm-light"] body #root .monthProgramSummary > div,
+html:root[data-app-theme="warm-light"] body #root .monthProgramWeek,
+html:root[data-app-theme="warm-light"] body #root .monthExerciseCard {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 8px 24px rgba(55, 64, 112, 0.07) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminV3ClientTableHead,
+html:root[data-app-theme="warm-light"] body #root .adminV3ProfileGrid span,
+html:root[data-app-theme="warm-light"] body #root .adminClientMetricGrid span,
+html:root[data-app-theme="warm-light"] body #root .adminClientRecommendationsRender p,
+html:root[data-app-theme="warm-light"] body #root .adminClientTelegramHead p,
+html:root[data-app-theme="warm-light"] body #root .adminClientTelegramBody small,
+html:root[data-app-theme="warm-light"] body #root .adminTelegramQuickMessagesRender button small,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionDayContent small,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionDayContent em,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionPlanPreview span,
+html:root[data-app-theme="warm-light"] body #root .adminCalendarHead p,
+html:root[data-app-theme="warm-light"] body #root .adminCalendarSettingsGrid span,
+html:root[data-app-theme="warm-light"] body #root .monthProgramTopbar p,
+html:root[data-app-theme="warm-light"] body #root .monthProgramSummary span,
+html:root[data-app-theme="warm-light"] body #root .monthExerciseSetRow span {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminClientRecommendationsRender span,
+html:root[data-app-theme="warm-light"] body #root .adminAssignProgramHead span,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionCalendarMonthTitle span,
+html:root[data-app-theme="warm-light"] body #root .adminCalendarHead span,
+html:root[data-app-theme="warm-light"] body #root .monthProgramTopbar span,
+html:root[data-app-theme="warm-light"] body #root .monthProgramBlockHead span,
+html:root[data-app-theme="warm-light"] body #root .monthProgramNameField span {
+  color: #5a49df !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminV3MiniChart span,
+html:root[data-app-theme="warm-light"] body #root .adminV3MiniChart em {
+  background: linear-gradient(180deg, #6552e6, #2d6ff2) !important;
+  color: #5a49df !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminUsersBack,
+html:root[data-app-theme="warm-light"] body #root .adminUsersSideAction,
+html:root[data-app-theme="warm-light"] body #root .adminUsersTopActions button,
+html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceActions button,
+html:root[data-app-theme="warm-light"] body #root .adminProgramActions button,
+html:root[data-app-theme="warm-light"] body #root .adminPasswordRow button,
+html:root[data-app-theme="warm-light"] body #root .adminAssignProgramHead button,
+html:root[data-app-theme="warm-light"] body #root .adminAssignProgramActions button,
+html:root[data-app-theme="warm-light"] body #root .adminProgramCardButtons button,
+html:root[data-app-theme="warm-light"] body #root .adminDayMoveButtons button,
+html:root[data-app-theme="warm-light"] body #root .adminClientRecommendationsRender button,
+html:root[data-app-theme="warm-light"] body #root .adminTelegramQuickMessagesRender button,
+html:root[data-app-theme="warm-light"] body #root .monthProgramModeButtons button,
+html:root[data-app-theme="warm-light"] body #root .monthProgramImportBtn {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminAssignProgramActions button:last-child,
+html:root[data-app-theme="warm-light"] body #root .adminClientRecommendationsRender button:last-child {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+}
+

@@ -1,0 +1,51 @@
+/* COOL LIGHT THEME V356 - trainer deep color audit */
+html:root[data-app-theme="warm-light"] body #root .adminV3Main,
+html:root[data-app-theme="warm-light"] body #root .adminUsersCrmMain,
+html:root[data-app-theme="warm-light"] body #root .adminUsersCrmGrid,
+html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrmPage,
+html:root[data-app-theme="warm-light"] body #root .adminClientTabContentRender,
+html:root[data-app-theme="warm-light"] body #root .adminDashboardPage,
+html:root[data-app-theme="warm-light"] body #root .adminV3Dashboard,
+html:root[data-app-theme="warm-light"] body #root .adminV3Content,
+html:root[data-app-theme="warm-light"] body #root .adminShell,
+html:root[data-app-theme="warm-light"] body #root .adminMain,
+html:root[data-app-theme="warm-light"] body #root .adminDashboardShell {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminV3ClientTable,
+html:root[data-app-theme="warm-light"] body #root .adminV3Alerts,
+html:root[data-app-theme="warm-light"] body #root .adminV3NutritionList,
+html:root[data-app-theme="warm-light"] body #root .adminV3ExerciseProgress,
+html:root[data-app-theme="warm-light"] body #root .adminV3Timeline,
+html:root[data-app-theme="warm-light"] body #root .adminV3TemplateControls,
+html:root[data-app-theme="warm-light"] body #root .adminUsersToolbar,
+html:root[data-app-theme="warm-light"] body #root .adminClientRenderTopbar,
+html:root[data-app-theme="warm-light"] body #root .adminClientMetricGridRender,
+html:root[data-app-theme="warm-light"] body #root .adminNutritionMonthSummaryBelow > div,
+html:root[data-app-theme="warm-light"] body #root .adminTrainingMonthTitle,
+html:root[data-app-theme="warm-light"] body #root .adminCalendarDaySettingsRow,
+html:root[data-app-theme="warm-light"] body #root .adminCalendarPreview,
+html:root[data-app-theme="warm-light"] body #root .adminCredentialsBox,
+html:root[data-app-theme="warm-light"] body #root .adminHistorySelectBar,
+html:root[data-app-theme="warm-light"] body #root .adminNoSavedPrograms,
+html:root[data-app-theme="warm-light"] body #root .historyEmptyCard,
+html:root[data-app-theme="warm-light"] body #root .adminTelegramComposer,
+html:root[data-app-theme="warm-light"] body #root .adminTelegramTextareaWrapRender,
+html:root[data-app-theme="warm-light"] body #root .adminPanelHubHero,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumTopbar,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramTabs,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumActions,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumHero,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumStats > div,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumDayEditor,
+html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramBottomSave {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08) !important;
+}
+
