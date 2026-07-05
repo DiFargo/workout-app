@@ -4809,7 +4809,7 @@ test("client cabinet action cards expose explicit accessible labels", async () =
 });
 
 test("client cabinet modal shells keep shared CSS owners", async () => {
-  const source = await readText("src/styles/workouts.css");
+  const source = await readCssWithImports("src/styles/workouts.css");
   const cabinetPolish = await readCssWithImports("src/styles/client-cabinet-desktop.css");
   const nutritionModal = await readText("src/features/client/profile/ProfileNutritionModal.jsx");
 
@@ -4884,7 +4884,7 @@ test("client cabinet modal shells keep shared CSS owners", async () => {
 });
 
 test("workout navigation compact heights stay grouped", async () => {
-  const source = await readText("src/styles/workouts.css");
+  const source = await readCssWithImports("src/styles/workouts.css");
 
   assert.equal(
     (source.match(/\.exerciseNavigationRow \.exerciseBackButton,\s*\.exerciseNavigationRow \.exerciseNextButton,\s*\.workoutRunPage \.exerciseNavigationRow \.exerciseBackButton,\s*\.workoutRunPage \.exerciseNavigationRow \.exerciseNextButton,\s*\.finishNavigationRow \.finishBackButton,\s*\.finishNavigationRow \.finishWorkoutButton,\s*\.workoutRunPage \.finishNavigationRow \.finishBackButton,\s*\.workoutRunPage \.finishNavigationRow \.finishWorkoutButton\s*\{\s*height:\s*59px !important;/g) || []).length,

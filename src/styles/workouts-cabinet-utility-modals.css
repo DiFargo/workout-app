@@ -1,0 +1,215 @@
+/* === CABINET PROGRESS + SETTINGS MODALS V303 === */
+.cabinetUtilityModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding:
+    max(12px, env(safe-area-inset-top))
+    12px
+    max(12px, env(safe-area-inset-bottom));
+  background: rgba(2, 5, 3, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cabinetUtilityModal {
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 430px);
+  max-height: calc(100dvh - 24px);
+  padding: 14px;
+  display: grid;
+  grid-template-rows: 48px minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(181, 230, 85, 0.22);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(127, 159, 58, 0.16), transparent 34%),
+    linear-gradient(180deg, #111a12 0%, #071008 100%);
+  box-shadow: 0 26px 74px rgba(0, 0, 0, 0.62);
+}
+
+.cabinetProgressModal {
+  height: auto;
+}
+
+.cabinetSettingsModal {
+  height: min(824px, calc(100dvh - 24px));
+}
+
+.cabinetSettingsModal.compact {
+  height: auto;
+}
+
+.cabinetUtilityModalHead {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 2px 0 6px;
+}
+
+.cabinetUtilityModalHead span {
+  display: block;
+  color: #b5e655;
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.cabinetUtilityModalHead h2 {
+  margin: 2px 0 0;
+  color: #fff;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.cabinetUtilityModalBody {
+  min-height: 0;
+  padding: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.cabinetUtilityModalBody::-webkit-scrollbar {
+  display: none;
+}
+
+.cabinetProgressModal .profileProgressTabOverview {
+  margin-top: 0;
+}
+
+.cabinetSettingsModal .profileWorkoutModeSettingsSection,
+.cabinetSettingsModal .profileBodyMetricsSettingsSection,
+.cabinetSettingsModal .profileAppSettingsSection {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.025);
+  box-shadow: none;
+}
+
+.cabinetSettingsModal .profileWorkoutModeToggle,
+.cabinetSettingsModal .profileBodyMetricsSettingsSection .profileAccordionHead {
+  min-height: 86px;
+  padding: 13px 14px;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+}
+
+.cabinetSettingsModal .profileWorkoutModeToggle span,
+.cabinetSettingsModal .profileBodyMetricsSettingsSection .profileAccordionHead span {
+  color: #b5e655;
+  font-size: 10px;
+}
+
+.cabinetSettingsModal .profileWorkoutModeToggle strong,
+.cabinetSettingsModal .profileBodyMetricsSettingsSection .profileAccordionHead strong {
+  margin: 5px 0 3px;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.08;
+}
+
+.cabinetSettingsModal .profileWorkoutModeToggle small,
+.cabinetSettingsModal .profileBodyMetricsSettingsSection .profileAccordionHead small {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 11px;
+}
+
+.cabinetSettingsModal .profileBodyMetricsSettingsSection {
+  padding: 0;
+}
+
+.cabinetSettingsModal .profileAppSettingsSection {
+  padding: 10px;
+}
+
+.cabinetSettingsModal .profileSettingsActions {
+  margin: 0;
+  gap: 8px;
+}
+
+.cabinetSettingsModal .profileThemeSwitchBtn,
+.cabinetSettingsModal .profileSettingsTelegramItem {
+  min-height: 68px;
+  margin: 0;
+  border-radius: 16px;
+}
+
+@media (max-height: 720px) {
+  .cabinetUtilityModal {
+    padding: 10px;
+    grid-template-rows: 42px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .cabinetUtilityModalHead h2 {
+    font-size: 18px;
+  }
+}
+
+.cabinetNutritionModal .profileNutritionGoalSettingsBtn {
+  min-height: 40px !important;
+  margin-top: 6px !important;
+  border-color: rgba(181, 230, 85, 0.34) !important;
+  background: linear-gradient(180deg, rgba(151, 193, 66, 0.22), rgba(76, 105, 31, 0.14)) !important;
+  color: #fff !important;
+}
+
+.cabinetNutritionModal .profileNutritionGoalModalOverlay {
+  border-radius: 21px !important;
+}
+
+@media (max-height: 720px) {
+  .cabinetNutritionModal {
+    padding: 10px;
+    grid-template-rows: 42px minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .cabinetNutritionModalHead h2 {
+    font-size: 18px;
+  }
+
+  .cabinetNutritionModal .profileNutritionMonthDay {
+    height: 38px !important;
+  }
+
+  .cabinetNutritionModal .profileNutritionCalendarLegend {
+    margin-top: 3px !important;
+  }
+
+  .cabinetNutritionModal .profileNutritionSection.hasPlan .profileNutritionGoalCard {
+    min-height: 116px !important;
+    padding-block: 7px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .workoutRunPage .exerciseDeck {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .workoutRunPage .exerciseSlideCard {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .exerciseBackButton {
+    max-width: 70px;
+    flex-basis: 70px !important;
+  }
+}
+

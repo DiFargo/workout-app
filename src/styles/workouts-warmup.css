@@ -1,0 +1,258 @@
+/* WARMUP AS ZERO EXERCISE */
+
+.warmupExerciseHero {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.warmupExerciseIntro {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at left, rgba(127, 159, 58, 0.18), transparent 58%),
+    rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(127, 159, 58, 0.16);
+}
+
+.warmupExerciseIntro span {
+  font-size: 34px;
+}
+
+.warmupExerciseIntro p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.warmupExerciseItem {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.warmupExerciseItem span {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.warmupExerciseItem strong {
+  display: block;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.18;
+}
+
+.warmupExerciseItem small {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.44);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* WARMUP READY BUTTON */
+.warmupReadyButton {
+  width: min(100%, 420px);
+  min-height: 68px;
+  margin: 8px auto 0;
+  border: none;
+  border-radius: 26px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  cursor: pointer;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+}
+
+@media (max-width: 480px) {
+
+  .warmupExerciseItem {
+    min-height: 72px;
+    padding: 12px 14px;
+  }
+
+  .warmupReadyButton {
+    min-height: 64px;
+    font-size: 21px;
+    border-radius: 24px;
+  }
+}
+
+/* WARMUP FIXED READY SCREEN â€” FINAL */
+.warmupExerciseCard {
+  max-height: calc(100dvh - 128px) !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: 26px 22px 18px !important;
+  touch-action: manipulation !important;
+}
+
+.warmupExerciseCard h3,
+.warmupExerciseCard .warmupExerciseTitle {
+  margin: 2px 0 20px !important;
+  font-size: clamp(38px, 10vw, 54px) !important;
+  line-height: 1 !important;
+}
+
+.warmupExerciseHero {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden !important;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  margin-top: 0 !important;
+}
+
+.warmupExerciseIntro,
+.warmupExerciseItem {
+  flex-shrink: 0;
+}
+
+.warmupExerciseIntro {
+  min-height: 112px;
+  padding: 14px 16px !important;
+}
+
+.warmupExerciseItem {
+  min-height: 74px !important;
+  padding: 12px 14px !important;
+}
+
+.warmupExerciseItem span {
+  font-size: 25px !important;
+}
+
+.warmupExerciseItem strong {
+  font-size: 15px !important;
+}
+
+.warmupExerciseItem small {
+  font-size: 12px !important;
+}
+
+.warmupReadyButton {
+  width: 100%;
+  min-height: 64px;
+  margin: auto 0 0;
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 24px;
+
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+}
+
+.warmupReadyButton:active {
+  transform: scale(0.985);
+}
+
+/* ÐÐ° Ñ€Ð°Ð·Ð¼Ð¸Ð½ÐºÐµ ÑÐ²Ð°Ð¹Ð¿Ð°/ÑÐºÑ€Ð¾Ð»Ð»Ð° Ð½ÐµÑ‚ */
+.exerciseDeck:has(.warmupExerciseCard) {
+  overflow: hidden !important;
+  touch-action: manipulation !important;
+}
+
+@media (max-width: 480px) {
+  .warmupExerciseCard {
+    max-height: calc(100dvh - 124px) !important;
+    padding: 24px 18px 16px !important;
+  }
+
+  .warmupExerciseCard h3,
+  .warmupExerciseCard .warmupExerciseTitle {
+    margin-bottom: 18px !important;
+    font-size: clamp(36px, 10vw, 48px) !important;
+  }
+
+  .warmupExerciseHero {
+    gap: 9px;
+  }
+
+  .warmupExerciseIntro {
+    min-height: 108px;
+    padding: 13px 14px !important;
+  }
+
+  .warmupExerciseItem {
+    min-height: 70px !important;
+    padding: 11px 13px !important;
+  }
+
+  .warmupReadyButton {
+    min-height: 60px;
+    font-size: 21px;
+    border-radius: 23px;
+  }
+}
+
+@media (max-height: 760px) {
+  .warmupExerciseCard {
+    max-height: calc(100dvh - 112px) !important;
+    padding-top: 20px !important;
+    padding-bottom: 14px !important;
+  }
+
+  .warmupExerciseCard h3,
+  .warmupExerciseCard .warmupExerciseTitle {
+    margin-bottom: 14px !important;
+    font-size: 38px !important;
+  }
+
+  .warmupExerciseHero {
+    gap: 8px;
+  }
+
+  .warmupExerciseIntro {
+    min-height: 96px;
+  }
+
+  .warmupExerciseIntro p {
+    font-size: 13px !important;
+    line-height: 1.28 !important;
+  }
+
+  .warmupExerciseIntro span {
+    font-size: 30px !important;
+  }
+
+  .warmupExerciseItem {
+    min-height: 64px !important;
+  }
+
+  .warmupReadyButton {
+    min-height: 56px;
+  }
+}
+
