@@ -1,0 +1,17 @@
+@media (max-width: 390px) {
+  html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionWaterInlineBlock {
+    grid-template-columns: 40px minmax(0, 1fr) auto !important;
+    column-gap: 9px !important;
+    padding: 11px !important;
+  }
+
+  html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWaterInlineActions {
+    grid-template-columns: repeat(2, 44px) !important;
+    gap: 4px !important;
+  }
+
+  html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWaterInlineActions button {
+    width: 44px !important;
+  }
+}
+

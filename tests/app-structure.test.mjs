@@ -1936,7 +1936,7 @@ test("client food search final CSS keeps diary swipe shell sizing in latest owne
 });
 
 test("nutrition orbit CSS keeps inline and modal meal shells grouped", async () => {
-  const source = await readText("src/styles/nutrition-orbit.css");
+  const source = await readCssWithImports("src/styles/nutrition-orbit.css");
 
   assert.equal(
     (source.match(/\.nutritionZoukBlock \.nutritionZoukMeal,\s*html body #root \.nutritionZoukModalSheet \.nutritionZoukMeal\s*\{\s*overflow:\s*hidden;/g) || []).length,

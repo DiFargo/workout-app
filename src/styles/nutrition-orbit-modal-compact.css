@@ -1,0 +1,32 @@
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock {
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
+}
+
+html body #root .nutritionZoukModalOverlay {
+  align-items: center !important;
+  padding: 16px 12px calc(16px + env(safe-area-inset-bottom)) !important;
+}
+
+html body #root .nutritionZoukModalSheet {
+  max-height: calc(100dvh - 32px - env(safe-area-inset-bottom)) !important;
+  border-radius: 24px !important;
+}
+
+@media (max-width: 700px) {
+  html body #root .nutritionZoukModalOverlay {
+    align-items: center !important;
+  }
+
+  html body #root .nutritionZoukModalSheet {
+    width: min(100%, 420px) !important;
+    max-height: calc(100dvh - 32px - env(safe-area-inset-bottom)) !important;
+  }
+
+  html body #root .nutritionZoukModalSheet .nutritionZoukContent {
+    padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
