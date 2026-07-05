@@ -1,0 +1,229 @@
+/* INDIVIDUAL WORKOUT CARD PREMIUM REDESIGN */
+.individualWorkoutDeck {
+  max-width: 460px !important;
+}
+
+.individualWorkoutCardPro {
+  width: 100% !important;
+  min-height: min(66dvh, 620px) !important;
+  padding: 18px !important;
+  border-radius: 34px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  text-align: left !important;
+  position: relative !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(127, 159, 58, 0.21), transparent 38%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+  border: 1px solid rgba(127, 159, 58, 0.24) !important;
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+  color: #fff !important;
+}
+
+.individualWorkoutCardPro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, rgba(255,255,255,0.045), transparent 38%);
+  pointer-events: none;
+}
+
+.individualWorkoutProTop {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.individualWorkoutBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.individualWorkoutWeek {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.individualWorkoutCompletedBadge,
+.individualWorkoutNextBadge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 32px !important;
+  padding: 8px 13px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.55px !important;
+  text-transform: uppercase !important;
+}
+
+.individualWorkoutCompletedBadge {
+  background: rgba(145, 173, 78, 0.22) !important;
+  color: rgba(224, 250, 162, 0.98) !important;
+  border: 1px solid rgba(145, 173, 78, 0.25) !important;
+}
+
+.individualWorkoutNextBadge {
+  background: rgba(255, 255, 255, 0.075) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.individualWorkoutProBody {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(132px, 42%);
+  gap: 14px;
+  align-items: center;
+}
+
+.individualWorkoutProInfo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.individualWorkoutTitle {
+  display: block;
+  color: #fff;
+  font-size: clamp(32px, 8.5vw, 46px);
+  font-weight: 950;
+  line-height: 0.98;
+  letter-spacing: -1.5px;
+  text-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.individualWorkoutAccentLine {
+  display: block;
+  width: 66px;
+  height: 6px;
+  margin: 16px 0 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.individualWorkoutStats {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.individualWorkoutStats span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.individualWorkoutStats b {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(127, 159, 58, 0.18);
+  color: rgba(217, 242, 154, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex: 0 0 auto;
+}
+
+.individualWorkoutProImage {
+  height: 100%;
+  min-height: 250px;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(127, 159, 58, 0.25);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
+}
+
+.individualWorkoutProImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.individualWorkoutStatus.done {
+  background: rgba(127, 159, 58, 0.2);
+  border-color: rgba(127, 159, 58, 0.36);
+}
+
+.individualWorkoutCardPro.completed::after {
+  content: none !important;
+}
+
+.individualWorkoutNav {
+  width: min(444px, calc(100vw - 24px)) !important;
+  padding: 10px !important;
+  border-radius: 26px !important;
+}
+
+.individualWorkoutNav button {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.individualWorkoutNav button:nth-child(2) {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+}
+
+@media (max-width: 480px) {
+  .individualWorkoutCardPro {
+    min-height: 64dvh !important;
+    padding: 14px !important;
+    gap: 12px !important;
+  }
+
+  .individualWorkoutProBody {
+    grid-template-columns: 1fr 132px;
+    gap: 12px;
+  }
+
+  .individualWorkoutProImage {
+    min-height: 260px;
+    border-radius: 24px;
+  }
+
+  .individualWorkoutTitle {
+    font-size: clamp(30px, 9vw, 40px);
+  }
+
+  .individualWorkoutStats span {
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .individualWorkoutStats b {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 390px) {
+  .individualWorkoutProBody {
+    grid-template-columns: 1fr 116px;
+  }
+
+  .individualWorkoutProImage {
+    min-height: 235px;
+  }
+}
