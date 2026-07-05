@@ -1,0 +1,72 @@
+/* Ãâ€”ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â ÃÂ²ÃÂ¾ÃÂ·ÃÂ²Ã‘â‚¬ÃÂ°Ã‘â€°Ã‘â€˜ÃÂ½ ÃÂ½ÃÂ°ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦; ÃÅ¸ÃÂ»ÃÂ°ÃÂ½ / Ãâ€”ÃÂ° ÃÂ¼ÃÂµÃ‘ÂÃ‘ÂÃ‘â€  ÃÂ¿ÃÂ¾ÃÂ´ ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘â€˜ÃÂ¼ */
+
+.adminNutritionMonthPanel {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.adminNutritionMonthHead {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  order: 1 !important;
+}
+
+.adminNutritionMonthHead > div:first-child {
+  order: 1 !important;
+}
+
+.adminCalendarDays,
+.adminNutritionCalendarGrid,
+.nutritionCalendarGrid,
+.calendarGrid {
+  order: 2 !important;
+}
+
+.adminNutritionMonthHead .adminNutritionMonthSummary {
+  order: 99 !important;
+  margin-top: 14px !important;
+  width: 100% !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.adminNutritionMonthSummary > div,
+.adminNutritionMonthSummaryBelow > div {
+  min-height: 74px !important;
+  padding: 14px !important;
+  border-radius: 20px !important;
+  background:
+    linear-gradient(180deg, rgba(20, 24, 20, .98), rgba(12, 15, 12, .98)) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.adminNutritionMonthSummary strong,
+.adminNutritionMonthSummaryBelow strong {
+  color: #fff !important;
+  font-size: 18px !important;
+  line-height: 1.1 !important;
+  margin-top: 6px !important;
+}
+
+@media (max-width: 420px) {
+  .adminNutritionMonthHead .adminNutritionMonthSummary {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .adminNutritionMonthSummary > div,
+  .adminNutritionMonthSummaryBelow > div {
+    min-height: 66px !important;
+    padding: 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .adminNutritionMonthSummary strong,
+  .adminNutritionMonthSummaryBelow strong {
+    font-size: 16px !important;
+  }
+}
+

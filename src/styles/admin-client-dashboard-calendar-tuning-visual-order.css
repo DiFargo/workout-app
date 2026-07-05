@@ -1,0 +1,53 @@
+/* === CALENDAR VISUAL ORDER FIX V44 === */
+/* ÃÂ¤ÃÂ¸ÃÂºÃ‘Â ÃÂ¿ÃÂ¾Ã‘â‚¬Ã‘ÂÃÂ´ÃÂºÃÂ°: ÃÂ·ÃÂ°ÃÂ³ÃÂ¾ÃÂ»ÃÂ¾ÃÂ²ÃÂ¾ÃÂº Ã‘ÂÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦Ã‘Æ’, Ã‘ÂÃÂµÃ‘â€šÃÂºÃÂ° ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬Ã‘Â, ÃÅ¸ÃÂ»ÃÂ°ÃÂ½/Ãâ€”ÃÂ° ÃÂ¼ÃÂµÃ‘ÂÃ‘ÂÃ‘â€  Ã‘ÂÃÂ½ÃÂ¸ÃÂ·Ã‘Æ’ */
+
+.adminNutritionMonthPanel {
+  display: block !important;
+}
+
+.adminNutritionMonthHead {
+  display: block !important;
+  order: initial !important;
+  margin-bottom: 12px !important;
+}
+
+.adminNutritionMonthHead > div:first-child {
+  order: initial !important;
+  display: block !important;
+}
+
+.adminNutritionCalendarLegend,
+.adminNutritionCalendarMonthTitle,
+.adminNutritionMonthGrid {
+  order: initial !important;
+}
+
+.adminNutritionMonthSummaryBelow {
+  display: grid !important;
+  order: initial !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin-top: 14px !important;
+  width: 100% !important;
+}
+
+/* Ã¢Å¡Â¡Ã¯Â¸Â ÃÂ¼ÃÂµÃÂ½Ã‘Å’Ã‘Ë†ÃÂµ ÃÂ¸ ÃÂ½ÃÂµÃÂ¼ÃÂ½ÃÂ¾ÃÂ³ÃÂ¾ ÃÂ¿Ã‘â‚¬ÃÂ°ÃÂ²ÃÂµÃÂµ Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ² ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬ÃÂ½ÃÂ¾ÃÂ¹ Ã‘ÂÃ‘â€¡ÃÂµÃÂ¹ÃÂºÃÂµ */
+.adminNutritionTrainingMark {
+  font-size: 10px !important;
+  line-height: 1 !important;
+  transform: translate(5px, -1px) !important;
+  opacity: .88 !important;
+}
+
+@media (max-width: 420px) {
+  .adminNutritionMonthSummaryBelow {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .adminNutritionTrainingMark {
+    font-size: 9px !important;
+    transform: translate(6px, -1px) !important;
+  }
+}
+
