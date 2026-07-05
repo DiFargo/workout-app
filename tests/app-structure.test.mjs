@@ -3447,7 +3447,7 @@ test("legacy admin client page CSS keeps Telegram render sizing grouped", async 
 });
 
 test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", async () => {
-  const source = await readText("src/styles/profile-dashboard-telegram.css");
+  const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
   const statsAlignmentStart = source.indexOf("/* STATS ALIGNMENT PERFECT */");
   const compactStatsStart = source.indexOf("/* COMPACT STATS + AI TITLE */");
   const oldStatsOwnerBlock = source.slice(0, statsAlignmentStart);
@@ -3480,7 +3480,7 @@ test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", 
 });
 
 test("profile dashboard CSS keeps unified stats grid in the horizontal owner", async () => {
-  const source = await readText("src/styles/profile-dashboard-telegram.css");
+  const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
   const horizontalStatsStart = source.indexOf("/* HORIZONTAL PROFILE STATS */");
   const goalSplitStart = source.indexOf("/* GOAL SPLIT: MAINTAIN VS RECOMP */");
   const horizontalStatsBlock = source.slice(horizontalStatsStart, goalSplitStart);
@@ -3502,7 +3502,7 @@ test("profile dashboard CSS keeps unified stats grid in the horizontal owner", a
 });
 
 test("profile dashboard CSS keeps sex and goal active states grouped", async () => {
-  const source = await readText("src/styles/profile-dashboard-telegram.css");
+  const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
 
   assert.equal(
     (
@@ -3519,7 +3519,7 @@ test("profile dashboard CSS keeps sex and goal active states grouped", async () 
 });
 
 test("profile dashboard CSS keeps AI coach label typography grouped", async () => {
-  const source = await readText("src/styles/profile-dashboard-telegram.css");
+  const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
 
   assert.doesNotMatch(source, /\.profileAiCoachStatusRow\.insideProgress strong,\s*\.profileAiCoachStatusRow\.insideProgress small\s*\{[\s\S]*?text-overflow:\s*ellipsis !important;/);
   assert.equal(
@@ -3537,7 +3537,7 @@ test("profile dashboard CSS keeps AI coach label typography grouped", async () =
 });
 
 test("profile dashboard CSS keeps Telegram shells grouped", async () => {
-  const source = await readText("src/styles/profile-dashboard-telegram.css");
+  const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
 
   assert.equal(
     (

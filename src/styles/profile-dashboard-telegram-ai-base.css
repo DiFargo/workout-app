@@ -1,0 +1,526 @@
+/* PREMIUM AI PROFILE DASHBOARD V1 */
+.profileAiDashboardCard {
+  padding: 24px !important;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at 14% 8%, rgba(127, 159, 58, 0.18), transparent 34%),
+    radial-gradient(circle at 86% 12%, rgba(42, 171, 238, 0.10), transparent 35%),
+    linear-gradient(180deg, rgba(20, 25, 20, 0.96), rgba(8, 12, 9, 0.96)) !important;
+}
+
+.profileAiDashboardCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,.055), transparent 38%);
+  pointer-events: none;
+}
+
+.profileAiHero,
+.profileAiStatsRow,
+.profileAiCoachInsight,
+.profileAiProgressStrip,
+.profileAiMeasurementPanel,
+.profileAiHistoryButton {
+  position: relative;
+  z-index: 1;
+}
+
+.profileAiHero {
+  display: grid;
+  grid-template-columns: 96px 1fr auto;
+  gap: 18px;
+  align-items: center;
+}
+
+.profileAiAvatarWrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.profileAiAvatar {
+  width: 88px !important;
+  height: 88px !important;
+  border-radius: 26px !important;
+  margin: 4px !important;
+  box-shadow: 0 18px 36px rgba(0,0,0,.34);
+}
+
+.profileAiAvatarRing {
+  position: absolute;
+  right: -5px;
+  top: -6px;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(127,159,58,.22);
+  border: 1px solid rgba(160,210,78,.36);
+  box-shadow: 0 0 24px rgba(127,159,58,.28);
+}
+
+.profileAiAvatarRing strong {
+  color: rgba(235,250,195,.96);
+  font-size: 11px;
+  font-weight: 1000;
+}
+
+.profileAiHeroText {
+  min-width: 0;
+}
+
+.profileAiHeroText > span {
+  color: rgba(145,173,78,.98);
+  font-size: 12px;
+  font-weight: 1000;
+  letter-spacing: .14em;
+}
+
+.profileAiHeroText h1 {
+  margin: 7px 0 5px;
+  color: #fff;
+  font-size: clamp(27px, 5vw, 42px);
+  line-height: 1;
+  letter-spacing: -.055em;
+}
+
+.profileAiHeroText p {
+  margin: 0;
+  color: rgba(255,255,255,.54);
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.profileAiStatsRow {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr;
+  gap: 10px;
+}
+
+.profileAiStatsRow > div {
+  min-height: 116px;
+  padding: 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(0,0,0,.18);
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.profileAiStatsRow > div.goal {
+  background:
+    radial-gradient(circle at top left, rgba(127,159,58,.18), transparent 54%),
+    rgba(0,0,0,.18);
+}
+
+.profileAiStatsRow span,
+.profileAiProgressStrip span {
+  color: rgba(255,255,255,.44);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.profileAiStatsRow strong {
+  color: #fff;
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 1000;
+  line-height: 1.02;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+
+.profileAiStatsRow small {
+  color: rgba(255,255,255,.44);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.profileAiCoachInsight {
+  margin-top: 12px;
+  padding: 18px;
+  border-radius: 26px;
+  border: 1px solid rgba(42,171,238,.13);
+  background:
+    radial-gradient(circle at 82% 30%, rgba(42,171,238,.12), transparent 36%),
+    rgba(255,255,255,.026);
+  display: grid;
+  grid-template-columns: 1fr 0.54fr;
+  gap: 18px;
+}
+
+.profileAiCoachInsight h2 {
+  margin: 9px 0 8px;
+  color: #fff;
+  font-size: clamp(22px, 4.2vw, 32px);
+  line-height: 1.05;
+  letter-spacing: -.04em;
+}
+
+.profileAiCoachInsight p {
+  margin: 0;
+  color: rgba(255,255,255,.62);
+  font-size: 14px;
+  font-weight: 820;
+  line-height: 1.45;
+}
+
+.profileAiCoachMetrics {
+  display: grid;
+  gap: 8px;
+  align-content: center;
+}
+
+.profileAiCoachMetrics div {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.16);
+  border: 1px solid rgba(255,255,255,.055);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profileAiCoachMetrics span {
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgba(255,255,255,.55);
+}
+
+.profileAiCoachMetrics strong {
+  color: rgba(142,225,78,.95);
+  font-size: 15px;
+  font-weight: 1000;
+}
+
+.profileAiMeasurementPanel {
+  margin-top: 12px !important;
+  background:
+    radial-gradient(circle at top right, rgba(127,159,58,.17), transparent 46%),
+    rgba(255,255,255,.035) !important;
+}
+
+@media (max-width: 720px) {
+  .profileAiDashboardCard {
+    padding: 16px !important;
+    border-radius: 30px !important;
+  }
+
+  .profileAiHero {
+    grid-template-columns: 78px 1fr;
+    gap: 12px;
+  }
+
+  .profileAiAvatarWrap {
+    width: 78px;
+    height: 78px;
+  }
+
+  .profileAiAvatar {
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 22px !important;
+    margin: 3px !important;
+  }
+
+  .profileAiAvatarRing {
+    width: 32px;
+    height: 32px;
+    right: -6px;
+    top: -7px;
+  }
+
+  .profileAiStatsRow {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .profileAiStatsRow > div {
+    min-height: 92px;
+    padding: 10px 8px;
+    border-radius: 20px;
+    text-align: center;
+  }
+
+  .profileAiStatsRow strong {
+    font-size: 20px;
+  }
+
+  .profileAiStatsRow small {
+    font-size: 10px;
+  }
+
+  .profileAiCoachInsight {
+    grid-template-columns: 1fr;
+    padding: 15px;
+  }
+
+  .profileAiCoachMetrics {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .profileAiCoachMetrics div {
+    min-height: 50px;
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 420px) {
+  .profileAiHeroText h1 {
+    font-size: 26px;
+  }
+
+  .profileAiStatsRow strong {
+    font-size: 18px;
+  }
+
+  .profileAiCoachMetrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* AI COACH STATUS ROW */
+
+.profileAiCoachStatusRow {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.profileAiCoachStatusRow > div {
+  min-height: 54px;
+  padding: 8px 9px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.065);
+  background: rgba(255,255,255,.042);
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 7px;
+  align-items: center;
+  min-width: 0;
+}
+
+.profileAiCoachStatusRow span {
+  grid-row: 1 / 3;
+  width: 22px;
+  height: 22px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: rgba(127,159,58,.14);
+  font-size: 13px;
+}
+
+.profileAiCoachStatusRow strong {
+  color: rgba(255,255,255,.9);
+  font-size: 11px;
+  font-weight: 1000;
+  line-height: 1.05;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profileAiCoachStatusRow small {
+  color: rgba(255,255,255,.42);
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.05;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 520px) {
+  .profileAiCoachStatusRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .profileAiCoachStatusRow > div {
+    min-height: 50px;
+    padding: 7px 6px;
+    grid-template-columns: 18px 1fr;
+    column-gap: 5px;
+    border-radius: 14px;
+  }
+
+  .profileAiCoachStatusRow span {
+    width: 18px;
+    height: 18px;
+    border-radius: 7px;
+    font-size: 11px;
+  }
+
+  .profileAiCoachStatusRow strong {
+    font-size: 9.5px;
+  }
+
+  .profileAiCoachStatusRow small {
+    font-size: 8.5px;
+  }
+}
+
+/* PROFILE AI POLISH V1 */
+.profileAiHero {
+  grid-template-columns: 82px 1fr !important;
+  align-items: start !important;
+}
+
+.profileAiAvatarWrap {
+  width: 82px !important;
+  height: 82px !important;
+  transform: translateY(-4px);
+}
+
+.profileAiAvatar {
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 23px !important;
+  margin: 3px !important;
+}
+
+.profileAiAvatarRing {
+  width: 30px !important;
+  height: 30px !important;
+  right: -6px !important;
+  top: -7px !important;
+}
+
+.profileAiHeroText h1 {
+  margin-top: 2px !important;
+  margin-bottom: 0 !important;
+}
+
+.profileAiCoachStatusRow > div {
+  min-height: 58px !important;
+  padding: 9px 10px !important;
+}
+
+.profileAiStatsRow > div {
+  min-height: 78px !important;
+  padding: 10px 12px !important;
+  border-radius: 19px !important;
+  gap: 5px !important;
+}
+
+.profileAiStatsRow span {
+  font-size: 10px !important;
+}
+
+.profileAiStatsRow strong {
+  font-size: clamp(17px, 2.4vw, 24px) !important;
+  line-height: 1.02 !important;
+}
+
+.profileAiStatsRow small {
+  font-size: 10px !important;
+  line-height: 1.05 !important;
+}
+
+@media (max-width: 720px) {
+  .profileAiHero {
+    grid-template-columns: 72px 1fr !important;
+  }
+
+  .profileAiAvatarWrap {
+    width: 72px !important;
+    height: 72px !important;
+  }
+
+  .profileAiAvatar {
+    width: 66px !important;
+    height: 66px !important;
+    border-radius: 21px !important;
+  }
+
+  .profileAiCoachStatusRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .profileAiStatsRow > div {
+    min-height: 70px !important;
+    padding: 8px 6px !important;
+  }
+}
+
+/* PROFILE ALIGNMENT FIX */
+.profileAiHero {
+  align-items: center !important;
+}
+
+.profileAiAvatarWrap {
+  transform: translateY(0px) !important;
+  align-self: center !important;
+}
+
+.profileAiHeroText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 82px;
+}
+
+.profileAiHeroText h1 {
+  margin-top: 0 !important;
+  line-height: 0.96 !important;
+}
+
+.profileAiCoachStatusRow {
+  width: 100% !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+.profileAiCoachStatusRow > div {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.profileAiStatsRow {
+  align-items: stretch !important;
+}
+
+.profileAiStatsRow > div {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+}
+
+.profileAiStatsRow strong {
+  margin-top: auto !important;
+}
+
+.profileAiStatsRow small {
+  min-height: 16px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 720px) {
+  .profileAiHeroText {
+    min-height: 72px;
+  }
+
+  .profileAiCoachStatusRow {
+    width: 100% !important;
+  }
+
+  .profileAiCoachStatusRow > div {
+    min-height: 56px !important;
+  }
+}

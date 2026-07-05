@@ -1,0 +1,348 @@
+/* PROFILE UNIFIED REDESIGN */
+
+.profileUnifiedCard {
+  width: min(100%, 920px);
+  margin: 0 auto 18px;
+  padding: 26px;
+  border-radius: 34px;
+  border: 1px solid rgba(127, 159, 58, 0.16);
+  background:
+    radial-gradient(circle at top left, rgba(127, 159, 58, 0.14), transparent 34%),
+    radial-gradient(circle at top right, rgba(42, 171, 238, 0.10), transparent 38%),
+    rgba(255, 255, 255, 0.028);
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045);
+}
+
+.profileUnifiedAvatar {
+  width: 94px !important;
+  height: 94px !important;
+  margin: 0 !important;
+  border-radius: 28px !important;
+}
+
+.profileUnifiedStats {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 1.25fr repeat(3, 1fr);
+  gap: 10px;
+}
+
+.profileUnifiedStats > div {
+  min-height: 104px;
+  padding: 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  background: rgba(0, 0, 0, 0.16);
+  display: grid;
+  align-content: center;
+  gap: 9px;
+  text-align: center;
+}
+
+.profileUnifiedStats > div.primary {
+  text-align: left;
+  background:
+    radial-gradient(circle at top right, rgba(127, 159, 58, 0.14), transparent 50%),
+    rgba(0, 0, 0, 0.16);
+}
+
+.profileUnifiedStats span,
+.profileUnifiedProgress span {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.profileUnifiedStats strong {
+  color: #fff;
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 1000;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.profileUnifiedStats .primary strong {
+  max-width: 220px;
+  font-size: clamp(24px, 4vw, 38px);
+}
+
+.profileDashboardGrid > .profileDashboardCard:first-child .profileCardHead.simple h2 {
+  font-size: 28px;
+}
+
+@media (max-width: 760px) {
+  .profileUnifiedCard {
+    padding: 18px;
+    border-radius: 30px;
+  }
+
+  .profileUnifiedAvatar {
+    width: 74px !important;
+    height: 74px !important;
+    border-radius: 23px !important;
+  }
+
+  .profileUnifiedStats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .profileUnifiedStats > div.primary {
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+
+  .profileUnifiedStats .primary strong {
+    max-width: none;
+  }
+}
+
+/* PROFILE UNIFIED COMPACT ADJUSTMENTS */
+
+.profileUnifiedStats {
+  grid-template-columns: 1.15fr 0.75fr 0.75fr !important;
+  gap: 8px !important;
+  margin-top: 16px !important;
+}
+
+.profileUnifiedStats > div {
+  min-height: 76px !important;
+  padding: 12px 14px !important;
+  border-radius: 20px !important;
+  gap: 6px !important;
+}
+
+.profileUnifiedStats span {
+  font-size: 11px !important;
+}
+
+.profileUnifiedStats strong {
+  font-size: clamp(18px, 2.3vw, 25px) !important;
+}
+
+.profileUnifiedStats .primary strong {
+  font-size: clamp(21px, 3vw, 30px) !important;
+}
+
+@media (max-width: 760px) {
+  .profileUnifiedStats {
+    grid-template-columns: 1fr !important;
+  }
+
+  .profileUnifiedStats > div.primary {
+    grid-column: auto !important;
+  }
+}
+
+/* HORIZONTAL PROFILE STATS */
+.profileUnifiedStats {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+.profileUnifiedStats > div {
+  min-width: 0;
+}
+
+.profileUnifiedStats .primary {
+  text-align: center !important;
+}
+
+.profileUnifiedStats .primary strong {
+  max-width: none !important;
+}
+
+@media (max-width: 760px) {
+  .profileUnifiedStats > div {
+    min-height: 72px !important;
+    padding: 10px 8px !important;
+  }
+
+  .profileUnifiedStats strong {
+    font-size: 18px !important;
+  }
+
+  .profileUnifiedStats .primary strong {
+    font-size: 18px !important;
+    line-height: 1 !important;
+  }
+}
+
+/* GOAL SPLIT: MAINTAIN VS RECOMP */
+.profileGoalModeHint {
+  margin: 10px 0 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(127, 159, 58, 0.16);
+  background: rgba(127, 159, 58, 0.08);
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.profileGoalPicker {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.firstSetupGoalGrid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 520px) {
+  .profileGoalPicker,
+  .firstSetupGoalGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* GOAL CARD ALIGN FIX */
+.profileUnifiedStats .primary {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  overflow: hidden !important;
+}
+
+.profileUnifiedStats .primary span {
+  width: 100% !important;
+  text-align: center !important;
+}
+
+.profileUnifiedStats .primary strong {
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: center !important;
+  line-height: 1.05 !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  hyphens: auto !important;
+  font-size: clamp(15px, 2vw, 24px) !important;
+  padding: 0 4px !important;
+  box-sizing: border-box !important;
+}
+
+/* PROFILE CONTROL MEASUREMENT */
+.profileMeasurementPanel {
+  margin-top: 12px;
+  border-radius: 24px;
+  border: 1px solid rgba(127, 159, 58, 0.14);
+  background:
+    radial-gradient(circle at top right, rgba(127, 159, 58, 0.12), transparent 46%),
+    rgba(255, 255, 255, 0.026);
+  overflow: hidden;
+}
+
+.profileMeasurementToggle {
+  width: 100%;
+  min-height: 72px;
+  padding: 14px 16px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 34px;
+  gap: 12px;
+  align-items: center;
+  text-align: left;
+  cursor: pointer;
+}
+
+.profileMeasurementToggle strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 17px;
+  font-weight: 1000;
+  margin-bottom: 5px;
+}
+
+.profileMeasurementToggle small {
+  display: block;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.28;
+}
+
+.profileMeasurementToggle em {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(127, 159, 58, 0.14);
+  color: rgba(235, 250, 195, 0.96);
+  font-size: 22px;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.profileMeasurementGrid label,
+.profileMeasurementNote {
+  display: grid;
+  gap: 7px;
+}
+
+.profileMeasurementGrid label span,
+.profileMeasurementNote span {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.profileMeasurementNote {
+  margin-top: 10px;
+}
+
+.profileMeasurementNote textarea {
+  min-height: 76px;
+  resize: vertical;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.18);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  outline: none;
+}
+
+.profileMeasurementSave {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(127, 159, 58, 0.24);
+  background: rgba(127, 159, 58, 0.15);
+  color: rgba(235, 250, 195, 0.96);
+  font-size: 15px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.profileMeasurementSave:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.profileMeasurementStatus {
+  margin: 0;
+  padding: 0 14px 14px;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+@media (max-width: 520px) {
+
+  .profileMeasurementToggle {
+    min-height: 68px;
+    padding: 12px;
+  }
+
+  .profileMeasurementToggle strong {
+    font-size: 16px;
+  }
+}
