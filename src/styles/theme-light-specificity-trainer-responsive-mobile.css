@@ -1,0 +1,38 @@
+@media (max-width: 760px) {
+  .trainerAttentionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .trainerAttentionCard {
+    min-height: 78px;
+    padding: 12px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+    border-radius: 15px;
+  }
+
+  .trainerAttentionCard > span:not(.trainerAttentionIcon) {
+    font-size: 11px;
+  }
+
+  .trainerAttentionCard strong {
+    font-size: 23px;
+  }
+
+  .trainerClientReasonList > button {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .trainerClientReasonList > button small {
+    grid-column: 1 / -1;
+    white-space: normal;
+  }
+
+  .trainerClientNameRow {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
