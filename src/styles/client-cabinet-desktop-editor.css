@@ -1,0 +1,122 @@
+/* DESKTOP EXERCISE EDITOR V357 */
+@media (min-width: 900px) {
+  .monthExerciseEditorPortal {
+    position: fixed;
+    inset: 0;
+    z-index: 10040;
+    pointer-events: none;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 10040;
+    pointer-events: none;
+    background: rgba(20, 24, 36, 0.42);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected {
+    inset: clamp(18px, 3vh, 32px) auto auto 50% !important;
+    width: min(calc(100vw - 64px), 1040px) !important;
+    height: min(760px, calc(100dvh - 36px)) !important;
+    max-height: calc(100dvh - 36px);
+    padding: 22px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+    grid-template-areas:
+      "title title"
+      "video name"
+      "video legend"
+      "video sets"
+      "video add"
+      "actions actions";
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto 64px;
+    align-content: start;
+    gap: 12px 18px;
+    overflow: hidden !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34) !important;
+    pointer-events: auto;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseFullscreenTitle {
+    grid-area: title;
+    margin: 0 !important;
+    min-width: 0;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseVideoBlock {
+    grid-area: video;
+    min-width: 0;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    align-self: stretch;
+    grid-template-rows: minmax(0, 1fr) auto;
+    overflow: hidden;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseVideoBlock video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    object-fit: contain;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseVideoBlock .monthVideoUploadBtn {
+    flex: 0 0 auto;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseRow.compact {
+    grid-area: name;
+    align-self: start;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumSetLegend {
+    grid-area: legend;
+    margin: 0;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseSets.compact {
+    grid-area: sets;
+    min-height: 0;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding-right: 3px;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthAddSetBtn.compact {
+    grid-area: add;
+    margin: 0;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .exerciseEditBar {
+    position: static;
+    grid-area: actions;
+    width: 100%;
+    min-height: 64px;
+    transform: none;
+    align-self: end;
+  }
+}
+
+@media (min-width: 900px) and (max-height: 720px) {
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected {
+    top: 12px !important;
+    bottom: auto !important;
+    height: calc(100dvh - 24px) !important;
+    max-height: calc(100dvh - 24px);
+    padding: 16px !important;
+  }
+
+  .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseVideoBlock {
+    max-height: calc(100dvh - 184px);
+  }
+}
+

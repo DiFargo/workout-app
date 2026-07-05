@@ -3727,7 +3727,7 @@ test("client nutrition grid CSS does not keep exact duplicate blocks", async () 
 });
 
 test("desktop cabinet CSS keeps trainer client overview grid locks in the broad mobile owner", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
   const trainerClientSectionStart = source.indexOf(".trainerClientDashboardModalOverlay");
   const broadMobileStart = source.indexOf("@media (max-width: 1100px)", trainerClientSectionStart);
   const narrowMobileStart = source.indexOf("@media (max-width: 700px)", broadMobileStart);
@@ -3752,7 +3752,7 @@ test("desktop cabinet CSS keeps trainer client overview grid locks in the broad 
 });
 
 test("desktop cabinet CSS keeps trainer client metric captions grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientKpiGrid article > em,\s*\.trainerClientKpiGrid article > small,\s*\.trainerClientMacroGrid span,\s*\.trainerClientMacroGrid em\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.46\);\s*font-size:\s*9px;\s*font-style:\s*normal;\s*\}/g) || []).length,
@@ -3765,7 +3765,7 @@ test("desktop cabinet CSS keeps trainer client metric captions grouped", async (
 });
 
 test("desktop cabinet CSS keeps trainer client progress captions grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientAttentionStrip small,\s*\.trainerClientProgramProgress span\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.48\);\s*font-size:\s*9px;\s*\}/g) || []).length,
@@ -3774,7 +3774,7 @@ test("desktop cabinet CSS keeps trainer client progress captions grouped", async
 });
 
 test("desktop cabinet CSS keeps trainer client muted captions grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientHeroMeta span,\s*\.trainerClientHeroMeta small,\s*\.trainerClientSectionHead small,\s*\.trainerClientControlRows span\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.48\);\s*font-size:\s*10px;\s*\}/g) || []).length,
@@ -3783,7 +3783,7 @@ test("desktop cabinet CSS keeps trainer client muted captions grouped", async ()
 });
 
 test("desktop cabinet CSS keeps trainer client list shells grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientAiList,\s*\.trainerClientControlRows,\s*\.trainerClientActivityList\s*\{\s*display:\s*grid;\s*\}/g) || []).length,
@@ -3792,7 +3792,7 @@ test("desktop cabinet CSS keeps trainer client list shells grouped", async () =>
 });
 
 test("desktop cabinet CSS keeps trainer notification header shells grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.clientTrainerTasksHead,\s*\.trainerWorkspaceHead,\s*\.profileTrainerNotificationsHead\s*\{\s*display:\s*flex;\s*align-items:\s*center;\s*justify-content:\s*space-between;\s*gap:\s*12px;\s*\}/g) || []).length,
@@ -3805,7 +3805,7 @@ test("desktop cabinet CSS keeps trainer notification header shells grouped", asy
 });
 
 test("desktop cabinet CSS keeps accent micro labels grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientDashboardModal > header span,\s*\.profileNutritionInlinePlanHead span\s*\{\s*color:\s*#b5e655;\s*font-size:\s*10px;\s*font-weight:\s*950;\s*letter-spacing:\s*0\.06em;\s*\}/g) || []).length,
@@ -3818,7 +3818,7 @@ test("desktop cabinet CSS keeps accent micro labels grouped", async () => {
 });
 
 test("desktop cabinet CSS keeps trainer client text shells grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.clientTrainerTask strong,\s*\.profileTrainerNotificationItem strong,\s*\.trainerClientProgramSummary strong\s*\{\s*overflow:\s*hidden;\s*color:\s*#fff;\s*font-size:\s*14px;\s*text-overflow:\s*ellipsis;\s*white-space:\s*nowrap;\s*\}/g) || []).length,
@@ -3835,7 +3835,7 @@ test("desktop cabinet CSS keeps trainer client text shells grouped", async () =>
 });
 
 test("desktop cabinet CSS keeps trainer mobile form columns grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerTaskCreate,\s*\.trainerPhotoMetaRow,\s*\.trainerPhotoCompare,\s*\.trainerPaymentGrid\s*\{\s*grid-template-columns:\s*1fr;\s*\}/g) || []).length,
@@ -3844,7 +3844,7 @@ test("desktop cabinet CSS keeps trainer mobile form columns grouped", async () =
 });
 
 test("desktop cabinet CSS keeps trainer mobile auto columns grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerProgressPhotosCard,\s*\.trainerEventsCard,\s*\.trainerPaymentGrid \.wide,\s*\.trainerPaymentGrid button\s*\{\s*grid-column:\s*auto;\s*\}/g) || []).length,
@@ -3853,7 +3853,7 @@ test("desktop cabinet CSS keeps trainer mobile auto columns grouped", async () =
 });
 
 test("desktop cabinet CSS keeps trainer full-width columns grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerProgressPhotosCard,\s*\.trainerEventsCard,\s*\.trainerPaymentGrid \.wide,\s*\.trainerPaymentGrid button\s*\{\s*grid-column:\s*1 \/ -1;\s*\}/g) || []).length,
@@ -3862,7 +3862,7 @@ test("desktop cabinet CSS keeps trainer full-width columns grouped", async () =>
 });
 
 test("desktop cabinet CSS keeps trainer client mobile columns grouped", async () => {
-  const source = await readText("src/styles/client-cabinet-desktop.css");
+  const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
     (source.match(/\.trainerClientPhotoCompareControls,\s*\.trainerClientPhotoCompare,\s*\.trainerClientHeroMeta,\s*\.trainerClientProgramProgress\s*\{\s*grid-template-columns:\s*1fr;\s*\}/g) || []).length,
@@ -4810,7 +4810,7 @@ test("client cabinet action cards expose explicit accessible labels", async () =
 
 test("client cabinet modal shells keep shared CSS owners", async () => {
   const source = await readText("src/styles/workouts.css");
-  const cabinetPolish = await readText("src/styles/client-cabinet-desktop.css");
+  const cabinetPolish = await readCssWithImports("src/styles/client-cabinet-desktop.css");
   const nutritionModal = await readText("src/features/client/profile/ProfileNutritionModal.jsx");
 
   assert.equal(

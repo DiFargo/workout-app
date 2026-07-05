@@ -1,0 +1,332 @@
+/* Main client sections use page scrolling instead of viewport compression. */
+.clientCorePageMain,
+.clientCorePageWorkout,
+.clientCorePageNutrition,
+.clientCorePageCabinet:not(.trainerRolePage) {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain;
+  scroll-padding-bottom: calc(104px + env(safe-area-inset-bottom));
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.clientCorePageMain::-webkit-scrollbar,
+.clientCorePageWorkout::-webkit-scrollbar,
+.clientCorePageNutrition::-webkit-scrollbar,
+.clientCorePageCabinet:not(.trainerRolePage)::-webkit-scrollbar {
+  display: none;
+}
+
+.profileDashboardPage.clientCorePageMain .profileCabinetSection,
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetSection {
+  height: auto !important;
+  min-height: calc(100dvh - 142px) !important;
+  overflow: visible !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetProgressOverview,
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetProgressOverview.hasProgressPhotos {
+  flex: 0 0 auto !important;
+  grid-template-rows: none !important;
+  grid-auto-rows: minmax(72px, auto) !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
+  height: auto !important;
+  min-height: 72px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealList {
+  min-height: auto !important;
+  flex: 0 0 auto !important;
+  grid-template-rows: repeat(4, 78px) !important;
+}
+
+.clientCorePageWorkout .individualWorkoutDeck {
+  height: auto !important;
+  min-height: calc(100dvh - 158px) !important;
+  flex: 0 0 auto !important;
+}
+
+.clientCorePageWorkout .individualWorkoutCardPro {
+  min-height: calc(100dvh - 188px) !important;
+}
+
+.trainerClientManagementGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.trainerWorkspaceCard {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid rgba(148, 190, 75, 0.16);
+  border-radius: 22px;
+  background: rgba(13, 24, 16, 0.74);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.16);
+}
+
+.trainerWorkspaceHead { margin-bottom: 14px; }
+.trainerWorkspaceHead > div { display: grid; gap: 4px; }
+.trainerWorkspaceHead h3 { margin: 0; color: #fff; font-size: 19px; }
+.trainerWorkspaceHead > strong {
+  max-width: 50%;
+  color: #9fca47;
+  font-size: 13px;
+  text-align: right;
+}
+.trainerWorkspaceHead > strong.overdue { color: #ff6b62; }
+.trainerWorkspaceHead > strong.soon { color: #f5b942; }
+
+.trainerTaskCreate,
+.trainerPhotoMetaRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px auto;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.trainerTaskCreate input,
+.trainerPhotoMetaRow input,
+.trainerPhotoCompareControls select,
+.trainerPaymentGrid input,
+.trainerPaymentGrid select {
+  min-width: 0;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.trainerTaskCreate button,
+.trainerPhotoMetaRow button,
+.trainerPaymentGrid button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 12px;
+  background: #9fca47;
+  color: #102006;
+  font-weight: 900;
+}
+
+.trainerTaskRow {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto 28px;
+  align-items: center;
+  gap: 9px;
+  min-height: 56px;
+  padding: 8px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.trainerTaskRow > span { display: grid; gap: 2px; }
+.trainerTaskRow strong { color: #fff; font-size: 13px; }
+.trainerTaskRow small,
+.trainerTaskRow em {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 10px;
+  font-style: normal;
+}
+.trainerTaskRow.overdue em { color: #ff7b72; }
+.trainerTaskDelete {
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 22px;
+}
+
+.trainerAiRecommendationList > div,
+.trainerEventList > div {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.trainerAiRecommendationList i,
+.trainerEventList i { color: #9fca47; font-style: normal; }
+.trainerAiRecommendationList p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.trainerPlateauBadge {
+  margin-top: 12px;
+  padding: 9px 12px;
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  border-radius: 12px;
+  color: #f5b942;
+  background: rgba(245, 166, 35, 0.08);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.trainerProgressPhotosCard,
+.trainerEventsCard,
+.trainerPaymentGrid .wide,
+.trainerPaymentGrid button { grid-column: 1 / -1; }
+
+.trainerPhotoUploadGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.trainerPhotoUploadGrid label {
+  display: grid;
+  gap: 5px;
+  min-height: 78px;
+  padding: 10px;
+  border: 1px dashed rgba(159, 202, 71, 0.32);
+  border-radius: 14px;
+  cursor: pointer;
+}
+.trainerPhotoUploadGrid span { color: #fff; font-size: 12px; font-weight: 800; }
+.trainerPhotoUploadGrid input { width: 1px; height: 1px; opacity: 0; }
+.trainerPhotoUploadGrid em {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerPhotoCompareControls,
+.trainerPhotoCompare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.trainerPhotoCompare > div {
+  min-height: 150px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+.trainerPhotoCompare > div > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 8px 0;
+}
+.trainerPhotoCompare img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 9px;
+  object-fit: cover;
+}
+.trainerPhotoCompare strong,
+.trainerPhotoCompare small,
+.trainerPhotoCompare span { color: rgba(255, 255, 255, 0.65); font-size: 11px; }
+
+.trainerPaymentGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+.trainerPaymentGrid label { display: grid; gap: 5px; }
+.trainerPaymentGrid label > span { color: rgba(255, 255, 255, 0.52); font-size: 10px; }
+
+.trainerEventList span { display: grid; gap: 3px; }
+.trainerEventList strong { color: #fff; font-size: 13px; }
+.trainerEventList small,
+.trainerEventList time,
+.trainerWorkspaceEmpty { color: rgba(255, 255, 255, 0.5); font-size: 11px; }
+.trainerWorkspaceEmpty { margin: 8px 0 0; }
+
+.workoutFinishComment { display: grid; gap: 6px; }
+.workoutFinishComment > span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 11px;
+  font-weight: 800;
+}
+.workoutFinishComment textarea {
+  width: 100%;
+  min-height: 62px;
+  resize: none;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+  background: rgba(0, 0, 0, 0.18);
+  color: #fff;
+  font: inherit;
+}
+.adminHistoryClientComment {
+  grid-column: 2 / -1;
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTasksPanel,
+html:root[data-app-theme="warm-light"] body #root .trainerWorkspaceCard {
+  border-color: rgba(98, 78, 220, 0.14);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 14px 36px rgba(54, 43, 120, 0.08);
+}
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTask,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompare > div {
+  border-color: rgba(98, 78, 220, 0.1);
+  background: rgba(246, 247, 255, 0.88);
+}
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTasksHead span,
+html:root[data-app-theme="warm-light"] body #root .trainerWorkspaceHead span,
+html:root[data-app-theme="warm-light"] body #root .trainerAiRecommendationList i,
+html:root[data-app-theme="warm-light"] body #root .trainerEventList i { color: #6045df; }
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTask strong,
+html:root[data-app-theme="warm-light"] body #root .trainerWorkspaceHead h3,
+html:root[data-app-theme="warm-light"] body #root .trainerTaskRow strong,
+html:root[data-app-theme="warm-light"] body #root .trainerEventList strong,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoUploadGrid span { color: #11162a; }
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTask small,
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTask em,
+html:root[data-app-theme="warm-light"] body #root .trainerTaskRow small,
+html:root[data-app-theme="warm-light"] body #root .trainerTaskRow em,
+html:root[data-app-theme="warm-light"] body #root .trainerAiRecommendationList p,
+html:root[data-app-theme="warm-light"] body #root .trainerEventList small,
+html:root[data-app-theme="warm-light"] body #root .trainerEventList time,
+html:root[data-app-theme="warm-light"] body #root .trainerWorkspaceEmpty,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompare strong,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompare small,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompare span { color: #6f7893; }
+html:root[data-app-theme="warm-light"] body #root .trainerTaskCreate input,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoMetaRow input,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompareControls select,
+html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid input,
+html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid select,
+html:root[data-app-theme="warm-light"] body #root .workoutFinishComment textarea {
+  border-color: rgba(98, 78, 220, 0.14);
+  background: #f7f8ff;
+  color: #11162a;
+}
+html:root[data-app-theme="warm-light"] body #root .trainerTaskCreate button,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoMetaRow button,
+html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
+  background: #6045df;
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .trainerClientManagementGrid { grid-template-columns: 1fr; gap: 12px; }
+  .trainerProgressPhotosCard,
+  .trainerEventsCard,
+  .trainerPaymentGrid .wide,
+  .trainerPaymentGrid button { grid-column: auto; }
+  .trainerWorkspaceCard { padding: 15px; border-radius: 18px; }
+  .trainerTaskCreate,
+  .trainerPhotoMetaRow,
+  .trainerPhotoCompare,
+  .trainerPaymentGrid { grid-template-columns: 1fr; }
+  .clientTrainerTask { grid-template-columns: 32px minmax(0, 1fr); }
+  .clientTrainerTask > em { grid-column: 2; }
+}
+
