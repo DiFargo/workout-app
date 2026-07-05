@@ -1974,7 +1974,7 @@ test("nutrition base CSS keeps compact meal card sizing in the desktop owner", a
 });
 
 test("legacy nutrition header CSS keeps one compact page padding owner", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const compactPremiumStart = source.indexOf("NUTRITION COMPACT PREMIUM ALIGNMENT");
   const oldMobileBlock = source.slice(0, compactPremiumStart);
 
@@ -1998,7 +1998,7 @@ test("legacy nutrition header CSS keeps one compact page padding owner", async (
 });
 
 test("legacy nutrition header CSS keeps calorie row grid in the later owner", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", pixelReferenceStart);
 
@@ -2019,7 +2019,7 @@ test("legacy nutrition header CSS keeps calorie row grid in the later owner", as
 });
 
 test("legacy nutrition header CSS keeps pixel meter span sizes in the later compact owner", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
   const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
@@ -2050,7 +2050,7 @@ test("legacy nutrition header CSS keeps pixel meter span sizes in the later comp
 });
 
 test("nutrition summary calories CSS keeps pixel meter width after the header layer", async () => {
-  const headerSource = await readText("src/styles/nutrition-header-layout.css");
+  const headerSource = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const summarySource = await readCssWithImports("src/styles/nutrition-summary-calories.css");
   const headerMobileStart = headerSource.indexOf("@media (max-width: 480px)");
   const headerMobileBlock = headerSource.slice(headerMobileStart);
@@ -2067,7 +2067,7 @@ test("nutrition summary calories CSS keeps pixel meter width after the header la
 });
 
 test("legacy nutrition header CSS keeps calorie row sizes in later compact owners", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
   const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
@@ -2093,7 +2093,7 @@ test("legacy nutrition header CSS keeps calorie row sizes in later compact owner
 });
 
 test("legacy nutrition header CSS keeps meal title sizes in later compact owners", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
   const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
@@ -2119,7 +2119,7 @@ test("legacy nutrition header CSS keeps meal title sizes in later compact owners
 });
 
 test("legacy nutrition header CSS keeps meal kcal sizes in later compact owners", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const referenceStart = source.indexOf("NUTRITION PAGE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", referenceStart);
   const narrowCompactStart = source.indexOf("@media (max-width: 430px)", compactPolishStart);
@@ -2145,7 +2145,7 @@ test("legacy nutrition header CSS keeps meal kcal sizes in later compact owners"
 });
 
 test("legacy nutrition header CSS keeps early narrow meal text sizes out of the old owner", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", pixelReferenceStart);
 
@@ -2165,7 +2165,7 @@ test("legacy nutrition header CSS keeps early narrow meal text sizes out of the 
 });
 
 test("legacy nutrition header CSS keeps early narrow layout sizes out of the old owner", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
 
   assert.ok(pixelReferenceStart > 0);
@@ -2183,7 +2183,7 @@ test("legacy nutrition header CSS keeps early narrow layout sizes out of the old
 });
 
 test("legacy nutrition header CSS keeps reference narrow layout sizes in compact owners", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const pixelReferenceStart = source.indexOf("PIXEL-PERFECT REFERENCE RENDER OVERRIDE");
   const compactPolishStart = source.indexOf("FOOD PAGE COMPACT POLISH", pixelReferenceStart);
 
@@ -2207,7 +2207,7 @@ test("legacy nutrition header CSS keeps reference narrow layout sizes in compact
 });
 
 test("legacy nutrition header CSS does not keep exact duplicate blocks", async () => {
-  const source = await readText("src/styles/nutrition-header-layout.css");
+  const source = await readCssWithImports("src/styles/nutrition-header-layout.css");
   const seenBlocks = new Set();
   const duplicateBlocks = [];
 

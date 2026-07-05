@@ -1,0 +1,422 @@
+/* =========================================================
+   NUTRITION COMPACT PREMIUM ALIGNMENT â€” 2026-05-12
+   ÐŸÑ€Ð°Ð²ÐºÐ¸ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð´Ð»Ñ ÑÐºÑ€Ð°Ð½Ð° Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ.
+   ========================================================= */
+.fatSecretPage {
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+}
+
+/* Ð¡ÐµÑ€Ð¸Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸ ÐµÐ´Ñ‹ â€” Ñ‡ÑƒÑ‚ÑŒ Ð·Ð°Ð¼ÐµÑ‚Ð½ÐµÐµ, Ð½Ð¾ Ð±ÐµÐ· Ð²Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ð¾Ð³Ð¾ ÑˆÑƒÐ¼Ð° */
+.fatSecretPage .fatStreakLineTop {
+  min-height: 30px !important;
+  margin: 0 auto 8px !important;
+  padding: 0 62px !important;
+}
+
+.fatSecretPage .fatStreakLineTop span {
+  font-size: clamp(15px, 4vw, 19px) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.15px !important;
+  color: rgba(245, 247, 251, 0.9) !important;
+  opacity: 1 !important;
+}
+
+/* Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ â€” Ð¼ÐµÐ½ÑŒÑˆÐµ, Ñ‚Ð¾Ð½ÑŒÑˆÐµ, Ð°ÐºÐºÑƒÑ€Ð°Ñ‚Ð½ÐµÐµ */
+.fatSecretPage .fatDateHeaderNoArrows .fatDateTitle h1 {
+  margin: 0 auto 10px !important;
+  font-size: clamp(27px, 7.2vw, 38px) !important;
+  font-weight: 760 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.8px !important;
+  color: rgba(245, 247, 251, 0.82) !important;
+}
+
+/* Ð’ÐµÑ€Ñ…Ð½Ð¸Ð¹ ÐºÐ°Ð»ÐµÐ½Ð´Ð°Ñ€ÑŒ Ð¸ Ð±Ñ‹ÑÑ‚Ñ€Ñ‹Ðµ Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ñ ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÐµÐµ */
+.fatSecretPage .fatTodayPanel {
+  margin-bottom: 14px !important;
+}
+
+.fatSecretPage .fatQuickActions button {
+  min-height: 44px !important;
+  border-radius: 15px !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+}
+
+/* Ð‘Ð»Ð¾Ðº ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ â€” Ñ€Ð¾Ð²Ð½Ð°Ñ Ð¿Ñ€Ð°Ð²Ð°Ñ ÑÐµÑ‚ÐºÐ° */
+.fatSecretPage .fatCaloriesCard {
+  display: grid !important;
+  grid-template-columns: 58px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 14px !important;
+  margin: 0 0 12px !important;
+  padding: 14px 14px !important;
+  border-radius: 24px !important;
+}
+
+.fatSecretPage .fatPixelMeter:not(.small) {
+  width: 58px !important;
+  min-width: 58px !important;
+  align-self: stretch !important;
+}
+
+.fatSecretPage .fatCalorieRows div {
+  width: 100% !important;
+  min-height: 34px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 82px !important;
+  align-items: center !important;
+  column-gap: 12px !important;
+  padding: 0 !important;
+}
+
+.fatSecretPage .fatCalorieRows span {
+  justify-self: end !important;
+  text-align: right !important;
+  font-size: 14px !important;
+  font-weight: 780 !important;
+  line-height: 1.15 !important;
+  color: rgba(236, 242, 250, 0.58) !important;
+  white-space: nowrap !important;
+}
+
+.fatSecretPage .fatCalorieRows strong {
+  justify-self: end !important;
+  min-width: 82px !important;
+  text-align: right !important;
+  font-variant-numeric: tabular-nums !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.8px !important;
+  color: #f7f9fd !important;
+}
+
+/* ÐšÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ â€” ÑƒÐ¶Ðµ, Ñ€Ð¾Ð²Ð½ÐµÐµ, Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¿ÑƒÑÑ‚Ð¾Ñ‚ */
+.fatSecretPage .fatMealList {
+  gap: 8px !important;
+  margin: 0 0 12px !important;
+}
+
+.fatSecretPage .fatMealCard {
+  border-radius: 22px !important;
+  overflow: hidden !important;
+}
+
+.fatSecretPage .fatMealMain {
+  min-height: 68px !important;
+  padding: 10px 12px !important;
+  display: grid !important;
+  grid-template-columns: 38px minmax(0, 1fr) 64px 34px !important;
+  align-items: center !important;
+  gap: 9px !important;
+}
+
+.fatSecretPage .fatMealIcon {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  border-radius: 14px !important;
+  font-size: 20px !important;
+}
+
+.fatSecretPage .fatMealTitle {
+  min-width: 0 !important;
+  gap: 2px !important;
+}
+
+.fatSecretPage .fatMealTitle strong {
+  font-size: 18px !important;
+  font-weight: 860 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.25px !important;
+}
+
+.fatSecretPage .fatMealTitle span {
+  font-size: 11px !important;
+  font-weight: 760 !important;
+  line-height: 1.1 !important;
+  color: rgba(236, 242, 250, 0.5) !important;
+}
+
+.fatSecretPage .fatMealKcal {
+  min-width: 64px !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+  gap: 2px !important;
+}
+
+.fatSecretPage .fatMealKcal strong {
+  font-size: 19px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.fatSecretPage .fatMealKcal span {
+  font-size: 10px !important;
+  font-weight: 760 !important;
+  line-height: 1 !important;
+  color: rgba(236, 242, 250, 0.46) !important;
+}
+
+.fatSecretPage .fatMealActions {
+  width: 34px !important;
+  min-width: 34px !important;
+  display: grid !important;
+  grid-template-rows: 32px 18px !important;
+  align-items: center !important;
+  justify-items: center !important;
+  gap: 2px !important;
+}
+
+.fatSecretPage .fatPlusBtn {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 27px !important;
+  font-weight: 500 !important;
+  line-height: 0.82 !important;
+}
+
+.fatSecretPage .fatMealToggle {
+  width: 32px !important;
+  height: 18px !important;
+  min-width: 32px !important;
+  min-height: 18px !important;
+  max-width: 32px !important;
+  max-height: 18px !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: rgba(236, 242, 250, 0.46) !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage .fatMealToggle.disabled {
+  opacity: 0.24 !important;
+  cursor: default !important;
+}
+
+.fatSecretPage .fatMealItems {
+  padding: 0 10px 10px !important;
+}
+
+.fatSecretPage .fatFoodItem {
+  min-height: 52px !important;
+  padding: 10px 12px !important;
+  border-radius: 16px !important;
+}
+
+/* Ð Ð¡Ðš / Ð¼Ð°ÐºÑ€Ð¾-Ð±Ð»Ð¾Ðº â€” ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÐµÐµ Ð¸ Ñ‚Ð¾Ð½ÑŒÑˆÐµ */
+.fatSecretPage .fatMacroPanel {
+  margin-top: 10px !important;
+  margin-bottom: 0 !important;
+  padding: 14px !important;
+  border-radius: 24px !important;
+}
+
+.fatSecretPage .fatMacroTop {
+  min-height: 0 !important;
+  margin-bottom: 12px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+.fatSecretPage .fatMacroTop h2 {
+  margin: 0 !important;
+  font-size: 15px !important;
+  font-weight: 820 !important;
+  line-height: 1.1 !important;
+  color: rgba(245, 247, 251, 0.78) !important;
+}
+
+.fatSecretPage .fatMacroTop span {
+  margin-top: 3px !important;
+  font-size: 11px !important;
+  font-weight: 760 !important;
+  color: rgba(236, 242, 250, 0.48) !important;
+}
+
+.fatSecretPage .fatMacroTop strong {
+  font-size: 18px !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.fatSecretPage .fatMacroTop .fatPixelMeter.small {
+  grid-column: 1 / -1 !important;
+  margin-top: 2px !important;
+}
+
+.fatSecretPage .fatMacroContent {
+  margin: 0 0 12px !important;
+  gap: 12px !important;
+  align-items: center !important;
+}
+
+.fatSecretPage .fatMacroLegend {
+  gap: 7px !important;
+}
+
+.fatSecretPage .fatMacroLegend span {
+  font-size: 12px !important;
+  font-weight: 780 !important;
+  line-height: 1.2 !important;
+}
+
+.fatSecretPage .fatDonut {
+  width: 92px !important;
+  height: 92px !important;
+  min-width: 92px !important;
+}
+
+.fatSecretPage .fatNutrients {
+  gap: 6px !important;
+  margin-top: 8px !important;
+}
+
+.fatSecretPage .fatNutrients p {
+  min-height: 28px !important;
+  padding: 7px 0 !important;
+  font-size: 12px !important;
+  line-height: 1.1 !important;
+}
+
+.fatSecretPage .fatNutrients p strong {
+  font-size: 12px !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.fatSecretPage .fatWaterBox {
+  margin-top: 10px !important;
+  padding: 10px !important;
+  border-radius: 18px !important;
+}
+
+.fatSecretPage .fatWaterActions button {
+  min-height: 34px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+}
+
+/* Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ Ð¿Ð¾Ð»Ð½Ð¾ÑÑ‚ÑŒÑŽ ÑƒÐ±Ñ€Ð°Ð½Ð° Ð¸Ð· JSX; ÑÑ‚Ñ€Ð°Ñ…Ð¾Ð²ÐºÐ° Ð½Ð° ÑÐ»ÑƒÑ‡Ð°Ð¹ ÑÑ‚Ð°Ñ€Ð¾Ð³Ð¾ ÐºÐµÑˆÐ° */
+.fatSecretPage .fatNutritionHistory {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .fatSecretPage .fatStreakLineTop {
+    padding-left: 58px !important;
+    padding-right: 58px !important;
+    margin-bottom: 7px !important;
+  }
+
+  .fatSecretPage .fatStreakLineTop span {
+    font-size: 16px !important;
+  }
+
+  .fatSecretPage .fatDateHeaderNoArrows .fatDateTitle h1 {
+    font-size: 30px !important;
+    margin-bottom: 9px !important;
+  }
+
+  .fatSecretPage .fatWeekRow .fatDayCell span {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 22px !important;
+  }
+
+  .fatSecretPage .fatWeekRow .fatDayCell small {
+    font-size: 12px !important;
+  }
+
+  .fatSecretPage .fatCaloriesCard {
+    grid-template-columns: 52px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding: 13px 12px !important;
+  }
+
+  .fatSecretPage .fatCalorieRows div {
+    grid-template-columns: minmax(0, 1fr) 74px !important;
+    column-gap: 9px !important;
+  }
+
+  .fatSecretPage .fatCalorieRows span {
+    font-size: 12.5px !important;
+  }
+
+  .fatSecretPage .fatCalorieRows strong {
+    min-width: 74px !important;
+    font-size: 22px !important;
+  }
+
+.fatSecretPage .fatMealIcon {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    font-size: 19px !important;
+  }
+
+  .fatSecretPage .fatMealTitle strong {
+    font-size: 17px !important;
+  }
+
+  .fatSecretPage .fatMealKcal {
+    min-width: 58px !important;
+  }
+
+.fatSecretPage .fatMealActions {
+    width: 32px !important;
+    min-width: 32px !important;
+    grid-template-rows: 30px 17px !important;
+  }
+
+  .fatSecretPage .fatPlusBtn {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    max-width: 30px !important;
+    max-height: 30px !important;
+    font-size: 25px !important;
+  }
+
+  .fatSecretPage .fatMealToggle {
+    width: 30px !important;
+    height: 17px !important;
+    min-width: 30px !important;
+    min-height: 17px !important;
+    max-width: 30px !important;
+    max-height: 17px !important;
+    font-size: 17px !important;
+  }
+
+  .fatSecretPage .fatMacroPanel {
+    padding: 12px !important;
+    border-radius: 22px !important;
+  }
+}
+
