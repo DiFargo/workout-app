@@ -2268,7 +2268,7 @@ test("legacy food picker CSS keeps empty-state text in the final owner", async (
 });
 
 test("nutrition food search actions CSS keeps one photo active transform owner", async () => {
-  const source = await readText("src/styles/nutrition-food-search-actions.css");
+  const source = await readCssWithImports("src/styles/nutrition-food-search-actions.css");
 
   assert.equal(
     (source.match(/\.fatSearchBottomBarFive \.fatSearchPhotoAction:active\s*\{\s*transform:\s*translateX\(-50%\) scale\(0\.97\) !important;\s*\}/g) || []).length,
@@ -2384,7 +2384,7 @@ test("legacy food editor CSS keeps details and unit focus state grouped", async 
 });
 
 test("nutrition food search actions CSS keeps action active colors grouped", async () => {
-  const source = await readText("src/styles/nutrition-food-search-actions.css");
+  const source = await readCssWithImports("src/styles/nutrition-food-search-actions.css");
 
   assert.equal(
     (source.match(/\.fatSearchBottomBarFive > button:not\(\.fatSearchPhotoAction\):active,\s*\.foodProductActionBar button:active:not\(:disabled\)\s*\{\s*background:\s*rgba\(143,\s*188,\s*54,\s*0\.055\) !important;\s*color:\s*#aee94d !important;\s*-webkit-text-fill-color:\s*#aee94d !important;\s*\}/g) || []).length,

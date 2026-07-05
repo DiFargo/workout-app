@@ -1,0 +1,184 @@
+/* FOOD SEARCH ACTION BAR V333 */
+.fatSearchBottomBar.fatSearchBottomBarFive {
+  grid-template-columns:
+    minmax(0, 0.82fr)
+    minmax(0, 1.18fr)
+    minmax(0, 1.18fr)
+    minmax(0, 0.82fr) !important;
+  gap: 8px !important;
+  position: fixed !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  background: rgba(12, 20, 14, 0.97) !important;
+  box-shadow:
+    0 -12px 32px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+  overflow: visible !important;
+}
+
+.fatSearchBottomBarFive > button {
+  min-width: 0 !important;
+  padding-right: 2px !important;
+  padding-left: 2px !important;
+}
+
+.fatSearchBottomBarFive > button:not(.fatSearchPhotoAction) {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: rgba(232, 237, 230, 0.62) !important;
+  -webkit-text-fill-color: rgba(232, 237, 230, 0.62) !important;
+}
+
+.fatSearchBottomBarFive > button:not(.fatSearchPhotoAction) span {
+  filter: none !important;
+}
+
+.fatSearchBottomBarFive > button:not(.fatSearchPhotoAction) strong {
+  color: rgba(232, 237, 230, 0.62) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  -webkit-text-fill-color: rgba(232, 237, 230, 0.62) !important;
+}
+
+.fatSearchBottomBarFive > button:not(.fatSearchPhotoAction):active,
+.foodProductActionBar button:active:not(:disabled) {
+  background: rgba(143, 188, 54, 0.055) !important;
+  color: #aee94d !important;
+  -webkit-text-fill-color: #aee94d !important;
+}
+
+.fatSearchBottomBarFive > button.active:not(.fatSearchPhotoAction) {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145, 173, 78, 0.15), transparent 68%),
+    rgba(127, 159, 58, 0.045) !important;
+  color: #aee94d !important;
+  -webkit-text-fill-color: #aee94d !important;
+}
+
+.fatSearchBottomBarFive > button.active:not(.fatSearchPhotoAction) strong {
+  color: #aee94d !important;
+  -webkit-text-fill-color: #aee94d !important;
+}
+
+.fatSearchBottomBarFive .fatSearchPhotoAction {
+  width: 86px !important;
+  min-width: 86px !important;
+  height: 86px !important;
+  min-height: 86px !important;
+  padding: 8px 4px !important;
+  position: absolute !important;
+  top: -26px !important;
+  left: 50% !important;
+  z-index: 2 !important;
+  transform: translateX(-50%) !important;
+  border-radius: 50% !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  background: #171a17 !important;
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+.fatSearchBottomBarFive .fatSearchPhotoAction span {
+  font-size: 30px !important;
+  color: #d9ecb0 !important;
+  filter: none !important;
+}
+
+.fatSearchBottomBarFive .fatSearchPhotoAction strong {
+  color: rgba(232, 237, 230, 0.62) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+}
+
+.fatSearchBottomBarFive .fatSearchPhotoAction:active {
+  transform: translateX(-50%) scale(0.97) !important;
+}
+
+.fatSearchBottomBarFive .fatSearchBackAction span {
+  font-size: 28px !important;
+  color: #aeb8b0 !important;
+}
+
+.fatSearchBottomBarFive .fatSearchBackAction {
+  width: auto !important;
+  height: auto !important;
+  min-height: 78px !important;
+  border-radius: 20px !important;
+}
+
+.fatSearchBottomBarFive .fatSearchBackAction strong {
+  max-width: 64px !important;
+  white-space: normal !important;
+  line-height: 1.05 !important;
+}
+
+.fatSearchBottomBarFive .fatSearchSearchAction > span {
+  position: relative !important;
+  left: -21px !important;
+  color: #aee94d !important;
+  font-size: 27px !important;
+}
+
+.fatSearchBottomBarFive .fatSearchSearchAction > strong {
+  position: relative !important;
+  left: -16px !important;
+}
+
+.fatSearchBottomBarFive .fatSearchCreateAction > span {
+  position: relative !important;
+  left: 21px !important;
+  color: #75d99b !important;
+  font-size: 27px !important;
+}
+
+.fatSearchBottomBarFive .fatSearchCreateAction > strong {
+  position: relative !important;
+  left: 16px !important;
+}
+
+.fatSearchBottomBarFive .fatSearchMyProductsAction span {
+  color: #e1c26e !important;
+}
+
+.fatSearchBottomBarFive .fatSearchMyProductsAction strong {
+  max-width: 58px !important;
+  white-space: normal !important;
+}
+
+@media (max-width: 390px) {
+  .fatSearchBottomBar.fatSearchBottomBarFive {
+    gap: 6px !important;
+    padding-right: 7px !important;
+    padding-left: 7px !important;
+  }
+
+  .fatSearchBottomBarFive .fatSearchPhotoAction {
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 80px !important;
+    min-height: 80px !important;
+    top: -23px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .fatSearchBottomBarFive .fatSearchBackAction {
+    min-height: 70px !important;
+    border-radius: 17px !important;
+  }
+
+  .fatSearchBottomBarFive > button strong {
+    font-size: 8.5px !important;
+  }
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchPhotoAction {
+  border-color: rgba(94, 75, 30, 0.10) !important;
+  background: rgba(255, 249, 215, 0.96) !important;
+  box-shadow:
+    0 12px 24px rgba(88, 68, 24, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+}
+
