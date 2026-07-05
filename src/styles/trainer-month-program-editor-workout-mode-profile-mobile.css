@@ -1,0 +1,10 @@
+.profileWorkoutModeActions button.active {
+  background: rgba(127, 159, 58, 0.18);
+  color: rgba(217, 242, 154, 0.95);
+}
+
+@media (max-width: 420px) {
+  .workoutModeHero h1 {
+    font-size: 34px;
+  }
+}

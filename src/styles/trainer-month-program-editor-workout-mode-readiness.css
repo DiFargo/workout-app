@@ -1,0 +1,18 @@
+/* READINESS 3 BLOCKS ALIGN FIX */
+.workoutReadinessOptions,
+.readinessOptions,
+.workoutReadinessGrid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  align-items: stretch !important;
+}
+
+@media (max-width: 640px) {
+  .workoutReadinessOptions,
+  .readinessOptions,
+  .workoutReadinessGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
