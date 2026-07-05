@@ -1,0 +1,298 @@
+/* =========================================================
+   NUTRITION SUMMARY â€” RENDER COPY
+   ========================================================= */
+
+.summaryCaloriesCard,
+.summaryMacroCard,
+.summaryWaterCard {
+  width: 100% !important;
+
+  border-radius: 25px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.035), transparent 38%),
+    linear-gradient(180deg, rgba(12, 24, 25, 0.985), rgba(7, 15, 17, 0.995)) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.025),
+    0 12px 28px rgba(0,0,0,0.18) !important;
+}
+
+.summaryCaloriesCard {
+  min-height: 166px !important;
+  padding: 24px 26px !important;
+
+  display: grid !important;
+  grid-template-columns: 96px minmax(0, 1fr) !important;
+  gap: 28px !important;
+  align-items: center !important;
+}
+
+.summaryDotGrid {
+  width: 78px !important;
+  display: grid !important;
+  grid-template-columns: repeat(5, 13px) !important;
+  grid-auto-rows: 13px !important;
+  gap: 7px !important;
+}
+
+.summaryDotGrid span {
+  width: 13px !important;
+  height: 13px !important;
+  border-radius: 50% !important;
+  background: rgba(39, 255, 116, 0.16) !important;
+}
+
+.summaryDotGrid span.on {
+  background: rgba(39, 255, 116, 0.72) !important;
+  box-shadow: 0 0 10px rgba(39, 255, 116, 0.18) !important;
+}
+
+.summaryCaloriesRow.muted span,
+.summaryCaloriesRow.muted strong {
+  color: rgba(247,248,251,0.48) !important;
+}
+
+.summaryMacroLegend i.carbs { background: #68d9ef !important; }
+.summaryMacroLegend i.fat { background: #ffd33f !important; }
+.summaryMacroLegend i.protein { background: #ff6572 !important; }
+
+.summaryDonut {
+  width: 86px !important;
+  height: 86px !important;
+  margin-left: auto !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.summaryDonut span {
+  width: 42px !important;
+  height: 42px !important;
+  display: block !important;
+  border-radius: 50% !important;
+  background: rgba(7, 15, 17, 0.995) !important;
+}
+
+@media (max-width: 480px) {
+
+  .summaryCaloriesCard {
+    min-height: 154px !important;
+    padding: 22px 20px !important;
+    grid-template-columns: 82px minmax(0, 1fr) !important;
+    gap: 20px !important;
+  }
+
+  .summaryDotGrid {
+    grid-template-columns: repeat(5, 12px) !important;
+    grid-auto-rows: 12px !important;
+    gap: 6px !important;
+  }
+
+  .summaryDotGrid span {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .summaryDonut {
+    width: 78px !important;
+    height: 78px !important;
+  }
+
+  .summaryDonut span {
+    width: 38px !important;
+    height: 38px !important;
+  }
+}
+
+/* =========================================================
+   SUMMARY SECOND SCALE UP
+   ========================================================= */
+
+/* Ð¡Ð²Ð¾Ð´ÐºÐ° +30% */
+
+/* ÑÐµÑ‚ÐºÐ° ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ +20% */
+.summaryCaloriesCard {
+  grid-template-columns: 50px minmax(0, 1fr) !important;
+  gap: 18px !important;
+}
+
+.summaryDotGrid {
+  width: 40px !important;
+  grid-template-columns: repeat(5, 7px) !important;
+  grid-auto-rows: 7px !important;
+  gap: 4px !important;
+}
+
+.summaryDotGrid span {
+  width: 7px !important;
+  height: 7px !important;
+}
+
+/* Ñ‚ÐµÐºÑÑ‚ Ð¸ Ñ†Ð¸Ñ„Ñ€Ñ‹ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ +20% */
+
+/* Ð Ð¡Ðš +25% */
+.summaryCaloriesRow.muted span,
+.summaryCaloriesRow.muted strong {
+  font-size: 16px !important;
+}
+
+@media (max-width: 480px) {
+
+  .summaryCaloriesCard {
+    grid-template-columns: 46px minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .summaryDotGrid {
+    width: 37px !important;
+    grid-template-columns: repeat(5, 6.5px) !important;
+    grid-auto-rows: 6.5px !important;
+    gap: 3.5px !important;
+  }
+
+  .summaryDotGrid span {
+    width: 6.5px !important;
+    height: 6.5px !important;
+  }
+
+  .summaryCaloriesRow.muted span,
+  .summaryCaloriesRow.muted strong {
+    font-size: 15px !important;
+  }
+}
+
+/* =========================================================
+   SUMMARY BJU + WATER SIZE TUNING
+   ========================================================= */
+
+/* Ð±Ð»Ð¾Ðº Ð‘Ð–Ð£ â€” Ñ‚ÐµÐºÑÑ‚ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¸ Ð±ÐµÐ· Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ° */
+
+/* ÑÐ»ÐµÐ´ÑƒÑŽÑ‰Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð‘Ð–Ð£ â€” Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð½Ð° 40% */
+
+/* Ð²Ð¾Ð´Ð° Ð¼ÐµÐ½ÑŒÑˆÐµ Ð½Ð° 25% */
+
+/* =========================================================
+   SUMMARY UNIFIED TEXT SIZE
+   ========================================================= */
+
+/* ÐµÐ´Ð¸Ð½Ñ‹Ð¹ Ñ€Ð°Ð·Ð¼ÐµÑ€ Ñ‚ÐµÐºÑÑ‚Ð° ÐºÐ°Ðº Ñƒ "ÐžÑÑ‚Ð°Ð»Ð¾ÑÑŒ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹" */
+.summaryCaloriesRow span,
+.summaryCaloriesRow strong,
+.summaryCaloriesRow.muted span,
+.summaryCaloriesRow.muted strong,
+.summaryMacroLegend span,
+.summaryNutrientsGrid span,
+.summaryNutrientsGrid strong,
+.summaryWaterTop span,
+.summaryWaterTop strong,
+.summaryWaterActions button {
+  font-size: 15px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.12px !important;
+}
+
+/* Ð±ÐµÐ· Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¾Ð² */
+
+/* Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð‘Ð–Ð£ Ñ‡ÑƒÑ‚ÑŒ Ð¿Ð»Ð¾Ñ‚Ð½ÐµÐµ */
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ð²Ð¾Ð´Ñ‹ */
+
+@media (max-width: 480px) {
+  .summaryCaloriesRow span,
+  .summaryCaloriesRow strong,
+  .summaryCaloriesRow.muted span,
+  .summaryCaloriesRow.muted strong,
+  .summaryMacroLegend span,
+  .summaryNutrientsGrid span,
+  .summaryNutrientsGrid strong,
+  .summaryWaterTop span,
+  .summaryWaterTop strong,
+  .summaryWaterActions button {
+    font-size: 14px !important;
+  }
+}
+
+/* =========================================================
+   SUMMARY REMOVE GREEN GLOW + TALLER CALORIE GRID
+   ========================================================= */
+
+/* ÑƒÐ±Ñ€Ð°Ñ‚ÑŒ Ð·ÐµÐ»Ñ‘Ð½Ð¾Ðµ ÑÐ²ÐµÑ‡ÐµÐ½Ð¸Ðµ */
+
+/* ÑƒÐ²ÐµÐ»Ð¸Ñ‡Ð¸Ñ‚ÑŒ ÑÐµÑ‚ÐºÑƒ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð¿Ð¾ Ð²Ñ‹ÑÐ¾Ñ‚Ðµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð½Ð° 10% */
+.summaryDotGrid {
+  transform: scaleY(1.1) !important;
+  transform-origin: center !important;
+}
+
+/* =========================================================
+   REAL TODAY + STREAK FIX â€” CURRENT BASE
+   ========================================================= */
+
+/* "Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ" â€” Ð±ÑƒÐºÐ²Ñ‹ Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½Ðµ Ð½Ð°ÐµÐ·Ð¶Ð°ÑŽÑ‚ Ð´Ñ€ÑƒÐ³ Ð½Ð° Ð´Ñ€ÑƒÐ³Ð° */
+.fatSecretPage .nutritionHeroTitleV4 h1,
+.nutritionHeroV4 .nutritionHeroTitleV4 h1,
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1 {
+  letter-spacing: -0.25px !important;
+  line-height: 1.05 !important;
+  font-kerning: normal !important;
+  text-rendering: geometricPrecision !important;
+  transform: none !important;
+  text-shadow: none !important;
+}
+
+/* ÑƒÐ±Ð¸Ñ€Ð°ÐµÐ¼ ÐºÐ½Ð¾Ð¿ÐºÑƒ/Ð´ÑƒÐ±Ð»ÑŒ "Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ" Ð¿Ñ€Ð¸ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ð½Ð¾Ð¼ Ð´Ñ€ÑƒÐ³Ð¾Ð¼ Ð´Ð½Ðµ */
+.fatSecretPage .nutritionHeroTitleV4 button,
+.nutritionHeroV4 .nutritionHeroTitleV4 button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* "Ð¡ÐµÑ€Ð¸Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸ ÐµÐ´Ñ‹" â€” ÑƒÐ±Ñ€Ð°Ñ‚ÑŒ Ñ„Ð¾Ð½, Ð¾ÐºÐ°Ð½Ñ‚Ð¾Ð²ÐºÑƒ Ð¸ ÑÑ‚ÐµÐºÐ»ÑÐ½Ð½Ñ‹Ð¹ Ð±ÐµÐ¹Ð´Ð¶ */
+.fatSecretPage .nutritionStreakV4,
+.nutritionStreakV4,
+.fatSecretPage .fatStreakLineTop,
+.fatStreakLineTop {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ñ‚ÐµÐºÑÑ‚ ÑÐµÑ€Ð¸Ð¸ Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð±ÐµÐ· Ð¿Ð»Ð°ÑˆÐºÐ¸ */
+.fatSecretPage .nutritionStreakV4 span,
+.nutritionStreakV4 span,
+.fatSecretPage .fatStreakLineTop span,
+.fatStreakLineTop span {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ÑÑ‚Ñ€Ð°Ñ…Ð¾Ð²ÐºÐ° Ð¾Ñ‚ Ð¿ÑÐµÐ²Ð´Ð¾Ñ„Ð¾Ð½Ð° */
+.fatSecretPage .nutritionHeroTitleV4::before,
+.fatSecretPage .nutritionHeroTitleV4::after,
+.fatSecretPage .nutritionHeroTitleV4 h1::before,
+.fatSecretPage .nutritionHeroTitleV4 h1::after,
+.fatSecretPage .nutritionStreakV4::before,
+.fatSecretPage .nutritionStreakV4::after {
+  display: none !important;
+  content: none !important;
+}
+
+@media (max-width: 430px) {
+  .fatSecretPage .nutritionHeroTitleV4 h1,
+  .nutritionHeroV4 .nutritionHeroTitleV4 h1,
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1 {
+    letter-spacing: -0.15px !important;
+    line-height: 1.06 !important;
+  }
+}

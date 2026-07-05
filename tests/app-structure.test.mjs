@@ -2371,7 +2371,7 @@ test("warm light add food CSS keeps profile action shells grouped", async () => 
 });
 
 test("legacy food editor CSS keeps details and unit focus state grouped", async () => {
-  const source = await readText("src/styles/nutrition-food-editor.css");
+  const source = await readCssWithImports("src/styles/nutrition-food-editor.css");
 
   assert.equal(
     (source.match(/\.foodEditDetailsPanel input:focus,\s*\.foodEditDetailsPanel textarea:focus,\s*\.foodEditPortionUnitRow select:focus\s*\{\s*border-color:\s*rgba\(38,255,116,0\.42\) !important;\s*box-shadow:\s*0 0 0 3px rgba\(38,255,116,0\.055\) !important;\s*\}/g) || []).length,
@@ -2615,7 +2615,7 @@ test("legacy nutrition summary calories CSS keeps final compact calorie owners",
 });
 
 test("legacy food editor CSS keeps summary dot sizes in root owners", async () => {
-  const source = await readText("src/styles/nutrition-food-editor.css");
+  const source = await readCssWithImports("src/styles/nutrition-food-editor.css");
 
   assert.doesNotMatch(
     source,

@@ -1,0 +1,353 @@
+/* =========================================================
+   FOOD EDIT BACK BEHAVIOR FIX
+   ========================================================= */
+
+/* Ð²Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ð¾ Ð½Ðµ Ð¼ÐµÐ½ÑÐµÐ¼ ÐºÐ½Ð¾Ð¿ÐºÑƒ, Ð¼ÐµÐ½ÑÐµÑ‚ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð»Ð¾Ð³Ð¸ÐºÐ°:
+   Ð¸Ð· Ð¿Ð¾Ð¸ÑÐºÐ° -> Ð½Ð°Ð·Ð°Ð´ Ð² Ð¿Ð¾Ð¸ÑÐº ÐµÐ´Ñ‹,
+   Ð¸Ð· ÑƒÐ¶Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð½Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° -> Ð½Ð°Ð·Ð°Ð´ Ð² Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ðµ */
+
+/* =========================================================
+   FOOD EDIT DETAILS PANEL
+   ========================================================= */
+
+.foodEditHeroEditable {
+  position: relative !important;
+}
+
+.foodEditDetailsPanel {
+  width: 100% !important;
+  margin: -2px 0 14px !important;
+  padding: 14px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(38,255,116,0.045), transparent 44%),
+    linear-gradient(180deg, rgba(12,22,24,0.96), rgba(7,13,15,0.985)) !important;
+
+  box-shadow:
+    0 14px 34px rgba(0,0,0,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.028) !important;
+}
+
+.foodEditDetailsPanel label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  margin: 0 !important;
+}
+
+.foodEditDetailsPanel label span {
+  color: rgba(248,248,246,0.48) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.1px !important;
+}
+
+.foodEditDetailsPanel input,
+.foodEditDetailsPanel textarea {
+  width: 100% !important;
+  min-height: 46px !important;
+  padding: 12px 13px !important;
+
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(248,248,246,0.94) !important;
+
+  font-size: 15px !important;
+  font-weight: 850 !important;
+  line-height: 1.2 !important;
+
+  outline: none !important;
+  resize: vertical !important;
+}
+
+.foodEditDetailsPanel textarea {
+  min-height: 78px !important;
+}
+
+.foodEditDetailsPanel input:focus,
+.foodEditDetailsPanel textarea:focus,
+.foodEditPortionUnitRow select:focus {
+  border-color: rgba(38,255,116,0.42) !important;
+  box-shadow: 0 0 0 3px rgba(38,255,116,0.055) !important;
+}
+
+@media (max-width: 390px) {
+
+  .foodEditDetailsPanel {
+    padding: 12px !important;
+    border-radius: 22px !important;
+  }
+
+  .foodEditDetailsPanel input,
+  .foodEditDetailsPanel textarea {
+    font-size: 13px !important;
+  }
+}
+
+/* =========================================================
+   NUTRITION PRODUCT CALORIES FIX
+   ========================================================= */
+
+/* ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¸ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° Ð² ÑÐ¿Ð¸ÑÐºÐµ Ð¿Ñ€Ð¸Ñ‘Ð¼Ð° Ð¿Ð¸Ñ‰Ð¸ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÑŽÑ‚ÑÑ ÐºÐ°Ðº ÑƒÐ¶Ðµ ÑÐ¾Ñ…Ñ€Ð°Ð½Ñ‘Ð½Ð½Ñ‹Ð¹ Ð¸Ñ‚Ð¾Ð³,
+   Ð±ÐµÐ· Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Ð½Ð¾Ð³Ð¾ ÑƒÐ¼Ð½Ð¾Ð¶ÐµÐ½Ð¸Ñ Ð½Ð° Ð³Ñ€Ð°Ð¼Ð¼Ñ‹ */
+
+/* =========================================================
+   FOOD EDIT PORTION MODE FIX
+   ========================================================= */
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ° Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ Ñ‚ÐµÐ¿ÐµÑ€ÑŒ Ñ€ÐµÐ°Ð»ÑŒÐ½Ð¾ Ð¿Ð¾Ð´ÑÑ‚Ð°Ð²Ð»ÑÐµÑ‚ Ð²ÐµÑ/Ð¼Ð» Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ */
+.foodEditSegmentRow button.active {
+  border-color: rgba(38,255,116,0.62) !important;
+}
+
+.foodEditAmountCard span {
+  white-space: nowrap !important;
+}
+
+.foodEditSegmentRow .weightModeButton.active {
+  color: rgba(38,255,116,0.95) !important;
+}
+
+/* =========================================================
+   FULL PAGE PRODUCT EDIT
+   ========================================================= */
+
+.foodEditPageOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  background:
+    radial-gradient(circle at top, rgba(38,255,116,0.05), transparent 30%),
+    linear-gradient(180deg, rgba(5,10,12,0.985), rgba(3,7,9,1)) !important;
+}
+
+.foodEditPageSheet {
+  width: 100% !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+  padding: 18px 16px 42px !important;
+}
+
+.foodEditPageHeader {
+  display: grid !important;
+  grid-template-columns: 44px 1fr auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-bottom: 24px !important;
+}
+
+.foodEditPageHeader strong {
+  color: rgba(248,248,246,0.95) !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.5px !important;
+}
+
+.foodEditPageBack,
+.foodEditPageSave {
+  border: none !important;
+  background: rgba(255,255,255,0.06) !important;
+  color: rgba(248,248,246,0.9) !important;
+  border-radius: 14px !important;
+  min-height: 42px !important;
+  padding: 0 14px !important;
+  font-weight: 800 !important;
+}
+
+.foodEditPageBack {
+  width: 42px !important;
+  padding: 0 !important;
+  font-size: 22px !important;
+}
+
+.foodEditPageSave {
+  color: rgba(38,255,116,0.92) !important;
+}
+
+.foodEditPageContent {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.foodEditPageContent label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.foodEditPageContent label span {
+  color: rgba(248,248,246,0.48) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.foodEditPageContent input,
+.foodEditPageContent textarea {
+  width: 100% !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  background: rgba(255,255,255,0.04) !important;
+  border-radius: 18px !important;
+  min-height: 54px !important;
+  padding: 14px !important;
+  color: rgba(248,248,246,0.95) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+.foodEditPageContent textarea {
+  min-height: 140px !important;
+  resize: vertical !important;
+}
+
+.foodEditPageGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 12px !important;
+}
+
+/* =========================================================
+   PORTION MODE FINAL FIX
+   ========================================================= */
+
+/* Ð²ÐµÑÑ‹ Ð²ÑÐµÐ³Ð´Ð° ÐºÐ»Ð¸ÐºÐ°Ð±ÐµÐ»ÑŒÐ½Ñ‹Ðµ Ð¿Ð¾ÑÐ»Ðµ Ð²Ñ‹Ð±Ð¾Ñ€Ð° 1 Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ */
+.foodEditSegmentRow .weightModeButton {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Ð¿Ð¾Ð»Ðµ Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ Ð² Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¾Ñ€Ðµ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° Ð¿Ñ€Ð¸Ð½Ð¸Ð¼Ð°ÐµÑ‚ Ð»ÑŽÐ±Ð¾Ð¹ Ñ‚ÐµÐºÑÑ‚: 1 Ð¿Ð¾Ñ€Ñ†Ð¸Ñ, ÑÑ‚Ð°ÐºÐ°Ð½, Ð±Ð°Ð½ÐºÐ°, 250 Ð¼Ð» */
+.foodEditPageContent input,
+.foodEditDetailsPanel input {
+  text-transform: none !important;
+}
+
+/* =========================================================
+   FOOD EDIT PORTION UNIT SELECT
+   ========================================================= */
+
+.foodEditPortionUnitRow {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 78px !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.foodEditPortionUnitRow input {
+  min-width: 0 !important;
+}
+
+.foodEditPortionUnitRow select {
+  width: 78px !important;
+  min-height: 54px !important;
+  padding: 0 12px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 62%),
+    rgba(255,255,255,0.04) !important;
+
+  color: rgba(38,255,116,0.95) !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+
+  outline: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  text-align: center !important;
+  text-align-last: center !important;
+}
+
+/* =========================================================
+   SAVE BUTTON ICON
+   ========================================================= */
+
+.foodEditPageSave {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  min-width: 72px !important;
+}
+
+/* =========================================================
+   PORTION UNIT TOGGLE â€” NO DROPDOWN
+   ========================================================= */
+
+.foodEditPortionUnitRow select {
+  display: none !important;
+}
+
+.foodEditPortionUnitToggle {
+  width: 78px !important;
+  min-height: 54px !important;
+  padding: 0 12px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 62%),
+    rgba(255,255,255,0.04) !important;
+
+  color: rgba(38,255,116,0.95) !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  outline: none !important;
+  cursor: pointer !important;
+}
+
+.foodEditPortionUnitToggle:active {
+  transform: scale(0.96) !important;
+}
+
+/* =========================================================
+   PORTION MODE AFTER RELOAD FIX
+   ========================================================= */
+
+/* Ñ€ÐµÐ¶Ð¸Ð¼ Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ Ñ‚ÐµÐ¿ÐµÑ€ÑŒ Ð²Ð¾ÑÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÑ‚ÑÑ Ð¸Ð· ÑÐ¾Ñ…Ñ€Ð°Ð½Ñ‘Ð½Ð½Ñ‹Ñ… amountMode/portionAmount */
+.foodEditSegmentRow button {
+  user-select: none !important;
+}
+
+/* =========================================================
+   ADD FOOD SEARCH â€” HIDE TOP-RIGHT X
+   ========================================================= */
+
+/* ÐºÑ€ÐµÑÑ‚Ð¸Ðº Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½Ðµ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ð¿Ð¾Ð¸ÑÐºÐ° ÐµÐ´Ñ‹,
+   Ð½Ð¾ Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹Ð¼ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ð½Ð¾Ð³Ð¾/Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€ÑƒÐµÐ¼Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° */
+.fatFoodSearchScreenPremium .fatSearchClosePremium {
+  z-index: 20 !important;
+}
+
+/* =========================================================
+   CREATE CUSTOM FOOD
+   ========================================================= */
+
+.foodEditPageSave span:last-child {
+  line-height: 1 !important;
+}
+
+/* =========================================================
+   ADMIN USERS CREATE PANEL
+   ========================================================= */
