@@ -1,0 +1,118 @@
+@media (max-width: 1080px) {
+  .adminClientWorkspaceHeaderRender {
+    grid-template-columns: 1fr;
+  }
+
+  .adminClientWorkspaceActionsRender {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .adminClientMetricGridRender {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .adminTelegramQuickMessagesRender > div {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .adminUsersCrmMainClientPage {
+    padding: 14px 10px 52px !important;
+  }
+
+  .adminClientRenderTopbar {
+    margin-bottom: 20px;
+  }
+
+  .adminClientIdentityRender {
+    grid-template-columns: 76px 1fr;
+    gap: 14px;
+  }
+
+  .adminClientInitialsRender {
+    width: 76px;
+    height: 76px;
+    font-size: 25px;
+  }
+
+  .adminClientStatusRender {
+    grid-column: 2;
+    font-size: 14px;
+  }
+
+  .adminClientWorkspaceHeaderRender h2 {
+    font-size: 32px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender p {
+    font-size: 14px !important;
+  }
+
+  .adminClientWorkspaceActionsRender {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .adminClientWorkspaceActionsRender button {
+    min-height: 48px !important;
+    font-size: 13px !important;
+    padding: 0 12px !important;
+  }
+
+  .adminClientWorkspaceCrmPage .adminClientTabsCrm {
+    display: flex !important;
+    overflow-x: auto;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .adminClientWorkspaceCrmPage .adminClientTabsCrm button {
+    min-width: 116px;
+    min-height: 58px !important;
+    font-size: 12px !important;
+  }
+
+  .adminClientTabContentRender {
+    padding: 14px !important;
+  }
+
+  .adminClientMetricGridRender {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .adminClientMetricCardRender,
+  .adminClientMetricCardSplitRender {
+    grid-column: span 1 !important;
+    min-height: 104px !important;
+  }
+
+  .adminClientTelegramPanelRender {
+    padding: 16px !important;
+  }
+
+  .adminClientTelegramBodyRender {
+    grid-template-columns: 56px 1fr !important;
+  }
+
+  .adminClientTelegramActionsRender {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .adminTelegramTextareaWrapRender {
+    grid-template-columns: 1fr;
+  }
+
+  .adminTelegramTextareaWrapRender span,
+  .adminTelegramTextareaWrapRender .adminTelegramSendButton {
+    grid-column: 1;
+  }
+
+  .adminClientRecommendationsRender div {
+    grid-template-columns: 42px 1fr !important;
+  }
+
+  .adminClientRecommendationsRender button {
+    grid-column: 1 / -1;
+  }
+}
