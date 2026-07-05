@@ -1,0 +1,77 @@
+/* === CLIENTS PAGE REAL CLEANUP V19 === */
+/* ÃÂ£ÃÂ´ÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ¸ÃÂµ ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦ÃÂ½ÃÂµÃÂ³ÃÂ¾ Clients CRM ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ° ÃÂ¸ Ã‘ÂÃ‘â€šÃÂ°Ã‘â‚¬Ã‘â€¹Ã‘â€¦ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂ¾ÃÂº ÃÂ½ÃÂ° Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ ÃÂµ ÃÅ¡ÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃ‘â€¹ */
+
+.adminUsersCrmMain {
+  padding-top: 6px !important;
+}
+
+/* === DASHBOARD REDESIGN V20 === */
+
+.adminDashboardSection{
+  margin-top:22px !important;
+  border-radius:30px !important;
+  padding:22px !important;
+  background:linear-gradient(180deg,#141814 0%,#0f130f 100%) !important;
+  border:1px solid rgba(255,255,255,.06) !important;
+}
+
+.adminDashboardSectionTitle{
+  font-size:26px !important;
+  font-weight:900 !important;
+  color:#fff !important;
+  margin-bottom:16px !important;
+}
+
+.adminDashboardMiniItem{
+  border-radius:22px !important;
+  padding:16px !important;
+  background:rgba(255,255,255,.03) !important;
+  border:1px solid rgba(255,255,255,.04) !important;
+}
+
+.adminDashboardMiniTop{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+
+.adminDashboardMiniName{
+  color:#fff !important;
+  font-size:18px !important;
+  font-weight:800 !important;
+}
+
+.adminDashboardMiniDesc{
+  margin-top:8px !important;
+  color:rgba(255,255,255,.6) !important;
+  font-size:14px !important;
+  line-height:1.4 !important;
+}
+
+.adminDashboardTimeline{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+
+.adminDashboardTimelineItem{
+  padding:14px 16px !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,.03) !important;
+  color:rgba(255,255,255,.78) !important;
+  font-size:14px !important;
+}
+
+@media (max-width:420px){
+
+  .adminDashboardSection{
+    padding:18px !important;
+    border-radius:24px !important;
+  }
+
+  .adminDashboardSectionTitle{
+    font-size:22px !important;
+  }
+}
+

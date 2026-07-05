@@ -1,0 +1,77 @@
+/* === CLIENT OVERVIEW ONLY BLOCKS V33 === */
+/* Ãâ€”ÃÂ°ÃÂ¼ÃÂµÃ‘â€šÃÂºÃÂ° Ã‘â€šÃ‘â‚¬ÃÂµÃÂ½ÃÂµÃ‘â‚¬ÃÂ°, ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂ½ÃÂ¾Ã‘Â ÃÂ´ÃÂ°ÃÂ½ÃÂ½Ã‘â€¹Ã‘â€¦ ÃÂ¸ Ã‘Æ’ÃÂ´ÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ¸ÃÂµ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° ÃÂ¿ÃÂ¾ÃÂºÃÂ°ÃÂ·Ã‘â€¹ÃÂ²ÃÂ°Ã‘Å½Ã‘â€šÃ‘ÂÃ‘Â Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ²ÃÂ¾ ÃÂ²ÃÂºÃÂ»ÃÂ°ÃÂ´ÃÂºÃÂµ ÃÅ¾ÃÂ±ÃÂ·ÃÂ¾Ã‘â‚¬ */
+
+.adminClientOverviewOnlyBlocks {
+  margin-top: 14px !important;
+}
+
+.adminClientOverviewOnlyBlocks .adminClientBottomTools {
+  margin-top: 0 !important;
+}
+
+/* === PROGRAM TAB CLEANUP SAFE V34 === */
+/* ÃÂ£ÃÂ±ÃÂ¸Ã‘â‚¬ÃÂ°ÃÂµÃÂ¼ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃ‘Æ’ Ã‘â‚¬ÃÂµÃÂ´ÃÂ°ÃÂºÃ‘â€šÃÂ¾Ã‘â‚¬ ÃÂ¸ ÃÂ±ÃÂ»ÃÂ¾ÃÂº Ã‘â€šÃÂµÃÂºÃ‘Æ’Ã‘â€°ÃÂµÃÂ¹ ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ³Ã‘â‚¬ÃÂ°ÃÂ¼ÃÂ¼Ã‘â€¹ Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ² ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂµ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° */
+
+.adminProgramClientTab .adminAssignProgramHead button,
+.adminProgramClientTab .adminCurrentProgramBadge {
+  display: none !important;
+}
+
+/* === NUTRITION PLAN DROPDOWN V35 === */
+/* ÃÅ¸ÃÂ»ÃÂ°ÃÂ½ ÃÂ¿ÃÂ¸Ã‘â€šÃÂ°ÃÂ½ÃÂ¸Ã‘Â: ÃÂ²Ã‘â€¹ÃÂ¿ÃÂ°ÃÂ´ÃÂ°Ã‘Å½Ã‘â€°ÃÂ¸ÃÂ¹ Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂ¾ÃÂº + ÃÂ½ÃÂ°ÃÂ·ÃÂ½ÃÂ°Ã‘â€¡ÃÂ¸Ã‘â€šÃ‘Å’ + Ã‘ÂÃÂ±Ã‘â‚¬ÃÂ¾Ã‘ÂÃÂ¸Ã‘â€šÃ‘Å’ */
+
+.adminNutritionAssignCard {
+  gap: 12px !important;
+}
+
+.adminNutritionPlanSelect {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  margin: 12px 0 12px !important;
+}
+
+.adminNutritionPlanSelect span {
+  color: rgba(255,255,255,.52) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+}
+
+.adminNutritionPlanSelect select {
+  width: 100% !important;
+  height: 48px !important;
+  padding: 0 14px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  background: #0b0f0b !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+
+.adminNutritionAssignCard .adminNutritionAssignButton {
+  width: 100% !important;
+  min-height: 46px !important;
+  margin-top: 8px !important;
+}
+
+.adminNutritionAssignCard .adminNutritionAssignButton.ghost {
+  margin-top: 8px !important;
+  background: rgba(255,255,255,.045) !important;
+  color: rgba(255,255,255,.78) !important;
+  border: 1px solid rgba(255,255,255,.075) !important;
+}
+
+/* === PROGRESS DIAGRAMS IN OVERVIEW V36 === */
+/* Ãâ€ÃÂ¸ÃÂ°ÃÂ³Ã‘â‚¬ÃÂ°ÃÂ¼ÃÂ¼Ã‘â€¹ ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ³Ã‘â‚¬ÃÂµÃ‘ÂÃ‘ÂÃÂ° ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂ½ÃÂµÃ‘ÂÃÂµÃÂ½Ã‘â€¹ ÃÂ¸ÃÂ· ÃÅ¸Ã‘â‚¬ÃÂ¾ÃÂ³Ã‘â‚¬ÃÂ°ÃÂ¼ÃÂ¼Ã‘â€¹ ÃÂ² ÃÅ¾ÃÂ±ÃÂ·ÃÂ¾Ã‘â‚¬ */
+
+.adminClientTabContentRender .adminProgressDiagramsPanel {
+  margin-top: 14px !important;
+}
+
+.adminProgramClientTab .adminProgressDiagramsPanel {
+  display: none !important;
+}
+

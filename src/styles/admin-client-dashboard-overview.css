@@ -1,0 +1,139 @@
+/* === CLIENT TELEGRAM ONLY TAB V28 === */
+/* ÃÂ ÃÂµÃÂ°ÃÂ»Ã‘Å’ÃÂ½Ã‘â€¹ÃÂ¹ Telegram-ÃÂ±ÃÂ»ÃÂ¾ÃÂº ÃÂ¿ÃÂ¾ÃÂºÃÂ°ÃÂ·Ã‘â€¹ÃÂ²ÃÂ°ÃÂµÃ‘â€šÃ‘ÂÃ‘Â Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ²ÃÂ¾ ÃÂ²ÃÂºÃÂ»ÃÂ°ÃÂ´ÃÂºÃÂµ Telegram */
+
+.adminClientTelegramOnlyTab {
+  margin-top: 14px !important;
+  padding-bottom: 120px !important;
+}
+
+/* === CLIENT OVERVIEW CLEANUP V29 === */
+/* ÃÅ¾ÃÂ±ÃÂ·ÃÂ¾Ã‘â‚¬: Ã‘Æ’ÃÂ±Ã‘â‚¬ÃÂ°Ã‘â€šÃ‘Å’ AI-Ã‘â‚¬ÃÂµÃÂºÃÂ¾ÃÂ¼ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â€ ÃÂ¸Ã‘Å½ ÃÂ¿Ã‘â‚¬ÃÂ¾ ÃÂ±ÃÂµÃÂ»ÃÂ¾ÃÂº, Ã‘Æ’ÃÂ±Ã‘â‚¬ÃÂ°Ã‘â€šÃ‘Å’ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂºÃ‘Æ’ ÃÂ¾ÃÂ±ÃÂ½ÃÂ¾ÃÂ²ÃÂ¸Ã‘â€šÃ‘Å’, Ã‘ÂÃÂ´ÃÂµÃÂ»ÃÂ°Ã‘â€šÃ‘Å’ ÃÂ½ÃÂ¸ÃÂ¶ÃÂ½ÃÂ¸ÃÂµ ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ ÃÂºÃÂ¾ÃÂ¼ÃÂ¿ÃÂ°ÃÂºÃ‘â€šÃÂ½ÃÂµÃÂµ */
+
+.adminClientRecommendationsRender,
+.adminClientRecommendations {
+  display: none !important;
+}
+
+.adminClientWorkspaceActionsRender {
+  display: none !important;
+}
+
+.adminClientBottomTools {
+  gap: 12px !important;
+  margin-top: 14px !important;
+}
+
+.adminClientNotesBlock,
+.adminClientTransferBlock {
+  min-height: auto !important;
+  padding: 14px !important;
+  border-radius: 22px !important;
+}
+
+.adminClientBottomBlockHead {
+  margin-bottom: 10px !important;
+}
+
+.adminClientBottomBlockHead h3 {
+  font-size: 18px !important;
+  line-height: 1.15 !important;
+}
+
+.adminClientBottomBlockHead span {
+  font-size: 10px !important;
+}
+
+.adminClientNotesBlock textarea,
+.adminClientNotesBlock .adminV3Note {
+  min-height: 74px !important;
+  height: 74px !important;
+  max-height: 92px !important;
+}
+
+.adminTransferGrid {
+  gap: 10px !important;
+}
+
+.adminTransferGrid label {
+  gap: 6px !important;
+}
+
+.adminClientTransferBlock .adminV3OpenEditor,
+.adminClientNotesBlock .adminV3OpenEditor {
+  min-height: 42px !important;
+  padding: 10px 14px !important;
+}
+
+/* ÃÅ¡ÃÂ¾ÃÂ¼ÃÂ¿ÃÂ°ÃÂºÃ‘â€šÃÂ½Ã‘â€¹ÃÂ¹ ÃÂºÃ‘â‚¬ÃÂ°Ã‘ÂÃÂ¸ÃÂ²Ã‘â€¹ÃÂ¹ ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦ ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ¸ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° */
+
+.adminClientIdentityRender {
+  min-width: 0 !important;
+}
+
+.adminClientIdentityRender h2 {
+  margin: 0 !important;
+  color: #fff !important;
+  font-size: clamp(28px, 6vw, 42px) !important;
+  line-height: 1.05 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.adminClientIdentityRender p {
+  margin: 6px 0 0 !important;
+  color: rgba(255, 255, 255, 0.62) !important;
+  font-size: 15px !important;
+  line-height: 1.2 !important;
+  font-weight: 800 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.adminClientStatusRender {
+  grid-column: 2 !important;
+  margin-top: -8px !important;
+
+  width: fit-content !important;
+  min-height: 30px !important;
+  padding: 6px 12px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+
+  border-radius: 999px !important;
+  background: rgba(110, 255, 80, 0.10) !important;
+  border: 1px solid rgba(110, 255, 80, 0.20) !important;
+  color: #aaff67 !important;
+
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.adminClientStatusRender i {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: #68ff52 !important;
+  box-shadow: 0 0 18px rgba(104, 255, 82, .7) !important;
+}
+
+@media (max-width: 520px) {
+
+  .adminClientIdentityRender h2 {
+    font-size: 30px !important;
+  }
+
+  .adminClientIdentityRender p {
+    font-size: 13px !important;
+  }
+
+  .adminClientStatusRender {
+    margin-top: -4px !important;
+    font-size: 13px !important;
+    min-height: 28px !important;
+    padding: 5px 10px !important;
+  }
+}
+

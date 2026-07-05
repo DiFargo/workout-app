@@ -2924,13 +2924,13 @@ test("legacy nutrition late layout CSS keeps expanded product text grouped", asy
 });
 
 test("admin client dashboard polish CSS has no empty media blocks", async () => {
-  const source = await readText("src/styles/admin-client-dashboard.css");
+  const source = await readCssWithImports("src/styles/admin-client-dashboard.css");
 
   assert.doesNotMatch(source, /@media\s+[^{]+\{\s*\}/);
 });
 
 test("admin client dashboard polish CSS keeps calendar layout in final owner", async () => {
-  const source = await readText("src/styles/admin-client-dashboard.css");
+  const source = await readCssWithImports("src/styles/admin-client-dashboard.css");
 
   assert.doesNotMatch(
     source,
@@ -3168,7 +3168,7 @@ test("admin client dashboard polish CSS keeps calendar layout in final owner", a
 });
 
 test("admin client dashboard polish CSS keeps nutrition month summary shells grouped", async () => {
-  const source = await readText("src/styles/admin-client-dashboard.css");
+  const source = await readCssWithImports("src/styles/admin-client-dashboard.css");
 
   assert.doesNotMatch(
     source,

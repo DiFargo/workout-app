@@ -1,0 +1,107 @@
+/* === CLIENT HEADER FINAL COMPACT V32 === */
+/* Ãâ€¢Ã‘â€°Ã‘â€˜ ÃÂºÃÂ¾ÃÂ¼ÃÂ¿ÃÂ°ÃÂºÃ‘â€šÃÂ½ÃÂµÃÂµ: mini profile card, ÃÂ¼ÃÂµÃÂ½Ã‘Å’Ã‘Ë†ÃÂµ ÃÂ¿Ã‘Æ’Ã‘ÂÃ‘â€šÃÂ¾Ã‘â€šÃ‘â€¹, Ã‘ÂÃ‘â€šÃÂ°Ã‘â€šÃ‘Æ’Ã‘Â ÃÂ² ÃÂ¾ÃÂ´ÃÂ½Ã‘Æ’ ÃÂ»ÃÂ¸ÃÂ½ÃÂ¸Ã‘Å½ */
+
+.adminClientWorkspaceHeaderRender {
+  padding: 10px 12px !important;
+  margin: 0 0 10px !important;
+  border-radius: 21px !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender {
+  grid-template-columns: 48px minmax(0, 1fr) auto !important;
+  grid-template-areas: "avatar name status" !important;
+  column-gap: 11px !important;
+  row-gap: 0 !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientInitialsRender {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  border-radius: 17px !important;
+  font-size: 22px !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender > div:not(.adminClientInitialsRender):not(.adminClientStatusRender) {
+  align-self: center !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender h2 {
+  font-size: 23px !important;
+  line-height: 1 !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientIdentityRender p {
+  margin-top: 5px !important;
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+  max-width: 100% !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientStatusRender {
+  grid-area: status !important;
+  align-self: center !important;
+  justify-self: end !important;
+
+  min-height: 25px !important;
+  margin: 0 !important;
+  padding: 5px 9px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+}
+
+.adminClientWorkspaceHeaderRender .adminClientStatusRender i {
+  width: 7px !important;
+  height: 7px !important;
+}
+
+@media (max-width: 520px) {
+  .adminClientWorkspaceHeaderRender {
+    padding: 10px 11px !important;
+    border-radius: 20px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender {
+    grid-template-columns: 46px minmax(0, 1fr) auto !important;
+    column-gap: 10px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientInitialsRender {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    border-radius: 16px !important;
+    font-size: 21px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender h2 {
+    font-size: 22px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender p {
+    font-size: 10.5px !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientStatusRender {
+    min-height: 24px !important;
+    padding: 5px 8px !important;
+    font-size: 10.5px !important;
+  }
+}
+
+@media (max-width: 370px) {
+  .adminClientWorkspaceHeaderRender .adminClientIdentityRender {
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+    grid-template-areas:
+      "avatar name"
+      "avatar status" !important;
+  }
+
+  .adminClientWorkspaceHeaderRender .adminClientStatusRender {
+    justify-self: start !important;
+    margin-top: 3px !important;
+  }
+}
+
