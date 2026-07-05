@@ -1,0 +1,146 @@
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
+html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle,
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  min-height: 42px !important;
+  margin: 0 0 12px !important;
+  color: #171923 !important;
+  font-size: 31px !important;
+  font-weight: 850 !important;
+  line-height: 1.05 !important;
+  letter-spacing: 0 !important;
+  text-shadow: 0 10px 28px rgba(91, 96, 125, 0.16) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
+html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
+  padding-top: 30px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle {
+  padding-right: 76px !important;
+  margin-top: 8px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn,
+html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileTrainerNotificationsButton,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutHeaderActions button,
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconButton {
+  width: 56px !important;
+  min-width: 56px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  border: 1px solid #e1e5f0 !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 12px 30px rgba(72, 77, 107, 0.11) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
+  top: 58px !important;
+  right: 28px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 56px !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 58px !important;
+  margin: 0 0 12px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileCabinetPageTitle {
+  grid-column: 1 !important;
+  margin: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileTrainerNotificationsButton {
+  position: static !important;
+  grid-column: 2 !important;
+  justify-self: end !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero {
+  display: grid !important;
+  width: 100% !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  column-gap: 12px !important;
+  min-height: 58px !important;
+  margin: 0 0 12px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  display: block !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  min-height: 34px !important;
+  margin: 0 !important;
+  font-size: 18px !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle span,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle strong {
+  display: inline !important;
+  white-space: nowrap !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutHeaderActions {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  position: static !important;
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  justify-self: end !important;
+  z-index: 2 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero > p,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectLine {
+  display: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: start !important;
+  gap: 12px !important;
+  min-height: 52px !important;
+  height: auto !important;
+  margin: 0 0 10px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroV4 {
+  padding-top: 6px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  height: auto !important;
+  margin: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconActions {
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4,
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 span {
+  color: #625d4e !important;
+  text-shadow: none !important;
+}
+
