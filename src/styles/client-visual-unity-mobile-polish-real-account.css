@@ -1,0 +1,269 @@
+/* v1.79: real-account mobile polish. This block is intentionally last: it
+   corrects the live client screens with real names/goals instead of the
+   simplified harness data. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage {
+    --client-x: 26px;
+    --client-top: 70px;
+    --client-title-h: 54px;
+    --client-title-fz: 30px;
+    --client-title-color: #5f5744;
+    --client-card-shadow: 0 18px 48px rgba(57, 64, 96, 0.1);
+    padding-left: var(--client-x) !important;
+    padding-right: var(--client-x) !important;
+    padding-bottom: calc(112px + env(safe-area-inset-bottom)) !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain.mainDashboardPage > .mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .workoutSelectHero {
+    height: var(--client-title-h) !important;
+    min-height: var(--client-title-h) !important;
+    margin: calc(var(--client-top) + 8px) 0 16px !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 12px !important;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain.mainDashboardPage > .mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage .workoutSelectTitle {
+    color: var(--client-title-color) !important;
+    -webkit-text-fill-color: var(--client-title-color) !important;
+    font-size: var(--client-title-fz) !important;
+    line-height: 1.06 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
+    top: calc(var(--client-top) + 8px) !important;
+    right: var(--client-x) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileTrainerNotificationsButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutHeaderActions button {
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    border-radius: 17px !important;
+    border: 1px solid #dfe4ee !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    color: var(--client-title-color) !important;
+    -webkit-text-fill-color: var(--client-title-color) !important;
+    box-shadow: 0 16px 36px rgba(36, 43, 66, 0.08) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileTrainerNotificationsButton {
+    justify-self: end !important;
+    align-self: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
+    width: 100% !important;
+    height: 104px !important;
+    min-height: 104px !important;
+    margin: 0 !important;
+    padding: 16px 18px !important;
+    display: grid !important;
+    grid-template-columns: 70px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 16px !important;
+    border: 1px solid #dfe4ee !important;
+    background: #ffffff !important;
+    box-shadow: var(--client-card-shadow) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero {
+    border-bottom: 0 !important;
+    border-radius: 22px 22px 0 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
+    border-radius: 22px !important;
+    margin: 0 0 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileAiAvatarWrap,
+  html:root[data-app-theme="warm-light"] body #root .profileAiAvatar,
+  html:root[data-app-theme="warm-light"] body #root .profileAvatarBig.profileUnifiedAvatar.profileAiAvatar {
+    width: 70px !important;
+    min-width: 70px !important;
+    height: 70px !important;
+    min-height: 70px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileAiHeroText h1 {
+    margin: 0 !important;
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+    font-size: clamp(22px, 6vw, 27px) !important;
+    line-height: 1.08 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
+    width: 100% !important;
+    height: 82px !important;
+    min-height: 82px !important;
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    border: 1px solid #dfe4ee !important;
+    border-top: 0 !important;
+    border-radius: 0 0 22px 22px !important;
+    background: #ffffff !important;
+    box-shadow: var(--client-card-shadow) !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
+    min-width: 0 !important;
+    height: 82px !important;
+    padding: 10px 6px !important;
+    display: grid !important;
+    place-items: center !important;
+    align-content: center !important;
+    gap: 5px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow span {
+    max-width: 100% !important;
+    color: #737b91 !important;
+    -webkit-text-fill-color: #737b91 !important;
+    font-size: 11px !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
+    max-width: 100% !important;
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+    font-size: clamp(18px, 5.1vw, 23px) !important;
+    line-height: 1.05 !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow .goal strong {
+    font-size: clamp(16px, 4.5vw, 20px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiSplitCards {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin: 0 0 14px !important;
+    box-sizing: border-box !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard {
+    min-height: 86px !important;
+    padding: 14px 10px !important;
+    border: 1px solid #dfe4ee !important;
+    border-radius: 18px !important;
+    background: #ffffff !important;
+    box-shadow: var(--client-card-shadow) !important;
+    box-sizing: border-box !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMeasurementSnapshot {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 14px !important;
+    border: 1px solid #dfe4ee !important;
+    border-radius: 22px !important;
+    background: #ffffff !important;
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+    box-shadow: var(--client-card-shadow) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard * {
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientBottomNav {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientBottomNav > button {
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientBottomNav > button strong {
+    max-width: 100% !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutDeck {
+    margin-bottom: 34px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardPro {
+    border-radius: 28px !important;
+    overflow: hidden !important;
+  }
+}
