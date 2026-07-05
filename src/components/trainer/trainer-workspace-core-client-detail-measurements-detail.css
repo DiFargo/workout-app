@@ -1,0 +1,110 @@
+.trainerMeasurementMainGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(260px, 1.05fr);
+  gap: 10px;
+}
+
+.trainerMeasurementInsight {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fff, #faf8ff);
+}
+
+.trainerMeasurementInsight > span {
+  color: var(--tn-purple);
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.trainerMeasurementInsight h3,
+.trainerMeasurementTimeline h3 {
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 14px;
+}
+
+.trainerMeasurementInsight p,
+.trainerMeasurementChart p {
+  margin: 0;
+  color: var(--tn-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.trainerMeasurementChart {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+}
+
+.trainerMeasurementChart header,
+.trainerMeasurementChart > div,
+.trainerWorkoutScheduleMonth {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.trainerMeasurementChart header strong {
+  color: var(--tn-purple);
+  font-size: 9px;
+}
+
+.trainerMeasurementChart svg {
+  width: 100%;
+  min-height: 112px;
+}
+
+.trainerMeasurementChart line {
+  stroke: #eeeaf7;
+  stroke-width: 1;
+}
+
+.trainerMeasurementChart polyline {
+  fill: none;
+  stroke: #2f6cf5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.trainerMeasurementChart circle {
+  fill: #6242ef;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.trainerMeasurementFieldGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.trainerMeasurementFieldGrid article {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+}
+
+.trainerMeasurementTimeline {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.trainerMeasurementTimeline article {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.8fr) minmax(80px, 0.7fr) minmax(120px, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid var(--tn-line);
+}
+
+.trainerMeasurementTimeline article:first-of-type {
+  border-top: 0;
+}
+
