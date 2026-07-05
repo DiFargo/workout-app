@@ -1,0 +1,90 @@
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarNav strong,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarPlanner strong,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > div:first-child strong,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > button strong {
+  color: #171923;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarNav button,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarPlanner,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > button {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #596176;
+  box-shadow: none;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarPlanner > button {
+  border-color: #ddd9fa;
+  background: #efedff;
+  color: #5542d8;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.hasWorkout {
+  border-color: #d8ccff;
+  background: #f6f2ff;
+  color: #5e38e8;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.scheduled {
+  border-color: #d8ccff;
+  background: #f6f2ff;
+  color: #5e38e8;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.completed {
+  border-color: #ccebd6;
+  background: #f2fbf5;
+  color: #16813d;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.historyCompleted {
+  border-color: #ccebd6;
+  background: #f2fbf5;
+  color: #16813d;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.completedOffDate {
+  border-color: #cfc6ff;
+  background: #f6f3ff;
+  color: #5e38e8;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.missed {
+  border-color: #ffd6d6;
+  background: #fff6f6;
+  color: #d53838;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.shifted {
+  border-color: #f5dfa4;
+  background: #fffaf0;
+  color: #9b6d12;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarGrid > button.selected {
+  border-color: #6552e6;
+  box-shadow: 0 0 0 3px rgba(117, 101, 232, 0.14);
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarWeekdays span,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarPlanner small,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > div:first-child span,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > button small,
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > p {
+  color: #73798b;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarEditActions button.secondary {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #596176;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetWorkoutCalendarDay > div:first-child em {
+  background: #edf9f2;
+  color: #278756;
+}
+

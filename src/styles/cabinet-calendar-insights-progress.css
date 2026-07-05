@@ -1,0 +1,79 @@
+/* Dynamic progress insight states. */
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight.positive {
+  border-color: rgba(87, 176, 126, 0.28) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight.supportive {
+  border-color: rgba(206, 151, 83, 0.3) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight {
+  height: 150px !important;
+  min-height: 150px !important;
+  flex-basis: 150px !important;
+  max-height: 150px !important;
+  padding: 12px !important;
+  gap: 8px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle h2 {
+  margin: 5px 0 3px !important;
+  font-size: 17px !important;
+  line-height: 1.08 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle p {
+  max-width: none !important;
+  font-size: 10px !important;
+  line-height: 1.3 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.positive {
+  border-color: #cde8d8 !important;
+  background: #fbfefc !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.supportive {
+  border-color: #eadbc8 !important;
+  background: #fffdf9 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview span {
+  min-width: 0 !important;
+  min-height: 36px !important;
+  padding: 5px 3px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  overflow: hidden !important;
+  line-height: 1.05 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview b,
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview small {
+  display: block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview b {
+  font-size: 8px !important;
+  font-weight: 850 !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview small {
+  color: inherit !important;
+  font-size: 8px !important;
+  opacity: 0.72 !important;
+}
+
