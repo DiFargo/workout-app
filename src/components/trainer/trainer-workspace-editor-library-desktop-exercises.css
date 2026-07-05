@@ -1,0 +1,94 @@
+.trainerProgramExerciseHead {
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 54px 64px 64px 66px 72px;
+  align-items: center;
+  padding-left: 84px;
+  color: var(--tn-muted);
+  font-size: 9px;
+  text-align: center;
+}
+
+.trainerProgramExerciseHead span:first-child {
+  text-align: left;
+}
+
+.trainerProgramExerciseList article {
+  display: block;
+  min-height: 0;
+  border-top: 1px solid var(--tn-line);
+}
+
+.trainerProgramExerciseRow {
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: 30px 46px minmax(120px, 1fr) 54px 64px 64px 66px 72px;
+  align-items: center;
+  gap: 4px;
+}
+
+.trainerProgramExerciseList article.expanded {
+  background: #fbfbfe;
+}
+
+.trainerProgramExerciseList .trainerNextExerciseActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1px;
+}
+
+.trainerProgramExerciseList .trainerNextExerciseActions button {
+  width: 26px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--tn-muted);
+  cursor: pointer;
+}
+
+.trainerProgramExerciseList .trainerNextExerciseActions button:last-child:hover,
+.trainerNextExerciseList .trainerNextExerciseActions button:last-child:hover {
+  background: #fff1f1;
+  color: #d44a4a;
+}
+
+.trainerProgramExerciseList .trainerNextExerciseEditor {
+  padding-left: 84px;
+}
+
+.trainerProgramAddExercise {
+  width: 100%;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  border: 1px solid var(--tn-purple);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--tn-purple);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.trainerProgramEmptyDay {
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  color: var(--tn-muted);
+  text-align: center;
+}
+
+.trainerProgramEmptyDay strong {
+  color: var(--tn-text);
+  font-size: 14px;
+}
+
