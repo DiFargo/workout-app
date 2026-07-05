@@ -1,0 +1,148 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProImage {
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: inherit !important;
+    overflow: hidden !important;
+    z-index: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProImage img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    filter: saturate(0.98) contrast(1.02) brightness(0.86) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProBody::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+    background:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.72) 36%, rgba(255, 255, 255, 0.08) 67%, rgba(0, 0, 0, 0.32) 100%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.1) 64%, rgba(0, 0, 0, 0.4) 100%) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutAccentLine,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutStats,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardStartButton {
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutTitle {
+    max-width: 190px !important;
+    margin: 0 0 14px !important;
+    color: var(--render-ink) !important;
+    font-size: 36px !important;
+    font-weight: 900 !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+    text-align: left !important;
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutAccentLine {
+    width: 84px !important;
+    height: 5px !important;
+    margin: 0 0 30px !important;
+    border-radius: 999px !important;
+    background: #5b4cff !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutStats {
+    width: auto !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 18px !important;
+    color: #1f2737 !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    line-height: 1.15 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutStats li {
+    display: grid !important;
+    grid-template-columns: 42px auto !important;
+    align-items: center !important;
+    gap: 12px !important;
+    min-height: 42px !important;
+    color: #1f2737 !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutStats li span:first-child {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    background: rgba(243, 238, 255, 0.92) !important;
+    color: var(--render-accent) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardStartButton {
+    position: absolute !important;
+    left: 20px !important;
+    right: 20px !important;
+    bottom: 22px !important;
+    width: auto !important;
+    height: 64px !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, #8f4dff 0%, #256ef4 100%) !important;
+    box-shadow: 0 20px 40px rgba(82, 74, 235, 0.26) !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutTrainerTip {
+    margin: 16px 0 0 !important;
+    color: var(--render-muted) !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutBottomPanel {
+    width: 100% !important;
+    margin: 10px 0 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutBottomProgress {
+    position: absolute !important;
+    left: 14px !important;
+    right: 14px !important;
+    top: -38px !important;
+    bottom: auto !important;
+    z-index: 18 !important;
+    height: 28px !important;
+    margin: 0 !important;
+    padding: 0 0 8px !important;
+    background: transparent !important;
+    color: var(--render-title-color) !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+  }
+}

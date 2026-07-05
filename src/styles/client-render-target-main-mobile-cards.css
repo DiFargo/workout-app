@@ -1,0 +1,152 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCardText small {
+    color: var(--render-accent) !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+    text-transform: uppercase !important;
+    margin: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCardText strong,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopTitle,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle {
+    color: var(--render-title-color) !important;
+    font-size: 21px !important;
+    font-weight: 900 !important;
+    line-height: 1.08 !important;
+    margin: 0 !important;
+    white-space: normal !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCardText em,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopSubtitle,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta {
+    color: var(--render-muted) !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    line-height: 1.18 !important;
+    margin: 0 !important;
+    white-space: normal !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCard > i,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanCollapsedArrow,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukArrow {
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--render-title-color) !important;
+    font-size: 34px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    opacity: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanDashboard,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukBlock {
+    width: 100% !important;
+    margin: 0 0 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionOrbitalCard {
+    width: 100% !important;
+    margin: 0 0 14px !important;
+    border: 1px solid var(--render-border) !important;
+    border-radius: 22px !important;
+    background: var(--render-card) !important;
+    box-shadow: var(--render-shadow) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage {
+    padding-bottom: calc(124px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero {
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-align: left !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero > p,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectLine {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutDeck,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectList.individualWorkoutDeck {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutCardPro {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 560px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 26px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    display: grid !important;
+    grid-template-rows: 44px 508px !important;
+    gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProTop {
+    height: 44px !important;
+    display: grid !important;
+    grid-template-columns: 0.48fr 1fr !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutNextBadge,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutWeek {
+    width: 100% !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    border: 1px solid #ddd8ff !important;
+    border-radius: 999px !important;
+    background: #f1eeff !important;
+    color: var(--render-accent) !important;
+    box-shadow: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0 !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProBody {
+    position: relative !important;
+    width: 100% !important;
+    height: 508px !important;
+    min-height: 508px !important;
+    padding: 28px 22px 104px !important;
+    border: 1px solid rgba(20, 24, 36, 0.1) !important;
+    border-radius: 26px !important;
+    background: #151820 !important;
+    box-shadow: 0 22px 44px rgba(52, 42, 103, 0.14) !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+}

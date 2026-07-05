@@ -1,0 +1,162 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
+    display: block !important;
+    width: 100% !important;
+    color: var(--render-ink) !important;
+    font-size: 21px !important;
+    font-weight: 900 !important;
+    line-height: 1.05 !important;
+    margin: 0 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow .goal strong {
+    font-size: 17px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow small {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiSplitCards {
+    width: 100% !important;
+    margin: 0 0 14px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard {
+    min-height: 88px !important;
+    height: 88px !important;
+    padding: 14px 10px !important;
+    border-radius: 22px !important;
+    border: 1px solid var(--render-border) !important;
+    background: var(--render-card) !important;
+    box-shadow: var(--render-shadow) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard span {
+    color: var(--render-muted) !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard strong {
+    color: var(--render-ink) !important;
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    line-height: 1.05 !important;
+    margin: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMeasurementSnapshot {
+    width: 100% !important;
+    margin: 0 0 14px !important;
+    border-radius: 22px !important;
+    border: 1px solid var(--render-border) !important;
+    background: var(--render-card) !important;
+    box-shadow: var(--render-shadow) !important;
+    color: var(--render-ink) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard {
+    min-height: 150px !important;
+    padding: 18px 18px 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard * {
+    color: inherit !important;
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileProgressInsightTitle span {
+    color: var(--render-accent) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMeasurementSnapshot {
+    min-height: 172px !important;
+    padding: 16px 18px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow {
+    width: 100% !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
+    gap: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
+    border-radius: 22px !important;
+    margin: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetProgressOverview {
+    width: 100% !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCard,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopCard,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
+    width: 100% !important;
+    min-height: 88px !important;
+    height: auto !important;
+    padding: 14px 18px !important;
+    border: 1px solid var(--render-border) !important;
+    border-radius: 22px !important;
+    background: var(--render-card) !important;
+    box-shadow: var(--render-shadow) !important;
+    display: grid !important;
+    grid-template-columns: 58px minmax(0, 1fr) 18px !important;
+    align-items: center !important;
+    gap: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCardIcon,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanCollapsedIcon,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukIcon {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 14px !important;
+    background: #f0edff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 25px !important;
+    color: var(--render-accent) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileAiHeroText,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .progressHubCardText,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopText,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukText {
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 2px !important;
+  }
+}

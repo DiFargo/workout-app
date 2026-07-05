@@ -1,0 +1,123 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root {
+    background: #f5f6fb !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage {
+    --render-x: 24px;
+    --render-top: 72px;
+    --render-title-size: 30px;
+    --render-title-color: #5f5848;
+    --render-ink: #161924;
+    --render-muted: #71798d;
+    --render-accent: #6047f2;
+    --render-border: #e0e4ee;
+    --render-card: rgba(255, 255, 255, 0.94);
+    --render-shadow: 0 18px 42px rgba(37, 44, 68, 0.08);
+    width: 100% !important;
+    min-height: 100dvh !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 0 var(--render-x) calc(112px + env(safe-area-inset-bottom, 0px)) !important;
+    overflow-x: hidden !important;
+    background:
+      radial-gradient(circle at 45% -10%, rgba(111, 79, 255, 0.07), transparent 42%),
+      linear-gradient(180deg, #fbfbff 0%, #f6f7fc 100%) !important;
+    color: var(--render-ink) !important;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::before,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::before,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::before,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage::before,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::after,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::after,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::after,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage::after {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .appVersionBadge.clientPageVersionBadge {
+    position: absolute !important;
+    top: 16px !important;
+    left: var(--render-x) !important;
+    z-index: 8 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 42px !important;
+    height: 22px !important;
+    padding: 0 8px !important;
+    border-radius: 999px !important;
+    border: 1px solid var(--render-border) !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    box-shadow: 0 8px 18px rgba(26, 32, 44, 0.04) !important;
+    color: #8690a2 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain > .mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroV4,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero {
+    margin: var(--render-top) 0 18px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain > .mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero {
+    min-height: 54px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain > .mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 h1,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectTitle {
+    color: var(--render-title-color) !important;
+    font-size: var(--render-title-size) !important;
+    font-weight: 900 !important;
+    line-height: 1.06 !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+    margin: 0 !important;
+    max-width: calc(100vw - 156px) !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileTrainerNotificationsButton,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHistoryHeaderButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutModeHeaderButton {
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    min-height: 54px !important;
+    border-radius: 18px !important;
+    border: 1px solid var(--render-border) !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    color: #5f5848 !important;
+    box-shadow: 0 16px 34px rgba(38, 46, 70, 0.08) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+}

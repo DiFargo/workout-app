@@ -1,0 +1,26 @@
+
+@media (max-width: 380px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage {
+    --render-x: 20px;
+    --render-title-size: 28px;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileAiHero {
+    grid-template-columns: 62px minmax(0, 1fr) !important;
+    gap: 14px !important;
+    padding: 16px 18px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileAiHeroText h1 {
+    font-size: 22px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button strong {
+    font-size: 10px !important;
+  }
+}
+
