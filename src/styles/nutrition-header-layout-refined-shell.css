@@ -1,0 +1,50 @@
+/* =========================================================
+   NUTRITION PAGE â€” REFINED DARK STYLE FINAL
+   Ð¦ÐµÐ»ÑŒ: Ð°ÐºÐºÑƒÑ€Ð°Ñ‚Ð½Ñ‹Ð¹ ÑÑ‚Ð¸Ð»ÑŒ ÐºÐ°Ðº Ð½Ð° Ñ€ÐµÑ„ÐµÑ€ÐµÐ½ÑÐµ â„–2.
+   Ð¢Ð¾Ð»ÑŒÐºÐ¾ Ñ€Ð°Ð·Ð´ÐµÐ» Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ. Workout UI Ð½Ðµ Ñ‚Ñ€Ð¾Ð³Ð°ÐµÐ¼.
+   ========================================================= */
+
+.fatSecretPage {
+  width: 100% !important;
+  max-width: 560px !important;
+  min-height: 100dvh !important;
+  margin: 0 auto !important;
+  padding:
+    max(18px, calc(env(safe-area-inset-top) + 14px))
+    16px
+    max(34px, calc(env(safe-area-inset-bottom) + 24px)) !important;
+  overflow-x: hidden !important;
+  color: #f5f7fb !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(23, 39, 52, 0.72) 0%, rgba(8, 17, 27, 0.72) 34%, transparent 58%),
+    linear-gradient(180deg, #06101a 0%, #02070b 100%) !important;
+  box-sizing: border-box !important;
+}
+
+.fatSecretPage * {
+  box-sizing: border-box !important;
+}
+
+.fatSecretPage .universalFixedBackPointer {
+  top: max(18px, calc(env(safe-area-inset-top) + 14px)) !important;
+  left: 18px !important;
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  min-height: 58px !important;
+  max-width: 58px !important;
+  max-height: 58px !important;
+  background: rgba(31, 43, 56, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 10px 28px rgba(0, 0, 0, 0.24) !important;
+  z-index: 50 !important;
+}
+
+.fatSecretPage .universalFixedBackPointer::before {
+  font-size: 34px !important;
+  font-weight: 800 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+

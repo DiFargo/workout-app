@@ -1,0 +1,21 @@
+/* Ð Ð°ÑÐºÑ€Ñ‹Ñ‚Ñ‹Ðµ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ñ‹ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ ÐµÐ´Ñ‹ */
+.fatMealItems {
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: rgba(3, 10, 16, 0.25) !important;
+}
+
+.fatFoodItem {
+  padding: 14px 18px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.045) !important;
+}
+
+.fatFoodItem strong {
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-size: 17px !important;
+}
+
+.fatFoodItem span {
+  color: rgba(32, 216, 101, 0.86) !important;
+  font-size: 14px !important;
+}
+
