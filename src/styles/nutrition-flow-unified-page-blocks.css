@@ -1,0 +1,46 @@
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopCard,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukHeader {
+  min-height: 78px !important;
+  padding: 12px 14px !important;
+  border-radius: 20px !important;
+  background: var(--nutrition-flow-card) !important;
+  box-shadow: var(--nutrition-flow-shadow) !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitPreviewCard {
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(93, 73, 230, 0.05), transparent 38%),
+    #ffffff !important;
+}
+
+html body #root .nutritionZoukModalSheet {
+  background:
+    radial-gradient(circle at 50% -8%, rgba(93, 73, 230, 0.055), transparent 31%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
+}
+
+html body #root .nutritionZoukMeal {
+  padding: 12px !important;
+  border: 1px solid #e2e5ef !important;
+  border-radius: 19px !important;
+  background: #ffffff !important;
+  box-shadow: 0 8px 20px rgba(51, 60, 108, 0.055) !important;
+}
+
+html body #root .nutritionZoukAdd {
+  border-color: #ded9ff !important;
+  background: #f0edff !important;
+  color: #5542d8 !important;
+  box-shadow: none !important;
+}
+

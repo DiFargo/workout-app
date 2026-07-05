@@ -1,0 +1,96 @@
+html body #root .foodEditPageOverlay {
+  padding: max(10px, env(safe-area-inset-top)) 8px max(10px, env(safe-area-inset-bottom)) !important;
+  display: grid !important;
+  place-items: center !important;
+  background: rgba(244, 246, 252, 0.78) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+html body #root .foodEditPageSheet {
+  width: min(430px, calc(100vw - 16px)) !important;
+  height: min(860px, calc(100dvh - 20px)) !important;
+  max-height: calc(100dvh - 20px) !important;
+  padding: 18px 16px calc(104px + env(safe-area-inset-bottom)) !important;
+  overflow-y: auto !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(93, 73, 230, 0.055), transparent 31%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
+  box-shadow: 0 24px 70px rgba(50, 59, 104, 0.16) !important;
+}
+
+html body #root .foodEditPageHeader {
+  min-height: 44px !important;
+  margin: 0 0 14px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-items: center !important;
+}
+
+html body #root .foodEditPageContent {
+  gap: 12px !important;
+}
+
+html body #root .foodEditPageContent label {
+  gap: 7px !important;
+}
+
+html body #root .foodEditPageContent input,
+html body #root .foodEditPageContent textarea {
+  min-height: 52px !important;
+  padding: 13px 14px !important;
+}
+
+html body #root .foodEditPageContent textarea {
+  min-height: 112px !important;
+}
+
+html body #root .foodEditPageGrid {
+  gap: 10px !important;
+}
+
+html body #root .foodEditIconManualBox,
+html body #root .dishEditIngredientsBox {
+  padding: 12px !important;
+  border-radius: 20px !important;
+}
+
+html body #root .foodEditIconPresetRow {
+  gap: 7px !important;
+  padding: 1px 0 2px !important;
+}
+
+html body #root .foodEditIconPresetRow button {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 13px !important;
+  background: #ffffff !important;
+}
+
+html body #root .dishEditIngredientsHeader,
+html body #root .dishIngredientPickerHeader,
+html body #root .dishIngredientConfirmTop {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+html body #root .dishEditIngredientsList,
+html body #root .nutritionCreateChoiceGrid {
+  display: grid !important;
+  gap: 10px !important;
+}
+
+html body #root .dishEditIngredientRow {
+  min-height: 56px !important;
+  padding: 9px 10px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 16px !important;
+  background: var(--food-flow-card-strong) !important;
+}
+

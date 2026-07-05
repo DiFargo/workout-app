@@ -1,0 +1,355 @@
+html body #root .fatFoodSearchOverlay {
+  padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom)) !important;
+  background: rgba(244, 246, 252, 0.72) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+html body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium {
+  width: min(430px, calc(100vw - 16px)) !important;
+  max-width: 430px !important;
+  height: min(860px, calc(100dvh - 16px)) !important;
+  max-height: calc(100dvh - 16px) !important;
+  margin: 0 auto !important;
+  padding: 18px 16px calc(106px + env(safe-area-inset-bottom)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(93, 73, 230, 0.055), transparent 31%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
+  box-shadow: 0 24px 70px rgba(50, 59, 104, 0.16) !important;
+}
+
+html body #root .fatFoodSearchOverlay .fatSearchTopPremium,
+html body #root .fatFoodSearchScreenPremium .foodProductFlowHeader {
+  min-height: 46px !important;
+  margin: 0 0 14px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup,
+html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle {
+  min-width: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup > span,
+html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle > span,
+html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader > span,
+html body #root .foodEditPageOverlay .foodEditPageContent label > span,
+html body #root .dishIngredientPickerHeader span,
+html body #root .dishIngredientConfirmInput > span {
+  color: var(--food-flow-accent) !important;
+  font-size: 10px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup h2,
+html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle h2,
+html body #root .foodEditPageOverlay .foodEditPageTitleCenter,
+html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader h3,
+html body #root .dishIngredientPickerHeader strong,
+html body #root .dishIngredientConfirmInfo strong {
+  margin: 4px 0 0 !important;
+  color: var(--food-flow-text) !important;
+  font-size: 22px !important;
+  font-weight: 950 !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchTitleWrap {
+  justify-content: flex-start !important;
+}
+
+html body #root .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchTitleWrap {
+  width: auto !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium,
+html body #root .fatFoodSearchScreenPremium .foodEditInlineMealButton {
+  min-height: 44px !important;
+  padding: 8px 12px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 15px !important;
+  background: var(--food-flow-card) !important;
+  color: var(--food-flow-text) !important;
+  box-shadow: 0 8px 18px rgba(51, 60, 108, 0.055) !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium span,
+html body #root .fatFoodSearchScreenPremium .foodEditInlineMealLabel {
+  color: var(--food-flow-muted) !important;
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium strong,
+html body #root .fatFoodSearchScreenPremium .foodEditInlineMealButton {
+  color: var(--food-flow-text) !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+}
+
+html body #root .fatFoodSearchOverlay .fatSearchClosePremium,
+html body #root .foodEditPageOverlay .foodEditPageHeader button,
+html body #root .nutritionZoukModalHeader button,
+html body #root .dishIngredientPickerHeader button,
+html body #root .nutritionPhotoNotFoundClose {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid var(--food-flow-border, #e2e5ef) !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  color: #4f5668 !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+  box-shadow: 0 8px 18px rgba(51, 60, 108, 0.07) !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium,
+html body #root .dishIngredientSearchBox,
+html body #root .foodEditPageOverlay .foodEditPageContent input,
+html body #root .foodEditPageOverlay .foodEditPageContent textarea,
+html body #root .foodEditPageOverlay .foodEditPortionInlineUnit,
+html body #root .foodEditPageOverlay .foodEditPortionUnitRow {
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  color: var(--food-flow-text) !important;
+  box-shadow: 0 9px 22px rgba(51, 60, 108, 0.055) !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium {
+  min-height: 56px !important;
+  margin: 0 0 12px !important;
+  padding: 0 12px !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input,
+html body #root .dishIngredientSearchBox input,
+html body #root .foodEditPageOverlay .foodEditPageContent input,
+html body #root .foodEditPageOverlay .foodEditPageContent textarea {
+  color: var(--food-flow-text) !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input::placeholder,
+html body #root .dishIngredientSearchBox input::placeholder,
+html body #root .foodEditPageOverlay .foodEditPageContent input::placeholder,
+html body #root .foodEditPageOverlay .foodEditPageContent textarea::placeholder {
+  color: #98a0b3 !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchListPremium,
+html body #root .dishIngredientResults,
+html body #root .nutritionZoukModalSheet .nutritionZoukContent {
+  display: grid !important;
+  gap: 10px !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchHistoryNames,
+html body #root .fatFoodSearchScreenPremium .fatRecentFoods {
+  padding: 13px !important;
+  border-radius: 20px !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchHistoryNamesTitle,
+html body #root .fatFoodSearchScreenPremium .fatRecentFoodsTitle {
+  margin-bottom: 10px !important;
+  color: var(--food-flow-text) !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchHistoryNameButton,
+html body #root .fatFoodSearchScreenPremium .fatRecentFoodButton,
+html body #root .dishIngredientResultCard {
+  min-height: 48px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 15px !important;
+  background: var(--food-flow-card-strong) !important;
+  color: var(--food-flow-text) !important;
+  box-shadow: none !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchResultCard,
+html body #root .nutritionZoukFood,
+html body #root .dishIngredientResultCard {
+  min-height: 72px !important;
+  padding: 10px 12px !important;
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) 28px !important;
+  gap: 11px !important;
+  align-items: center !important;
+  border-radius: 19px !important;
+  text-align: left !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchResultIcon,
+html body #root .nutritionZoukIcon,
+html body #root .nutritionZoukMealIcon,
+html body #root .nutritionZoukFoodIcon,
+html body #root .dishIngredientResultCard > span,
+html body #root .foodEditIconRender,
+html body #root .foodEditIconPreviewManual,
+html body #root .dishIngredientConfirmIcon {
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  min-height: 46px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid #e4e1ff !important;
+  border-radius: 15px !important;
+  background: #f1efff !important;
+  color: var(--food-flow-accent) !important;
+  font-size: 22px !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo,
+html body #root .nutritionZoukFoodText,
+html body #root .dishIngredientResultCard > div {
+  min-width: 0 !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo strong,
+html body #root .nutritionZoukFoodText strong,
+html body #root .dishIngredientResultCard strong {
+  display: block !important;
+  overflow: hidden !important;
+  color: var(--food-flow-text) !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  line-height: 1.18 !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo span,
+html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo small,
+html body #root .nutritionZoukFoodText small,
+html body #root .dishIngredientResultCard small,
+html body #root .dishIngredientConfirmInfo span {
+  color: var(--food-flow-muted) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchResultCheck {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  border-color: #ded9ff !important;
+  background: #f2efff !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchResultCheck::before {
+  background: #5d49e6 !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchStatus,
+html body #root .fatFoodSearchScreenPremium .myProductsEmptyState,
+html body #root .dishIngredientEmpty,
+html body #root .dishIngredientSearchLoading {
+  padding: 16px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 19px !important;
+  background: var(--food-flow-card) !important;
+  color: var(--food-flow-muted) !important;
+  box-shadow: var(--food-flow-shadow) !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatFallbackSuggestions {
+  display: grid !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatFallbackSuggestions button,
+html body #root .fatSearchShowMoreButton,
+html body #root .nutritionCreateChoiceGrid button,
+html body #root .dishEditIngredientsHeader button,
+html body #root .dishIngredientConfirmAdd {
+  min-height: 48px !important;
+  border: 1px solid #ded9ff !important;
+  border-radius: 16px !important;
+  background: #f2efff !important;
+  color: #5542d8 !important;
+  font-weight: 950 !important;
+  box-shadow: 0 8px 18px rgba(84, 55, 230, 0.08) !important;
+}
+
+html body #root .fatSearchBottomBarFive,
+html body #root .foodProductActionBar,
+html body #root .foodEditPageActionBar {
+  width: min(394px, calc(100vw - 22px)) !important;
+  height: 80px !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  border: 1px solid var(--food-flow-border, #e2e5ef) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow:
+    0 -12px 34px rgba(50, 59, 104, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+html body #root .fatSearchBottomBarFive button,
+html body #root .foodProductActionBar button,
+html body #root .foodEditPageActionBar button {
+  height: 68px !important;
+  min-height: 68px !important;
+  border-radius: 14px !important;
+  color: #70788d !important;
+  font-weight: 900 !important;
+}
+
+html body #root .fatSearchBottomBarFive button.active,
+html body #root .fatSearchBottomBarFive .fatSearchPhotoAction {
+  border-color: #ded9ff !important;
+  background: #f0edff !important;
+  color: #5542d8 !important;
+  box-shadow: none !important;
+}
+
+html body #root .foodProductActionBar .foodProductAddAction:not(:disabled),
+html body #root .foodEditPageActionBar .foodEditPageConfirmAction:not(:disabled) {
+  border-color: rgba(93, 73, 230, 0.24) !important;
+  background:
+    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.78), transparent 44%),
+    linear-gradient(135deg, #f3f0ff 0%, #e9e3ff 100%) !important;
+  color: #5542d8 !important;
+  box-shadow:
+    0 10px 22px rgba(84, 55, 230, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84) !important;
+}
+
+html body #root .foodProductActionBar .foodProductDeleteAction:not(:disabled) {
+  color: #d95263 !important;
+}
+
+html body #root .foodProductActionBar .foodProductAddAction:not(:disabled) span,
+html body #root .foodEditPageActionBar .foodEditPageConfirmAction:not(:disabled) span {
+  background: rgba(93, 73, 230, 0.09) !important;
+  color: #5542d8 !important;
+}
+

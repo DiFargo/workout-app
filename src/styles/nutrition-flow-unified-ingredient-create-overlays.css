@@ -1,0 +1,115 @@
+html body #root .dishIngredientPickerOverlay,
+html body #root .dishIngredientConfirmOverlay,
+html body #root .nutritionCreateChoiceOverlay {
+  background: rgba(244, 246, 252, 0.72) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+html body #root .dishIngredientPickerSheet,
+html body #root .dishIngredientConfirmCard,
+html body #root .nutritionCreateChoiceSheet {
+  width: min(390px, calc(100vw - 24px)) !important;
+  max-width: 390px !important;
+  padding: 16px !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(93, 73, 230, 0.055), transparent 31%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
+}
+
+html body #root .dishIngredientSearchBox {
+  min-height: 50px !important;
+  margin: 12px 0 !important;
+  padding: 0 12px !important;
+}
+
+html body #root .dishIngredientConfirmInput > div {
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 17px !important;
+  background: #ffffff !important;
+}
+
+html body #root .dishIngredientConfirmActions {
+  display: grid !important;
+  grid-template-columns: 0.86fr 1.14fr !important;
+  gap: 8px !important;
+}
+
+html body #root .dishIngredientConfirmCancel {
+  min-height: 48px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  color: #596176 !important;
+  font-weight: 950 !important;
+}
+
+html body #root .nutritionCreateChoiceOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99950 !important;
+  display: grid !important;
+  place-items: end center !important;
+  padding: 16px 12px calc(98px + env(safe-area-inset-bottom)) !important;
+}
+
+html body #root .nutritionCreateChoiceSheet {
+  max-height: min(520px, calc(100dvh - 130px)) !important;
+}
+
+html body #root .nutritionCreateChoiceHeader {
+  margin-bottom: 12px !important;
+  text-align: left !important;
+}
+
+html body #root .nutritionCreateChoiceHeader p {
+  margin: 7px 0 0 !important;
+  color: var(--food-flow-muted) !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+  line-height: 1.35 !important;
+}
+
+html body #root .nutritionCreateChoiceGrid button {
+  min-height: 96px !important;
+  padding: 14px !important;
+  display: grid !important;
+  grid-template-columns: 42px minmax(0, 1fr) !important;
+  grid-template-areas:
+    "icon title"
+    "icon text" !important;
+  column-gap: 12px !important;
+  row-gap: 3px !important;
+  align-items: center !important;
+  text-align: left !important;
+  background: #ffffff !important;
+}
+
+html body #root .nutritionCreateChoiceGrid button span {
+  grid-area: icon !important;
+  width: 42px !important;
+  height: 42px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 14px !important;
+  background: #f0edff !important;
+  color: #5542d8 !important;
+  font-size: 22px !important;
+}
+
+html body #root .nutritionCreateChoiceGrid button strong {
+  grid-area: title !important;
+  color: var(--food-flow-text) !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+html body #root .nutritionCreateChoiceGrid button small {
+  grid-area: text !important;
+  color: var(--food-flow-muted) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+

@@ -1,0 +1,51 @@
+/* V618: unified nutrition and food-management flow. */
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
+  --nutrition-flow-border: #e2e5ef;
+  --nutrition-flow-card: rgba(255, 255, 255, 0.96);
+  --nutrition-flow-card-soft: rgba(247, 248, 253, 0.94);
+  --nutrition-flow-text: #161a24;
+  --nutrition-flow-muted: #727b91;
+  --nutrition-flow-accent: #5d49e6;
+  --nutrition-flow-shadow: 0 13px 34px rgba(51, 60, 108, 0.085);
+}
+
+html body #root .fatFoodSearchScreenPremium,
+html body #root .foodEditPageOverlay,
+html body #root .dishIngredientPickerOverlay,
+html body #root .dishIngredientConfirmOverlay,
+html body #root .nutritionCreateChoiceScreen {
+  --food-flow-border: #e2e5ef !important;
+  --food-flow-card: #ffffff !important;
+  --food-flow-card-strong: #f7f8fd !important;
+  --food-flow-text: #161a24 !important;
+  --food-flow-muted: #727b91 !important;
+  --food-flow-accent: #5d49e6 !important;
+  --food-flow-accent-soft: #f0edff !important;
+  --food-flow-shadow: 0 13px 34px rgba(51, 60, 108, 0.085) !important;
+  color: var(--food-flow-text) !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitPreviewCard,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock,
+html body #root .nutritionZoukModalSheet,
+html body #root .fatFoodSearchScreenPremium .fatSearchHistoryNames,
+html body #root .fatFoodSearchScreenPremium .fatRecentFoods,
+html body #root .fatFoodSearchScreenPremium .fatSearchResultCard,
+html body #root .fatFoodSearchScreenPremium .fatRecentFoodButton,
+html body #root .fatFoodSearchScreenPremium .foodEditHeroRender,
+html body #root .fatFoodSearchScreenPremium .foodEditAmountCard,
+html body #root .fatFoodSearchScreenPremium .foodEditMacrosCards > div,
+html body #root .fatFoodSearchScreenPremium .foodEditRowsCard,
+html body #root .fatFoodSearchScreenPremium .foodProductFlowHeader .foodEditInlineMealHeader,
+html body #root .foodEditPageOverlay .foodEditIconManualBox,
+html body #root .foodEditPageOverlay .dishEditIngredientsBox,
+html body #root .dishIngredientPickerSheet,
+html body #root .dishIngredientConfirmCard,
+html body #root .nutritionCreateChoiceSheet {
+  border: 1px solid var(--food-flow-border, #e2e5ef) !important;
+  background: var(--food-flow-card, #ffffff) !important;
+  color: var(--food-flow-text, #161a24) !important;
+  box-shadow: var(--food-flow-shadow, 0 13px 34px rgba(51, 60, 108, 0.085)) !important;
+}
+
