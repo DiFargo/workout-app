@@ -1,0 +1,91 @@
+/* =========================================================
+   REAL MEAL HEIGHT REDUCTION
+   Ð£Ð¼ÐµÐ½ÑŒÑˆÐ°ÐµÐ¼ Ð¸Ð¼ÐµÐ½Ð½Ð¾ Ð²Ñ‹ÑÐ¾Ñ‚Ñƒ ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐµÐº
+   ÐÐ• ÑƒÐ¼ÐµÐ½ÑŒÑˆÐ°Ñ ÑÐ¸Ð»ÑŒÐ½Ð¾ Ñ‚ÐµÐºÑÑ‚
+   ========================================================= */
+
+.fatSecretPage .fatMealList,
+.fatMealList {
+  gap: 5px !important;
+}
+
+.fatSecretPage .fatMealCard,
+.fatMealCard {
+  border-radius: 18px !important;
+}
+
+.fatSecretPage .fatMealMain,
+.fatMealMain {
+  min-height: 54px !important;
+  height: 54px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+
+  grid-template-columns: 34px minmax(0, 1fr) 56px 30px !important;
+  gap: 8px !important;
+}
+
+.fatSecretPage .fatMealIcon,
+.fatMealIcon {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+
+  font-size: 17px !important;
+}
+
+.fatSecretPage .fatMealTitle strong,
+.fatMealTitle strong {
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage .fatMealTitle span,
+.fatMealTitle span {
+  margin-top: 2px !important;
+  font-size: 11px !important;
+}
+
+.fatSecretPage .fatMealKcal strong,
+.fatMealKcal strong {
+  font-size: 16px !important;
+}
+
+.fatSecretPage .fatMealKcal span,
+.fatMealKcal span {
+  font-size: 9px !important;
+  margin-top: 2px !important;
+}
+
+@media (max-width: 480px) {
+
+  .fatSecretPage .fatMealMain,
+  .fatMealMain {
+    min-height: 50px !important;
+    height: 50px !important;
+
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+
+    grid-template-columns: 32px minmax(0, 1fr) 52px 28px !important;
+  }
+
+  .fatSecretPage .fatMealTitle strong,
+  .fatMealTitle strong {
+    font-size: 17px !important;
+  }
+
+  .fatSecretPage .fatMealKcal strong,
+  .fatMealKcal strong {
+    font-size: 15px !important;
+  }
+
+  .fatSecretPage .fatPlusBtn,
+  .fatPlusBtn {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+  }
+}
+
