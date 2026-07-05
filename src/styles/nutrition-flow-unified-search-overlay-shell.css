@@ -1,0 +1,24 @@
+html body #root .fatFoodSearchOverlay {
+  padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom)) !important;
+  background: rgba(244, 246, 252, 0.72) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+html body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium {
+  width: min(430px, calc(100vw - 16px)) !important;
+  max-width: 430px !important;
+  height: min(860px, calc(100dvh - 16px)) !important;
+  max-height: calc(100dvh - 16px) !important;
+  margin: 0 auto !important;
+  padding: 18px 16px calc(106px + env(safe-area-inset-bottom)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(93, 73, 230, 0.055), transparent 31%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
+  box-shadow: 0 24px 70px rgba(50, 59, 104, 0.16) !important;
+}
+

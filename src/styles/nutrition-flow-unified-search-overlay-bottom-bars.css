@@ -1,0 +1,57 @@
+html body #root .fatSearchBottomBarFive,
+html body #root .foodProductActionBar,
+html body #root .foodEditPageActionBar {
+  width: min(394px, calc(100vw - 22px)) !important;
+  height: 80px !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  border: 1px solid var(--food-flow-border, #e2e5ef) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow:
+    0 -12px 34px rgba(50, 59, 104, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+html body #root .fatSearchBottomBarFive button,
+html body #root .foodProductActionBar button,
+html body #root .foodEditPageActionBar button {
+  height: 68px !important;
+  min-height: 68px !important;
+  border-radius: 14px !important;
+  color: #70788d !important;
+  font-weight: 900 !important;
+}
+
+html body #root .fatSearchBottomBarFive button.active,
+html body #root .fatSearchBottomBarFive .fatSearchPhotoAction {
+  border-color: #ded9ff !important;
+  background: #f0edff !important;
+  color: #5542d8 !important;
+  box-shadow: none !important;
+}
+
+html body #root .foodProductActionBar .foodProductAddAction:not(:disabled),
+html body #root .foodEditPageActionBar .foodEditPageConfirmAction:not(:disabled) {
+  border-color: rgba(93, 73, 230, 0.24) !important;
+  background:
+    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.78), transparent 44%),
+    linear-gradient(135deg, #f3f0ff 0%, #e9e3ff 100%) !important;
+  color: #5542d8 !important;
+  box-shadow:
+    0 10px 22px rgba(84, 55, 230, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84) !important;
+}
+
+html body #root .foodProductActionBar .foodProductDeleteAction:not(:disabled) {
+  color: #d95263 !important;
+}
+
+html body #root .foodProductActionBar .foodProductAddAction:not(:disabled) span,
+html body #root .foodEditPageActionBar .foodEditPageConfirmAction:not(:disabled) span {
+  background: rgba(93, 73, 230, 0.09) !important;
+  color: #5542d8 !important;
+}
+

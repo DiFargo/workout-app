@@ -1,0 +1,32 @@
+html body #root .fatFoodSearchScreenPremium .fatSearchStatus,
+html body #root .fatFoodSearchScreenPremium .myProductsEmptyState,
+html body #root .dishIngredientEmpty,
+html body #root .dishIngredientSearchLoading {
+  padding: 16px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 19px !important;
+  background: var(--food-flow-card) !important;
+  color: var(--food-flow-muted) !important;
+  box-shadow: var(--food-flow-shadow) !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatFallbackSuggestions {
+  display: grid !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatFallbackSuggestions button,
+html body #root .fatSearchShowMoreButton,
+html body #root .nutritionCreateChoiceGrid button,
+html body #root .dishEditIngredientsHeader button,
+html body #root .dishIngredientConfirmAdd {
+  min-height: 48px !important;
+  border: 1px solid #ded9ff !important;
+  border-radius: 16px !important;
+  background: #f2efff !important;
+  color: #5542d8 !important;
+  font-weight: 950 !important;
+  box-shadow: 0 8px 18px rgba(84, 55, 230, 0.08) !important;
+}
+

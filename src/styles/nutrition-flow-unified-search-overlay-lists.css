@@ -1,0 +1,32 @@
+html body #root .fatFoodSearchScreenPremium .fatSearchListPremium,
+html body #root .dishIngredientResults,
+html body #root .nutritionZoukModalSheet .nutritionZoukContent {
+  display: grid !important;
+  gap: 10px !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchHistoryNames,
+html body #root .fatFoodSearchScreenPremium .fatRecentFoods {
+  padding: 13px !important;
+  border-radius: 20px !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchHistoryNamesTitle,
+html body #root .fatFoodSearchScreenPremium .fatRecentFoodsTitle {
+  margin-bottom: 10px !important;
+  color: var(--food-flow-text) !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+}
+
+html body #root .fatFoodSearchScreenPremium .fatSearchHistoryNameButton,
+html body #root .fatFoodSearchScreenPremium .fatRecentFoodButton,
+html body #root .dishIngredientResultCard {
+  min-height: 48px !important;
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 15px !important;
+  background: var(--food-flow-card-strong) !important;
+  color: var(--food-flow-text) !important;
+  box-shadow: none !important;
+}
+
