@@ -1,0 +1,17 @@
+/* Trainer client dashboard */
+.adminClientTabContentRender > .adminClientMetricGridRender,
+.adminClientTabContentRender > .adminClientMeasurementsBlock,
+.adminClientTabContentRender > .trainerClientManagementGrid,
+.adminClientTabContentRender > .adminOverviewNutritionMonthPanel,
+.adminClientTabContentRender > .adminProgressDiagramsPanel,
+.adminClientTabContentRender > .adminClientRecommendationsRender {
+  display: none !important;
+}
+
+.adminClientWorkspaceCrmPage .adminClientTabContentRender {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+

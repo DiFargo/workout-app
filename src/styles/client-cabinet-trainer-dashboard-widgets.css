@@ -1,0 +1,568 @@
+.trainerClientAttentionSection {
+  padding: 14px 16px 16px;
+}
+
+.trainerClientAttentionStrip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.trainerClientAttentionStrip article {
+  min-width: 0;
+  min-height: 68px;
+  padding: 11px 12px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.trainerClientAttentionStrip article > i {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  font-style: normal;
+  font-weight: 950;
+}
+
+.trainerClientAttentionStrip strong,
+.trainerClientAttentionStrip small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerClientAttentionStrip strong {
+  color: #fff;
+  font-size: 12px;
+}
+
+.trainerClientAttentionStrip small,
+.trainerClientProgramProgress span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 9px;
+}
+
+.trainerClientAttentionStrip article.danger {
+  border-color: rgba(255, 100, 83, 0.26);
+  background: rgba(255, 100, 83, 0.055);
+}
+
+.trainerClientAttentionStrip article.danger > i {
+  color: #ff8a7d;
+  background: rgba(255, 100, 83, 0.18);
+}
+
+.trainerClientAttentionStrip article.warning {
+  border-color: rgba(244, 181, 45, 0.25);
+  background: rgba(244, 181, 45, 0.05);
+}
+
+.trainerClientAttentionStrip article.warning > i {
+  color: #f6c653;
+  background: rgba(244, 181, 45, 0.16);
+}
+
+.trainerClientAttentionStrip article.success {
+  border-color: rgba(159, 202, 71, 0.22);
+  background: rgba(159, 202, 71, 0.045);
+}
+
+.trainerClientAttentionStrip article.success > i {
+  color: #b5e655;
+  background: rgba(159, 202, 71, 0.16);
+}
+
+.trainerClientKpiGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.trainerClientKpiGrid > article {
+  position: relative;
+  min-height: 116px;
+  padding: 14px;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.trainerClientKpiGrid article > span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 10px;
+}
+
+.trainerClientKpiGrid article > strong {
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.trainerClientKpiGrid article > strong small {
+  font-size: 13px;
+}
+
+.trainerClientKpiGrid article > strong.dateValue {
+  font-size: 19px;
+}
+
+.trainerClientKpiGrid article > em,
+.trainerClientKpiGrid article > small,
+.trainerClientMacroGrid span,
+.trainerClientMacroGrid em {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 9px;
+  font-style: normal;
+}
+
+.trainerClientKpiGrid article > em.positive {
+  color: #a9dc47;
+}
+
+.trainerClientKpiGrid article > em.warning {
+  color: #f5b942;
+}
+
+.trainerClientKpiGrid article > b {
+  position: absolute;
+  right: 13px;
+  bottom: 13px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 4px solid rgba(159, 202, 71, 0.25);
+  border-radius: 50%;
+  color: #b5e655;
+  font-size: 11px;
+}
+
+.trainerClientMiniBars {
+  height: 34px;
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.trainerClientMiniBars i {
+  width: 5px;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, #b8ec52, #6d9526);
+}
+
+.trainerClientOverviewGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: 12px;
+}
+
+.trainerClientOverviewGridMain {
+  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+}
+
+.trainerClientPhotoRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.trainerClientPhotoRow figure {
+  min-width: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.trainerClientPhotoRow img,
+.trainerClientPhotoRow figure > div {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 13px;
+  object-fit: cover;
+}
+
+.trainerClientPhotoRow figure > div {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  border: 1px dashed rgba(159, 202, 71, 0.28);
+  background: rgba(159, 202, 71, 0.04);
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.trainerClientPhotoRow figure > div span {
+  font-size: 24px;
+}
+
+.trainerClientPhotoRow figcaption {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 10px;
+  text-align: center;
+}
+
+.trainerClientInlineEditor {
+  position: relative;
+}
+
+.trainerClientInlineEditor > summary,
+.trainerClientNoteEditor > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.trainerClientInlineEditor > summary::-webkit-details-marker,
+.trainerClientNoteEditor > summary::-webkit-details-marker {
+  display: none;
+}
+
+.trainerClientInlineEditor[open] {
+  width: 100%;
+}
+
+.trainerClientInlineEditorPanel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(620px, calc(100vw - 44px));
+  padding: 12px;
+  border: 1px solid rgba(159, 202, 71, 0.24);
+  border-radius: 15px;
+  background: #101a12;
+  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.4);
+}
+
+.trainerClientTaskPreview {
+  display: grid;
+  gap: 0;
+}
+
+.trainerClientTaskPreview > div {
+  min-height: 46px;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.trainerClientTaskPreview > div > button {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(159, 202, 71, 0.42);
+  border-radius: 5px;
+  background: transparent;
+  color: #102006;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.trainerClientTaskPreview > div.completed > button {
+  background: #9fca47;
+}
+
+.trainerClientTaskPreview > div > span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.trainerClientTaskPreview strong {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerClientTaskPreview small,
+.trainerClientTaskPreview em {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 9px;
+  font-style: normal;
+}
+
+.trainerClientTaskPreview .completed em {
+  color: #b5e655;
+}
+
+.trainerClientTaskPreview .overdue em {
+  color: #ff8a7d;
+}
+
+.trainerClientMacroGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+}
+
+.trainerClientMacroGrid > div {
+  position: relative;
+  min-width: 0;
+  min-height: 114px;
+  padding: 10px 54px 10px 12px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.trainerClientMacroGrid > div:first-child {
+  border-left: 0;
+}
+
+.trainerClientMacroGrid strong {
+  color: #fff;
+  font-size: 20px;
+}
+
+.trainerClientMacroGrid strong small {
+  margin-left: 2px;
+  font-size: 10px;
+}
+
+.trainerClientMacroGrid i {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(#9fca47 var(--macro-progress), rgba(255, 255, 255, 0.08) 0);
+  transform: translateY(-50%);
+}
+
+.trainerClientMacroGrid i::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: #101a12;
+}
+
+.trainerClientMacroGrid i b {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-size: 8px;
+}
+
+.trainerClientCompliance {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 10px;
+}
+
+.trainerClientCompliance > i,
+.trainerClientProgramProgress > i {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.trainerClientCompliance > i b,
+.trainerClientProgramProgress > i b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8dbd36, #b6e955);
+}
+
+.trainerClientAiList,
+.trainerClientControlRows,
+.trainerClientActivityList {
+  display: grid;
+}
+
+.trainerClientAiList > div {
+  min-height: 54px;
+  padding: 8px 0;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.trainerClientAiList i {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.trainerClientAiList i.warning {
+  background: #d39a20;
+}
+
+.trainerClientAiList i.success {
+  background: #75a52d;
+}
+
+.trainerClientAiList strong {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 11px;
+}
+
+.trainerClientAiList small {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.trainerClientNoteEditor {
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.trainerClientNoteEditor summary {
+  color: #b5e655;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.trainerClientNoteEditor textarea {
+  min-height: 70px;
+  padding: 10px;
+  resize: vertical;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+  color: #fff;
+  font: inherit;
+}
+
+.trainerClientNoteEditor button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 11px;
+  background: #9fca47;
+  color: #102006;
+  font-weight: 900;
+}
+
+.trainerClientProgramSummary {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.trainerClientProgramSummary > i {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(159, 202, 71, 0.12);
+  color: #b5e655;
+  font-style: normal;
+}
+
+.trainerClientProgramSummary small {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 9px;
+}
+
+.trainerClientProgramSummary > b {
+  color: #b5e655;
+  font-size: 25px;
+}
+
+.trainerClientProgramProgress {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.trainerClientProgramProgress > i {
+  grid-column: 1 / -1;
+}
+
+.trainerClientProgramProgress strong {
+  margin-left: 4px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.trainerClientControlRows > div {
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.trainerClientControlRows strong {
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 11px;
+}
+
+.trainerClientActivityList > div {
+  min-height: 36px;
+  display: grid;
+  grid-template-columns: 24px minmax(150px, 0.55fr) minmax(0, 1fr) 76px;
+  align-items: center;
+  gap: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.trainerClientActivityList i {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  background: rgba(159, 202, 71, 0.12);
+  color: #b5e655;
+  font-size: 10px;
+  font-style: normal;
+}
+
+.trainerClientActivityList strong {
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 10px;
+}
+
+.trainerClientActivityList span,
+.trainerClientActivityList time {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerClientActivityList time {
+  text-align: right;
+}
+

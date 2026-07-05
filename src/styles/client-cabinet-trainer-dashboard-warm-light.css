@@ -1,0 +1,124 @@
+html:root[data-app-theme="warm-light"] body #root .trainerClientHero,
+html:root[data-app-theme="warm-light"] body #root .trainerClientOverviewSection,
+html:root[data-app-theme="warm-light"] body #root .trainerClientKpiGrid > article {
+  border-color: #e4e7f1 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 12px 32px rgba(64, 70, 112, 0.07) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientHeroNameRow h2,
+html:root[data-app-theme="warm-light"] body #root .trainerClientHeroCopy > strong,
+html:root[data-app-theme="warm-light"] body #root .trainerClientHeroMeta strong,
+html:root[data-app-theme="warm-light"] body #root .trainerClientKpiGrid article > strong,
+html:root[data-app-theme="warm-light"] body #root .trainerClientAttentionStrip strong,
+html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoRow figcaption,
+html:root[data-app-theme="warm-light"] body #root .trainerClientTaskPreview strong,
+html:root[data-app-theme="warm-light"] body #root .trainerClientMacroGrid strong,
+html:root[data-app-theme="warm-light"] body #root .trainerClientAiList strong,
+html:root[data-app-theme="warm-light"] body #root .trainerClientProgramSummary strong,
+html:root[data-app-theme="warm-light"] body #root .trainerClientControlRows strong,
+html:root[data-app-theme="warm-light"] body #root .trainerClientActivityList strong {
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientHeroCopy p,
+html:root[data-app-theme="warm-light"] body #root .trainerClientHeroCopy > small,
+html:root[data-app-theme="warm-light"] body #root .trainerClientHeroMeta span,
+html:root[data-app-theme="warm-light"] body #root .trainerClientHeroMeta small,
+html:root[data-app-theme="warm-light"] body #root .trainerClientSectionHead small,
+html:root[data-app-theme="warm-light"] body #root .trainerClientAttentionStrip small,
+html:root[data-app-theme="warm-light"] body #root .trainerClientKpiGrid article > span,
+html:root[data-app-theme="warm-light"] body #root .trainerClientKpiGrid article > em,
+html:root[data-app-theme="warm-light"] body #root .trainerClientKpiGrid article > small,
+html:root[data-app-theme="warm-light"] body #root .trainerClientTaskPreview small,
+html:root[data-app-theme="warm-light"] body #root .trainerClientTaskPreview em,
+html:root[data-app-theme="warm-light"] body #root .trainerClientMacroGrid span,
+html:root[data-app-theme="warm-light"] body #root .trainerClientMacroGrid em,
+html:root[data-app-theme="warm-light"] body #root .trainerClientAiList small,
+html:root[data-app-theme="warm-light"] body #root .trainerClientProgramSummary small,
+html:root[data-app-theme="warm-light"] body #root .trainerClientProgramProgress span,
+html:root[data-app-theme="warm-light"] body #root .trainerClientControlRows span,
+html:root[data-app-theme="warm-light"] body #root .trainerClientActivityList span,
+html:root[data-app-theme="warm-light"] body #root .trainerClientActivityList time {
+  color: #747d93 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientHeroMeta > div,
+html:root[data-app-theme="warm-light"] body #root .trainerClientTaskPreview > div,
+html:root[data-app-theme="warm-light"] body #root .trainerClientMacroGrid > div,
+html:root[data-app-theme="warm-light"] body #root .trainerClientAiList > div,
+html:root[data-app-theme="warm-light"] body #root .trainerClientControlRows > div,
+html:root[data-app-theme="warm-light"] body #root .trainerClientActivityList > div {
+  border-color: #eceef5;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientAttentionStrip article {
+  border-color: #e8eaf2;
+  background: #fbfbfe;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientInlineEditorPanel {
+  border-color: #dedaf8;
+  background: #ffffff;
+  box-shadow: 0 20px 55px rgba(55, 58, 100, 0.16);
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoRow figure > div {
+  border-color: #d9d4fb;
+  background: #f7f5ff;
+  color: #7463dc;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientMacroGrid i::after {
+  background: #fff;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientMacroGrid i b {
+  color: #20243a;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientNoteEditor textarea {
+  border-color: #e1e4ee;
+  background: #f8f9fd;
+  color: #151824;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientNoteEditor button {
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientSectionActions > button,
+html:root[data-app-theme="warm-light"] body #root .trainerClientSectionActions .trainerClientInlineEditor > summary {
+  color: #5d50c6;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModalOverlay {
+  background: rgba(32, 34, 57, 0.3);
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal {
+  border-color: #ddd8fb;
+  background: #fff;
+  box-shadow: 0 28px 80px rgba(55, 58, 100, 0.2);
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal > header h3 {
+  color: #151824;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal > header span {
+  color: #6045df;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal > header > button {
+  border-color: #e3e5ef;
+  background: #f7f8fc;
+  color: #687188;
+}
+
+html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModalBody label > span,
+html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModal .trainerPhotoCompareControls label > span {
+  color: #747d93;
+}
+
