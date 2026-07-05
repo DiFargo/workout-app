@@ -1,0 +1,109 @@
+.trainerAnalyticsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.trainerAnalyticsStack,
+.trainerNextClientSide,
+.trainerMeasurementDashboard,
+.trainerNextClientsStandalone,
+.trainerNextModal form,
+.trainerProgramConstructor,
+.trainerWorkoutSchedulePlanner,
+.trainerWorkoutScheduleBody {
+  display: grid;
+  gap: 14px;
+}
+
+.trainerAnalyticsGrid article {
+  min-height: 120px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  padding: 16px;
+}
+
+.trainerAnalyticsGrid span,
+.trainerAnalyticsGrid small {
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.trainerAnalyticsGrid strong {
+  color: var(--tn-text);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.trainerAnalyticsPanel {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.trainerAnalyticsPanel h3,
+.trainerNotificationFeed h3,
+.trainerNotificationsLayout h3,
+.trainerClientBlockHeading h2,
+.trainerClientAssignedInfo h2,
+.trainerNutritionCurrentPlan h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.trainerAnalyticsPanel p {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.trainerAnalyticsSignals,
+.trainerNextMeasurementGrid,
+.trainerNextPhotoGrid,
+.trainerMeasurementSummaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.trainerAnalyticsSignals span {
+  min-height: 52px;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  padding: 10px;
+  border: 1px solid #edf0f7;
+  border-radius: 13px;
+  background: #fbfcff;
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.trainerAnalyticsSignals strong,
+.trainerExerciseProgressSummary strong {
+  color: var(--tn-text);
+  font-size: 18px;
+}
+
+.trainerAnalyticsRiskList button {
+  min-height: 44px;
+  display: grid;
+  gap: 3px;
+  padding: 9px 11px;
+  border: 1px solid #edf0f7;
+  border-radius: 12px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trainerAnalyticsRiskList span {
+  color: var(--tn-text);
+  font-size: 12px;
+  font-weight: 900;
+}
+

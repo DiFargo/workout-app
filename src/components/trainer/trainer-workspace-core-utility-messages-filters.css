@@ -1,0 +1,38 @@
+.trainerMessageFilters {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+  min-height: 38px;
+  margin: 0;
+  padding: 0 0 4px;
+  background: #fff;
+  border-bottom: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #c7bbff transparent;
+}
+
+.trainerMessageFilters::-webkit-scrollbar {
+  height: 5px;
+}
+
+.trainerMessageFilters button {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e2e5ef;
+  border-radius: 999px;
+  background: #fff;
+  color: #596070;
+  font-size: 12px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.trainerMessageFilters button.active {
+  border-color: transparent;
+}
+

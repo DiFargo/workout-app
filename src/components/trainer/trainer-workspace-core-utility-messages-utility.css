@@ -1,0 +1,67 @@
+.trainerUtilityGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.75fr);
+  gap: 14px;
+}
+
+.trainerUtilityGrid section,
+.trainerAnalyticsGrid article,
+.trainerAnalyticsPanel,
+.trainerNotificationFeed,
+.trainerNotificationsLayout > section {
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--tn-soft-shadow);
+}
+
+.trainerUtilityGrid section {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.trainerUtilityGrid h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.trainerUtilityGrid section > button {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #e3e5ee;
+  border-radius: 11px;
+  background: #fff;
+  color: var(--tn-text);
+  font-weight: 800;
+  text-align: left;
+}
+
+.trainerUtilityToggle {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid #edf0f7;
+  border-radius: 13px;
+  background: #fbfbff;
+}
+
+.trainerUtilityToggle strong {
+  font-size: 13px;
+}
+
+.trainerUtilityToggle small {
+  color: var(--tn-muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.trainerUtilityToggle input {
+  width: 42px;
+  height: 24px;
+  accent-color: var(--tn-purple);
+}
+

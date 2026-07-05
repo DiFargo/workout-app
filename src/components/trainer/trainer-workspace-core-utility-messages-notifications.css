@@ -1,0 +1,42 @@
+.trainerNotificationsLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.85fr);
+  gap: 14px;
+}
+
+.trainerNotificationFeed,
+.trainerNotificationsLayout > section {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 16px;
+}
+
+.trainerNotificationFeed article {
+  min-height: 52px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 9px;
+  border: 1px solid #edf0f7;
+  border-radius: 13px;
+  background: #fbfcff;
+}
+
+.trainerNotificationFeed span,
+.trainerNextClientIdentity > span {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.trainerNotificationFeed strong,
+.trainerNextClientIdentity strong {
+  overflow: hidden;
+  color: var(--tn-text);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
