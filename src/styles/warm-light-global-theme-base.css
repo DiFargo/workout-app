@@ -1,0 +1,230 @@
+/* =========================================================
+   GLOBAL WARM-LIGHT THEME â€” ALL PAGES FINAL
+   Fitness-club inspired: calm cream / beige / muted gold.
+   Applied at the very end to override old hardcoded dark blocks.
+   ========================================================= */
+:root[data-app-theme="warm-light"],
+body[data-app-theme="warm-light"] {
+  color-scheme: light;
+  --bg: #f4ead3;
+  --card: #fff8ea;
+  --card-2: #f8efd9;
+  --line: rgba(92, 72, 36, 0.16);
+  --text: #241d14;
+  --muted: rgba(77, 62, 38, 0.68);
+  --accent: #caa45a;
+  --accent-2: #d9b86f;
+  --danger: #b8514c;
+  --success: #6c883f;
+  --warm-bg-soft: #f4ead3;
+  --warm-card-soft: #fff8ea;
+  --warm-card-deep: #f2e3c4;
+  --warm-gold: #caa45a;
+  --warm-gold-soft: rgba(202, 164, 90, 0.18);
+  --warm-shadow: rgba(94, 70, 30, 0.14);
+}
+
+:root[data-app-theme="warm-light"] body,
+body[data-app-theme="warm-light"] {
+  background:
+    radial-gradient(circle at 50% -10%, rgba(216, 184, 111, 0.34), transparent 38%),
+    linear-gradient(180deg, #fbf3df 0%, #efe0bd 100%) !important;
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="warm-light"] .menuPage,
+:root[data-app-theme="warm-light"] .app,
+:root[data-app-theme="warm-light"] .loginPage,
+:root[data-app-theme="warm-light"] .adminPage,
+:root[data-app-theme="warm-light"] .historyPage,
+:root[data-app-theme="warm-light"] .fatSecretPage,
+:root[data-app-theme="warm-light"] .nutritionPage,
+:root[data-app-theme="warm-light"] .workoutPage,
+:root[data-app-theme="warm-light"] .appSplash {
+  background:
+    radial-gradient(circle at 50% -7%, rgba(216, 184, 111, 0.28), transparent 34%),
+    radial-gradient(circle at 8% 14%, rgba(255, 255, 255, 0.42), transparent 30%),
+    linear-gradient(180deg, #fbf3df 0%, #f2e4c5 52%, #ead8ad 100%) !important;
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage {
+  --food-green: #b99345 !important;
+  --food-text: #241d14 !important;
+  --food-muted: rgba(77, 62, 38, 0.64) !important;
+  --food-card: #fff8ea !important;
+  --food-line: rgba(92, 72, 36, 0.16) !important;
+}
+
+:root[data-app-theme="warm-light"] .menuTitle,
+:root[data-app-theme="warm-light"] .workoutTitle,
+:root[data-app-theme="warm-light"] .workoutTitleInline,
+:root[data-app-theme="warm-light"] h1,
+:root[data-app-theme="warm-light"] h2,
+:root[data-app-theme="warm-light"] h3,
+:root[data-app-theme="warm-light"] h4,
+:root[data-app-theme="warm-light"] .fatDateHeaderNoArrows .fatDateTitle h1,
+:root[data-app-theme="warm-light"] .fatMealTitle strong,
+:root[data-app-theme="warm-light"] .fatMealKcal strong,
+:root[data-app-theme="warm-light"] .fatCalorieRows strong,
+:root[data-app-theme="warm-light"] .fatFoodInfo strong,
+:root[data-app-theme="warm-light"] .productInfoExact strong,
+:root[data-app-theme="warm-light"] .finishStatBox strong,
+:root[data-app-theme="warm-light"] .historyCardHeader strong,
+:root[data-app-theme="warm-light"] .adminUserRow strong {
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="warm-light"] p,
+:root[data-app-theme="warm-light"] span,
+:root[data-app-theme="warm-light"] small,
+:root[data-app-theme="warm-light"] em,
+:root[data-app-theme="warm-light"] .daySub,
+:root[data-app-theme="warm-light"] .loginHint,
+:root[data-app-theme="warm-light"] .previousInfo,
+:root[data-app-theme="warm-light"] .finishWorkoutSubtext,
+:root[data-app-theme="warm-light"] .fatMealTitle span,
+:root[data-app-theme="warm-light"] .fatMealKcal span,
+:root[data-app-theme="warm-light"] .fatCalorieRows span,
+:root[data-app-theme="warm-light"] .fatFoodInfo span,
+:root[data-app-theme="warm-light"] .fatStreakLineTop span,
+:root[data-app-theme="warm-light"] .fatDayCell small,
+:root[data-app-theme="warm-light"] .adminUserRow span {
+  color: var(--muted) !important;
+}
+
+:root[data-app-theme="warm-light"] .bigButton,
+:root[data-app-theme="warm-light"] .loginCard,
+:root[data-app-theme="warm-light"] .exercise,
+:root[data-app-theme="warm-light"] .exerciseSlideCard,
+:root[data-app-theme="warm-light"] .historyCard,
+:root[data-app-theme="warm-light"] .historyExercise,
+:root[data-app-theme="warm-light"] .finishWorkoutCard,
+:root[data-app-theme="warm-light"] .finishSummaryCard,
+:root[data-app-theme="warm-light"] .finishStatBox,
+:root[data-app-theme="warm-light"] .finishProgressCard,
+:root[data-app-theme="warm-light"] .finishNextTip,
+:root[data-app-theme="warm-light"] .startWorkoutSlide,
+:root[data-app-theme="warm-light"] .fatCaloriesCard,
+:root[data-app-theme="warm-light"] .fatSummaryCard,
+:root[data-app-theme="warm-light"] .fatMealCard,
+:root[data-app-theme="warm-light"] .fatMealMain,
+:root[data-app-theme="warm-light"] .fatMealCard.open,
+:root[data-app-theme="warm-light"] .productListWideFinal,
+:root[data-app-theme="warm-light"] .fatFoodItem,
+:root[data-app-theme="warm-light"] .fatFoodItemEditable,
+:root[data-app-theme="warm-light"] .fatFoodSwipeShell,
+:root[data-app-theme="warm-light"] .fatSearchPanel,
+:root[data-app-theme="warm-light"] .fatSearchModal,
+:root[data-app-theme="warm-light"] .fatPickerSheet,
+:root[data-app-theme="warm-light"] .adminCard,
+:root[data-app-theme="warm-light"] .adminPanel,
+:root[data-app-theme="warm-light"] .adminUserRow,
+:root[data-app-theme="warm-light"] .saveToast,
+:root[data-app-theme="warm-light"] .finishCard {
+  background:
+    linear-gradient(180deg, rgba(255, 250, 239, 0.98) 0%, rgba(246, 235, 211, 0.98) 100%) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+  box-shadow:
+    0 14px 34px var(--warm-shadow),
+    inset 0 1px 0 rgba(255,255,255,0.68) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatMealCard.open,
+:root[data-app-theme="warm-light"] .productListWideFinal,
+:root[data-app-theme="warm-light"] .fatMealCard.open .productListWideFinal {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(202, 164, 90, 0.13), transparent 40%),
+    linear-gradient(180deg, #fff8ea 0%, #f3e4c6 100%) !important;
+  border-color: rgba(92, 72, 36, 0.16) !important;
+}
+
+:root[data-app-theme="warm-light"] input,
+:root[data-app-theme="warm-light"] textarea,
+:root[data-app-theme="warm-light"] select,
+:root[data-app-theme="warm-light"] .loginCard input,
+:root[data-app-theme="warm-light"] .exercise input,
+:root[data-app-theme="warm-light"] .fatSearchInput,
+:root[data-app-theme="warm-light"] .nutritionInput {
+  background: rgba(255, 255, 255, 0.62) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.62) !important;
+}
+
+:root[data-app-theme="warm-light"] input::placeholder,
+:root[data-app-theme="warm-light"] textarea::placeholder {
+  color: rgba(77, 62, 38, 0.42) !important;
+}
+
+:root[data-app-theme="warm-light"] .loginBtn,
+:root[data-app-theme="warm-light"] .exercise button,
+:root[data-app-theme="warm-light"] .showVideoBtn,
+:root[data-app-theme="warm-light"] .finishWorkoutButton,
+:root[data-app-theme="warm-light"] .fatPlusBtn,
+:root[data-app-theme="warm-light"] .fatQuickActions button,
+:root[data-app-theme="warm-light"] .fatAddBtn,
+:root[data-app-theme="warm-light"] .adminSaveBtn,
+:root[data-app-theme="warm-light"] .bigButton:active {
+  background: linear-gradient(135deg, #c79d4c 0%, #d9b86f 100%) !important;
+  color: #21180d !important;
+  border-color: rgba(92, 72, 36, 0.14) !important;
+  box-shadow: 0 10px 24px rgba(145, 105, 38, 0.18) !important;
+}
+
+:root[data-app-theme="warm-light"] .backIconBtn,
+:root[data-app-theme="warm-light"] .backBtn,
+:root[data-app-theme="warm-light"] .logoutSmall,
+:root[data-app-theme="warm-light"] .themeSwitchBtn,
+:root[data-app-theme="warm-light"] .fatIconBtn,
+:root[data-app-theme="warm-light"] .fatCollapseBtn,
+:root[data-app-theme="warm-light"] .finishBackButton {
+  background: rgba(255, 250, 239, 0.70) !important;
+  color: #5c4a28 !important;
+  border-color: rgba(92, 72, 36, 0.16) !important;
+  box-shadow: 0 10px 24px rgba(94, 70, 30, 0.12) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatWeekRow .fatDayCell span,
+:root[data-app-theme="warm-light"] .fatDayCell span {
+  background: rgba(255, 250, 239, 0.62) !important;
+  color: #5c4a28 !important;
+  border-color: rgba(92, 72, 36, 0.16) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatWeekRow .fatDayCell.active span,
+:root[data-app-theme="warm-light"] .fatDayCell.active span,
+:root[data-app-theme="warm-light"] .fatWeekRow .fatDayCell.done span,
+:root[data-app-theme="warm-light"] .fatDayCell.done span {
+  background: linear-gradient(135deg, #c79d4c 0%, #d9b86f 100%) !important;
+  color: #21180d !important;
+  border-color: rgba(121, 86, 31, 0.20) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashLogo,
+:root[data-app-theme="warm-light"] .appLogo,
+:root[data-app-theme="warm-light"] .finishIcon,
+:root[data-app-theme="warm-light"] .saveToastIcon,
+:root[data-app-theme="warm-light"] .finishWorkoutIcon,
+:root[data-app-theme="warm-light"] .historySet strong,
+:root[data-app-theme="warm-light"] .fatFoodCalories strong,
+:root[data-app-theme="warm-light"] .fatFoodItem strong,
+:root[data-app-theme="warm-light"] .productInfoExact span {
+  color: #a77f35 !important;
+}
+
+:root[data-app-theme="warm-light"] .menuTitle::after,
+:root[data-app-theme="warm-light"] .workoutTitle::after {
+  background: #c79d4c !important;
+}
+
+:root[data-app-theme="warm-light"] video,
+:root[data-app-theme="warm-light"] .exerciseVideo {
+  background: #1f1a12 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatPlusBtn {
+  color: #21180d !important;
+}
+
