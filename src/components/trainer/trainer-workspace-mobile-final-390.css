@@ -1,0 +1,68 @@
+@media (max-width: 390px) {
+  .trainerClientBlockHeading h2,
+  .trainerClientAssignedInfo h2 {
+    font-size: 14px;
+  }
+
+  .trainerClientAssignedStats {
+    gap: 5px;
+  }
+
+  .trainerClientAssignedStats span {
+    min-width: 0;
+    padding: 6px;
+  }
+
+  .trainerClientBarChart {
+    gap: 6px;
+  }
+
+  .trainerWorkoutMonthGrid,
+  .trainerWorkoutMonthWeekdays {
+    gap: 4px;
+  }
+
+  .trainerWorkoutMonthGrid > span {
+    min-height: 30px;
+    border-radius: 7px;
+  }
+
+  .trainerWorkoutMonthControls strong {
+    min-width: 96px;
+  }
+
+  .trainerClientQualityMetrics,
+  .trainerNutritionMetricGrid,
+  .trainerNutritionGoalInputs {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .trainerNutritionDonutRow {
+    gap: 14px;
+  }
+
+  .trainerNutritionDonut {
+    width: 108px;
+    height: 108px;
+  }
+
+  .trainerNutritionDonut::before {
+    width: 70px;
+    height: 70px;
+  }
+
+  .trainerMeasurementFieldGrid,
+  .trainerMeasurementCollapsed > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trainerMeasurementCollapsed article:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .trainerMeasurementTimeline article {
+    grid-template-columns: 1fr;
+  }
+}
+

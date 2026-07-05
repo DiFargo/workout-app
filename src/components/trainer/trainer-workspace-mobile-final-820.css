@@ -1,0 +1,479 @@
+@media (max-width: 820px) {
+  .trainerClientWorkoutPlan,
+  .trainerNutritionAnalytics,
+  .trainerNutritionPlan,
+  .trainerClientNotifications {
+    gap: 11px;
+    padding-top: 12px;
+  }
+
+  .trainerClientAssignment,
+  .trainerClientInlineEditor,
+  .trainerClientAnalyticsCard {
+    padding: 13px;
+  }
+
+  .trainerClientInlineEditor {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .trainerClientInlineEditor .trainerNextEmbeddedPlan,
+  .trainerClientInlineEditor .trainerNextWorkoutLayout,
+  .trainerClientInlineEditor .trainerNextExercisePanel {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .trainerClientAssignmentControls {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerClientAssignmentControls > button {
+    width: 100%;
+  }
+
+  .trainerClientProgramSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerClientProgramSummaryTop {
+    grid-column: 1;
+    display: grid;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .trainerClientProgramEditButton {
+    width: 100%;
+  }
+
+  .trainerClientProgramCurrent {
+    grid-column: 1;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 11px;
+  }
+
+  .trainerClientProgramSummary .trainerClientAssignmentControls,
+  .trainerClientProgramSummary .trainerClientSelectionHint,
+  .trainerClientProgramSummary .trainerNextProgramStatus {
+    grid-column: 1;
+  }
+
+  .trainerClientProgramSummary .trainerClientAssignmentControls {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerClientProgramActionStack > button {
+    width: 100%;
+  }
+
+  .trainerClientProgramCurrent .trainerClientAssignedIcon {
+    display: none;
+  }
+
+  .trainerClientAssignedProgram {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 11px;
+    padding: 14px;
+  }
+
+  .trainerClientAssignedStats,
+  .trainerClientAssignedProgram > button {
+    grid-column: 1 / -1;
+  }
+
+  .trainerClientAssignedStats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .trainerClientAssignedProgram > button {
+    justify-content: center;
+  }
+
+  .trainerWorkoutEditorModalBackdrop {
+    align-items: stretch;
+    place-items: stretch;
+    padding: 8px;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .trainerWorkoutEditorModal {
+    width: 100%;
+    height: calc(100dvh - 16px);
+    max-height: calc(100dvh - 16px);
+    border-radius: 14px;
+  }
+
+  .trainerWorkoutEditorModal > header {
+    padding: 14px;
+  }
+
+  .trainerWorkoutEditorModalBody {
+    min-height: 0;
+    overflow-y: auto;
+    padding: 10px 10px calc(34px + env(safe-area-inset-bottom));
+  }
+
+  .trainerClientWorkoutAnalytics,
+  .trainerNutritionAnalyticsMain {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .trainerWorkoutSchedulePlanner > header,
+  .trainerWorkoutScheduleFooter {
+    display: grid;
+    align-items: stretch;
+  }
+
+  .trainerWorkoutSchedulePlanner > header > strong {
+    min-width: 0;
+    min-height: 46px;
+  }
+
+  .trainerWorkoutScheduleBody {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerWorkoutScheduleFooter button {
+    width: 100%;
+  }
+
+  .trainerClientWorkoutCalendar > header,
+  .trainerNotificationCalendar > header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .trainerWorkoutMonthControls {
+    justify-content: space-between;
+  }
+
+.trainerClientQualityMetrics,
+.trainerNutritionMetricGrid,
+.trainerExerciseProgressSummary,
+.trainerNutritionGoalInputs,
+.trainerNutritionCurrentGoals,
+.trainerNutritionValidity,
+.trainerNotificationOffsets > div {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+  .trainerExerciseProgressToolbar,
+  .trainerNutritionCustomPeriod {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trainerExerciseProgressToolbar button {
+    width: 100%;
+  }
+
+  .trainerExerciseProgressList article {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    padding: 8px 0;
+  }
+
+  .trainerExerciseProgressMetrics {
+    grid-row: 2;
+  }
+
+  .trainerExerciseProgressResult {
+    grid-row: 3;
+  }
+
+  .trainerNutritionDiary {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    padding-top: 12px;
+  }
+
+  .trainerNutritionUnifiedSection > .trainerClientBlockHeading {
+    flex-wrap: wrap;
+  }
+
+  .trainerNutritionUnifiedSection > .trainerClientBlockHeading > div {
+    flex: 1 1 calc(100% - 52px);
+    min-width: 0;
+  }
+
+  .trainerNutritionSectionToggle {
+    flex: 0 1 auto;
+    justify-content: center;
+    width: auto;
+    min-width: 178px;
+    max-width: calc(100% - 52px);
+    margin: 8px 0 0 52px;
+    padding: 0 14px;
+  }
+
+  .trainerNutritionDiaryCollapsed {
+    min-height: 54px;
+    padding: 12px 13px;
+  }
+
+  .trainerNutritionDiary > aside {
+    display: flex;
+    gap: 7px;
+    max-width: 100%;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .trainerNutritionDiary > aside::-webkit-scrollbar {
+    display: none;
+  }
+
+  .trainerNutritionDiary > aside button {
+    min-width: 98px;
+    flex: 0 0 auto;
+  }
+
+  .trainerNutritionDiary .trainerNextMealPanel {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .trainerNutritionDiaryHead {
+    align-items: flex-start;
+    gap: 9px;
+  }
+
+  .trainerNutritionDiaryHead > div {
+    min-width: 0;
+  }
+
+  .trainerNutritionDiaryHead h2 {
+    overflow-wrap: anywhere;
+  }
+
+  .trainerNutritionDiaryHead > strong {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .trainerNutritionDiaryTotals {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .trainerNutritionDiaryTotals span {
+    min-width: 0;
+    padding: 8px 6px;
+    text-align: center;
+  }
+
+  .trainerNutritionDiary .trainerNextMealList,
+  .trainerNutritionDiary .trainerNextMealList article {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .trainerNutritionDiary .trainerNextMealList article {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .trainerNutritionDiary .trainerNextMealList article > div,
+  .trainerNutritionDiary .trainerNextMealList article strong,
+  .trainerNutritionDiary .trainerNextMealList article p,
+  .trainerNutritionDiary .trainerNextMealList article small {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .trainerNutritionPeriod {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .trainerNutritionPeriodButtons {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .trainerNutritionPeriodButtons button {
+    padding: 0 5px;
+  }
+
+  .trainerNutritionCustomPeriod label {
+    display: grid;
+  }
+
+  .trainerNutritionCurrentPlan {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .trainerNutritionCurrentMeta {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .trainerNutritionCurrentMeta button {
+    width: 100%;
+    margin: 4px 0 0;
+  }
+
+  .trainerNutritionPlanFields {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerNutritionValidity > small {
+    grid-column: 1 / -1;
+    padding-bottom: 0;
+  }
+
+  .trainerNutritionPlanActions {
+    display: grid;
+  }
+
+  .trainerNutritionPlanActions > button,
+  .trainerNotificationActions button {
+    width: 100%;
+  }
+
+  .trainerNextNutrition > .trainerNextPageTabs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 10px;
+  }
+
+  .trainerNextNutrition > .trainerNextPageTabs button {
+    min-height: 38px;
+    padding: 5px 7px;
+    font-size: 10px;
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  .trainerNotificationStatusCard {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .trainerNotificationStatusCard > i {
+    grid-column: 2;
+    width: fit-content;
+  }
+
+  .trainerNotificationStatusCard > button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .trainerNotificationSettings {
+    padding: 14px;
+  }
+
+  .trainerNotificationSettings > header {
+    align-items: flex-start;
+  }
+
+  .trainerReminderCard {
+    padding: 12px;
+  }
+
+  .trainerReminderCardHead {
+    gap: 8px;
+  }
+
+  .trainerReminderIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .trainerReminderCardHead strong {
+    font-size: 11px;
+  }
+
+  .trainerReminderCardHead p {
+    font-size: 8px;
+  }
+
+  .trainerReminderPeriod button {
+    min-height: 40px;
+    padding: 0 3px;
+    font-size: 7px;
+  }
+
+  .trainerNotificationWeekdays,
+  .trainerNotificationCalendarGrid {
+    gap: 2px;
+  }
+
+  .trainerNotificationCalendarGrid button {
+    min-height: 40px;
+  }
+
+  .trainerNotificationSchedule > span {
+    min-height: 54px;
+    gap: 2px 7px;
+    padding: 8px;
+  }
+
+  .trainerNotificationSchedule svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .trainerNotificationSchedule b {
+    font-size: 9px;
+  }
+
+  .trainerNotificationSchedule small {
+    font-size: 7px;
+  }
+
+  .trainerProgressReminderOptions {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerNotificationActions {
+    display: grid;
+  }
+
+  .trainerWorkoutStatusPanel {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .trainerClientModalBackdrop {
+    align-items: end;
+    padding: 12px;
+  }
+
+  .trainerClientMessageModal,
+  .trainerClientActionSheet {
+    border-radius: 12px;
+  }
+
+  .trainerClientMessageModal footer {
+    display: grid;
+  }
+
+  .trainerNutritionDonutRow {
+    justify-content: flex-start;
+  }
+}
+

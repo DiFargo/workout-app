@@ -1,0 +1,35 @@
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  .trainerNextMobileHeader {
+    min-height: 54px;
+    display: grid;
+    grid-template-columns: 34px 1fr auto;
+    align-items: center;
+    margin-bottom: 13px;
+  }
+
+  .trainerNextMobileHeader h1,
+  .trainerNextMobileTitle {
+    font-size: 20px;
+  }
+
+  .trainerNextMobileNav button {
+    height: 64px;
+    display: grid;
+    grid-template-rows: 30px 18px;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    gap: 2px;
+    padding: 6px 2px 5px;
+    border-radius: 15px;
+    font-size: 10px;
+  }
+
+  .trainerNextClientOverview,
+  .trainerNutritionAnalyticsMain,
+  .trainerNotificationsLayout,
+  .trainerAnalyticsGrid,
+  .trainerClientWorkoutAnalytics {
+    grid-template-columns: 1fr;
+  }
+}
