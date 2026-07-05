@@ -1,0 +1,49 @@
+/* v1.66 final alignment: food search header and main dashboard first-card gap. */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome):not(:has(.foodEditRenderScreen)) {
+  padding-top: max(46px, calc(env(safe-area-inset-top) + 42px)) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) > .fatSearchTopPremiumHome {
+  grid-template-columns: minmax(0, 1fr) 50px !important;
+  align-items: center !important;
+  min-height: 110px !important;
+  margin: 0 0 14px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) .foodFlowSearchTitle h2 {
+  min-height: 50px !important;
+  height: 50px !important;
+  color: #5f5744 !important;
+  font-size: var(--client-page-title-size, 27px) !important;
+  font-weight: 800 !important;
+  line-height: 1.05 !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchTopPremiumHome) > .fatSearchTopPremiumHome .fatSearchClosePremium {
+  width: 50px !important;
+  min-width: 50px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  justify-self: end !important;
+  align-self: center !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle {
+  box-sizing: border-box !important;
+  min-height: 50px !important;
+  height: 50px !important;
+  margin: 8px 0 16px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard,
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileCabinetSection {
+  margin-top: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero {
+  margin-top: 0 !important;
+}
+
