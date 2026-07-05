@@ -2051,7 +2051,7 @@ test("legacy nutrition header CSS keeps pixel meter span sizes in the later comp
 
 test("nutrition summary calories CSS keeps pixel meter width after the header layer", async () => {
   const headerSource = await readText("src/styles/nutrition-header-layout.css");
-  const summarySource = await readText("src/styles/nutrition-summary-calories.css");
+  const summarySource = await readCssWithImports("src/styles/nutrition-summary-calories.css");
   const headerMobileStart = headerSource.indexOf("@media (max-width: 480px)");
   const headerMobileBlock = headerSource.slice(headerMobileStart);
 
@@ -2579,7 +2579,7 @@ test("legacy client workout plan tail CSS keeps calorie number sizing in compact
 });
 
 test("legacy nutrition summary calories CSS keeps final compact calorie owners", async () => {
-  const source = await readText("src/styles/nutrition-summary-calories.css");
+  const source = await readCssWithImports("src/styles/nutrition-summary-calories.css");
   const compactRedesignStart = source.indexOf("NUTRITION SUMMARY COMPACT REDESIGN");
   const premiumHarmonicStart = source.indexOf("CALORIES SUMMARY CARD", compactRedesignStart);
   const referenceLayoutStart = source.indexOf("CALORIES CARD", premiumHarmonicStart);

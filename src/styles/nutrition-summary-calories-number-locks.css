@@ -1,0 +1,27 @@
+/* CALORIES CARD NUMBERS â€” SMALLER & SOFTER FINAL
+   Ð¦Ð¸Ñ„Ñ€Ñ‹ Ð² ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐµ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ ÑƒÐ¼ÐµÐ½ÑŒÑˆÐµÐ½Ñ‹ Ð¸ ÑÐ´ÐµÐ»Ð°Ð½Ñ‹ Ð¼ÐµÐ½ÐµÐµ ÑÑ€ÐºÐ¸Ð¼Ð¸. */
+.fatSecretPage .fatCaloriesCard .fatCalorieRows strong {
+  font-size: clamp(19px, 5.6vw, 27px) !important;
+  font-weight: 800 !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.75px !important;
+  color: rgba(248, 250, 248, 0.58) !important;
+  text-shadow: none !important;
+  opacity: 0.92 !important;
+}
+
+@media (max-width: 420px) {
+  .fatSecretPage .fatCaloriesCard .fatCalorieRows strong {
+    font-size: clamp(17px, 5.4vw, 23px) !important;
+    color: rgba(248, 250, 248, 0.54) !important;
+    letter-spacing: -0.65px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .fatSecretPage .fatCaloriesCard .fatCalorieRows strong {
+    font-size: 17px !important;
+    color: rgba(248, 250, 248, 0.52) !important;
+  }
+}
+

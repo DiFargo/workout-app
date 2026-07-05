@@ -1,0 +1,67 @@
+/* NUTRITION MICRO ALIGNMENT â€” USER REQUEST FINAL */
+.fatSecretPage .fatStreakLineTop {
+  justify-content: flex-end !important;
+  padding-right: 10% !important;
+}
+
+.fatSecretPage .fatStreakLineTop span {
+  transform: none !important;
+  text-align: right !important;
+}
+
+.fatSecretPage .fatPlusBtn {
+  width: 60px !important;
+  min-width: 60px !important;
+  height: 60px !important;
+  min-height: 60px !important;
+  border-radius: 22px !important;
+  font-size: 58px !important;
+  line-height: 0.78 !important;
+  font-weight: 700 !important;
+}
+
+.fatSecretPage .fatWeekRow .fatDayCell.selected span,
+.fatSecretPage .fatWeekRow .fatDayCell.selected.hasFood span,
+.fatSecretPage .fatWeekRow .fatDayCell span.done {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+  border-color: rgba(145, 173, 78, 0.75) !important;
+  box-shadow: 0 8px 18px rgba(127, 159, 58, 0.28) !important;
+}
+
+.fatSecretPage .fatWeekRow .fatDayCell:not(.selected) span {
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(255, 255, 255, 0.52) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: none !important;
+}
+
+.fatSecretPage .fatMealItems {
+  margin-top: 18px !important;
+  padding-top: 18px !important;
+}
+
+.fatSecretPage .fatMealItems .fatFoodItem:first-child {
+  margin-top: 8px !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .fatStreakLineTop {
+    padding-right: 10% !important;
+  }
+
+  .fatSecretPage .fatPlusBtn {
+    width: 52px !important;
+    min-width: 52px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    border-radius: 20px !important;
+    font-size: 50px !important;
+  }
+
+  .fatSecretPage .fatMealItems {
+    margin-top: 16px !important;
+    padding-top: 16px !important;
+  }
+}
+
