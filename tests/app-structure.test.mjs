@@ -3873,7 +3873,7 @@ test("desktop cabinet CSS keeps trainer client mobile columns grouped", async ()
 test("dark nutrition hero keeps explicit readable text overrides", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
-  const darkGreenFoodFlow = await readText("src/styles/client-screen-alignment.css");
+  const darkGreenFoodFlow = await readCssWithImports("src/styles/client-screen-alignment.css");
 
   assert.doesNotMatch(indexCss, /@import "\.\/nutrition-dark-food-flow\.css"/);
   assert.match(nutritionStackCss, /@import "\.\/nutrition-dark-food-flow\.css"/);
