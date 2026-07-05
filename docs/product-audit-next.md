@@ -1,6 +1,6 @@
 # Product Audit Backlog
 
-Last updated at app version `v.1.790`.
+Last updated at app version `v.1.791`.
 
 ## Evidence
 
@@ -47,6 +47,7 @@ The cabinet Telegram modal audit also guards the contained dialog shell and back
 The cabinet measurements modal audit also guards readable labels for the latest measurement value cards.
 The cabinet progress photos modal audit also guards readable labels for the comparison photo-session selectors.
 The cabinet settings modal audit also guards readable labels for the profile goal and activity selectors.
+The client harness main preview now guards the restored reference card internals: shared title baseline, divider-free hero stats, compact progress-card spacing and non-wrapping current-weight copy.
 
 The admin visual audit now attaches screenshots for:
 
