@@ -1,0 +1,348 @@
+.trainerClientInlineEditor > .trainerClientBlockHeading {
+  margin-bottom: 14px;
+}
+
+.trainerNutritionMetricGrid {
+  margin-top: 0;
+}
+
+.trainerNutritionPeriod {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerNutritionPeriod > div:first-child {
+  display: grid;
+  gap: 3px;
+  margin-right: auto;
+}
+
+.trainerNutritionPeriodButtons {
+  display: flex;
+  gap: 6px;
+}
+
+.trainerNutritionPeriodButtons button {
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid var(--tn-line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--tn-muted);
+  font-size: 9px;
+}
+
+.trainerNutritionCustomPeriod {
+  display: flex;
+  gap: 7px;
+}
+
+.trainerNutritionCustomPeriod label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--tn-muted);
+  font-size: 8px;
+}
+
+.trainerNutritionCustomPeriod input {
+  height: 32px;
+  padding: 0 7px;
+  border: 1px solid var(--tn-line);
+  border-radius: 6px;
+  color: var(--tn-text);
+}
+
+.trainerNutritionMetricGrid article > span {
+  color: var(--tn-text);
+  font-size: 9px;
+}
+
+.trainerNutritionDonutRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 18px;
+}
+
+.trainerNutritionDonut {
+  width: 126px;
+  height: 126px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.trainerNutritionDonut::before {
+  content: "";
+  grid-area: 1 / 1;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.trainerNutritionDonut > span {
+  z-index: 1;
+  grid-area: 1 / 1;
+  display: grid;
+  justify-items: center;
+}
+
+.trainerNutritionLegend span {
+  display: grid;
+  grid-template-columns: 9px 1fr auto;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+}
+
+.trainerNutritionLegend span::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--tn-purple);
+}
+
+.trainerNutritionLegend span.protein::before {
+  background: #34aa5f;
+}
+
+.trainerNutritionLegend span.fat::before {
+  background: #f2a329;
+}
+
+.trainerNutritionDiary {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 14px;
+  max-width: 100%;
+  min-width: 0;
+  padding-top: 16px;
+}
+
+.trainerNutritionDiary > aside {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-color: var(--tn-purple) transparent;
+}
+
+.trainerNutritionDiary > aside button {
+  min-height: 44px;
+  display: grid;
+  justify-items: start;
+  gap: 3px;
+  padding: 8px 11px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+  text-align: left;
+}
+
+.trainerNutritionDiary > aside button.active {
+  border-color: var(--tn-purple);
+  background: #f8f5ff;
+  color: var(--tn-purple);
+}
+
+.trainerNutritionDiaryHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.trainerNutritionDiaryHead h2 {
+  margin: 0;
+}
+
+.trainerNutritionDiaryHead h2,
+.trainerNutritionDiaryHead > strong {
+  font-size: 14px;
+}
+
+.trainerNutritionDiaryTotals {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.trainerNutritionDiaryTotals span {
+  min-width: 76px;
+  padding: 8px 10px;
+  border: 1px solid #ebe9f4;
+  border-radius: 7px;
+  background: #faf9fd;
+  color: var(--tn-muted);
+  font-size: 9px;
+}
+
+.trainerNutritionDiary .trainerNextMealList article {
+  grid-template-columns: 52px minmax(0, 1fr);
+}
+
+.trainerNutritionReadonly {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 12px 0 0;
+}
+
+.trainerNutritionPreset {
+  max-width: 420px;
+  margin-top: 16px;
+}
+
+.trainerNutritionCurrentPlan {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(320px, 1.2fr);
+  gap: 16px 24px;
+  padding: 18px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerNutritionCurrentPlan .trainerClientBlockHeading small {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.trainerNutritionCurrentPlan .trainerClientBlockHeading small,
+.trainerNutritionPresetPreview {
+  color: var(--tn-purple);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.trainerNutritionCurrentPlan p {
+  margin: 4px 0 0;
+}
+
+.trainerNutritionCurrentGoals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.trainerNutritionCurrentGoals span {
+  min-height: 54px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 8px 10px;
+  border: 1px solid #eceaf3;
+  border-radius: 7px;
+  background: #faf9fd;
+}
+
+.trainerNutritionCurrentGoals strong {
+  color: var(--tn-text);
+  font-size: 11px;
+}
+
+.trainerNutritionCurrentMeta {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--tn-line);
+}
+
+.trainerNutritionCurrentMeta button {
+  min-height: 34px;
+  margin-left: auto;
+  padding: 0 13px;
+  border: 1px solid var(--tn-purple);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--tn-purple);
+  font-weight: 700;
+}
+
+.trainerNutritionPlanFields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.trainerNutritionPlanFields .trainerNutritionPreset {
+  max-width: none;
+  margin-top: 0;
+}
+
+.trainerNutritionGoalInputs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.trainerNutritionGoalInputs label > div {
+  position: relative;
+}
+
+.trainerNutritionGoalInputs input {
+  padding-right: 42px;
+}
+
+.trainerNutritionGoalInputs small {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+}
+
+.trainerNutritionValidity {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 220px)) minmax(220px, 1fr);
+  align-items: end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.trainerNutritionValidity > small {
+  padding-bottom: 11px;
+}
+
+.trainerNutritionPlanActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.trainerNutritionPlanActions > button,
+.trainerNotificationActions button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 16px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--tn-text);
+  font-weight: 700;
+}
+
+.trainerNutritionPlanActions > button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
