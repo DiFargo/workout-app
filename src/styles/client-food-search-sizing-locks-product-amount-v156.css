@@ -1,0 +1,16 @@
+/* Food product/search alignment and amount behavior v156 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap {
+  width: min(376px, calc(100vw - 24px)) !important;
+  max-width: min(376px, calc(100vw - 24px)) !important;
+  justify-self: center !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductAmountControls.isWeightMode {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductAmountControls.isWeightMode .foodProductAmountInputWrap {
+  width: 100% !important;
+  max-width: none !important;
+}
+

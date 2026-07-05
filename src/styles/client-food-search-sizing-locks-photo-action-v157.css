@@ -1,0 +1,29 @@
+/* Food search AI photo action bar height v157 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction {
+  height: 84px !important;
+  min-height: 84px !important;
+  max-height: 84px !important;
+  padding: 12px 14px !important;
+  grid-template-columns: 52px minmax(0, 1fr) 22px !important;
+  gap: 13px !important;
+  border-radius: 18px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction .foodSearchModernActionIcon {
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  min-height: 46px !important;
+  border-radius: 14px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction strong {
+  font-size: 14px !important;
+  line-height: 1.08 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction small {
+  font-size: 11px !important;
+  line-height: 1.16 !important;
+}
+

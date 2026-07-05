@@ -1,0 +1,13 @@
+/* Product page header exact lock v158 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap {
+  width: min(376px, calc(100vw - 24px)) !important;
+  max-width: min(376px, calc(100vw - 24px)) !important;
+}
+
+@media (max-width: 380px) {
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap {
+    width: min(352px, calc(100vw - 24px)) !important;
+    max-width: min(352px, calc(100vw - 24px)) !important;
+  }
+}
+
