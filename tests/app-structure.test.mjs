@@ -2708,7 +2708,7 @@ test("admin CRM CSS keeps client card grid breakpoints in the latest owner", asy
 });
 
 test("admin calendar reminders CSS keeps one fixed back label visibility owner", async () => {
-  const source = await readText("src/styles/admin-calendar-reminders.css");
+  const source = await readCssWithImports("src/styles/admin-calendar-reminders.css");
 
   assert.equal(
     (source.match(/\.adminFixedMainBack b\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
@@ -4738,7 +4738,7 @@ test("admin and access denied navigation buttons declare button type", async () 
 
 test("admin hub CSS does not keep trainer role button rules", async () => {
   const adminHubCss = await readText("src/styles/adminPanelHub.css");
-  const adminCalendarCss = await readText("src/styles/admin-calendar-reminders.css");
+  const adminCalendarCss = await readCssWithImports("src/styles/admin-calendar-reminders.css");
   const adminPanelHub = await readText("src/components/admin/AdminPanelHub.jsx");
 
   assert.doesNotMatch(adminPanelHub, /adminTrainerRoleButton|adminClientStatusRender/);

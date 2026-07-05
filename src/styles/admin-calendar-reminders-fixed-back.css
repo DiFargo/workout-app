@@ -1,0 +1,61 @@
+/* === FIXED ADMIN BACK ALWAYS ON SCREEN V83 === */
+/* ÐšÐ½Ð¾Ð¿ÐºÐ° Ñ‚ÐµÐ¿ÐµÑ€ÑŒ fixed, Ð° Ð½Ðµ sticky, Ð¿Ð¾ÑÑ‚Ð¾Ð¼Ñƒ Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ Ð½Ð° ÑÐºÑ€Ð°Ð½Ðµ Ð¿Ñ€Ð¸ Ð»ÑŽÐ±Ð¾Ð¼ ÑÐºÑ€Ð¾Ð»Ð»Ðµ */
+
+.adminFixedMainBack {
+  position: fixed !important;
+  top: max(14px, calc(env(safe-area-inset-top) + 10px)) !important;
+  left: max(14px, calc(env(safe-area-inset-left) + 14px)) !important;
+  z-index: 9999 !important;
+
+  width: 46px !important;
+  min-width: 46px !important;
+  max-width: 46px !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  background: rgba(14,18,16,.72) !important;
+  color: rgba(255,255,255,.9) !important;
+
+  box-shadow: 0 12px 30px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+.adminFixedMainBack span {
+  font-size: 28px !important;
+  line-height: 1 !important;
+  font-weight: 850 !important;
+}
+
+.adminFixedMainBack b {
+  display: none !important;
+}
+
+/* Ñ‡Ñ‚Ð¾Ð±Ñ‹ fixed-ÐºÐ½Ð¾Ð¿ÐºÐ° Ð½Ðµ Ð·Ð°ÐºÑ€Ñ‹Ð²Ð°Ð»Ð° Ð·Ð°Ð³Ð¾Ð»Ð¾Ð²Ð¾Ðº */
+.adminV3Shell,
+.adminUsersCrmPage,
+.monthProgramPage,
+.monthProgramBuilder {
+  padding-top: max(0px, env(safe-area-inset-top)) !important;
+}
+
+@media (min-width: 760px) {
+  .adminFixedMainBack {
+    width: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    padding: 0 !important;
+  }
+
+}
+
