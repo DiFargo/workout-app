@@ -1,0 +1,51 @@
+@media (max-width: 390px) {
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetsList .setRow.workoutExercisePlanRow {
+    grid-template-columns: 36px minmax(104px, 1fr) 118px !important;
+    column-gap: 10px !important;
+    row-gap: 8px !important;
+    min-height: 90px !important;
+    padding: 12px 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetsList .workoutExercisePlanRow .workoutExerciseSetNumber {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetPlan {
+    gap: 2px !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetReps,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetWeight,
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetEdit span {
+    max-width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetWeight {
+    font-size: 17px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExercisePlanRow.withoutWeight .workoutExerciseSetWeight {
+    font-size: 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseCompleteButton {
+    height: 54px !important;
+    min-height: 54px !important;
+    padding: 0 9px !important;
+    font-size: 13px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseCompleteButton svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+

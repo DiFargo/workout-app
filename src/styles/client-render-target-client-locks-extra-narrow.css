@@ -1,0 +1,19 @@
+@media (max-width: 370px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProTop {
+    grid-template-columns: minmax(0, 0.44fr) minmax(0, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutBadges > span,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutNextBadge,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutWeek {
+    padding: 0 8px !important;
+    font-size: 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProBody {
+    height: clamp(340px, calc(100svh - 282px), 410px) !important;
+    min-height: 340px !important;
+  }
+}
+
