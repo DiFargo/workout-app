@@ -1,0 +1,82 @@
+html:root[data-app-theme="warm-light"] body #root .foodSearchModernLanding {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodSearchModernSectionHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin: 0 0 8px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodSearchModernSectionHeader h3 {
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  color: #151824 !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  -webkit-text-fill-color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodSearchModernSectionHeader h3 span {
+  color: #5f5744 !important;
+  font-size: 15px !important;
+  -webkit-text-fill-color: #5f5744 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodSearchModernSectionHeader button {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #5d43ee !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  -webkit-text-fill-color: #5d43ee !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodSearchRecentGrid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-rows: 74px !important;
+  gap: 8px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodSearchRecentCard {
+  min-height: 74px !important;
+  height: 74px !important;
+  padding: 9px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  border: 1px solid #e1e5ee !important;
+  border-radius: 13px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 22px rgba(55, 64, 112, 0.06) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodSearchRecentCard span {
+  font-size: 27px !important;
+  line-height: 1 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodSearchRecentCard strong {
+  width: 100% !important;
+  overflow: hidden !important;
+  color: #151824 !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  line-height: 1.15 !important;
+  text-align: center !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  -webkit-text-fill-color: #151824 !important;
+}
+
