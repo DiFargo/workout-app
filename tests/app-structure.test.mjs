@@ -586,7 +586,7 @@ test("modular CSS import graph resolves without cycles", async () => {
 });
 
 test("client visual unity CSS does not keep exact duplicate blocks", async () => {
-  const source = await readText("src/styles/client-visual-unity.css");
+  const source = await readCssWithImports("src/styles/client-visual-unity.css");
   const seenBlocks = new Set();
   const duplicateBlocks = [];
 
@@ -605,7 +605,7 @@ test("client visual unity CSS does not keep exact duplicate blocks", async () =>
 });
 
 test("client visual unity CSS keeps product editor header rhythm in the final owner", async () => {
-  const source = await readText("src/styles/client-visual-unity.css");
+  const source = await readCssWithImports("src/styles/client-visual-unity.css");
   const finalStart = source.indexOf("v.1.102 final cascade lock: product editor must use the same top rhythm as nutrition flow.");
   const finalBlock = source.slice(finalStart);
 
@@ -626,7 +626,7 @@ test("client visual unity CSS keeps product editor header rhythm in the final ow
 });
 
 test("client visual unity CSS keeps goal stat typography in the final owner", async () => {
-  const source = await readText("src/styles/client-visual-unity.css");
+  const source = await readCssWithImports("src/styles/client-visual-unity.css");
   const mobileFixStart = source.indexOf("v.1.89: final mobile alignment fixes");
   const fullCardGoalStart = source.indexOf("v.1.90: override the older full-card goal selector", mobileFixStart);
   const earlyBlock = source.slice(mobileFixStart, fullCardGoalStart);
