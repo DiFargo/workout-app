@@ -259,16 +259,16 @@ function HarnessHero() {
   return (
     <div className="profileAiHero">
       <div className="profileAiAvatarWrap">
-        <div className="profileAvatarBig profileUnifiedAvatar profileAiAvatar">
-          <span>👤</span>
+        <div className="profileAvatarBig profileUnifiedAvatar profileAiAvatar harnessLegacyPortrait">
+          <span aria-hidden="true" />
         </div>
         <div className="profileAiAvatarRing">
-          <strong>82%</strong>
+          <strong>79%</strong>
         </div>
       </div>
 
       <div className="profileAiHeroText">
-        <h1>Добрый день, атлет 👋</h1>
+        <h1>Добрый день, ILYA 👋</h1>
       </div>
     </div>
   );
@@ -299,11 +299,11 @@ function HarnessMainSummary({ compact = false }) {
 
       <div className="profileMainSummaryGrid profileAiSplitCards">
         <article className="profileAiMiniCard">
-          <span>Последняя тренировка</span>
+          <span><i aria-hidden="true">📅</i>Последняя тренировка</span>
           <strong>27 июня</strong>
         </article>
         <article className="profileAiMiniCard">
-          <span>Следующая тренировка</span>
+          <span><i aria-hidden="true">⚡</i>Следующая тренировка</span>
           <strong>4 июля</strong>
         </article>
       </div>
@@ -319,37 +319,41 @@ function HarnessProgressInsight() {
           <div
             className="profileProgressGauge"
             style={{
-              "--progress-score": 82,
-              "--progress-fill": "295deg",
+              "--progress-score": 79,
+              "--progress-fill": "284deg",
               "--progress-color": "rgba(123, 111, 232, 1)",
               "--progress-glow": "rgba(123, 111, 232, 0.24)"
             }}
             role="img"
-            aria-label="Оценка прогресса 82 из 100"
+            aria-label="Оценка прогресса 79 из 100"
           >
             <div className="profileProgressGaugeDial">
               <i />
-              <strong>82</strong>
+              <strong>79</strong>
             </div>
             <small>из 100</small>
           </div>
 
           <div className="profileAiCoachHeadline">
             <span>Оценка прогресса</span>
-            <h2>Хороший темп</h2>
-            <p>Питание и тренировки идут ровно, продолжай держать режим.</p>
+            <h2>Хороший прогресс</h2>
+            <p>Регулярность: данные ведутся стабильно. Продолжай в том же ритме.</p>
           </div>
         </div>
       </button>
 
       <div className="profileAiCoachPreview profileProgressInsightBadges">
         <span className="profileProgressInsightBadge">
-          <b>🔥 Серия</b>
-          <small>4 тренировки за период</small>
+          <b>⚡ Тренировка</b>
+          <small>5 дн. назад</small>
         </span>
         <span className="profileProgressInsightBadge">
-          <b>⚖ Вес</b>
-          <small>88.8 кг, цель под контролем</small>
+          <b>📏 Замер</b>
+          <small>Пора обновить</small>
+        </span>
+        <span className="profileProgressInsightBadge">
+          <b>🍽 Питание</b>
+          <small>Нет записей</small>
         </span>
       </div>
     </div>
@@ -358,17 +362,17 @@ function HarnessProgressInsight() {
 
 function HarnessMeasurementSnapshot() {
   return (
-    <section className="mainMeasurementSnapshot" aria-label="Последние замеры веса">
-      <div className="mainMeasurementSnapshotHeader">
-        <span>Последние замеры</span>
-        <i aria-hidden="true">›</i>
+    <section className="mainMeasurementSnapshot harnessLegacyMeasurementSnapshot" aria-label="Последние замеры веса">
+      <div className="mainMeasurementWeight">
+        <span>Текущий вес</span>
+        <strong>89 кг</strong>
+        <em>-0.5 кг</em>
+        <small>к прошлому замеру</small>
       </div>
-      <div className="mainMeasurementSnapshotBody">
-        <div className="mainMeasurementWeight">
-          <span>Текущий вес</span>
-          <strong>88.8 кг</strong>
-          <em>-0.4 кг</em>
-          <small>к прошлому замеру</small>
+      <div className="harnessLegacyMeasurementChartPanel">
+        <div className="mainMeasurementSnapshotHeader">
+          <span>Последние замеры</span>
+          <i aria-hidden="true">›</i>
         </div>
         <div className="mainMeasurementChart">
           <svg
@@ -386,25 +390,25 @@ function HarnessMeasurementSnapshot() {
             <line className="mainMeasurementCurrentGuide" x1="238" y1="47" x2="238" y2="96" />
             <polyline
               className="mainMeasurementTrendLine"
-              points="28,72 98,52 168,52 238,47"
+              points="28,78 98,48 168,48 238,60"
             />
-            <text className="mainMeasurementPointLabel" x="28" y="54">89.2 кг</text>
-            <text className="mainMeasurementPointLabel" x="98" y="34">89 кг</text>
-            <text className="mainMeasurementPointLabel" x="168" y="34">89 кг</text>
-            <text className="mainMeasurementPointLabel" x="238" y="29">88.8 кг</text>
-            <circle className="mainMeasurementTrendPoint" cx="28" cy="72" r="4.8" />
-            <circle className="mainMeasurementTrendPoint" cx="98" cy="52" r="4.8" />
-            <circle className="mainMeasurementTrendPoint" cx="168" cy="52" r="4.8" />
-            <circle className="mainMeasurementTrendPoint current" cx="238" cy="47" r="7" />
+            <text className="mainMeasurementPointLabel" x="28" y="61">88.5 кг</text>
+            <text className="mainMeasurementPointLabel" x="98" y="31">89.5 кг</text>
+            <text className="mainMeasurementPointLabel" x="168" y="31">89.5 кг</text>
+            <text className="mainMeasurementPointLabel" x="238" y="42">89 кг</text>
+            <circle className="mainMeasurementTrendPoint" cx="28" cy="78" r="4.8" />
+            <circle className="mainMeasurementTrendPoint" cx="98" cy="48" r="4.8" />
+            <circle className="mainMeasurementTrendPoint" cx="168" cy="48" r="4.8" />
+            <circle className="mainMeasurementTrendPoint current" cx="238" cy="60" r="7" />
             <g className="mainMeasurementCurrentBubble">
-              <rect x="209" y="5" width="58" height="25" rx="7" />
-              <path d="M 231 29 L 245 29 L 238 40 Z" />
-              <text x="238" y="22">88.8 кг</text>
+              <rect x="209" y="18" width="58" height="25" rx="7" />
+              <path d="M 231 42 L 245 42 L 238 53 Z" />
+              <text x="238" y="35">89 кг</text>
             </g>
             <text className="mainMeasurementDateLabel" x="28" y="110">09.06</text>
             <text className="mainMeasurementDateLabel" x="98" y="110">10.06</text>
-            <text className="mainMeasurementDateLabel" x="168" y="110">16.06</text>
-            <text className="mainMeasurementDateLabel" x="238" y="110">22.06</text>
+            <text className="mainMeasurementDateLabel" x="168" y="110">10.06</text>
+            <text className="mainMeasurementDateLabel" x="238" y="110">16.06</text>
           </svg>
         </div>
       </div>
