@@ -1,0 +1,234 @@
+/* v169: search results must disappear under the fixed AI photo action instead of showing through it. */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
+.fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)) .foodSearchFixedPhotoAction > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukFoods {
+  gap: 10px !important;
+  padding: 0 10px 12px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell {
+  position: relative !important;
+  min-height: 64px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(224, 229, 243, 0.92) !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 22px rgba(40, 48, 78, 0.06) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell + .nutritionZoukSwipeShell {
+  border-top: 1px solid rgba(224, 229, 243, 0.92) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .productDeleteBg {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #ec5b5b, #d94646) !important;
+  transition: opacity 0.16s ease, visibility 0.16s ease !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell:has(.nutritionZoukFood[style*="translateX(-"]) .productDeleteBg,
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell.deleting .productDeleteBg {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFood {
+  width: 100% !important;
+  min-height: 64px !important;
+  grid-template-columns: 48px minmax(0, 1fr) 54px !important;
+  gap: 12px !important;
+  padding: 9px 12px !important;
+  border: 0 !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFoodIcon {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  border-radius: 15px !important;
+  background: #f0edff !important;
+  border: 1px solid #e3defc !important;
+  font-size: 22px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFoodText strong {
+  color: #5f5848 !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  line-height: 1.12 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFoodText small {
+  margin-top: 3px !important;
+  color: #6f778b !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFoodKcal {
+  min-width: 48px !important;
+  padding-left: 6px !important;
+  align-items: flex-end !important;
+  color: #5f5848 !important;
+  text-align: right !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFoodKcal strong {
+  color: #5f5848 !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+  line-height: 0.98 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFoodKcal small {
+  color: #6f778b !important;
+  font-size: 10px !important;
+  font-weight: 850 !important;
+  line-height: 1.05 !important;
+}
+
+/* v171: polish nutrition fixed docks, inner scrollbars and safe bottom masking. */
+html:root[data-app-theme="warm-light"],
+html:root[data-app-theme="warm-light"] body:has(#root .fatFoodSearchOverlay) {
+  background: #f4f7fd !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen {
+  background-color: #f4f7fd !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent textarea,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent input,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent select {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(96, 71, 242, 0.78) rgba(239, 236, 255, 0.36) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent textarea::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent input::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent select::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent textarea::-webkit-scrollbar-track,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent input::-webkit-scrollbar-track,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent select::-webkit-scrollbar-track {
+  background: rgba(239, 236, 255, 0.36) !important;
+  border-radius: 999px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent textarea::-webkit-scrollbar-thumb,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent input::-webkit-scrollbar-thumb,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent select::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #7b61ff 0%, #5f4cff 100%) !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
+.fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)):not(:has(.fatSearchMyProductsAction.active)) .fatSearchListPremium {
+  padding-bottom: calc(198px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
+.fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)) .foodSearchFixedPhotoAction {
+  z-index: 42 !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+  background: linear-gradient(180deg, rgba(250, 248, 255, 0.99), rgba(246, 243, 255, 0.99)) !important;
+  box-shadow:
+    0 14px 28px rgba(76, 66, 134, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
+.fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)) .foodSearchFixedPhotoAction::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  top: -18px !important;
+  bottom: calc(-128px - env(safe-area-inset-bottom, 0px)) !important;
+  width: 100vw !important;
+  transform: translateX(-50%) !important;
+  border-radius: 0 !important;
+  background: linear-gradient(
+    180deg,
+    rgba(244, 247, 253, 0) 0%,
+    rgba(244, 247, 253, 0.96) 18px,
+    #f4f7fd 56px,
+    #f4f7fd 100%
+  ) !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+/* v176: keep the product editor action bar locked inside its modal sheet. */
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
+  position: relative !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar {
+  position: absolute !important;
+  left: 14px !important;
+  right: 14px !important;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+  width: auto !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  grid-template-columns: minmax(92px, 0.78fr) minmax(0, 1.82fr) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar > button {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar::after,
+html:root[data-app-theme="warm-light"] body #root .foodProductActionBar::after,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar::after {
+  content: "" !important;
+  position: absolute !important;
+  left: -24px !important;
+  right: -24px !important;
+  bottom: calc(-52px - env(safe-area-inset-bottom, 0px)) !important;
+  height: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+  background: #f4f7fd !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > *,
+html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > *,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalHeader button,
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukAdd,
+html:root[data-app-theme="warm-light"] body #root .nutritionAiPlanModal .nutritionAiPlanToggleBtn {
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+}

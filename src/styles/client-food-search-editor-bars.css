@@ -1,0 +1,150 @@
+/* Product editor close/save and bottom bar occlusion lock v167 */
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader {
+  display: grid !important;
+  grid-template-columns: 48px minmax(0, 1fr) 48px !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader .foodEditPageTitleCenter {
+  position: static !important;
+  grid-column: 2 !important;
+  z-index: 1 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  pointer-events: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderSpacer {
+  width: 48px !important;
+  height: 48px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderClose {
+  position: relative !important;
+  z-index: 3 !important;
+  grid-column: 3 !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  border: 1px solid rgba(126, 141, 170, 0.22) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #6a6252 !important;
+  box-shadow: 0 14px 34px rgba(31, 38, 60, 0.12) !important;
+  font-size: 30px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderClose:active {
+  transform: translateY(1px) scale(0.98) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
+  display: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar,
+html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar,
+html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar,
+html:root[data-app-theme="warm-light"] body #root .foodProductActionBar,
+html:root[data-app-theme="warm-light"] body #root .workoutStageActionPanel,
+html:root[data-app-theme="warm-light"] body #root .startWorkoutBottomPanel {
+  overflow: visible !important;
+  isolation: isolate !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav::after,
+html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav::after,
+html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar::after,
+html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar::after,
+html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar::after,
+html:root[data-app-theme="warm-light"] body #root .foodProductActionBar::after,
+html:root[data-app-theme="warm-light"] body #root .workoutStageActionPanel::after,
+html:root[data-app-theme="warm-light"] body #root .startWorkoutBottomPanel::after {
+  content: "" !important;
+  position: absolute !important;
+  left: -18px !important;
+  right: -18px !important;
+  bottom: calc(-34px - env(safe-area-inset-bottom, 0px)) !important;
+  height: calc(42px + env(safe-area-inset-bottom, 0px)) !important;
+  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f4f7fd 42%, #f4f7fd 100%) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > *,
+html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav > *,
+html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar > *,
+html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar > *,
+html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > *,
+html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > *,
+html:root[data-app-theme="warm-light"] body #root .workoutStageActionPanel > *,
+html:root[data-app-theme="warm-light"] body #root .startWorkoutBottomPanel > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* v168: nutrition/product scrollbars use the purple product accent, not the old warm yellow. */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium,
+html:root[data-app-theme="warm-light"] body #root .foodProductRenderScreen,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageSheet,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(96, 71, 242, 0.72) rgba(239, 236, 255, 0.32) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .foodProductRenderScreen::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageSheet::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent::-webkit-scrollbar {
+  display: block !important;
+  width: 6px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay::-webkit-scrollbar-track,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium::-webkit-scrollbar-track,
+html:root[data-app-theme="warm-light"] body #root .foodProductRenderScreen::-webkit-scrollbar-track,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay::-webkit-scrollbar-track,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageSheet::-webkit-scrollbar-track,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent::-webkit-scrollbar-track {
+  background: rgba(239, 236, 255, 0.32) !important;
+  border-radius: 999px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay::-webkit-scrollbar-thumb,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium::-webkit-scrollbar-thumb,
+html:root[data-app-theme="warm-light"] body #root .foodProductRenderScreen::-webkit-scrollbar-thumb,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay::-webkit-scrollbar-thumb,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageSheet::-webkit-scrollbar-thumb,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageContent::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #7457ff 0%, #5b45e9 100%) !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.64) !important;
+}
+
+/* v175: product render is fullscreen on mobile; keep scrolling but hide the desktop scrollbar rail. */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay:has(.foodProductRenderScreen),
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.foodProductRenderScreen),
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen {
+  scrollbar-width: none !important;
+  scrollbar-gutter: auto !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay:has(.foodProductRenderScreen)::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.foodProductRenderScreen)::-webkit-scrollbar,
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}

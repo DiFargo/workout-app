@@ -1,0 +1,287 @@
+/* Food search header/action sizing v155 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreen.fatFoodSearchScreenPremium > .fatSearchTopPremium.fatSearchTopPremiumHome.foodSearchHeaderExactMainAlign.foodSearchHeaderExactMainAlign {
+  min-height: 124px !important;
+  height: 124px !important;
+  max-height: 124px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap > .fatSearchTitleButtonPremium {
+  height: 54px !important;
+  min-height: 54px !important;
+  max-height: 54px !important;
+  border-radius: 15px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap > .fatSearchTitleButtonPremium span {
+  font-size: 9px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap > .fatSearchTitleButtonPremium strong {
+  font-size: 16px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction {
+  width: min(376px, calc(100vw - 24px)) !important;
+  bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+@media (max-width: 380px) {
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction {
+    width: min(352px, calc(100vw - 24px)) !important;
+    bottom: calc(108px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* Food product/search alignment and amount behavior v156 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap {
+  width: min(376px, calc(100vw - 24px)) !important;
+  max-width: min(376px, calc(100vw - 24px)) !important;
+  justify-self: center !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductAmountControls.isWeightMode {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductAmountControls.isWeightMode .foodProductAmountInputWrap {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Food search AI photo action bar height v157 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction {
+  height: 84px !important;
+  min-height: 84px !important;
+  max-height: 84px !important;
+  padding: 12px 14px !important;
+  grid-template-columns: 52px minmax(0, 1fr) 22px !important;
+  gap: 13px !important;
+  border-radius: 18px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction .foodSearchModernActionIcon {
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  min-height: 46px !important;
+  border-radius: 14px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction strong {
+  font-size: 14px !important;
+  line-height: 1.08 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction small {
+  font-size: 11px !important;
+  line-height: 1.16 !important;
+}
+
+/* Product page header exact lock v158 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap {
+  width: min(376px, calc(100vw - 24px)) !important;
+  max-width: min(376px, calc(100vw - 24px)) !important;
+}
+
+@media (max-width: 380px) {
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremium.foodSearchHeaderExactMainAlign > .fatSearchTitleWrap {
+    width: min(352px, calc(100vw - 24px)) !important;
+    max-width: min(352px, calc(100vw - 24px)) !important;
+  }
+}
+
+/* Product page stable flow v159 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen {
+  padding-top: 46px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader {
+  position: relative !important;
+  inset: auto !important;
+  z-index: 3 !important;
+  width: 100% !important;
+  height: 124px !important;
+  min-height: 124px !important;
+  max-height: 124px !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 120px !important;
+  grid-template-areas:
+    "title actions"
+    "meal meal" !important;
+  align-items: start !important;
+  gap: 14px 12px !important;
+  pointer-events: auto !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowTitle {
+  position: static !important;
+  grid-area: title !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: 48px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  pointer-events: auto !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowTitle h2 {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  color: var(--food-product-title) !important;
+  -webkit-text-fill-color: var(--food-product-title) !important;
+  font-size: 27px !important;
+  font-weight: 900 !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader .foodEditInlineMealHeader {
+  position: static !important;
+  grid-area: meal !important;
+  inset: auto !important;
+  width: min(376px, calc(100vw - 48px)) !important;
+  max-width: min(376px, calc(100vw - 48px)) !important;
+  min-width: 0 !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  margin: 0 auto !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader + .foodEditHeroRender.foodEditHeroEditable {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 380px) {
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader {
+    height: 120px !important;
+    min-height: 120px !important;
+    max-height: 120px !important;
+    grid-template-columns: minmax(0, 1fr) 108px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowTitle h2 {
+    font-size: 25px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen .foodProductFlowHeader .foodEditInlineMealHeader {
+    width: min(352px, calc(100vw - 36px)) !important;
+    max-width: min(352px, calc(100vw - 36px)) !important;
+  }
+}
+
+/* Product page header/search alignment hard lock v160 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) {
+  padding: 0 12px calc(112px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 920px !important;
+  margin: 0 !important;
+  padding:
+    50px
+    var(--food-product-x)
+    calc(112px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+@media (max-width: 380px) {
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) {
+    padding-inline: 10px !important;
+  }
+
+}
+
+/* Product page header/search alignment final lock v161 */
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen {
+  padding-top: 55px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductTopActions {
+  top: 55px !important;
+  right: 12px !important;
+  left: auto !important;
+  width: 108px !important;
+  height: 48px !important;
+  gap: 12px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductFlowHeader {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: 124px !important;
+  min-height: 124px !important;
+  max-height: 124px !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 120px !important;
+  grid-template-areas:
+    "title actions"
+    "meal meal" !important;
+  align-items: start !important;
+  justify-content: normal !important;
+  gap: 14px 12px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductFlowHeader .foodProductFlowTitle {
+  position: static !important;
+  grid-area: title !important;
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductFlowHeader .foodProductFlowTitle h2 {
+  height: 48px !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  color: var(--food-product-title) !important;
+  -webkit-text-fill-color: var(--food-product-title) !important;
+  font-size: 27px !important;
+  font-weight: 900 !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductFlowHeader .foodEditInlineMealHeader {
+  position: static !important;
+  grid-area: meal !important;
+  height: 54px !important;
+  min-height: 54px !important;
+  transform: none !important;
+}
+
+@media (max-width: 380px) {
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductTopActions {
+    right: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductFlowHeader .foodProductFlowTitle h2 {
+    font-size: 25px !important;
+  }
+}

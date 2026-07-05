@@ -766,7 +766,7 @@ test("client primary final CSS keeps food action bars in the final owner", async
 });
 
 test("client food search CSS keeps product edit action bar sheet-locked", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
 
   assert.equal(
     (source.match(/\.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*position:\s*relative !important;\s*\}/g) || []).length,
@@ -1650,7 +1650,7 @@ test("client workout hero spacing stays in the workout lazy owner", async () => 
 });
 
 test("client food search final CSS keeps one compact product title-wrap lock", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
 
   assert.equal(
     (source.match(/fatSearchTitleWrap\s*\{\s*width:\s*min\(352px,\s*calc\(100vw - 24px\)\) !important;\s*max-width:\s*min\(352px,\s*calc\(100vw - 24px\)\) !important;\s*\}/g) || []).length,
@@ -1659,7 +1659,7 @@ test("client food search final CSS keeps one compact product title-wrap lock", a
 });
 
 test("client food search final CSS keeps one compact meal header width owner", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
   const nonHasMealHeaderCompactLocks = source.match(
     /body #root \.fatFoodSearchOverlay \.foodProductRenderScreen \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{\s*width:\s*min\(352px,\s*calc\(100vw - 36px\)\) !important;\s*max-width:\s*min\(352px,\s*calc\(100vw - 36px\)\) !important;\s*\}/g
   ) || [];
@@ -1668,7 +1668,7 @@ test("client food search final CSS keeps one compact meal header width owner", a
 });
 
 test("client food search final CSS keeps one compact product title owner", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
   const nonHasProductTitleCompactLocks = source.match(
     /body #root \.fatFoodSearchOverlay \.foodProductRenderScreen \.foodProductFlowTitle h2\s*\{\s*font-size:\s*25px !important;\s*\}/g
   ) || [];
@@ -1677,7 +1677,7 @@ test("client food search final CSS keeps one compact product title owner", async
 });
 
 test("client food search final CSS keeps header close shell grouped", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
 
   assert.doesNotMatch(source, /\.fatSearchTopPremium\.fatSearchTopPremiumHome button\.fatSearchClosePremium\s*\{/);
   assert.equal(
@@ -1699,7 +1699,7 @@ test("client food search final CSS keeps header close shell grouped", async () =
 });
 
 test("client food search final CSS keeps header title shell grouped", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
 
   assert.equal(
     (
@@ -1720,7 +1720,7 @@ test("client food search final CSS keeps header title shell grouped", async () =
 });
 
 test("client food search final CSS keeps product title typography in stable flow owner", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
   const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
   const hardLockStart = source.indexOf("/* Product page header/search alignment hard lock v160 */");
   const stableFlowBlock = source.slice(stableFlowStart, hardLockStart);
@@ -1740,7 +1740,7 @@ test("client food search final CSS keeps product title typography in stable flow
 });
 
 test("client food search final CSS keeps product hero spacing in latest owners", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
   const amountBehaviorStart = source.indexOf("/* Food product/search alignment and amount behavior v156 */");
   const photoActionStart = source.indexOf("/* Food search AI photo action bar height v157 */", amountBehaviorStart);
   const exactLockStart = source.indexOf("/* Product page header exact lock v158 */");
@@ -1810,7 +1810,7 @@ test("client food search final CSS keeps product hero spacing in latest owners",
 });
 
 test("client food search final CSS keeps photo action sizing in latest owner", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
   const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
   const productAddStart = source.indexOf("/* Food product add page v154 */", renderControlsStart);
   const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */");
@@ -1858,7 +1858,7 @@ test("client food search final CSS keeps photo action sizing in latest owner", a
 });
 
 test("client food search final CSS keeps title button sizing in latest owner", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
   const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
   const productAddStart = source.indexOf("/* Food product add page v154 */", renderControlsStart);
   const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */", productAddStart);
@@ -1883,7 +1883,7 @@ test("client food search final CSS keeps title button sizing in latest owner", a
 });
 
 test("client food search final CSS keeps fixed action bottom mask in latest owner", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
   const oldMaskStart = source.indexOf("/* v169: search results must disappear under the fixed AI photo action instead of showing through it. */");
   const diaryRowsStart = source.indexOf("/* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */", oldMaskStart);
   const finalMaskStart = source.indexOf("/* v171: polish nutrition fixed docks, inner scrollbars and safe bottom masking. */", diaryRowsStart);
@@ -1903,7 +1903,7 @@ test("client food search final CSS keeps fixed action bottom mask in latest owne
 });
 
 test("client food search final CSS hides the mobile product render scrollbar", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
 
   assert.equal(
     (source.match(/\.fatFoodSearchOverlay:has\(\.foodProductRenderScreen\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.foodProductRenderScreen\s*\{\s*scrollbar-width:\s*none !important;\s*scrollbar-gutter:\s*auto !important;\s*\}/g) || []).length,
@@ -1916,7 +1916,7 @@ test("client food search final CSS hides the mobile product render scrollbar", a
 });
 
 test("client food search final CSS keeps diary swipe shell sizing in latest owner", async () => {
-  const source = await readText("src/styles/client-food-search.css");
+  const source = await readCssWithImports("src/styles/client-food-search.css");
   const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
   const diaryRowsStart = source.indexOf("/* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */");
   const finalDocksStart = source.indexOf("/* v171: polish nutrition fixed docks, inner scrollbars and safe bottom masking. */", diaryRowsStart);
