@@ -1,4 +1,4 @@
-﻿/* MONTH PROGRAM PREMIUM EDITOR V142 */
+/* MONTH PROGRAM PREMIUM EDITOR V142 */
 .monthProgramEditorPage.monthProgramPremium {
   width: 100% !important;
   max-width: 560px !important;
@@ -86,95 +86,6 @@
   margin-top: 8px;
 }
 
-.monthProgramPremiumHero {
-  margin-bottom: 12px;
-  padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 22px;
-  background:
-    linear-gradient(145deg, rgba(131, 167, 58, 0.11), transparent 52%),
-    rgba(21, 25, 21, 0.98);
-  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.2);
-}
-
-.monthProgramPremiumField {
-  display: block;
-}
-
-.monthProgramPremiumField + .monthProgramPremiumField {
-  margin-top: 8px;
-}
-
-.monthProgramPremiumField > span {
-  display: block;
-  margin-bottom: 5px;
-  color: rgba(208, 229, 158, 0.78);
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.monthProgramPremiumField input,
-.monthProgramPremiumField textarea {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
-  outline: none;
-}
-
-.monthProgramPremiumField input {
-  min-height: 46px;
-  padding: 0 12px;
-  font-size: 17px;
-  font-weight: 900;
-}
-
-.monthProgramPremiumField textarea {
-  min-height: 64px;
-  padding: 10px 12px;
-  resize: vertical;
-  font: inherit;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.monthProgramPremiumStats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 12px;
-}
-
-.monthProgramPremiumStats > div {
-  min-width: 0;
-  padding: 9px 3px;
-  border: 1px solid rgba(255, 255, 255, 0.055);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
-  text-align: center;
-}
-
-.monthProgramPremiumStats strong,
-.monthProgramPremiumStats span {
-  display: block;
-}
-
-.monthProgramPremiumStats strong {
-  font-size: 18px;
-  line-height: 1;
-}
-
-.monthProgramPremiumStats span {
-  margin-top: 4px;
-  color: rgba(255, 255, 255, 0.43);
-  font-size: 9px !important;
-  font-weight: 850;
-  overflow-wrap: anywhere;
-}
-
 .monthProgramPremium .monthProgramPremiumBlocks {
   gap: 10px;
 }
@@ -184,48 +95,6 @@
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.035);
   overflow: visible !important;
-}
-
-.monthProgramPremiumBlockHead {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: end;
-  margin-bottom: 10px;
-}
-
-.monthProgramPremiumBlockHead > div {
-  min-width: 0;
-}
-
-.monthProgramPremiumBlockHead span {
-  display: block;
-  margin-bottom: 3px;
-  color: rgba(164, 196, 91, 0.88);
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.monthProgramPremiumBlockHead input {
-  width: 100%;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.94);
-  font-size: 18px;
-  font-weight: 950;
-  outline: none;
-}
-
-.monthProgramPremiumBlockHead small {
-  max-width: 145px;
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 10px;
-  font-weight: 850;
-  line-height: 1.3;
-  text-align: right;
 }
 
 .monthProgramPremiumWeeks {
@@ -432,17 +301,6 @@
   border-radius: 13px;
 }
 
-.monthProgramPremiumAddBlock {
-  min-height: 46px;
-  margin-top: 10px;
-  border: 1px dashed rgba(159, 194, 83, 0.32);
-  border-radius: 16px;
-  background: rgba(131, 167, 58, 0.07);
-  color: rgba(217, 242, 154, 0.9);
-  font-size: 13px;
-  font-weight: 900;
-}
-
 .monthProgramPremium .monthProgramBottomSave {
   bottom: max(96px, calc(env(safe-area-inset-bottom) + 88px));
   margin-top: 12px;
@@ -502,18 +360,10 @@
 }
 
 @media (max-width: 390px) {
-  .monthProgramPremiumStats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .monthProgramPremiumBlockHead,
   .monthProgramPremiumDayHead {
     grid-template-columns: 1fr;
-  }
-
-  .monthProgramPremiumBlockHead small {
-    max-width: none;
-    text-align: left;
   }
 
   .monthProgramPremiumDayHead button {
@@ -733,18 +583,6 @@
   font-size: 11px;
 }
 
-.programsOverviewEditButton {
-  width: 100%;
-  min-height: 46px;
-  margin-top: 10px;
-  border: 0;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #10120f;
-  font-size: 13px;
-  font-weight: 950;
-}
-
 .programsOverviewEmpty {
   padding: 18px 12px;
   border-radius: 14px;
@@ -825,12 +663,6 @@
   .programsOverviewConstructorActions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     max-width: 560px;
-  }
-
-  .programsOverviewEditButton {
-    width: auto;
-    min-width: 260px;
-    padding: 0 24px;
   }
 }
 
@@ -934,13 +766,6 @@ div.adminClientTabsCrm.adminClientTabsFoodBar[role="tablist"] > button > .adminC
 }
 
 /* === PROGRAMS PAGE BAR V15 === */
-
-.adminWorkoutsPage,
-.adminProgramsPage,
-.adminWorkoutEditorPage,
-.adminWorkoutsMain {
-  padding-bottom: 190px !important;
-}
 
 /* === ACTIVE ADMIN BAR V16 === */
 /* ÃÅ¸ÃÂ¾ÃÂ´Ã‘ÂÃÂ²ÃÂµÃ‘â€šÃÂºÃÂ° ÃÂ°ÃÂºÃ‘â€šÃÂ¸ÃÂ²ÃÂ½ÃÂ¾ÃÂ¹ Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ Ã‘â€¹ ÃÂ² ÃÂµÃÂ´ÃÂ¸ÃÂ½ÃÂ¾ÃÂ¼ admin bottom bar */

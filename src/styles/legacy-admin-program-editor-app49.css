@@ -1,13 +1,4 @@
 /* APP49 ADMIN PROGRAM EDITOR V2 */
-.adminProgramEditorPage {
-  min-height: 100dvh;
-  width: 100%;
-  padding: 18px 22px 60px;
-  background:
-    radial-gradient(circle at 15% 0%, rgba(127,159,58,.09), transparent 35%),
-    linear-gradient(180deg, #070a07, #050705);
-  color: #f4f6f2;
-}
 
 .adminProgramTopbar,
 .adminProgramGridTopbar {
@@ -225,69 +216,9 @@
   top: 108px;
 }
 
-.adminProgramMainPanel {
-  padding: 14px;
-  min-height: 620px;
-}
-
-.adminProgramPanelHead {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.adminProgramPanelHead h2 {
-  margin: 0;
-  font-size: 19px;
-}
-
-.adminProgramPanelHead button {
-  width: 34px;
-  min-height: 34px;
-  padding: 0;
-}
-
-.adminProgramPanelHead span {
-  color: rgba(255,255,255,.42);
-  font-size: 11px;
-  font-weight: 900;
-}
-
-.adminProgramDayTabs {
-  display: grid;
-  gap: 8px;
-}
-
-.adminProgramDayTabs button {
-  min-height: 76px;
-  padding: 11px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.055);
-  background: rgba(255,255,255,.03);
-  color: #fff;
-  text-align: left;
-}
-
 .adminProgramDayTabs button.active {
   border-color: rgba(127,159,58,.34);
   background: rgba(127,159,58,.12);
-}
-
-.adminProgramDayTabs span,
-.adminProgramDayTabs small {
-  display: block;
-  color: rgba(255,255,255,.43);
-  font-size: 10px;
-  font-weight: 900;
-}
-
-.adminProgramDayTabs strong {
-  display: block;
-  margin: 5px 0;
-  font-size: 13px;
-  line-height: 1.15;
 }
 
 .adminProgramWorkoutHeader {
@@ -320,112 +251,11 @@
   color: #ff9b9b;
 }
 
-.adminProgramExerciseTable {
-  display: grid;
-  gap: 8px;
-}
-
-.adminProgramExerciseHead,
-.adminProgramExerciseRow {
-  display: grid;
-  grid-template-columns: 36px minmax(220px, 1.4fr) minmax(180px, 1fr) 90px 88px;
-  gap: 10px;
-  align-items: center;
-}
-
-.adminProgramExerciseHead {
-  padding: 0 10px 4px;
-  color: rgba(255,255,255,.36);
-  font-size: 10px;
-  font-weight: 1000;
-  text-transform: uppercase;
-}
-
-.adminProgramExerciseRow {
-  min-height: 74px;
-  padding: 10px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.055);
-  background: rgba(255,255,255,.032);
-  cursor: pointer;
-  transition: transform .16s ease, border-color .16s ease, background .16s ease;
-}
-
 .adminProgramExerciseRow:hover,
 .adminProgramExerciseRow.active {
   transform: translateY(-1px);
   border-color: rgba(127,159,58,.28);
   background: rgba(127,159,58,.085);
-}
-
-.dragDots {
-  color: rgba(255,255,255,.35);
-  font-weight: 1000;
-  letter-spacing: -3px;
-}
-
-.adminProgramExerciseName input {
-  min-height: 34px;
-  width: 100%;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 950;
-  outline: none;
-}
-
-.adminProgramExerciseName small {
-  display: block;
-  margin-top: 3px;
-  color: rgba(235,250,195,.62);
-  font-size: 10.5px;
-  font-weight: 850;
-}
-
-.adminProgramSetsPills {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-
-.adminProgramSetsPills span {
-  padding: 5px 7px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.045);
-  color: rgba(255,255,255,.58);
-  font-size: 10px;
-  font-weight: 900;
-}
-
-.videoOk,
-.videoEmpty,
-.adminProgramRowActions button {
-  min-height: 34px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.065);
-  background: rgba(255,255,255,.04);
-  color: rgba(255,255,255,.72);
-  font-size: 11px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.videoOk {
-  border-color: rgba(127,159,58,.25);
-  background: rgba(127,159,58,.12);
-  color: rgba(235,250,195,.9);
-}
-
-.adminProgramRowActions {
-  display: flex;
-  gap: 6px;
-}
-
-.adminProgramRowActions button {
-  width: 36px;
-  padding: 0;
 }
 
 .adminProgramEmptyDay,
@@ -479,122 +309,13 @@
   font-weight: 900;
 }
 
-.adminFileInput input {
-  min-height: auto;
-  padding: 10px;
-}
-
 .adminInspectorPreviewButton {
   width: 100%;
-}
-
-.adminInspectorSets {
-  padding: 12px;
-  border-radius: 18px;
-  background: rgba(0,0,0,.13);
-  border: 1px solid rgba(255,255,255,.045);
-}
-
-.adminInspectorSets h3 {
-  margin: 0 0 10px;
-  font-size: 15px;
-}
-
-.adminInspectorSets div {
-  display: grid;
-  grid-template-columns: 24px 1fr 1fr;
-  gap: 7px;
-  align-items: center;
-  margin-bottom: 7px;
-}
-
-.adminInspectorSets div span {
-  color: rgba(255,255,255,.52);
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.adminInspectorSets input {
-  min-height: 36px;
-}
-
-.adminInspectorAiBox,
-.adminInspectorEmpty {
-  padding: 13px;
-  border-radius: 18px;
-  background: rgba(127,159,58,.08);
-  border: 1px solid rgba(127,159,58,.13);
-}
-
-.adminInspectorAiBox strong,
-.adminInspectorEmpty strong {
-  display: block;
-  font-size: 14px;
-}
-
-.adminInspectorAiBox p,
-.adminInspectorEmpty p {
-  margin: 7px 0 0;
-  color: rgba(255,255,255,.58);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.35;
-}
-
-.adminVideoPreviewOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 20000;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  background: rgba(0,0,0,.78);
-  backdrop-filter: blur(18px);
-}
-
-.adminVideoPreviewModal {
-  width: min(100%, 760px);
-  position: relative;
-  padding: 18px;
-  border-radius: 26px;
-  border: 1px solid rgba(255,255,255,.08);
-  background: linear-gradient(180deg, rgba(18,24,19,.98), rgba(7,10,8,.99));
-  box-shadow: 0 30px 90px rgba(0,0,0,.58);
-}
-
-.adminVideoPreviewModal button {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.06);
-  color: #fff;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.adminVideoPreviewModal h3 {
-  margin: 0 48px 12px 0;
-}
-
-.adminVideoPreviewModal video {
-  width: 100%;
-  max-height: 70vh;
-  border-radius: 18px;
-  background: #000;
 }
 
 @media (max-width: 1280px) {
   .adminProgramLayout {
     grid-template-columns: 240px minmax(560px, 1fr);
-  }
-
-  .adminProgramInspector {
-    grid-column: 1 / -1;
-    position: static;
   }
 }
 
@@ -610,39 +331,12 @@
     position: static;
   }
 
-  .adminProgramDayTabs {
-    display: flex;
-    overflow-x: auto;
-  }
-
-  .adminProgramDayTabs button {
-    min-width: 190px;
-  }
-
-  .adminProgramExerciseHead {
-    display: none;
-  }
-
-  .adminProgramExerciseRow {
-    grid-template-columns: 28px 1fr;
-  }
-
-  .adminProgramSetsPills,
-  .videoOk,
-  .videoEmpty,
-  .adminProgramRowActions {
-    grid-column: 2;
-  }
-
   .adminProgramStatsRow {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 /* APP49 PROGRAM EDITOR V3 â€” DRAWER + COMPACT WORKFLOW */
-.adminProgramEditorPage {
-  padding-top: 12px !important;
-}
 
 .adminProgramTopbar {
   min-height: 62px !important;
@@ -717,21 +411,6 @@
   box-shadow: none !important;
 }
 
-.adminProgramMainPanel {
-  min-height: 600px !important;
-  padding: 12px !important;
-  border-radius: 20px !important;
-  background: rgba(255,255,255,.024) !important;
-  box-shadow: none !important;
-}
-
-.adminProgramDayTabs button {
-  min-height: 62px !important;
-  padding: 9px !important;
-  border-radius: 14px !important;
-  background: rgba(255,255,255,.022) !important;
-}
-
 .adminProgramDayTabs button.active {
   background: rgba(127,159,58,.1) !important;
 }
@@ -753,20 +432,6 @@
   font-size: 12px !important;
 }
 
-.adminProgramExerciseHead,
-.adminProgramExerciseRow {
-  grid-template-columns: 28px minmax(240px, 1.5fr) minmax(160px, .85fr) 84px 74px !important;
-  gap: 8px !important;
-}
-
-.adminProgramExerciseRow {
-  min-height: 58px !important;
-  padding: 8px 9px !important;
-  border-radius: 14px !important;
-  background: rgba(255,255,255,.026) !important;
-  box-shadow: none !important;
-}
-
 .adminProgramExerciseRow:hover,
 .adminProgramExerciseRow.active {
   transform: none !important;
@@ -774,227 +439,10 @@
   background: rgba(127,159,58,.072) !important;
 }
 
-.adminProgramExerciseName input {
-  min-height: 26px !important;
-  font-size: 13px !important;
-}
-
-.adminProgramExerciseName small {
-  margin-top: 1px !important;
-  font-size: 9.5px !important;
-}
-
-.adminProgramSetsPills span {
-  padding: 4px 6px !important;
-  font-size: 9px !important;
-}
-
-.videoOk,
-.videoEmpty,
-.adminProgramRowActions button {
-  min-height: 30px !important;
-  border-radius: 10px !important;
-  font-size: 10px !important;
-}
-
-.adminProgramRowActions button {
-  width: 32px !important;
-}
-
-.adminProgramInspector {
-  display: none !important;
-}
-
-.adminInspectorDrawerOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 18000;
-  display: flex;
-  justify-content: flex-end;
-  background: rgba(0,0,0,.38);
-  backdrop-filter: blur(10px);
-  animation: adminDrawerFadeIn .16s ease both;
-}
-
-.adminInspectorDrawer {
-  width: min(440px, 94vw);
-  height: 100dvh;
-  padding: 18px;
-  background:
-    radial-gradient(circle at 18% 0%, rgba(127,159,58,.12), transparent 38%),
-    linear-gradient(180deg, rgba(15,20,16,.98), rgba(6,9,7,.99));
-  border-left: 1px solid rgba(255,255,255,.08);
-  box-shadow: -28px 0 80px rgba(0,0,0,.48);
-  overflow-y: auto;
-  animation: adminDrawerSlideIn .2s ease both;
-}
-
-.adminDrawerHeader {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  align-items: flex-start;
-  margin-bottom: 14px;
-}
-
-.adminDrawerHeader span {
-  display: block;
-  color: rgba(145,173,78,.95);
-  font-size: 10px;
-  font-weight: 1000;
-  letter-spacing: .1em;
-}
-
-.adminDrawerHeader h2 {
-  margin: 5px 0 3px;
-  font-size: 25px;
-  line-height: 1;
-}
-
-.adminDrawerHeader p {
-  margin: 0;
-  color: rgba(255,255,255,.48);
-  font-size: 12px;
-  font-weight: 850;
-}
-
-.adminDrawerHeader button {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.045);
-  color: rgba(255,255,255,.78);
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.adminDrawerTabs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-bottom: 14px;
-  position: sticky;
-  top: -18px;
-  z-index: 4;
-  padding: 10px 0;
-  background: linear-gradient(180deg, rgba(9,13,10,.98), rgba(9,13,10,.88));
-  backdrop-filter: blur(12px);
-}
-
-.adminDrawerTabs button {
-  min-height: 34px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.07);
-  background: rgba(255,255,255,.035);
-  color: rgba(255,255,255,.58);
-  font-size: 10.5px;
-  font-weight: 950;
-  cursor: pointer;
-}
-
 .adminDrawerTabs button.active {
   border-color: rgba(127,159,58,.32);
   background: rgba(127,159,58,.16);
   color: rgba(235,250,195,.95);
-}
-
-.adminDrawerBody {
-  display: grid;
-  gap: 12px;
-}
-
-.adminDrawerBody label {
-  display: grid;
-  gap: 7px;
-}
-
-.adminDrawerBody label span,
-.adminDrawerMetaGrid span {
-  color: rgba(255,255,255,.45);
-  font-size: 11px;
-  font-weight: 950;
-}
-
-.adminDrawerBody input {
-  min-height: 44px;
-  width: 100%;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.075);
-  background: rgba(0,0,0,.22);
-  color: #fff;
-  padding: 0 12px;
-  font-weight: 850;
-}
-
-.adminDrawerMetaGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.adminDrawerMetaGrid div,
-.adminDrawerHint,
-.adminDrawerAiCard {
-  padding: 12px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.055);
-  background: rgba(255,255,255,.032);
-}
-
-.adminDrawerMetaGrid strong {
-  display: block;
-  margin-top: 6px;
-  color: #fff;
-  font-size: 12px;
-  line-height: 1.25;
-}
-
-.adminDrawerHint strong,
-.adminDrawerAiCard strong {
-  display: block;
-  font-size: 14px;
-}
-
-.adminDrawerHint p,
-.adminDrawerAiCard p,
-.adminDrawerAiCard li {
-  color: rgba(255,255,255,.6);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.4;
-}
-
-.adminDrawerHint p,
-.adminDrawerAiCard p {
-  margin: 7px 0 0;
-}
-
-.adminDrawerAiCard ul {
-  margin: 10px 0 0;
-  padding-left: 18px;
-}
-
-.adminDrawerSets {
-  display: grid;
-  gap: 8px;
-}
-
-.adminDrawerSets div {
-  display: grid;
-  grid-template-columns: 26px 1fr 1fr;
-  gap: 8px;
-  align-items: center;
-  padding: 8px;
-  border-radius: 14px;
-  background: rgba(255,255,255,.032);
-  border: 1px solid rgba(255,255,255,.045);
-}
-
-.adminDrawerSets span {
-  color: rgba(255,255,255,.52);
-  font-size: 12px;
-  font-weight: 950;
 }
 
 @keyframes adminDrawerFadeIn {
@@ -1015,119 +463,17 @@
   .adminProgramDaysPanel {
     position: static !important;
   }
-
-  .adminProgramDayTabs {
-    display: flex !important;
-    overflow-x: auto !important;
-  }
-
-  .adminProgramDayTabs button {
-    min-width: 180px !important;
-  }
 }
 
 @media (max-width: 720px) {
   .adminProgramStatsRow {
     grid-template-columns: repeat(2, 1fr) !important;
   }
-
-  .adminDrawerMetaGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .adminInspectorDrawer {
-    width: 100vw;
-  }
 }
 
 /* APP49 DRAWER FIX â€” NON-BLOCKING INSPECTOR */
-.adminInspectorDrawerOverlay {
-  pointer-events: none !important;
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.adminInspectorDrawer {
-  pointer-events: auto !important;
-  width: min(420px, 92vw) !important;
-  background:
-    radial-gradient(circle at 18% 0%, rgba(127,159,58,.10), transparent 36%),
-    linear-gradient(180deg, rgba(13,18,14,.98), rgba(5,8,6,.99)) !important;
-  box-shadow: -18px 0 56px rgba(0,0,0,.38) !important;
-}
-
-.adminDrawerHeader button,
-.adminDrawerBottomClose {
-  pointer-events: auto !important;
-}
-
-.adminDrawerBottomClose {
-  width: 100%;
-  min-height: 42px;
-  margin-top: 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.045);
-  color: rgba(255,255,255,.78);
-  font-weight: 950;
-  cursor: pointer;
-}
-
-.adminDrawerBottomClose:hover {
-  border-color: rgba(127,159,58,.24);
-  background: rgba(127,159,58,.12);
-  color: rgba(235,250,195,.95);
-}
-
-@media (max-width: 720px) {
-  .adminInspectorDrawerOverlay {
-    pointer-events: auto !important;
-    background: rgba(0,0,0,.42) !important;
-  }
-}
 
 /* APP49 DRAWER HARD FIX â€” REMOVE FULLSCREEN BLOCKING LAYER */
-.adminInspectorDrawerOverlay {
-  display: none !important;
-}
-
-.adminInspectorDrawerHost {
-  position: fixed !important;
-  top: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: min(420px, 92vw) !important;
-  z-index: 19000 !important;
-  pointer-events: none !important;
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.adminInspectorDrawerHost .adminInspectorDrawer {
-  pointer-events: auto !important;
-  width: 100% !important;
-  height: 100dvh !important;
-  margin: 0 !important;
-  position: relative !important;
-}
-
-.adminDrawerHeader button,
-.adminDrawerTabs button,
-.adminDrawerBody button,
-.adminDrawerBody input,
-.adminDrawerBottomClose,
-.adminFileInput input {
-  pointer-events: auto !important;
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-.adminDrawerHeader button {
-  display: grid !important;
-  place-items: center !important;
-}
 
 @media (min-width: 1181px) {
   .adminProgramLayout {
@@ -1135,26 +481,7 @@
   }
 }
 
-@media (max-width: 720px) {
-  .adminInspectorDrawerHost {
-    width: 100vw !important;
-    pointer-events: none !important;
-  }
-
-  .adminInspectorDrawerHost .adminInspectorDrawer {
-    pointer-events: auto !important;
-  }
-}
-
 /* APP49 PROGRAM GRID SCHEME */
-.adminProgramGridPage {
-  min-height: 100dvh;
-  padding: 18px 24px 64px;
-  background:
-    radial-gradient(circle at 14% 0%, rgba(127,159,58,.08), transparent 34%),
-    linear-gradient(180deg, #070a07, #050705);
-  color: #f4f6f2;
-}
 
 .adminProgramGridTopbar {
   margin-bottom: 12px;
@@ -1224,29 +551,6 @@
   line-height: 1;
 }
 
-.adminProgramCardsFive,
-.adminProgramDayCardsFive {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.adminProgramCard,
-.adminProgramDayCard {
-  min-height: 142px;
-  padding: 14px;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.06);
-  background: rgba(255,255,255,.028);
-  color: #fff;
-  text-align: left;
-  display: grid;
-  align-content: start;
-  gap: 8px;
-  cursor: pointer;
-  transition: transform .16s ease, border-color .16s ease, background .16s ease;
-}
-
 .adminProgramCard:hover,
 .adminProgramDayCard:hover,
 .adminProgramCard.active,
@@ -1254,61 +558,6 @@
   transform: translateY(-2px);
   border-color: rgba(127,159,58,.3);
   background: rgba(127,159,58,.1);
-}
-
-.adminProgramCard span,
-.adminProgramDayCard span {
-  color: rgba(145,173,78,.82);
-  font-size: 10px;
-  font-weight: 950;
-  text-transform: uppercase;
-}
-
-.adminProgramCard strong,
-.adminProgramDayCard strong {
-  font-size: 16px !important;
-  line-height: 1.15;
-}
-
-.adminProgramCard small,
-.adminProgramDayCard small {
-  color: rgba(255,255,255,.45);
-  font-size: 12px;
-  font-weight: 850;
-}
-
-.adminProgramCard em,
-.adminProgramDayCard em {
-  align-self: end;
-  justify-self: start;
-  margin-top: auto;
-  padding: 6px 9px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.045);
-  color: rgba(255,255,255,.6);
-  font-size: 10px;
-  font-weight: 950;
-  font-style: normal;
-}
-
-.adminProgramAddCard {
-  border-style: dashed !important;
-  border-color: rgba(127,159,58,.34) !important;
-  background:
-    radial-gradient(circle at top left, rgba(127,159,58,.14), transparent 42%),
-    rgba(127,159,58,.055) !important;
-}
-
-.adminProgramAddCard b {
-  width: 42px;
-  height: 42px;
-  border-radius: 15px;
-  display: grid;
-  place-items: center;
-  background: rgba(127,159,58,.14);
-  color: rgba(235,250,195,.95);
-  font-size: 26px;
-  line-height: 1;
 }
 
 .adminProgramDayActions {
@@ -1322,46 +571,6 @@
   border-color: rgba(255,90,90,.25);
   background: rgba(255,90,90,.13);
   color: #ff9b9b;
-}
-
-.adminExerciseEditorTable {
-  display: grid;
-  gap: 8px;
-}
-
-.adminExerciseEditorHead,
-.adminExerciseEditorRow {
-  display: grid;
-  grid-template-columns: 36px minmax(220px, 1fr) minmax(360px, 1.15fr) minmax(260px, .85fr) 44px;
-  gap: 9px;
-  align-items: start;
-}
-
-.adminExerciseEditorHead {
-  padding: 0 10px 4px;
-  color: rgba(255,255,255,.36);
-  font-size: 10px;
-  font-weight: 1000;
-  text-transform: uppercase;
-}
-
-.adminExerciseEditorRow {
-  padding: 10px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.055);
-  background: rgba(255,255,255,.026);
-}
-
-.adminExerciseIndex {
-  width: 28px;
-  height: 28px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: rgba(127,159,58,.12);
-  color: rgba(235,250,195,.9);
-  font-size: 12px;
-  font-weight: 950;
 }
 
 .adminExerciseNameCell small {
@@ -1426,13 +635,6 @@
   color: rgba(235,250,195,.9);
 }
 
-.adminExerciseDelete {
-  width: 34px;
-  color: #ff9b9b;
-  border-color: rgba(255,90,90,.22);
-  background: rgba(255,90,90,.11);
-}
-
 .adminProgramEmptyExerciseList {
   min-height: 220px;
   border-radius: 20px;
@@ -1440,36 +642,12 @@
   padding: 22px;
 }
 
-@media (max-width: 1320px) {
-  .adminProgramCardsFive,
-  .adminProgramDayCardsFive {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .adminExerciseEditorHead,
-  .adminExerciseEditorRow {
-    grid-template-columns: 34px minmax(210px, 1fr) minmax(280px, 1fr) minmax(220px, .8fr) 40px;
-  }
-}
-
 @media (max-width: 1080px) {
-  .adminProgramCardsFive,
-  .adminProgramDayCardsFive {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 
   .adminProgramTemplateStrip,
   .adminProgramGridTopbar,
   .adminProgramDayActions {
     grid-template-columns: 1fr;
-  }
-
-  .adminExerciseEditorHead {
-    display: none;
-  }
-
-  .adminExerciseEditorRow {
-    grid-template-columns: 32px 1fr;
   }
 
   .adminExerciseSetsCell,
@@ -1480,17 +658,9 @@
 }
 
 @media (max-width: 720px) {
-  .adminProgramGridPage {
-    padding: 14px 12px 48px;
-  }
 
   .adminProgramGridStats {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .adminProgramCardsFive,
-  .adminProgramDayCardsFive {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -1501,11 +671,6 @@
 
 .adminProgramGridSave {
   white-space: nowrap;
-}
-
-.adminProgramCard small,
-.adminProgramDayCard small {
-  line-height: 1.25;
 }
 
 .adminProgramExerciseEditorBlock .adminProgramGridSectionHead {
@@ -1711,37 +876,4 @@
 }
 
 /* COPY PROGRAM + REORDER DAYS */
-.adminProgramCardButtons,
-.adminDayCardButtons {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: auto;
-}
-
-.adminProgramCardButtons button,
-.adminDayMoveButtons button {
-  min-height: 28px;
-  min-width: 28px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,.07);
-  background: rgba(255,255,255,.05);
-  color: rgba(255,255,255,.8);
-  font-size: 10px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.adminProgramCardButtons button:hover,
-.adminDayMoveButtons button:hover {
-  border-color: rgba(127,159,58,.35);
-  background: rgba(127,159,58,.14);
-  color: rgba(235,250,195,.95);
-}
-
-.adminDayMoveButtons {
-  display: flex;
-  gap: 6px;
-}
 

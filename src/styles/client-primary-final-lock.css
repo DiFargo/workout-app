@@ -2122,29 +2122,6 @@ html:root[data-app-theme="warm-light"] body #root .foodSearchModernActions {
   gap: 8px !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .foodSearchPopularCard {
-  min-height: 58px !important;
-  padding: 9px 10px !important;
-  display: grid !important;
-  grid-template-columns: 42px minmax(0, 1fr) 32px !important;
-  align-items: center !important;
-  gap: 10px !important;
-  border: 1px solid #e1e5ee !important;
-  border-radius: 14px !important;
-  background: #ffffff !important;
-  box-shadow: 0 10px 22px rgba(55, 64, 112, 0.06) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodSearchPopularIcon {
-  width: 36px !important;
-  height: 36px !important;
-  display: grid !important;
-  place-items: center !important;
-  border-radius: 12px !important;
-  background: #f4f1ff !important;
-  font-size: 22px !important;
-}
-
 html:root[data-app-theme="warm-light"] body #root .foodSearchPopularInfo,
 html:root[data-app-theme="warm-light"] body #root .foodSearchModernActionCard > span:nth-child(2),
 html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction > span:nth-child(2) {
@@ -2173,40 +2150,6 @@ html:root[data-app-theme="warm-light"] body #root .foodSearchPopularInfo small {
   font-weight: 750 !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
-  -webkit-text-fill-color: #5f5744 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodSearchPopularAdd {
-  width: 28px !important;
-  height: 28px !important;
-  display: grid !important;
-  place-items: center !important;
-  border: 1px solid #dedaf8 !important;
-  border-radius: 50% !important;
-  background: #f3f0ff !important;
-  color: #5d43ee !important;
-  font-size: 19px !important;
-  font-weight: 850 !important;
-  line-height: 1 !important;
-  -webkit-text-fill-color: #5d43ee !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodSearchShowMoreModern {
-  width: 100% !important;
-  min-height: 34px !important;
-  margin-top: 8px !important;
-  padding: 0 12px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 12px !important;
-  border: 1px solid #e2e6ef !important;
-  border-radius: 12px !important;
-  background: #ffffff !important;
-  color: #5f5744 !important;
-  font-size: 11px !important;
-  font-weight: 850 !important;
-  box-shadow: 0 8px 18px rgba(55, 64, 112, 0.05) !important;
   -webkit-text-fill-color: #5f5744 !important;
 }
 
@@ -3158,10 +3101,6 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
     gap: 5px !important;
     text-align: center !important;
     border-right: 1px solid #e0e4ef !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div:last-child {
-    border-right: 0 !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiSplitCards {

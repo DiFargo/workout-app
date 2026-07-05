@@ -1,4 +1,4 @@
-﻿/* ADMIN CLIENT FIXED FOOD-STYLE BOTTOM BAR */
+/* ADMIN CLIENT FIXED FOOD-STYLE BOTTOM BAR */
 .adminClientWorkspaceCrmPage {
   padding-bottom: 112px !important;
 }
@@ -401,9 +401,6 @@
 }
 
 /* APP VERSION BADGE */
-.menuPage {
-  position: relative;
-}
 
 .appVersionBadge {
   position: fixed;
@@ -430,10 +427,6 @@
 
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
   pointer-events: none;
-}
-
-.menuPage {
-  padding-bottom: calc(126px + env(safe-area-inset-bottom));
 }
 
 .mainMenuBottomBar {
@@ -800,17 +793,6 @@
   text-align: center !important;
 }
 
-.adminV3SidebarNote {
-  min-height: 136px !important;
-  padding: 20px 18px !important;
-  border-radius: 26px !important;
-  margin-top: 8px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  text-align: center !important;
-}
-
 .adminV3KpiGrid {
   gap: 14px !important;
   margin-bottom: 18px !important;
@@ -887,11 +869,6 @@
 
   .adminV3Brand {
     min-height: 172px !important;
-  }
-
-  .adminV3SidebarNote {
-    min-height: 126px !important;
-    margin-top: 8px !important;
   }
 }
 
@@ -1030,41 +1007,8 @@
 }
 
 /* Ãâ€¢ÃÂ´ÃÂ¸ÃÂ½Ã‘â€¹ÃÂ¹ Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂ¾ÃÂº ÃÅ¾ÃÂ±ÃÂ·ÃÂ¾Ã‘â‚¬ Ã¢â‚¬â€ ÃÂ²Ã‘â€¹Ã‘Ë†ÃÂµ ÃÂ¸ ÃÂ°ÃÂºÃÂºÃ‘Æ’Ã‘â‚¬ÃÂ°Ã‘â€šÃÂ½ÃÂµÃÂµ */
-.clientOverviewList,
-.adminClientOverviewList,
-.adminV3ClientOverviewList {
-  background:
-    radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
-    linear-gradient(180deg, #171a17 0%, #111511 100%) !important;
-  background-color: #171a17 !important;
-  border: 1px solid rgba(255, 255, 255, 0.075) !important;
-  border-radius: 28px !important;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
-  overflow: hidden !important;
-}
 
 /* ÃÅ¸Ã‘Æ’ÃÂ½ÃÂºÃ‘â€šÃ‘â€¹ Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂºÃÂ° ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° Ã¢â‚¬â€ ÃÂ²Ã‘â€¹Ã‘ÂÃÂ¾Ã‘â€šÃÂ° ÃÂºÃÂ°ÃÂº ÃÂ¿Ã‘â‚¬ÃÂ¾ÃÂ´Ã‘Æ’ÃÂºÃ‘â€šÃÂ¾ÃÂ²Ã‘â€¹ÃÂ¹ Ã‘ÂÃÂ¿ÃÂ¸Ã‘ÂÃÂ¾ÃÂº */
-.clientOverviewRow,
-.adminClientOverviewRow,
-.adminV3ClientOverviewRow,
-.clientMetricRow,
-.adminClientMetricRow {
-  min-height: 82px !important;
-  padding: 15px 18px !important;
-  display: grid !important;
-  grid-template-columns: 48px 1fr auto !important;
-  align-items: center !important;
-  gap: 14px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.065) !important;
-}
-
-.clientOverviewRow:last-child,
-.adminClientOverviewRow:last-child,
-.adminV3ClientOverviewRow:last-child,
-.clientMetricRow:last-child,
-.adminClientMetricRow:last-child {
-  border-bottom: 0 !important;
-}
 
 /* ÃÅ“ÃÂ°ÃÂ»Ã‘â€¹ÃÂµ ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ¸ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ°, ÃÂµÃ‘ÂÃÂ»ÃÂ¸ ÃÂ³ÃÂ´ÃÂµ-Ã‘â€šÃÂ¾ ÃÂ¾Ã‘ÂÃ‘â€šÃÂ°ÃÂ»ÃÂ¸Ã‘ÂÃ‘Å’ grid-ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ¸ */
 .clientMetricCard,
@@ -1079,22 +1023,6 @@
 }
 
 /* Ãâ€˜ÃÂ¾ÃÂ»Ã‘Å’Ã‘Ë†ÃÂ¸ÃÂµ ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ¸ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° */
-.clientTelegramCard,
-.adminClientTelegramCard,
-.adminV3ClientTelegramCard,
-.clientDashboardPanel,
-.adminClientDashboardPanel,
-.adminV3ClientDashboardPanel {
-  min-height: 176px !important;
-  padding: 20px !important;
-  border-radius: 28px !important;
-  background:
-    radial-gradient(circle at 100% 0%, rgba(18, 117, 188, 0.18), transparent 42%),
-    linear-gradient(180deg, #101a1d 0%, #0f1415 100%) !important;
-  background-color: #101a1d !important;
-  border: 1px solid rgba(32, 154, 238, 0.24) !important;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
-}
 
 /* ÃÂÃÂ¸ÃÂ¶ÃÂ½ÃÂ¸ÃÂ¹ bar ÃÂ½ÃÂ° Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ ÃÂµ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° ÃÂ½ÃÂµ ÃÂ´ÃÂ¾ÃÂ»ÃÂ¶ÃÂµÃÂ½ ÃÂ¿ÃÂµÃ‘â‚¬ÃÂµÃÂºÃ‘â‚¬Ã‘â€¹ÃÂ²ÃÂ°Ã‘â€šÃ‘Å’ ÃÂºÃÂ¾ÃÂ½Ã‘â€šÃÂµÃÂ½Ã‘â€š */
 .adminClientPage,
@@ -1106,22 +1034,6 @@
 }
 
 @media (max-width: 720px) {
-  .clientOverviewList,
-  .adminClientOverviewList,
-  .adminV3ClientOverviewList {
-    border-radius: 26px !important;
-  }
-
-  .clientOverviewRow,
-  .adminClientOverviewRow,
-  .adminV3ClientOverviewRow,
-  .clientMetricRow,
-  .adminClientMetricRow {
-    min-height: 76px !important;
-    padding: 13px 15px !important;
-    grid-template-columns: 44px 1fr auto !important;
-    gap: 12px !important;
-  }
 
   .clientMetricCard,
   .clientInfoCard,
@@ -1132,17 +1044,6 @@
     min-height: 118px !important;
     padding: 16px 14px !important;
     border-radius: 22px !important;
-  }
-
-  .clientTelegramCard,
-  .adminClientTelegramCard,
-  .adminV3ClientTelegramCard,
-  .clientDashboardPanel,
-  .adminClientDashboardPanel,
-  .adminV3ClientDashboardPanel {
-    min-height: 166px !important;
-    padding: 18px !important;
-    border-radius: 26px !important;
   }
 
   .adminClientPage,
@@ -1156,85 +1057,6 @@
 
 /* === ADMIN CLIENT BOTTOM BAR MATCH DASHBOARD V5 === */
 /* ÃÂÃÂ¸ÃÂ¶ÃÂ½ÃÂ¸ÃÂ¹ bar ÃÂ² ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂµ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° Ã‘ÂÃÂ´ÃÂµÃÂ»ÃÂ°ÃÂ½ Ã‘â€šÃÂ°ÃÂºÃÂ¸ÃÂ¼ ÃÂ¶ÃÂµ, ÃÂºÃÂ°ÃÂº dashboard bottom bar */
-
-.clientBottomBar,
-.adminClientBottomBar,
-.adminClientTabBar,
-.adminV3ClientBottomBar,
-.clientTabBar,
-.clientMobileBar {
-  position: fixed !important;
-  left: 12px !important;
-  right: 12px !important;
-  bottom: max(12px, env(safe-area-inset-bottom)) !important;
-  z-index: 2100 !important;
-
-  width: auto !important;
-  max-width: 560px !important;
-  margin: 0 auto !important;
-  min-height: 84px !important;
-  padding: 8px !important;
-
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 8px !important;
-
-  border-radius: 28px !important;
-  border: 1px solid rgba(255, 255, 255, 0.09) !important;
-  background: #10140f !important;
-  background-color: #10140f !important;
-
-  box-shadow:
-    0 -14px 38px rgba(0, 0, 0, 0.58),
-    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
-
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.clientBottomBar button,
-.adminClientBottomBar button,
-.adminClientTabBar button,
-.adminV3ClientBottomBar button,
-.clientTabBar button,
-.clientMobileBar button {
-  min-width: 0 !important;
-  min-height: 68px !important;
-  padding: 8px 6px !important;
-
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 4px !important;
-
-  border-radius: 22px !important;
-  border: 1px solid rgba(255, 255, 255, 0.075) !important;
-  background: #171a17 !important;
-  background-color: #171a17 !important;
-  color: rgba(255, 255, 255, 0.64) !important;
-
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  line-height: 1.05 !important;
-  white-space: nowrap !important;
-
-  box-shadow: none !important;
-}
-
-.clientBottomBar button span:first-child,
-.adminClientBottomBar button span:first-child,
-.adminClientTabBar button span:first-child,
-.adminV3ClientBottomBar button span:first-child,
-.clientTabBar button span:first-child,
-.clientMobileBar button span:first-child {
-  font-size: 23px !important;
-  line-height: 1 !important;
-  height: 25px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
 
 .clientBottomBar button.active,
 .adminClientBottomBar button.active,

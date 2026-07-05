@@ -237,37 +237,6 @@
     line-height: 1.25 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .postWorkoutComment {
-    display: block !important;
-    width: 100% !important;
-    margin: 0 0 16px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .postWorkoutComment span {
-    margin: 0 0 7px !important;
-    color: #8d8474 !important;
-    -webkit-text-fill-color: #8d8474 !important;
-    font-size: 12px !important;
-    font-weight: 950 !important;
-    letter-spacing: 0.02em !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .postWorkoutComment textarea {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    min-height: 82px !important;
-    max-height: 120px !important;
-    resize: none !important;
-    padding: 14px 16px !important;
-    border: 1px solid #ddd8f9 !important;
-    border-radius: 20px !important;
-    background: #fffdf5 !important;
-    color: #151824 !important;
-    font-size: 15px !important;
-    line-height: 1.25 !important;
-    box-shadow: inset 0 0 0 2px rgba(104, 82, 230, 0.08) !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .postWorkoutGrid {
     width: 100% !important;
     display: grid !important;

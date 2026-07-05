@@ -1,4 +1,4 @@
-﻿/* === NUTRITION COMPACT RHYTHM V311 === */
+/* === NUTRITION COMPACT RHYTHM V311 === */
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealList {
   height: auto !important;
   min-height: 0 !important;
@@ -548,14 +548,6 @@
   fill: #b6ed56;
   stroke: #243516;
   stroke-width: 2;
-}
-
-.mainMeasurementChartDates {
-  margin-top: -4px;
-  display: flex;
-  justify-content: space-between;
-  color: rgba(229, 234, 226, 0.38);
-  font-size: 8px;
 }
 
 .mainMeasurementSnapshot.emptyTrend {

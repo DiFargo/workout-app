@@ -194,98 +194,6 @@
   gap: 14px !important;
 }
 
-.profileMeasurementMannequinCard {
-  min-height: 300px !important;
-  border-radius: 28px !important;
-  border: 1px solid rgba(145, 173, 78, .16) !important;
-  background:
-    radial-gradient(circle at 50% 15%, rgba(145,173,78,.16), transparent 44%),
-    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)) !important;
-  overflow: hidden !important;
-  position: relative !important;
-}
-
-.profileMeasurementMannequin {
-  width: 230px !important;
-  height: 280px !important;
-  margin: 14px auto 6px !important;
-  position: relative !important;
-}
-
-.profileMeasurementMannequin::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 84px !important;
-  top: 46px !important;
-  width: 62px !important;
-  height: 118px !important;
-  border-radius: 34px 34px 28px 28px !important;
-  border: 2px solid rgba(180, 220, 91, .58) !important;
-  background: linear-gradient(180deg, rgba(145,173,78,.12), rgba(145,173,78,.03)) !important;
-  box-shadow: inset 0 0 24px rgba(145,173,78,.08) !important;
-}
-
-.profileMeasurementMannequin::after {
-  content: "" !important;
-  position: absolute !important;
-  left: 96px !important;
-  top: 156px !important;
-  width: 38px !important;
-  height: 105px !important;
-  border-left: 2px solid rgba(180, 220, 91, .5) !important;
-  border-right: 2px solid rgba(180, 220, 91, .5) !important;
-  border-radius: 0 0 26px 26px !important;
-}
-
-.pmHead {
-  position: absolute !important;
-  left: 96px !important;
-  top: 10px !important;
-  width: 38px !important;
-  height: 38px !important;
-  border-radius: 50% !important;
-  border: 2px solid rgba(180, 220, 91, .55) !important;
-}
-
-.pmNeckLine,
-.pmShouldersLine,
-.pmChestLine,
-.pmBellyLine,
-.pmPelvisLine,
-.pmThighLine,
-.pmCalfLine {
-  position: absolute !important;
-  height: 3px !important;
-  border-radius: 999px !important;
-  background: rgba(181, 230, 85, .88) !important;
-  box-shadow: 0 0 14px rgba(145,173,78,.28) !important;
-}
-
-.pmNeckLine { left: 95px; top: 49px; width: 40px; }
-.pmShouldersLine { left: 49px; top: 69px; width: 132px; }
-.pmChestLine { left: 72px; top: 98px; width: 86px; }
-.pmBellyLine { left: 78px; top: 136px; width: 74px; }
-.pmPelvisLine { left: 76px; top: 164px; width: 78px; }
-.pmThighLine { left: 78px; top: 205px; width: 74px; }
-.pmCalfLine { left: 88px; top: 244px; width: 54px; }
-
-.pmLabel {
-  position: absolute !important;
-  padding: 5px 8px !important;
-  border-radius: 999px !important;
-  background: rgba(11,15,12,.86) !important;
-  border: 1px solid rgba(145,173,78,.22) !important;
-  color: rgba(244,246,242,.82) !important;
-  font-size: 11px !important;
-  font-weight: 900 !important;
-  white-space: nowrap !important;
-}
-
-.pmLabelNeck { left: 146px; top: 38px; }
-.pmLabelChest { left: 4px; top: 88px; }
-.pmLabelBelly { right: 0; top: 126px; }
-.pmLabelThigh { left: 0; top: 196px; }
-
 .profileMeasurementLastGrid,
 .profileMeasurementReviewGrid {
   display: grid !important;
@@ -417,43 +325,6 @@
   overflow: hidden !important;
 }
 
-.profileMeasurementMiniHuman {
-  width: 100px !important;
-  height: 128px !important;
-  margin: 12px auto 0 !important;
-  position: relative !important;
-}
-
-.profileMeasurementMiniHuman i {
-  position: absolute !important;
-  left: 34px !important;
-  top: 0 !important;
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 50% !important;
-  border: 2px solid rgba(181,230,85,.58) !important;
-}
-
-.profileMeasurementMiniHuman b {
-  position: absolute !important;
-  left: 24px !important;
-  top: 36px !important;
-  width: 52px !important;
-  height: 60px !important;
-  border-radius: 28px !important;
-  border: 2px solid rgba(181,230,85,.58) !important;
-}
-
-.profileMeasurementMiniHuman em {
-  position: absolute !important;
-  left: 30px !important;
-  top: 94px !important;
-  width: 40px !important;
-  height: 34px !important;
-  border-left: 2px solid rgba(181,230,85,.58) !important;
-  border-right: 2px solid rgba(181,230,85,.58) !important;
-}
-
 .measurementIntroImage {
   display: block !important;
   width: 100% !important;
@@ -477,34 +348,6 @@
   font-size: 12px !important;
   font-weight: 900 !important;
   text-align: center !important;
-}
-
-.profileMeasurementZoneVisual {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-}
-
-.profileMeasurementZoneVisual strong {
-  font-size: 42px !important;
-  line-height: 1 !important;
-}
-
-.profileMeasurementZoneVisual span {
-  color: rgba(229,255,175,.92) !important;
-  font-size: 15px !important;
-  font-weight: 950 !important;
-  letter-spacing: .14em !important;
-}
-
-.profileMeasurementZoneVisual i {
-  width: 52% !important;
-  height: 4px !important;
-  border-radius: 999px !important;
-  background: #b5e655 !important;
-  box-shadow: 0 0 16px rgba(181,230,85,.35) !important;
 }
 
 .profileMeasurementWizardInput {
@@ -611,19 +454,9 @@
   .profileMeasurementWizardCard h3 {
     font-size: 27px !important;
   }
-
-  .profileMeasurementMannequin {
-    transform: scale(.92) !important;
-    transform-origin: top center !important;
-  }
 }
 
 /* === V106 ANKLE MEASUREMENT === */
-
-.pmLabelAnkle {
-  right: 0 !important;
-  top: 238px !important;
-}
 
 .profileMeasurementReviewGrid {
   max-height: 300px !important;
@@ -1364,17 +1197,6 @@
   font-weight: 900 !important;
 }
 
-.measurementFullscreenSave {
-  width: 100% !important;
-  min-height: 62px !important;
-  border-radius: 22px !important;
-  border: 1px solid rgba(145,173,78,.30) !important;
-  background: linear-gradient(180deg, rgba(145,173,78,.28), rgba(91,122,42,.16)) !important;
-  color: #f2ffd0 !important;
-  font-size: 17px !important;
-  font-weight: 950 !important;
-}
-
 .measurementFullscreenStatus {
   margin: 12px 0 0 !important;
   color: rgba(255,255,255,.58) !important;
@@ -1485,72 +1307,6 @@
   font-weight: 900 !important;
 }
 
-.profileMeasurementDashboardImageWrap {
-  position: relative !important;
-  z-index: 1 !important;
-  height: 350px !important;
-  border-radius: 26px !important;
-  overflow: hidden !important;
-  background: rgba(0,0,0,.16) !important;
-}
-
-.profileMeasurementDashboardImage {
-  width: 100% !important;
-  height: 100% !important;
-  display: block !important;
-  object-fit: contain !important;
-  object-position: center bottom !important;
-  transform: scale(1.10) translateY(8px) !important;
-  filter: drop-shadow(0 0 24px rgba(145,173,78,.34)) !important;
-}
-
-.profileMeasurementMetricBadge {
-  position: absolute !important;
-  z-index: 3 !important;
-  min-width: 76px !important;
-  padding: 7px 9px !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(181,230,85,.22) !important;
-  background: rgba(7,10,7,.82) !important;
-  color: rgba(255,255,255,.68) !important;
-  font-size: 10.5px !important;
-  font-weight: 950 !important;
-  line-height: 1 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 6px !important;
-  box-shadow: 0 10px 24px rgba(0,0,0,.24) !important;
-  backdrop-filter: blur(8px) !important;
-}
-
-.profileMeasurementMetricBadge b {
-  color: #dfff8e !important;
-  font-size: 12px !important;
-  font-weight: 950 !important;
-}
-
-.profileMeasurementMetricNeck {
-  top: 44px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-}
-
-.profileMeasurementMetricChest {
-  top: 122px !important;
-  left: 10px !important;
-}
-
-.profileMeasurementMetricBelly {
-  top: 184px !important;
-  right: 10px !important;
-}
-
-.profileMeasurementMetricThigh {
-  bottom: 74px !important;
-  left: 16px !important;
-}
-
 .profileMeasurementLastGrid {
   margin-top: 2px !important;
 }
@@ -1565,44 +1321,12 @@
     padding: 14px !important;
     border-radius: 28px !important;
   }
-
-  .profileMeasurementDashboardImageWrap {
-    height: 318px !important;
-  }
-
-  .profileMeasurementDashboardImage {
-    transform: scale(1.13) translateY(8px) !important;
-  }
-
-  .profileMeasurementMetricBadge {
-    min-width: 68px !important;
-    padding: 6px 8px !important;
-    font-size: 10px !important;
-  }
-
-  .profileMeasurementMetricChest {
-    top: 112px !important;
-  }
-
-  .profileMeasurementMetricBelly {
-    top: 168px !important;
-  }
-
-  .profileMeasurementMetricThigh {
-    bottom: 66px !important;
-  }
 }
 
 /* === V111 MEASUREMENT DASHBOARD SCALE ICON === */
 
 .profileMeasurementDashboardCard {
   min-height: 245px !important;
-}
-
-.profileMeasurementDashboardImageWrap,
-.profileMeasurementDashboardImage,
-.profileMeasurementMetricBadge {
-  display: none !important;
 }
 
 .profileMeasurementDashboardIconWrap {

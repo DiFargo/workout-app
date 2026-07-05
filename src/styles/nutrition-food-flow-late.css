@@ -1,4 +1,4 @@
-﻿/* UNIFIED FOOD FLOW V346 */
+/* UNIFIED FOOD FLOW V346 */
 .fatFoodSearchScreenPremium {
   --food-flow-border: rgba(255, 255, 255, 0.075);
   --food-flow-card: rgba(255, 255, 255, 0.035);
@@ -1027,28 +1027,11 @@
   color: #626b82 !important;
 }
 
-:root[data-app-theme="warm-light"] .nutritionQuickActionsExact {
-  border-color: transparent !important;
-  background: transparent !important;
-}
-
 :root[data-app-theme="warm-light"] .nutritionQuickActionExact {
   border: 1px solid #e3e6f1 !important;
   background: #ffffff !important;
   color: #151824 !important;
   box-shadow: 0 8px 22px rgba(55, 64, 112, 0.07) !important;
-}
-
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon {
-  border-color: #333b51 !important;
-}
-
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon::after {
-  background: #333b51 !important;
-}
-
-:root[data-app-theme="warm-light"] .nutritionQuickActionsDivider {
-  background: transparent !important;
 }
 
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span {
@@ -1058,10 +1041,6 @@
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span.isActive {
   background: #2d6ff2 !important;
   box-shadow: 0 2px 5px rgba(45, 111, 242, 0.18) !important;
-}
-
-:root[data-app-theme="warm-light"] .nutritionCaloriesRenderDivider {
-  background: #e5e8f2 !important;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCard::after {

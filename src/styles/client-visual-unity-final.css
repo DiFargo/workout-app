@@ -1650,7 +1650,4 @@
     scrollbar-width: thin !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow {
-    display: none !important;
-  }
 }

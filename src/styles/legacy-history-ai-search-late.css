@@ -4,40 +4,10 @@
   padding-right: 104px !important;
 }
 
-.adminV3DeleteWorkoutBtn {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  min-width: 78px;
-  height: 34px;
-  padding: 0 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 107, 107, 0.22);
-  background: rgba(255, 107, 107, 0.10);
-  color: rgba(255, 185, 185, 0.96);
-  font-size: 11px;
-  font-weight: 950;
-  cursor: pointer;
-}
-
-.adminV3DeleteWorkoutBtn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
 @media (max-width: 620px) {
   .adminV3TimelineWorkoutItem {
     padding-right: 12px !important;
     padding-bottom: 54px !important;
-  }
-
-  .adminV3DeleteWorkoutBtn {
-    top: auto;
-    bottom: 12px;
-    right: 12px;
-    transform: none;
-    width: calc(100% - 24px);
   }
 }
 
@@ -115,10 +85,6 @@
 .adminV3Tabs button.active {
   border-color: rgba(127, 159, 58, 0.32) !important;
   background: rgba(127, 159, 58, 0.16) !important;
-}
-
-.adminHistoryDeleteVisibleCard {
-  border-color: rgba(255, 107, 107, 0.12) !important;
 }
 
 .adminHistoryDeleteHint {
@@ -267,19 +233,6 @@
   color: inherit !important;
 }
 
-.fatPhotoAiRetry {
-  width: auto !important;
-  height: 30px !important;
-  margin-top: 8px !important;
-  padding: 0 11px !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background: rgba(255, 255, 255, 0.055) !important;
-  color: rgba(247, 248, 251, 0.78) !important;
-  font-size: 11px !important;
-  font-weight: 900 !important;
-}
-
 /* PREMIUM AI PHOTO SEARCH CARD â€” compact/no filename/no visual noise */
 .fatPhotoAiFloatingPreview {
   width: 100% !important;
@@ -369,21 +322,6 @@
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-}
-
-.fatPhotoAiRetry {
-  width: fit-content !important;
-  height: 28px !important;
-  min-height: 28px !important;
-  margin-top: 2px !important;
-  padding: 0 12px !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(145,173,78,0.24) !important;
-  background: rgba(127,159,58,0.13) !important;
-  color: rgba(190,240,104,0.95) !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
 }
 
 .fatPhotoAiClear {
@@ -1059,44 +997,6 @@
 }
 
 /* SMART FOOD UNITS */
-.foodEditSmartUnitBlock {
-  width: 100%;
-  margin: 8px 0 10px;
-}
-
-.foodEditSmartUnitSelect {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.foodEditSmartUnitSelect span {
-  color: rgba(247, 248, 251, 0.46);
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.02em;
-}
-
-.foodEditSmartUnitSelect select {
-  width: 100%;
-  min-height: 52px;
-  padding: 0 42px 0 14px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.075);
-  background:
-    linear-gradient(180deg, rgba(16, 24, 18, 0.98), rgba(7, 12, 9, 0.98));
-  color: rgba(247, 248, 251, 0.92);
-  font-size: 15px;
-  font-weight: 900;
-  outline: none;
-  appearance: auto;
-}
-
-.foodEditSmartUnitSelect select:focus {
-  border-color: rgba(127, 159, 58, 0.38);
-  box-shadow: 0 0 0 3px rgba(127, 159, 58, 0.10);
-}
 
 /* PORTION DROPDOWN KEEP BUTTONS */
 .foodEditPortionDropdown {
@@ -1155,271 +1055,14 @@
 }
 
 /* MEAL SELECT MOVED TO TOP */
-.foodEditHeroWithMeal {
-  display: grid !important;
-  grid-template-columns: 112px minmax(0, 1fr) !important;
-  align-items: center !important;
-  gap: 14px !important;
-}
-
-.foodEditHeroTextStack {
-  min-width: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  gap: 10px !important;
-}
-
-.foodEditHeroTextStack > strong {
-  max-width: 100% !important;
-  text-align: left !important;
-  white-space: normal !important;
-  line-height: 1.12 !important;
-}
-
-.foodEditTopMealSelect {
-  width: 100% !important;
-  max-width: 190px !important;
-}
-
-.foodEditTopMealSelect select {
-  width: 100% !important;
-  height: 38px !important;
-  padding: 0 32px 0 12px !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(127,159,58,0.20) !important;
-  background: linear-gradient(180deg, rgba(16, 25, 18, 0.98), rgba(6, 12, 8, 0.98)) !important;
-  color: rgba(83, 231, 116, 0.95) !important;
-  font-size: 14px !important;
-  font-weight: 950 !important;
-  outline: none !important;
-  appearance: auto !important;
-}
-
-.foodEditTopMealSelect select:focus {
-  border-color: rgba(83, 231, 116, 0.42) !important;
-  box-shadow: 0 0 0 3px rgba(83, 231, 116, 0.09) !important;
-}
-
-@media (max-width: 380px) {
-  .foodEditHeroWithMeal {
-    grid-template-columns: 96px minmax(0, 1fr) !important;
-    gap: 12px !important;
-  }
-
-  .foodEditTopMealSelect {
-    max-width: 170px !important;
-  }
-
-  .foodEditTopMealSelect select {
-    font-size: 13px !important;
-  }
-}
 
 /* MEAL SELECTOR ABOVE PRODUCT */
-.foodEditMealTopCenter {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 4px 0 14px;
-  padding: 0 72px;
-}
-
-.foodEditMealTopCenter select {
-  width: min(100%, 230px);
-  height: 44px;
-  padding: 0 36px 0 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(127,159,58,0.24);
-  background:
-    radial-gradient(circle at 18% 0%, rgba(83,231,116,0.10), transparent 42%),
-    linear-gradient(180deg, rgba(16, 25, 18, 0.98), rgba(6, 12, 8, 0.98));
-  color: rgba(83, 231, 116, 0.96);
-  font-size: 15px;
-  font-weight: 950;
-  text-align: center;
-  text-align-last: center;
-  outline: none;
-  appearance: auto;
-  box-shadow:
-    0 10px 24px rgba(0,0,0,0.18),
-    inset 0 1px 0 rgba(255,255,255,0.035);
-}
-
-.foodEditMealTopCenter select:focus {
-  border-color: rgba(83, 231, 116, 0.42);
-  box-shadow: 0 0 0 3px rgba(83, 231, 116, 0.09);
-}
-
-@media (max-width: 380px) {
-  .foodEditMealTopCenter {
-    padding: 0 58px;
-    margin-bottom: 12px;
-  }
-
-  .foodEditMealTopCenter select {
-    height: 42px;
-    font-size: 14px;
-  }
-}
 
 /* MEAL TITLE HEADER â€” centered like premium add screen */
-.foodEditMealTopCenter {
-  display: none !important;
-}
-
-.foodEditMealTitleHeader {
-  width: 100%;
-  margin: 2px 0 22px;
-  padding: 0 82px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  text-align: center;
-}
-
-.foodEditMealTitleHeader span {
-  color: rgba(247, 248, 251, 0.42);
-  font-size: clamp(20px, 5.6vw, 28px);
-  font-weight: 950;
-  line-height: 1;
-  letter-spacing: -0.4px;
-}
-
-.foodEditMealTitleHeader select {
-  width: auto;
-  max-width: min(78vw, 340px);
-  height: auto;
-  min-height: 56px;
-  padding: 0 34px 0 10px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.96);
-  font-size: clamp(38px, 10vw, 58px);
-  font-weight: 950;
-  line-height: 1;
-  letter-spacing: -1.8px;
-  text-align: center;
-  text-align-last: center;
-  outline: none;
-  appearance: auto;
-  text-shadow: 0 8px 26px rgba(0, 0, 0, 0.42);
-}
-
-.foodEditMealTitleHeader select:focus {
-  box-shadow: none;
-}
-
-@media (max-width: 380px) {
-  .foodEditMealTitleHeader {
-    padding: 0 64px;
-    margin-bottom: 18px;
-  }
-
-  .foodEditMealTitleHeader span {
-    font-size: 19px;
-  }
-
-  .foodEditMealTitleHeader select {
-    font-size: 36px;
-    min-height: 52px;
-  }
-}
 
 /* SMALLER MEAL HEADER + HIDE ARROW */
-.foodEditMealTitleHeader span {
-  font-size: clamp(10px, 2.8vw, 14px) !important;
-  opacity: 0.72;
-  letter-spacing: -0.1px !important;
-}
-
-.foodEditMealTitleHeader select {
-  font-size: clamp(19px, 5vw, 29px) !important;
-  min-height: 34px !important;
-  padding-right: 4px !important;
-  appearance: none !important;
-  background-image: none !important;
-}
-
-.foodEditMealTitleHeader {
-  gap: 0px !important;
-  margin-bottom: 14px !important;
-}
-
-@media (max-width: 380px) {
-  .foodEditMealTitleHeader span {
-    font-size: 10px !important;
-  }
-
-  .foodEditMealTitleHeader select {
-    font-size: 18px !important;
-    min-height: 30px !important;
-  }
-}
 
 /* MEAL PICKER LIKE SEARCH DROPDOWN */
-.foodEditMealTitleHeader {
-  display: none !important;
-}
-
-.foodEditMealPickerTop {
-  width: 100%;
-  margin: 0 0 16px;
-  padding: 0 72px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 7px;
-  text-align: center;
-  z-index: 20;
-}
-
-.foodEditMealPickerTop > span {
-  color: rgba(247, 248, 251, 0.42);
-  font-size: 13px;
-  font-weight: 950;
-  line-height: 1;
-  letter-spacing: -0.1px;
-}
-
-.foodEditMealPickerButton {
-  width: min(100%, 230px);
-  min-height: 46px;
-  padding: 0 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(127, 159, 58, 0.24);
-  background:
-    radial-gradient(circle at 18% 0%, rgba(83, 231, 116, 0.10), transparent 42%),
-    linear-gradient(180deg, rgba(16, 25, 18, 0.98), rgba(6, 12, 8, 0.98));
-  color: rgba(83, 231, 116, 0.96);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow:
-    0 10px 24px rgba(0,0,0,0.18),
-    inset 0 1px 0 rgba(255,255,255,0.035);
-}
-
-.foodEditMealPickerButton strong {
-  font-size: 22px;
-  font-weight: 950;
-  line-height: 1;
-  letter-spacing: -0.5px;
-}
-
-.foodEditMealPickerButton em {
-  color: rgba(83, 231, 116, 0.74);
-  font-style: normal;
-  font-size: 17px;
-  font-weight: 950;
-  line-height: 1;
-  transform: translateY(-1px);
-}
 
 .foodEditMealPickerDropdown {
   position: absolute;
@@ -1475,25 +1118,7 @@
   color: rgba(83, 231, 116, 0.96);
 }
 
-@media (max-width: 380px) {
-  .foodEditMealPickerTop {
-    padding: 0 58px;
-    margin-bottom: 14px;
-  }
-
-  .foodEditMealPickerButton {
-    min-height: 42px;
-  }
-
-  .foodEditMealPickerButton strong {
-    font-size: 20px;
-  }
-}
-
 /* INLINE MEAL HEADER: back â€” meal â€” edit */
-.foodEditMealPickerTop {
-  display: none !important;
-}
 
 .foodEditInlineMealHeader {
   position: absolute !important;
@@ -1742,14 +1367,6 @@
   font-size: 13px;
   font-weight: 700;
   line-height: 1.35;
-}
-
-.appErrorToast--offline {
-  border-color: rgba(212, 90, 90, 0.32);
-}
-
-.appErrorToast--savedLocal {
-  border-color: rgba(127, 159, 58, 0.36);
 }
 
 .appErrorToastOut {
@@ -2067,15 +1684,6 @@
   font-weight: 900;
 }
 
-.historyCompactDelete {
-  color: rgba(212, 90, 90, 0.85);
-  background: rgba(212, 90, 90, 0.08);
-}
-
-.historyCompactDelete:disabled {
-  opacity: 0.55;
-}
-
 .historyCompactMeta {
   display: flex;
   flex-wrap: wrap;
@@ -2206,10 +1814,6 @@
 
 .historyCompactCardTop {
   grid-template-columns: 1fr 42px;
-}
-
-.historyCompactDelete {
-  display: none !important;
 }
 
 .historyCompactToggle {

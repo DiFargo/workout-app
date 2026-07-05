@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    NUTRITION PAGE â€” REFINED DARK STYLE FINAL
    Ð¦ÐµÐ»ÑŒ: Ð°ÐºÐºÑƒÑ€Ð°Ñ‚Ð½Ñ‹Ð¹ ÑÑ‚Ð¸Ð»ÑŒ ÐºÐ°Ðº Ð½Ð° Ñ€ÐµÑ„ÐµÑ€ÐµÐ½ÑÐµ â„–2.
    Ð¢Ð¾Ð»ÑŒÐºÐ¾ Ñ€Ð°Ð·Ð´ÐµÐ» Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ. Workout UI Ð½Ðµ Ñ‚Ñ€Ð¾Ð³Ð°ÐµÐ¼.
@@ -49,43 +49,8 @@
 }
 
 /* Ð’ÐµÑ€Ñ…Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº */
-.fatTodayPanel {
-  width: 100% !important;
-  padding: 0 !important;
-  margin: 0 0 22px !important;
-}
 
 /* Ð¡Ñ‚Ñ€Ð¾ÐºÐ° ÑÐµÑ€Ð¸Ð¸ â€” ÑÐ²ÐµÑ€Ñ…Ñƒ, Ñ€Ð¾Ð²Ð½Ð¾ Ð½Ð° Ð»Ð¸Ð½Ð¸Ð¸ Ñ ÐºÐ½Ð¾Ð¿ÐºÐ¾Ð¹ Ð½Ð°Ð·Ð°Ð´ */
-.fatStreakLineTop {
-  width: 100% !important;
-  min-height: 58px !important;
-  height: 58px !important;
-  margin: 0 0 28px !important;
-  padding: 0 78px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-.fatStreakLineTop span {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  color: rgba(245, 247, 251, 0.92) !important;
-  font-size: clamp(16px, 4.1vw, 22px) !important;
-  font-weight: 850 !important;
-  line-height: 1.1 !important;
-  letter-spacing: -0.25px !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
 
 .fatStreakLineTop strong,
 .fatStreakLineTop i,
@@ -95,26 +60,6 @@
 }
 
 /* Ð”Ð°Ñ‚Ð° */
-.fatDateHeaderNoArrows,
-.fatDateHeaderNoArrows .fatDateTitle {
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  margin: 0 !important;
-}
-
-.fatDateHeaderNoArrows .fatDateTitle h1 {
-  width: 100% !important;
-  margin: 0 0 28px !important;
-  color: rgba(255, 255, 255, 0.82) !important;
-  font-size: clamp(42px, 11vw, 62px) !important;
-  font-weight: 850 !important;
-  line-height: 0.95 !important;
-  letter-spacing: -1.8px !important;
-  text-align: center !important;
-}
 
 /* ÐÐµÐ´ÐµÐ»Ñ */
 .fatWeekRow {
@@ -395,23 +340,6 @@
     max-height: 54px !important;
   }
 
-  .fatStreakLineTop {
-    height: 54px !important;
-    min-height: 54px !important;
-    padding-left: 68px !important;
-    padding-right: 44px !important;
-    margin-bottom: 24px !important;
-  }
-
-  .fatStreakLineTop span {
-    font-size: 16px !important;
-  }
-
-  .fatDateHeaderNoArrows .fatDateTitle h1 {
-    font-size: 42px !important;
-    margin-bottom: 25px !important;
-  }
-
   .fatWeekRow {
     gap: 7px !important;
     margin-bottom: 27px !important;
@@ -538,53 +466,6 @@
   color: #ffffff !important;
   transform: translateY(-2px) !important;
 }
-
-.fatTodayPanel {
-  padding: 0 !important;
-  margin: 0 0 22px !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-.fatStreakLineTop {
-  height: 60px !important;
-  min-height: 60px !important;
-  margin: 0 0 42px !important;
-  padding: 0 60px 0 72px !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  background: transparent !important;
-  border: 0 !important;
-}
-
-.fatStreakLineTop span {
-  color: rgba(245, 247, 251, 0.88) !important;
-  font-size: clamp(18px, 4.6vw, 24px) !important;
-  font-weight: 900 !important;
-  letter-spacing: -0.45px !important;
-  text-align: center !important;
-}
-
-.fatStreakLineTop span::first-letter { color: inherit; }
-
-.fatDateHeaderNoArrows {
-  margin: 0 !important;
-}
-
-.fatDateHeaderNoArrows .fatDateTitle h1 {
-  margin: 0 0 30px !important;
-  color: #ffffff !important;
-  font-size: clamp(49px, 13vw, 72px) !important;
-  font-weight: 950 !important;
-  line-height: 0.95 !important;
-  letter-spacing: -2.4px !important;
-  text-align: center !important;
-  text-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
-}
-
-.fatDateHeaderNoArrows .fatDateTitle button { display: none !important; }
 
 .fatWeekRow {
   width: 100% !important;
@@ -871,23 +752,6 @@
     max-height: 55px !important;
   }
 
-  .fatStreakLineTop {
-    height: 58px !important;
-    min-height: 58px !important;
-    padding-left: 72px !important;
-    padding-right: 38px !important;
-    margin-bottom: 40px !important;
-  }
-
-  .fatStreakLineTop span {
-    font-size: 17px !important;
-  }
-
-  .fatDateHeaderNoArrows .fatDateTitle h1 {
-    margin-bottom: 30px !important;
-    font-size: 42px !important;
-  }
-
   .fatWeekRow {
     gap: 11px !important;
     margin-bottom: 33px !important;
@@ -1002,25 +866,6 @@
   padding-left: 14px !important;
   padding-right: 14px !important;
   padding-bottom: 18px !important;
-}
-
-.fatStreakLineTop {
-  height: 50px !important;
-  min-height: 50px !important;
-  margin-bottom: 22px !important;
-  padding-left: 64px !important;
-  padding-right: 28px !important;
-}
-
-.fatStreakLineTop span {
-  font-size: clamp(15px, 4vw, 20px) !important;
-  letter-spacing: -0.3px !important;
-}
-
-.fatDateHeaderNoArrows .fatDateTitle h1 {
-  margin-bottom: 22px !important;
-  font-size: clamp(38px, 10vw, 56px) !important;
-  letter-spacing: -1.6px !important;
 }
 
 .fatWeekRow {
@@ -1162,18 +1007,6 @@
     max-height: 48px !important;
   }
 
-  .fatStreakLineTop {
-    height: 48px !important;
-    min-height: 48px !important;
-    padding-left: 64px !important;
-    margin-bottom: 20px !important;
-  }
-
-  .fatDateHeaderNoArrows .fatDateTitle h1 {
-    margin-bottom: 20px !important;
-    font-size: 36px !important;
-  }
-
   .fatWeekRow {
     gap: 8px !important;
     margin-bottom: 20px !important;
@@ -1261,7 +1094,6 @@
 }
 
 @media (max-width: 370px) {
-  .fatDateHeaderNoArrows .fatDateTitle h1 { font-size: 32px !important; }
   .fatWeekRow .fatDayCell span { width: 32px !important; height: 32px !important; font-size: 21px !important; }
   .fatWeekRow .fatDayCell small { font-size: 12px !important; }
   .fatQuickActions button { min-height: 48px !important; font-size: 13px !important; }

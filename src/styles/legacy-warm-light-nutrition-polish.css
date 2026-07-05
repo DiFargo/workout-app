@@ -321,12 +321,6 @@ body[data-app-theme="warm-light"],
   border-radius: 30px !important;
 }
 
-:root[data-app-theme="warm-light"] .fatCalorieDot,
-:root[data-app-theme="warm-light"] .fatDot,
-:root[data-app-theme="warm-light"] .calorieDot {
-  background: rgba(76, 64, 42, 0.22) !important;
-}
-
 :root[data-app-theme="warm-light"] .fatCalorieDot.active,
 :root[data-app-theme="warm-light"] .fatDot.active,
 :root[data-app-theme="warm-light"] .calorieDot.active {
@@ -345,17 +339,6 @@ body[data-app-theme="warm-light"],
   background: #f06d7c !important;
 }
 
-:root[data-app-theme="warm-light"] .fatMacroBox,
-:root[data-app-theme="warm-light"] .fatNutrientBox,
-:root[data-app-theme="warm-light"] .fatSummaryMiniCard,
-:root[data-app-theme="warm-light"] .fatWaterAction,
-:root[data-app-theme="warm-light"] .fatWaterCard button {
-  background: linear-gradient(180deg, rgba(255, 252, 237, 0.84), rgba(245, 233, 198, 0.88)) !important;
-  color: var(--text) !important;
-  border-color: var(--line) !important;
-  box-shadow: var(--warm-shadow-sm) !important;
-}
-
 /* bottom sheet / add food / search history */
 :root[data-app-theme="warm-light"] .fatSearchBottomBar,
 :root[data-app-theme="warm-light"] .fatSearchActions,
@@ -368,27 +351,7 @@ body[data-app-theme="warm-light"],
   -webkit-backdrop-filter: blur(18px) !important;
 }
 
-:root[data-app-theme="warm-light"] .fatSearchHistoryItem,
-:root[data-app-theme="warm-light"] .fatRecentFoodItem,
-:root[data-app-theme="warm-light"] .fatFoodResult,
-:root[data-app-theme="warm-light"] .fatProductResult,
-:root[data-app-theme="warm-light"] .fatMyFoodItem {
-  background: rgba(255, 253, 243, 0.72) !important;
-  color: var(--text) !important;
-  border-color: var(--line) !important;
-  box-shadow: var(--warm-shadow-sm) !important;
-}
-
 /* overlays and modals */
-:root[data-app-theme="warm-light"] .saveOverlay,
-:root[data-app-theme="warm-light"] .finishOverlay,
-:root[data-app-theme="warm-light"] .modalOverlay,
-:root[data-app-theme="warm-light"] .fatOverlay,
-:root[data-app-theme="warm-light"] .nutritionOverlay {
-  background: rgba(62, 48, 22, 0.26) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-}
 
 :root[data-app-theme="warm-light"] .modalCard,
 :root[data-app-theme="warm-light"] .fatModalCard,
@@ -422,13 +385,6 @@ body[data-app-theme="warm-light"],
 }
 
 /* keep destructive actions red */
-:root[data-app-theme="warm-light"] .deleteBtn,
-:root[data-app-theme="warm-light"] .dangerBtn,
-:root[data-app-theme="warm-light"] .fatDeleteBtn {
-  background: rgba(188, 81, 79, 0.12) !important;
-  color: #9d3735 !important;
-  border-color: rgba(188, 81, 79, 0.18) !important;
-}
 
 /* charts / donuts */
 :root[data-app-theme="warm-light"] .fatDonut,
@@ -506,12 +462,6 @@ body[data-app-theme="warm-light"],
 }
 
 /* CLEAN TODAY HEADER â€” WARM LIGHT ONLY */
-:root[data-app-theme="warm-light"] .fatDateHeaderNoArrows,
-:root[data-app-theme="warm-light"] .fatDateTitle {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-}
 
 :root[data-app-theme="warm-light"] .fatWeekRow,
 :root[data-app-theme="warm-light"] .fatDayCell {
@@ -965,13 +915,6 @@ body[data-app-theme="warm-light"],
     inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
 }
 
-:root[data-app-theme="warm-light"] .summaryNutrientsGrid > div {
-  background:
-    radial-gradient(circle at 12% 0%, rgba(224, 201, 77, 0.18), transparent 42%),
-    linear-gradient(180deg, rgba(255, 249, 215, 0.94) 0%, rgba(246, 232, 174, 0.78) 100%) !important;
-  border-color: rgba(94, 75, 30, 0.10) !important;
-}
-
 :root[data-app-theme="warm-light"] .summaryDotGrid span.on {
   background: #e0c94d !important;
   box-shadow: 0 0 10px rgba(224, 201, 77, 0.36) !important;
@@ -1029,9 +972,6 @@ body[data-app-theme="warm-light"],
 }
 
 /* COMPACT SUMMARY DONUT â€” WARM LIGHT ONLY */
-:root[data-app-theme="warm-light"] .summaryMacroCard {
-  overflow: hidden !important;
-}
 
 :root[data-app-theme="warm-light"] .summaryDonut {
   width: 88px !important;
@@ -1163,15 +1103,6 @@ body[data-app-theme="warm-light"],
 }
 
 /* hollow search icon */
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon,
-:root[data-app-theme="warm-light"] .searchFoodIcon {
-  background: transparent !important;
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
-  fill: none !important;
-  stroke: #5f5744 !important;
-  stroke-width: 2.4px !important;
-}
 
 /* FIX PRODUCT ROWS + HOLLOW SEARCH ICON */
 
@@ -1190,21 +1121,8 @@ body[data-app-theme="warm-light"],
 }
 
 /* hollow magnifier icon */
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon svg,
-:root[data-app-theme="warm-light"] .searchFoodIcon svg,
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon path,
-:root[data-app-theme="warm-light"] .searchFoodIcon path {
-  fill: transparent !important;
-  stroke: #5f5744 !important;
-  stroke-width: 2.2px !important;
-}
 
 /* fallback if icon font */
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon,
-:root[data-app-theme="warm-light"] .searchFoodIcon {
-  color: #5f5744 !important;
-  background: transparent !important;
-}
 
 /* WARM LIGHT â€” PRODUCT ROWS EXACT COLOR LIKE REFERENCE */
 :root[data-app-theme="warm-light"] .productRowExact,
@@ -1229,38 +1147,4 @@ body[data-app-theme="warm-light"],
 }
 
 /* SEARCH ICON EXACT LIKE REFERENCE */
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon {
-  width: 26px !important;
-  height: 26px !important;
-
-  border: 3px solid #433d31 !important;
-  border-radius: 50% !important;
-
-  background: transparent !important;
-  box-shadow: none !important;
-
-  position: relative !important;
-  display: inline-block !important;
-}
-
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon::before {
-  content: "" !important;
-
-  position: absolute !important;
-  width: 11px !important;
-  height: 3px !important;
-
-  background: #433d31 !important;
-  border-radius: 999px !important;
-
-  right: -8px !important;
-  bottom: 1px !important;
-
-  transform: rotate(45deg) !important;
-}
-
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon::after {
-  display: none !important;
-  content: none !important;
-}
 

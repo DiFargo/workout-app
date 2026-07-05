@@ -1,4 +1,4 @@
-﻿/* Nutrition AI plan follows the active client theme. */
+/* Nutrition AI plan follows the active client theme. */
 :root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanDashboard {
   border: 1px solid rgba(255, 255, 255, 0.07) !important;
   background: rgba(255, 255, 255, 0.026) !important;
@@ -972,47 +972,9 @@
   padding: 30px 18px 18px !important;
 }
 
-.profileProgressTab {
-  width: 100%;
-}
-
-.profileProgressTabHeader {
-  text-align: center;
-}
-
-.profileProgressTabHeader span {
-  color: #b5e655;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.profileProgressTabHeader h1 {
-  margin: 8px 0 6px;
-  color: #fff;
-  font-size: clamp(26px, 7vw, 34px);
-  line-height: 1;
-}
-
-.profileProgressTabHeader p {
-  max-width: 300px;
-  margin: 0 auto;
-  color: rgba(255, 255, 255, 0.56);
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.profileProgressTabOverview {
-  margin-top: 30px;
-}
-
 @media (max-height: 720px) {
   .profileTabbedPage[data-profile-tab="progress"] .profileCabinetSection {
     padding: 20px 14px 14px !important;
-  }
-
-  .profileProgressTabOverview {
-    margin-top: 20px;
-    gap: 8px;
   }
 
   .profileProgressTabOverview .progressHubCard {

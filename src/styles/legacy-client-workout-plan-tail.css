@@ -1,4 +1,4 @@
-﻿/* === INDIVIDUAL PLAN CARD ACTION + FOUR-SLOT BAR V276 === */
+/* === INDIVIDUAL PLAN CARD ACTION + FOUR-SLOT BAR V276 === */
 .individualWorkoutSelectPage .individualWorkoutCardPro {
   cursor: default !important;
 }
@@ -419,17 +419,6 @@
   box-shadow: none !important;
 }
 
-.nutritionCaloriesRenderDivider {
-  width: 1px !important;
-  height: 64px !important;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.24) 50%,
-    transparent 100%
-  ) !important;
-}
-
 .nutritionCaloriesRenderCol {
   gap: 10px !important;
   align-items: flex-start !important;
@@ -477,10 +466,6 @@
   .nutritionCaloriesRenderGrid span {
     width: 8px !important;
     height: 8px !important;
-  }
-
-  .nutritionCaloriesRenderDivider {
-    height: 56px !important;
   }
 
   .nutritionCaloriesRenderCol {
@@ -546,10 +531,6 @@
   padding-bottom: 14px !important;
 }
 
-.nutritionCaloriesRenderDivider {
-  height: 54px !important;
-}
-
 .nutritionCaloriesRenderCol {
   gap: 7px !important;
 }
@@ -569,10 +550,6 @@
     min-height: 104px !important;
     padding-top: 12px !important;
     padding-bottom: 12px !important;
-  }
-
-  .nutritionCaloriesRenderDivider {
-    height: 48px !important;
   }
 
   .nutritionCaloriesRenderCol {
@@ -608,10 +585,6 @@
   padding-bottom: 11px !important;
 }
 
-.nutritionCaloriesRenderDivider {
-  height: 46px !important;
-}
-
 .nutritionCaloriesRenderCol {
   gap: 5px !important;
 }
@@ -627,10 +600,6 @@
     min-height: 94px !important;
     padding-top: 10px !important;
     padding-bottom: 10px !important;
-  }
-
-  .nutritionCaloriesRenderDivider {
-    height: 42px !important;
   }
 
   .nutritionCaloriesRenderCol strong {
@@ -721,23 +690,6 @@
    ÐÐ¾Ð²Ñ‹Ð¹ Ð±Ð»Ð¾Ðº ÑÐ¾Ð·Ð´Ð°Ð½ Ñ Ð½ÑƒÐ»Ñ Ð¸ Ð½Ðµ Ð·Ð°Ð²Ð¸ÑÐ¸Ñ‚ Ð¾Ñ‚ ÑÑ‚Ð°Ñ€Ñ‹Ñ… ÑÑ‚Ð¸Ð»ÐµÐ¹.
    ========================================================= */
 
-.nutritionQuickActionsExact {
-  width: 100% !important;
-  min-height: 78px !important;
-  margin: 10px 0 16px !important;
-  padding: 4px 0 !important;
-
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr) !important;
-  align-items: center !important;
-  column-gap: 12px !important;
-
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  overflow: visible !important;
-}
-
 .nutritionQuickActionExact {
   width: 100% !important;
   height: 62px !important;
@@ -776,54 +728,6 @@
   transform: scale(0.985) !important;
 }
 
-.nutritionQuickActionsDivider {
-  width: 1px !important;
-  height: 34px !important;
-  display: block !important;
-  justify-self: center !important;
-  align-self: center !important;
-
-  border-radius: 999px !important;
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgba(255,255,255,0.18),
-    transparent
-  ) !important;
-}
-
-.nutritionQuickSearchIcon {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  display: inline-block !important;
-  position: relative !important;
-}
-
-.nutritionQuickSearchIcon::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 2px !important;
-  top: 2px !important;
-  width: 17px !important;
-  height: 17px !important;
-  border: 3px solid rgba(246,248,251,0.92) !important;
-  border-radius: 50% !important;
-}
-
-.nutritionQuickSearchIcon::after {
-  content: "" !important;
-  position: absolute !important;
-  left: 19px !important;
-  top: 20px !important;
-  width: 11px !important;
-  height: 3px !important;
-  border-radius: 999px !important;
-  background: rgba(246,248,251,0.92) !important;
-  transform: rotate(45deg) !important;
-  transform-origin: left center !important;
-}
-
 .nutritionQuickCalendarIcon {
   width: 28px !important;
   height: 28px !important;
@@ -835,21 +739,7 @@
   line-height: 1 !important;
 }
 
-.nutritionQuickActionsExact input[type="date"] {
-  position: absolute !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  width: 1px !important;
-  height: 1px !important;
-}
-
 @media (max-width: 480px) {
-  .nutritionQuickActionsExact {
-    min-height: 74px !important;
-    margin: 8px 0 15px !important;
-    padding: 4px 0 !important;
-    column-gap: 10px !important;
-  }
 
   .nutritionQuickActionExact {
     height: 58px !important;
@@ -858,10 +748,6 @@
     gap: 9px !important;
     border-radius: 16px !important;
     font-size: 15px !important;
-  }
-
-  .nutritionQuickActionsDivider {
-    height: 30px !important;
   }
 
   .nutritionQuickSearchIcon,
@@ -874,25 +760,9 @@
   .nutritionQuickCalendarIcon {
     font-size: 22px !important;
   }
-
-  .nutritionQuickSearchIcon::before {
-    width: 15px !important;
-    height: 15px !important;
-    border-width: 2.5px !important;
-  }
-
-  .nutritionQuickSearchIcon::after {
-    left: 17px !important;
-    top: 18px !important;
-    width: 10px !important;
-    height: 2.5px !important;
-  }
 }
 
 @media (max-width: 390px) {
-  .nutritionQuickActionsExact {
-    column-gap: 9px !important;
-  }
 
   .nutritionQuickActionExact {
     height: 56px !important;

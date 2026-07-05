@@ -1,4 +1,4 @@
-﻿/* APP */
+/* APP */
 .app {
   max-width: 560px;
   min-height: 100vh;
@@ -110,10 +110,6 @@
   font-size: 17px;
   font-weight: 900;
   box-shadow: none;
-}
-
-.showVideoBtn {
-  margin-bottom: 12px;
 }
 
 .exerciseVideo {

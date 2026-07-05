@@ -232,50 +232,6 @@
     white-space: nowrap;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .adminFocusGrid {
-    grid-column: 1 / -1 !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 20px !important;
-    margin: 8px 0 2px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminFocusCard {
-    min-height: 120px !important;
-    padding: 19px 21px !important;
-    display: grid !important;
-    grid-template-columns: 62px minmax(0, 1fr) !important;
-    align-items: center !important;
-    justify-content: initial !important;
-    gap: 17px !important;
-    border: 1px solid #e3e6f1 !important;
-    border-radius: 21px !important;
-    background: #ffffff !important;
-    color: #171a2a !important;
-    text-align: left !important;
-    box-shadow: 0 10px 28px rgba(55, 64, 112, 0.07) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root button.adminFocusCard {
-    cursor: pointer;
-    transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root button.adminFocusCard:hover {
-    transform: translateY(-2px);
-    border-color: #cec8f7 !important;
-    box-shadow: 0 15px 34px rgba(73, 67, 151, 0.12) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminFocusIcon {
-    width: 62px;
-    height: 62px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    font-size: 27px;
-    font-weight: 900;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .adminFocusIcon.clients {
     background: #efedff;
     color: #6b55e7;
@@ -294,32 +250,6 @@
   html:root[data-app-theme="warm-light"] body #root .adminFocusIcon.ai {
     background: #f7eaff;
     color: #a64bdd;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminFocusContent {
-    min-width: 0;
-    display: grid;
-    gap: 5px;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminFocusLabel {
-    margin: 0 !important;
-    color: #68738c !important;
-    font-size: 13px !important;
-    font-weight: 850 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminFocusValue {
-    color: #171a2a !important;
-    font-size: 30px !important;
-    font-weight: 950 !important;
-    line-height: 1 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminFocusContent small {
-    color: #7d879d;
-    font-size: 12px;
-    font-weight: 650;
   }
 
   html:root[data-app-theme="warm-light"] body #root .adminV3Header > div:first-child > .adminDashboardSection {
@@ -365,10 +295,6 @@
     font-size: 19px;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardMiniList {
-    gap: 9px !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .adminDashboardMiniItem {
     min-height: 68px !important;
     padding: 13px 15px !important;
@@ -377,34 +303,6 @@
     background: #ffffff !important;
     color: #171a2a !important;
     box-shadow: none !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardClientItem {
-    width: 100%;
-    display: grid !important;
-    grid-template-columns: 48px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 13px;
-    text-align: left;
-    cursor: pointer;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardClientAvatar {
-    width: 48px;
-    height: 48px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ece8ff, #ddd7ff);
-    color: #674fe0;
-    font-size: 17px;
-    font-weight: 950;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardClientCopy {
-    min-width: 0;
-    display: grid;
-    gap: 3px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .adminDashboardMiniName {
@@ -420,38 +318,6 @@
     line-height: 1.35 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardOpenClient {
-    min-height: 38px;
-    padding: 0 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #d9d4fb;
-    border-radius: 13px;
-    color: #654fe0;
-    font-size: 12px;
-    font-weight: 900;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardAddClient {
-    width: 100%;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    border: 1px solid #d9d4fb;
-    border-radius: 14px;
-    background: #ffffff;
-    color: #654fe0;
-    font-size: 13px;
-    font-weight: 900;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardAddClient span {
-    font-size: 20px;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .adminDashboardAiCard {
     min-height: 188px !important;
     display: grid;
@@ -459,29 +325,6 @@
     align-content: start;
     gap: 14px;
     padding: 20px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardMiniStatus {
-    color: #694fe0 !important;
-    font-size: 11px !important;
-    font-weight: 900 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardOpenPlan {
-    width: 100%;
-    min-height: 44px;
-    border: 0;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #684ee3, #7b3fe4);
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 900;
-    box-shadow: 0 10px 24px rgba(102, 74, 214, 0.2);
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminDashboardOpenPlan:disabled {
-    opacity: 0.45;
-    box-shadow: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .adminDashboardTimeline {
@@ -552,10 +395,6 @@
     margin: 12px auto !important;
     padding-right: 26px !important;
     padding-left: 26px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .adminFocusGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .adminV3Header > div:first-child > .adminDashboardSection,
@@ -732,16 +571,6 @@ html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrmPage .
 
 .trainerAttentionCard.plateau .trainerAttentionIcon { color: #f5a623; }
 .trainerAttentionCard.payment .trainerAttentionIcon { color: #8d74ff; }
-
-.clientTrainerTasksPanel {
-  width: 100%;
-  display: grid;
-  gap: 10px;
-  padding: 16px;
-  border: 1px solid rgba(151, 197, 64, 0.2);
-  border-radius: 20px;
-  background: rgba(13, 25, 16, 0.84);
-}
 
 .clientTrainerTasksHead,
 .trainerWorkspaceHead,

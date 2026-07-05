@@ -14,28 +14,6 @@
   color: var(--text);
 }
 
-.profileDashboardBack {
-  position: fixed;
-  top: max(16px, calc(env(safe-area-inset-top) + 8px));
-  left: max(14px, calc(env(safe-area-inset-left) + 12px));
-  z-index: 60;
-  width: 46px;
-  height: 46px;
-  padding: 0;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-}
-
-.profileDashboardHero {
-  display: grid;
-  grid-template-columns: 68px 1fr;
-  gap: 14px;
-  align-items: center;
-  padding-top: 20px;
-  margin-bottom: 16px;
-}
-
 .profileAvatarBig {
   width: 68px;
   height: 68px;
@@ -58,13 +36,6 @@
   letter-spacing: .1em;
 }
 
-.profileDashboardHero h1 {
-  margin: 4px 0 4px;
-  font-size: 34px;
-  line-height: .95;
-  letter-spacing: -1.2px;
-}
-
 .profileDashboardHero p,
 .profileCardHead p,
 .profileAccordionHead small {
@@ -75,13 +46,6 @@
   line-height: 1.35;
 }
 
-.profileQuickGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
 .profileQuickGrid div,
 .profileDashboardCard {
   border-radius: 24px;
@@ -89,11 +53,6 @@
   background:
     linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.024));
   box-shadow: 0 14px 36px rgba(0,0,0,.18);
-}
-
-.profileQuickGrid div {
-  min-height: 82px;
-  padding: 13px;
 }
 
 .profileQuickGrid span,
@@ -106,25 +65,9 @@
   font-weight: 900;
 }
 
-.profileQuickGrid strong {
-  display: block;
-  margin-top: 8px;
-  color: #fff;
-  font-size: 19px;
-  line-height: 1.05;
-  font-weight: 1000;
-}
-
 .profileDashboardCard {
   padding: 16px;
   margin-bottom: 12px;
-}
-
-.profileCardHead {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
 }
 
 .profileCardHead h2,
@@ -149,21 +92,6 @@
   font-size: 13px;
   font-weight: 950;
   cursor: pointer;
-}
-
-.profileProgramStatus {
-  margin-top: 14px;
-  padding: 13px;
-  border-radius: 18px;
-  background: rgba(0,0,0,.14);
-  border: 1px solid rgba(255,255,255,.045);
-}
-
-.profileProgramStatus strong {
-  display: block;
-  margin-bottom: 5px;
-  color: #fff;
-  font-size: 15px;
 }
 
 .profileAccordionHead {
@@ -262,27 +190,6 @@
   gap: 12px;
 }
 
-.profileMiniRows {
-  display: grid;
-  gap: 8px;
-  margin: 14px 0;
-}
-
-.profileMiniRows div {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 0;
-  border-top: 1px solid rgba(255,255,255,.055);
-}
-
-.profileMiniRows strong {
-  color: rgba(255,255,255,.88);
-  font-size: 13px;
-  font-weight: 950;
-  text-align: right;
-}
-
 .profileMacroGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -339,10 +246,6 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .profileDashboardHero {
-    grid-template-columns: 58px 1fr;
-  }
-
   .profileAvatarBig {
     width: 58px;
     height: 58px;
@@ -387,49 +290,6 @@
 }
 
 /* APP50 PROFILE NUTRITION ACCORDION */
-.profileNutritionAccordionHead {
-  margin-bottom: 12px;
-}
-
-.profileNutritionCollapsedInfo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-}
-
-.profileNutritionCollapsedInfo div {
-  min-height: 66px;
-  padding: 11px;
-  border-radius: 16px;
-  background: rgba(0,0,0,.14);
-  border: 1px solid rgba(255,255,255,.045);
-}
-
-.profileNutritionCollapsedInfo span,
-.profileNutritionGoalHint {
-  color: rgba(255,255,255,.46);
-  font-size: 11px;
-  font-weight: 900;
-}
-
-.profileNutritionCollapsedInfo strong {
-  display: block;
-  margin-top: 7px;
-  color: #fff;
-  font-size: 16px;
-  line-height: 1.05;
-}
-
-.profileNutritionGoalExpanded {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255,255,255,.06);
-}
-
-.profileNutritionGoalHint {
-  margin: 0 0 12px;
-  line-height: 1.4;
-}
 
 .profileNutritionGoalExpanded .profileMacroGrid {
   margin-top: 10px;
@@ -441,70 +301,7 @@
   padding-bottom: 14px;
 }
 
-.profileNutritionAccordionHead {
-  margin-bottom: 8px !important;
-}
-
-.profileNutritionAccordionHead strong {
-  font-size: 19px !important;
-  margin: 3px 0 2px !important;
-}
-
-.profileNutritionAccordionHead small {
-  font-size: 11px !important;
-  line-height: 1.25 !important;
-}
-
-.profileNutritionAccordionHead em {
-  width: 34px !important;
-  height: 34px !important;
-  font-size: 20px !important;
-}
-
-.profileNutritionCollapsedInfo {
-  grid-template-columns: 1.25fr .75fr !important;
-  gap: 7px !important;
-}
-
-.profileNutritionCollapsedInfo div {
-  min-height: 48px !important;
-  padding: 8px 10px !important;
-  border-radius: 14px !important;
-}
-
-.profileNutritionCollapsedInfo span {
-  font-size: 9.5px !important;
-  line-height: 1 !important;
-}
-
-.profileNutritionCollapsedInfo strong {
-  margin-top: 4px !important;
-  font-size: 12px !important;
-  line-height: 1.05 !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.profileNutritionCollapsedInfo div:last-child strong {
-  font-size: 14px !important;
-}
-
 /* APP50 PROFILE GOAL READONLY */
-.profileGoalReadonlyValue {
-  width: 100%;
-  min-height: 44px;
-  padding: 0 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.075);
-  background: rgba(255,255,255,.035);
-  color: rgba(235,250,195,.92);
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  font-weight: 900;
-  text-transform: capitalize;
-}
 
 /* APP50 TELEGRAM PROFILE V1 */
 .profileAvatarBig.telegram {
@@ -527,19 +324,6 @@
 .profileTelegramAvatar img {
   border-radius: inherit;
   display: block;
-}
-
-.profileTelegramCard {
-  position: relative;
-  overflow: hidden;
-}
-
-.profileTelegramCard::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top right, rgba(42,171,238,.12), transparent 42%);
-  pointer-events: none;
 }
 
 .profileTelegramStatus,
@@ -566,20 +350,6 @@
   color: rgba(180,230,255,.95);
 }
 
-.profileTelegramBody {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 54px 1fr;
-  gap: 12px;
-  align-items: center;
-  margin-top: 14px;
-  padding: 12px;
-  border-radius: 18px;
-  background: rgba(0,0,0,.14);
-  border: 1px solid rgba(255,255,255,.045);
-}
-
 .profileTelegramAvatar {
   width: 54px;
   height: 54px;
@@ -593,22 +363,6 @@
   place-items: center;
   background: rgba(42,171,238,.14);
   border: 1px solid rgba(42,171,238,.18);
-}
-
-.profileTelegramInfo strong {
-  display: block;
-  color: #fff;
-  font-size: 15px;
-  line-height: 1.15;
-}
-
-.profileTelegramInfo span {
-  display: block;
-  margin-top: 5px;
-  color: rgba(255,255,255,.48);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.35;
 }
 
 .profileTelegramActions {
@@ -645,15 +399,6 @@
   border-color: rgba(255,90,90,.24);
   background: rgba(255,90,90,.11);
   color: #ffaaaa;
-}
-
-.profileTelegramStatusText {
-  position: relative;
-  z-index: 1;
-  margin: 10px 0 0;
-  color: rgba(255,255,255,.52);
-  font-size: 12px;
-  font-weight: 850;
 }
 
 .profileTelegramModalOverlay {
@@ -728,18 +473,6 @@
   padding: 0 12px;
   font-size: 14px;
   font-weight: 850;
-}
-
-.profileTelegramToggle {
-  grid-template-columns: 24px 1fr !important;
-  align-items: center;
-  margin: 12px 0 !important;
-}
-
-.profileTelegramToggle input {
-  width: 18px;
-  height: 18px;
-  accent-color: #2aabee;
 }
 
 .profileTelegramSave {
@@ -918,27 +651,6 @@
 }
 
 /* APP50 TELEGRAM AUTO LINK V2 */
-.profileTelegramLinkBox {
-  margin: 12px 0;
-  padding: 12px;
-  border-radius: 16px;
-  border: 1px solid rgba(42,171,238,.18);
-  background: rgba(42,171,238,.08);
-  display: grid;
-  gap: 5px;
-}
-
-.profileTelegramLinkBox span {
-  color: rgba(255,255,255,.46);
-  font-size: 11px;
-  font-weight: 950;
-}
-
-.profileTelegramLinkBox strong {
-  color: #fff;
-  font-size: 18px;
-  letter-spacing: .08em;
-}
 
 .profileTelegramBotActions {
   display: grid;
@@ -1032,42 +744,6 @@
   color: rgba(255,255,255,.44);
   font-size: 12px;
   font-weight: 850;
-}
-
-.profileTelegramAuthSteps {
-  display: grid;
-  gap: 8px;
-  margin: 12px 0;
-}
-
-.profileTelegramAuthSteps div {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 9px;
-  align-items: center;
-  padding: 9px;
-  border-radius: 14px;
-  background: rgba(255,255,255,.032);
-  border: 1px solid rgba(255,255,255,.045);
-}
-
-.profileTelegramAuthSteps span {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: rgba(42,171,238,.13);
-  color: rgba(205,239,255,.96);
-  font-size: 12px;
-  font-weight: 950;
-}
-
-.profileTelegramAuthSteps p {
-  margin: 0 !important;
-  color: rgba(255,255,255,.58) !important;
-  font-size: 12px !important;
-  line-height: 1.3 !important;
 }
 
 .profileTelegramSave.ghost {
@@ -1306,9 +982,6 @@
 }
 
 /* PROFILE TELEGRAM MOVED TO APP SETTINGS */
-.profileTelegramCard {
-  display: none !important;
-}
 
 .profileSettingsTelegramItem {
   width: 100%;
@@ -1491,10 +1164,6 @@
 }
 
 /* PROFILE UNIFIED REDESIGN */
-.profileDashboardHero,
-.profileQuickGrid {
-  display: none !important;
-}
 
 .profileUnifiedCard {
   width: min(100%, 920px);
@@ -1511,60 +1180,11 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.045);
 }
 
-.profileUnifiedHero {
-  display: grid;
-  grid-template-columns: 94px 1fr auto;
-  gap: 18px;
-  align-items: center;
-}
-
 .profileUnifiedAvatar {
   width: 94px !important;
   height: 94px !important;
   margin: 0 !important;
   border-radius: 28px !important;
-}
-
-.profileUnifiedTitle {
-  min-width: 0;
-}
-
-.profileUnifiedTitle span {
-  display: block;
-  color: rgba(145, 173, 78, 0.96);
-  font-size: 13px;
-  font-weight: 1000;
-  letter-spacing: 0.14em;
-}
-
-.profileUnifiedTitle h1 {
-  margin: 8px 0 4px;
-  color: #fff;
-  font-size: clamp(36px, 6vw, 58px);
-  line-height: 0.95;
-  letter-spacing: -0.06em;
-}
-
-.profileUnifiedTitle p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.48);
-  font-size: 15px;
-  font-weight: 900;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.profileUnifiedHistoryBtn {
-  min-height: 44px;
-  padding: 0 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(127, 159, 58, 0.22);
-  background: rgba(127, 159, 58, 0.12);
-  color: rgba(235, 250, 195, 0.95);
-  font-size: 13px;
-  font-weight: 950;
-  cursor: pointer;
 }
 
 .profileUnifiedStats {
@@ -1613,59 +1233,6 @@
   font-size: clamp(24px, 4vw, 38px);
 }
 
-.profileUnifiedProgress {
-  margin-top: 12px;
-  padding: 14px 16px;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.055);
-  background: rgba(255, 255, 255, 0.026);
-  display: grid;
-  grid-template-columns: 1.35fr 1fr 1fr;
-  gap: 12px;
-}
-
-.profileUnifiedProgress > div {
-  min-width: 0;
-  display: grid;
-  gap: 5px;
-}
-
-.profileUnifiedProgress strong {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 16px;
-  font-weight: 950;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.profileUnifiedFooter {
-  margin-top: 12px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-  align-items: center;
-}
-
-.profileUnifiedFooter p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.profileUnifiedFooter button {
-  min-height: 46px;
-  padding: 0 18px;
-  border-radius: 18px;
-  border: 1px solid rgba(42, 171, 238, 0.2);
-  background: rgba(42, 171, 238, 0.10);
-  color: rgba(205, 239, 255, 0.95);
-  font-size: 13px;
-  font-weight: 950;
-  cursor: pointer;
-}
-
 .profileDashboardGrid > .profileDashboardCard:first-child .profileCardHead.simple h2 {
   font-size: 28px;
 }
@@ -1674,15 +1241,6 @@
   .profileUnifiedCard {
     padding: 18px;
     border-radius: 30px;
-  }
-
-  .profileUnifiedHero {
-    grid-template-columns: 74px 1fr;
-  }
-
-  .profileUnifiedHistoryBtn {
-    grid-column: 1 / -1;
-    width: 100%;
   }
 
   .profileUnifiedAvatar {
@@ -1703,21 +1261,9 @@
   .profileUnifiedStats .primary strong {
     max-width: none;
   }
-
-  .profileUnifiedProgress {
-    grid-template-columns: 1fr;
-  }
-
-  .profileUnifiedFooter {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* PROFILE UNIFIED COMPACT ADJUSTMENTS */
-.profileUnifiedTitle h1 {
-  font-size: clamp(28px, 4.2vw, 42px) !important;
-  letter-spacing: -0.045em !important;
-}
 
 .profileUnifiedStats {
   grid-template-columns: 1.15fr 0.75fr 0.75fr !important;
@@ -1742,25 +1288,6 @@
 
 .profileUnifiedStats .primary strong {
   font-size: clamp(21px, 3vw, 30px) !important;
-}
-
-.profileUnifiedFooter {
-  margin-top: 12px !important;
-  display: block !important;
-}
-
-.profileUnifiedFooter p {
-  display: none !important;
-}
-
-.profileUnifiedFooter button {
-  width: 100% !important;
-  min-height: 58px !important;
-  border-radius: 20px !important;
-  background: rgba(127, 159, 58, 0.13) !important;
-  border-color: rgba(127, 159, 58, 0.24) !important;
-  color: rgba(235, 250, 195, 0.96) !important;
-  font-size: 16px !important;
 }
 
 @media (max-width: 760px) {
@@ -1917,16 +1444,6 @@
   font-style: normal;
 }
 
-.profileMeasurementBody {
-  padding: 0 14px 14px;
-}
-
-.profileMeasurementGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
 .profileMeasurementGrid label,
 .profileMeasurementNote {
   display: grid;
@@ -1938,35 +1455,6 @@
   color: rgba(255, 255, 255, 0.46);
   font-size: 11px;
   font-weight: 950;
-}
-
-.profileMeasurementGrid label div {
-  height: 46px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  align-items: center;
-  padding: 0 12px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(0, 0, 0, 0.18);
-}
-
-.profileMeasurementGrid input {
-  min-width: 0;
-  border: 0;
-  outline: none;
-  background: transparent;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 900;
-}
-
-.profileMeasurementGrid em {
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 12px;
-  font-weight: 900;
-  font-style: normal;
 }
 
 .profileMeasurementNote {
@@ -2013,10 +1501,6 @@
 }
 
 @media (max-width: 520px) {
-  .profileMeasurementGrid {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
 
   .profileMeasurementToggle {
     min-height: 68px;
@@ -2125,52 +1609,6 @@
   font-weight: 850;
 }
 
-.profileAiBadges {
-  margin-top: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.profileAiBadges span {
-  min-height: 30px;
-  padding: 0 11px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: rgba(255,255,255,.045);
-  border: 1px solid rgba(255,255,255,.055);
-  color: rgba(255,255,255,.72);
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.profileAiFormStatus {
-  min-width: 138px;
-  min-height: 78px;
-  padding: 14px;
-  border-radius: 22px;
-  border: 1px solid rgba(127,159,58,.20);
-  background: rgba(127,159,58,.10);
-  display: grid;
-  align-content: center;
-  gap: 6px;
-  text-align: center;
-}
-
-.profileAiFormStatus span {
-  color: rgba(255,255,255,.46);
-  font-size: 11px;
-  font-weight: 950;
-  text-transform: uppercase;
-}
-
-.profileAiFormStatus strong {
-  color: rgba(235,250,195,.98);
-  font-size: 17px;
-  font-weight: 1000;
-}
-
 .profileAiStatsRow {
   margin-top: 20px;
   display: grid;
@@ -2277,57 +1715,11 @@
   font-weight: 1000;
 }
 
-.profileAiProgressStrip {
-  margin-top: 12px;
-  padding: 14px 16px;
-  border-radius: 22px;
-  border: 1px solid rgba(255,255,255,.06);
-  background: rgba(0,0,0,.16);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.profileAiProgressStrip div {
-  display: grid;
-  gap: 5px;
-}
-
-.profileAiProgressStrip strong {
-  color: rgba(255,255,255,.88);
-  font-size: 16px;
-  font-weight: 950;
-}
-
 .profileAiMeasurementPanel {
   margin-top: 12px !important;
   background:
     radial-gradient(circle at top right, rgba(127,159,58,.17), transparent 46%),
     rgba(255,255,255,.035) !important;
-}
-
-.profileAiHistoryButton {
-  width: 100%;
-  min-height: 60px;
-  margin-top: 12px;
-  padding: 0 18px;
-  border-radius: 21px;
-  border: 1px solid rgba(127,159,58,.24);
-  background: rgba(127,159,58,.15);
-  color: rgba(235,250,195,.96);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 17px;
-  font-weight: 1000;
-  cursor: pointer;
-}
-
-.profileAiHistoryButton span {
-  font-size: 28px;
-  line-height: 1;
-  opacity: .75;
 }
 
 @media (max-width: 720px) {
@@ -2358,25 +1750,6 @@
     height: 32px;
     right: -6px;
     top: -7px;
-  }
-
-  .profileAiFormStatus {
-    grid-column: 1 / -1;
-    min-height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .profileAiBadges {
-    gap: 6px;
-  }
-
-  .profileAiBadges span {
-    min-height: 28px;
-    font-size: 11px;
-    padding: 0 9px;
   }
 
   .profileAiStatsRow {
@@ -2415,10 +1788,6 @@
     justify-items: center;
     gap: 4px;
   }
-
-  .profileAiProgressStrip {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 420px) {
@@ -2436,9 +1805,6 @@
 }
 
 /* AI COACH STATUS ROW */
-.profileAiBadges {
-  display: none !important;
-}
 
 .profileAiCoachStatusRow {
   margin-top: 12px;
@@ -3443,9 +2809,6 @@
 }
 
 /* SPLIT TRAINING CARDS FIXED */
-.profileAiProgressStrip {
-  display: none !important;
-}
 
 .profileAiSplitCards {
   margin-top: 14px;
@@ -3660,50 +3023,6 @@
   padding-top: max(76px, calc(env(safe-area-inset-top) + 64px));
 }
 
-.historyPremiumBack {
-  width: 76px !important;
-  height: 76px !important;
-  padding: 0 !important;
-  display: grid !important;
-  place-items: center !important;
-  font-size: 38px !important;
-  color: #6fff93 !important;
-  background: radial-gradient(circle at top left, rgba(95, 255, 146, 0.2), rgba(8, 32, 18, 0.88)) !important;
-  border-color: rgba(111, 255, 147, 0.18) !important;
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34) !important;
-}
-
-.historyPremiumHero {
-  max-width: 520px;
-  margin: 0 auto 14px;
-  text-align: center;
-  padding: 0 10px;
-}
-
-.historyPremiumHero span {
-  color: rgba(145, 173, 78, 0.98);
-  font-size: 12px;
-  font-weight: 1000;
-  letter-spacing: 0.16em;
-}
-
-.historyPremiumHero h1 {
-  margin: 8px 0 6px;
-  color: #fff;
-  font-size: clamp(32px, 8vw, 48px);
-  line-height: 0.98;
-  letter-spacing: -0.06em;
-}
-
-.historyPremiumHero p {
-  max-width: 360px;
-  margin: 0 auto 14px;
-  color: rgba(255, 255, 255, 0.46);
-  font-size: 13px;
-  font-weight: 800;
-  line-height: 1.35;
-}
-
 .historyRefreshBtn {
   min-height: 42px;
   padding: 0 16px;
@@ -3716,155 +3035,8 @@
   cursor: pointer;
 }
 
-.historySummaryGrid {
-  max-width: 520px;
-  margin: 0 auto 12px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.historySummaryGrid div {
-  min-height: 70px;
-  padding: 10px 8px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.065);
-  background:
-    radial-gradient(circle at top, rgba(127, 159, 58, 0.10), transparent 48%),
-    rgba(255, 255, 255, 0.035);
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 5px;
-}
-
-.historySummaryGrid span {
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 10px;
-  font-weight: 950;
-}
-
-.historySummaryGrid strong {
-  color: #fff;
-  font-size: 24px;
-  font-weight: 1000;
-  line-height: 1;
-}
-
-.historyAiNote {
-  max-width: 520px;
-  margin: 0 auto 12px;
-  padding: 14px 16px;
-  border-radius: 22px;
-  border: 1px solid rgba(42, 171, 238, 0.12);
-  background:
-    radial-gradient(circle at top right, rgba(42, 171, 238, 0.12), transparent 45%),
-    rgba(255, 255, 255, 0.032);
-}
-
-.historyAiNote span {
-  display: block;
-  margin-bottom: 6px;
-  color: rgba(145, 173, 78, 0.98);
-  font-size: 10px;
-  font-weight: 1000;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.historyAiNote strong {
-  display: block;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 950;
-  line-height: 1.15;
-}
-
-.historyAiNote p {
-  margin: 6px 0 0;
-  color: rgba(255, 255, 255, 0.46);
-  font-size: 12px;
-  font-weight: 850;
-}
-
-.historyTimeline {
-  max-width: 520px;
-  margin: 0 auto;
-  display: grid;
-  gap: 10px;
-}
-
-.historyPremiumCard {
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.065);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.018)),
-    rgba(10, 13, 10, 0.88);
-  overflow: hidden;
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
-}
-
 .historyPremiumCard.open {
   border-color: rgba(127, 159, 58, 0.18);
-}
-
-.historyPremiumHeader {
-  width: 100%;
-  min-height: 98px;
-  padding: 16px 16px;
-  border: 0;
-  background: transparent;
-  color: #fff;
-  display: grid;
-  grid-template-columns: 1fr 34px;
-  gap: 12px;
-  align-items: center;
-  text-align: left;
-  cursor: pointer;
-}
-
-.historyPremiumHeader span {
-  display: block;
-  margin-bottom: 5px;
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.historyPremiumHeader strong {
-  display: block;
-  color: #fff;
-  font-size: clamp(21px, 5.6vw, 28px);
-  font-weight: 1000;
-  line-height: 1.05;
-  letter-spacing: -0.045em;
-}
-
-.historyPremiumHeader small {
-  display: block;
-  margin-top: 8px;
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 11px;
-  font-weight: 850;
-  line-height: 1.2;
-}
-
-.historyPremiumHeader em {
-  width: 34px;
-  height: 34px;
-  border-radius: 13px;
-  display: grid;
-  place-items: center;
-  background: rgba(127, 159, 58, 0.13);
-  color: rgba(235, 250, 195, 0.96);
-  font-size: 20px;
-  font-weight: 1000;
-  font-style: normal;
-}
-
-.historyPremiumBody {
-  padding: 0 14px 14px;
-  animation: historyBodyIn 0.22s ease;
 }
 
 @keyframes historyBodyIn {
@@ -3876,73 +3048,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.historyFeedbackPill {
-  width: fit-content;
-  max-width: 100%;
-  margin: 0 0 10px;
-  min-height: 32px;
-  padding: 0 12px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: rgba(127, 159, 58, 0.12);
-  border: 1px solid rgba(127, 159, 58, 0.18);
-  color: rgba(235, 250, 195, 0.95);
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.historyPremiumExercise {
-  padding: 12px;
-  border-radius: 18px;
-  background: rgba(0, 0, 0, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  margin-top: 8px;
-}
-
-.historyPremiumExercise h4 {
-  margin: 0 0 10px;
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 15px;
-  font-weight: 950;
-  line-height: 1.15;
-}
-
-.historyPremiumSets {
-  display: grid;
-  gap: 6px;
-}
-
-.historyPremiumSet {
-  min-height: 34px;
-  padding: 7px 9px;
-  border-radius: 12px;
-  display: grid;
-  grid-template-columns: 26px 1fr;
-  gap: 8px;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.028);
-}
-
-.historyPremiumSet span {
-  width: 24px;
-  height: 24px;
-  border-radius: 9px;
-  display: grid;
-  place-items: center;
-  background: rgba(127, 159, 58, 0.13);
-  color: rgba(235, 250, 195, 0.95);
-  font-size: 11px;
-  font-weight: 950;
-}
-
-.historyPremiumSet strong {
-  color: #fff;
-  font-size: 13px;
-  font-weight: 900;
-  text-align: right;
 }
 
 .historyEmptyCard {
@@ -3972,23 +3077,6 @@
   .historyPagePremium {
     padding-left: 14px;
     padding-right: 14px;
-  }
-
-  .historyPremiumHero h1 {
-    font-size: 34px;
-  }
-
-  .historyPremiumHeader {
-    min-height: 92px;
-    padding: 14px;
-  }
-
-  .historyPremiumHeader strong {
-    font-size: 22px;
-  }
-
-  .historyPremiumHeader small {
-    font-size: 10.5px;
   }
 }
 

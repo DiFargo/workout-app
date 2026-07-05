@@ -173,12 +173,6 @@ body[data-app-theme="warm-light"] {
   box-shadow: 0 10px 24px rgba(145, 105, 38, 0.18) !important;
 }
 
-:root[data-app-theme="warm-light"] .bigButton {
-  background:
-    linear-gradient(180deg, rgba(255, 250, 239, 0.98) 0%, rgba(242, 228, 196, 0.98) 100%) !important;
-  color: var(--text) !important;
-}
-
 :root[data-app-theme="warm-light"] .backIconBtn,
 :root[data-app-theme="warm-light"] .backBtn,
 :root[data-app-theme="warm-light"] .logoutSmall,
@@ -208,15 +202,6 @@ body[data-app-theme="warm-light"] {
   border-color: rgba(121, 86, 31, 0.20) !important;
 }
 
-:root[data-app-theme="warm-light"] .finishOverlay,
-:root[data-app-theme="warm-light"] .saveOverlay,
-:root[data-app-theme="warm-light"] .fatModalBackdrop,
-:root[data-app-theme="warm-light"] .nutritionModalBackdrop {
-  background: rgba(56, 42, 20, 0.26) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-}
-
 :root[data-app-theme="warm-light"] .splashLogo,
 :root[data-app-theme="warm-light"] .appLogo,
 :root[data-app-theme="warm-light"] .finishIcon,
@@ -241,13 +226,6 @@ body[data-app-theme="warm-light"] {
 
 :root[data-app-theme="warm-light"] .fatPlusBtn {
   color: #21180d !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodDelete,
-:root[data-app-theme="warm-light"] .deleteBtn,
-:root[data-app-theme="warm-light"] .dangerBtn {
-  background: linear-gradient(135deg, #b8514c, #d07268) !important;
-  color: #fff9ef !important;
 }
 
 /* =========================================================
@@ -462,12 +440,6 @@ body[data-app-theme="warm-light"] {
   background: rgba(244, 224, 100, 0.22) !important;
   color: #8d711f !important;
   border-color: rgba(96, 78, 27, 0.12) !important;
-}
-
-:root[data-app-theme="warm-light"] .summaryCaloriesDivider,
-:root[data-app-theme="warm-light"] .nutritionCaloriesRenderDivider,
-:root[data-app-theme="warm-light"] .nutritionQuickActionsDivider {
-  opacity: 0.72 !important;
 }
 
 :root[data-app-theme="warm-light"] .fatSearchOverlay,

@@ -118,37 +118,6 @@
   line-height: 1.35;
 }
 
-.workoutExerciseTechniqueHint {
-  padding: 9px 10px;
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 13px;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.workoutExerciseTechniqueHint > span {
-  width: 22px;
-  height: 22px;
-  flex: 0 0 22px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: rgba(117, 101, 232, 0.18);
-  color: #c9c2ff;
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.workoutExerciseTechniqueHint p {
-  margin: 1px 0 0;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.35;
-}
-
 .workoutFinishComment > span {
   color: rgba(255, 255, 255, 0.64) !important;
 }
@@ -244,11 +213,6 @@ html:root[data-app-theme="warm-light"] body #root .workoutFinishComment textarea
   border-color: #dfe3ef !important;
   background: #f7f8fc !important;
   color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .workoutExerciseTechniqueHint {
-  border-color: #e1e4ef;
-  background: #f7f8fc;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseCard button.previousInfo:not(.showVideoBtn) {

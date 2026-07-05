@@ -98,13 +98,6 @@
   box-shadow: none !important;
 }
 
-:root[data-app-theme="warm-light"] .exerciseVideoWrap,
-:root[data-app-theme="warm-light"] .exerciseVideoFallback {
-  border-color: #e2e5ef !important;
-  background: #f1f3f8 !important;
-  color: #616a80 !important;
-}
-
 :root[data-app-theme="warm-light"] .exerciseSetRow input,
 :root[data-app-theme="warm-light"] .workoutRunPage input {
   border-color: #dfe3ef !important;

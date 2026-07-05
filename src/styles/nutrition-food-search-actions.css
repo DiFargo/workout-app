@@ -1,4 +1,4 @@
-﻿/* FOOD SEARCH ACTION BAR V333 */
+/* FOOD SEARCH ACTION BAR V333 */
 .fatSearchBottomBar.fatSearchBottomBarFive {
   grid-template-columns:
     minmax(0, 0.82fr)
@@ -378,51 +378,6 @@
   color: rgba(255, 174, 174, 0.88) !important;
   font-size: 12px !important;
   line-height: 1.35 !important;
-}
-
-.fatBarcodeManual {
-  margin-top: 16px !important;
-}
-
-.fatBarcodeManual label {
-  display: block !important;
-  margin: 0 0 7px 4px !important;
-  color: rgba(232, 237, 230, 0.55) !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-}
-
-.fatBarcodeManual > div {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 92px !important;
-  gap: 8px !important;
-}
-
-.fatBarcodeManual input,
-.fatBarcodeManual button {
-  min-height: 54px !important;
-  border-radius: 17px !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
-.fatBarcodeManual input {
-  min-width: 0 !important;
-  padding: 0 16px !important;
-  background: rgba(255, 255, 255, 0.035) !important;
-  color: rgba(248, 248, 246, 0.94) !important;
-  font-size: 17px !important;
-  font-weight: 800 !important;
-}
-
-.fatBarcodeManual button {
-  background: rgba(143, 188, 54, 0.12) !important;
-  color: #c9f078 !important;
-  font-size: 13px !important;
-  font-weight: 900 !important;
-}
-
-.fatBarcodeManual button:disabled {
-  opacity: 0.4 !important;
 }
 
 .fatBarcodePlaceholder {

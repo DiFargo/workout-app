@@ -181,41 +181,6 @@
   border-radius: 28px !important;
 }
 
-.profileAiNutritionPlanFull {
-  margin: 0 !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-.profileAiNutritionEmpty {
-  padding: 22px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 12px !important;
-}
-
-.profileAiNutritionEmpty span {
-  color: rgba(145, 173, 78, .9) !important;
-  font-size: 12px !important;
-  font-weight: 950 !important;
-  letter-spacing: .12em !important;
-}
-
-.profileAiNutritionEmpty h3 {
-  margin: 0 !important;
-  color: #fff !important;
-  font-size: 22px !important;
-  font-weight: 950 !important;
-}
-
-.profileAiNutritionEmpty p {
-  margin: 0 !important;
-  color: rgba(255,255,255,.54) !important;
-  font-size: 14px !important;
-  font-weight: 750 !important;
-  line-height: 1.4 !important;
-}
-
 .profileNutritionSection {
   gap: 14px !important;
 }
@@ -227,15 +192,6 @@
   margin: 18px auto 0 !important;
   padding: 0 14px calc(118px + env(safe-area-inset-bottom)) !important;
   gap: 12px !important;
-}
-
-.profileNutritionPageTitle {
-  margin: 0 0 2px !important;
-  color: #fff !important;
-  font-size: clamp(22px, 6.4vw, 28px) !important;
-  font-weight: 950 !important;
-  line-height: 1 !important;
-  text-align: center !important;
 }
 
 .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button:nth-child(3) strong {
@@ -250,43 +206,6 @@
 
 .profileNutritionGoalCard .profileNutritionAccordionHead {
   margin-bottom: 10px !important;
-}
-
-.profileNutritionMacroLine {
-  min-height: 48px !important;
-  padding: 0 12px !important;
-  border-radius: 16px !important;
-  border: 1px solid rgba(255,255,255,.055) !important;
-  background: rgba(0,0,0,.16) !important;
-  display: grid !important;
-  grid-template-columns: 1.45fr repeat(3, .65fr) !important;
-  gap: 7px !important;
-  align-items: center !important;
-}
-
-.profileNutritionMacroLine strong {
-  color: #fff !important;
-  font-size: 15px !important;
-  font-weight: 950 !important;
-}
-
-.profileNutritionMacroLine span {
-  color: rgba(255,255,255,.58) !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  text-align: center !important;
-}
-
-.profileNutritionGoalSettingsBtn {
-  width: 100% !important;
-  min-height: 44px !important;
-  margin-top: 9px !important;
-  border-radius: 15px !important;
-  border: 1px solid rgba(127,159,58,.24) !important;
-  background: rgba(127,159,58,.09) !important;
-  color: rgba(225,248,168,.92) !important;
-  font-size: 13px !important;
-  font-weight: 950 !important;
 }
 
 .profileAiNutritionPlanCard {
@@ -360,43 +279,6 @@
 
 .profileNutritionSection.hasPlan .profileNutritionOverview::-webkit-scrollbar {
   display: none !important;
-}
-
-.profileNutritionOverviewHead {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 54px !important;
-  gap: 12px !important;
-  align-items: center !important;
-}
-
-.profileNutritionOverviewHead span,
-.profileNutritionAdvice span,
-.profileNutritionWeeksToggle small {
-  display: block !important;
-  color: rgba(181,230,85,.78) !important;
-  font-size: 10px !important;
-  font-weight: 950 !important;
-}
-
-.profileNutritionOverviewHead h2 {
-  margin: 4px 0 0 !important;
-  color: #fff !important;
-  font-size: 21px !important;
-  font-weight: 950 !important;
-}
-
-.profileNutritionOverviewHead > strong {
-  width: 54px !important;
-  height: 54px !important;
-  border-radius: 18px !important;
-  background: rgba(127,159,58,.18) !important;
-  border: 1px solid rgba(181,230,85,.22) !important;
-  color: #e7ffad !important;
-  font-size: 16px !important;
-  font-weight: 950 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
 }
 
 .profileNutritionCalendarHead {
@@ -613,46 +495,6 @@
   border-radius: 0 5px 0 11px !important;
 }
 
-.profileNutritionCalendarWeek {
-  display: grid !important;
-  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
-  gap: 5px !important;
-  margin-top: 13px !important;
-}
-
-.profileNutritionCalendarWeek button {
-  min-width: 0 !important;
-  height: 58px !important;
-  padding: 6px 2px 5px !important;
-  border-radius: 14px !important;
-  border: 1px solid rgba(255,255,255,.055) !important;
-  background: rgba(255,255,255,.03) !important;
-  color: rgba(255,255,255,.5) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 2px !important;
-}
-
-.profileNutritionCalendarWeek button span {
-  font-size: 9px !important;
-  font-weight: 900 !important;
-}
-
-.profileNutritionCalendarWeek button strong {
-  color: rgba(255,255,255,.76) !important;
-  font-size: 15px !important;
-  font-weight: 950 !important;
-}
-
-.profileNutritionCalendarWeek button i {
-  width: 4px !important;
-  height: 4px !important;
-  border-radius: 50% !important;
-  background: transparent !important;
-}
-
 .profileNutritionCalendarWeek button.filled i {
   background: rgba(181,230,85,.72) !important;
 }
@@ -665,53 +507,6 @@
 
 .profileNutritionCalendarWeek button.active strong {
   color: #fff !important;
-}
-
-.profileNutritionDayPlan {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  align-items: stretch !important;
-  gap: 3px !important;
-  margin-top: 3px !important;
-}
-
-.profileNutritionDayPlan div {
-  box-sizing: border-box !important;
-  min-width: 0 !important;
-  height: 40px !important;
-  min-height: 40px !important;
-  padding: 4px 2px !important;
-  display: grid !important;
-  grid-template-rows: 10px 17px !important;
-  place-items: center !important;
-  align-content: center !important;
-  gap: 2px !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba(255,255,255,.055) !important;
-  background: rgba(0,0,0,.14) !important;
-  text-align: center !important;
-}
-
-.profileNutritionDayPlan span {
-  display: block !important;
-  width: 100% !important;
-  color: rgba(255,255,255,.42) !important;
-  font-size: 8px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-}
-
-.profileNutritionDayPlan strong {
-  display: block !important;
-  margin-top: 0 !important;
-  color: #fff !important;
-  font-size: 13px !important;
-  font-weight: 950 !important;
-  line-height: 1 !important;
-  text-align: center !important;
-  white-space: nowrap !important;
 }
 
 .profileNutritionSection.hasPlan .profileNutritionGoalCard .profileNutritionAccordionHead {
@@ -767,30 +562,11 @@
   .profileNutritionMonthDay {
     height: 40px !important;
   }
-
-  .profileNutritionDayPlan div {
-    height: 36px !important;
-    min-height: 36px !important;
-  }
 }
 
 .profileNutritionSection.hasPlan .profileNutritionGoalExpanded {
   margin-top: 8px !important;
   padding-top: 8px !important;
-}
-
-.profileNutritionGoalModalOverlay {
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 30 !important;
-  box-sizing: border-box !important;
-  padding: 12px !important;
-  display: grid !important;
-  place-items: center !important;
-  border-radius: 26px !important;
-  background: rgba(3, 6, 4, .72) !important;
-  backdrop-filter: blur(9px) !important;
-  -webkit-backdrop-filter: blur(9px) !important;
 }
 
 .profileNutritionGoalModal {
@@ -904,41 +680,12 @@
   border-radius: 15px !important;
 }
 
-.profileNutritionDayPlan strong small {
-  color: rgba(181,230,85,.72) !important;
-  font-size: 8px !important;
-}
-
 .profileNutritionCalendarLogged {
   margin: 8px 0 0 !important;
   color: rgba(255,255,255,.48) !important;
   font-size: 10px !important;
   font-weight: 850 !important;
   text-align: center !important;
-}
-
-.profileNutritionStatusRow {
-  display: flex !important;
-  gap: 7px !important;
-  margin-top: 12px !important;
-  overflow-x: auto !important;
-  scrollbar-width: none !important;
-}
-
-.profileNutritionStatusRow::-webkit-scrollbar {
-  display: none !important;
-}
-
-.profileNutritionStatusRow span {
-  flex: 0 0 auto !important;
-  padding: 7px 9px !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(255,255,255,.07) !important;
-  background: rgba(255,255,255,.035) !important;
-  color: rgba(255,255,255,.68) !important;
-  font-size: 11px !important;
-  font-weight: 900 !important;
-  white-space: nowrap !important;
 }
 
 .profileNutritionStatusRow span.warning {
@@ -951,108 +698,9 @@
   background: rgba(127,159,58,.08) !important;
 }
 
-.profileNutritionStatusRow i {
-  margin-right: 4px !important;
-  font-style: normal !important;
-}
-
-.profileNutritionAdvice {
-  margin-top: 11px !important;
-  padding: 12px 13px !important;
-  border-radius: 18px !important;
-  border: 1px solid rgba(255,255,255,.06) !important;
-  background: rgba(255,255,255,.035) !important;
-}
-
-.profileNutritionAdvice p {
-  margin: 6px 0 0 !important;
-  color: rgba(255,255,255,.65) !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-  line-height: 1.35 !important;
-}
-
-.profileNutritionWeeksToggle {
-  width: 100% !important;
-  min-height: 58px !important;
-  margin-top: 11px !important;
-  padding: 10px 13px !important;
-  border-radius: 18px !important;
-  border: 1px solid rgba(255,255,255,.06) !important;
-  background: rgba(255,255,255,.03) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  text-align: left !important;
-}
-
-.profileNutritionWeeksToggle strong {
-  display: block !important;
-  margin-top: 4px !important;
-  color: #fff !important;
-  font-size: 14px !important;
-  font-weight: 950 !important;
-}
-
-.profileNutritionWeeksToggle em {
-  color: rgba(181,230,85,.9) !important;
-  font-size: 25px !important;
-  font-style: normal !important;
-  font-weight: 900 !important;
-}
-
-.profileNutritionWeeksList {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 7px !important;
-  margin-top: 8px !important;
-}
-
-.profileNutritionWeeksList div {
-  min-height: 64px !important;
-  padding: 9px 10px !important;
-  border-radius: 15px !important;
-  border: 1px solid rgba(255,255,255,.055) !important;
-  background: rgba(0,0,0,.13) !important;
-}
-
 .profileNutritionWeeksList div.active {
   border-color: rgba(127,159,58,.26) !important;
   background: rgba(127,159,58,.08) !important;
-}
-
-.profileNutritionWeeksList span,
-.profileNutritionWeeksList small {
-  display: block !important;
-  color: rgba(255,255,255,.46) !important;
-  font-size: 9px !important;
-  font-weight: 850 !important;
-}
-
-.profileNutritionWeeksList strong {
-  display: block !important;
-  margin: 4px 0 !important;
-  color: #fff !important;
-  font-size: 13px !important;
-  font-weight: 950 !important;
-}
-
-.profileNutritionActions {
-  display: grid !important;
-  grid-template-columns: 1.65fr 1fr !important;
-  gap: 8px !important;
-  margin-top: 12px !important;
-}
-
-.profileNutritionActions button {
-  min-height: 52px !important;
-  padding: 0 12px !important;
-  border-radius: 18px !important;
-  border: 1px solid rgba(255,255,255,.075) !important;
-  background: rgba(255,255,255,.04) !important;
-  color: rgba(255,255,255,.72) !important;
-  font-size: 12px !important;
-  font-weight: 950 !important;
 }
 
 .profileNutritionActions button.primary {
@@ -1060,16 +708,5 @@
   background: linear-gradient(180deg, #a9d24f, #8fb43e) !important;
   color: #10140c !important;
   font-size: 14px !important;
-}
-
-@media (max-width: 370px) {
-  .profileNutritionActions {
-    grid-template-columns: 1.55fr 1fr !important;
-  }
-
-  .profileNutritionActions button {
-    padding: 0 8px !important;
-    font-size: 11px !important;
-  }
 }
 

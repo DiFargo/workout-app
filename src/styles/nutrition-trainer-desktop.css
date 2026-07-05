@@ -1,4 +1,4 @@
-﻿/* TRAINER DESKTOP WORKSPACE V326 */
+/* TRAINER DESKTOP WORKSPACE V326 */
 .adminClientDesktopDelete {
   display: none;
 }
@@ -31,16 +31,6 @@
     grid-template-columns: 1fr !important;
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     border-left: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .adminUsersCrmSidebar {
-    width: 0 !important;
-    min-height: 0 !important;
-    height: 0 !important;
-    padding: 0 !important;
-    position: static !important;
-    border: 0 !important;
-    background: transparent !important;
   }
 
   .adminUsersCrmMain:not(.adminUsersCrmMainClientPage) {

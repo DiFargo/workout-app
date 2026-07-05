@@ -39,31 +39,6 @@ html:root[data-app-theme="warm-light"] body #root
 
 
 /* PRETTY START STATS ICONS FINAL FIX */
-.startWorkoutStatIcon {
-  font-size: 0;
-}
-
-@media (max-width: 380px) {
-  .startWorkoutStat {
-    min-height: 88px;
-    border-radius: 22px;
-  }
-
-  .startWorkoutStatIcon {
-    width: 27px;
-    height: 27px;
-    margin-bottom: 7px;
-  }
-
-  .startWorkoutStatIcon svg {
-    width: 23px;
-    height: 23px;
-  }
-
-  .startWorkoutStat strong {
-    font-size: 25px;
-  }
-}
 
 /* REMOVE SPLASH TEXT */
 .splashText {

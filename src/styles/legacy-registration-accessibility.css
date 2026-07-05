@@ -94,10 +94,6 @@
   font-weight: 650;
 }
 
-.firstSetupInputWithUnit {
-  position: relative;
-}
-
 .firstSetupInput {
   box-sizing: border-box !important;
   width: 100% !important;
@@ -123,17 +119,6 @@
 .firstSetupInput:focus {
   border-color: #7664e8 !important;
   box-shadow: 0 0 0 3px rgba(101, 82, 230, 0.1) !important;
-}
-
-.firstSetupInputWithUnit em {
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  color: #737b91;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 650;
-  transform: translateY(-50%);
 }
 
 .firstSetupWelcomeVisual {
@@ -311,15 +296,6 @@
   border-color: #6b55e6 !important;
   background: #f6f4ff !important;
   box-shadow: inset 0 0 0 1px #6b55e6 !important;
-}
-
-.firstSetupTargetWeight {
-  gap: 6px;
-}
-
-.firstSetupTargetWeight > span small {
-  color: #9299aa;
-  font-weight: 500;
 }
 
 .firstSetupReview {
@@ -588,10 +564,6 @@
 
   .firstSetupCard .firstSetupGoalGrid button small {
     display: none;
-  }
-
-  .firstSetupTargetWeight {
-    gap: 4px;
   }
 }
 

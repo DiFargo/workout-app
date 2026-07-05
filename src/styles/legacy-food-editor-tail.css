@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    PREMIUM DELETE SWIPE WITHOUT COLLAPSE
    ========================================================= */
 
@@ -514,10 +514,6 @@
     font-size: 21px !important;
   }
 
-  .foodEditHeroRender strong {
-    font-size: 17px !important;
-  }
-
   .foodEditHeroRender small {
     font-size: 11px !important;
   }
@@ -865,13 +861,6 @@
     0 12px 26px rgba(0,0,0,0.20) !important;
 }
 
-.foodEditDeleteIcon {
-  font-size: 21px !important;
-  line-height: 1 !important;
-  filter: grayscale(1) brightness(1.25) !important;
-  opacity: 0.9 !important;
-}
-
 .foodEditDeleteButton span:last-child {
   font-size: inherit !important;
   font-weight: inherit !important;
@@ -881,10 +870,6 @@
   .foodEditBottomActions {
     width: calc(100% - 16px) !important;
     gap: 10px !important;
-  }
-
-  .foodEditDeleteIcon {
-    font-size: 19px !important;
   }
 }
 
@@ -900,16 +885,6 @@
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.03),
     0 10px 24px rgba(0,0,0,0.18)!important;
-}
-
-.foodEditDeleteIcon{
-  font-size:28px!important;
-  line-height:1!important;
-  font-weight:300!important;
-  color:rgba(247,248,251,0.92)!important;
-  filter:none!important;
-  opacity:0.95!important;
-  transform:translateY(-1px)!important;
 }
 
 /* =========================================================
@@ -939,29 +914,6 @@
 }
 
 /* Ð¼ÑƒÑÐ¾Ñ€ÐºÐ° ÐºÐ°Ðº Ð½Ð° Ñ€ÐµÐ½Ð´ÐµÑ€Ðµ: Ñ‚Ð¾Ð½ÐºÐ°Ñ Ð±ÐµÐ»Ð°Ñ outline-Ð¸ÐºÐ¾Ð½ÐºÐ° */
-.foodEditDeleteIcon {
-  width: 22px !important;
-  height: 22px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transform: none !important;
-  filter: none !important;
-}
-
-.foodEditDeleteIcon svg {
-  width: 22px !important;
-  height: 22px !important;
-  display: block !important;
-}
-
-.foodEditDeleteIcon svg path {
-  fill: none !important;
-  stroke: rgba(247, 248, 251, 0.92) !important;
-  stroke-width: 1.8 !important;
-  stroke-linecap: round !important;
-  stroke-linejoin: round !important;
-}
 
 /* Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÐµÐµ Ð¿Ð¾ÑÐ»Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ "ÐŸÐ¾Ñ€Ñ†Ð¸Ñ" */
 .foodEditRowsCard {
@@ -974,44 +926,11 @@
 }
 
 /* Ð²Ñ‹Ð±Ð¾Ñ€ Ð¿Ñ€Ð¸Ñ‘Ð¼Ð° Ð¿Ð¸Ñ‰Ð¸ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ Ð½Ð¸Ð¶Ð½ÐµÐ³Ð¾ Ð±Ð»Ð¾ÐºÐ° */
-.foodEditMealSelector {
-  padding: 6px 0 10px 42px !important;
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 8px !important;
-  border-top: 1px solid rgba(255,255,255,0.045) !important;
-}
-
-.foodEditMealSelector button {
-  min-height: 38px !important;
-  padding: 0 10px !important;
-  border-radius: 14px !important;
-  border: 1px solid rgba(255,255,255,0.07) !important;
-  background: rgba(255,255,255,0.025) !important;
-  color: rgba(247,248,251,0.72) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 7px !important;
-}
 
 .foodEditMealSelector button.active {
   border-color: rgba(38,255,116,0.42) !important;
   color: rgba(38,255,116,0.92) !important;
   background: rgba(38,255,116,0.055) !important;
-}
-
-.foodEditMealSelector button span {
-  font-size: 15px !important;
-  line-height: 1 !important;
-}
-
-.foodEditMealSelector button strong {
-  font-size: 12px !important;
-  font-weight: 850 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
 }
 
 @media (max-width: 480px) {
@@ -1027,17 +946,6 @@
 
   .foodEditDeleteButton span:last-child {
     font-size: 15px !important;
-  }
-
-  .foodEditDeleteIcon,
-  .foodEditDeleteIcon svg {
-    width: 20px !important;
-    height: 20px !important;
-  }
-
-  .foodEditMealSelector {
-    padding-left: 38px !important;
-    gap: 7px !important;
   }
 }
 
@@ -1091,32 +999,6 @@
    ========================================================= */
 
 /* Ð¾Ð´Ð½Ð° Ð½Ð°ÑÑ‚Ð¾ÑÑ‰Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ° Ð½Ð°Ð·Ð°Ð´ */
-.foodEditBackOnly {
-  position: fixed !important;
-  top: 18px !important;
-  left: 18px !important;
-  z-index: 99999 !important;
-
-  width: 54px !important;
-  height: 54px !important;
-  border-radius: 50% !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  background: rgba(255,255,255,0.035) !important;
-  color: rgba(255,255,255,0.95) !important;
-
-  font-size: 36px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-
-  box-shadow:
-    0 12px 28px rgba(0,0,0,0.24),
-    inset 0 1px 0 rgba(255,255,255,0.04) !important;
-}
 
 /* =========================================================
    FINAL HARD BACK DEDUPLICATION
@@ -1135,44 +1017,8 @@
 }
 
 /* ÐµÐ´Ð¸Ð½ÑÑ‚Ð²ÐµÐ½Ð½Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ° Ð½Ð°Ð·Ð°Ð´ */
-.foodEditBackOnly {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-
-  position: fixed !important;
-  top: 18px !important;
-  left: 18px !important;
-  z-index: 999999 !important;
-
-  width: 54px !important;
-  height: 54px !important;
-  border-radius: 50% !important;
-
-  align-items: center !important;
-  justify-content: center !important;
-
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  background: rgba(255,255,255,0.035) !important;
-  color: rgba(255,255,255,0.95) !important;
-
-  font-size: 36px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-}
 
 /* Ð½Ð° ÑÐºÑ€Ð°Ð½Ðµ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ ÑÑ‚Ð° ÐºÐ½Ð¾Ð¿ÐºÐ° */
-.foodEditBackOnly {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  position: fixed !important;
-  top: 18px !important;
-  left: 18px !important;
-  z-index: 999999 !important;
-}
 
 /* =========================================================
    MOVE ADD FOOD CANCEL X TO TOP RIGHT
@@ -1264,34 +1110,6 @@
    NUTRITION SUMMARY â€” RENDER COPY
    ========================================================= */
 
-.nutritionSummaryRender {
-  width: 100% !important;
-  max-width: 520px !important;
-  margin: 28px auto 0 !important;
-  padding: 28px 18px 20px !important;
-
-  border-radius: 34px !important;
-  border: 1px solid rgba(127, 255, 122, 0.14) !important;
-
-  background:
-    radial-gradient(circle at 0% 0%, rgba(39, 255, 116, 0.07), transparent 32%),
-    linear-gradient(180deg, rgba(8, 20, 22, 0.97), rgba(5, 12, 14, 0.995)) !important;
-
-  box-shadow:
-    0 22px 60px rgba(0,0,0,0.34),
-    inset 0 1px 0 rgba(255,255,255,0.025) !important;
-}
-
-.nutritionSummaryRender h2 {
-  margin: 0 0 20px 12px !important;
-
-  color: rgba(247,248,251,0.96) !important;
-  font-size: 31px !important;
-  line-height: 1 !important;
-  font-weight: 950 !important;
-  letter-spacing: -0.8px !important;
-}
-
 .summaryCaloriesCard,
 .summaryMacroCard,
 .summaryWaterCard {
@@ -1339,81 +1157,9 @@
   box-shadow: 0 0 10px rgba(39, 255, 116, 0.18) !important;
 }
 
-.summaryCaloriesInfo {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 14px !important;
-}
-
-.summaryCaloriesRow {
-  display: grid !important;
-  grid-template-columns: 1fr auto !important;
-  gap: 20px !important;
-  align-items: center !important;
-}
-
-.summaryCaloriesRow span {
-  color: rgba(247,248,251,0.62) !important;
-  font-size: 20px !important;
-  line-height: 1.05 !important;
-  font-weight: 900 !important;
-  letter-spacing: -0.35px !important;
-}
-
-.summaryCaloriesRow strong {
-  color: rgba(247,248,251,0.96) !important;
-  font-size: 27px !important;
-  line-height: 1 !important;
-  font-weight: 950 !important;
-  letter-spacing: -0.4px !important;
-}
-
 .summaryCaloriesRow.muted span,
 .summaryCaloriesRow.muted strong {
   color: rgba(247,248,251,0.48) !important;
-}
-
-.summaryCaloriesDivider {
-  height: 1px !important;
-  width: 100% !important;
-  background: rgba(255,255,255,0.075) !important;
-  margin: 4px 0 2px !important;
-}
-
-.summaryMacroCard {
-  min-height: 134px !important;
-  margin-top: 16px !important;
-  padding: 20px 26px !important;
-
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 112px !important;
-  gap: 18px !important;
-  align-items: center !important;
-}
-
-.summaryMacroLegend {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 14px !important;
-}
-
-.summaryMacroLegend span {
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-
-  color: rgba(247,248,251,0.66) !important;
-  font-size: 20px !important;
-  line-height: 1 !important;
-  font-weight: 900 !important;
-  letter-spacing: -0.35px !important;
-}
-
-.summaryMacroLegend i {
-  width: 13px !important;
-  height: 13px !important;
-  border-radius: 50% !important;
-  flex: 0 0 auto !important;
 }
 
 .summaryMacroLegend i.carbs { background: #68d9ef !important; }
@@ -1439,109 +1185,7 @@
   background: rgba(7, 15, 17, 0.995) !important;
 }
 
-.summaryNutrientsGrid {
-  margin-top: 16px !important;
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 12px !important;
-}
-
-.summaryNutrientsGrid div {
-  min-height: 94px !important;
-  padding: 16px 10px !important;
-
-  border-radius: 22px !important;
-  border: 1px solid rgba(255,255,255,0.075) !important;
-
-  background:
-    linear-gradient(180deg, rgba(12, 24, 25, 0.985), rgba(7, 15, 17, 0.995)) !important;
-
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 12px !important;
-}
-
-.summaryNutrientsGrid span {
-  color: rgba(247,248,251,0.48) !important;
-  font-size: 18px !important;
-  line-height: 1 !important;
-  font-weight: 900 !important;
-}
-
-.summaryNutrientsGrid strong {
-  color: rgba(247,248,251,0.96) !important;
-  font-size: 29px !important;
-  line-height: 1 !important;
-  font-weight: 950 !important;
-  letter-spacing: -0.4px !important;
-}
-
-.summaryWaterCard {
-  min-height: 152px !important;
-  margin-top: 16px !important;
-  padding: 24px 20px 20px !important;
-}
-
-.summaryWaterTop {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  padding: 0 8px 22px !important;
-}
-
-.summaryWaterTop span {
-  color: rgba(247,248,251,0.92) !important;
-  font-size: 24px !important;
-  line-height: 1 !important;
-  font-weight: 950 !important;
-  letter-spacing: -0.45px !important;
-}
-
-.summaryWaterTop strong {
-  color: rgba(247,248,251,0.66) !important;
-  font-size: 24px !important;
-  line-height: 1 !important;
-  font-weight: 950 !important;
-}
-
-.summaryWaterActions {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 16px !important;
-}
-
-.summaryWaterActions button {
-  min-height: 56px !important;
-
-  border-radius: 18px !important;
-  border: 1px solid rgba(255,255,255,0.075) !important;
-
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.055), transparent 60%),
-    linear-gradient(180deg, rgba(24, 33, 35, 0.86), rgba(12, 20, 22, 0.96)) !important;
-
-  color: rgba(247,248,251,0.55) !important;
-  font-size: 18px !important;
-  font-weight: 950 !important;
-  letter-spacing: 0.2px !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.035) !important;
-}
-
 @media (max-width: 480px) {
-  .nutritionSummaryRender {
-    margin-top: 24px !important;
-    padding: 24px 14px 18px !important;
-    border-radius: 30px !important;
-  }
-
-  .nutritionSummaryRender h2 {
-    font-size: 29px !important;
-    margin-left: 10px !important;
-  }
 
   .summaryCaloriesCard {
     min-height: 154px !important;
@@ -1561,23 +1205,6 @@
     height: 12px !important;
   }
 
-  .summaryCaloriesRow span {
-    font-size: 17px !important;
-  }
-
-  .summaryCaloriesRow strong {
-    font-size: 24px !important;
-  }
-
-  .summaryMacroCard {
-    padding: 18px 20px !important;
-    grid-template-columns: minmax(0, 1fr) 96px !important;
-  }
-
-  .summaryMacroLegend span {
-    font-size: 17px !important;
-  }
-
   .summaryDonut {
     width: 78px !important;
     height: 78px !important;
@@ -1587,28 +1214,6 @@
     width: 38px !important;
     height: 38px !important;
   }
-
-  .summaryNutrientsGrid div {
-    min-height: 88px !important;
-  }
-
-  .summaryNutrientsGrid span {
-    font-size: 16px !important;
-  }
-
-  .summaryNutrientsGrid strong {
-    font-size: 26px !important;
-  }
-
-  .summaryWaterTop span,
-  .summaryWaterTop strong {
-    font-size: 22px !important;
-  }
-
-  .summaryWaterActions button {
-    min-height: 52px !important;
-    font-size: 16px !important;
-  }
 }
 
 /* =========================================================
@@ -1616,11 +1221,6 @@
    ========================================================= */
 
 /* Ð¡Ð²Ð¾Ð´ÐºÐ° +30% */
-.nutritionSummaryRender h2 {
-  font-size: 25px !important;
-  margin-bottom: 18px !important;
-  letter-spacing: -0.35px !important;
-}
 
 /* ÑÐµÑ‚ÐºÐ° ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ +20% */
 .summaryCaloriesCard {
@@ -1641,15 +1241,6 @@
 }
 
 /* Ñ‚ÐµÐºÑÑ‚ Ð¸ Ñ†Ð¸Ñ„Ñ€Ñ‹ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ +20% */
-.summaryCaloriesRow span {
-  font-size: 15px !important;
-  line-height: 1.08 !important;
-}
-
-.summaryCaloriesRow strong {
-  font-size: 20px !important;
-  line-height: 1 !important;
-}
 
 /* Ð Ð¡Ðš +25% */
 .summaryCaloriesRow.muted span,
@@ -1657,15 +1248,7 @@
   font-size: 16px !important;
 }
 
-.summaryCaloriesInfo {
-  gap: 10px !important;
-}
-
 @media (max-width: 480px) {
-  .nutritionSummaryRender h2 {
-    font-size: 23px !important;
-    margin-bottom: 16px !important;
-  }
 
   .summaryCaloriesCard {
     grid-template-columns: 46px minmax(0, 1fr) !important;
@@ -1684,14 +1267,6 @@
     height: 6.5px !important;
   }
 
-  .summaryCaloriesRow span {
-    font-size: 14px !important;
-  }
-
-  .summaryCaloriesRow strong {
-    font-size: 18px !important;
-  }
-
   .summaryCaloriesRow.muted span,
   .summaryCaloriesRow.muted strong {
     font-size: 15px !important;
@@ -1703,49 +1278,10 @@
    ========================================================= */
 
 /* Ð±Ð»Ð¾Ðº Ð‘Ð–Ð£ â€” Ñ‚ÐµÐºÑÑ‚ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¸ Ð±ÐµÐ· Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ° */
-.summaryMacroLegend span {
-  font-size: 13px !important;
-  white-space: nowrap !important;
-  line-height: 1 !important;
-  gap: 8px !important;
-}
 
 /* ÑÐ»ÐµÐ´ÑƒÑŽÑ‰Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð‘Ð–Ð£ â€” Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð¼ÐµÐ½ÑŒÑˆÐµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð½Ð° 40% */
-.summaryNutrientsGrid strong {
-  font-size: 12px !important;
-  line-height: 1 !important;
-}
-
-.summaryNutrientsGrid span {
-  font-size: 13px !important;
-  white-space: nowrap !important;
-}
 
 /* Ð²Ð¾Ð´Ð° Ð¼ÐµÐ½ÑŒÑˆÐµ Ð½Ð° 25% */
-.summaryWaterTop span,
-.summaryWaterTop strong {
-  font-size: 18px !important;
-  line-height: 1 !important;
-}
-
-@media (max-width: 480px) {
-  .summaryMacroLegend span {
-    font-size: 12px !important;
-  }
-
-  .summaryNutrientsGrid strong {
-    font-size: 11px !important;
-  }
-
-  .summaryNutrientsGrid span {
-    font-size: 12px !important;
-  }
-
-  .summaryWaterTop span,
-  .summaryWaterTop strong {
-    font-size: 16px !important;
-  }
-}
 
 /* =========================================================
    SUMMARY UNIFIED TEXT SIZE
@@ -1768,21 +1304,10 @@
 }
 
 /* Ð±ÐµÐ· Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¾Ð² */
-.summaryMacroLegend span,
-.summaryNutrientsGrid span,
-.summaryWaterTop span {
-  white-space: nowrap !important;
-}
 
 /* Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð‘Ð–Ð£ Ñ‡ÑƒÑ‚ÑŒ Ð¿Ð»Ð¾Ñ‚Ð½ÐµÐµ */
-.summaryNutrientsGrid strong {
-  font-weight: 900 !important;
-}
 
 /* ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ð²Ð¾Ð´Ñ‹ */
-.summaryWaterActions button {
-  min-height: 48px !important;
-}
 
 @media (max-width: 480px) {
   .summaryCaloriesRow span,
@@ -1804,13 +1329,6 @@
    ========================================================= */
 
 /* ÑƒÐ±Ñ€Ð°Ñ‚ÑŒ Ð·ÐµÐ»Ñ‘Ð½Ð¾Ðµ ÑÐ²ÐµÑ‡ÐµÐ½Ð¸Ðµ */
-.nutritionSummaryRender {
-  background:
-    linear-gradient(180deg, rgba(8, 20, 22, 0.97), rgba(5, 12, 14, 0.995)) !important;
-  box-shadow:
-    0 22px 60px rgba(0,0,0,0.34),
-    inset 0 1px 0 rgba(255,255,255,0.025) !important;
-}
 
 /* ÑƒÐ²ÐµÐ»Ð¸Ñ‡Ð¸Ñ‚ÑŒ ÑÐµÑ‚ÐºÑƒ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð¿Ð¾ Ð²Ñ‹ÑÐ¾Ñ‚Ðµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð½Ð° 10% */
 .summaryDotGrid {
@@ -1970,10 +1488,6 @@
 /* =========================================================
    PERSONAL FOOD DATABASE
    ========================================================= */
-
-.fatSearchQuickActions button span {
-  white-space: nowrap !important;
-}
 
 .fatSearchResultInfo span {
   display: block !important;
@@ -2271,10 +1785,6 @@
   box-shadow: 0 0 10px rgba(157,245,76,0.08) !important;
 }
 
-.fatSearchResultAdd {
-  display: none !important;
-}
-
 /* bottom bar closer to render */
 .fatSearchBottomBar {
   min-height: 86px !important;
@@ -2541,9 +2051,6 @@
    ========================================================= */
 
 /* ÑÑ‚Ð°Ñ€Ñ‹Ðµ Ð±Ð¾Ð»ÑŒÑˆÐ¸Ðµ Ð¿ÑƒÑÑ‚Ñ‹Ðµ skeleton-ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ¸ Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½Ðµ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð·Ð°Ð½Ð¸Ð¼Ð°Ñ‚ÑŒ Ð²ÐµÑ€Ñ… */
-.fatSkeletonList {
-  display: none !important;
-}
 
 /* ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½Ñ‹Ð¹ loader Ð¿Ð¾ÑÐ»Ðµ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð¾Ð² Ð¼Ð¾ÐµÐ¹ Ð±Ð°Ð·Ñ‹ */
 .fatAiLoadingBelow {
@@ -2591,9 +2098,6 @@
 /* Ð²Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ð¾ Ð½Ðµ Ð¼ÐµÐ½ÑÐµÐ¼ ÐºÐ½Ð¾Ð¿ÐºÑƒ, Ð¼ÐµÐ½ÑÐµÑ‚ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð»Ð¾Ð³Ð¸ÐºÐ°:
    Ð¸Ð· Ð¿Ð¾Ð¸ÑÐºÐ° -> Ð½Ð°Ð·Ð°Ð´ Ð² Ð¿Ð¾Ð¸ÑÐº ÐµÐ´Ñ‹,
    Ð¸Ð· ÑƒÐ¶Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð½Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° -> Ð½Ð°Ð·Ð°Ð´ Ð² Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ðµ */
-.foodEditBackOnly {
-  cursor: pointer !important;
-}
 
 /* =========================================================
    FOOD EDIT DETAILS PANEL
@@ -2601,41 +2105,6 @@
 
 .foodEditHeroEditable {
   position: relative !important;
-}
-
-.foodEditPencilButton {
-  position: absolute !important;
-  top: 14px !important;
-  right: 14px !important;
-  z-index: 4 !important;
-
-  width: 38px !important;
-  height: 38px !important;
-  padding: 0 !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  border-radius: 14px !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-
-  background:
-    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.10), transparent 64%),
-    rgba(255,255,255,0.035) !important;
-
-  color: rgba(38,255,116,0.95) !important;
-  font-size: 22px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-
-  box-shadow:
-    0 10px 24px rgba(0,0,0,0.24),
-    inset 0 1px 0 rgba(255,255,255,0.035) !important;
-}
-
-.foodEditPencilButton:active {
-  transform: scale(0.96) !important;
 }
 
 .foodEditDetailsPanel {
@@ -2705,44 +2174,16 @@
   box-shadow: 0 0 0 3px rgba(38,255,116,0.055) !important;
 }
 
-.foodEditDetailsGrid {
-  display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-  gap: 8px !important;
-}
-
-.foodEditDetailsGrid input {
-  text-align: center !important;
-  padding-left: 8px !important;
-  padding-right: 8px !important;
-}
-
 @media (max-width: 390px) {
-  .foodEditPencilButton {
-    top: 12px !important;
-    right: 12px !important;
-    width: 34px !important;
-    height: 34px !important;
-    border-radius: 12px !important;
-    font-size: 20px !important;
-  }
 
   .foodEditDetailsPanel {
     padding: 12px !important;
     border-radius: 22px !important;
   }
 
-  .foodEditDetailsGrid {
-    gap: 6px !important;
-  }
-
   .foodEditDetailsPanel input,
   .foodEditDetailsPanel textarea {
     font-size: 13px !important;
-  }
-
-  .foodEditDetailsGrid label span {
-    font-size: 10px !important;
   }
 }
 
@@ -2752,9 +2193,6 @@
 
 /* ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¸ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° Ð² ÑÐ¿Ð¸ÑÐºÐµ Ð¿Ñ€Ð¸Ñ‘Ð¼Ð° Ð¿Ð¸Ñ‰Ð¸ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÑŽÑ‚ÑÑ ÐºÐ°Ðº ÑƒÐ¶Ðµ ÑÐ¾Ñ…Ñ€Ð°Ð½Ñ‘Ð½Ð½Ñ‹Ð¹ Ð¸Ñ‚Ð¾Ð³,
    Ð±ÐµÐ· Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Ð½Ð¾Ð³Ð¾ ÑƒÐ¼Ð½Ð¾Ð¶ÐµÐ½Ð¸Ñ Ð½Ð° Ð³Ñ€Ð°Ð¼Ð¼Ñ‹ */
-.productKcalExact {
-  white-space: nowrap !important;
-}
 
 /* =========================================================
    FOOD EDIT PORTION MODE FIX
@@ -2940,11 +2378,6 @@
   min-width: 72px !important;
 }
 
-.foodEditSaveIcon {
-  font-size: 14px !important;
-  line-height: 1 !important;
-}
-
 /* =========================================================
    PORTION UNIT TOGGLE â€” NO DROPDOWN
    ========================================================= */
@@ -3011,17 +2444,6 @@
 /* =========================================================
    ADMIN USERS CREATE PANEL
    ========================================================= */
-
-.adminUsersPage {
-  padding-bottom: 40px !important;
-}
-
-.adminCreateUserCard,
-.adminUsersListCard {
-  max-width: 460px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
 
 .adminCreateUserForm {
   display: flex !important;
@@ -3146,62 +2568,3 @@
   color: rgba(244,246,242,0.86) !important;
   font-weight: 900 !important;
 }
-
-.adminUsersList {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 10px !important;
-}
-
-.adminUserRow {
-  width: 100% !important;
-  min-height: 74px !important;
-  padding: 12px 14px !important;
-  display: grid !important;
-  grid-template-columns: 42px minmax(0, 1fr) 18px !important;
-  gap: 12px !important;
-  align-items: center !important;
-  text-align: left !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-  border-radius: 20px !important;
-  background: rgba(255,255,255,0.035) !important;
-  color: rgba(244,246,242,0.92) !important;
-}
-
-.adminUserRow > span {
-  width: 42px !important;
-  height: 42px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border-radius: 16px !important;
-  background: rgba(127,159,58,0.13) !important;
-  font-size: 20px !important;
-}
-
-.adminUserRow strong {
-  display: block !important;
-  font-size: 15px !important;
-  font-weight: 950 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-.adminUserRow small {
-  display: block !important;
-  margin-top: 4px !important;
-  color: rgba(244,246,242,0.45) !important;
-  font-size: 12px !important;
-  font-weight: 750 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-.adminUserRow em {
-  color: rgba(127,159,58,0.88) !important;
-  font-size: 24px !important;
-  font-style: normal !important;
-}
-

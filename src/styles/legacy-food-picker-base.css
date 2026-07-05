@@ -1,4 +1,4 @@
-﻿/* FATSECRET-LIKE FOOD PICKER â€” NEW BASE */
+/* FATSECRET-LIKE FOOD PICKER â€” NEW BASE */
 .fatFoodSearchOverlay {
   position: fixed !important;
   inset: 0 !important;
@@ -33,8 +33,6 @@
   background: #252c38 !important;
   border-bottom: 1px solid rgba(255,255,255,0.06) !important;
 }
-
-.fatSearchTopSpacer { display: none !important; }
 
 .fatSearchClose,
 .fatSearchTopCloseRight .fatSearchClose {
@@ -91,30 +89,6 @@
   text-align: left !important;
 }
 
-.fatSecretTabs,
-.fatSearchTabs {
-  height: 58px !important;
-  min-height: 58px !important;
-  padding: 0 0 0 0 !important;
-  gap: 0 !important;
-  background: #252c38 !important;
-  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
-  overflow-x: auto !important;
-}
-
-.fatSearchTabs button {
-  min-width: 122px !important;
-  height: 58px !important;
-  padding: 0 16px !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  color: rgba(225,230,240,0.58) !important;
-  font-size: 16px !important;
-  font-weight: 900 !important;
-  letter-spacing: .2px !important;
-  white-space: nowrap !important;
-}
-
 .fatSearchTabs button.active {
   color: #f5f7fb !important;
 }
@@ -162,10 +136,6 @@
   opacity: 1 !important;
 }
 
-.fatSearchAmountRow {
-  display: none !important;
-}
-
 .fatSearchList {
   flex: 1 1 auto !important;
   min-height: 0 !important;
@@ -174,139 +144,11 @@
   background: #050b14 !important;
 }
 
-.fatSearchItem {
-  min-height: 90px !important;
-  padding: 0 20px 0 38px !important;
-  display: grid !important;
-  grid-template-columns: 42px 1fr 34px !important;
-  gap: 18px !important;
-  align-items: center !important;
-  border-radius: 0 !important;
-  border: none !important;
-  border-bottom: 1px solid rgba(140,150,170,0.18) !important;
-  background: transparent !important;
-}
-
-.fatSearchFavorite {
-  width: 42px !important;
-  height: 42px !important;
-  min-width: 42px !important;
-  border: 3px solid #70798b !important;
-  border-radius: 50% !important;
-  background: transparent !important;
-  color: transparent !important;
-  font-size: 0 !important;
-  position: relative !important;
-}
-
-.fatSearchFavorite::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 9px !important;
-  border: 3px solid #70798b !important;
-  border-radius: 50% !important;
-  border-left-color: transparent !important;
-}
-
-.fatSearchFoodName {
-  padding: 0 !important;
-  text-align: left !important;
-  background: transparent !important;
-  border: none !important;
-}
-
-.fatSearchFoodName strong {
-  color: #eef3fb !important;
-  font-size: 23px !important;
-  font-weight: 700 !important;
-  line-height: 1.12 !important;
-}
-
-.fatSearchFoodName span {
-  margin-top: 6px !important;
-  color: rgba(170,180,196,0.78) !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  line-height: 1.25 !important;
-  display: none !important;
-}
-
-.fatSearchAdd {
-  width: 34px !important;
-  height: 42px !important;
-  min-width: 34px !important;
-  border-radius: 0 !important;
-  border: none !important;
-  background: transparent !important;
-  color: #8d96a7 !important;
-  font-size: 38px !important;
-  font-weight: 300 !important;
-  transform: rotate(-45deg) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
 .fatSearchStatus {
   padding: 28px 20px !important;
   color: #9ba4b4 !important;
   font-size: 17px !important;
   font-weight: 700 !important;
-}
-
-.fatSecretBottomTools,
-.fatSearchBottomTools {
-  position: fixed !important;
-  left: 50% !important;
-  bottom: max(18px, env(safe-area-inset-bottom)) !important;
-  transform: translateX(-50%) !important;
-  width: min(470px, calc(100% - 48px)) !important;
-  height: 104px !important;
-  padding: 0 38px !important;
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  align-items: center !important;
-  gap: 22px !important;
-  border-radius: 999px !important;
-  border: none !important;
-  background: #3d424e !important;
-  box-shadow: 0 16px 36px rgba(0,0,0,0.35) !important;
-  z-index: 2147483640 !important;
-}
-
-.fatSearchBottomTools button {
-  width: 64px !important;
-  height: 64px !important;
-  margin: 0 auto !important;
-  padding: 0 !important;
-  border: none !important;
-  border-radius: 24px !important;
-  background: transparent !important;
-  color: #23d86f !important;
-  font-size: 36px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-}
-
-.fatSearchBottomTools button:nth-child(2) {
-  position: relative !important;
-  font-size: 44px !important;
-}
-
-.fatSearchBottomTools button:nth-child(2)::after {
-  content: "!" !important;
-  position: absolute !important;
-  right: 6px !important;
-  bottom: 8px !important;
-  width: 18px !important;
-  height: 18px !important;
-  border-radius: 50% !important;
-  background: #f6b93b !important;
-  color: #283040 !important;
-  font-size: 13px !important;
-  font-weight: 900 !important;
-  line-height: 18px !important;
-  text-align: center !important;
 }
 
 .fatMealDropdown {
@@ -340,11 +182,6 @@
     font-size: 14px !important;
   }
 
-  .fatSearchTabs button {
-    min-width: 114px !important;
-    font-size: 15px !important;
-  }
-
   .fatSearchInputWrap {
     margin: 20px 10px 12px !important;
     min-height: 60px !important;
@@ -352,25 +189,6 @@
 
   .fatSearchInputWrap input {
     font-size: 22px !important;
-  }
-
-  .fatSearchItem {
-    min-height: 91px !important;
-    padding-left: 42px !important;
-    padding-right: 34px !important;
-    grid-template-columns: 40px 1fr 30px !important;
-    gap: 16px !important;
-  }
-
-  .fatSearchFoodName strong {
-    font-size: 22px !important;
-  }
-
-  .fatSecretBottomTools,
-  .fatSearchBottomTools {
-    width: min(470px, calc(100% - 48px)) !important;
-    height: 104px !important;
-    padding: 0 34px !important;
   }
 }
 
@@ -500,64 +318,6 @@
   justify-content: center !important;
 }
 
-.fatSearchQuickActions {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 9px !important;
-  margin: 0 0 12px !important;
-}
-
-.fatSearchQuickActions button {
-  min-height: 74px !important;
-  padding: 11px 8px !important;
-  border-radius: 22px !important;
-  border: 1px solid rgba(255,255,255,.09) !important;
-  background: rgba(255,255,255,.052) !important;
-  color: #fff !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 7px !important;
-  font-size: 23px !important;
-  font-weight: 900 !important;
-  cursor: pointer !important;
-}
-
-.fatSearchQuickActions button span {
-  color: rgba(255,255,255,.62) !important;
-  font-size: 12px !important;
-  font-weight: 850 !important;
-  line-height: 1.08 !important;
-  text-align: center !important;
-}
-
-.fatSearchBarcodeInline {
-  display: grid !important;
-  grid-template-columns: 1fr 82px !important;
-  gap: 8px !important;
-  margin-bottom: 14px !important;
-}
-
-.fatSearchBarcodeInline input {
-  min-height: 50px !important;
-  padding: 0 16px !important;
-  border-radius: 18px !important;
-  border: 1px solid rgba(255,255,255,.085) !important;
-  background: rgba(255,255,255,.045) !important;
-  font-size: 15px !important;
-}
-
-.fatSearchBarcodeInline button {
-  min-height: 50px !important;
-  border: none !important;
-  border-radius: 18px !important;
-  background: linear-gradient(135deg, #12e35c, #87e44f) !important;
-  color: #061008 !important;
-  font-size: 15px !important;
-  font-weight: 900 !important;
-}
-
 .fatSearchListPremium {
   display: flex !important;
   flex-direction: column !important;
@@ -614,78 +374,10 @@
   line-height: 1.2 !important;
 }
 
-.fatSearchResultAdd {
-  width: 44px !important;
-  height: 44px !important;
-  border-radius: 18px !important;
-  background: linear-gradient(135deg, #12e35c, #87e44f) !important;
-  color: #061008 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 34px !important;
-  font-weight: 800 !important;
-  line-height: .8 !important;
-}
-
 .fatFoodAmountScreen {
   display: flex !important;
   flex-direction: column !important;
   gap: 14px !important;
-}
-
-.fatFoodAmountHero {
-  padding: 24px 18px !important;
-  border-radius: 30px !important;
-  border: 1px solid rgba(255,255,255,.1) !important;
-  background:
-    radial-gradient(circle at top, rgba(18,227,92,.14), transparent 46%),
-    rgba(255,255,255,.052) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  text-align: center !important;
-  gap: 9px !important;
-}
-
-.fatFoodAmountHero span {
-  width: 66px !important;
-  height: 66px !important;
-  border-radius: 24px !important;
-  background: rgba(18,227,92,.12) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 34px !important;
-}
-
-.fatFoodAmountHero strong {
-  color: #fff !important;
-  font-size: 25px !important;
-  font-weight: 900 !important;
-  line-height: 1.08 !important;
-}
-
-.fatFoodAmountHero small {
-  color: rgba(255,255,255,.5) !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-}
-
-.fatAmountQuickRow {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 10px !important;
-}
-
-.fatAmountQuickRow button {
-  min-height: 52px !important;
-  border-radius: 19px !important;
-  border: 1px solid rgba(255,255,255,.1) !important;
-  background: rgba(255,255,255,.055) !important;
-  color: rgba(255,255,255,.78) !important;
-  font-size: 17px !important;
-  font-weight: 900 !important;
 }
 
 .fatAmountQuickRow button.active {
@@ -694,210 +386,23 @@
   border-color: rgba(18,227,92,.45) !important;
 }
 
-.fatAmountInputCard {
-  min-height: 74px !important;
-  padding: 12px 16px !important;
-  border-radius: 23px !important;
-  border: 1px solid rgba(255,255,255,.095) !important;
-  background: rgba(255,255,255,.05) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  gap: 4px !important;
-}
-
-.fatAmountInputCard span {
-  color: rgba(255,255,255,.45) !important;
-  font-size: 13px !important;
-  font-weight: 850 !important;
-}
-
-.fatAmountInputCard input {
-  font-size: 29px !important;
-  font-weight: 900 !important;
-}
-
-.fatAmountMacrosGrid {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 10px !important;
-}
-
-.fatAmountMacrosGrid div {
-  min-height: 88px !important;
-  padding: 12px 8px !important;
-  border-radius: 22px !important;
-  border: 1px solid rgba(255,255,255,.09) !important;
-  background: rgba(255,255,255,.047) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 3px !important;
-}
-
 .fatAmountMacrosGrid div.wide {
   grid-column: 1 / -1 !important;
   min-height: 104px !important;
-}
-
-.fatAmountMacrosGrid span {
-  color: rgba(255,255,255,.43) !important;
-  font-size: 12px !important;
-  font-weight: 850 !important;
-}
-
-.fatAmountMacrosGrid strong {
-  color: #fff !important;
-  font-size: 25px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
 }
 
 .fatAmountMacrosGrid .wide strong {
   font-size: 42px !important;
 }
 
-.fatAmountMacrosGrid small {
-  color: rgba(18,227,92,.84) !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-}
-
-.fatAmountAddButton {
-  width: 100% !important;
-  min-height: 66px !important;
-  border: none !important;
-  border-radius: 24px !important;
-  background: linear-gradient(135deg, #12e35c, #87e44f) !important;
-  color: #061008 !important;
-  font-size: 22px !important;
-  font-weight: 900 !important;
-  box-shadow: 0 18px 40px rgba(18, 227, 92, .18) !important;
-}
-
 @media (max-width: 380px) {
-  .fatSearchQuickActions { gap: 7px !important; }
-  .fatSearchQuickActions button { min-height: 68px !important; font-size: 21px !important; }
-  .fatSearchQuickActions button span { font-size: 11px !important; }
   .fatSearchResultInfo strong { font-size: 17px !important; }
   .fatSearchResultInfo small { font-size: 12px !important; }
 }
 
 /* AI FOOD PHOTO SEARCH */
-.fatPhotoAiBox {
-  width: 100%;
-  margin: 10px 0 12px;
-}
-
-.fatPhotoAiUpload,
-.fatPhotoAiPreviewRow {
-  width: 100%;
-  min-height: 78px;
-  padding: 12px;
-  border-radius: 24px;
-  border: 1px solid rgba(127, 159, 58, 0.18);
-  background:
-    radial-gradient(circle at left, rgba(127, 159, 58, 0.14), transparent 48%),
-    rgba(255, 255, 255, 0.045);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-align: left;
-}
-
-.fatPhotoAiUpload {
-  cursor: pointer;
-}
-
-.fatPhotoAiUpload > span {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 48px;
-  border-radius: 18px;
-  background: rgba(127, 159, 58, 0.16);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 25px;
-}
-
-.fatPhotoAiUpload strong,
-.fatPhotoAiPreviewRow strong {
-  display: block;
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 16px;
-  font-weight: 900;
-  line-height: 1.15;
-}
-
-.fatPhotoAiUpload small,
-.fatPhotoAiPreviewRow span,
-.fatPhotoAiPreviewRow small {
-  display: block;
-  margin-top: 4px;
-  color: rgba(255, 255, 255, 0.48);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.25;
-}
-
-.fatPhotoAiPreviewRow img {
-  width: 58px;
-  height: 58px;
-  flex: 0 0 58px;
-  border-radius: 18px;
-  object-fit: cover;
-  background: #050705;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.fatPhotoAiPreviewRow > div {
-  min-width: 0;
-  flex: 1;
-}
-
-.fatPhotoAiPreviewRow button {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.07);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1;
-  cursor: pointer;
-}
-
-@media (max-width: 380px) {
-  .fatPhotoAiUpload,
-  .fatPhotoAiPreviewRow {
-    min-height: 72px;
-    border-radius: 22px;
-  }
-
-  .fatPhotoAiUpload > span {
-    width: 44px;
-    height: 44px;
-    flex-basis: 44px;
-  }
-
-  .fatPhotoAiPreviewRow img {
-    width: 52px;
-    height: 52px;
-    flex-basis: 52px;
-  }
-}
 
 /* OPENAI NUTRITION SEARCH MODE */
-.fatFoodMeta,
-.fatFoodSource,
-.fatFoodBrand {
-  word-break: break-word;
-}
 
 .fatSearchStatus strong {
   display: block;
@@ -906,11 +411,6 @@
 }
 
 /* PREMIUM ADD FOOD SEARCH PAGE â€” COMPACT REDESIGN */
-.fatSearchPage,
-.nutritionPickerPage,
-.foodSearchPage {
-  min-height: 100dvh;
-}
 
 .fatSearchHeader,
 .nutritionSearchHeader,
@@ -936,23 +436,6 @@
   font-size: 13px;
   font-weight: 800;
   line-height: 1.25;
-}
-
-.fatSearchBox,
-.nutritionSearchBox,
-.foodSearchBox {
-  position: sticky;
-  top: max(10px, env(safe-area-inset-top));
-  z-index: 20;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 24px;
-  background:
-    linear-gradient(180deg, rgba(23, 28, 23, 0.96), rgba(10, 13, 10, 0.96));
-  border: 1px solid rgba(127, 159, 58, 0.16);
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.28);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
 }
 
 .fatSearchInputWrap,
@@ -1013,59 +496,12 @@
   box-shadow: none !important;
 }
 
-.fatQuickSuggestions {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 2px 2px 8px;
-  margin: 10px -2px 0;
-  scrollbar-width: none;
-}
-
-.fatQuickSuggestions button {
-  flex: 0 0 auto;
-  min-height: 36px;
-  padding: 8px 13px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.075);
-  background: rgba(255, 255, 255, 0.045);
-  color: rgba(244, 246, 242, 0.72);
-  font-size: 13px;
-  font-weight: 900;
-  white-space: nowrap;
-}
-
 .fatQuickSuggestions button:active,
 .fatQuickActions button:active {
   transform: scale(0.975);
 }
 
 /* Make old big photo/search blocks compact if present */
-.fatPhotoSearchCard,
-.aiPhotoSearchCard,
-.nutritionPhotoSearchCard {
-  padding: 12px !important;
-  margin: 8px 0 10px !important;
-  border-radius: 22px !important;
-  min-height: auto !important;
-}
-
-.fatPhotoSearchCard h3,
-.aiPhotoSearchCard h3,
-.nutritionPhotoSearchCard h3 {
-  margin: 0 0 4px !important;
-  font-size: 16px !important;
-  line-height: 1.15 !important;
-}
-
-.fatPhotoSearchCard p,
-.aiPhotoSearchCard p,
-.nutritionPhotoSearchCard p {
-  margin: 0 !important;
-  font-size: 12px !important;
-  line-height: 1.25 !important;
-  color: rgba(244, 246, 242, 0.46) !important;
-}
 
 /* Result cards */
 .fatSearchResults,
@@ -1113,31 +549,6 @@
   color: rgba(244, 246, 242, 0.46);
   font-size: 12px;
   font-weight: 800;
-}
-
-.fatAiBadge {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  margin-top: 6px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(127, 159, 58, 0.14);
-  border: 1px solid rgba(127, 159, 58, 0.18);
-  color: #b7d46d !important;
-  font-size: 10px !important;
-  font-weight: 900 !important;
-  letter-spacing: 0.3px;
-}
-
-.fatFoodCalories,
-.fatFoodKcal,
-.nutritionFoodCalories {
-  margin-top: 7px;
-  color: rgba(244, 246, 242, 0.68) !important;
-  font-size: 13px !important;
-  font-weight: 900 !important;
 }
 
 .fatFoodCard button,
@@ -1194,13 +605,6 @@
     border-radius: 16px !important;
   }
 
-  .fatSearchBox,
-  .nutritionSearchBox,
-  .foodSearchBox {
-    border-radius: 22px;
-    padding: 9px;
-  }
-
   .fatFoodCard,
   .fatSearchResultCard,
   .nutritionFoodCard,
@@ -1212,14 +616,6 @@
 }
 
 /* ADD FOOD PAGE â€” FINAL PREMIUM POLISH */
-.fatSearchPage,
-.nutritionPickerPage,
-.foodSearchPage {
-  min-height: 100dvh;
-  background:
-    radial-gradient(circle at top left, rgba(127, 159, 58, 0.12), transparent 35%),
-    linear-gradient(180deg, #07100c 0%, #05090a 100%);
-}
 
 .fatSearchHeader,
 .nutritionSearchHeader,
@@ -1246,22 +642,6 @@
 }
 
 /* sticky compact search area */
-.fatSearchBox,
-.nutritionSearchBox,
-.foodSearchBox {
-  position: sticky !important;
-  top: max(6px, env(safe-area-inset-top)) !important;
-  z-index: 50 !important;
-  padding: 8px !important;
-  margin: 8px 0 8px !important;
-  border-radius: 24px !important;
-  background:
-    linear-gradient(180deg, rgba(18, 24, 20, 0.94), rgba(7, 11, 10, 0.94)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.075) !important;
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
 
 .fatSearchInputWrap,
 .nutritionSearchInputWrap,
@@ -1343,62 +723,7 @@
   text-transform: uppercase;
 }
 
-.fatQuickSuggestions {
-  display: flex !important;
-  gap: 8px !important;
-  overflow-x: auto !important;
-  padding: 0 2px 8px !important;
-  margin: 0 -2px 2px !important;
-  scrollbar-width: none;
-}
-
-.fatQuickSuggestions::-webkit-scrollbar {
-  display: none;
-}
-
-.fatQuickSuggestions button {
-  flex: 0 0 auto;
-  min-height: 34px !important;
-  padding: 7px 12px !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(127, 159, 58, 0.14) !important;
-  background: rgba(127, 159, 58, 0.07) !important;
-  color: rgba(244, 246, 242, 0.72) !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  white-space: nowrap;
-}
-
 /* remove feeling of a huge duplicate photo CTA */
-.fatPhotoSearchCard,
-.aiPhotoSearchCard,
-.nutritionPhotoSearchCard {
-  min-height: 72px !important;
-  padding: 12px 14px !important;
-  margin: 8px 0 10px !important;
-  border-radius: 22px !important;
-  background:
-    radial-gradient(circle at left, rgba(127, 159, 58, 0.18), transparent 52%),
-    rgba(255, 255, 255, 0.035) !important;
-  border: 1px solid rgba(127, 159, 58, 0.14) !important;
-}
-
-.fatPhotoSearchCard h3,
-.aiPhotoSearchCard h3,
-.nutritionPhotoSearchCard h3 {
-  margin: 0 0 5px !important;
-  font-size: 17px !important;
-  line-height: 1.12 !important;
-}
-
-.fatPhotoSearchCard p,
-.aiPhotoSearchCard p,
-.nutritionPhotoSearchCard p {
-  margin: 0 !important;
-  font-size: 12px !important;
-  line-height: 1.2 !important;
-  color: rgba(244, 246, 242, 0.44) !important;
-}
 
 /* product results */
 .fatSearchResults,
@@ -1449,31 +774,6 @@
   color: rgba(244, 246, 242, 0.44) !important;
   font-size: 12px !important;
   font-weight: 850 !important;
-  line-height: 1.2 !important;
-}
-
-.fatAiBadge {
-  display: inline-flex !important;
-  width: fit-content !important;
-  margin: 2px 0 5px !important;
-  padding: 3px 7px !important;
-  border-radius: 999px !important;
-  background: rgba(127, 159, 58, 0.13) !important;
-  border: 1px solid rgba(127, 159, 58, 0.16) !important;
-  color: #a7c85a !important;
-  font-size: 10px !important;
-  font-weight: 900 !important;
-  letter-spacing: 0.3px !important;
-}
-
-.fatFoodCalories,
-.fatFoodKcal,
-.nutritionFoodCalories,
-.fatFoodMeta {
-  margin-top: 6px !important;
-  color: rgba(74, 235, 97, 0.9) !important;
-  font-size: 13px !important;
-  font-weight: 900 !important;
   line-height: 1.2 !important;
 }
 
@@ -1554,22 +854,6 @@
 }
 
 /* skeleton loading */
-.fatSkeletonList {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  margin-top: 8px;
-}
-
-.fatSkeletonCard {
-  height: 86px;
-  border-radius: 23px;
-  border: 1px solid rgba(255, 255, 255, 0.055);
-  background:
-    linear-gradient(90deg, rgba(255,255,255,0.035), rgba(255,255,255,0.075), rgba(255,255,255,0.035));
-  background-size: 220% 100%;
-  animation: fatSkeletonPulse 1.15s ease-in-out infinite;
-}
 
 @keyframes fatSkeletonPulse {
   0% { background-position: 120% 0; opacity: 0.62; }
@@ -1621,12 +905,6 @@
 
 /* phone refinements */
 @media (max-width: 420px) {
-  .fatSearchBox,
-  .nutritionSearchBox,
-  .foodSearchBox {
-    margin-top: 6px !important;
-    border-radius: 22px !important;
-  }
 
   .fatQuickActions button {
     min-height: 42px !important;

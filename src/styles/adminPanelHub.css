@@ -1,12 +1,5 @@
 /* === ADMIN PANEL MENU V87 === */
 
-.adminPanelMenuButton {
-  border-color: rgba(255, 183, 77, .18) !important;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255, 183, 77, .16), transparent 42%),
-    linear-gradient(180deg, #1b1914 0%, #11100d 100%) !important;
-}
-
 .adminPanelHubPage {
   min-height: 100vh;
   width: min(100%, 560px);

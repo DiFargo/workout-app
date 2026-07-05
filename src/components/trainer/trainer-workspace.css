@@ -1306,21 +1306,6 @@
   cursor: pointer;
 }
 
-.trainerNextDateButton {
-  min-width: 165px;
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 0 14px;
-  border: 1px solid var(--tn-line);
-  border-radius: 7px;
-  background: #fff;
-  font-size: 12px;
-  font-weight: 600;
-}
-
 .trainerNextMobileHeader,
 .trainerNextMobileActions,
 .trainerNextMobileNav {
@@ -1512,32 +1497,6 @@
 .trainerAttentionList > button small {
   color: var(--tn-muted);
   font-size: 11px;
-}
-
-.trainerNextClientTools {
-  min-height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.trainerNextFilters {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.trainerNextFilters button {
-  min-height: 37px;
-  padding: 0 15px;
-  border: 1px solid var(--tn-line);
-  border-radius: 7px;
-  background: #fff;
-  color: #464955;
-  font-size: 12px;
-  cursor: pointer;
 }
 
 .trainerNextFilters button.active {
@@ -2915,13 +2874,6 @@
   letter-spacing: 0.03em;
 }
 
-.trainerNextNutritionLayout {
-  display: grid;
-  grid-template-columns: 120px minmax(0, 1fr) 280px;
-  gap: 14px;
-  padding-top: 14px;
-}
-
 .trainerNextNutritionDays > span {
   padding: 0 8px 4px;
   color: var(--tn-muted);
@@ -3070,20 +3022,6 @@
   gap: 8px;
   margin: 10px 0 0;
   font-size: 10px;
-}
-
-.trainerNextAiButton {
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 0;
-  border-radius: 7px;
-  background: linear-gradient(135deg, #7550f7, #5425ec);
-  color: #fff !important;
-  font-weight: 700;
-  cursor: pointer;
 }
 
 .trainerNextModalBackdrop {
@@ -3283,10 +3221,6 @@
   .trainerNextClientTable > button {
     grid-template-columns: minmax(160px, 1.5fr) 110px 75px 75px 90px 115px;
   }
-
-  .trainerNextNutritionLayout {
-    grid-template-columns: 105px minmax(0, 1fr) 240px;
-  }
 }
 
 @media (max-width: 820px), (hover: none) and (pointer: coarse) and (orientation: landscape) {
@@ -3380,12 +3314,6 @@
     font-style: normal;
   }
 
-  .trainerNextMobileActions {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-
   .trainerNextMobileActions .trainerNextPrimary {
     min-width: 100px;
   }
@@ -3415,10 +3343,6 @@
 
   .trainerNextSparkline {
     width: 70px;
-  }
-
-  .trainerNextClientsSection {
-    margin-top: 20px;
   }
 
   .trainerAttentionListSection {
@@ -3451,23 +3375,6 @@
   .trainerAttentionList > button .trainerNextStatus {
     grid-column: 2;
     justify-self: start;
-  }
-
-  .trainerNextClientTools {
-    display: block;
-  }
-
-  .trainerNextFilters {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .trainerNextFilters button {
-    min-width: 0;
-    padding: 0 7px;
-    font-size: 10px;
   }
 
   .trainerNextSearch.open {
@@ -4126,11 +4033,6 @@
     grid-template-columns: 1fr;
   }
 
-  .trainerNextNutritionLayout {
-    display: block;
-    padding-top: 12px;
-  }
-
   .trainerNextNutritionDays {
     display: flex;
     gap: 7px;
@@ -4197,10 +4099,6 @@
   .trainerNextPage {
     padding-right: 14px;
     padding-left: 14px;
-  }
-
-  .trainerNextDateButton {
-    min-width: 156px;
   }
 
   .trainerNextMetric {

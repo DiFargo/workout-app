@@ -158,8 +158,6 @@
 .firstSetupChoiceGrid,.firstSetupGoalGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .firstSetupChoiceGrid button,.firstSetupGoalGrid button,.firstSetupDays button{border:none;border-radius:20px;background:rgba(255,255,255,.05);color:#fff;min-height:58px;font-weight:900}
 .firstSetupChoiceGrid button.active,.firstSetupGoalGrid button.active,.firstSetupDays button.active{background:linear-gradient(135deg,rgba(127,159,58,.34),rgba(127,159,58,.12))}
-.firstSetupDays{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
-.firstSetupDays button{height:46px;min-height:46px}
 .firstSetupBottom{display:flex;gap:10px;margin-top:24px}
 .firstSetupPrimary,.firstSetupSecondary{flex:1;height:58px;border:none;border-radius:22px;font-weight:1000}
 .firstSetupPrimary{background:linear-gradient(135deg,#91ad4e,#6e8836);color:#081007}

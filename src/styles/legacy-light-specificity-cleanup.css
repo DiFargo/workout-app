@@ -401,14 +401,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMiniStats > span
     white-space: normal;
   }
 
-  .adminDashboardClientItem {
-    grid-template-columns: 42px minmax(0, 1fr) !important;
-  }
-
-  .adminDashboardClientItem .adminDashboardOpenClient {
-    display: none !important;
-  }
-
   .trainerClientNameRow {
     align-items: flex-start;
     flex-direction: column;

@@ -29,11 +29,6 @@
   line-height: 1.08 !important;
 }
 
-.foodEditHeaderSpacer {
-  width: 54px !important;
-  height: 54px !important;
-}
-
 .foodEditPageBack {
   position: static !important;
   width: 54px !important;
@@ -74,39 +69,9 @@
 }
 
 /* bottom ready button under note */
-.foodEditPageSaveBottom {
-  width: 100% !important;
-  min-height: 62px !important;
-  margin-top: 4px !important;
-  margin-bottom: calc(18px + env(safe-area-inset-bottom)) !important;
-
-  border-radius: 24px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-
-  font-size: 22px !important;
-  font-weight: 950 !important;
-}
 
 .foodEditPageContent {
   padding-bottom: calc(18px + env(safe-area-inset-bottom)) !important;
-}
-
-:root[data-app-theme="warm-light"] .foodEditPageSaveBottom {
-  background:
-    linear-gradient(180deg, #f4e064 0%, #e0c94d 100%) !important;
-  border: 1px solid rgba(94,75,30,0.12) !important;
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
-}
-
-:root:not([data-app-theme="warm-light"]) .foodEditPageSaveBottom {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
-  color: #10120f !important;
-  -webkit-text-fill-color: #10120f !important;
 }
 
 /* PORTION UNIT BUTTON â€” EXACT HEIGHT ALIGN */
@@ -1576,10 +1541,6 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   backdrop-filter: blur(12px) !important;
 }
 
-.workoutCloseButtonTopRight:active {
-  transform: scale(0.96) !important;
-}
-
 @media (max-width: 480px) {
   .workoutCloseButtonTopRight,
   .workoutRunPage .workoutCloseButtonTopRight,
@@ -1655,58 +1616,6 @@ button.foodEditPencilButton.foodEditPencilTopRight {
 .startWorkoutSlide .workoutCloseButton,
 .warmupExerciseCard .workoutCloseButton {
   display: none !important;
-}
-
-.workoutCloseFixedScreen {
-  position: fixed !important;
-
-  top: max(12px, calc(env(safe-area-inset-top) + 10px)) !important;
-  right: max(12px, calc(env(safe-area-inset-right) + 12px)) !important;
-
-  left: auto !important;
-  bottom: auto !important;
-
-  z-index: 2147483647 !important;
-
-  width: 44px !important;
-  height: 44px !important;
-  min-width: 44px !important;
-  min-height: 44px !important;
-  max-width: 44px !important;
-  max-height: 44px !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  border-radius: 50% !important;
-  border: 1px solid rgba(127,159,58,0.26) !important;
-
-  background:
-    radial-gradient(circle at 50% 0%, rgba(127,159,58,0.24), transparent 62%),
-    rgba(12,16,12,0.90) !important;
-
-  color: rgba(255,255,255,0.90) !important;
-  -webkit-text-fill-color: rgba(255,255,255,0.90) !important;
-
-  font-size: 25px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  box-shadow:
-    0 10px 24px rgba(0,0,0,0.36),
-    inset 0 1px 0 rgba(255,255,255,0.06) !important;
-
-  transform: none !important;
-  backdrop-filter: blur(12px) !important;
-  cursor: pointer !important;
-}
-
-.workoutCloseFixedScreen:active {
-  transform: scale(0.96) !important;
 }
 
 /* FINISH SAVED ANIMATION */

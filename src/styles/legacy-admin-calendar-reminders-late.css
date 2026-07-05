@@ -513,18 +513,6 @@
 }
 
 /* === ADMIN BACK BUTTONS MAIN MENU V78 === */
-.adminSingleBackArrow {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  white-space: nowrap !important;
-}
-
-.adminSingleBackArrow::before,
-.adminSingleBackArrow::after {
-  display: none !important;
-}
 
 .adminV3Back.adminSingleBackArrow,
 .adminUsersBack.adminSingleBackArrow,
@@ -536,30 +524,6 @@
 
 /* === PROGRAMS BACK BUTTON STYLE V80 === */
 /* ÐšÐ½Ð¾Ð¿ÐºÐ° Ð½Ð°Ð·Ð°Ð´ Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ ÐŸÑ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹ Ñ‚Ð°ÐºÐ°Ñ Ð¶Ðµ, ÐºÐ°Ðº Ð² Ð¾ÑÑ‚Ð°Ð»ÑŒÐ½Ñ‹Ñ… Ñ€Ð°Ð·Ð´ÐµÐ»Ð°Ñ… */
-
-.monthProgramBackButton,
-.monthProgramPage .adminV3Back,
-.monthProgramBuilder .adminV3Back {
-  width: fit-content !important;
-  min-height: 46px !important;
-  padding: 0 18px !important;
-  margin: 0 0 18px !important;
-  border-radius: 999px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  background: rgba(127,159,58,.16) !important;
-  border: 1px solid rgba(127,159,58,.24) !important;
-  color: rgba(245,255,225,.9) !important;
-  font-size: 15px !important;
-  font-weight: 900 !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04) !important;
-}
-
-.monthProgramBackButton:active {
-  transform: scale(.98) !important;
-}
 
 /* === UNIFIED FIXED ADMIN BACK V82 === */
 /* Ð•Ð´Ð¸Ð½Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ° Ð“Ð»Ð°Ð²Ð½Ð¾Ðµ Ð¼ÐµÐ½ÑŽ Ð½Ð° Ð”Ð°ÑˆÐ±Ð¾Ñ€Ð´ / ÐšÐ»Ð¸ÐµÐ½Ñ‚Ñ‹ / ÐŸÑ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹.

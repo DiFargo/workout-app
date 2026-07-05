@@ -227,42 +227,6 @@
     line-height: 1.35 !important;
   }
 
-  .adminFocusGrid {
-    grid-column: 1 / -1 !important;
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 14px !important;
-    margin: 8px 0 4px !important;
-  }
-
-  .adminFocusCard {
-    min-height: 134px !important;
-    padding: 20px 18px !important;
-    border-radius: 28px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    text-align: center !important;
-    background:
-      radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.12), transparent 58%),
-      linear-gradient(180deg, #151a15 0%, #101410 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.075) !important;
-    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24) !important;
-  }
-
-  .adminFocusLabel {
-    margin: 0 0 14px !important;
-    font-size: 13px !important;
-    line-height: 1.2 !important;
-  }
-
-  .adminFocusValue {
-    font-size: clamp(38px, 4vw, 58px) !important;
-    line-height: 0.95 !important;
-  }
-
   .adminV3Header > div:first-child > .adminDashboardSection {
     grid-column: span 6 !important;
     width: 100% !important;
@@ -289,10 +253,6 @@
     line-height: 1.05 !important;
   }
 
-  .adminDashboardMiniList {
-    gap: 10px !important;
-  }
-
   .adminDashboardMiniItem,
   .adminDashboardTimelineItem {
     min-height: 72px !important;
@@ -304,10 +264,6 @@
 
   .adminDashboardMiniName {
     font-size: 18px !important;
-  }
-
-  .adminDashboardMiniStatus {
-    white-space: nowrap !important;
   }
 
   .adminDashboardMiniDesc {
@@ -347,10 +303,6 @@
     width: 100vw !important;
     padding-left: 24px !important;
     padding-right: 24px !important;
-  }
-
-  .adminFocusGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
   .adminV3Header > div:first-child > .adminDashboardSection,

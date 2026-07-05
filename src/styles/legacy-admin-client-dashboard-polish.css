@@ -1,54 +1,11 @@
-﻿/* === CLIENTS PAGE REAL CLEANUP V19 === */
+/* === CLIENTS PAGE REAL CLEANUP V19 === */
 /* ÃÂ£ÃÂ´ÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ¸ÃÂµ ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦ÃÂ½ÃÂµÃÂ³ÃÂ¾ Clients CRM ÃÂ±ÃÂ»ÃÂ¾ÃÂºÃÂ° ÃÂ¸ Ã‘ÂÃ‘â€šÃÂ°Ã‘â‚¬Ã‘â€¹Ã‘â€¦ ÃÂºÃÂ½ÃÂ¾ÃÂ¿ÃÂ¾ÃÂº ÃÂ½ÃÂ° Ã‘ÂÃ‘â€šÃ‘â‚¬ÃÂ°ÃÂ½ÃÂ¸Ã‘â€ ÃÂµ ÃÅ¡ÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃ‘â€¹ */
-
-.adminUsersBrand,
-.adminUsersSideAction {
-  display: none !important;
-}
-
-.adminUsersCrmSidebar {
-  min-height: auto !important;
-  padding-bottom: 0 !important;
-}
-
-.adminUsersCrmSidebar .adminUsersBack {
-  margin-bottom: 18px !important;
-}
 
 .adminUsersCrmMain {
   padding-top: 6px !important;
 }
 
 /* === DASHBOARD REDESIGN V20 === */
-
-.adminFocusGrid{
-  display:grid !important;
-  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  gap:14px !important;
-  margin-top:18px !important;
-}
-
-.adminFocusCard{
-  border-radius:28px !important;
-  padding:22px 18px !important;
-  background:linear-gradient(180deg,#141814 0%,#0f130f 100%) !important;
-  border:1px solid rgba(255,255,255,.06) !important;
-  min-height:128px !important;
-}
-
-.adminFocusLabel{
-  color:rgba(255,255,255,.55) !important;
-  font-size:13px !important;
-  font-weight:700 !important;
-  margin-bottom:14px !important;
-}
-
-.adminFocusValue{
-  color:#fff !important;
-  font-size:42px !important;
-  font-weight:900 !important;
-  line-height:1 !important;
-}
 
 .adminDashboardSection{
   margin-top:22px !important;
@@ -63,12 +20,6 @@
   font-weight:900 !important;
   color:#fff !important;
   margin-bottom:16px !important;
-}
-
-.adminDashboardMiniList{
-  display:flex !important;
-  flex-direction:column !important;
-  gap:12px !important;
 }
 
 .adminDashboardMiniItem{
@@ -88,12 +39,6 @@
 .adminDashboardMiniName{
   color:#fff !important;
   font-size:18px !important;
-  font-weight:800 !important;
-}
-
-.adminDashboardMiniStatus{
-  color:#b5db53 !important;
-  font-size:13px !important;
   font-weight:800 !important;
 }
 
@@ -119,19 +64,6 @@
 }
 
 @media (max-width:420px){
-  .adminFocusGrid{
-    gap:10px !important;
-  }
-
-  .adminFocusCard{
-    min-height:108px !important;
-    padding:18px 14px !important;
-    border-radius:24px !important;
-  }
-
-  .adminFocusValue{
-    font-size:34px !important;
-  }
 
   .adminDashboardSection{
     padding:18px !important;
@@ -196,18 +128,6 @@
 
 .adminClientTelegramOnlyTab {
   margin-top: 14px !important;
-}
-
-.adminClientTelegramBlockMoved {
-  min-height: 166px !important;
-  padding: 18px !important;
-  border-radius: 26px !important;
-  background:
-    radial-gradient(circle at 100% 0%, rgba(18, 117, 188, 0.18), transparent 42%),
-    linear-gradient(180deg, #101a1d 0%, #0f1415 100%) !important;
-  background-color: #101a1d !important;
-  border: 1px solid rgba(32, 154, 238, 0.24) !important;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
 }
 
 .adminClientTelegramOnlyTab .adminV3OpenEditor {
@@ -282,43 +202,6 @@
 
 /* ÃÅ¡ÃÂ¾ÃÂ¼ÃÂ¿ÃÂ°ÃÂºÃ‘â€šÃÂ½Ã‘â€¹ÃÂ¹ ÃÂºÃ‘â‚¬ÃÂ°Ã‘ÂÃÂ¸ÃÂ²Ã‘â€¹ÃÂ¹ ÃÂ²ÃÂµÃ‘â‚¬Ã‘â€¦ ÃÂºÃÂ°Ã‘â‚¬Ã‘â€šÃÂ¾Ã‘â€¡ÃÂºÃÂ¸ ÃÂºÃÂ»ÃÂ¸ÃÂµÃÂ½Ã‘â€šÃÂ° */
 
-.adminClientWorkspaceHeadRender {
-  min-height: auto !important;
-  padding: 18px 18px 16px !important;
-  margin-bottom: 14px !important;
-
-  display: grid !important;
-  grid-template-columns: 78px 1fr !important;
-  align-items: center !important;
-  gap: 16px !important;
-
-  border-radius: 28px !important;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(127, 159, 58, 0.18), transparent 38%),
-    linear-gradient(180deg, rgba(18, 22, 18, 0.98), rgba(11, 14, 11, 0.98)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-}
-
-.adminClientAvatarRender {
-  width: 72px !important;
-  height: 72px !important;
-  min-width: 72px !important;
-
-  border-radius: 24px !important;
-  font-size: 30px !important;
-  font-weight: 900 !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  background:
-    radial-gradient(circle at 50% 20%, rgba(170, 230, 75, .28), transparent 60%),
-    linear-gradient(180deg, #1d2a13, #11170f) !important;
-  border: 1px solid rgba(170, 230, 75, .35) !important;
-  color: #c9ff67 !important;
-}
-
 .adminClientIdentityRender {
   min-width: 0 !important;
 }
@@ -373,20 +256,6 @@
 }
 
 @media (max-width: 520px) {
-  .adminClientWorkspaceHeadRender {
-    grid-template-columns: 64px 1fr !important;
-    gap: 13px !important;
-    padding: 15px !important;
-    border-radius: 24px !important;
-  }
-
-  .adminClientAvatarRender {
-    width: 60px !important;
-    height: 60px !important;
-    min-width: 60px !important;
-    border-radius: 20px !important;
-    font-size: 26px !important;
-  }
 
   .adminClientIdentityRender h2 {
     font-size: 30px !important;
@@ -771,50 +640,6 @@
     linear-gradient(180deg, #261717, #1b1010) !important;
 }
 
-.calendarDayCalories,
-.nutritionCalendarCalories,
-.adminNutritionCalendarCalories {
-  font-size: 22px !important;
-  line-height: 1 !important;
-  font-weight: 900 !important;
-  color: rgba(255,255,255,.92) !important;
-  margin-top: 8px !important;
-}
-
-.calendarDayProtein,
-.nutritionCalendarProtein,
-.adminNutritionCalendarProtein {
-  margin-top: 5px !important;
-  font-size: 14px !important;
-  font-weight: 800 !important;
-  color: rgba(195,255,126,.82) !important;
-}
-
-.calendarDayProteinLabel,
-.nutritionCalendarProteinLabel,
-.adminNutritionCalendarProteinLabel {
-  display: none !important;
-}
-
-.calendarDayProgress,
-.nutritionCalendarProgress,
-.adminNutritionCalendarProgress {
-  height: 4px !important;
-  border-radius: 999px !important;
-  margin-top: 10px !important;
-  background: rgba(255,255,255,.05) !important;
-  overflow: hidden !important;
-}
-
-.calendarDayProgress > div,
-.nutritionCalendarProgress > div,
-.adminNutritionCalendarProgress > div {
-  height: 100% !important;
-  border-radius: inherit !important;
-  background:
-    linear-gradient(90deg, rgba(191,255,96,.88), rgba(225,255,160,.98)) !important;
-}
-
 .calendarGrid,
 .nutritionCalendarGrid,
 .adminNutritionCalendarGrid {
@@ -822,17 +647,6 @@
 }
 
 @media (max-width: 520px) {
-  .calendarDayCalories,
-  .nutritionCalendarCalories,
-  .adminNutritionCalendarCalories {
-    font-size: 18px !important;
-  }
-
-  .calendarDayProtein,
-  .nutritionCalendarProtein,
-  .adminNutritionCalendarProtein {
-    font-size: 12px !important;
-  }
 
   .calendarDayCard,
   .calendarNutritionDay,
@@ -986,21 +800,6 @@
 }
 
 /* Ã¢Å¡Â¡Ã¯Â¸Â Ã‘â€šÃÂ¾ÃÂ»Ã‘Å’ÃÂºÃÂ¾ ÃÂ² ÃÂºÃÂ°ÃÂ»ÃÂµÃÂ½ÃÂ´ÃÂ°Ã‘â‚¬ÃÂµ */
-.adminNutritionTrainingBadge,
-.nutritionTrainingBadge,
-.calendarTrainingBadge,
-.adminCalendarTrainingBadge {
-  font-size: 0 !important;
-}
-
-.adminNutritionTrainingBadge::before,
-.nutritionTrainingBadge::before,
-.calendarTrainingBadge::before,
-.adminCalendarTrainingBadge::before {
-  content: "Ã¢Å¡Â¡Ã¯Â¸Â" !important;
-  font-size: 13px !important;
-  line-height: 1 !important;
-}
 
 @media (max-width: 420px) {
   .adminNutritionMonthSummary {
