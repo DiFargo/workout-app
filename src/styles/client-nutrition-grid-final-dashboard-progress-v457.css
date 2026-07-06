@@ -1,0 +1,66 @@
+/* Split from client-nutrition-grid-final-dashboard-alignment.css: progress insight alignment. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards .profileAiMiniCard.profileAiMiniCard span {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    width: 100% !important;
+    font-size: 9.8px !important;
+    line-height: 1.05 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiSplitCards.profileAiSplitCards.profileAiSplitCards .profileAiMiniCard.profileAiMiniCard strong {
+    font-size: 18px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard {
+    height: 170px !important;
+    min-height: 170px !important;
+    max-height: 170px !important;
+    flex-basis: 170px !important;
+    padding: 16px 20px 13px !important;
+    gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline span {
+    font-size: 9.5px !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline h2 {
+    font-size: 16.5px !important;
+    line-height: 1.08 !important;
+    margin-top: 4px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileAiCoachHeadline p {
+    font-size: 9.8px !important;
+    line-height: 1.22 !important;
+    margin-top: 5px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressInsightBadge {
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 4px 6px !important;
+    border-radius: 15px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressInsightBadge b {
+    font-size: 9px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileAiCoachInsight.profileProgressInsightCard.profileProgressInsightCard .profileProgressInsightBadge small {
+    font-size: 8.2px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+}
