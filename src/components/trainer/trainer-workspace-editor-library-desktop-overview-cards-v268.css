@@ -1,0 +1,21 @@
+/* Keep the trainer library in one readable column on desktop. */
+.trainerNextProgramsTab .trainerProgramManager.monthProgramOverviewMode .programsOverviewGrid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.trainerNextProgramsTab .trainerProgramManager.monthProgramOverviewMode .programsOverviewCard {
+  min-height: 0;
+  padding: 0;
+}
+
+.trainerNextProgramsTab .programsOverviewCreateCard strong {
+  justify-self: start;
+  font-size: 12px;
+}
+
+.trainerNextProgramsTab .programsOverviewCreateCard span {
+  grid-column: 2 / 4;
+  justify-self: start;
+  color: var(--tn-muted);
+  font-size: 9px;
+}
