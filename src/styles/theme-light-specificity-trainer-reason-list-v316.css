@@ -1,0 +1,49 @@
+.trainerClientReasonList {
+  display: grid;
+  gap: 7px;
+}
+
+.trainerClientReasonList > button {
+  width: 100%;
+  min-height: 46px;
+  padding: 9px 12px;
+  display: grid;
+  grid-template-columns: auto minmax(110px, 0.45fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  color: #ffffff;
+  text-align: left;
+}
+
+.trainerClientReasonList > button strong {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerClientReasonList > button small {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerClientReasonEmpty {
+  min-height: 44px;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(143, 208, 90, 0.14);
+  border-radius: 14px;
+  background: rgba(143, 208, 90, 0.055);
+  color: rgba(224, 244, 210, 0.72);
+  font-size: 12px;
+  font-weight: 750;
+}
