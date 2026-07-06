@@ -1,0 +1,31 @@
+
+.workoutTechniqueModalContent {
+  padding: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.workoutTechniqueModalContent > span {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(117, 101, 232, 0.18);
+  color: #c9c2ff;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.workoutTechniqueModalContent p {
+  margin: 2px 0 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+}
