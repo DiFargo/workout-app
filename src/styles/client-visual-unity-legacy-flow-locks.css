@@ -1,0 +1,115 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutBottomPanel nav.individualWorkoutMenuBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root nav.nutritionBottomTabBar.clientBottomNav > button strong {
+    max-width: none !important;
+    width: auto !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodSearchFixedPhotoAction,
+  html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction {
+    left: 26px !important;
+    right: 26px !important;
+    width: auto !important;
+    max-width: none !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
+    grid-template-rows: 82px minmax(0, 1fr) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader {
+    box-sizing: border-box !important;
+    position: relative !important;
+    display: grid !important;
+    grid-template-columns: 52px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    height: 82px !important;
+    min-height: 82px !important;
+    margin: 0 !important;
+    padding: 18px 0 10px !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 5 !important;
+    width: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    margin: 0 !important;
+    border: 1px solid var(--client-border, #dfe4ee) !important;
+    border-radius: 16px !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    color: #5f5744 !important;
+    -webkit-text-fill-color: #5f5744 !important;
+    box-shadow: 0 14px 32px rgba(36, 43, 66, 0.08) !important;
+    display: grid !important;
+    place-items: center !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageTitleCenter {
+    position: static !important;
+    z-index: 2 !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: var(--client-title-color, #5f5744) !important;
+    -webkit-text-fill-color: var(--client-title-color, #5f5744) !important;
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageContent {
+    padding-top: 8px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div.goal strong,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow > div.goal strong {
+    font-size: clamp(14px, 4vw, 16px) !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress {
+    top: -22px !important;
+  }
+}

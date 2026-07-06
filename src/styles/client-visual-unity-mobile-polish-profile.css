@@ -1,0 +1,122 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
+    width: 100% !important;
+    height: 104px !important;
+    min-height: 104px !important;
+    margin: 0 !important;
+    padding: 16px 18px !important;
+    display: grid !important;
+    grid-template-columns: 70px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 16px !important;
+    border: 1px solid #dfe4ee !important;
+    background: #ffffff !important;
+    box-shadow: var(--client-card-shadow) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero {
+    border-bottom: 0 !important;
+    border-radius: 22px 22px 0 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
+    border-radius: 22px !important;
+    margin: 0 0 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileAiAvatarWrap,
+  html:root[data-app-theme="warm-light"] body #root .profileAiAvatar,
+  html:root[data-app-theme="warm-light"] body #root .profileAvatarBig.profileUnifiedAvatar.profileAiAvatar {
+    width: 70px !important;
+    min-width: 70px !important;
+    height: 70px !important;
+    min-height: 70px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileAiHeroText h1 {
+    margin: 0 !important;
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+    font-size: clamp(22px, 6vw, 27px) !important;
+    line-height: 1.08 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
+    width: 100% !important;
+    height: 82px !important;
+    min-height: 82px !important;
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    border: 1px solid #dfe4ee !important;
+    border-top: 0 !important;
+    border-radius: 0 0 22px 22px !important;
+    background: #ffffff !important;
+    box-shadow: var(--client-card-shadow) !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
+    min-width: 0 !important;
+    height: 82px !important;
+    padding: 10px 6px !important;
+    display: grid !important;
+    place-items: center !important;
+    align-content: center !important;
+    gap: 5px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow span {
+    max-width: 100% !important;
+    color: #737b91 !important;
+    -webkit-text-fill-color: #737b91 !important;
+    font-size: 11px !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
+    max-width: 100% !important;
+    color: #171923 !important;
+    -webkit-text-fill-color: #171923 !important;
+    font-size: clamp(18px, 5.1vw, 23px) !important;
+    line-height: 1.05 !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow .goal strong {
+    font-size: clamp(16px, 4.5vw, 20px) !important;
+  }
+}

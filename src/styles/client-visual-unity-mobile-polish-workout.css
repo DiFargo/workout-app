@@ -1,0 +1,10 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutDeck {
+    margin-bottom: 34px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .individualWorkoutCardPro {
+    border-radius: 28px !important;
+    overflow: hidden !important;
+  }
+}

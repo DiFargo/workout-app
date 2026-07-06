@@ -6,7 +6,9 @@
 @import "./client-visual-unity-shell-workout-v438.css";
 @import "./client-visual-unity-title-locks.css";
 @import "./client-visual-unity-mobile-polish.css";
-@import "./client-visual-unity-legacy-locks.css";
+@import "./client-visual-unity-legacy-title-locks.css";
+@import "./client-visual-unity-legacy-dashboard-locks.css";
+@import "./client-visual-unity-legacy-flow-locks.css";
 @import "./client-visual-unity-late-fixes.css";
 @import "./client-visual-unity-nutrition-flow.css";
 @import "./client-visual-unity-product-editor.css";
