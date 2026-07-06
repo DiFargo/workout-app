@@ -1,0 +1,106 @@
+/* Split from client-nutrition-grid-shell-alignment.css: shared page padding, version, title and action alignment. */
+@media (max-width: 900px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
+    --nutrition-grid-x: 25px;
+    --nutrition-grid-title-y: 53px;
+    --nutrition-grid-title-color: #5f5848;
+    padding-left: var(--nutrition-grid-x) !important;
+    padding-right: var(--nutrition-grid-x) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientPageVersionBadge {
+    top: 15px !important;
+    left: 27px !important;
+    height: 22px !important;
+    min-width: 44px !important;
+    padding: 0 6px !important;
+    border-radius: 999px !important;
+    color: #8a90a0 !important;
+    font-size: 12px !important;
+    font-weight: 850 !important;
+    line-height: 20px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain > h1.mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero.workoutSelectHero,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow.profileCabinetTitleRow {
+    margin-top: var(--nutrition-grid-title-y) !important;
+    margin-bottom: 18px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    padding: 0 !important;
+    align-items: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain > h1.mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle.clientCorePageTitle {
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    color: var(--nutrition-grid-title-color) !important;
+    font-size: 28px !important;
+    font-weight: 900 !important;
+    line-height: 29.68px !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain > h1.mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle.clientCorePageTitle {
+    transform: translate(-1px, -1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectTitle.clientCorePageTitle {
+    transform: translate(-1px, -3px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .menuRefreshIconBtn.menuRefreshIconBtn,
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileTrainerNotificationsButton.profileTrainerNotificationsButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions > button.workoutHistoryHeaderButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions > button.workoutModeHeaderButton {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
+    border-radius: 16px !important;
+    color: var(--nutrition-grid-title-color) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .menuRefreshIconBtn.menuRefreshIconBtn {
+    top: var(--nutrition-grid-title-y) !important;
+    right: var(--nutrition-grid-x) !important;
+    transform: translate(1px, -1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileTrainerNotificationsButton.profileTrainerNotificationsButton {
+    transform: translate(1px, -1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions > button.workoutHistoryHeaderButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions > button.workoutModeHeaderButton {
+    transform: translate(1px, -3px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .clientPageVersionBadge {
+    transform: translate(-1px, -1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow.profileCabinetTitleRow {
+    grid-template-columns: minmax(0, 1fr) 48px !important;
+    column-gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions {
+    gap: 10px !important;
+  }
+}
