@@ -1,0 +1,80 @@
+.trainerNutritionDiary {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 14px;
+  max-width: 100%;
+  min-width: 0;
+  padding-top: 16px;
+}
+
+.trainerNutritionDiary > aside {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-color: var(--tn-purple) transparent;
+}
+
+.trainerNutritionDiary > aside button {
+  min-height: 44px;
+  display: grid;
+  justify-items: start;
+  gap: 3px;
+  padding: 8px 11px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+  text-align: left;
+}
+
+.trainerNutritionDiary > aside button.active {
+  border-color: var(--tn-purple);
+  background: #f8f5ff;
+  color: var(--tn-purple);
+}
+
+.trainerNutritionDiaryHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.trainerNutritionDiaryHead h2 {
+  margin: 0;
+}
+
+.trainerNutritionDiaryHead h2,
+.trainerNutritionDiaryHead > strong {
+  font-size: 14px;
+}
+
+.trainerNutritionDiaryTotals {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.trainerNutritionDiaryTotals span {
+  min-width: 76px;
+  padding: 8px 10px;
+  border: 1px solid #ebe9f4;
+  border-radius: 7px;
+  background: #faf9fd;
+  color: var(--tn-muted);
+  font-size: 9px;
+}
+
+.trainerNutritionDiary .trainerNextMealList article {
+  grid-template-columns: 52px minmax(0, 1fr);
+}
+
+.trainerNutritionReadonly {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 12px 0 0;
+}

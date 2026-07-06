@@ -1,0 +1,121 @@
+.trainerClientInlineEditor > .trainerClientBlockHeading {
+  margin-bottom: 14px;
+}
+
+.trainerNutritionMetricGrid {
+  margin-top: 0;
+}
+
+.trainerNutritionPeriod {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerNutritionPeriod > div:first-child {
+  display: grid;
+  gap: 3px;
+  margin-right: auto;
+}
+
+.trainerNutritionPeriodButtons {
+  display: flex;
+  gap: 6px;
+}
+
+.trainerNutritionPeriodButtons button {
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid var(--tn-line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--tn-muted);
+  font-size: 9px;
+}
+
+.trainerNutritionCustomPeriod {
+  display: flex;
+  gap: 7px;
+}
+
+.trainerNutritionCustomPeriod label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--tn-muted);
+  font-size: 8px;
+}
+
+.trainerNutritionCustomPeriod input {
+  height: 32px;
+  padding: 0 7px;
+  border: 1px solid var(--tn-line);
+  border-radius: 6px;
+  color: var(--tn-text);
+}
+
+.trainerNutritionMetricGrid article > span {
+  color: var(--tn-text);
+  font-size: 9px;
+}
+
+.trainerNutritionDonutRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 18px;
+}
+
+.trainerNutritionDonut {
+  width: 126px;
+  height: 126px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.trainerNutritionDonut::before {
+  content: "";
+  grid-area: 1 / 1;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.trainerNutritionDonut > span {
+  z-index: 1;
+  grid-area: 1 / 1;
+  display: grid;
+  justify-items: center;
+}
+
+.trainerNutritionLegend span {
+  display: grid;
+  grid-template-columns: 9px 1fr auto;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+}
+
+.trainerNutritionLegend span::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--tn-purple);
+}
+
+.trainerNutritionLegend span.protein::before {
+  background: #34aa5f;
+}
+
+.trainerNutritionLegend span.fat::before {
+  background: #f2a329;
+}

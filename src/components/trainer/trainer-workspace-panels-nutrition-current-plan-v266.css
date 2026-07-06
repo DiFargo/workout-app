@@ -1,0 +1,72 @@
+.trainerNutritionPreset {
+  max-width: 420px;
+  margin-top: 16px;
+}
+
+.trainerNutritionCurrentPlan {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(320px, 1.2fr);
+  gap: 16px 24px;
+  padding: 18px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerNutritionCurrentPlan .trainerClientBlockHeading small {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.trainerNutritionCurrentPlan .trainerClientBlockHeading small,
+.trainerNutritionPresetPreview {
+  color: var(--tn-purple);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.trainerNutritionCurrentPlan p {
+  margin: 4px 0 0;
+}
+
+.trainerNutritionCurrentGoals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.trainerNutritionCurrentGoals span {
+  min-height: 54px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 8px 10px;
+  border: 1px solid #eceaf3;
+  border-radius: 7px;
+  background: #faf9fd;
+}
+
+.trainerNutritionCurrentGoals strong {
+  color: var(--tn-text);
+  font-size: 11px;
+}
+
+.trainerNutritionCurrentMeta {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--tn-line);
+}
+
+.trainerNutritionCurrentMeta button {
+  min-height: 34px;
+  margin-left: auto;
+  padding: 0 13px;
+  border: 1px solid var(--tn-purple);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--tn-purple);
+  font-weight: 700;
+}
