@@ -1,0 +1,50 @@
+/* Compact profile cabinet/progress sections tied to fixed client viewport rhythm. */
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetProgressOverview {
+  width: calc(100% - 8px);
+  margin: 12px auto 0 !important;
+  gap: 8px;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
+  min-height: 90px;
+  padding: 11px 12px;
+  grid-template-columns: 46px minmax(0, 1fr) 14px;
+  gap: 10px;
+  border-radius: 17px;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCardIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  font-size: 22px;
+}
+
+@media (max-height: 720px) {
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetProgressOverview {
+    margin-top: 8px !important;
+    gap: 6px;
+  }
+
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
+    min-height: 82px;
+    padding: 9px 11px;
+  }
+}
+
+.profileTabbedPage[data-profile-tab="progress"] .profileCabinetSection {
+  min-height: min(690px, calc(100dvh - 154px)) !important;
+  margin-top: 0 !important;
+  padding: 30px 18px 18px !important;
+}
+
+@media (max-height: 720px) {
+  .profileTabbedPage[data-profile-tab="progress"] .profileCabinetSection {
+    padding: 20px 14px 14px !important;
+  }
+
+  .profileProgressTabOverview .progressHubCard {
+    min-height: 96px;
+    padding: 12px;
+  }
+}

@@ -1,5 +1,8 @@
 @import "./nutrition-ai-plan-shell.css";
-@import "./nutrition-fixed-viewport.css";
+@import "./nutrition-fixed-viewport-shell.css";
+@import "./nutrition-fixed-viewport-bottom-nav.css";
+@import "./nutrition-fixed-viewport-meal-stack.css";
+@import "./nutrition-fixed-viewport-profile.css";
 @import "./nutrition-cabinet-modals.css";
 @import "./nutrition-cabinet-matched-view.css";
 @import "./nutrition-client-core-pages.css";

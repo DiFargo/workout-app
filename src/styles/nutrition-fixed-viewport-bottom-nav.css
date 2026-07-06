@@ -1,0 +1,161 @@
+/* === UNIFIED CLIENT BOTTOM NAVIGATION V287 === */
+.profileBottomTabBar,
+.individualWorkoutMenuBar {
+  box-sizing: border-box !important;
+  width: min(374px, calc(100vw - 20px)) !important;
+  max-width: 374px !important;
+  height: 82px !important;
+  min-height: 82px !important;
+  max-height: 82px !important;
+  margin: 0 !important;
+  padding: 6px !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  border-radius: 17px !important;
+  background: linear-gradient(180deg, rgba(22, 29, 23, 0.98), rgba(11, 16, 12, 0.99)) !important;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+  overflow: hidden !important;
+  z-index: 9500 !important;
+}
+
+.profileBottomTabBar {
+  position: fixed !important;
+  left: 50vw !important;
+  right: auto !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  transform: translateX(-50%) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar {
+  width: min(374px, calc(100vw - 20px)) !important;
+  max-width: 374px !important;
+}
+
+.mainDashboardPage .mainMenuBottomBar.profileBottomTabBar {
+  width: min(374px, calc(100vw - 20px)) !important;
+  max-width: 374px !important;
+}
+
+.profileBottomTabBar > button,
+.individualWorkoutMenuBar > button {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 68px !important;
+  min-height: 68px !important;
+  max-height: 68px !important;
+  margin: 0 !important;
+  padding: 7px 3px 6px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  border: 1px solid transparent !important;
+  border-radius: 13px !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+.profileBottomTabBar > button span,
+.individualWorkoutMenuBar > button span {
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 27px !important;
+  line-height: 32px !important;
+  transform: translateY(-3px) !important;
+  filter: none !important;
+}
+
+.profileBottomTabBar > button strong,
+.individualWorkoutMenuBar > button strong {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  max-height: 16px !important;
+  margin: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  color: inherit !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 16px !important;
+  text-align: center !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  transform: translateY(-2px) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button:nth-child(3) strong {
+  font-size: 12px !important;
+}
+
+.profileBottomTabBar > button.active,
+.individualWorkoutMenuBar > button.active {
+  border-color: rgba(145, 173, 78, 0.14) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145, 173, 78, 0.15), transparent 68%),
+    rgba(127, 159, 58, 0.045) !important;
+  color: #b5e655 !important;
+}
+
+.individualWorkoutBottomPanel {
+  left: 50vw !important;
+  right: auto !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  width: min(374px, calc(100vw - 20px)) !important;
+  max-width: 374px !important;
+  height: 82px !important;
+  min-height: 82px !important;
+  max-height: 82px !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  transform: translateX(-50%) !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutBottomPanel,
+.workoutPlanOverviewPage > .individualWorkoutBottomPanel,
+.clientCorePageWorkout.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
+  left: 50vw !important;
+  right: auto !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  width: min(374px, calc(100vw - 20px)) !important;
+  max-width: 374px !important;
+  height: 82px !important;
+  min-height: 82px !important;
+  max-height: 82px !important;
+  padding: 0 !important;
+  transform: translateX(-50%) !important;
+}
+
+.individualWorkoutBottomPanel .individualWorkoutMenuBar {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+}
+
+@media (max-width: 370px) {
+  .fatSecretPage.nutritionFixedHeaderV3 .nutritionBottomTabBar button strong {
+    font-size: 10px !important;
+  }
+
+  .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button:nth-child(3) strong {
+    font-size: 10px !important;
+  }
+}
