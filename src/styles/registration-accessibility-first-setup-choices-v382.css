@@ -1,0 +1,86 @@
+
+.firstSetupChoiceGrid.firstSetupSexGrid {
+  gap: 12px !important;
+}
+
+.firstSetupSexGrid button {
+  height: 190px !important;
+  padding: 14px 8px !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid #dfe3ef !important;
+  border-radius: 17px !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+}
+
+.firstSetupSexGrid button span {
+  font-size: 84px;
+  line-height: 1;
+}
+
+.firstSetupSexGrid button strong {
+  font-size: 14px;
+}
+
+.firstSetupActivityList {
+  display: grid;
+  gap: 8px;
+}
+
+.firstSetupActivityList button {
+  min-height: 65px;
+  padding: 9px 13px;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #dfe3ef;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #151824;
+  text-align: left;
+}
+
+.firstSetupActivityList button > span:first-child {
+  font-size: 25px;
+  text-align: center;
+}
+
+.firstSetupActivityList button > span:nth-child(2) {
+  display: grid;
+  gap: 3px;
+}
+
+.firstSetupActivityList strong,
+.firstSetupActivityList small {
+  display: block;
+}
+
+.firstSetupActivityList strong {
+  font-size: 14px;
+}
+
+.firstSetupActivityList small {
+  color: #737b91;
+  font-size: 11px;
+}
+
+.firstSetupActivityList button > i {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #b5bac8;
+  border-radius: 50%;
+}
+
+.firstSetupActivityList button.active {
+  border-color: #6b55e6;
+  background: #f6f4ff;
+}
+
+.firstSetupActivityList button.active > i {
+  border: 5px solid #6552e6;
+}
