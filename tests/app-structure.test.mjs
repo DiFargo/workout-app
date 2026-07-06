@@ -242,8 +242,11 @@ test("application styles use the modular styles entrypoint", async () => {
   const appSource = await readText("src/App.jsx");
   const appCore = await readText("src/AppCore.jsx");
   const appRouter = await readText("src/app/AppRouter.jsx");
+  const appRouteLoaders = await readText("src/app/appRouteLoaders.js");
   const appStartupGate = await readText("src/app/appStartupGate.jsx");
   const appTerminalRoutes = await readText("src/app/appTerminalRoutes.jsx");
+  const appTerminalRoute = await readText("src/app/AppTerminalRoute.jsx");
+  const appTerminalRouteLoaders = await readText("src/app/appTerminalRouteLoaders.js");
   const trainerWorkspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
   const adminPanelHub = await readText("src/components/admin/AdminPanelHub.jsx");
   const adminE2EHarness = await readText("src/components/admin/AdminE2EHarness.jsx");
@@ -291,7 +294,7 @@ test("application styles use the modular styles entrypoint", async () => {
   ]) {
     assert.match(nutritionStackCss, new RegExp(`@import "${nutritionLazyImport.replace(".", "\\.")}"`));
   }
-  assert.match(appRouter, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
+  assert.match(appRouteLoaders, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   for (const workoutRouteLoader of [
     "loadBasicWorkoutQuizPage",
     "loadWorkoutHistoryPage",
@@ -299,10 +302,10 @@ test("application styles use the modular styles entrypoint", async () => {
     "loadWorkoutModePage",
     "loadWorkoutPlanPage"
   ]) {
-    assert.match(appRouter, new RegExp(`const ${workoutRouteLoader} = \\(\\) => Promise\\.all\\(\\[[\\s\\S]*?loadWorkoutStyles\\(\\)`));
+    assert.match(appRouteLoaders, new RegExp(`const ${workoutRouteLoader} = \\(\\) => Promise\\.all\\(\\[[\\s\\S]*?loadWorkoutStyles\\(\\)`));
   }
-  assert.match(appRouter, /['"]\.\.\/styles\/ai-coach-lazy\.css['"]/);
-  assert.match(appRouter, /['"]\.\.\/styles\/client-measurements-lazy\.css['"]/);
+  assert.match(appRouteLoaders, /['"]\.\.\/styles\/ai-coach-lazy\.css['"]/);
+  assert.match(appRouteLoaders, /['"]\.\.\/styles\/client-measurements-lazy\.css['"]/);
   assert.match(appStartupGate, /['"]\.\.\/styles\/client-first-setup-lazy\.css['"]/);
   for (const firstSetupLazyImport of [
     "./profile-first-setup-core.css",
@@ -311,8 +314,8 @@ test("application styles use the modular styles entrypoint", async () => {
     assert.match(clientFirstSetupLazyCss, new RegExp(`@import "${firstSetupLazyImport.replace(".", "\\.")}"`));
     assert.doesNotMatch(indexCss, new RegExp(`@import "${firstSetupLazyImport.replace(".", "\\.")}"`));
   }
-  assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
-  assert.match(appTerminalRoutes, /['"]\.\.\/styles\/client-profile-lazy\.css['"]/);
+  assert.match(appTerminalRouteLoaders, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
+  assert.match(appTerminalRoute, /['"]\.\.\/styles\/client-profile-lazy\.css['"]/);
   assert.match(clientProfileLazyCss, /@import "\.\/client-measurements-lazy\.css"/);
   for (const measurementLazyImport of [
     "./client-measurements.css",
@@ -423,8 +426,11 @@ test("application styles use the modular styles entrypoint", async () => {
     path.normalize("src/main.jsx"),
     path.normalize("src/AppCore.jsx"),
     path.normalize("src/app/AppRouter.jsx"),
+    path.normalize("src/app/AppTerminalRoute.jsx"),
+    path.normalize("src/app/appRouteLoaders.js"),
     path.normalize("src/app/appStartupGate.jsx"),
     path.normalize("src/app/appTerminalRoutes.jsx"),
+    path.normalize("src/app/appTerminalRouteLoaders.js"),
     path.normalize("src/components/trainer/TrainerWorkspace.jsx"),
     path.normalize("src/components/admin/AdminPanelHub.jsx"),
     path.normalize("src/components/admin/AdminE2EHarness.jsx")
@@ -3918,6 +3924,7 @@ test("auth bootstrap cannot leave the splash screen blocked forever", async () =
 test("trainer UI routes stay behind terminal route boundaries", async () => {
   const appCore = await readText("src/AppCore.jsx");
   const terminalRoutes = await readText("src/app/appTerminalRoutes.jsx");
+  const appTerminalRoute = await readText("src/app/AppTerminalRoute.jsx");
   const trainerUsersRoute = await readText("src/features/trainer/TrainerUsersRoute.jsx");
   const trainerWorkoutsRoute = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
 
@@ -3928,12 +3935,16 @@ test("trainer UI routes stay behind terminal route boundaries", async () => {
   assert.doesNotMatch(appCore, /TrainerProgramManagerView/);
   assert.doesNotMatch(appCore, /from ["']\.\/components\/trainer\/TrainerWorkspace["']/);
 
-  assert.match(terminalRoutes, /TrainerDashboardRoute/);
-  assert.match(terminalRoutes, /TrainerUsersRoute/);
-  assert.match(terminalRoutes, /TrainerAdminWorkoutsRoute/);
+  assert.match(terminalRoutes, /AppTerminalRouteRenderer/);
+  assert.match(appTerminalRoute, /TrainerDashboardRoute/);
+  assert.match(appTerminalRoute, /TrainerUsersRoute/);
+  assert.match(appTerminalRoute, /TrainerAdminWorkoutsRoute/);
   assert.doesNotMatch(terminalRoutes, /TrainerUsersLegacyRoute/);
   assert.doesNotMatch(terminalRoutes, /TrainerClientsWorkspaceRoute/);
   assert.doesNotMatch(terminalRoutes, /TrainerProgramManagerView/);
+  assert.doesNotMatch(appTerminalRoute, /TrainerUsersLegacyRoute/);
+  assert.doesNotMatch(appTerminalRoute, /TrainerClientsWorkspaceRoute/);
+  assert.doesNotMatch(appTerminalRoute, /TrainerProgramManagerView/);
 
   assert.match(trainerUsersRoute, /TrainerClientsWorkspaceRoute/);
   assert.match(trainerUsersRoute, /TrainerUsersLegacyRoute/);

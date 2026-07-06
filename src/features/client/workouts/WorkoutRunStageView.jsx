@@ -37,7 +37,6 @@ export default function WorkoutRunStageView({
   openWorkoutExerciseModal,
   plan,
   postWorkoutFeedback,
-  repsInputRefs,
   requestLeaveWorkout,
   saveWorkoutToFirebase,
   setExerciseHistoryOpenId,
@@ -71,7 +70,6 @@ export default function WorkoutRunStageView({
   warmupTimerDuration,
   warmupTimerRunning,
   warmupTimerSeconds,
-  weightInputRefs,
   workout,
   workoutClientComment,
   workoutDurationText,
@@ -294,9 +292,7 @@ export default function WorkoutRunStageView({
                 hasExternalWeight={exerciseUsesExternalWeight(exercise)}
                 onToggleSetCompleted={toggleWorkoutSetCompleted}
                 onUpdateSet={updateSet}
-                repsInputRefs={repsInputRefs}
                 sharedExerciseAiWeightAdjustment={sharedExerciseAiWeightAdjustment}
-                weightInputRefs={weightInputRefs}
               />
             )}
 

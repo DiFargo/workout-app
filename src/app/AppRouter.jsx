@@ -1,39 +1,16 @@
 import { lazy, Suspense } from "react";
 import { APP_PAGES } from "./appPages";
+import {
+  loadAdminPanelHub,
+  loadAiCoachPage,
+  loadBasicWorkoutQuizPage,
+  loadMeasurementWizardPage,
+  loadWorkoutHistoryPage,
+  loadWorkoutListPage,
+  loadWorkoutModePage,
+  loadWorkoutPlanPage
+} from "./appRouteLoaders";
 import RouteFallback from "./RouteFallback";
-
-const loadAdminPanelHub = () => import("../components/admin/AdminPanelHub");
-const loadAiCoachStyles = () => import("../styles/ai-coach-lazy.css");
-const loadWorkoutStyles = () => import("../styles/client-workout-lazy.css");
-const loadAiCoachPage = () => Promise.all([
-  loadAiCoachStyles(),
-  import("../features/client/ai/AiCoachPage")
-]).then(([, module]) => module);
-const loadBasicWorkoutQuizPage = () => Promise.all([
-  loadWorkoutStyles(),
-  import("../features/client/workouts/BasicWorkoutQuizPage")
-]).then(([, module]) => module);
-const loadMeasurementStyles = () => import("../styles/client-measurements-lazy.css");
-const loadMeasurementWizardPage = () => Promise.all([
-  loadMeasurementStyles(),
-  import("../features/client/measurements/MeasurementWizardPage")
-]).then(([, module]) => module);
-const loadWorkoutHistoryPage = () => Promise.all([
-  loadWorkoutStyles(),
-  import("../features/client/workouts/WorkoutHistoryPage")
-]).then(([, module]) => module);
-const loadWorkoutListPage = () => Promise.all([
-  loadWorkoutStyles(),
-  import("../features/client/workouts/WorkoutListPage")
-]).then(([, module]) => module);
-const loadWorkoutModePage = () => Promise.all([
-  loadWorkoutStyles(),
-  import("../features/client/workouts/WorkoutModePage")
-]).then(([, module]) => module);
-const loadWorkoutPlanPage = () => Promise.all([
-  loadWorkoutStyles(),
-  import("../features/client/workouts/WorkoutPlanPage")
-]).then(([, module]) => module);
 
 const AdminPanelHub = lazy(loadAdminPanelHub);
 const AiCoachPage = lazy(loadAiCoachPage);
@@ -43,18 +20,6 @@ const WorkoutHistoryPage = lazy(loadWorkoutHistoryPage);
 const WorkoutListPage = lazy(loadWorkoutListPage);
 const WorkoutModePage = lazy(loadWorkoutModePage);
 const WorkoutPlanPage = lazy(loadWorkoutPlanPage);
-
-export function preloadClientRouteChunks() {
-  return Promise.allSettled([
-    loadWorkoutListPage(),
-    loadWorkoutModePage(),
-    loadWorkoutHistoryPage(),
-    loadWorkoutPlanPage(),
-    loadBasicWorkoutQuizPage(),
-    loadMeasurementWizardPage(),
-    loadAiCoachPage()
-  ]);
-}
 
 function renderLazyRoute(route) {
   return <Suspense fallback={<RouteFallback />}>{route}</Suspense>;

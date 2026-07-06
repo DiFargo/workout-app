@@ -69,7 +69,6 @@ export default function WorkoutRunRoute({
   setPendingWorkoutFeedback,
   setPostWorkoutFeedback,
   setPostWorkoutFeedbackOpen,
-  setRepsInputRefs,
   setRestTimerRunning,
   setRestTimerSeconds,
   setWorkoutReadinessPending,
@@ -80,7 +79,6 @@ export default function WorkoutRunRoute({
   setWarmupTimerRunning,
   setWarmupTimerSeconds,
   setWarmupTimerPreset,
-  setWeightInputRefs,
   setWorkoutClientComment,
   setWorkoutExitPromptOpen,
   setWorkoutFinishedAt,
@@ -174,7 +172,6 @@ export default function WorkoutRunRoute({
         openWorkoutExerciseModal={openWorkoutExerciseModal}
         plan={plan}
         postWorkoutFeedback={postWorkoutFeedback}
-        repsInputRefs={setRepsInputRefs}
         requestLeaveWorkout={requestLeaveWorkout}
         restTimerDuration={restTimerDuration}
         restTimerSeconds={restTimerSeconds}
@@ -214,7 +211,6 @@ export default function WorkoutRunRoute({
         warmupTimerDuration={warmupTimerDuration}
         warmupTimerRunning={warmupTimerRunning}
         warmupTimerSeconds={warmupTimerSeconds}
-        weightInputRefs={setWeightInputRefs}
         workout={workout}
         workoutClientComment={workoutClientComment}
         workoutDurationText={workoutDurationText}

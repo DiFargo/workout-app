@@ -1319,6 +1319,18 @@ function getWorkoutScheduleInitialDates(client = {}, workouts = []) {
   return [...new Set(source.map(toWorkoutDateKey).filter(Boolean))].sort();
 }
 
+function getWorkoutSchedulePlannerKey(client = {}, workouts = []) {
+  return [
+    client?.id || "client",
+    client?.workoutCalendar?.updatedAt || "",
+    client?.workoutCalendar?.assignedProgramUpdatedAt || "",
+    getWorkoutScheduleInitialDates(client, workouts).join("|"),
+    (Array.isArray(workouts) ? workouts : [])
+      .map((workout) => `${workout?.id || ""}:${workout?.scheduledDate || workout?.plannedDate || ""}`)
+      .join("|")
+  ].join("::");
+}
+
 const WORKOUT_SCHEDULE_DAY_STATUS_TEXT = {
   planned: "в плане",
   completed: "выполнена в срок",
@@ -1381,18 +1393,6 @@ function WorkoutSchedulePlanner({
     return result;
   }, {});
   const visibleEntriesByDate = editing ? draftEntriesByDate : savedEntriesByDate;
-
-  useEffect(() => {
-    const nextDates = getWorkoutScheduleInitialDates(client, workouts);
-    setSelectedDates(nextDates);
-    setMonthKey((nextDates[0] || getLocalDateKey()).slice(0, 7));
-    setEditing(false);
-  }, [
-    client?.id,
-    client?.workoutCalendar?.updatedAt,
-    client?.workoutCalendar?.assignedProgramUpdatedAt,
-    workouts.length
-  ]);
 
   function shiftMonth(delta) {
     const [year, month] = monthKey.split("-").map(Number);
@@ -1663,6 +1663,7 @@ function ClientWorkoutPlan({
       </section>
 
       <WorkoutSchedulePlanner
+        key={getWorkoutSchedulePlannerKey(client, workouts)}
         client={client}
         workouts={workouts}
         history={history}
@@ -2014,10 +2015,15 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
     validTo: currentPlan?.validTo || "",
     presetId: normalizeNutritionPresetId(currentPlan?.presetId || currentPlan?.preset || "custom")
   });
+  const initialDraft = buildDraft();
+  const initialPreset = presetMap[initialDraft.presetId] ? initialDraft.presetId : "custom";
   const [editing, setEditing] = useState(!currentPlan);
   const [saving, setSaving] = useState(false);
-  const [preset, setPreset] = useState(buildDraft().presetId);
-  const [draft, setDraft] = useState(buildDraft);
+  const [preset, setPreset] = useState(initialPreset);
+  const [draft, setDraft] = useState(() => ({
+    ...initialDraft,
+    presetId: initialPreset
+  }));
   const visiblePlan = editing ? draft : {
     name: currentPlan?.name || draft.name,
     goal: currentPlan?.goal || draft.goal,
@@ -2028,34 +2034,6 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
     validFrom: currentPlan?.validFrom || draft.validFrom,
     validTo: currentPlan?.validTo || draft.validTo
   };
-
-  useEffect(() => {
-    const nextDraft = buildDraft();
-    const nextPreset = presetMap[nextDraft.presetId] ? nextDraft.presetId : "custom";
-    setDraft({
-      ...nextDraft,
-      presetId: nextPreset
-    });
-    setPreset(nextPreset);
-    setEditing(!currentPlan);
-  }, [
-    client?.id,
-    currentPlan?.updatedAt,
-    currentPlan?.name,
-    currentPlan?.goal,
-    currentPlan?.calories,
-    currentPlan?.protein,
-    currentPlan?.fat,
-    currentPlan?.carbs,
-    currentPlan?.validFrom,
-    currentPlan?.validTo,
-    currentPlan?.presetId,
-    currentPlan?.preset,
-    goals.calories,
-    goals.protein,
-    goals.fat,
-    goals.carbs
-  ]);
 
   function selectPreset(value) {
     const normalizedValue = normalizeNutritionPresetId(value);
@@ -2204,7 +2182,23 @@ function NutritionView({ client, nutritionDays, goals = {}, planOptions = [], on
       </section>
 
       <section id="trainerNutritionPlan" className="trainerNutritionUnifiedSection">
-        <NutritionPlan key={client?.id || "nutrition-plan"} client={client} goals={goals} planOptions={planOptions} onSavePlan={onSavePlan} onGeneratePlan={onGeneratePlan} status={status} />
+        <NutritionPlan
+          key={[
+            client?.id || "nutrition-plan",
+            client?.nutritionPlan?.updatedAt || "",
+            client?.nutritionPlan?.presetId || client?.nutritionPlan?.preset || "",
+            client?.nutritionPlan?.calories || goals.calories || "",
+            client?.nutritionPlan?.protein || goals.protein || "",
+            client?.nutritionPlan?.fat || goals.fat || "",
+            client?.nutritionPlan?.carbs || goals.carbs || ""
+          ].join("::")}
+          client={client}
+          goals={goals}
+          planOptions={planOptions}
+          onSavePlan={onSavePlan}
+          onGeneratePlan={onGeneratePlan}
+          status={status}
+        />
       </section>
     </div>
   );

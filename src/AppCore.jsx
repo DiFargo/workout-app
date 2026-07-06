@@ -256,12 +256,14 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 
 import * as appConfig from "./constants/appConfig";
 import { APP_PAGES } from "./app/appPages";
-import { preloadClientRouteChunks } from "./app/AppRouter";
+import { preloadClientRouteChunks } from "./app/appRouteLoaders";
 import { renderAppRoutePage } from "./app/appRouteRenderer";
 import {
   preloadClientTerminalRouteChunks,
-  preloadTrainerRouteChunks,
-  renderAppTerminalRoute
+  preloadTrainerRouteChunks
+} from "./app/appTerminalRouteLoaders";
+import {
+  AppTerminalRouteRenderer as renderAppTerminalRoute
 } from "./app/appTerminalRoutes";
 import {
   getFirstSetupGateState,
@@ -472,9 +474,6 @@ export default function App() {
   const [postWorkoutFeedback, setPostWorkoutFeedback] = useState(null);
   const [workoutClientComment, setWorkoutClientComment] = useState("");
   const [timerTick, setTimerTick] = useState(Date.now());
-  const setRepsInputRefs = useRef({});
-  const setWeightInputRefs = useRef({});
-
   useEffect(() => () => {
     if (exerciseValidationTimerRef.current) {
       window.clearTimeout(exerciseValidationTimerRef.current);
@@ -2168,7 +2167,6 @@ export default function App() {
     touchStartY,
     exerciseValidationTimerRef,
     partialExerciseWarningKeysRef,
-    setWeightInputRefs,
     setOpenVideoId,
     setInlinePlayingVideoId,
     setRestTimerRunning,
@@ -3041,7 +3039,6 @@ export default function App() {
     setProfileWorkoutCalendarStatus,
     setProfileWorkoutHistoryModalOpen,
     setProfileWorkoutScheduledDates,
-    setRepsInputRefs,
     setRestTimerRunning,
     setRestTimerSeconds,
     setSelectedNutritionDateKey,
@@ -3059,7 +3056,6 @@ export default function App() {
     setWarmupTimerPreset,
     setWarmupTimerRunning,
     setWarmupTimerSeconds,
-    setWeightInputRefs,
     setWorkoutClientComment,
     setWorkoutExitPromptOpen,
     setWorkoutFinishedAt,

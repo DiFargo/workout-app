@@ -116,9 +116,7 @@ export default function WorkoutExerciseSets({
   hasExternalWeight,
   onToggleSetCompleted,
   onUpdateSet,
-  repsInputRefs,
-  sharedExerciseAiWeightAdjustment,
-  weightInputRefs
+  sharedExerciseAiWeightAdjustment
 }) {
   const [editingSetDraft, setEditingSetDraft] = useState(null);
   const repsWheelRef = useRef(null);
@@ -126,8 +124,6 @@ export default function WorkoutExerciseSets({
   const editingSetIndex = editingSetDraft?.index ?? null;
   const editingSet = editingSetIndex !== null ? exercise.sets[editingSetIndex] : null;
   const editingSetKey = editingSetIndex !== null ? `${exercise.id}:${editingSetIndex}` : "";
-  const repsInputRegistry = repsInputRefs.current;
-  const weightInputRegistry = weightInputRefs.current;
   const repsSliderState = editingSetDraft ? getRepsSliderState(editingSetDraft.reps, editingSet?.reps) : null;
   const weightSliderState = editingSetDraft ? getWeightSliderState(editingSetDraft.weight, editingSet?.weight) : null;
   const repsWheelOptions = useMemo(
@@ -138,24 +134,6 @@ export default function WorkoutExerciseSets({
     () => (weightSliderState ? buildWheelOptions(weightSliderState, formatWeightValue) : []),
     [weightSliderState?.min, weightSliderState?.max, weightSliderState?.step]
   );
-
-  useEffect(() => {
-    if (!editingSetKey) {
-      return undefined;
-    }
-
-    // eslint-disable-next-line react-hooks/immutability
-    repsInputRegistry[editingSetKey] = repsWheelRef.current;
-    // eslint-disable-next-line react-hooks/immutability
-    weightInputRegistry[editingSetKey] = weightWheelRef.current;
-
-    return () => {
-      // eslint-disable-next-line react-hooks/immutability
-      delete repsInputRegistry[editingSetKey];
-      // eslint-disable-next-line react-hooks/immutability
-      delete weightInputRegistry[editingSetKey];
-    };
-  }, [editingSetKey, repsInputRegistry, weightInputRegistry]);
 
   useEffect(() => {
     if (!editingSetKey || !repsSliderState) {
