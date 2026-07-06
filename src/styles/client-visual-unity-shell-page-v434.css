@@ -1,0 +1,63 @@
+/* v1.78: final client visual unity layer. Keep this file last in styles/index.css. */
+/* v.1.964: page shell, variables and version badge. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body,
+  html:root[data-app-theme="warm-light"] body #root {
+    background:
+      radial-gradient(circle at 50% -8%, rgba(109, 77, 248, 0.075), transparent 36%),
+      linear-gradient(180deg, #fbfbff 0%, #f5f6fb 100%) !important;
+    color: #171923 !important;
+    overflow-x: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium,
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
+    --client-x: 26px;
+    --client-top: 70px;
+    --client-action: 52px;
+    --client-title-h: 54px;
+    --client-title-fz: 30px;
+    --client-title-color: #5f5744;
+    --client-border: #dfe4ee;
+    --client-card-shadow: 0 18px 48px rgba(36, 43, 66, 0.08);
+    width: 100% !important;
+    min-height: 100dvh !important;
+    box-sizing: border-box !important;
+    padding: 0 var(--client-x) calc(112px + env(safe-area-inset-bottom)) !important;
+    background:
+      radial-gradient(circle at 50% -8%, rgba(109, 77, 248, 0.075), transparent 36%),
+      linear-gradient(180deg, #fbfbff 0%, #f5f6fb 100%) !important;
+    color: #171923 !important;
+    overflow-x: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientPageVersionBadge,
+  html:root[data-app-theme="warm-light"] body #root .appVersionBadge.clientPageVersionBadge {
+    position: absolute !important;
+    top: 14px !important;
+    left: var(--client-x, 26px) !important;
+    z-index: 20 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    padding: 0 8px !important;
+    border: 1px solid #dfe4ee !important;
+    border-radius: 999px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #737b91 !important;
+    -webkit-text-fill-color: #737b91 !important;
+    font-size: 12px !important;
+    line-height: 20px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+  }
+
+}
