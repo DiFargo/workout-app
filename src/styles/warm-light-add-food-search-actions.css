@@ -1,0 +1,53 @@
+/* Main refresh action and profile theme switch. */
+.menuRefreshIconBtn {
+  position: fixed;
+  top: max(18px, calc(env(safe-area-inset-top) + 10px));
+  right: 18px;
+  z-index: 40;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.86);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.28);
+}
+
+.menuRefreshIconBtn:active {
+  transform: scale(0.96);
+}
+
+.profileThemeSwitchBtn {
+  width: 100%;
+  min-height: 66px;
+  margin: 14px 0 4px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: linear-gradient(180deg, #171c18 0%, #111511 100%);
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+}
+
+.profileThemeIcon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.profileThemeText {
+  display: inline-block;
+}
