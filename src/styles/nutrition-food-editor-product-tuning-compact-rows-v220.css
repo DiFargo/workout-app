@@ -1,0 +1,19 @@
+/* =========================================================
+   PRODUCT EDIT PAGE TUNE â€” HEADER + CONTROLS + MACROS + ROWS
+   ========================================================= */
+
+/* Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ð¿Ð¾ÑÐ»Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ Ð´Ð²ÑƒÑ… Ð¿ÑƒÐ½ÐºÑ‚Ð¾Ð² */
+.foodEditRowsCard {
+  margin-top: 4px !important;
+  padding: 12px 16px !important;
+}
+
+.foodEditRow {
+  height: 58px !important;
+}
+
+@media (max-width: 480px) {
+  .foodEditRow {
+    height: 56px !important;
+  }
+}

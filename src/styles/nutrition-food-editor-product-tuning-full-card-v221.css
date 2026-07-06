@@ -1,0 +1,182 @@
+/* =========================================================
+   PIXEL TUNE TO MATCH REFERENCE
+   ========================================================= */
+
+/* Ð¾Ð±Ñ‰Ð¸Ð¹ ÑÐºÑ€Ð°Ð½ */
+.foodEditRenderScreen {
+  gap: 10px !important;
+  max-width: 420px !important;
+}
+
+/* Ð²ÐµÑ€Ñ…Ð½ÑÑ ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐºÐ° */
+.foodEditHeroRender {
+  min-height: 118px !important;
+  padding: 18px 20px !important;
+  border-radius: 28px !important;
+
+  border: 1px solid rgba(255,255,255,0.07) !important;
+
+  background:
+    radial-gradient(circle at 18% 0%, rgba(38,255,116,0.07), transparent 38%),
+    linear-gradient(180deg, rgba(10,18,21,0.985), rgba(7,12,15,0.995)) !important;
+
+  box-shadow:
+    0 16px 36px rgba(0,0,0,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.03) !important;
+}
+
+.foodEditIconRender {
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 20px !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.16), transparent 58%),
+    linear-gradient(180deg, rgba(12,35,26,0.95), rgba(8,20,16,0.98)) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 10px 24px rgba(0,0,0,0.18) !important;
+}
+
+.foodEditHeroRender strong {
+  font-size: 21px !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.45px !important;
+}
+
+.foodEditHeroRender small {
+  color: rgba(247,248,251,0.46) !important;
+}
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ¸ */
+.foodEditSegmentRow {
+  gap: 12px !important;
+}
+
+.foodEditSegmentRow button {
+  height: 48px !important;
+  border-radius: 19px !important;
+
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  background:
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+
+  font-size: 17px !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.025) !important;
+}
+
+.foodEditSegmentRow button.active {
+  border-color: rgba(39,255,118,0.62) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(39,255,118,0.05), transparent 60%),
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+
+  color: rgba(39,255,118,0.96) !important;
+}
+
+/* ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ */
+.foodEditAmountCard {
+  min-height: 66px !important;
+
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+
+  background:
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+}
+
+.foodEditAmountCard span {
+  font-size: 13px !important;
+  color: rgba(247,248,251,0.46) !important;
+}
+
+.foodEditAmountCard input {
+  font-size: 32px !important;
+  font-weight: 950 !important;
+}
+
+/* Ð‘Ð–Ð£ */
+.foodEditMacrosCards {
+  gap: 12px !important;
+}
+
+.foodEditMacrosCards div {
+  min-height: 82px !important;
+
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+
+  background:
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+}
+
+.foodEditMacrosCards span {
+  font-size: 13px !important;
+}
+
+.foodEditMacrosCards strong {
+  font-size: 24px !important;
+}
+
+.foodEditMacrosCards small {
+  font-size: 12px !important;
+}
+
+/* Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº */
+.foodEditRowsCard {
+  border-radius: 28px !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+
+  background:
+    linear-gradient(180deg, rgba(11,18,22,0.985), rgba(7,12,15,0.995)) !important;
+
+  overflow: hidden !important;
+}
+
+.foodEditRow {
+  height: 64px !important;
+}
+
+.foodEditRow + .foodEditRow {
+  border-top: 1px solid rgba(255,255,255,0.045) !important;
+}
+
+.foodEditRowIcon {
+  font-size: 30px !important;
+  color: rgba(247,248,251,0.70) !important;
+}
+
+.foodEditRowLabel {
+  font-size: 17px !important;
+}
+
+.foodEditRow strong {
+  font-size: 16px !important;
+}
+
+.foodEditRow em {
+  font-size: 31px !important;
+  color: rgba(247,248,251,0.36) !important;
+}
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ° ÑÐ¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ */
+.foodEditSaveRender {
+  min-height: 74px !important;
+
+  border-radius: 24px !important;
+
+  background:
+    linear-gradient(135deg, #28ef62, #79e74d) !important;
+
+  box-shadow:
+    0 18px 42px rgba(40,239,98,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+
+  font-size: 24px !important;
+  letter-spacing: -0.4px !important;
+}

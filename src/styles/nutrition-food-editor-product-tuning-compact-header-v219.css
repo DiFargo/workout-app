@@ -1,0 +1,133 @@
+/* =========================================================
+   FOOD EDIT COMPACT HEADER + BUTTONS + AMOUNT
+   ========================================================= */
+
+/* Ð²ÐµÑ€Ñ…Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº Ñ Ð½Ð°Ð·Ð²Ð°Ð½Ð¸ÐµÐ¼ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° Ð½Ð¸Ð¶Ðµ Ð¿Ñ€Ð¸Ð¼ÐµÑ€Ð½Ð¾ Ð² 3 Ñ€Ð°Ð·Ð° */
+.foodEditHeroRender {
+  min-height: 82px !important;
+  padding: 12px 18px !important;
+  border-radius: 24px !important;
+
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 12px !important;
+  align-items: center !important;
+  text-align: left !important;
+}
+
+.foodEditIconRender {
+  grid-row: 1 / 3 !important;
+
+  width: 44px !important;
+  height: 44px !important;
+  margin: 0 !important;
+
+  border-radius: 15px !important;
+  font-size: 22px !important;
+}
+
+.foodEditHeroRender strong {
+  max-width: 100% !important;
+  font-size: 18px !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.35px !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.foodEditHeroRender small {
+  margin-top: 4px !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+/* ÐºÐ½Ð¾Ð¿ÐºÐ¸ 100 Ð³ / 1 Ð¿Ð¾Ñ€Ñ†Ð¸Ñ Ð½Ð¸Ð¶Ðµ Ð½Ð° 40% */
+.foodEditSegmentRow {
+  gap: 10px !important;
+}
+
+.foodEditSegmentRow button {
+  height: 37px !important;
+  min-height: 37px !important;
+
+  border-radius: 15px !important;
+
+  background: linear-gradient(180deg, rgba(16,24,27,0.96), rgba(10,15,18,0.98)) !important;
+  color: rgba(247,248,251,0.58) !important;
+
+  font-size: 15px !important;
+  font-weight: 900 !important;
+
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.025) !important;
+}
+
+/* Ð°ÐºÑ‚Ð¸Ð²Ð½Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ°: Ð·ÐµÐ»Ñ‘Ð½Ñ‹Ð¼ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ñ‚ÐµÐºÑÑ‚ Ð¸ Ð¾Ð±Ð²Ð¾Ð´ÐºÐ°, Ð½Ðµ Ð²ÑÑ Ð·Ð°Ð»Ð¸Ð²ÐºÐ° */
+.foodEditSegmentRow button.active {
+  border-color: rgba(33,255,105,0.62) !important;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 62%),
+    linear-gradient(180deg, rgba(16,24,27,0.96), rgba(10,15,18,0.98)) !important;
+
+  color: rgba(38,255,116,0.92) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.035),
+    0 0 0 1px rgba(38,255,116,0.08) !important;
+}
+
+/* Ð±Ð»Ð¾Ðº ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð½Ð¸Ð¶Ðµ Ð² 2 Ñ€Ð°Ð·Ð° */
+.foodEditAmountCard {
+  min-height: 56px !important;
+  padding: 10px 16px !important;
+  border-radius: 18px !important;
+}
+
+.foodEditAmountCard span {
+  margin-bottom: 4px !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.foodEditAmountCard input {
+  font-size: 25px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+  .foodEditHeroRender {
+    min-height: 78px !important;
+    padding: 11px 16px !important;
+    border-radius: 22px !important;
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+  }
+
+  .foodEditIconRender {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 14px !important;
+    font-size: 21px !important;
+  }
+
+  .foodEditHeroRender small {
+    font-size: 11px !important;
+  }
+
+  .foodEditSegmentRow button {
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 14px !important;
+  }
+
+  .foodEditAmountCard {
+    min-height: 52px !important;
+    padding: 9px 15px !important;
+  }
+
+  .foodEditAmountCard input {
+    font-size: 24px !important;
+  }
+}
