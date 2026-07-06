@@ -1,0 +1,20 @@
+/* Internal nutrition flow top alignment without touching main pages. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremiumMy {
+    margin-top: var(--client-top, 70px) !important;
+    margin-bottom: 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremiumMy .foodFlowTitleGroup,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremiumMy .foodFlowSearchTitle {
+    transform: translate(-2px, -3px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremiumMy .fatSearchClosePremium {
+    transform: translate(2px, 4px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductActionBar) > .fatSearchTopPremium {
+    display: none !important;
+  }
+}

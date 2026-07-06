@@ -1,23 +1,4 @@
-/* v.1.96: finish internal nutrition flow alignment without touching main pages. */
 @media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremiumMy {
-    margin-top: var(--client-top, 70px) !important;
-    margin-bottom: 16px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremiumMy .foodFlowTitleGroup,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremiumMy .foodFlowSearchTitle {
-    transform: translate(-2px, -3px) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium > .fatSearchTopPremiumMy .fatSearchClosePremium {
-    transform: translate(2px, 4px) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductActionBar) > .fatSearchTopPremium {
-    display: none !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductRenderScreen {
     box-sizing: border-box !important;
     width: 100% !important;
@@ -204,41 +185,5 @@
     height: 50px !important;
     margin: 0 auto !important;
     padding: 7px 12px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductActionBar {
-    left: max(10px, env(safe-area-inset-left)) !important;
-    right: max(10px, env(safe-area-inset-right)) !important;
-    bottom: max(10px, env(safe-area-inset-bottom)) !important;
-    width: auto !important;
-    max-width: none !important;
-    height: 84px !important;
-    min-height: 84px !important;
-    padding: 8px !important;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) !important;
-    border-radius: 20px !important;
-    transform: none !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodProductRenderScreen) .foodProductRenderScreen .foodProductActionBar > button {
-    height: 68px !important;
-    min-height: 68px !important;
-    padding: 5px 4px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchMyProductsAction.active):not(:has(.foodProductRenderScreen)) > .fatSearchTopPremiumMy .foodFlowTitleGroup,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchMyProductsAction.active):not(:has(.foodProductRenderScreen)) > .fatSearchTopPremiumMy .foodFlowSearchTitle {
-    transform: translate(-2px, -3px) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchMyProductsAction.active):not(:has(.foodProductRenderScreen)) > .fatSearchTopPremiumMy .fatSearchClosePremium {
-    transform: translate(2px, 8px) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchMyProductsAction.active):not(:has(.foodProductRenderScreen)) .fatSearchTitleButtonPremium {
-    height: 50px !important;
-    min-height: 50px !important;
-    max-height: 50px !important;
-    transform: translateY(-4px) !important;
   }
 }

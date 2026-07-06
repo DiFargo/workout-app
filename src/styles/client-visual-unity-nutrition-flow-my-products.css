@@ -1,0 +1,17 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchMyProductsAction.active):not(:has(.foodProductRenderScreen)) > .fatSearchTopPremiumMy .foodFlowTitleGroup,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchMyProductsAction.active):not(:has(.foodProductRenderScreen)) > .fatSearchTopPremiumMy .foodFlowSearchTitle {
+    transform: translate(-2px, -3px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchMyProductsAction.active):not(:has(.foodProductRenderScreen)) > .fatSearchTopPremiumMy .fatSearchClosePremium {
+    transform: translate(2px, 8px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.fatSearchMyProductsAction.active):not(:has(.foodProductRenderScreen)) .fatSearchTitleButtonPremium {
+    height: 50px !important;
+    min-height: 50px !important;
+    max-height: 50px !important;
+    transform: translateY(-4px) !important;
+  }
+}

@@ -10,5 +10,8 @@
 @import "./client-visual-unity-legacy-dashboard-locks.css";
 @import "./client-visual-unity-legacy-flow-locks.css";
 @import "./client-visual-unity-late-fixes.css";
-@import "./client-visual-unity-nutrition-flow.css";
+@import "./client-visual-unity-nutrition-flow-top.css";
+@import "./client-visual-unity-nutrition-flow-product.css";
+@import "./client-visual-unity-nutrition-flow-action-bar.css";
+@import "./client-visual-unity-nutrition-flow-my-products.css";
 @import "./client-visual-unity-product-editor.css";
