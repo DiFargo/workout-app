@@ -1,0 +1,103 @@
+/* INDIVIDUAL PLAN STABLE CARD + SWIPE INDICATOR V189 */
+.individualWorkoutSelectPage .individualWorkoutDeck {
+  min-height: clamp(410px, calc(100dvh - 280px), 640px) !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutCardPro {
+  box-sizing: border-box !important;
+  height: clamp(410px, calc(100dvh - 280px), 640px) !important;
+  min-height: clamp(410px, calc(100dvh - 280px), 640px) !important;
+  max-height: clamp(410px, calc(100dvh - 280px), 640px) !important;
+  animation: individualWorkoutCardEnter 180ms ease-out;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProBody,
+.individualWorkoutSelectPage .individualWorkoutProInfo {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutTitle {
+  display: -webkit-box !important;
+  max-height: 2.04em !important;
+  overflow: hidden !important;
+  font-size: 34px !important;
+  line-height: 1.02 !important;
+  letter-spacing: 0 !important;
+  overflow-wrap: anywhere !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProImage {
+  min-height: 0 !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutTrainerTip small {
+  display: -webkit-box !important;
+  overflow: hidden !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutNav .individualWorkoutCenterNav {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutNav .individualWorkoutCounter {
+  height: auto !important;
+  color: rgba(255, 255, 255, 0.42) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutNav .individualWorkoutDots {
+  width: min(100%, 300px) !important;
+  max-width: 300px !important;
+  height: 12px !important;
+  gap: 4px !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutNav .individualWorkoutDots span {
+  width: 4px !important;
+  height: 4px !important;
+  background: rgba(255, 255, 255, 0.28) !important;
+  transition: width 160ms ease, height 160ms ease, background-color 160ms ease !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutNav .individualWorkoutDots span.active {
+  width: 14px !important;
+  height: 6px !important;
+  background: var(--accent) !important;
+  box-shadow: 0 0 10px rgba(170, 210, 74, 0.42) !important;
+}
+
+@keyframes individualWorkoutCardEnter {
+  from {
+    opacity: 0.72;
+    translate: 10px 0;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .individualWorkoutSelectPage .individualWorkoutTitle {
+    font-size: 28px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .individualWorkoutSelectPage .individualWorkoutCardPro {
+    animation: none;
+  }
+}
+

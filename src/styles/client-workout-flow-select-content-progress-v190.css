@@ -1,0 +1,220 @@
+/* INDIVIDUAL PLAN CONTENT + PROGRESS V190 */
+.individualWorkoutSelectPage .workoutSelectHero {
+  padding-top: 8px !important;
+  margin-bottom: 4px !important;
+}
+
+.individualWorkoutSelectPage .workoutSelectTitle {
+  margin-bottom: 8px !important;
+  line-height: 0.96 !important;
+  letter-spacing: 0 !important;
+}
+
+.individualWorkoutSelectPage .workoutSelectTitle span {
+  font-size: clamp(26px, 6.7vw, 28px) !important;
+}
+
+.individualWorkoutSelectPage .workoutSelectTitle strong {
+  font-size: clamp(24px, 6.2vw, 27px) !important;
+}
+
+:root .individualWorkoutSelectPage button.workoutSelectBack.universalFixedBackPointer {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  left: 14px !important;
+}
+
+:root .individualWorkoutSelectPage button.workoutSelectBack.universalFixedBackPointer::before {
+  font-size: 24px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProTop {
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) !important;
+  min-height: 30px !important;
+  gap: 12px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutBadges {
+  flex-wrap: nowrap !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutNextBadge,
+.individualWorkoutSelectPage .individualWorkoutCompletedBadge {
+  min-height: 28px !important;
+  padding: 6px 11px !important;
+  font-size: 10.5px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutWeek {
+  overflow: hidden !important;
+  color: rgba(255, 255, 255, 0.68) !important;
+  text-overflow: ellipsis !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutTitle {
+  color: rgba(255, 255, 255, 0.97) !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutStats span {
+  color: rgba(255, 255, 255, 0.86) !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProImage {
+  display: flex !important;
+  align-items: stretch !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProImage img {
+  object-fit: contain !important;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(127, 159, 58, 0.14), transparent 58%),
+    #0b100c !important;
+}
+
+.individualWorkoutCoverPreload {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.individualWorkoutSelectPage .individualWorkoutImageFallback,
+.workoutRunPage .startWorkoutImageFallback {
+  width: 100%;
+  min-width: 0;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(153, 188, 73, 0.2), transparent 42%),
+    linear-gradient(160deg, #172117 0%, #090d0a 72%);
+}
+
+.individualWorkoutSelectPage .individualWorkoutImageFallback b,
+.workoutRunPage .startWorkoutImageFallback b {
+  color: rgba(224, 242, 182, 0.9);
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.individualWorkoutSelectPage .individualWorkoutImageFallback small,
+.workoutRunPage .startWorkoutImageFallback small {
+  display: -webkit-box;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 11px;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.individualWorkoutSelectPage .individualWorkoutTrainerTip {
+  min-height: 62px !important;
+  padding: 9px 12px !important;
+  gap: 10px !important;
+  border-radius: 19px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutTrainerTip > b {
+  width: 34px !important;
+  height: 34px !important;
+  border-width: 2px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutTrainerTip strong {
+  font-size: 13px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutTrainerTip small {
+  color: rgba(255, 255, 255, 0.66) !important;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+}
+
+.individualWorkoutSelectPage > .individualWorkoutNav .individualWorkoutCenterNav {
+  gap: 7px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProgressMeta {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.individualWorkoutSelectPage .individualWorkoutProgressMeta .individualWorkoutCounter {
+  color: rgba(255, 255, 255, 0.68) !important;
+  font-size: 11.5px !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutSwipeHint {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 10.5px;
+  font-weight: 750;
+  line-height: 1;
+  text-align: center;
+}
+
+.individualWorkoutSelectPage .individualWorkoutCardPro.completed {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutCardPro.completed::before {
+  z-index: 2 !important;
+  background: rgba(4, 7, 5, 0.26) !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutCardPro.completed::after {
+  content: none !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutCardPro.completed .individualWorkoutCompletedBadge {
+  display: inline-flex !important;
+}
+
+.individualWorkoutSelectPage .individualWorkoutCardPro.completed .individualWorkoutProTop,
+.individualWorkoutSelectPage .individualWorkoutCardPro.completed .individualWorkoutProBody,
+.individualWorkoutSelectPage .individualWorkoutCardPro.completed .individualWorkoutTrainerTip {
+  opacity: 0.78 !important;
+  filter: none !important;
+}
+
+@media (max-width: 700px) {
+  .individualWorkoutSelectPage > .individualWorkoutNav {
+    width: min(330px, calc(100vw - 48px)) !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .individualWorkoutSelectPage .workoutSelectHero {
+    padding-top: 4px !important;
+  }
+
+  .individualWorkoutSelectPage .workoutSelectTitle span {
+    font-size: 27px !important;
+  }
+
+  .individualWorkoutSelectPage .workoutSelectTitle strong {
+    font-size: 25px !important;
+  }
+}
+
+@media (min-width: 701px) {
+  .individualWorkoutSelectPage .individualWorkoutSwipeHint {
+    display: none;
+  }
+}
