@@ -1,0 +1,33 @@
+
+.profileBodyMetricsGrid.profileBodyMetricsGridTwo label {
+  min-width: 0;
+}
+
+:root[data-app-theme="dark-green"] .firstSetupMetricSlider,
+:root[data-app-theme="dark-green"] .profileMetricSlider {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+:root[data-app-theme="dark-green"] .firstSetupMetricSlider > span,
+:root[data-app-theme="dark-green"] .firstSetupMetricLabel,
+:root[data-app-theme="dark-green"] .profileMetricSlider > span,
+:root[data-app-theme="dark-green"] .firstSetupMetricSlider > strong small,
+:root[data-app-theme="dark-green"] .firstSetupMetricValue small,
+:root[data-app-theme="dark-green"] .profileMetricSlider > strong small {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+:root[data-app-theme="dark-green"] .firstSetupMetricSlider > strong,
+:root[data-app-theme="dark-green"] .firstSetupMetricValue,
+:root[data-app-theme="dark-green"] .profileMetricSlider > strong {
+  color: #fff;
+}
+
+:root[data-app-theme="dark-green"] .firstSetupMetricInput input,
+:root[data-app-theme="dark-green"] .profileMetricSliderInput input {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.22);
+  color: #fff;
+}

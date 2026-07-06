@@ -1,0 +1,52 @@
+
+.firstSetupMetricInput,
+.profileMetricSliderInput {
+  position: relative;
+}
+
+.firstSetupMetricInput {
+  width: min(160px, 52%);
+  margin-top: 8px;
+}
+
+.firstSetupMetricInput input,
+.profileMetricSliderInput input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 54px 0 14px;
+  border: 1px solid #dfe3ef;
+  border-radius: 15px;
+  outline: none;
+  background: #fff;
+  color: #151824;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.firstSetupMetricInput input {
+  min-height: 42px;
+  padding-left: 14px;
+  text-align: center;
+  font-size: 17px;
+  border-radius: 14px;
+  background: #f9faff;
+}
+
+.firstSetupMetricInput input:focus,
+.profileMetricSliderInput input:focus {
+  border-color: #7664e8;
+  box-shadow: 0 0 0 3px rgba(101, 82, 230, 0.1);
+}
+
+.firstSetupMetricInput em,
+.profileMetricSliderInput em {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  color: #737b91;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  transform: translateY(-50%);
+}
