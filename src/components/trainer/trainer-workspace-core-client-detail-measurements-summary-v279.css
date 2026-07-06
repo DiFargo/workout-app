@@ -1,0 +1,60 @@
+.trainerMeasurementSummaryGrid article,
+.trainerMeasurementFieldGrid article,
+.trainerMeasurementInsight,
+.trainerMeasurementChart,
+.trainerMeasurementTimeline,
+.trainerProgramTree,
+.trainerProgramDayPanel {
+  min-width: 0;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerMeasurementSummaryGrid article {
+  min-height: 96px;
+  display: grid;
+  align-content: center;
+  gap: 7px;
+  padding: 13px;
+}
+
+.trainerMeasurementSummaryGrid span,
+.trainerMeasurementFieldGrid span,
+.trainerMeasurementChart header span,
+.trainerMeasurementTimeline time {
+  color: var(--tn-muted);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.trainerMeasurementSummaryGrid strong {
+  color: var(--tn-text);
+  font-size: 20px;
+}
+
+.trainerNextClientTable > button > span small,
+.trainerMeasurementSummaryGrid small,
+.trainerMeasurementFieldGrid small,
+.trainerMeasurementChart small,
+.trainerMeasurementTimeline span {
+  color: var(--tn-muted);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.trainerMeasurementCollapsed .positive,
+.trainerMeasurementSummaryGrid .positive,
+.trainerMeasurementFieldGrid .positive,
+.trainerExerciseProgressSummary .positive,
+.trainerExerciseProgressMetrics .positive {
+  color: #159947;
+}
+
+.trainerMeasurementCollapsed .negative,
+.trainerMeasurementSummaryGrid .negative,
+.trainerMeasurementFieldGrid .negative,
+.trainerExerciseProgressSummary .negative,
+.trainerExerciseProgressMetrics .negative {
+  color: #dc4f4f;
+}

@@ -1,0 +1,38 @@
+.trainerNextHistoryList article {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+}
+
+.trainerNextHistoryList article > span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--tn-purple-soft);
+  color: var(--tn-purple);
+}
+
+.trainerNextHistoryList article strong {
+  font-size: 12px;
+}
+
+.trainerNextHistoryList article small,
+.trainerNextHistoryList article b {
+  color: var(--tn-muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.trainerNextHistoryList article p {
+  margin: 2px 0 0;
+  color: var(--tn-text);
+  font-size: 11px;
+  line-height: 1.35;
+}
