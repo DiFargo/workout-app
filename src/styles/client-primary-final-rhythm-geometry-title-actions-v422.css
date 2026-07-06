@@ -1,0 +1,59 @@
+/* v.1.962: title rows and header actions geometry. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumMy {
+    width: 100% !important;
+    min-height: var(--client-title-h) !important;
+    height: var(--client-title-h) !important;
+    margin: 0 0 16px !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 12px !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodFlowTitleGroup h2,
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageTitleCenter {
+    margin: 0 !important;
+    padding: 0 !important;
+    color: var(--client-title-color) !important;
+    -webkit-text-fill-color: var(--client-title-color) !important;
+    font-size: var(--client-title-fz) !important;
+    line-height: 1.06 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileTrainerNotificationsButton,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutHeaderActions button,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchClosePremium,
+  html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack,
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductTopAction {
+    width: var(--client-action) !important;
+    height: var(--client-action) !important;
+    min-width: var(--client-action) !important;
+    min-height: var(--client-action) !important;
+    border: 1px solid var(--client-border) !important;
+    border-radius: 18px !important;
+    background: #ffffff !important;
+    color: var(--client-title-color) !important;
+    -webkit-text-fill-color: var(--client-title-color) !important;
+    box-shadow: 0 14px 34px rgba(55, 64, 112, 0.12) !important;
+    transform: none !important;
+  }
+
+}
