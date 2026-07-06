@@ -1,0 +1,83 @@
+/* v.1.196: main dashboard inner cards only. Header and bottom navigation are intentionally untouched. */
+/* v.1.959: goal and next workout mini cards. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiSplitCards.profileAiSplitCards {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 86px !important;
+    min-height: 86px !important;
+    max-height: 86px !important;
+    flex: 0 0 86px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    background: #fff !important;
+    border: 1px solid var(--main-card-border) !important;
+    border-radius: 24px !important;
+    box-shadow: var(--main-card-shadow) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard.profileAiMiniCard {
+    box-sizing: border-box !important;
+    height: 86px !important;
+    min-height: 86px !important;
+    max-height: 86px !important;
+    margin: 0 !important;
+    padding: 16px 18px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard.profileAiMiniCard:first-child {
+    border-right: 1px solid var(--main-card-border) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard.profileAiMiniCard span {
+    max-width: 100% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    color: var(--main-card-muted) !important;
+    font-size: 11px !important;
+    line-height: 1.18 !important;
+    font-weight: 800 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard.profileAiMiniCard span svg {
+    width: 18px !important;
+    height: 18px !important;
+    color: var(--main-card-purple) !important;
+    stroke-width: 2.45 !important;
+    flex: 0 0 auto !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard.profileAiMiniCard:last-child span svg {
+    color: #ff981f !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiMiniCard.profileAiMiniCard strong {
+    max-width: 100% !important;
+    color: var(--main-card-text) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+}
