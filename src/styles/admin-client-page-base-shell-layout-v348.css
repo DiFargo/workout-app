@@ -1,0 +1,36 @@
+/* ADMIN CLIENT PAGE Ã¢â‚¬â€ PREMIUM RENDER STYLE UPDATE */
+.adminUsersCrmMainClientPage {
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  padding: 18px 18px 72px !important;
+}
+
+.adminClientWorkspaceCrmPage {
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.adminClientRenderTopbar {
+  width: 100%;
+  margin: 0 0 28px;
+  display: flex;
+  align-items: center;
+}
+
+.adminClientBackToList {
+  min-height: 52px !important;
+  padding: 0 24px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.11) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025)) !important;
+  color: rgba(255,255,255,.94) !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+  cursor: pointer;
+}
