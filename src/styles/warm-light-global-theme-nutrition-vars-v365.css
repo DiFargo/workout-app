@@ -1,0 +1,46 @@
+/* =========================================================
+   WARM-LIGHT NUTRITION FULL OVERRIDE â€” ALL FOOD SCREENS
+   Uses calm version of user yellow (#F4E064) without flooding UI.
+   Covers: nutrition main, search, calendar, calories, summary,
+   add product, create/edit product, modals, bottom sheets.
+   ========================================================= */
+:root[data-app-theme="warm-light"],
+body[data-app-theme="warm-light"] {
+  --bg: #fbf4d8;
+  --card: #fffaf0;
+  --card-2: #f8edc9;
+  --line: rgba(96, 78, 27, 0.18);
+  --text: #282111;
+  --muted: rgba(69, 56, 24, 0.66);
+  --accent: #f4e064;
+  --accent-2: #e6c64e;
+  --food-green: #d7b947 !important;
+  --food-text: #282111 !important;
+  --food-muted: rgba(69, 56, 24, 0.66) !important;
+  --food-card: #fffaf0 !important;
+  --food-line: rgba(96, 78, 27, 0.18) !important;
+  --warm-bg-soft: #fbf4d8;
+  --warm-card-soft: #fffaf0;
+  --warm-card-deep: #f8edc9;
+  --warm-gold: #f4e064;
+  --warm-gold-deep: #d7b947;
+  --warm-gold-soft: rgba(244, 224, 100, 0.22);
+  --warm-shadow: rgba(87, 68, 18, 0.14);
+}
+
+:root[data-app-theme="warm-light"] .nutritionFixedHeaderV3,
+:root[data-app-theme="warm-light"] .fatSecretPage,
+:root[data-app-theme="warm-light"] .fat,
+:root[data-app-theme="warm-light"] .fatFoodSearchOverlay,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreen,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium,
+:root[data-app-theme="warm-light"] .fatFoodAmountScreen,
+:root[data-app-theme="warm-light"] .foodEditRenderScreen,
+:root[data-app-theme="warm-light"] .fatBarcodeOverlay,
+:root[data-app-theme="warm-light"] .fatPhotoAiInput,
+:root[data-app-theme="warm-light"] .fatSearchBottomBar {
+  background:
+    radial-gradient(circle at 50% -8%, rgba(244, 224, 100, 0.32), transparent 34%),
+    linear-gradient(180deg, #fff8dc 0%, #fbf1cc 48%, #f2e4b5 100%) !important;
+  color: var(--text) !important;
+}
