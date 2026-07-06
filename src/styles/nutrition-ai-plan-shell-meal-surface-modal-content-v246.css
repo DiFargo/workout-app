@@ -1,0 +1,123 @@
+.nutritionMealModalHeader {
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 40px;
+  gap: 12px;
+  align-items: center;
+}
+
+.nutritionMealModalIcon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  font-size: 27px;
+}
+
+.nutritionMealModalHeader div {
+  min-width: 0;
+}
+
+.nutritionMealModalHeader small,
+.nutritionMealModalHeader strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.nutritionMealModalHeader h2 {
+  margin: 3px 0;
+  overflow: hidden;
+  color: #f5f7f3;
+  font-size: 23px;
+  font-weight: 950;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nutritionMealModalHeader > button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 25px;
+  line-height: 1;
+}
+
+.nutritionMealModalList {
+  min-height: 0;
+  display: grid;
+  gap: 7px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.nutritionMealModalList::-webkit-scrollbar {
+  display: none;
+}
+
+.nutritionMealModalList .productSwipeShell {
+  min-height: 68px;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.nutritionMealModalList .productRowExact {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 68px;
+  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 18px;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.nutritionMealModalList .productFoodIconWrap {
+  min-width: 0;
+}
+
+.nutritionMealModalList .productInfoExact {
+  min-width: 0;
+}
+
+.nutritionMealModalList .productInfoExact strong,
+.nutritionMealModalList .productInfoExact span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nutritionMealModalAdd {
+  width: 100%;
+  min-height: 54px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(145, 173, 78, 0.34);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(50, 65, 33, 0.95), rgba(31, 43, 24, 0.98));
+  color: #dff3ae;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.nutritionMealModalAdd span {
+  font-size: 21px;
+  line-height: 1;
+}
