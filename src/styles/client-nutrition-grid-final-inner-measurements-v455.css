@@ -1,0 +1,75 @@
+/* Split from client-nutrition-grid-final-inner-lock.css: main measurement snapshot. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSnapshot.mainMeasurementSnapshot {
+    height: 156px !important;
+    min-height: 156px !important;
+    max-height: 156px !important;
+    flex: 0 0 156px !important;
+    margin: 0 !important;
+    padding: 18px 26px 14px !important;
+    border-radius: 24px !important;
+    border: 1px solid var(--main-inner-border) !important;
+    background: #fff !important;
+    box-shadow: var(--main-inner-shadow) !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSnapshotHeader {
+    height: 18px !important;
+    margin: 0 0 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSnapshotHeader span {
+    color: var(--main-inner-text) !important;
+    font-size: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementSnapshotBody {
+    grid-template-columns: 104px minmax(0, 1fr) !important;
+    gap: 14px !important;
+    align-items: end !important;
+    height: 106px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementWeight {
+    align-self: end !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    min-width: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementWeight strong {
+    color: var(--main-inner-text) !important;
+    font-size: 25px !important;
+    line-height: 1 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementWeight em {
+    color: var(--main-inner-purple) !important;
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    font-style: normal !important;
+    font-weight: 900 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementWeight small {
+    color: #283044 !important;
+    font-size: 9.5px !important;
+    line-height: 1.15 !important;
+    font-weight: 700 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChart {
+    height: 82px !important;
+    min-height: 82px !important;
+    max-height: 82px !important;
+    align-self: end !important;
+    overflow: visible !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMeasurementChart svg {
+    height: 58px !important;
+    min-height: 58px !important;
+  }
+}
