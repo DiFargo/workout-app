@@ -1,0 +1,96 @@
+.workoutHistoryModal {
+  width: min(100%, 370px);
+  max-height: min(680px, calc(100dvh - 28px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
+.workoutHistoryModalList {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.workoutHistoryModalList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.workoutHistoryModalList::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(126, 132, 151, 0.38);
+}
+
+.workoutHistoryModalList > button,
+.workoutHistoryModalItem {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 60px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.085);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  text-align: left;
+}
+
+.workoutHistoryModalItem {
+  grid-template-columns: 38px minmax(0, 1fr);
+}
+
+.workoutHistoryModalList i {
+  color: rgba(247, 248, 252, 0.5);
+  font-size: 19px;
+  font-style: normal;
+}
+
+.workoutHistoryModalList > p {
+  margin: 16px 4px;
+  color: rgba(247, 248, 252, 0.58);
+  font-size: 12px;
+  text-align: center;
+}
+
+.workoutHistoryModalAll {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 10px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+:root[data-app-theme="warm-light"] .workoutHistoryModalList > button,
+:root[data-app-theme="warm-light"] .workoutHistoryModalItem {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #171923;
+}
+
+:root[data-app-theme="warm-light"] .workoutHistoryModalList small,
+:root[data-app-theme="warm-light"] .workoutHistoryModalList > p {
+  color: #73798b;
+}
+
+:root[data-app-theme="warm-light"] .workoutHistoryModalList i {
+  color: #8a91a3;
+}
+
+:root[data-app-theme="warm-light"] .workoutHistoryModalAll {
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+}
