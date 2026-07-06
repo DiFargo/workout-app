@@ -1,0 +1,84 @@
+.cabinetWorkoutCalendarLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 10px;
+  color: #7f7a70;
+  font-size: 8px;
+  font-weight: 850;
+}
+
+.cabinetWorkoutCalendarLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cabinetWorkoutCalendarLegend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #5e38e8;
+}
+
+.cabinetWorkoutCalendarLegend i.completed {
+  background: #1fad54;
+}
+
+.cabinetWorkoutCalendarLegend i.historyCompleted {
+  background: #1fad54;
+}
+
+.cabinetWorkoutCalendarLegend i.completedOffDate {
+  background: #7b61ff;
+}
+
+.cabinetWorkoutCalendarLegend i.missed {
+  background: #ff5c5c;
+}
+
+.cabinetWorkoutCalendarLegend i.shifted {
+  background: #d99a22;
+}
+
+.cabinetWorkoutCalendarEditActions {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 8px;
+}
+
+.cabinetWorkoutCalendarEditActions button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.cabinetWorkoutCalendarEditActions button.secondary {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.cabinetWorkoutCalendarEditActions button:disabled {
+  opacity: 0.56;
+}
+
+.cabinetWorkoutCalendarStatus {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 123, 114, 0.2);
+  border-radius: 11px;
+  background: rgba(255, 123, 114, 0.07);
+  color: #ff9b95;
+  font-size: 10px;
+  text-align: center;
+}
+
+.cabinetWorkoutCalendarStatus.success {
+  border-color: rgba(70, 184, 124, 0.24);
+  background: rgba(70, 184, 124, 0.08);
+  color: #9be4bd;
+}
