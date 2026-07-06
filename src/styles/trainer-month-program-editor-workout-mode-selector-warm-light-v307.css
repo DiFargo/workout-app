@@ -1,0 +1,27 @@
+:root[data-app-theme="warm-light"] .workoutModePage {
+  background: #f7f8fc;
+  color: #171923;
+}
+
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeBack,
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeCard,
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeRemember {
+  border-color: #e1e4ee;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(69, 74, 105, 0.08);
+}
+
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeCard.premium {
+  border-color: rgba(91, 77, 221, 0.3);
+  background: #f2f0ff;
+}
+
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeHero p,
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeCard small,
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeRemember {
+  color: #73798b;
+}
+
+:root[data-app-theme="warm-light"] .workoutModePage .workoutModeCard > i {
+  color: #8a91a3;
+}

@@ -1,0 +1,29 @@
+.workoutModeRemember {
+  margin-top: 14px;
+  padding: 13px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.72);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.workoutModePage .workoutModeRemember {
+  margin-top: 12px;
+  padding: 12px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(247, 248, 252, 0.68);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.workoutModeRemember input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
