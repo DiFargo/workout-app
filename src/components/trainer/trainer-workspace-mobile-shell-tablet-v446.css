@@ -1,0 +1,33 @@
+/* Split from trainer-workspace-mobile-shell.css: tablet page and landscape shell. */
+@media (max-width: 1050px) {
+  .trainerNextPage {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .trainerNextClientTableHead,
+  .trainerNextClientTable > button {
+    grid-template-columns: minmax(160px, 1.5fr) 110px 75px 75px 90px 115px;
+  }
+}
+
+@media (max-width: 820px), (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  .trainerNextSidebar {
+    display: none;
+  }
+
+  .trainerNextMain {
+    margin-left: 0;
+  }
+
+  .trainerNextPage {
+    width: 100%;
+    min-height: 100dvh;
+    padding: max(20px, env(safe-area-inset-top)) 20px calc(112px + env(safe-area-inset-bottom));
+    background: #fff;
+  }
+
+  .trainerNextDesktopPageHead {
+    display: none;
+  }
+}

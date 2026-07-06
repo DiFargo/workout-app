@@ -1,0 +1,251 @@
+/* Split from trainer-workspace-mobile-shell.css: client detail, measurements and photos. */
+@media (max-width: 820px) {
+  .trainerNextClientBackRow {
+    margin-bottom: 12px;
+  }
+
+  .trainerNextClientBackRow > button span {
+    font-size: 13px;
+  }
+
+  .trainerNextClientBackRow > div {
+    display: none;
+  }
+
+  .trainerNextClientHeader {
+    position: relative;
+    gap: 13px;
+    min-height: 94px;
+  }
+
+  .trainerNextAvatar.large {
+    width: 72px;
+    height: 72px;
+  }
+
+  .trainerNextClientName h1 {
+    max-width: calc(100vw - 160px);
+    overflow: hidden;
+    font-size: 19px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .trainerNextClientName span {
+    font-size: 9px;
+  }
+
+  .trainerNextClientHeader p,
+  .trainerNextClientHeader strong {
+    font-size: 10px;
+  }
+
+  .trainerNextMobileMore {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .trainerNextClientTabs {
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    overflow-x: auto;
+    padding: 0 42px 8px 20px;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 30px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 30px), transparent 100%);
+  }
+
+  .trainerNextClientTabs::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  .trainerNextClientTabs button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 0 14px;
+    font-size: 10px;
+    scroll-snap-align: start;
+  }
+
+  .trainerNextClientOverview {
+    display: block;
+    padding-top: 13px;
+  }
+
+  .trainerNextProgressChart {
+    min-height: 270px;
+    padding: 13px;
+  }
+
+  .trainerNextChartHead strong {
+    font-size: 12px;
+  }
+
+  .trainerNextChartHead button {
+    min-width: 0;
+    width: auto;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 9px;
+  }
+
+  .trainerNextProgressChart svg {
+    height: 170px;
+  }
+
+  .trainerNextClientSide {
+    margin-top: 11px;
+  }
+
+  .trainerNextRecommendation {
+    margin-top: 11px;
+  }
+
+  .trainerNextMeasurementGrid,
+  .trainerNextPhotoGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trainerMeasurementMainGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerMeasurementSummaryGrid,
+  .trainerNotificationSchedule {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .trainerMeasurementPanelTitle {
+    align-items: flex-start;
+  }
+
+  .trainerMeasurementPanelTitle button {
+    min-height: 32px;
+    padding: 0 10px;
+    font-size: 9px;
+  }
+
+  .trainerMeasurementCollapsed > div,
+  .trainerMeasurementFieldGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .trainerMeasurementCollapsed article {
+    min-height: 62px;
+    padding: 8px 7px;
+  }
+
+  .trainerMeasurementCollapsed strong {
+    font-size: 12px;
+  }
+
+  .trainerMeasurementCollapsed small,
+  .trainerMeasurementCollapsed p {
+    font-size: 8px;
+  }
+
+  .trainerMeasurementSummaryGrid article {
+    min-height: 70px;
+    gap: 4px;
+    padding: 9px 10px;
+  }
+
+  .trainerMeasurementSummaryGrid strong {
+    font-size: 16px;
+  }
+
+  .trainerMeasurementFieldGrid article {
+    gap: 3px;
+    padding: 8px 7px;
+  }
+
+  .trainerMeasurementFieldGrid span,
+  .trainerMeasurementSummaryGrid span,
+  .trainerMeasurementSummaryGrid small,
+  .trainerMeasurementFieldGrid small {
+    font-size: 8px;
+  }
+
+  .trainerMeasurementFieldGrid strong {
+    font-size: 11px;
+  }
+
+  .trainerMeasurementDashboard,
+  .trainerClientBodyProgress {
+    gap: 10px;
+  }
+
+  .trainerMeasurementInsight,
+  .trainerMeasurementChart,
+  .trainerMeasurementTimeline {
+    padding: 11px;
+  }
+
+  .trainerMeasurementInsight h3,
+  .trainerMeasurementTimeline h3 {
+    font-size: 12px;
+  }
+
+  .trainerMeasurementInsight p,
+  .trainerMeasurementChart p {
+    font-size: 9px;
+  }
+
+  .trainerMeasurementChart svg {
+    min-height: 82px;
+  }
+
+  .trainerMeasurementTimeline article {
+    grid-template-columns: minmax(74px, 0.75fr) minmax(62px, 0.55fr) minmax(92px, 1fr);
+    gap: 6px;
+    padding: 6px 0;
+  }
+
+  .trainerMeasurementTimeline strong {
+    font-size: 10px;
+  }
+
+  .trainerPhotoViewTabs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .trainerPhotoViewTabs button {
+    min-width: 0;
+    padding: 0 6px;
+  }
+
+  .trainerPhotoComparePanel {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerPhotoCompareGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerPhotoCompareGrid figure {
+    min-height: 320px;
+  }
+
+  .trainerPhotoPreviewModal {
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+    padding: 14px;
+  }
+
+  .trainerPhotoPreviewImage {
+    min-height: 420px;
+  }
+}
