@@ -3,6 +3,10 @@ import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase
 import { getTrainerClientMirrorPayload } from "../../utils/trainerClientMirror";
 import { buildTrainerUserLists } from "../../utils/trainerUserLists";
 
+function isPermissionDeniedError(error) {
+  return error?.code === "permission-denied" || String(error?.message || "").includes("Missing or insufficient permissions");
+}
+
 export async function loadTrainerUsersWithDeps({
   db,
   auth,
@@ -105,7 +109,9 @@ export async function loadTrainerUsersWithDeps({
             return { id: clientDoc.id, ...clientDoc.data() };
           }
         } catch (profileReadError) {
-          console.warn("Trainer linked client profile read failed:", profileReadError);
+          if (!isPermissionDeniedError(profileReadError)) {
+            console.warn("Trainer linked client profile read failed:", profileReadError);
+          }
         }
 
         return {

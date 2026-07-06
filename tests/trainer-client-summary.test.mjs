@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   buildTrainerClientRecentEvents,
   buildTrainerDashboardSummary,
+  canLoadTrainerClientDeepSummary,
   getClientActivityStatus,
   getClientAttentionReasons,
   getTrainerAssignedWorkoutCount,
@@ -336,6 +337,11 @@ test("trainer fast summary merges client fields with previous loaded summary", (
   assert.equal(summary.programCompletionPercent, 38);
   assert.equal(summary.assignedProgramId, "program_1");
   assert.deepEqual(summary.recentEvents, [{ type: "note" }]);
+});
+
+test("trainer mirror-only clients skip deep private summary reads", () => {
+  assert.equal(canLoadTrainerClientDeepSummary({ id: "client_1" }), true);
+  assert.equal(canLoadTrainerClientDeepSummary({ id: "client_2", trainerLinkOnly: true }), false);
 });
 
 test("trainer dashboard summary builds counts, focus and recent events", () => {

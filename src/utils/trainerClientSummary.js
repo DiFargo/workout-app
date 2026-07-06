@@ -298,6 +298,10 @@ export function getTrainerClientSummaryFromMap(client = {}, summaries = {}) {
   return summaries?.[client.id] || getTrainerClientEmptySummary(client);
 }
 
+export function canLoadTrainerClientDeepSummary(client = {}) {
+  return !client.trainerLinkOnly;
+}
+
 export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
   const nutritionState = client.nutritionState || client.adminClientNutrition || client.nutrition || null;
   const nutritionSummary = getTrainerNutritionSummary(nutritionState);

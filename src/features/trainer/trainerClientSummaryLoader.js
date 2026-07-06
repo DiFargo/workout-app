@@ -7,6 +7,7 @@ import {
 import {
   buildTrainerClientRecentEvents,
   getTrainerAssignedWorkoutCount,
+  canLoadTrainerClientDeepSummary,
   getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
   getTrainerCompletedWorkoutCountForAssignment,
@@ -48,6 +49,10 @@ export function createTrainerClientSummaryLoader({
     const { weekStart, sevenDayStart, thirtyDayStart } = getTrainerSummaryPeriodBounds();
 
     const loadClientSummary = async (client) => {
+      if (!canLoadTrainerClientDeepSummary(client)) {
+        return getTrainerClientFastSummary(client);
+      }
+
       const [historyResult, nutritionResult, measurementsResult, paymentResult, workoutsResult] = await Promise.allSettled([
         getDocs(collection(db, "users", client.id, "history")),
         getDoc(doc(db, "users", client.id, "nutrition", "state")),
