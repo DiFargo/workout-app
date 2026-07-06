@@ -1,0 +1,42 @@
+
+:root[data-app-theme="warm-light"] .fatWeekRow .fatDayCell span,
+:root[data-app-theme="warm-light"] .fatDayCell span {
+  background: rgba(255, 250, 239, 0.62) !important;
+  color: #5c4a28 !important;
+  border-color: rgba(92, 72, 36, 0.16) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatWeekRow .fatDayCell.active span,
+:root[data-app-theme="warm-light"] .fatDayCell.active span,
+:root[data-app-theme="warm-light"] .fatWeekRow .fatDayCell.done span,
+:root[data-app-theme="warm-light"] .fatDayCell.done span {
+  background: linear-gradient(135deg, #c79d4c 0%, #d9b86f 100%) !important;
+  color: #21180d !important;
+  border-color: rgba(121, 86, 31, 0.20) !important;
+}
+
+:root[data-app-theme="warm-light"] .splashLogo,
+:root[data-app-theme="warm-light"] .appLogo,
+:root[data-app-theme="warm-light"] .finishIcon,
+:root[data-app-theme="warm-light"] .saveToastIcon,
+:root[data-app-theme="warm-light"] .finishWorkoutIcon,
+:root[data-app-theme="warm-light"] .historySet strong,
+:root[data-app-theme="warm-light"] .fatFoodCalories strong,
+:root[data-app-theme="warm-light"] .fatFoodItem strong,
+:root[data-app-theme="warm-light"] .productInfoExact span {
+  color: #a77f35 !important;
+}
+
+:root[data-app-theme="warm-light"] .menuTitle::after,
+:root[data-app-theme="warm-light"] .workoutTitle::after {
+  background: #c79d4c !important;
+}
+
+:root[data-app-theme="warm-light"] video,
+:root[data-app-theme="warm-light"] .exerciseVideo {
+  background: #1f1a12 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatPlusBtn {
+  color: #21180d !important;
+}

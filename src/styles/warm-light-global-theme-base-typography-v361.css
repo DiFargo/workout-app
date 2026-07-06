@@ -1,0 +1,37 @@
+
+:root[data-app-theme="warm-light"] .menuTitle,
+:root[data-app-theme="warm-light"] .workoutTitle,
+:root[data-app-theme="warm-light"] .workoutTitleInline,
+:root[data-app-theme="warm-light"] h1,
+:root[data-app-theme="warm-light"] h2,
+:root[data-app-theme="warm-light"] h3,
+:root[data-app-theme="warm-light"] h4,
+:root[data-app-theme="warm-light"] .fatDateHeaderNoArrows .fatDateTitle h1,
+:root[data-app-theme="warm-light"] .fatMealTitle strong,
+:root[data-app-theme="warm-light"] .fatMealKcal strong,
+:root[data-app-theme="warm-light"] .fatCalorieRows strong,
+:root[data-app-theme="warm-light"] .fatFoodInfo strong,
+:root[data-app-theme="warm-light"] .productInfoExact strong,
+:root[data-app-theme="warm-light"] .finishStatBox strong,
+:root[data-app-theme="warm-light"] .historyCardHeader strong,
+:root[data-app-theme="warm-light"] .adminUserRow strong {
+  color: var(--text) !important;
+}
+
+:root[data-app-theme="warm-light"] p,
+:root[data-app-theme="warm-light"] span,
+:root[data-app-theme="warm-light"] small,
+:root[data-app-theme="warm-light"] em,
+:root[data-app-theme="warm-light"] .daySub,
+:root[data-app-theme="warm-light"] .loginHint,
+:root[data-app-theme="warm-light"] .previousInfo,
+:root[data-app-theme="warm-light"] .finishWorkoutSubtext,
+:root[data-app-theme="warm-light"] .fatMealTitle span,
+:root[data-app-theme="warm-light"] .fatMealKcal span,
+:root[data-app-theme="warm-light"] .fatCalorieRows span,
+:root[data-app-theme="warm-light"] .fatFoodInfo span,
+:root[data-app-theme="warm-light"] .fatStreakLineTop span,
+:root[data-app-theme="warm-light"] .fatDayCell small,
+:root[data-app-theme="warm-light"] .adminUserRow span {
+  color: var(--muted) !important;
+}
