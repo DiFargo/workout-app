@@ -1,0 +1,44 @@
+.trainerNextLibrary {
+  margin-top: 14px;
+  padding: 18px;
+}
+
+.trainerNextLibrary > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.trainerNextLibrary article {
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+}
+
+.trainerNextSidebar nav,
+.trainerUtilityToggle span,
+.trainerNextLibrary article div {
+  display: grid;
+  gap: 4px;
+}
+
+.trainerNextLibrary article small,
+.trainerNextProgramControl small,
+.trainerNextProgramControl label > span,
+.trainerProgramWeekRow small,
+.trainerProgramWorkoutName span,
+.trainerNutritionReadonly,
+.trainerNutritionCurrentPlan p,
+.trainerNextWorkoutName label span,
+.trainerNextExerciseFields label > span,
+.trainerNextExerciseName small,
+.trainerNextWorkoutPreview article header span,
+.trainerNextWorkoutPreview article div small {
+  color: var(--tn-muted);
+  font-size: 9px;
+}

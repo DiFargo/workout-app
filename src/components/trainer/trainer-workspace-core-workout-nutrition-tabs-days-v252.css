@@ -1,0 +1,106 @@
+.trainerNextWorkoutPage .trainerNextPageTabs,
+.trainerNextNutrition .trainerNextPageTabs {
+  margin-top: -6px;
+}
+
+.trainerNextNutrition > .trainerNextPageTabs {
+  width: fit-content;
+  max-width: 100%;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 5px;
+  overflow-x: auto;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #f7f6fb;
+  scrollbar-width: none;
+}
+
+.trainerNextNutrition > .trainerNextPageTabs::-webkit-scrollbar {
+  display: none;
+}
+
+.trainerNextNutrition > .trainerNextPageTabs button {
+  min-height: 38px;
+  flex: 0 0 auto;
+  padding: 0 17px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--tn-purple);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.trainerNextNutrition > .trainerNextPageTabs button::after {
+  display: none;
+}
+
+.trainerNextNutrition > .trainerNextPageTabs button.active {
+  box-shadow: 0 5px 14px rgba(91, 54, 238, 0.2);
+}
+
+.trainerNextWorkoutLayout {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 14px;
+  padding-top: 14px;
+}
+
+.trainerNextWorkoutDays,
+.trainerNextNutritionDays {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+}
+
+.trainerNextWorkoutDays {
+  max-height: min(640px, calc(100vh - 260px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #c7bbff transparent;
+}
+
+.trainerNextWorkoutDays::-webkit-scrollbar {
+  width: 6px;
+}
+
+.trainerNextWorkoutDays button,
+.trainerNextNutritionDays button {
+  min-height: 62px;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 5px;
+  padding: 10px 13px;
+  border: 1px solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trainerNextWorkoutDays button strong,
+.trainerNextNutritionDays button strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.trainerNextWorkoutDays button.active,
+.trainerNextNutritionDays button.active {
+  border-color: var(--tn-purple);
+  color: var(--tn-purple);
+  background: #fbfaff;
+}
+
+.trainerNextWorkoutDays button.add,
+.trainerNextNutritionDays button.add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #424652;
+}
