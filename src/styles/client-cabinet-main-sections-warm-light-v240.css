@@ -1,0 +1,47 @@
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTasksPanel,
+html:root[data-app-theme="warm-light"] body #root .trainerWorkspaceCard {
+  border-color: rgba(98, 78, 220, 0.14);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 14px 36px rgba(54, 43, 120, 0.08);
+}
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTask,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompare > div {
+  border-color: rgba(98, 78, 220, 0.1);
+  background: rgba(246, 247, 255, 0.88);
+}
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTasksHead span,
+html:root[data-app-theme="warm-light"] body #root .trainerWorkspaceHead span,
+html:root[data-app-theme="warm-light"] body #root .trainerAiRecommendationList i,
+html:root[data-app-theme="warm-light"] body #root .trainerEventList i { color: #6045df; }
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTask strong,
+html:root[data-app-theme="warm-light"] body #root .trainerWorkspaceHead h3,
+html:root[data-app-theme="warm-light"] body #root .trainerTaskRow strong,
+html:root[data-app-theme="warm-light"] body #root .trainerEventList strong,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoUploadGrid span { color: #11162a; }
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTask small,
+html:root[data-app-theme="warm-light"] body #root .clientTrainerTask em,
+html:root[data-app-theme="warm-light"] body #root .trainerTaskRow small,
+html:root[data-app-theme="warm-light"] body #root .trainerTaskRow em,
+html:root[data-app-theme="warm-light"] body #root .trainerAiRecommendationList p,
+html:root[data-app-theme="warm-light"] body #root .trainerEventList small,
+html:root[data-app-theme="warm-light"] body #root .trainerEventList time,
+html:root[data-app-theme="warm-light"] body #root .trainerWorkspaceEmpty,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompare strong,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompare small,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompare span { color: #6f7893; }
+html:root[data-app-theme="warm-light"] body #root .trainerTaskCreate input,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoMetaRow input,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoCompareControls select,
+html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid input,
+html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid select,
+html:root[data-app-theme="warm-light"] body #root .workoutFinishComment textarea {
+  border-color: rgba(98, 78, 220, 0.14);
+  background: #f7f8ff;
+  color: #11162a;
+}
+html:root[data-app-theme="warm-light"] body #root .trainerTaskCreate button,
+html:root[data-app-theme="warm-light"] body #root .trainerPhotoMetaRow button,
+html:root[data-app-theme="warm-light"] body #root .trainerPaymentGrid button {
+  background: #6045df;
+  color: #fff;
+}

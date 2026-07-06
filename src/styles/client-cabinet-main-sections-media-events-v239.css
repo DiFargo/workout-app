@@ -1,0 +1,98 @@
+.trainerProgressPhotosCard,
+.trainerEventsCard,
+.trainerPaymentGrid .wide,
+.trainerPaymentGrid button { grid-column: 1 / -1; }
+
+.trainerPhotoUploadGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.trainerPhotoUploadGrid label {
+  display: grid;
+  gap: 5px;
+  min-height: 78px;
+  padding: 10px;
+  border: 1px dashed rgba(159, 202, 71, 0.32);
+  border-radius: 14px;
+  cursor: pointer;
+}
+.trainerPhotoUploadGrid span { color: #fff; font-size: 12px; font-weight: 800; }
+.trainerPhotoUploadGrid input { width: 1px; height: 1px; opacity: 0; }
+.trainerPhotoUploadGrid em {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerPhotoCompareControls,
+.trainerPhotoCompare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.trainerPhotoCompare > div {
+  min-height: 150px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+.trainerPhotoCompare > div > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 8px 0;
+}
+.trainerPhotoCompare img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 9px;
+  object-fit: cover;
+}
+.trainerPhotoCompare strong,
+.trainerPhotoCompare small,
+.trainerPhotoCompare span { color: rgba(255, 255, 255, 0.65); font-size: 11px; }
+
+.trainerPaymentGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+.trainerPaymentGrid label { display: grid; gap: 5px; }
+.trainerPaymentGrid label > span { color: rgba(255, 255, 255, 0.52); font-size: 10px; }
+
+.trainerEventList span { display: grid; gap: 3px; }
+.trainerEventList strong { color: #fff; font-size: 13px; }
+.trainerEventList small,
+.trainerEventList time,
+.trainerWorkspaceEmpty { color: rgba(255, 255, 255, 0.5); font-size: 11px; }
+.trainerWorkspaceEmpty { margin: 8px 0 0; }
+
+.workoutFinishComment { display: grid; gap: 6px; }
+.workoutFinishComment > span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 11px;
+  font-weight: 800;
+}
+.workoutFinishComment textarea {
+  width: 100%;
+  min-height: 62px;
+  resize: none;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+  background: rgba(0, 0, 0, 0.18);
+  color: #fff;
+  font: inherit;
+}
+.adminHistoryClientComment {
+  grid-column: 2 / -1;
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+}

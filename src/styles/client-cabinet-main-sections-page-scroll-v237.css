@@ -1,0 +1,54 @@
+/* Main client sections use page scrolling instead of viewport compression. */
+.clientCorePageMain,
+.clientCorePageWorkout,
+.clientCorePageNutrition,
+.clientCorePageCabinet:not(.trainerRolePage) {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain;
+  scroll-padding-bottom: calc(104px + env(safe-area-inset-bottom));
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.clientCorePageMain::-webkit-scrollbar,
+.clientCorePageWorkout::-webkit-scrollbar,
+.clientCorePageNutrition::-webkit-scrollbar,
+.clientCorePageCabinet:not(.trainerRolePage)::-webkit-scrollbar {
+  display: none;
+}
+
+.profileDashboardPage.clientCorePageMain .profileCabinetSection,
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetSection {
+  height: auto !important;
+  min-height: calc(100dvh - 142px) !important;
+  overflow: visible !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetProgressOverview,
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetProgressOverview.hasProgressPhotos {
+  flex: 0 0 auto !important;
+  grid-template-rows: none !important;
+  grid-auto-rows: minmax(72px, auto) !important;
+}
+
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
+  height: auto !important;
+  min-height: 72px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealList {
+  min-height: auto !important;
+  flex: 0 0 auto !important;
+  grid-template-rows: repeat(4, 78px) !important;
+}
+
+.clientCorePageWorkout .individualWorkoutDeck {
+  height: auto !important;
+  min-height: calc(100dvh - 158px) !important;
+  flex: 0 0 auto !important;
+}
+
+.clientCorePageWorkout .individualWorkoutCardPro {
+  min-height: calc(100dvh - 188px) !important;
+}
