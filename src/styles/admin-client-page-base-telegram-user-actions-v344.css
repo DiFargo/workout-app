@@ -1,0 +1,71 @@
+
+.adminClientTelegramBodyRender {
+  margin-top: 26px;
+  min-height: 92px;
+  padding: 18px !important;
+  border-radius: 20px !important;
+  display: grid !important;
+  grid-template-columns: 62px minmax(0, 1fr) auto !important;
+  gap: 18px !important;
+  align-items: center !important;
+  border: 1px solid rgba(255,255,255,.085) !important;
+  background: rgba(255,255,255,.035) !important;
+}
+
+.adminClientTelegramAvatarRender {
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(145,230,78,.46) !important;
+  background: radial-gradient(circle at 50% 0%, rgba(145,230,78,.19), transparent 60%), rgba(127,159,58,.08) !important;
+  display: grid;
+  place-items: center;
+  color: rgba(218,255,126,.96) !important;
+  font-size: 20px !important;
+  font-weight: 1000;
+}
+
+.adminClientTelegramAvatarRender img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.adminClientTelegramUserRender strong {
+  display: block;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 1000;
+}
+
+.adminClientTelegramUserRender small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(255,255,255,.58);
+  font-size: 14px;
+  font-weight: 820;
+}
+
+.adminClientTelegramActionsRender {
+  display: grid !important;
+  grid-template-columns: 190px 180px;
+  gap: 12px !important;
+}
+
+.adminClientTelegramActionsRender button,
+.adminTelegramSendButton {
+  min-height: 54px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(51,157,255,.48) !important;
+  background: rgba(51,157,255,.11) !important;
+  color: #8fd0ff !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+}
+
+.adminClientTelegramActionsRender button.danger {
+  border-color: rgba(255,95,95,.42) !important;
+  background: rgba(255,95,95,.10) !important;
+  color: #ff8585 !important;
+}

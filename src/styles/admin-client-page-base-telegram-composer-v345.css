@@ -1,0 +1,45 @@
+
+.adminTelegramComposerRender {
+  margin-top: 24px;
+  display: grid;
+  gap: 20px;
+}
+
+.adminTelegramTextareaWrapRender {
+  min-height: 128px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.085);
+  background: rgba(0,0,0,.18);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-rows: 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.adminTelegramTextareaWrapRender textarea {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 68px;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  color: #fff;
+  resize: vertical;
+  outline: none;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.adminTelegramTextareaWrapRender span {
+  grid-column: 2;
+  color: rgba(255,255,255,.50);
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.adminTelegramTextareaWrapRender .adminTelegramSendButton {
+  grid-column: 3;
+  min-width: 190px;
+}
