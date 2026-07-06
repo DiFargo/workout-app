@@ -1,0 +1,45 @@
+/* =========================================================
+   NUTRITION COMPACT PREMIUM ALIGNMENT â€” 2026-05-12
+   ÐŸÑ€Ð°Ð²ÐºÐ¸ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð´Ð»Ñ ÑÐºÑ€Ð°Ð½Ð° Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ.
+   ========================================================= */
+.fatSecretPage {
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+}
+
+/* Ð¡ÐµÑ€Ð¸Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸ ÐµÐ´Ñ‹ â€” Ñ‡ÑƒÑ‚ÑŒ Ð·Ð°Ð¼ÐµÑ‚Ð½ÐµÐµ, Ð½Ð¾ Ð±ÐµÐ· Ð²Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ð¾Ð³Ð¾ ÑˆÑƒÐ¼Ð° */
+.fatSecretPage .fatStreakLineTop {
+  min-height: 30px !important;
+  margin: 0 auto 8px !important;
+  padding: 0 62px !important;
+}
+
+.fatSecretPage .fatStreakLineTop span {
+  font-size: clamp(15px, 4vw, 19px) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.15px !important;
+  color: rgba(245, 247, 251, 0.9) !important;
+  opacity: 1 !important;
+}
+
+/* Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ â€” Ð¼ÐµÐ½ÑŒÑˆÐµ, Ñ‚Ð¾Ð½ÑŒÑˆÐµ, Ð°ÐºÐºÑƒÑ€Ð°Ñ‚Ð½ÐµÐµ */
+.fatSecretPage .fatDateHeaderNoArrows .fatDateTitle h1 {
+  margin: 0 auto 10px !important;
+  font-size: clamp(27px, 7.2vw, 38px) !important;
+  font-weight: 760 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.8px !important;
+  color: rgba(245, 247, 251, 0.82) !important;
+}
+
+/* Ð’ÐµÑ€Ñ…Ð½Ð¸Ð¹ ÐºÐ°Ð»ÐµÐ½Ð´Ð°Ñ€ÑŒ Ð¸ Ð±Ñ‹ÑÑ‚Ñ€Ñ‹Ðµ Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ñ ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÐµÐµ */
+.fatSecretPage .fatTodayPanel {
+  margin-bottom: 14px !important;
+}
+
+.fatSecretPage .fatQuickActions button {
+  min-height: 44px !important;
+  border-radius: 15px !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+}
