@@ -1,0 +1,196 @@
+.trainerNextSearch {
+  width: 0;
+  min-height: 38px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0 solid var(--tn-line);
+  border-radius: 7px;
+  background: #fff;
+  opacity: 0;
+  transition: width 160ms ease, opacity 160ms ease, padding 160ms ease;
+}
+
+.trainerNextSearch.open {
+  width: 245px;
+  padding: 0 12px;
+  border-width: 1px;
+  opacity: 1;
+}
+
+.trainerNextSearch input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--tn-text);
+  font-size: 12px;
+}
+
+.trainerNextClientTable {
+  overflow: hidden;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerNextClientTableHead,
+.trainerNextClientTable > button {
+  display: grid;
+  grid-template-columns: minmax(190px, 1.5fr) minmax(120px, 0.85fr) 86px 82px 100px 130px;
+  align-items: center;
+  gap: 12px;
+}
+
+.trainerNextClientTableHead {
+  min-height: 42px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--tn-line);
+  color: var(--tn-muted);
+  font-size: 10px;
+}
+
+.trainerNextClientTable > button {
+  width: 100%;
+  min-height: 56px;
+  padding: 7px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--tn-line);
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trainerNextClientTable > button:last-of-type,
+.trainerNextMealList article:last-child,
+.trainerExerciseProgressList article:last-child {
+  border-bottom: 0;
+}
+
+.trainerNextClientTable > button:hover {
+  background: #fbfaff;
+}
+
+.trainerNextClientTable > button > span {
+  min-width: 0;
+  color: #4f5360;
+  font-size: 11px;
+}
+
+.trainerNextClientTable > button > span:not(.trainerNextClientIdentity):not(.trainerNextStatus),
+.trainerNextHistoryList article div {
+  display: grid;
+  gap: 3px;
+}
+
+.trainerNextClientTable > button > span.positive {
+  color: var(--tn-green);
+  font-weight: 700;
+}
+
+.trainerNextClientTable > button > span.negative {
+  color: var(--tn-red);
+  font-weight: 700;
+}
+
+.trainerNextClientTable .trainerNextSparkline {
+  width: 62px;
+  height: 22px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.trainerNextClientIdentity,
+.trainerNextClientName,
+.trainerProgramSelectedBar > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trainerNextClientIdentity small {
+  overflow: hidden;
+  color: var(--tn-muted);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerNextAvatar {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #dcdfe6;
+  border-radius: 50%;
+  background: #f0f1f5;
+  color: #59606f;
+  font-weight: 800;
+}
+
+.trainerNextAvatar img,
+.trainerNextPhotoGrid img,
+.trainerNextExerciseImage img,
+.trainerNextExerciseImage video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trainerNextAvatar.small {
+  width: 34px;
+  height: 34px;
+  font-size: 11px;
+}
+
+.trainerNextAvatar.medium {
+  width: 48px;
+  height: 48px;
+}
+
+.trainerNextAvatar.large {
+  width: 84px;
+  height: 84px;
+  font-size: 20px;
+}
+
+.trainerNextStatus {
+  width: max-content;
+  max-width: 125px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.trainerNextStatus.active {
+  color: #11883b;
+  background: var(--tn-green-soft);
+}
+
+.trainerNextStatus.attention,
+.trainerNextStatus.noProgram {
+  color: #c77000;
+  background: #fff4df;
+}
+
+.trainerNextStatus.lost {
+  color: #d43737;
+  background: #fff0f0;
+}
+
+.trainerNextEmpty {
+  width: 100%;
+  padding: 24px;
+  color: var(--tn-muted);
+  font-size: 12px;
+  text-align: center;
+}

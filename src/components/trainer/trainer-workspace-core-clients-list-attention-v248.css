@@ -1,0 +1,81 @@
+.trainerNextClientsSection,
+.trainerNextClientsStandalone {
+  margin-top: 24px;
+}
+
+.trainerNextClientsTitle {
+  margin-bottom: 13px;
+}
+
+.trainerNextClientsTitle p {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+}
+
+.trainerNextClientsTitle button {
+  min-width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--tn-purple);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.trainerAttentionListSection {
+  margin-top: 24px;
+}
+
+.trainerAttentionList {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--tn-soft-shadow);
+}
+
+.trainerAttentionList > button {
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #eef0f6;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff 0%, #fbfbff 100%);
+  color: var(--tn-text);
+  text-align: left;
+}
+
+.trainerAttentionList > button > span,
+.trainerNextProgramControl > div > span,
+.trainerNextProgramControl label {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.trainerAttentionList > button strong {
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerAttentionList > button small {
+  color: var(--tn-muted);
+  font-size: 11px;
+}
+
+.trainerNextFilters button.active {
+  border-color: var(--tn-purple);
+  color: var(--tn-purple);
+  background: var(--tn-purple-soft);
+}

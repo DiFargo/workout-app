@@ -1,0 +1,66 @@
+.trainerNextClientBackRow {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.trainerNextClientBackRow > button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.trainerNextClientHeader {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 94px;
+}
+
+.trainerNextClientHeader > div,
+.trainerNextMealList article div,
+.trainerNextProgramsTab .programsOverviewCardTitle > div,
+.trainerProgramConstructor button,
+.trainerProgramConstructor input,
+.trainerClientProgramCurrent .trainerClientAssignedInfo,
+.trainerClientProgramSelectLabel,
+.trainerExerciseProgressList article > div,
+.trainerNotificationStatusCard > div:nth-child(2) {
+  min-width: 0;
+}
+
+.trainerNextClientName h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.trainerNextClientName span {
+  padding: 5px 8px;
+  border-radius: 7px;
+  color: #11883b;
+  background: var(--tn-green-soft);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.trainerNextClientHeader p {
+  margin: 8px 0 4px;
+  color: #343742;
+  font-size: 12px;
+}
+
+.trainerNextClientHeader strong {
+  color: #353842;
+  font-size: 12px;
+  font-weight: 500;
+}
