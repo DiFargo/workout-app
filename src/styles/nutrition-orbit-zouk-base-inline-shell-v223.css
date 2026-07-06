@@ -1,0 +1,104 @@
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock {
+  display: block !important;
+  flex: 0 0 auto !important;
+  position: relative;
+  z-index: 2;
+  width: min(100%, 540px);
+  min-height: 72px;
+  margin: 0 auto 14px;
+  overflow: hidden;
+  border: 1px solid rgba(225, 229, 243, 0.86);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 18px 42px rgba(44, 55, 106, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukHeader {
+  width: 100%;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 0;
+  background: transparent;
+  color: #5d5749;
+  text-align: left;
+  cursor: pointer;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukIcon,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMealIcon,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodIcon {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 17px;
+  background: #f3f0ff;
+  font-size: 24px;
+  flex: 0 0 auto;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukTitle {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukTitle strong {
+  color: #151a27;
+  font-size: 17px;
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukTitle small,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeta small,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMealHead small,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodText small,
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukFoodKcal small {
+  color: #817b6e;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeta i {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(220, 225, 239, 0.95);
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgba(36, 45, 85, 0.08);
+  color: #5f5848;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 900;
+  transform: rotate(0deg);
+  transition: transform 0.18s ease;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock.expanded .nutritionZoukMeta i {
+  transform: rotate(180deg);
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukContent {
+  display: grid;
+  gap: 12px;
+  padding: 0 14px 14px;
+}
