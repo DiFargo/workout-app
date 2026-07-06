@@ -1,0 +1,134 @@
+/* BOTTOM NAV ALIGNMENT FIX */
+.individualWorkoutSelectPage {
+  padding-bottom: max(148px, calc(env(safe-area-inset-bottom) + 148px)) !important;
+}
+
+.individualWorkoutNav {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: max(10px, env(safe-area-inset-bottom)) !important;
+  transform: translateX(-50%) !important;
+  z-index: 90 !important;
+
+  width: min(452px, calc(100vw - 24px)) !important;
+  height: auto !important;
+
+  display: grid !important;
+  grid-template-columns: 64px minmax(0, 1fr) 64px !important;
+  grid-template-areas: "prev center next" !important;
+  gap: 10px !important;
+  align-items: end !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.individualWorkoutNav > button:first-child {
+  grid-area: prev !important;
+}
+
+.individualWorkoutNav > button:last-child {
+  grid-area: next !important;
+}
+
+.individualWorkoutNav > button:first-child,
+.individualWorkoutNav > button:last-child {
+  width: 64px !important;
+  height: 64px !important;
+  min-height: 64px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  align-self: end !important;
+  justify-self: stretch !important;
+
+  border-radius: 20px !important;
+  background: rgba(18, 22, 18, 0.96) !important;
+  border: 1px solid rgba(255,255,255,0.075) !important;
+  color: rgba(255,255,255,0.92) !important;
+  font-size: 30px !important;
+  font-weight: 950 !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.26) !important;
+}
+
+.individualWorkoutCenterNav {
+  grid-area: center !important;
+  min-width: 0 !important;
+  width: 100% !important;
+
+  display: grid !important;
+  grid-template-rows: auto auto 68px !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-items: center !important;
+}
+
+.individualWorkoutDots span.active {
+  width: 9px !important;
+  height: 9px !important;
+  background: var(--accent) !important;
+}
+
+.individualWorkoutStartButton {
+  width: 100% !important;
+  height: 68px !important;
+  min-height: 68px !important;
+  max-height: 68px !important;
+  margin: 0 !important;
+  padding: 0 14px !important;
+
+  border: none !important;
+  border-radius: 24px !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  color: #10120f !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 18px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  box-shadow: 0 14px 30px rgba(127,159,58,0.22) !important;
+}
+
+@media (max-width: 420px) {
+  .individualWorkoutNav {
+    width: calc(100vw - 18px) !important;
+    grid-template-columns: 58px minmax(0, 1fr) 58px !important;
+    gap: 8px !important;
+  }
+
+  .individualWorkoutNav > button:first-child,
+  .individualWorkoutNav > button:last-child {
+    width: 58px !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    font-size: 28px !important;
+    border-radius: 18px !important;
+  }
+
+  .individualWorkoutCenterNav {
+    grid-template-rows: auto auto 64px !important;
+    gap: 7px !important;
+  }
+
+  .individualWorkoutStartButton {
+    height: 64px !important;
+    min-height: 64px !important;
+    max-height: 64px !important;
+    font-size: 16px !important;
+    border-radius: 22px !important;
+  }
+
+  .individualWorkoutDots span.active {
+    width: 8px !important;
+    height: 8px !important;
+  }
+}

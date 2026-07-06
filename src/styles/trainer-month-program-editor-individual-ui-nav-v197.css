@@ -1,0 +1,89 @@
+/* INDIVIDUAL CARD UI + NAVIGATION FIX */
+.individualWorkoutSelectPage .workoutSelectHero {
+  margin-top: 4px !important;
+  margin-bottom: 14px !important;
+}
+
+.individualWorkoutSelectPage .workoutSelectTitle {
+  margin-bottom: 0 !important;
+}
+
+.individualWorkoutSelectPage .workoutSelectTitle::after,
+.individualWorkoutSelectPage .menuTitle::after,
+.individualWorkoutSelectPage .workoutTitle::after {
+  margin-top: 12px !important;
+  margin-bottom: 10px !important;
+  width: 74px !important;
+  height: 5px !important;
+}
+
+.individualWorkoutCardPro {
+  min-height: min(59dvh, 550px) !important;
+  margin-bottom: 8px !important;
+}
+
+.individualWorkoutProTop {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 10px !important;
+  align-items: center !important;
+  margin-bottom: 2px !important;
+}
+
+.individualWorkoutWeek {
+  justify-self: end !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  text-align: right !important;
+  color: rgba(255, 255, 255, 0.56) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  padding-top: 1px !important;
+}
+
+.individualWorkoutNextBadge,
+.individualWorkoutCompletedBadge {
+  min-height: 30px !important;
+  padding: 7px 12px !important;
+  line-height: 1 !important;
+}
+
+.individualWorkoutNav {
+  bottom: max(8px, env(safe-area-inset-bottom)) !important;
+  padding: 8px !important;
+  border-radius: 24px !important;
+}
+
+.individualWorkoutNav button {
+  min-height: 54px !important;
+}
+
+.individualWorkoutNav button:disabled {
+  opacity: 1 !important;
+}
+
+.individualWorkoutSelectPage {
+  padding-bottom: max(92px, calc(env(safe-area-inset-bottom) + 92px)) !important;
+}
+
+@media (max-width: 480px) {
+  .individualWorkoutCardPro {
+    min-height: 58dvh !important;
+    padding: 13px !important;
+  }
+
+  .individualWorkoutProImage {
+    min-height: 220px !important;
+  }
+
+  .individualWorkoutWeek {
+    font-size: 10.5px !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  .individualWorkoutNextBadge,
+  .individualWorkoutCompletedBadge {
+    font-size: 11px !important;
+    padding: 7px 10px !important;
+  }
+}
