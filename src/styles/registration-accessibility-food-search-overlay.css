@@ -1,0 +1,114 @@
+.fatFoodSearchOverlay .fatFoodSearchScreenPremium {
+  position: relative;
+}
+
+.fatFoodSearchOverlay .fatSearchTopPremium .fatSearchClosePremium {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  font-size: 23px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCol strong {
+  font-size: 20px !important;
+}
+
+.nutritionCalendarSheet .nutritionCalendarHeader {
+  margin-top: 32px !important;
+}
+
+.fatFoodSearchOverlay .fatSearchTopPremium .fatSearchClosePremium {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+  padding: 0 !important;
+  font-size: 24px !important;
+  line-height: 24px !important;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .foodFlowTitleGroup {
+  width: 100% !important;
+  padding: 0 42px !important;
+  text-align: center !important;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .foodFlowTitleGroup h2 {
+  font-size: 27px !important;
+  line-height: 1.08 !important;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchTitleWrap {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchTitleButtonPremium {
+  margin: 0 auto !important;
+}
+
+.fatFoodSearchScreenPremium .fatPhotoAiSearchProcess,
+.fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview {
+  border: 1px solid var(--food-flow-border) !important;
+  border-radius: 18px !important;
+  background: var(--food-flow-card) !important;
+  box-shadow: none !important;
+}
+
+.fatFoodSearchScreenPremium .fatPhotoAiSearchProcess strong,
+.fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview strong {
+  color: var(--food-flow-text) !important;
+}
+
+.fatFoodSearchScreenPremium .fatPhotoAiSearchProcess p,
+.fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview span,
+.fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview small {
+  color: var(--food-flow-muted) !important;
+}
+
+.fatSearchBottomBarFive .fatSearchBackAction {
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.fatSearchBottomBarFive .fatSearchBackAction span,
+.fatSearchBottomBarFive .fatSearchBackAction strong {
+  position: static !important;
+  left: auto !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  text-align: center !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiSearchProcess,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  box-shadow: 0 9px 25px rgba(55, 64, 112, 0.075) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiSearchProcess strong,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview strong {
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiSearchProcess p,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview span,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiFloatingPreview small {
+  color: #737b91 !important;
+}
+
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchPhotoAction {
+  border-color: #dedcf3 !important;
+  background: #eeecfb !important;
+  color: #5542d8 !important;
+  box-shadow: 0 8px 20px rgba(78, 67, 203, 0.14) !important;
+}

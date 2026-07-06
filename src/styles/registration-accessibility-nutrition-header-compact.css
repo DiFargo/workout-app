@@ -1,0 +1,129 @@
+/* Final compact nutrition header overrides. */
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroV4 {
+  padding-top: 6px !important;
+  margin-bottom: 6px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  height: 24px !important;
+  min-height: 24px !important;
+  max-height: 24px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
+  margin-bottom: 4px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  font-size: 18px !important;
+  line-height: 24px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 3px 5px !important;
+  border-radius: 9px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 {
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  gap: 2px !important;
+  flex-direction: column-reverse !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
+  height: 13px !important;
+  font-size: 9px !important;
+  line-height: 13px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
+  width: 20px !important;
+  height: 3px !important;
+  min-width: 20px !important;
+  min-height: 3px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  font-size: 0 !important;
+  box-shadow: none !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected span,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.hasFood span {
+  background: #6552e6 !important;
+  box-shadow: 0 2px 5px rgba(90, 73, 223, 0.22) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 {
+  width: 100% !important;
+  max-width: none !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  max-height: 18px !important;
+  margin: 2px 0 3px !important;
+  display: flex !important;
+  place-items: unset !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 span {
+  width: 100% !important;
+  font-family: Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+  line-height: 12px !important;
+  letter-spacing: -0.42px !important;
+  text-align: center !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  font-family: Arial, sans-serif !important;
+  font-size: 21px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.55px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small {
+  font-family: Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+  line-height: 14px !important;
+  letter-spacing: -0.42px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected {
+  border-radius: 7px !important;
+  background: rgba(101, 82, 230, 0.09) !important;
+}
+
+:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected {
+  background: rgba(101, 82, 230, 0.09) !important;
+}
+
+:root[data-app-theme="dark-green"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected {
+  background: rgba(181, 230, 85, 0.09) !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
+  width: auto !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  line-height: 42px !important;
+}

@@ -1,0 +1,93 @@
+.nutritionHeaderIconActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .nutritionHeaderIconActions button {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  transform: none !important;
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  color: inherit;
+  place-items: center;
+  box-shadow: none;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .nutritionHeaderIconButton {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
+  margin: 0 !important;
+  gap: 0 !important;
+}
+
+.nutritionHeaderIconActions .nutritionQuickSearchIcon {
+  width: 19px !important;
+  height: 19px !important;
+  min-width: 19px !important;
+  min-height: 19px !important;
+}
+
+.nutritionHeaderIconActions .nutritionQuickCalendarIcon {
+  width: auto !important;
+  height: auto !important;
+  font-size: 19px !important;
+  line-height: 1 !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4::before,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4::after,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span::before,
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span::after {
+  content: none !important;
+  display: none !important;
+}
+
+.nutritionCalendarSheet {
+  position: relative;
+}
+
+.nutritionCalendarClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+:root[data-app-theme="warm-light"] .nutritionHeaderIconActions button,
+:root[data-app-theme="warm-light"] .nutritionCalendarClose {
+  border-color: #e3e6f1;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: 0 5px 14px rgba(55, 64, 112, 0.07);
+}

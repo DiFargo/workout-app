@@ -1,5 +1,7 @@
 @import "./registration-accessibility-first-setup.css";
-@import "./registration-accessibility-nutrition-header.css";
+@import "./registration-accessibility-nutrition-header-compact.css";
+@import "./registration-accessibility-nutrition-header-actions.css";
+@import "./registration-accessibility-food-search-overlay.css";
 @import "./registration-accessibility-client-nav.css";
 @import "./registration-accessibility-client-shell.css";
 @import "./registration-accessibility-workout-history.css";
