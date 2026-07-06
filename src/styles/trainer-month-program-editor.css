@@ -3,5 +3,9 @@
 @import "./trainer-month-program-editor-individual-base.css";
 @import "./trainer-month-program-editor-individual-polish.css";
 @import "./trainer-month-program-editor-bottom-nav.css";
-@import "./trainer-month-program-editor-completed-card.css";
+@import "./trainer-month-program-editor-completed-card-base.css";
+@import "./trainer-month-program-editor-completed-card-ribbon.css";
+@import "./trainer-month-program-editor-completed-card-overlay.css";
+@import "./trainer-month-program-editor-completed-card-reference.css";
+@import "./trainer-month-program-editor-completed-card-spacing.css";
 @import "./trainer-month-program-editor-admin-cleanup.css";

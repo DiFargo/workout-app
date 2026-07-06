@@ -1,0 +1,77 @@
+
+.profileNutritionInlinePlan {
+  display: grid;
+  gap: 9px;
+}
+
+.profileNutritionInlinePlanHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profileNutritionInlinePlanHead strong {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.cabinetNutritionModal .cabinetNutritionCombined .profileGoalPicker {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+  margin: 0 !important;
+}
+
+.cabinetNutritionModal .cabinetNutritionCombined .profileGoalPicker button {
+  min-height: 44px !important;
+}
+
+.cabinetNutritionModal .cabinetNutritionCombined .profileGoalModeHint {
+  margin: 0 !important;
+  padding: 9px 11px !important;
+  border-radius: 13px !important;
+  font-size: 10px !important;
+}
+
+.cabinetNutritionModal .cabinetNutritionCombined .profileMacroGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 5px !important;
+  margin: 0 !important;
+}
+
+.cabinetNutritionModal .cabinetNutritionCombined .profileMacroGrid > div {
+  min-height: 50px !important;
+  padding: 7px 3px !important;
+  border-radius: 12px !important;
+}
+
+.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay > small,
+.cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay > em,
+.cabinetNutritionModal .cabinetNutritionCombined .profileMacroGrid span {
+  font-size: 8px !important;
+}
+
+.cabinetNutritionModal .cabinetNutritionCombined .profileMacroGrid strong {
+  margin-top: 4px !important;
+  font-size: 11px !important;
+}
+
+.cabinetNutritionModal .cabinetNutritionCombined .profileDashboardButton {
+  min-height: 44px !important;
+  border-radius: 14px !important;
+}
+
+.cabinetNutritionModal
+  .cabinetNutritionCombined
+  .profileDashboardButton[data-save-state="saved"] {
+  background: linear-gradient(135deg, #63b53d, #2f8f57) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.cabinetNutritionModal
+  .cabinetNutritionCombined
+  .profileDashboardButton[data-save-state="saving"] {
+  opacity: 0.72 !important;
+}

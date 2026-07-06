@@ -4,4 +4,6 @@
 @import "./client-food-search-sizing-locks.css";
 @import "./client-food-search-product-compact.css";
 @import "./client-food-search-editor-bars.css";
-@import "./client-food-search-diary-rows.css";
+@import "./client-food-search-diary-rows-cards.css";
+@import "./client-food-search-diary-rows-scroll.css";
+@import "./client-food-search-diary-rows-editor.css";

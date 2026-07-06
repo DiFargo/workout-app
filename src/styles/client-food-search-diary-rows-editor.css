@@ -1,0 +1,52 @@
+
+/* v176: keep the product editor action bar locked inside its modal sheet. */
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
+  position: relative !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar {
+  position: absolute !important;
+  left: 14px !important;
+  right: 14px !important;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+  width: auto !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  grid-template-columns: minmax(92px, 0.78fr) minmax(0, 1.82fr) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar > button {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar::after,
+html:root[data-app-theme="warm-light"] body #root .foodProductActionBar::after,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar::after {
+  content: "" !important;
+  position: absolute !important;
+  left: -24px !important;
+  right: -24px !important;
+  bottom: calc(-52px - env(safe-area-inset-bottom, 0px)) !important;
+  height: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+  background: #f4f7fd !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > *,
+html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > *,
+html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalHeader button,
+html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukAdd,
+html:root[data-app-theme="warm-light"] body #root .nutritionAiPlanModal .nutritionAiPlanToggleBtn {
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+}

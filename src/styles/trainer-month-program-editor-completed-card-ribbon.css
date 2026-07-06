@@ -1,0 +1,110 @@
+
+/* COMPLETED WORKOUT STRONG BLUR + BIG RIBBON */
+.individualWorkoutCardPro.completed {
+  opacity: 0.62 !important;
+  filter: blur(1.7px) saturate(0.55) brightness(0.72) !important;
+  transform: scale(0.985) !important;
+}
+
+.individualWorkoutCardPro.completed::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 6 !important;
+  border-radius: inherit !important;
+  background: rgba(7, 10, 7, 0.34) !important;
+  backdrop-filter: blur(2.5px) !important;
+  pointer-events: none !important;
+}
+
+.individualWorkoutCardPro.completed::after {
+  content: "Ð’Ð«ÐŸÐžÐ›ÐÐ•ÐÐ" !important;
+  position: absolute !important;
+  top: 44% !important;
+  left: 50% !important;
+  z-index: 12 !important;
+
+  width: 150% !important;
+  height: 76px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  transform: translate(-50%, -50%) rotate(-38deg) !important;
+
+  background: linear-gradient(135deg, rgba(151, 184, 67, 0.98), rgba(190, 225, 85, 0.96)) !important;
+  color: #10120f !important;
+
+  font-size: clamp(24px, 7vw, 38px) !important;
+  font-weight: 1000 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+
+  box-shadow:
+    0 18px 44px rgba(0,0,0,0.38),
+    inset 0 1px 0 rgba(255,255,255,0.18) !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 420px) {
+  .individualWorkoutCardPro.completed {
+    filter: blur(1.8px) saturate(0.52) brightness(0.68) !important;
+  }
+
+  .individualWorkoutCardPro.completed::after {
+    width: 155% !important;
+    height: 70px !important;
+    font-size: 27px !important;
+    letter-spacing: 1.8px !important;
+  }
+}
+
+/* COMPLETED CARD FINAL TUNING */
+.individualWorkoutCardPro.completed {
+  opacity: 0.72 !important;
+  filter: blur(1.3px) saturate(0.68) brightness(0.78) !important;
+  transform: scale(0.992) !important;
+}
+
+.individualWorkoutCardPro.completed::before {
+  background: rgba(7, 10, 7, 0.22) !important;
+  backdrop-filter: blur(1.2px) !important;
+  border-radius: inherit !important;
+}
+
+.individualWorkoutCardPro.completed::after {
+  filter: none !important;
+  backdrop-filter: none !important;
+  opacity: 1 !important;
+
+  width: 145% !important;
+  height: 72px !important;
+
+  font-size: clamp(22px, 6vw, 34px) !important;
+  font-weight: 1000 !important;
+  letter-spacing: 1.6px !important;
+
+  box-shadow:
+    0 14px 34px rgba(0,0,0,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.12) !important;
+}
+
+.individualWorkoutCardPro.completed .individualWorkoutProImage,
+.individualWorkoutCardPro.completed .individualWorkoutTrainerTip,
+.individualWorkoutCardPro.completed .individualWorkoutProTop,
+.individualWorkoutCardPro.completed .individualWorkoutProBody {
+  border-radius: inherit !important;
+}
+
+@media (max-width: 420px) {
+  .individualWorkoutCardPro.completed {
+    filter: blur(1.2px) saturate(0.7) brightness(0.8) !important;
+  }
+
+  .individualWorkoutCardPro.completed::after {
+    height: 66px !important;
+    width: 150% !important;
+    font-size: 24px !important;
+  }
+}

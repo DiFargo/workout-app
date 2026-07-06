@@ -6,4 +6,6 @@
 @import "./admin-client-page-calendar-nutrition-responsive.css";
 @import "./admin-client-page-program-progress.css";
 @import "./admin-client-page-actions-tabs.css";
-@import "./admin-client-page-mobile-metrics.css";
+@import "./admin-client-page-mobile-metrics-compact.css";
+@import "./admin-client-page-mobile-metrics-list.css";
+@import "./admin-client-page-mobile-metrics-polish.css";

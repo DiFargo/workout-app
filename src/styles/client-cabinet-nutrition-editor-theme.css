@@ -1,0 +1,72 @@
+
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .cabinetNutritionCombined .profileAiNutritionPlanCard,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionGoalCard,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileGoalPicker button,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileMacroGrid > div,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .cabinetNutritionCombined .profileGoalPicker button,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .cabinetNutritionCombined .profileMacroGrid > div {
+  border-color: #e1e4ef !important;
+  background: #ffffff !important;
+  color: #596176 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root
+  .profileNutritionInlinePlanHead span {
+  color: #5a49df !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root
+  .profileNutritionInlinePlanHead strong {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileGoalPicker button.active,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .cabinetNutritionCombined .profileGoalPicker button.active {
+  border-color: #7565e8 !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileGoalModeHint,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .cabinetNutritionCombined .profileGoalModeHint {
+  border-color: #dedaf8 !important;
+  background: #f3f1ff !important;
+  color: #596176 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .profileNutritionSection.settingsOpen .profileDashboardButton,
+html:root[data-app-theme="warm-light"] body #root
+  .cabinetNutritionModal .cabinetNutritionCombined .profileDashboardButton {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22) !important;
+}
+
+@media (max-height: 720px) {
+  .cabinetNutritionModal .cabinetNutritionCombined {
+    padding: 7px !important;
+    gap: 7px !important;
+  }
+
+  .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionMonthDay {
+    height: 47px !important;
+    min-height: 47px !important;
+  }
+
+  .cabinetNutritionModal .cabinetNutritionCombined .profileNutritionGoalCard {
+    padding: 9px !important;
+  }
+}
