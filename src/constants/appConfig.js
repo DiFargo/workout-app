@@ -1,4 +1,4 @@
-export const APP_VERSION = "v.1.939";
+export const APP_VERSION = "v.1.940";
 export const BARCODE_SEARCH_ENABLED = false;
 export const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 export const STORAGE_KEY = "workout_tracker_v1";
