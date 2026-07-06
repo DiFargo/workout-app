@@ -1,0 +1,76 @@
+@media (max-width: 640px) {
+
+  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar.clientBottomNav {
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    padding: 7px !important;
+    border-radius: 20px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientBottomNav > button,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button {
+    height: 60px !important;
+    min-height: 60px !important;
+    padding: 5px 2px 4px !important;
+    border-radius: 15px !important;
+    grid-template-rows: 28px 16px !important;
+    gap: 2px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientBottomNav > button span,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button span {
+    width: 27px !important;
+    height: 27px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientBottomNav > button span svg,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button span svg {
+    width: 24px !important;
+    height: 24px !important;
+    stroke-width: 2.5 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientBottomNav > button strong,
+  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button strong {
+    font-size: 10.5px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain > h1.mainDashboardTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileCabinetPageTitle.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 h1.clientCorePageTitle,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero .workoutSelectTitle.clientCorePageTitle {
+    font-size: 28px !important;
+    line-height: 1.06 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav {
+    height: 76px !important;
+    min-height: 76px !important;
+    padding: 7px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    border-radius: 20px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button,
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button,
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .clientBottomNav > button,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button {
+    height: 60px !important;
+    min-height: 60px !important;
+    padding: 5px 2px 4px !important;
+    display: grid !important;
+    grid-template-rows: 28px 16px !important;
+    align-items: center !important;
+    justify-items: center !important;
+    gap: 2px !important;
+  }
+
+}

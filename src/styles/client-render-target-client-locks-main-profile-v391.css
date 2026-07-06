@@ -1,0 +1,78 @@
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .profileAiHero {
+    min-height: 98px !important;
+    height: 98px !important;
+    padding: 14px 18px !important;
+    grid-template-columns: 62px minmax(0, 1fr) !important;
+    gap: 14px !important;
+    border-radius: 20px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileAiAvatarWrap,
+  html:root[data-app-theme="warm-light"] body #root .profileAiAvatar {
+    width: 62px !important;
+    height: 62px !important;
+    min-width: 62px !important;
+    min-height: 62px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileAiHeroText h1 {
+    font-size: 22px !important;
+    line-height: 1.08 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow {
+    height: 70px !important;
+    min-height: 70px !important;
+    margin-bottom: 14px !important;
+    border-bottom-left-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div {
+    padding: 9px 6px 8px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow span {
+    margin-bottom: 5px !important;
+    font-size: 11px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
+    font-size: 19px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow .goal strong {
+    font-size: 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiSplitCards {
+    gap: 10px !important;
+    margin-bottom: 12px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard {
+    min-height: 76px !important;
+    height: 76px !important;
+    padding: 10px 8px !important;
+    border-radius: 20px !important;
+    gap: 7px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiMiniCard strong {
+    font-size: 22px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiCoachInsight.profileProgressInsightCard {
+    min-height: 132px !important;
+    padding: 14px 16px 10px !important;
+    border-radius: 20px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainMeasurementSnapshot {
+    min-height: 150px !important;
+    padding: 14px 16px !important;
+    border-radius: 20px !important;
+  }
+
+}
