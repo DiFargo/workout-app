@@ -1,0 +1,97 @@
+.trainerClientProgramSummary {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.trainerClientProgramSummary > i {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(159, 202, 71, 0.12);
+  color: #b5e655;
+  font-style: normal;
+}
+
+.trainerClientProgramSummary small {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 9px;
+}
+
+.trainerClientProgramSummary > b {
+  color: #b5e655;
+  font-size: 25px;
+}
+
+.trainerClientProgramProgress {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.trainerClientProgramProgress > i {
+  grid-column: 1 / -1;
+}
+
+.trainerClientProgramProgress strong {
+  margin-left: 4px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.trainerClientControlRows > div {
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.trainerClientControlRows strong {
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 11px;
+}
+
+.trainerClientActivityList > div {
+  min-height: 36px;
+  display: grid;
+  grid-template-columns: 24px minmax(150px, 0.55fr) minmax(0, 1fr) 76px;
+  align-items: center;
+  gap: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.trainerClientActivityList i {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  background: rgba(159, 202, 71, 0.12);
+  color: #b5e655;
+  font-size: 10px;
+  font-style: normal;
+}
+
+.trainerClientActivityList strong {
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 10px;
+}
+
+.trainerClientActivityList span,
+.trainerClientActivityList time {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerClientActivityList time {
+  text-align: right;
+}
