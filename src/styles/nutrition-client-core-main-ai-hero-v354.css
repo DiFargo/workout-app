@@ -1,0 +1,41 @@
+
+.profileDashboardPage.clientCorePageMain .profileCabinetSection {
+  height: calc(100% - 54px) !important;
+  padding: 0 !important;
+  gap: 9px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiHero {
+  box-sizing: border-box !important;
+  min-height: 82px !important;
+  padding: 10px 12px !important;
+  grid-template-columns: 58px minmax(0, 1fr) !important;
+  gap: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.026) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiAvatarWrap,
+.profileDashboardPage.clientCorePageMain .profileAiAvatar {
+  width: 56px !important;
+  height: 56px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiAvatar {
+  border-radius: 50% !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiAvatarRing {
+  display: none !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiHeroText h1 {
+  max-width: 250px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}

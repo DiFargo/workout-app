@@ -1,0 +1,35 @@
+
+.profileDashboardPage.clientCorePageMain .profileAiSplitCards {
+  gap: 8px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiMiniCard {
+  min-height: 78px !important;
+  padding: 11px 10px !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.024) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiMiniCard strong {
+  font-size: 18px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachInsight {
+  min-height: 158px !important;
+  flex: 0 0 158px !important;
+  padding: 14px !important;
+  justify-content: flex-start !important;
+  gap: 13px !important;
+  overflow: visible !important;
+  border-radius: 17px !important;
+  background: rgba(255, 255, 255, 0.024) !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachToggle h2 {
+  font-size: 18px !important;
+}
+
+.profileDashboardPage.clientCorePageMain .profileAiCoachPreview span {
+  min-height: 28px !important;
+  border-radius: 999px !important;
+}
