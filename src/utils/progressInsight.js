@@ -223,7 +223,7 @@ function scoreMeasurementProgress(measurements, goal, now) {
   const previousWaist = getMeasurementValue(previous, ["belly", "waist"]);
   const weightDelta = latestWeight && previousWeight ? latestWeight - previousWeight : 0;
   const waistDelta = latestWaist && previousWaist ? latestWaist - previousWaist : 0;
-  let trend = 74;
+  let trend;
 
   if (goal === "mass") trend = weightDelta > 0 && weightDelta <= 2 ? 100 : weightDelta > 2 ? 62 : 70;
   else if (goal === "cut" || goal === "dry") {

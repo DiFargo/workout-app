@@ -79,7 +79,6 @@ export function TrainerMainBottomBar({
   onGoMain,
   onOpenTrainerClients,
   onOpenTrainerPrograms,
-  onOpenCabinet,
   onLoadTrainerCabinet
 }) {
   return (
@@ -129,7 +128,6 @@ export function TrainerWorkspaceBottomBar({
   onGoMain,
   onOpenTrainerClients,
   onOpenTrainerPrograms,
-  onOpenCabinet,
   onLoadTrainerCabinet
 }) {
   return (

@@ -8,7 +8,6 @@ export function createTrainerMonthSelectedExerciseHandlers({
   db,
   openMonthWorkoutContext,
   removeMonthExercise,
-  setAdminExerciseSearch,
   setAdminSelectedExerciseId,
   showAppConfirm,
   showAppError,

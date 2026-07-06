@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Bell, CalendarDays, Dumbbell, RefreshCw, Scale, Target, Zap } from "lucide-react";
+import { Bell, RefreshCw } from "lucide-react";
 import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
@@ -259,205 +259,6 @@ function getHarnessWeekDates(selectedKey) {
   return buildNutritionWeekDates(selectedKey);
 }
 
-function HarnessHero({ withStats = true } = {}) {
-  if (!withStats) {
-    return (
-      <div className="profileAiHero">
-        <div className="profileAiAvatarWrap">
-          <div className="profileAvatarBig profileUnifiedAvatar profileAiAvatar harnessLegacyPortrait">
-            <span aria-hidden="true" />
-          </div>
-          <div className="profileAiAvatarRing">
-            <strong>90%</strong>
-          </div>
-        </div>
-
-        <div className="profileAiHeroText">
-          <h1>Добрый вечер, ILYA 👋</h1>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="profileAiHero">
-      <div className="profileAiHeroGreeting">
-        <div className="profileAiAvatarWrap">
-          <div className="profileAvatarBig profileUnifiedAvatar profileAiAvatar harnessLegacyPortrait">
-            <span aria-hidden="true" />
-          </div>
-          <div className="profileAiAvatarRing">
-            <strong>90%</strong>
-          </div>
-        </div>
-
-        <div className="profileAiHeroText">
-          <h1>Добрый вечер, ILYA 👋</h1>
-        </div>
-      </div>
-
-      <div className="profileAiStatsRow profileMainHeroStats">
-        <div className="goal">
-          <span className="profileAiStatLabel"><Target aria-hidden="true" />Твоя цель</span>
-          <strong>Сушка</strong>
-          <small>&nbsp;</small>
-        </div>
-        <div>
-          <span className="profileAiStatLabel"><Scale aria-hidden="true" />Целевой вес</span>
-          <strong>89 кг</strong>
-          <small>&nbsp;</small>
-        </div>
-        <div>
-          <span className="profileAiStatLabel"><Dumbbell aria-hidden="true" />Тренировок</span>
-          <strong>12</strong>
-          <small>&nbsp;</small>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function HarnessMainSummary({ compact = false }) {
-  return (
-    <>
-      {!compact && (
-        <div className="profileAiStatsRow">
-          <div className="goal">
-            <span className="profileAiStatLabel">Цель</span>
-            <strong>Рекомпозиция</strong>
-            <small>&nbsp;</small>
-          </div>
-          <div>
-            <span className="profileAiStatLabel">Вес</span>
-            <strong>88.8 кг</strong>
-            <small>&nbsp;</small>
-          </div>
-          <div>
-            <span className="profileAiStatLabel">Тренировки</span>
-            <strong>4</strong>
-            <small>&nbsp;</small>
-          </div>
-        </div>
-      )}
-
-      <div className="profileMainSummaryGrid profileAiSplitCards">
-        <article className="profileAiMiniCard">
-          <span><CalendarDays aria-hidden="true" />Последняя тренировка</span>
-          <strong>27 июня</strong>
-        </article>
-        <article className="profileAiMiniCard">
-          <span><Zap aria-hidden="true" />Следующая тренировка</span>
-          <strong>4 июля</strong>
-        </article>
-      </div>
-    </>
-  );
-}
-
-function HarnessProgressInsight() {
-  return (
-    <div className="profileAiCoachInsight profileProgressInsightCard positive">
-      <button type="button" className="profileAiCoachToggle">
-        <div className="profileAiCoachSummary">
-          <div
-            className="harnessReferenceProgressGauge"
-            style={{
-              "--progress-score": 90,
-              "--progress-fill": "324deg",
-              "--progress-color": "rgba(123, 111, 232, 1)",
-              "--progress-glow": "rgba(123, 111, 232, 0.24)"
-            }}
-            role="img"
-            aria-label="Оценка прогресса 90 из 100"
-          >
-            <div className="harnessReferenceProgressGaugeDial">
-              <strong>90</strong>
-            </div>
-            <small>из 100</small>
-          </div>
-
-          <div className="profileAiCoachHeadline">
-            <span>Оценка прогресса</span>
-            <h2>Отличный темп</h2>
-            <p>Регулярность: данные ведутся стабильно. Продолжай в том же ритме.</p>
-          </div>
-        </div>
-      </button>
-
-      <div className="profileAiCoachPreview profileProgressInsightBadges">
-        <span className="profileProgressInsightBadge">
-          <b>⚡ Тренировка</b>
-          <small>Сегодня</small>
-        </span>
-        <span className="profileProgressInsightBadge">
-          <b>📏 Замер</b>
-          <small>Пора обновить</small>
-        </span>
-        <span className="profileProgressInsightBadge">
-          <b>🍽 Питание</b>
-          <small>По плану</small>
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function HarnessMeasurementSnapshot() {
-  return (
-    <section className="mainMeasurementSnapshot harnessLegacyMeasurementSnapshot" aria-label="Последние замеры веса">
-      <div className="mainMeasurementWeight">
-        <span>Текущий вес</span>
-        <strong>89 кг</strong>
-        <em>-0.5 кг</em>
-        <small>к прошлому замеру</small>
-      </div>
-      <div className="harnessLegacyMeasurementChartPanel">
-        <div className="mainMeasurementSnapshotHeader">
-          <span>Последние замеры</span>
-          <i aria-hidden="true">›</i>
-        </div>
-        <div className="mainMeasurementChart">
-          <svg
-            className="mainMeasurementChartTrend"
-            viewBox="0 0 280 118"
-            role="img"
-            aria-label="Динамика веса по последним замерам"
-          >
-            <defs>
-              <linearGradient id="harnessMeasurementLineGradient" x1="0" x2="1" y1="0" y2="0">
-                <stop offset="0%" stopColor="#6354f4" />
-                <stop offset="100%" stopColor="#7a4cff" />
-              </linearGradient>
-            </defs>
-            <line className="mainMeasurementCurrentGuide" x1="238" y1="47" x2="238" y2="96" />
-            <polyline
-              className="mainMeasurementTrendLine"
-              points="28,78 98,48 168,48 238,60"
-            />
-            <text className="mainMeasurementPointLabel" x="28" y="61">88.5 кг</text>
-            <text className="mainMeasurementPointLabel" x="98" y="31">89.5 кг</text>
-            <text className="mainMeasurementPointLabel" x="168" y="31">89.5 кг</text>
-            <text className="mainMeasurementPointLabel" x="238" y="42">89 кг</text>
-            <circle className="mainMeasurementTrendPoint" cx="28" cy="78" r="4.8" />
-            <circle className="mainMeasurementTrendPoint" cx="98" cy="48" r="4.8" />
-            <circle className="mainMeasurementTrendPoint" cx="168" cy="48" r="4.8" />
-            <circle className="mainMeasurementTrendPoint current" cx="238" cy="60" r="7" />
-            <g className="mainMeasurementCurrentBubble">
-              <rect x="209" y="18" width="58" height="25" rx="7" />
-              <path d="M 231 42 L 245 42 L 238 53 Z" />
-              <text x="238" y="35">89 кг</text>
-            </g>
-            <text className="mainMeasurementDateLabel" x="28" y="110">09.06</text>
-            <text className="mainMeasurementDateLabel" x="98" y="110">10.06</text>
-            <text className="mainMeasurementDateLabel" x="168" y="110">10.06</text>
-            <text className="mainMeasurementDateLabel" x="238" y="110">16.06</text>
-          </svg>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function HarnessCabinetActions({
   onOpenPhotos,
   onOpenMeasurements,
@@ -644,6 +445,7 @@ export default function ClientE2EHarness() {
   const telegramLoginContainerRef = useRef(null);
   const nutritionFoodSwipeMoved = useRef(false);
   const cabinetWorkoutHistoryItemRefs = useRef(new Map());
+  const dishIdCounterRef = useRef(0);
 
   const nutritionToday = nutrition.days[nutritionDateKey] || { foods: [] };
   const nutritionTotals = getHarnessNutritionTotals(nutritionToday);
@@ -696,7 +498,8 @@ export default function ClientE2EHarness() {
   }
 
   function openHarnessCustomDish() {
-    const dishId = `harness_dish_${Date.now()}`;
+    dishIdCounterRef.current += 1;
+    const dishId = `harness_dish_${dishIdCounterRef.current}`;
     setSelectedNutritionFood({
       id: dishId,
       foodId: dishId,

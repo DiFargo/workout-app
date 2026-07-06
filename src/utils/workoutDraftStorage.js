@@ -16,7 +16,7 @@ export function getWorkoutDraftKey(uid, workoutId) {
 export function clearWorkoutDraft(uid, workoutId) {
   try {
     localStorage.removeItem(getWorkoutDraftKey(uid, workoutId));
-  } catch (_) {
+  } catch {
     // ignore localStorage errors
   }
 }
@@ -44,7 +44,7 @@ export function clearStaleWorkoutCaches(
     draftKeys.forEach((key) => localStorage.removeItem(key));
     localStorage.removeItem(getUserScopedStorageKey(workoutStorageKey, uid));
     localStorage.removeItem(getUserScopedStorageKey(workoutPlanBackupStorageKey, uid));
-  } catch (_) {
+  } catch {
     // ignore localStorage errors
   }
 

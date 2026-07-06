@@ -40,7 +40,6 @@ export function buildTrainerUsersPageModel({
   trainerClientSummaries,
   usersList
 }) {
-  const credentialsText = null;
   const getClientCardSummary = (client = {}) =>
     getTrainerClientSummaryFromMap(client, trainerClientSummaries);
 

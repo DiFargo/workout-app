@@ -108,7 +108,6 @@ export default function ProfileDashboardRoute(ctx) {
     profileBodyMetricsOpen,
     profileMeasurementDraft,
     profileMeasurementOpen,
-    profileMeasurementReturnTab,
     profileMeasurementSaving,
     profileMeasurementStatus,
     profileMeasurementWizardStep,

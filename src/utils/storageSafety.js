@@ -19,7 +19,7 @@ function removeDisposableBackups(exceptKey) {
     }
     keys.forEach((key) => localStorage.removeItem(key));
     return keys.length;
-  } catch (_) {
+  } catch {
     return 0;
   }
 }
@@ -32,7 +32,7 @@ export function safeReadJsonStorage(key, fallback = null) {
   try {
     const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : fallback;
-  } catch (_) {
+  } catch {
     return fallback;
   }
 }
@@ -49,7 +49,7 @@ export function safeWriteJsonStorage(key, value) {
           try {
             writeJsonStorage(key, value.slice(0, limit));
             return true;
-          } catch (_) {
+          } catch {
             // Try a smaller backup snapshot before dropping unrelated backups.
           }
         }
@@ -59,7 +59,7 @@ export function safeWriteJsonStorage(key, value) {
         try {
           writeJsonStorage(key, value);
           return true;
-        } catch (_) {
+        } catch {
           // Fall through to the final warning below.
         }
       }

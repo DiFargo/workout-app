@@ -1,6 +1,5 @@
 export default function FoodProductHeader({
   showFlowHeader,
-  isEditing,
   selectedFood,
   meals,
   mealId,

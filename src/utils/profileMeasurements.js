@@ -1,4 +1,4 @@
-export function getProfileMeasurementFields(goal = "recomp") {
+export function getProfileMeasurementFields() {
   return [
     {
       id: "weight",

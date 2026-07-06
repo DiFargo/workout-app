@@ -130,7 +130,7 @@ export function useAppRuntimeEffects({
       currentUserRole !== "client"
     ) return;
 
-    let completedForThisUser = false;
+    let completedForThisUser;
 
     try {
       completedForThisUser =

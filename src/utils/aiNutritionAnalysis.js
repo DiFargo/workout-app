@@ -38,7 +38,7 @@ export function getAiNutritionTargetFromHistory(nutrition = defaultNutritionStat
   };
 }
 
-export function buildAiNutritionDayModel(nutrition = defaultNutritionState, selectedDay = null, history = []) {
+export function buildAiNutritionDayModel(nutrition = defaultNutritionState, selectedDay = null) {
   const day = selectedDay || nutrition.days?.[todayNutritionKey()] || makeEmptyNutritionDay();
   const goals = nutrition.goals || defaultNutritionState.goals;
   const baseline = getAiNutritionHistoryBaseline();

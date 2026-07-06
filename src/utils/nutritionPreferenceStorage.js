@@ -9,7 +9,7 @@ export function loadRecentNutritionFoods(uid = auth.currentUser?.uid) {
     const raw = localStorage.getItem(getUserScopedStorageKey(RECENT_NUTRITION_SEARCHES_KEY, uid));
     const value = JSON.parse(raw || "[]");
     return Array.isArray(value) ? value.slice(0, 9) : [];
-  } catch (_) {
+  } catch {
     return [];
   }
 }
@@ -21,7 +21,7 @@ export function saveRecentNutritionFoods(foods = [], uid = auth.currentUser?.uid
       getUserScopedStorageKey(RECENT_NUTRITION_SEARCHES_KEY, uid),
       JSON.stringify((Array.isArray(foods) ? foods : []).slice(0, 9))
     );
-  } catch (_) {
+  } catch {
     // ignore localStorage errors
   }
 }
@@ -47,7 +47,7 @@ export function saveNutritionPreferredUnit(food = {}, unitId = "") {
   try {
     if (!food?.name || !unitId) return;
     localStorage.setItem(getNutritionUnitStorageKey(food), unitId);
-  } catch (_) {
+  } catch {
     // ignore storage errors
   }
 }
@@ -56,7 +56,7 @@ export function loadNutritionPreferredUnit(food = {}) {
   try {
     if (!food?.name) return "";
     return localStorage.getItem(getNutritionUnitStorageKey(food)) || "";
-  } catch (_) {
+  } catch {
     return "";
   }
 }

@@ -1,5 +1,4 @@
 import { getAiNutritionHistoryBaseline } from "../data/aiNutritionBaseline";
-import { defaultNutritionState } from "../data/nutritionDefaults";
 
 export function calculateAiNutritionMacros(calories, weight, goal = "recomp") {
   const safeCalories = Math.max(1400, Math.round(Number(calories) || 2200));
@@ -28,7 +27,7 @@ export function calculateAiNutritionBmr({ weight = 80, height = 180, age = 30, s
   return Math.round(10 * safeWeight + 6.25 * safeHeight - 5 * safeAge + (sex === "female" ? -161 : 5));
 }
 
-export function calculatePersonalAiNutritionCalories(profile = {}, nutrition = defaultNutritionState) {
+export function calculatePersonalAiNutritionCalories(profile = {}) {
   const baseline = getAiNutritionHistoryBaseline();
   const weight = Number(profile?.weight) || 80;
   const height = Number(profile?.height) || 180;

@@ -162,9 +162,6 @@ export function createWorkoutOpenHandlers({
                   sets: exercise.sets.map((set) => {
                     const {
                       aiOriginalWeight,
-                      aiReadinessId,
-                      aiReadinessTitle,
-                      completed,
                       ...cleanSet
                     } = set;
 

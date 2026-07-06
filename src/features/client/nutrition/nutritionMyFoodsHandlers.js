@@ -19,7 +19,6 @@ export function createNutritionMyFoodsHandlers({
   NUTRITION_STORAGE_KEY,
   auth,
   user,
-  nutrition,
   showAppError,
   setNutrition,
   setRecentNutritionFoods
