@@ -1,5 +1,9 @@
 @import "./admin-client-page-base.css";
-@import "./admin-client-page-alignment.css";
+@import "./admin-client-page-alignment-base.css";
+@import "./admin-client-page-alignment-mobile-shell.css";
+@import "./admin-client-page-alignment-mobile-telegram.css";
+@import "./admin-client-page-alignment-mobile-actions.css";
+@import "./admin-client-page-alignment-narrow.css";
 @import "./admin-client-page-final-render.css";
 @import "./admin-client-page-calendar-nutrition-shell.css";
 @import "./admin-client-page-calendar-nutrition-grid.css";

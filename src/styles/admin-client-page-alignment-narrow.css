@@ -1,0 +1,18 @@
+@media (max-width: 420px) {
+  .adminClientWorkspaceActionsRender,
+  .adminTelegramQuickMessagesRender > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .adminClientMetricGridRender {
+    grid-template-columns: 1fr !important;
+  }
+
+  .adminClientRecommendationsRender div {
+    grid-template-columns: 40px minmax(0, 1fr) !important;
+  }
+
+  .adminClientRecommendationsRender button {
+    grid-column: 1 / -1 !important;
+  }
+}

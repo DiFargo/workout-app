@@ -1,7 +1,9 @@
 @import "./client-nutrition-grid-dashboard-main-shell-v404.css";
 @import "./client-nutrition-grid-dashboard-main-hero-stats-v405.css";
 @import "./client-nutrition-grid-dashboard-main-mini-cards-v406.css";
-@import "./client-nutrition-grid-dashboard-main-progress-v407.css";
+@import "./client-nutrition-grid-dashboard-main-progress-shell-v407.css";
+@import "./client-nutrition-grid-dashboard-main-progress-gauge-v407.css";
+@import "./client-nutrition-grid-dashboard-main-progress-badges-v407.css";
 @import "./client-nutrition-grid-dashboard-main-measurements-v408.css";
 @import "./client-nutrition-grid-dashboard-workout-compact.css";
 @import "./client-nutrition-grid-dashboard-cabinet-cards.css";
