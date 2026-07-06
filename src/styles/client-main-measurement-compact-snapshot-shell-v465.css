@@ -1,0 +1,48 @@
+/* Split from client-main-measurement-compact-snapshot.css: snapshot shell, header and body grid. */
+@media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot {
+    position: relative !important;
+    height: 140px !important;
+    min-height: 140px !important;
+    max-height: 140px !important;
+    flex-basis: 140px !important;
+    padding: 15px 18px 13px !important;
+    overflow: hidden !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotHeader {
+    position: absolute !important;
+    top: 15px !important;
+    left: 18px !important;
+    right: 18px !important;
+    height: 18px !important;
+    min-height: 18px !important;
+    margin: 0 !important;
+    padding-left: 126px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotHeader span {
+    color: var(--main-nutrition-ink) !important;
+    -webkit-text-fill-color: var(--main-nutrition-ink) !important;
+    font-size: 17px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotHeader i {
+    display: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .mainMeasurementSnapshot.mainMeasurementSnapshot .mainMeasurementSnapshotBody {
+    display: grid !important;
+    grid-template-columns: 116px minmax(0, 1fr) !important;
+    align-items: start !important;
+    gap: 10px !important;
+    height: 108px !important;
+    min-height: 108px !important;
+    margin: 0 !important;
+  }
+}
