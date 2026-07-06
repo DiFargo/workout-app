@@ -1,0 +1,77 @@
+.trainerNextProgramsTab .programsOverviewGrid {
+  width: min(620px, 100%);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.trainerNextProgramsTab .programsOverviewCard {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--tn-purple-border);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #fff 0%, #f8f5ff 58%, #f1edff 100%);
+  color: var(--tn-text);
+  box-shadow: 0 8px 25px rgba(80, 56, 184, 0.06);
+}
+
+.trainerNextProgramsTab .programsOverviewCard.selected {
+  border-color: #9e88ff;
+  background: linear-gradient(135deg, #fff 0%, #f7f3ff 52%, #eee8ff 100%);
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle {
+  min-height: 106px;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px 8px;
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle > i {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #eae4ff;
+  color: var(--tn-purple);
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle strong {
+  color: var(--tn-text);
+  font-size: 20px;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle p {
+  margin: 8px 0 0;
+  color: var(--tn-muted);
+  font-size: 10px;
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle > span {
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  background: #eee9ff;
+  color: var(--tn-purple);
+  font-size: 9px;
+}
+
+.trainerNextProgramsTab .programsOverviewCardTitle > span b {
+  width: 17px;
+  height: 17px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--tn-purple);
+  color: #fff;
+  font-size: 10px;
+}
