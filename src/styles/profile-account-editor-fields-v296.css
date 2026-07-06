@@ -1,0 +1,104 @@
+.profileAccountFields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.profileAccountFields label {
+  display: grid;
+  gap: 5px;
+}
+
+.profileAccountFields label > span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.profileAccountFields input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.94);
+  font: inherit;
+  font-size: 13px;
+}
+
+.profileAccountFields input:focus {
+  border-color: rgba(117, 101, 232, 0.62);
+  box-shadow: 0 0 0 3px rgba(117, 101, 232, 0.12);
+}
+
+.profileAccountPasswordButton {
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  text-align: left;
+}
+
+.profileAccountPasswordButton > span:first-child {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(117, 101, 232, 0.14);
+}
+
+.profileAccountPasswordButton strong,
+.profileAccountPasswordButton small {
+  display: block;
+}
+
+.profileAccountPasswordButton strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+}
+
+.profileAccountPasswordButton small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 9px;
+}
+
+.profileAccountPasswordButton i {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 19px;
+  font-style: normal;
+}
+
+.profileAccountStatus {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 123, 114, 0.2);
+  border-radius: 11px;
+  background: rgba(255, 123, 114, 0.07);
+  color: #ff9b95;
+  font-size: 10px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.profileAccountStatus.success {
+  border-color: rgba(70, 184, 124, 0.24);
+  background: rgba(70, 184, 124, 0.08);
+  color: #9be4bd;
+}
+
+.profileAccountLogout {
+  width: 100% !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+}

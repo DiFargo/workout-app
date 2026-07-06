@@ -1,0 +1,24 @@
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor,
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label,
+html:root[data-app-theme="warm-light"] body #root .profileAccountFields input,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #171923;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label strong,
+html:root[data-app-theme="warm-light"] body #root .profileAccountFields label > span,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton strong {
+  color: #171923;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label small,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton small,
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton i {
+  color: #73798b;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountFields input {
+  background: #f7f8fc;
+}

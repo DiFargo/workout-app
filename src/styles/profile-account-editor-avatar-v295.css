@@ -1,0 +1,67 @@
+/* Cabinet account editor. */
+.profileAccountSection {
+  display: grid;
+  gap: 12px;
+}
+
+.profileAccountAvatarEditor {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.profileAccountAvatarPreview {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(117, 101, 232, 0.3);
+  border-radius: 18px;
+  background: rgba(117, 101, 232, 0.12);
+  font-size: 28px;
+}
+
+.profileAccountAvatarPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileAccountAvatarEditor label {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.profileAccountAvatarEditor label strong,
+.profileAccountAvatarEditor label small {
+  display: block;
+}
+
+.profileAccountAvatarEditor label strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+}
+
+.profileAccountAvatarEditor label small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 9px;
+}
+
+.profileAccountAvatarEditor input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
