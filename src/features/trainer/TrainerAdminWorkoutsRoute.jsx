@@ -19,7 +19,6 @@ export default function TrainerAdminWorkoutsRoute({
   adminActiveProgramId,
   adminClientStatus,
   adminExerciseEditSnapshotRef,
-  adminExerciseLibrary,
   adminExerciseSearch,
   adminExerciseVideoUploadingId,
   adminOpenProgramBlocks,
@@ -146,7 +145,7 @@ export default function TrainerAdminWorkoutsRoute({
   }
 
   const monthProgram = adminProgramGroups?.[0] || {
-    id: `month_${Date.now()}`,
+    id: "month_default",
     name: "Программа на месяц",
     blocks: createFourWeekWorkoutProgramBlocks("default")
   };

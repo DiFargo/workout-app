@@ -290,7 +290,7 @@ export function createTrainerPlanEditorHandlers({
         return;
       }
 
-      const safeName = String(file.name || "exercise-video").replace(/[^\w\u0430-\u044f\u0410-\u042f\u0451\u0401.\-]+/g, "_");
+      const safeName = String(file.name || "exercise-video").replace(/[^\w\u0430-\u044f\u0410-\u042f\u0451\u0401.-]+/g, "_");
       const storageRef = ref(storage, `exercise-videos/${owner}/${selectedUserId || owner}/${Date.now()}-${safeName}`);
 
       await uploadBytes(storageRef, file);

@@ -92,7 +92,7 @@ export function createAuthHandlers({
 
       await setDoc(doc(db, "users", result.user.uid), {
         email: login,
-        role: false ? "admin" : "client"
+        role: "client"
       });
 
       setLoginError("");

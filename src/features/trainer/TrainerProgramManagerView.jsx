@@ -165,6 +165,7 @@ export default function TrainerProgramManagerView({
           addMonthExercise={addMonthExercise}
           addMonthExerciseSet={addMonthExerciseSet}
           addMonthWeek={addMonthWeek}
+          addMonthWorkout={addMonthWorkout}
           addProgramMonth={addProgramMonth}
           adminExerciseLibrary={adminExerciseLibrary}
           adminExerciseSearch={adminExerciseSearch}
@@ -189,6 +190,7 @@ export default function TrainerProgramManagerView({
           removeMonthBlock={removeMonthBlock}
           removeMonthExerciseSet={removeMonthExerciseSet}
           removeMonthWeek={removeMonthWeek}
+          removeProgramMonth={removeProgramMonth}
           saveMonthExerciseEdit={saveMonthExerciseEdit}
           setAdminExerciseSearch={setAdminExerciseSearch}
           setAdminOpenWorkoutId={setAdminOpenWorkoutId}

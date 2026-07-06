@@ -141,7 +141,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
         showAppError("load", "У вас нет прав на изменение этой программы.");
         return;
       }
-      const safeName = String(file.name || "exercise-video").replace(/[^\wа-яА-ЯёЁ.\-]+/g, "_");
+      const safeName = String(file.name || "exercise-video").replace(/[^\wа-яА-ЯёЁ.-]+/g, "_");
       const storageRef = ref(storage, `exercise-videos/${owner.uid}/${monthProgram.id || "draft"}/${Date.now()}-${safeName}`);
 
       await uploadBytes(storageRef, file);
