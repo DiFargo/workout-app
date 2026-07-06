@@ -1,0 +1,91 @@
+@media (max-width: 640px) {
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > div.profileAiHero.profileAiHero {
+    border-bottom: 0 !important;
+    border-radius: 22px 22px 0 0 !important;
+    box-shadow: 0 18px 36px rgba(31, 39, 68, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > div.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow {
+    flex: 0 0 58px !important;
+    flex-basis: 58px !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    max-height: 58px !important;
+    margin-top: -16px !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    border-top: 1px solid #e7ebf4 !important;
+    border-radius: 0 0 22px 22px !important;
+    box-shadow: 0 18px 36px rgba(31, 39, 68, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > div.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow > div {
+    height: 58px !important;
+    min-height: 58px !important;
+    max-height: 58px !important;
+    gap: 3px !important;
+    padding: 7px 5px 6px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard {
+    width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    border: 1px solid #e3e7f0 !important;
+    border-radius: 22px !important;
+    box-shadow: 0 18px 36px rgba(31, 39, 68, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiHero.profileAiHero {
+    width: 100% !important;
+    height: 86px !important;
+    min-height: 86px !important;
+    max-height: 86px !important;
+    grid-template-columns: 54px minmax(0, 1fr) !important;
+    column-gap: 12px !important;
+    padding: 12px 18px 10px 20px !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiHero.profileAiHero .profileAiAvatarWrap,
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiHero.profileAiHero .profileAiAvatar {
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow {
+    width: 100% !important;
+    flex: 0 0 56px !important;
+    flex-basis: 56px !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-top: 1px solid #e7ebf4 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiStatsRow.profileAiStatsRow.profileAiStatsRow.profileAiStatsRow > div {
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    gap: 3px !important;
+    padding: 6px 5px 5px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}
