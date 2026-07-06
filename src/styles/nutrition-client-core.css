@@ -4,5 +4,7 @@
 @import "./nutrition-client-core-main.css";
 @import "./nutrition-client-core-cabinet.css";
 @import "./nutrition-client-core-nutrition.css";
-@import "./nutrition-client-core-workout-plan.css";
+@import "./nutrition-client-core-workout-plan-card.css";
+@import "./nutrition-client-core-workout-plan-compact-height.css";
+@import "./nutrition-client-core-workout-plan-narrow.css";
 @import "./nutrition-client-core-main-render-match.css";

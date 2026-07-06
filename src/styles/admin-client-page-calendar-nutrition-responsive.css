@@ -1,0 +1,140 @@
+
+.adminCalendarPanelMerged {
+  padding: 22px !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarHead {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 16px !important;
+  align-items: start !important;
+}
+
+.adminCalendarPanelMerged .adminCalendarDays {
+  margin-top: 18px !important;
+}
+
+@media (max-width: 980px) {
+  .adminClientWorkspaceCrmPage .adminClientTabsCrm {
+    display: flex !important;
+  }
+
+  .adminClientNutritionCalendarContent {
+    padding: 18px !important;
+  }
+
+  .adminNutritionMonthHead,
+  .adminCalendarPanelMerged .adminCalendarHead {
+    grid-template-columns: 1fr !important;
+  }
+
+  .adminNutritionMonthSummary {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .adminNutritionMonthGrid {
+    gap: 8px !important;
+  }
+
+  .adminNutritionDayCell,
+  .adminNutritionDayContent {
+    min-height: 92px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .adminClientNutritionCalendarContent {
+    padding: 12px !important;
+    gap: 14px !important;
+  }
+
+  .adminNutritionMonthPanel,
+  .adminCalendarPanelMerged {
+    padding: 14px !important;
+    border-radius: 20px !important;
+  }
+
+  .adminNutritionMonthHead h3,
+  .adminCalendarPanelMerged .adminCalendarHead h3 {
+    font-size: 22px !important;
+  }
+
+  .adminNutritionMonthHead p,
+  .adminCalendarPanelMerged .adminCalendarHead p {
+    font-size: 12px !important;
+  }
+
+  .adminNutritionMonthSummary {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .adminNutritionMonthSummary div {
+    padding: 10px !important;
+  }
+
+  .adminNutritionMonthSummary strong {
+    font-size: 14px !important;
+  }
+
+  .adminNutritionCalendarLegend span {
+    min-height: 28px !important;
+    padding: 0 9px !important;
+    font-size: 10px !important;
+  }
+
+  .adminNutritionCalendarMonthTitle strong {
+    font-size: 16px !important;
+  }
+
+  .adminNutritionCalendarMonthTitle span {
+    font-size: 11px !important;
+  }
+
+  .adminNutritionMonthGrid {
+    gap: 5px !important;
+  }
+
+  .adminNutritionWeekday {
+    font-size: 10px !important;
+    min-height: 22px !important;
+  }
+
+  .adminNutritionDayCell,
+  .adminNutritionDayContent {
+    min-height: 66px !important;
+    border-radius: 12px !important;
+  }
+
+  .adminNutritionDayContent {
+    padding: 6px 4px !important;
+  }
+
+  .adminNutritionDayContent span {
+    font-size: 9px !important;
+  }
+
+  .adminNutritionDayContent strong {
+    font-size: 12px !important;
+  }
+
+  .adminNutritionDayContent small,
+  .adminNutritionDayContent em {
+    font-size: 8px !important;
+  }
+
+  .adminNutritionDayProteinFill,
+  .adminNutritionDayCarbsFill,
+  .adminNutritionDayFatFill {
+    width: 3px !important;
+  }
+
+  .adminNutritionDayCarbsFill {
+    left: 4px !important;
+  }
+
+  .adminNutritionDayFatFill {
+    left: 8px !important;
+  }
+}

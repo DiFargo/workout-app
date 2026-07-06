@@ -1,7 +1,9 @@
 @import "./admin-client-page-base.css";
 @import "./admin-client-page-alignment.css";
 @import "./admin-client-page-final-render.css";
-@import "./admin-client-page-calendar-nutrition.css";
+@import "./admin-client-page-calendar-nutrition-shell.css";
+@import "./admin-client-page-calendar-nutrition-grid.css";
+@import "./admin-client-page-calendar-nutrition-responsive.css";
 @import "./admin-client-page-program-progress.css";
 @import "./admin-client-page-actions-tabs.css";
 @import "./admin-client-page-mobile-metrics.css";

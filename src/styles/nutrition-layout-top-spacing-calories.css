@@ -1,0 +1,94 @@
+
+/* =========================================================
+   SMALLER CALORIE NUMBERS
+   ÐÐµÐ¼Ð½Ð¾Ð³Ð¾ ÑƒÐ¼ÐµÐ½ÑŒÑˆÐ°ÐµÑ‚ Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð² Ð±Ð»Ð¾ÐºÐµ ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹
+   ========================================================= */
+
+.fatSecretPage .nutritionCaloriesRenderCol strong,
+.nutritionCaloriesRenderCol strong {
+  font-size: 28px !important;
+  letter-spacing: -1.1px !important;
+  color: rgba(247, 248, 251, 0.54) !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionCaloriesRenderCol strong,
+  .nutritionCaloriesRenderCol strong {
+    font-size: 24px !important;
+    letter-spacing: -0.9px !important;
+    color: rgba(247, 248, 251, 0.52) !important;
+  }
+}
+
+/* =========================================================
+   EVEN SMALLER CALORIE NUMBERS
+   ========================================================= */
+
+.fatSecretPage .nutritionCaloriesRenderCol strong,
+.nutritionCaloriesRenderCol strong {
+  font-size: 25px !important;
+  letter-spacing: -0.95px !important;
+  color: rgba(247, 248, 251, 0.50) !important;
+}
+
+@media (max-width: 480px) {
+  .fatSecretPage .nutritionCaloriesRenderCol strong,
+  .nutritionCaloriesRenderCol strong {
+    font-size: 21px !important;
+    letter-spacing: -0.75px !important;
+    color: rgba(247, 248, 251, 0.48) !important;
+  }
+}
+
+/* =========================================================
+   CALORIES CARD + TODAY TITLE TUNE
+   ========================================================= */
+
+/* ÑÐµÑ‚ÐºÐ° ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð¼ÐµÐ½ÑŒÑˆÐµ */
+.fatSecretPage .nutritionCaloriesRenderGrid,
+.nutritionCaloriesRenderGrid,
+.fatSecretPage .nutritionCaloriesGrid,
+.nutritionCaloriesGrid {
+  transform: scale(0.93) !important;
+  transform-origin: center center !important;
+}
+
+/* Ð±Ð»Ð¾Ðº ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹ Ð½Ð¸Ð¶Ðµ */
+.fatSecretPage .nutritionCaloriesRenderCard,
+.nutritionCaloriesRenderCard {
+  min-height: 84px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* TODAY Ñ‡ÑƒÑ‚ÑŒ ÑˆÐ¸Ñ€Ðµ */
+.fatSecretPage .todayTitle,
+.todayTitle,
+.fatSecretPage .nutritionTodayTitle,
+.nutritionTodayTitle {
+  letter-spacing: 0.55px !important;
+}
+
+@media (max-width: 480px) {
+
+  .fatSecretPage .nutritionCaloriesRenderGrid,
+  .nutritionCaloriesRenderGrid,
+  .fatSecretPage .nutritionCaloriesGrid,
+  .nutritionCaloriesGrid {
+    transform: scale(0.90) !important;
+  }
+
+  .fatSecretPage .nutritionCaloriesRenderCard,
+  .nutritionCaloriesRenderCard {
+    min-height: 78px !important;
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+  }
+
+  .fatSecretPage .todayTitle,
+  .todayTitle,
+  .fatSecretPage .nutritionTodayTitle,
+  .nutritionTodayTitle {
+    letter-spacing: 0.7px !important;
+  }
+}
