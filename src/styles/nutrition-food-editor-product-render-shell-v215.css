@@ -1,0 +1,45 @@
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) {
+  padding: 28px 20px 24px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(29, 255, 109, 0.055), transparent 32%),
+    radial-gradient(circle at 50% 42%, rgba(255,255,255,0.028), transparent 42%),
+    linear-gradient(180deg, #061012 0%, #05090b 100%) !important;
+}
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTopPremium {
+  position: absolute !important;
+  top: 18px !important;
+  left: 18px !important;
+  right: 18px !important;
+  height: 56px !important;
+  padding: 0 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchBackMini {
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(255,255,255,0.94) !important;
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  pointer-events: auto !important;
+}
+
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTitleWrap,
+.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchClosePremium {
+  display: none !important;
+}
+
+.foodEditRenderScreen {
+  width: 100% !important;
+  max-width: 430px !important;
+  margin: 0 auto !important;
+  padding: 54px 0 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
