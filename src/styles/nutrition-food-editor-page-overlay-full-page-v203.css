@@ -1,0 +1,97 @@
+/* =========================================================
+   FULL PAGE PRODUCT EDIT
+   ========================================================= */
+
+.foodEditPageOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  background:
+    radial-gradient(circle at top, rgba(38,255,116,0.05), transparent 30%),
+    linear-gradient(180deg, rgba(5,10,12,0.985), rgba(3,7,9,1)) !important;
+}
+
+.foodEditPageSheet {
+  width: 100% !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+  padding: 18px 16px 42px !important;
+}
+
+.foodEditPageHeader {
+  display: grid !important;
+  grid-template-columns: 44px 1fr auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-bottom: 24px !important;
+}
+
+.foodEditPageHeader strong {
+  color: rgba(248,248,246,0.95) !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.5px !important;
+}
+
+.foodEditPageBack,
+.foodEditPageSave {
+  border: none !important;
+  background: rgba(255,255,255,0.06) !important;
+  color: rgba(248,248,246,0.9) !important;
+  border-radius: 14px !important;
+  min-height: 42px !important;
+  padding: 0 14px !important;
+  font-weight: 800 !important;
+}
+
+.foodEditPageBack {
+  width: 42px !important;
+  padding: 0 !important;
+  font-size: 22px !important;
+}
+
+.foodEditPageSave {
+  color: rgba(38,255,116,0.92) !important;
+}
+
+.foodEditPageContent {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.foodEditPageContent label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.foodEditPageContent label span {
+  color: rgba(248,248,246,0.48) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.foodEditPageContent input,
+.foodEditPageContent textarea {
+  width: 100% !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  background: rgba(255,255,255,0.04) !important;
+  border-radius: 18px !important;
+  min-height: 54px !important;
+  padding: 14px !important;
+  color: rgba(248,248,246,0.95) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+.foodEditPageContent textarea {
+  min-height: 140px !important;
+  resize: vertical !important;
+}
+
+.foodEditPageGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 12px !important;
+}
