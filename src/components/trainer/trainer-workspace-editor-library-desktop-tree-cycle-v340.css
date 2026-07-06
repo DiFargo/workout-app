@@ -1,0 +1,39 @@
+
+.trainerNextMoreDrawer nav,
+.trainerMessageCoachHint > div,
+.trainerProgramCycles {
+  display: grid;
+  gap: 7px;
+}
+
+.trainerProgramCycle {
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 7px;
+}
+
+.trainerProgramCycle.selected {
+  border-color: var(--tn-purple-border);
+  background: linear-gradient(100deg, #faf9ff, #f1edff);
+}
+
+.trainerProgramCycleRow {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 8px;
+}
+
+.trainerProgramCycleRow > div {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.trainerProgramWeeks {
+  display: grid;
+  gap: 2px;
+  padding: 0 8px 8px;
+}

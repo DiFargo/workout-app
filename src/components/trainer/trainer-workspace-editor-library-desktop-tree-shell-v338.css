@@ -1,0 +1,29 @@
+.trainerProgramConstructorGrid {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.trainerProgramTree {
+  overflow: hidden;
+  padding: 10px;
+}
+
+.trainerProgramTree button,
+.trainerProgramTree input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+.trainerProgramTree button {
+  cursor: pointer;
+}
+
+.trainerProgramTree > section + section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--tn-line);
+}

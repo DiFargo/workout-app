@@ -1,0 +1,32 @@
+
+.trainerProgramTreeAdd {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  color: var(--tn-purple);
+  font-size: 9px;
+}
+
+.trainerProgramAddCycle,
+.trainerProgramAddMonth {
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  border: 1px solid var(--tn-purple-border) !important;
+  border-radius: 7px;
+  color: var(--tn-purple);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.trainerProgramAddMonth {
+  min-height: 36px;
+  border-style: dashed !important;
+  font-size: 10px;
+}

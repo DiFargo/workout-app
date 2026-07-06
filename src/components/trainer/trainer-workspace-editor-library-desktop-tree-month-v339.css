@@ -1,0 +1,56 @@
+
+.trainerProgramMonthRow {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+}
+
+.trainerProgramMonthRow > svg {
+  color: #394051;
+}
+
+.trainerProgramMonthRow label,
+.trainerProgramCycleRow label {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.trainerProgramMonthRow input,
+.trainerProgramCycleRow strong {
+  width: 100%;
+  height: auto !important;
+  padding: 0;
+  border: 0 !important;
+  outline: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--tn-text);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.trainerProgramMonthRow button,
+.trainerProgramCycleRow button,
+.trainerProgramWeekRow button,
+.trainerProgramDay > button:not(:first-child) {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 5px;
+  color: #515869;
+}
+
+.trainerProgramMonthRow button:hover,
+.trainerProgramCycleRow button:hover,
+.trainerProgramWeekRow button:hover,
+.trainerProgramDay > button:not(:first-child):hover,
+.trainerNextWorkoutDays .trainerNextWorkoutDayActions button:hover {
+  background: #f1efff;
+  color: var(--tn-purple);
+}
