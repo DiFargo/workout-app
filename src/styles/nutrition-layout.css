@@ -4,5 +4,7 @@
 @import "./nutrition-layout-meal-cards.css";
 @import "./nutrition-layout-meal-alignment.css";
 @import "./nutrition-layout-expanded-products.css";
-@import "./nutrition-layout-product-list-width.css";
+@import "./nutrition-layout-product-list-base.css";
+@import "./nutrition-layout-product-list-width-locks.css";
+@import "./nutrition-layout-product-list-final.css";
 @import "./nutrition-layout-product-text-swipe.css";

@@ -1,0 +1,146 @@
+/* === UNIFIED CLIENT CORE PAGES V310 === */
+.clientCorePage {
+  --client-page-title-size: 29px;
+  --client-card-title-size: 20px;
+  --client-body-size: 13px;
+  --client-caption-size: 11px;
+  --client-primary-radius: 22px;
+  --client-item-radius: 17px;
+  box-sizing: border-box !important;
+  position: relative !important;
+  width: min(390px, calc(100vw - 20px)) !important;
+  max-width: 390px !important;
+  height: calc(100dvh - 12px) !important;
+  min-height: calc(100dvh - 12px) !important;
+  max-height: calc(100dvh - 12px) !important;
+  margin: 6px auto !important;
+  padding: 14px 14px 98px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(145, 173, 78, 0.26) !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(127, 159, 58, 0.12), transparent 30%),
+    linear-gradient(180deg, #0c130d 0%, #071008 100%) !important;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+  font-family: Arial, sans-serif !important;
+}
+
+.clientCorePage .clientCorePageTitle {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 50px !important;
+  margin: 0 0 10px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-size: var(--client-page-title-size) !important;
+  font-weight: 850 !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0 !important;
+  text-align: center !important;
+}
+
+.clientCorePage .clientCorePageTitle::after {
+  display: none !important;
+}
+
+/* Main */
+.clientCorePageMain .appVersionBadge {
+  top: 14px !important;
+  left: 14px !important;
+}
+
+.clientCorePageMain .menuRefreshIconBtn {
+  top: 13px !important;
+  right: 14px !important;
+}
+
+.clientCorePageMain .profileCabinetSection {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: calc(100% - 60px) !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 14px !important;
+  display: grid !important;
+  grid-template-rows: auto auto auto minmax(120px, 1fr) !important;
+  overflow: hidden !important;
+  border-radius: var(--client-primary-radius) !important;
+}
+
+.clientCorePageMain .profileAiHero {
+  min-height: 80px !important;
+  padding: 6px 4px 8px !important;
+  grid-template-columns: 66px minmax(0, 1fr) !important;
+  gap: 12px !important;
+}
+
+.clientCorePageMain .profileAiAvatarWrap {
+  width: 62px !important;
+  height: 62px !important;
+}
+
+.clientCorePageMain .profileAiAvatar {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 18px !important;
+}
+
+.clientCorePageMain .profileAiHeroText h1 {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  line-height: 1.12 !important;
+}
+
+.clientCorePageMain .profileAiStatsRow {
+  margin-top: 8px !important;
+}
+
+.clientCorePageMain .profileAiStatsRow > div {
+  height: 70px !important;
+  min-height: 70px !important;
+}
+
+.clientCorePageMain .profileAiStatsRow span,
+.clientCorePageMain .profileAiMiniCard span {
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+}
+
+.clientCorePageMain .profileAiStatsRow strong,
+.clientCorePageMain .profileAiMiniCard strong {
+  font-size: 18px !important;
+  line-height: 1.08 !important;
+}
+
+.clientCorePageMain .profileAiMiniCard {
+  min-height: 74px !important;
+}
+
+.clientCorePageMain .profileAiCoachInsight {
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.clientCorePageMain .profileAiCoachToggle {
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+  padding: 13px 14px 9px !important;
+}
+
+.clientCorePageMain .profileAiCoachToggle h2 {
+  margin: 7px 0 5px !important;
+  font-size: var(--client-card-title-size) !important;
+  line-height: 1.1 !important;
+}
+
+.clientCorePageMain .profileAiCoachToggle p {
+  font-size: var(--client-body-size) !important;
+  line-height: 1.35 !important;
+}

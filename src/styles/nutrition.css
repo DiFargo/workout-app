@@ -5,5 +5,7 @@
 @import "./nutrition-fixed-viewport-profile.css";
 @import "./nutrition-cabinet-modals.css";
 @import "./nutrition-cabinet-matched-view.css";
-@import "./nutrition-client-core-pages.css";
+@import "./nutrition-client-core-pages-main.css";
+@import "./nutrition-client-core-pages-cabinet-nutrition.css";
+@import "./nutrition-client-core-pages-workout.css";
 @import "./nutrition-shell-overrides.css";

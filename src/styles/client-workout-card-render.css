@@ -1,4 +1,6 @@
-@import "./client-workout-card-render-base.css";
+@import "./client-workout-card-render-shell.css";
+@import "./client-workout-card-render-card.css";
+@import "./client-workout-card-render-actions.css";
 @import "./client-workout-card-render-mobile.css";
 @import "./client-workout-card-render-narrow.css";
 @import "./client-workout-card-render-short.css";

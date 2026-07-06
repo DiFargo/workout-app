@@ -1,6 +1,8 @@
 @import "./profile-dashboard-telegram-base.css";
 @import "./profile-dashboard-telegram-unified.css";
-@import "./profile-dashboard-telegram-ai-base.css";
+@import "./profile-dashboard-telegram-ai-shell.css";
+@import "./profile-dashboard-telegram-ai-status.css";
+@import "./profile-dashboard-telegram-ai-base-polish.css";
 @import "./profile-dashboard-telegram-ai-polish.css";
 @import "./profile-dashboard-telegram-stats-cards.css";
 @import "./profile-dashboard-telegram-progress-history.css";
