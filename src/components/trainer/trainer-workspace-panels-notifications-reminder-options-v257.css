@@ -1,0 +1,213 @@
+.trainerReminderCard {
+  padding: 14px;
+  border: 1px solid #eceaf3;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.trainerReminderCardHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.trainerReminderIcon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #eee9ff;
+  color: var(--tn-purple);
+}
+
+.trainerReminderCardHead strong {
+  display: block;
+  color: var(--tn-text);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.trainerReminderCardHead p {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.trainerReminderCardHead > svg {
+  color: var(--tn-muted);
+}
+
+.trainerNotificationSchedule {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.trainerNotificationCalendar .trainerNotificationSchedule {
+  margin-top: 12px;
+}
+
+.trainerNotificationSchedule > span {
+  min-height: 62px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
+  align-items: center;
+  gap: 3px 9px;
+  padding: 10px 12px;
+  border: 1px solid #eceaf3;
+  border-radius: 7px;
+  background: #faf9fd;
+}
+
+.trainerNotificationSchedule svg {
+  grid-row: 1 / 3;
+  color: var(--tn-purple);
+}
+
+.trainerNotificationOffsets,
+.trainerReminderPeriod {
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid #eceaf3;
+}
+
+.trainerNotificationOffsets > p,
+.trainerProgressReminderSettings > div:first-child > p {
+  margin: 3px 0 10px;
+  color: var(--tn-muted);
+  font-size: 8px;
+}
+
+.trainerNotificationOffsets > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.trainerNotificationOffsets label {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.trainerNotificationOffsets label.active {
+  border-color: var(--tn-purple);
+  background: #f5f2ff;
+  color: var(--tn-purple);
+}
+
+.trainerNotificationOffsets label > span {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #d9dbe3;
+  border-radius: 5px;
+  color: transparent;
+}
+
+.trainerNextChartHead button.active,
+.trainerPhotoViewTabs button.active,
+.trainerNextProgramControl > button:nth-of-type(1),
+.trainerProgramSelectedBar > div button.primary,
+.trainerNextNutrition > .trainerNextPageTabs button.active,
+.trainerNutritionPeriodButtons button.active,
+.trainerNotificationOffsets label.active > span {
+  border-color: var(--tn-purple);
+  background: var(--tn-purple);
+  color: #fff;
+}
+
+.trainerReminderPeriod > strong {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--tn-text);
+  font-size: 10px;
+}
+
+.trainerReminderPeriod > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerReminderPeriod button {
+  min-height: 40px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--tn-line);
+  background: #fff;
+  color: var(--tn-text);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.trainerReminderPeriod button:last-child {
+  border-right: 0;
+}
+
+.trainerReminderPeriod button.active {
+  background: #f4f0ff;
+  color: var(--tn-purple);
+  box-shadow: inset 0 0 0 1px #cfc3ff;
+}
+
+.trainerProgressReminderSettings {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid #eceaf3;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerProgressReminderOptions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.trainerProgressReminderOptions label {
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
+  align-items: center;
+  gap: 3px 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fbfaff;
+  cursor: pointer;
+}
+
+.trainerProgressReminderOptions label.active {
+  border-color: var(--tn-purple);
+  background: #f5f2ff;
+  box-shadow: 0 8px 18px rgba(103, 70, 255, 0.08);
+}
+
+.trainerProgressReminderOptions label > span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  grid-row: 1 / 3;
+  place-items: center;
+  border-radius: 8px;
+  background: #eee9ff;
+  color: var(--tn-purple);
+}

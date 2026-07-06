@@ -1,0 +1,143 @@
+.trainerNotificationCalendar {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid #eceaf3;
+  border-radius: 8px;
+  background: #fbfaff;
+}
+
+.trainerNotificationCalendar p,
+.trainerNotificationCalendar > small {
+  display: block;
+  margin: 3px 0 0;
+  color: var(--tn-muted);
+  font-size: 8px;
+}
+
+.trainerNotificationCalendar > header button {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--tn-line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--tn-purple);
+}
+
+.trainerNotificationCalendar > header b {
+  min-width: 126px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.trainerNotificationWeekdays {
+  margin-top: 12px;
+  color: var(--tn-muted);
+  font-size: 8px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.trainerNotificationCalendarGrid {
+  margin-top: 6px;
+}
+
+.trainerNotificationCalendarGrid button {
+  min-height: 40px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid #eceaf3;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--tn-text);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.trainerNotificationCalendarGrid button b {
+  line-height: 1;
+}
+
+.trainerNotificationCalendarGrid button.muted {
+  color: #c3c6d1;
+}
+
+.trainerNotificationCalendarGrid button.active {
+  border-color: var(--tn-purple);
+  background: #f4f0ff;
+  color: var(--tn-purple);
+  box-shadow: 0 8px 16px rgba(103, 70, 255, 0.18);
+}
+
+.trainerNotificationCalendarGrid button.photoReminder {
+  border-color: #9fd6ff;
+  background: #f0f8ff;
+  color: #0a6fb5;
+}
+
+.trainerNotificationCalendarGrid button.measurementReminder {
+  border-color: #a9e7ce;
+  background: #effcf7;
+  color: #16845a;
+}
+
+.trainerNotificationCalendarGrid button.photoReminder.measurementReminder {
+  background: linear-gradient(135deg, #f0f8ff 0%, #effcf7 100%);
+}
+
+.trainerNotificationCalendarGrid button.active.photoReminder,
+.trainerNotificationCalendarGrid button.active.measurementReminder {
+  box-shadow: inset 0 0 0 1px rgba(103, 70, 255, 0.28);
+}
+
+.trainerNotificationDayBadges {
+  min-height: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.trainerNotificationDayBadges i,
+.trainerNotificationLegend i {
+  width: 11px;
+  height: 11px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 6px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.trainerNotificationDayBadges i.photo,
+.trainerNotificationLegend i.photo {
+  background: #1789d5;
+}
+
+.trainerNotificationDayBadges i.measurement,
+.trainerNotificationLegend i.measurement {
+  background: #1ca66b;
+}
+
+.trainerNotificationLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 10px;
+  color: var(--tn-muted);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.trainerNotificationLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
