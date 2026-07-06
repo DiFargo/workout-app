@@ -1,0 +1,48 @@
+/* =========================================================
+   ADD FOOD SCREEN: BACK RETURNS TO NUTRITION
+   ========================================================= */
+
+/* ÐºÐ¾Ð³Ð´Ð° Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ Ð¿Ð¾Ð¸ÑÐº/Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ ÐµÐ´Ñ‹, ÑÐºÑ€Ñ‹Ð²Ð°ÐµÐ¼ ÑÑ‚Ñ€ÐµÐ»ÐºÑƒ Ð¾ÑÐ½Ð¾Ð²Ð½Ð¾Ð³Ð¾ ÑÐºÑ€Ð°Ð½Ð° Ð¿Ð¸Ñ‚Ð°Ð½Ð¸Ñ */
+.fatSecretPage:has(.fatFoodSearchOverlay) > .nutritionBackTopLeftV3,
+.fatSecretPage:has(.fatFoodSearchOverlay) > .backBtn.universalFixedBackPointer,
+.fatSecretPage:has(.fatFoodSearchOverlay) .nutritionBackTopLeftV3,
+.fatSecretPage:has(.fatFoodSearchOverlay) .backBtn.universalFixedBackPointer {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ð½Ð¾Ð²Ð°Ñ ÑÑ‚Ñ€ÐµÐ»ÐºÐ° Ð¸Ð¼ÐµÐ½Ð½Ð¾ Ð½Ð° ÑÐºÑ€Ð°Ð½Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ ÐµÐ´Ñ‹ */
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .addFoodBackOnly {
+  position: fixed !important;
+  top: 18px !important;
+  left: 18px !important;
+  right: auto !important;
+
+  z-index: 99999 !important;
+
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: rgba(255,255,255,0.95) !important;
+
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+/* ÐºÑ€ÐµÑÑ‚Ð¸Ðº Ð¾Ñ‚Ð¼ÐµÐ½Ñ‹ Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ ÑÐ¿Ñ€Ð°Ð²Ð° */
+.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchClosePremium {
+  position: fixed !important;
+  top: 18px !important;
+  right: 18px !important;
+  left: auto !important;
+}
