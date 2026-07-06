@@ -1,0 +1,58 @@
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanInlineHidden {
+  display: none !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline {
+  display: block !important;
+  flex: 0 0 auto !important;
+  width: min(100%, 540px) !important;
+  min-height: 72px !important;
+  margin: 0 auto 14px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(225, 229, 243, 0.86) !important;
+  border-radius: 26px !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  box-shadow:
+    0 18px 42px rgba(44, 55, 106, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopCard {
+  width: 100% !important;
+  min-height: 72px !important;
+  display: grid !important;
+  grid-template-columns: 52px 1fr auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 12px 14px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #5d5749 !important;
+  font: inherit !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopTitle {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopTitle strong {
+  color: #151a27 !important;
+  font-size: 17px !important;
+  font-weight: 950 !important;
+  line-height: 1.05 !important;
+}
+
+html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopTitle small {
+  overflow: hidden !important;
+  color: #817b6e !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
