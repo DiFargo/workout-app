@@ -1,0 +1,22 @@
+/* Workout flow polish V458 */
+.workoutRunPage .workoutCloseButton {
+  top: max(12px, calc(env(safe-area-inset-top) + 10px)) !important;
+  right: max(12px, calc(env(safe-area-inset-right) + 12px)) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: rgba(15, 18, 24, 0.92) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.workoutRunPage .workoutStageTitle {
+  padding-right: 58px !important;
+  padding-left: 58px !important;
+}
+
+.workoutRunPage .workoutStageCard,
+.workoutRunPage .startWorkoutSlide {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: linear-gradient(180deg, rgba(23, 27, 33, 0.98), rgba(9, 12, 16, 0.99)) !important;
+  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}

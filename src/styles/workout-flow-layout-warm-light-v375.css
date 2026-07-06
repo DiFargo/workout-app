@@ -1,0 +1,50 @@
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutCloseButton {
+  border-color: #dfe3ef !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #4f5668 !important;
+  -webkit-text-fill-color: #4f5668 !important;
+  box-shadow: 0 8px 22px rgba(50, 59, 104, 0.12) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseValidation {
+  border-color: #f2caca;
+  background: #fff4f4;
+  color: #a13f3f;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseTools button {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseTools button.active {
+  border-color: #7565e8 !important;
+  background: #efedff !important;
+  color: #4f3dd2 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseNote > span,
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseTechniqueHint p,
+html:root[data-app-theme="warm-light"] body #root .workoutFinishComment > span {
+  color: #737b91 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutExerciseNote textarea,
+html:root[data-app-theme="warm-light"] body #root .workoutFinishComment textarea {
+  border-color: #dfe3ef !important;
+  background: #f7f8fc !important;
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseCard button.previousInfo:not(.showVideoBtn) {
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishActionPanel .finishNavigationRow .finishBackButton {
+  border-color: #e1e4ef !important;
+  background: #f4f6fc !important;
+  color: #596176 !important;
+}
