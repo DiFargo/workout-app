@@ -29,7 +29,8 @@ export default function ProfileProgressPhotosModal({
   onSelectPhoto,
   onCompareIdsChange,
   onCompareViewChange,
-  onSave
+  onSave,
+  onOpenMeasurements
 }) {
   if (!open) {
     return null;
@@ -42,7 +43,7 @@ export default function ProfileProgressPhotosModal({
       onClick={() => !uploading && onClose()}
     >
       <section
-        className="cabinetProgressPhotosModal"
+        className={onOpenMeasurements ? "cabinetProgressPhotosModal cabinetBodyControlModal" : "cabinetProgressPhotosModal"}
         role="dialog"
         aria-modal="true"
         aria-labelledby="cabinetProgressPhotosTitle"
@@ -63,6 +64,27 @@ export default function ProfileProgressPhotosModal({
             ×
           </button>
         </header>
+
+        {onOpenMeasurements && (
+          <div className="cabinetBodyControlTabs" role="tablist" aria-label="Контроль тела">
+            <button
+              type="button"
+              role="tab"
+              aria-selected="true"
+              className="active"
+            >
+              Фото прогресса
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              onClick={onOpenMeasurements}
+            >
+              Замеры
+            </button>
+          </div>
+        )}
 
         <div className="cabinetProgressPhotosBody">
           <div className="cabinetProgressPhotosIntro">

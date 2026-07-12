@@ -1,4 +1,8 @@
 @media (max-width: 640px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutProInfo {
+    overflow: visible !important;
+  }
+
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutBottomProgress::after {
     content: "" !important;
     position: absolute !important;

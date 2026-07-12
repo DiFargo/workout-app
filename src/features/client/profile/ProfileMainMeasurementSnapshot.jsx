@@ -85,14 +85,16 @@ export default function ProfileMainMeasurementSnapshot({
               )}
               <polyline className="mainMeasurementTrendLine" points={chartPolyline} />
               {chartPoints.map((point, index) => (
-                <text
-                  key={`${point.dateLabel}-weight-${index}`}
-                  className="mainMeasurementPointLabel"
-                  x={point.x}
-                  y={point.y - 14}
-                >
-                  {point.weightLabel}
-                </text>
+                index === chartPoints.length - 1 ? null : (
+                  <text
+                    key={`${point.dateLabel}-weight-${index}`}
+                    className="mainMeasurementPointLabel"
+                    x={point.x}
+                    y={point.y - 14}
+                  >
+                    {point.weightLabel}
+                  </text>
+                )
               ))}
               {chartPoints.map((point, index) => (
                 <circle

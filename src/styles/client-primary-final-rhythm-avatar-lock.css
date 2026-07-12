@@ -1,3 +1,10 @@
+html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiHero,
+html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero,
+html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard > .profileAiHero.profileAiHero {
+  grid-template-columns: 70px minmax(0, 1fr) !important;
+  column-gap: 16px !important;
+}
+
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiAvatarWrap,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiAvatar,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedAvatar.profileAiAvatar,

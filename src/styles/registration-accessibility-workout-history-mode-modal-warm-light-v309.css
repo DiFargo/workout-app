@@ -31,3 +31,9 @@
 :root[data-app-theme="warm-light"] .workoutModeModalOptions small {
   color: #73798b;
 }
+
+:root[data-app-theme="warm-light"] .workoutModeModalRemember {
+  border-color: #e1e4ee;
+  background: #fff;
+  color: #5f594f;
+}

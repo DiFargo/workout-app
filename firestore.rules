@@ -37,6 +37,10 @@ service cloud.firestore {
         "assignedProgramName",
         "assignedProgramAt",
         "assignedProgramUpdatedAt",
+        "assignedProgramLifecycleStatus",
+        "assignedProgramVisibility",
+        "assignedProgramPublishedAt",
+        "assignedProgramAssignedByUid",
         "assignedWorkoutCount",
         "adminClaimUpdatedAt",
         "trainerRoleUpdatedAt"
@@ -56,6 +60,10 @@ service cloud.firestore {
           "assignedProgramName",
           "assignedProgramAt",
           "assignedProgramUpdatedAt",
+          "assignedProgramLifecycleStatus",
+          "assignedProgramVisibility",
+          "assignedProgramPublishedAt",
+          "assignedProgramAssignedByUid",
           "assignedWorkoutCount",
           "adminClaimUpdatedAt",
           "trainerRoleUpdatedAt"
@@ -68,7 +76,7 @@ service cloud.firestore {
     }
 
     function isAssignedTrainerData(data) {
-      return signedIn() && (
+      return isTrainer() && (
         data.trainerId == request.auth.uid ||
         data.assignedTrainerId == request.auth.uid ||
         data.coachId == request.auth.uid ||
@@ -94,10 +102,23 @@ service cloud.firestore {
           "assignedProgramName",
           "assignedProgramAt",
           "assignedProgramUpdatedAt",
+          "assignedProgramLifecycleStatus",
+          "assignedProgramVisibility",
+          "assignedProgramPublishedAt",
+          "assignedProgramAssignedByUid",
           "assignedWorkoutCount",
           "workoutCalendar"
         ]) &&
         request.resource.data.assignedProgramUpdatedAt is string &&
+        (
+          request.resource.data.assignedProgramId == "" ||
+          (
+            request.resource.data.assignedProgramLifecycleStatus == "active" &&
+            request.resource.data.assignedProgramVisibility == "client_active" &&
+            request.resource.data.assignedProgramPublishedAt is string &&
+            request.resource.data.assignedProgramAssignedByUid == request.auth.uid
+          )
+        ) &&
         (
           (
             request.resource.data.assignedProgramId == "" &&
@@ -121,6 +142,18 @@ service cloud.firestore {
           "workoutTime",
           "telegram",
           "telegramNotificationsEnabled",
+          "updatedAt"
+        ]);
+    }
+
+    function isTrainerClientArchiveUpdate() {
+      return isTrainer() &&
+        isAssignedTrainerData(resource.data) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "archived",
+          "active",
+          "archivedAt",
+          "restoredAt",
           "updatedAt"
         ]);
     }
@@ -158,11 +191,109 @@ service cloud.firestore {
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(trainerNutritionStateFields());
     }
 
+    function isTrainerOutgoingMessage(uid) {
+      return isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.keys().hasOnly([
+          "type",
+          "direction",
+          "text",
+          "status",
+          "sentAt",
+          "sentByUid",
+          "sentByEmail"
+        ]) &&
+        request.resource.data.type == "manual" &&
+        request.resource.data.direction == "out" &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() > 0 &&
+        request.resource.data.status == "saved" &&
+        request.resource.data.sentAt is string &&
+        request.resource.data.sentByUid == request.auth.uid &&
+        request.resource.data.sentByEmail is string;
+    }
+
+    function isTrainerMessageReadUpdate(uid) {
+      return isTrainer() &&
+        isAssignedTrainer(uid) &&
+        resource.data.type == "incoming" &&
+        resource.data.direction == "in" &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "trainerReadAt",
+          "trainerReadByUid"
+        ]) &&
+        request.resource.data.trainerReadAt is string &&
+        request.resource.data.trainerReadByUid == request.auth.uid;
+    }
+
     function isTrainerCreatingAssignedClient() {
       return isTrainer() &&
         request.resource.data.role == "client" &&
         request.resource.data.createdByUid == request.auth.uid &&
         isAssignedTrainerData(request.resource.data);
+    }
+
+    function inviteFields() {
+      return [
+        "email",
+        "name",
+        "status",
+        "authUid",
+        "trainerId",
+        "trainerEmail",
+        "createdByUid",
+        "createdByEmail",
+        "createdAt",
+        "updatedAt",
+        "inviteUrl",
+        "acceptedAt",
+        "acceptedUid"
+      ];
+    }
+
+    function isTrainerInviteWrite() {
+      return (isAdmin() || isTrainer()) &&
+        request.resource.data.keys().hasOnly(inviteFields()) &&
+        request.resource.data.email is string &&
+        request.resource.data.status in ["active", "created", "accepted", "revoked"] &&
+        (
+          isAdmin() ||
+          (
+            request.resource.data.trainerId == request.auth.uid &&
+            request.resource.data.createdByUid == request.auth.uid
+          )
+        );
+    }
+
+    function isInviteAcceptance() {
+      return signedIn() &&
+        resource.data.email == request.auth.token.email &&
+        request.resource.data.email == resource.data.email &&
+        request.resource.data.trainerId == resource.data.trainerId &&
+        request.resource.data.createdByUid == resource.data.createdByUid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "status",
+          "acceptedAt",
+          "acceptedUid",
+          "updatedAt"
+        ]) &&
+        request.resource.data.status == "accepted" &&
+        request.resource.data.acceptedUid == request.auth.uid;
+    }
+
+    function isInvitedOwnerCreate(uid) {
+      return isOwner(uid) &&
+        exists(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)) &&
+        get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.status in ["active", "created"] &&
+        request.resource.data.role == "client" &&
+        request.resource.data.email == request.auth.token.email &&
+        request.resource.data.trainerId == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerId &&
+        request.resource.data.assignedTrainerId == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerId &&
+        request.resource.data.coachId == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerId &&
+        request.resource.data.createdByUid == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerId &&
+        request.resource.data.trainerEmail == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerEmail &&
+        request.resource.data.assignedTrainerEmail == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerEmail &&
+        request.resource.data.coachEmail == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerEmail;
     }
 
     function isTrainerOwnedProgramWorkout(uid) {
@@ -189,15 +320,75 @@ service cloud.firestore {
         ]);
     }
 
-    match /users/{uid} {
-      allow create: if isAdmin() || isSafeOwnerCreate(uid) || isTrainerCreatingAssignedClient();
-      allow read: if isOwnerOrAdmin(uid) || isAssignedTrainerData(resource.data);
-      allow update: if isAdmin() || isSafeOwnerUpdate(uid) || isTrainerProgramAssignment() || isTrainerClientScheduleUpdate() || isTrainerNutritionPlanUpdate();
-      allow delete: if isAdmin() || (
-        isTrainer() &&
-        resource.data.role == "client" &&
-        isAssignedTrainerData(resource.data)
+    match /loginAliases/{aliasId} {
+      allow read: if true;
+      allow create: if signedIn() &&
+        request.resource.data.keys().hasOnly([
+          "email",
+          "uid",
+          "createdAt",
+          "updatedAt"
+        ]) &&
+        (
+          (
+            request.resource.data.uid == request.auth.uid &&
+            request.resource.data.email == request.auth.token.email
+          ) ||
+          (
+            isAdmin() ||
+            (
+              isTrainer() &&
+              isAssignedTrainer(request.resource.data.uid)
+            )
+          )
+        );
+      allow update: if signedIn() &&
+        request.resource.data.keys().hasOnly([
+          "email",
+          "uid",
+          "createdAt",
+          "updatedAt"
+        ]) &&
+        (
+          (
+            resource.data.uid == request.auth.uid &&
+            request.resource.data.uid == request.auth.uid &&
+            request.resource.data.email == request.auth.token.email
+          ) ||
+          (
+            isAdmin() ||
+            (
+              isTrainer() &&
+              resource.data.uid == request.resource.data.uid &&
+              isAssignedTrainer(resource.data.uid)
+            )
+          )
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /clientInvites/{inviteId} {
+      allow read: if signedIn() && (
+        isAdmin() ||
+        resource.data.email == request.auth.token.email ||
+        (
+          isTrainer() &&
+          (
+            resource.data.trainerId == request.auth.uid ||
+            resource.data.createdByUid == request.auth.uid
+          )
+        )
       );
+      allow create: if isTrainerInviteWrite();
+      allow update: if isTrainerInviteWrite() || isInviteAcceptance();
+      allow delete: if isAdmin() || (isTrainer() && resource.data.trainerId == request.auth.uid);
+    }
+
+    match /users/{uid} {
+      allow create: if isAdmin() || isInvitedOwnerCreate(uid) || isTrainerCreatingAssignedClient();
+      allow read: if isOwnerOrAdmin(uid) || isAssignedTrainerData(resource.data);
+      allow update: if isAdmin() || isSafeOwnerUpdate(uid) || isTrainerProgramAssignment() || isTrainerClientScheduleUpdate() || isTrainerClientArchiveUpdate() || isTrainerNutritionPlanUpdate();
+      allow delete: if isAdmin();
 
       match /workouts/{workoutId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
@@ -257,6 +448,13 @@ service cloud.firestore {
       match /payments/{paymentId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
         allow write: if isAdmin() || (isTrainer() && isAssignedTrainer(uid));
+      }
+
+      match /telegramMessages/{messageId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow create: if isOwnerOrAdmin(uid) || isTrainerOutgoingMessage(uid);
+        allow update: if isOwnerOrAdmin(uid) || isTrainerMessageReadUpdate(uid);
+        allow delete: if isOwnerOrAdmin(uid);
       }
 
       match /{collectionId}/{subPath=**} {

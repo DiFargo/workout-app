@@ -97,7 +97,7 @@ export default function WorkoutExerciseVideoFrame({
         </>
       ) : (
         <div className="workoutExerciseVideoFallback">
-          <strong>Видео техники недоступно</strong>
+          <strong>{exercise.video ? "Видео техники недоступно" : "Видео появится позже"}</strong>
           <small>{fallbackHint}</small>
           {exercise.video && exerciseVideoFailed && (
             <button type="button" onClick={onRetryVideo}>

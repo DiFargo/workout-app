@@ -1,30 +1,40 @@
+import { Mail } from "lucide-react";
+
 export default function ProfileAppSettingsSection({
   isWarmLightTheme,
+  email,
   telegramProfile,
   onToggleTheme,
+  onOpenEmail,
   onOpenTelegram,
   onTelegramAvatarError,
+  heading,
   darkThemeLabel = "тёмный стиль",
   disconnectedText = "Нажми, чтобы подключить",
   connectedBadge = "Подключён"
 }) {
   return (
-    <section className="profileDashboardCard profileAppSettingsSection">
+    <section className={heading ? "profileDashboardCard profileAppSettingsSection hasHeading" : "profileDashboardCard profileAppSettingsSection"}>
+      {heading && <p className="profileAccountPanelTitle">{heading}</p>}
       <div className="profileSettingsActions">
-        <button
-          type="button"
-          className="profileThemeSwitchBtn"
-          aria-label={isWarmLightTheme ? `Переключить оформление на ${darkThemeLabel}` : "Переключить оформление на светлый стиль"}
-          aria-pressed={isWarmLightTheme}
-          onClick={onToggleTheme}
-        >
-          <span className="profileThemeIcon">{isWarmLightTheme ? "🌙" : "☀️"}</span>
-          <span className="profileThemeText">
-            <strong>Оформление</strong>
-            <small>{isWarmLightTheme ? `Переключить на ${darkThemeLabel}` : "Переключить на светлый стиль"}</small>
-          </span>
-          <i>›</i>
-        </button>
+        {onOpenEmail && (
+          <button
+            type="button"
+            className={email ? "profileSettingsEmailItem connected" : "profileSettingsEmailItem"}
+            aria-label={email ? "Открыть настройки почты" : "Привязать почту"}
+            onClick={onOpenEmail}
+          >
+            <span className="profileSettingsTelegramAvatar profileSettingsEmailAvatar">
+              <Mail size={18} strokeWidth={2.4} />
+            </span>
+            <span className="profileSettingsTelegramText">
+              <strong>Почта</strong>
+              <small>{email ? `${email} · привязана` : "Нажми, чтобы привязать"}</small>
+            </span>
+            <em>{email ? "Привязана" : "Привязать"}</em>
+            <i>›</i>
+          </button>
+        )}
 
         <button
           type="button"
@@ -45,6 +55,23 @@ export default function ProfileAppSettingsSection({
           </span>
           <em>{telegramProfile.connected ? connectedBadge : "Подключить"}</em>
           <i>›</i>
+        </button>
+
+        <button
+          type="button"
+          className="profileThemeSwitchBtn"
+          aria-label={isWarmLightTheme ? `Переключить оформление на ${darkThemeLabel}` : "Переключить оформление на светлый стиль"}
+          aria-pressed={isWarmLightTheme}
+          onClick={onToggleTheme}
+        >
+          <span className="profileThemeIcon">{isWarmLightTheme ? "🌙" : "☀️"}</span>
+          <span className="profileThemeText">
+            <strong>Оформление</strong>
+            <small>{isWarmLightTheme ? `Переключить на ${darkThemeLabel}` : "Переключить на светлый стиль"}</small>
+          </span>
+          <span className="profileThemeToggle" aria-hidden="true">
+            <span />
+          </span>
         </button>
       </div>
     </section>

@@ -1,12 +1,17 @@
 import TrainerWorkspace from "../../components/trainer/TrainerWorkspace";
+import TrainerClientOverviewModals from "./TrainerClientOverviewModals";
 
 export default function TrainerDashboardWorkspaceRoute({
   APP_VERSION,
   adminClientHistory,
   adminClientMeasurements,
+  adminNewTaskDueDate,
+  adminNewTaskTitle,
   adminClientProgressPhotos,
   adminClientStatus,
   adminClientTasks,
+  adminClientTelegramMessages,
+  adminTaskComposerOpen,
   adminSelectedTemplateId,
   adminTrainingTemplates,
   adminTrainerNote,
@@ -14,6 +19,7 @@ export default function TrainerDashboardWorkspaceRoute({
   assignSavedProgramToClient,
   attentionCount,
   clientNutritionDays,
+  createAdminClientTask,
   getAdminClientGoalLabel,
   getClientActivityStatus,
   getTrainerNextCreateClientState,
@@ -35,18 +41,24 @@ export default function TrainerDashboardWorkspaceRoute({
   setAdminClientPageOpen,
   setAdminCreateClientModalOpen,
   setAdminClientStatus,
+  setAdminNewTaskDueDate,
+  setAdminNewTaskTitle,
   setAdminSelectedTemplateId,
+  setAdminTaskComposerOpen,
   setAdminUsersSelectedTab,
   setTrainerNextSection,
   sortWorkoutDays,
   plan,
   telegramProfile,
+  trainerActionCenter,
   trainerClientSummariesLoading,
   trainerExerciseLibraryItems,
   trainerName,
   trainerNextActiveSection,
   trainerNextMode,
   trainerNextSelectedSummary,
+  selectedClientSnapshot,
+  selectedLastWorkoutReview,
   trainerNextSummaries,
   trainerNextWorkspaceHandlers,
   trainerNutritionPlanOptions,
@@ -55,7 +67,8 @@ export default function TrainerDashboardWorkspaceRoute({
   adminExerciseVideoUploadingId
 }) {
   return (
-    <TrainerWorkspace
+    <>
+      <TrainerWorkspace
       appVersion={APP_VERSION}
       mode={trainerNextMode}
       activeSection={trainerNextActiveSection}
@@ -65,6 +78,7 @@ export default function TrainerDashboardWorkspaceRoute({
       trainerAvatar={telegramProfile.avatarUrl}
       clients={usersList}
       clientSummaries={trainerNextSummaries}
+      actionCenter={trainerActionCenter}
       summariesLoading={trainerClientSummariesLoading}
       counts={{
         active: trainerStatusCounts.active,
@@ -79,6 +93,8 @@ export default function TrainerDashboardWorkspaceRoute({
         ...trainerNextSelectedSummary,
         status: getClientActivityStatus(trainerNextSelectedSummary)
       }}
+      selectedClientSnapshot={selectedClientSnapshot}
+      selectedLastWorkoutReview={selectedLastWorkoutReview}
       activeClientTab={adminUsersSelectedTab}
       onClientTabChange={(tab) => {
         setAdminUsersSelectedTab(tab);
@@ -105,6 +121,8 @@ export default function TrainerDashboardWorkspaceRoute({
       onTestNotification={() => sendAdminTestWorkoutReminder(selectedClient)}
       onConnectTelegram={openClientTelegramConnection}
       onSendMessage={sendTrainerClientMessage}
+      telegramMessages={adminClientTelegramMessages}
+      onCreateTask={() => setAdminTaskComposerOpen(true)}
       onClientAction={handleTrainerClientAction}
       workouts={sortWorkoutDays(plan.workouts || [])}
       exerciseLibrary={trainerExerciseLibraryItems}
@@ -130,6 +148,18 @@ export default function TrainerDashboardWorkspaceRoute({
       onRemoveDay={trainerNextWorkspaceHandlers.onRemoveDay}
       onSaveWorkouts={saveWorkoutsToFirebase}
       onLogout={logout}
-    />
+      />
+      <TrainerClientOverviewModals
+        adminClientProgressPhotos={adminClientProgressPhotos}
+        adminNewTaskDueDate={adminNewTaskDueDate}
+        adminNewTaskTitle={adminNewTaskTitle}
+        adminTaskComposerOpen={adminTaskComposerOpen}
+        createAdminClientTask={createAdminClientTask}
+        selectedPhotoCompare={[]}
+        setAdminNewTaskDueDate={setAdminNewTaskDueDate}
+        setAdminNewTaskTitle={setAdminNewTaskTitle}
+        setAdminTaskComposerOpen={setAdminTaskComposerOpen}
+      />
+    </>
   );
 }

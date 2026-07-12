@@ -13,8 +13,8 @@ import {
   WorkoutDraftRestoreDialog,
   WorkoutReadinessDialog
 } from "../workout/WorkoutDialogs";
+import ProfileAccountSettingsSection from "../../features/client/profile/ProfileAccountSettingsSection";
 import ProfileAppSettingsSection from "../../features/client/profile/ProfileAppSettingsSection";
-import ProfileBodyMetricsSettingsSection from "../../features/client/profile/ProfileBodyMetricsSettingsSection";
 import ProfileHeroCard from "../../features/client/profile/ProfileHeroCard";
 import ProfileMainMeasurementSnapshot from "../../features/client/profile/ProfileMainMeasurementSnapshot";
 import ProfileMainSummaryCards from "../../features/client/profile/ProfileMainSummaryCards";
@@ -25,8 +25,7 @@ import ProfileProgressPhotosModal from "../../features/client/profile/ProfilePro
 import ProfileSettingsModal from "../../features/client/profile/ProfileSettingsModal";
 import ProfileTelegramModal from "../../features/client/profile/ProfileTelegramModal";
 import ProfileTrainerNotificationsModal from "../../features/client/profile/ProfileTrainerNotificationsModal";
-import ProfileWorkoutCalendarModal from "../../features/client/profile/ProfileWorkoutCalendarModal";
-import ProfileWorkoutHistoryModal from "../../features/client/profile/ProfileWorkoutHistoryModal";
+import ProfileWorkoutJournalModal from "../../features/client/profile/ProfileWorkoutJournalModal";
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
 import {
   buildNutritionCalendarDays,
@@ -263,22 +262,20 @@ function HarnessCabinetActions({
   onOpenPhotos,
   onOpenMeasurements,
   onOpenNutrition,
-  onOpenCalendar,
-  onOpenHistory,
+  onOpenJournal,
   onOpenSettings
 }) {
   const actions = [
+    ["accountProfile", "👤", "Аккаунт", "Профиль и настройки", "Тема и Telegram", onOpenSettings, true],
     ["photos", "📷", "Контроль тела", "Фото прогресса", "Последние: 22.06.2026", onOpenPhotos],
     ["measurements", "📏", "Контроль тела", "Замеры", "22.06.2026", onOpenMeasurements],
     ["nutrition", "🍽", "План питания", "КБЖУ", "2409 ккал · Рекомпозиция", onOpenNutrition],
-    ["progress", "📅", "Тренировки", "Календарь", "4 тренировки сохранено", onOpenCalendar],
-    ["history cabinetWorkoutHistoryHarnessButton", "◷", "Тренировки", "История", "Открыть журнал", onOpenHistory],
-    ["settings", "⚙", "Параметры", "Настройки", "Тема и Telegram", onOpenSettings]
+    ["progress cabinetWorkoutHistoryHarnessButton", "📅", "Тренировки", "Календарь и история", "4 тренировки сохранено", onOpenJournal]
   ];
 
   return (
     <div className="progressHubOverview profileCabinetProgressOverview hasProgressPhotos">
-      {actions.map(([className, icon, eyebrow, title, note, onClick]) => (
+      {actions.map(([className, icon, eyebrow, title, note, onClick, useAvatar]) => (
         <button
           key={title}
           type="button"
@@ -286,7 +283,9 @@ function HarnessCabinetActions({
           onClick={onClick}
           aria-label={`${eyebrow}: ${title}`}
         >
-          <span className="progressHubCardIcon">{icon}</span>
+          <span className="progressHubCardIcon">
+            {useAvatar ? <span className="progressHubCardAvatar">👤</span> : icon}
+          </span>
           <span className="progressHubCardText">
             <small>{eyebrow}</small>
             <strong>{title}</strong>
@@ -405,7 +404,12 @@ export default function ClientE2EHarness() {
   const [workoutModeModalOpen, setWorkoutModeModalOpen] = useState(false);
   const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
   const [workoutReadinessPending, setWorkoutReadinessPending] = useState(null);
-  const [cabinetWorkoutHistoryOpen, setCabinetWorkoutHistoryOpen] = useState(false);
+  const [cabinetWorkoutJournalOpen, setCabinetWorkoutJournalOpen] = useState(
+    () => cabinetModalParam === "calendar" || cabinetModalParam === "history"
+  );
+  const [cabinetWorkoutJournalTab, setCabinetWorkoutJournalTab] = useState(
+    () => cabinetModalParam === "history" ? "history" : "calendar"
+  );
   const [cabinetWorkoutHistoryItemOpen, setCabinetWorkoutHistoryItemOpen] = useState("client_harness_history_1");
   const [cabinetMeasurementsOpen, setCabinetMeasurementsOpen] = useState(
     () => cabinetModalParam === "measurements"
@@ -414,9 +418,6 @@ export default function ClientE2EHarness() {
     () => cabinetModalParam === "nutrition"
   );
   const [cabinetNutritionGoal, setCabinetNutritionGoal] = useState("recomp");
-  const [cabinetCalendarOpen, setCabinetCalendarOpen] = useState(
-    () => cabinetModalParam === "calendar"
-  );
   const [cabinetPhotosOpen, setCabinetPhotosOpen] = useState(
     () => cabinetModalParam === "photos"
   );
@@ -430,15 +431,6 @@ export default function ClientE2EHarness() {
   const [trainerNotificationsOpen, setTrainerNotificationsOpen] = useState(
     () => cabinetModalParam === "notifications"
   );
-  const [bodyMetricsDraft, setBodyMetricsDraft] = useState({
-    sex: "male",
-    weight: "88",
-    targetWeight: "84",
-    height: "181",
-    age: "32",
-    goal: "recomp",
-    activity: "medium"
-  });
   const [cabinetCalendarEditing, setCabinetCalendarEditing] = useState(false);
   const [cabinetCalendarSelectedDate, setCabinetCalendarSelectedDate] = useState("2026-06-05");
   const nutritionPhotoInputRef = useRef(null);
@@ -545,10 +537,6 @@ export default function ClientE2EHarness() {
     setDishIngredientPickerOpen(false);
   }
 
-  function updateBodyMetricsDraft(field, value) {
-    setBodyMetricsDraft((current) => ({ ...current, [field]: value }));
-  }
-
   function renderBottomBar(firstArg, secondArg = {}) {
     const props = typeof firstArg === "object"
       ? firstArg
@@ -583,15 +571,14 @@ export default function ClientE2EHarness() {
         data-profile-tab={activeTab === "main" || activeTab === "cabinet" ? "cabinet" : undefined}
         data-testid={`client-harness-${activeTab}`}
       >
-        <div className="appVersionBadge clientPageVersionBadge">{APP_VERSION}</div>
         {activeTab === "main" && (
           <button
             type="button"
             className="menuRefreshIconBtn"
-            aria-label="Обновить страницу"
-            title="Обновить страницу"
+            aria-label="Уведомления тренера"
+            title="Уведомления тренера"
           >
-            <RefreshCw aria-hidden="true" />
+            <Bell aria-hidden="true" />
           </button>
         )}
         {activeTab === "cabinet" ? (
@@ -600,10 +587,10 @@ export default function ClientE2EHarness() {
             <button
               type="button"
               className="profileTrainerNotificationsButton"
-              aria-label="Уведомления тренера"
-              title="Уведомления тренера"
+              aria-label="Обновить страницу"
+              title="Обновить страницу"
             >
-              <Bell aria-hidden="true" />
+              <RefreshCw aria-hidden="true" />
             </button>
           </div>
         ) : (
@@ -612,6 +599,9 @@ export default function ClientE2EHarness() {
         <section className="profileUnifiedCard profileAiDashboardCard profileCabinetSection">
           {children}
         </section>
+        {activeTab === "main" && APP_VERSION ? (
+          <div className="mainDashboardAppVersion">{APP_VERSION}</div>
+        ) : null}
         {renderBottomBar(activeTab, { className: "mainMenuBottomBar profileBottomTabBar" })}
       </div>
     );
@@ -878,36 +868,15 @@ export default function ClientE2EHarness() {
 
     return renderHarnessChrome("cabinet", "Личный кабинет", (
       <>
-        <ProfileHeroCard
-          isMainDashboard={false}
-          telegramProfile={{ connected: false }}
-          avatarUrl=""
-          progressScore={90}
-          greetingName="ILYA"
-          onOpenAccount={() => {}}
-        />
         <HarnessCabinetActions
           onOpenPhotos={() => setCabinetPhotosOpen(true)}
           onOpenMeasurements={() => setCabinetMeasurementsOpen(true)}
           onOpenNutrition={() => setCabinetNutritionOpen(true)}
-          onOpenCalendar={() => setCabinetCalendarOpen(true)}
-          onOpenHistory={() => setCabinetWorkoutHistoryOpen(true)}
-          onOpenSettings={() => setCabinetSettingsOpen(true)}
-        />
-        <ProfileWorkoutHistoryModal
-          open={cabinetWorkoutHistoryOpen}
-          programScope={{
-            assignedProgramName: "Тестовая программа"
+          onOpenJournal={() => {
+            setCabinetWorkoutJournalTab("calendar");
+            setCabinetWorkoutJournalOpen(true);
           }}
-          loading={false}
-          items={cabinetHistoryItems}
-          openItemId={cabinetWorkoutHistoryItemOpen}
-          itemRefs={cabinetWorkoutHistoryItemRefs}
-          deletingId=""
-          getTimestampValue={(value) => value}
-          onClose={() => setCabinetWorkoutHistoryOpen(false)}
-          onToggleItem={(itemId) => setCabinetWorkoutHistoryItemOpen((current) => current === itemId ? "" : itemId)}
-          onRequestDelete={() => {}}
+          onOpenSettings={() => setCabinetSettingsOpen(true)}
         />
         <ProfileMeasurementsModal
           open={cabinetMeasurementsOpen}
@@ -936,27 +905,47 @@ export default function ClientE2EHarness() {
           onSave={() => {}}
           onShiftWeek={() => {}}
         />
-        <ProfileWorkoutCalendarModal
-          open={cabinetCalendarOpen}
+        <ProfileWorkoutJournalModal
+          open={cabinetWorkoutJournalOpen}
+          activeTab={cabinetWorkoutJournalTab}
           modalBodyRef={null}
-          monthDate={new Date("2026-06-01T12:00:00")}
-          monthKey={cabinetCalendarMonthKey}
-          calendarDays={cabinetCalendarDays}
-          selectedDate={cabinetCalendarSelectedDate}
-          selectedItems={cabinetCalendarSelectedItems}
-          scheduledDates={harnessWorkoutScheduledDates}
-          draftDates={harnessWorkoutScheduledDates}
-          editing={cabinetCalendarEditing}
-          saving={false}
-          status=""
-          getTimestampValue={(value) => value}
-          onClose={() => setCabinetCalendarOpen(false)}
-          onShiftMonth={() => {}}
-          onStartEdit={() => setCabinetCalendarEditing(true)}
-          onCancelEdit={() => setCabinetCalendarEditing(false)}
-          onSave={() => setCabinetCalendarEditing(false)}
-          onDayClick={(day) => setCabinetCalendarSelectedDate(day.key)}
-          onOpenHistory={() => setCabinetWorkoutHistoryOpen(true)}
+          onClose={() => setCabinetWorkoutJournalOpen(false)}
+          onTabChange={setCabinetWorkoutJournalTab}
+          calendarProps={{
+            monthDate: new Date("2026-06-01T12:00:00"),
+            monthKey: cabinetCalendarMonthKey,
+            calendarDays: cabinetCalendarDays,
+            selectedDate: cabinetCalendarSelectedDate,
+            selectedItems: cabinetCalendarSelectedItems,
+            scheduledDates: harnessWorkoutScheduledDates,
+            draftDates: harnessWorkoutScheduledDates,
+            editing: cabinetCalendarEditing,
+            saving: false,
+            status: "",
+            getTimestampValue: (value) => value,
+            onShiftMonth: () => {},
+            onStartEdit: () => setCabinetCalendarEditing(true),
+            onCancelEdit: () => setCabinetCalendarEditing(false),
+            onSave: () => setCabinetCalendarEditing(false),
+            onDayClick: (day) => setCabinetCalendarSelectedDate(day.key),
+            onOpenHistory: (itemId) => {
+              setCabinetWorkoutHistoryItemOpen(itemId || "client_harness_history_1");
+              setCabinetWorkoutJournalTab("history");
+            }
+          }}
+          historyProps={{
+            programScope: {
+              assignedProgramName: "Тестовая программа"
+            },
+            loading: false,
+            items: cabinetHistoryItems,
+            openItemId: cabinetWorkoutHistoryItemOpen,
+            itemRefs: cabinetWorkoutHistoryItemRefs,
+            deletingId: "",
+            getTimestampValue: (value) => value,
+            onToggleItem: (itemId) => setCabinetWorkoutHistoryItemOpen((current) => current === itemId ? "" : itemId),
+            onRequestDelete: () => {}
+          }}
         />
         <ProfileProgressPhotosModal
           open={cabinetPhotosOpen}
@@ -982,10 +971,25 @@ export default function ClientE2EHarness() {
         />
         <ProfileSettingsModal
           open={cabinetSettingsOpen}
-          section="settings"
+          section="account"
           onClose={() => setCabinetSettingsOpen(false)}
         >
+          <ProfileAccountSettingsSection
+            avatarPreview=""
+            avatarUrl=""
+            draft={{
+              displayName: "ILYA",
+              email: "ilya@gmail.com"
+            }}
+            saving={false}
+            status=""
+            onAvatarFile={() => {}}
+            onDraftChange={() => {}}
+            onSendPasswordReset={() => {}}
+            onSave={() => {}}
+          />
           <ProfileAppSettingsSection
+            heading="Приложение"
             isWarmLightTheme={harnessWarmLightTheme}
             telegramProfile={{
               connected: true,
@@ -997,16 +1001,9 @@ export default function ClientE2EHarness() {
             onOpenTelegram={() => setTelegramModalOpen(true)}
             onTelegramAvatarError={() => {}}
           />
-          <button type="button" className="profileDashboardButton" onClick={() => setTelegramModalOpen(true)}>
-            Open Telegram
+          <button type="button" className="profileLogoutBtn profileAccountLogout" onClick={() => {}}>
+            Выйти из аккаунта
           </button>
-          <ProfileBodyMetricsSettingsSection
-            open
-            draft={bodyMetricsDraft}
-            onToggle={() => {}}
-            onDraftChange={updateBodyMetricsDraft}
-            onSave={() => {}}
-          />
         </ProfileSettingsModal>
         <ProfileTrainerNotificationsModal
           open={trainerNotificationsOpen}

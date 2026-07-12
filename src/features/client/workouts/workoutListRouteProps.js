@@ -8,6 +8,7 @@ export function createWorkoutListProps({
   workoutCalendar,
   userId,
   workoutModePreference,
+  workoutModeRemember,
   individualWorkoutIndex,
   individualWorkoutIndexInitialized,
   setIndividualWorkoutIndex,
@@ -34,6 +35,8 @@ export function createWorkoutListProps({
   saveWorkoutModePreference,
   setSelectedWorkoutId,
   openIndividualWorkouts,
+  openSavedBasicWorkoutsOrQuiz,
+  openBasicWorkoutQuiz,
   openCabinetWorkoutHistory,
   handleWorkoutDraftChoice
 }) {
@@ -45,6 +48,7 @@ export function createWorkoutListProps({
     workoutCalendar: workoutCalendar || {},
     currentUserId: userId || "",
     workoutModePreference,
+    workoutModeRemember,
     individualWorkoutIndex,
     individualWorkoutIndexInitialized,
     setIndividualWorkoutIndex,
@@ -74,11 +78,16 @@ export function createWorkoutListProps({
     openWorkout,
     onOpenBasicMode: () => {
       setWorkoutModeModalOpen(false);
-      saveWorkoutModePreference("basic", true);
-      setSelectedWorkoutId(null);
-      setPage(APP_PAGES.BASIC_WORKOUT_QUIZ);
+      openSavedBasicWorkoutsOrQuiz();
+    },
+    onOpenBasicSettings: () => {
+      setWorkoutModeModalOpen(false);
+      openBasicWorkoutQuiz();
     },
     onOpenIndividualWorkouts: openIndividualWorkouts,
+    onToggleWorkoutModeRemember: (remember) => {
+      saveWorkoutModePreference(workoutModePreference?.mode || "individual", remember);
+    },
     openCabinetWorkoutHistory,
     handleWorkoutDraftChoice
   };

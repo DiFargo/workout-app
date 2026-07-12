@@ -22,6 +22,14 @@ export function isClientWorkflowPage(page) {
   return APP_PAGE_GROUPS.CLIENT_WORKFLOW.includes(page);
 }
 
+export function isTrainerForbiddenClientPage(page) {
+  return (
+    APP_PAGE_GROUPS.CLIENT_CORE.includes(page) ||
+    APP_PAGE_GROUPS.CLIENT_WORKFLOW.includes(page) ||
+    page === APP_PAGES.AI_COACH
+  );
+}
+
 export function isTrainerWorkspacePage(page) {
   return APP_PAGE_GROUPS.TRAINER.includes(page);
 }

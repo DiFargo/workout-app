@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Clock3, Paperclip } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Clock3, Paperclip, Settings } from "lucide-react";
 import {
   getProgramHistoryItems,
   getWorkoutCover,
@@ -35,6 +35,7 @@ export default function WorkoutListPage({
   workoutCalendar = {},
   currentUserId,
   workoutModePreference,
+  workoutModeRemember,
   individualWorkoutIndex,
   individualWorkoutIndexInitialized,
   setIndividualWorkoutIndex,
@@ -59,24 +60,40 @@ export default function WorkoutListPage({
   loadHistory,
   openWorkout,
   onOpenBasicMode,
+  onOpenBasicSettings,
   onOpenIndividualWorkouts,
+  onToggleWorkoutModeRemember,
   openCabinetWorkoutHistory,
   handleWorkoutDraftChoice
 }) {
   const [swipeHintVisible, setSwipeHintVisible] = useState(
     () => safeReadJsonStorage(INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY, true) !== false
   );
+  const basicQuizRedirectedRef = useRef(false);
   const swipeStartRef = useRef(null);
   const swipeSuppressClickRef = useRef(false);
 
-  const sortedWorkouts = sortWorkoutDays(plan.workouts || []);
-  const assignmentVersion = getWorkoutAssignmentVersion(plan);
-  const completedWorkoutSet = buildCompletedWorkoutSet(history, assignmentVersion, workoutCalendar);
   const isIndividualWorkoutMode = workoutModePreference.mode === "individual";
-  const nextUncompletedWorkoutIndex = isIndividualWorkoutMode
+  const isBasicWorkoutMode = workoutModePreference.mode === "basic" || plan.source === "basic";
+  const shouldOpenBasicQuiz = isBasicWorkoutMode && plan.source !== "basic";
+  const planWorkouts = isBasicWorkoutMode && plan.source !== "basic" ? [] : plan.workouts || [];
+  const sortedWorkouts = sortWorkoutDays(planWorkouts);
+  const assignmentVersion = getWorkoutAssignmentVersion(plan);
+  const completionHistory = isBasicWorkoutMode && assignmentVersion
+    ? (Array.isArray(history) ? history : []).filter((item) => (
+      String(item?.assignedProgramUpdatedAt || "").trim() === assignmentVersion
+    ))
+    : history;
+  const completedWorkoutSet = buildCompletedWorkoutSet(
+    completionHistory,
+    assignmentVersion,
+    isBasicWorkoutMode ? {} : workoutCalendar
+  );
+  const isDeckWorkoutMode = isIndividualWorkoutMode || isBasicWorkoutMode;
+  const nextUncompletedWorkoutIndex = isDeckWorkoutMode
     ? getNextUncompletedWorkoutIndex(sortedWorkouts, completedWorkoutSet, assignmentVersion)
     : 0;
-  const activeWorkoutIndex = isIndividualWorkoutMode
+  const activeWorkoutIndex = isDeckWorkoutMode
     ? Math.min(
         Math.max(
           individualWorkoutIndexInitialized
@@ -104,6 +121,16 @@ export default function WorkoutListPage({
     activeWorkoutDraft?.assignedProgramUpdatedAt ||
     activeWorkoutDraft?.plan?.assignedProgramUpdatedAt ||
     "";
+
+  useEffect(() => {
+    if (!shouldOpenBasicQuiz) {
+      basicQuizRedirectedRef.current = false;
+      return;
+    }
+    if (basicQuizRedirectedRef.current) return;
+    basicQuizRedirectedRef.current = true;
+    onOpenBasicMode();
+  }, [onOpenBasicMode, shouldOpenBasicQuiz]);
   const hasActiveWorkoutDraft = Boolean(
     activeWorkoutDraft?.workoutId === activeIndividualWorkout?.id &&
     (
@@ -185,18 +212,20 @@ export default function WorkoutListPage({
     }, 180);
   }
 
+  if (shouldOpenBasicQuiz) {
+    return null;
+  }
+
   return (
     <div className={isIndividualWorkoutMode ? "workoutSelectPage individualWorkoutSelectPage clientCorePage clientCorePageWorkout" : "workoutSelectPage basicWorkoutSelectPage clientCorePage clientCorePageWorkout"}>
-      <div className="appVersionBadge clientPageVersionBadge">{appVersion}</div>
       <div className="workoutSelectHero">
         <h1 className="workoutSelectTitle clientCorePageTitle">
           {isIndividualWorkoutMode ? (
             "Мой план"
           ) : (
             <>
-              <span>Базовые</span>
-              {" "}
-              <strong>тренировки</strong>
+              <span className="basicWorkoutTitleLine">Базовые</span>
+              <span className="basicWorkoutTitleLine">тренировки</span>
             </>
           )}
         </h1>
@@ -213,6 +242,16 @@ export default function WorkoutListPage({
               }}
             >
               <Clock3 aria-hidden="true" />
+            </button>
+          )}
+          {!isIndividualWorkoutMode && isBasicWorkoutMode && (
+            <button
+              type="button"
+              className="workoutHistoryHeaderButton basicWorkoutSettingsButton"
+              aria-label="Изменить базовый план"
+              onClick={onOpenBasicSettings}
+            >
+              <Settings aria-hidden="true" />
             </button>
           )}
           <button
@@ -233,7 +272,7 @@ export default function WorkoutListPage({
         <div className="workoutSelectLine" />
       </div>
 
-      <div className={isIndividualWorkoutMode ? "workoutSelectList individualWorkoutDeck" : "workoutSelectList"}>
+      <div className={isDeckWorkoutMode ? "workoutSelectList individualWorkoutDeck" : "workoutSelectList"}>
         {sortedWorkouts.length === 0 ? (
           <div className="workoutProgramEmptyState">
             <div className="workoutProgramEmptyIcon">⏳</div>
@@ -241,7 +280,7 @@ export default function WorkoutListPage({
             <p>Тренер пока не назначил тебе программу. Как только тренировка появится в твоём профиле, она отобразится здесь.</p>
             <button type="button" onClick={onGoMain}>Вернуться в меню</button>
           </div>
-        ) : isIndividualWorkoutMode && activeIndividualWorkout ? (
+        ) : isDeckWorkoutMode && activeIndividualWorkout ? (
           (() => {
             const w = activeIndividualWorkout;
             const index = activeWorkoutIndex;
@@ -407,7 +446,7 @@ export default function WorkoutListPage({
         )}
       </div>
 
-      {isIndividualWorkoutMode && sortedWorkouts.length > 1 && (
+      {isDeckWorkoutMode && sortedWorkouts.length > 1 && (
         <div className="individualWorkoutNav">
           <button
             type="button"
@@ -427,7 +466,7 @@ export default function WorkoutListPage({
               </small>
             )}
             <span className="individualWorkoutSwipeAffordance" aria-hidden="true">
-              ‹&nbsp;&nbsp;&nbsp;›
+              ‹ свайп ›
             </span>
           </div>
 
@@ -445,7 +484,7 @@ export default function WorkoutListPage({
       )}
 
       <div className="individualWorkoutBottomPanel">
-        {isIndividualWorkoutMode && sortedWorkouts.length > 0 && (
+        {isDeckWorkoutMode && sortedWorkouts.length > 0 && (
           <div
             className="individualWorkoutBottomProgress"
             style={{ "--completed-workouts-progress": `${completedWorkoutProgressPercent}%` }}
@@ -471,12 +510,14 @@ export default function WorkoutListPage({
       <WorkoutModePickerDialog
         open={workoutModeModalOpen}
         workoutModePreference={workoutModePreference}
+        rememberChoice={workoutModeRemember}
         onClose={() => setWorkoutModeModalOpen(false)}
         onOpenBasic={onOpenBasicMode}
         onOpenIndividual={() => {
           setWorkoutModeModalOpen(false);
           onOpenIndividualWorkouts();
         }}
+        onRememberChoiceChange={onToggleWorkoutModeRemember}
       />
 
       <IndividualWorkoutHistoryDialog

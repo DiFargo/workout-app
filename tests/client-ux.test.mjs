@@ -10,30 +10,40 @@ import {
   validateNutritionFoodDraft
 } from "../src/utils/clientUx.js";
 
-test("login validation trims email and reports fields separately", () => {
-  assert.deepEqual(validateLoginFields(" bad-email ", ""), {
+test("login validation accepts login or email and reports fields separately", () => {
+  assert.deepEqual(validateLoginFields(" bad login ", ""), {
     valid: false,
-    email: "bad-email",
+    email: "bad login",
+    login: "bad login",
+    loginAlias: "bad login",
+    isEmail: false,
     password: "",
     errors: {
-      email: "Проверь формат email.",
+      email: "Логин: 3-32 символа, латиница, цифры, точка, дефис или _.",
       password: "Укажи пароль."
     }
   });
 
   assert.equal(validateLoginFields("user@example.com", "secret").valid, true);
+  assert.equal(validateLoginFields("ilya-2000", "secret").valid, true);
 });
 
-test("password reset validation accepts an email without a password", () => {
+test("password reset validation accepts an email or login without a password", () => {
   assert.equal(
     validateLoginFields("user@example.com", "", { passwordRequired: false }).valid,
+    true
+  );
+  assert.equal(
+    validateLoginFields("ilya-2000", "", { passwordRequired: false }).valid,
     true
   );
 });
 
 test("auth errors are mapped to actionable messages", () => {
   assert.match(mapLoginAuthError({ code: "auth/network-request-failed" }), /интернет/i);
-  assert.match(mapLoginAuthError({ code: "auth/invalid-credential" }), /email или пароль/i);
+  assert.match(mapLoginAuthError({ code: "auth/invalid-credential" }), /логин, email или пароль/i);
+  assert.match(mapLoginAuthError({ code: "auth/login-not-found" }), /логин не найден/i);
+  assert.match(mapLoginAuthError({ code: "auth/invite-required" }), /приглашение/i);
 });
 
 test("nutrition amount never silently falls back to 100", () => {

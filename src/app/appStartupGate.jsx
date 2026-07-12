@@ -81,6 +81,7 @@ export function renderAppStartupGate({
   setLoginFieldErrors,
   loginSubmitting,
   passwordResetSending,
+  handleGoogleAuth,
   handleLogin,
   handleLoginPasswordReset,
   logout
@@ -121,6 +122,7 @@ export function renderAppStartupGate({
         setLoginFieldErrors={setLoginFieldErrors}
         loginSubmitting={loginSubmitting}
         passwordResetSending={passwordResetSending}
+        handleGoogleAuth={handleGoogleAuth}
         handleLogin={handleLogin}
         handleLoginPasswordReset={handleLoginPasswordReset}
       />

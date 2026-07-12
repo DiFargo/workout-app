@@ -238,6 +238,7 @@ import { createTrainerPlanEditorHandlers } from "./features/trainer/trainerPlanE
 import { createTrainerProgramTemplateHandlers } from "./features/trainer/trainerProgramTemplateHandlers";
 import { createTrainerMonthProgramSwipeHandlers } from "./features/trainer/trainerMonthProgramSwipeHandlers";
 import { useTrainerAutoLoadEffect } from "./features/trainer/useTrainerAutoLoadEffect";
+import { useTrainerTelegramThreadEffects } from "./features/trainer/useTrainerTelegramThreadEffects";
 import { createTrainerWorkspaceHandlers } from "./features/trainer/trainerWorkspaceHandlers";
 import { createTrainerBridgeHandlers } from "./features/trainer/trainerBridgeHandlers";
 import { createBottomBarActions } from "./features/client/navigation/bottomBarActions";
@@ -256,12 +257,13 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 
 import * as appConfig from "./constants/appConfig";
 import { APP_PAGES } from "./app/appPages";
-import { preloadClientRouteChunks } from "./app/appRouteLoaders";
 import { renderAppRoutePage } from "./app/appRouteRenderer";
+import { preloadTrainerRouteChunks } from "./app/appTerminalRouteLoaders";
 import {
-  preloadClientTerminalRouteChunks,
-  preloadTrainerRouteChunks
-} from "./app/appTerminalRouteLoaders";
+  preloadClientSecondaryRoutes,
+  preloadClientTrainingRoutes,
+  scheduleClientBackgroundRoutePreloads
+} from "./app/clientRoutePreload";
 import {
   AppTerminalRouteRenderer as renderAppTerminalRoute
 } from "./app/appTerminalRoutes";
@@ -272,7 +274,7 @@ import {
 import { isAppRouterPage } from "./app/appRouterPages";
 import RouteFallback from "./app/RouteFallback";
 import { normalizeAppTheme, APP_THEMES } from "./app/appTheme";
-import { isClientPrimaryPage, normalizeAppPage } from "./app/appNavigation";
+import { isClientPrimaryPage, isTrainerForbiddenClientPage, normalizeAppPage } from "./app/appNavigation";
 import {
   createAppSessionNavigationHandlers
 } from "./app/appSessionNavigationHandlers";
@@ -313,6 +315,7 @@ const {
   APP_THEME_STORAGE_KEY,
   APP_VERSION,
   BARCODE_SEARCH_ENABLED,
+  BASIC_WORKOUT_PLAN_STORAGE_KEY,
   CLIENT_LAST_PAGE_STORAGE_KEY,
   FIRST_SETUP_DONE_USER_STORAGE_KEY,
   FIRST_SETUP_REQUIRED_VERSION,
@@ -422,8 +425,8 @@ export default function App() {
     }
   });
 
-  const [plan, setPlan] = useState(() => ({ workouts: [] }));
-  const [workoutModePreference, setWorkoutModePreference] = useState(() => getDefaultWorkoutModePreference());
+  const [plan, setPlan] = useState({ workouts: [] });
+  const [workoutModePreference, setWorkoutModePreference] = useState(getDefaultWorkoutModePreference);
   const [workoutModeRemember, setWorkoutModeRemember] = useState(false);
   const [workoutModeModalOpen, setWorkoutModeModalOpen] = useState(false);
   const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
@@ -512,6 +515,7 @@ export default function App() {
   const [adminCreatedCredentials, setAdminCreatedCredentials] = useState(null);
   const [adminSelectedClient, setAdminSelectedClient] = useState(null);
   const [adminClientPageOpen, setAdminClientPageOpen] = useState(false);
+  const [adminClientTelegramMessages, setAdminClientTelegramMessages] = useState([]);
   const [adminClientHistory, setAdminClientHistory] = useState([]);
   const [adminClientNutrition, setAdminClientNutrition] = useState(null);
   const [adminClientMeasurements, setAdminClientMeasurements] = useState([]);
@@ -521,6 +525,7 @@ export default function App() {
   const [trainerNextSection, setTrainerNextSection] = useState("dashboard");
   const [trainerProgramManagerOpen, setTrainerProgramManagerOpen] = useState(false);
   const [trainerWorkoutTab, setTrainerWorkoutTab] = useState("programs");
+  const [adminUsersSelectedTab, setAdminUsersSelectedTab] = useState("overview");
   const loadAdminClientOverviewRef = useRef(null);
   const loadAdminClientOverview = (...args) => {
     if (!loadAdminClientOverviewRef.current) {
@@ -541,6 +546,7 @@ export default function App() {
     setPage,
     setProfileActiveTab,
     setTrainerNextSection,
+    setAdminUsersSelectedTab,
     setAdminSelectedClient,
     loadAdminClientOverview,
     setTrainerProgramManagerOpen,
@@ -588,7 +594,6 @@ export default function App() {
   const [adminTransferStatus, setAdminTransferStatus] = useState("");
   const [adminTransferLoading, setAdminTransferLoading] = useState(false);
   const [adminUsersSearch, setAdminUsersSearch] = useState("");
-  const [adminUsersSelectedTab, setAdminUsersSelectedTab] = useState("overview");
   const [adminTelegramMessage, setAdminTelegramMessage] = useState("");
   const [adminTelegramSending, setAdminTelegramSending] = useState(false);
   const [adminCalendarDraft, setAdminCalendarDraft] = useState({
@@ -678,10 +683,12 @@ export default function App() {
   const [profileWorkoutCalendarSaving, setProfileWorkoutCalendarSaving] = useState(false);
   const [profileWorkoutCalendarStatus, setProfileWorkoutCalendarStatus] = useState("");
   const [profileSettingsModalOpen, setProfileSettingsModalOpen] = useState(false);
+  const [profileEmailConnectOpen, setProfileEmailConnectOpen] = useState(false);
+  const [profileFeedbackModalOpen, setProfileFeedbackModalOpen] = useState(false);
   const [profileTrainerNotificationsOpen, setProfileTrainerNotificationsOpen] = useState(false);
   const [profileSettingsModalSection, setProfileSettingsModalSection] = useState("settings");
-  const [profileAccount, setProfileAccount] = useState({ displayName: "", avatarUrl: "", email: "" });
-  const [profileAccountDraft, setProfileAccountDraft] = useState({ displayName: "", email: "" });
+  const [profileAccount, setProfileAccount] = useState({ displayName: "", avatarUrl: "", email: "", login: "" });
+  const [profileAccountDraft, setProfileAccountDraft] = useState({ displayName: "", email: "", login: "" });
   const [profileAccountAvatarFile, setProfileAccountAvatarFile] = useState(null);
   const [profileAccountAvatarPreview, setProfileAccountAvatarPreview] = useState("");
   const [profileAvatarCropOpen, setProfileAvatarCropOpen] = useState(false);
@@ -718,7 +725,7 @@ export default function App() {
   const [profileProgressPhotoUploading, setProfileProgressPhotoUploading] = useState(false);
   const [profileProgressPhotoStatus, setProfileProgressPhotoStatus] = useState("");
 
-  useBodyScrollLock(profileSettingsModalOpen || profileAvatarCropOpen, { lockHtml: true });
+  useBodyScrollLock(profileSettingsModalOpen || profileAvatarCropOpen || profileEmailConnectOpen, { lockHtml: true });
   useProfileUiEffects({
     cabinetWorkoutHistoryItemRefs,
     clientProgressPhotos,
@@ -850,6 +857,7 @@ export default function App() {
   const {
     loadNutritionFromFirebase
   } = createNutritionCloudLoader({
+    auth,
     db,
     NUTRITION_STORAGE_KEY,
     startPerformanceCheck,
@@ -865,6 +873,7 @@ export default function App() {
     toggleCabinetWorkoutHistory
   } = createWorkoutHistoryNavigation({
     APP_PAGES,
+    STORAGE_KEY,
     loadHistory,
     setPage,
     setSelectedWorkoutId,
@@ -886,8 +895,10 @@ export default function App() {
     saveTrainerNextPlan,
     saveWorkoutsToFirebase
   } = createWorkoutPersistenceHandlers(() => ({
+    BASIC_WORKOUT_PLAN_STORAGE_KEY,
     STORAGE_KEY,
     WORKOUT_CALENDAR_STORAGE_KEY,
+    WORKOUT_MODE_STORAGE_KEY,
     WORKOUT_PLAN_BACKUP_STORAGE_KEY,
     auth,
     canUseAdminFeatures,
@@ -1029,6 +1040,7 @@ export default function App() {
     AI_NUTRITION_PROFILE_STORAGE_KEY,
     APP_PAGES,
     APP_THEMES,
+    BASIC_WORKOUT_PLAN_STORAGE_KEY,
     CLIENT_LAST_PAGE_STORAGE_KEY,
     FIRST_SETUP_REQUIRED_VERSION,
     NUTRITION_STORAGE_KEY,
@@ -1066,10 +1078,12 @@ export default function App() {
     setAppTheme,
     setAppThemeCloudReady,
     setClientProgressPhotos,
+    setClientTrainerTasks,
     setCurrentUserRole,
     setFirstSetupCompletedInCloud,
     setFirstSetupCompletedInSession,
     setFirstSetupProfileHydrated,
+    setHistory,
     setIsAdminClaim,
     setIsLoggedIn,
     setNutrition,
@@ -1135,21 +1149,12 @@ export default function App() {
   useEffect(() => {
     if (!isLoggedIn || appLoading) return undefined;
 
-    const preloadClientScreens = () => {
-      if (currentUserRole === "client") {
-        preloadClientRouteChunks();
-        preloadClientTerminalRouteChunks();
-        loadNutritionRoute().catch((error) => console.warn("Nutrition preload error", error));
-        return;
-      }
-
-      if (isAdminClaim || currentUserRole === "admin" || currentUserRole === "trainer") {
-        preloadTrainerRouteChunks();
-      }
-    };
-
-    const preloadTimerId = window.setTimeout(preloadClientScreens, 0);
-    return () => window.clearTimeout(preloadTimerId);
+    return scheduleClientBackgroundRoutePreloads({
+      isClient: currentUserRole === "client",
+      isTrainerLike: isAdminClaim || currentUserRole === "admin" || currentUserRole === "trainer",
+      loadNutritionRoute,
+      preloadTrainerRouteChunks
+    });
   }, [appLoading, currentUserRole, isAdminClaim, isLoggedIn]);
 
   const hasTransientScreen =
@@ -1224,6 +1229,14 @@ export default function App() {
     loadUsers: () => loadUsers()
   });
 
+  useTrainerTelegramThreadEffects({
+    db,
+    auth,
+    adminClientPageOpen,
+    selectedClientId: adminSelectedClient?.id || "",
+    setAdminClientTelegramMessages
+  });
+
   const {
     workout,
     workoutVideoUrls,
@@ -1292,6 +1305,7 @@ export default function App() {
   });
 
   const {
+    handleGoogleAuth,
     handleLogin,
     handleLoginPasswordReset,
     handleRegister
@@ -1659,6 +1673,10 @@ export default function App() {
     endProfileAvatarCropDrag,
     applyProfileAvatarCrop,
     saveProfileAccount,
+    requestProfileEmailChange,
+    syncProfileVerifiedEmail,
+    changeProfileLogin,
+    changeProfilePassword,
     sendProfilePasswordReset
   } = createProfileAccountHandlers({
     APP_THEMES,
@@ -1926,12 +1944,17 @@ export default function App() {
     saveWorkoutModePreference,
     openTrainingEntry,
     openIndividualWorkouts,
+    openSavedBasicWorkoutsOrQuiz,
     openBasicWorkoutQuiz
   } = createWorkoutEntryNavigation({
     APP_PAGES,
+    STORAGE_KEY,
+    BASIC_WORKOUT_PLAN_STORAGE_KEY,
     WORKOUT_MODE_STORAGE_KEY,
     auth,
+    db,
     user,
+    plan,
     workoutModePreference,
     workoutModeRemember,
     setWorkoutModePreference,
@@ -1939,6 +1962,7 @@ export default function App() {
     setSelectedWorkoutId,
     setIndividualWorkoutIndex,
     setIndividualWorkoutIndexInitialized,
+    setPlan,
     setPage,
     loadWorkoutsFromFirebase
   });
@@ -1955,6 +1979,17 @@ export default function App() {
     openAdminProgramsOverview
   });
 
+  const preloadClientMainTarget = () => {};
+  const preloadClientTrainingTarget = () => {
+    preloadClientTrainingRoutes();
+  };
+  const preloadClientNutritionTarget = () => {
+    loadNutritionRoute().catch((error) => console.warn("Nutrition preload error", error));
+  };
+  const preloadClientCabinetTarget = () => {
+    preloadClientSecondaryRoutes();
+  };
+
   const {
     renderClientMainBottomBar,
     renderTrainerMainBottomBar,
@@ -1965,6 +2000,10 @@ export default function App() {
     onOpenTraining: openTrainingEntry,
     onOpenNutrition: () => setPage(APP_PAGES.NUTRITION),
     onOpenCabinet: openTrainerCabinetFromBottomBar,
+    onPreloadMain: preloadClientMainTarget,
+    onPreloadTraining: preloadClientTrainingTarget,
+    onPreloadNutrition: preloadClientNutritionTarget,
+    onPreloadCabinet: preloadClientCabinetTarget,
     onOpenTrainerClients: openTrainerClientsList,
     onOpenTrainerPrograms: openTrainerProgramsList,
     onLoadTrainerCabinet: openTrainerCabinetFromBottomBar
@@ -2188,7 +2227,11 @@ export default function App() {
     handleWorkoutDraftChoice
   } = createWorkoutOpenHandlers({
     APP_PAGES,
+    BASIC_WORKOUT_PLAN_STORAGE_KEY,
+    STORAGE_KEY,
+    WORKOUT_MODE_STORAGE_KEY,
     auth,
+    db,
     user,
     plan,
     basicWorkoutQuiz,
@@ -2197,7 +2240,11 @@ export default function App() {
     loadWorkoutsFromFirebase,
     setPlan,
     setSelectedWorkoutId,
+    setIndividualWorkoutIndex,
+    setIndividualWorkoutIndexInitialized,
     setPage,
+    setWorkoutModePreference,
+    setWorkoutModeRemember,
     setOpenVideoId,
     setFullscreenVideo,
     setCurrentExerciseIndex,
@@ -2400,6 +2447,7 @@ export default function App() {
     setLoginFieldErrors,
     loginSubmitting,
     passwordResetSending,
+    handleGoogleAuth,
     handleLogin,
     handleLoginPasswordReset,
     logout
@@ -2409,11 +2457,14 @@ export default function App() {
     return startupGate;
   }
 
+  const trainerForbiddenClientPage = canUseTrainerFeatures() && isTrainerForbiddenClientPage(page);
+  const effectivePage = trainerForbiddenClientPage ? APP_PAGES.ADMIN : page;
+
   const routedPage = renderAppRoutePage({
     APP_VERSION,
     APP_PAGES,
     auth,
-    page,
+    page: effectivePage,
     renderClientMainBottomBar,
     workoutModeRemember,
     canUseAdminFeatures,
@@ -2426,6 +2477,7 @@ export default function App() {
     setWorkoutModeRemember,
     setPage,
     openTrainingEntry,
+    openSavedBasicWorkoutsOrQuiz,
     applyBasicWorkoutPlan,
     setBasicWorkoutQuiz,
     openTrainerClientsList,
@@ -2496,7 +2548,7 @@ export default function App() {
     handleWorkoutDraftChoice
   });
 
-  if (isAppRouterPage(page, { selectedWorkoutId })) {
+  if (isAppRouterPage(effectivePage, { selectedWorkoutId })) {
     return routedPage;
   }
 
@@ -2652,6 +2704,7 @@ export default function App() {
     adminClientPayment,
     adminClientProgressPhotos,
     adminClientStatus,
+    adminClientTelegramMessages,
     adminClientTab,
     adminClientTasks,
     adminCopyTargetUserId,
@@ -2729,6 +2782,9 @@ export default function App() {
     canUseAdminFeatures,
     canUseTrainerFeatures,
     changeProfileAvatarCropZoom,
+    changeProfilePassword,
+    changeProfileLogin,
+    requestProfileEmailChange,
     checkTelegramLoginResult,
     clearClientProgram,
     clientProgressPhotos,
@@ -2865,7 +2921,7 @@ export default function App() {
     openTrainerProgramManager,
     openVideoId,
     openWorkoutExerciseModal,
-    page,
+    page: effectivePage,
     pendingWorkoutFeedback,
     plan,
     postWorkoutFeedback,
@@ -2891,6 +2947,8 @@ export default function App() {
     profileMeasurementsModalOpen,
     profileMeasurementStatus,
     profileMeasurementWizardStep,
+    profileEmailConnectOpen,
+    profileFeedbackModalOpen,
     profileNutritionModalOpen,
     profileNutritionSaveStatus,
     profileProgressAnalysisOpen,
@@ -2944,6 +3002,7 @@ export default function App() {
     sendAdminTelegramMessage,
     sendAdminTestWorkoutReminder,
     sendProfilePasswordReset,
+    syncProfileVerifiedEmail,
     sendTrainerClientMessage,
     setAdminActiveDayId,
     setAdminActiveProgramId,
@@ -3013,6 +3072,8 @@ export default function App() {
     setProfileActiveTab,
     setProfileAvatarCropSize,
     setProfileBodyMetricsOpen,
+    setProfileEmailConnectOpen,
+    setProfileFeedbackModalOpen,
     setProfileMeasurementDraft,
     setProfileMeasurementOpen,
     setProfileMeasurementReturnTab,
@@ -3102,6 +3163,7 @@ export default function App() {
     transferClientDataBetweenAccounts,
     updateAdminCalendarDaySetting,
     updateAdminClientTask,
+    updateClientTrainerTask,
     updateExerciseNote,
     updateSet,
     updateUserTrainerRole,
@@ -3129,8 +3191,3 @@ export default function App() {
     workoutStarted
   });
 }
-
-
-
-
-

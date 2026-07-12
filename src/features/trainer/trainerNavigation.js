@@ -32,6 +32,7 @@ export function createTrainerNavigationActions({
   setPage,
   setProfileActiveTab,
   setTrainerNextSection,
+  setAdminUsersSelectedTab,
   setAdminSelectedClient,
   loadAdminClientOverview,
   setTrainerProgramManagerOpen,
@@ -62,13 +63,16 @@ export function createTrainerNavigationActions({
 
       setPage(APP_PAGES.ADMIN);
     },
-    openTrainerNextClient(client) {
+    openTrainerNextClient(client, targetTab = "") {
       const targetClient = client?.id
         ? usersList.find((item) => item.id === client.id) || client
         : null;
 
       if (!targetClient) return;
 
+      if (targetTab && typeof setAdminUsersSelectedTab === "function") {
+        setAdminUsersSelectedTab(targetTab);
+      }
       setAdminSelectedClient(targetClient);
       setTrainerNextSection("client");
       setPage(APP_PAGES.ADMIN);

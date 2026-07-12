@@ -6,7 +6,8 @@ export default function ProfileTrainerNotificationsModal({
   activeCount,
   getTaskDestination,
   onClose,
-  onOpenTask
+  onOpenTask,
+  onUpdateTask
 }) {
   if (!open) {
     return null;
@@ -46,12 +47,10 @@ export default function ProfileTrainerNotificationsModal({
                   ? `До ${new Date(`${task.dueDate}T12:00:00`).toLocaleDateString("ru-RU")}`
                   : "Без срока";
                 return (
-                  <button
-                    type="button"
+                  <article
                     key={task.id}
                     className={`profileTrainerNotificationItem ${taskStatus.id}${taskDestination ? " actionable" : ""}`}
                     aria-label={`Задача тренера: ${task.title}. ${taskStatus.label}. ${taskDueText}`}
-                    onClick={() => onOpenTask(task)}
                   >
                     <i aria-hidden="true">{taskStatus.id === "completed" ? "✓" : "!"}</i>
                     <span>
@@ -61,7 +60,22 @@ export default function ProfileTrainerNotificationsModal({
                       </small>
                     </span>
                     <em>{taskStatus.label}</em>
-                  </button>
+                    <div className="profileTrainerNotificationActions">
+                      {taskDestination ? (
+                        <button type="button" onClick={() => onOpenTask(task)}>
+                          Открыть
+                        </button>
+                      ) : null}
+                      {onUpdateTask ? (
+                        <button
+                          type="button"
+                          onClick={() => onUpdateTask(task, taskStatus.id !== "completed")}
+                        >
+                          {taskStatus.id === "completed" ? "Вернуть" : "Готово"}
+                        </button>
+                      ) : null}
+                    </div>
+                  </article>
                 );
               })}
             </div>

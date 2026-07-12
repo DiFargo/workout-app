@@ -4,6 +4,13 @@ import { readFile } from "node:fs/promises";
 
 const functionsSource = await readFile(new URL("../functions/index.js", import.meta.url), "utf8");
 const appSource = await readFile(new URL("../src/App.jsx", import.meta.url), "utf8");
+const appCoreSource = await readFile(new URL("../src/AppCore.jsx", import.meta.url), "utf8");
+const appBootstrapHelpersSource = await readFile(new URL("../src/app/appBootstrapHelpers.js", import.meta.url), "utf8");
+const appNavigationSource = await readFile(new URL("../src/app/appNavigation.js", import.meta.url), "utf8");
+const appRouterSource = await readFile(new URL("../src/app/AppRouter.jsx", import.meta.url), "utf8");
+const appTerminalRouteSource = await readFile(new URL("../src/app/AppTerminalRoute.jsx", import.meta.url), "utf8");
+const authBootstrapEffectSource = await readFile(new URL("../src/app/useAuthBootstrapEffect.js", import.meta.url), "utf8");
+const appRuntimeEffectsSource = await readFile(new URL("../src/app/useAppRuntimeEffects.js", import.meta.url), "utf8");
 const apiClientSource = await readFile(new URL("../src/utils/apiClient.js", import.meta.url), "utf8");
 const rulesSource = await readFile(new URL("../firestore.rules", import.meta.url), "utf8");
 const firebaseConfig = JSON.parse(
@@ -25,7 +32,9 @@ test("paid and privileged HTTP functions require Firebase authentication", () =>
     ["telegramSendMessage", "telegramTestWorkoutReminder"],
     ["telegramTestWorkoutReminder", "telegramDailyWorkoutReminders"],
     ["telegramSetWebhook", "telegramWebhook"],
-    ["openFoodFactsSearch", "deleteUser"],
+    ["openFoodFactsSearch", "profileUpdateEmail"],
+    ["profileUpdateEmail", "profileUpdateLogin"],
+    ["profileUpdateLogin", "deleteUser"],
     ["deleteUser", "aiFoodPhoto"],
     ["aiFoodPhoto", null]
   ];
@@ -62,6 +71,28 @@ test("profile owners cannot change role and trainer assignment fields", () => {
   );
 });
 
+test("assigned trainer access requires the trainer role and guarded routes", () => {
+  assert.match(
+    rulesSource,
+    /function isAssignedTrainerData\(data\) \{\s*return isTrainer\(\) && \(/m
+  );
+  assert.match(appTerminalRouteSource, /const canUseTrainerFeatures = typeof ctx\.canUseTrainerFeatures === "function"/);
+  assert.match(appTerminalRouteSource, /isTrainerPage && !canUseTrainerFeatures/);
+  assert.match(
+    appTerminalRouteSource,
+    /canUseTrainerFeatures && \(page === APP_PAGES\.PROFILE \|\| page === APP_PAGES\.MAIN\)[\s\S]*?<TrainerDashboardRoute \{\.\.\.ctx\} page=\{APP_PAGES\.ADMIN\}/
+  );
+  assert.match(appBootstrapHelpersSource, /resolvedRole === "client"[\s\S]*?setPage\([\s\S]*?APP_PAGES\.MAIN[\s\S]*?\} else \{\s*setPage\(APP_PAGES\.ADMIN\);/);
+  assert.match(appNavigationSource, /function isTrainerForbiddenClientPage\(page\)[\s\S]*?CLIENT_CORE[\s\S]*?CLIENT_WORKFLOW[\s\S]*?APP_PAGES\.AI_COACH/);
+  assert.match(appRuntimeEffectsSource, /isTrainerForbiddenClientPage\(page\)[\s\S]*?setPage\(APP_PAGES\.ADMIN\)/);
+  assert.match(appCoreSource, /canUseTrainerFeatures\(\) && isTrainerForbiddenClientPage\(page\)[\s\S]*?const effectivePage = trainerForbiddenClientPage \? APP_PAGES\.ADMIN : page/);
+  assert.match(
+    authBootstrapEffectSource,
+    /const resolvedRole = await loadRemoteUserBootstrapState[\s\S]*?if \(resolvedRole === "client"\) \{[\s\S]*?loadInitialSignedInUserData[\s\S]*?\} else \{[\s\S]*?setPlan\(\{ workouts: \[\] \}\)/
+  );
+  assert.match(appRouterSource, /page === APP_PAGES\.ADMIN_PANEL[\s\S]*?!canUseAdminFeatures\(\)/);
+});
+
 test("assigned trainer nutrition writes are limited to plan fields", () => {
   assert.match(rulesSource, /function isTrainerNutritionPlanUpdate\(\)/);
   assert.match(rulesSource, /function trainerNutritionStateFields\(\)/);
@@ -69,8 +100,9 @@ test("assigned trainer nutrition writes are limited to plan fields", () => {
   assert.match(rulesSource, /function isTrainerNutritionStatePlanUpdate\(uid, docId\)/);
   assert.match(
     rulesSource,
-    /isTrainerClientScheduleUpdate\(\) \|\| isTrainerNutritionPlanUpdate\(\)/
+    /isTrainerClientScheduleUpdate\(\) \|\| isTrainerClientArchiveUpdate\(\) \|\| isTrainerNutritionPlanUpdate\(\)/
   );
+  assert.match(rulesSource, /function isTrainerClientArchiveUpdate\(\)/);
   assert.match(
     rulesSource,
     /request\.resource\.data\.diff\(resource\.data\)\.affectedKeys\(\)\.hasOnly\(trainerNutritionStateFields\(\)\)/

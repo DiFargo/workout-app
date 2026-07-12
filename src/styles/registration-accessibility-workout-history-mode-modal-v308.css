@@ -122,3 +122,26 @@
   font-style: normal;
   text-align: center;
 }
+
+.workoutModeModalRemember {
+  box-sizing: border-box;
+  min-height: 48px;
+  margin-top: 12px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(247, 248, 252, 0.86);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.workoutModeModalRemember input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: #6d5cff;
+}

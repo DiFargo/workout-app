@@ -7,11 +7,13 @@ export default function ProfileSettingsTab({
   draft,
   activeGoalLabel,
   isWarmLightTheme,
+  email,
   telegramProfile,
   onToggleBodyMetrics,
   onDraftChange,
   onSaveBodyMetrics,
   onToggleTheme,
+  onOpenEmail,
   onOpenTelegram,
   onTelegramAvatarError
 }) {
@@ -35,11 +37,13 @@ export default function ProfileSettingsTab({
       <h1 className="profileSettingsPageTitle">Настройки</h1>
       <ProfileAppSettingsSection
         isWarmLightTheme={isWarmLightTheme}
+        email={email}
         telegramProfile={telegramProfile}
         darkThemeLabel="тёмно-зелёный стиль"
         disconnectedText="Не подключён · нажми, чтобы привязать"
         connectedBadge="Подключен"
         onToggleTheme={onToggleTheme}
+        onOpenEmail={onOpenEmail}
         onOpenTelegram={onOpenTelegram}
         onTelegramAvatarError={onTelegramAvatarError}
       />

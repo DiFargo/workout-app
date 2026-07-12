@@ -7,11 +7,23 @@ export function createBottomBarActions({
   openAdminClientsWithFilter,
   openAdminProgramsOverview
 }) {
+  function runAfterNavigation(callback) {
+    if (typeof callback !== "function") return;
+    if (typeof window === "undefined") {
+      callback();
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      window.setTimeout(callback, 0);
+    });
+  }
+
   return {
     openTrainerCabinetFromBottomBar() {
-      loadHistory();
       setProfileActiveTab("cabinet");
       setPage(APP_PAGES.PROFILE);
+      runAfterNavigation(loadHistory);
     },
     openTrainerClientsList() {
       return openAdminClientsWithFilter("all");

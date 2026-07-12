@@ -7,6 +7,7 @@ import {
   loadTrainerUsersRoute,
   loadWorkoutRunRoute
 } from "./appTerminalRouteLoaders";
+import AccessDeniedScreen from "../components/common/AccessDeniedScreen";
 import RouteFallback from "./RouteFallback";
 
 const TrainerAdminWorkoutsRoute = lazy(loadTrainerAdminWorkoutsRoute);
@@ -20,6 +21,27 @@ function renderLazyTerminalRoute(route) {
 
 export default function AppTerminalRoute({ ctx }) {
   const { APP_PAGES, page } = ctx;
+  const canUseTrainerFeatures = typeof ctx.canUseTrainerFeatures === "function"
+    ? ctx.canUseTrainerFeatures()
+    : Boolean(ctx.canUseTrainerFeatures);
+  const isTrainerPage = [
+    APP_PAGES.ADMIN,
+    APP_PAGES.ADMIN_USERS,
+    APP_PAGES.ADMIN_WORKOUTS
+  ].includes(page);
+
+  if (isTrainerPage && !canUseTrainerFeatures) {
+    return (
+      <AccessDeniedScreen
+        message="Тренерская доступна админам и пользователям с ролью тренера."
+        onBack={() => ctx.setPage(APP_PAGES.MAIN)}
+      />
+    );
+  }
+
+  if (canUseTrainerFeatures && (page === APP_PAGES.PROFILE || page === APP_PAGES.MAIN)) {
+    return renderLazyTerminalRoute(<TrainerDashboardRoute {...ctx} page={APP_PAGES.ADMIN} />);
+  }
 
   if (page === APP_PAGES.PROFILE || page === APP_PAGES.MAIN) {
     return (

@@ -269,7 +269,6 @@ export default function WorkoutRunRoute({
           setPostWorkoutFeedback(option);
           setPostWorkoutFeedbackOpen(false);
           setCurrentExerciseIndex(workout.exercises.length + 1);
-          saveWorkoutToFirebase(option);
         }}
       />
 

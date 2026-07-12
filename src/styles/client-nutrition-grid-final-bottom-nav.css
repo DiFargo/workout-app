@@ -28,7 +28,7 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
     box-sizing: border-box !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button {
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button:not(.active) {
     width: auto !important;
     min-width: 0 !important;
     height: 60px !important;
@@ -67,4 +67,5 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
     line-height: 11px !important;
     transform: translateY(-1px) !important;
   }
+
 }

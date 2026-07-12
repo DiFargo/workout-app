@@ -1,5 +1,6 @@
-html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor,
-html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label,
+html:root[data-app-theme="warm-light"] body #root .profileAccountHeroCard,
+html:root[data-app-theme="warm-light"] body #root .profileAccountDataPanel,
+html:root[data-app-theme="warm-light"] body #root .profileAccountSecurityPanel,
 html:root[data-app-theme="warm-light"] body #root .profileAccountFields input,
 html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton {
   border-color: #e1e4ee;
@@ -7,18 +8,162 @@ html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton 
   color: #171923;
 }
 
-html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label strong,
+html:root[data-app-theme="warm-light"] body #root .profileAccountHeroText > strong,
 html:root[data-app-theme="warm-light"] body #root .profileAccountFields label > span,
 html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton strong {
   color: #171923;
 }
 
-html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarEditor label small,
+html:root[data-app-theme="warm-light"] body #root .profileAccountHeroText > small,
 html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton small,
 html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton i {
   color: #73798b;
 }
 
+html:root[data-app-theme="warm-light"] body #root .profileAccountPanelTitle {
+  color: #747b8d;
+}
+
 html:root[data-app-theme="warm-light"] body #root .profileAccountFields input {
   background: #f7f8fc;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarAction {
+  border-color: #dedaf8;
+  background: #f2f0ff;
+  color: #5542df;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountPasswordButton > span:first-child {
+  background: #f0edff;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountLogout {
+  border-color: #f2d4d4 !important;
+  background: #fff4f4 !important;
+  color: #d36a6d !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountIdentity > strong,
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickTitle {
+  color: #151824;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetSettingsModal.accountCompact .profileAccountQuickTitle,
+html:root[data-app-theme="warm-light"] body #root .cabinetSettingsModal.accountCompact .profileSettingsTelegramText strong {
+  color: #151824 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountHeroNameRow input {
+  color: #171923;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountHeroNameRow.editing input {
+  border-color: #dedaf8;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(117, 101, 232, 0.1);
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountHeroNameEdit {
+  color: #8a8f9c;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountIdentity > small,
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickValue,
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickRow input,
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickEdit {
+  color: #6f7687;
+}
+
+html:root[data-app-theme="warm-light"] body #root .cabinetSettingsModal.accountCompact .profileAccountQuickValue,
+html:root[data-app-theme="warm-light"] body #root .cabinetSettingsModal.accountCompact .profileAccountQuickEdit {
+  color: #8a8f9c !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickPanel {
+  border-color: #e1e4ee;
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(55, 64, 112, 0.06);
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickRow {
+  border-bottom-color: #edf0f6;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickRow.editing {
+  background: #f7f5ff;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickRow:last-child {
+  border-bottom-color: transparent;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickIcon {
+  background: #f0edff;
+  color: #6552e6;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickRow input {
+  padding: 0 !important;
+  border: 0 !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickRow input:focus {
+  color: #151824;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickRow.editing input {
+  border-color: #d8d2ff !important;
+  background: #ffffff !important;
+  color: #151824;
+  box-shadow: 0 6px 16px rgba(85, 75, 180, 0.08) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountQuickRow.editing .profileAccountQuickEdit {
+  background: #eeeaff;
+  color: #6552e6;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileAccountAvatarCamera {
+  border-color: #ffffff;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profilePasswordEditor {
+  border-color: #e4e0ff;
+  background: #f7f5ff;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profilePasswordEditor label > span {
+  color: #747b8d;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profilePasswordEditorHint {
+  color: #747b8d;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profilePasswordEditor input {
+  border-color: #e1e4ee;
+  background: #ffffff;
+  color: #151824;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profilePasswordVisibilityButton {
+  color: #8a8f9c;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profilePasswordVisibilityButton:active {
+  background: rgba(117, 101, 232, 0.08);
+  color: #6552e6;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profilePasswordEditorActions button.secondary {
+  border-color: #dedaf8;
+  background: #ffffff;
+  color: #6552e6;
 }

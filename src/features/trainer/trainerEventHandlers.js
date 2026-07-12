@@ -24,8 +24,8 @@ export async function saveAdminTrainerNoteWithDeps({
       updatedAt: new Date().toISOString(),
       updatedByUid: noteOwnerUid
     }, { merge: true });
-    await recordTrainerEvent(adminSelectedClient.id, "note", "Обновлена заметка тренера");
     setAdminClientStatus("Заметка тренера сохранена.");
+    recordTrainerEvent(adminSelectedClient.id, "note", "Обновлена заметка тренера");
   } catch (error) {
     console.error("Ошибка сохранения заметки:", error);
     setAdminClientStatus("Не получилось сохранить заметку.");

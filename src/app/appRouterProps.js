@@ -12,7 +12,10 @@ export function createAppRouterProps({
   basicWorkoutQuiz,
   goBackToMain,
   openBasicWorkoutQuiz,
+  openSavedBasicWorkoutsOrQuiz,
   openIndividualWorkouts,
+  saveWorkoutModePreference,
+  workoutModePreference,
   setWorkoutModeRemember,
   setPage,
   openTrainingEntry,
@@ -75,10 +78,19 @@ export function createAppRouterProps({
     renderNutritionPage,
     workoutListProps,
     basicWorkoutQuiz,
+    workoutModePreference,
     onBackToMain: goBackToMain,
     onOpenBasicWorkoutQuiz: openBasicWorkoutQuiz,
+    onOpenSavedBasicWorkoutsOrQuiz: openSavedBasicWorkoutsOrQuiz,
     onOpenIndividualWorkouts: openIndividualWorkouts,
-    onSetWorkoutModeRemember: setWorkoutModeRemember,
+    onSetWorkoutModeRemember: (remember) => {
+      if (workoutModePreference?.mode) {
+        saveWorkoutModePreference(workoutModePreference.mode, remember);
+        return;
+      }
+
+      setWorkoutModeRemember(remember);
+    },
     onSetPage: setPage,
     onOpenTrainingEntry: openTrainingEntry,
     onApplyBasicWorkoutPlan: applyBasicWorkoutPlan,

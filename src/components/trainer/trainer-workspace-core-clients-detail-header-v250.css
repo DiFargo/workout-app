@@ -64,3 +64,60 @@
   font-size: 12px;
   font-weight: 500;
 }
+
+.trainerClientWorkSummary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0 16px;
+}
+
+.trainerClientWorkSummary article {
+  min-width: 0;
+  min-height: 78px;
+  padding: 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.trainerClientWorkSummary article.attention {
+  border-color: rgba(255, 92, 92, 0.24);
+  background: linear-gradient(180deg, rgba(255, 92, 92, 0.06), #fff 58%);
+}
+
+.trainerClientWorkSummary span {
+  display: block;
+  color: var(--tn-purple);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.trainerClientWorkSummary strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--tn-text);
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerClientWorkSummary small {
+  display: block;
+  margin-top: 5px;
+  color: var(--tn-muted);
+  font-size: 10px;
+  line-height: 1.25;
+  font-weight: 650;
+}
+
+.trainerClientWorkSummary p {
+  margin: 8px 0 0;
+  color: #5e6475;
+  font-size: 11px;
+  line-height: 1.35;
+}

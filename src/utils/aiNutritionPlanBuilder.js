@@ -1,9 +1,9 @@
 import { defaultNutritionState } from "../data/nutritionDefaults";
-import { getAiNutritionHistoryBaseline } from "../data/aiNutritionBaseline";
 import { TRAINER_NUTRITION_GOAL_PRESETS } from "../data/nutritionPlanning";
 import { getAiHistoryItems } from "../domain/workoutPresentation";
 import {
   collectAiNutritionFoodStats,
+  getNutritionPersonalBaseline,
   getAiNutritionWeightTrend
 } from "./aiNutritionAnalysis";
 import {
@@ -22,7 +22,6 @@ import {
 } from "./aiNutritionSchedule";
 
 export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, profile = null, history = [], previousPlan = null) {
-  const baseline = getAiNutritionHistoryBaseline();
   const weight = Number(profile?.weight) || 80;
   const height = Number(profile?.height) || 180;
   const age = Number(profile?.age) || 30;
@@ -120,7 +119,7 @@ export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, p
     goalLabel: getAiNutritionGoalLabel(goal),
     start: currentWeek,
     weeks,
-    baseline,
+    baseline: getNutritionPersonalBaseline(nutrition),
     frequentFoods,
     workoutsCount,
     weightTrend,

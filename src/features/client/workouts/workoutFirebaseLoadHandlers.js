@@ -4,7 +4,9 @@ import {
   safeReadUserJsonStorage,
   safeWriteUserJsonStorage
 } from "../../../utils/userScopedStorage";
+import { normalizeBasicWorkoutPlanState } from "../../../utils/basicWorkoutPlanBuilder.js";
 import { clearStaleWorkoutCaches } from "../../../utils/workoutDraftStorage";
+import { isTrainerProgramClientVisible } from "../../../utils/trainerProgramLifecycle.js";
 
 export async function loadWorkoutsFromFirebaseWithDeps({
   db,
@@ -12,6 +14,8 @@ export async function loadWorkoutsFromFirebaseWithDeps({
   selectedUserId,
   plan,
   storageKey,
+  basicWorkoutPlanStorageKey,
+  workoutModeStorageKey,
   normalizeExercise,
   sortWorkoutDays,
   canUseAdminFeatures,
@@ -23,6 +27,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
   options = {}
 }) {
   const preserveCurrentPlanOnError = options.preserveCurrentPlanOnError === true;
+  const preserveBasicPlanOnEmpty = options.preserveBasicPlanOnEmpty === true;
   const currentUser = auth.currentUser;
   const targetUserId = userIdFromClick || selectedUserId || currentUser?.uid;
   const isOwnPlan = currentUser?.uid === targetUserId;
@@ -47,6 +52,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
       getDocs(collection(db, "users", targetUserId, "workouts")),
       getDoc(doc(db, "users", targetUserId))
     ]);
+    if (isOwnPlan && auth.currentUser?.uid !== targetUserId) return { workouts: [] };
     const profileData = profileSnapshot.exists() ? profileSnapshot.data() : {};
     const assignedProgramUpdatedAt = profileData.assignedProgramUpdatedAt || profileData.assignedProgramAt || "";
 
@@ -54,9 +60,22 @@ export async function loadWorkoutsFromFirebaseWithDeps({
 
     querySnapshot.forEach((workoutDoc) => {
       const data = workoutDoc.data();
+      const workoutAssignmentVersion = String(data.assignedProgramUpdatedAt || assignedProgramUpdatedAt || "").trim();
+      const isBasicWorkout = data.source === "basic" || workoutAssignmentVersion.startsWith("basic:");
+      const isClientVisibleLifecycle = isBasicWorkout || isTrainerProgramClientVisible({
+        lifecycleStatus: data.assignedProgramLifecycleStatus || "active"
+      });
+      const isCurrentAssignment = !assignedProgramUpdatedAt ||
+        !workoutAssignmentVersion ||
+        workoutAssignmentVersion === String(assignedProgramUpdatedAt || "").trim() ||
+        isBasicWorkout;
+
+      if (!isClientVisibleLifecycle) return;
+      if (!isCurrentAssignment) return;
 
       workoutsFromDb.push({
         id: workoutDoc.id,
+        source: data.source || "",
         name: data.name || "Без названия",
         order: data.order,
         sortOrder: data.sortOrder,
@@ -69,7 +88,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
         assignedAt: data.assignedAt || "",
         assignedProgramId: data.assignedProgramId || profileData.assignedProgramId || "",
         assignedProgramName: data.assignedProgramName || profileData.assignedProgramName || "",
-        assignedProgramUpdatedAt: data.assignedProgramUpdatedAt || assignedProgramUpdatedAt,
+        assignedProgramUpdatedAt: workoutAssignmentVersion,
         exercises: (data.exercises || []).map(normalizeExercise)
       });
     });
@@ -80,6 +99,52 @@ export async function loadWorkoutsFromFirebaseWithDeps({
       assignedProgramUpdatedAt,
       workouts: sortWorkoutDays(workoutsFromDb)
     };
+    const basicWorkoutsFromDb = workoutsFromDb.filter((workout) => (
+      workout.source === "basic" ||
+      String(workout.assignedProgramUpdatedAt || "").startsWith("basic:")
+    ));
+    const firstBasicWorkout = basicWorkoutsFromDb[0];
+    if (firstBasicWorkout) {
+      nextPlan.source = "basic";
+      nextPlan.basicPlanId = firstBasicWorkout.assignedProgramId || profileData.basicWorkoutPlan?.basicPlanId || "";
+      nextPlan.basicPlanName = firstBasicWorkout.assignedProgramName || profileData.basicWorkoutPlan?.basicPlanName || "";
+      nextPlan.assignedProgramId = firstBasicWorkout.assignedProgramId || nextPlan.assignedProgramId;
+      nextPlan.assignedProgramName = firstBasicWorkout.assignedProgramName || nextPlan.assignedProgramName;
+      nextPlan.assignedProgramUpdatedAt = firstBasicWorkout.assignedProgramUpdatedAt || nextPlan.assignedProgramUpdatedAt;
+      nextPlan.workouts = sortWorkoutDays(basicWorkoutsFromDb);
+    }
+
+    if (
+      isOwnPlan &&
+      preserveBasicPlanOnEmpty &&
+      workoutsFromDb.length === 0 &&
+      currentUser?.uid &&
+      basicWorkoutPlanStorageKey &&
+      workoutModeStorageKey
+    ) {
+      const userScopedWorkoutModePreference = safeReadUserJsonStorage(workoutModeStorageKey, currentUser.uid, null);
+      const savedWorkoutModePreference = userScopedWorkoutModePreference;
+      const remoteBasicPlan = profileData.basicWorkoutPlan || null;
+      const cachedBasicPlan = safeReadUserJsonStorage(basicWorkoutPlanStorageKey, currentUser.uid, null);
+      const currentBasicPlan = plan?.source === "basic" ? plan : null;
+      const preservedBasicPlan = Array.isArray(remoteBasicPlan?.workouts) && remoteBasicPlan.workouts.length > 0
+        ? normalizeBasicWorkoutPlanState(remoteBasicPlan)
+        : Array.isArray(cachedBasicPlan?.workouts) && cachedBasicPlan.workouts.length > 0
+          ? normalizeBasicWorkoutPlanState(cachedBasicPlan)
+          : Array.isArray(currentBasicPlan?.workouts) && currentBasicPlan.workouts.length > 0
+          ? normalizeBasicWorkoutPlanState(currentBasicPlan)
+          : null;
+
+      if (savedWorkoutModePreference?.mode === "basic" && preservedBasicPlan?.workouts?.length > 0) {
+        setPlan(preservedBasicPlan);
+        safeWriteUserJsonStorage(basicWorkoutPlanStorageKey, currentUser.uid, preservedBasicPlan);
+        endPerformanceCheck("Firebase · workouts load", {
+          workouts: 0,
+          preservedBasicPlan: true
+        });
+        return preservedBasicPlan;
+      }
+    }
 
     if (isOwnPlan && currentUser?.uid) {
       clearStaleWorkoutCaches(currentUser.uid, assignedProgramUpdatedAt);
@@ -96,6 +161,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     return nextPlan;
   } catch (err) {
     console.error("Ошибка загрузки тренировок:", err);
+    if (isOwnPlan && auth.currentUser?.uid !== targetUserId) return { workouts: [] };
     if (preserveCurrentPlanOnError) {
       return plan;
     }

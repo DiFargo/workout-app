@@ -43,6 +43,41 @@
   color: var(--tn-muted);
 }
 
+.trainerClientMessageThread {
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 18px 12px;
+}
+
+.trainerClientMessageBubble {
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.trainerClientMessageBubble p {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.trainerClientMessageBubble.outgoing {
+  align-self: flex-end;
+  background: var(--tn-purple);
+  color: #fff;
+}
+
+.trainerClientMessageBubble.incoming {
+  align-self: flex-start;
+  background: #f2f2f7;
+  color: var(--tn-text);
+  border: 1px solid var(--tn-line);
+}
+
 .trainerClientMessageModal textarea {
   width: calc(100% - 36px);
   min-height: 130px;

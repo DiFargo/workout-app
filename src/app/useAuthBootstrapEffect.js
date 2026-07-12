@@ -20,6 +20,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
       APP_THEMES,
       CLIENT_LAST_PAGE_STORAGE_KEY,
       FIRST_SETUP_REQUIRED_VERSION,
+      BASIC_WORKOUT_PLAN_STORAGE_KEY,
       NUTRITION_STORAGE_KEY,
       STORAGE_KEY,
       TELEGRAM_PROFILE_STORAGE_KEY,
@@ -55,10 +56,12 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
       setAppTheme,
       setAppThemeCloudReady,
       setClientProgressPhotos,
+      setClientTrainerTasks,
       setCurrentUserRole,
       setFirstSetupCompletedInCloud,
       setFirstSetupCompletedInSession,
       setFirstSetupProfileHydrated,
+      setHistory,
       setIsAdminClaim,
       setIsLoggedIn,
       setNutrition,
@@ -147,6 +150,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           setShowFirstSetupOnboarding,
           setOnboardingStep,
           setAppThemeCloudReady,
+          setClientProgressPhotos,
+          setClientTrainerTasks,
           setAiNutritionProfile,
           setAiNutritionProfileDraft,
           setAiNutritionSavedPlan,
@@ -161,6 +166,9 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           setProfileAccountStatus,
           setNutritionCloudReady,
           setNutrition,
+          setHistory,
+          setPlan,
+          setProfileMeasurements,
           setRecentNutritionFoods,
           setUser,
           setIsLoggedIn
@@ -170,6 +178,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           user: u,
           AI_NUTRITION_PLAN_STORAGE_KEY,
           AI_NUTRITION_PROFILE_STORAGE_KEY,
+          BASIC_WORKOUT_PLAN_STORAGE_KEY,
           NUTRITION_STORAGE_KEY,
           TELEGRAM_PROFILE_STORAGE_KEY,
           WORKOUT_CALENDAR_STORAGE_KEY,
@@ -201,10 +210,12 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
         if (u) {
           const nextIsAdmin = await resolveAdminClaim({
             user: u,
-            setIsAdminClaim
+            setIsAdminClaim,
+            isCurrentRun: () => !disposed && runId === bootstrapRunId
           });
+          if (disposed || runId !== bootstrapRunId) return;
 
-          await loadRemoteUserBootstrapState({
+          const resolvedRole = await loadRemoteUserBootstrapState({
             user: u,
             db,
             isAdmin: nextIsAdmin,
@@ -215,6 +226,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             CLIENT_LAST_PAGE_STORAGE_KEY,
             FIRST_SETUP_REQUIRED_VERSION,
             WORKOUT_CALENDAR_STORAGE_KEY,
+            WORKOUT_MODE_STORAGE_KEY,
+            getDefaultWorkoutModePreference,
             hasRequiredAiNutritionProfileFields,
             normalizeAppPage,
             normalizeClientPrimaryPage,
@@ -233,21 +246,39 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             setProfileAccountDraft,
             setProfileWorkoutCalendarData,
             setProfileWorkoutCalendarDraftDates,
-            setProfileWorkoutScheduledDates
+            setProfileWorkoutScheduledDates,
+            setWorkoutModePreference,
+            setWorkoutModeRemember,
+            isCurrentRun: () => !disposed && runId === bootstrapRunId
           });
 
-          await loadInitialSignedInUserData({
-            user: u,
-            loadWorkoutsFromFirebase,
-            loadHistory,
-            loadNutritionFromFirebase,
-            loadProfileMeasurements,
-            loadClientProgressPhotos,
-            loadClientTrainerTasks,
-            replayFailedHistorySaves,
-            replayFailedNutritionSync,
-            replayFailedMeasurementSaves
-          });
+          if (disposed || runId !== bootstrapRunId || !resolvedRole) return;
+
+          if (resolvedRole === "client") {
+            await loadInitialSignedInUserData({
+              user: u,
+              loadWorkoutsFromFirebase,
+              loadHistory,
+              loadNutritionFromFirebase,
+              loadProfileMeasurements,
+              loadClientProgressPhotos,
+              loadClientTrainerTasks,
+              replayFailedHistorySaves,
+              replayFailedNutritionSync,
+              replayFailedMeasurementSaves
+            });
+          } else {
+            setPlan({ workouts: [] });
+            setNutrition(defaultNutritionState);
+            setRecentNutritionFoods([]);
+            setProfileMeasurements([]);
+            setClientProgressPhotos([]);
+            setProfileWorkoutCalendarData({});
+            setProfileWorkoutScheduledDates([]);
+            setProfileWorkoutCalendarDraftDates([]);
+            setWorkoutModePreference(getDefaultWorkoutModePreference());
+            setWorkoutModeRemember(false);
+          }
 
           await hydrateRemoteTelegramProfile({
             user: u,

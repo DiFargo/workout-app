@@ -1,27 +1,26 @@
-import { RefreshCw } from "lucide-react";
+import { Bell } from "lucide-react";
 
 export default function ProfilePageChrome({
-  showVersion,
-  appVersion,
   isMainDashboard,
   renderBottomBar,
-  onRefresh
+  showTrainerNotifications,
+  trainerNotificationCount,
+  onOpenTrainerNotifications
 }) {
   return (
     <>
-      {showVersion && (
-        <div className="appVersionBadge clientPageVersionBadge">{appVersion}</div>
-      )}
-
-      {isMainDashboard && (
+      {isMainDashboard && showTrainerNotifications && (
         <button
           type="button"
           className="menuRefreshIconBtn"
-          onClick={onRefresh}
-          aria-label="Обновить страницу"
-          title="Обновить страницу"
+          onClick={onOpenTrainerNotifications}
+          aria-label={`Уведомления тренера${trainerNotificationCount ? `: ${trainerNotificationCount}` : ""}`}
+          title="Уведомления тренера"
         >
-          <RefreshCw aria-hidden="true" />
+          <Bell aria-hidden="true" />
+          {trainerNotificationCount > 0 && (
+            <em>{Math.min(trainerNotificationCount, 99)}</em>
+          )}
         </button>
       )}
 

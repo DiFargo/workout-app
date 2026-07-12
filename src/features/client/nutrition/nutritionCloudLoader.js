@@ -11,6 +11,7 @@ const NUTRITION_LOAD_LABEL = "Firebase \u00b7 nutrition load";
 const ERROR_LOAD_NUTRITION = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u043f\u0438\u0442\u0430\u043d\u0438\u0435 \u0438\u0437 Firebase. \u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u044e \u043b\u043e\u043a\u0430\u043b\u044c\u043d\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435.";
 
 export function createNutritionCloudLoader({
+  auth,
   db,
   NUTRITION_STORAGE_KEY,
   startPerformanceCheck,
@@ -27,6 +28,7 @@ export function createNutritionCloudLoader({
         getDoc(doc(db, "users", uid, "nutrition", "state")),
         getDoc(getPersonalMyFoodsDocRef(uid))
       ]);
+      if (auth.currentUser?.uid !== uid) return;
 
       const userData = userSnap.exists() ? userSnap.data() : {};
       const personalMyFoodsData = personalMyFoodsSnap.exists() ? personalMyFoodsSnap.data() : {};
@@ -63,7 +65,7 @@ export function createNutritionCloudLoader({
         ERROR_LOAD_NUTRITION
       );
     } finally {
-      setNutritionCloudReady(true);
+      if (auth.currentUser?.uid === uid) setNutritionCloudReady(true);
     }
   }
 

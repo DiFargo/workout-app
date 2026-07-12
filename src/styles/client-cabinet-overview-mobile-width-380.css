@@ -20,7 +20,7 @@
 }
 
 .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview.hasProgressPhotos {
-  grid-template-rows: repeat(6, minmax(0, 1fr)) !important;
+  grid-template-rows: repeat(5, minmax(0, 1fr)) !important;
 }
 
 .cabinetProgressPhotosOverlay {
@@ -349,4 +349,3 @@ html:root[data-app-theme="warm-light"] body #root .cabinetProgressPhotosSave {
   background: linear-gradient(135deg, #6552e6, #2d6ff2);
   color: #fff;
 }
-

@@ -1,7 +1,9 @@
-function ProfileCabinetActionCard({ className, icon, eyebrow, title, note, onClick }) {
+function ProfileCabinetActionCard({ className, icon, avatarUrl, eyebrow, title, note, onClick }) {
   return (
     <button type="button" className={`progressHubCard ${className}`} onClick={onClick} aria-label={`${eyebrow}: ${title}`}>
-      <span className="progressHubCardIcon">{icon}</span>
+      <span className="progressHubCardIcon">
+        {avatarUrl ? <img className="progressHubCardAvatar" src={avatarUrl} alt="" /> : icon}
+      </span>
       <span className="progressHubCardText">
         <small>{eyebrow}</small>
         <strong>{title}</strong>
@@ -18,36 +20,38 @@ export default function ProfileCabinetActionGrid({
   latestMeasurementText,
   nutritionText,
   historyText,
-  onOpenPhotos,
-  onOpenMeasurements,
+  onOpenBodyControl,
   onOpenNutrition,
   onOpenCalendar,
-  onOpenHistory,
   onOpenAccount,
   onOpenQuestionnaire,
-  onOpenSettings
+  onOpenFeedback,
+  accountAvatarUrl
 }) {
+  const bodyControlNote = latestMeasurementText && latestMeasurementText !== "Замеров пока нет"
+    ? `Замеры: ${latestMeasurementText}`
+    : latestPhotoText;
+
   return (
     <div className={`progressHubOverview profileCabinetProgressOverview${showClientOnlyActions ? " hasProgressPhotos" : ""}`}>
-      {showClientOnlyActions && (
-        <ProfileCabinetActionCard
-          className="photos"
-          icon="📷"
-          eyebrow="КОНТРОЛЬ ТЕЛА"
-          title="Фото прогресса"
-          note={latestPhotoText}
-          onClick={onOpenPhotos}
-        />
-      )}
+      <ProfileCabinetActionCard
+        className="accountProfile"
+        icon="👤"
+        avatarUrl={accountAvatarUrl}
+        eyebrow="АККАУНТ"
+        title="Профиль и настройки"
+        note="Оформление, Telegram и выход"
+        onClick={onOpenAccount}
+      />
 
       {showClientOnlyActions && (
         <ProfileCabinetActionCard
-          className="measurements"
-          icon="📏"
+          className="bodyControl"
+          icon="📷"
           eyebrow="КОНТРОЛЬ ТЕЛА"
-          title="Замеры"
-          note={latestMeasurementText}
-          onClick={onOpenMeasurements}
+          title="Фото и замеры"
+          note={bodyControlNote}
+          onClick={onOpenBodyControl}
         />
       )}
 
@@ -64,34 +68,14 @@ export default function ProfileCabinetActionGrid({
 
       {showClientOnlyActions && (
         <ProfileCabinetActionCard
-          className="progress"
+          className="progress cabinetWorkoutJournalButton"
           icon="🗓️"
           eyebrow="ТРЕНИРОВКИ"
-          title="Календарь"
+          title="Календарь и история"
           note={historyText}
           onClick={onOpenCalendar}
         />
       )}
-
-      {showClientOnlyActions && (
-        <ProfileCabinetActionCard
-          className="history"
-          icon="🕘"
-          eyebrow="ТРЕНИРОВКИ"
-          title="История"
-          note={historyText}
-          onClick={onOpenHistory}
-        />
-      )}
-
-      <ProfileCabinetActionCard
-        className="accountProfile"
-        icon="👤"
-        eyebrow="АККАУНТ"
-        title="Профиль"
-        note="Имя, почта, пароль и выход"
-        onClick={onOpenAccount}
-      />
 
       {showClientOnlyActions && (
         <ProfileCabinetActionCard
@@ -105,13 +89,14 @@ export default function ProfileCabinetActionGrid({
       )}
 
       <ProfileCabinetActionCard
-        className="settings"
-        icon="⚙️"
-        eyebrow="ПАРАМЕТРЫ"
-        title="Настройки"
-        note="Оформление и Telegram"
-        onClick={onOpenSettings}
+        className="feedback"
+        icon="💬"
+        eyebrow="ОБРАТНАЯ СВЯЗЬ"
+        title="Ошибка или идея"
+        note="Отзыв, рекомендация или предложение"
+        onClick={onOpenFeedback}
       />
+
     </div>
   );
 }

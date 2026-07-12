@@ -1,6 +1,18 @@
 ﻿
 import { Dumbbell, Home, UserRound, Utensils } from "lucide-react";
 
+function runDeferredTouchPreload(preload) {
+  if (typeof preload !== "function") return undefined;
+  return (event) => {
+    if (event.pointerType === "touch" || event.pointerType === "pen") {
+      window.setTimeout(preload, 90);
+      return;
+    }
+
+    preload();
+  };
+}
+
 export function ClientMainBottomBar({
   activeTab = "main",
   className = "mainMenuBottomBar profileBottomTabBar",
@@ -9,10 +21,19 @@ export function ClientMainBottomBar({
   onOpenTraining,
   onOpenNutrition,
   onOpenCabinet,
+  onPreloadMain,
+  onPreloadTraining,
+  onPreloadNutrition,
+  onPreloadCabinet,
   onOpenTrainerClients,
   onOpenTrainerPrograms,
   onLoadTrainerCabinet
 }) {
+  const preloadMain = runDeferredTouchPreload(onPreloadMain);
+  const preloadTraining = runDeferredTouchPreload(onPreloadTraining);
+  const preloadNutrition = runDeferredTouchPreload(onPreloadNutrition);
+  const preloadCabinet = runDeferredTouchPreload(onPreloadCabinet);
+
   if (isTrainerMode) {
     return (
       <TrainerMainBottomBar
@@ -34,6 +55,8 @@ export function ClientMainBottomBar({
         data-testid="client-nav-main"
         className={activeTab === "main" ? "active" : ""}
         aria-current={activeTab === "main" ? "page" : undefined}
+        onPointerDown={preloadMain}
+        onFocus={onPreloadMain}
         onClick={onGoMain}
       >
         <span aria-hidden="true"><Home /></span>
@@ -44,6 +67,8 @@ export function ClientMainBottomBar({
         data-testid="client-nav-workouts"
         className={activeTab === "workouts" ? "active" : ""}
         aria-current={activeTab === "workouts" ? "page" : undefined}
+        onPointerDown={preloadTraining}
+        onFocus={onPreloadTraining}
         onClick={onOpenTraining}
       >
         <span aria-hidden="true"><Dumbbell /></span>
@@ -54,6 +79,8 @@ export function ClientMainBottomBar({
         data-testid="client-nav-nutrition"
         className={activeTab === "nutrition" ? "active" : ""}
         aria-current={activeTab === "nutrition" ? "page" : undefined}
+        onPointerDown={preloadNutrition}
+        onFocus={onPreloadNutrition}
         onClick={onOpenNutrition}
       >
         <span aria-hidden="true"><Utensils /></span>
@@ -64,6 +91,8 @@ export function ClientMainBottomBar({
         data-testid="client-nav-cabinet"
         className={activeTab === "cabinet" ? "active" : ""}
         aria-current={activeTab === "cabinet" ? "page" : undefined}
+        onPointerDown={preloadCabinet}
+        onFocus={onPreloadCabinet}
         onClick={onOpenCabinet}
       >
         <span aria-hidden="true"><UserRound /></span>
@@ -210,4 +239,3 @@ export function ClientTrainingBottomBar({
     </nav>
   );
 }
-

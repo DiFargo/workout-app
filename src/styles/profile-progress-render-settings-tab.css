@@ -106,7 +106,7 @@
 }
 
 .profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn {
-  grid-template-columns: 46px minmax(0, 1fr) 18px !important;
+  grid-template-columns: 46px minmax(0, 1fr) 46px !important;
 }
 
 .profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
@@ -154,4 +154,3 @@
   font-size: 15px !important;
   font-weight: 600 !important;
 }
-

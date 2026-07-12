@@ -1,5 +1,4 @@
 import { defaultNutritionState } from "../data/nutritionDefaults";
-import { getAiNutritionHistoryBaseline } from "../data/aiNutritionBaseline";
 import { starterPlan } from "../data/starterPlan";
 import {
   getAiExerciseMuscles,
@@ -25,7 +24,7 @@ export function buildAiCoachResult(featureId, { history = [], nutrition = defaul
   const todayTotals = getAiNutritionTotalsForToday(nutrition);
   const goals = nutrition.goals || defaultNutritionState.goals;
   const aiNutritionDayModel = buildAiNutritionDayModel(nutrition, null, history);
-  const aiNutritionBaseline = getAiNutritionHistoryBaseline();
+  const aiNutritionBaseline = aiNutritionDayModel.baseline;
   const proteinLeft = Math.max(0, Math.round((Number(goals.protein) || 0) - todayTotals.protein));
   const caloriesLeft = Math.max(0, Math.round((Number(goals.calories) || 0) - todayTotals.calories));
   const workoutsCount = historyItems.length;
@@ -95,7 +94,7 @@ export function buildAiCoachResult(featureId, { history = [], nutrition = defaul
       score: Math.round(aiNutritionDayModel.score * 10),
       bullets: [
         aiNutritionDayModel.summary,
-        `Твоя база март–апрель: ${aiNutritionBaseline.average.calories} ккал · Б ${Math.round(aiNutritionBaseline.average.protein)} · Ж ${Math.round(aiNutritionBaseline.average.fat)} · У ${Math.round(aiNutritionBaseline.average.carbs)}.`,
+        `${aiNutritionBaseline.source}: ${aiNutritionBaseline.average.calories} ккал · Б ${Math.round(aiNutritionBaseline.average.protein)} · Ж ${Math.round(aiNutritionBaseline.average.fat)} · У ${Math.round(aiNutritionBaseline.average.carbs)}.`,
         `Сегодня получено: ${Math.round(todayTotals.calories)} ккал из ${goals.calories}.`
       ],
       actions: [

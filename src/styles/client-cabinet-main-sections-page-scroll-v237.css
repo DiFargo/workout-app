@@ -11,6 +11,24 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.profileDashboardPage.clientCorePageMain,
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] {
+  height: calc(100dvh - 4px) !important;
+  min-height: calc(100dvh - 4px) !important;
+  max-height: calc(100dvh - 4px) !important;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain !important;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.profileDashboardPage.clientCorePageMain::-webkit-scrollbar,
+.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"]::-webkit-scrollbar {
+  display: none;
+}
+
 .clientCorePageMain::-webkit-scrollbar,
 .clientCorePageWorkout::-webkit-scrollbar,
 .clientCorePageNutrition::-webkit-scrollbar,
@@ -21,7 +39,7 @@
 .profileDashboardPage.clientCorePageMain .profileCabinetSection,
 .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetSection {
   height: auto !important;
-  min-height: calc(100dvh - 142px) !important;
+  min-height: 0 !important;
   overflow: visible !important;
 }
 

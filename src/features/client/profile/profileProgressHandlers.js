@@ -66,6 +66,7 @@ export function createProfileProgressHandlers({
 
     try {
       const snapshot = await getDocs(collection(db, "users", uid, "measurements"));
+      if (auth.currentUser?.uid !== uid) return [];
       const remoteMeasurements = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
       const measurements = Array.from(
         new Map(
@@ -80,6 +81,7 @@ export function createProfileProgressHandlers({
       setProfileMeasurements(measurements);
       return measurements;
     } catch (error) {
+      if (auth.currentUser?.uid !== uid) return [];
       console.error("Ошибка загрузки замеров:", error);
       setProfileMeasurements(normalizedCachedMeasurements);
       return normalizedCachedMeasurements;
@@ -94,6 +96,7 @@ export function createProfileProgressHandlers({
 
     try {
       const snapshot = await getDocs(collection(db, "users", uid, "progressPhotos"));
+      if (auth.currentUser?.uid !== uid) return [];
       const photos = snapshot.docs
         .map((item) => ({ id: item.id, ...item.data() }))
         .sort((a, b) => (
@@ -103,6 +106,7 @@ export function createProfileProgressHandlers({
       setClientProgressPhotos(photos);
       return photos;
     } catch (error) {
+      if (auth.currentUser?.uid !== uid) return [];
       console.warn("Client progress photos load failed:", error);
       setClientProgressPhotos([]);
       return [];
@@ -168,7 +172,6 @@ export function createProfileProgressHandlers({
       setProfileProgressPhotoPreviews({ front: "", side: "", back: "" });
       setProfileProgressPhotoStatus("Фото прогресса сохранены.");
       await recordTrainerEvent(uid, "photo", "Клиент добавил фото прогресса");
-      await new Promise((resolve) => setTimeout(resolve, 1200));
       setProfileProgressPhotosModalOpen(false);
       setProfileProgressPhotoStatus("");
     } catch (error) {
@@ -263,7 +266,6 @@ export function createProfileProgressHandlers({
       setProfileMeasurementSaving(false);
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1400));
     setProfileMeasurementDraft({
       weight: "",
       neck: "",

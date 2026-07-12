@@ -7,12 +7,17 @@ html:root[data-app-theme="warm-light"] body #root .workoutSetWheelPicker {
   overflow-x: hidden !important;
   overflow-y: auto !important;
   border-radius: 18px !important;
+  contain: content !important;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.1) 33%, rgba(255, 255, 255, 0.1) 67%, rgba(255, 255, 255, 0.96) 100%),
     #f8f7ff !important;
   scroll-snap-type: y mandatory !important;
+  scroll-padding-block: calc(var(--workout-set-wheel-item-height) * 2) !important;
   scrollbar-width: none !important;
   overscroll-behavior: contain !important;
+  overscroll-behavior-y: contain !important;
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
   -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%) !important;
   mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%) !important;
 }
@@ -51,22 +56,28 @@ html:root[data-app-theme="warm-light"] body #root .workoutSetWheelOption {
   border-radius: 13px !important;
   background: transparent !important;
   box-shadow: none !important;
-  color: rgba(21, 24, 36, 0.48) !important;
+  color: rgba(21, 24, 36, 0.42) !important;
   display: grid !important;
   place-items: center !important;
   font-size: 20px !important;
   font-weight: 850 !important;
   line-height: 1 !important;
   scroll-snap-align: center !important;
+  scroll-snap-stop: always !important;
   cursor: pointer !important;
-  transition: color 120ms ease, font-size 120ms ease, opacity 120ms ease, transform 120ms ease !important;
+  opacity: 0.58 !important;
+  transition: background-color 120ms ease, box-shadow 120ms ease, color 120ms ease, font-size 120ms ease, opacity 120ms ease, transform 120ms ease !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutSetWheelOption.active {
-  color: #356ff2 !important;
+  background: rgba(100, 78, 246, 0.14) !important;
+  box-shadow: inset 0 0 0 1px rgba(100, 78, 246, 0.32), 0 6px 14px rgba(85, 65, 220, 0.11) !important;
+  color: #553df2 !important;
   font-size: 23px !important;
   font-weight: 950 !important;
-  transform: scale(1.02) !important;
+  opacity: 1 !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72) !important;
+  transform: scale(1.03) !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutSetWheelPicker:focus-visible {

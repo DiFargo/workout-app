@@ -1,0 +1,908 @@
+html:root[data-app-theme="warm-light"] body #root .workoutModePage,
+html:root[data-app-theme="warm-light"] body #root .basicQuizPage {
+  box-sizing: border-box !important;
+  min-height: 100dvh !important;
+  width: 100% !important;
+  max-width: 430px !important;
+  margin: 0 auto !important;
+  padding: max(30px, env(safe-area-inset-top)) 22px calc(112px + env(safe-area-inset-bottom)) !important;
+  background: #f7f7fd !important;
+  color: #171923 !important;
+  overflow-x: hidden !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModePage *,
+html:root[data-app-theme="warm-light"] body #root .basicQuizPage * {
+  box-sizing: border-box !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModePage .clientPageVersionBadge,
+html:root[data-app-theme="warm-light"] body #root .basicQuizPage .clientPageVersionBadge,
+html:root[data-app-theme="warm-light"] body #root .workoutModePage .workoutModeBack,
+html:root[data-app-theme="warm-light"] body #root .basicQuizPage .workoutModeBack {
+  display: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeTopBar {
+  width: 100% !important;
+  min-height: 48px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 4px 0 24px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeHero {
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeHeroTitle {
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  color: #5f5848 !important;
+  -webkit-text-fill-color: #5f5848 !important;
+  font-size: 24px !important;
+  font-weight: 950 !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0 !important;
+  text-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeHero span,
+html:root[data-app-theme="warm-light"] body #root .basicQuizCard > label > span,
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreview > span,
+html:root[data-app-theme="warm-light"] body #root .basicQuizSectionHeader > span {
+  display: block !important;
+  color: #6b55f6 !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeHero h1 {
+  width: 100% !important;
+  margin: 8px 0 0 !important;
+  color: #5f5a50 !important;
+  font-size: 32px !important;
+  font-weight: 950 !important;
+  line-height: 1.06 !important;
+  letter-spacing: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeTopActions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  height: 48px !important;
+  padding-top: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeTopButton {
+  width: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  padding: 0 !important;
+  border: 1px solid rgba(226, 229, 239, 0.98) !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #7f7a71 !important;
+  box-shadow: 0 16px 34px rgba(72, 77, 105, 0.12) !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeTopButton svg {
+  width: 22px !important;
+  height: 22px !important;
+  stroke-width: 2.7 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeLead {
+  width: 100% !important;
+  margin: 14px 0 22px !important;
+  color: #8a8379 !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeCards,
+html:root[data-app-theme="warm-light"] body #root .basicQuizCard,
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreview {
+  width: 100% !important;
+  display: grid !important;
+  gap: 12px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeCard,
+html:root[data-app-theme="warm-light"] body #root .workoutModeRemember,
+html:root[data-app-theme="warm-light"] body #root .basicQuizCard,
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreview {
+  border: 1px solid rgba(226, 229, 239, 0.98) !important;
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 16px 38px rgba(65, 72, 104, 0.1) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeCard {
+  min-height: 112px !important;
+  padding: 15px !important;
+  display: grid !important;
+  grid-template-columns: 62px minmax(0, 1fr) 18px !important;
+  align-items: center !important;
+  gap: 16px !important;
+  text-align: left !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeCard.premium {
+  border-color: rgba(107, 85, 246, 0.34) !important;
+  background: #f3f0ff !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeIcon {
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 18px !important;
+  background: #f0edff !important;
+  color: #6b55f6 !important;
+  display: grid !important;
+  place-items: center !important;
+  font-size: 24px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeCard strong {
+  display: block !important;
+  color: #171923 !important;
+  font-size: 23px !important;
+  font-weight: 950 !important;
+  line-height: 1.12 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeCard small {
+  display: block !important;
+  margin-top: 5px !important;
+  color: #7f8798 !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+  line-height: 1.22 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeCard > i {
+  color: #7f8798 !important;
+  font-size: 30px !important;
+  font-style: normal !important;
+  line-height: 1 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeRemember {
+  min-height: 72px !important;
+  margin-top: 24px !important;
+  padding: 14px 18px !important;
+  display: grid !important;
+  grid-template-columns: 38px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeRemember input {
+  width: 38px !important;
+  height: 38px !important;
+  margin: 0 !important;
+  accent-color: #6b55f6 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeRemember span {
+  color: #7f7a71 !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  line-height: 1.15 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizCard {
+  min-height: 216px !important;
+  padding: 15px !important;
+  gap: 8px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizSectionHeader {
+  display: grid !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizSectionHeader h2 {
+  margin: 0 !important;
+  color: #171923 !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  line-height: 1.16 !important;
+  letter-spacing: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizSectionHeader p {
+  margin: 0 !important;
+  max-width: 300px !important;
+  color: #7f8798 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizCard label {
+  min-width: 0 !important;
+  min-height: 48px !important;
+  padding: 7px 10px !important;
+  border: 1px solid rgba(226, 229, 239, 0.86) !important;
+  border-radius: 15px !important;
+  background: #f9f9fd !important;
+  display: grid !important;
+  grid-template-columns: minmax(92px, 0.78fr) minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizCard > label > span {
+  font-size: 11px !important;
+  line-height: 1.05 !important;
+  overflow-wrap: anywhere !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizCard select {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 26px 0 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #171923 !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+  line-height: 34px !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  text-overflow: ellipsis !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreview {
+  min-height: 156px !important;
+  margin-top: 12px !important;
+  padding: 15px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreview strong {
+  display: block !important;
+  margin-top: 7px !important;
+  color: #171923 !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  line-height: 1.16 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreview p {
+  margin: 7px 0 10px !important;
+  color: #7f7a71 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreviewStats {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreviewStats > span {
+  min-width: 0 !important;
+  min-height: 44px !important;
+  padding: 6px 8px !important;
+  border-radius: 14px !important;
+  background: #f0edff !important;
+  display: grid !important;
+  place-items: center !important;
+  gap: 2px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreviewStats b {
+  color: #6b55f6 !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizPreviewStats small {
+  color: #7f8798 !important;
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .basicQuizStartBtn {
+  width: 100% !important;
+  min-height: 54px !important;
+  margin-top: 30px !important;
+  margin-bottom: 8px !important;
+  padding: 0 18px !important;
+  border: 0 !important;
+  border-radius: 20px !important;
+  background: linear-gradient(135deg, #6b55f6 0%, #2f72f0 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 16px 34px rgba(72, 83, 232, 0.22) !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .workoutModeBottomBar {
+  left: 50% !important;
+  right: auto !important;
+  bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+  transform: translateX(-50%) !important;
+  width: min(calc(100% - 28px), 402px) !important;
+  max-width: 402px !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 900px) {
+  html:root[data-app-theme="warm-light"] body #root .basicQuizPage .workoutModeBottomBar.clientBottomNav {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+    max-width: none !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    max-height: 76px !important;
+    padding: 7px !important;
+    gap: 4px !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    justify-content: stretch !important;
+    border: 1px solid #dce2ed !important;
+    border-radius: 20px !important;
+    background: rgba(248, 251, 255, 0.94) !important;
+    box-shadow:
+      0 18px 44px rgba(55, 64, 112, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    transform: none !important;
+    box-sizing: border-box !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .basicQuizPage .workoutModeBottomBar.clientBottomNav > button {
+    width: auto !important;
+    min-width: 0 !important;
+    height: 60px !important;
+    min-height: 60px !important;
+    max-height: 60px !important;
+    padding: 5px 2px 4px !important;
+    display: grid !important;
+    place-items: center !important;
+    gap: 2px !important;
+    border: 1px solid transparent !important;
+    border-radius: 16px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #737b91 !important;
+    transform: none !important;
+    line-height: 13.3333px !important;
+    box-sizing: border-box !important;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .basicQuizPage .workoutModeBottomBar.clientBottomNav > button.active {
+    background: #f0edff !important;
+    border-color: #ded7ff !important;
+    color: #5d43e8 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .basicQuizPage .workoutModeBottomBar.clientBottomNav > button span {
+    width: 24px !important;
+    height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #737b91 !important;
+    font-size: 25px !important;
+    line-height: 25px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .basicQuizPage .workoutModeBottomBar.clientBottomNav > button.active span {
+    color: #5d43e8 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .basicQuizPage .workoutModeBottomBar.clientBottomNav > button svg {
+    width: 24px !important;
+    height: 24px !important;
+    color: currentColor !important;
+    stroke-width: 2.4px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .basicQuizPage .workoutModeBottomBar.clientBottomNav > button strong {
+    color: currentColor !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    line-height: 11px !important;
+    height: 16px !important;
+    display: block !important;
+    transform: translateY(-1px) !important;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  }
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectHero > p,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectLine {
+  display: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutDeck {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  gap: 0 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard {
+  display: flex !important;
+  grid-template-columns: none !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 14px !important;
+  min-height: clamp(430px, calc(100dvh - 310px), 560px) !important;
+  height: clamp(430px, calc(100dvh - 310px), 560px) !important;
+  padding: 18px !important;
+  text-align: left !important;
+  cursor: default !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutProTop {
+  width: 100% !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  overflow: visible !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutBadges {
+  width: auto !important;
+  min-width: 0 !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  overflow: visible !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutCompletedBadge,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutProgressBadge,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutNextBadge,
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutWeek {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 150px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 14px !important;
+  flex: 0 1 auto !important;
+  overflow: hidden !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutWeek {
+  margin-left: auto !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard:active {
+  transform: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .basicWorkoutSettingsButton svg {
+  width: 22px !important;
+  height: 22px !important;
+  stroke-width: 2.6 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectHero {
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  column-gap: 12px !important;
+  height: calc(var(--client-title-height) + 18px) !important;
+  min-height: calc(var(--client-title-height) + 18px) !important;
+  padding: 0 !important;
+  margin: var(--client-title-top) 0 14px !important;
+  margin-bottom: 14px !important;
+  overflow: visible !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectTitle.clientCorePageTitle {
+  width: clamp(158px, calc(100vw - 194px), 250px) !important;
+  min-width: 0 !important;
+  max-width: clamp(158px, calc(100vw - 194px), 250px) !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: block !important;
+  align-self: center !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  color: #5f5848 !important;
+  -webkit-text-fill-color: #5f5848 !important;
+  font-size: clamp(30px, 8vw, 34px) !important;
+  line-height: 1.02 !important;
+  font-weight: 950 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectTitle.clientCorePageTitle .basicWorkoutTitleLine {
+  display: block !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  font: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutHeaderActions {
+  flex-shrink: 0 !important;
+  align-self: center !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutProInfo {
+  width: min(228px, 74%) !important;
+  max-width: min(228px, 74%) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutTitle {
+  max-width: 100% !important;
+  font-size: clamp(34px, 9vw, 42px) !important;
+  line-height: 1.08 !important;
+  overflow-wrap: normal !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutStats {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress {
+  left: 50% !important;
+  right: auto !important;
+  top: -32px !important;
+  bottom: auto !important;
+  width: calc(100% - 54px) !important;
+  max-width: 484px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  padding: 0 0 8px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  transform: translateX(-50%) !important;
+}
+
+@media (max-width: 900px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    padding: 7px !important;
+    gap: 4px !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    border-radius: 20px !important;
+    background: rgba(248, 251, 255, 0.94) !important;
+    border-color: #dce2ed !important;
+    box-shadow:
+      0 18px 44px rgba(55, 64, 112, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button {
+    height: 60px !important;
+    min-height: 60px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    gap: 2px !important;
+    padding: 5px 2px 4px !important;
+    border-radius: 16px !important;
+    border: 1px solid transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
+    color: #737b91 !important;
+    line-height: 13.3333px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button.active {
+    background: #f0edff !important;
+    border-color: #ded7ff !important;
+    color: #5d43e8 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button span {
+    width: 24px !important;
+    height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #737b91 !important;
+    font-size: 25px !important;
+    line-height: 25px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button.active span {
+    color: #5d43e8 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button svg {
+    width: 24px !important;
+    height: 24px !important;
+    color: currentColor !important;
+    stroke-width: 2.4px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button strong {
+    color: currentColor !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    line-height: 11px !important;
+    height: 16px !important;
+    display: block !important;
+    transform: translateY(-1px) !important;
+  }
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress span {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 14px !important;
+  color: #5f5848 !important;
+  -webkit-text-fill-color: #5f5848 !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(
+    90deg,
+    #6b4df7 0 var(--completed-workouts-progress, 0%),
+    #dfe3ee var(--completed-workouts-progress, 0%) 100%
+  ) !important;
+}
+
+@media (max-width: 390px) {
+  html:root[data-app-theme="warm-light"] body #root .workoutModePage,
+  html:root[data-app-theme="warm-light"] body #root .basicQuizPage {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutModeHero h1 {
+    font-size: 31px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutModeLead {
+    font-size: 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutModeCard {
+    grid-template-columns: 56px minmax(0, 1fr) 16px !important;
+    min-height: 102px !important;
+    gap: 14px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutModeIcon {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .workoutModeCard strong {
+    font-size: 21px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .workoutSelectTitle.clientCorePageTitle {
+    font-size: 28px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard .individualWorkoutProInfo {
+    width: min(218px, 76%) !important;
+    max-width: min(218px, 76%) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .workoutSelectHero {
+    margin-top: 34px !important;
+    margin-bottom: 18px !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    max-height: 64px !important;
+    padding: 0 !important;
+    align-items: start !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .workoutSelectTitle.clientCorePageTitle {
+    align-self: start !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    max-height: 64px !important;
+    font-size: 28px !important;
+    line-height: 29.68px !important;
+    transform: translate(-1px, -3px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .workoutHeaderActions {
+    align-self: start !important;
+    transform: translate(-9px, -2px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .workoutHeaderActions > button.workoutHistoryHeaderButton,
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .workoutHeaderActions > button.workoutModeHeaderButton {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
+    border-radius: 16px !important;
+    transform: translate(1px, -3px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutDeck {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutCardPro.workoutSelectCard {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutBottomPanel {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    max-height: 76px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+    max-width: none !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    max-height: 76px !important;
+    margin: 0 !important;
+    padding: 7px !important;
+    gap: 4px !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    justify-content: stretch !important;
+    border: 1px solid #dce2ed !important;
+    border-radius: 20px !important;
+    background: rgba(248, 251, 255, 0.94) !important;
+    box-shadow:
+      0 18px 44px rgba(55, 64, 112, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    transform: none !important;
+    box-sizing: border-box !important;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav > button {
+    width: auto !important;
+    min-width: 0 !important;
+    height: 60px !important;
+    min-height: 60px !important;
+    max-height: 60px !important;
+    padding: 5px 2px 4px !important;
+    display: grid !important;
+    place-items: center !important;
+    gap: 2px !important;
+    border: 1px solid transparent !important;
+    border-radius: 16px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #737b91 !important;
+    transform: none !important;
+    box-sizing: border-box !important;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav > button.active {
+    background: #f0edff !important;
+    border-color: #ded7ff !important;
+    color: #5d43e8 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav > button span {
+    width: 24px !important;
+    height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: currentColor !important;
+    font-size: 25px !important;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    line-height: 25px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav > button svg {
+    width: 24px !important;
+    height: 24px !important;
+    color: currentColor !important;
+    stroke-width: 2.4px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutMenuBar.clientBottomNav > button strong {
+    height: 16px !important;
+    display: block !important;
+    color: currentColor !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    line-height: 11px !important;
+    transform: translateY(-1px) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutBottomPanel .individualWorkoutBottomProgress {
+    left: 0 !important;
+    right: 0 !important;
+    top: -30px !important;
+    width: 100% !important;
+    max-width: none !important;
+    transform: none !important;
+  }
+}

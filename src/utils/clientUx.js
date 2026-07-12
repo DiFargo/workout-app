@@ -9,16 +9,34 @@ export function normalizeClientPrimaryPage(value, fallback = "main") {
   return CLIENT_PRIMARY_PAGES.includes(value) ? value : fallback;
 }
 
+export function isEmailLogin(value) {
+  return String(value || "").includes("@");
+}
+
+export function normalizeLoginAlias(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
+
+export function getDefaultLoginAlias(email) {
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  const [localPart] = cleanEmail.split("@");
+  return /^[a-z0-9._-]{3,32}$/.test(localPart || "") ? localPart : "";
+}
+
 export function validateLoginFields(email, password, options = {}) {
   const { passwordRequired = true } = options;
-  const cleanEmail = String(email || "").trim();
+  const cleanLogin = String(email || "").trim();
   const cleanPassword = String(password || "");
   const errors = {};
 
-  if (!cleanEmail) {
-    errors.email = "Укажи email.";
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+  if (!cleanLogin) {
+    errors.email = "Укажи логин или email.";
+  } else if (isEmailLogin(cleanLogin) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanLogin)) {
     errors.email = "Проверь формат email.";
+  } else if (!isEmailLogin(cleanLogin) && !/^[a-zA-Z0-9._-]{3,32}$/.test(cleanLogin)) {
+    errors.email = "Логин: 3-32 символа, латиница, цифры, точка, дефис или _.";
   }
 
   if (passwordRequired && !cleanPassword) {
@@ -27,7 +45,10 @@ export function validateLoginFields(email, password, options = {}) {
 
   return {
     valid: Object.keys(errors).length === 0,
-    email: cleanEmail,
+    email: cleanLogin,
+    login: cleanLogin,
+    loginAlias: isEmailLogin(cleanLogin) ? "" : normalizeLoginAlias(cleanLogin),
+    isEmail: isEmailLogin(cleanLogin),
     password: cleanPassword,
     errors
   };
@@ -35,6 +56,10 @@ export function validateLoginFields(email, password, options = {}) {
 
 export function mapLoginAuthError(error) {
   switch (error?.code) {
+    case "auth/invite-required":
+      return "Аккаунт не найден. Попроси тренера отправить приглашение.";
+    case "auth/login-not-found":
+      return "Логин не найден. Попробуй email или проверь написание.";
     case "auth/invalid-email":
       return "Проверь формат email.";
     case "auth/too-many-requests":
@@ -46,7 +71,13 @@ export function mapLoginAuthError(error) {
     case "auth/invalid-credential":
     case "auth/user-not-found":
     case "auth/wrong-password":
-      return "Неверный email или пароль.";
+      return "Неверный логин, email или пароль.";
+    case "auth/popup-closed-by-user":
+      return "Вход через Google отменён.";
+    case "auth/popup-blocked":
+      return "Браузер заблокировал окно Google. Разреши всплывающее окно и попробуй ещё раз.";
+    case "auth/account-exists-with-different-credential":
+      return "Аккаунт с этой почтой уже есть. Войди через email и пароль.";
     default:
       return "Не удалось войти. Попробуй ещё раз.";
   }

@@ -10,8 +10,10 @@ import {
 } from "../src/domain/workoutPresentation.js";
 import {
   getActiveTrainerTasksCount,
+  getClientTrainerTaskDestination,
   getClientPlateauInfo,
-  getMeasurementWeightValue
+  getMeasurementWeightValue,
+  inferClientTrainerTaskDestination
 } from "../src/domain/clientInsights.js";
 import { searchLazyNutritionCatalog } from "../src/data/nutrition-catalog/lazyCatalog.js";
 
@@ -103,6 +105,26 @@ test("active trainer task count ignores completed tasks", () => {
     { title: "Проверить замеры" }
   ]), 2);
   assert.equal(getActiveTrainerTasksCount(null), 0);
+});
+
+test("trainer task destination understands russian client tasks", () => {
+  assert.equal(inferClientTrainerTaskDestination("Загрузи фото прогресса спереди"), "progressPhotos");
+  assert.equal(inferClientTrainerTaskDestination("Сделай замеры талии и веса"), "measurements");
+  assert.equal(inferClientTrainerTaskDestination("Заполни дневник питания за сегодня"), "nutrition");
+  assert.equal(inferClientTrainerTaskDestination("Напиши заметку по тренировке"), "workouts");
+  assert.equal(inferClientTrainerTaskDestination("Обнови параметры профиля"), "profile");
+  assert.equal(inferClientTrainerTaskDestination("Посмотри историю прогресса"), "progress");
+});
+
+test("trainer task destination prefers explicit saved target", () => {
+  assert.equal(getClientTrainerTaskDestination({
+    target: "measurements",
+    title: "Фото прогресса"
+  }), "measurements");
+  assert.equal(getClientTrainerTaskDestination({
+    type: "custom",
+    title: "Нужно записать ужин"
+  }), "nutrition");
 });
 
 test("lazy nutrition catalog loads once and returns local matches", async () => {

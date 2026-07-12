@@ -91,3 +91,40 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .n
   white-space: nowrap !important;
 }
 
+@media (max-width: 640px) {
+  html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
+    margin-bottom: 0 !important;
+  }
+
+  html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 {
+    height: 30px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
+    margin: 2px 0 4px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+  }
+
+  html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview {
+    margin-top: -6px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4 {
+    margin-bottom: 0 !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 {
+    height: 30px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
+    margin: 2px 0 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview {
+    margin-top: -6px !important;
+  }
+}

@@ -1,27 +1,20 @@
-import { Bell } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 
 export default function ProfileCabinetTitleRow({
-  showTrainerNotifications,
-  trainerNotificationCount,
-  onOpenTrainerNotifications
+  onRefresh
 }) {
   return (
     <div className="profileCabinetTitleRow">
       <h1 className="profileCabinetPageTitle clientCorePageTitle">Личный кабинет</h1>
-      {showTrainerNotifications && (
-        <button
-          type="button"
-          className="profileTrainerNotificationsButton"
-          aria-label={`Уведомления тренера${trainerNotificationCount ? `: ${trainerNotificationCount}` : ""}`}
-          title="Уведомления тренера"
-          onClick={onOpenTrainerNotifications}
-        >
-          <Bell aria-hidden="true" />
-          {trainerNotificationCount > 0 && (
-            <em>{Math.min(trainerNotificationCount, 99)}</em>
-          )}
-        </button>
-      )}
+      <button
+        type="button"
+        className="profileTrainerNotificationsButton"
+        aria-label="Обновить страницу"
+        title="Обновить страницу"
+        onClick={onRefresh}
+      >
+        <RefreshCw aria-hidden="true" />
+      </button>
     </div>
   );
 }

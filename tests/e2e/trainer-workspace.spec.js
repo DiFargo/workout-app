@@ -61,7 +61,7 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
   const main = page.locator(".trainerNextMain");
 
   await expect(page.locator(".trainerNextRoot")).toBeVisible();
-  await expect(page.getByText(/^v(?:\.\d+)+$/)).toBeVisible();
+  await expect(main.locator("h1")).toHaveCount(1);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
@@ -104,7 +104,7 @@ test("trainer workspace smoke: dashboard, clients, client card and messages stay
     await page.locator(".trainerNextMobileMore").click();
   }
   await expect(page.locator(".trainerClientActionSheet")).toBeVisible();
-  await expect(page.locator(".trainerClientActionSheet button.danger")).toBeVisible();
+  await expect(page.getByRole("button", { name: /Архивировать клиента|Восстановить клиента/ })).toBeVisible();
   await page.locator(".trainerClientActionSheet header button").click();
   await expect(page.locator(".trainerClientActionSheet")).toBeHidden();
   assertNoRuntimeErrors();

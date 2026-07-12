@@ -10,6 +10,10 @@ export function renderClientMainBottomBar({
   onOpenTraining,
   onOpenNutrition,
   onOpenCabinet,
+  onPreloadMain,
+  onPreloadTraining,
+  onPreloadNutrition,
+  onPreloadCabinet,
   onOpenTrainerClients,
   onOpenTrainerPrograms,
   onLoadTrainerCabinet,
@@ -23,6 +27,10 @@ export function renderClientMainBottomBar({
       onOpenTraining={onOpenTraining}
       onOpenNutrition={onOpenNutrition}
       onOpenCabinet={onOpenCabinet}
+      onPreloadMain={onPreloadMain}
+      onPreloadTraining={onPreloadTraining}
+      onPreloadNutrition={onPreloadNutrition}
+      onPreloadCabinet={onPreloadCabinet}
       onOpenTrainerClients={onOpenTrainerClients}
       onOpenTrainerPrograms={onOpenTrainerPrograms}
       onLoadTrainerCabinet={onLoadTrainerCabinet}

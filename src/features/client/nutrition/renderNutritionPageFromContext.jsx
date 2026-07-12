@@ -1,6 +1,5 @@
 export function renderNutritionPageFromContext(ctx) {
 const {
-  APP_VERSION,
   NUTRITION_ICON_PRESETS,
   NutritionPageView,
   activeNutritionSearchResultLimit,
@@ -184,8 +183,6 @@ const {
 
   return (
     <NutritionPageView
-      appVersion={APP_VERSION}
-      showVersionBadge={!nutritionPickerOpen}
       pickerOpen={nutritionPickerOpen}
       calendarOpen={nutritionCalendarOpen}
       activeMeal={activeNutritionMeal}

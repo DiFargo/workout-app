@@ -1,3 +1,19 @@
+function normalizeDashboardDateKeys(values = []) {
+  return [...new Set((Array.isArray(values) ? values : [])
+    .filter((dateKey) => typeof dateKey === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dateKey))
+  )].sort();
+}
+
+export function getProfileDashboardScheduleDates(savedDates = [], workouts = [], sortWorkoutDays = (items) => items) {
+  const normalizedSavedDates = normalizeDashboardDateKeys(savedDates);
+  if (normalizedSavedDates.length) return normalizedSavedDates;
+
+  const orderedWorkouts = sortWorkoutDays(Array.isArray(workouts) ? workouts : []);
+  return normalizeDashboardDateKeys(
+    orderedWorkouts.map((workout) => workout?.scheduledDate || workout?.plannedDate || "")
+  );
+}
+
 export function buildProfileDashboardModel(ctx) {
   const {
     AI_NUTRITION_WEEK_DAYS,
@@ -159,10 +175,15 @@ export function buildProfileDashboardModel(ctx) {
       return result;
     }, {});
     const profileCalendarWorkouts = sortWorkoutDays(plan.workouts || []);
+    const dashboardScheduledDates = getProfileDashboardScheduleDates(
+      profileWorkoutScheduledDates,
+      profileCalendarWorkouts,
+      sortWorkoutDays
+    );
     const profileCalendarSource = {
       ...(profileWorkoutCalendarData || {}),
-      scheduledDates: profileWorkoutScheduledDates,
-      monthlyTrainingDates: profileWorkoutScheduledDates
+      scheduledDates: dashboardScheduledDates,
+      monthlyTrainingDates: dashboardScheduledDates
     };
     const profileWorkoutSlots = buildPlannedWorkoutSlots({
       workouts: profileCalendarWorkouts,
@@ -300,7 +321,7 @@ export function buildProfileDashboardModel(ctx) {
     const nextTrainingText = getProfileNextTrainingText(
       activeProfile,
       user,
-      profileWorkoutScheduledDates
+      dashboardScheduledDates
     );
     const currentGoalId = activeProfile?.goal || "recomp";
     const progressTone = currentGoalId === "mass"
@@ -358,7 +379,7 @@ export function buildProfileDashboardModel(ctx) {
       nutrition,
       calorieGoal: Number(profileMacros.calories || nutrition.goals.calories),
       proteinGoal: Number(profileMacros.protein || nutrition.goals.protein),
-      scheduledDates: profileWorkoutScheduledDates,
+      scheduledDates: dashboardScheduledDates,
       goal: currentGoalId
     });
     const aiCoachStatuses = progressInsight.statuses;

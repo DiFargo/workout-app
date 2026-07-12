@@ -14,6 +14,7 @@ export function renderAppRoutePage(ctx) {
     profileWorkoutCalendarData,
     user,
     workoutModePreference,
+    workoutModeRemember,
     individualWorkoutIndex,
     individualWorkoutIndexInitialized,
     setIndividualWorkoutIndex,
@@ -39,6 +40,8 @@ export function renderAppRoutePage(ctx) {
     saveWorkoutModePreference,
     setSelectedWorkoutId,
     openIndividualWorkouts,
+    openSavedBasicWorkoutsOrQuiz,
+    openBasicWorkoutQuiz,
     openCabinetWorkoutHistory,
     handleWorkoutDraftChoice
   } = ctx;
@@ -51,6 +54,7 @@ export function renderAppRoutePage(ctx) {
     workoutCalendar: profileWorkoutCalendarData,
     userId: (auth.currentUser || user)?.uid || "",
     workoutModePreference,
+    workoutModeRemember,
     individualWorkoutIndex,
     individualWorkoutIndexInitialized,
     setIndividualWorkoutIndex,
@@ -77,6 +81,8 @@ export function renderAppRoutePage(ctx) {
     saveWorkoutModePreference,
     setSelectedWorkoutId,
     openIndividualWorkouts,
+    openSavedBasicWorkoutsOrQuiz,
+    openBasicWorkoutQuiz,
     openCabinetWorkoutHistory,
     handleWorkoutDraftChoice
   });

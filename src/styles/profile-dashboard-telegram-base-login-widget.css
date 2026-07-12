@@ -67,3 +67,30 @@
   color: rgba(255,255,255,.72) !important;
 }
 
+html:root[data-app-theme="warm-light"] body #root .profileTelegramAuthPreview {
+  border-color: #e1e4ee;
+  background: #f7f8fd;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramAuthIcon {
+  border-color: #dedaf8;
+  background: #f0edff;
+  color: #6552e6;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramAuthPreview strong {
+  color: #151824;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramAuthPreview span {
+  color: #747b8d;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramLoginWidgetCard {
+  border-color: #dedaf8;
+  background: #f7f8fd;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramWidgetLoading {
+  color: #8a8f9c;
+}

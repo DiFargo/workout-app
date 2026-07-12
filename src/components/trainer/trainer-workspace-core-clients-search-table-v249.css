@@ -30,6 +30,10 @@
   font-size: 12px;
 }
 
+.trainerClientFilters {
+  margin: 14px 0;
+}
+
 .trainerNextClientTable {
   overflow: hidden;
   border: 1px solid var(--tn-line);

@@ -1,7 +1,14 @@
+import {
+  buildTrainerActionCenter,
+  buildTrainerClientSnapshot,
+  buildTrainerWorkoutReview
+} from "../../utils/trainerActionCenter.js";
+
 export function buildTrainerDashboardPageModel({
   adminClientFilter,
   adminClientHistory,
   adminClientNutrition,
+  adminClientTasks,
   adminSelectedClient,
   auth,
   buildClientNutritionPresetOptions,
@@ -27,6 +34,7 @@ export function buildTrainerDashboardPageModel({
   const getDashboardClientSummary = (client = {}) =>
     getTrainerClientSummaryFromMap(client, trainerClientSummaries);
   const trainerDashboardSummary = buildTrainerDashboardSummary(usersList, trainerClientSummaries);
+  const trainerActionCenter = buildTrainerActionCenter(usersList, trainerClientSummaries);
   const trainerStatusCounts = trainerDashboardSummary.statusCounts;
   const trainerProblemClients = trainerDashboardSummary.problemClients;
   const trainerAiFocusItems = trainerDashboardSummary.focusItems;
@@ -86,6 +94,15 @@ export function buildTrainerDashboardPageModel({
   const trainerNextSelectedSummary = selectedClient
     ? getDashboardClientSummary(selectedClient)
     : {};
+  const selectedClientSnapshot = selectedClient
+    ? buildTrainerClientSnapshot(
+      selectedClient,
+      trainerNextSelectedSummary,
+      adminClientTasks,
+      adminClientHistory
+    )
+    : null;
+  const selectedLastWorkoutReview = buildTrainerWorkoutReview(adminClientHistory?.[0] || {}, {});
   const trainerNextMode = trainerNextSection === "clients"
     ? "clients"
     : trainerNextSection === "client" && selectedClient
@@ -112,10 +129,13 @@ export function buildTrainerDashboardPageModel({
     maxWeight,
     recommendations,
     selectedClient,
+    selectedClientSnapshot,
     selectedEffectiveNutritionGoals,
+    selectedLastWorkoutReview,
     selectedNutritionFallbackGoals,
     selectedProfile,
     trainerAiFocusItems,
+    trainerActionCenter,
     trainerNextActiveSection,
     trainerNextMode,
     trainerNextSelectedSummary,

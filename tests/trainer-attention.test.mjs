@@ -76,3 +76,84 @@ test("weekly training pattern waits until planned weekday has passed", () => {
     reason: "Не закрыта плановая тренировка"
   });
 });
+
+test("active trainer tasks require trainer attention after schedule checks", () => {
+  const now = new Date("2026-06-16T12:00:00");
+  const attention = getClientAttentionState(
+    {
+      assignedProgramId: "program_1",
+      workoutCalendar: {
+        scheduledDates: ["2026-06-17"]
+      }
+    },
+    {
+      assignedProgramId: "program_1",
+      activeTrainerTasksCount: 2,
+      assignedProgramUpdatedAt: "2026-06-10T10:00:00",
+      nutritionDays7: 4,
+      lastNutritionAt: "2026-06-16"
+    },
+    now
+  );
+
+  assert.deepEqual(attention, {
+    type: "task",
+    reason: "2 активные задачи от тренера"
+  });
+});
+
+test("workout feedback attention is shown before nutrition checks", () => {
+  const now = new Date("2026-06-16T12:00:00");
+  const attention = getClientAttentionState(
+    {
+      assignedProgramId: "program_1",
+      workoutCalendar: {
+        scheduledDates: ["2026-06-17"]
+      }
+    },
+    {
+      assignedProgramId: "program_1",
+      workoutFeedbackAttention: {
+        id: "pain",
+        reason: "Клиент сообщил о боли после тренировки"
+      },
+      assignedProgramUpdatedAt: "2026-06-10T10:00:00",
+      nutritionDays7: 0,
+      lastNutritionAt: "2026-06-01"
+    },
+    now
+  );
+
+  assert.deepEqual(attention, {
+    type: "feedback",
+    reason: "Клиент сообщил о боли после тренировки"
+  });
+});
+
+test("program ending attention is shown before nutrition checks", () => {
+  const now = new Date("2026-06-16T12:00:00");
+  const attention = getClientAttentionState(
+    {
+      assignedProgramId: "program_1",
+      workoutCalendar: {
+        scheduledDates: ["2026-06-17"]
+      }
+    },
+    {
+      assignedProgramId: "program_1",
+      programEndingAttention: {
+        id: "endingSoon",
+        reason: "До конца программы: 1 тренировка"
+      },
+      assignedProgramUpdatedAt: "2026-06-10T10:00:00",
+      nutritionDays7: 0,
+      lastNutritionAt: "2026-06-01"
+    },
+    now
+  );
+
+  assert.deepEqual(attention, {
+    type: "programEnding",
+    reason: "До конца программы: 1 тренировка"
+  });
+});

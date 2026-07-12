@@ -35,13 +35,19 @@ export function createTrainerClientControlHandlers({
       updatedByUid: auth.currentUser?.uid || ""
     };
 
+    let previousPayment = null;
+    setAdminClientPayment((prev) => {
+      previousPayment = prev;
+      return payment;
+    });
+    setAdminClientStatus("\u041a\u043e\u043d\u0442\u0440\u043e\u043b\u044c \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d.");
+
     try {
       await setDoc(doc(db, "users", clientId, "payments", "current"), payment, { merge: true });
-      setAdminClientPayment(payment);
-      await recordTrainerEvent(clientId, "programControl", "\u041a\u043e\u043d\u0442\u0440\u043e\u043b\u044c \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b \u043e\u0431\u043d\u043e\u0432\u043b\u0451\u043d", getClientPaymentAttention(payment).label);
-      setAdminClientStatus("\u041a\u043e\u043d\u0442\u0440\u043e\u043b\u044c \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d.");
+      recordTrainerEvent(clientId, "programControl", "\u041a\u043e\u043d\u0442\u0440\u043e\u043b\u044c \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b \u043e\u0431\u043d\u043e\u0432\u043b\u0451\u043d", getClientPaymentAttention(payment).label);
     } catch (error) {
       console.error("Client program control save failed:", error);
+      setAdminClientPayment(previousPayment);
       setAdminClientStatus("\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043a\u043e\u043d\u0442\u0440\u043e\u043b\u044c \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b.");
     }
   }
@@ -82,8 +88,8 @@ export function createTrainerClientControlHandlers({
       setAdminPhotoCompareIds((current) => [photoId, current[0] || ""]);
       setAdminProgressPhotoFiles({ front: null, side: null, back: null });
       setAdminProgressPhotoComment("");
-      await recordTrainerEvent(clientId, "photo", "\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u044b \u0444\u043e\u0442\u043e \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430", photo.comment);
       setAdminClientStatus("\u0424\u043e\u0442\u043e \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u044b.");
+      recordTrainerEvent(clientId, "photo", "\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u044b \u0444\u043e\u0442\u043e \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430", photo.comment);
     } catch (error) {
       console.error("Progress photos upload failed:", error);
       setAdminClientStatus("\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0444\u043e\u0442\u043e \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430.");

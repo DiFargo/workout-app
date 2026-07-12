@@ -22,7 +22,51 @@ export function getActiveTrainerTasksCount(tasks = []) {
     .length;
 }
 
+const TRAINER_TASK_DESTINATION_PATTERNS = [
+  {
+    destination: "progressPhotos",
+    pattern: /фото|photo|progress\s*photo/i
+  },
+  {
+    destination: "measurements",
+    pattern: /замер|обмер|объ[её]м|вес|шея|плеч|талия|живот|бедр|таз|груд|бицепс|предплеч|запяст|голень|лодыж|взвес/i
+  },
+  {
+    destination: "nutrition",
+    pattern: /питан|кбжу|ккал|калор|белок|жир|углевод|при[её]м пищи|дневник|завтрак|обед|ужин|перекус|вода/i
+  },
+  {
+    destination: "workouts",
+    pattern: /трениров|упражнен|программ|подход|повтор|кардио|размин/i
+  },
+  {
+    destination: "profile",
+    pattern: /профил|параметр|рост|возраст|активност|анкета/i
+  },
+  {
+    destination: "progress",
+    pattern: /прогресс|результат|истори/i
+  }
+];
+
+export function inferClientTrainerTaskDestination(content = "") {
+  const text = String(content || "").toLowerCase();
+  const match = TRAINER_TASK_DESTINATION_PATTERNS.find(({ pattern }) => pattern.test(text));
+  return match?.destination || "";
+}
+
 export function getClientTrainerTaskDestination(task = {}) {
+  if ([
+    "progressPhotos",
+    "measurements",
+    "nutrition",
+    "workouts",
+    "profile",
+    "progress"
+  ].includes(task.target)) {
+    return task.target;
+  }
+
   const content = [
     task.target,
     task.section,
@@ -30,6 +74,9 @@ export function getClientTrainerTaskDestination(task = {}) {
     task.title,
     task.description
   ].filter(Boolean).join(" ").toLowerCase();
+  const inferredDestination = inferClientTrainerTaskDestination(content);
+
+  if (inferredDestination) return inferredDestination;
 
   if (/фото|photo/.test(content)) return "progressPhotos";
   if (/замер|объ[её]м|талия|бедр|груд|бицепс|взвес|вес тела/.test(content)) return "measurements";

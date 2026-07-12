@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 
 import { APP_THEMES, normalizeAppTheme } from "./appTheme";
+import { isTrainerForbiddenClientPage } from "./appNavigation";
 import {
   addUserLocalBackup,
   safeWriteUserJsonStorage
@@ -78,14 +79,27 @@ export function useAppRuntimeEffects({
 
   useEffect(() => {
     const hasTrainerDashboard = Boolean(
-      isAdminClaim || currentUserRole === "admin" || currentUserRole === "trainer"
+      isAdminClaim ||
+      currentUserRole === "admin" ||
+      currentUserRole === "trainer"
     );
+    const trainerForbiddenClientPage = isTrainerForbiddenClientPage(page);
 
-    if (isLoggedIn && !appLoading && hasTrainerDashboard && page === APP_PAGES.MAIN) {
+    if (isLoggedIn && !appLoading && hasTrainerDashboard && trainerForbiddenClientPage) {
       setSelectedUserId(null);
       setPage(APP_PAGES.ADMIN);
     }
-  }, [APP_PAGES.ADMIN, APP_PAGES.MAIN, appLoading, currentUserRole, isAdminClaim, isLoggedIn, page, setPage, setSelectedUserId]);
+  }, [
+    APP_PAGES.ADMIN,
+    appLoading,
+    currentUserRole,
+    isAdminClaim,
+    isLoggedIn,
+    page,
+    setPage,
+    setSelectedUserId,
+    user?.email
+  ]);
 
   useEffect(() => {
     const normalizedClientPrimaryPage = normalizeAppPage(page);

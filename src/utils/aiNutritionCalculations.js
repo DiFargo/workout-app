@@ -1,5 +1,3 @@
-import { getAiNutritionHistoryBaseline } from "../data/aiNutritionBaseline";
-
 export function calculateAiNutritionMacros(calories, weight, goal = "recomp") {
   const safeCalories = Math.max(1400, Math.round(Number(calories) || 2200));
   const safeWeight = Math.max(45, Number(weight) || 80);
@@ -28,7 +26,6 @@ export function calculateAiNutritionBmr({ weight = 80, height = 180, age = 30, s
 }
 
 export function calculatePersonalAiNutritionCalories(profile = {}) {
-  const baseline = getAiNutritionHistoryBaseline();
   const weight = Number(profile?.weight) || 80;
   const height = Number(profile?.height) || 180;
   const age = Number(profile?.age) || 30;
@@ -38,10 +35,7 @@ export function calculatePersonalAiNutritionCalories(profile = {}) {
 
   const bmr = calculateAiNutritionBmr({ weight, height, age, sex });
   const maintenance = Math.round(bmr * getAiNutritionActivityMultiplier(activity));
-  const historyAverage = Number(baseline.average.calories) || maintenance;
-
-  // History is useful, but personal body data should be the main base for new users.
-  const personalizedBase = Math.round(maintenance * 0.72 + historyAverage * 0.28);
+  const personalizedBase = maintenance;
 
   if (goal === "mass") return Math.round(personalizedBase + 220);
   if (goal === "cut") return Math.round(personalizedBase - 320);

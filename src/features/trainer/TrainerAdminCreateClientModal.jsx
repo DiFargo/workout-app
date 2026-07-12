@@ -4,10 +4,8 @@ export default function TrainerAdminCreateClientModal({
   adminCreatedCredentials,
   adminNewUserEmail,
   adminNewUserName,
-  adminNewUserPassword,
   createUserFromAdminPanel,
   credentialsText,
-  generateAdminPassword,
   setAdminCreateClientModalOpen,
   setAdminNewUserEmail,
   setAdminNewUserName,
@@ -24,8 +22,8 @@ export default function TrainerAdminCreateClientModal({
           ×
         </button>
 
-        <h2>Создать клиента</h2>
-        <p>Создай логин, пароль и стартовую программу для нового клиента.</p>
+        <h2>Пригласить клиента</h2>
+        <p>Клиент сам задаст пароль по ссылке активации и сможет войти по email, логину или Google.</p>
 
         <form className="adminCreateUserForm" onSubmit={createUserFromAdminPanel}>
           <label>
@@ -48,22 +46,8 @@ export default function TrainerAdminCreateClientModal({
             />
           </label>
 
-          <label>
-            <span>Пароль</span>
-            <div className="adminPasswordRow">
-              <input
-                value={adminNewUserPassword}
-                onChange={(event) => setAdminNewUserPassword(event.target.value)}
-                placeholder="Минимум 6 символов"
-                type="text"
-                autoComplete="new-password"
-              />
-              <button type="button" onClick={generateAdminPassword}>Сген.</button>
-            </div>
-          </label>
-
           <button type="submit" className="adminCreateUserSubmit" disabled={adminCreateUserLoading}>
-            {adminCreateUserLoading ? "Создаю..." : "Создать клиента"}
+            {adminCreateUserLoading ? "Создаю..." : "Создать приглашение"}
           </button>
         </form>
 
@@ -71,10 +55,10 @@ export default function TrainerAdminCreateClientModal({
 
         {adminCreatedCredentials && (
           <div className="adminCredentialsBox">
-            <span>Данные для клиента</span>
+            <span>Приглашение для клиента</span>
             <pre>{credentialsText}</pre>
             <button type="button" onClick={() => navigator.clipboard?.writeText(credentialsText)}>
-              Скопировать логин и пароль
+              Скопировать приглашение
             </button>
           </div>
         )}

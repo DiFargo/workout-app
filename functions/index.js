@@ -132,6 +132,24 @@ function normalizeTelegramTarget({ chatId, telegramUserId, username }) {
   return directChatId || userId || (cleanUsername ? `@${cleanUsername}` : "");
 }
 
+function normalizeAccountEmail(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function getDefaultLoginAliasForEmail(email) {
+  const cleanEmail = normalizeAccountEmail(email);
+  const [localPart] = cleanEmail.split("@");
+  return /^[a-z0-9._-]{3,32}$/.test(localPart || "") ? localPart : "";
+}
+
+function normalizeLoginAlias(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function isValidLoginAlias(value) {
+  return /^[a-z0-9._-]{3,32}$/.test(String(value || ""));
+}
+
 async function sendTelegramMessage({ chatId, telegramUserId, username, text, token }) {
   const targetChatId = normalizeTelegramTarget({ chatId, telegramUserId, username });
 
@@ -328,6 +346,68 @@ export const bootstrapFirstAdmin = onCall(
   }
 );
 
+export const trainerCreateInvite = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30 },
+  async (req, res) => {
+    try {
+      if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
+
+      const context = await getAuthenticatedContext(req);
+      if (context.role !== "trainer" && context.token?.admin !== true) {
+        return json(res, 403, { error: "Trainer access required" });
+      }
+
+      const email = normalizeAccountEmail(req.body?.email);
+      const name = String(req.body?.name || "").trim() || email.split("@")[0] || "Клиент";
+      if (!email || !email.includes("@")) return json(res, 400, { error: "Valid email is required" });
+
+      try {
+        await admin.auth().getUserByEmail(email);
+        return json(res, 409, { error: "auth/email-already-in-use" });
+      } catch (error) {
+        if (error?.code !== "auth/user-not-found") throw error;
+      }
+
+      const generatedPassword = `${crypto.randomBytes(24).toString("base64url")}!`;
+      const createdUser = await admin.auth().createUser({ email, password: generatedPassword, displayName: name });
+      const now = new Date().toISOString();
+      const trainerEmail = normalizeAccountEmail(context.token?.email || context.userData?.email);
+      // Cloud Run receives an internal Host header through Hosting rewrites.
+      // Firebase only accepts an authorized public continue URL for password actions.
+      const appUrl = "https://tren-85720.web.app/";
+      const inviteUrl = `${appUrl}?invite=${encodeURIComponent(email)}`;
+      const activationUrl = await admin.auth().generatePasswordResetLink(email, { url: inviteUrl });
+      const clientPayload = {
+        email, name, role: "client", createdAt: now, updatedAt: now,
+        createdByUid: context.uid, createdByEmail: trainerEmail,
+        trainerId: context.uid, assignedTrainerId: context.uid, coachId: context.uid,
+        trainerEmail, assignedTrainerEmail: trainerEmail, coachEmail: trainerEmail,
+        assignedProgramId: "", assignedProgramName: ""
+      };
+      const batch = admin.firestore().batch();
+      const clientRef = admin.firestore().collection("users").doc(createdUser.uid);
+      batch.set(clientRef, clientPayload);
+      batch.set(admin.firestore().collection("users").doc(context.uid).collection("trainerClients").doc(createdUser.uid), {
+        clientId: createdUser.uid, uid: createdUser.uid, email, name, role: "client",
+        trainerId: context.uid, trainerEmail, assignedTrainerId: context.uid,
+        assignedTrainerEmail: trainerEmail, createdAt: now, updatedAt: now
+      });
+      batch.set(admin.firestore().collection("clientInvites").doc(email), {
+        email, name, status: "active", authUid: createdUser.uid, trainerId: context.uid,
+        trainerEmail, createdByUid: context.uid, createdByEmail: trainerEmail,
+        createdAt: now, updatedAt: now, inviteUrl
+      });
+      const login = getDefaultLoginAliasForEmail(email);
+      if (login) batch.set(admin.firestore().collection("loginAliases").doc(login), { email, uid: createdUser.uid, createdAt: now, updatedAt: now });
+      await batch.commit();
+      return json(res, 200, { client: { id: createdUser.uid, ...clientPayload }, inviteUrl, activationUrl });
+    } catch (error) {
+      console.error("trainerCreateInvite error:", error);
+      return json(res, getHttpErrorStatus(error), { error: error?.code || error?.message || "Unable to create invite" });
+    }
+  }
+);
+
 
 export const telegramLoginVerify = onRequest(
   {
@@ -478,6 +558,7 @@ export const telegramSendMessage = onRequest(
 
       await client.ref.collection("telegramMessages").add({
         type: "manual",
+        direction: "out",
         text,
         sentByUid: context.uid,
         sentAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -832,6 +913,34 @@ export const telegramWebhook = onRequest(
       crypto.timingSafeEqual(Buffer.from(receivedSecret), Buffer.from(expectedSecret));
 
     if (!validSecret) return json(res, 401, { ok: false, error: "Invalid webhook secret" });
+
+    try {
+      const message = req.body?.message;
+      const fromId = String(message?.from?.id || "").trim();
+      const text = String(message?.text || "").trim();
+
+      if (fromId && text) {
+        const matches = await admin.firestore()
+          .collection("users")
+          .where("telegram.telegramUserId", "==", fromId)
+          .limit(1)
+          .get();
+
+        if (!matches.empty) {
+          await matches.docs[0].ref.collection("telegramMessages").add({
+            type: "incoming",
+            direction: "in",
+            text: text.slice(0, 3500),
+            telegramMessageId: message.message_id || null,
+            sentAt: admin.firestore.FieldValue.serverTimestamp(),
+            status: "received"
+          });
+        }
+      }
+    } catch (error) {
+      console.error("telegramWebhook processing error:", error);
+    }
+
     return json(res, 200, { ok: true });
   }
 );
@@ -1441,6 +1550,191 @@ export const openFoodFactsSearch = onRequest(
         error: "open_food_facts_search_failed",
         message: error.message
       });
+    }
+  }
+);
+
+export const profileUpdateEmail = onRequest(
+  {
+    cors: true,
+    timeoutSeconds: 30,
+    memory: "256MiB",
+    region: "europe-west1"
+  },
+  async (req, res) => {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed" });
+
+    try {
+      const context = await getAuthenticatedContext(req);
+      await enforceRateLimit(context.uid, "profile-update-email", {
+        limit: 8,
+        windowMs: 10 * 60 * 1000
+      });
+      await enforceRateLimit(context.uid, "profile-update-email-daily", {
+        limit: 20,
+        windowMs: 24 * 60 * 60 * 1000
+      });
+
+      const nextEmail = normalizeAccountEmail(req.body?.email);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nextEmail)) {
+        return json(res, 400, { ok: false, error: "invalid-email", message: "Invalid email" });
+      }
+
+      const authUser = await admin.auth().getUser(context.uid);
+      const currentEmail = normalizeAccountEmail(authUser.email || context.userData.email);
+      if (nextEmail === currentEmail) {
+        return json(res, 200, { ok: true, email: nextEmail, unchanged: true });
+      }
+
+      const existingUser = await admin.auth().getUserByEmail(nextEmail).catch((error) => {
+        if (error?.code === "auth/user-not-found") return null;
+        throw error;
+      });
+      if (existingUser && existingUser.uid !== context.uid) {
+        return json(res, 409, { ok: false, error: "email-already-in-use", message: "Email already in use" });
+      }
+
+      const updatedAt = new Date().toISOString();
+      const accountProfile = context.userData.accountProfile || {};
+      const displayName = accountProfile.displayName || context.userData.name || authUser.displayName || "";
+      const avatarUrl = accountProfile.avatarUrl || context.userData.avatarUrl || authUser.photoURL || "";
+      const previousDefaultLoginAlias = getDefaultLoginAliasForEmail(currentEmail);
+      const nextDefaultLoginAlias = getDefaultLoginAliasForEmail(nextEmail);
+      const currentLoginAlias = normalizeLoginAlias(context.userData.loginLower || accountProfile.login || previousDefaultLoginAlias);
+      const nextLoginAlias = currentLoginAlias && currentLoginAlias !== previousDefaultLoginAlias
+        ? currentLoginAlias
+        : nextDefaultLoginAlias;
+      const nextAccountProfile = {
+        ...accountProfile,
+        displayName,
+        avatarUrl,
+        email: nextEmail,
+        login: nextLoginAlias,
+        updatedAt
+      };
+
+      await admin.auth().updateUser(context.uid, {
+        email: nextEmail,
+        emailVerified: false
+      });
+
+      const db = admin.firestore();
+      const batch = db.batch();
+      batch.set(db.collection("users").doc(context.uid), {
+        email: nextEmail,
+        loginLower: nextLoginAlias,
+        accountProfile: nextAccountProfile,
+        pendingEmail: "",
+        pendingEmailRequestedAt: "",
+        updatedAt
+      }, { merge: true });
+
+      if (nextLoginAlias) {
+        batch.set(db.collection("loginAliases").doc(nextLoginAlias), {
+          email: nextEmail,
+          uid: context.uid,
+          updatedAt
+        }, { merge: true });
+      }
+      if (previousDefaultLoginAlias && previousDefaultLoginAlias !== nextLoginAlias) {
+        batch.delete(db.collection("loginAliases").doc(previousDefaultLoginAlias));
+      }
+
+      await batch.commit();
+
+      return json(res, 200, {
+        ok: true,
+        email: nextEmail,
+        loginAlias: nextLoginAlias,
+        accountProfile: nextAccountProfile
+      });
+    } catch (error) {
+      console.error("profileUpdateEmail error:", error);
+      return json(res, getHttpErrorStatus(error), { ok: false, error: error.message });
+    }
+  }
+);
+
+export const profileUpdateLogin = onRequest(
+  {
+    cors: true,
+    timeoutSeconds: 30,
+    memory: "256MiB",
+    region: "europe-west1"
+  },
+  async (req, res) => {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed" });
+
+    try {
+      const context = await getAuthenticatedContext(req);
+      await enforceRateLimit(context.uid, "profile-update-login", {
+        limit: 10,
+        windowMs: 10 * 60 * 1000
+      });
+
+      const nextLoginAlias = normalizeLoginAlias(req.body?.login);
+      if (!isValidLoginAlias(nextLoginAlias)) {
+        return json(res, 400, {
+          ok: false,
+          error: "invalid-login",
+          message: "Login must be 3-32 latin characters, numbers, dot, dash or underscore"
+        });
+      }
+
+      const authUser = await admin.auth().getUser(context.uid);
+      const email = normalizeAccountEmail(authUser.email || context.userData.email);
+      if (!email) {
+        return json(res, 400, { ok: false, error: "missing-email", message: "Account email is required" });
+      }
+
+      const accountProfile = context.userData.accountProfile || {};
+      const currentLoginAlias = normalizeLoginAlias(context.userData.loginLower || accountProfile.login || getDefaultLoginAliasForEmail(email));
+      if (nextLoginAlias === currentLoginAlias) {
+        return json(res, 200, { ok: true, login: nextLoginAlias, unchanged: true });
+      }
+
+      const db = admin.firestore();
+      const nextAliasRef = db.collection("loginAliases").doc(nextLoginAlias);
+      const nextAliasSnapshot = await nextAliasRef.get();
+      const nextAliasData = nextAliasSnapshot.exists ? nextAliasSnapshot.data() || {} : {};
+      if (nextAliasData.uid && nextAliasData.uid !== context.uid) {
+        return json(res, 409, { ok: false, error: "login-already-in-use", message: "Login already in use" });
+      }
+
+      const updatedAt = new Date().toISOString();
+      const nextAccountProfile = {
+        ...accountProfile,
+        email,
+        login: nextLoginAlias,
+        updatedAt
+      };
+
+      const batch = db.batch();
+      batch.set(db.collection("users").doc(context.uid), {
+        loginLower: nextLoginAlias,
+        accountProfile: nextAccountProfile,
+        updatedAt
+      }, { merge: true });
+      batch.set(nextAliasRef, {
+        email,
+        uid: context.uid,
+        updatedAt,
+        ...(nextAliasSnapshot.exists ? {} : { createdAt: updatedAt })
+      }, { merge: true });
+      if (currentLoginAlias && currentLoginAlias !== nextLoginAlias) {
+        batch.delete(db.collection("loginAliases").doc(currentLoginAlias));
+      }
+
+      await batch.commit();
+
+      return json(res, 200, {
+        ok: true,
+        login: nextLoginAlias,
+        accountProfile: nextAccountProfile
+      });
+    } catch (error) {
+      console.error("profileUpdateLogin error:", error);
+      return json(res, getHttpErrorStatus(error), { ok: false, error: error.message });
     }
   }
 );

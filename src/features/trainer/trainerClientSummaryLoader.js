@@ -1,6 +1,7 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 import {
+  getActiveTrainerTasksCount,
   getClientPaymentAttention,
   getClientPlateauInfo
 } from "../../domain/clientInsights";
@@ -14,11 +15,13 @@ import {
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
   getTrainerProgramCompletionPercent,
+  getTrainerProgramEndingAttention,
   getTrainerSettledCollectionItems,
   getTrainerSettledDocumentData,
   getTrainerSortedHistory,
   getTrainerSortedMeasurements,
   getTrainerSummaryReadFailures,
+  getTrainerWorkoutFeedbackAttention,
   getTrainerWorkoutActivitySummary
 } from "../../utils/trainerClientSummary";
 import { getTrainerSummaryPeriodBounds } from "../../utils/trainerSummaryDates";
@@ -53,19 +56,21 @@ export function createTrainerClientSummaryLoader({
         return getTrainerClientFastSummary(client);
       }
 
-      const [historyResult, nutritionResult, measurementsResult, paymentResult, workoutsResult] = await Promise.allSettled([
+      const [historyResult, nutritionResult, measurementsResult, paymentResult, workoutsResult, tasksResult] = await Promise.allSettled([
         getDocs(collection(db, "users", client.id, "history")),
         getDoc(doc(db, "users", client.id, "nutrition", "state")),
         getDocs(collection(db, "users", client.id, "measurements")),
         getDoc(doc(db, "users", client.id, "payments", "current")),
-        getDocs(collection(db, "users", client.id, "workouts"))
+        getDocs(collection(db, "users", client.id, "workouts")),
+        getDocs(collection(db, "users", client.id, "trainerTasks"))
       ]);
       const readFailures = getTrainerSummaryReadFailures({
         history: historyResult,
         nutrition: nutritionResult,
         measurements: measurementsResult,
         payment: paymentResult,
-        workouts: workoutsResult
+        workouts: workoutsResult,
+        tasks: tasksResult
       });
 
       if (readFailures.names.length) {
@@ -80,6 +85,7 @@ export function createTrainerClientSummaryLoader({
         getTrainerSettledCollectionItems(measurementsResult)
       );
       const clientWorkouts = getTrainerSettledCollectionItems(workoutsResult);
+      const clientTasks = getTrainerSettledCollectionItems(tasksResult);
 
       const nutritionState = getTrainerSettledDocumentData(nutritionResult, client?.nutritionState || null);
       const nutritionSummary = getTrainerNutritionSummary(nutritionState);
@@ -109,6 +115,9 @@ export function createTrainerClientSummaryLoader({
         plateau: getClientPlateauInfo(clientMeasurements),
         payment,
         paymentAttention: getClientPaymentAttention(payment),
+        activeTrainerTasksCount: getActiveTrainerTasksCount(clientTasks),
+        workoutFeedbackAttention: getTrainerWorkoutFeedbackAttention(clientHistory),
+        programEndingAttention: getTrainerProgramEndingAttention(assignedWorkoutCount, completedWorkoutCount),
         recentEvents: buildTrainerClientRecentEvents({
           clientId: client.id,
           historyList: clientHistory,

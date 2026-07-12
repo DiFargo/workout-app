@@ -48,6 +48,14 @@
   -webkit-text-fill-color: #aee94d !important;
 }
 
+.foodProductActionBar button {
+  transition: transform 0.08s ease-out;
+}
+
+.foodProductActionBar button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
 .fatSearchBottomBarFive > button.active:not(.fatSearchPhotoAction) {
   background:
     radial-gradient(circle at 50% 0%, rgba(145, 173, 78, 0.15), transparent 68%),

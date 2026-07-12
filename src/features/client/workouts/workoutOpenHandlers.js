@@ -1,6 +1,8 @@
 import { getWorkoutReadinessOption } from "../../../domain/workoutPresentation";
 import { buildBasicWorkoutPlanFromQuiz } from "../../../utils/basicWorkoutPlanBuilder";
 import { safeReadJsonStorage } from "../../../utils/storageSafety";
+import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
+import { doc, writeBatch } from "firebase/firestore";
 import {
   clearWorkoutDraft,
   getWorkoutDraftKey
@@ -8,7 +10,11 @@ import {
 
 export function createWorkoutOpenHandlers({
   APP_PAGES,
+  STORAGE_KEY,
+  BASIC_WORKOUT_PLAN_STORAGE_KEY,
+  WORKOUT_MODE_STORAGE_KEY,
   auth,
+  db,
   user,
   plan,
   basicWorkoutQuiz,
@@ -17,7 +23,11 @@ export function createWorkoutOpenHandlers({
   loadWorkoutsFromFirebase,
   setPlan,
   setSelectedWorkoutId,
+  setIndividualWorkoutIndex,
+  setIndividualWorkoutIndexInitialized,
   setPage,
+  setWorkoutModePreference,
+  setWorkoutModeRemember,
   setOpenVideoId,
   setFullscreenVideo,
   setCurrentExerciseIndex,
@@ -45,9 +55,83 @@ export function createWorkoutOpenHandlers({
   setWorkoutDraftRestorePrompt
 }) {
   function applyBasicWorkoutPlan() {
+    const currentUser = auth.currentUser || user;
     const nextPlan = buildBasicWorkoutPlanFromQuiz(basicWorkoutQuiz);
-    setPlan({ workouts: nextPlan.workouts });
+    const nextPlanState = {
+      ...nextPlan,
+      source: "basic",
+      basicPlanId: nextPlan.basicPlanId || nextPlan.id,
+      basicPlanName: nextPlan.basicPlanName || nextPlan.name
+    };
+    const nextWorkoutModePreference = {
+      mode: "basic",
+      remember: true,
+      updatedAt: new Date().toISOString()
+    };
+
+    setPlan(nextPlanState);
+    setWorkoutModePreference?.(nextWorkoutModePreference);
+    setWorkoutModeRemember?.(true);
+    if (currentUser?.uid) {
+      safeWriteUserJsonStorage(BASIC_WORKOUT_PLAN_STORAGE_KEY || STORAGE_KEY, currentUser.uid, nextPlanState);
+      safeWriteUserJsonStorage(STORAGE_KEY, currentUser.uid, nextPlanState);
+      if (WORKOUT_MODE_STORAGE_KEY) {
+        safeWriteUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, currentUser.uid, nextWorkoutModePreference);
+      }
+      if (db) {
+        const basicPlanBatch = writeBatch(db);
+        const userRef = doc(db, "users", currentUser.uid);
+
+        for (const [workoutIndex, workout] of (nextPlanState.workouts || []).entries()) {
+          basicPlanBatch.set(doc(db, "users", currentUser.uid, "workouts", workout.id), {
+            id: workout.id,
+            source: "basic",
+            name: workout.name || `День ${workoutIndex + 1}`,
+            order: workoutIndex + 1,
+            sortOrder: workoutIndex + 1,
+            status: workout.status || "planned",
+            statusUpdatedAt: workout.statusUpdatedAt || "",
+            scheduledDate: workout.scheduledDate || "",
+            plannedDate: workout.plannedDate || "",
+            movedToDate: workout.movedToDate || "",
+            assignedBy: currentUser.uid,
+            assignedAt: nextWorkoutModePreference.updatedAt,
+            assignedProgramId: workout.assignedProgramId || nextPlanState.assignedProgramId || nextPlanState.basicPlanId || "",
+            assignedProgramName: workout.assignedProgramName || nextPlanState.assignedProgramName || nextPlanState.basicPlanName || "",
+            assignedProgramUpdatedAt: workout.assignedProgramUpdatedAt || nextPlanState.assignedProgramUpdatedAt || "",
+            exercises: (workout.exercises || []).map((exercise, exerciseIndex) => ({
+              id: exercise.id || `${workout.id}_exercise_${exerciseIndex + 1}`,
+              name: exercise.name || "",
+              video: exercise.video || exercise.videoUrl || exercise.videoURL || "",
+              rest: exercise.rest || "",
+              requiresWeight: exercise.requiresWeight ?? true,
+              usesWeight: exercise.usesWeight ?? exercise.requiresWeight ?? true,
+              note: exercise.note || "",
+              description: exercise.description || "",
+              technique: exercise.technique || "",
+              sets: (exercise.sets || []).map((set) => ({
+                ...(set?.id ? { id: set.id } : {}),
+                reps: set?.reps ?? "",
+                weight: set?.weight ?? ""
+              }))
+            }))
+          }, { merge: true });
+        }
+
+        basicPlanBatch.set(userRef, {
+          basicWorkoutPlan: nextPlanState,
+          workoutModePreference: nextWorkoutModePreference,
+          updatedAt: nextWorkoutModePreference.updatedAt
+        }, { merge: true });
+
+        basicPlanBatch.commit().catch((error) => {
+          console.warn("Basic workout mode sync error", error);
+        });
+      }
+    }
     setSelectedWorkoutId(null);
+    setIndividualWorkoutIndex?.(0);
+    setIndividualWorkoutIndexInitialized?.(false);
     setPage(APP_PAGES.WORKOUTS);
   }
 

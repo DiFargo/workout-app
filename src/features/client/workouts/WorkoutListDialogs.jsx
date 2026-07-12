@@ -3,11 +3,14 @@ import { formatIndividualWorkoutHistoryDate } from "../../../utils/workoutHistor
 export function WorkoutModePickerDialog({
   open,
   workoutModePreference,
+  rememberChoice,
   onClose,
   onOpenBasic,
-  onOpenIndividual
+  onOpenIndividual,
+  onRememberChoiceChange
 }) {
   if (!open) return null;
+  const rememberChecked = Boolean(rememberChoice ?? workoutModePreference?.remember);
 
   return (
     <div
@@ -65,6 +68,15 @@ export function WorkoutModePickerDialog({
             <i>✓</i>
           </button>
         </div>
+
+        <label className="workoutModeModalRemember">
+          <input
+            type="checkbox"
+            checked={rememberChecked}
+            onChange={(event) => onRememberChoiceChange?.(event.target.checked)}
+          />
+          <span>Запомнить выбор</span>
+        </label>
       </section>
     </div>
   );

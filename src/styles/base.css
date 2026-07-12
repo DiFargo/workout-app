@@ -35,3 +35,29 @@ input {
   font-family: inherit;
 }
 
+button,
+[role="button"],
+summary,
+label:has(input[type="checkbox"]),
+label:has(input[type="radio"]) {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button:not(:disabled),
+[role="button"],
+summary {
+  cursor: pointer;
+}
+
+button:active:not(:disabled),
+[role="button"]:active,
+summary:active {
+  transform: translateY(1px) scale(0.985);
+  opacity: 0.88;
+  transition: transform 80ms ease, opacity 80ms ease;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}

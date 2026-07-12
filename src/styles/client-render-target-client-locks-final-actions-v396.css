@@ -15,9 +15,14 @@
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain > h1.mainDashboardTitle.clientCorePageTitle,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow.profileCabinetTitleRow,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition section.nutritionHeroV4.nutritionHeroV4,
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero.workoutSelectHero {
     margin-top: 50px !important;
+    margin-bottom: 12px !important;
+    min-height: 48px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition section.nutritionHeroV4.nutritionHeroV4 {
+    margin-top: 31px !important;
     margin-bottom: 12px !important;
     min-height: 48px !important;
   }

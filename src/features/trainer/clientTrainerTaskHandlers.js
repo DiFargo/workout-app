@@ -4,8 +4,22 @@ import { APP_PAGES } from "../../app/appPages";
 import {
   createClientResourceId,
   getClientTrainerTaskDestination,
-  getTrainerTaskStatus
+  getTrainerTaskStatus,
+  inferClientTrainerTaskDestination
 } from "../../domain/clientInsights";
+import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus";
+import { buildTrainerTaskDraft } from "../../utils/trainerActionCenter.js";
+
+const STATUS_TASK_TITLE_REQUIRED = "\u041d\u0430\u043f\u0438\u0448\u0438 \u0437\u0430\u0434\u0430\u0447\u0443 \u0434\u043b\u044f \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
+const STATUS_TASK_CREATING = "\u0414\u043e\u0431\u0430\u0432\u043b\u044f\u044e \u0437\u0430\u0434\u0430\u0447\u0443...";
+const STATUS_TASK_CREATED = "\u0417\u0430\u0434\u0430\u0447\u0430 \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0430.";
+const STATUS_TASK_CREATE_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0437\u0430\u0434\u0430\u0447\u0443.";
+const STATUS_TASK_UPDATING = "\u041e\u0431\u043d\u043e\u0432\u043b\u044f\u044e \u0437\u0430\u0434\u0430\u0447\u0443...";
+const STATUS_TASK_UPDATED = "\u0417\u0430\u0434\u0430\u0447\u0430 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0430.";
+const STATUS_TASK_UPDATE_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0437\u0430\u0434\u0430\u0447\u0443.";
+const STATUS_TASK_DELETING = "\u0423\u0434\u0430\u043b\u044f\u044e \u0437\u0430\u0434\u0430\u0447\u0443...";
+const STATUS_TASK_DELETED = "\u0417\u0430\u0434\u0430\u0447\u0430 \u0443\u0434\u0430\u043b\u0435\u043d\u0430.";
+const STATUS_TASK_DELETE_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0437\u0430\u0434\u0430\u0447\u0443.";
 
 export function createClientTrainerTaskHandlers({
   auth,
@@ -39,6 +53,7 @@ export function createClientTrainerTaskHandlers({
 
     try {
       const snapshot = await getDocs(collection(db, "users", uid, "trainerTasks"));
+      if (auth.currentUser?.uid !== uid) return;
       const tasks = snapshot.docs
         .map((taskDoc) => ({ id: taskDoc.id, ...taskDoc.data() }))
         .sort((a, b) => {
@@ -49,6 +64,7 @@ export function createClientTrainerTaskHandlers({
         });
       setClientTrainerTasks(tasks);
     } catch (error) {
+      if (auth.currentUser?.uid !== uid) return;
       console.warn("Client trainer tasks load failed:", error);
       setClientTrainerTasks([]);
     }
@@ -122,14 +138,18 @@ export function createClientTrainerTaskHandlers({
     const clientId = adminSelectedClient?.id;
     const title = adminNewTaskTitle.trim();
     if (!clientId || !title) {
-      setAdminClientStatus("\u041d\u0430\u043f\u0438\u0448\u0438 \u0437\u0430\u0434\u0430\u0447\u0443 \u0434\u043b\u044f \u043a\u043b\u0438\u0435\u043d\u0442\u0430.");
+      setAdminClientStatus(STATUS_TASK_TITLE_REQUIRED);
       return;
     }
 
     const taskId = createClientResourceId("task");
+    const taskTarget = inferClientTrainerTaskDestination(title);
     const task = {
+      ...buildTrainerTaskDraft(taskTarget || "custom", {
+        title,
+        dueDate: adminNewTaskDueDate || ""
+      }),
       title,
-      dueDate: adminNewTaskDueDate || "",
       status: "progress",
       completedAt: "",
       createdAt: new Date().toISOString(),
@@ -137,16 +157,19 @@ export function createClientTrainerTaskHandlers({
       createdByUid: auth.currentUser?.uid || ""
     };
 
+    setAdminClientTasks((current) => [{ id: taskId, ...task }, ...current]);
+    setAdminNewTaskTitle("");
+    setAdminNewTaskDueDate("");
+    setAdminClientStatus(STATUS_TASK_CREATING);
+
     try {
       await setDoc(doc(db, "users", clientId, "trainerTasks", taskId), task);
-      setAdminClientTasks((current) => [{ id: taskId, ...task }, ...current]);
-      setAdminNewTaskTitle("");
-      setAdminNewTaskDueDate("");
-      await recordTrainerEvent(clientId, "task", "\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0430 \u0437\u0430\u0434\u0430\u0447\u0430", title);
-      setAdminClientStatus("\u0417\u0430\u0434\u0430\u0447\u0430 \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0430.");
+      recordTrainerEvent(clientId, "task", "\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0430 \u0437\u0430\u0434\u0430\u0447\u0430", title);
+      setAdminClientStatus(STATUS_TASK_CREATED);
     } catch (error) {
       console.error("Trainer task create failed:", error);
-      setAdminClientStatus("\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0437\u0430\u0434\u0430\u0447\u0443.");
+      setAdminClientTasks((current) => current.filter((item) => item.id !== taskId));
+      setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_TASK_CREATE_FAILED));
     }
   }
 
@@ -160,18 +183,22 @@ export function createClientTrainerTaskHandlers({
       updatedAt: new Date().toISOString()
     };
 
+    setAdminClientTasks((current) => current.map((item) => item.id === task.id ? { ...item, ...patch } : item));
+    setAdminClientStatus(STATUS_TASK_UPDATING);
+
     try {
       await setDoc(doc(db, "users", clientId, "trainerTasks", task.id), patch, { merge: true });
-      setAdminClientTasks((current) => current.map((item) => item.id === task.id ? { ...item, ...patch } : item));
-      await recordTrainerEvent(
+      recordTrainerEvent(
         clientId,
         "task",
         status === "completed" ? "\u0417\u0430\u0434\u0430\u0447\u0430 \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0430" : "\u0417\u0430\u0434\u0430\u0447\u0430 \u0432\u0435\u0440\u043d\u0443\u0442\u0430 \u0432 \u0440\u0430\u0431\u043e\u0442\u0443",
         task.title
       );
+      setAdminClientStatus(STATUS_TASK_UPDATED);
     } catch (error) {
       console.error("Trainer task update failed:", error);
-      setAdminClientStatus("\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0437\u0430\u0434\u0430\u0447\u0443.");
+      setAdminClientTasks((current) => current.map((item) => item.id === task.id ? task : item));
+      setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_TASK_UPDATE_FAILED));
     }
   }
 
@@ -179,13 +206,17 @@ export function createClientTrainerTaskHandlers({
     const clientId = adminSelectedClient?.id;
     if (!clientId || !task?.id) return;
 
+    setAdminClientTasks((current) => current.filter((item) => item.id !== task.id));
+    setAdminClientStatus(STATUS_TASK_DELETING);
+
     try {
       await deleteDoc(doc(db, "users", clientId, "trainerTasks", task.id));
-      setAdminClientTasks((current) => current.filter((item) => item.id !== task.id));
-      await recordTrainerEvent(clientId, "task", "\u0417\u0430\u0434\u0430\u0447\u0430 \u0443\u0434\u0430\u043b\u0435\u043d\u0430", task.title);
+      recordTrainerEvent(clientId, "task", "\u0417\u0430\u0434\u0430\u0447\u0430 \u0443\u0434\u0430\u043b\u0435\u043d\u0430", task.title);
+      setAdminClientStatus(STATUS_TASK_DELETED);
     } catch (error) {
       console.error("Trainer task delete failed:", error);
-      setAdminClientStatus("\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0437\u0430\u0434\u0430\u0447\u0443.");
+      setAdminClientTasks((current) => [task, ...current]);
+      setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_TASK_DELETE_FAILED));
     }
   }
 

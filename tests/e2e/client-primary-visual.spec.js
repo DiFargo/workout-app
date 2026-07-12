@@ -54,15 +54,17 @@ async function expectTapTargets(page, selectors, minSize = 40) {
 
 async function expectPrimaryChrome(page, pageTestId, mode) {
   await expect(page.getByTestId(pageTestId)).toBeVisible();
-  await expect(page.locator(".clientPageVersionBadge")).toBeVisible();
   await expect(page.locator(".clientCorePageTitle")).toBeVisible();
   if (mode === "main") {
     await expect(page.locator(".clientCorePageTitle")).toHaveText("Главное меню");
     await expect(page.locator(".profileMainSummaryGrid article")).toHaveCount(2);
+    await expect(page.locator(".mainDashboardAppVersion")).toBeVisible();
   } else {
     await expect(page.locator(".clientCorePageTitle")).toHaveText("Личный кабинет");
     await expect(page.locator(".profileMainSummaryGrid article")).toHaveCount(0);
+    await expect(page.locator(".mainDashboardAppVersion")).toHaveCount(0);
   }
+  await expect(page.locator(".clientPageVersionBadge")).toHaveCount(0);
   await expect(page.getByTestId("client-bottom-nav")).toBeVisible();
   await expectTapTargets(page, [".clientBottomNav button"]);
   await expectNoHorizontalOverflow(page);
@@ -144,8 +146,8 @@ async function expectClientCardTextReadable(page, mode) {
 
     return {
       skipped: window.innerWidth > 640,
-      avatar: rectOf(".profileAiAvatar"),
-      title: rectOf(".profileAiHeroText h1"),
+      avatar: rectOf(activeMode === "cabinet" ? ".accountProfile .progressHubCardAvatar" : ".profileAiAvatar"),
+      title: rectOf(activeMode === "cabinet" ? ".accountProfile .progressHubCardText strong" : ".profileAiHeroText h1"),
       clippedTexts: activeMode === "main" ? clippedTexts : []
     };
   }, mode);
@@ -159,9 +161,11 @@ async function expectClientCardTextReadable(page, mode) {
 }
 
 async function expectCabinetContent(page) {
-  await expect(page.locator(".profileAiHero")).toBeVisible();
+  await expect(page.locator(".profileAiHero")).toHaveCount(0);
   await expect(page.locator(".profileCabinetProgressOverview")).toBeVisible();
-  await expect(page.locator(".progressHubCard")).toHaveCount(6);
+  await expect(page.locator(".accountProfile").first()).toBeVisible();
+  await expect(page.locator(".accountProfile .progressHubCardAvatar").first()).toBeVisible();
+  await expect(page.locator(".progressHubCard")).toHaveCount(5);
 }
 
 async function expectContentAboveBottomNav(page) {
@@ -227,18 +231,20 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await attachScreenshot(page, testInfo, "client-cabinet.png");
 
   await page.locator(".cabinetWorkoutHistoryHarnessButton").click();
-  await expect(page.locator(".cabinetWorkoutHistoryModal")).toBeVisible();
+  await expect(page.locator(".cabinetWorkoutJournalModal")).toBeVisible();
+  await page.getByRole("tab", { name: "История" }).click();
   await expect(page.locator(".cabinetWorkoutHistoryItem > button").first()).toHaveAttribute("aria-label", /тренировку:/);
   await expect(page.locator(".cabinetWorkoutHistoryDelete").first()).toHaveAttribute("aria-label", /Удалить тренировку:/);
   await expectTapTargets(page, [
-    ".workoutModeModalHeader button",
+    ".cabinetUtilityModalHead button",
+    ".cabinetWorkoutJournalTabs button",
     ".cabinetWorkoutHistoryItem > button",
     ".cabinetWorkoutHistoryDelete"
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-cabinet-workout-history-modal.png");
-  await page.locator(".workoutModeModalHeader button").click();
-  await expect(page.locator(".cabinetWorkoutHistoryModal")).toBeHidden();
+  await page.locator(".cabinetUtilityModalHead button").click();
+  await expect(page.locator(".cabinetWorkoutJournalModal")).toBeHidden();
 
   await page.goto("/?clientHarness=1&clientCabinetModal=measurements");
   await clickClientCabinetNav(page);
@@ -274,11 +280,12 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
 
   await page.goto("/?clientHarness=1&clientCabinetModal=calendar");
   await clickClientCabinetNav(page);
-  await expect(page.locator(".cabinetProgressModal")).toBeVisible();
+  await expect(page.locator(".cabinetWorkoutJournalModal")).toBeVisible();
   await expect(page.locator(".cabinetWorkoutCalendarGrid button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".cabinetWorkoutCalendarGrid button[aria-current='date']")).toHaveCount(1);
   await expectTapTargets(page, [
     ".cabinetUtilityModalHead button",
+    ".cabinetWorkoutJournalTabs button",
     ".cabinetWorkoutCalendarNav button",
     ".cabinetWorkoutCalendarPlanner > button",
     ".cabinetWorkoutCalendarDay > button"
@@ -289,7 +296,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.locator(".cabinetWorkoutCalendarEditActions")).toBeVisible();
   await expectTapTargets(page, [".cabinetWorkoutCalendarEditActions button"]);
   await page.locator(".cabinetUtilityModalHead button").click();
-  await expect(page.locator(".cabinetProgressModal")).toBeHidden();
+  await expect(page.locator(".cabinetWorkoutJournalModal")).toBeHidden();
 
   await page.goto("/?clientHarness=1&clientCabinetModal=photos");
   await clickClientCabinetNav(page);
@@ -311,17 +318,19 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=settings");
   await clickClientCabinetNav(page);
   await expect(page.locator(".cabinetSettingsModal")).toBeVisible();
+  await expect(page.locator(".profileAccountHeroCard")).toBeVisible();
+  await expect(page.locator(".profileAccountDataPanel")).toBeVisible();
+  await expect(page.locator(".profileAccountSecurityPanel")).toBeVisible();
   await expect(page.locator(".profileThemeSwitchBtn")).toHaveAttribute("aria-pressed", /^(true|false)$/);
-  await expect(page.locator(".profileSexPicker button[aria-pressed='true']")).toHaveCount(1);
-  await expect(page.locator(".profileBodyMetricsGridTwo select[aria-label]")).toHaveCount(2);
   await expect(page.locator(".profileSettingsTelegramItem")).toHaveAttribute("aria-label", /Telegram/);
   await expectTapTargets(page, [
     ".cabinetUtilityModalHead button",
-    ".cabinetSettingsModal .profileDashboardButton",
+    ".profileAccountAvatarAction",
+    ".profileAccountPasswordButton",
     ".profileThemeSwitchBtn",
-    ".profileSexPicker button",
     ".profileBodySaveBtn",
-    ".profileSettingsTelegramItem"
+    ".profileSettingsTelegramItem",
+    ".profileAccountLogout"
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-cabinet-settings-modal.png");

@@ -1,6 +1,7 @@
 /* PROFILE TELEGRAM MOVED TO APP SETTINGS */
 
-.profileSettingsTelegramItem {
+.profileSettingsTelegramItem,
+.profileSettingsEmailItem {
   width: 100%;
   min-height: 78px;
   padding: 12px 14px;
@@ -18,7 +19,8 @@
   cursor: pointer;
 }
 
-.profileSettingsTelegramItem.connected {
+.profileSettingsTelegramItem.connected,
+.profileSettingsEmailItem.connected {
   border-color: rgba(42, 171, 238, 0.22);
   background:
     radial-gradient(circle at top right, rgba(42, 171, 238, 0.18), transparent 48%),
@@ -35,6 +37,12 @@
   background: rgba(42, 171, 238, 0.14);
   border: 1px solid rgba(42, 171, 238, 0.18);
   font-size: 24px;
+}
+
+.profileSettingsEmailAvatar {
+  color: rgba(105, 78, 255, 0.95);
+  background: rgba(105, 78, 255, 0.12);
+  border-color: rgba(105, 78, 255, 0.18);
 }
 
 .profileSettingsTelegramText {
@@ -59,7 +67,8 @@
   white-space: nowrap;
 }
 
-.profileSettingsTelegramItem em {
+.profileSettingsTelegramItem em,
+.profileSettingsEmailItem em {
   min-height: 30px;
   padding: 0 10px;
   border-radius: 999px;
@@ -74,13 +83,15 @@
   white-space: nowrap;
 }
 
-.profileSettingsTelegramItem:not(.connected) em {
+.profileSettingsTelegramItem:not(.connected) em,
+.profileSettingsEmailItem:not(.connected) em {
   background: rgba(127, 159, 58, 0.12);
   border-color: rgba(127, 159, 58, 0.2);
   color: rgba(235, 250, 195, 0.94);
 }
 
-.profileSettingsTelegramItem i {
+.profileSettingsTelegramItem i,
+.profileSettingsEmailItem i {
   color: rgba(255, 255, 255, 0.36);
   font-size: 28px;
   font-weight: 700;
@@ -160,12 +171,85 @@
   color: rgba(255, 190, 190, 0.96);
 }
 
+.profileEmailManageAvatar {
+  color: rgba(105, 78, 255, 0.95);
+  background: rgba(105, 78, 255, 0.12);
+  border-color: rgba(105, 78, 255, 0.18);
+}
+
+.profilePasswordManageAvatar {
+  color: rgba(105, 78, 255, 0.95);
+  background: rgba(105, 78, 255, 0.12);
+  border-color: rgba(105, 78, 255, 0.18);
+}
+
+.profileEmailManageForm {
+  display: grid;
+  gap: 10px;
+}
+
+.profilePasswordManageForm {
+  gap: 10px;
+}
+
+.profileEmailAuthPreview {
+  margin: 2px 0 0;
+}
+
+.profilePasswordManageActions {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 8px;
+}
+
+.profilePasswordManageActions .profileTelegramSave,
+.profilePasswordManageActions .profileTelegramCheckButton {
+  width: 100%;
+  min-height: 46px;
+}
+
+.profilePasswordAuthPreview {
+  margin-top: 2px;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramManageHead span {
+  color: #6552e6;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramManageHead h3 {
+  color: #151824;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramManageHead p {
+  color: #747b8d;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramManageAvatar {
+  border-color: #dedaf8;
+  background: #f0edff;
+  color: #6552e6;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramManageActions button {
+  border-color: #dedaf8;
+  background: #f7f5ff;
+  color: #6552e6;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramManageActions button.danger {
+  border-color: #f2d4d4;
+  background: #fff4f4;
+  color: #d36a6d;
+}
+
 @media (max-width: 520px) {
-  .profileSettingsTelegramItem {
+  .profileSettingsTelegramItem,
+  .profileSettingsEmailItem {
     grid-template-columns: 44px 1fr 16px;
   }
 
-  .profileSettingsTelegramItem em {
+  .profileSettingsTelegramItem em,
+  .profileSettingsEmailItem em {
     display: none;
   }
 
@@ -176,6 +260,10 @@
   }
 
   .profileTelegramManageActions {
+    grid-template-columns: 1fr;
+  }
+
+  .profilePasswordManageActions {
     grid-template-columns: 1fr;
   }
 }

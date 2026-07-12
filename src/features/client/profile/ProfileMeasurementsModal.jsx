@@ -5,7 +5,8 @@ export default function ProfileMeasurementsModal({
   formatMeasurementDate,
   getMeasurementValue,
   onClose,
-  onStart
+  onStart,
+  onOpenPhotos
 }) {
   if (!open) {
     return null;
@@ -18,7 +19,7 @@ export default function ProfileMeasurementsModal({
       onClick={onClose}
     >
       <section
-        className="cabinetMeasurementModal"
+        className={onOpenPhotos ? "cabinetMeasurementModal cabinetBodyControlModal" : "cabinetMeasurementModal"}
         role="dialog"
         aria-modal="true"
         aria-labelledby="cabinetMeasurementModalTitle"
@@ -38,6 +39,27 @@ export default function ProfileMeasurementsModal({
             ×
           </button>
         </header>
+
+        {onOpenPhotos && (
+          <div className="cabinetBodyControlTabs" role="tablist" aria-label="Контроль тела">
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              onClick={onOpenPhotos}
+            >
+              Фото прогресса
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="true"
+              className="active"
+            >
+              Замеры
+            </button>
+          </div>
+        )}
 
         <div className="cabinetMeasurementModalSummary">
           <span aria-hidden="true">⚖️</span>

@@ -102,6 +102,21 @@ export async function saveCompletedWorkoutToFirebase({
       advice: feedbackOverride.advice
     } : null,
     clientComment: workoutClientComment.trim(),
+    // Keep the trainer's prescription immutable even when the client changes a set in the run UI.
+    plannedSnapshot: {
+      workoutId: workout.id,
+      workoutName: workout.name,
+      exercises: workout.exercises.map((exercise) => ({
+        id: exercise.id || "",
+        name: exercise.name,
+        video: exercise.video || "",
+        sets: (exercise.sets || []).map((set, index) => ({
+          set: index + 1,
+          reps: set.targetReps || set.reps || "",
+          weight: set.targetWeight || set.aiOriginalWeight || set.aiSuggestedWeight || ""
+        }))
+      }))
+    },
     exercises: workout.exercises.map((exercise) => ({
       id: exercise.id || "",
       name: exercise.name,

@@ -126,14 +126,42 @@
   }
 
   .trainerWorkoutSchedulePlanner > header,
-  .trainerWorkoutScheduleFooter {
+  .trainerWorkoutScheduleFooter,
+  .trainerClientWorkoutHistoryBlock > header,
+  .trainerClientWorkoutReviewPanel > header {
     display: grid;
     align-items: stretch;
   }
 
-  .trainerWorkoutSchedulePlanner > header > strong {
+  .trainerWorkoutSchedulePlanner > header > strong,
+  .trainerClientWorkoutHistoryBlock > header > strong,
+  .trainerClientWorkoutReviewPanel > header > strong {
     min-width: 0;
     min-height: 46px;
+  }
+
+  .trainerClientWorkoutHistoryList {
+    grid-template-columns: 1fr;
+  }
+
+  .trainerWorkoutReviewGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .trainerWorkoutReviewGrid article {
+    min-height: 66px;
+    padding: 9px;
+  }
+
+  .trainerWorkoutReviewGrid strong {
+    font-size: 13px;
+  }
+
+  .trainerWorkoutReviewGrid span,
+  .trainerWorkoutReviewGrid small,
+  .trainerWorkoutReviewFeedback p {
+    font-size: 8px;
   }
 
   .trainerWorkoutScheduleBody {
@@ -476,4 +504,3 @@
     justify-content: flex-start;
   }
 }
-

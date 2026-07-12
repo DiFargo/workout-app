@@ -175,9 +175,78 @@
   margin-top: 4px;
 }
 
+html:root[data-app-theme="warm-light"] body #root .profileTelegramModalOverlay {
+  background: rgba(26, 30, 46, 0.34);
+  backdrop-filter: blur(14px);
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramModal {
+  border-color: #e1e4ee;
+  background:
+    radial-gradient(circle at top right, rgba(117, 101, 232, 0.1), transparent 44%),
+    #ffffff;
+  color: #151824;
+  box-shadow: 0 28px 90px rgba(55, 64, 112, 0.22);
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramModalClose {
+  border-color: #e1e4ee;
+  background: #ffffff;
+  color: #5d6372;
+  box-shadow: 0 10px 26px rgba(55, 64, 112, 0.1);
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramModal h3 {
+  color: #151824;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramModal p {
+  color: #747b8d;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramModal label span {
+  color: #8a8f9c;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramModal input:not([type="checkbox"]) {
+  border-color: #e1e4ee;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: 0 10px 22px rgba(55, 64, 112, 0.05);
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramModal input:not([type="checkbox"])::placeholder {
+  color: #a6acba;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramSave.ghost {
+  border-color: #dedaf8 !important;
+  background: #ffffff !important;
+  color: #6552e6 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramCheckButton {
+  border-color: transparent;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22);
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramCheckButton:disabled {
+  opacity: 0.62;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramAuthStatus {
+  border-color: #dedaf8;
+  background: #f7f5ff;
+}
+
+html:root[data-app-theme="warm-light"] body #root .profileTelegramAuthStatus span {
+  color: #6552e6;
+}
+
 @media (max-width: 420px) {
   .profileTelegramActions {
     grid-template-columns: 1fr;
   }
 }
-

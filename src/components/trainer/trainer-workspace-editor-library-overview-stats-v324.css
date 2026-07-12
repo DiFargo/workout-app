@@ -69,6 +69,42 @@
   letter-spacing: 2px;
 }
 
+.trainerNextProgramsTab .programsOverviewStatusBadge {
+  width: max-content;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border: 1px solid #e5e0f8;
+  border-radius: 999px;
+  background: #f7f4ff;
+  color: var(--tn-purple);
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.trainerNextProgramsTab .programsOverviewStatusBadge.status-assigned,
+.trainerNextProgramsTab .programsOverviewStatusBadge.status-active {
+  border-color: #cfe9db;
+  background: #f0fbf4;
+  color: #198754;
+}
+
+.trainerNextProgramsTab .programsOverviewStatusBadge.status-completed {
+  border-color: #d7e3ff;
+  background: #f2f6ff;
+  color: #2f67d8;
+}
+
+.trainerNextProgramsTab .programsOverviewStatusBadge.status-archived {
+  border-color: #ead6d6;
+  background: #fff5f5;
+  color: #b84d4d;
+}
+
 .trainerNextProgramsTab .programsOverviewCreateCard {
   width: 100%;
   min-width: 0;

@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import "../../styles/trainer-lazy.css";
+if (new URLSearchParams(window.location.search).get("newCss") === "1") {
+  import("../../../css-new/trainer-lazy.css");
+} else {
+  import("../../styles/trainer-lazy.css");
+}
 import { analyzeExerciseProgress } from "../../utils/exerciseProgress.js";
 import {
   buildPlannedWorkoutSlots,
@@ -10,6 +14,11 @@ import {
   getClientAttentionState,
   getTrainerAttentionDaysSince as getLocalDaysSince
 } from "../../utils/trainerAttention.js";
+import {
+  buildTrainerClientListItems,
+  buildTrainerWorkoutReview,
+  getTrainerActionItemTargetTab
+} from "../../utils/trainerActionCenter.js";
 import {
   Activity,
   ArrowLeft,
@@ -310,6 +319,70 @@ function getWorkoutHistoryDate(item = {}) {
   return getWorkspaceDate(item.date || item.completedAt || item.finishedAt || item.createdAt);
 }
 
+function formatWorkoutHistoryDuration(seconds) {
+  const value = Number(seconds) || 0;
+  if (value <= 0) return "без времени";
+  const minutes = Math.max(1, Math.round(value / 60));
+  return `${minutes} ${pluralize(minutes, "мин", "мин", "мин")}`;
+}
+
+function getWorkoutHistorySetSummary(item = {}) {
+  const exercises = Array.isArray(item.exercises) ? item.exercises : [];
+  const sets = exercises.reduce((sum, exercise) => sum + (Array.isArray(exercise.sets) ? exercise.sets.length : 0), 0);
+  if (!exercises.length && !sets) return "подходы не указаны";
+  return `${exercises.length} ${pluralize(exercises.length, "упражнение", "упражнения", "упражнений")} · ${sets} ${pluralize(sets, "подход", "подхода", "подходов")}`;
+}
+
+function getWorkoutReviewKey(value = "") {
+  return String(value || "").trim().toLowerCase();
+}
+
+function getWorkoutHistoryIndex(item = {}) {
+  const candidates = [
+    item.workoutIndex,
+    item.dayIndex,
+    item.order,
+    item.workoutNumber,
+    item.dayNumber
+  ];
+  const numeric = candidates.map(Number).find((value) => Number.isFinite(value));
+  if (!Number.isFinite(numeric)) return null;
+  return numeric > 0 ? numeric - 1 : numeric;
+}
+
+function findPlannedWorkoutForHistory(historyItem = {}, workouts = []) {
+  if (!historyItem || !Array.isArray(workouts) || !workouts.length) return {};
+  const idCandidates = [
+    historyItem.workoutId,
+    historyItem.workoutDayId,
+    historyItem.sourceWorkoutId,
+    historyItem.templateWorkoutId,
+    historyItem.id
+  ].filter(Boolean).map(getWorkoutReviewKey);
+  const nameCandidates = [
+    historyItem.workoutName,
+    historyItem.name,
+    historyItem.workout,
+    historyItem.title
+  ].filter(Boolean).map(getWorkoutReviewKey);
+
+  const byId = workouts.find((workout) => (
+    idCandidates.includes(getWorkoutReviewKey(workout.id)) ||
+    idCandidates.includes(getWorkoutReviewKey(workout.workoutId)) ||
+    idCandidates.includes(getWorkoutReviewKey(workout.templateWorkoutId))
+  ));
+  if (byId) return byId;
+
+  const historyIndex = getWorkoutHistoryIndex(historyItem);
+  if (historyIndex !== null && workouts[historyIndex]) return workouts[historyIndex];
+
+  return workouts.find((workout) => (
+    nameCandidates.includes(getWorkoutReviewKey(workout.name)) ||
+    nameCandidates.includes(getWorkoutReviewKey(workout.title)) ||
+    nameCandidates.includes(getWorkoutReviewKey(workout.workout))
+  )) || {};
+}
+
 function getTrainerWorkoutKey(value = "") {
   return String(value || "")
     .toLowerCase()
@@ -527,10 +600,9 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
   );
 }
 
-export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAvatar, appVersion, children }) {
+export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAvatar, children }) {
   return (
     <div className="trainerNextRoot">
-      {appVersion ? <div className="trainerNextVersionBadge">{appVersion}</div> : null}
       <TrainerNavigation
         activeSection={activeSection}
         onNavigate={onNavigate}
@@ -559,23 +631,15 @@ function DashboardMetric({ label, value, detail, tone, icon: Icon, values }) {
 }
 
 function DashboardClientList({ clients, summaries, filter, search, onOpenClient }) {
-  const filteredClients = clients.filter((client) => {
-    const item = summaries[client.id] || {};
-    const attentionState = getClientAttentionState(client, item);
-    const matchesSearch = !search || String(client.name || client.email || "").toLowerCase().includes(search.toLowerCase());
-    if (!matchesSearch) return false;
-    if (filter === "active") return !client.archived && !attentionState;
-    if (filter === "attention") return !client.archived && Boolean(attentionState);
-    return true;
-  });
+  const filteredClients = buildTrainerClientListItems(clients, summaries, { search, filter });
 
   return (
     <div className="trainerNextClientTable">
       <div className="trainerNextClientTableHead">
         <span>Клиент</span><span>Прогресс</span><span>Тренировки</span><span>Питание</span><span>Активность</span><span>Статус</span>
       </div>
-      {filteredClients.map((client) => {
-        const summary = summaries[client.id] || {};
+      {filteredClients.map((item) => {
+        const { client, summary, status } = item;
         const progress = Number(summary.programCompletionPercent);
         const progressValue = Number.isFinite(progress) ? progress : 0;
         return (
@@ -594,7 +658,7 @@ function DashboardClientList({ clients, summaries, filter, search, onOpenClient 
             <span><b>{summary.workouts7 || 0} / 5</b><small>тренировки</small></span>
             <span><b>{summary.nutritionDays7 || 0} / 7</b><small>питание</small></span>
             <span className="trainerNextClientActivity"><b>{formatCompactDate(summary.lastWorkoutAt || summary.lastNutritionAt)}</b><small>последнее</small></span>
-            <ClientStatus status={summary.status} />
+            <ClientStatus status={status} />
           </button>
         );
       })}
@@ -685,36 +749,98 @@ function getTrainerMessageAction(client = {}, summary = {}, fallbackReason = "")
   };
 }
 
-function DashboardAttentionList({ clients, summaries, onOpenClient }) {
-  const attentionClients = clients
-    .filter((client) => !client.archived)
-    .map((client) => {
-      const summary = summaries[client.id] || {};
-      return { client, summary, attention: getClientAttentionState(client, summary) };
-    })
-    .filter(({ attention }) => Boolean(attention))
-    .slice(0, 5);
+const DASHBOARD_ACTION_GROUPS = [
+  {
+    id: "todayWorkouts",
+    title: "\u0421\u0435\u0433\u043e\u0434\u043d\u044f",
+    text: "\u041f\u043b\u0430\u043d\u043e\u0432\u044b\u0435 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438",
+    empty: "\u041d\u0430 \u0441\u0435\u0433\u043e\u0434\u043d\u044f \u043d\u0435\u0442 \u043f\u043b\u0430\u043d\u043e\u0432\u044b\u0445 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043e\u043a."
+  },
+  {
+    id: "missedWorkouts",
+    title: "\u041f\u0440\u043e\u043f\u0443\u0441\u043a\u0438",
+    text: "\u041d\u0443\u0436\u043d\u0430 \u0440\u0435\u0430\u043a\u0446\u0438\u044f",
+    empty: "\u041f\u0440\u043e\u043f\u0443\u0441\u043a\u043e\u0432 \u043d\u0435\u0442."
+  },
+  {
+    id: "feedbackItems",
+    title: "\u041a\u043e\u043c\u043c\u0435\u043d\u0442\u0430\u0440\u0438\u0438",
+    text: "\u0411\u043e\u043b\u044c, \u0436\u0430\u043b\u043e\u0431\u044b \u0438\u043b\u0438 \u0437\u0430\u043c\u0435\u0442\u043a\u0438",
+    empty: "\u041d\u043e\u0432\u044b\u0445 \u0441\u0438\u0433\u043d\u0430\u043b\u043e\u0432 \u043e\u0442 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432 \u043d\u0435\u0442."
+  },
+  {
+    id: "programEndingItems",
+    title: "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b",
+    text: "\u0417\u0430\u043a\u0430\u043d\u0447\u0438\u0432\u0430\u044e\u0442\u0441\u044f \u0438\u043b\u0438 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u044b",
+    empty: "\u041d\u0435\u0442 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c \u043d\u0430 \u0444\u0438\u043d\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u0442\u0430\u0434\u0438\u0438."
+  },
+  {
+    id: "taskItems",
+    title: "\u0417\u0430\u0434\u0430\u0447\u0438",
+    text: "\u0410\u043a\u0442\u0438\u0432\u043d\u044b\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u043a\u043b\u0438\u0435\u043d\u0442\u0430\u043c",
+    empty: "\u0410\u043a\u0442\u0438\u0432\u043d\u044b\u0445 \u0437\u0430\u0434\u0430\u0447 \u043d\u0435\u0442."
+  }
+];
+
+function DashboardActionCenter({ actionCenter, onOpenClient }) {
+  const groups = DASHBOARD_ACTION_GROUPS.map((group) => ({
+    ...group,
+    items: Array.isArray(actionCenter?.[group.id]) ? actionCenter[group.id] : []
+  }));
+  const priorityItems = Array.isArray(actionCenter?.priorityItems)
+    ? actionCenter.priorityItems
+    : (actionCenter?.attentionItems || []);
+  const totalCount = priorityItems.length;
+  const [activeGroupId, setActiveGroupId] = useState("");
+  const activeGroup = groups.find((group) => group.id === activeGroupId) || null;
+  const visibleItems = (activeGroup ? activeGroup.items : priorityItems).slice(0, 6);
 
   return (
-    <section className="trainerAttentionListSection">
+    <section className="trainerActionCenterSection">
       <div className="trainerNextClientsTitle">
         <div>
-          <h2>Требуют внимания</h2>
-          <p>Клиенты, где есть повод быстро проверить план, питание или активность.</p>
+          <h2>{"\u0427\u0442\u043e \u0441\u0434\u0435\u043b\u0430\u0442\u044c \u0441\u0435\u0433\u043e\u0434\u043d\u044f"}</h2>
+          <p>{"\u041e\u0434\u0438\u043d \u043a\u043b\u0438\u0435\u043d\u0442 \u2014 \u043e\u0434\u043d\u0430 \u0441\u0442\u0440\u043e\u043a\u0430 \u0432 \u043e\u0447\u0435\u0440\u0435\u0434\u0438. \u041a\u0430\u0440\u0442\u043e\u0447\u043a\u0438 \u0432\u044b\u0448\u0435 \u0444\u0438\u043b\u044c\u0442\u0440\u0443\u044e\u0442 \u0435\u0451 \u043f\u043e \u0442\u0438\u043f\u0443 \u0437\u0430\u0434\u0430\u0447\u0438."}</p>
         </div>
+        <span className="trainerActionCenterCount">{totalCount}</span>
       </div>
-      <div className="trainerAttentionList">
-        {attentionClients.map(({ client, summary, attention }) => (
-          <button type="button" key={client.id} onClick={() => onOpenClient(client)}>
-            <TrainerAvatar client={client} size="small" />
-            <span>
-              <strong>{client.name || client.email || "Клиент"}</strong>
-              <small>{attention.reason || getAttentionReason(client, summary)}</small>
-            </span>
-            <ClientStatus status={summary.status} />
+
+      <div className="trainerActionCenterGrid">
+        {groups.map((group) => (
+          <button
+            type="button"
+            className={`trainerActionCenterCard ${activeGroup?.id === group.id ? "active" : ""}`}
+            key={group.id}
+            onClick={() => setActiveGroupId(group.id)}
+            aria-pressed={activeGroup?.id === group.id}
+          >
+            <header>
+              <span>{group.title}</span>
+              <strong>{group.items.length}</strong>
+            </header>
+            <p>{group.text}</p>
           </button>
         ))}
-        {!attentionClients.length ? <div className="trainerNextEmpty">Сейчас нет клиентов, требующих внимания.</div> : null}
+      </div>
+
+      <div className="trainerActionCenterList" aria-label={activeGroup?.title || "Приоритетная очередь"}>
+        {visibleItems.map((item) => (
+          <button
+            type="button"
+            key={item.id}
+            onClick={() => onOpenClient(item.client, getTrainerActionItemTargetTab(item, activeGroup?.id))}
+          >
+            <TrainerAvatar client={item.client} size="small" />
+            <span>
+              <strong>{item.clientName}</strong>
+              <small>{item.reason || getAttentionReason(item.client, item.summary)}</small>
+            </span>
+            <ClientStatus status={item.status} />
+          </button>
+        ))}
+        {!visibleItems.length ? (
+          <div className="trainerNextEmpty">{activeGroup?.empty || "\u0421\u0435\u0439\u0447\u0430\u0441 \u043d\u0435\u0442 \u0441\u0440\u043e\u0447\u043d\u044b\u0445 \u0441\u0438\u0433\u043d\u0430\u043b\u043e\u0432."}</div>
+        ) : null}
       </div>
     </section>
   );
@@ -723,6 +849,7 @@ function DashboardAttentionList({ clients, summaries, onOpenClient }) {
 function TrainerDashboard({
   clients,
   clientSummaries,
+  actionCenter,
   onOpenClient,
   onRefresh,
   onNotifications,
@@ -785,7 +912,7 @@ function TrainerDashboard({
         <DashboardMetric label="Средний прогресс" value={progressValue} detail={progressDetail} tone="green" icon={TrendingUp} values={[2, 2, 3.5, 3, 5, 4.3, 7]} />
       </section>
 
-      <DashboardAttentionList clients={clients} summaries={clientSummaries} onOpenClient={onOpenClient} />
+      <DashboardActionCenter actionCenter={actionCenter} onOpenClient={onOpenClient} />
     </div>
   );
 }
@@ -1224,6 +1351,7 @@ function getWorkoutNoteItems(history = []) {
         notes.push({
           id: `${item.id || item.clientSaveId || date}-comment`,
           title: `Комментарий: ${workoutTitle}`,
+          source: "Комментарий",
           text: clientComment,
           date
         });
@@ -1233,6 +1361,7 @@ function getWorkoutNoteItems(history = []) {
         notes.push({
           id: `${item.id || item.clientSaveId || date}-feedback`,
           title: `Оценка: ${item.postWorkoutFeedback.title}`,
+          source: "Самочувствие",
           text: item.postWorkoutFeedback.advice || "Клиент отметил самочувствие после тренировки.",
           date
         });
@@ -1245,6 +1374,7 @@ function getWorkoutNoteItems(history = []) {
         notes.push({
           id: `${item.id || item.clientSaveId || date}-exercise-${exercise.id || exerciseIndex}`,
           title: exercise.name || workoutTitle,
+          source: "Упражнение",
           text: exerciseNote,
           date
         });
@@ -1256,8 +1386,9 @@ function getWorkoutNoteItems(history = []) {
     .slice(0, 12);
 }
 
-function ClientNotes({ note, tasks = [], history = [] }) {
+function ClientNotes({ note, tasks = [], history = [], onReplyToNote }) {
   const workoutNotes = getWorkoutNoteItems(history);
+  const activeTasks = tasks.filter((task) => task.status !== "completed" && !task.completedAt);
 
   return (
     <section className="trainerNextSimplePanel">
@@ -1268,8 +1399,8 @@ function ClientNotes({ note, tasks = [], history = [] }) {
       </div>
       <div className="trainerNextPanelTitle trainerNextWorkoutNotesTitle">
         <div>
-          <h2>Пометки из тренировок</h2>
-          <p>Комментарии клиента, оценка самочувствия и заметки по упражнениям</p>
+          <h2>Входящие от клиента</h2>
+          <p>{workoutNotes.length ? `${workoutNotes.length} сигналов из последних тренировок` : "Комментарии клиента, оценка самочувствия и заметки по упражнениям"}</p>
         </div>
       </div>
       <div className="trainerNextHistoryList">
@@ -1279,8 +1410,13 @@ function ClientNotes({ note, tasks = [], history = [] }) {
               <span><MessageSquare size={18} /></span>
               <div>
                 <strong>{item.title}</strong>
-                <small>{formatCompactDate(item.date)}</small>
+                <small>{item.source} · {formatCompactDate(item.date)}</small>
                 <p>{item.text}</p>
+                {onReplyToNote ? (
+                  <button type="button" className="trainerNoteReplyButton" onClick={() => onReplyToNote(item)}>
+                    Ответить клиенту
+                  </button>
+                ) : null}
               </div>
             </article>
           ))
@@ -1294,8 +1430,33 @@ function ClientNotes({ note, tasks = [], history = [] }) {
           </article>
         )}
       </div>
+      <div className="trainerNextPanelTitle trainerNextWorkoutNotesTitle">
+        <div>
+          <h2>Задания клиенту</h2>
+          <p>{activeTasks.length ? `${activeTasks.length} активных задач` : "Активных задач сейчас нет"}</p>
+        </div>
+      </div>
       <div className="trainerNextHistoryList">
-        {tasks.map((task, index) => <article key={task.id || index}><span><ClipboardList size={18} /></span><div><strong>{task.title || task.text || "Задача"}</strong><small>{formatCompactDate(task.createdAt || task.date)}</small></div></article>)}
+        {tasks.length ? tasks.map((task, index) => {
+          const completed = task.status === "completed" || task.completedAt;
+          return (
+            <article key={task.id || index} className={completed ? "completed" : ""}>
+              <span><ClipboardList size={18} /></span>
+              <div>
+                <strong>{task.title || task.text || "Задача"}</strong>
+                <small>{completed ? "Выполнено" : "Активно"} · {task.dueDate ? `до ${formatCompactDate(task.dueDate)}` : formatCompactDate(task.createdAt || task.date)}</small>
+              </div>
+            </article>
+          );
+        }) : (
+          <article>
+            <span><ClipboardList size={18} /></span>
+            <div>
+              <strong>Задач пока нет</strong>
+              <small>Создай задачу на фото, замеры, питание или тренировку из карточки клиента.</small>
+            </div>
+          </article>
+        )}
       </div>
     </section>
   );
@@ -1503,6 +1664,139 @@ function WorkoutSchedulePlanner({
   );
 }
 
+function ClientWorkoutHistoryBlock({ history = [] }) {
+  const sortedHistory = [...history]
+    .sort((a, b) => {
+      const dateA = getWorkoutHistoryDate(a)?.getTime() || 0;
+      const dateB = getWorkoutHistoryDate(b)?.getTime() || 0;
+      return dateB - dateA;
+    });
+  const visibleHistory = sortedHistory.slice(0, 3);
+  const olderHistory = sortedHistory.slice(3);
+
+  return (
+    <section className="trainerClientAnalyticsCard trainerClientWorkoutHistoryBlock">
+      <header>
+        <div>
+          <span>ИСТОРИЯ ТРЕНИРОВОК</span>
+          <h3>Последние тренировки клиента</h3>
+          <p>Короткая лента выполненных тренировок по этой программе и всем сохранённым записям клиента.</p>
+        </div>
+        <strong>{history.length}<small>записей</small></strong>
+      </header>
+
+      {visibleHistory.length ? (
+        <>
+        <div className="trainerClientWorkoutHistoryList">
+          {visibleHistory.map((item, index) => {
+            const feedback = item.postWorkoutFeedback || item.readiness || {};
+            return (
+              <article key={item.id || item.clientSaveId || `${item.workout || "workout"}-${index}`}>
+                <span>{feedback.emoji || "🏋️"}</span>
+                <div>
+                  <strong>{item.workoutName || item.workout || "Тренировка"}</strong>
+                  <small>{formatWorkoutHistoryDuration(item.durationSeconds)} · {getWorkoutHistorySetSummary(item)}</small>
+                </div>
+                <time>{formatCompactDate(getWorkoutHistoryDate(item))}</time>
+                <p>{feedback.title || item.clientComment || "Нормально"}</p>
+              </article>
+            );
+          })}
+        </div>
+        {olderHistory.length ? (
+          <details className="trainerClientHistoryMore">
+            <summary>Показать ещё {olderHistory.length} записей</summary>
+            <div className="trainerClientWorkoutHistoryList">
+              {olderHistory.map((item, index) => {
+                const feedback = item.postWorkoutFeedback || item.readiness || {};
+                return (
+                  <article key={item.id || item.clientSaveId || `${item.workout || "workout"}-${index + visibleHistory.length}`}>
+                    <span>{feedback.emoji || "🏋️"}</span>
+                    <div>
+                      <strong>{item.workoutName || item.workout || "Тренировка"}</strong>
+                      <small>{formatWorkoutHistoryDuration(item.durationSeconds)} · {getWorkoutHistorySetSummary(item)}</small>
+                    </div>
+                    <time>{formatCompactDate(getWorkoutHistoryDate(item))}</time>
+                    <p>{feedback.title || item.clientComment || "Нормально"}</p>
+                  </article>
+                );
+              })}
+            </div>
+          </details>
+        ) : null}
+        </>
+      ) : (
+        <div className="trainerNextEmpty">История тренировок пока пустая. Когда клиент завершит тренировку, запись появится здесь.</div>
+      )}
+    </section>
+  );
+}
+
+function ClientWorkoutReviewPanel({ review, onAdjustNextWorkout }) {
+  if (!review?.workoutId && !review?.workoutName) return null;
+
+  const statusText = review.needsTrainerReply
+    ? "Нужна реакция тренера"
+    : "Без срочных сигналов";
+  const skippedText = review.skippedExercises?.length
+    ? review.skippedExercises.slice(0, 3).join(", ")
+    : "нет";
+
+  return (
+    <section className="trainerClientAnalyticsCard trainerClientWorkoutReviewPanel">
+      <header>
+        <div>
+          <span>РАЗБОР ТРЕНИРОВКИ</span>
+          <h3>{review.workoutName || "Последняя тренировка"}</h3>
+          <p>Сравнение плановой тренировки с фактом клиента и сигналами после выполнения.</p>
+        </div>
+        <strong className={review.needsTrainerReply ? "warning" : "positive"}>
+          {statusText}
+        </strong>
+      </header>
+
+      <div className="trainerWorkoutReviewGrid">
+        <article>
+          <span>Упражнения</span>
+          <strong>{review.completedExercisesCount || 0} / {review.plannedExercisesCount || 0}</strong>
+          <small>выполнено из плана</small>
+        </article>
+        <article>
+          <span>Подходы</span>
+          <strong>{review.completedSetsCount || 0} / {review.plannedSetsCount || 0}</strong>
+          <small>факт против плана</small>
+        </article>
+        <article>
+          <span>Объём</span>
+          <strong>{review.volumeKg || 0} кг</strong>
+          <small>по заполненным подходам</small>
+        </article>
+        <article className={review.skippedExercises?.length ? "warning" : ""}>
+          <span>Пропуски</span>
+          <strong>{review.skippedExercises?.length || 0}</strong>
+          <small>{skippedText}</small>
+        </article>
+      </div>
+
+      {review.feedbackTitle || review.clientComment || review.hasPainComment ? (
+        <div className="trainerWorkoutReviewFeedback">
+          <span>{review.hasPainComment ? "⚠" : "💬"}</span>
+          <div>
+            <strong>{review.feedbackTitle || (review.hasPainComment ? "Есть жалоба на боль" : "Комментарий клиента")}</strong>
+            <p>{review.clientComment || "Клиент оставил оценку после тренировки. Проверьте, нужна ли корректировка нагрузки."}</p>
+          </div>
+        </div>
+      ) : null}
+
+      {onAdjustNextWorkout ? (
+        <button type="button" className="trainerWorkoutReviewAction" onClick={onAdjustNextWorkout}>
+          Скорректировать следующую тренировку
+        </button>
+      ) : null}
+    </section>
+  );
+}
+
 function ClientWorkoutPlan({
   client,
   summary,
@@ -1610,6 +1904,15 @@ function ClientWorkoutPlan({
   })();
   const assignedName = client?.assignedProgramName || (workouts.length ? "Индивидуальная программа" : "Программа не назначена");
   const selectedTemplate = programTemplates.find((program) => program.id === selectedProgramId);
+  const latestWorkoutHistory = [...history]
+    .sort((a, b) => {
+      const dateA = getWorkoutHistoryDate(a)?.getTime() || 0;
+      const dateB = getWorkoutHistoryDate(b)?.getTime() || 0;
+      return dateB - dateA;
+    })[0];
+  const latestWorkoutReview = latestWorkoutHistory
+    ? buildTrainerWorkoutReview(latestWorkoutHistory, findPlannedWorkoutForHistory(latestWorkoutHistory, workouts))
+    : null;
 
   return (
     <div className="trainerClientWorkoutPlan">
@@ -1670,6 +1973,9 @@ function ClientWorkoutPlan({
         onSaveSchedule={onSaveWorkoutSchedule}
         status={programStatus}
       />
+
+      <ClientWorkoutHistoryBlock history={history} />
+      <ClientWorkoutReviewPanel review={latestWorkoutReview} onAdjustNextWorkout={() => setEditorOpen(true)} />
 
       <div className="trainerClientWorkoutAnalytics trainerClientWorkoutAnalyticsSingle">
         <section className="trainerClientAnalyticsCard trainerClientTrainingQuality">
@@ -2568,10 +2874,55 @@ function ClientNotifications({
   );
 }
 
+function ClientWorkSummary({ snapshot, workoutReview }) {
+  if (!snapshot && !workoutReview?.workoutId) return null;
+
+  const completion = snapshot?.assignedWorkoutCount
+    ? `${snapshot.completedWorkoutCount || 0} из ${snapshot.assignedWorkoutCount}`
+    : "нет программы";
+  const statusText = snapshot?.primaryAttention?.reason || snapshot?.status?.label || "Активен";
+  const lastWorkout = snapshot?.lastWorkoutAt ? formatCompactDate(snapshot.lastWorkoutAt) : "нет данных";
+  const lastMeasurement = snapshot?.lastMeasurementAt ? formatCompactDate(snapshot.lastMeasurementAt) : "нет данных";
+  const reviewTitle = workoutReview?.workoutName || "Последняя тренировка";
+  const reviewSets = workoutReview?.plannedSetsCount
+    ? `${workoutReview.completedSetsCount || 0} из ${workoutReview.plannedSetsCount} подходов`
+    : `${workoutReview?.completedSetsCount || 0} подходов`;
+
+  return (
+    <section className="trainerClientWorkSummary" aria-label="Короткая сводка по клиенту">
+      <article>
+        <span>СОСТОЯНИЕ</span>
+        <strong>{statusText}</strong>
+        <small>Программа: {completion}</small>
+      </article>
+      <article>
+        <span>АКТИВНОСТЬ</span>
+        <strong>{lastWorkout}</strong>
+        <small>Замеры: {lastMeasurement}</small>
+      </article>
+      <article>
+        <span>ЗАДАЧИ</span>
+        <strong>{snapshot?.activeTasksCount || 0}</strong>
+        <small>активных задач</small>
+      </article>
+      {workoutReview?.workoutId ? (
+        <article className={workoutReview.needsTrainerReply ? "attention" : ""}>
+          <span>ПОСЛЕДНЯЯ ТРЕНИРОВКА</span>
+          <strong>{reviewTitle}</strong>
+          <small>{workoutReview.completedExercisesCount || 0} упр. · {reviewSets} · {workoutReview.volumeKg || 0} кг</small>
+          {workoutReview.clientComment ? <p>{workoutReview.clientComment}</p> : null}
+        </article>
+      ) : null}
+    </section>
+  );
+}
+
 function TrainerClientDetail({
   client,
   profile,
   summary,
+  snapshot,
+  workoutReview,
   activeTab,
   onTabChange,
   onBack,
@@ -2612,6 +2963,8 @@ function TrainerClientDetail({
   onTestNotification,
   onConnectTelegram,
   onSendMessage,
+  onCreateTask,
+  messages = [],
   onClientAction
 }) {
   const name = client.name || client.email || "Клиент";
@@ -2630,11 +2983,9 @@ function TrainerClientDetail({
       ? { id: "restore", label: "Восстановить клиента", icon: "♻️" }
       : { id: "archive", label: "Архивировать клиента", icon: "📦" },
     { id: "duplicate", label: "Дублировать клиента", icon: "📋" },
-    { id: "reset_progress", label: "Сбросить прогресс", icon: "🔄" },
     { id: "export_excel", label: "Экспорт Excel", icon: "📊" },
     { id: "export_pdf", label: "Экспорт PDF", icon: "📄" },
-    { id: "disable_notifications", label: "Отключить уведомления", icon: "🔕" },
-    { id: "delete", label: "Удалить клиента", icon: "🗑", danger: true }
+    { id: "disable_notifications", label: "Отключить уведомления", icon: "🔕" }
   ];
 
   async function submitMessage() {
@@ -2649,6 +3000,13 @@ function TrainerClientDetail({
     }
   }
 
+  function openMessageFromNote(noteItem) {
+    const prefix = noteItem?.title ? `${noteItem.title}\n` : "";
+    const quote = noteItem?.text ? `\n\nПо твоей заметке: “${noteItem.text}”` : "";
+    setMessageText(`${prefix}${quote}`.trim());
+    setMessageOpen(true);
+  }
+
   async function runClientAction(actionId) {
     setActionsOpen(false);
     await onClientAction?.(actionId, client);
@@ -2659,6 +3017,7 @@ function TrainerClientDetail({
         <button type="button" onClick={onBack}><ArrowLeft size={20} /><span>Назад к списку</span></button>
         <div>
           <button className="trainerNextPrimary" type="button" onClick={() => setMessageOpen(true)}><Mail size={16} />Написать</button>
+          {onCreateTask ? <button type="button" onClick={onCreateTask}><ClipboardList size={16} />Задача</button> : null}
           <button type="button" onClick={() => setActionsOpen(true)}>Действия <ChevronDown size={16} /></button>
         </div>
       </div>
@@ -2672,6 +3031,8 @@ function TrainerClientDetail({
         </div>
         <button className="trainerNextMobileMore" type="button" aria-label="Действия" onClick={() => setActionsOpen(true)}><MoreHorizontal size={22} /></button>
       </header>
+
+      <ClientWorkSummary snapshot={snapshot} workoutReview={workoutReview} />
 
       <nav className="trainerNextClientTabs">
         {CLIENT_TABS.map((tab) => {
@@ -2723,7 +3084,7 @@ function TrainerClientDetail({
       {["bodyProgress", "measurements", "photos"].includes(activeTab) ? <ClientBodyProgress measurements={measurements} photos={photos} /> : null}
       {activeTab === "notifications" ? <ClientNotifications key={client.id} client={client} workouts={workouts} measurements={measurements} photos={photos} status={programStatus} onSave={onSaveNotifications} onTest={onTestNotification} onConnectTelegram={onConnectTelegram} /> : null}
       {activeTab === "exerciseProgress" ? <ClientExerciseProgress history={history} /> : null}
-      {activeTab === "notes" ? <ClientNotes note={note} tasks={tasks} history={history} /> : null}
+      {activeTab === "notes" ? <ClientNotes note={note} tasks={tasks} history={history} onReplyToNote={openMessageFromNote} /> : null}
 
       {messageOpen ? (
         <div className="trainerClientModalBackdrop" role="dialog" aria-modal="true" aria-label="Сообщение клиенту">
@@ -2732,6 +3093,18 @@ function TrainerClientDetail({
               <div><span>СООБЩЕНИЕ КЛИЕНТУ</span><h2>{name}</h2></div>
               <button type="button" onClick={() => setMessageOpen(false)} aria-label="Закрыть"><X size={18} /></button>
             </header>
+            {messages.length ? (
+              <div className="trainerClientMessageThread">
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`trainerClientMessageBubble ${message.type === "incoming" ? "incoming" : "outgoing"}`}
+                  >
+                    <p>{message.text}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
             <textarea value={messageText} onChange={(event) => setMessageText(event.target.value)} placeholder="Напишите сообщение клиенту..." />
             <footer>
               <button type="button" onClick={() => setMessageOpen(false)}>Отмена</button>
@@ -2751,6 +3124,15 @@ function TrainerClientDetail({
               <button type="button" onClick={() => setActionsOpen(false)} aria-label="Закрыть"><X size={18} /></button>
             </header>
             <div>
+              {onCreateTask ? (
+                <button type="button" onClick={() => {
+                  setActionsOpen(false);
+                  onCreateTask();
+                }}>
+                  <span>✓</span>
+                  <b>Назначить задачу</b>
+                </button>
+              ) : null}
               {clientActions.map((action) => (
                 <button className={action.danger ? "danger" : ""} type="button" key={action.id} onClick={() => runClientAction(action.id)}>
                   <span>{action.icon}</span>
@@ -2767,7 +3149,14 @@ function TrainerClientDetail({
 
 function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateClient }) {
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
   const summaries = clientSummaries;
+  const filters = [
+    ["all", "Все"],
+    ["attention", "Внимание"],
+    ["noProgram", "Без программы"],
+    ["inactive", "Неактивные"]
+  ];
   return (
     <div className="trainerNextPage trainerNextClientsPage">
       <div className="trainerNextDesktopPageHead">
@@ -2777,7 +3166,20 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
       <header className="trainerNextMobileHeader"><span className="trainerNextMobileHeaderSpacer" aria-hidden="true" /><div className="trainerNextMobileTitle">Клиенты</div><button type="button" onClick={onCreateClient}><Plus size={22} /></button></header>
       <div className="trainerNextClientsStandalone">
         <label className="trainerNextSearch open"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Поиск клиента..." /></label>
-        <DashboardClientList clients={clients} summaries={summaries} filter="all" search={search} onOpenClient={onOpenClient} />
+        <div className="trainerMessageFilters trainerClientFilters" role="group" aria-label="Фильтр клиентов">
+          {filters.map(([id, label]) => (
+            <button
+              type="button"
+              key={id}
+              className={filter === id ? "active" : ""}
+              aria-pressed={filter === id}
+              onClick={() => setFilter(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <DashboardClientList clients={clients} summaries={summaries} filter={filter} search={search} onOpenClient={onOpenClient} />
       </div>
     </div>
   );
@@ -3592,15 +3994,14 @@ function CreateClientModal({ state }) {
       <section className="trainerNextModal" role="dialog" aria-modal="true" aria-labelledby="trainer-create-client-title">
         <button className="trainerNextModalClose" type="button" onClick={state.onClose} aria-label="Закрыть">×</button>
         <div className="trainerNextModalIcon"><UserPlus size={24} /></div>
-        <h2 id="trainer-create-client-title">Добавить клиента</h2>
-        <p>Создайте учетные данные для нового клиента.</p>
+        <h2 id="trainer-create-client-title">Пригласить клиента</h2>
+        <p>Клиент сам задаст пароль по ссылке активации и сможет войти по email, логину или Google.</p>
         <form onSubmit={state.onSubmit}>
           <label><span>Имя</span><input value={state.name} onChange={(event) => state.onNameChange(event.target.value)} placeholder="Имя клиента" /></label>
           <label><span>Email</span><input type="email" value={state.email} onChange={(event) => state.onEmailChange(event.target.value)} placeholder="client@email.com" /></label>
-          <label><span>Пароль</span><div><input type="text" value={state.password} onChange={(event) => state.onPasswordChange(event.target.value)} placeholder="Минимум 6 символов" /><button type="button" onClick={state.onGeneratePassword}>Создать</button></div></label>
           {state.status ? <p className="trainerNextModalStatus">{state.status}</p> : null}
-          {state.credentials ? <div className="trainerNextCredentials"><strong>Данные клиента</strong><code>{state.credentials.email}<br />{state.credentials.password}</code></div> : null}
-          <button className="trainerNextPrimary trainerNextModalSubmit" type="submit" disabled={state.loading}>{state.loading ? "Создаю..." : "Добавить клиента"}</button>
+          {state.credentials ? <div className="trainerNextCredentials"><strong>Приглашение клиента</strong><code>{state.credentials.email}{state.credentials.activationUrl ? <><br />{state.credentials.activationUrl}</> : state.credentials.inviteUrl ? <><br />{state.credentials.inviteUrl}</> : null}</code></div> : null}
+          <button className="trainerNextPrimary trainerNextModalSubmit" type="submit" disabled={state.loading}>{state.loading ? "Создаю..." : "Создать приглашение"}</button>
         </form>
       </section>
     </div>
@@ -4097,11 +4498,14 @@ export default function TrainerWorkspace({
   trainerAvatar,
   clients = [],
   clientSummaries = {},
+  actionCenter = null,
   summariesLoading = false,
   counts = {},
   selectedClient,
   selectedProfile = {},
   selectedSummary = {},
+  selectedClientSnapshot = null,
+  selectedLastWorkoutReview = null,
   activeClientTab = "overview",
   onClientTabChange,
   onOpenClient,
@@ -4148,10 +4552,11 @@ export default function TrainerWorkspace({
   onTestNotification,
   onConnectTelegram,
   onSendMessage,
+  telegramMessages = [],
+  onCreateTask,
   onClientAction,
   onRefresh,
-  onLogout,
-  appVersion
+  onLogout
 }) {
   let content = null;
   const showSyncOverlay = summariesLoading;
@@ -4161,6 +4566,7 @@ export default function TrainerWorkspace({
       <TrainerDashboard
         clients={clients}
         clientSummaries={clientSummaries}
+        actionCenter={actionCenter}
         counts={counts}
         onOpenClient={onOpenClient}
         onOpenClients={() => onNavigate("clients")}
@@ -4178,6 +4584,8 @@ export default function TrainerWorkspace({
         client={selectedClient}
         profile={selectedProfile}
         summary={selectedSummary}
+        snapshot={selectedClientSnapshot}
+        workoutReview={selectedLastWorkoutReview}
         activeTab={activeClientTab}
         onTabChange={onClientTabChange}
         onBack={onCloseClient}
@@ -4217,6 +4625,8 @@ export default function TrainerWorkspace({
         onTestNotification={onTestNotification}
         onConnectTelegram={onConnectTelegram}
         onSendMessage={onSendMessage}
+        messages={telegramMessages}
+        onCreateTask={onCreateTask}
         onClientAction={onClientAction}
         onSaveWorkouts={onSaveWorkouts}
       />
@@ -4292,7 +4702,7 @@ export default function TrainerWorkspace({
   }
 
   return (
-    <TrainerShell activeSection={activeSection} onNavigate={onNavigate} trainerName={trainerName} trainerAvatar={trainerAvatar} appVersion={appVersion}>
+    <TrainerShell activeSection={activeSection} onNavigate={onNavigate} trainerName={trainerName} trainerAvatar={trainerAvatar}>
       {content}
       <CreateClientModal state={createClientState} />
       {showSyncOverlay ? (

@@ -33,6 +33,7 @@ export function LoginPage({
   setLoginFieldErrors,
   loginSubmitting,
   passwordResetSending,
+  handleGoogleAuth,
   handleLogin,
   handleLoginPasswordReset
 }) {
@@ -41,14 +42,17 @@ export function LoginPage({
       <div className="loginHero">
         <div className="appLogo">W</div>
         <h1>Workout</h1>
-        <p>Твой дневник тренировок</p>
+        <p>Доступ к приложению открывает тренер</p>
       </div>
 
       <form className="loginCard" onSubmit={handleLogin}>
-        <h2>Вход</h2>
+        <h2>Вход по приглашению</h2>
+        <p className="loginInviteNote">
+          Если тренер уже добавил тебя, войди по логину, email или Google.
+        </p>
 
         <label className="loginField">
-          <span>Email</span>
+          <span>Логин или email</span>
           <input
             value={login}
             onChange={(e) => {
@@ -57,9 +61,10 @@ export function LoginPage({
               setLoginError("");
               setLoginNotice("");
             }}
-            placeholder="name@example.com"
+            placeholder="ilya или name@example.com"
             inputMode="email"
-            autoComplete="email"
+            autoComplete="username"
+            aria-label="Логин или email"
             aria-invalid={Boolean(loginFieldErrors.email)}
             aria-describedby={loginFieldErrors.email ? "login-email-error" : undefined}
           />
@@ -107,6 +112,16 @@ export function LoginPage({
         </button>
 
         <button
+          className="loginGoogleBtn"
+          type="button"
+          disabled={loginSubmitting || passwordResetSending}
+          onClick={handleGoogleAuth}
+        >
+          <span aria-hidden="true">G</span>
+          Войти через Google
+        </button>
+
+        <button
           className="loginResetBtn"
           type="button"
           disabled={loginSubmitting || passwordResetSending}
@@ -115,7 +130,7 @@ export function LoginPage({
           {passwordResetSending ? "Отправляю..." : "Забыли пароль?"}
         </button>
 
-        <p className="loginHint">Вход через email и пароль</p>
+        <p className="loginHint">Нет доступа? Попроси тренера отправить приглашение. Восстановление пароля отправит письмо на почту аккаунта.</p>
       </form>
     </div>
   );

@@ -16,11 +16,13 @@ import {
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
   getTrainerProgramCompletionPercent,
+  getTrainerProgramEndingAttention,
   getTrainerSettledCollectionItems,
   getTrainerSettledDocumentData,
   getTrainerSummaryReadFailures,
   getTrainerSortedHistory,
   getTrainerSortedMeasurements,
+  getTrainerWorkoutFeedbackAttention,
   getTrainerWorkoutActivitySummary
 } from "../src/utils/trainerClientSummary.js";
 import {
@@ -152,6 +154,24 @@ test("trainer program completion percent stays bounded and optional", () => {
   assert.equal(getTrainerProgramCompletionPercent(8, 3, false), null);
 });
 
+test("trainer program ending attention detects nearly finished programs", () => {
+  assert.equal(getTrainerProgramEndingAttention(8, 4), null);
+  assert.deepEqual(getTrainerProgramEndingAttention(8, 6), {
+    id: "endingSoon",
+    reason: "До конца программы: 2 тренировки",
+    remainingWorkouts: 2,
+    completedWorkoutCount: 6,
+    assignedWorkoutCount: 8
+  });
+  assert.deepEqual(getTrainerProgramEndingAttention(8, 8), {
+    id: "completed",
+    reason: "Программа завершена, назначьте следующий блок",
+    remainingWorkouts: 0,
+    completedWorkoutCount: 8,
+    assignedWorkoutCount: 8
+  });
+});
+
 test("trainer assigned workout count prefers actual client workouts over stale root count", () => {
   const workouts = Array.from({ length: 8 }, (_, index) => ({ id: `w${index + 1}` }));
 
@@ -251,6 +271,32 @@ test("trainer client recent events combine workouts nutrition and measurements",
   assert.equal(events[0].title, "New workout");
 });
 
+test("trainer workout feedback attention highlights pain and bad feedback", () => {
+  const now = new Date("2026-06-20T12:00:00").getTime();
+
+  assert.deepEqual(getTrainerWorkoutFeedbackAttention([
+    {
+      id: "pain",
+      date: "2026-06-19T10:00:00.000Z",
+      clientComment: "После жима болит плечо"
+    }
+  ], now), {
+    id: "pain",
+    reason: "Клиент сообщил о боли после тренировки",
+    date: "2026-06-19T10:00:00.000Z",
+    comment: "После жима болит плечо"
+  });
+
+  assert.deepEqual(getTrainerWorkoutFeedbackAttention([
+    { id: "bad_1", date: "2026-06-19T10:00:00.000Z", postWorkoutFeedback: { id: "bad" } },
+    { id: "bad_2", date: "2026-06-18T10:00:00.000Z", readiness: { id: "bad" } }
+  ], now), {
+    id: "badFeedback",
+    reason: "2 тяжелые оценки после тренировок",
+    date: "2026-06-19T10:00:00.000Z"
+  });
+});
+
 test("trainer client activity status detects missing program, lost and active states", () => {
   assert.deepEqual(getClientActivityStatus({}), { id: "noProgram", label: "Без программы" });
   assert.deepEqual(
@@ -283,6 +329,70 @@ test("trainer client attention reasons stay compact and readable", () => {
       `нет замера 31 ${getTrainerDayWord(31)}`
     ]
   );
+  assert.deepEqual(
+    getClientAttentionReasons({
+      assignedProgramId: "p1",
+      lastWorkoutAt: dateKeyOffset(-1),
+      lastNutritionAt: dateKeyOffset(-1),
+      lastMeasurementAt: dateKeyOffset(-7),
+      activeTrainerTasksCount: 2
+    }),
+    ["2 активные задачи"]
+  );
+});
+
+test("trainer client activity status treats active tasks as attention", () => {
+  assert.deepEqual(
+    getClientActivityStatus({
+      assignedProgramId: "p1",
+      lastWorkoutAt: dateKeyOffset(-1),
+      lastNutritionAt: dateKeyOffset(-1),
+      lastMeasurementAt: dateKeyOffset(-7),
+      activeTrainerTasksCount: 1
+    }),
+    { id: "attention", label: "Требует внимания" }
+  );
+});
+
+test("trainer client activity status treats workout feedback as attention", () => {
+  assert.deepEqual(
+    getClientActivityStatus({
+      assignedProgramId: "p1",
+      lastWorkoutAt: dateKeyOffset(-1),
+      lastNutritionAt: dateKeyOffset(-1),
+      lastMeasurementAt: dateKeyOffset(-7),
+      workoutFeedbackAttention: { id: "comment", reason: "Есть комментарий клиента после тренировки" }
+    }),
+    { id: "attention", label: "Требует внимания" }
+  );
+  assert.ok(getClientAttentionReasons({
+    assignedProgramId: "p1",
+    lastWorkoutAt: dateKeyOffset(-1),
+    lastNutritionAt: dateKeyOffset(-1),
+    lastMeasurementAt: dateKeyOffset(-7),
+    workoutFeedbackAttention: { id: "comment", reason: "Есть комментарий клиента после тренировки" }
+  }).includes("есть комментарий клиента после тренировки"));
+});
+
+test("trainer client activity status treats ending programs as attention", () => {
+  assert.deepEqual(
+    getClientActivityStatus({
+      assignedProgramId: "p1",
+      lastWorkoutAt: dateKeyOffset(-1),
+      lastNutritionAt: dateKeyOffset(-1),
+      lastMeasurementAt: dateKeyOffset(-7),
+      programEndingAttention: { id: "endingSoon", reason: "До конца программы: 1 тренировка" }
+    }),
+    { id: "attention", label: "Требует внимания" }
+  );
+
+  assert.ok(getClientAttentionReasons({
+    assignedProgramId: "p1",
+    lastWorkoutAt: dateKeyOffset(-1),
+    lastNutritionAt: dateKeyOffset(-1),
+    lastMeasurementAt: dateKeyOffset(-7),
+    programEndingAttention: { id: "completed", reason: "Программа завершена, назначьте следующий блок" }
+  }).includes("программа завершена, назначьте следующий блок"));
 });
 
 test("trainer empty client summary preserves assigned program hints", () => {
@@ -297,6 +407,9 @@ test("trainer empty client summary preserves assigned program hints", () => {
   assert.equal(summary.assignedProgramId, "program_1");
   assert.equal(summary.assignedWorkoutCount, 8);
   assert.equal(summary.completedWorkoutCount, 0);
+  assert.equal(summary.activeTrainerTasksCount, 0);
+  assert.equal(summary.workoutFeedbackAttention, null);
+  assert.equal(summary.programEndingAttention, null);
   assert.equal(summary.programCompletionPercent, null);
   assert.deepEqual(summary.recentEvents, []);
 });
@@ -317,6 +430,7 @@ test("trainer fast summary merges client fields with previous loaded summary", (
     weeklyWorkouts: 2,
     assignedWorkoutCount: 8,
     assignedCompletedWorkoutCount: 3,
+    activeTrainerTasksCount: 2,
     nutritionState: {
       days: {
         [dateKeyOffset(-1)]: { foods: [{ calories: 1800 }] }
@@ -334,6 +448,7 @@ test("trainer fast summary merges client fields with previous loaded summary", (
   assert.equal(summary.nutritionDays7, 1);
   assert.equal(summary.assignedWorkoutCount, 8);
   assert.equal(summary.completedWorkoutCount, 3);
+  assert.equal(summary.activeTrainerTasksCount, 2);
   assert.equal(summary.programCompletionPercent, 38);
   assert.equal(summary.assignedProgramId, "program_1");
   assert.deepEqual(summary.recentEvents, [{ type: "note" }]);

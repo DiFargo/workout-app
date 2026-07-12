@@ -40,9 +40,9 @@
   filter: saturate(0.92) brightness(1.02) !important;
 }
 
-/* reduce old hard green glows in warm mode */
+/* keep warm-light scrollbars aligned with the product purple accent */
 :root[data-app-theme="warm-light"] * {
-  scrollbar-color: rgba(183,149,45,0.46) rgba(255,252,237,0.24);
+  scrollbar-color: rgba(101, 82, 230, 0.58) rgba(239, 236, 255, 0.36);
 }
 
 :root[data-app-theme="warm-light"] *:focus {
@@ -85,4 +85,3 @@
 :root[data-app-theme="warm-light"] .nutritionPage [class*="Modal"] {
   border-color: var(--line) !important;
 }
-

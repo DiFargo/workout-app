@@ -1,3 +1,9 @@
+import {
+  buildTrainerClientListItems,
+  buildTrainerClientSnapshot,
+  buildTrainerWorkoutReview
+} from "../../utils/trainerActionCenter.js";
+
 export function buildTrainerUsersPageModel({
   adminCalendarDraft,
   adminClientFilter,
@@ -43,25 +49,11 @@ export function buildTrainerUsersPageModel({
   const getClientCardSummary = (client = {}) =>
     getTrainerClientSummaryFromMap(client, trainerClientSummaries);
 
-  const adminUsersFilteredClients = usersList.filter((client) => {
-    const search = adminUsersSearch.trim().toLowerCase();
-    const matchesSearch = !search ||
-      String(client.name || "").toLowerCase().includes(search) ||
-      String(client.email || "").toLowerCase().includes(search);
-
-    if (!matchesSearch) return false;
-
-    const clientHistory = adminSelectedClient?.id === client.id ? adminClientHistory : [];
-    const lastWorkoutDate = clientHistory[0]?.date ? new Date(clientHistory[0].date) : null;
-    const daysSinceWorkout = lastWorkoutDate
-      ? Math.round((Date.now() - lastWorkoutDate.getTime()) / (24 * 60 * 60 * 1000))
-      : null;
-    const badCount = clientHistory.filter((item) => item.postWorkoutFeedback?.id === "bad").length;
-
-    if (adminClientFilter === "active") return daysSinceWorkout === null || daysSinceWorkout <= 7;
-    if (adminClientFilter === "attention") return badCount >= 2 || daysSinceWorkout >= 5;
-    return true;
+  const trainerClientListItems = buildTrainerClientListItems(usersList, trainerClientSummaries, {
+    search: adminUsersSearch,
+    filter: adminClientFilter
   });
+  const adminUsersFilteredClients = trainerClientListItems.map((item) => item.client);
 
   const selectedClient = adminSelectedClient ||
     usersList.find((client) => client.id === selectedUserId) ||
@@ -111,6 +103,9 @@ export function buildTrainerUsersPageModel({
   const selectedPlateau = getClientPlateauInfo(adminClientMeasurements);
   const selectedPaymentAttention = getClientPaymentAttention(adminClientPayment);
   const selectedSummary = selectedClient ? trainerClientSummaries[selectedClient.id] || {} : {};
+  const selectedClientSnapshot = selectedClient
+    ? buildTrainerClientSnapshot(selectedClient, selectedSummary, adminClientTasks, adminClientHistory)
+    : null;
   const selectedPhotoCompare = adminPhotoCompareIds.map((photoId) => (
     adminClientProgressPhotos.find((photo) => photo.id === photoId) || null
   ));
@@ -181,6 +176,7 @@ export function buildTrainerUsersPageModel({
   const selectedAssignedWorkouts = Number(selectedSummary.assignedWorkoutCount || selectedClient?.assignedWorkoutCount) || 0;
   const selectedLatestPhoto = adminClientProgressPhotos[0] || null;
   const selectedTaskPreview = adminClientTasks.slice(0, 4);
+  const selectedLastWorkoutReview = buildTrainerWorkoutReview(lastWorkout || {}, {});
   const selectedRecentActivity = [
     ...adminClientEvents,
     ...adminClientHistory.slice(0, 6).map((item) => ({
@@ -299,6 +295,7 @@ export function buildTrainerUsersPageModel({
     selectedAssignedWorkouts,
     selectedAttentionItems,
     selectedClient,
+    selectedClientSnapshot,
     selectedCompletedWorkouts,
     selectedEffectiveNutritionGoals,
     selectedLatestMeasurement,
@@ -316,6 +313,7 @@ export function buildTrainerUsersPageModel({
     selectedRecentActivity,
     selectedSummary,
     selectedTaskPreview,
+    selectedLastWorkoutReview,
     selectedTelegramProfile,
     selectedTrainerName,
     selectedWaistDelta,
@@ -324,6 +322,7 @@ export function buildTrainerUsersPageModel({
     selectedWeightValue,
     selectedWorkoutDays,
     trainerAiRecommendations,
+    trainerClientListItems,
     trainerNutritionPlanOptions,
     workoutProgress
   };

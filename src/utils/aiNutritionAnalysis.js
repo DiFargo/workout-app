@@ -1,5 +1,4 @@
 import { defaultNutritionState } from "../data/nutritionDefaults";
-import { getAiNutritionHistoryBaseline } from "../data/aiNutritionBaseline";
 import { makeEmptyNutritionDay, todayNutritionKey } from "../domain/nutritionPresentation";
 import { getShortFoodName } from "./nutritionFoodPresentation";
 import { sumNutritionFoods } from "./nutritionFoodTotals";
@@ -28,20 +27,53 @@ export function getAiNutritionTotalsForToday(nutrition = {}) {
 
 export function getAiNutritionTargetFromHistory(nutrition = defaultNutritionState) {
   const goals = nutrition.goals || defaultNutritionState.goals;
-  const historyAverage = getAiNutritionHistoryBaseline().average;
 
   return {
-    calories: Number(goals.calories) || historyAverage.calories,
-    protein: Math.max(Number(goals.protein) || 0, Math.round(historyAverage.protein * 0.82)),
-    fat: Number(goals.fat) || Math.round(historyAverage.fat),
-    carbs: Number(goals.carbs) || Math.round(historyAverage.carbs)
+    calories: Number(goals.calories) || defaultNutritionState.goals.calories,
+    protein: Number(goals.protein) || defaultNutritionState.goals.protein,
+    fat: Number(goals.fat) || defaultNutritionState.goals.fat,
+    carbs: Number(goals.carbs) || defaultNutritionState.goals.carbs
+  };
+}
+
+export function getNutritionPersonalBaseline(nutrition = defaultNutritionState) {
+  const recordedDays = Object.values(nutrition.days || {})
+    .filter((day) => Array.isArray(day?.foods) && day.foods.length > 0)
+    .map((day) => getNutritionDayTotals(day));
+  const target = getAiNutritionTargetFromHistory(nutrition);
+
+  if (!recordedDays.length) {
+    return {
+      source: "Стартовые цели текущего пользователя",
+      average: target,
+      hasHistoryData: false
+    };
+  }
+
+  const total = recordedDays.reduce((accumulator, day) => ({
+    calories: accumulator.calories + day.calories,
+    protein: accumulator.protein + day.protein,
+    fat: accumulator.fat + day.fat,
+    carbs: accumulator.carbs + day.carbs
+  }), { calories: 0, protein: 0, fat: 0, carbs: 0 });
+  const count = recordedDays.length;
+
+  return {
+    source: "Личная история питания",
+    average: {
+      calories: Math.round(total.calories / count),
+      protein: Math.round(total.protein / count),
+      fat: Math.round(total.fat / count),
+      carbs: Math.round(total.carbs / count)
+    },
+    hasHistoryData: true
   };
 }
 
 export function buildAiNutritionDayModel(nutrition = defaultNutritionState, selectedDay = null) {
   const day = selectedDay || nutrition.days?.[todayNutritionKey()] || makeEmptyNutritionDay();
-  const goals = nutrition.goals || defaultNutritionState.goals;
-  const baseline = getAiNutritionHistoryBaseline();
+  const baseline = getNutritionPersonalBaseline(nutrition);
+  const goals = getAiNutritionTargetFromHistory(nutrition);
   const totals = getNutritionDayTotals(day);
 
   const left = {
@@ -76,10 +108,10 @@ export function buildAiNutritionDayModel(nutrition = defaultNutritionState, sele
 
   const baselineDelta = Math.round(totals.calories - baseline.average.calories);
   const weeklyText = baselineDelta < -250
-    ? "Ты заметно ниже своей базы марта–апреля. Если вес падает слишком быстро — добавь 100–150 ккал."
+    ? "Сегодня ты заметно ниже своего личного ориентира. Если вес падает слишком быстро — добавь 100–150 ккал."
     : baselineDelta > 250
-      ? "Сегодня выше твоей базы марта–апреля. Если цель похудение — остаток дня лучше сделать легче."
-      : "Сегодня близко к твоей реальной базе марта–апреля. Коррекцию калорий можно делать плавно.";
+      ? "Сегодня ты выше своего личного ориентира. Если цель похудение — остаток дня лучше сделать легче."
+      : "Сегодня близко к твоему личному ориентиру. Коррекцию калорий можно делать плавно.";
 
   const adaptiveAdvice = fatProgress > 110
     ? "На остаток дня меньше сыра, орехов, масла и жирного мяса. Лучше белок + углеводы: творог/курица + рис/картофель/овощи."
@@ -100,7 +132,7 @@ export function buildAiNutritionDayModel(nutrition = defaultNutritionState, sele
     adaptiveAdvice,
     summary: `${score}/10 — ${proteinProgress >= 75 ? "белок хорошо" : "белка мало"}, ${fatProgress > 110 ? "жиров много" : carbsProgress < 58 ? "углеводов мало" : "баланс нормальный"}.`,
     target: getAiNutritionTargetFromHistory(nutrition),
-    hasHistoryData: true
+    hasHistoryData: baseline.hasHistoryData
   };
 }
 

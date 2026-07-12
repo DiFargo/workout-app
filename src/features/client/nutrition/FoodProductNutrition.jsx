@@ -24,6 +24,16 @@ export default function FoodProductNutrition({
     const roundedAmount = Math.round(nextAmount * 10) / 10;
     onAmountChange(String(roundedAmount || ""));
   };
+  const selectDefaultAmountOnFocus = (event) => {
+    if (isPortionMode || String(amount).trim() !== "100") {
+      return;
+    }
+
+    const input = event.currentTarget;
+    window.requestAnimationFrame(() => {
+      input.setSelectionRange(0, input.value.length);
+    });
+  };
 
   return (
     <>
@@ -44,6 +54,7 @@ export default function FoodProductNutrition({
             <input
               value={amount}
               onChange={(event) => onAmountChange(event.target.value)}
+              onFocus={selectDefaultAmountOnFocus}
               placeholder={isPortionMode ? "1" : "100"}
               inputMode="decimal"
               aria-label="Количество продукта"

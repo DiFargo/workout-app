@@ -39,6 +39,7 @@
     box-shadow: none !important;
     transform: none !important;
     color: #737b91 !important;
+    -webkit-text-fill-color: #737b91 !important;
     line-height: 13.3333px !important;
   }
 
@@ -63,8 +64,10 @@
     align-items: center !important;
     justify-content: center !important;
     color: #737b91 !important;
+    -webkit-text-fill-color: #737b91 !important;
     font-size: 25px !important;
     line-height: 25px !important;
+    filter: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button.active span,
@@ -72,6 +75,8 @@
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button.active span,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientBottomNav > button.active span {
     color: #5d43e8 !important;
+    -webkit-text-fill-color: #5d43e8 !important;
+    filter: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button svg,
@@ -82,7 +87,10 @@
     width: 24px !important;
     height: 24px !important;
     color: currentColor !important;
+    stroke: currentColor !important;
+    fill: none !important;
     stroke-width: 2.4px !important;
+    filter: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientBottomNav > button strong,
@@ -105,5 +113,29 @@
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.clientCorePageNutrition .nutritionBottomTabBar.clientBottomNav > button strong {
     transform: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html:root[data-app-theme="warm-light"] body #root .basicQuizPage .mainMenuBottomBar.profileBottomTabBar.workoutModeBottomBar.clientBottomNav {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    padding: 7px !important;
+    gap: 4px !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button span {
+    filter: none !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .individualWorkoutMenuBar.clientBottomNav > button svg {
+    stroke: currentColor !important;
+    fill: none !important;
+    filter: none !important;
   }
 }

@@ -1,6 +1,5 @@
 import { doc, setDoc } from "firebase/firestore";
 
-import { getAiNutritionHistoryBaseline } from "../../../data/aiNutritionBaseline";
 import {
   buildAiNutritionMonthlyPlan
 } from "../../../utils/aiNutritionPlanBuilder";
@@ -130,7 +129,6 @@ export function createAiNutritionPlanHandlers({
   }
 
   function resetAiNutritionPlan() {
-    const preservedAnchor = Number(aiNutritionSavedPlan?.calorieAnchor || aiNutritionProfile?.calorieAnchor || getAiNutritionHistoryBaseline().average.calories) || 2374;
     const nextDraft = {
       weight: "",
       height: "",
@@ -141,7 +139,6 @@ export function createAiNutritionPlanHandlers({
       trainingDays: getAiNutritionTrainingDays(aiNutritionProfile)
     };
 
-    void preservedAnchor;
     setAiNutritionProfile(null);
     setAiNutritionSavedPlan(null);
     setAiNutritionProfileDraft(nextDraft);

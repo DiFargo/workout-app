@@ -1,19 +1,25 @@
 import TrainerWorkspace from "../../components/trainer/TrainerWorkspace";
+import TrainerClientOverviewModals from "./TrainerClientOverviewModals";
 
 export default function TrainerClientsWorkspaceRoute({
   APP_VERSION,
   adminClientHistory,
   adminClientMeasurements,
   adminClientProgressPhotos,
+  adminNewTaskDueDate,
+  adminNewTaskTitle,
   adminClientStatus,
   adminClientTasks,
+  adminClientTelegramMessages,
   adminExerciseVideoUploadingId,
+  adminTaskComposerOpen,
   adminSelectedTemplateId,
   adminTrainingTemplates,
   adminTrainerNote,
   adminUsersSelectedTab,
   assignSavedProgramToClient,
   clientNutritionDays,
+  createAdminClientTask,
   getAdminClientGoalLabel,
   getClientActivityStatus,
   getClientCardSummary,
@@ -33,13 +39,19 @@ export default function TrainerClientsWorkspaceRoute({
   selectedEffectiveNutritionGoals,
   selectedProfile,
   selectedSummary,
+  selectedPhotoCompare,
   selectedTrainerName,
+  selectedClientSnapshot,
+  selectedLastWorkoutReview,
   sendAdminTestWorkoutReminder,
   sendTrainerClientMessage,
   setAdminClientPageOpen,
   setAdminClientStatus,
   setAdminCreateClientModalOpen,
+  setAdminNewTaskDueDate,
+  setAdminNewTaskTitle,
   setAdminSelectedTemplateId,
+  setAdminTaskComposerOpen,
   setAdminUsersSelectedTab,
   sortWorkoutDays,
   telegramProfile,
@@ -66,7 +78,8 @@ export default function TrainerClientsWorkspaceRoute({
   }[adminUsersSelectedTab] || adminUsersSelectedTab;
 
   return (
-    <TrainerWorkspace
+    <>
+      <TrainerWorkspace
       appVersion={APP_VERSION}
       mode={adminClientPageOpen && selectedClient ? "client" : "clients"}
       activeSection="clients"
@@ -86,6 +99,8 @@ export default function TrainerClientsWorkspaceRoute({
         ...selectedSummary,
         status: getClientActivityStatus(selectedSummary)
       }}
+      selectedClientSnapshot={selectedClientSnapshot}
+      selectedLastWorkoutReview={selectedLastWorkoutReview}
       activeClientTab={trainerNextTab}
       onClientTabChange={setAdminUsersSelectedTab}
       onOpenClient={openTrainerNextClient}
@@ -106,6 +121,8 @@ export default function TrainerClientsWorkspaceRoute({
       onTestNotification={() => sendAdminTestWorkoutReminder(selectedClient)}
       onConnectTelegram={openClientTelegramConnection}
       onSendMessage={sendTrainerClientMessage}
+      telegramMessages={adminClientTelegramMessages}
+      onCreateTask={() => setAdminTaskComposerOpen(true)}
       onClientAction={handleTrainerClientAction}
       workouts={sortWorkoutDays(plan.workouts || [])}
       exerciseLibrary={trainerExerciseLibraryItems}
@@ -131,6 +148,18 @@ export default function TrainerClientsWorkspaceRoute({
       onRemoveDay={trainerNextWorkspaceHandlers.onRemoveDay}
       onSaveWorkouts={saveWorkoutsToFirebase}
       onLogout={logout}
-    />
+      />
+      <TrainerClientOverviewModals
+        adminClientProgressPhotos={adminClientProgressPhotos}
+        adminNewTaskDueDate={adminNewTaskDueDate}
+        adminNewTaskTitle={adminNewTaskTitle}
+        adminTaskComposerOpen={adminTaskComposerOpen}
+        createAdminClientTask={createAdminClientTask}
+        selectedPhotoCompare={selectedPhotoCompare || []}
+        setAdminNewTaskDueDate={setAdminNewTaskDueDate}
+        setAdminNewTaskTitle={setAdminNewTaskTitle}
+        setAdminTaskComposerOpen={setAdminTaskComposerOpen}
+      />
+    </>
   );
 }

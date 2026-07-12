@@ -40,6 +40,35 @@
     font-size: 10px;
   }
 
+  .trainerClientWorkSummary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin: 10px 0 12px;
+  }
+
+  .trainerClientWorkSummary article {
+    min-height: 66px;
+    padding: 9px;
+  }
+
+  .trainerClientWorkSummary article.attention {
+    grid-column: 1 / -1;
+  }
+
+  .trainerClientWorkSummary span {
+    font-size: 8px;
+  }
+
+  .trainerClientWorkSummary strong {
+    margin-top: 4px;
+    font-size: 11px;
+  }
+
+  .trainerClientWorkSummary small,
+  .trainerClientWorkSummary p {
+    font-size: 8px;
+  }
+
   .trainerNextMobileMore {
     position: absolute;
     top: 0;

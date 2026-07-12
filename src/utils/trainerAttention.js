@@ -157,6 +157,24 @@ export function getClientAttentionState(client = {}, summary = {}, now = new Dat
     return { type: "workout", reason: "Нет тренировок после назначения программы" };
   }
 
+  if (summary.workoutFeedbackAttention?.reason) {
+    return { type: "feedback", reason: summary.workoutFeedbackAttention.reason };
+  }
+
+  if (summary.programEndingAttention?.reason) {
+    return { type: "programEnding", reason: summary.programEndingAttention.reason };
+  }
+
+  const activeTrainerTasksCount = Number(summary.activeTrainerTasksCount ?? client.activeTrainerTasksCount) || 0;
+  if (activeTrainerTasksCount > 0) {
+    return {
+      type: "task",
+      reason: activeTrainerTasksCount === 1
+        ? "Есть активная задача от тренера"
+        : `${activeTrainerTasksCount} ${pluralizeRu(activeTrainerTasksCount, "активная задача", "активные задачи", "активных задач")} от тренера`
+    };
+  }
+
   const nutritionReason = getNutritionAttentionReason(summary, now);
   if (nutritionReason) return { type: "nutrition", reason: nutritionReason };
 

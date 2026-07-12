@@ -138,7 +138,8 @@
 .profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle,
 .profileTabbedPage[data-profile-tab="settings"] .profileAccordionHead,
 .profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn,
-.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem {
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsEmailItem {
   min-height: 68px !important;
   padding: 12px 14px !important;
   border-radius: 18px !important;
@@ -147,14 +148,16 @@
 .profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle:focus,
 .profileTabbedPage[data-profile-tab="settings"] .profileAccordionHead:focus,
 .profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn:focus,
-.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem:focus {
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem:focus,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsEmailItem:focus {
   outline: none !important;
 }
 
 .profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeToggle:focus-visible,
 .profileTabbedPage[data-profile-tab="settings"] .profileAccordionHead:focus-visible,
 .profileTabbedPage[data-profile-tab="settings"] .profileThemeSwitchBtn:focus-visible,
-.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem:focus-visible {
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsTelegramItem:focus-visible,
+.profileTabbedPage[data-profile-tab="settings"] .profileSettingsEmailItem:focus-visible {
   outline: 2px solid rgba(181, 230, 85, 0.58) !important;
   outline-offset: 2px !important;
 }
@@ -267,4 +270,3 @@
     width: calc(100vw - 18px) !important;
   }
 }
-

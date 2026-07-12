@@ -15,7 +15,11 @@ export function createAppAccessHandlers({
   }
 
   function canUseTrainerFeatures() {
-    return getCanUseTrainerFeatures({ isAdminClaim, currentUserRole });
+    return getCanUseTrainerFeatures({
+      isAdminClaim,
+      currentUserRole,
+      email: auth.currentUser?.email || user?.email || ""
+    });
   }
 
   function getCurrentProgramOwner() {

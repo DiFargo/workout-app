@@ -4806,8 +4806,9 @@ test("client icon-only actions expose accessible labels", async () => {
   const dishPicker = await readText("src/features/client/nutrition/DishIngredientPicker.jsx");
 
   assert.match(aiCoach, /aiCoachBackBtn" type="button"[\s\S]*aria-label="Назад"/);
-  assert.match(basicQuiz, /className="workoutModeBack" type="button"[\s\S]*aria-label="Назад к выбору режима"/);
-  assert.match(workoutMode, /className="workoutModeBack" type="button"[\s\S]*aria-label="Назад на главную"/);
+  assert.match(basicQuiz, /className="workoutModeTopButton[^"]*" type="button"[\s\S]*aria-label="Открыть режим запуска"/);
+  assert.match(workoutMode, /className="workoutModeTopButton" type="button"[\s\S]*aria-label="Открыть главную"/);
+  assert.match(workoutMode, /className="workoutModeTopButton" type="button"[\s\S]*aria-label="Выбрать режим запуска тренировки"/);
   assert.match(historyPage, /historyCompactRefresh" type="button"[\s\S]*aria-label="Обновить историю тренировок"/);
   assert.match(runOverlays, /type="button"[\s\S]*onClick=\{onClose\}[\s\S]*aria-label="Закрыть видео"/);
   assert.match(dishPicker, /type="button" onClick=\{onClose\} aria-label="Закрыть выбор ингредиента"/);

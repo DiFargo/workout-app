@@ -67,6 +67,20 @@
         }
       },
       {
+        "source": "/api/profile/update-email",
+        "function": {
+          "functionId": "profileUpdateEmail",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/profile/update-login",
+        "function": {
+          "functionId": "profileUpdateLogin",
+          "region": "europe-west1"
+        }
+      },
+      {
         "source": "/api/ai-food-photo",
         "function": {
           "functionId": "aiFoodPhoto",
@@ -112,6 +126,13 @@
         "source": "/api/admin/deleteUser",
         "function": {
           "functionId": "deleteUser",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/trainer/create-invite",
+        "function": {
+          "functionId": "trainerCreateInvite",
           "region": "europe-west1"
         }
       },

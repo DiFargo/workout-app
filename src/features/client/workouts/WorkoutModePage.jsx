@@ -1,10 +1,14 @@
+import { useState } from "react";
+import { Home, Paperclip } from "lucide-react";
+import { WorkoutModePickerDialog } from "./WorkoutListDialogs";
+
 export default function WorkoutModePage({
-  appVersion,
+  workoutModePreference,
   workoutModeRemember,
   renderClientMainBottomBar,
   canUseTrainerFeatures,
   onBackToMain,
-  onOpenBasicWorkoutQuiz,
+  onOpenBasicWorkouts,
   onOpenIndividualWorkouts,
   onToggleWorkoutModeRemember,
   onOpenTraining,
@@ -14,28 +18,39 @@ export default function WorkoutModePage({
   onOpenTrainerPrograms,
   onLoadTrainerCabinet
 }) {
+  const [workoutModePickerOpen, setWorkoutModePickerOpen] = useState(false);
+  const resolvedWorkoutModePreference = workoutModePreference || { mode: "individual" };
+
   return (
     <div className="workoutModePage">
-      <div className="appVersionBadge clientPageVersionBadge">{appVersion}</div>
-      <button className="workoutModeBack" type="button" onClick={onBackToMain} aria-label="Назад на главную">
-        ←
-      </button>
+      <header className="workoutModeTopBar">
+        <section className="workoutModeHero">
+          <span>ТРЕНИРОВКИ</span>
+          <h1>Режим запуска</h1>
+        </section>
+        <div className="workoutModeTopActions">
+          <button className="workoutModeTopButton" type="button" onClick={onBackToMain} aria-label="Открыть главную">
+            <Home aria-hidden="true" />
+          </button>
+          <button className="workoutModeTopButton" type="button" onClick={() => setWorkoutModePickerOpen(true)} aria-label="Выбрать режим запуска тренировки">
+            <Paperclip aria-hidden="true" />
+          </button>
+        </div>
+      </header>
 
-      <section className="workoutModeHero">
-        <span>ТРЕНИРОВКИ</span>
-        <h1>Режим запуска</h1>
-        <p>Можно тренироваться по базовой программе или по индивидуальному плану от тренера.</p>
-      </section>
+      <p className="workoutModeLead">
+        Можно тренироваться по базовой программе или по индивидуальному плану от тренера.
+      </p>
 
       <section className="workoutModeCards">
-        <button className="workoutModeCard" type="button" onClick={onOpenBasicWorkoutQuiz}>
+        <button className="workoutModeCard" type="button" onClick={onOpenBasicWorkouts}>
           <span className="workoutModeIcon">Б</span>
           <div>
             <strong>Базовые тренировки</strong>
             <small>Короткий опрос и готовый план из базы приложения.</small>
           </div>
           <i>›</i>
-          </button>
+        </button>
 
         <button className="workoutModeCard premium" type="button" onClick={onOpenIndividualWorkouts}>
           <span className="workoutModeIcon">И</span>
@@ -70,6 +85,22 @@ export default function WorkoutModePage({
           onLoadTrainerCabinet
         }
       )}
+
+      <WorkoutModePickerDialog
+        open={workoutModePickerOpen}
+        workoutModePreference={resolvedWorkoutModePreference}
+        rememberChoice={workoutModeRemember}
+        onClose={() => setWorkoutModePickerOpen(false)}
+        onOpenBasic={() => {
+          setWorkoutModePickerOpen(false);
+          onOpenBasicWorkouts();
+        }}
+        onOpenIndividual={() => {
+          setWorkoutModePickerOpen(false);
+          onOpenIndividualWorkouts();
+        }}
+        onRememberChoiceChange={onToggleWorkoutModeRemember}
+      />
     </div>
   );
 }

@@ -45,7 +45,9 @@ export function createWorkoutPersistenceHandlers(getContext) {
 
   async function loadWorkoutsFromFirebase(userIdFromClick, options = {}) {
     const {
+      BASIC_WORKOUT_PLAN_STORAGE_KEY,
       STORAGE_KEY,
+      WORKOUT_MODE_STORAGE_KEY,
       auth,
       canUseAdminFeatures,
       db,
@@ -65,6 +67,8 @@ export function createWorkoutPersistenceHandlers(getContext) {
       selectedUserId,
       plan,
       storageKey: STORAGE_KEY,
+      basicWorkoutPlanStorageKey: BASIC_WORKOUT_PLAN_STORAGE_KEY,
+      workoutModeStorageKey: WORKOUT_MODE_STORAGE_KEY,
       normalizeExercise,
       sortWorkoutDays,
       canUseAdminFeatures,

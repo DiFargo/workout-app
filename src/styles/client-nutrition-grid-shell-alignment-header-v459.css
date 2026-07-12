@@ -4,7 +4,7 @@
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
     --nutrition-grid-x: 25px;
-    --nutrition-grid-title-y: 53px;
+    --nutrition-grid-title-y: 34px;
     --nutrition-grid-title-color: #5f5848;
     padding-left: var(--nutrition-grid-x) !important;
     padding-right: var(--nutrition-grid-x) !important;
@@ -82,6 +82,11 @@
     transform: translate(1px, -1px) !important;
   }
 
+  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .menuRefreshIconBtn.menuRefreshIconBtn > svg {
+    color: #5f5744 !important;
+    stroke: #5f5744 !important;
+  }
+
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileTrainerNotificationsButton.profileTrainerNotificationsButton {
     transform: translate(1px, -1px) !important;
   }
@@ -102,5 +107,10 @@
 
   html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutHeaderActions {
     gap: 10px !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroV4 {
+    margin-top: 31px !important;
+    padding-top: 0 !important;
   }
 }

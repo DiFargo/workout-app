@@ -52,6 +52,7 @@ export function createWorkoutHistoryHandlers({
       const snapshot = await getDocs(
         collection(db, "users", currentUser.uid, "history")
       );
+      if (auth.currentUser?.uid !== currentUser.uid) return;
 
       const workouts = [];
 
@@ -78,6 +79,7 @@ export function createWorkoutHistoryHandlers({
       setHistory(nextHistory);
       endPerformanceCheck(HISTORY_LOAD_LABEL, { records: nextHistory.length });
     } catch (err) {
+      if (auth.currentUser?.uid !== currentUser.uid) return;
       console.error("History load failed:", err);
       const pendingWorkouts = getPendingWorkouts(currentUser.uid)
         .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -85,7 +87,7 @@ export function createWorkoutHistoryHandlers({
       if (pendingWorkouts.length) setHistory(pendingWorkouts);
       showAppError("load", ERROR_LOAD_HISTORY);
     } finally {
-      setHistoryLoading(false);
+      if (auth.currentUser?.uid === currentUser.uid) setHistoryLoading(false);
     }
   }
 

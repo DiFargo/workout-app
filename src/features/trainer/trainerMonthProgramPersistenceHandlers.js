@@ -2,6 +2,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { createFourWeekWorkoutProgramBlocks } from "../../utils/auditSafety";
+import { buildDraftProgramMetadata } from "../../utils/trainerProgramLifecycle.js";
 import { requestTrainerAiProgramImport } from "./trainerAiProgramImport";
 import { createTrainerMonthProgramImportHelpers } from "./trainerMonthProgramImportHelpers";
 
@@ -82,6 +83,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
       ? (existingTemplate?.ownerRole || program.ownerRole || "admin")
       : "trainer";
     const createdByUid = existingTemplate?.createdByUid || program.createdByUid || ownerUid;
+    const nowIso = new Date().toISOString();
     const workoutsToSave = program.blocks.flatMap((block, blockIndex) =>
       block.weeks.flatMap((week, weekIndex) =>
         (week.workouts || []).map((workout, workoutIndex) => ({
@@ -107,21 +109,20 @@ export function createTrainerMonthProgramPersistenceHandlers({
         ownerUid,
         ownerRole,
         createdByUid,
-        updatedByUid: owner.uid,
         months: program.months,
         blocks: program.blocks,
         workouts: workoutsToSave,
-        createdAt: program.createdAt || new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: program.createdAt || existingTemplate?.createdAt || nowIso,
+        updatedAt: nowIso,
+        ...buildDraftProgramMetadata(existingTemplate || program, { nowIso, ownerUid: owner.uid }),
         createdBy: createdByUid,
         createdByEmail: user?.email || ""
       }, { merge: true });
 
       setAdminTemplateName(program.name || "");
       setAdminSelectedTemplateId(program.id);
-      await loadAdminTrainingTemplates();
-
       showAppError("savedLocal", "Программа сохранена в библиотеку.");
+      loadAdminTrainingTemplates();
       return true;
     } catch (error) {
       console.error("Save month program to library error:", error);

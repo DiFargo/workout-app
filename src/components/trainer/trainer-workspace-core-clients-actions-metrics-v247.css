@@ -36,6 +36,11 @@
   box-shadow: 0 8px 18px rgba(100, 55, 245, 0.18);
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.08s ease-out;
+}
+
+.trainerNextPrimary:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .trainerNextMobileHeader,

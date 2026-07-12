@@ -58,8 +58,13 @@ export function createTrainerClientOverviewLoader({
   mirrorClientForTrainer,
   loadAdminTrainingTemplates
 }) {
+  let requestedClientId = "";
+
   async function loadAdminClientOverview(client, openClientPage = false) {
     if (!client?.id) return;
+
+    requestedClientId = client.id;
+    const isCurrentClientRequest = () => requestedClientId === client.id;
 
     setSelectedUserId(client.id);
     setAdminSelectedClient(client);
@@ -111,6 +116,8 @@ export function createTrainerClientOverviewLoader({
         }
       }
 
+      if (!isCurrentClientRequest()) return;
+
       setAdminSelectedClient(freshClient);
       setUsersList((prev) => prev.map((item) => item.id === freshClient.id ? { ...item, ...freshClient } : item));
       setAdminAllUsersList((prev) => prev.map((item) => item.id === freshClient.id ? { ...item, ...freshClient } : item));
@@ -155,6 +162,8 @@ export function createTrainerClientOverviewLoader({
         getDoc(doc(db, "users", client.id, "payments", "current")),
         getDoc(doc(db, "trainerNotes", `${auth.currentUser?.uid || ""}_${client.id}`))
       ]);
+
+      if (!isCurrentClientRequest()) return;
 
       const clientHistory = getDocsAsItems(historySnap);
       clientHistory.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
@@ -213,6 +222,8 @@ export function createTrainerClientOverviewLoader({
         aiNutritionPlan: freshClient.aiNutritionPlan || mergedNutritionState.aiNutritionPlan
       };
 
+      if (!isCurrentClientRequest()) return;
+
       setAdminSelectedClient(fullClientForView);
       setUsersList((prev) => prev.map((item) => item.id === fullClientForView.id ? { ...item, ...fullClientForView } : item));
       setAdminAllUsersList((prev) => prev.map((item) => item.id === fullClientForView.id ? { ...item, ...fullClientForView } : item));
@@ -254,9 +265,13 @@ export function createTrainerClientOverviewLoader({
       await loadAdminTrainingTemplates();
     } catch (error) {
       console.error("Client overview load failed:", error);
-      setAdminClientStatus(STATUS_LOAD_FAILED);
+      if (isCurrentClientRequest()) {
+        setAdminClientStatus(STATUS_LOAD_FAILED);
+      }
     } finally {
-      setAdminClientLoading(false);
+      if (isCurrentClientRequest()) {
+        setAdminClientLoading(false);
+      }
     }
   }
 

@@ -121,6 +121,9 @@ export default function WorkoutExerciseSets({
   const [editingSetDraft, setEditingSetDraft] = useState(null);
   const repsWheelRef = useRef(null);
   const weightWheelRef = useRef(null);
+  const wheelScrollFrameRef = useRef({ reps: null, weight: null });
+  const wheelSnapTimeoutRef = useRef({ reps: null, weight: null });
+  const initializedWheelKeyRef = useRef("");
   const editingSetIndex = editingSetDraft?.index ?? null;
   const editingSet = editingSetIndex !== null ? exercise.sets[editingSetIndex] : null;
   const editingSetKey = editingSetIndex !== null ? `${exercise.id}:${editingSetIndex}` : "";
@@ -136,19 +139,43 @@ export default function WorkoutExerciseSets({
   );
 
   useEffect(() => {
-    if (!editingSetKey || !repsSliderState) {
+    if (!editingSetKey || !repsSliderState || initializedWheelKeyRef.current === editingSetKey) {
       return;
     }
 
+    initializedWheelKeyRef.current = editingSetKey;
     window.requestAnimationFrame(() => {
       scrollWheelToValue(repsWheelRef.current, repsWheelOptions, repsSliderState.value);
       if (weightSliderState) {
         scrollWheelToValue(weightWheelRef.current, weightWheelOptions, weightSliderState.value);
       }
     });
-  }, [editingSetKey, repsWheelOptions, weightWheelOptions]);
+  }, [editingSetKey]);
+
+  useEffect(() => () => {
+    clearWheelSettleWork();
+  }, []);
+
+  function clearWheelSettleWork() {
+    Object.values(wheelScrollFrameRef.current).forEach((frameId) => {
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+    });
+
+    Object.values(wheelSnapTimeoutRef.current).forEach((timeoutId) => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    });
+
+    wheelScrollFrameRef.current = { reps: null, weight: null };
+    wheelSnapTimeoutRef.current = { reps: null, weight: null };
+  }
 
   function closeEditModal() {
+    clearWheelSettleWork();
+    initializedWheelKeyRef.current = "";
     setEditingSetDraft(null);
   }
 
@@ -191,18 +218,55 @@ export default function WorkoutExerciseSets({
   }
 
   function handleWheelScroll(event, options, field) {
-    const nextValue = getWheelValueFromScroll(event.currentTarget.scrollTop, options);
+    const element = event.currentTarget;
+    const nextValue = getWheelValueFromScroll(element.scrollTop, options);
 
     if (nextValue === undefined) {
       return;
     }
 
-    if (field === "reps") {
-      setRepsFromWheel(nextValue);
-      return;
+    if (wheelScrollFrameRef.current[field] !== null) {
+      window.cancelAnimationFrame(wheelScrollFrameRef.current[field]);
     }
 
-    setWeightFromWheel(nextValue);
+    wheelScrollFrameRef.current[field] = window.requestAnimationFrame(() => {
+      if (field === "reps") {
+        setRepsFromWheel(nextValue);
+      } else {
+        setWeightFromWheel(nextValue);
+      }
+
+      wheelScrollFrameRef.current[field] = null;
+    });
+
+    if (wheelSnapTimeoutRef.current[field] !== null) {
+      window.clearTimeout(wheelSnapTimeoutRef.current[field]);
+    }
+
+    wheelSnapTimeoutRef.current[field] = window.setTimeout(() => {
+      const settledValue = getWheelValueFromScroll(element.scrollTop, options);
+
+      if (settledValue === undefined) {
+        return;
+      }
+
+      if (field === "reps") {
+        setRepsFromWheel(settledValue);
+      } else {
+        setWeightFromWheel(settledValue);
+      }
+
+      const settledIndex = options.findIndex((option) => isSameWheelValue(option.value, settledValue));
+      const settledScrollTop = settledIndex * WHEEL_ITEM_HEIGHT;
+
+      // A hard swipe can stop between snap points on mobile. Align once after it settles,
+      // without starting a second smooth scroll that would fight the user's gesture.
+      if (Math.abs(element.scrollTop - settledScrollTop) > 1) {
+        scrollWheelToValue(element, options, settledValue);
+      }
+
+      wheelSnapTimeoutRef.current[field] = null;
+    }, 140);
   }
 
   return (

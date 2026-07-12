@@ -269,11 +269,7 @@ html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrmPage .
 }
 
 .profileTrainerNotificationItem.actionable {
-  cursor: pointer;
-}
-
-.profileTrainerNotificationItem.actionable:active {
-  transform: scale(0.99);
+  cursor: default;
 }
 
 .profileTrainerNotificationItem > i {
@@ -316,6 +312,26 @@ html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrmPage .
   border-color: #9fca47;
   background: #9fca47;
   color: #101a08;
+}
+
+.profileTrainerNotificationActions {
+  grid-column: 2 / 4;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.profileTrainerNotificationActions button {
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid rgba(122, 91, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(122, 91, 255, 0.1);
+  color: #f6f1ff;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .profileTrainerNotificationsEmpty {
@@ -395,3 +411,8 @@ html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsEm
   color: #737b91;
 }
 
+html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationActions button {
+  border-color: rgba(101, 82, 230, 0.22);
+  background: rgba(101, 82, 230, 0.09);
+  color: #6552e6;
+}

@@ -1,5 +1,5 @@
 function getProfileSettingsModalTitle(section) {
-  if (section === "account") return "Аккаунт";
+  if (section === "account") return "Профиль и настройки";
   if (section === "profile") return "Профиль";
   return "Настройки";
 }
@@ -23,7 +23,7 @@ export default function ProfileSettingsModal({
   return (
     <div className="cabinetUtilityModalOverlay" role="presentation" onClick={onClose}>
       <section
-        className={`cabinetUtilityModal cabinetSettingsModal ${section === "settings" ? "compact" : ""}`}
+        className={`cabinetUtilityModal cabinetSettingsModal ${section === "settings" ? "compact" : ""} ${section === "account" ? "accountCompact" : ""} ${section === "profile" ? "profileCompact" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="cabinetSettingsModalTitle"

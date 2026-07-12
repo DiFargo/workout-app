@@ -12,6 +12,7 @@ import {
   Upload as ProgramUploadIcon
 } from "lucide-react";
 import { useState } from "react";
+import { getTrainerProgramStatusMeta } from "../../utils/trainerProgramLifecycle.js";
 
 export default function TrainerProgramOverviewPage({
   adminProgramCreateChoiceOpen,
@@ -141,6 +142,7 @@ export default function TrainerProgramOverviewPage({
             {adminTrainingTemplates.map((template) => {
               const stats = getTemplateStats(template);
               const isSelected = adminSelectedTemplateId === template.id;
+              const statusMeta = getTrainerProgramStatusMeta(template);
               const createdAt = template.createdAt ? new Date(template.createdAt) : null;
               const createdLabel = createdAt && !Number.isNaN(createdAt.getTime())
                 ? createdAt.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
@@ -168,7 +170,13 @@ export default function TrainerProgramOverviewPage({
                     <span><ProgramCycleIcon size={16} /><b>{stats.blocksCount}</b><small>микроцикла</small></span>
                     <span><ProgramListIcon size={16} /><b>{stats.exercisesCount}</b><small>упражнений</small></span>
                   </div>
-                  <footer><span>Создана: {createdLabel}</span><span>Автор: Вы</span><b>•••</b></footer>
+                  <footer>
+                    <span>Создана: {createdLabel}</span>
+                    <span className={`programsOverviewStatusBadge status-${statusMeta.tone}`} title={statusMeta.description}>
+                      {statusMeta.label}
+                    </span>
+                    <b>•••</b>
+                  </footer>
                 </button>
               );
             })}

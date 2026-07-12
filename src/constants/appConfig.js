@@ -1,8 +1,11 @@
-export const APP_VERSION = "v.1.991";
+export const APP_VERSION = `v.${typeof __APP_VERSION__ === "undefined" ? "test" : __APP_VERSION__}`;
 export const BARCODE_SEARCH_ENABLED = false;
 export const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 export const STORAGE_KEY = "workout_tracker_v1";
 export const ADMIN_EMAIL = "work.kriptonit.il@gmail.com";
+export const TRAINER_EMAIL_ALLOWLIST = [
+  "zahar.rusenko2000@gmail.com"
+];
 
 export const NUTRITION_STORAGE_KEY = "workout_nutrition_v1";
 export const NUTRITION_BACKUP_STORAGE_KEY = "workout_nutrition_backup_v1";
@@ -17,6 +20,7 @@ export const TELEGRAM_BOT_USERNAME = "tren_ai_coach_bot";
 export const TELEGRAM_PROFILE_STORAGE_KEY = "workout_telegram_profile_v1";
 
 export const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";
+export const BASIC_WORKOUT_PLAN_STORAGE_KEY = "basic_workout_plan_v1";
 export const WORKOUT_CALENDAR_STORAGE_KEY = "workout_calendar_v1";
 export const CLIENT_LAST_PAGE_STORAGE_KEY = "workout_client_last_page_v1";
 

@@ -19,6 +19,13 @@ export default function TrainerClientOverviewModals({
   setAdminProgramControlOpen,
   setAdminTaskComposerOpen
 }) {
+  const taskTemplates = [
+    { label: "Замеры", title: "Сделать контрольный замер" },
+    { label: "Фото", title: "Загрузить фото прогресса" },
+    { label: "Питание", title: "Заполнить дневник питания" },
+    { label: "Тренировка", title: "Выполнить ближайшую тренировку" }
+  ];
+
   return (
     <>
       {adminTaskComposerOpen && (
@@ -41,6 +48,17 @@ export default function TrainerClientOverviewModals({
                 <span>Что нужно сделать</span>
                 <input value={adminNewTaskTitle} onChange={(event) => setAdminNewTaskTitle(event.target.value)} placeholder="Например: сделать контрольный замер" autoFocus />
               </label>
+              <div className="trainerTaskTemplateRow" role="group" aria-label="Быстрые шаблоны задач">
+                {taskTemplates.map((template) => (
+                  <button
+                    type="button"
+                    key={template.label}
+                    onClick={() => setAdminNewTaskTitle(template.title)}
+                  >
+                    {template.label}
+                  </button>
+                ))}
+              </div>
               <label>
                 <span>Срок выполнения</span>
                 <input type="date" value={adminNewTaskDueDate} onChange={(event) => setAdminNewTaskDueDate(event.target.value)} />

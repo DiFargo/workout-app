@@ -128,6 +128,62 @@ export function getTrainerLastMeasurementAt(measurements = []) {
     : "";
 }
 
+export function getTrainerWorkoutFeedbackAttention(historyList = [], now = Date.now()) {
+  const nowTimestamp = getTrainerSummaryTimestamp(now) || Date.now();
+  const recentHistory = getTrainerSortedHistory(historyList)
+    .filter((entry) => {
+      const timestamp = getTrainerSummaryTimestamp(entry?.date || entry?.completedAt || entry?.createdAt);
+      return timestamp && nowTimestamp - timestamp <= 14 * 24 * 60 * 60 * 1000;
+    });
+
+  const badEntries = recentHistory.filter((entry) => {
+    const feedbackId = String(entry?.postWorkoutFeedback?.id || entry?.readiness?.id || "").toLowerCase();
+    return ["bad", "hard", "low", "pain"].includes(feedbackId);
+  });
+
+  if (badEntries.length >= 2) {
+    return {
+      id: "badFeedback",
+      reason: `${badEntries.length} тяжелые оценки после тренировок`,
+      date: badEntries[0]?.date || badEntries[0]?.completedAt || badEntries[0]?.createdAt || ""
+    };
+  }
+
+  const painEntry = recentHistory.find((entry) => {
+    const text = String(entry?.clientComment || "").toLowerCase();
+    return /боль|болит|болел|травм|сустав|головокруж|тошн|резк/.test(text);
+  });
+
+  if (painEntry) {
+    return {
+      id: "pain",
+      reason: "Клиент сообщил о боли после тренировки",
+      date: painEntry.date || painEntry.completedAt || painEntry.createdAt || "",
+      comment: String(painEntry.clientComment || "").trim()
+    };
+  }
+
+  if (badEntries.length === 1) {
+    return {
+      id: "badFeedback",
+      reason: "Плохое самочувствие после тренировки",
+      date: badEntries[0]?.date || badEntries[0]?.completedAt || badEntries[0]?.createdAt || ""
+    };
+  }
+
+  const commentEntry = recentHistory.find((entry) => String(entry?.clientComment || "").trim());
+  if (commentEntry) {
+    return {
+      id: "comment",
+      reason: "Есть комментарий клиента после тренировки",
+      date: commentEntry.date || commentEntry.completedAt || commentEntry.createdAt || "",
+      comment: String(commentEntry.clientComment || "").trim()
+    };
+  }
+
+  return null;
+}
+
 export function getTrainerProgramCompletionPercent(
   assignedWorkoutCount = 0,
   completedWorkoutCount = 0,
@@ -140,6 +196,39 @@ export function getTrainerProgramCompletionPercent(
 
   const completedCount = Number(completedWorkoutCount) || 0;
   return Math.min(100, Math.round(completedCount / assignedCount * 100));
+}
+
+export function getTrainerProgramEndingAttention(
+  assignedWorkoutCount = 0,
+  completedWorkoutCount = 0
+) {
+  const assignedCount = Number(assignedWorkoutCount) || 0;
+  const completedCount = Math.max(0, Number(completedWorkoutCount) || 0);
+  if (assignedCount <= 0) return null;
+
+  const remainingCount = Math.max(0, assignedCount - completedCount);
+  if (remainingCount === 0) {
+    return {
+      id: "completed",
+      reason: "Программа завершена, назначьте следующий блок",
+      remainingWorkouts: 0,
+      completedWorkoutCount: completedCount,
+      assignedWorkoutCount: assignedCount
+    };
+  }
+
+  const completionPercent = completedCount / assignedCount * 100;
+  if (assignedCount >= 4 && (remainingCount <= 2 || completionPercent >= 75)) {
+    return {
+      id: "endingSoon",
+      reason: `До конца программы: ${remainingCount} ${pluralizeRu(remainingCount, "тренировка", "тренировки", "тренировок")}`,
+      remainingWorkouts: remainingCount,
+      completedWorkoutCount: completedCount,
+      assignedWorkoutCount: assignedCount
+    };
+  }
+
+  return null;
 }
 
 export function getTrainerAssignedWorkoutCount(client = {}, workouts = []) {
@@ -234,6 +323,9 @@ export function getClientActivityStatus(summary = {}) {
     nutritionDays >= 5 ||
     measurementDays === null ||
     measurementDays >= 30 ||
+    (Number(summary.activeTrainerTasksCount) || 0) > 0 ||
+    summary.workoutFeedbackAttention?.id ||
+    summary.programEndingAttention?.id ||
     summary.plateau?.isPlateau ||
     ["overdue", "soon"].includes(summary.paymentAttention?.id)
   ) {
@@ -263,6 +355,18 @@ export function getClientAttentionReasons(summary = {}) {
 
   if (measurementDays === null) reasons.push("нет замеров");
   else if (measurementDays >= 30) reasons.push(`нет замера ${measurementDays} ${getTrainerDayWord(measurementDays)}`);
+  const activeTrainerTasksCount = Number(summary.activeTrainerTasksCount) || 0;
+  if (activeTrainerTasksCount > 0) {
+    reasons.push(activeTrainerTasksCount === 1
+      ? "есть активная задача"
+      : `${activeTrainerTasksCount} ${pluralizeRu(activeTrainerTasksCount, "активная задача", "активные задачи", "активных задач")}`);
+  }
+  if (summary.workoutFeedbackAttention?.reason) {
+    reasons.push(summary.workoutFeedbackAttention.reason.toLowerCase());
+  }
+  if (summary.programEndingAttention?.reason) {
+    reasons.push(summary.programEndingAttention.reason.toLowerCase());
+  }
   if (summary.plateau?.isPlateau) reasons.push(`вес стоит ${summary.plateau.days} ${getTrainerDayWord(summary.plateau.days)}`);
   if (["overdue", "soon"].includes(summary.paymentAttention?.id)) {
     reasons.push(summary.paymentAttention.label.toLowerCase());
@@ -289,6 +393,9 @@ export function getTrainerClientEmptySummary(client = {}) {
     plateau: { isPlateau: false, days: 0, delta: null },
     payment: null,
     paymentAttention: getClientPaymentAttention(null),
+    activeTrainerTasksCount: Number(client.activeTrainerTasksCount) || 0,
+    workoutFeedbackAttention: client.workoutFeedbackAttention || null,
+    programEndingAttention: client.programEndingAttention || null,
     recentEvents: [],
     programCompletionPercent: null
   };
@@ -324,6 +431,9 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
     Number(previousSummary.assignedWorkoutCount) || 0
   );
   const explicitCompletion = Number(client.programCompletionPercent ?? previousSummary.programCompletionPercent);
+  const programEndingAttention = client.programEndingAttention ||
+    previousSummary.programEndingAttention ||
+    getTrainerProgramEndingAttention(assignedWorkoutCount, completedWorkoutCount);
 
   return {
     clientId: client.id,
@@ -361,6 +471,14 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
     plateau: previousSummary.plateau || { isPlateau: false, days: 0, delta: null },
     payment: previousSummary.payment || null,
     paymentAttention: previousSummary.paymentAttention || getClientPaymentAttention(null),
+    activeTrainerTasksCount: Number(
+      client.activeTrainerTasksCount ??
+      client.trainerTasksActiveCount ??
+      previousSummary.activeTrainerTasksCount ??
+      0
+    ) || 0,
+    workoutFeedbackAttention: client.workoutFeedbackAttention || previousSummary.workoutFeedbackAttention || null,
+    programEndingAttention,
     recentEvents: previousSummary.recentEvents || [],
     programCompletionPercent: Number.isFinite(explicitCompletion)
       ? Math.round(explicitCompletion)

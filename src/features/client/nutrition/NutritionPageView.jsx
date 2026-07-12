@@ -4,8 +4,6 @@ import NutritionPage from "./NutritionPage";
 import NutritionUndoDeleteToast from "./NutritionUndoDeleteToast";
 
 export default function NutritionPageView({
-  appVersion,
-  showVersionBadge = true,
   pickerOpen,
   calendarOpen,
   activeMeal,
@@ -22,7 +20,7 @@ export default function NutritionPageView({
   onUndoDelete
 }) {
   return (
-    <NutritionPage appVersion={appVersion} showVersionBadge={showVersionBadge}>
+    <NutritionPage>
       <NutritionMainContent
         visible={!pickerOpen}
         calendarOpen={calendarOpen}

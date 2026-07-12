@@ -62,6 +62,14 @@
   font-size: 26px;
 }
 
+.loginInviteNote {
+  margin: -4px 0 4px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: center;
+}
+
 .loginCard input,
 .exercise input {
   width: 100%;
@@ -134,6 +142,40 @@
 
 .loginBtn:active {
   transform: scale(0.98);
+}
+
+.loginGoogleBtn {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.loginGoogleBtn span {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff;
+  color: #151824;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.loginGoogleBtn:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 
 .loginError {

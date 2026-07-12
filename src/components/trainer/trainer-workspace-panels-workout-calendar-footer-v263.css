@@ -39,3 +39,261 @@
   color: var(--tn-muted);
   font-size: 9px;
 }
+
+.trainerClientWorkoutHistoryBlock {
+  display: grid;
+  gap: 14px;
+}
+
+.trainerClientWorkoutHistoryBlock > header p {
+  max-width: 640px;
+  margin: 5px 0 0;
+  color: var(--tn-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.trainerClientWorkoutHistoryBlock > header > strong {
+  min-width: 82px;
+  min-height: 54px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  border: 1px solid #eceaf3;
+  border-radius: 9px;
+  background: #faf9ff;
+  color: var(--tn-purple);
+  font-size: 20px;
+}
+
+.trainerClientWorkoutHistoryBlock > header > strong small {
+  color: var(--tn-muted);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.trainerClientWorkoutHistoryList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
+.trainerClientWorkoutHistoryList article {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr) minmax(92px, auto) minmax(110px, .45fr);
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border: 1px solid #eceaf3;
+  border-radius: 10px;
+  background: #fbfbfe;
+}
+
+.trainerClientWorkoutHistoryList article > span {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #f0ebff;
+  font-size: 15px;
+}
+
+.trainerClientWorkoutHistoryList article > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.trainerClientWorkoutHistoryList strong,
+.trainerClientWorkoutHistoryList small,
+.trainerClientWorkoutHistoryList p {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerClientWorkoutHistoryList strong {
+  color: var(--tn-text);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.trainerClientWorkoutHistoryList time {
+  color: var(--tn-muted);
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.trainerClientWorkoutHistoryList small {
+  color: var(--tn-muted);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.trainerClientWorkoutHistoryList p {
+  margin: 0;
+  color: var(--tn-purple);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  .trainerClientWorkoutHistoryList article {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .trainerClientWorkoutHistoryList article > p {
+    grid-column: 2 / -1;
+  }
+}
+
+.trainerClientHistoryMore {
+  display: grid;
+  gap: 10px;
+}
+
+.trainerClientHistoryMore summary {
+  width: fit-content;
+  cursor: pointer;
+  color: var(--tn-purple);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.trainerClientWorkoutReviewPanel {
+  display: grid;
+  gap: 14px;
+}
+
+.trainerWorkoutReviewAction {
+  justify-self: start;
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid rgba(108, 78, 255, .22);
+  border-radius: 10px;
+  background: #f7f4ff;
+  color: var(--tn-purple);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.trainerWorkoutReviewAction:hover,
+.trainerWorkoutReviewAction:focus-visible {
+  border-color: var(--tn-purple);
+  background: #eee9ff;
+}
+
+.trainerClientWorkoutReviewPanel > header p {
+  max-width: 640px;
+  margin: 5px 0 0;
+  color: var(--tn-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.trainerClientWorkoutReviewPanel > header > strong {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 1px solid rgba(43, 190, 117, 0.22);
+  border-radius: 999px;
+  background: rgba(43, 190, 117, 0.09);
+  color: var(--tn-green);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.trainerClientWorkoutReviewPanel > header > strong.warning {
+  border-color: rgba(255, 164, 28, 0.28);
+  background: rgba(255, 164, 28, 0.1);
+  color: #b87310;
+}
+
+.trainerWorkoutReviewGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.trainerWorkoutReviewGrid article {
+  min-width: 0;
+  min-height: 78px;
+  padding: 12px;
+  border: 1px solid #eceaf3;
+  border-radius: 10px;
+  background: #fbfbfe;
+}
+
+.trainerWorkoutReviewGrid article.warning {
+  border-color: rgba(255, 164, 28, 0.24);
+  background: rgba(255, 164, 28, 0.06);
+}
+
+.trainerWorkoutReviewGrid span {
+  display: block;
+  color: var(--tn-muted);
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.trainerWorkoutReviewGrid strong {
+  display: block;
+  margin-top: 7px;
+  color: var(--tn-text);
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.trainerWorkoutReviewGrid small {
+  display: block;
+  margin-top: 4px;
+  color: var(--tn-muted);
+  font-size: 9px;
+  font-weight: 750;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trainerWorkoutReviewFeedback {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(107, 78, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(107, 78, 255, 0.06);
+}
+
+.trainerWorkoutReviewFeedback > span {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.trainerWorkoutReviewFeedback strong {
+  color: var(--tn-text);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.trainerWorkoutReviewFeedback p {
+  margin: 4px 0 0;
+  color: #5f6576;
+  font-size: 10px;
+  line-height: 1.45;
+  font-weight: 650;
+}

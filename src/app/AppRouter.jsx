@@ -10,6 +10,7 @@ import {
   loadWorkoutModePage,
   loadWorkoutPlanPage
 } from "./appRouteLoaders";
+import AccessDeniedScreen from "../components/common/AccessDeniedScreen";
 import RouteFallback from "./RouteFallback";
 
 const AdminPanelHub = lazy(loadAdminPanelHub);
@@ -35,8 +36,10 @@ export default function AppRouter({
   renderNutritionPage,
   workoutListProps,
   basicWorkoutQuiz,
+  workoutModePreference,
   onBackToMain,
   onOpenBasicWorkoutQuiz,
+  onOpenSavedBasicWorkoutsOrQuiz,
   onOpenIndividualWorkouts,
   onSetWorkoutModeRemember,
   onSetPage,
@@ -93,6 +96,15 @@ export default function AppRouter({
   isWorkoutCompletedByHistory
 }) {
   if (page === APP_PAGES.ADMIN_PANEL) {
+    if (!canUseAdminFeatures()) {
+      return (
+        <AccessDeniedScreen
+          message="Админ-панель доступна только главному администратору."
+          onBack={() => onSetPage(APP_PAGES.MAIN)}
+        />
+      );
+    }
+
     return renderLazyRoute(
       <AdminPanelHub
         canUseAdminFeatures={canUseAdminFeatures}
@@ -115,10 +127,11 @@ export default function AppRouter({
       <WorkoutModePage
         appVersion={appVersion}
         renderClientMainBottomBar={renderClientMainBottomBar}
+        workoutModePreference={workoutModePreference}
         workoutModeRemember={workoutModeRemember}
         canUseTrainerFeatures={canUseTrainerFeatures}
         onBackToMain={onBackToMain}
-        onOpenBasicWorkoutQuiz={onOpenBasicWorkoutQuiz}
+        onOpenBasicWorkouts={onOpenSavedBasicWorkoutsOrQuiz}
         onOpenIndividualWorkouts={onOpenIndividualWorkouts}
         onToggleWorkoutModeRemember={onSetWorkoutModeRemember}
         onOpenTraining={onOpenTrainingEntry}
@@ -136,10 +149,15 @@ export default function AppRouter({
       <BasicWorkoutQuizPage
         appVersion={appVersion}
         renderClientMainBottomBar={renderClientMainBottomBar}
+        workoutModePreference={workoutModePreference}
+        workoutModeRemember={workoutModeRemember}
         basicWorkoutQuiz={basicWorkoutQuiz}
         onBasicWorkoutQuizChange={onBasicWorkoutQuizChange}
         onGoBackToMode={() => onSetPage(APP_PAGES.WORKOUT_MODE)}
+        onOpenIndividualWorkouts={onOpenIndividualWorkouts}
+        onOpenBasicWorkouts={onOpenSavedBasicWorkoutsOrQuiz}
         onApplyBasicWorkoutPlan={onApplyBasicWorkoutPlan}
+        onToggleWorkoutModeRemember={onSetWorkoutModeRemember}
         canUseTrainerFeatures={canUseTrainerFeatures}
         onGoMain={onBackToMain}
         onOpenTraining={onOpenTrainingEntry}
