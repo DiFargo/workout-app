@@ -30,7 +30,7 @@ export function useNutritionRuntimeEffects({
     if (nutritionUndoTimerRef.current) {
       window.clearTimeout(nutritionUndoTimerRef.current);
     }
-  }, []);
+  }, [nutritionUndoTimerRef]);
 
   useEffect(() => {
     if (!user?.uid || !nutritionCloudReady) return;
@@ -43,7 +43,7 @@ export function useNutritionRuntimeEffects({
 
     safeWriteUserJsonStorage(nutritionStorageKey, user.uid, localNutrition);
     addUserLocalBackup(nutritionBackupStorageKey, user.uid, { nutrition: localNutrition }, 12);
-  }, [nutrition, nutritionCloudReady, user?.uid]);
+  }, [nutrition, nutritionCloudReady, nutritionBackupStorageKey, nutritionStorageKey, user?.uid]);
 
   useEffect(() => {
     if (!barcodeScannerOpen || !barcodeSearchEnabled) return undefined;
@@ -108,6 +108,9 @@ export function useNutritionRuntimeEffects({
       if (frameId) cancelAnimationFrame(frameId);
       if (stream) stream.getTracks().forEach((track) => track.stop());
     };
+    // Scanner callbacks are event handlers supplied by the current nutrition route.
+    // Restarting the camera whenever their identity changes would interrupt scanning.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [barcodeScannerOpen]);
 
   useEffect(() => {
@@ -148,5 +151,5 @@ export function useNutritionRuntimeEffects({
     }, 650);
 
     return () => clearTimeout(timer);
-  }, [nutrition, nutritionCloudReady]);
+  }, [auth.currentUser, nutrition, nutritionBackupStorageKey, nutritionCloudReady, showAppError]);
 }

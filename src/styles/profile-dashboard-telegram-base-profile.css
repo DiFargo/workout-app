@@ -1,252 +1,39 @@
-/* APP50 TELEGRAM PROFILE V1 */
-.profileAvatarBig.telegram {
-  background:
-    linear-gradient(180deg, rgba(42,171,238,.22), rgba(42,171,238,.08));
-  border-color: rgba(42,171,238,.28);
-}
+/* Shared live Telegram styles for the profile avatar and trainer workspace. */
 
-.profileAvatarBig img,
-.profileTelegramAvatar img,
-.adminClientTelegramAvatar img,
-.profileSettingsTelegramAvatar img,
-.profileTelegramManageAvatar img {
+.adminClientTelegramAvatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.profileAvatarBig img,
-.profileTelegramAvatar img {
-  border-radius: inherit;
-  display: block;
-}
-
-.profileTelegramStatus,
 .adminClientTelegramBadge {
   min-height: 32px;
   padding: 0 10px;
-  border-radius: 999px;
   display: grid;
   place-items: center;
-  background: rgba(255,255,255,.045);
-  color: rgba(255,255,255,.55);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.55);
   font-size: 10px;
   font-weight: 950;
   white-space: nowrap;
 }
 
-.profileTelegramStatus.connected,
 .adminClientTelegramBadge.connected {
-  background: rgba(42,171,238,.14);
-  border: 1px solid rgba(42,171,238,.24);
+  border: 1px solid rgba(42, 171, 238, 0.24);
+  background: rgba(42, 171, 238, 0.14);
 }
 
-.profileTelegramStatus.connected {
-  color: rgba(180,230,255,.95);
-}
-
-.profileTelegramAvatar {
-  width: 54px;
-  height: 54px;
-  border-radius: 18px;
-  font-size: 26px;
-}
-
-.profileTelegramAvatar,
 .adminClientTelegramAvatar {
   display: grid;
   place-items: center;
-  background: rgba(42,171,238,.14);
-  border: 1px solid rgba(42,171,238,.18);
+  border: 1px solid rgba(42, 171, 238, 0.18);
+  background: rgba(42, 171, 238, 0.14);
 }
 
-.profileTelegramActions {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 9px;
-  margin-top: 12px;
-}
-
-.profileTelegramActions button,
-.profileTelegramSave,
 .adminClientTelegramActions button,
-.adminTelegramSendButton,
-.profileTelegramBotActions button,
-.profileTelegramCheckButton {
-  color: rgba(205,239,255,.96);
+.adminTelegramSendButton {
+  color: rgba(205, 239, 255, 0.96);
   font-weight: 950;
   cursor: pointer;
-}
-
-.profileTelegramActions button,
-.profileTelegramSave {
-  min-height: 44px;
-  padding: 0 13px;
-  border-radius: 15px;
-  border: 1px solid rgba(42,171,238,.28);
-  background: rgba(42,171,238,.14);
-  font-size: 13px;
-}
-
-.profileTelegramActions button.danger {
-  border-color: rgba(255,90,90,.24);
-  background: rgba(255,90,90,.11);
-  color: #ffaaaa;
-}
-
-.profileTelegramModalOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 20000;
-  display: grid;
-  place-items: center;
-  padding: 18px;
-  background: rgba(0,0,0,.72);
-  backdrop-filter: blur(14px);
-}
-
-.profileTelegramModal {
-  width: min(100%, 430px);
-  position: relative;
-  padding: 22px;
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at top right, rgba(42,171,238,.16), transparent 42%),
-    linear-gradient(180deg, rgba(18,23,19,.98), rgba(7,10,8,.99));
-  border: 1px solid rgba(42,171,238,.2);
-  box-shadow: 0 30px 90px rgba(0,0,0,.55);
-}
-
-.profileTelegramModalClose {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.045);
-  color: rgba(255,255,255,.78);
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.profileTelegramModal h3 {
-  margin: 0;
-  color: #fff;
-  font-size: 26px;
-}
-
-.profileTelegramModal p {
-  margin: 8px 42px 16px 0;
-  color: rgba(255,255,255,.5);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.4;
-}
-
-.profileTelegramModal label {
-  display: grid;
-  gap: 7px;
-  margin-bottom: 10px;
-}
-
-.profileTelegramModal label span {
-  color: rgba(255,255,255,.46);
-  font-size: 11px;
-  font-weight: 950;
-}
-
-.profileTelegramModal input:not([type="checkbox"]) {
-  min-height: 46px;
-  border-radius: 15px;
-  border: 1px solid rgba(255,255,255,.075);
-  background: rgba(0,0,0,.22);
-  color: #fff;
-  padding: 0 12px;
-  font-size: 14px;
-  font-weight: 850;
-}
-
-.profileTelegramSave {
-  width: 100%;
-  margin-top: 4px;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramModalOverlay {
-  background: rgba(26, 30, 46, 0.34);
-  backdrop-filter: blur(14px);
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramModal {
-  border-color: #e1e4ee;
-  background:
-    radial-gradient(circle at top right, rgba(117, 101, 232, 0.1), transparent 44%),
-    #ffffff;
-  color: #151824;
-  box-shadow: 0 28px 90px rgba(55, 64, 112, 0.22);
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramModalClose {
-  border-color: #e1e4ee;
-  background: #ffffff;
-  color: #5d6372;
-  box-shadow: 0 10px 26px rgba(55, 64, 112, 0.1);
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramModal h3 {
-  color: #151824;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramModal p {
-  color: #747b8d;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramModal label span {
-  color: #8a8f9c;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramModal input:not([type="checkbox"]) {
-  border-color: #e1e4ee;
-  background: #ffffff;
-  color: #151824;
-  box-shadow: 0 10px 22px rgba(55, 64, 112, 0.05);
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramModal input:not([type="checkbox"])::placeholder {
-  color: #a6acba;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramSave.ghost {
-  border-color: #dedaf8 !important;
-  background: #ffffff !important;
-  color: #6552e6 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramCheckButton {
-  border-color: transparent;
-  background: linear-gradient(135deg, #6552e6, #2d6ff2);
-  color: #ffffff;
-  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22);
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramCheckButton:disabled {
-  opacity: 0.62;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramAuthStatus {
-  border-color: #dedaf8;
-  background: #f7f5ff;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTelegramAuthStatus span {
-  color: #6552e6;
-}
-
-@media (max-width: 420px) {
-  .profileTelegramActions {
-    grid-template-columns: 1fr;
-  }
 }

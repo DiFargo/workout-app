@@ -1,0 +1,828 @@
+.root,
+.root * {
+  box-sizing: border-box;
+}
+
+.root {
+  width: 100%;
+  min-width: 0;
+  min-height: 100dvh;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: max(26px, calc(env(safe-area-inset-top) + 16px)) 14px calc(18px + env(safe-area-inset-bottom));
+  background: var(--background-ai-coach-page);
+  color: var(--color-ai-coach-text);
+  font-family: inherit;
+  overflow-x: hidden;
+}
+
+.back {
+  width: 46px;
+  min-width: 46px;
+  max-width: 46px;
+  height: 46px;
+  min-height: 46px;
+  max-height: 46px;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  position: fixed;
+  top: max(16px, calc(env(safe-area-inset-top) + 14px));
+  left: 14px;
+  z-index: 80;
+  border: 1px solid var(--color-ai-coach-back-border);
+  border-radius: 50%;
+  background: var(--background-ai-coach-back);
+  color: var(--color-ai-coach-back);
+  box-shadow: var(--shadow-ai-coach-back);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.backIcon {
+  display: block;
+  color: currentColor;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.back:active {
+  transform: scale(0.96);
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--color-ai-coach-focus);
+  outline-offset: 3px;
+}
+
+.srOnly {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  border: 0;
+  white-space: nowrap;
+}
+
+.hero {
+  margin: 0 0 12px;
+  padding: 18px 18px 16px;
+  border-radius: 28px;
+  text-align: center;
+}
+
+.badge {
+  width: fit-content;
+  margin: 0 auto 10px;
+  padding: 8px 13px;
+  display: block;
+  border: 1px solid var(--color-ai-coach-accent-border);
+  border-radius: 999px;
+  background: var(--background-ai-coach-accent-soft);
+  color: var(--color-ai-coach-accent);
+  -webkit-text-fill-color: var(--color-ai-coach-accent);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: normal;
+  letter-spacing: 0.8px;
+}
+
+.hero h1 {
+  margin: 0;
+  color: var(--color-ai-coach-heading);
+  -webkit-text-fill-color: var(--color-ai-coach-heading);
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 0.98;
+  letter-spacing: -1.2px;
+}
+
+.hero p {
+  max-width: 380px;
+  margin: 8px auto 0;
+  color: var(--color-ai-coach-muted);
+  -webkit-text-fill-color: var(--color-ai-coach-muted);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.32;
+}
+
+.resultCard,
+.planShell {
+  width: 100%;
+  min-width: 0;
+  margin: 0 auto 12px;
+  padding: 14px;
+  border-radius: 26px;
+}
+
+.resultCard {
+  border: 1px solid var(--color-ai-coach-border);
+  background: var(--background-ai-coach-card);
+  box-shadow: var(--shadow-ai-coach-card);
+}
+
+.resultTop {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.resultTop > div {
+  min-width: 0;
+}
+
+.resultTop span {
+  width: 46px;
+  height: 46px;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-ai-coach-accent-soft-border);
+  border-radius: 18px;
+  background: var(--background-ai-coach-accent-icon);
+  font-size: 24px;
+}
+
+.resultTop h2 {
+  margin: 0;
+  color: var(--color-ai-coach-heading);
+  -webkit-text-fill-color: var(--color-ai-coach-heading);
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -0.4px;
+}
+
+.resultTop p {
+  margin: 7px 0 0;
+  color: var(--color-ai-coach-muted-strong);
+  -webkit-text-fill-color: var(--color-ai-coach-muted-strong);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.resultTop > strong {
+  min-width: 72px;
+  padding: 13px 12px;
+  border: 1px solid var(--color-ai-coach-score-border);
+  border-radius: 22px;
+  background: var(--background-ai-coach-score);
+  color: var(--color-ai-coach-accent-bright);
+  -webkit-text-fill-color: var(--color-ai-coach-accent-bright);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+}
+
+.meter {
+  height: 8px;
+  margin: 16px 0;
+  border-radius: 999px;
+  background: var(--background-ai-coach-meter);
+  overflow: hidden;
+}
+
+.meterFill {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: var(--gradient-ai-coach-primary);
+  box-shadow: var(--shadow-ai-coach-meter);
+  transition: width 0.32s ease;
+}
+
+.blocks {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.miniBlock {
+  padding: 14px;
+  border: 1px solid var(--color-ai-coach-border-soft);
+  border-radius: 22px;
+  background: var(--background-ai-coach-surface-soft);
+}
+
+.miniBlock.accent {
+  border-color: var(--color-ai-coach-accent-soft-border);
+  background: var(--background-ai-coach-accent-panel);
+}
+
+.miniBlock h3 {
+  margin: 0 0 10px;
+  color: var(--color-ai-coach-heading-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-heading-soft);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.miniBlock p {
+  margin: 8px 0 0;
+  color: var(--color-ai-coach-copy);
+  -webkit-text-fill-color: var(--color-ai-coach-copy);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.featuresGrid {
+  width: 100%;
+  min-width: 0;
+  padding: 0 0 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.featureCard {
+  width: 100%;
+  min-width: 0;
+  min-height: 78px;
+  padding: 12px 10px;
+  display: block;
+  border: 1px solid var(--color-ai-coach-feature-border);
+  border-radius: 20px;
+  background: var(--background-ai-coach-feature);
+  color: var(--color-ai-coach-heading);
+  box-shadow: var(--shadow-ai-coach-feature);
+  text-align: left;
+  cursor: pointer;
+}
+
+.featureCard.active {
+  border-color: var(--color-ai-coach-feature-active-border);
+  background: var(--background-ai-coach-feature-active);
+}
+
+.featureCard:active {
+  transform: scale(0.98);
+}
+
+.featureCard:focus-visible {
+  outline: 2px solid var(--color-ai-coach-focus);
+  outline-offset: 2px;
+}
+
+.featureCard > span {
+  width: 38px;
+  height: 38px;
+  margin: 0 0 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: var(--background-ai-coach-feature-icon);
+  font-size: 21px;
+}
+
+.featureCard > strong {
+  display: block;
+  color: var(--color-ai-coach-heading-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-heading-soft);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.featureCard > small {
+  margin: 4px 0 0;
+  display: block;
+  color: var(--color-ai-coach-muted-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-muted-soft);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.onboardingCard,
+.planCard {
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--color-ai-coach-border);
+  border-radius: 24px;
+  background: var(--background-ai-coach-plan-card);
+  box-shadow: var(--shadow-ai-coach-plan-card);
+}
+
+.onboardingHead > span,
+.planHero span,
+.planInsight > span,
+.twoColumn > div > span,
+.improveBox > span {
+  margin: 0 0 8px;
+  display: inline-flex;
+  color: var(--color-ai-coach-accent);
+  -webkit-text-fill-color: var(--color-ai-coach-accent);
+  font-size: 11px;
+  font-weight: 950;
+  line-height: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.onboardingHead h2,
+.planHero h2 {
+  margin: 0;
+  color: var(--color-ai-coach-heading);
+  -webkit-text-fill-color: var(--color-ai-coach-heading);
+  font-size: 21px;
+  font-weight: 950;
+  line-height: 1.08;
+  letter-spacing: -0.6px;
+}
+
+.onboardingHead p,
+.planHero p,
+.planInsight p,
+.twoColumn p,
+.improveBox p {
+  margin: 9px 0 0;
+  color: var(--color-ai-coach-copy-plan);
+  -webkit-text-fill-color: var(--color-ai-coach-copy-plan);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.bodyReadOnlyCard {
+  width: 100%;
+  margin: 14px 0 16px;
+  padding: 14px;
+  border: 1px solid var(--color-ai-coach-feature-border);
+  border-radius: 24px;
+  background: var(--background-ai-coach-body-card);
+  box-shadow: var(--shadow-ai-coach-inset);
+}
+
+.bodyReadOnlyHead {
+  margin: 0 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.bodyReadOnlyHead strong {
+  color: var(--color-ai-coach-heading-strong);
+  -webkit-text-fill-color: var(--color-ai-coach-heading-strong);
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.bodyReadOnlyHead small {
+  color: var(--color-ai-coach-muted-strong);
+  -webkit-text-fill-color: var(--color-ai-coach-muted-strong);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.bodyReadOnlyGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.bodyReadOnlyGrid > span {
+  min-width: 0;
+  min-height: 56px;
+  padding: 9px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-ai-coach-border-soft);
+  border-radius: 16px;
+  background: var(--background-ai-coach-body-value);
+  text-align: center;
+}
+
+.bodyReadOnlyGrid i {
+  color: var(--color-ai-coach-muted-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-muted-soft);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.bodyReadOnlyGrid b {
+  margin: 4px 0 0;
+  color: var(--color-ai-coach-heading-strong);
+  -webkit-text-fill-color: var(--color-ai-coach-heading-strong);
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.profileLink,
+.primaryButton,
+.adaptButton,
+.planActions button {
+  width: 100%;
+  border: 0;
+  background: var(--gradient-ai-coach-primary);
+  color: var(--color-ai-coach-primary-text);
+  -webkit-text-fill-color: var(--color-ai-coach-primary-text);
+  font-family: inherit;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.profileLink {
+  height: 46px;
+  margin: 10px 0 0;
+  border-radius: 16px;
+  font-size: 13px;
+}
+
+.trainingDaysPicker {
+  margin: 10px 0 0;
+  padding: 12px;
+  border: 1px solid var(--color-ai-coach-border-soft);
+  border-radius: 20px;
+  background: var(--background-ai-coach-surface-subtle);
+}
+
+.trainingDaysHead {
+  margin: 0 0 10px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.trainingDaysHead strong {
+  color: var(--color-ai-coach-heading-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-heading-soft);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.trainingDaysHead small {
+  color: var(--color-ai-coach-muted-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-muted-soft);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.trainingDaysGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(42px, 1fr));
+  gap: 6px;
+}
+
+.trainingDaysGrid button {
+  min-width: 0;
+  min-height: 42px;
+  border: 1px solid var(--color-ai-coach-feature-border);
+  border-radius: 14px;
+  background: var(--background-ai-coach-surface-soft);
+  color: var(--color-ai-coach-copy);
+  -webkit-text-fill-color: var(--color-ai-coach-copy);
+  font-size: 12px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.trainingDaysGrid button.active {
+  border-color: var(--color-ai-coach-feature-active-border);
+  background: var(--background-ai-coach-training-active);
+  color: var(--color-ai-coach-training-active);
+  -webkit-text-fill-color: var(--color-ai-coach-training-active);
+  box-shadow: var(--shadow-ai-coach-training-active);
+}
+
+.goalPicker {
+  margin: 10px 0 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.goalPicker button {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--color-ai-coach-feature-border);
+  border-radius: 19px;
+  background: var(--background-ai-coach-surface-soft);
+  color: var(--color-ai-coach-heading);
+  text-align: left;
+  cursor: pointer;
+}
+
+.goalPicker button.active {
+  border-color: var(--color-ai-coach-feature-active-border);
+  background: var(--background-ai-coach-accent-panel);
+}
+
+.goalPicker strong {
+  display: block;
+  color: var(--color-ai-coach-heading);
+  -webkit-text-fill-color: var(--color-ai-coach-heading);
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.goalPicker small {
+  margin: 3px 0 0;
+  display: block;
+  color: var(--color-ai-coach-muted-strong);
+  -webkit-text-fill-color: var(--color-ai-coach-muted-strong);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.primaryButton,
+.planActions button {
+  min-height: 52px;
+  margin: 12px 0 0;
+  border-radius: 19px;
+  font-size: 16px;
+}
+
+.planHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 76px;
+  align-items: start;
+  gap: 14px;
+}
+
+.planHero > strong {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  background: var(--gradient-ai-coach-primary);
+  color: var(--color-ai-coach-primary-text);
+  -webkit-text-fill-color: var(--color-ai-coach-primary-text);
+  box-shadow: var(--shadow-ai-coach-score);
+  font-size: 19px;
+  font-weight: 950;
+}
+
+.todayMacros {
+  margin: 16px 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.todayMacros > div,
+.weeksGrid > div,
+.twoColumn > div,
+.planInsight,
+.improveBox {
+  border: 1px solid var(--color-ai-coach-border-soft);
+  border-radius: 20px;
+  background: var(--background-ai-coach-surface-soft);
+}
+
+.todayMacros > div {
+  min-width: 0;
+  min-height: 78px;
+  padding: 11px 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.todayMacros span,
+.weeksGrid span {
+  color: var(--color-ai-coach-muted-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-muted-soft);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.todayMacros strong {
+  margin: 5px 0 0;
+  color: var(--color-ai-coach-heading);
+  -webkit-text-fill-color: var(--color-ai-coach-heading);
+  font-size: 20px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.todayMacros small {
+  margin: 4px 0 0;
+  color: var(--color-ai-coach-muted-faint);
+  -webkit-text-fill-color: var(--color-ai-coach-muted-faint);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.planInsight,
+.improveBox {
+  margin: 12px 0 0;
+  padding: 14px;
+}
+
+.badgesRow {
+  padding: 12px 0 2px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.badgesRow::-webkit-scrollbar {
+  display: none;
+}
+
+.badgesRow > span {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  border: 1px solid var(--color-ai-coach-border);
+  border-radius: 999px;
+  background: var(--background-ai-coach-surface-subtle);
+  color: var(--color-ai-coach-heading-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-heading-soft);
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.badgesRow > span.good {
+  border-color: var(--color-ai-coach-good-border);
+  background: var(--background-ai-coach-good);
+}
+
+.badgesRow > span.warning {
+  border-color: var(--color-ai-coach-warning-border);
+  background: var(--background-ai-coach-warning);
+}
+
+.badgesRow i {
+  margin: 0 5px 0 0;
+  font-style: normal;
+}
+
+.trainingDayInfo {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--color-ai-coach-border-soft);
+  border-radius: 20px;
+  background: var(--background-ai-coach-surface-subtle);
+}
+
+.trainingDayInfo.active {
+  border-color: var(--color-ai-coach-good-border);
+  background: var(--background-ai-coach-training-day);
+}
+
+.trainingDayInfo span {
+  display: block;
+  color: var(--color-ai-coach-heading-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-heading-soft);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.trainingDayInfo p {
+  margin: 5px 0 0;
+  color: var(--color-ai-coach-copy-plan);
+  -webkit-text-fill-color: var(--color-ai-coach-copy-plan);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.32;
+}
+
+.adaptButton {
+  min-height: 52px;
+  margin: 12px 0 0;
+  border: 1px solid var(--color-ai-coach-good-border);
+  border-radius: 20px;
+  background: var(--background-ai-coach-accent-panel);
+  color: var(--color-ai-coach-adapt);
+  -webkit-text-fill-color: var(--color-ai-coach-adapt);
+  font-size: 15px;
+}
+
+.adaptResult {
+  border-color: var(--color-ai-coach-accent-soft-border);
+  background: var(--background-ai-coach-adapt-result);
+}
+
+.weeksGrid,
+.twoColumn {
+  margin: 12px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.weeksGrid > div {
+  min-width: 0;
+  min-height: 120px;
+  padding: 12px;
+}
+
+.weeksGrid > div.active {
+  border-color: var(--color-ai-coach-feature-active-border);
+  background: var(--background-ai-coach-week-active);
+}
+
+.weeksGrid strong {
+  margin: 7px 0 0;
+  display: block;
+  color: var(--color-ai-coach-heading);
+  -webkit-text-fill-color: var(--color-ai-coach-heading);
+  font-size: 17px;
+  font-weight: 950;
+}
+
+.weeksGrid small,
+.weeksGrid p {
+  margin: 6px 0 0;
+  display: block;
+  color: var(--color-ai-coach-muted-strong);
+  -webkit-text-fill-color: var(--color-ai-coach-muted-strong);
+  font-size: 11.5px;
+  font-weight: 800;
+  line-height: 1.26;
+}
+
+.twoColumn > div {
+  min-width: 0;
+  padding: 13px;
+}
+
+.planActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.planActions button.ghost {
+  border: 1px solid var(--color-ai-coach-border);
+  background: var(--background-ai-coach-surface-soft);
+  color: var(--color-ai-coach-heading-soft);
+  -webkit-text-fill-color: var(--color-ai-coach-heading-soft);
+}
+
+@media (max-width: 430px) {
+  .todayMacros {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .planHero {
+    grid-template-columns: minmax(0, 1fr) 66px;
+  }
+
+  .planHero > strong {
+    width: 62px;
+    height: 62px;
+    border-radius: 21px;
+    font-size: 17px;
+  }
+
+  .weeksGrid,
+  .twoColumn,
+  .planActions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 390px) {
+  .root {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .resultCard {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .bodyReadOnlyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trainingDaysGrid {
+    gap: 5px;
+  }
+
+  .trainingDaysGrid button {
+    min-height: 40px;
+    border-radius: 12px;
+    font-size: 11px;
+  }
+}

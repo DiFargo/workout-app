@@ -21,7 +21,7 @@ export function useProfileUiEffects({
     });
 
     return () => window.cancelAnimationFrame(frameId);
-  }, [profileWorkoutHistoryModalOpen, openHistoryKey, historyLoading, historyLength]);
+  }, [cabinetWorkoutHistoryItemRefs, profileWorkoutHistoryModalOpen, openHistoryKey, historyLoading, historyLength]);
 
   useEffect(() => {
     if (!profileProgressPhotosModalOpen || clientProgressPhotos.length < 2) return;
@@ -37,5 +37,5 @@ export function useProfileUiEffects({
 
       return [firstId, secondId];
     });
-  }, [profileProgressPhotosModalOpen, clientProgressPhotos]);
+  }, [profileProgressPhotosModalOpen, clientProgressPhotos, setProfileProgressPhotoCompareIds]);
 }

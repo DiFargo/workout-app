@@ -21,8 +21,7 @@
   html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseNextButton,
   html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishBackButton,
   html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkoutButton,
-  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutButton,
-  html:root[data-app-theme="warm-light"] body #root .workoutReadinessActions > button {
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutButton {
     box-sizing: border-box !important;
     position: static !important;
     inset: auto !important;
@@ -75,8 +74,7 @@
 
   html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPreviousButton,
   html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exercisePrevButton,
-  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishBackButton,
-  html:root[data-app-theme="warm-light"] body #root .workoutReadinessActions > button:first-child {
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishBackButton {
     border: 1px solid #dfe4ee !important;
     background: #f7f9fe !important;
     color: #596176 !important;
@@ -87,16 +85,11 @@
   html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupReadyButton,
   html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseNextButton,
   html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkoutButton,
-  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutButton,
-  html:root[data-app-theme="warm-light"] body #root .workoutReadinessActions > button:last-child {
+  html:root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutButton {
     border: 1px solid transparent !important;
     background: linear-gradient(135deg, #6552e6 0%, #2d6ff2 100%) !important;
     color: #ffffff !important;
     -webkit-text-fill-color: #ffffff !important;
     box-shadow: 0 12px 26px rgba(77, 69, 202, 0.23) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .workoutReadinessActions > button:disabled {
-    opacity: 0.45 !important;
   }
 }

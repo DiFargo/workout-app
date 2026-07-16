@@ -1,22 +1,30 @@
+import styles from "./NutritionSummary.module.css";
+
 export default function NutritionSummary({
   isCaloriesOverGoal,
   summaryText,
   onExpand
 }) {
   return (
-    <section className={`nutritionAiPlanDashboard collapsed nutritionAiPlanTopInline ${isCaloriesOverGoal ? "overLimit" : ""}`}>
+    <section
+      className={`${styles.root} ${isCaloriesOverGoal ? styles.overLimit : ""}`}
+      data-testid="nutrition-summary"
+      data-css-module-scope="nutrition-summary"
+      data-state={isCaloriesOverGoal ? "over-limit" : "within-limit"}
+    >
       <button
         type="button"
-        className="nutritionAiPlanTopCard"
+        className={styles.card}
         onClick={onExpand}
         aria-label="Развернуть анализ питания"
+        data-nutrition-summary-part="card"
       >
-        <span className="nutritionAiPlanCollapsedIcon" aria-hidden="true">📊</span>
-        <span className="nutritionAiPlanTopTitle">
-          <strong>Анализ</strong>
-          <small>{summaryText}</small>
+        <span className={styles.icon} aria-hidden="true" data-nutrition-summary-part="icon">📊</span>
+        <span className={styles.title} data-nutrition-summary-part="title">
+          <strong className={styles.titleStrong}>Анализ</strong>
+          <small className={styles.description}>{summaryText}</small>
         </span>
-        <span className="nutritionAiPlanCollapsedArrow" aria-hidden="true">›</span>
+        <span className={styles.arrow} aria-hidden="true" data-nutrition-summary-part="arrow">›</span>
       </button>
     </section>
   );

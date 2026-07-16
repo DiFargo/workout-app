@@ -1,0 +1,360 @@
+.amountCard,
+.macros,
+.noteCard {
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-family-compact-ui);
+}
+
+.amountCard {
+  position: relative;
+  min-height: 76px;
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-food-history-border);
+  border-radius: 18px;
+  background: var(--color-surface);
+  color: var(--color-food-flow-text);
+  box-shadow: 0 18px 42px rgba(40, 48, 70, 0.05);
+}
+
+.amountLabel {
+  display: block;
+  margin: 0 0 7px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  -webkit-text-fill-color: currentColor;
+}
+
+.amountControls {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 38px;
+  align-items: center;
+  gap: 8px;
+}
+
+.amountControls.weightMode {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.stepButton {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  min-height: 38px;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-food-nav-active-border);
+  border-radius: 12px;
+  outline: 0;
+  background: var(--color-food-nav-active-surface);
+  color: var(--color-food-nav-active);
+  font: inherit;
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-text-fill-color: currentColor;
+}
+
+.stepButton:hover,
+.stepButton:active {
+  border-color: var(--color-food-nav-active-border);
+  background: var(--color-food-nav-active-surface);
+  color: var(--color-food-nav-active);
+}
+
+.inputWrap {
+  min-width: 0;
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--color-food-history-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+
+.input {
+  width: auto;
+  min-width: 42px;
+  max-width: 88px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-food-flow-text);
+  font: inherit;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  box-shadow: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+.inputWrap em {
+  flex: none;
+  color: var(--color-heading);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+  -webkit-text-fill-color: currentColor;
+}
+
+.input[aria-invalid="true"] {
+  border-radius: 6px;
+  box-shadow: 0 0 0 3px rgba(194, 77, 77, 0.12);
+}
+
+.error {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-danger);
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.macros {
+  margin: 0 0 12px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.macroCard {
+  min-width: 0;
+  min-height: 82px;
+  padding: 9px 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-food-history-border);
+  border-radius: 16px;
+  background: var(--color-surface);
+  color: var(--color-food-flow-text);
+  box-shadow: 0 12px 28px rgba(40, 48, 70, 0.035);
+}
+
+.macroCard span,
+.macroCard strong,
+.macroCard small {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+.macroCard span {
+  color: var(--color-text-muted);
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.15;
+}
+
+.macroCard strong {
+  margin-top: 7px;
+  color: var(--color-food-flow-text);
+  font-size: 16px;
+  font-weight: 950;
+  line-height: 1.08;
+}
+
+.macroCard small {
+  margin-top: 5px;
+  color: var(--color-success);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.noteCard {
+  height: 70px;
+  min-height: 70px;
+  margin: 0 0 12px;
+  overflow: hidden;
+  display: grid;
+  align-items: center;
+  border: 1px solid var(--color-food-history-border);
+  border-radius: 18px;
+  background: var(--color-surface);
+  color: var(--color-food-product-page-text);
+  box-shadow: 0 18px 42px rgba(40, 48, 70, 0.05);
+}
+
+.noteButton {
+  width: 100%;
+  height: 70px;
+  min-height: 70px;
+  margin: 0;
+  padding: 0 17px;
+  display: grid;
+  grid-template-columns: 22px minmax(92px, 1fr) minmax(0, max-content) 14px;
+  align-items: center;
+  column-gap: 10px;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-heading);
+  font: inherit;
+  text-align: left;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-text-fill-color: currentColor;
+}
+
+.noteButton:hover,
+.noteButton:active {
+  background: transparent;
+  color: var(--color-heading);
+}
+
+.noteIcon,
+.noteLabel,
+.noteValue,
+.chevron {
+  align-self: center;
+  margin: 0;
+}
+
+.noteIcon {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: var(--color-heading);
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.82;
+}
+
+.noteLabel {
+  display: block;
+  max-width: 96px;
+  color: var(--color-heading);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.03;
+  text-align: left;
+  -webkit-text-fill-color: currentColor;
+}
+
+.noteValue {
+  min-width: 0;
+  max-width: 128px;
+  overflow: hidden;
+  justify-self: end;
+  color: var(--color-heading);
+  font-size: 22px;
+  font-weight: 950;
+  line-height: 1;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+.muted .noteValue {
+  color: var(--color-text-muted);
+}
+
+.chevron {
+  justify-self: end;
+  color: var(--color-heading);
+  font-size: 31px;
+  font-style: normal;
+  line-height: 1;
+  opacity: 0.62;
+}
+
+.stepButton:focus-visible,
+.input:focus-visible,
+.noteButton:focus-visible {
+  outline: 0;
+  box-shadow: var(--focus-ring);
+}
+
+:global(:root[data-app-theme="dark-green"]) .amountCard,
+:global(:root[data-app-theme="dark-green"]) .macroCard,
+:global(:root[data-app-theme="dark-green"]) .noteCard {
+  border-color: var(--color-control-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  -webkit-text-fill-color: currentColor;
+  box-shadow: var(--shadow-card);
+}
+
+:global(:root[data-app-theme="dark-green"]) .inputWrap {
+  border-color: var(--color-control-border);
+  background: var(--color-control-surface);
+}
+
+:global(:root[data-app-theme="dark-green"]) .input,
+:global(:root[data-app-theme="dark-green"]) .inputWrap em,
+:global(:root[data-app-theme="dark-green"]) .macroCard strong,
+:global(:root[data-app-theme="dark-green"]) .noteButton,
+:global(:root[data-app-theme="dark-green"]) .noteValue {
+  color: var(--color-text);
+}
+
+:global(:root[data-app-theme="dark-green"]) .amountLabel,
+:global(:root[data-app-theme="dark-green"]) .macroCard span,
+:global(:root[data-app-theme="dark-green"]) .muted .noteValue {
+  color: var(--color-text-muted);
+}
+
+:global(:root[data-app-theme="warm-light"]) .amountControls,
+:global(:root[data-app-theme="warm-light"]) .inputWrap,
+:global(:root[data-app-theme="warm-light"]) .macroCard,
+:global(:root[data-app-theme="warm-light"]) .macroCard span,
+:global(:root[data-app-theme="warm-light"]) .macroCard strong,
+:global(:root[data-app-theme="warm-light"]) .macroCard small,
+:global(:root[data-app-theme="warm-light"]) .muted .noteValue {
+  color: var(--color-food-product-page-text);
+  -webkit-text-fill-color: currentColor;
+}
+
+:global(:root[data-app-theme="dark-green"]) .macroCard small,
+:global(:root[data-app-theme="dark-green"]) .chevron {
+  color: rgba(244, 247, 241, 0.7);
+  -webkit-text-fill-color: currentColor;
+}
+
+@media (max-width: 380px) {
+  .macros {
+    gap: 6px;
+  }
+
+  .macroCard {
+    padding-right: 3px;
+    padding-left: 3px;
+  }
+
+  .noteButton {
+    padding-right: 14px;
+    padding-left: 14px;
+    grid-template-columns: 22px minmax(82px, 1fr) minmax(0, max-content) 12px;
+    column-gap: 8px;
+  }
+
+  .noteValue {
+    max-width: 112px;
+    font-size: 18px;
+  }
+}

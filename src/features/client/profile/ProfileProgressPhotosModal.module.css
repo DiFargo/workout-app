@@ -1,0 +1,610 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 15500;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  background: var(--background-profile-progress-photos-overlay);
+  backdrop-filter: var(--filter-profile-progress-photos-overlay);
+  -webkit-backdrop-filter: var(--filter-profile-progress-photos-overlay);
+}
+
+.dialog {
+  box-sizing: border-box;
+  width: min(100%, 430px);
+  max-height: min(820px, calc(100dvh - 24px));
+  padding: 15px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-profile-progress-photos-dialog-border);
+  border-radius: 27px;
+  background: var(--background-profile-progress-photos-dialog);
+  box-shadow: var(--shadow-profile-progress-photos-dialog);
+  color: var(--color-profile-progress-photos-text);
+}
+
+.bodyControlDialog {
+  width: min(100%, 430px);
+  height: min(820px, calc(100dvh - 24px));
+  max-height: min(820px, calc(100dvh - 24px));
+  grid-template-rows: auto 48px minmax(0, 1fr) auto;
+}
+
+.header {
+  min-height: 48px;
+  padding: 0 2px 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header > div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.header span {
+  color: var(--color-profile-progress-photos-eyebrow);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.header h2 {
+  margin: 0;
+  color: var(--color-profile-progress-photos-heading);
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+.header small {
+  color: var(--color-profile-progress-photos-muted);
+  font-size: 10px;
+}
+
+.closeButton {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-profile-progress-photos-close-border);
+  border-radius: 13px;
+  background: var(--background-profile-progress-photos-close);
+  color: var(--color-profile-progress-photos-close);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bodyControlDialog .header {
+  box-sizing: border-box;
+  min-height: 86px;
+  padding: 2px 0 0 4px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  align-items: start;
+  gap: 12px;
+}
+
+.bodyControlDialog .header > div {
+  align-content: start;
+  gap: 3px;
+  padding-top: 1px;
+}
+
+.bodyControlDialog .header span {
+  display: block;
+  color: var(--color-profile-progress-photos-tabbed-eyebrow);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+}
+
+.bodyControlDialog .header h2 {
+  color: var(--color-profile-progress-photos-tabbed-heading);
+  font-size: 25px;
+  line-height: 1.02;
+}
+
+.bodyControlDialog .header small {
+  display: block;
+  min-height: 17px;
+  color: var(--color-profile-progress-photos-tabbed-muted);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.bodyControlDialog .closeButton {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  align-self: start;
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  border-color: var(--color-profile-progress-photos-tabbed-close-border);
+  border-radius: 14px;
+  background: var(--background-profile-progress-photos-tabbed-close);
+  color: var(--color-profile-progress-photos-tabbed-close);
+  font-weight: 500;
+  box-shadow: var(--shadow-profile-progress-photos-tabbed-close);
+}
+
+.bodyControlTabs {
+  box-sizing: border-box;
+  height: 48px;
+  padding: 3px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 6px;
+  border: 1px solid var(--color-profile-progress-photos-section-tabs-border);
+  border-radius: 16px;
+  background: var(--background-profile-progress-photos-section-tabs);
+}
+
+.bodyControlTabs button {
+  min-width: 0;
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 8px;
+  border: 1px solid var(--color-profile-progress-photos-section-tab-border);
+  border-radius: 13px;
+  background: var(--background-profile-progress-photos-section-tab);
+  color: var(--color-profile-progress-photos-section-tab);
+  font-size: 12px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.bodyControlTabs button.active {
+  border-color: var(--color-profile-progress-photos-section-tab-active-border);
+  background: var(--background-profile-progress-photos-section-tab-active);
+  color: var(--color-profile-progress-photos-section-tab-active);
+  box-shadow: var(--shadow-profile-progress-photos-section-tab-active);
+}
+
+.body {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.body::-webkit-scrollbar {
+  display: none;
+}
+
+.intro {
+  box-sizing: border-box;
+  min-height: 70px;
+  padding: 11px 13px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  border: 1px solid var(--color-profile-progress-photos-intro-border);
+  border-radius: 17px;
+  background: var(--background-profile-progress-photos-intro);
+}
+
+.intro > i {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-profile-progress-photos-accent-border);
+  border-radius: 14px;
+  background: var(--background-profile-progress-photos-accent);
+  font-size: 20px;
+  font-style: normal;
+}
+
+.intro p {
+  margin: 0;
+  color: var(--color-profile-progress-photos-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.latest {
+  padding: 11px 13px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-profile-progress-photos-latest-border);
+  border-radius: 17px;
+  background: var(--background-profile-progress-photos-latest);
+}
+
+.latest > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.latest span {
+  color: var(--color-profile-progress-photos-label);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.latest strong {
+  color: var(--color-profile-progress-photos-card-heading);
+  font-size: 14px;
+}
+
+.latest > div:last-child {
+  display: flex;
+  gap: 4px;
+}
+
+.latest img {
+  width: 34px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.steps {
+  display: grid;
+  gap: 8px;
+}
+
+.steps label {
+  position: relative;
+  box-sizing: border-box;
+  min-height: 82px;
+  padding: 9px 12px;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 26px;
+  align-items: center;
+  gap: 11px;
+  overflow: hidden;
+  border: 1px solid var(--color-profile-progress-photos-step-border);
+  border-radius: 17px;
+  background: var(--background-profile-progress-photos-step);
+  cursor: pointer;
+}
+
+.steps label.selected {
+  border-color: var(--color-profile-progress-photos-selected-border);
+  background: var(--background-profile-progress-photos-selected);
+}
+
+.steps input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.steps label > img,
+.steps label > i {
+  width: 58px;
+  height: 64px;
+  border-radius: 13px;
+}
+
+.steps label > img {
+  object-fit: cover;
+}
+
+.steps label > i {
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--color-profile-progress-photos-placeholder-border);
+  background: var(--background-profile-progress-photos-placeholder);
+  color: var(--color-profile-progress-photos-placeholder);
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.steps label > span {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.steps strong {
+  color: var(--color-profile-progress-photos-card-heading);
+  font-size: 15px;
+}
+
+.steps small {
+  color: var(--color-profile-progress-photos-muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.steps label > em {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-profile-progress-photos-step-action-border);
+  border-radius: 50%;
+  color: var(--color-profile-progress-photos-step-action);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.status {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid var(--color-profile-progress-photos-error-border);
+  border-radius: 13px;
+  background: var(--background-profile-progress-photos-error);
+  color: var(--color-profile-progress-photos-error);
+  font-size: 11px;
+  text-align: center;
+}
+
+.status.success {
+  border-color: var(--color-profile-progress-photos-success-border);
+  background: var(--background-profile-progress-photos-success);
+  color: var(--color-profile-progress-photos-success);
+}
+
+.compare {
+  min-height: max-content;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-profile-progress-photos-compare-border);
+  border-radius: 18px;
+  background: var(--background-profile-progress-photos-compare);
+}
+
+.compare:not([open]) > .compareContent {
+  display: none;
+}
+
+.compareHeader {
+  min-height: 58px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.compareHeader::-webkit-details-marker {
+  display: none;
+}
+
+.compareHeader > span {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.compareHeader strong {
+  display: block;
+  color: var(--color-profile-progress-photos-compare-heading);
+  font-size: 15px;
+}
+
+.compareHeader small {
+  display: block;
+  color: var(--color-profile-progress-photos-compare-muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.compareHeader > i {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-profile-progress-photos-compare-control-border);
+  border-radius: 10px;
+  background: var(--background-profile-progress-photos-compare-control);
+  color: var(--color-profile-progress-photos-compare-control);
+  font-size: 18px;
+  font-style: normal;
+  transition: transform 0.18s ease;
+}
+
+.compare[open] .compareHeader > i {
+  transform: rotate(180deg);
+}
+
+.compareContent {
+  padding: 0 12px 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.compareControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.compareControls label {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.compareControls span {
+  color: var(--color-profile-progress-photos-compare-label);
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.compareControls select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 28px 0 10px;
+  border: 1px solid var(--color-profile-progress-photos-compare-control-border);
+  border-radius: 12px;
+  background: var(--background-profile-progress-photos-compare-control);
+  color: var(--color-profile-progress-photos-compare-select);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.compareTabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.compareTabs button {
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 7px;
+  border: 1px solid var(--color-profile-progress-photos-compare-tab-border);
+  border-radius: 11px;
+  background: var(--background-profile-progress-photos-compare-tab);
+  color: var(--color-profile-progress-photos-compare-tab);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.compareTabs button.active {
+  border-color: var(--color-profile-progress-photos-compare-tab-active-border);
+  background: var(--background-profile-progress-photos-compare-tab-active);
+  color: var(--color-profile-progress-photos-compare-tab-active);
+}
+
+.compareStage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.compareStage figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.compareStage figcaption {
+  min-height: 32px;
+  margin-bottom: 6px;
+  display: grid;
+  gap: 1px;
+  text-align: center;
+}
+
+.compareStage figcaption span {
+  color: var(--color-profile-progress-photos-compare-caption);
+  font-size: 8px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.compareStage figcaption strong {
+  color: var(--color-profile-progress-photos-compare-date);
+  font-size: 10px;
+}
+
+.compareStage img,
+.compareMissing {
+  width: 100%;
+  aspect-ratio: 3 / 4.15;
+  border-radius: 12px;
+}
+
+.compareStage img {
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.compareMissing {
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--color-profile-progress-photos-missing-border);
+  color: var(--color-profile-progress-photos-missing);
+  font-size: 11px;
+}
+
+.saveButton {
+  min-height: 54px;
+  border: 0;
+  border-radius: 17px;
+  background: var(--background-profile-progress-photos-save);
+  color: var(--color-profile-progress-photos-save);
+  font-size: 15px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.saveButton:disabled,
+.closeButton:disabled {
+  cursor: default;
+  opacity: 0.58;
+}
+
+.saveButton:disabled {
+  filter: saturate(0.3);
+}
+
+.closeButton:focus-visible,
+.bodyControlTabs button:focus-visible,
+.compareHeader:focus-visible,
+.compareTabs button:focus-visible,
+.compareControls select:focus-visible,
+.saveButton:focus-visible,
+.steps input:focus-visible + img,
+.steps input:focus-visible + i {
+  outline: 2px solid var(--color-profile-progress-photos-focus);
+  outline-offset: 2px;
+}
+
+@media (max-height: 800px) {
+  .dialog:not(.bodyControlDialog) {
+    padding: 12px;
+    gap: 9px;
+  }
+
+  .intro {
+    min-height: 60px;
+  }
+
+  .steps label {
+    min-height: 72px;
+  }
+
+  .steps label > img,
+  .steps label > i {
+    height: 54px;
+  }
+}
+
+@media (min-width: 620px) {
+  .dialog:not(.bodyControlDialog) {
+    width: min(100%, 620px);
+  }
+
+  .compareStage {
+    gap: 12px;
+  }
+}

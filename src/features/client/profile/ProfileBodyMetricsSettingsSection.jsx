@@ -1,3 +1,5 @@
+import styles from "./ProfileBodyMetricsSettingsSection.module.css";
+
 const SEX_OPTIONS = [
   { id: "male", title: "Мужчина" },
   { id: "female", title: "Женщина" }
@@ -18,10 +20,10 @@ const ACTIVITY_OPTIONS = [
 ];
 
 const METRIC_FIELDS = {
-  weight: { label: "Текущий вес", min: 30, max: 350, step: 0.1, unit: "кг", fallback: 80 },
-  targetWeight: { label: "Целевой вес", min: 30, max: 350, step: 0.1, unit: "кг", fallback: 75 },
-  height: { label: "Рост", min: 120, max: 230, step: 1, unit: "см", fallback: 175 },
-  age: { label: "Возраст", min: 14, max: 100, step: 1, unit: "лет", fallback: 30 }
+  weight: { label: "Текущий вес", min: 30, max: 350, step: 0.1, fallback: 80 },
+  targetWeight: { label: "Целевой вес", min: 30, max: 350, step: 0.1, fallback: 75 },
+  height: { label: "Рост", min: 120, max: 230, step: 1, fallback: 175 },
+  age: { label: "Возраст", min: 14, max: 100, step: 1, fallback: 30 }
 };
 
 function normalizeMetricValue(value) {
@@ -50,9 +52,10 @@ function ProfileMetricField({ field, value, fallback, onChange }) {
   const placeholder = formatMetricValue(fallback ?? config.fallback, config.step);
 
   return (
-    <label>
-      <span>{config.label}</span>
+    <label className={styles.field}>
+      <span className={styles.fieldLabel}>{config.label}</span>
       <input
+        className={styles.control}
         inputMode={config.step < 1 ? "decimal" : "numeric"}
         type="number"
         min={config.min}
@@ -72,26 +75,36 @@ export default function ProfileBodyMetricsSettingsSection({
   description = "Вес, рост, возраст и активность",
   onToggle,
   onDraftChange,
-  onSave
+  onSave,
+  variant = "modal"
 }) {
+  const variantClass = variant === "tab" ? styles.tab : styles.modal;
+
   return (
-    <section className="profileDashboardCard profileBodyMetricsSettingsSection">
+    <section
+      className={`${styles.section} ${variantClass}`}
+      data-testid="profile-body-metrics-section"
+      data-profile-body-metrics-variant={variant}
+      data-open={open ? "true" : "false"}
+    >
       <button
         type="button"
-        className={open ? "profileAccordionHead open" : "profileAccordionHead"}
+        className={styles.head}
+        data-testid="profile-body-metrics-toggle"
+        aria-expanded={open}
         onClick={onToggle}
       >
-        <div>
-          <span>ПРОФИЛЬ</span>
-          <strong>Параметры тела</strong>
-          <small>{description}</small>
+        <div className={styles.headText}>
+          <span className={styles.eyebrow}>ПРОФИЛЬ</span>
+          <strong className={styles.title}>Параметры тела</strong>
+          <small className={styles.description}>{description}</small>
         </div>
-        <em>{open ? "−" : "+"}</em>
+        <em className={styles.expandIcon}>{open ? "−" : "+"}</em>
       </button>
 
       {open && (
-        <div className="profileBodyMetricsAccordion">
-          <div className="profileBodyMetricsGrid profileBodyMetricsGridTwo">
+        <div className={styles.accordion}>
+          <div className={`${styles.grid} ${styles.gridTwo}`}>
             <ProfileMetricField
               field="weight"
               value={draft.weight}
@@ -115,12 +128,12 @@ export default function ProfileBodyMetricsSettingsSection({
             />
           </div>
 
-          <div className="profileSexPicker">
+          <div className={styles.sexPicker}>
             {SEX_OPTIONS.map((sex) => (
               <button
                 type="button"
                 key={sex.id}
-                className={draft.sex === sex.id ? "active" : ""}
+                className={`${styles.sexButton}${draft.sex === sex.id ? ` ${styles.active}` : ""}`}
                 aria-pressed={draft.sex === sex.id}
                 onClick={() => onDraftChange("sex", sex.id)}
               >
@@ -129,10 +142,11 @@ export default function ProfileBodyMetricsSettingsSection({
             ))}
           </div>
 
-          <div className="profileBodyMetricsGrid profileBodyMetricsGridTwo">
-            <label>
-              <span>Твоя цель</span>
+          <div className={`${styles.grid} ${styles.gridTwo}`}>
+            <label className={styles.field}>
+              <span className={styles.fieldLabel}>Твоя цель</span>
               <select
+                className={styles.control}
                 aria-label="Твоя цель"
                 value={draft.goal || "recomp"}
                 onChange={(event) => onDraftChange("goal", event.target.value)}
@@ -142,9 +156,10 @@ export default function ProfileBodyMetricsSettingsSection({
                 ))}
               </select>
             </label>
-            <label>
-              <span>Активность</span>
+            <label className={styles.field}>
+              <span className={styles.fieldLabel}>Активность</span>
               <select
+                className={styles.control}
                 aria-label="Активность"
                 value={draft.activity}
                 onChange={(event) => onDraftChange("activity", event.target.value)}
@@ -156,7 +171,12 @@ export default function ProfileBodyMetricsSettingsSection({
             </label>
           </div>
 
-          <button type="button" className="profileBodySaveBtn" onClick={onSave}>
+          <button
+            type="button"
+            className={styles.saveButton}
+            data-testid="profile-body-metrics-save"
+            onClick={onSave}
+          >
             Сохранить анкету
           </button>
         </div>

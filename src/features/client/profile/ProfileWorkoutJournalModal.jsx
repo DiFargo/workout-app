@@ -1,5 +1,6 @@
 import { ProfileWorkoutCalendarContent } from "./ProfileWorkoutCalendarModal";
 import { ProfileWorkoutHistoryContent } from "./ProfileWorkoutHistoryModal";
+import styles from "./ProfileWorkoutJournalModal.module.css";
 
 export default function ProfileWorkoutJournalModal({
   open,
@@ -17,30 +18,37 @@ export default function ProfileWorkoutJournalModal({
   const isHistory = activeTab === "history";
 
   return (
-    <div className="cabinetUtilityModalOverlay" role="presentation" onClick={onClose}>
+    <div
+      className={styles.overlay}
+      data-testid="profile-workout-journal-overlay"
+      data-css-module-scope="profile-workout-journal"
+      role="presentation"
+      onClick={onClose}
+    >
       <section
-        className="cabinetUtilityModal cabinetWorkoutJournalModal"
+        className={styles.dialog}
+        data-testid="profile-workout-journal-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="cabinetWorkoutJournalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="cabinetUtilityModalHead cabinetWorkoutJournalHead">
+        <header className={styles.header}>
           <div>
-            <span>ТРЕНИРОВКИ</span>
-            <h2 id="cabinetWorkoutJournalTitle">Календарь и история</h2>
+            <span className={styles.eyebrow}>ТРЕНИРОВКИ</span>
+            <h2 className={styles.title} id="cabinetWorkoutJournalTitle">Календарь и история</h2>
           </div>
-          <button type="button" aria-label="Закрыть календарь и историю тренировок" onClick={onClose}>
+          <button className={styles.closeButton} data-testid="profile-workout-journal-close" type="button" aria-label="Закрыть календарь и историю тренировок" onClick={onClose}>
             ×
           </button>
         </header>
 
-        <div className="cabinetWorkoutJournalTabs" role="tablist" aria-label="Раздел тренировок">
+        <div className={styles.tabs} role="tablist" aria-label="Раздел тренировок">
           <button
             type="button"
             role="tab"
             aria-selected={!isHistory}
-            className={!isHistory ? "active" : ""}
+            className={`${styles.tab} ${!isHistory ? styles.activeTab : ""}`}
             onClick={() => onTabChange("calendar")}
           >
             Календарь
@@ -49,21 +57,21 @@ export default function ProfileWorkoutJournalModal({
             type="button"
             role="tab"
             aria-selected={isHistory}
-            className={isHistory ? "active" : ""}
+            className={`${styles.tab} ${isHistory ? styles.activeTab : ""}`}
             onClick={() => onTabChange("history")}
           >
             История
           </button>
         </div>
 
-        <div className="cabinetUtilityModalBody cabinetWorkoutJournalBody" ref={modalBodyRef}>
+        <div className={styles.body} ref={modalBodyRef}>
           {!isHistory ? (
-            <div role="tabpanel" aria-label="Календарь тренировок">
+            <div className={styles.panel} role="tabpanel" aria-label="Календарь тренировок">
               <ProfileWorkoutCalendarContent {...calendarProps} />
             </div>
           ) : (
-            <div className="cabinetWorkoutJournalHistoryPanel" role="tabpanel" aria-label="История тренировок">
-              <ProfileWorkoutHistoryContent {...historyProps} />
+            <div className={`${styles.panel} ${styles.historyPanel}`} role="tabpanel" aria-label="История тренировок">
+              <ProfileWorkoutHistoryContent embedded {...historyProps} />
             </div>
           )}
         </div>

@@ -9,16 +9,6 @@
    ========================================================= */
 
 /* Ð¿Ð¾Ð»Ð½Ð¾ÑÑ‚ÑŒÑŽ ÑÐºÑ€Ñ‹Ñ‚ÑŒ ÑÑ‚Ð°Ñ€ÑƒÑŽ Ð²ÐµÑ€Ñ…Ð½ÑŽÑŽ Ð¿Ð°Ð½ÐµÐ»ÑŒ overlay */
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) > .fatSearchTopPremium,
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTopPremium,
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchBackMini,
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) button[aria-label="ÐÐ°Ð·Ð°Ð´ Ðº Ð¿Ð¾Ð¸ÑÐºÑƒ"],
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) button[aria-label="ÐÐ°Ð·Ð°Ð´ Ðº Ð¿Ð¸Ñ‚Ð°Ð½Ð¸ÑŽ"]:not(.foodEditBackOnly) {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
 
 /* ÐµÐ´Ð¸Ð½ÑÑ‚Ð²ÐµÐ½Ð½Ð°Ñ ÐºÐ½Ð¾Ð¿ÐºÐ° Ð½Ð°Ð·Ð°Ð´ */
 
@@ -29,33 +19,9 @@
    ========================================================= */
 
 /* Ð½Ðµ Ñ‚Ñ€Ð¾Ð³Ð°ÐµÐ¼ ÑÑ‚Ñ€ÐµÐ»ÐºÑƒ Ð½Ð°Ð·Ð°Ð´, Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¸Ð¼ Ð¸Ð¼ÐµÐ½Ð½Ð¾ ÐºÑ€ÐµÑÑ‚Ð¸Ðº Ð¾Ñ‚Ð¼ÐµÐ½Ñ‹ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ */
-.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchClosePremium {
-  position: fixed !important;
-  top: 18px !important;
-  right: 18px !important;
-  left: auto !important;
-
-  z-index: 99999 !important;
-
-  width: 54px !important;
-  height: 54px !important;
-  border-radius: 50% !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  background: rgba(255,255,255,0.035) !important;
-  color: rgba(255,255,255,0.94) !important;
-
-  font-size: 34px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-}
 
 /* Ð½Ð° ÑÐºÑ€Ð°Ð½Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ ÐµÐ´Ñ‹ Ð½Ðµ Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¸Ð¼ ÑÑ‚Ñ€ÐµÐ»ÐºÑƒ */
-.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchBackMini {
+.fatFoodSearchScreenPremium .fatSearchBackMini {
   position: static !important;
   right: auto !important;
   left: auto !important;

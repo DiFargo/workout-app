@@ -39,10 +39,7 @@
 :root[data-app-theme="warm-light"] .menuPage,
 :root[data-app-theme="warm-light"] .profileDashboardPage,
 :root[data-app-theme="warm-light"] .fatSecretPage,
-:root[data-app-theme="warm-light"] .workoutSelectPage,
-:root[data-app-theme="warm-light"] .workoutPlanOverviewPage,
 :root[data-app-theme="warm-light"] .app.workoutRunPage,
-:root[data-app-theme="warm-light"] .measurementFullscreenPage,
 :root[data-app-theme="warm-light"] .adminPanelHubPage,
 :root[data-app-theme="warm-light"] .adminUsersCrmPage,
 :root[data-app-theme="warm-light"] .adminWorkoutsPage,
@@ -51,7 +48,6 @@
 :root[data-app-theme="warm-light"] .adminV3Shell,
 :root[data-app-theme="warm-light"] .adminV3Main,
 :root[data-app-theme="warm-light"] .fatFoodSearchOverlay,
-:root[data-app-theme="warm-light"] .foodEditPageOverlay,
 :root[data-app-theme="warm-light"] .nutritionCreateChoiceOverlay {
   background:
     radial-gradient(circle at 50% -10%, rgba(92, 75, 224, 0.05), transparent 30%),
@@ -60,16 +56,12 @@
 }
 
 :root[data-app-theme="warm-light"] .clientCorePageTitle,
-:root[data-app-theme="warm-light"] .mainDashboardTitle,
-:root[data-app-theme="warm-light"] .profileCabinetPageTitle,
-:root[data-app-theme="warm-light"] .profileSettingsPageTitle,
-:root[data-app-theme="warm-light"] .workoutSelectTitle,
 :root[data-app-theme="warm-light"] .workoutRunPage h1,
 :root[data-app-theme="warm-light"] .workoutRunPage h2,
 :root[data-app-theme="warm-light"] .workoutRunPage h3,
-:root[data-app-theme="warm-light"] .fatSecretPage h1,
-:root[data-app-theme="warm-light"] .fatSecretPage h2,
-:root[data-app-theme="warm-light"] .profileDashboardPage h1,
+:root[data-app-theme="warm-light"] .fatSecretPage h1:not([data-css-module-scope]):not([data-css-module-scope] *),
+:root[data-app-theme="warm-light"] .fatSecretPage h2:not([data-css-module-scope]):not([data-css-module-scope] *),
+:root[data-app-theme="warm-light"] .profileDashboardPage h1:not([data-css-module-scope="profile-settings-tab"]),
 :root[data-app-theme="warm-light"] .profileDashboardPage h2,
 :root[data-app-theme="warm-light"] .profileDashboardPage h3,
 :root[data-app-theme="warm-light"] .adminV3Header h1,
@@ -78,38 +70,18 @@
   text-shadow: none !important;
 }
 
-:root[data-app-theme="warm-light"] .workoutSelectTitle strong,
-:root[data-app-theme="warm-light"] .profileAiHeroText > span,
-:root[data-app-theme="warm-light"] .profileAiCoachToggle span,
-:root[data-app-theme="warm-light"] .mainMeasurementSnapshotHeader span,
-:root[data-app-theme="warm-light"] .progressHubCardText small,
 :root[data-app-theme="warm-light"] .profileProgressTabHeader > span,
-:root[data-app-theme="warm-light"] .foodFlowTitleGroup > span,
-:root[data-app-theme="warm-light"] .foodProductFlowTitle > span,
 :root[data-app-theme="warm-light"] .adminV3Header > div:first-child > span,
 :root[data-app-theme="warm-light"] .adminPanelHubHero > span {
   color: #5a49df !important;
 }
 
-:root[data-app-theme="warm-light"] .profileAiHeroText h1,
-:root[data-app-theme="warm-light"] .profileAiStatsRow strong,
-:root[data-app-theme="warm-light"] .profileAiMiniCard strong,
-:root[data-app-theme="warm-light"] .profileAiCoachToggle h2,
-:root[data-app-theme="warm-light"] .mainMeasurementSnapshotHeader strong,
-:root[data-app-theme="warm-light"] .progressHubCardText strong,
 :root[data-app-theme="warm-light"] .fatMealTitle strong,
 :root[data-app-theme="warm-light"] .fatMealKcal strong,
-:root[data-app-theme="warm-light"] .nutritionCaloriesRenderCol strong,
-:root[data-app-theme="warm-light"] .individualWorkoutTitle {
+:root[data-app-theme="warm-light"] .nutritionCaloriesRenderCol strong {
   color: #151824 !important;
 }
 
-:root[data-app-theme="warm-light"] .profileAiStatsRow span,
-:root[data-app-theme="warm-light"] .profileAiMiniCard span,
-:root[data-app-theme="warm-light"] .profileAiCoachToggle p,
-:root[data-app-theme="warm-light"] .mainMeasurementSnapshotHeader small,
-:root[data-app-theme="warm-light"] .mainMeasurementChartDates,
-:root[data-app-theme="warm-light"] .progressHubCardText em,
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderCol span,
 :root[data-app-theme="warm-light"] .fatMealTitle span,
 :root[data-app-theme="warm-light"] .fatMealKcal span,
@@ -118,4 +90,3 @@
 :root[data-app-theme="warm-light"] .adminV3Empty {
   color: #737b91 !important;
 }
-

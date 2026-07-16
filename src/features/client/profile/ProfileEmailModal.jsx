@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Mail } from "lucide-react";
+import styles from "./ProfileEmailModal.module.css";
 
 export default function ProfileEmailModal({
   open,
@@ -9,16 +10,9 @@ export default function ProfileEmailModal({
   onClose,
   onRequestEmailChange
 }) {
-  const [nextEmail, setNextEmail] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
   const currentEmail = String(email || "").trim();
-
-  useEffect(() => {
-    if (open) {
-      setNextEmail(currentEmail);
-      setCurrentPassword("");
-    }
-  }, [currentEmail, open]);
+  const [nextEmail, setNextEmail] = useState(currentEmail);
+  const [currentPassword, setCurrentPassword] = useState("");
 
   if (!open) {
     return null;
@@ -33,9 +27,16 @@ export default function ProfileEmailModal({
   }
 
   return (
-    <div className="profileTelegramModalOverlay" role="presentation" onClick={onClose}>
+    <div
+      className={styles.overlay}
+      data-testid="profile-email-overlay"
+      data-css-module-scope="profile-email-modal"
+      role="presentation"
+      onClick={onClose}
+    >
       <div
-        className="profileTelegramModal profileEmailManageModal"
+        className={styles.dialog}
+        data-testid="profile-email-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="profileEmailManageTitle"
@@ -43,19 +44,20 @@ export default function ProfileEmailModal({
       >
         <button
           type="button"
-          className="profileTelegramModalClose"
+          className={styles.closeButton}
+          data-testid="profile-email-close"
           aria-label="Закрыть почту"
           onClick={onClose}
         >×</button>
 
-        <div className="profileTelegramManageHead profileEmailManageHead">
-          <div className="profileTelegramManageAvatar profileEmailManageAvatar">
+        <div className={styles.head}>
+          <div className={styles.avatar}>
             <Mail size={28} strokeWidth={2.3} />
           </div>
           <div>
-            <span>ПОЧТА</span>
-            <h3 id="profileEmailManageTitle">Привязка почты</h3>
-            <p>
+            <span className={styles.eyebrow}>ПОЧТА</span>
+            <h3 className={styles.heading} id="profileEmailManageTitle">Привязка почты</h3>
+            <p className={styles.intro}>
               {currentEmail
                 ? `${currentEmail} · используется для входа и восстановления доступа.`
                 : "Добавь почту, чтобы входить в аккаунт и восстановить доступ при необходимости."}
@@ -63,10 +65,12 @@ export default function ProfileEmailModal({
           </div>
         </div>
 
-        <form className="profileEmailManageForm" onSubmit={submitEmailChange}>
-          <label>
-            <span>Новая почта</span>
+        <form className={styles.form} data-testid="profile-email-form" onSubmit={submitEmailChange}>
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>Новая почта</span>
             <input
+              className={styles.input}
+              data-testid="profile-email-address"
               type="email"
               autoComplete="email"
               value={nextEmail}
@@ -75,9 +79,11 @@ export default function ProfileEmailModal({
             />
           </label>
 
-          <label>
-            <span>Текущий пароль</span>
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>Текущий пароль</span>
             <input
+              className={styles.input}
+              data-testid="profile-email-password"
               type="password"
               autoComplete="current-password"
               value={currentPassword}
@@ -86,26 +92,24 @@ export default function ProfileEmailModal({
             />
           </label>
 
-          <div className="profileTelegramAuthPreview profileEmailAuthPreview">
-            <div className="profileTelegramAuthIcon">✓</div>
+          <div className={styles.preview}>
+            <div className={styles.previewIcon}>✓</div>
             <div>
               <strong>Подтверждение входа</strong>
               <span>Для парольного аккаунта нужен текущий пароль. Для Google откроется окно авторизации.</span>
             </div>
           </div>
 
-          <button type="submit" className="profileTelegramCheckButton" disabled={saving}>
+          <button type="submit" className={styles.primaryButton} data-testid="profile-email-submit" disabled={saving}>
             {saving ? "Проверяю..." : "Авторизовать и привязать"}
           </button>
         </form>
 
         {status && (
-          <div className="profileTelegramAuthStatus">
-            <span>{status}</span>
-          </div>
+          <div className={styles.status} data-testid="profile-email-status">{status}</div>
         )}
 
-        <button type="button" className="profileTelegramSave ghost" onClick={onClose}>
+        <button type="button" className={styles.secondaryButton} data-testid="profile-email-dismiss" onClick={onClose}>
           Закрыть
         </button>
       </div>

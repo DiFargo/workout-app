@@ -1,5 +1,5 @@
 /* V622: food search bottom actions match nutrition bar, with AI search as centered FAB. */
-html body #root .fatFoodSearchScreenPremium:has(.fatSearchBottomBarFive) {
+html body #root .fatFoodSearchScreenPremium:not([data-food-search-header-layout]):has(.fatSearchBottomBarFive) {
   padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
 }
 

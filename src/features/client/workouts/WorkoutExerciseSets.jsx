@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, Pencil } from "lucide-react";
+import styles from "./WorkoutExerciseSets.module.css";
 
 const WHEEL_ITEM_HEIGHT = 42;
 const REPS_SLIDER_MIN = 1;
@@ -127,36 +128,24 @@ export default function WorkoutExerciseSets({
   const editingSetIndex = editingSetDraft?.index ?? null;
   const editingSet = editingSetIndex !== null ? exercise.sets[editingSetIndex] : null;
   const editingSetKey = editingSetIndex !== null ? `${exercise.id}:${editingSetIndex}` : "";
-  const repsSliderState = editingSetDraft ? getRepsSliderState(editingSetDraft.reps, editingSet?.reps) : null;
-  const weightSliderState = editingSetDraft ? getWeightSliderState(editingSetDraft.weight, editingSet?.weight) : null;
+  const repsSliderState = useMemo(
+    () => (editingSetDraft ? getRepsSliderState(editingSetDraft.reps, editingSet?.reps) : null),
+    [editingSetDraft, editingSet?.reps]
+  );
+  const weightSliderState = useMemo(
+    () => (editingSetDraft ? getWeightSliderState(editingSetDraft.weight, editingSet?.weight) : null),
+    [editingSetDraft, editingSet?.weight]
+  );
   const repsWheelOptions = useMemo(
     () => (repsSliderState ? buildWheelOptions(repsSliderState, (value) => String(Math.round(value))) : []),
-    [repsSliderState?.min, repsSliderState?.max, repsSliderState?.step]
+    [repsSliderState]
   );
   const weightWheelOptions = useMemo(
     () => (weightSliderState ? buildWheelOptions(weightSliderState, formatWeightValue) : []),
-    [weightSliderState?.min, weightSliderState?.max, weightSliderState?.step]
+    [weightSliderState]
   );
 
-  useEffect(() => {
-    if (!editingSetKey || !repsSliderState || initializedWheelKeyRef.current === editingSetKey) {
-      return;
-    }
-
-    initializedWheelKeyRef.current = editingSetKey;
-    window.requestAnimationFrame(() => {
-      scrollWheelToValue(repsWheelRef.current, repsWheelOptions, repsSliderState.value);
-      if (weightSliderState) {
-        scrollWheelToValue(weightWheelRef.current, weightWheelOptions, weightSliderState.value);
-      }
-    });
-  }, [editingSetKey]);
-
-  useEffect(() => () => {
-    clearWheelSettleWork();
-  }, []);
-
-  function clearWheelSettleWork() {
+  const clearWheelSettleWork = useCallback(() => {
     Object.values(wheelScrollFrameRef.current).forEach((frameId) => {
       if (frameId !== null) {
         window.cancelAnimationFrame(frameId);
@@ -171,7 +160,25 @@ export default function WorkoutExerciseSets({
 
     wheelScrollFrameRef.current = { reps: null, weight: null };
     wheelSnapTimeoutRef.current = { reps: null, weight: null };
-  }
+  }, []);
+
+  useEffect(() => {
+    if (!editingSetKey || !repsSliderState || initializedWheelKeyRef.current === editingSetKey) {
+      return;
+    }
+
+    initializedWheelKeyRef.current = editingSetKey;
+    window.requestAnimationFrame(() => {
+      scrollWheelToValue(repsWheelRef.current, repsWheelOptions, repsSliderState.value);
+      if (weightSliderState) {
+        scrollWheelToValue(weightWheelRef.current, weightWheelOptions, weightSliderState.value);
+      }
+    });
+  }, [editingSetKey, repsSliderState, repsWheelOptions, weightSliderState, weightWheelOptions]);
+
+  useEffect(() => () => {
+    clearWheelSettleWork();
+  }, [clearWheelSettleWork]);
 
   function closeEditModal() {
     clearWheelSettleWork();
@@ -270,9 +277,13 @@ export default function WorkoutExerciseSets({
   }
 
   return (
-    <section className="workoutExerciseSets">
-      <div className="workoutExerciseSetsTitle">План на сегодня</div>
-      <div className="workoutExerciseSetsList workoutExercisePlanList">
+    <section
+      className={styles.root}
+      data-testid="workout-exercise-sets"
+      data-css-module-scope="workout-exercise-sets"
+    >
+      <div className={styles.title}>План на сегодня</div>
+      <div className={styles.list}>
         {exercise.sets.map((set, index) => {
           const repsValue = getPlannedValue(set.enteredReps, set.reps);
           const weightValue = getPlannedValue(set.enteredWeight, set.weight);
@@ -283,7 +294,8 @@ export default function WorkoutExerciseSets({
 
           return (
             <div
-              className={`setRow workoutExercisePlanRow ${hasExternalWeight ? "" : "withoutWeight"} ${set.completed ? "completed" : ""}`}
+              data-testid="workout-exercise-set-row"
+              className={`${styles.row} ${set.completed ? styles.completed : ""}`}
               key={`${exercise.id}:${index}`}
               role="button"
               tabIndex={0}
@@ -292,22 +304,23 @@ export default function WorkoutExerciseSets({
               aria-pressed={set.completed}
             >
               <span
-                className="workoutExerciseSetNumber"
+                className={styles.number}
                 aria-hidden="true"
                 aria-label={set.completed ? `Снять отметку с подхода ${index + 1}` : `Отметить подход ${index + 1}`}
               >
                 {index + 1}
               </span>
 
-              <div className="workoutExerciseSetPlan">
-                <span className="workoutExerciseSetReps">{repsText}</span>
-                <strong className="workoutExerciseSetWeight">{weightText}</strong>
+              <div className={styles.plan}>
+                <span className={styles.reps}>{repsText}</span>
+                <strong className={styles.weight}>{weightText}</strong>
               </div>
 
-              <div className="workoutExerciseSetActions">
+              <div className={styles.actions}>
                 <button
                   type="button"
-                  className="workoutExerciseSetEdit"
+                  className={styles.editButton}
+                  data-css-module-control="workout-exercise-sets"
                   onClick={(event) => {
                     event.stopPropagation();
                     setEditingSetDraft({
@@ -322,7 +335,7 @@ export default function WorkoutExerciseSets({
                 </button>
 
                 <span
-                  className="workoutExerciseCompleteButton"
+                  className={styles.completeButton}
                   aria-label={set.completed ? `Подход ${index + 1} выполнен` : `Выполнить подход ${index + 1}`}
                   aria-pressed={set.completed}
                 >
@@ -335,30 +348,38 @@ export default function WorkoutExerciseSets({
       </div>
 
       {editingSet && (
-        <div className="workoutSetEditModalBackdrop" role="presentation" onClick={closeEditModal}>
+        <div className={styles.modalBackdrop} role="presentation" onClick={closeEditModal}>
           <div
-            className="workoutSetEditModal"
+            data-testid="workout-set-edit-modal"
+            className={styles.modal}
             role="dialog"
             aria-modal="true"
             aria-label={`Редактировать подход ${editingSetIndex + 1}`}
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="workoutSetEditModalHeader">
+            <div className={styles.modalHeader}>
               <div>
                 <span>Подход {editingSetIndex + 1}</span>
                 <strong>Редактировать</strong>
               </div>
-              <button type="button" onClick={closeEditModal} aria-label="Закрыть">
+              <button
+                className={styles.closeButton}
+                data-css-module-control="workout-exercise-sets"
+                type="button"
+                onClick={closeEditModal}
+                aria-label="Закрыть"
+              >
                 ×
               </button>
             </div>
 
-            <div className={`workoutSetEditModalFields ${hasExternalWeight ? "withWeight" : "withoutWeight"}`}>
-              <div className="workoutSetWheelField">
+            <div className={`${styles.modalFields} ${hasExternalWeight ? "" : styles.withoutWeight}`}>
+              <div className={styles.wheelField}>
                 <span>Повторы</span>
                 <div
+                  data-testid="workout-set-wheel-picker"
                   ref={repsWheelRef}
-                  className="workoutSetWheelPicker"
+                  className={styles.wheelPicker}
                   role="listbox"
                   tabIndex={0}
                   aria-label={`Повторы, подход ${editingSetIndex + 1}`}
@@ -370,7 +391,8 @@ export default function WorkoutExerciseSets({
                       <button
                         key={option.value}
                         type="button"
-                        className={`workoutSetWheelOption ${active ? "active" : ""}`}
+                        className={`${styles.wheelOption} ${active ? styles.active : ""}`}
+                        data-css-module-control="workout-exercise-sets"
                         role="option"
                         aria-selected={active}
                         onClick={() => {
@@ -386,11 +408,12 @@ export default function WorkoutExerciseSets({
               </div>
 
               {hasExternalWeight && (
-                <div className="workoutSetWheelField workoutExerciseWeightField">
+                <div className={styles.wheelField}>
                   <span>Вес, кг</span>
                   <div
+                    data-testid="workout-set-wheel-picker"
                     ref={weightWheelRef}
-                    className="workoutSetWheelPicker"
+                    className={styles.wheelPicker}
                     role="listbox"
                     tabIndex={0}
                     aria-label={`Вес, подход ${editingSetIndex + 1}`}
@@ -402,7 +425,8 @@ export default function WorkoutExerciseSets({
                         <button
                           key={option.value}
                           type="button"
-                          className={`workoutSetWheelOption ${active ? "active" : ""}`}
+                          className={`${styles.wheelOption} ${active ? styles.active : ""}`}
+                          data-css-module-control="workout-exercise-sets"
                           role="option"
                           aria-selected={active}
                           onClick={() => {
@@ -419,7 +443,12 @@ export default function WorkoutExerciseSets({
               )}
             </div>
 
-            <button type="button" className="workoutSetEditDoneButton" onClick={saveEditModal}>
+            <button
+              type="button"
+              className={styles.doneButton}
+              data-css-module-control="workout-exercise-sets"
+              onClick={saveEditModal}
+            >
               Готово
             </button>
           </div>
@@ -427,7 +456,7 @@ export default function WorkoutExerciseSets({
       )}
 
       {sharedExerciseAiWeightAdjustment && (
-        <small className="workoutAiSharedWeightNote">
+        <small className={styles.sharedWeightNote}>
           Коррекция готовности: {sharedExerciseAiWeightAdjustment}
         </small>
       )}

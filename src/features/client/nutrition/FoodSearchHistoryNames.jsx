@@ -1,4 +1,5 @@
 import { getSearchHistoryName } from "../../../utils/nutritionFoodPresentation";
+import styles from "./FoodSearchHistoryNames.module.css";
 
 export default function FoodSearchHistoryNames({
   visible,
@@ -10,9 +11,13 @@ export default function FoodSearchHistoryNames({
   }
 
   return (
-    <div className="fatSearchHistoryNames">
-      <div className="fatSearchHistoryNamesTitle">История поиска</div>
-      <div className="fatSearchHistoryNamesList">
+    <div
+      className={styles.root}
+      data-css-module-scope="food-search-history-names"
+      data-testid="food-search-history-names"
+    >
+      <div className={styles.title}>История поиска</div>
+      <div className={styles.list}>
         {foods.slice(0, 8).map((food, index) => {
           const foodName = getSearchHistoryName(food);
           if (!foodName) return null;
@@ -21,7 +26,8 @@ export default function FoodSearchHistoryNames({
             <button
               type="button"
               key={`search_history_name_only_${foodName}_${index}`}
-              className="fatSearchHistoryNameButton"
+              className={styles.button}
+              data-css-module-control="food-search-history-name"
               data-history-name-only="true"
               title={foodName}
               onClick={() => onSelect(foodName)}

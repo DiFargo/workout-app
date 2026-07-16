@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
+import styles from "./ProfilePasswordModal.module.css";
 
 export default function ProfilePasswordModal({
   open,
@@ -23,21 +24,6 @@ export default function ProfilePasswordModal({
   });
   const canSetPasswordViaGoogle = !hasPasswordProvider && hasGoogleProvider;
 
-  useEffect(() => {
-    if (open) {
-      setPasswordDraft({
-        currentPassword: "",
-        nextPassword: "",
-        confirmPassword: ""
-      });
-      setVisiblePasswordFields({
-        currentPassword: false,
-        nextPassword: false,
-        confirmPassword: false
-      });
-    }
-  }, [open]);
-
   if (!open) return null;
 
   function updatePasswordDraft(field, value) {
@@ -52,8 +38,10 @@ export default function ProfilePasswordModal({
     const isVisible = Boolean(visiblePasswordFields[field]);
 
     return (
-      <div className="profilePasswordInputWrap">
+      <div className={styles.inputWrap}>
         <input
+          className={styles.input}
+          data-testid={`profile-password-${field}`}
           type={isVisible ? "text" : "password"}
           autoComplete={autoComplete}
           value={passwordDraft[field]}
@@ -61,7 +49,8 @@ export default function ProfilePasswordModal({
         />
         <button
           type="button"
-          className="profilePasswordVisibilityButton"
+          className={styles.visibilityButton}
+          data-testid={`profile-password-toggle-${field}`}
           aria-label={isVisible ? "Скрыть пароль" : "Показать пароль"}
           onMouseDown={(event) => event.preventDefault()}
           onClick={() => togglePasswordVisibility(field)}
@@ -86,9 +75,16 @@ export default function ProfilePasswordModal({
   }
 
   return (
-    <div className="profileTelegramModalOverlay" role="presentation" onClick={onClose}>
+    <div
+      className={styles.overlay}
+      data-testid="profile-password-overlay"
+      data-css-module-scope="profile-password-modal"
+      role="presentation"
+      onClick={onClose}
+    >
       <div
-        className="profileTelegramModal profilePasswordManageModal"
+        className={styles.dialog}
+        data-testid="profile-password-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="profilePasswordManageTitle"
@@ -96,19 +92,20 @@ export default function ProfilePasswordModal({
       >
         <button
           type="button"
-          className="profileTelegramModalClose"
+          className={styles.closeButton}
+          data-testid="profile-password-close"
           aria-label="Закрыть пароль"
           onClick={onClose}
         >×</button>
 
-        <div className="profileTelegramManageHead profilePasswordManageHead">
-          <div className="profileTelegramManageAvatar profilePasswordManageAvatar">
+        <div className={styles.head}>
+          <div className={styles.avatar}>
             <LockKeyhole size={28} strokeWidth={2.3} />
           </div>
           <div>
-            <span>БЕЗОПАСНОСТЬ</span>
-            <h3 id="profilePasswordManageTitle">{canSetPasswordViaGoogle ? "Задать пароль" : "Изменить пароль"}</h3>
-            <p>
+            <span className={styles.eyebrow}>БЕЗОПАСНОСТЬ</span>
+            <h3 className={styles.heading} id="profilePasswordManageTitle">{canSetPasswordViaGoogle ? "Задать пароль" : "Изменить пароль"}</h3>
+            <p className={styles.intro}>
               {canSetPasswordViaGoogle
                 ? "Аккаунт подключён через Google. Подтверди вход Google и задай пароль для входа через логин."
                 : "Обнови пароль для входа через логин или email."}
@@ -116,26 +113,26 @@ export default function ProfilePasswordModal({
           </div>
         </div>
 
-        <form className="profileEmailManageForm profilePasswordManageForm" onSubmit={submitPasswordChange}>
+        <form className={styles.form} data-testid="profile-password-form" onSubmit={submitPasswordChange}>
           {hasPasswordProvider && (
-            <label>
-              <span>Текущий пароль</span>
+            <label className={styles.field}>
+              <span className={styles.fieldLabel}>Текущий пароль</span>
               {renderPasswordInput("currentPassword", "current-password")}
             </label>
           )}
 
-          <label>
-            <span>Новый пароль</span>
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>Новый пароль</span>
             {renderPasswordInput("nextPassword", "new-password")}
           </label>
 
-          <label>
-            <span>Повтори пароль</span>
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>Повтори пароль</span>
             {renderPasswordInput("confirmPassword", "new-password")}
           </label>
 
-          <div className="profileTelegramAuthPreview profileEmailAuthPreview profilePasswordAuthPreview">
-            <div className="profileTelegramAuthIcon">✓</div>
+          <div className={styles.preview}>
+            <div className={styles.previewIcon}>✓</div>
             <div>
               <strong>Подтверждение входа</strong>
               <span>
@@ -146,23 +143,21 @@ export default function ProfilePasswordModal({
             </div>
           </div>
 
-          <div className="profilePasswordManageActions">
-            <button type="button" className="profileTelegramSave ghost" onClick={onSendPasswordReset}>
+          <div className={styles.actions}>
+            <button type="button" className={styles.secondaryButton} data-testid="profile-password-reset" onClick={onSendPasswordReset}>
               Ссылка на почту
             </button>
-            <button type="submit" className="profileTelegramCheckButton" disabled={saving}>
+            <button type="submit" className={styles.primaryButton} data-testid="profile-password-submit" disabled={saving}>
               {saving ? "Меняю..." : canSetPasswordViaGoogle ? "Задать пароль" : "Обновить"}
             </button>
           </div>
         </form>
 
         {status && (
-          <div className="profileTelegramAuthStatus">
-            <span>{status}</span>
-          </div>
+          <div className={styles.status} data-testid="profile-password-status">{status}</div>
         )}
 
-        <button type="button" className="profileTelegramSave ghost" onClick={onClose}>
+        <button type="button" className={styles.secondaryButton} data-testid="profile-password-dismiss" onClick={onClose}>
           Закрыть
         </button>
       </div>

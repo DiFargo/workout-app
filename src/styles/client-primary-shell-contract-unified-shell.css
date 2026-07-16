@@ -2,10 +2,7 @@
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
-html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
-html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium {
   --client-shell-x: 26px;
   --client-title-top: 58px;
   --client-title-height: 54px;
@@ -27,9 +24,7 @@ html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEdit
 
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
-html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
-html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
-html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage {
+html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
   padding-left: var(--client-shell-x) !important;
   padding-right: var(--client-shell-x) !important;
   padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
@@ -39,7 +34,6 @@ html:root[data-app-theme="warm-light"] body #root .clientCorePage .appVersionBad
 html:root[data-app-theme="warm-light"] body #root .clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
-html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .appVersionBadge.clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge {
   position: absolute !important;
   top: 18px !important;

@@ -1,3 +1,5 @@
+import styles from "./ProfileProgressPhotosModal.module.css";
+
 const PROGRESS_PHOTO_STEPS = [
   ["front", "01", "Спереди"],
   ["side", "02", "Сбоку"],
@@ -38,24 +40,29 @@ export default function ProfileProgressPhotosModal({
 
   return (
     <div
-      className="cabinetProgressPhotosOverlay"
+      className={styles.overlay}
+      data-css-module-scope="profile-progress-photos"
+      data-testid="profile-progress-photos-overlay"
       role="presentation"
       onClick={() => !uploading && onClose()}
     >
       <section
-        className={onOpenMeasurements ? "cabinetProgressPhotosModal cabinetBodyControlModal" : "cabinetProgressPhotosModal"}
+        className={`${styles.dialog}${onOpenMeasurements ? ` ${styles.bodyControlDialog}` : ""}`}
+        data-testid="profile-progress-photos-dialog"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="cabinetProgressPhotosTitle"
+        aria-labelledby="profileProgressPhotosTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="cabinetProgressPhotosHead">
+        <header className={styles.header} data-testid="profile-progress-photos-header">
           <div>
             <span>КОНТРОЛЬ ТЕЛА</span>
-            <h2 id="cabinetProgressPhotosTitle">Фото прогресса</h2>
+            <h2 id="profileProgressPhotosTitle">Фото прогресса</h2>
             <small>Спереди · сбоку · со спины</small>
           </div>
           <button
+            className={styles.closeButton}
+            data-testid="profile-progress-photos-close"
             type="button"
             aria-label="Закрыть фото прогресса"
             disabled={uploading}
@@ -66,12 +73,12 @@ export default function ProfileProgressPhotosModal({
         </header>
 
         {onOpenMeasurements && (
-          <div className="cabinetBodyControlTabs" role="tablist" aria-label="Контроль тела">
+          <div className={styles.bodyControlTabs} data-testid="profile-progress-photos-section-tabs" role="tablist" aria-label="Контроль тела">
             <button
               type="button"
               role="tab"
               aria-selected="true"
-              className="active"
+              className={styles.active}
             >
               Фото прогресса
             </button>
@@ -86,14 +93,14 @@ export default function ProfileProgressPhotosModal({
           </div>
         )}
 
-        <div className="cabinetProgressPhotosBody">
-          <div className="cabinetProgressPhotosIntro">
+        <div className={styles.body} data-testid="profile-progress-photos-body">
+          <div className={styles.intro} data-testid="profile-progress-photos-intro">
             <i aria-hidden="true">📷</i>
             <p>Встань в полный рост, используй одинаковое освещение и держи камеру на одном уровне.</p>
           </div>
 
           {latestPhoto && (
-            <div className="cabinetProgressPhotosLatest">
+            <div className={styles.latest} data-testid="profile-progress-photos-latest">
               <div>
                 <span>ПОСЛЕДНЯЯ ФОТОСЕССИЯ</span>
                 <strong>
@@ -105,16 +112,21 @@ export default function ProfileProgressPhotosModal({
                   latestPhoto.frontUrl,
                   latestPhoto.sideUrl,
                   latestPhoto.backUrl
-                ].filter(Boolean).map((url) => (
-                  <img key={url} src={url} alt="" loading="lazy" />
+                ].filter(Boolean).map((url, index) => (
+                  <img key={`${index}_${url}`} src={url} alt="" loading="lazy" />
                 ))}
               </div>
             </div>
           )}
 
-          <div className="cabinetProgressPhotoSteps">
+          <div className={styles.steps} data-testid="profile-progress-photos-steps">
             {PROGRESS_PHOTO_STEPS.map(([view, number, label]) => (
-              <label className={files[view] ? "selected" : ""} key={view}>
+              <label
+                className={files[view] ? styles.selected : undefined}
+                data-photo-view={view}
+                data-testid="profile-progress-photo-step"
+                key={view}
+              >
                 <input
                   type="file"
                   accept="image/*"
@@ -138,14 +150,17 @@ export default function ProfileProgressPhotosModal({
           </div>
 
           {status && (
-            <p className={status.includes("сохранены") ? "cabinetProgressPhotoStatus success" : "cabinetProgressPhotoStatus"}>
+            <p
+              className={`${styles.status}${status.includes("сохранены") ? ` ${styles.success}` : ""}`}
+              data-testid="profile-progress-photos-status"
+            >
               {status}
             </p>
           )}
 
           {selectedBefore && selectedAfter && (
-            <details className="cabinetProgressPhotosCompare">
-              <summary className="cabinetProgressPhotosCompareHead">
+            <details className={styles.compare} data-testid="profile-progress-photos-compare">
+              <summary className={styles.compareHeader} data-testid="profile-progress-photos-compare-toggle">
                 <span>
                   <strong>Сравнить фотосессии</strong>
                   <small>
@@ -157,8 +172,8 @@ export default function ProfileProgressPhotosModal({
                 <i aria-hidden="true">⌄</i>
               </summary>
 
-              <div className="cabinetProgressPhotosCompareContent">
-                <div className="cabinetProgressPhotosCompareControls">
+              <div className={styles.compareContent} data-testid="profile-progress-photos-compare-content">
+                <div className={styles.compareControls}>
                   {COMPARE_SLOTS.map(([label, slot]) => (
                     <label key={slot}>
                       <span>{label}</span>
@@ -181,14 +196,15 @@ export default function ProfileProgressPhotosModal({
                   ))}
                 </div>
 
-                <div className="cabinetProgressPhotosCompareTabs" role="tablist" aria-label="Ракурс фотографии">
+                <div className={styles.compareTabs} data-testid="profile-progress-photos-compare-tabs" role="tablist" aria-label="Ракурс фотографии">
                   {compareViews.map((view) => (
                     <button
                       type="button"
                       role="tab"
                       aria-selected={compareView === view.id}
                       aria-pressed={compareView === view.id}
-                      className={compareView === view.id ? "active" : ""}
+                      className={compareView === view.id ? styles.active : undefined}
+                      data-compare-view={view.id}
                       onClick={() => onCompareViewChange(view.id)}
                       key={view.id}
                     >
@@ -197,7 +213,7 @@ export default function ProfileProgressPhotosModal({
                   ))}
                 </div>
 
-                <div className="cabinetProgressPhotosCompareStage">
+                <div className={styles.compareStage} data-testid="profile-progress-photos-compare-stage">
                   {[
                     ["Раньше", selectedBefore],
                     ["Позже", selectedAfter]
@@ -214,7 +230,7 @@ export default function ProfileProgressPhotosModal({
                           loading="lazy"
                         />
                       ) : (
-                        <div className="cabinetProgressPhotosCompareMissing">Нет фото</div>
+                        <div className={styles.compareMissing}>Нет фото</div>
                       )}
                     </figure>
                   ))}
@@ -226,7 +242,8 @@ export default function ProfileProgressPhotosModal({
 
         <button
           type="button"
-          className="cabinetProgressPhotosSave"
+          className={styles.saveButton}
+          data-testid="profile-progress-photos-save"
           disabled={uploading || !canSave}
           onClick={onSave}
         >

@@ -29,8 +29,7 @@
   text-align: left !important;
 }
 
-.profileBottomTabBar,
-.individualWorkoutMenuBar {
+.profileBottomTabBar {
   box-sizing: border-box !important;
   width: min(394px, calc(100vw - 16px)) !important;
   max-width: 394px !important;
@@ -52,8 +51,7 @@
   bottom: max(16px, calc(env(safe-area-inset-bottom) + 10px)) !important;
 }
 
-.profileBottomTabBar > button,
-.individualWorkoutMenuBar > button {
+.profileBottomTabBar > button {
   height: 68px !important;
   min-height: 68px !important;
   max-height: 68px !important;
@@ -62,8 +60,7 @@
   color: rgba(232, 237, 230, 0.62) !important;
 }
 
-.profileBottomTabBar > button span,
-.individualWorkoutMenuBar > button span {
+.profileBottomTabBar > button span {
   height: 31px !important;
   min-height: 31px !important;
   max-height: 31px !important;
@@ -72,21 +69,18 @@
   filter: grayscale(1) saturate(0) opacity(0.78) !important;
 }
 
-.profileBottomTabBar > button strong,
-.individualWorkoutMenuBar > button strong {
+.profileBottomTabBar > button strong {
   font-size: 11px !important;
   font-weight: 700 !important;
 }
 
-.profileBottomTabBar > button.active,
-.individualWorkoutMenuBar > button.active {
+.profileBottomTabBar > button.active {
   border-color: transparent !important;
   background: rgba(143, 188, 54, 0.055) !important;
   color: #aee94d !important;
 }
 
-.profileBottomTabBar > button.active span,
-.individualWorkoutMenuBar > button.active span {
+.profileBottomTabBar > button.active span {
   filter: none !important;
 }
 
@@ -107,9 +101,7 @@
 }
 
 .profileBottomTabBar > button:focus,
-.profileBottomTabBar > button:focus-visible,
-.individualWorkoutMenuBar > button:focus,
-.individualWorkoutMenuBar > button:focus-visible {
+.profileBottomTabBar > button:focus-visible {
   outline: none !important;
 }
 

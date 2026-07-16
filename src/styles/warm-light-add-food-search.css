@@ -2,8 +2,7 @@
 @import "./warm-light-add-food-search-fields.css";
 @import "./warm-light-add-food-search-actions.css";
 
-:root[data-app-theme="warm-light"] .menuRefreshIconBtn,
-:root[data-app-theme="warm-light"] .profileThemeSwitchBtn {
+:root[data-app-theme="warm-light"] .menuRefreshIconBtn {
   background: linear-gradient(180deg, rgba(255, 249, 215, 0.96) 0%, rgba(246, 232, 174, 0.82) 100%) !important;
   color: #5f5744 !important;
   border-color: rgba(94,75,30,0.12) !important;

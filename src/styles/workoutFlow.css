@@ -147,13 +147,13 @@
   text-align: center;
 }
 
-.exerciseSlideCard button:not(.showVideoBtn) {
+.exerciseSlideCard button:not(.showVideoBtn):not([data-css-module-control]) {
   min-height: 50px;
   border-radius: 18px;
   font-size: 17px;
 }
 
-.exerciseSlideCard button:not(.showVideoBtn) {
+.exerciseSlideCard button:not(.showVideoBtn):not([data-css-module-control]) {
   position: sticky;
   bottom: 0;
   z-index: 5;
@@ -251,10 +251,6 @@
   .exerciseSlideCard h3 {
     font-size: 21px;
     margin-bottom: 12px;
-  }
-
-  .exerciseVideo {
-    max-height: 145px;
   }
 
   .setRow input {
@@ -365,5 +361,3 @@
 }
 
 /* REFRESH BUTTON FIX */
-
-

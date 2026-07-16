@@ -6,6 +6,7 @@ import FoodSearchResults from "./FoodSearchResults";
 import NutritionCreateChoice from "./NutritionCreateChoice";
 import NutritionPhotoAiPreview from "./NutritionPhotoAiPreview";
 import NutritionPhotoNotFoundModal from "./NutritionPhotoNotFoundModal";
+import styles from "./FoodSearchPage.module.css";
 import {
   getSearchHistoryName,
   getShortFoodName
@@ -48,28 +49,41 @@ function FoodSearchModernLanding({
     .slice(0, 6);
 
   return (
-    <div className="foodSearchModernLanding">
-      <section className="foodSearchModernSection foodSearchRecentSection">
-        <div className="foodSearchModernSectionHeader">
-          <h3>
-            <span aria-hidden="true">↺</span>
+    <div
+      className={styles.landing}
+      data-testid="food-search-modern-landing"
+      data-css-module-scope="food-search-page"
+    >
+      <section data-testid="food-search-recent-section">
+        <div className={styles.sectionHeader}>
+          <h3 className={styles.sectionTitle}>
+            <span className={styles.sectionIcon} aria-hidden="true">↺</span>
             Недавние
           </h3>
-          <button type="button" onClick={onSearchReset}>Очистить</button>
+          <button
+            type="button"
+            className={styles.clearButton}
+            data-css-module-control="food-search-clear"
+            onClick={onSearchReset}
+          >
+            Очистить
+          </button>
         </div>
 
-        <div className="foodSearchRecentGrid">
+        <div className={styles.recentGrid} data-testid="food-search-recent-grid">
           {recentCards.map((food, index) => {
             const name = getSearchHistoryName(food) || food.name || "Продукт";
             return (
               <button
                 type="button"
                 key={`${food.id || name}_${index}`}
-                className="foodSearchRecentCard"
+                className={styles.recentItem}
+                data-food-search-recent-card
+                data-css-module-control="food-search-recent-card"
                 onClick={() => onRecentFoodSelect(food)}
               >
-                <span aria-hidden="true">{food.icon || "🍽️"}</span>
-                <strong>{getShortFoodName(name)}</strong>
+                <span className={styles.recentIcon} aria-hidden="true">{food.icon || "🍽️"}</span>
+                <strong className={styles.recentName}>{getShortFoodName(name)}</strong>
               </button>
             );
           })}
@@ -137,6 +151,7 @@ export default function FoodSearchPage({
         value={search}
         onChange={onSearchChange}
         onReset={onSearchReset}
+        variant={searchTab === "my" ? "my-products" : "search"}
       />
 
       <FoodPhotoAiSearchProcess
@@ -159,8 +174,6 @@ export default function FoodSearchPage({
         <FoodSearchResults
           search={search}
           searchTab={searchTab}
-          showRecentFoods={showRecentFoods}
-          recentFoods={recentFoods}
           photoAnalyzing={photoAnalyzing}
           fatSecretError={fatSecretError}
           fatSecretLoading={fatSecretLoading}
@@ -168,7 +181,6 @@ export default function FoodSearchPage({
           searchResults={searchResults}
           visibleResults={visibleResults}
           nutrition={nutrition}
-          onRecentFoodSelect={onRecentFoodSelect}
           onSuggestionSelect={onSuggestionSelect}
           onMyFoodSelect={onMyFoodSelect}
           onFoodSelect={onFoodSelect}
@@ -179,16 +191,19 @@ export default function FoodSearchPage({
       {!createChoiceOpen && searchTab !== "my" && (
         <button
           type="button"
-          className="foodSearchFixedPhotoAction"
+          className={styles.photoAction}
+          data-testid="food-search-photo-action"
+          data-css-module-scope="food-search-page"
+          data-css-module-control="food-search-photo-action"
           onClick={onPhotoSelect}
           aria-label="ИИ поиск по фото"
         >
-          <span className="foodSearchModernActionIcon" aria-hidden="true">📷</span>
-          <span>
-            <strong>ИИ поиск по фото</strong>
-            <small>Сфотографируйте еду и получите КБЖУ</small>
+          <span className={styles.photoIcon} aria-hidden="true">📷</span>
+          <span className={styles.photoCopy}>
+            <strong className={styles.photoTitle}>ИИ поиск по фото</strong>
+            <small className={styles.photoDescription}>Сфотографируйте еду и получите КБЖУ</small>
           </span>
-          <em aria-hidden="true">›</em>
+          <em className={styles.photoChevron} aria-hidden="true">›</em>
         </button>
       )}
 
@@ -210,7 +225,9 @@ export default function FoodSearchPage({
 
       <input
         ref={photoInputRef}
-        className="fatPhotoAiInput"
+        className={styles.photoInput}
+        data-testid="food-search-photo-input"
+        data-css-module-control="food-search-photo-input"
         type="file"
         accept="image/*"
         capture="environment"

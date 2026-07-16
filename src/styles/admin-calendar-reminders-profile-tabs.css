@@ -1,5 +1,4 @@
 /* Tab content is conditionally rendered in JSX; CSS only keeps page spacing and transitions. */
-.profileNutritionSection,
 .profileSettingsSection,
 .profileCabinetSection {
   animation: profileTabFadeIn .22s ease both;
@@ -18,59 +17,13 @@
   padding-top: 72px !important;
 }
 
-.profileTabbedPage[data-profile-tab="settings"] .profileWorkoutModeSettingsSection {
-  margin-top: 0 !important;
-}
-
 .profileTabbedPage[data-profile-tab="nutrition"] .profileCabinetSection {
   display: none !important;
-}
-
-.profileTabbedPage[data-profile-tab="nutrition"] .profileNutritionSection {
-  margin-top: 72px !important;
 }
 
 @media (min-width: 721px) {
   .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
     padding: 20px !important;
-  }
-
-  .profileTabbedPage[data-profile-tab="cabinet"] .profileAiHero {
-    min-height: 88px !important;
-  }
-
-  .profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow,
-  .profileTabbedPage[data-profile-tab="cabinet"] .profileAiSplitCards {
-    gap: 12px !important;
-    margin-top: 12px !important;
-  }
-
-  .profileTabbedPage[data-profile-tab="cabinet"] .profileAiSplitCards {
-    margin-bottom: 12px !important;
-  }
-
-  .profileTabbedPage[data-profile-tab="cabinet"] .profileAiStatsRow > div,
-  .profileTabbedPage[data-profile-tab="cabinet"] .profileAiMiniCard {
-    box-sizing: border-box !important;
-    height: 84px !important;
-    min-height: 84px !important;
-    padding: 12px 14px !important;
-    border-radius: 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
-    background: rgba(0, 0, 0, 0.18) !important;
-    box-shadow: none !important;
-  }
-
-  .profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachInsight {
-    border-radius: 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
-    background: rgba(0, 0, 0, 0.18) !important;
-    box-shadow: none !important;
-  }
-
-  .profileTabbedPage[data-profile-tab="cabinet"] .profileAiCoachToggle {
-    min-height: 112px;
-    padding: 16px 18px;
   }
 
   .profileTabbedPage[data-profile-tab="cabinet"] .profileAiHistoryButton {
@@ -80,4 +33,3 @@
     box-shadow: none;
   }
 }
-

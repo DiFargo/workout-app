@@ -9,13 +9,6 @@
   overflow: hidden !important;
 }
 
-.fatMealCard.open .productRowExact,
-.productRowExact {
-  width: 100% !important;
-  max-width: none !important;
-  box-sizing: border-box !important;
-}
-
 .fatMealCard.open .fatMealItems,
 .fatMealItems {
   max-width: none !important;
@@ -39,12 +32,6 @@
   margin-right: 0 !important;
 
   border-radius: 20px !important;
-}
-
-.fatMealCard.open .productRowExact,
-.productRowExact {
-  padding-left: 24px !important;
-  padding-right: 24px !important;
 }
 
 @media (max-width: 480px) {

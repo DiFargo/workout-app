@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Bell, RefreshCw } from "lucide-react";
 import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
@@ -7,26 +6,65 @@ import { POST_WORKOUT_FEEDBACK_OPTIONS } from "../../domain/workoutPresentation"
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import FirstSetupOnboarding from "../../features/auth/FirstSetupOnboarding";
 import AiCoachPage from "../../features/client/ai/AiCoachPage";
+import MeasurementWizardPage from "../../features/client/measurements/MeasurementWizardPage";
+import WorkoutHistoryPage from "../../features/client/workouts/WorkoutHistoryPage";
+import BasicWorkoutQuizPage from "../../features/client/workouts/BasicWorkoutQuizPage";
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
+import WorkoutModePage from "../../features/client/workouts/WorkoutModePage";
+import WorkoutPlanPage from "../../features/client/workouts/WorkoutPlanPage";
+import WorkoutExerciseVideoFrame from "../../features/client/workouts/WorkoutExerciseVideoFrame";
+import WorkoutExerciseSets from "../../features/client/workouts/WorkoutExerciseSets";
+import WorkoutRunStageView, { WorkoutRunExercisePreview } from "../../features/client/workouts/WorkoutRunStageView";
+import WorkoutRunPageShell from "../../features/client/workouts/WorkoutRunPageShell";
+import WorkoutExerciseSupport from "../../features/client/workouts/WorkoutExerciseSupport";
+import {
+  WorkoutFullscreenVideoOverlay,
+  WorkoutNotFoundPage,
+  WorkoutRunTopControls
+} from "../../features/client/workouts/WorkoutRunOverlays";
 import {
   PostWorkoutFeedbackDialog,
   WorkoutDraftRestoreDialog,
+  WorkoutExitDialog,
+  WorkoutIncompleteDialog,
   WorkoutReadinessDialog
 } from "../workout/WorkoutDialogs";
 import ProfileAccountSettingsSection from "../../features/client/profile/ProfileAccountSettingsSection";
 import ProfileAppSettingsSection from "../../features/client/profile/ProfileAppSettingsSection";
+import ProfileAvatarCropModal from "../../features/client/profile/ProfileAvatarCropModal";
+import ProfileCabinetActionGrid from "../../features/client/profile/ProfileCabinetActionGrid";
+import ProfileCabinetTitleRow from "../../features/client/profile/ProfileCabinetTitleRow";
+import ProfileEmailModal from "../../features/client/profile/ProfileEmailModal";
 import ProfileHeroCard from "../../features/client/profile/ProfileHeroCard";
 import ProfileMainMeasurementSnapshot from "../../features/client/profile/ProfileMainMeasurementSnapshot";
+import ProfileMainRoleActions from "../../features/client/profile/ProfileMainRoleActions";
 import ProfileMainSummaryCards from "../../features/client/profile/ProfileMainSummaryCards";
+import ProfileMeasurementWizardPanel from "../../features/client/profile/ProfileMeasurementWizardPanel";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
+import ProfilePasswordModal from "../../features/client/profile/ProfilePasswordModal";
+import ProfilePageChrome from "../../features/client/profile/ProfilePageChrome";
+import {
+  ProfileDashboardContent,
+  ProfileDashboardShell,
+  ProfileDashboardVersion,
+  ProfileHarnessTitle,
+  ProfileMainHeroStatsShell
+} from "../../features/client/profile/ProfileDashboardShell";
 import ProfileProgressInsightCard from "../../features/client/profile/ProfileProgressInsightCard";
 import ProfileProgressPhotosModal from "../../features/client/profile/ProfileProgressPhotosModal";
-import ProfileSettingsModal from "../../features/client/profile/ProfileSettingsModal";
+import ProfileSettingsModal, { ProfileSettingsLogoutButton } from "../../features/client/profile/ProfileSettingsModal";
+import ProfileSettingsTab from "../../features/client/profile/ProfileSettingsTab";
 import ProfileTelegramModal from "../../features/client/profile/ProfileTelegramModal";
 import ProfileTrainerNotificationsModal from "../../features/client/profile/ProfileTrainerNotificationsModal";
 import ProfileWorkoutJournalModal from "../../features/client/profile/ProfileWorkoutJournalModal";
 import { renderNutritionRoute } from "../../features/client/nutrition/renderNutritionRoute";
+import DishEditIngredientsBox from "../../features/client/nutrition/DishEditIngredientsBox";
+import NutritionDeleteConfirmModal from "../../features/client/nutrition/NutritionDeleteConfirmModal";
+import FoodSearchHistoryNames from "../../features/client/nutrition/FoodSearchHistoryNames";
+import { FoodSearchSurface } from "../../features/client/nutrition/FoodSearchOverlay";
+import NutritionPhotoAiPreview from "../../features/client/nutrition/NutritionPhotoAiPreview";
+import NutritionUndoDeleteToast from "../../features/client/nutrition/NutritionUndoDeleteToast";
 import {
   buildNutritionCalendarDays,
   buildNutritionWeekDates,
@@ -34,6 +72,7 @@ import {
   shiftNutritionCalendarMonthKey
 } from "../../utils/nutritionCalendar";
 import { buildAiNutritionMonthlyPlan } from "../../utils/aiNutritionPlanBuilder";
+import { getProfileMeasurementFields } from "../../utils/profileMeasurements";
 
 const HARNESS_DATE = "2026-06-22";
 
@@ -102,6 +141,32 @@ const harnessWorkouts = [
   }
 ];
 
+const harnessRunWorkoutSeed = {
+  id: "client_harness_run_day_1",
+  name: "День 1 — Верх тела",
+  weekName: "Неделя 1",
+  exercises: [
+    {
+      id: "client_harness_run_bench",
+      name: "Жим штанги лёжа",
+      video: "/videos/1ea4065d-8785-4c13-9fd5-a5bdf409b6b7.mp4",
+      sets: [
+        { reps: "10", weight: "60", enteredReps: "10", enteredWeight: "60", aiOriginalWeight: "65", completed: true },
+        { reps: "10", weight: "60", enteredReps: "", enteredWeight: "", completed: false },
+        { reps: "8", weight: "65", enteredReps: "", enteredWeight: "", completed: false }
+      ]
+    },
+    {
+      id: "client_harness_run_row",
+      name: "Тяга верхнего блока",
+      sets: [
+        { reps: "12", weight: "35", enteredReps: "", enteredWeight: "", completed: false },
+        { reps: "12", weight: "35", enteredReps: "", enteredWeight: "", completed: false }
+      ]
+    }
+  ]
+};
+
 const harnessHistory = [
   {
     id: "client_harness_history_1",
@@ -115,6 +180,50 @@ const harnessHistory = [
   }
 ];
 
+const harnessWorkoutHistory = [
+  {
+    id: "client_harness_history_full_1",
+    workoutId: "client_harness_day_1",
+    workout: "День 1 — Верх тела",
+    completedAt: "2026-06-20T18:00:00.000Z",
+    date: "2026-06-20T18:00:00.000Z",
+    postWorkoutFeedback: { emoji: "🔥", title: "Хорошо" },
+    exercises: [
+      {
+        name: "Жим гантелей",
+        sets: [
+          { set: 1, reps: 10, weight: 20 },
+          { set: 2, reps: 9, weight: 20 }
+        ]
+      },
+      {
+        name: "Тяга верхнего блока",
+        sets: [
+          { set: 1, reps: 12, weight: 35 },
+          { set: 2, reps: 11, weight: 35 }
+        ]
+      }
+    ]
+  },
+  {
+    id: "client_harness_history_full_2",
+    workoutId: "client_harness_day_2",
+    workout: "День 2 — Низ тела",
+    completedAt: "2026-06-17T17:30:00.000Z",
+    date: "2026-06-17T17:30:00.000Z",
+    exercises: [
+      {
+        name: "Жим ногами",
+        sets: [
+          { set: 1, reps: 12, weight: 90 },
+          { set: 2, reps: 12, weight: 90 },
+          { set: 3, reps: 10, weight: 95 }
+        ]
+      }
+    ]
+  }
+];
+
 const harnessMeasurementFields = [
   { id: "weight", label: "Вес", unit: "кг" },
   { id: "chest", label: "Грудь", unit: "см" },
@@ -122,13 +231,50 @@ const harnessMeasurementFields = [
   { id: "thigh", label: "Бедро", unit: "см" }
 ];
 
+const harnessFullMeasurementFields = [
+  { id: "weight", label: "Вес", unit: "кг" },
+  { id: "neck", label: "Шея", unit: "см" },
+  { id: "shoulders", label: "Плечевой пояс", unit: "см" },
+  { id: "chest", label: "Грудь", unit: "см" },
+  { id: "biceps", label: "Бицепс", unit: "см" },
+  { id: "forearm", label: "Предплечье", unit: "см" },
+  { id: "wrist", label: "Запястье", unit: "см" },
+  { id: "belly", label: "Живот", unit: "см" },
+  { id: "pelvis", label: "Таз", unit: "см" },
+  { id: "thigh", label: "Бедро", unit: "см" },
+  { id: "calf", label: "Икра", unit: "см" },
+  { id: "ankle", label: "Щиколотка", unit: "см" }
+];
+
 const harnessLatestMeasurement = {
   date: "2026-06-22T12:00:00.000Z",
   weight: 88.8,
+  neck: 39,
+  shoulders: 121,
   chest: 108,
+  biceps: 39,
+  forearm: 31,
+  wrist: 18,
   belly: 91,
-  thigh: 61
+  pelvis: 102,
+  thigh: 61,
+  calf: 39,
+  ankle: 24
 };
+
+const harnessWizardMeasurementFields = getProfileMeasurementFields("recomp");
+const harnessMeasurementDraftSeed = harnessWizardMeasurementFields.reduce((draft, field) => ({
+  ...draft,
+  [field.id]: String(harnessLatestMeasurement[field.id] ?? "")
+}), {
+  note: "Утром, до завтрака"
+});
+
+function getHarnessMeasurementStep(state) {
+  if (state === "review") return harnessWizardMeasurementFields.length + 1;
+  if (state === "measurement") return 1;
+  return 0;
+}
 
 const harnessNutritionGoals = {
   calories: 2409,
@@ -260,41 +406,25 @@ function getHarnessWeekDates(selectedKey) {
 
 function HarnessCabinetActions({
   onOpenPhotos,
-  onOpenMeasurements,
   onOpenNutrition,
   onOpenJournal,
   onOpenSettings
 }) {
-  const actions = [
-    ["accountProfile", "👤", "Аккаунт", "Профиль и настройки", "Тема и Telegram", onOpenSettings, true],
-    ["photos", "📷", "Контроль тела", "Фото прогресса", "Последние: 22.06.2026", onOpenPhotos],
-    ["measurements", "📏", "Контроль тела", "Замеры", "22.06.2026", onOpenMeasurements],
-    ["nutrition", "🍽", "План питания", "КБЖУ", "2409 ккал · Рекомпозиция", onOpenNutrition],
-    ["progress cabinetWorkoutHistoryHarnessButton", "📅", "Тренировки", "Календарь и история", "4 тренировки сохранено", onOpenJournal]
-  ];
-
   return (
-    <div className="progressHubOverview profileCabinetProgressOverview hasProgressPhotos">
-      {actions.map(([className, icon, eyebrow, title, note, onClick, useAvatar]) => (
-        <button
-          key={title}
-          type="button"
-          className={`progressHubCard ${className}`}
-          onClick={onClick}
-          aria-label={`${eyebrow}: ${title}`}
-        >
-          <span className="progressHubCardIcon">
-            {useAvatar ? <span className="progressHubCardAvatar">👤</span> : icon}
-          </span>
-          <span className="progressHubCardText">
-            <small>{eyebrow}</small>
-            <strong>{title}</strong>
-            <em>{note}</em>
-          </span>
-          <i aria-hidden="true">›</i>
-        </button>
-      ))}
-    </div>
+    <ProfileCabinetActionGrid
+      showClientOnlyActions
+      latestPhotoText="Последние: 22.06.2026"
+      latestMeasurementText="22.06.2026"
+      nutritionText="2409 ккал · Рекомпозиция"
+      historyText="4 тренировки сохранено"
+      onOpenBodyControl={onOpenPhotos}
+      onOpenNutrition={onOpenNutrition}
+      onOpenCalendar={onOpenJournal}
+      onOpenAccount={onOpenSettings}
+      onOpenQuestionnaire={() => {}}
+      onOpenFeedback={() => {}}
+      accountAvatarUrl=""
+    />
   );
 }
 
@@ -308,21 +438,39 @@ export default function ClientE2EHarness() {
   const workoutHarnessState = typeof window !== "undefined"
     ? harnessParams.get("clientWorkoutState")
     : "";
+  const workoutHistoryHarnessState = harnessParams?.get("clientHistoryState") || "";
   const harnessPageParam = harnessParams?.get("clientHarnessPage") || "";
+  const harnessRunStageParam = harnessParams?.get("clientWorkoutRunStage") || "exercise";
+  const harnessThemeParam = harnessParams?.get("clientHarnessTheme") === "dark-green"
+    ? "dark-green"
+    : "warm-light";
+  const telegramHarnessConnected = harnessParams?.get("clientTelegramState") !== "disconnected";
   const workoutDialogParam = harnessParams?.get("clientWorkoutDialog") || "draft";
   const firstSetupStepValue = Number(harnessParams?.get("clientFirstSetupStep") || 1);
   const firstSetupStepParam = Number.isFinite(firstSetupStepValue)
     ? Math.min(9, Math.max(0, firstSetupStepValue))
     : 1;
   const nutritionPhotoNotFoundParam = harnessParams?.get("clientNutritionPhotoNotFound") === "1";
+  const nutritionPhotoAnalyzingParam = harnessParams?.get("clientNutritionPhotoAnalyzing") === "1";
+  const nutritionPhotoPreviewAnalyzing = harnessParams?.get("clientPhotoPreviewState") === "analyzing";
+  const nutritionBarcodeParam = harnessParams?.get("clientNutritionBarcode") === "1";
+  const progressPhotosTabbed = harnessParams?.get("clientPhotosTabbed") === "1";
+  const progressPhotosState = harnessParams?.get("clientPhotosState") || "default";
+  const measurementsTabbed = harnessParams?.get("clientMeasurementsTabbed") === "1";
+  const measurementsState = harnessParams?.get("clientMeasurementsState") || "default";
+  const measurementSnapshotState = harnessParams?.get("clientMeasurementSnapshotState") || "trend";
+  const measurementWizardState = harnessParams?.get("clientMeasurementStep") || "intro";
   const visibleHarnessWorkouts = workoutHarnessState === "empty" ? [] : harnessWorkouts;
+  const visibleHarnessTrainerTasks = harnessParams?.get("clientNotificationState") === "empty"
+    ? []
+    : harnessTrainerTasks;
 
   useEffect(() => {
     const previousHtmlTheme = document.documentElement.dataset.appTheme;
     const previousBodyTheme = document.body.dataset.appTheme;
 
-    document.documentElement.dataset.appTheme = "warm-light";
-    document.body.dataset.appTheme = "warm-light";
+    document.documentElement.dataset.appTheme = harnessThemeParam;
+    document.body.dataset.appTheme = harnessThemeParam;
 
     return () => {
       if (previousHtmlTheme) {
@@ -337,10 +485,10 @@ export default function ClientE2EHarness() {
         delete document.body.dataset.appTheme;
       }
     };
-  }, []);
+  }, [harnessThemeParam]);
 
   const [page, setPage] = useState(
-    nutritionPhotoNotFoundParam
+    nutritionPhotoNotFoundParam || nutritionPhotoAnalyzingParam || nutritionBarcodeParam || harnessPageParam === "nutritionMealModal"
       ? "nutrition"
       : harnessPageParam === "aiCoach"
         ? "aiCoach"
@@ -348,9 +496,111 @@ export default function ClientE2EHarness() {
           ? "firstSetup"
         : harnessPageParam === "workoutDialogs"
           ? "workoutDialogs"
+        : harnessPageParam === "workoutPlan"
+          ? "workoutPlan"
+        : harnessPageParam === "workoutHistory"
+          ? "workoutHistory"
+        : harnessPageParam === "workoutMode"
+          ? "workoutMode"
+        : harnessPageParam === "basicQuiz"
+          ? "basicQuiz"
+        : harnessPageParam === "exerciseVideo"
+          ? "exerciseVideo"
+        : harnessPageParam === "exerciseSets"
+          ? "exerciseSets"
+        : harnessPageParam === "workoutRunOverlays"
+          ? "workoutRunOverlays"
+        : harnessPageParam === "workoutRunStage"
+          ? "workoutRunStage"
         : "main"
   );
   const [firstSetupStep, setFirstSetupStep] = useState(firstSetupStepParam);
+  const [harnessDeleteConfirmOpen, setHarnessDeleteConfirmOpen] = useState(
+    harnessPageParam === "nutritionDeleteConfirm"
+  );
+  const [harnessUndoToastOpen, setHarnessUndoToastOpen] = useState(
+    harnessPageParam === "nutritionUndoToast"
+  );
+  const [harnessSearchHistorySelection, setHarnessSearchHistorySelection] = useState("");
+  const [harnessPhotoPreviewVisible, setHarnessPhotoPreviewVisible] = useState(
+    harnessPageParam === "nutritionPhotoPreview"
+  );
+  const [harnessPhotoCandidateId, setHarnessPhotoCandidateId] = useState("");
+  const [harnessAvatarCropOpen, setHarnessAvatarCropOpen] = useState(
+    harnessPageParam === "avatarCrop"
+  );
+  const [harnessAvatarCropZoom, setHarnessAvatarCropZoom] = useState(1);
+  const harnessAvatarCropImageRef = useRef(null);
+  const [harnessMeasurementWizardStep, setHarnessMeasurementWizardStep] = useState(
+    () => getHarnessMeasurementStep(measurementWizardState)
+  );
+  const [harnessMeasurementDraft, setHarnessMeasurementDraft] = useState(
+    () => ({ ...harnessMeasurementDraftSeed })
+  );
+  const [harnessMeasurementStatus, setHarnessMeasurementStatus] = useState("");
+  const [workoutHistoryOpenId, setWorkoutHistoryOpenId] = useState(
+    workoutHistoryHarnessState === "expanded" ? harnessWorkoutHistory[0].id : null
+  );
+  const [workoutHistoryDeleteCandidate, setWorkoutHistoryDeleteCandidate] = useState(
+    workoutHistoryHarnessState === "delete" ? harnessWorkoutHistory[0] : null
+  );
+  const [harnessWorkoutModeRemember, setHarnessWorkoutModeRemember] = useState(
+    harnessParams?.get("clientWorkoutModeRemember") === "1"
+  );
+  const [harnessBasicWorkoutQuiz, setHarnessBasicWorkoutQuiz] = useState({
+    goal: "muscle",
+    level: "middle",
+    days: "4"
+  });
+  const harnessRunDeckRef = useRef(null);
+  const harnessRunInlineVideoTimerRef = useRef(null);
+  const [harnessRunWorkout, setHarnessRunWorkout] = useState(() => structuredClone(harnessRunWorkoutSeed));
+  const [harnessRunExerciseIndex, setHarnessRunExerciseIndex] = useState(() => (
+    harnessRunStageParam === "warmup"
+      ? 0
+      : harnessRunStageParam === "finish" || harnessRunStageParam === "saved"
+        ? harnessRunWorkoutSeed.exercises.length + 1
+        : 1
+  ));
+  const [harnessRunExerciseHistoryOpenId, setHarnessRunExerciseHistoryOpenId] = useState(
+    harnessParams?.get("clientWorkoutRunHistory") === "1" ? harnessRunWorkoutSeed.exercises[0].id : ""
+  );
+  const [harnessRunExerciseNoteOpenId, setHarnessRunExerciseNoteOpenId] = useState(
+    harnessParams?.get("clientWorkoutRunModal") === "note" ? harnessRunWorkoutSeed.exercises[0].id : ""
+  );
+  const [harnessRunExerciseTechniqueOpenId, setHarnessRunExerciseTechniqueOpenId] = useState(
+    harnessParams?.get("clientWorkoutRunModal") === "technique" ? harnessRunWorkoutSeed.exercises[0].id : ""
+  );
+  const [harnessRunWarmupCompletedSteps, setHarnessRunWarmupCompletedSteps] = useState([0]);
+  const [harnessRunWarmupTimerDuration, setHarnessRunWarmupTimerDuration] = useState(180);
+  const [harnessRunWarmupTimerRunning, setHarnessRunWarmupTimerRunning] = useState(false);
+  const [harnessRunWarmupTimerSeconds, setHarnessRunWarmupTimerSeconds] = useState(180);
+  const [harnessRunClientComment, setHarnessRunClientComment] = useState("");
+  const [harnessRunSaved, setHarnessRunSaved] = useState(harnessRunStageParam === "saved");
+  const [harnessRunSavedCard, setHarnessRunSavedCard] = useState(harnessRunStageParam === "saved");
+  const [harnessExerciseSets, setHarnessExerciseSets] = useState(() => [
+    { reps: "10", weight: "60", enteredReps: "", enteredWeight: "", completed: harnessParams?.get("clientExerciseSetsState") === "completed" },
+    { reps: "10", weight: "62.5", enteredReps: "", enteredWeight: "", completed: false },
+    { reps: "8", weight: "65", enteredReps: "", enteredWeight: "", completed: false }
+  ]);
+  const [harnessDishIngredients, setHarnessDishIngredients] = useState([
+    {
+      id: "harness_dish_chicken",
+      name: "Куриная грудка",
+      icon: "🍗",
+      grams: 180,
+      baseCalories: 165,
+      baseAmount: 100
+    },
+    {
+      id: "harness_dish_rice",
+      name: "Рис басмати",
+      icon: "🍚",
+      grams: 120,
+      baseCalories: 130,
+      baseAmount: 100
+    }
+  ]);
   const [firstSetupProfileDraft, setFirstSetupProfileDraft] = useState({
     sex: "male",
     name: "Harness Athlete",
@@ -375,10 +625,14 @@ export default function ClientE2EHarness() {
   });
   const [aiNutritionSavedPlan, setAiNutritionSavedPlan] = useState(null);
   const [aiNutritionAdaptedToday, setAiNutritionAdaptedToday] = useState(false);
-  const [nutritionPickerOpen, setNutritionPickerOpen] = useState(nutritionPhotoNotFoundParam);
+  const [nutritionPickerOpen, setNutritionPickerOpen] = useState(
+    nutritionPhotoNotFoundParam || nutritionPhotoAnalyzingParam || nutritionBarcodeParam
+  );
   const [nutritionCalendarOpen, setNutritionCalendarOpen] = useState(false);
   const [nutritionCalendarMonthKey, setNutritionCalendarMonthKey] = useState(HARNESS_DATE.slice(0, 7));
-  const [expandedNutritionMeals, setExpandedNutritionMeals] = useState({});
+  const [expandedNutritionMeals, setExpandedNutritionMeals] = useState(
+    harnessPageParam === "nutritionMealModal" ? { breakfast: true } : {}
+  );
   const [nutritionZoukExpanded, setNutritionZoukExpanded] = useState(false);
   const [isAiNutritionPlanExpanded, setIsAiNutritionPlanExpanded] = useState(false);
   const [nutritionCreateChoiceOpen, setNutritionCreateChoiceOpen] = useState(false);
@@ -424,6 +678,8 @@ export default function ClientE2EHarness() {
   const [cabinetSettingsOpen, setCabinetSettingsOpen] = useState(
     () => cabinetModalParam === "settings"
   );
+  const [profilePasswordModalOpen, setProfilePasswordModalOpen] = useState(false);
+  const [profileEmailModalOpen, setProfileEmailModalOpen] = useState(false);
   const [telegramModalOpen, setTelegramModalOpen] = useState(
     () => cabinetModalParam === "telegram"
   );
@@ -553,57 +809,644 @@ export default function ClientE2EHarness() {
     );
   }
 
-  function renderHarnessChrome(activeTab, title, children) {
-    const pageClass = activeTab === "main"
-      ? " clientCorePageMain mainDashboardPage"
-      : activeTab === "cabinet"
-        ? " clientCorePageCabinet"
-        : "";
-    const titleClass = activeTab === "main"
-      ? "mainDashboardTitle clientCorePageTitle"
-      : activeTab === "cabinet"
-        ? "profileCabinetPageTitle clientCorePageTitle"
-        : "clientCorePageTitle";
-
+  function renderHarnessChrome(activeTab, title, children, afterSection = null) {
     return (
-      <div
-        className={`profileDashboardPage profileTabbedPage clientCorePage${pageClass}`}
-        data-profile-tab={activeTab === "main" || activeTab === "cabinet" ? "cabinet" : undefined}
-        data-testid={`client-harness-${activeTab}`}
-      >
-        {activeTab === "main" && (
-          <button
-            type="button"
-            className="menuRefreshIconBtn"
-            aria-label="Уведомления тренера"
-            title="Уведомления тренера"
-          >
-            <Bell aria-hidden="true" />
-          </button>
+      <ProfileDashboardShell mode={activeTab} testId={`client-harness-${activeTab}`}>
+        {(activeTab === "main" || activeTab === "cabinet") && (
+          <ProfilePageChrome
+            isMainDashboard={activeTab === "main"}
+            renderBottomBar={renderBottomBar}
+            showTrainerNotifications
+            trainerNotificationCount={0}
+            onOpenTrainerNotifications={() => {}}
+          />
         )}
         {activeTab === "cabinet" ? (
-          <div className="profileCabinetTitleRow">
-            <h1 className={titleClass}>{title}</h1>
-            <button
-              type="button"
-              className="profileTrainerNotificationsButton"
-              aria-label="Обновить страницу"
-              title="Обновить страницу"
-            >
-              <RefreshCw aria-hidden="true" />
-            </button>
-          </div>
-        ) : (
-          <h1 className={titleClass}>{title}</h1>
-        )}
-        <section className="profileUnifiedCard profileAiDashboardCard profileCabinetSection">
-          {children}
-        </section>
-        {activeTab === "main" && APP_VERSION ? (
-          <div className="mainDashboardAppVersion">{APP_VERSION}</div>
+          <ProfileCabinetTitleRow onRefresh={() => {}} />
+        ) : activeTab !== "main" ? (
+          <ProfileHarnessTitle>{title}</ProfileHarnessTitle>
         ) : null}
-        {renderBottomBar(activeTab, { className: "mainMenuBottomBar profileBottomTabBar" })}
-      </div>
+        <ProfileDashboardContent mode={activeTab}>
+          {children}
+        </ProfileDashboardContent>
+        {afterSection}
+        {activeTab === "main" && APP_VERSION ? (
+          <ProfileDashboardVersion>{APP_VERSION}</ProfileDashboardVersion>
+        ) : null}
+        {activeTab !== "main" && activeTab !== "cabinet"
+          ? renderBottomBar(activeTab)
+          : null}
+      </ProfileDashboardShell>
+    );
+  }
+
+  if (harnessPageParam === "measurementWizard") {
+    return (
+      <main data-testid="client-harness-measurement-wizard">
+        <MeasurementWizardPage
+          aiNutritionProfile={{ goal: "recomp" }}
+          aiNutritionProfileDraft={{}}
+          profileMeasurements={[harnessLatestMeasurement]}
+          profileMeasurementWizardStep={harnessMeasurementWizardStep}
+          profileMeasurementDraft={harnessMeasurementDraft}
+          profileMeasurementStatus={harnessMeasurementStatus}
+          profileMeasurementSaving={false}
+          setProfileMeasurementDraft={setHarnessMeasurementDraft}
+          setProfileMeasurementStatus={setHarnessMeasurementStatus}
+          setProfileMeasurementWizardStep={setHarnessMeasurementWizardStep}
+          setProfileMeasurementOpen={() => {}}
+          setProfileActiveTab={() => {}}
+          profileMeasurementReturnTab="measurements"
+          saveProfileMeasurement={() => setHarnessMeasurementStatus("Замер сохранён")}
+          onNavigateProfilePage={() => {}}
+        />
+      </main>
+    );
+  }
+
+  if (harnessPageParam === "measurementPanel") {
+    return (
+      <main data-testid="client-harness-measurement-panel">
+        <ProfileDashboardShell mode="measurements">
+          <ProfileDashboardContent mode="measurements">
+            <ProfileMeasurementWizardPanel
+              visible
+              latestMeasurement={harnessLatestMeasurement}
+              measurementFields={harnessWizardMeasurementFields}
+              formatMeasurementDate={(measurement) => new Date(measurement.date).toLocaleDateString("ru-RU")}
+              getMeasurementValue={(measurement, field) => String(measurement?.[field.id] ?? "—")}
+              onStart={() => {}}
+            />
+          </ProfileDashboardContent>
+          {renderBottomBar("cabinet")}
+        </ProfileDashboardShell>
+      </main>
+    );
+  }
+
+  if (harnessPageParam === "profileRoleActions") {
+    return (
+      <main data-testid="client-harness-profile-role-actions">
+        {renderHarnessChrome("main", "Главное меню", (
+          <p>Проверка переходов для расширенных ролей.</p>
+        ), (
+          <ProfileMainRoleActions
+            showTrainer
+            showAdmin
+            onOpenTrainer={() => {}}
+            onOpenAdmin={() => {}}
+          />
+        ))}
+      </main>
+    );
+  }
+
+  if (harnessPageParam === "profileSettingsTab") {
+    return (
+      <main data-testid="client-harness-profile-settings-tab">
+        <ProfileDashboardShell mode="settings">
+          <ProfileSettingsTab
+            visible
+            bodyMetricsOpen={false}
+            draft={aiNutritionProfileDraft}
+            isWarmLightTheme={harnessThemeParam === "warm-light"}
+            email="ilya@example.com"
+            telegramProfile={{
+              connected: true,
+              username: "harness_coach",
+              displayName: "Harness Athlete",
+              avatarUrl: ""
+            }}
+            onToggleBodyMetrics={() => {}}
+            onDraftChange={() => {}}
+            onSaveBodyMetrics={() => {}}
+            onToggleTheme={() => {}}
+            onOpenEmail={() => {}}
+            onOpenTelegram={() => {}}
+            onTelegramAvatarError={() => {}}
+          />
+          {renderBottomBar("cabinet")}
+        </ProfileDashboardShell>
+      </main>
+    );
+  }
+
+  if (harnessPageParam === "nutritionDeleteConfirm") {
+    return (
+      <main data-testid="client-harness-nutrition-delete-confirm">
+        {renderHarnessChrome("nutrition", "Питание", (
+          <p>Проверка подтверждения удаления продукта из моей базы.</p>
+        ))}
+        <NutritionDeleteConfirmModal
+          open={harnessDeleteConfirmOpen}
+          foodName="Harness Oat Bar"
+          onCancel={() => setHarnessDeleteConfirmOpen(false)}
+          onConfirm={() => setHarnessDeleteConfirmOpen(false)}
+        />
+      </main>
+    );
+  }
+
+  if (harnessPageParam === "avatarCrop") {
+    return (
+      <main data-testid="client-harness-avatar-crop">
+        <ProfileAvatarCropModal
+          open={harnessAvatarCropOpen}
+          imageRef={harnessAvatarCropImageRef}
+          source="/workout-covers/chest.webp"
+          size={{ width: 1200, height: 800 }}
+          zoom={harnessAvatarCropZoom}
+          offset={{ x: 0, y: 0 }}
+          onClose={() => setHarnessAvatarCropOpen(false)}
+          onImageLoad={() => {}}
+          onPointerDown={() => {}}
+          onPointerMove={() => {}}
+          onPointerUp={() => {}}
+          onPointerCancel={() => {}}
+          onZoomChange={(value) => setHarnessAvatarCropZoom(Number(value))}
+          onApply={() => setHarnessAvatarCropOpen(false)}
+        />
+      </main>
+    );
+  }
+
+  if (harnessPageParam === "nutritionSearchHistory") {
+    return (
+      <main data-testid="client-harness-nutrition-search-history">
+        <FoodSearchSurface>
+          <FoodSearchHistoryNames
+            visible
+            foods={[
+              ...harnessSearchFoods,
+              ...Object.values(harnessMyFoods)
+            ]}
+            onSelect={setHarnessSearchHistorySelection}
+          />
+        </FoodSearchSurface>
+        <output hidden data-testid="food-search-history-selection">
+          {harnessSearchHistorySelection}
+        </output>
+      </main>
+    );
+  }
+
+  if (harnessPageParam === "nutritionDishIngredients") {
+    return (
+      <main data-testid="client-harness-nutrition-dish-ingredients">
+        <section data-testid="client-harness-dish-ingredients-module">
+          <DishEditIngredientsBox
+                selectedFood={{
+                  id: "harness_dish",
+                  type: "dish",
+                  name: "Боул с курицей",
+                  ingredients: harnessDishIngredients
+                }}
+                getFoodIcon={() => "🍽️"}
+                onOpenIngredientPicker={() => {
+                  setHarnessDishIngredients((current) => (
+                    current.some((ingredient) => ingredient.id === "harness_dish_avocado")
+                      ? current
+                      : [
+                        ...current,
+                        {
+                          id: "harness_dish_avocado",
+                          name: "Авокадо",
+                          icon: "🥑",
+                          grams: 70,
+                          baseCalories: 160,
+                          baseAmount: 100
+                        }
+                      ]
+                  ));
+                }}
+                onRemoveIngredient={(ingredientId) => {
+                  setHarnessDishIngredients((current) => (
+                    current.filter((ingredient) => ingredient.id !== ingredientId)
+                  ));
+                }}
+          />
+        </section>
+      </main>
+    );
+  }
+
+  if (harnessPageParam === "nutritionPhotoPreview") {
+    return (
+      <main data-testid="client-harness-nutrition-photo-preview">
+        <FoodSearchSurface>
+          {harnessPhotoPreviewVisible && (
+            <NutritionPhotoAiPreview
+              preview="/workout-covers/chest.webp"
+              analyzing={nutritionPhotoPreviewAnalyzing}
+              confidence={nutritionPhotoPreviewAnalyzing ? "" : "92%"}
+              result="ИИ распознал: Куриная грудка"
+              selectedFood={null}
+              candidates={[
+                { id: "harness_chicken", name: "Куриная грудка", icon: "🍗" },
+                { id: "harness_turkey", name: "Филе индейки", icon: "🥩" },
+                { id: "harness_fish", name: "Белая рыба", icon: "🐟" }
+              ]}
+              onSelectCandidate={(candidate) => setHarnessPhotoCandidateId(candidate.id)}
+              onReset={() => setHarnessPhotoPreviewVisible(false)}
+            />
+          )}
+        </FoodSearchSurface>
+        <output hidden data-testid="nutrition-photo-candidate-selection">
+          {harnessPhotoCandidateId}
+        </output>
+      </main>
+    );
+  }
+
+  if (harnessPageParam === "nutritionUndoToast") {
+    return (
+      <main data-testid="client-harness-nutrition-undo-toast">
+        {renderHarnessChrome("nutrition", "Питание", (
+          <p>Проверка восстановления удалённого продукта.</p>
+        ))}
+        <NutritionUndoDeleteToast
+          open={harnessUndoToastOpen}
+          onRestore={() => setHarnessUndoToastOpen(false)}
+        />
+      </main>
+    );
+  }
+
+  if (page === "workoutPlan") {
+    return (
+      <main data-testid="client-harness-workout-plan">
+        <WorkoutPlanPage
+          plan={{
+            workouts: visibleHarnessWorkouts,
+            assignedProgramId: "client_harness_program",
+            assignedProgramName: "Тестовая программа",
+            assignedProgramUpdatedAt: "2026-06-18T10:00:00.000Z"
+          }}
+          history={harnessHistory}
+          user={{ assignedProgramName: "Тестовая программа" }}
+          onGoBackToMain={() => setPage("main")}
+          onOpenWorkoutIndex={() => setPage("workouts")}
+          onOpenWorkouts={() => setPage("workouts")}
+          onOpenPlan={() => setPage("workoutPlan")}
+          onOpenHistory={() => setPage("cabinet")}
+          getCompletedWorkoutSet={(items) => new Set(items.map((item) => item.workoutId))}
+          isWorkoutCompletedByHistory={(workout, completedSet) => completedSet.has(workout.id)}
+        />
+      </main>
+    );
+  }
+
+  if (page === "workoutHistory") {
+    const visibleHistory = workoutHistoryHarnessState === "empty" ? [] : harnessWorkoutHistory;
+
+    return (
+      <main data-testid="client-harness-workout-history">
+        <WorkoutHistoryPage
+          canUseTrainerFeatures={false}
+          renderClientMainBottomBar={renderBottomBar}
+          history={visibleHistory}
+          historyLoading={workoutHistoryHarnessState === "loading"}
+          openHistoryKey={workoutHistoryOpenId}
+          historySwipeId={workoutHistoryHarnessState === "swiped" ? harnessWorkoutHistory[0].id : ""}
+          historyDeletingId={workoutHistoryHarnessState === "deleting" ? harnessWorkoutHistory[0].id : ""}
+          historyDeleteCandidate={workoutHistoryDeleteCandidate}
+          goBackToMain={() => setPage("main")}
+          openTrainingEntry={() => setPage("workouts")}
+          onOpenNutrition={() => setPage("nutrition")}
+          openProfileCabinet={() => setPage("cabinet")}
+          onOpenTrainerClients={() => {}}
+          onOpenTrainerPrograms={() => {}}
+          loadHistory={() => {}}
+          handleHistoryTouchStart={() => {}}
+          handleHistoryTouchEnd={() => {}}
+          requestDeleteOwnHistoryWorkout={setWorkoutHistoryDeleteCandidate}
+          setOpenHistoryKey={setWorkoutHistoryOpenId}
+          closeHistoryDeleteConfirm={() => setWorkoutHistoryDeleteCandidate(null)}
+          confirmDeleteOwnHistoryWorkout={() => setWorkoutHistoryDeleteCandidate(null)}
+        />
+      </main>
+    );
+  }
+
+  if (page === "basicQuiz") {
+    return (
+      <main data-testid="client-harness-basic-quiz">
+        <BasicWorkoutQuizPage
+          renderClientMainBottomBar={renderBottomBar}
+          workoutModePreference={{ mode: "basic" }}
+          workoutModeRemember={harnessWorkoutModeRemember}
+          basicWorkoutQuiz={harnessBasicWorkoutQuiz}
+          onBasicWorkoutQuizChange={setHarnessBasicWorkoutQuiz}
+          onOpenIndividualWorkouts={() => setPage("workouts")}
+          onOpenBasicWorkouts={() => setPage("workouts")}
+          onApplyBasicWorkoutPlan={() => setPage("workouts")}
+          onToggleWorkoutModeRemember={setHarnessWorkoutModeRemember}
+          canUseTrainerFeatures={false}
+          onGoMain={() => setPage("main")}
+          onOpenTraining={() => setPage("workouts")}
+          onOpenNutrition={() => setPage("nutrition")}
+          onOpenCabinet={() => setPage("cabinet")}
+          onOpenTrainerClients={() => {}}
+          onOpenTrainerPrograms={() => {}}
+          onLoadTrainerCabinet={() => setPage("cabinet")}
+        />
+      </main>
+    );
+  }
+
+  if (page === "workoutMode") {
+    return (
+      <main data-testid="client-harness-workout-mode">
+        <WorkoutModePage
+          workoutModePreference={{ mode: "individual" }}
+          workoutModeRemember={harnessWorkoutModeRemember}
+          renderClientMainBottomBar={renderBottomBar}
+          canUseTrainerFeatures={false}
+          onBackToMain={() => setPage("main")}
+          onOpenBasicWorkouts={() => setPage("workouts")}
+          onOpenIndividualWorkouts={() => setPage("workouts")}
+          onToggleWorkoutModeRemember={setHarnessWorkoutModeRemember}
+          onOpenTraining={() => setPage("workouts")}
+          onOpenNutrition={() => setPage("nutrition")}
+          onOpenCabinet={() => setPage("cabinet")}
+          onOpenTrainerClients={() => {}}
+          onOpenTrainerPrograms={() => {}}
+          onLoadTrainerCabinet={() => setPage("cabinet")}
+        />
+      </main>
+    );
+  }
+
+  if (page === "workoutRunStage") {
+    const updateHarnessRunSet = (exerciseId, setIndex, field, value) => {
+      setHarnessRunWorkout((current) => ({
+        ...current,
+        exercises: current.exercises.map((exercise) => (
+          exercise.id === exerciseId
+            ? {
+                ...exercise,
+                sets: exercise.sets.map((set, index) => (
+                  index === setIndex ? { ...set, [field]: value } : set
+                ))
+              }
+            : exercise
+        ))
+      }));
+    };
+    const toggleHarnessRunSet = (exerciseId, setIndex) => {
+      setHarnessRunWorkout((current) => ({
+        ...current,
+        exercises: current.exercises.map((exercise) => (
+          exercise.id === exerciseId
+            ? {
+                ...exercise,
+                sets: exercise.sets.map((set, index) => (
+                  index === setIndex ? { ...set, completed: !set.completed } : set
+                ))
+              }
+            : exercise
+        ))
+      }));
+    };
+    const updateHarnessRunNote = (exerciseId, value) => {
+      setHarnessRunWorkout((current) => ({
+        ...current,
+        exercises: current.exercises.map((exercise) => (
+          exercise.id === exerciseId ? { ...exercise, clientNote: value } : exercise
+        ))
+      }));
+    };
+    const noHeader = !harnessRunSaved;
+
+    return (
+      <main data-testid="client-harness-workout-run-stage">
+        <WorkoutRunPageShell noHeader={noHeader}>
+          <WorkoutRunTopControls
+            isSaving={false}
+            showBackButton={harnessRunSaved}
+            onExit={() => setPage("main")}
+            onBack={() => setPage("main")}
+          />
+          <WorkoutRunStageView
+            closeWorkoutExerciseModal={(setter) => setter("")}
+            currentExerciseIndex={harnessRunExerciseIndex}
+            deckRef={harnessRunDeckRef}
+            exerciseHistoryOpenId={harnessRunExerciseHistoryOpenId}
+            exerciseNoteOpenId={harnessRunExerciseNoteOpenId}
+            exerciseTechniqueOpenId={harnessRunExerciseTechniqueOpenId}
+            endPerformanceCheck={() => {}}
+            getLastExerciseText={() => "Предыдущий результат: 10 × 60 кг"}
+            goBackToMain={() => setPage("main")}
+            goToNextExercise={() => setHarnessRunExerciseIndex((current) => Math.min(harnessRunWorkout.exercises.length + 1, current + 1))}
+            goToPreviousExercise={() => setHarnessRunExerciseIndex((current) => Math.max(0, current - 1))}
+            handleExerciseTouchEnd={() => {}}
+            handleExerciseTouchMove={() => {}}
+            handleExerciseTouchStart={() => {}}
+            history={harnessWorkoutHistory}
+            inlinePlayingVideoId=""
+            inlineVideoControlsTimerRef={harnessRunInlineVideoTimerRef}
+            inlineVideoControlsVisible
+            isSaving={false}
+            isWorkoutSaved={harnessRunSaved}
+            lastExerciseResults={[]}
+            normalizeExercise={(exercise) => exercise}
+            openVideoId={null}
+            openWorkoutExerciseModal={(setter, exerciseId) => setter(exerciseId)}
+            plan={{ workouts: [harnessRunWorkout] }}
+            postWorkoutFeedback={{ advice: "Отличная работа" }}
+            requestLeaveWorkout={() => setPage("main")}
+            saveWorkoutToFirebase={() => {
+              setHarnessRunSaved(true);
+              setHarnessRunSavedCard(true);
+            }}
+            setExerciseHistoryOpenId={setHarnessRunExerciseHistoryOpenId}
+            setExerciseNoteOpenId={setHarnessRunExerciseNoteOpenId}
+            setExerciseTechniqueOpenId={setHarnessRunExerciseTechniqueOpenId}
+            setFullscreenVideo={() => {}}
+            setInlinePlayingVideoId={() => {}}
+            setInlineVideoControlsVisible={() => {}}
+            setIsWorkoutSaved={setHarnessRunSaved}
+            setOpenVideoId={() => {}}
+            setPostWorkoutFeedbackOpen={() => {}}
+            setShowWorkoutSavedCard={setHarnessRunSavedCard}
+            setVideoLoadingId={() => {}}
+            setVideoRetryToken={() => {}}
+            setWarmupTimerRunning={setHarnessRunWarmupTimerRunning}
+            setWarmupTimerSeconds={setHarnessRunWarmupTimerSeconds}
+            setWarmupTimerPreset={(seconds) => {
+              setHarnessRunWarmupTimerDuration(seconds);
+              setHarnessRunWarmupTimerSeconds(seconds);
+              setHarnessRunWarmupTimerRunning(false);
+            }}
+            setWorkoutClientComment={setHarnessRunClientComment}
+            showAppError={() => {}}
+            showInlineVideoControlsTemporarily={() => {}}
+            showWorkoutSavedCard={harnessRunSavedCard}
+            startPerformanceCheck={() => {}}
+            swipeDirection=""
+            swipeOffset={0}
+            toggleWarmupStep={(stepIndex) => {
+              setHarnessRunWarmupCompletedSteps((current) => (
+                current.includes(stepIndex)
+                  ? current.filter((index) => index !== stepIndex)
+                  : [...current, stepIndex]
+              ));
+            }}
+            toggleWorkoutSetCompleted={toggleHarnessRunSet}
+            updateExerciseNote={updateHarnessRunNote}
+            updateSet={updateHarnessRunSet}
+            videoLoadingId=""
+            videoRetryToken={0}
+            warmupCompletedSteps={harnessRunWarmupCompletedSteps}
+            warmupTimerDuration={harnessRunWarmupTimerDuration}
+            warmupTimerRunning={harnessRunWarmupTimerRunning}
+            warmupTimerSeconds={harnessRunWarmupTimerSeconds}
+            workout={harnessRunWorkout}
+            workoutClientComment={harnessRunClientComment}
+            workoutDurationText="42 мин"
+            workoutFinishedAt={Date.parse("2026-06-22T18:42:00.000Z")}
+            workoutHistorySyncState={harnessRunSaved ? "synced" : "local"}
+            workoutReadiness={{ volumeText: "−10% объёма" }}
+            workoutStarted
+          />
+        </WorkoutRunPageShell>
+      </main>
+    );
+  }
+
+  if (page === "workoutRunOverlays") {
+    const overlayState = harnessParams?.get("clientWorkoutRunOverlayState") || "default";
+
+    if (overlayState === "notFound") {
+      return (
+        <main data-testid="client-harness-workout-run-overlays">
+          <WorkoutNotFoundPage onBackToMenu={() => setPage("main")} />
+        </main>
+      );
+    }
+
+    return (
+      <main data-testid="client-harness-workout-run-overlays">
+        <WorkoutRunPageShell noHeader={overlayState !== "saved"}>
+          <WorkoutRunTopControls
+            isSaving={false}
+            showBackButton={overlayState === "saved"}
+            onExit={() => setPage("main")}
+            onBack={() => setPage("main")}
+          />
+          <WorkoutRunExercisePreview
+            exercise={{ id: "harness_overlay_exercise", name: "Жим штанги лёжа" }}
+            isFinishSlide={overlayState === "finish"}
+            isWorkoutSaved={overlayState === "saved"}
+          />
+          <WorkoutFullscreenVideoOverlay
+            videoSrc={overlayState === "fullscreen" ? "/videos/1ea4065d-8785-4c13-9fd5-a5bdf409b6b7.mp4" : ""}
+            onClose={() => setPage("main")}
+            onVideoError={() => {}}
+          />
+        </WorkoutRunPageShell>
+      </main>
+    );
+  }
+
+  if (page === "exerciseVideo") {
+    const videoState = harnessParams?.get("clientExerciseVideoState") || "paused";
+    const exercise = {
+      id: "client_harness_exercise_video",
+      name: "Жим штанги лёжа",
+      video: "/videos/1ea4065d-8785-4c13-9fd5-a5bdf409b6b7.mp4",
+      sets: []
+    };
+
+    return (
+      <main data-testid="client-harness-exercise-video">
+        <WorkoutRunPageShell noHeader>
+          <WorkoutRunExercisePreview exercise={exercise} hasVideo videoOpen>
+            <WorkoutExerciseVideoFrame
+              exercise={exercise}
+              exerciseVideoFailed={videoState === "fallback"}
+              fallbackHint="Держите лопатки сведёнными и контролируйте амплитуду."
+              inlinePlayingVideoId={videoState === "playing" ? exercise.id : ""}
+              inlineVideoControlsVisible={videoState !== "hidden"}
+              onFullscreenVideo={() => {}}
+              onInlineVideoPlayFailed={() => {}}
+              onRetryVideo={() => {}}
+              onVideoCanPlay={() => {}}
+              onVideoEnded={() => {}}
+              onVideoError={() => {}}
+              onVideoLoadedMetadata={() => {}}
+              onVideoLoadStart={() => {}}
+              onVideoPause={() => {}}
+              onVideoPlay={() => {}}
+              videoLoadingId={videoState === "loading" ? exercise.id : ""}
+              videoRetryToken={0}
+            />
+            <WorkoutExerciseSupport
+              exercise={exercise}
+              exerciseAiWeightAdjustments={[]}
+              exerciseHistoryOpenId=""
+              lastExerciseText="Предыдущий результат: 10 × 60 кг"
+              onOpenNote={() => {}}
+              onToggleHistory={() => {}}
+              readinessVolumeText=""
+              showNoteButton={false}
+            />
+          </WorkoutRunExercisePreview>
+        </WorkoutRunPageShell>
+      </main>
+    );
+  }
+
+  if (page === "exerciseSets") {
+    const hasExternalWeight = harnessParams?.get("clientExerciseSetsState") !== "bodyweight";
+    const exercise = {
+      id: "client_harness_exercise_sets",
+      name: hasExternalWeight ? "Жим штанги лёжа" : "Отжимания",
+      video: "/videos/1ea4065d-8785-4c13-9fd5-a5bdf409b6b7.mp4",
+      sets: harnessExerciseSets
+    };
+
+    return (
+      <main data-testid="client-harness-exercise-sets">
+        <WorkoutRunPageShell noHeader>
+          <WorkoutRunExercisePreview exercise={exercise} hasVideo videoOpen>
+            <WorkoutExerciseVideoFrame
+              exercise={exercise}
+              exerciseVideoFailed={false}
+              fallbackHint="Держите лопатки сведёнными и контролируйте амплитуду."
+              inlinePlayingVideoId=""
+              inlineVideoControlsVisible
+              onFullscreenVideo={() => {}}
+              onInlineVideoPlayFailed={() => {}}
+              onRetryVideo={() => {}}
+              onVideoCanPlay={() => {}}
+              onVideoEnded={() => {}}
+              onVideoError={() => {}}
+              onVideoLoadedMetadata={() => {}}
+              onVideoLoadStart={() => {}}
+              onVideoPause={() => {}}
+              onVideoPlay={() => {}}
+              videoLoadingId=""
+              videoRetryToken={0}
+            />
+            <WorkoutExerciseSets
+              exercise={exercise}
+              hasExternalWeight={hasExternalWeight}
+              onToggleSetCompleted={(_exerciseId, index) => {
+                setHarnessExerciseSets((current) => current.map((set, setIndex) => (
+                  setIndex === index ? { ...set, completed: !set.completed } : set
+                )));
+              }}
+              onUpdateSet={(_exerciseId, index, field, value) => {
+                setHarnessExerciseSets((current) => current.map((set, setIndex) => (
+                  setIndex === index ? { ...set, [field]: value } : set
+                )));
+              }}
+              sharedExerciseAiWeightAdjustment={harnessParams?.get("clientExerciseSetsAdjustment") === "1" ? "−5% от рабочего веса" : ""}
+            />
+          </WorkoutRunExercisePreview>
+        </WorkoutRunPageShell>
+      </main>
     );
   }
 
@@ -676,6 +1519,17 @@ export default function ClientE2EHarness() {
           isSaving={false}
           onSelect={() => {}}
         />
+        <WorkoutExitDialog
+          open={workoutDialogParam === "exit"}
+          onStay={() => {}}
+          onLeave={() => {}}
+        />
+        <WorkoutIncompleteDialog
+          open={workoutDialogParam === "incomplete"}
+          completion={{ completedSets: 2, totalSets: 5 }}
+          onContinue={() => {}}
+          onSave={() => {}}
+        />
       </main>
     );
   }
@@ -735,7 +1589,7 @@ export default function ClientE2EHarness() {
           aiNutritionProfile: { goal: "recomp", activity: "moderate", trainingDays: 3 },
           aiNutritionProfileDraft: { goal: "recomp", activity: "moderate", trainingDays: 3 },
           aiNutritionSavedPlan: null,
-          barcodeScannerOpen: false,
+          barcodeScannerOpen: nutritionBarcodeParam,
           canDeleteSelectedNutritionFood: () => false,
           cancelNutritionEditPage: () => setNutritionEditPageOpen(false),
           closeSelectedNutritionFood: closeHarnessSelectedFood,
@@ -783,7 +1637,7 @@ export default function ClientE2EHarness() {
           nutritionPhotoAiCandidates: [],
           nutritionPhotoAiConfidence: 0,
           nutritionPhotoAiResult: null,
-          nutritionPhotoAnalyzing: false,
+          nutritionPhotoAnalyzing: nutritionPhotoAnalyzingParam,
           nutritionPhotoInputRef,
           nutritionPhotoNotFoundOpen,
           nutritionPhotoPreview: "",
@@ -802,7 +1656,14 @@ export default function ClientE2EHarness() {
           openDishIngredientPicker: () => setDishIngredientPickerOpen(true),
           openNutritionCalendar: () => setNutritionCalendarOpen(true),
           openNutritionEditPage: () => setNutritionEditPageOpen(true),
-          openNutritionFoodEditor: () => {},
+          openNutritionFoodEditor: (item) => {
+            setExpandedNutritionMeals({});
+            setSelectedNutritionFood(item);
+            setEditingNutritionItemId(item.id);
+            setNutritionAmount(String(item.amount || 100));
+            setNutritionEditPageOpen(true);
+            setNutritionPickerOpen(true);
+          },
           openNutritionPicker: () => setNutritionPickerOpen(true),
           pendingDishIngredient,
           pendingDishIngredientGrams,
@@ -870,7 +1731,6 @@ export default function ClientE2EHarness() {
       <>
         <HarnessCabinetActions
           onOpenPhotos={() => setCabinetPhotosOpen(true)}
-          onOpenMeasurements={() => setCabinetMeasurementsOpen(true)}
           onOpenNutrition={() => setCabinetNutritionOpen(true)}
           onOpenJournal={() => {
             setCabinetWorkoutJournalTab("calendar");
@@ -880,12 +1740,13 @@ export default function ClientE2EHarness() {
         />
         <ProfileMeasurementsModal
           open={cabinetMeasurementsOpen}
-          latestMeasurement={harnessLatestMeasurement}
-          measurementFields={harnessMeasurementFields}
+          latestMeasurement={measurementsState === "empty" ? null : harnessLatestMeasurement}
+          measurementFields={measurementsState === "full" ? harnessFullMeasurementFields : harnessMeasurementFields}
           formatMeasurementDate={(measurement) => new Date(measurement.date).toLocaleDateString("ru-RU")}
           getMeasurementValue={(measurement, field) => `${measurement[field.id]} ${field.unit}`}
           onClose={() => setCabinetMeasurementsOpen(false)}
           onStart={() => {}}
+          onOpenPhotos={measurementsTabbed ? () => {} : undefined}
         />
         <ProfileNutritionModal
           open={cabinetNutritionOpen}
@@ -949,21 +1810,22 @@ export default function ClientE2EHarness() {
         />
         <ProfileProgressPhotosModal
           open={cabinetPhotosOpen}
-          uploading={false}
+          uploading={progressPhotosState === "uploading"}
           latestPhoto={harnessProgressPhotos[0]}
           photos={harnessProgressPhotos}
-          files={{}}
-          previews={{}}
-          status=""
+          files={progressPhotosState === "selected" ? { front: { name: "front.jpg" } } : {}}
+          previews={progressPhotosState === "selected" ? { front: harnessProgressPhotos[0].frontUrl } : {}}
+          status={progressPhotosState === "selected" ? "Фотографии сохранены" : ""}
           compareIds={[harnessProgressPhotos[1].id, harnessProgressPhotos[0].id]}
           compareViews={harnessProgressPhotoCompareViews}
           compareView="front"
           activeCompareView={harnessProgressPhotoCompareViews[0]}
           selectedBefore={harnessProgressPhotos[1]}
           selectedAfter={harnessProgressPhotos[0]}
-          canSave={false}
+          canSave={progressPhotosState === "selected"}
           formatPhotoDate={(photo) => photo?.date || ""}
           onClose={() => setCabinetPhotosOpen(false)}
+          onOpenMeasurements={progressPhotosTabbed ? () => {} : undefined}
           onSelectPhoto={() => {}}
           onCompareIdsChange={() => {}}
           onCompareViewChange={() => {}}
@@ -981,34 +1843,52 @@ export default function ClientE2EHarness() {
               displayName: "ILYA",
               email: "ilya@gmail.com"
             }}
-            saving={false}
             status=""
             onAvatarFile={() => {}}
             onDraftChange={() => {}}
-            onSendPasswordReset={() => {}}
+            onOpenPassword={() => setProfilePasswordModalOpen(true)}
             onSave={() => {}}
           />
           <ProfileAppSettingsSection
+            variant="account"
             heading="Приложение"
             isWarmLightTheme={harnessWarmLightTheme}
+            email="ilya@example.com"
             telegramProfile={{
-              connected: true,
+              connected: telegramHarnessConnected,
               username: "harness_coach",
               displayName: "Harness Athlete",
               avatarUrl: ""
             }}
             onToggleTheme={() => setHarnessWarmLightTheme((current) => !current)}
+            onOpenEmail={() => setProfileEmailModalOpen(true)}
             onOpenTelegram={() => setTelegramModalOpen(true)}
             onTelegramAvatarError={() => {}}
           />
-          <button type="button" className="profileLogoutBtn profileAccountLogout" onClick={() => {}}>
-            Выйти из аккаунта
-          </button>
+          <ProfileSettingsLogoutButton onClick={() => {}} />
         </ProfileSettingsModal>
+        <ProfilePasswordModal
+          open={profilePasswordModalOpen}
+          hasPasswordProvider
+          hasGoogleProvider={false}
+          saving={false}
+          status=""
+          onClose={() => setProfilePasswordModalOpen(false)}
+          onChangePassword={async () => false}
+          onSendPasswordReset={() => {}}
+        />
+        <ProfileEmailModal
+          open={profileEmailModalOpen}
+          email="ilya@example.com"
+          saving={false}
+          status=""
+          onClose={() => setProfileEmailModalOpen(false)}
+          onRequestEmailChange={async () => false}
+        />
         <ProfileTrainerNotificationsModal
           open={trainerNotificationsOpen}
-          tasks={harnessTrainerTasks}
-          activeCount={1}
+          tasks={visibleHarnessTrainerTasks}
+          activeCount={visibleHarnessTrainerTasks.length > 0 ? 1 : 0}
           getTaskDestination={(task) => task.target || ""}
           onClose={() => setTrainerNotificationsOpen(false)}
           onOpenTask={() => {}}
@@ -1016,16 +1896,16 @@ export default function ClientE2EHarness() {
         <ProfileTelegramModal
           open={telegramModalOpen}
           telegramProfile={{
-            connected: true,
+            connected: telegramHarnessConnected,
             username: "harness_coach",
             displayName: "Harness Athlete",
             avatarUrl: "",
             notificationsEnabled: true
           }}
           loginContainerRef={telegramLoginContainerRef}
-          loginWidgetReady={true}
+          loginWidgetReady={telegramHarnessConnected}
           linking={false}
-          status="Notifications enabled"
+          status={telegramHarnessConnected ? "Notifications enabled" : ""}
           onAvatarError={() => {}}
           onClose={() => setTelegramModalOpen(false)}
           onCheckLogin={() => {}}
@@ -1038,14 +1918,11 @@ export default function ClientE2EHarness() {
 
   return renderHarnessChrome("main", "Главное меню", (
     <>
-      <div className="profileMainHeroStatsCard">
+      <ProfileMainHeroStatsShell>
         <ProfileHeroCard
-          isMainDashboard
           telegramProfile={{ connected: false }}
           avatarUrl=""
-          progressScore={90}
           greetingName="ILYA"
-          onOpenAccount={() => {}}
         />
         <ProfileMainSummaryCards
           activeGoalLabel="Сушка"
@@ -1057,7 +1934,7 @@ export default function ClientE2EHarness() {
           nextTrainingText="Сегодня"
           showSplitCards={false}
         />
-      </div>
+      </ProfileMainHeroStatsShell>
 
       <ProfileMainSummaryCards
         activeGoalLabel="Сушка"
@@ -1071,34 +1948,35 @@ export default function ClientE2EHarness() {
       />
 
       <ProfileProgressInsightCard
-        isMainDashboard
         progressInsight={{
           score: 90,
           tone: "positive",
           scoreLabel: "Отличный темп",
           scoreSummary: "Регулярность: данные ведутся стабильно. Продолжай в том же ритме."
         }}
-        expanded={false}
         statuses={[
           { icon: "⚡", title: "Тренировка", text: "Сегодня" },
           { icon: "📏", title: "Замер", text: "Пора обновить" },
           { icon: "🍽", title: "Питание", text: "По плану" }
         ]}
-        currentGoalId="cut"
-        totalWorkouts={12}
-        onToggle={() => {}}
       />
 
       <ProfileMainMeasurementSnapshot
-        measurementSeries={[
-          { dateLabel: "09.06", weight: 88.5 },
-          { dateLabel: "10.06", weight: 89.5 },
-          { dateLabel: "10.06", weight: 89.5 },
-          { dateLabel: "16.06", weight: 89 }
-        ]}
-        latestMeasurement={{ date: "2026-06-16T12:00:00.000Z", weight: 89 }}
-        latestWeight={89}
-        weightChange={-0.5}
+        measurementSeries={measurementSnapshotState === "empty"
+          ? []
+          : measurementSnapshotState === "single"
+            ? [{ dateLabel: "16.06", weight: 89 }]
+            : [
+                { dateLabel: "09.06", weight: 88.5 },
+                { dateLabel: "10.06", weight: 89.5 },
+                { dateLabel: "10.06", weight: 89.5 },
+                { dateLabel: "16.06", weight: 89 }
+              ]}
+        latestMeasurement={measurementSnapshotState === "empty"
+          ? null
+          : { date: "2026-06-16T12:00:00.000Z", weight: 89 }}
+        latestWeight={measurementSnapshotState === "empty" ? 0 : 89}
+        weightChange={measurementSnapshotState === "trend" ? -0.5 : 0}
       />
     </>
   ));

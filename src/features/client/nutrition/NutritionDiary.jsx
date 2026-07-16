@@ -1,3 +1,5 @@
+import styles from "./NutritionDiary.module.css";
+
 export default function NutritionDiary({
   nutritionZoukExpanded,
   nutritionZoukFoodsCount,
@@ -22,20 +24,21 @@ export default function NutritionDiary({
 }) {
   return (
     <>
-      <section className="nutritionZoukBlock">
+      <section className={styles.diaryBlock} data-css-module-scope="nutrition-diary">
         <button
           type="button"
-          className="nutritionZoukHeader"
+          className={styles.diaryHeader}
+          data-testid="nutrition-diary-toggle"
           onClick={onOpenZouk}
           aria-expanded={nutritionZoukExpanded}
           aria-haspopup="dialog"
         >
-          <span className="nutritionZoukIcon" aria-hidden="true">🍽️</span>
-          <span className="nutritionZoukTitle">
-            <strong>Дневник</strong>
-            <small>Список продуктов за день</small>
+          <span className={styles.diaryIcon} aria-hidden="true">🍽️</span>
+          <span className={styles.diaryTitle}>
+            <span className={styles.titleText}>Дневник</span>
+            <span className={styles.subtitleText}>Список продуктов за день</span>
           </span>
-          <span className="nutritionZoukMeta">
+          <span className={styles.diaryMeta}>
             <small>{nutritionZoukFoodsCount ? `${nutritionZoukFoodsCount} шт` : "пусто"}</small>
             <i aria-hidden="true">›</i>
           </span>
@@ -43,16 +46,22 @@ export default function NutritionDiary({
       </section>
 
       {nutritionZoukExpanded && (
-        <div className="nutritionZoukModalOverlay" role="dialog" aria-modal="true" aria-label="Дневник питания">
+        <div
+          className={styles.modalOverlay}
+          data-testid="nutrition-diary-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Дневник питания"
+        >
           <button
             type="button"
-            className="nutritionZoukModalBackdrop"
+            className={styles.modalBackdrop}
             onClick={onCloseZouk}
             aria-label="Закрыть список продуктов"
           />
-          <section className="nutritionZoukModalSheet">
-            <header className="nutritionZoukModalHeader">
-              <span className="nutritionZoukIcon" aria-hidden="true">🍽️</span>
+          <section className={styles.modalSheet}>
+            <header className={styles.modalHeader}>
+              <span className={styles.diaryIcon} aria-hidden="true">🍽️</span>
               <div>
                 <small>Продукты за день</small>
                 <h2>Дневник питания</h2>
@@ -60,6 +69,7 @@ export default function NutritionDiary({
               </div>
               <button
                 type="button"
+                data-testid="nutrition-diary-close"
                 onClick={onCloseZouk}
                 aria-label="Закрыть"
               >
@@ -67,22 +77,23 @@ export default function NutritionDiary({
               </button>
             </header>
 
-            <div className="nutritionZoukContent">
+            <div className={styles.content}>
               {nutritionMeals.map((meal) => {
                 const foods = (nutritionToday.foods || []).filter((item) => item.mealId === meal.id);
                 const stats = mealStats[meal.id] || { calories: 0, count: 0 };
 
                 return (
-                  <div className="nutritionZoukMeal" key={meal.id}>
-                    <div className="nutritionZoukMealHead">
-                      <span className="nutritionZoukMealIcon" aria-hidden="true">{meal.icon}</span>
+                  <div className={styles.mealGroup} key={meal.id}>
+                    <div className={styles.mealHeading}>
+                      <span className={styles.mealIcon} aria-hidden="true">{meal.icon}</span>
                       <div>
                         <strong>{meal.name}</strong>
                         <small>{foods.length ? `${foods.length} шт · ${Math.round(stats.calories)} ккал` : "продуктов нет"}</small>
                       </div>
                       <button
                         type="button"
-                        className="nutritionZoukAdd"
+                        className={styles.addButton}
+                        data-testid="nutrition-diary-add"
                         onClick={() => onAddMealFood(meal.id)}
                         aria-label={`Добавить продукт: ${meal.name}`}
                       >
@@ -91,19 +102,20 @@ export default function NutritionDiary({
                     </div>
 
                     {foods.length > 0 ? (
-                      <div className="nutritionZoukFoods">
+                      <div className={styles.foods}>
                         {foods.map((item) => (
                           <div
-                            className={`productSwipeShell nutritionZoukSwipeShell ${deletingFoodId === item.id ? "deleting" : ""}`}
+                            className={`${styles.swipeShell} ${deletingFoodId === item.id ? styles.deleting : ""}`}
                             key={item.id}
                           >
-                            <div className="productDeleteBg">
+                            <div className={styles.deleteBackground}>
                               <span aria-hidden="true">×</span>
                             </div>
 
                             <button
                               type="button"
-                              className={`nutritionZoukFood ${deletingFoodId === item.id ? "deleting" : ""}`}
+                              className={`${styles.foodButton} ${deletingFoodId === item.id ? styles.deleting : ""}`}
+                              data-testid="nutrition-diary-food"
                               style={{
                                 transform: `translateX(${swipeOffsets[item.id] || 0}px)`,
                                 opacity: deletingFoodId === item.id ? 0 : 1
@@ -117,12 +129,12 @@ export default function NutritionDiary({
                               onTouchEnd={(event) => onSwipeEnd?.(item.id, event)}
                               onTouchCancel={() => onSwipeCancel?.(item.id)}
                             >
-                            <span className="nutritionZoukFoodIcon" aria-hidden="true">{item.icon || getFoodIcon(item)}</span>
-                            <span className="nutritionZoukFoodText">
+                            <span className={styles.foodIcon} aria-hidden="true">{item.icon || getFoodIcon(item)}</span>
+                            <span className={styles.foodText}>
                               <strong>{item.name}</strong>
                               <small>{item.amount} г · Б {roundMacro(item.protein)} · Ж {roundMacro(item.fat)} · У {roundMacro(item.carbs)}</small>
                             </span>
-                            <span className="nutritionZoukFoodKcal">
+                            <span className={styles.foodCalories}>
                               <strong>{Math.round(Number(item.calories) || 0)}</strong>
                               <small>ккал</small>
                             </span>
@@ -133,7 +145,7 @@ export default function NutritionDiary({
                     ) : (
                       <button
                         type="button"
-                        className="nutritionZoukEmpty"
+                        className={styles.emptyButton}
                         onClick={() => onAddMealFood(meal.id)}
                       >
                         Добавить продукт
@@ -147,22 +159,22 @@ export default function NutritionDiary({
         </div>
       )}
 
-      <section className="fatMealList">
+      <section className={styles.mealList}>
         {nutritionMeals.map((meal) => {
           const stats = mealStats[meal.id] || { calories: 0, count: 0 };
           const hasFoods = stats.count > 0;
 
           return (
             <div
-              className="fatMealCard collapsed"
+              className={styles.mealCard}
               key={meal.id}
             >
               <div
-                className="fatMealMain mealRowExact"
+                className={styles.mealRow}
               >
                 <button
                   type="button"
-                  className="fatMealOpenArea"
+                  className={styles.mealOpenArea}
                   aria-label={`Открыть приём пищи: ${meal.name}`}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -173,13 +185,13 @@ export default function NutritionDiary({
                     }
                   }}
                 />
-                <div className="fatMealIcon mealIconExact">{meal.icon}</div>
-                <div className="fatMealTitle mealTitleExact">
+                <div className={styles.mealIcon}>{meal.icon}</div>
+                <div className={styles.mealTitle}>
                   <strong>{meal.name}</strong>
                   {hasFoods && <span>{stats.count} шт</span>}
                   <button
                     type="button"
-                    className={`fatMealToggle mealToggleUnderCount ${!hasFoods ? "disabled" : ""}`}
+                    className={`${styles.mealToggle} ${!hasFoods ? styles.disabled : ""}`}
                     aria-label="Открыть список продуктов"
                     aria-expanded={Boolean(expandedNutritionMeals[meal.id])}
                     disabled={!hasFoods}
@@ -192,15 +204,15 @@ export default function NutritionDiary({
                     ›
                   </button>
                 </div>
-                <div className="fatMealKcal">
+                <div className={styles.mealCalories}>
                   <strong>{Math.round(stats.calories)}</strong>
                   <span>Калории</span>
                 </div>
 
-                <div className="fatMealActions mealActionsExact">
+                <div className={styles.mealActions}>
                   <button
                     type="button"
-                    className="fatPlusBtn mealPlusExact"
+                    className={styles.mealAddButton}
                     onClick={(event) => {
                       event.stopPropagation();
                       onAddMealFood(meal.id);

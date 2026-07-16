@@ -54,11 +54,6 @@
   left: 14px !important;
 }
 
-.clientCorePageMain .menuRefreshIconBtn {
-  top: 13px !important;
-  right: 14px !important;
-}
-
 .clientCorePageMain .profileCabinetSection {
   box-sizing: border-box !important;
   width: 100% !important;
@@ -71,76 +66,4 @@
   grid-template-rows: auto auto auto minmax(120px, 1fr) !important;
   overflow: hidden !important;
   border-radius: var(--client-primary-radius) !important;
-}
-
-.clientCorePageMain .profileAiHero {
-  min-height: 80px !important;
-  padding: 6px 4px 8px !important;
-  grid-template-columns: 66px minmax(0, 1fr) !important;
-  gap: 12px !important;
-}
-
-.clientCorePageMain .profileAiAvatarWrap {
-  width: 62px !important;
-  height: 62px !important;
-}
-
-.clientCorePageMain .profileAiAvatar {
-  width: 60px !important;
-  height: 60px !important;
-  border-radius: 18px !important;
-}
-
-.clientCorePageMain .profileAiHeroText h1 {
-  font-size: 22px !important;
-  font-weight: 800 !important;
-  line-height: 1.12 !important;
-}
-
-.clientCorePageMain .profileAiStatsRow {
-  margin-top: 8px !important;
-}
-
-.clientCorePageMain .profileAiStatsRow > div {
-  height: 70px !important;
-  min-height: 70px !important;
-}
-
-.clientCorePageMain .profileAiStatsRow span,
-.clientCorePageMain .profileAiMiniCard span {
-  font-size: 10px !important;
-  line-height: 1.2 !important;
-}
-
-.clientCorePageMain .profileAiStatsRow strong,
-.clientCorePageMain .profileAiMiniCard strong {
-  font-size: 18px !important;
-  line-height: 1.08 !important;
-}
-
-.clientCorePageMain .profileAiMiniCard {
-  min-height: 74px !important;
-}
-
-.clientCorePageMain .profileAiCoachInsight {
-  min-height: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-.clientCorePageMain .profileAiCoachToggle {
-  min-height: 0 !important;
-  flex: 1 1 auto !important;
-  padding: 13px 14px 9px !important;
-}
-
-.clientCorePageMain .profileAiCoachToggle h2 {
-  margin: 7px 0 5px !important;
-  font-size: var(--client-card-title-size) !important;
-  line-height: 1.1 !important;
-}
-
-.clientCorePageMain .profileAiCoachToggle p {
-  font-size: var(--client-body-size) !important;
-  line-height: 1.35 !important;
 }

@@ -1,81 +1,6 @@
 /* Split from client-primary-food-flow-rhythm-narrow.css: narrow shared title, workout, nutrition, cabinet locks. */
 @media (max-width: 520px) {
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
-    width: calc(100% - 116px) !important;
-    max-width: calc(100% - 116px) !important;
-    min-height: 54px !important;
-    height: 54px !important;
-    display: flex !important;
-    align-items: center !important;
-    white-space: nowrap !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
-    line-height: 1.12 !important;
-  }
 
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow {
-    width: 100% !important;
-    max-width: none !important;
-    height: 50px !important;
-    min-height: 50px !important;
-    margin: 8px 0 16px !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) 50px !important;
-    align-items: center !important;
-    gap: 10px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileCabinetPageTitle {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 50px !important;
-    height: 50px !important;
-    margin: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    overflow: visible !important;
-    line-height: 1.05 !important;
-    justify-self: start !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileTrainerNotificationsButton {
-    position: static !important;
-    justify-self: end !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle span,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle strong {
-    display: inline-flex !important;
-    align-items: center !important;
-    min-width: 0 !important;
-    white-space: nowrap !important;
-    line-height: 1.12 !important;
-    overflow: visible !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutCardPro,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectCard.individualWorkoutCardPro {
-    border-radius: 26px !important;
-    overflow: hidden !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutProBody,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutProImage,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .individualWorkoutProImage img {
-    border-radius: 24px !important;
-    overflow: hidden !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow strong {
-    width: 100% !important;
-    text-align: center !important;
-    justify-content: center !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopCard,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
     min-height: 72px !important;
     display: grid !important;
@@ -89,7 +14,6 @@
     box-shadow: 0 9px 25px rgba(55, 64, 112, 0.13) !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukBlock {
     padding: 0 !important;
     border: 0 !important;
@@ -97,13 +21,11 @@
     box-shadow: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline > .nutritionAiPlanTopCard,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukBlock > .nutritionZoukHeader {
     width: 100% !important;
     border: 1px solid #e1e4ef !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanCollapsedIcon,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukIcon {
     width: 48px !important;
     min-width: 48px !important;
@@ -113,10 +35,6 @@
     background: #f0edff !important;
     border: 1px solid #e4e0ff !important;
     box-shadow: none !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileAiHero {
-    cursor: default !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {

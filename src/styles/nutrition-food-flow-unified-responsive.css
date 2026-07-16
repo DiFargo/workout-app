@@ -1,21 +1,5 @@
-@media (max-width: 390px) {
-  .foodProductFlowHeader {
-    align-items: stretch !important;
-  }
-
-  .foodProductFlowTitle h2 {
-    font-size: 28px !important;
-  }
-
-  .foodEditPageActionBar {
-    padding-right: 5px !important;
-    padding-left: 5px !important;
-  }
-}
-
 @media (min-width: 760px) {
-  .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)),
-  .foodEditRenderScreen {
+  .fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
     padding-top: 32px !important;
   }
 

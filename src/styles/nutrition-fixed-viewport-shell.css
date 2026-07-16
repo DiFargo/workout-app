@@ -9,7 +9,6 @@
   overflow: hidden !important;
 }
 
-.fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroV4,
 .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard,
 .fatSecretPage.nutritionFixedHeaderV3 .fatMealList {
   flex-shrink: 0 !important;
@@ -24,41 +23,6 @@
 @media (max-height: 760px) {
   .fatSecretPage.nutritionFixedHeaderV3 {
     padding-top: 24px !important;
-  }
-
-  .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroV4 {
-    height: 154px !important;
-    min-height: 154px !important;
-    margin-bottom: 10px !important;
-  }
-
-  .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 {
-    height: 44px !important;
-    min-height: 44px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1 {
-    font-size: 38px !important;
-    line-height: 44px !important;
-  }
-
-  .fatSecretPage.nutritionFixedHeaderV3 .nutritionWeekV4 {
-    height: 52px !important;
-    min-height: 52px !important;
-    margin-bottom: 6px !important;
-  }
-
-  .fatSecretPage.nutritionFixedHeaderV3 .nutritionDayV4 {
-    min-height: 52px !important;
-  }
-
-  .fatSecretPage.nutritionFixedHeaderV3 .nutritionStreakV4 {
-    height: 26px !important;
-    min-height: 26px !important;
-    margin-top: 2px !important;
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
   }
 
   .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard {

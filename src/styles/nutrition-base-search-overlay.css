@@ -128,19 +128,6 @@
 
 .fatSearchList::-webkit-scrollbar { display: none; }
 
-.fatSearchStatus {
-  min-height: 78px;
-  padding: 24px 28px;
-  display: flex;
-  align-items: center;
-  color: #9aa4b5;
-  border-bottom: 1px solid rgba(255,255,255,.075);
-  font-size: 18px;
-  font-weight: 800;
-}
-
-.fatSearchStatus.error { color: #ff8a8a; }
-
 @media (max-width: 480px) {
   .fatSearchInputWrap { min-height: 58px; margin: 18px 10px 10px; }
   .fatSearchInputWrap input { font-size: 22px; }

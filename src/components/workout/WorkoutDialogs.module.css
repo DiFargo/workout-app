@@ -1,0 +1,674 @@
+.draftOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 11950;
+  padding:
+    max(20px, env(safe-area-inset-top))
+    max(18px, env(safe-area-inset-right))
+    max(20px, env(safe-area-inset-bottom))
+    max(18px, env(safe-area-inset-left));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-workout-draft-overlay);
+  -webkit-backdrop-filter: var(--filter-workout-draft-overlay);
+  backdrop-filter: var(--filter-workout-draft-overlay);
+}
+
+.draftCard {
+  width: min(100%, 390px);
+  padding: 24px;
+  border: 1px solid var(--color-workout-draft-card-border);
+  border-radius: 30px;
+  background: var(--background-workout-draft-card);
+  box-shadow: var(--shadow-workout-draft-card);
+  color: var(--color-workout-draft-card-text);
+  text-align: center;
+}
+
+.draftIcon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-workout-dialog-icon-border);
+  border-radius: 50%;
+  background: var(--background-workout-dialog-icon);
+  color: var(--color-workout-dialog-icon);
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.draftCard h2 {
+  margin: 0;
+  color: var(--color-workout-dialog-heading);
+  font-size: 25px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.draftCard p {
+  max-width: 310px;
+  margin: 10px auto 20px;
+  color: var(--color-workout-dialog-muted);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.42;
+}
+
+.draftActions {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 9px;
+}
+
+.draftActions > button {
+  min-width: 0;
+  min-height: 56px;
+  padding: 10px 12px;
+  border-radius: 19px;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.restartButton {
+  border: 1px solid var(--color-workout-dialog-secondary-border);
+  background: var(--background-workout-dialog-secondary);
+  color: var(--color-workout-dialog-secondary);
+}
+
+.restoreButton {
+  border: 1px solid var(--color-workout-dialog-primary-border);
+  background: var(--background-workout-dialog-primary);
+  box-shadow: var(--shadow-workout-dialog-primary);
+  color: var(--color-workout-dialog-primary);
+}
+
+.draftActions > button:active {
+  transform: scale(0.98);
+}
+
+.exitOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9900;
+  padding: 20px;
+  display: grid;
+  place-items: center;
+  background: var(--background-workout-exit-overlay);
+  backdrop-filter: var(--filter-workout-exit-overlay);
+}
+
+.exitCard {
+  box-sizing: border-box;
+  width: min(100%, 410px);
+  padding: 22px;
+  border: 1px solid var(--color-workout-exit-card-border);
+  border-radius: 30px;
+  background: var(--background-workout-exit-card);
+  box-shadow: var(--shadow-workout-exit-card);
+  color: var(--color-workout-exit-card-text);
+  text-align: center;
+}
+
+.exitIcon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--background-workout-dialog-icon);
+  color: var(--color-workout-dialog-icon);
+  font-size: 22px;
+}
+
+.exitCard h2 {
+  margin: 0;
+  color: var(--color-workout-dialog-heading);
+  font-size: 22px;
+}
+
+.exitCard p {
+  margin: 9px 0 18px;
+  color: var(--color-workout-dialog-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.exitActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.exitActions > button {
+  min-height: 52px;
+  border: 1px solid var(--color-workout-dialog-secondary-border);
+  border-radius: 17px;
+  background: var(--background-workout-dialog-secondary);
+  color: var(--color-workout-dialog-secondary);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.exitActions > button:last-child {
+  border: 0;
+  background: var(--background-workout-dialog-primary);
+  box-shadow: var(--shadow-workout-dialog-primary);
+  color: var(--color-workout-dialog-primary);
+}
+
+.postOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 13000;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-post-workout-overlay);
+  backdrop-filter: var(--filter-post-workout-overlay);
+}
+
+.postCard {
+  width: min(100%, 430px);
+  padding: 22px;
+  border: 1px solid var(--color-post-workout-card-border);
+  border-radius: 34px;
+  background: var(--background-post-workout-card);
+  box-shadow: var(--shadow-post-workout-card);
+  color: var(--color-post-workout-card-text);
+}
+
+.postBadge {
+  padding: 7px 11px;
+  display: inline-flex;
+  border-color: var(--color-workout-dialog-icon-border);
+  border-radius: 999px;
+  background: var(--background-post-workout-badge);
+  color: var(--color-post-workout-badge);
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.postCard h2 {
+  margin: 13px 0 7px;
+  color: var(--color-workout-dialog-heading);
+  font-size: 29px;
+  line-height: 1.05;
+}
+
+.postCard > p {
+  margin: 0 0 16px;
+  color: var(--color-workout-dialog-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.postGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.postOption {
+  min-height: 118px;
+  padding: 12px 8px;
+  border: 1px solid var(--color-post-workout-option-border);
+  border-radius: 24px;
+  background: var(--background-post-workout-option);
+  color: var(--color-post-workout-option);
+}
+
+.postOption > span {
+  display: block;
+  font-size: 32px;
+}
+
+.postOption > strong {
+  margin-top: 8px;
+  display: block;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.postOption > small {
+  margin-top: 5px;
+  display: block;
+  color: var(--color-post-workout-option-muted);
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.postOption:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.readinessOverlay {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-workout-readiness-overlay);
+  color: var(--color-workout-readiness-text);
+  backdrop-filter: var(--filter-workout-readiness-overlay);
+}
+
+.readinessStage {
+  width: min(100%, 560px);
+  height: 100%;
+  max-height: 100%;
+  display: grid;
+  grid-template-rows: 64px minmax(0, 1fr) 98px;
+  align-content: center;
+  gap: 8px;
+}
+
+.readinessHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.readinessHeader > span {
+  color: var(--color-workout-readiness-heading);
+  font-size: clamp(24px, 6.2vw, 28px);
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.readinessHeader > small {
+  margin-top: 5px;
+  color: var(--color-workout-readiness-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.readinessCard {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 0;
+  max-height: calc(100dvh - 170px);
+  padding: 18px;
+  overflow-y: auto;
+  border: 1px solid var(--color-workout-readiness-card-border);
+  border-radius: 32px;
+  background: var(--background-workout-readiness-card);
+  box-shadow: var(--shadow-workout-readiness-card);
+  color: var(--color-workout-readiness-text);
+}
+
+.readinessIntro {
+  margin-bottom: 14px;
+  padding: 11px 12px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-radius: 18px;
+  background: var(--background-workout-readiness-intro);
+}
+
+.readinessIntro > span {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--color-workout-readiness-icon-border);
+  border-radius: 50%;
+  background: var(--background-workout-readiness-icon);
+  color: var(--color-workout-readiness-icon);
+  font-size: 18px;
+}
+
+.readinessIntro strong {
+  color: var(--color-workout-readiness-heading);
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.readinessIntro p {
+  margin: 0 0 16px;
+  color: var(--color-workout-readiness-paragraph);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.readinessGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 8px;
+}
+
+.readinessOption {
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  min-height: 68px;
+  max-height: none;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  border: 1px solid var(--color-workout-readiness-item-border);
+  border-radius: 18px;
+  background: var(--background-workout-readiness-item);
+  color: var(--color-workout-readiness-text);
+  text-align: left;
+}
+
+.readinessOption.active {
+  border-color: var(--color-workout-readiness-active-border);
+  background: var(--background-workout-readiness-active);
+  box-shadow: var(--shadow-workout-readiness-active);
+}
+
+.readinessOption > span {
+  display: block;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.readinessOption > span:first-child {
+  font-size: 26px;
+  text-align: center;
+}
+
+.readinessOption strong,
+.readinessOption small {
+  display: block;
+}
+
+.readinessOption strong {
+  margin-top: 7px;
+  color: var(--color-workout-readiness-heading);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.readinessOption small {
+  margin-top: 3px;
+  color: var(--color-workout-readiness-muted);
+  font-size: 9px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.readinessConfirmation {
+  min-height: 30px;
+  margin: 0 0 16px;
+  color: var(--color-workout-readiness-confirmation);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.readinessConfirmation.empty {
+  visibility: hidden;
+}
+
+.readinessActions {
+  box-sizing: border-box;
+  height: 98px;
+  padding: 9px 10px 11px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  gap: 9px;
+  border: 1px solid var(--color-workout-readiness-actions-border);
+  border-radius: 30px;
+  background: var(--background-workout-readiness-actions);
+  box-shadow: var(--shadow-workout-readiness-actions);
+}
+
+.readinessActions > button {
+  min-height: 58px;
+  border: 0;
+  border-radius: 24px;
+  font-size: 17px;
+  font-weight: 950;
+}
+
+.readinessActions > button:first-child {
+  border: 1px solid var(--color-workout-readiness-back-border);
+  background: var(--background-workout-readiness-back);
+  color: var(--color-workout-readiness-back);
+}
+
+.readinessActions > button:last-child {
+  background: var(--background-workout-readiness-primary);
+  color: var(--color-workout-readiness-primary);
+}
+
+.readinessActions > button:disabled {
+  opacity: 0.42;
+}
+
+@media (max-width: 390px) {
+  .readinessStage {
+    grid-template-rows: 58px minmax(0, 1fr) 98px;
+  }
+
+  .readinessCard {
+    padding: 15px;
+    border-radius: 28px;
+  }
+}
+
+@media (max-width: 360px) {
+  .draftCard {
+    padding: 21px 18px;
+    border-radius: 28px;
+  }
+
+  .draftActions > button {
+    padding-inline: 8px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  :global(:root[data-app-theme="warm-light"]) .postOverlay {
+    box-sizing: border-box;
+    padding: 18px;
+    background: var(--background-post-workout-overlay-mobile);
+    -webkit-backdrop-filter: var(--filter-post-workout-overlay-mobile);
+    backdrop-filter: var(--filter-post-workout-overlay-mobile);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .postCard {
+    box-sizing: border-box;
+    width: min(100%, 430px);
+    max-width: calc(100vw - 36px);
+    max-height: calc(100dvh - 36px);
+    padding: 24px 22px 22px;
+    overflow: hidden;
+    border-radius: 28px;
+    box-shadow: var(--shadow-post-workout-card-mobile);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .postBadge {
+    min-height: 28px;
+    padding: 0 13px;
+    align-items: center;
+    background: var(--background-post-workout-badge-mobile);
+    color: var(--color-post-workout-badge-mobile);
+    -webkit-text-fill-color: var(--color-post-workout-badge-mobile);
+    font-size: 12px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .postCard h2 {
+    margin: 14px 0 9px;
+    font-size: clamp(31px, 8vw, 40px);
+    line-height: 1.04;
+    letter-spacing: 0;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .postCard > p {
+    margin-bottom: 18px;
+    font-size: 15px;
+    font-weight: 850;
+    line-height: 1.25;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .postGrid {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .postOption {
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+    min-height: 118px;
+    padding: 12px 6px 11px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    text-align: center;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .postOption > span {
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .postOption > strong {
+    max-width: 100%;
+    margin-top: 9px;
+    overflow: hidden;
+    color: var(--color-post-workout-option);
+    -webkit-text-fill-color: var(--color-post-workout-option);
+    font-size: 13px;
+    line-height: 1.05;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .postOption > small {
+    max-width: 100%;
+    margin-top: 6px;
+    overflow: hidden;
+    color: #7b8397;
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 1.15;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessOverlay {
+    padding:
+      max(16px, calc(env(safe-area-inset-top, 0px) + 10px))
+      0
+      calc(100px + env(safe-area-inset-bottom, 0px));
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessStage {
+    width: min(100%, 520px);
+    height: auto;
+    min-height: 0;
+    max-height: calc(100dvh - 108px - env(safe-area-inset-bottom, 0px));
+    grid-template-rows: minmax(0, auto);
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    margin: auto 0;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessHeader {
+    display: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessCard {
+    width: 100%;
+    max-height: min(560px, calc(100dvh - 146px - env(safe-area-inset-bottom, 0px)));
+    align-self: center;
+    margin: 0 auto;
+    overflow-y: auto;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessActions {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    z-index: 13100;
+    width: auto;
+    height: 76px;
+    min-height: 76px;
+    max-height: 76px;
+    margin: 0;
+    padding: 7px;
+    grid-template-columns: minmax(74px, 0.75fr) minmax(0, 2.25fr);
+    gap: 8px;
+    border-color: var(--color-workout-readiness-mobile-actions-border);
+    border-radius: 20px;
+    background: var(--background-workout-readiness-mobile-actions);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    box-shadow: var(--shadow-workout-readiness-mobile-actions);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessActions > button {
+    box-sizing: border-box;
+    position: static;
+    inset: auto;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    height: 62px;
+    min-height: 62px;
+    max-height: 62px;
+    margin: 0;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessActions > button:first-child {
+    border: 1px solid var(--color-workout-readiness-mobile-back-border);
+    background: var(--background-workout-readiness-mobile-back);
+    box-shadow: none;
+    color: var(--color-workout-readiness-mobile-back);
+    -webkit-text-fill-color: var(--color-workout-readiness-mobile-back);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessActions > button:last-child {
+    border: 1px solid transparent;
+    background: var(--background-workout-readiness-primary);
+    box-shadow: var(--shadow-workout-readiness-mobile-primary);
+    color: var(--color-workout-readiness-primary);
+    -webkit-text-fill-color: var(--color-workout-readiness-primary);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessActions > button:disabled {
+    opacity: 0.45;
+  }
+}

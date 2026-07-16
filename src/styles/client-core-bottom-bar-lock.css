@@ -1,7 +1,6 @@
 /* === FINAL CORE BOTTOM BAR ALIGNMENT LOCK (MAIN / TRAINING / NUTRITION / CABINET) === */
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar,
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar,
-nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].nutritionBottomTabBar,
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar,
 .workoutModeBottomBar {
   left: 50% !important;
@@ -25,11 +24,8 @@ nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹
 
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar > button,
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar > button,
-nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].nutritionBottomTabBar > button,
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar > button,
-.individualWorkoutMenuBar > button,
-.workoutModeBottomBar > button,
-.individualWorkoutMenuBar > button {
+.workoutModeBottomBar > button {
   box-sizing: border-box !important;
   min-height: 68px !important;
   height: 68px !important;
@@ -45,9 +41,7 @@ nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹
 
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar > button span,
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar > button span,
-nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].nutritionBottomTabBar > button span,
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar > button span,
-.individualWorkoutMenuBar > button span,
 .workoutModeBottomBar > button span {
   width: 100% !important;
   min-height: 31px !important;
@@ -59,9 +53,7 @@ nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹
 
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar > button strong,
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar > button strong,
-nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].nutritionBottomTabBar > button strong,
 nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar > button strong,
-.individualWorkoutMenuBar > button strong,
 .workoutModeBottomBar > button strong {
   width: 100% !important;
   min-height: 16px !important;
@@ -72,23 +64,11 @@ nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹
   line-height: 16px !important;
 }
 
-.individualWorkoutSelectPage > .individualWorkoutBottomPanel,
-.workoutPlanOverviewPage > .individualWorkoutBottomPanel,
-.clientCorePageWorkout.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
-  left: 50% !important;
-  right: auto !important;
-  transform: translateX(-50%) !important;
-  width: min(394px, calc(100vw - 20px)) !important;
-  max-width: 394px !important;
-}
-
 @media (max-width: 360px) {
   nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar > button strong,
-  nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar > button strong,
-  nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].nutritionBottomTabBar > button strong,
-  nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar > button strong,
-  .individualWorkoutMenuBar > button strong,
-  .workoutModeBottomBar > button strong {
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar > button strong,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar > button strong,
+.workoutModeBottomBar > button strong {
     font-size: 11px !important;
     line-height: 16px !important;
   }

@@ -1,39 +1,10 @@
 /* ===== FINAL PRODUCT EDIT TUNE ===== */
 
-.foodEditHeroRender strong{
-  font-size:18px!important;
-  line-height:1.18!important;
-  white-space:normal!important;
-  overflow:visible!important;
-  text-overflow:unset!important;
-  display:-webkit-box!important;
-  -webkit-line-clamp:2!important;
-  -webkit-box-orient:vertical!important;
-}
-
 .foodEditSegmentRow button{
   display:flex!important;
   align-items:center!important;
   justify-content:center!important;
   gap:8px!important;
-}
-
-.foodEditAmountCard input{
-  text-align:center!important;
-  color:rgba(247,248,251,0.82)!important;
-}
-
-.foodEditMacrosCards strong{
-  color:rgba(247,248,251,0.82)!important;
-}
-
-.foodEditRowsCard{
-  padding-top:4px!important;
-  padding-bottom:4px!important;
-}
-
-.foodEditRow{
-  height:56px!important;
 }
 
 .foodEditBottomActions{
@@ -59,9 +30,6 @@
 }
 
 @media (max-width:480px){
-  .foodEditHeroRender strong{
-    font-size:17px!important;
-  }
 
   .foodEditDeleteButton,
   .foodEditSaveRender{

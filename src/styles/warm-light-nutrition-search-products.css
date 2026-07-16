@@ -45,7 +45,6 @@
 /* ===== WARM LIGHT FINAL PRODUCT LIST FIX ===== */
 
 /* product rows slightly darker than parent meal block */
-:root[data-app-theme="warm-light"] .productRowExact,
 :root[data-app-theme="warm-light"] .fatFoodItem {
   background:
     linear-gradient(
@@ -59,7 +58,6 @@
 }
 
 /* remove white square behind arrow */
-:root[data-app-theme="warm-light"] .productArrowExact,
 :root[data-app-theme="warm-light"] .fatFoodArrow {
   background: transparent !important;
   background-color: transparent !important;
@@ -70,8 +68,6 @@
   color: #5f5744 !important;
 }
 
-:root[data-app-theme="warm-light"] .productArrowExact::before,
-:root[data-app-theme="warm-light"] .productArrowExact::after,
 :root[data-app-theme="warm-light"] .fatFoodArrow::before,
 :root[data-app-theme="warm-light"] .fatFoodArrow::after {
   display: none !important;
@@ -86,7 +82,6 @@
 /* FIX PRODUCT ROWS + HOLLOW SEARCH ICON */
 
 /* slightly darker than block, but warm yellow not orange */
-:root[data-app-theme="warm-light"] .productRowExact,
 :root[data-app-theme="warm-light"] .fatFoodItem {
   background:
     linear-gradient(
@@ -104,9 +99,7 @@
 /* fallback if icon font */
 
 /* WARM LIGHT â€” PRODUCT ROWS EXACT COLOR LIKE REFERENCE */
-:root[data-app-theme="warm-light"] .productRowExact,
-:root[data-app-theme="warm-light"] .fatFoodItem,
-:root[data-app-theme="warm-light"] .productSwipeShell .productRowExact {
+:root[data-app-theme="warm-light"] .fatFoodItem {
   background: linear-gradient(
     180deg,
     rgba(248, 238, 191, 0.98) 0%,
@@ -118,7 +111,6 @@
 }
 
 /* remove extra white backgrounds around rows */
-:root[data-app-theme="warm-light"] .productSwipeShell,
 :root[data-app-theme="warm-light"] .fatMealItems {
   background: transparent !important;
   border: none !important;

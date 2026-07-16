@@ -1,9 +1,6 @@
 /* V619: shared typography for nutrition and food-management screens. */
 html body #root .fatFoodSearchScreenPremium,
-html body #root .foodEditPageOverlay,
 html body #root .nutritionCreateChoiceSheet,
-html body #root .dishIngredientPickerSheet,
-html body #root .dishIngredientConfirmCard,
 html body #root .nutritionZoukModalSheet {
   --nutrition-flow-heading: 22px;
   --nutrition-flow-subheading: 17px;
@@ -16,22 +13,14 @@ html body #root .nutritionZoukModalSheet {
   letter-spacing: 0 !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup,
-html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle,
 html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader,
-html body #root .dishIngredientPickerSheet .dishIngredientPickerHeader,
 html body #root .nutritionZoukModalSheet .nutritionZoukModalHeader {
   min-width: 0 !important;
   text-align: left !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup h2,
-html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle h2,
-html body #root .foodEditPageOverlay .foodEditPageTitleCenter,
 html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader h3,
-html body #root .dishIngredientPickerSheet .dishIngredientPickerHeader strong,
-html body #root .nutritionZoukModalSheet .nutritionZoukModalHeader h2,
-html body #root .dishIngredientConfirmCard .dishIngredientConfirmInfo strong {
+html body #root .nutritionZoukModalSheet .nutritionZoukModalHeader h2 {
   margin: 0 !important;
   max-width: 100% !important;
   overflow: hidden !important;
@@ -43,27 +32,13 @@ html body #root .dishIngredientConfirmCard .dishIngredientConfirmInfo strong {
   text-overflow: ellipsis !important;
 }
 
-html body #root .foodEditPageOverlay .foodEditPageTitleCenter {
-  text-align: center !important;
-  white-space: normal !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup h2,
-html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle h2,
 html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader h3,
-html body #root .dishIngredientPickerSheet .dishIngredientPickerHeader strong,
 html body #root .nutritionZoukModalSheet .nutritionZoukModalHeader h2 {
   white-space: nowrap !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup > span,
-html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle > span,
 html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader > span,
 html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader p,
-html body #root .dishIngredientPickerSheet .dishIngredientPickerHeader span,
-html body #root .dishIngredientConfirmCard .dishIngredientConfirmInput > span,
-html body #root .foodEditPageOverlay .foodEditPageContent label > span,
-html body #root .fatFoodSearchScreenPremium .foodEditInlineMealLabel,
 html body #root .nutritionZoukModalSheet .nutritionZoukModalHeader small {
   margin: 0 !important;
   color: var(--food-flow-muted, #71788c) !important;
@@ -84,31 +59,7 @@ html body #root .nutritionZoukModalSheet .nutritionZoukModalHeader small {
   text-transform: none !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium span,
-html body #root .fatFoodSearchScreenPremium .foodEditInlineMealButton span {
-  color: var(--food-flow-muted, #71788c) !important;
-  font-size: 9px !important;
-  font-weight: 900 !important;
-  line-height: 1.1 !important;
-  letter-spacing: 0.02em !important;
-  text-transform: uppercase !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium strong,
-html body #root .fatFoodSearchScreenPremium .foodEditInlineMealButton strong,
-html body #root .fatFoodSearchScreenPremium .foodEditInlineMealButton {
-  color: var(--food-flow-text, #161a24) !important;
-  font-size: 13px !important;
-  font-weight: 950 !important;
-  line-height: 1.12 !important;
-  letter-spacing: 0 !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input,
-html body #root .dishIngredientPickerSheet .dishIngredientSearchBox input,
-html body #root .foodEditPageOverlay .foodEditPageContent input,
-html body #root .foodEditPageOverlay .foodEditPageContent textarea,
-html body #root .dishIngredientConfirmCard .dishIngredientConfirmInput input {
+html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input {
   color: var(--food-flow-text, #161a24) !important;
   font-size: 15px !important;
   font-weight: 850 !important;
@@ -117,9 +68,6 @@ html body #root .dishIngredientConfirmCard .dishIngredientConfirmInput input {
 }
 
 html body #root .fatFoodSearchScreenPremium .fatSearchHistoryNamesTitle,
-html body #root .fatFoodSearchScreenPremium .fatRecentFoodsTitle,
-html body #root .foodEditPageOverlay .foodEditSectionTitle,
-html body #root .foodEditPageOverlay .dishEditIngredientsHeader strong,
 html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceGrid button strong {
   color: var(--food-flow-text, #161a24) !important;
   font-size: var(--nutrition-flow-subheading) !important;
@@ -128,12 +76,7 @@ html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceGrid button st
   letter-spacing: 0 !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo strong,
-html body #root .fatFoodSearchScreenPremium .fatRecentFoodButton strong,
-html body #root .nutritionZoukModalSheet .nutritionZoukFoodText strong,
-html body #root .dishIngredientPickerSheet .dishIngredientResultCard strong,
-html body #root .foodEditRenderScreen .foodEditHeroRender strong,
-html body #root .dishEditIngredientRow strong {
+html body #root .nutritionZoukModalSheet .nutritionZoukFoodText strong {
   display: block !important;
   max-width: 100% !important;
   overflow: hidden !important;
@@ -146,13 +89,7 @@ html body #root .dishEditIngredientRow strong {
   white-space: nowrap !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo span,
-html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo small,
-html body #root .fatFoodSearchScreenPremium .fatRecentFoodButton span,
 html body #root .nutritionZoukModalSheet .nutritionZoukFoodText small,
-html body #root .dishIngredientPickerSheet .dishIngredientResultCard small,
-html body #root .dishIngredientConfirmCard .dishIngredientConfirmInfo span,
-html body #root .dishEditIngredientRow small,
 html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceGrid button small {
   color: var(--food-flow-muted, #71788c) !important;
   font-size: var(--nutrition-flow-caption) !important;
@@ -161,45 +98,17 @@ html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceGrid button sm
   letter-spacing: 0 !important;
 }
 
-html body #root .foodEditRenderScreen .foodEditMacrosCards strong,
-html body #root .foodEditRenderScreen .foodEditRowsCard strong,
-html body #root .foodEditPageOverlay .foodEditMacroInput strong {
-  color: var(--food-flow-text, #161a24) !important;
-  font-size: 16px !important;
-  font-weight: 950 !important;
-  line-height: 1.08 !important;
-  letter-spacing: 0 !important;
-}
-
-html body #root .foodEditRenderScreen .foodEditMacrosCards span,
-html body #root .foodEditRenderScreen .foodEditRowsCard span,
-html body #root .foodEditPageOverlay .foodEditMacroInput span {
-  color: var(--food-flow-muted, #71788c) !important;
-  font-size: 10px !important;
-  font-weight: 850 !important;
-  line-height: 1.15 !important;
-  letter-spacing: 0 !important;
-}
-
-html body #root .fatSearchBottomBarFive button,
-html body #root .foodProductActionBar button,
-html body #root .foodEditPageActionBar button,
-html body #root .dishIngredientConfirmActions button {
+html body #root .fatSearchBottomBarFive button {
   font-family: Arial, sans-serif !important;
   letter-spacing: 0 !important;
 }
 
-html body #root .fatSearchBottomBarFive button span,
-html body #root .foodProductActionBar button span,
-html body #root .foodEditPageActionBar button span {
+html body #root .fatSearchBottomBarFive button span {
   font-size: 20px !important;
   line-height: 1 !important;
 }
 
-html body #root .fatSearchBottomBarFive button strong,
-html body #root .foodProductActionBar button strong,
-html body #root .foodEditPageActionBar button strong,
-html body #root .dishIngredientConfirmActions button {
+html body #root .fatSearchBottomBarFive button strong {
   max-width: 100% !important;
   overflow-wrap: anywhere !important;
   color: inherit !important;
@@ -212,11 +121,8 @@ html body #root .dishIngredientConfirmActions button {
 
 @media (max-width: 390px) {
   html body #root .fatFoodSearchScreenPremium,
-  html body #root .foodEditPageOverlay,
-  html body #root .nutritionCreateChoiceSheet,
-  html body #root .dishIngredientPickerSheet,
-  html body #root .dishIngredientConfirmCard,
-  html body #root .nutritionZoukModalSheet {
+html body #root .nutritionCreateChoiceSheet,
+html body #root .nutritionZoukModalSheet {
     --nutrition-flow-heading: 20px;
     --nutrition-flow-subheading: 15px;
     --nutrition-flow-card-title: 14px;
@@ -225,10 +131,7 @@ html body #root .dishIngredientConfirmActions button {
     --nutrition-flow-caption: 10.5px;
   }
 
-  html body #root .fatSearchBottomBarFive button strong,
-  html body #root .foodProductActionBar button strong,
-  html body #root .foodEditPageActionBar button strong {
+  html body #root .fatSearchBottomBarFive button strong {
     font-size: 9.5px !important;
   }
 }
-

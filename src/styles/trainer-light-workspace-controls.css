@@ -111,6 +111,41 @@ html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programC
   box-shadow: 0 24px 64px rgba(43, 50, 92, 0.2) !important;
 }
 
+html:root[data-app-theme="warm-light"] body #root .adminCredentialsBox {
+  display: grid !important;
+  gap: 10px !important;
+  padding: 16px !important;
+  border-color: #d9d2ff !important;
+  background: #f5f2ff !important;
+  color: #1b1d2b !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminCredentialsBox span {
+  color: #5d4bd4 !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminCredentialsBox strong {
+  margin: 0 !important;
+  overflow-wrap: anywhere !important;
+  color: #3d328a !important;
+  font: 700 14px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .adminCredentialsBox button {
+  width: fit-content !important;
+  min-height: 40px !important;
+  margin: 0 !important;
+  padding: 0 16px !important;
+  border: 1px solid #cfc7ff !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: #5741d3 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 7px 16px rgba(82, 65, 181, 0.1) !important;
+}
+
 html:root[data-app-theme="warm-light"] body #root .adminCreateClientModalClose,
 html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programCopyTargetMonth,
 html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programCopyTargetMonth button,

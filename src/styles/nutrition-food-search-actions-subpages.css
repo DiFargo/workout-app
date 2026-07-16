@@ -20,14 +20,8 @@
   border-radius: 13px !important;
 }
 
-.fatFoodSearchScreenPremium:has(.fatSearchBottomBarFive) {
+.fatFoodSearchScreenPremium:not([data-food-search-header-layout]):has(.fatSearchBottomBarFive) {
   padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
-}
-
-.fatFoodSearchScreenPremium:has(.nutritionCreateChoiceScreen) > .fatSearchTopPremium,
-.fatFoodSearchScreenPremium:has(.fatBarcodeScreen) > .fatSearchTopPremium {
-  visibility: hidden !important;
-  pointer-events: none !important;
 }
 
 .nutritionCreateChoiceOverlay.nutritionCreateChoiceScreen,

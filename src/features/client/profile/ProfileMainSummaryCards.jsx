@@ -1,4 +1,5 @@
 import { CalendarDays, Dumbbell, Scale, Target, Zap } from "lucide-react";
+import styles from "./ProfileMainSummaryCards.module.css";
 
 export default function ProfileMainSummaryCards({
   activeGoalLabel,
@@ -24,37 +25,42 @@ export default function ProfileMainSummaryCards({
   return (
     <>
       {showStats && (
-      <div className="profileAiStatsRow">
-        <div className="goal">
-          <span className="profileAiStatLabel"><Target aria-hidden="true" />Твоя цель</span>
-          <strong>{activeGoalLabel}</strong>
-          <small>&nbsp;</small>
+      <div
+        className={styles.statsRoot}
+        data-css-module-scope="profile-main-summary-stats"
+        data-testid="profile-main-stats"
+      >
+        <div className={styles.stat}>
+          <span className={styles.statLabel}><Target className={styles.statIcon} aria-hidden="true" />Твоя цель</span>
+          <strong className={`${styles.statValue} ${styles.goalValue}`}>{activeGoalLabel}</strong>
         </div>
 
-        <div>
-          <span className="profileAiStatLabel"><Scale aria-hidden="true" />Целевой вес</span>
-          <strong>{resolvedTargetWeight || "—"} кг</strong>
-          <small>&nbsp;</small>
+        <div className={styles.stat}>
+          <span className={styles.statLabel}><Scale className={styles.statIcon} aria-hidden="true" />Целевой вес</span>
+          <strong className={styles.statValue}>{resolvedTargetWeight || "—"} кг</strong>
         </div>
 
-        <div>
-          <span className="profileAiStatLabel"><Dumbbell aria-hidden="true" />Тренировок</span>
-          <strong>{totalWorkouts}</strong>
-          <small>&nbsp;</small>
+        <div className={styles.stat}>
+          <span className={styles.statLabel}><Dumbbell className={styles.statIcon} aria-hidden="true" />Тренировок</span>
+          <strong className={styles.statValue}>{totalWorkouts}</strong>
         </div>
       </div>
       )}
 
       {showSplitCards && (
-      <div className="profileMainSummaryGrid profileAiSplitCards">
-        <article className="profileAiMiniCard">
-          <span><CalendarDays aria-hidden="true" />Последняя тренировка</span>
-          <strong>{lastWorkoutDate || "Нет данных"}</strong>
+      <div
+        className={styles.summaryGrid}
+        data-css-module-scope="profile-main-summary-grid"
+        data-testid="profile-main-summary-grid"
+      >
+        <article className={styles.summaryCard}>
+          <span className={styles.summaryLabel}><CalendarDays className={styles.summaryIcon} aria-hidden="true" />Последняя тренировка</span>
+          <strong className={styles.summaryValue}>{lastWorkoutDate || "Нет данных"}</strong>
         </article>
 
-        <article className="profileAiMiniCard">
-          <span><Zap aria-hidden="true" />Следующая тренировка</span>
-          <strong>{nextTrainingText}</strong>
+        <article className={styles.summaryCard}>
+          <span className={styles.summaryLabel}><Zap className={`${styles.summaryIcon} ${styles.nextIcon}`} aria-hidden="true" />Следующая тренировка</span>
+          <strong className={styles.summaryValue}>{nextTrainingText}</strong>
         </article>
       </div>
       )}

@@ -22,8 +22,7 @@
 :root[data-app-theme="warm-light"] .finishWorkoutIcon,
 :root[data-app-theme="warm-light"] .historySet strong,
 :root[data-app-theme="warm-light"] .fatFoodCalories strong,
-:root[data-app-theme="warm-light"] .fatFoodItem strong,
-:root[data-app-theme="warm-light"] .productInfoExact span {
+:root[data-app-theme="warm-light"] .fatFoodItem strong {
   color: #a77f35 !important;
 }
 
@@ -32,8 +31,7 @@
   background: #c79d4c !important;
 }
 
-:root[data-app-theme="warm-light"] video,
-:root[data-app-theme="warm-light"] .exerciseVideo {
+:root[data-app-theme="warm-light"] video:not([data-css-module-control]) {
   background: #1f1a12 !important;
 }
 

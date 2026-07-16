@@ -14,7 +14,7 @@
 }
 
 /* Ð½Ð¾Ð²Ð°Ñ ÑÑ‚Ñ€ÐµÐ»ÐºÐ° Ð¸Ð¼ÐµÐ½Ð½Ð¾ Ð½Ð° ÑÐºÑ€Ð°Ð½Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ ÐµÐ´Ñ‹ */
-.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .addFoodBackOnly {
+.fatFoodSearchScreenPremium .addFoodBackOnly {
   position: fixed !important;
   top: 18px !important;
   left: 18px !important;
@@ -40,9 +40,3 @@
 }
 
 /* ÐºÑ€ÐµÑÑ‚Ð¸Ðº Ð¾Ñ‚Ð¼ÐµÐ½Ñ‹ Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ ÑÐ¿Ñ€Ð°Ð²Ð° */
-.fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchClosePremium {
-  position: fixed !important;
-  top: 18px !important;
-  right: 18px !important;
-  left: auto !important;
-}

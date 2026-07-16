@@ -3,8 +3,7 @@
 .menuPage,
 .loginPage,
 .appSplash,
-.finishOverlay,
-.historyDeleteOverlay {
+.finishOverlay {
   min-height: 100svh;
   min-height: 100dvh;
 }
@@ -16,11 +15,10 @@
 
 @supports (height: 100dvh) {
   .app,
-  .menuPage,
-  .loginPage,
-  .appSplash,
-  .finishOverlay,
-  .historyDeleteOverlay {
+.menuPage,
+.loginPage,
+.appSplash,
+.finishOverlay {
     min-height: 100dvh;
   }
 

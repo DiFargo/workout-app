@@ -93,7 +93,7 @@
   min-height: var(--workout-stage-card-height) !important;
   max-height: var(--workout-stage-card-height) !important;
   margin: 0 auto !important;
-  padding: 16px !important;
+  padding: var(--workout-stage-card-padding, 16px) !important;
   display: flex !important;
   flex: 0 0 auto !important;
   flex-direction: column !important;
@@ -179,35 +179,7 @@
 }
 
 /* INDIVIDUAL PLAN SPLIT BOTTOM ACTION V209 */
-.individualWorkoutSelectPage {
-  padding-bottom: calc(178px + env(safe-area-inset-bottom)) !important;
-}
 
-.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
-  overflow: visible !important;
-}
-
-.individualWorkoutBottomProgress {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  top: -25px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 10.5px;
-  font-weight: 800;
-  line-height: 1;
-  pointer-events: none;
-}
-
-.individualWorkoutBottomProgress span:first-child {
-  color: rgba(255, 255, 255, 0.66);
-}
-
-.individualWorkoutActionRow,
 .workoutRunPage .warmupNavigationRow {
   width: 100%;
   height: 78px;
@@ -216,8 +188,6 @@
   gap: 9px;
 }
 
-.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutBackButton,
-.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutStartButton,
 .workoutRunPage .warmupBottomPanel .warmupPreviousButton,
 .workoutRunPage .warmupBottomPanel .warmupReadyButton {
   box-sizing: border-box !important;
@@ -232,7 +202,6 @@
   line-height: 1 !important;
 }
 
-.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutBackButton,
 .workoutRunPage .warmupBottomPanel .warmupPreviousButton {
   padding: 0 8px !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -241,19 +210,12 @@
   box-shadow: none !important;
 }
 
-.individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutStartButton,
 .workoutRunPage .warmupBottomPanel .warmupReadyButton {
   padding: 0 14px !important;
 }
 
 @media (max-width: 390px) {
-  .individualWorkoutBottomProgress {
-    left: 9px;
-    right: 9px;
-  }
 
-  .individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutBackButton,
-  .individualWorkoutSelectPage > .individualWorkoutBottomPanel .individualWorkoutStartButton,
   .workoutRunPage .warmupBottomPanel .warmupPreviousButton,
   .workoutRunPage .warmupBottomPanel .warmupReadyButton {
     font-size: 16px !important;
@@ -261,64 +223,3 @@
 }
 
 /* INDIVIDUAL PLAN ALIGNED CONTENT WITHOUT SWIPE PROGRESS V211 */
-.individualWorkoutSelectPage .individualWorkoutCardPro {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) !important;
-  grid-template-rows: 30px minmax(0, 1fr) 62px !important;
-  align-items: stretch !important;
-  align-content: stretch !important;
-  gap: 12px !important;
-}
-
-.individualWorkoutSelectPage .individualWorkoutProTop,
-.individualWorkoutSelectPage .individualWorkoutProBody,
-.individualWorkoutSelectPage .individualWorkoutTrainerTip {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  margin: 0 !important;
-}
-
-.individualWorkoutSelectPage .individualWorkoutProTop {
-  height: 30px !important;
-  min-height: 30px !important;
-}
-
-.individualWorkoutSelectPage .individualWorkoutProBody {
-  height: 100% !important;
-  min-height: 0 !important;
-  align-self: stretch !important;
-}
-
-.individualWorkoutSelectPage .individualWorkoutProInfo,
-.individualWorkoutSelectPage .individualWorkoutProImage {
-  height: 100% !important;
-  min-height: 0 !important;
-}
-
-.individualWorkoutSelectPage .individualWorkoutStats {
-  width: 100% !important;
-}
-
-.individualWorkoutSelectPage .individualWorkoutStats > span {
-  min-height: 32px !important;
-}
-
-.individualWorkoutSelectPage .individualWorkoutTrainerTip {
-  height: 62px !important;
-  min-height: 62px !important;
-  max-height: 62px !important;
-}
-
-.individualWorkoutSelectPage > .individualWorkoutNav {
-  margin-top: 6px !important;
-}
-
-.individualWorkoutSelectPage > .individualWorkoutNav .individualWorkoutCenterNav {
-  gap: 0 !important;
-}
-
-@media (max-width: 700px) {
-  .individualWorkoutSelectPage > .individualWorkoutNav:not(:has(.individualWorkoutSwipeHint)) {
-    display: none !important;
-  }
-}

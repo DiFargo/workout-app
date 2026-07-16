@@ -8,15 +8,6 @@
     --main-nutrition-soft: #6f778b;
   }
 
-  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain > h1.mainDashboardTitle.clientCorePageTitle {
-    color: var(--main-nutrition-title) !important;
-    -webkit-text-fill-color: var(--main-nutrition-title) !important;
-    font-size: 28px !important;
-    font-weight: 900 !important;
-    line-height: 1.06 !important;
-    letter-spacing: 0 !important;
-  }
-
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection {
     gap: 16px !important;
     padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)) !important;

@@ -96,8 +96,7 @@
 }
 
 /* popular suggestions */
-.fatQuickSuggestionsTitle,
-.fatRecentFoodsTitle {
+.fatQuickSuggestionsTitle {
   margin: 10px 2px 7px;
   color: rgba(244, 246, 242, 0.42);
   font-size: 12px;
@@ -119,7 +118,6 @@
 }
 
 .fatFoodCard,
-.fatSearchResultCard,
 .nutritionFoodCard,
 .foodResultCard {
   position: relative !important;
@@ -137,7 +135,6 @@
 }
 
 .fatFoodCard strong,
-.fatSearchResultCard strong,
 .nutritionFoodCard strong,
 .foodResultCard strong {
   display: block;
@@ -151,7 +148,6 @@
 }
 
 .fatFoodCard span,
-.fatSearchResultCard span,
 .nutritionFoodCard span,
 .foodResultCard span {
   color: rgba(244, 246, 242, 0.44) !important;
@@ -162,7 +158,6 @@
 
 /* smaller FatSecret-style plus */
 .fatFoodCard button,
-.fatSearchResultCard button,
 .nutritionFoodCard button,
 .foodResultCard button {
   position: absolute !important;
@@ -186,54 +181,9 @@
 }
 
 .fatFoodCard button:active,
-.fatSearchResultCard button:active,
 .nutritionFoodCard button:active,
 .foodResultCard button:active {
   transform: translateY(-50%) scale(0.94) !important;
-}
-
-/* recent foods */
-.fatRecentFoods {
-  margin: 8px 0 10px;
-  padding: 10px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.032);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.fatRecentFoodsTitle {
-  margin-top: 0;
-}
-
-.fatRecentFoodButton {
-  width: 100%;
-  min-height: 42px;
-  margin-top: 7px;
-  padding: 8px 11px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(255,255,255,0.035);
-  color: rgba(244,246,242,0.76);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.fatRecentFoodButton span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.fatRecentFoodButton strong {
-  color: #a7c85a;
-  font-size: 12px;
-  font-weight: 900;
-  white-space: nowrap;
 }
 
 /* skeleton loading */
@@ -242,48 +192,6 @@
   0% { background-position: 120% 0; opacity: 0.62; }
   50% { opacity: 1; }
   100% { background-position: -120% 0; opacity: 0.62; }
-}
-
-/* empty state */
-.fatSearchStatus {
-  width: 100%;
-  padding: 18px 14px !important;
-  border-radius: 24px !important;
-  background:
-    radial-gradient(circle at top, rgba(127,159,58,0.12), transparent 56%),
-    rgba(255,255,255,0.035) !important;
-  border: 1px solid rgba(255,255,255,0.065) !important;
-  color: rgba(244,246,242,0.52) !important;
-  font-size: 14px !important;
-  font-weight: 850 !important;
-  text-align: center;
-}
-
-.fatSearchStatus strong {
-  display: block;
-  margin-bottom: 8px;
-  color: rgba(244,246,242,0.9);
-  font-size: 16px;
-  font-weight: 900;
-}
-
-.fatFallbackSuggestions {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  margin-top: 13px;
-}
-
-.fatFallbackSuggestions button {
-  width: 100%;
-  min-height: 45px;
-  border-radius: 17px;
-  border: 1px solid rgba(127,159,58,0.18);
-  background: rgba(127,159,58,0.07);
-  color: rgba(244,246,242,0.78);
-  font-size: 14px;
-  font-weight: 900;
 }
 
 /* phone refinements */
@@ -296,18 +204,16 @@
   }
 
   .fatFoodCard,
-  .fatSearchResultCard,
-  .nutritionFoodCard,
-  .foodResultCard {
+.nutritionFoodCard,
+.foodResultCard {
     min-height: 82px !important;
     padding-right: 59px !important;
     border-radius: 21px !important;
   }
 
   .fatFoodCard strong,
-  .fatSearchResultCard strong,
-  .nutritionFoodCard strong,
-  .foodResultCard strong {
+.nutritionFoodCard strong,
+.foodResultCard strong {
     font-size: 16px !important;
   }
 }

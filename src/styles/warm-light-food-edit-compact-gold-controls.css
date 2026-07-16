@@ -10,9 +10,7 @@
 }
 
 /* BOTTOM ACTION BUTTONS = WATER BUTTON STYLE */
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBar button,
-:root[data-app-theme="warm-light"] .foodEditPageSave,
-:root[data-app-theme="warm-light"] .foodEditPageBack {
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBar button {
   background:
     linear-gradient(180deg, #f4e064 0%, #e0c94d 100%) !important;
 
@@ -33,161 +31,30 @@
 }
 
 /* PRODUCT EDIT PAGE â€” LABELS ABOVE + 35% LOWER BLOCKS */
-:root[data-app-theme="warm-light"] .foodEditPageContent {
-  gap: 12px !important;
-}
-
-:root[data-app-theme="warm-light"] .foodEditPageGrid {
-  gap: 12px !important;
-}
 
 /* label container becomes transparent so the title sits above the actual field */
-:root[data-app-theme="warm-light"] .foodEditPageContent label,
-:root[data-app-theme="warm-light"] .foodEditPageGrid label {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  gap: 7px !important;
-}
 
 /* block names above blocks */
-:root[data-app-theme="warm-light"] .foodEditPageContent label > span,
-:root[data-app-theme="warm-light"] .foodEditPageGrid label > span {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 0 0 6px !important;
-  padding: 0 !important;
-
-  color: rgba(95, 87, 68, 0.72) !important;
-  -webkit-text-fill-color: rgba(95, 87, 68, 0.72) !important;
-
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  line-height: 1.1 !important;
-}
 
 /* actual input blocks: about 35% shorter than before */
-:root[data-app-theme="warm-light"] .foodEditPageContent label > input,
-:root[data-app-theme="warm-light"] .foodEditPageGrid label > input,
-:root[data-app-theme="warm-light"] .foodEditPortionUnitRow {
-  min-height: 50px !important;
-  height: 50px !important;
-  padding: 10px 14px !important;
-
-  border-radius: 20px !important;
-  border: 1px solid rgba(94, 75, 30, 0.10) !important;
-
-  background:
-    radial-gradient(circle at top, rgba(244,224,100,0.12), transparent 65%),
-    linear-gradient(180deg, rgba(255,247,205,0.98) 0%, rgba(240,223,154,0.92) 100%) !important;
-
-  box-shadow:
-    0 10px 24px rgba(151,119,35,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.48) !important;
-
-  color: #4f4739 !important;
-  -webkit-text-fill-color: #4f4739 !important;
-}
 
 /* grid fields compact */
-:root[data-app-theme="warm-light"] .foodEditPageGrid label > input {
-  text-align: center !important;
-  font-size: 18px !important;
-  font-weight: 900 !important;
-}
 
 /* name/portion input compact */
-:root[data-app-theme="warm-light"] .foodEditPageContent label > input {
-  font-size: 17px !important;
-  font-weight: 900 !important;
-}
 
 /* portion row internals */
-:root[data-app-theme="warm-light"] .foodEditPortionUnitRow input {
-  height: 100% !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-:root[data-app-theme="warm-light"] .foodEditPortionUnitToggle {
-  height: 34px !important;
-  min-height: 34px !important;
-  padding: 0 13px !important;
-  border-radius: 16px !important;
-}
 
 /* textarea block lower/compact but still usable */
-:root[data-app-theme="warm-light"] .foodEditPageContent textarea {
-  min-height: 116px !important;
-  height: 116px !important;
-  padding: 13px 15px !important;
-  border-radius: 20px !important;
-
-  background:
-    radial-gradient(circle at top, rgba(244,224,100,0.12), transparent 65%),
-    linear-gradient(180deg, rgba(255,247,205,0.98) 0%, rgba(240,223,154,0.92) 100%) !important;
-
-  border: 1px solid rgba(94, 75, 30, 0.10) !important;
-  box-shadow:
-    0 10px 24px rgba(151,119,35,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.48) !important;
-
-  font-size: 16px !important;
-  font-weight: 800 !important;
-}
 
 /* keep header compact */
-:root[data-app-theme="warm-light"] .foodEditPageHeader {
-  margin-bottom: 12px !important;
-}
 
 /* GOLD DONE BUTTON + GOLD GRAMS BUTTON */
 
 /* grams/unit row aligned */
-:root[data-app-theme="warm-light"] .foodEditPortionUnitRow {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-}
 
 /* grams button gold */
-:root[data-app-theme="warm-light"] .foodEditPortionUnitToggle {
-  height: 50px !important;
-  min-height: 50px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  background:
-    linear-gradient(180deg, #f4e064 0%, #e0c94d 100%) !important;
-
-  border: 1px solid rgba(94,75,30,0.12) !important;
-
-  box-shadow:
-    0 10px 24px rgba(151,119,35,0.14),
-    inset 0 1px 0 rgba(255,255,255,0.34) !important;
-
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
-
-  font-weight: 900 !important;
-}
 
 /* GOLD BACK BUTTON ON PRODUCT EDIT PAGE */
 
 /* ALIGN GRAMS BUTTON TO LEFT */
-:root[data-app-theme="warm-light"] .foodEditPortionUnitRow {
-  justify-content: flex-start !important;
-}
-
-:root[data-app-theme="warm-light"] .foodEditPortionUnitToggle {
-  margin-left: 0 !important;
-  margin-right: auto !important;
-  align-self: flex-start !important;
-}
 

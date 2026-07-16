@@ -1,3 +1,5 @@
+import styles from "./ProfileHeroCard.module.css";
+
 function getTimeOfDayGreeting() {
   const hour = new Date().getHours();
 
@@ -8,49 +10,38 @@ function getTimeOfDayGreeting() {
 }
 
 export default function ProfileHeroCard({
-  isMainDashboard,
   telegramProfile,
   avatarUrl,
-  progressScore,
-  greetingName,
-  onOpenAccount
+  greetingName
 }) {
-  const clickable = false;
   const greeting = getTimeOfDayGreeting();
 
   return (
     <div
-      className={`profileAiHero${clickable ? " profileAiHeroButton" : ""}`}
-      role={clickable ? "button" : undefined}
-      tabIndex={clickable ? 0 : undefined}
-      aria-label={clickable ? "Открыть аккаунт" : undefined}
-      onClick={() => {
-        if (clickable) onOpenAccount();
-      }}
-      onKeyDown={(event) => {
-        if (!clickable || (event.key !== "Enter" && event.key !== " ")) return;
-        event.preventDefault();
-        onOpenAccount();
-      }}
+      className={styles.root}
+      data-css-module-scope="profile-hero-card"
+      data-testid="profile-main-hero"
     >
-      <div className="profileAiAvatarWrap">
-        <div className={telegramProfile.connected ? "profileAvatarBig telegram profileUnifiedAvatar profileAiAvatar" : "profileAvatarBig profileUnifiedAvatar profileAiAvatar"}>
+      <div className={styles.avatarWrap} data-testid="profile-main-hero-avatar-wrap">
+        <div
+          className={`${styles.avatar}${telegramProfile.connected ? ` ${styles.telegram}` : ""}`}
+          data-testid="profile-main-hero-avatar"
+        >
           {avatarUrl ? (
             <img src={avatarUrl} alt="" />
           ) : (
-            <span>{telegramProfile.connected ? "✈️" : "👤"}</span>
+            <span className={styles.fallback} data-testid="profile-main-hero-avatar-fallback">
+              {telegramProfile.connected ? "✈️" : "👤"}
+            </span>
           )}
         </div>
-        <div className="profileAiAvatarRing">
-          <strong>{progressScore === null ? "—" : `${progressScore}%`}</strong>
-        </div>
       </div>
 
-      <div className="profileAiHeroText">
-        {!isMainDashboard && <span>ЛИЧНЫЙ КАБИНЕТ</span>}
-        <h1>{greeting}, {greetingName} 👋</h1>
+      <div className={styles.text} data-testid="profile-main-hero-text">
+        <h1 className={styles.title} data-testid="profile-main-hero-title">
+          {greeting}, {greetingName} 👋
+        </h1>
       </div>
-
     </div>
   );
 }

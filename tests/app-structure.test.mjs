@@ -12,7 +12,7 @@ async function readCssWithImports(entryPath, seen = new Set()) {
   assert.equal(seen.has(normalizedEntry), false, `CSS import cycle detected at ${normalizedEntry}`);
 
   const source = await readText(normalizedEntry);
-  const importPattern = /@import\s+["']([^"']+\.css)["']\s*;/g;
+  const importPattern = /@import\s+["']([^"']+\.css)["'][^;]*;/g;
   const chunks = [];
   let cursor = 0;
 
@@ -59,7 +59,7 @@ async function collectFiles(dir, extensions, files = []) {
 }
 
 function collectCssImports(source) {
-  return [...source.matchAll(/@import\s+["']([^"']+)["']\s*;/g)].map((match) => match[1]);
+  return [...source.matchAll(/@import\s+["']([^"']+)["'][^;]*;/g)].map((match) => match[1]);
 }
 
 function collectModuleImports(source) {
@@ -235,7 +235,6 @@ test("application styles use the modular styles entrypoint", async () => {
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
   const nutritionAiPlanLazyCss = await readCssWithImports("src/styles/nutrition-ai-plan-lazy.css");
   const nutritionFoodIconLazyCss = await readText("src/styles/nutrition-food-icon-lazy.css");
-  const aiCoachLazyCss = await readCssWithImports("src/styles/ai-coach-lazy.css");
   const clientFirstSetupLazyCss = await readText("src/styles/client-first-setup-lazy.css");
   const clientMeasurementsLazyCss = await readText("src/styles/client-measurements-lazy.css");
   const clientProfileLazyCss = await readText("src/styles/client-profile-lazy.css");
@@ -261,14 +260,12 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.doesNotMatch(indexCss, /legacy-ai-nutrition-workout-readiness\.css/);
   assert.match(appCore, /['"]\.\/styles\/client-workout-lazy\.css['"]/);
   assert.match(appCore, /['"]\.\/styles\/nutrition-stack\.css['"]/);
-  assert.match(appCore, /['"]\.\/styles\/ai-coach-lazy\.css['"]/);
-  assert.match(aiCoachLazyCss, /\.aiCoachPage/);
-  assert.match(aiCoachLazyCss, /\.aiNutritionPlanShell/);
+  assert.doesNotMatch(appCore, /ai-coach-lazy\.css/);
   assert.match(nutritionStackCss, /@import "\.\/nutrition-ai-plan-lazy\.css"/);
   assert.match(nutritionStackCss, /@import "\.\/nutrition-food-icon-lazy\.css"/);
-  assert.match(nutritionAiPlanLazyCss, /\.nutritionAiPlanDashboard/);
+  assert.doesNotMatch(nutritionAiPlanLazyCss, /\.nutritionAiPlanDashboard/);
   assert.match(nutritionAiPlanLazyCss, /\.nutritionAiHistoryPlanCard/);
-  assert.match(nutritionFoodIconLazyCss, /\.foodEditIconManualBox/);
+  assert.doesNotMatch(nutritionFoodIconLazyCss, /\.foodEditIconManualBox/);
   assert.match(nutritionFoodIconLazyCss, /\.nutritionCaloriesRenderCard\.trainingDay/);
   assert.doesNotMatch(indexCss, /\.aiCoachPage/);
   assert.doesNotMatch(indexCss, /\.aiNutritionPlanShell/);
@@ -280,20 +277,22 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(clientWorkoutLazyCss, /@import "\.\/workout-flow-layout\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/workout-exercise-notes\.css"/);
   assert.match(clientWorkoutLazyCss, /@import "\.\/workout-navigation-close\.css"/);
-  assert.match(clientWorkoutLazyCss, /@import "\.\/client-workout-set-rows\.css"/);
-  assert.match(clientWorkoutLazyCss, /@import "\.\/client-workout-dialogs-lazy\.css"/);
+  assert.doesNotMatch(clientWorkoutLazyCss, /@import "\.\/client-workout-set-rows\.css"/);
+  assert.equal(await pathExists("src/styles/client-workout-set-rows.css"), false);
+  assert.doesNotMatch(clientWorkoutLazyCss, /client-workout-dialogs-lazy\.css/);
   for (const nutritionLazyImport of [
     "./nutrition-food-products-summary.css",
     "./nutrition-food-editor-workout-close.css",
     "./warm-light-food-edit-back-buttons.css",
     "./warm-light-add-food-search.css",
     "./client-food-search.css",
-    "./nutrition-photo-not-found.css",
     "./nutrition-orbit.css",
     "./nutrition-flow.css"
   ]) {
     assert.match(nutritionStackCss, new RegExp(`@import "${nutritionLazyImport.replace(".", "\\.")}"`));
   }
+  assert.doesNotMatch(nutritionStackCss, /nutrition-photo-not-found\.css/);
+  assert.equal(await pathExists("src/styles/nutrition-photo-not-found.css"), false);
   assert.match(appRouteLoaders, /['"]\.\.\/styles\/client-workout-lazy\.css['"]/);
   for (const workoutRouteLoader of [
     "loadBasicWorkoutQuizPage",
@@ -304,7 +303,8 @@ test("application styles use the modular styles entrypoint", async () => {
   ]) {
     assert.match(appRouteLoaders, new RegExp(`const ${workoutRouteLoader} = \\(\\) => Promise\\.all\\(\\[[\\s\\S]*?loadWorkoutStyles\\(\\)`));
   }
-  assert.match(appRouteLoaders, /['"]\.\.\/styles\/ai-coach-lazy\.css['"]/);
+  assert.doesNotMatch(appRouteLoaders, /ai-coach-lazy\.css/);
+  assert.match(appRouteLoaders, /loadAiCoachPage = \(\) => import\("\.\.\/features\/client\/ai\/AiCoachPage"\)/);
   assert.match(appRouteLoaders, /['"]\.\.\/styles\/client-measurements-lazy\.css['"]/);
   assert.match(appStartupGate, /['"]\.\.\/styles\/client-first-setup-lazy\.css['"]/);
   for (const firstSetupLazyImport of [
@@ -318,21 +318,19 @@ test("application styles use the modular styles entrypoint", async () => {
   assert.match(appTerminalRoute, /['"]\.\.\/styles\/client-profile-lazy\.css['"]/);
   assert.match(clientProfileLazyCss, /@import "\.\/client-measurements-lazy\.css"/);
   for (const measurementLazyImport of [
-    "./client-measurements.css",
-    "./client-measurement-review.css"
+    "./client-measurements.css"
   ]) {
     assert.match(clientMeasurementsLazyCss, new RegExp(`@import "${measurementLazyImport.replace(".", "\\.")}"`));
     assert.doesNotMatch(indexCss, new RegExp(`@import "${measurementLazyImport.replace(".", "\\.")}"`));
   }
+  assert.doesNotMatch(clientMeasurementsLazyCss, /client-measurement-review\.css/);
+  assert.equal(await pathExists("src/styles/client-measurement-review.css"), false);
   for (const profileLazyImport of [
     "./profile-dashboard-telegram.css",
     "./client-history-ai-search.css",
     "./profile-nutrition.css",
     "./profile-progress.css",
-    "./client-cabinet-desktop.css",
-    "./cabinet-calendar-insights.css",
-    "./profile-account-editor.css",
-    "./profile-progress-insights.css"
+    "./client-cabinet-desktop.css"
   ]) {
     assert.match(clientProfileLazyCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
     assert.doesNotMatch(indexCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
@@ -424,6 +422,7 @@ test("application styles use the modular styles entrypoint", async () => {
   const allSourceFiles = await collectFiles("src", [".js", ".jsx"]);
   const allowedCssImportFiles = new Set([
     path.normalize("src/main.jsx"),
+    path.normalize("src/app/cssVariant.js"),
     path.normalize("src/AppCore.jsx"),
     path.normalize("src/app/AppRouter.jsx"),
     path.normalize("src/app/AppTerminalRoute.jsx"),
@@ -439,9 +438,26 @@ test("application styles use the modular styles entrypoint", async () => {
   for (const file of allSourceFiles) {
     const source = await readText(file);
     if (!/\.css['"]/.test(source)) continue;
+
+    const cssImports = collectModuleImports(source).filter((importSource) => importSource.endsWith(".css"));
+    const nonModuleImports = cssImports.filter((importSource) => !importSource.endsWith(".module.css"));
+
+    for (const moduleImport of cssImports.filter((importSource) => importSource.endsWith(".module.css"))) {
+      const resolvedModule = resolveRelativeImport(file, moduleImport);
+      assert.ok(resolvedModule, `CSS Module imports must be relative: ${moduleImport} from ${file}`);
+      assert.equal(
+        path.dirname(resolvedModule),
+        path.dirname(path.normalize(file)),
+        `CSS Module must be colocated with its component: ${moduleImport} from ${file}`
+      );
+      assert.equal(await pathExists(resolvedModule), true, `Missing CSS Module ${moduleImport} from ${file}`);
+      assert.doesNotMatch(await readText(resolvedModule), /!important/, `CSS Module cannot use !important: ${resolvedModule}`);
+    }
+
+    if (nonModuleImports.length === 0) continue;
     assert.ok(
       allowedCssImportFiles.has(path.normalize(file)),
-      `Unexpected CSS import outside approved entrypoints: ${file}`
+      `Unexpected global CSS import outside approved entrypoints: ${file}`
     );
   }
 });
@@ -461,17 +477,37 @@ test("client loading fallback CSS keeps warm-light panel and spinner shells grou
   assert.equal((source.match(/animation:\s*clientRouteFallbackSpin 0\.78s linear infinite;/g) || []).length, 1);
 });
 
-test("AI coach CSS keeps nutrition plan grids grouped", async () => {
-  const source = await readCssWithImports("src/styles/ai-coach-lazy.css");
+test("AI coach owns colocated scoped styles without legacy selector owners", async () => {
+  const component = await readText("src/features/client/ai/AiCoachPage.jsx");
+  const moduleCss = await readText("src/features/client/ai/AiCoachPage.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyStyles = (await Promise.all(legacyFiles.map((file) => readText(file)))).join("\n");
+  const legacySelectors = /aiCoach(?:Page|BackBtn|Hero|Badge|ResultCard|ResultTop|Meter|Blocks|MiniBlock|Grid|FeatureCard)|aiNutrition(?:PlanShell|OnboardingCard|PlanCardFull|OnboardingHead|PlanHero|PlanInsight|TwoCol|ImproveBox|GoalPicker|PrimaryBtn|PlanActions|TodayMacros|BadgesRow|WeeksGrid|AdaptBtn|AdaptResult|TrainingDaysPicker|TrainingDaysHead|TrainingDaysGrid|TrainingDayInfo|BodyReadOnlyCard|BodyReadOnlyHead|BodyReadOnlyGrid|ProfileLinkBtn|SexPicker)/;
 
-  assert.equal(
-    (source.match(/\.aiNutritionWeeksGrid,\s*\.aiNutritionTwoCol\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*1fr 1fr;\s*gap:\s*9px;\s*margin-top:\s*12px;\s*\}/g) || []).length,
-    1
-  );
-  const standaloneBlocks = [...source.matchAll(/([^{}]+)\{([^{}]+)\}/g)]
-    .map((match) => match[1].trim().replace(/\s+/g, " "));
-
-  assert.equal(standaloneBlocks.includes(".aiNutritionTwoCol"), false);
+  assert.match(component, /import styles from "\.\/AiCoachPage\.module\.css"/);
+  assert.match(component, /className=\{styles\.root\}[\s\S]*data-css-module-scope="ai-coach-page"/);
+  for (const testId of [
+    "ai-coach-page",
+    "ai-coach-back",
+    "ai-coach-hero",
+    "ai-coach-result",
+    "ai-coach-features",
+    "ai-nutrition-plan-shell",
+    "ai-nutrition-onboarding",
+    "ai-nutrition-plan"
+  ]) {
+    assert.match(component, new RegExp(`data-testid="${testId}"`));
+  }
+  assert.doesNotMatch(component, legacySelectors);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.weeksGrid,\s*\.twoColumn\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /@media \(max-width: 430px\)/);
+  assert.match(moduleCss, /@media \(max-width: 380px\)/);
+  assert.match(variables, /--background-ai-coach-page:/);
+  assert.match(variables, /--color-ai-coach-heading:/);
+  assert.doesNotMatch(legacyStyles, legacySelectors);
+  assert.equal(await pathExists("src/styles/ai-coach-lazy.css"), false);
 });
 
 test("legacy registration CSS keeps first setup active choices grouped", async () => {
@@ -491,76 +527,586 @@ test("legacy registration CSS keeps first setup active choices grouped", async (
   );
 });
 
-test("legacy registration CSS keeps workout history item internals grouped", async () => {
-  const source = await readCssWithImports("src/styles/registration-accessibility.css");
+test("workout picker and profile history dialogs own scoped modules without legacy selectors", async () => {
+  const workoutDialogs = await readText("src/features/client/workouts/WorkoutListDialogs.jsx");
+  const workoutDialogsCss = await readText("src/features/client/workouts/WorkoutListDialogs.module.css");
+  const profileHistory = await readText("src/features/client/profile/ProfileWorkoutHistoryModal.jsx");
+  const profileHistoryCss = await readText("src/features/client/profile/ProfileWorkoutHistoryModal.module.css");
+  const profileJournal = await readText("src/features/client/profile/ProfileWorkoutJournalModal.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldSelector = /\.(?:workoutModeModalOverlay|workoutModeModal|workoutModeModalHeader|workoutModeModalOptions|workoutModeModalRemember|workoutHistoryModal|workoutHistoryModalList|workoutHistoryModalItem|workoutHistoryModalAll|cabinetWorkoutHistoryItem|cabinetWorkoutHistoryDetails|cabinetWorkoutHistoryExercise|cabinetWorkoutHistoryExerciseHead|cabinetWorkoutHistorySets|cabinetWorkoutHistoryDelete)(?![\w-])/;
 
-  assert.equal(
-    (
-      source.match(
-        /\.workoutHistoryModalList > button > span,\s*\.workoutHistoryModalItem > span,\s*\.cabinetWorkoutHistoryItem > button > span\s*\{\s*width:\s*38px;\s*height:\s*38px;\s*display:\s*grid;\s*place-items:\s*center;\s*border-radius:\s*11px;\s*background:\s*rgba\(107, 92, 255, 0\.14\);\s*font-size:\s*18px;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.workoutHistoryModalList strong,\s*\.cabinetWorkoutHistoryItem > button strong\s*\{\s*overflow:\s*hidden;\s*font-size:\s*12px;\s*line-height:\s*1\.2;\s*text-overflow:\s*ellipsis;\s*white-space:\s*nowrap;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.workoutHistoryModalList > button div,\s*\.workoutHistoryModalItem > div,\s*\.cabinetWorkoutHistoryItem > button div\s*\{\s*min-width:\s*0;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.workoutHistoryModalList strong,\s*\.workoutHistoryModalList small,\s*\.cabinetWorkoutHistoryItem > button strong,\s*\.cabinetWorkoutHistoryItem > button small\s*\{\s*display:\s*block;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.workoutHistoryModalList small,\s*\.cabinetWorkoutHistoryItem > button small\s*\{\s*margin-top:\s*4px;\s*color:\s*rgba\(247, 248, 252, 0\.56\);\s*font-size:\s*10px;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal((source.match(/background:\s*rgba\(107, 92, 255, 0\.14\);\s*font-size:\s*18px;/g) || []).length, 1);
-  assert.equal((source.match(/font-size:\s*12px;\s*line-height:\s*1\.2;\s*text-overflow:\s*ellipsis;/g) || []).length, 1);
-  assert.equal((source.match(/color:\s*rgba\(247, 248, 252, 0\.56\);\s*font-size:\s*10px;/g) || []).length, 1);
+  assert.match(workoutDialogs, /import styles from "\.\/WorkoutListDialogs\.module\.css";/);
+  assert.match(workoutDialogs, /data-css-module-scope="workout-list-dialogs"/);
+  assert.match(workoutDialogs, /data-testid="workout-mode-option"/);
+  assert.match(workoutDialogs, /data-testid="workout-history-dialog"/);
+  assert.doesNotMatch(workoutDialogs, oldSelector);
+  assert.doesNotMatch(workoutDialogsCss, /!important/);
+  assert.match(workoutDialogsCss, /\.dialog\s*\{[\s\S]*?width:\s*min\(100%, 350px\);/);
+  assert.match(workoutDialogsCss, /\.historyDialog\s*\{[\s\S]*?max-height:\s*min\(680px, calc\(100dvh - 28px\)\);/);
+  assert.match(workoutDialogsCss, /var\(--background-workout-list-dialog-overlay\)/);
+
+  assert.match(profileHistory, /import styles from "\.\/ProfileWorkoutHistoryModal\.module\.css";/);
+  assert.match(profileHistory, /data-css-module-scope="profile-workout-history"/);
+  assert.match(profileHistory, /data-testid="profile-workout-history-delete"/);
+  assert.doesNotMatch(profileHistory, oldSelector);
+  assert.doesNotMatch(profileHistoryCss, /!important/);
+  assert.match(profileHistoryCss, /\.embeddedList\s*\{[\s\S]*?padding-right:\s*1px;/);
+  assert.match(profileHistoryCss, /\.set\s*\{[\s\S]*?grid-template-columns:\s*20px minmax\(0, 1fr\) auto;/);
+  assert.match(profileJournal, /<ProfileWorkoutHistoryContent embedded \{\.\.\.historyProps\} \/>/);
+
+  assert.match(variables, /--background-workout-list-dialog-overlay:/);
+  assert.match(variables, /--background-workout-history-set:/);
+  assert.doesNotMatch(legacyCss, oldSelector);
+
+  for (const removedFile of [
+    "src/styles/registration-accessibility-workout-history-mode-modal-v308.css",
+    "src/styles/registration-accessibility-workout-history-mode-modal-warm-light-v309.css",
+    "src/styles/registration-accessibility-workout-history-modal-list-v310.css",
+    "src/styles/registration-accessibility-workout-history-cabinet-item-v311.css",
+    "src/styles/registration-accessibility-workout-history-cabinet-details-v312.css",
+    "src/styles/registration-accessibility-workout-history-cabinet-warm-light-v313.css",
+    "src/styles/client-workout-card-render.css",
+    "src/styles/client-workout-card-render-final-lock.css"
+  ]) {
+    assert.equal(await pathExists(removedFile), false, `${removedFile} must stay removed`);
+  }
 });
 
-test("legacy registration CSS keeps warm-light nutrition icon shells grouped", async () => {
-  const source = await readCssWithImports("src/styles/registration-accessibility.css");
+test("profile workout calendar owns a colocated module and excludes dead standalone modals", async () => {
+  const calendar = await readText("src/features/client/profile/ProfileWorkoutCalendarModal.jsx");
+  const calendarCss = await readText("src/features/client/profile/ProfileWorkoutCalendarModal.module.css");
+  const history = await readText("src/features/client/profile/ProfileWorkoutHistoryModal.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldCalendarSelector = /\.cabinetWorkoutCalendar(?:Nav|Planner|Weekdays|Grid|Legend|EditActions|Status|Day)?(?![\w-])/;
 
-  assert.equal(
-    (
-      source.match(
-        /:root\[data-app-theme="warm-light"\] \.nutritionHeaderIconActions button,\s*:root\[data-app-theme="warm-light"\] \.nutritionCalendarClose\s*\{\s*border-color:\s*#e3e6f1;\s*background:\s*#ffffff;\s*color:\s*#151824;\s*box-shadow:\s*0 5px 14px rgba\(55, 64, 112, 0\.07\);\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (source.match(/box-shadow:\s*0 5px 14px rgba\(55, 64, 112, 0\.07\);/g) || []).length,
-    1
-  );
+  assert.match(calendar, /import styles from "\.\/ProfileWorkoutCalendarModal\.module\.css";/);
+  assert.match(calendar, /data-css-module-scope="profile-workout-calendar"/);
+  assert.match(calendar, /styles\[visualStatus\]/);
+  assert.doesNotMatch(calendar, oldCalendarSelector);
+  assert.doesNotMatch(calendar, /export default function ProfileWorkoutCalendarModal/);
+  assert.doesNotMatch(history, /export default function ProfileWorkoutHistoryModal/);
+  assert.doesNotMatch(calendarCss, /!important/);
+  assert.match(calendarCss, /\.grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\);/);
+  assert.match(calendarCss, /\.dayButton\.completed,[\s\S]*?\.dayButton\.historyCompleted/);
+  assert.match(calendarCss, /var\(--color-workout-calendar-shell-border\)/);
+  assert.match(variables, /--background-workout-calendar-shell:/);
+  assert.match(variables, /--color-workout-calendar-details-heading:/);
+  assert.doesNotMatch(legacyCss, oldCalendarSelector);
+  assert.doesNotMatch(legacyCss, /\.cabinetProgressModal(?![\w-])/);
+
+  for (const removedFile of [
+    "src/styles/cabinet-calendar-insights-calendar.css",
+    "src/styles/cabinet-calendar-insights-calendar-modal-v290.css",
+    "src/styles/cabinet-calendar-insights-calendar-shell-v291.css",
+    "src/styles/cabinet-calendar-insights-calendar-grid-v292.css",
+    "src/styles/cabinet-calendar-insights-calendar-actions-v293.css",
+    "src/styles/cabinet-calendar-insights-calendar-day-detail-v294.css",
+    "src/styles/cabinet-calendar-insights-warm-light.css"
+  ]) {
+    assert.equal(await pathExists(removedFile), false, `${removedFile} must stay removed`);
+  }
+});
+
+test("profile workout journal owns its live modal shell in a colocated module", async () => {
+  const journal = await readText("src/features/client/profile/ProfileWorkoutJournalModal.jsx");
+  const journalCss = await readText("src/features/client/profile/ProfileWorkoutJournalModal.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldJournalSelector = /\.(?:cabinetWorkoutJournalModal|cabinetWorkoutJournalHead|cabinetWorkoutJournalTabs|cabinetWorkoutJournalBody|cabinetWorkoutJournalHistoryPanel)(?![\w-])/;
+
+  assert.match(journal, /import styles from "\.\/ProfileWorkoutJournalModal\.module\.css";/);
+  assert.match(journal, /data-css-module-scope="profile-workout-journal"/);
+  assert.match(journal, /data-testid="profile-workout-journal-dialog"/);
+  assert.match(journal, /data-testid="profile-workout-journal-close"/);
+  assert.doesNotMatch(journal, oldJournalSelector);
+  assert.doesNotMatch(journalCss, /!important/);
+  assert.match(journalCss, /\.dialog\s*\{[\s\S]*?grid-template-rows:\s*48px 48px minmax\(0, 1fr\);/);
+  assert.match(journalCss, /@media \(max-height: 720px\)[\s\S]*?grid-template-rows:\s*42px 46px minmax\(0, 1fr\);/);
+  assert.match(journalCss, /var\(--background-profile-modal-overlay\)/);
+  assert.match(variables, /--background-profile-modal:/);
+  assert.match(variables, /--shadow-workout-journal-tab-active:/);
+  assert.doesNotMatch(legacyCss, oldJournalSelector);
+});
+
+test("profile feedback modal owns its live styles without legacy selector branches", async () => {
+  const feedback = await readText("src/features/client/profile/ProfileFeedbackModal.jsx");
+  const feedbackCss = await readText("src/features/client/profile/ProfileFeedbackModal.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldFeedbackSelector = /\.(?:profileFeedbackOverlay|profileFeedbackModal|profileFeedbackHead|profileFeedbackBody|profileFeedbackTypeGrid|profileFeedbackField|profileFeedbackAttachment|profileFeedbackAttachmentFile|profileFeedbackStatus|profileFeedbackSubmit)(?![\w-])/;
+
+  assert.match(feedback, /import styles from "\.\/ProfileFeedbackModal\.module\.css";/);
+  assert.match(feedback, /data-css-module-scope="profile-feedback"/);
+  assert.match(feedback, /data-testid="profile-feedback-dialog"/);
+  assert.match(feedback, /data-testid="profile-feedback-type"/);
+  assert.doesNotMatch(feedback, oldFeedbackSelector);
+  assert.doesNotMatch(feedback, /className="[^\"]*compact/);
+  assert.doesNotMatch(feedbackCss, /!important/);
+  assert.match(feedbackCss, /\.dialog\s*\{[\s\S]*?grid-template-rows:\s*48px minmax\(0, 1fr\) 54px;/);
+  assert.match(feedbackCss, /\.typeGrid\s*\{[\s\S]*?grid-template-columns:\s*1fr 1fr;/);
+  assert.match(feedbackCss, /@media \(max-height: 720px\)[\s\S]*?grid-template-rows:\s*42px minmax\(0, 1fr\);/);
+  assert.match(feedbackCss, /var\(--color-profile-feedback-field-border\)/);
+  assert.match(variables, /--background-profile-modal-overlay:/);
+  assert.match(variables, /--background-profile-feedback-type-active:/);
+  assert.doesNotMatch(legacyCss, oldFeedbackSelector);
+});
+
+test("profile settings modal owns all live shell variants without cabinet utility selectors", async () => {
+  const settings = await readText("src/features/client/profile/ProfileSettingsModal.jsx");
+  const settingsCss = await readText("src/features/client/profile/ProfileSettingsModal.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldSettingsSelector = /\.(?:cabinetUtilityModalOverlay|cabinetUtilityModalHead|cabinetUtilityModalBody|cabinetUtilityModal|cabinetSettingsModal)(?![\w-])/;
+
+  assert.match(settings, /import styles from "\.\/ProfileSettingsModal\.module\.css";/);
+  assert.match(settings, /data-css-module-scope="profile-settings"/);
+  assert.match(settings, /data-profile-settings-section=\{section\}/);
+  assert.match(settings, /data-testid="profile-settings-close"/);
+  assert.doesNotMatch(settings, oldSettingsSelector);
+  assert.doesNotMatch(settingsCss, /!important/);
+  assert.match(settingsCss, /\.accountCompact\s*\{[\s\S]*?grid-template-rows:\s*44px minmax\(0, 1fr\);/);
+  assert.match(settingsCss, /\.profileCompact\s*\{[\s\S]*?grid-template-rows:\s*42px minmax\(0, 1fr\);/);
+  assert.match(settingsCss, /@media \(max-height: 720px\)/);
+  assert.match(settingsCss, /var\(--color-profile-modal-border\)/);
+  assert.match(variables, /--color-profile-settings-control-active-border:/);
+  assert.doesNotMatch(legacyCss, oldSettingsSelector);
+  assert.equal(await pathExists("src/styles/theme-light-nested-screens-cabinet-profile.css"), false);
+});
+
+test("profile app settings section owns modal, account, and tab variants", async () => {
+  const component = await readText("src/features/client/profile/ProfileAppSettingsSection.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileAppSettingsSection.module.css");
+  const settingsModalCss = await readText("src/features/client/profile/ProfileSettingsModal.module.css");
+  const settingsTab = await readText("src/features/client/profile/ProfileSettingsTab.jsx");
+  const dashboard = await readText("src/features/client/profile/ProfileDashboardRoute.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldAppSelector = /\.(?:profileAppSettingsSection|profileSettingsActions|profileSettingsEmailItem|profileSettingsTelegramItem|profileSettingsTelegramAvatar|profileSettingsEmailAvatar|profileSettingsTelegramText|profileThemeSwitchBtn|profileThemeIcon|profileThemeText|profileThemeToggle)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileAppSettingsSection\.module\.css";/);
+  assert.match(component, /data-profile-app-settings-variant=\{variant\}/);
+  assert.match(component, /data-testid="profile-settings-theme"/);
+  assert.match(component, /data-testid="profile-settings-telegram"/);
+  assert.match(settingsTab, /variant="tab"/);
+  assert.match(dashboard, /variant="account"/);
+  assert.match(dashboard, /variant="modal"/);
+  assert.doesNotMatch(component, oldAppSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.account\s*\{[\s\S]*?border-radius:\s*16px;/);
+  assert.match(moduleCss, /\.tab\s*\{[\s\S]*?width:\s*calc\(100% - 28px\);/);
+  assert.match(moduleCss, /@media \(max-width: 370px\)/);
+  assert.match(moduleCss, /var\(--background-profile-app-item\)/);
+  assert.match(variables, /--background-profile-app-item-connected:/);
+  assert.doesNotMatch(settingsModalCss, oldAppSelector);
+  assert.doesNotMatch(legacyCss, oldAppSelector);
+});
+
+test("profile body metrics settings owns modal and tab variants without dead workout-mode CSS", async () => {
+  const component = await readText("src/features/client/profile/ProfileBodyMetricsSettingsSection.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileBodyMetricsSettingsSection.module.css");
+  const settingsModalCss = await readText("src/features/client/profile/ProfileSettingsModal.module.css");
+  const settingsTab = await readText("src/features/client/profile/ProfileSettingsTab.jsx");
+  const dashboard = await readText("src/features/client/profile/ProfileDashboardRoute.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldBodySelector = /\.(?:profileBodyMetricsSettingsSection|profileBodyMetricsAccordion|profileBodyMetricsGrid|profileBodyMetricsGridTwo|profileSexPicker|profileBodySaveBtn|profileAccordionHead)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileBodyMetricsSettingsSection\.module\.css";/);
+  assert.match(component, /data-profile-body-metrics-variant=\{variant\}/);
+  assert.match(component, /data-testid="profile-body-metrics-toggle"/);
+  assert.match(component, /aria-expanded=\{open\}/);
+  assert.match(component, /data-testid="profile-body-metrics-save"/);
+  assert.match(settingsTab, /variant="tab"/);
+  assert.match(dashboard, /variant="modal"/);
+  assert.doesNotMatch(settingsTab, /activeGoalLabel|ageInputClassName/);
+  assert.doesNotMatch(component, /unit:/);
+  assert.doesNotMatch(component, oldBodySelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.gridTwo\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /\.modal \.head\s*\{[\s\S]*?min-height:\s*66px;/);
+  assert.match(moduleCss, /\.tab\s*\{[\s\S]*?width:\s*calc\(100% - 28px\);/);
+  assert.match(moduleCss, /@media \(max-width: 420px\)/);
+  assert.match(variables, /--background-profile-settings-expand:/);
+  assert.doesNotMatch(settingsModalCss, oldBodySelector);
+  assert.doesNotMatch(legacyCss, oldBodySelector);
+  assert.doesNotMatch(legacyCss, /\.profileWorkoutMode(?:SettingsSection|Toggle|Actions|Card)(?![\w-])/);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-workout-mode-profile-mobile.css"), false);
+});
+
+test("profile account settings owns its live editor styles and local logout action", async () => {
+  const component = await readText("src/features/client/profile/ProfileAccountSettingsSection.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileAccountSettingsSection.module.css");
+  const settingsModal = await readText("src/features/client/profile/ProfileSettingsModal.jsx");
+  const settingsModalCss = await readText("src/features/client/profile/ProfileSettingsModal.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldAccountSelector = /\.(?:profileAccountSection|profileAccountSummarySection|profileAccountIdentity|profileAccountHeroCard|profileAccountAvatarCenterAction|profileAccountAvatarPreview|profileAccountAvatarCamera|profileAccountHeroNameRow|profileAccountHeroNameEdit|profileAccountQuickPanel|profileAccountDataPanel|profileAccountSecurityPanel|profileAccountQuickRow|profileAccountLoginRow|profileAccountQuickIcon|profileAccountQuickTitle|profileAccountQuickValue|profileAccountQuickEdit|profileAccountQuickButton|profileAccountStatus|profileAccountLogout)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileAccountSettingsSection\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-account-settings"/);
+  assert.match(component, /data-testid="profile-account-avatar"/);
+  assert.match(component, /data-testid="profile-account-login-edit"/);
+  assert.match(component, /data-testid="profile-account-password"/);
+  assert.doesNotMatch(component, oldAccountSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.quickRow\s*\{[\s\S]*?grid-template-columns:\s*30px minmax\(74px, 0\.85fr\) minmax\(0, 1\.15fr\) 24px;/);
+  assert.match(moduleCss, /\.camera\s*\{[\s\S]*?var\(--background-profile-account-camera\)/);
+  assert.match(moduleCss, /@media \(max-width: 350px\)/);
+  assert.match(settingsModal, /export function ProfileSettingsLogoutButton/);
+  assert.match(settingsModal, /data-testid="profile-settings-logout"/);
+  assert.match(settingsModalCss, /\.logoutButton\s*\{[\s\S]*?var\(--background-profile-account-logout\)/);
+  assert.match(variables, /--background-profile-account-camera:/);
+  assert.match(variables, /--color-profile-account-logout:/);
+  assert.doesNotMatch(settingsModalCss, oldAccountSelector);
+  assert.doesNotMatch(legacyCss, oldAccountSelector);
+  assert.equal(await pathExists("src/styles/profile-account-editor-avatar-v295.css"), false);
+});
+
+test("profile avatar crop editor owns its visual shell in a colocated module", async () => {
+  const component = await readText("src/features/client/profile/ProfileAvatarCropModal.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileAvatarCropModal.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldCropSelector = /\.(?:profileAvatarCropOverlay|profileAvatarCropModal|profileAvatarCropViewport|profileAvatarCropMask|profileAvatarCropZoom|profileAvatarCropActions)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileAvatarCropModal\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-avatar-crop-modal"/);
+  assert.match(component, /data-testid="profile-avatar-crop-dialog"/);
+  assert.match(component, /data-testid="profile-avatar-crop-viewport"/);
+  assert.match(component, /data-testid="profile-avatar-crop-apply"/);
+  assert.match(component, /--profile-avatar-crop-image-width/);
+  assert.doesNotMatch(component, /style=\{\{[\s\S]*?\b(?:width|height|transform):/);
+  assert.doesNotMatch(component, oldCropSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.dialog\s*\{[\s\S]*?max-height:\s*calc\(100dvh - 28px\);[\s\S]*?overflow-y:\s*auto;/);
+  assert.match(moduleCss, /\.viewport\s*\{[\s\S]*?width:\s*240px;[\s\S]*?touch-action:\s*none;/);
+  assert.match(moduleCss, /\.image\s*\{[\s\S]*?transform:\s*var\(--profile-avatar-crop-image-transform\);/);
+  assert.match(moduleCss, /\.closeButton\s*\{[\s\S]*?width:\s*36px;[\s\S]*?height:\s*36px;/);
+  assert.match(variables, /--background-profile-avatar-crop-overlay:/);
+  assert.match(variables, /--background-profile-avatar-crop-dialog:/);
+  assert.match(variables, /--shadow-profile-avatar-crop-mask:/);
+  assert.match(harness, /harnessPageParam === "avatarCrop"/);
+  assert.match(harness, /<ProfileAvatarCropModal/);
+  assert.doesNotMatch(legacyCss, oldCropSelector);
+  assert.equal(await pathExists("src/styles/profile-account-editor.css"), false);
+  assert.equal(await pathExists("src/styles/profile-account-editor-avatar-crop-v298.css"), false);
+  assert.equal(await pathExists("src/styles/profile-account-editor-avatar-crop-warm-light-v299.css"), false);
+});
+
+test("profile password modal owns its complete shell and removes versioned editor CSS", async () => {
+  const component = await readText("src/features/client/profile/ProfilePasswordModal.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfilePasswordModal.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldPasswordSelector = /\.(?:profilePasswordInputWrap|profilePasswordVisibilityButton|profilePasswordManageModal|profilePasswordManageHead|profilePasswordManageAvatar|profilePasswordManageForm|profilePasswordAuthPreview|profilePasswordManageActions)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfilePasswordModal\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-password-modal"/);
+  assert.match(component, /data-testid="profile-password-dialog"/);
+  assert.match(component, /data-testid=\{`profile-password-toggle-\$\{field\}`\}/);
+  assert.match(component, /data-testid="profile-password-submit"/);
+  assert.doesNotMatch(component, oldPasswordSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.dialog\s*\{[\s\S]*?max-height:\s*calc\(100dvh - 36px\);[\s\S]*?overflow-y:\s*auto;/);
+  assert.match(moduleCss, /\.head\s*\{[\s\S]*?grid-template-columns:\s*62px minmax\(0, 1fr\);/);
+  assert.match(moduleCss, /\.visibilityButton\s*\{[\s\S]*?width:\s*40px;[\s\S]*?height:\s*40px;/);
+  assert.match(moduleCss, /@media \(max-width: 520px\)/);
+  assert.match(moduleCss, /var\(--background-profile-credential-dialog\)/);
+  assert.match(variables, /--background-profile-credential-overlay:/);
+  assert.match(variables, /--color-profile-credential-input-border:/);
+  assert.match(harness, /onOpenPassword=\{\(\) => setProfilePasswordModalOpen\(true\)\}/);
+  assert.match(harness, /<ProfilePasswordModal/);
+  assert.doesNotMatch(legacyCss, oldPasswordSelector);
+  assert.equal(await pathExists("src/styles/profile-account-editor-fields-v296.css"), false);
+  assert.equal(await pathExists("src/styles/profile-account-editor-warm-light-v297.css"), false);
+});
+
+test("profile email modal owns its complete credential shell without shared legacy classes", async () => {
+  const component = await readText("src/features/client/profile/ProfileEmailModal.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileEmailModal.module.css");
+  const passwordCss = await readText("src/features/client/profile/ProfilePasswordModal.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldEmailSelector = /\.(?:profileEmailManageModal|profileEmailManageHead|profileEmailManageAvatar|profileEmailManageForm|profileEmailAuthPreview)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileEmailModal\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-email-modal"/);
+  assert.match(component, /data-testid="profile-email-dialog"/);
+  assert.match(component, /data-testid="profile-email-address"/);
+  assert.match(component, /data-testid="profile-email-submit"/);
+  assert.doesNotMatch(component, oldEmailSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.dialog\s*\{[\s\S]*?max-height:\s*calc\(100dvh - 36px\);[\s\S]*?overflow-y:\s*auto;/);
+  assert.match(moduleCss, /\.input\s*\{[\s\S]*?width:\s*100%;[\s\S]*?min-height:\s*46px;/);
+  assert.match(moduleCss, /var\(--background-profile-credential-dialog\)/);
+  assert.match(passwordCss, /var\(--background-profile-credential-dialog\)/);
+  assert.match(variables, /--color-profile-credential-input-placeholder:/);
+  assert.match(variables, /--opacity-profile-credential-primary-disabled:/);
+  assert.match(harness, /onOpenEmail=\{\(\) => setProfileEmailModalOpen\(true\)\}/);
+  assert.match(harness, /<ProfileEmailModal/);
+  assert.doesNotMatch(legacyCss, oldEmailSelector);
+});
+
+test("profile Telegram modal owns connected and login states in one colocated module", async () => {
+  const component = await readText("src/features/client/profile/ProfileTelegramModal.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileTelegramModal.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldTelegramSelector = /\.(?:profileTelegramModalOverlay|profileTelegramModal|profileTelegramManageModal|profileTelegramModalClose|profileTelegramManageHead|profileTelegramManageAvatar|profileTelegramManageActions|profileTelegramAuthPreview|profileTelegramAuthIcon|profileTelegramLoginWidgetCard|profileTelegramLoginWidget|profileTelegramWidgetLoading|profileTelegramCheckButton|profileTelegramAuthStatus|profileTelegramSave|profileTelegramBotActions)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileTelegramModal\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-telegram-modal"/);
+  assert.match(component, /data-testid="profile-telegram-dialog"/);
+  assert.match(component, /data-testid="profile-telegram-actions"/);
+  assert.match(component, /data-testid="profile-telegram-widget-card"/);
+  assert.match(component, /data-testid="profile-telegram-check"/);
+  assert.doesNotMatch(component, oldTelegramSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.dialog\s*\{[\s\S]*?max-height:\s*calc\(100dvh - 36px\);[\s\S]*?overflow-y:\s*auto;/);
+  assert.match(moduleCss, /\.manageActions\s*\{[\s\S]*?grid-template-columns:\s*1fr 0\.72fr;/);
+  assert.match(moduleCss, /\.status\s*\{[\s\S]*?min-height:\s*46px;[\s\S]*?place-items:\s*center;/);
+  assert.match(moduleCss, /@media \(max-width: 520px\)[\s\S]*?grid-template-columns:\s*1fr;/);
+  assert.match(moduleCss, /var\(--background-profile-telegram-widget\)/);
+  assert.match(variables, /--color-profile-telegram-avatar-border:/);
+  assert.match(variables, /--background-profile-telegram-action:/);
+  assert.match(variables, /--color-profile-telegram-danger:/);
+  assert.match(harness, /clientTelegramState/);
+  assert.match(harness, /telegramHarnessConnected/);
+  assert.doesNotMatch(legacyCss, oldTelegramSelector);
+  assert.equal(await pathExists("src/styles/profile-dashboard-telegram-base-auto-link.css"), false);
+  assert.equal(await pathExists("src/styles/profile-dashboard-telegram-base-login-widget.css"), false);
+  assert.equal(await pathExists("src/styles/profile-dashboard-telegram-base-login-status.css"), false);
+  assert.equal(await pathExists("src/styles/profile-dashboard-telegram-base-settings.css"), false);
+});
+
+test("profile trainer notifications own task and empty states in a colocated module", async () => {
+  const component = await readText("src/features/client/profile/ProfileTrainerNotificationsModal.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileTrainerNotificationsModal.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldNotificationSelector = /\.(?:profileTrainerNotificationsOverlay|profileTrainerNotificationsModal|profileTrainerNotificationsHead|profileTrainerNotificationsSummary|profileTrainerNotificationsList|profileTrainerNotificationsEmpty|profileTrainerNotificationItem|profileTrainerNotificationActions)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileTrainerNotificationsModal\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-trainer-notifications"/);
+  assert.match(component, /data-testid="profile-trainer-notifications-dialog"/);
+  assert.match(component, /data-testid="profile-trainer-notification-item"/);
+  assert.match(component, /data-task-status=\{taskStatus\.id\}/);
+  assert.match(component, /data-testid="profile-trainer-notifications-empty"/);
+  assert.doesNotMatch(component, oldNotificationSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.dialog\s*\{[\s\S]*?max-height:\s*min\(650px, calc\(100dvh - 32px\)\);[\s\S]*?overflow:\s*hidden;/);
+  assert.match(moduleCss, /\.list\s*\{[\s\S]*?min-height:\s*0;[\s\S]*?overflow-y:\s*auto;/);
+  assert.match(moduleCss, /\.item\s*\{[\s\S]*?grid-template-columns:\s*32px minmax\(0, 1fr\) auto;/);
+  assert.match(moduleCss, /@media \(max-width: 380px\)[\s\S]*?grid-template-columns:\s*30px minmax\(0, 1fr\);/);
+  assert.match(moduleCss, /var\(--background-profile-trainer-notifications-dialog\)/);
+  assert.match(variables, /--background-profile-trainer-notifications-overlay:/);
+  assert.match(variables, /--color-profile-trainer-notifications-action:/);
+  assert.match(variables, /--color-profile-trainer-notifications-empty-text:/);
+  assert.match(harness, /clientNotificationState/);
+  assert.match(harness, /visibleHarnessTrainerTasks/);
+  assert.doesNotMatch(legacyCss, oldNotificationSelector);
+});
+
+test("profile progress photos own base, tabbed and comparison states in a colocated module", async () => {
+  const component = await readText("src/features/client/profile/ProfileProgressPhotosModal.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileProgressPhotosModal.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldProgressPhotosSelector = /\.(?:cabinetProgressPhotos(?:Overlay|Modal|Head|Body|Intro|Latest|Compare|CompareHead|CompareContent|CompareControls|CompareTabs|CompareStage|CompareMissing|Save)|cabinetProgressPhoto(?:Steps|Status))(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileProgressPhotosModal\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-progress-photos"/);
+  assert.match(component, /data-testid="profile-progress-photos-dialog"/);
+  assert.match(component, /data-testid="profile-progress-photo-step"/);
+  assert.match(component, /data-testid="profile-progress-photos-compare-toggle"/);
+  assert.match(component, /data-testid="profile-progress-photos-save"/);
+  assert.doesNotMatch(component, oldProgressPhotosSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.dialog\s*\{[\s\S]*?max-height:\s*min\(820px, calc\(100dvh - 24px\)\);[\s\S]*?grid-template-rows:\s*auto minmax\(0, 1fr\) auto;/);
+  assert.match(moduleCss, /\.bodyControlDialog\s*\{[\s\S]*?height:\s*min\(820px, calc\(100dvh - 24px\)\);[\s\S]*?grid-template-rows:\s*auto 48px minmax\(0, 1fr\) auto;/);
+  assert.match(moduleCss, /\.compare:not\(\[open\]\) > \.compareContent\s*\{\s*display:\s*none;/);
+  assert.match(moduleCss, /@media \(max-height: 800px\)[\s\S]*?\.dialog:not\(\.bodyControlDialog\)/);
+  assert.match(moduleCss, /var\(--background-profile-progress-photos-dialog\)/);
+  assert.match(variables, /--background-profile-progress-photos-overlay:/);
+  assert.match(variables, /--color-profile-progress-photos-section-tab-active:/);
+  assert.match(variables, /--color-profile-progress-photos-compare-date:/);
+  assert.match(harness, /clientPhotosTabbed/);
+  assert.match(harness, /clientPhotosState/);
+  assert.doesNotMatch(legacyCss, oldProgressPhotosSelector);
+  assert.equal(await pathExists("src/styles/client-cabinet-overview-mobile-height-800.css"), false);
+});
+
+test("profile measurements modal owns list, empty and body-control states in a colocated module", async () => {
+  const component = await readText("src/features/client/profile/ProfileMeasurementsModal.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileMeasurementsModal.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldMeasurementsSelector = /\.(?:cabinetMeasurementModal(?:Overlay|Head|Summary|Grid|Empty|Start)?|cabinetBodyControl(?:Modal|Tabs))(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileMeasurementsModal\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-measurements-modal"/);
+  assert.match(component, /data-testid="profile-measurements-dialog"/);
+  assert.match(component, /data-testid="profile-measurements-cell"/);
+  assert.match(component, /data-testid="profile-measurements-empty"/);
+  assert.match(component, /data-testid="profile-measurements-start"/);
+  assert.doesNotMatch(component, oldMeasurementsSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.dialog\s*\{[\s\S]*?max-height:\s*calc\(100dvh - 32px\);[\s\S]*?overflow-y:\s*auto;/);
+  assert.match(moduleCss, /\.bodyControlDialog\s*\{[\s\S]*?height:\s*min\(820px, calc\(100dvh - 24px\)\);[\s\S]*?grid-template-rows:\s*auto 48px auto minmax\(0, 1fr\) auto;/);
+  assert.match(moduleCss, /@media \(max-height: 720px\)[\s\S]*?\.dialog:not\(\.bodyControlDialog\)/);
+  assert.match(moduleCss, /\.bodyControlDialog \.grid\s*\{[\s\S]*?grid-auto-rows:\s*minmax\(58px, auto\);/);
+  assert.match(moduleCss, /var\(--background-profile-measurements-dialog\)/);
+  assert.match(variables, /--background-profile-measurements-overlay:/);
+  assert.match(variables, /--color-profile-measurements-tab-active:/);
+  assert.match(variables, /--background-profile-measurements-cell:/);
+  assert.match(harness, /clientMeasurementsTabbed/);
+  assert.match(harness, /clientMeasurementsState/);
+  assert.doesNotMatch(legacyCss, oldMeasurementsSelector);
+  assert.equal(await pathExists("src/styles/theme-light-nested-screens-measurements-modal.css"), false);
+});
+
+test("measurement summary and fullscreen wizard own only live styles in colocated modules", async () => {
+  const panel = await readText("src/features/client/profile/ProfileMeasurementWizardPanel.jsx");
+  const panelCss = await readText("src/features/client/profile/ProfileMeasurementWizardPanel.module.css");
+  const wizard = await readText("src/features/client/measurements/MeasurementWizardPage.jsx");
+  const wizardCss = await readText("src/features/client/measurements/MeasurementWizardPage.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const variables = await readText("src/styles/_variables.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldWizardSelector = /\.(?:measurementFullscreen|measurementIntro|profileMeasurement)[\w-]*/;
+
+  assert.match(panel, /import styles from "\.\/ProfileMeasurementWizardPanel\.module\.css";/);
+  assert.match(panel, /data-css-module-scope="profile-measurement-panel"/);
+  assert.match(panel, /data-testid="profile-measurement-panel"/);
+  assert.match(panel, /data-testid="profile-measurement-last-value"/);
+  assert.match(panel, /data-testid="profile-measurement-start"/);
+  assert.doesNotMatch(panel, /onToggle|profileMeasurementWizardCard|measurementIntroImage/);
+  assert.doesNotMatch(panelCss, /!important/);
+  assert.match(panelCss, /\.lastGrid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/);
+  assert.match(panelCss, /var\(--background-profile-measurement-panel-item\)/);
+
+  assert.match(wizard, /import styles from "\.\/MeasurementWizardPage\.module\.css";/);
+  assert.match(wizard, /data-css-module-scope="measurement-wizard-page"/);
+  assert.match(wizard, /data-testid="measurement-wizard-intro"/);
+  assert.match(wizard, /data-testid="measurement-wizard-measurement"/);
+  assert.match(wizard, /data-testid="measurement-wizard-review"/);
+  assert.match(wizard, /data-css-module-control/);
+  assert.doesNotMatch(wizardCss, /!important/);
+  assert.match(wizardCss, /height:\s*100dvh;/);
+  assert.match(wizardCss, /@media \(max-width: 390px\)/);
+  assert.match(wizardCss, /var\(--background-measurement-wizard-page\)/);
+  assert.match(variables, /--background-profile-measurement-panel:/);
+  assert.match(variables, /--background-measurement-wizard-page:/);
+  assert.match(variables, /--background-measurement-wizard-next:/);
+  assert.match(harness, /clientHarnessPage=measurementWizard|harnessPageParam === "measurementWizard"/);
+  assert.match(harness, /harnessPageParam === "measurementPanel"/);
+  assert.match(harness, /clientMeasurementStep/);
+  assert.doesNotMatch(legacyCss, oldWizardSelector);
+
+  for (const deletedPath of [
+    "src/styles/client-measurement-review.css",
+    "src/styles/client-measurements-wizard-base.css",
+    "src/styles/client-measurements-wizard-card.css",
+    "src/styles/client-measurements-wizard-shell.css",
+    "src/styles/client-measurements-wizard-review.css",
+    "src/styles/theme-light-nested-screens-measurements-wizard.css"
+  ]) {
+    assert.equal(await pathExists(deletedPath), false);
+  }
+});
+
+test("profile main role actions own their live styles without trainer lazy CSS", async () => {
+  const component = await readText("src/features/client/profile/ProfileMainRoleActions.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileMainRoleActions.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+
+  assert.match(component, /import styles from "\.\/ProfileMainRoleActions\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-main-role-actions"/);
+  assert.match(component, /data-testid="profile-main-role-trainer"/);
+  assert.match(component, /data-testid="profile-main-role-admin"/);
+  assert.doesNotMatch(component, /mainDashboardRoleActions/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?grid-template-columns:\s*repeat\(auto-fit, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /\.action\s*\{[\s\S]*?min-height:\s*48px;/);
+  assert.match(moduleCss, /var\(--background-profile-role-action\)/);
+  assert.match(variables, /--color-profile-role-action-border:/);
+  assert.match(harness, /harnessPageParam === "profileRoleActions"/);
+  assert.doesNotMatch(legacyCss, /\.mainDashboardRoleActions(?![\w-])/);
+});
+
+test("profile settings tab title owns its live style without legacy selectors", async () => {
+  const component = await readText("src/features/client/profile/ProfileSettingsTab.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileSettingsTab.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const warmTheme = await readText("src/styles/nutrition-food-flow-light-theme.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+
+  assert.match(component, /import styles from "\.\/ProfileSettingsTab\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-settings-tab"/);
+  assert.match(component, /data-testid="profile-settings-tab-title"/);
+  assert.doesNotMatch(component, /profileSettingsPageTitle/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.title\s*\{[\s\S]*?margin:\s*0 0 32px;/);
+  assert.match(moduleCss, /font-size:\s*15px;/);
+  assert.match(moduleCss, /var\(--color-profile-settings-tab-title\)/);
+  assert.match(variables, /--color-profile-settings-tab-title:\s*#211b12;/);
+  assert.match(variables, /--color-profile-settings-tab-title:\s*#a9d13f;/);
+  assert.match(harness, /harnessPageParam === "profileSettingsTab"/);
+  assert.match(warmTheme, /h1:not\(\[data-css-module-scope="profile-settings-tab"\]\)/);
+  assert.doesNotMatch(legacyCss, /\.profileSettingsPageTitle(?![\w-])/);
+});
+
+test("nutrition header uses a colocated module with no remaining legacy selector owner", async () => {
+  const component = await readText("src/features/client/nutrition/NutritionHeader.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/NutritionHeader.module.css");
+  const legacyCss = await readCssWithImports("src/styles/index.css");
+  const legacySelectors = /nutritionHeroV4|nutritionHeroTitleV4|nutritionHeaderIconActions|nutritionHeaderIconButton|nutritionHeaderLucideIcon|nutritionQuickActionExact|nutritionQuickCalendarIcon|nutritionWeekV4|nutritionDayV4|nutritionStreakV4/;
+
+  assert.match(component, /import styles from "\.\/NutritionHeader\.module\.css"/);
+  assert.match(component, /className=\{styles\.root\}[\s\S]*data-testid="nutrition-header"/);
+  assert.match(component, /data-nutrition-header-action="search"/);
+  assert.match(component, /data-nutrition-header-action="calendar"/);
+  assert.match(moduleCss, /@media \(max-width: 700px\)/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.doesNotMatch(component, legacySelectors);
+  assert.doesNotMatch(legacyCss, legacySelectors);
 });
 
 test("modular CSS import graph resolves without cycles", async () => {
   const visited = new Set();
-  for (const cssEntry of [
+  const cssEntries = [
     "src/styles/index.css",
-    "src/styles/ai-coach-lazy.css",
     "src/styles/client-first-setup-lazy.css",
     "src/styles/client-measurements-lazy.css",
     "src/styles/client-profile-lazy.css",
@@ -568,18 +1114,22 @@ test("modular CSS import graph resolves without cycles", async () => {
     "src/styles/nutrition-stack.css",
     "src/styles/trainer-lazy.css",
     "src/styles/admin-lazy.css",
-    "src/styles/admin-internals-lazy.css"
-  ]) {
+    "src/styles/admin-internals-lazy.css",
+    ...(await collectFiles("src/components", [".module.css"])),
+    ...(await collectFiles("src/features", [".module.css"]))
+  ];
+  for (const cssEntry of cssEntries) {
     await walkCssImports(cssEntry, new Set(), visited);
   }
   const allCssFiles = [
     ...(await collectFiles("src/styles", [".css"])),
-    ...(await collectFiles("src/components", [".css"]))
+    ...(await collectFiles("src/components", [".css"])),
+    ...(await collectFiles("src/features", [".module.css"]))
   ].map((file) => path.normalize(file)).sort();
   const reachableCssFiles = [...visited].sort();
 
   assert.ok(visited.has(path.normalize("src/styles/index.css")));
-  assert.ok(visited.has(path.normalize("src/styles/ai-coach-lazy.css")));
+  assert.equal(await pathExists("src/styles/ai-coach-lazy.css"), false);
   assert.ok(visited.has(path.normalize("src/styles/client-first-setup-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/client-workout-lazy.css")));
   assert.ok(visited.has(path.normalize("src/styles/nutrition-stack.css")));
@@ -610,61 +1160,31 @@ test("client visual unity CSS does not keep exact duplicate blocks", async () =>
   assert.deepEqual(duplicateBlocks, []);
 });
 
-test("client visual unity CSS keeps product editor header rhythm in the final owner", async () => {
+test("client visual unity CSS does not retain migrated profile summary selectors", async () => {
   const source = await readCssWithImports("src/styles/client-visual-unity.css");
-  const finalStart = source.indexOf("v.1.102 final cascade lock: product editor must use the same top rhythm as nutrition flow.");
-  const finalBlock = source.slice(finalStart);
 
-  assert.doesNotMatch(source, /v\.1\.100: finish product editor header rhythm/);
-  assert.ok(finalStart >= 0);
-  assert.match(
-    finalBlock,
-    /\.foodEditPageOverlay \.foodEditPageSheet\s*\{[\s\S]*?--client-top:\s*84px;[\s\S]*?grid-template-rows:\s*calc\(var\(--client-top\) \+ var\(--client-title-h\) \+ 18px\) minmax\(0, 1fr\) !important;/
-  );
-  assert.match(
-    finalBlock,
-    /\.foodEditPageOverlay \.foodEditPageHeader\s*\{[\s\S]*?position:\s*relative !important;[\s\S]*?inset:\s*auto !important;[\s\S]*?grid-template-columns:\s*var\(--client-action\) minmax\(0, 1fr\) !important;/
-  );
-  assert.match(
-    finalBlock,
-    /\.foodEditPageOverlay \.foodEditPageTitleCenter\s*\{[\s\S]*?position:\s*static !important;[\s\S]*?inset:\s*auto !important;[\s\S]*?font-size:\s*clamp\(20px, 5\.6vw, 22px\) !important;/
-  );
-});
-
-test("client visual unity CSS keeps goal stat typography in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-visual-unity.css");
-  const mobileFixStart = source.indexOf("v.1.89: final mobile alignment fixes");
-  const fullCardGoalStart = source.indexOf("v.1.90: override the older full-card goal selector", mobileFixStart);
-  const earlyBlock = source.slice(mobileFixStart, fullCardGoalStart);
-  const finalBlock = source.slice(fullCardGoalStart);
-
-  assert.ok(mobileFixStart >= 0);
-  assert.ok(fullCardGoalStart > mobileFixStart);
   assert.doesNotMatch(
-    earlyBlock,
-    /\.profileAiStatsRow > div\.goal > strong,[\s\S]*?\{\s*display:\s*block !important;[\s\S]*?font-size:\s*14px !important;/
-  );
-  assert.match(
-    finalBlock,
-    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\.goal > strong,[\s\S]*?\.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection \.profileAiStatsRow > div\.goal > strong\s*\{\s*display:\s*block !important;[\s\S]*?font-size:\s*14px !important;[\s\S]*?word-break:\s*keep-all !important;/
+    source,
+    /\.(?:profileAiStatsRow|profileAiStatLabel|profileAiSplitCards|profileAiMiniCard|profileMainSummaryGrid)(?![\w-])/
   );
 });
 
-test("client primary final CSS keeps bottom nav sizing in one owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
+test("client main bottom bar owns its complete scoped navigation contract", async () => {
+  const component = await readText("src/shared/ui/BottomBar.jsx");
+  const moduleCss = await readText("src/shared/ui/BottomBar.module.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map((file) => readText(file)))).join("\n");
 
-  assert.equal(
-    (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.individualWorkoutMenuBar\.clientBottomNav\s*\{\s*position:\s*fixed !important;\s*left:\s*max\(10px, env\(safe-area-inset-left\)\) !important;\s*right:\s*max\(10px, env\(safe-area-inset-right\)\) !important;\s*bottom:\s*max\(10px, env\(safe-area-inset-bottom\)\) !important;\s*z-index:\s*80 !important;\s*width:\s*auto !important;\s*max-width:\s*none !important;\s*height:\s*84px !important;\s*min-height:\s*84px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav > button\s*\{\s*width:\s*100% !important;\s*min-width:\s*0 !important;\s*height:\s*68px !important;\s*min-height:\s*68px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav > button\.active\s*\{\s*border-color:\s*#ded7ff !important;\s*background:\s*#f0edff !important;\s*color:\s*#5d43e8 !important;/g) || []).length,
-    1
-  );
+  assert.match(component, /navigationClassName = nutritionVariant[\s\S]*?\? styles\.nutrition[\s\S]*?: styles\.main/);
+  assert.match(component, /"client-main-bottom-bar"/);
+  assert.match(component, /className=\{activeTab === "main" \? styles\.active : ""\}/);
+  assert.doesNotMatch(component, /clientBottomNav/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.main\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /\.main > \.active\s*\{[\s\S]*?var\(--color-nutrition-nav-active\)/);
+  assert.match(moduleCss, /@media \(max-width: 900px\)[\s\S]*?\.main\s*\{[\s\S]*?height:\s*76px;/);
+  assert.doesNotMatch(legacyCss, /clientBottomNav/);
+  assert.equal(await pathExists("src/styles/client-primary-final-rhythm-eof-bottom-nav-v417.css"), false);
 });
 
 test("legacy bottom bars CSS keeps button shells in the final owner", async () => {
@@ -694,124 +1214,66 @@ test("legacy bottom bars CSS keeps button shells in the final owner", async () =
   );
 });
 
-test("client primary final CSS keeps shared action bar sizing in one owner", async () => {
+test("client primary CSS no longer owns the scoped food product action bar", async () => {
   const source = await readCssWithImports("src/styles/client-primary.css");
 
-  assert.equal(
-    (source.match(/\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root nav\.individualWorkoutMenuBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.nutritionBottomTabBar\.clientBottomNav,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSearchBottomBar\.fatSearchBottomBarFour,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar\s*\{\s*position:\s*fixed !important;\s*left:\s*max\(10px, env\(safe-area-inset-left\)\) !important;\s*right:\s*max\(10px, env\(safe-area-inset-right\)\) !important;\s*bottom:\s*max\(10px, env\(safe-area-inset-bottom\)\) !important;\s*z-index:\s*90 !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.nutritionBottomTabBar\.clientBottomNav > button,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSearchBottomBar\.fatSearchBottomBarFour > button,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodProductActionBar > button,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar > button\s*\{[^}]*height:\s*68px !important;[^}]*min-height:\s*68px !important;[^}]*border-radius:\s*16px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.nutritionBottomTabBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSearchBottomBar\.fatSearchBottomBarFour > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodProductActionBar \.foodProductAddAction,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar \.foodEditPageConfirmAction\s*\{\s*border-color:\s*#ded7ff !important;\s*background:\s*#f0edff !important;\s*color:\s*#5d43e8 !important;\s*-webkit-text-fill-color:\s*#5d43e8 !important;\s*\}/g) || []).length,
-    1
-  );
-  const normalizedBlocks = [...source.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
-    selector: match[1].trim().replace(/\s+/g, " "),
-    body: match[2].trim().replace(/\s+/g, " ")
-  }));
-  assert.ok(
-    !normalizedBlocks.some(
-      ({ selector, body }) =>
-        selector ===
-          'html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button, html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > button, html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar > button' &&
-        body ===
-          "height: 68px !important; min-height: 68px !important; border-radius: 16px !important; color: #737b91 !important; -webkit-text-fill-color: #737b91 !important;"
-    )
-  );
-  assert.ok(
-    !normalizedBlocks.some(
-      ({ selector, body }) =>
-        selector ===
-          'html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button.active, html:root[data-app-theme="warm-light"] body #root .foodProductActionBar .foodProductAddAction, html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar .foodEditPageConfirmAction' &&
-        body ===
-          "border-color: #ded7ff !important; background: #f0edff !important; color: #5d43e8 !important; -webkit-text-fill-color: #5d43e8 !important;"
-    )
-  );
+  assert.doesNotMatch(source, /\.(?:foodProductActionBar|foodProductRenderScreen|foodEditRenderScreen|fatFoodAmountScreen)(?![\w-])/);
 });
 
-test("client primary final CSS keeps profile progress overview grid in one owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
+test("profile cabinet action grid owns its scoped production layout", async () => {
+  const component = await readText("src/features/client/profile/ProfileCabinetActionGrid.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileCabinetActionGrid.module.css");
+  const legacyCss = await readCssWithImports("src/styles/index.css");
 
-  assert.doesNotMatch(
-    source,
-    /\.profileDashboardPage\.clientCorePageMain \.profileAiCoachInsight\.profileProgressInsightCard\s*\{\s*margin:\s*0 0 12px !important;\s*border:\s*1px solid var\(--client-border\) !important;\s*border-radius:\s*var\(--client-radius\) !important;\s*background:\s*#ffffff !important;\s*color:\s*var\(--client-ink\) !important;\s*box-shadow:\s*var\(--client-shadow\) !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetProgressOverview\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*gap:\s*12px !important;\s*margin:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
+  assert.match(component, /import styles from "\.\/ProfileCabinetActionGrid\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-cabinet-action-grid"/);
+  assert.match(component, /data-testid="profile-cabinet-action-grid"/);
+  assert.match(component, /data-testid=\{`profile-cabinet-action-\$\{kind\}`\}/);
+  assert.doesNotMatch(component, /progressHub|profileCabinetProgressOverview|cabinetWorkoutJournalButton/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.card\s*\{[\s\S]*?grid-template-columns:\s*44px minmax\(0, 1fr\) 14px;[\s\S]*?border:\s*1px solid var\(--color-profile-cabinet-action-border\);/);
+  assert.match(moduleCss, /@media \(max-width: 430px\)[\s\S]*?min-height:\s*78px;[\s\S]*?grid-template-columns:\s*48px minmax\(0, 1fr\) 18px;/);
+  assert.match(moduleCss, /@media \(min-width: 1100px\)[\s\S]*?\.trainer\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/);
+  assert.doesNotMatch(legacyCss, /\.(?:progressHubOverview|profileCabinetProgressOverview|progressHubCard(?:Icon|Avatar|Text)?)(?![\w-])/);
 });
 
-test("client primary final CSS keeps food action bars in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
+test("food product action bar owns its scoped geometry and label typography", async () => {
+  const component = await readText("src/features/client/nutrition/FoodProductActionBar.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/FoodProductActionBar.module.css");
 
-  assert.equal(
-    (source.match(/\.fatSearchBottomBar\.fatSearchBottomBarFour,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageActionBar\s*\{\s*width:\s*min\(374px, calc\(100vw - 20px\)\) !important;\s*height:\s*78px !important;\s*border-radius:\s*20px !important;\s*background:\s*rgba\(255, 255, 255, 0\.96\) !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatSearchBottomBar\.fatSearchBottomBarFour,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar\s*\{\s*position:\s*fixed !important;\s*left:\s*max\(10px, env\(safe-area-inset-left\)\) !important;\s*right:\s*max\(10px, env\(safe-area-inset-right\)\) !important;\s*bottom:\s*max\(10px, env\(safe-area-inset-bottom\)\) !important;\s*z-index:\s*90 !important;\s*width:\s*auto !important;\s*max-width:\s*none !important;\s*height:\s*84px !important;\s*min-height:\s*84px !important;\s*padding:\s*8px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageActionBar\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*0\.92fr 1\.58fr !important;\s*gap:\s*8px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar\s*\{\s*position:\s*fixed !important;\s*left:\s*50% !important;/g) || []).length,
-    0
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageActionBar\s*\{\s*position:\s*fixed !important;\s*left:\s*50% !important;\s*bottom:\s*max\(10px, calc\(env\(safe-area-inset-bottom\) \+ 8px\)\) !important;/g) || []).length,
-    1
-  );
+  assert.match(component, /import styles from "\.\/FoodProductActionBar\.module\.css";/);
+  assert.match(component, /data-css-module-scope="food-product-action-bar"/);
+  assert.match(component, /data-testid="food-product-action-bar"/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?width:\s*min\(374px, calc\(100vw - 20px\)\);[\s\S]*?height:\s*78px;[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) minmax\(0, 2fr\);/);
+  assert.match(moduleCss, /\.button > strong\s*\{[\s\S]*?font-size:\s*10\.5px;[\s\S]*?text-overflow:\s*ellipsis;[\s\S]*?white-space:\s*nowrap;/);
+  assert.match(moduleCss, /@media \(max-width:\s*700px\)[\s\S]*?height:\s*84px;[\s\S]*?\.button\s*\{[\s\S]*?height:\s*68px;/);
 });
 
-test("client food search CSS keeps product edit action bar sheet-locked", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
+test("food search page owns its scoped recent landing and photo action", async () => {
+  const component = await readText("src/features/client/nutrition/FoodSearchPage.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/FoodSearchPage.module.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const oldSelectors = /\.(?:foodSearchModernLanding|foodSearchModernSection|foodSearchRecentSection|foodSearchModernSectionHeader|foodSearchRecentGrid|foodSearchRecentCard|foodSearchFixedPhotoAction|foodSearchModernActionIcon|fatPhotoAiInput)(?![\w-])/;
 
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*position:\s*relative !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay \.foodEditPageActionBar\s*\{\s*position:\s*absolute !important;\s*left:\s*14px !important;\s*right:\s*14px !important;\s*bottom:\s*calc\(14px \+ env\(safe-area-inset-bottom, 0px\)\) !important;\s*width:\s*auto !important;\s*max-width:\s*none !important;\s*box-sizing:\s*border-box !important;\s*transform:\s*none !important;\s*grid-template-columns:\s*minmax\(92px, 0\.78fr\) minmax\(0, 1\.82fr\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay \.foodEditPageActionBar > button\s*\{\s*min-width:\s*0 !important;\s*max-width:\s*100% !important;\s*\}/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps food action label typography grouped", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.fatSearchBottomBarFour > button strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) \.foodProductActionBar > button strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageActionBar > button strong\s*\{\s*max-width:\s*100% !important;\s*overflow:\s*hidden !important;\s*color:\s*inherit !important;\s*font-size:\s*10\.5px !important;\s*font-weight:\s*850 !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/max-width:\s*100% !important;\s*overflow:\s*hidden !important;\s*color:\s*inherit !important;\s*font-size:\s*10\.5px !important;\s*font-weight:\s*850 !important;\s*line-height:\s*1\.05 !important;\s*text-align:\s*center !important;\s*text-overflow:\s*ellipsis !important;\s*white-space:\s*nowrap !important;\s*-webkit-text-fill-color:\s*currentColor !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps food search action stack shells grouped", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.foodSearchPopularList,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodSearchModernActions\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*8px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodSearchPopularInfo,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodSearchModernActionCard > span:nth-child\(2\),\s*html:root\[data-app-theme="warm-light"\] body #root \.foodSearchFixedPhotoAction > span:nth-child\(2\)\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*gap:\s*3px !important;\s*text-align:\s*left !important;\s*\}/g) || []).length,
-    1
-  );
+  assert.match(component, /import styles from "\.\/FoodSearchPage\.module\.css";/);
+  assert.match(component, /data-testid="food-search-modern-landing"/);
+  assert.match(component, /data-testid="food-search-photo-action"/);
+  assert.match(component, /data-css-module-scope="food-search-page"/);
+  assert.doesNotMatch(component, oldSelectors);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.recentGrid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);[\s\S]*?grid-auto-rows:\s*82px;[\s\S]*?gap:\s*10px;/);
+  assert.match(moduleCss, /\.recentItem\s*\{[\s\S]*?height:\s*82px;[\s\S]*?border-radius:\s*13px;/);
+  assert.match(moduleCss, /\.photoAction\s*\{[\s\S]*?bottom:\s*calc\(112px \+ var\(--safe-area-bottom\)\);[\s\S]*?width:\s*min\(376px, calc\(100vw - 24px\)\);[\s\S]*?height:\s*84px;[\s\S]*?grid-template-columns:\s*52px minmax\(0, 1fr\) 22px;/);
+  assert.match(moduleCss, /\.photoAction::before\s*\{[\s\S]*?bottom:\s*calc\(-128px - var\(--safe-area-bottom\)\);[\s\S]*?width:\s*100vw;/);
+  assert.match(moduleCss, /@media \(max-width:\s*380px\)[\s\S]*?grid-auto-rows:\s*78px;[\s\S]*?bottom:\s*calc\(108px \+ var\(--safe-area-bottom\)\);/);
+  assert.doesNotMatch(legacyCss, oldSelectors);
+  assert.equal(await pathExists("src/styles/client-food-search-actions.css"), false);
+  assert.equal(await pathExists("src/styles/client-food-search-sizing-locks-header-action-v155.css"), false);
+  assert.equal(await pathExists("src/styles/client-food-search-sizing-locks-photo-action-v157.css"), false);
+  assert.equal(await pathExists("src/styles/client-primary-food-flow-search-home-actions.css"), false);
+  assert.equal(await pathExists("src/styles/client-primary-food-flow-search-home-landing.css"), false);
 });
 
 test("client primary final CSS keeps food search create action colors grouped", async () => {
@@ -827,337 +1289,149 @@ test("client primary final CSS keeps food search create action colors grouped", 
   );
 });
 
-test("client primary final CSS keeps food editor header layout in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
+test("food product header owns its scoped CSS module without legacy selectors", async () => {
+  const component = await readText("src/features/client/nutrition/FoodProductHeader.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/FoodProductHeader.module.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const oldSelectors = /\.(?:foodProductFlowHeader|foodProductFlowTitle|foodEditInlineMealHeader|foodEditInlineMealLabel|foodEditInlineMealButton|foodEditMealPickerDropdown(?:Inline)?|foodEditHeroRender|foodEditHeroEditable|foodEditIconSourceStack|foodEditIconRender)(?![\w-])/;
 
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 18px !important;\s*padding:\s*0 0 0 calc\(var\(--client-action\) \+ 12px\) !important;\s*position:\s*relative !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;/g) || []).length,
-    1
-  );
+  assert.match(component, /import styles from "\.\/FoodProductHeader\.module\.css";/);
+  assert.doesNotMatch(component, oldSelectors);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.flowHeader\s*\{[\s\S]*?height:\s*124px;[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) 120px;/);
+  assert.match(moduleCss, /\.mealCard\s*\{[\s\S]*?height:\s*54px;/);
+  assert.match(moduleCss, /\.hero\s*\{[\s\S]*?height:\s*96px;[\s\S]*?padding:\s*12px 18px;/);
+  assert.match(moduleCss, /@media \(max-width:\s*380px\)[\s\S]*?\.heading\s*\{\s*font-size:\s*25px;/);
+  assert.doesNotMatch(legacyCss, oldSelectors);
+  assert.equal(await pathExists("src/styles/client-food-search-product-render-hero.css"), false);
+  assert.equal(await pathExists("src/styles/client-history-ai-search-food-edit.css"), false);
+});
+
+test("food product top actions own a scoped CSS module without legacy selectors", async () => {
+  const pageComponent = await readText("src/features/client/nutrition/FoodProductPage.jsx");
+  const component = await readText("src/features/client/nutrition/FoodProductTopActions.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/FoodProductTopActions.module.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const oldSelectors = /\.(?:foodProductTopActions|foodProductTopAction|foodProductTopDelete|foodProductTopEdit)(?![\w-])/;
+
+  assert.match(pageComponent, /import FoodProductTopActions from "\.\/FoodProductTopActions";/);
+  assert.match(pageComponent, /<FoodProductTopActions[\s\S]*?canDelete=\{canDelete\}[\s\S]*?onEdit=\{onOpenEditPage\}/);
+  assert.match(component, /import styles from "\.\/FoodProductTopActions\.module\.css";/);
+  assert.match(component, /data-css-module-scope="food-product-top-actions"/);
+  assert.match(component, /data-food-product-top-action="delete"/);
+  assert.match(component, /data-food-product-top-action="edit"/);
+  assert.doesNotMatch(pageComponent, oldSelectors);
+  assert.doesNotMatch(component, oldSelectors);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?position:\s*absolute;[\s\S]*?top:\s*55px;[\s\S]*?width:\s*108px;[\s\S]*?height:\s*48px;/);
+  assert.match(moduleCss, /\.action\s*\{[\s\S]*?width:\s*48px;[\s\S]*?height:\s*48px;[\s\S]*?var\(--color-food-product-action-border\)/);
+  assert.match(moduleCss, /@media \(max-width:\s*380px\)[\s\S]*?right:\s*10px;/);
+  assert.doesNotMatch(legacyCss, oldSelectors);
+});
+
+test("food search header owns scoped search and my-products layouts", async () => {
+  const component = await readText("src/features/client/nutrition/FoodSearchHeader.jsx");
+  const headerCss = await readText("src/features/client/nutrition/FoodSearchHeader.module.css");
+  const overlayCss = await readText("src/features/client/nutrition/FoodSearchOverlay.module.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const oldSelectors = /\.(?:foodSearchHeaderExactMainAlign|fatSearchTopPremiumHome|fatSearchTopPremiumMy|fatSearchTopPremium|foodFlowSearchTitle|foodFlowTitleGroup|fatSearchTitleButtonPremium|fatSearchTitleWrap|fatMealDropdownCentered|fatMealDropdownCollapse|fatMealDropdown|fatSearchClosePremium)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/FoodSearchHeader\.module\.css";/);
+  assert.match(component, /if \(selectedFood\) \{\s*return null;/);
+  assert.doesNotMatch(component, oldSelectors);
+  assert.doesNotMatch(headerCss, /!important/);
+  assert.doesNotMatch(overlayCss, /!important/);
+  assert.match(headerCss, /\.search\s*\{[\s\S]*?height:\s*124px;[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) 48px;/);
+  assert.match(headerCss, /\.mealDropdown\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?width:\s*min\(320px, calc\(100vw - 40px\)\);/);
+  assert.match(headerCss, /@media \(max-width:\s*640px\)[\s\S]*?\.myProducts\s*\{[\s\S]*?height:\s*136px;/);
+  assert.match(overlayCss, /\.searchLayout\s*\{\s*padding:\s*0 12px calc\(112px \+ env\(safe-area-inset-bottom, 0px\)\);/);
+  assert.doesNotMatch(legacyCss, oldSelectors);
+  assert.match(legacyCss, /\.fatFoodSearchScreenPremium:not\(\[data-food-search-header-layout\]\)/);
+});
+
+test("profile main summary cards own their live scoped visual", async () => {
+  const component = await readText("src/features/client/profile/ProfileMainSummaryCards.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileMainSummaryCards.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const retiredSelectors = /\.(?:profileAiStatsRow|profileAiStatLabel|profileAiSplitCards|profileAiMiniCard|profileMainSummaryGrid)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileMainSummaryCards\.module\.css";/);
+  assert.match(component, /data-testid="profile-main-stats"/);
+  assert.match(component, /data-testid="profile-main-summary-grid"/);
+  assert.match(component, /className=\{styles\.statsRoot\}/);
+  assert.match(component, /className=\{styles\.summaryGrid\}/);
+  assert.doesNotMatch(component, retiredSelectors);
+  assert.doesNotMatch(component, /<small(?:\s|>)/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.statsRoot\s*\{[\s\S]*?height:\s*82px;[\s\S]*?grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /\.summaryGrid\s*\{[\s\S]*?height:\s*84px;[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /@media \(max-width:\s*640px\)[\s\S]*?\.statsRoot\s*\{[\s\S]*?height:\s*64px;[\s\S]*?\.summaryGrid\s*\{[\s\S]*?height:\s*76px;/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="dark-green"\]\) \.statsRoot\s*\{[\s\S]*?height:\s*78px;/);
+  assert.match(moduleCss, /@media \(max-height:\s*800px\)[\s\S]*?height:\s*70px;[\s\S]*?height:\s*84px;/);
+  assert.match(variables, /--color-profile-summary-stats-border:/);
+  assert.match(variables, /--background-profile-summary-card:/);
+  assert.doesNotMatch(legacyCss, retiredSelectors);
+});
+
+test("profile hero card owns its live scoped visual and omits retired interaction branches", async () => {
+  const component = await readText("src/features/client/profile/ProfileHeroCard.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileHeroCard.module.css");
+  const legacyCss = await readCssWithImports("src/styles/index.css");
+
+  assert.match(component, /import styles from "\.\/ProfileHeroCard\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-hero-card"/);
+  assert.match(component, /data-testid="profile-main-hero"/);
+  assert.match(component, /data-testid="profile-main-hero-avatar"/);
+  assert.match(component, /data-testid="profile-main-hero-title"/);
+  assert.doesNotMatch(component, /profileAiHero|profileAiAvatar|profileAvatarBig|profileUnifiedAvatar/);
+  assert.doesNotMatch(component, /progressScore|onOpenAccount|clickable|isMainDashboard/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?height:\s*108px;[\s\S]*?margin:\s*0 -12px;[\s\S]*?grid-template-columns:\s*70px minmax\(0, 1fr\);/);
+  assert.match(moduleCss, /@media \(max-width: 700px\)[\s\S]*?\.root\s*\{[\s\S]*?height:\s*96px;[\s\S]*?grid-template-columns:\s*62px minmax\(0, 1fr\);/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="dark-green"\]\) \.root\s*\{[\s\S]*?height:\s*90px;[\s\S]*?grid-template-columns:\s*48px minmax\(0, 1fr\);/);
+  assert.match(moduleCss, /@media \(max-height: 800px\)[\s\S]*?height:\s*80px;/);
+  assert.match(moduleCss, /\.avatar img\s*\{[\s\S]*?object-fit:\s*cover;/);
   assert.doesNotMatch(
-    source,
-    /\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 18px !important;\s*padding:\s*0 0 0 calc\(var\(--client-action\) \+ 12px\) !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;\s*position:\s*relative !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen \.foodProductFlowHeader\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 116px !important;\s*grid-template-areas:\s*"title actions"\s*"meal meal" !important;\s*align-items:\s*center !important;\s*gap:\s*12px 10px !important;\s*margin-bottom:\s*14px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen \.foodProductFlowHeader \.foodProductFlowTitle\s*\{\s*grid-area:\s*title !important;\s*height:\s*52px !important;\s*min-height:\s*52px !important;\s*padding-right:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{\s*grid-area:\s*meal !important;\s*width:\s*min\(270px, 100%\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen \.foodProductFlowHeader \.foodProductFlowTitle h2\s*\{\s*font-size:\s*26px !important;\s*line-height:\s*1\.05 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*padding-top:\s*16px !important;\s*padding-bottom:\s*calc\(104px \+ env\(safe-area-inset-bottom\)\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay \.foodEditPageHeader\s*\{\s*min-height:\s*64px !important;\s*padding:\s*4px 54px 8px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay \.foodEditPageHeaderBack\s*\{\s*top:\s*2px !important;\s*width:\s*52px !important;\s*height:\s*52px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay \.foodEditIconPresetRow\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodEditRenderScreen\s*\{\s*padding-bottom:\s*calc\(110px \+ env\(safe-area-inset-bottom\)\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay\s*\{\s*align-items:\s*stretch !important;\s*justify-content:\s*center !important;\s*padding:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodEditPageOverlay \.foodEditPageHeaderBack\s*\{\s*position:\s*absolute !important;\s*top:\s*0 !important;\s*left:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/body #root \.foodEditIconPresetRow\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
-    1
+    legacyCss,
+    /\.(?:profileAiHero[\w-]*|profileAiAvatar[\w-]*|profileAvatarBig|profileUnifiedAvatar)(?![\w-])/
   );
 });
 
-test("client primary final CSS keeps fixed photo action spacing in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodSearchFixedPhotoAction\s*\{\s*left:\s*var\(--client-x\) !important;\s*right:\s*var\(--client-x\) !important;\s*bottom:\s*calc\(102px \+ env\(safe-area-inset-bottom\)\) !important;\s*min-height:\s*76px !important;\s*border-radius:\s*18px !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps product flow title typography in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.foodProductFlowHeader \.foodProductFlowTitle h2\s*\{\s*max-width:\s*100% !important;\s*color:\s*var\(--client-title-color\) !important;\s*-webkit-text-fill-color:\s*var\(--client-title-color\) !important;\s*font-size:\s*26px !important;\s*line-height:\s*1\.08 !important;\s*font-weight:\s*900 !important;\s*white-space:\s*normal !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps product flow header layout in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader\s*\{\s*min-height:\s*126px !important;\s*margin:\s*0 0 16px !important;\s*padding:\s*0 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 116px !important;\s*grid-template-areas:\s*"title actions"\s*"meal meal" !important;\s*align-items:\s*center !important;\s*gap:\s*14px 12px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader \.foodProductFlowTitle\s*\{\s*grid-area:\s*title !important;\s*min-width:\s*0 !important;\s*padding-right:\s*0 !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader \.foodProductFlowTitle\s*\{\s*grid-area:\s*title !important;\s*align-self:\s*center !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{\s*grid-area:\s*meal !important;\s*width:\s*min\(300px, 78%\) !important;\s*justify-self:\s*center !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodProductFlowHeader\s*\{\s*min-height:\s*128px !important;\s*margin:\s*0 0 16px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 116px !important;\s*grid-template-areas:\s*"title actions"\s*"meal meal" !important;\s*gap:\s*14px 12px !important;\s*align-items:\s*start !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps product top actions layout in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.foodProductTopActions\s*\{\s*top:\s*var\(--client-top\) !important;\s*right:\s*var\(--client-x\) !important;\s*left:\s*auto !important;\s*display:\s*flex !important;\s*gap:\s*10px !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps food search header layout in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.doesNotMatch(source, /\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) \.fatSearchTopPremiumHome \.fatSearchTitleWrap\s*\{/);
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.fatSearchTopPremiumHome \.foodFlowSearchTitle\s*\{\s*grid-area:\s*title !important;\s*min-width:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.fatSearchTopPremiumHome \.fatSearchClosePremium\s*\{\s*grid-area:\s*close !important;\s*justify-self:\s*end !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.fatSearchTopPremiumHome \.fatSearchTitleWrap\s*\{\s*grid-area:\s*meal !important;\s*width:\s*min\(300px, 78%\) !important;\s*justify-self:\s*center !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.fatSearchTopPremiumHome,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumMy\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\) var\(--client-action\) !important;\s*grid-template-areas:\s*"title close"\s*"meal meal" !important;\s*height:\s*auto !important;\s*min-height:\s*128px !important;\s*align-items:\s*start !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatSearchInputWrapPremium\s*\{\s*min-height:\s*64px !important;\s*border-radius:\s*18px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodSearchRecentGrid\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*gap:\s*10px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\):not\(:has\(\.foodEditRenderScreen\)\)\s*\{\s*padding-top:\s*74px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) > \.fatSearchTopPremiumHome\s*\{\s*min-height:\s*122px !important;\s*margin:\s*0 0 16px !important;\s*grid-template-columns:\s*minmax\(0, 1fr\) 52px !important;\s*gap:\s*12px 10px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) \.foodFlowSearchTitle h2\s*\{\s*height:\s*52px !important;\s*min-height:\s*52px !important;\s*font-size:\s*30px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.03 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) > \.fatSearchTopPremiumHome \.fatSearchClosePremium\s*\{\s*width:\s*52px !important;\s*min-width:\s*52px !important;\s*height:\s*52px !important;\s*min-height:\s*52px !important;\s*border-radius:\s*18px !important;\s*background:\s*#ffffff !important;\s*background-image:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchTopPremiumHome\) \.fatSearchInputWrapPremium\s*\{\s*min-height:\s*60px !important;\s*margin-bottom:\s*16px !important;\s*border-radius:\s*17px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.foodSearchRecentGrid\s*\{\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*grid-auto-rows:\s*78px !important;\s*gap:\s*9px !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.foodSearchRecentGrid\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;\s*grid-auto-rows:\s*78px !important;\s*gap:\s*9px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.foodSearchRecentCard\s*\{\s*min-height:\s*78px !important;\s*height:\s*78px !important;\s*border-radius:\s*13px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.foodSearchRecentCard\s*\{\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*\}/
-  );
-});
-
-test("client primary final CSS keeps main AI stats row in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow\s*\{\s*width:\s*100% !important;\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*margin:\s*0 0 12px !important;\s*padding:\s*0 !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\) !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow\s*\{\s*margin-top:\s*-1px !important;\s*margin-bottom:\s*12px !important;\s*border-radius:\s*0 0 var\(--client-page-card-radius\) var\(--client-page-card-radius\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow strong\s*\{\s*max-width:\s*100% !important;\s*color:\s*var\(--client-ink\) !important;\s*-webkit-text-fill-color:\s*var\(--client-ink\) !important;\s*font-size:\s*clamp\(18px, 5\.4vw, 25px\) !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow \.goal strong\s*\{\s*font-size:\s*clamp\(15px, 4\.7vw, 22px\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\s*\{\s*min-width:\s*0 !important;\s*height:\s*100% !important;\s*padding:\s*10px 6px !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*gap:\s*5px !important;/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*\}/
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\s*\{\s*min-width:\s*0 !important;\s*padding:\s*12px 8px !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*\}/
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow > div\s*\{\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow span\s*\{\s*color:\s*var\(--client-muted\) !important;\s*-webkit-text-fill-color:\s*var\(--client-muted\) !important;\s*font-size:\s*12px !important;\s*font-weight:\s*800 !important;\s*line-height:\s*1\.15 !important;\s*text-align:\s*center !important;/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow span\s*\{\s*color:\s*#7f8798 !important;\s*-webkit-text-fill-color:\s*#7f8798 !important;\s*font-size:\s*11px !important;\s*font-weight:\s*750 !important;\s*line-height:\s*1\.15 !important;\s*\}/
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileDashboardPage\.clientCorePageMain \.profileAiStatsRow strong\s*\{\s*color:\s*#171923 !important;\s*-webkit-text-fill-color:\s*#171923 !important;\s*font-size:\s*19px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.05 !important;\s*text-align:\s*center !important;\s*\}/
-  );
-});
-
-test("client primary final CSS keeps profile AI hero sizing in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*width:\s*100% !important;\s*height:\s*104px !important;\s*min-height:\s*104px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*74px minmax\(0, 1fr\) !important;/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*pointer-events:\s*none !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*border-radius:\s*var\(--client-radius\) !important;\s*pointer-events:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*border-radius:\s*var\(--client-radius\) !important;\s*box-shadow:\s*var\(--client-shadow\) !important;\s*margin:\s*0 0 12px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileAiHeroText h1\s*\{\s*max-width:\s*100% !important;\s*margin:\s*0 !important;\s*color:\s*var\(--client-ink\) !important;\s*-webkit-text-fill-color:\s*var\(--client-ink\) !important;\s*font-size:\s*clamp\(23px, 6\.4vw, 30px\) !important;\s*line-height:\s*1\.08 !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps profile AI hero compact cluster in root owners", async () => {
+test("client primary final CSS keeps the remaining shared profile surfaces grouped", async () => {
   const source = await readCssWithImports("src/styles/client-primary.css");
 
   assert.equal(
     (source.match(/\.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileUnifiedCard\.profileAiDashboardCard\.profileCabinetSection\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*border:\s*0 !important;\s*background:\s*transparent !important;\s*box-shadow:\s*none !important;\s*\}/g) || []).length,
     1
   );
+  assert.doesNotMatch(
+    source,
+    /\.profileDashboardPage\.clientCorePageMain::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\)::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition::before\s*\{\s*display:\s*none !important;\s*content:\s*none !important;\s*\}/
+  );
   assert.equal(
-    (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileDashboardPage\.clientCorePageMain \.profileAiAvatar,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatar\s*\{\s*width:\s*72px !important;\s*height:\s*72px !important;\s*min-width:\s*72px !important;\s*min-height:\s*72px !important;\s*\}/g) || []).length,
+    (source.match(/\.profileDashboardPage\.clientCorePageMain::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\)::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition::before\s*\{\s*content:\s*none !important;\s*display:\s*none !important;\s*\}/g) || []).length,
     1
   );
   assert.doesNotMatch(
     source,
-    /\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileAiAvatar\s*\{\s*width:\s*70px !important;\s*height:\s*70px !important;\s*min-width:\s*70px !important;\s*min-height:\s*70px !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.profileAiHeroText h1,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHeroText h1\s*\{\s*margin:\s*0 !important;\s*color:\s*var\(--client-ink\) !important;\s*-webkit-text-fill-color:\s*var\(--client-ink\) !important;\s*font-size:\s*21px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.12 !important;\s*letter-spacing:\s*0 !important;\s*text-shadow:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero\s*\{\s*min-height:\s*94px !important;\s*padding:\s*16px 18px !important;\s*grid-template-columns:\s*72px minmax\(0, 1fr\) !important;\s*gap:\s*18px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileDashboardPage\.clientCorePageMain \.profileAiHero\s*\{\s*border-radius:\s*var\(--client-page-card-radius\) var\(--client-page-card-radius\) 0 0 !important;\s*margin-bottom:\s*0 !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero\s*\{\s*margin-bottom:\s*0 !important;\s*border-radius:\s*var\(--client-page-card-radius\) var\(--client-page-card-radius\) 0 0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiMiniCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileDashboardPage\.clientCorePageMain \.profileAiCoachInsight\.profileProgressInsightCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileDashboardPage\.clientCorePageMain \.mainMeasurementSnapshot\s*\{\s*background:\s*rgba\(255, 255, 255, 0\.94\) !important;\s*color:\s*#171923 !important;\s*-webkit-text-fill-color:\s*#171923 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiAvatarRing,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatarRing\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero::after,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiHero::after\s*\{\s*content:\s*none !important;\s*display:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileDashboardPage\.clientCorePageMain::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\)::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage::before\s*\{\s*display:\s*none !important;\s*content:\s*none !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\)::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage::before,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage::before\s*\{\s*content:\s*none !important;\s*display:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileAiHero::after/g) || []).length,
-    2
+    /profileAiHero|profileAiAvatar|profileAvatarBig|profileUnifiedAvatar|profileAiStatsRow|profileAiStatLabel|profileAiSplitCards|profileAiMiniCard|profileMainSummaryGrid/
   );
 });
 
-test("client primary final CSS keeps profile AI split cards in the final owner", async () => {
+test("client primary final CSS keeps Zouk arrow sizing after nutrition summary migration", async () => {
   const source = await readCssWithImports("src/styles/client-primary.css");
 
+  assert.doesNotMatch(source, /nutritionAiPlanTop(?:Inline|Card|Title)/);
   assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiSplitCards\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\) !important;\s*gap:\s*12px !important;\s*margin:\s*0 0 12px !important;/g) || []).length,
+    (source.match(/\.nutritionZoukHeader\s*\{\s*min-height:\s*88px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*62px minmax\(0, 1fr\) 24px !important;\s*align-items:\s*center !important;\s*gap:\s*14px !important;\s*padding:\s*14px 18px !important;\s*\}/g) || []).length,
     1
   );
-});
-
-test("client primary final CSS keeps nutrition arrow sizing in the root owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.doesNotMatch(source, /> \.nutritionAiPlanDashboard\.collapsed\.nutritionAiPlanTopInline \.nutritionAiPlanTopCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition > \.nutritionZoukBlock \.nutritionZoukHeader\s*\{/);
-  assert.equal(
-    (source.match(/\.nutritionAiPlanTopCard,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionZoukHeader\s*\{\s*min-height:\s*88px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*62px minmax\(0, 1fr\) 24px !important;\s*align-items:\s*center !important;\s*gap:\s*14px !important;\s*padding:\s*14px 18px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.nutritionAiPlanCollapsedArrow,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionZoukMeta i\s*\{\s*width:\s*18px !important;\s*min-width:\s*18px !important;\s*height:\s*36px !important;\s*min-height:\s*36px !important;/g) || []).length,
-    1
-  );
+  assert.doesNotMatch(source, /nutritionAiPlanCollapsedArrow/);
   assert.equal(
     (source.match(/\.nutritionZoukMeta\s*\{\s*width:\s*18px !important;\s*min-width:\s*18px !important;\s*height:\s*36px !important;\s*min-height:\s*36px !important;/g) || []).length,
     1
@@ -1168,191 +1442,86 @@ test("client primary final CSS keeps nutrition arrow sizing in the root owner", 
   );
 });
 
-test("client primary final CSS keeps primary page title typography in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
+test("profile dashboard shell owns client layout while preserving the trainer fallback", async () => {
+  const shell = await readText("src/features/client/profile/ProfileDashboardShell.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileDashboardShell.module.css");
+  const route = await readText("src/features/client/profile/ProfileDashboardRoute.jsx");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const variables = await readText("src/styles/_variables.css");
 
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4 \.clientCorePageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetPageTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectTitle\s*\{\s*height:\s*var\(--client-page-title-height\) !important;\s*min-height:\s*var\(--client-page-title-height\) !important;\s*color:\s*var\(--client-page-title-color\) !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.workoutSelectTitle\s*\{\s*width:\s*calc\(100% - 118px\) !important;\s*max-width:\s*calc\(100% - 118px\) !important;\s*overflow:\s*hidden !important;\s*text-overflow:\s*ellipsis !important;\s*\}/g) || []).length,
-    1
-  );
+  assert.match(shell, /import styles from "\.\/ProfileDashboardShell\.module\.css";/);
+  assert.match(shell, /data-css-module-scope=\{legacyTrainer \? undefined : "profile-dashboard-shell"\}/);
+  assert.match(shell, /data-testid=\{legacyTrainer \? undefined : "profile-dashboard-content"\}/);
+  assert.match(shell, /data-testid="profile-main-hero-stats-shell"/);
+  assert.match(shell, /data-testid="profile-dashboard-version"/);
+  assert.match(shell, /legacyTrainer/);
+  assert.match(shell, /trainerRolePage/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?overflow:\s*hidden auto;[\s\S]*?scroll-padding-bottom:/);
+  assert.match(moduleCss, /\.mainContent\s*\{[\s\S]*?height:\s*calc\(100% - 44px\);/);
+  assert.match(moduleCss, /@media \(max-width: 900px\)[\s\S]*?\.heroStats\s*\{[\s\S]*?grid-template-rows:\s*96px 64px;/);
+  assert.match(moduleCss, /var\(--gradient-profile-shell-mobile\)/);
+  assert.match(variables, /--gradient-profile-shell-mobile:/);
+  assert.match(variables, /--shadow-profile-shell-main:/);
+  assert.match(route, /<ProfileDashboardShell[\s\S]*?mode=\{profileShellMode\}/);
+  assert.match(route, /<ProfileDashboardContent[\s\S]*?mode=\{profileShellMode\}/);
+  assert.match(route, /<ProfileMainHeroStatsShell>/);
+  assert.match(route, /<ProfileDashboardVersion>\{APP_VERSION\}<\/ProfileDashboardVersion>/);
+  assert.doesNotMatch(route, /profileDashboardPage|profileUnifiedCard|profileMainHeroStatsCard|mainDashboardAppVersion/);
+  assert.match(harness, /<ProfileDashboardShell mode=\{activeTab\}/);
+  assert.doesNotMatch(harness, /profileDashboardPage|profileUnifiedCard|profileMainHeroStatsCard|mainDashboardAppVersion/);
 });
 
-test("client primary final CSS keeps page title row spacing in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
+test("profile page chrome owns its scoped main title and notification action", async () => {
+  const component = await readText("src/features/client/profile/ProfilePageChrome.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfilePageChrome.module.css");
+  const legacyCss = await readCssWithImports("src/styles/index.css");
 
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetTitleRow,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectHero\s*\{[^}]*margin:\s*var\(--client-page-title-top\) 0 14px !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps header action sizing in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn\s*\{\s*position:\s*absolute !important;\s*top:\s*var\(--client-top\) !important;\s*right:\s*var\(--client-x\) !important;\s*z-index:\s*35 !important;\s*margin:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn\s*\{\s*top:\s*var\(--client-page-title-top\) !important;\s*right:\s*var\(--client-page-x\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileTrainerNotificationsButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeaderIconButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutHeaderActions button\s*\{\s*width:\s*52px !important;\s*min-width:\s*52px !important;\s*max-width:\s*52px !important;\s*height:\s*52px !important;\s*min-height:\s*52px !important;\s*max-height:\s*52px !important;\s*border-radius:\s*18px !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps client title row sizing in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.mainDashboardTitle,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetTitleRow,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeroTitleV4,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectHero,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumHome,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchTopPremiumMy\s*\{\s*width:\s*100% !important;\s*min-height:\s*var\(--client-title-h\) !important;\s*height:\s*var\(--client-title-h\) !important;\s*margin:\s*0 0 16px !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps client title action styling in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.menuRefreshIconBtn,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileTrainerNotificationsButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeaderIconButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutHeaderActions button,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatSearchClosePremium,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageHeaderBack,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.foodProductTopAction\s*\{\s*width:\s*var\(--client-action\) !important;\s*height:\s*var\(--client-action\) !important;\s*min-width:\s*var\(--client-action\) !important;\s*min-height:\s*var\(--client-action\) !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps workout start button fixed styling in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*position:\s*absolute !important;\s*left:\s*20px !important;\s*right:\s*20px !important;\s*bottom:\s*22px !important;\s*width:\s*auto !important;\s*height:\s*76px !important;\s*min-height:\s*76px !important;\s*border-radius:\s*18px !important;\s*background:\s*linear-gradient\(135deg, #6b4ff4 0%, #2f72f0 100%\) !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*bottom:\s*20px !important;\s*\}/g) || []).length,
-    1
-  );
+  assert.match(component, /import styles from "\.\/ProfilePageChrome\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-page-chrome"/);
+  assert.match(component, /data-testid="profile-main-title"/);
+  assert.match(component, /data-testid="profile-main-notifications"/);
+  assert.doesNotMatch(component, /mainDashboardTitle|menuRefreshIconBtn|trainerNotificationBadge/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.title\s*\{[\s\S]*?height:\s*32px;[\s\S]*?padding:\s*0 44px 0 0;[\s\S]*?font-size:\s*24px;/);
+  assert.match(moduleCss, /\.notificationButton\s*\{[\s\S]*?width:\s*34px;[\s\S]*?top:\s*13px;[\s\S]*?right:\s*20px;/);
+  assert.match(moduleCss, /@media \(max-width: 700px\)[\s\S]*?\.title\s*\{[\s\S]*?width:\s*calc\(100% - 116px\);[\s\S]*?font-size:\s*28px;/);
+  assert.match(moduleCss, /@media \(max-width: 700px\)[\s\S]*?\.notificationButton\s*\{[\s\S]*?width:\s*48px;[\s\S]*?top:\s*34px;[\s\S]*?right:\s*25px;/);
+  assert.match(moduleCss, /\.badge\s*\{[\s\S]*?position:\s*absolute;[\s\S]*?font-size:\s*10px;/);
+  assert.doesNotMatch(legacyCss, /\.mainDashboardTitle(?![\w-])/);
   assert.doesNotMatch(
-    source,
-    /\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*left:\s*18px !important;\s*right:\s*18px !important;\s*bottom:\s*22px !important;\s*height:\s*62px !important;\s*min-height:\s*62px !important;\s*border-radius:\s*16px !important;\s*\}/
+    legacyCss,
+    /(?:\.(?:profileDashboardPage|clientCorePageMain|mainDashboardPage)[^,{]*\.menuRefreshIconBtn|\.menuRefreshIconBtn[^,{]*\.(?:profileDashboardPage|clientCorePageMain|mainDashboardPage))/
   );
 });
 
-test("client primary final CSS keeps workout card compact sizing in one owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
+test("profile cabinet title row owns its scoped title and refresh geometry", async () => {
+  const component = await readText("src/features/client/profile/ProfileCabinetTitleRow.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileCabinetTitleRow.module.css");
+  const legacyCss = await readCssWithImports("src/styles/index.css");
 
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutDeck\s*\{\s*width:\s*100% !important;\s*margin:\s*0 0 46px !important;\s*padding:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutCardPro\s*\{\s*height:\s*clamp\(470px, calc\(100dvh - 292px\), 560px\) !important;\s*min-height:\s*470px !important;\s*max-height:\s*560px !important;\s*margin-bottom:\s*24px !important;\s*border-radius:\s*24px !important;\s*overflow:\s*hidden !important;/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.clientCorePageWorkout \.individualWorkoutCardPro\s*\{\s*border:\s*1px solid #e0e4ef !important;\s*border-radius:\s*24px !important;\s*background:\s*rgba\(255, 255, 255, 0\.94\) !important;\s*box-shadow:\s*0 16px 38px rgba\(55, 64, 112, 0\.12\) !important;\s*overflow:\s*hidden !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutProBody\s*\{\s*height:\s*100% !important;\s*border-radius:\s*22px !important;/g) || []).length,
-    1
-  );
+  assert.match(component, /import styles from "\.\/ProfileCabinetTitleRow\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-cabinet-title-row"/);
+  assert.match(component, /data-testid="profile-cabinet-title"/);
+  assert.match(component, /data-testid="profile-cabinet-refresh"/);
+  assert.doesNotMatch(component, /profileCabinetTitleRow|profileCabinetPageTitle|profileTrainerNotificationsButton|clientCorePageTitle/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) 42px;[\s\S]*?gap:\s*8px;/);
+  assert.match(moduleCss, /@media \(max-width: 700px\)[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) 48px;[\s\S]*?font-size:\s*28px;/);
+  assert.match(moduleCss, /@media \(min-width: 1100px\)[\s\S]*?:global\(\.trainerRolePage\) \.title/);
+  assert.doesNotMatch(legacyCss, /\.(?:profileCabinetTitleRow|profileCabinetPageTitle|profileTrainerNotificationsButton)(?![\w-])/);
 });
 
-test("client primary final CSS keeps workout compact shell no-op repeats out of media", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutDeck\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*gap:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutCardStartButton\s*\{\s*left:\s*18px !important;\s*right:\s*18px !important;\s*bottom:\s*18px !important;\s*width:\s*calc\(100% - 36px\) !important;\s*min-height:\s*58px !important;\s*border-radius:\s*16px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutBottomPanel\s*\{\s*margin-top:\s*0 !important;\s*padding-top:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutBottomProgress\s*\{\s*margin:\s*0 0 4px !important;\s*\}/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps workout stats layout in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutStats\s*\{\s*display:\s*grid !important;\s*gap:\s*18px !important;\s*margin-top:\s*26px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutStats span\s*\{\s*display:\s*grid !important;\s*grid-template-columns:\s*42px minmax\(0, 1fr\) !important;\s*align-items:\s*center !important;\s*gap:\s*12px !important;\s*color:\s*#253047 !important;/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps workout badge layout in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutBadges\s*\{\s*width:\s*100% !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 0\.78fr\) minmax\(0, 1\.45fr\) !important;\s*gap:\s*10px !important;\s*margin:\s*0 0 14px !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutBadges\s*\{\s*width:\s*100% !important;\s*min-height:\s*42px !important;\s*margin:\s*0 0 12px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 0\.48fr\) minmax\(0, 1fr\) !important;\s*gap:\s*10px !important;/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.clientCorePageWorkout \.individualWorkoutBadges\s*\{\s*min-height:\s*42px !important;\s*margin:\s*0 0 12px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 0\.45fr\) minmax\(0, 1fr\) !important;\s*gap:\s*10px !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.individualWorkoutNextBadge,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.individualWorkoutProgressBadge,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.individualWorkoutCompletedBadge,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.individualWorkoutWeek\s*\{\s*height:\s*42px !important;\s*min-height:\s*42px !important;\s*padding:\s*0 14px !important;\s*display:\s*inline-flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*border-radius:\s*18px !important;\s*white-space:\s*nowrap !important;\s*overflow:\s*hidden !important;\s*text-overflow:\s*ellipsis !important;/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.clientCorePageWorkout \.individualWorkoutNextBadge,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.individualWorkoutWeek\s*\{\s*height:\s*42px !important;\s*min-height:\s*42px !important;\s*padding:\s*0 16px !important;\s*justify-content:\s*center !important;\s*border-radius:\s*18px !important;\s*white-space:\s*nowrap !important;\s*overflow:\s*hidden !important;\s*text-overflow:\s*ellipsis !important;\s*\}/
-  );
-});
-
-test("client primary final CSS keeps header action layout in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
+test("migrated client title rows stay out of the legacy title owner", async () => {
+  const source = await readText("src/styles/client-visual-unity-shell-title-actions-v435.css");
 
   assert.doesNotMatch(
     source,
-    /\.clientCorePageWorkout\.individualWorkoutSelectPage \.workoutHeaderActions,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage \.workoutHeaderActions\s*\{\s*position:\s*static !important;\s*inset:\s*auto !important;\s*justify-self:\s*end !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-end !important;\s*gap:\s*10px !important;\s*width:\s*auto !important;\s*height:\s*var\(--client-action\) !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*transform:\s*none !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileCabinetTitleRow \.profileTrainerNotificationsButton,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionHeaderIconActions,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutHeaderActions\s*\{\s*position:\s*static !important;\s*justify-self:\s*end !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-end !important;\s*gap:\s*10px !important;/g) || []).length,
-    1
+    /\.fatSearchTopPremium|\.foodFlowTitleGroup|\.foodFlowSearchTitle|\.fatSearchClosePremium|clientCorePageWorkout|workoutSelect|mainDashboardTitle/
   );
 });
 
-test("client primary final CSS keeps workout mobile hero and actions in one owner", async () => {
-  const source = await readCssWithImports("src/styles/client-primary.css");
-
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.workoutSelectHero > p,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout \.workoutSelectLine\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.workoutSelectHero\s*\{\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout \.workoutHeaderActions\s*\{\s*top:\s*0 !important;\s*right:\s*0 !important;\s*height:\s*52px !important;\s*\}/g) || []).length,
-    1
-  );
-});
-
-test("client primary final CSS keeps client page variables in the final owner", async () => {
+test("client primary final CSS keeps remaining legacy page variables in the final owner", async () => {
   const source = await readCssWithImports("src/styles/client-primary.css");
   const rhythmStart = source.indexOf("/* v.1.39: final rhythm lock for the four primary client screens. */");
   const beforeRhythmBlock = source.slice(0, rhythmStart);
@@ -1362,26 +1531,27 @@ test("client primary final CSS keeps client page variables in the final owner", 
   assert.doesNotMatch(beforeRhythmBlock, /\.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\)::after/);
   assert.match(
     source.slice(rhythmStart),
-    /\.profileDashboardPage\.clientCorePageMain::after,[\s\S]*?\.clientCorePageWorkout\.individualWorkoutSelectPage::after\s*\{[\s\S]*?height:\s*calc\(112px \+ env\(safe-area-inset-bottom\)\) !important;[\s\S]*?background:\s*linear-gradient\(180deg,\s*rgba\(246,\s*247,\s*252,\s*0\) 0%,\s*#f6f7fc 22%,\s*#f6f7fc 100%\) !important;/
+    /\.profileDashboardPage\.clientCorePageMain::after,[\s\S]*?\.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition::after\s*\{[\s\S]*?height:\s*calc\(112px \+ env\(safe-area-inset-bottom\)\) !important;[\s\S]*?background:\s*linear-gradient\(180deg,\s*rgba\(246,\s*247,\s*252,\s*0\) 0%,\s*#f6f7fc 22%,\s*#f6f7fc 100%\) !important;/
   );
 
   assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage\s*\{\s*--client-page-x:\s*22px;\s*--client-page-title-top:\s*54px;\s*--client-page-title-height:\s*52px;\s*--client-page-title-size:\s*30px;\s*--client-page-title-color:\s*#5f5744;/g) || []).length,
+    (source.match(/\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition\s*\{\s*--client-page-x:\s*22px;\s*--client-page-title-top:\s*54px;\s*--client-page-title-height:\s*52px;\s*--client-page-title-size:\s*30px;\s*--client-page-title-color:\s*#5f5744;/g) || []).length,
     1
   );
   assert.doesNotMatch(
     source,
-    /\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*--client-top:\s*70px;\s*\}/
+    /\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium\s*\{\s*--client-top:\s*70px;\s*\}/
   );
   assert.match(
     source,
-    /\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.individualWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.basicWorkoutSelectPage,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium,\s*html:root\[data-app-theme="warm-light"\] body #root \.foodEditPageOverlay \.foodEditPageSheet\s*\{\s*--client-x:\s*26px;\s*--client-top:\s*70px;/
+    /\.profileDashboardPage\.clientCorePageMain,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreenPremium:not\(\[data-food-search-header-layout\]\)\s*\{\s*--client-x:\s*26px;\s*--client-top:\s*70px;/
   );
+  assert.doesNotMatch(source, /clientCorePageWorkout|workoutSelectPage|individualWorkoutSelectPage|basicWorkoutSelectPage/);
 });
 
-test("client workout set-row final sizing stays in the workout lazy owner", async () => {
+test("client workout set-row final sizing stays in its colocated CSS Module", async () => {
   const renderTarget = await readCssWithImports("src/styles/client-render-target.css");
-  const setRows = await readCssWithImports("src/styles/client-workout-set-rows.css");
+  const setRows = await readText("src/features/client/workouts/WorkoutExerciseSets.module.css");
 
   assert.doesNotMatch(renderTarget, /v127: absolute final override for workout set rows/);
   assert.doesNotMatch(renderTarget, /v126: final set-row size\/state polish/);
@@ -1392,68 +1562,28 @@ test("client workout set-row final sizing stays in the workout lazy owner", asyn
     (renderTarget.match(/setRow\.workoutExercisePlanRow\s*\{\s*min-height: 58px !important;/g) || []).length,
     0
   );
-  assert.equal(
-    (setRows.match(/setRow\.workoutExercisePlanRow\s*\{\s*min-height: 58px !important;/g) || []).length,
-    1
-  );
+  assert.doesNotMatch(setRows, /!important/);
+  assert.match(setRows, /\.row\s*\{[\s\S]*?min-height:\s*52px;/);
+  assert.match(setRows, /html\[data-app-theme="warm-light"\][\s\S]*?\.row\s*\{[\s\S]*?height:\s*60px;/);
 });
 
-test("client render target CSS keeps profile hero locks in one owner", async () => {
+test("client render target CSS does not retain migrated profile summary locks", async () => {
   const source = await readCssWithImports("src/styles/client-render-target.css");
 
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.clientCorePageMain \.profileAiHero\s*\{\s*border-bottom-left-radius:\s*0 !important;\s*border-bottom-right-radius:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileAiAvatar\s*\{\s*width:\s*70px !important;\s*height:\s*70px !important;\s*min-width:\s*70px !important;\s*min-height:\s*70px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.profileAiAvatarWrap,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileAiAvatar\s*\{\s*width:\s*62px !important;\s*height:\s*62px !important;\s*min-width:\s*62px !important;\s*min-height:\s*62px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/body #root \.profileAiHeroText,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.progressHubCardText,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionAiPlanTopText,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionZoukText\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*flex-start !important;\s*justify-content:\s*center !important;\s*gap:\s*2px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal((source.match(/\.profileAiHeroText\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;/g) || []).length, 0);
-  assert.equal(
-    (source.match(/\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiStatsRow\s*\{\s*height:\s*70px !important;\s*min-height:\s*70px !important;\s*max-height:\s*70px !important;\s*margin-bottom:\s*14px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal((source.match(/\.profileAiStatsRow\.profileAiStatsRow\s*\{\s*height:\s*70px !important;\s*min-height:\s*70px !important;\s*max-height:\s*70px !important;\s*\}/g) || []).length, 0);
-  assert.doesNotMatch(source, /\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiAvatarWrap,[\s\S]*?\.profileDashboardPage\.profileTabbedPage\.clientCorePage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.profileAiAvatar\s*\{[\s\S]*?width:\s*62px !important;/);
-});
-
-test("client render target CSS keeps workout pro top sizing in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-render-target.css");
-
+  assert.doesNotMatch(source, /progressHubCardText/);
+  assert.doesNotMatch(source, /profileAiHero|profileAiAvatar|profileAvatarBig|profileUnifiedAvatar/);
   assert.doesNotMatch(
     source,
-    /\.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutProTop\s*\{\s*height:\s*38px !important;\s*gap:\s*8px !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutProTop\s*\{\s*width:\s*100% !important;\s*height:\s*38px !important;\s*display:\s*grid !important;\s*grid-template-columns:\s*minmax\(0, 0\.48fr\) minmax\(0, 1fr\) !important;\s*gap:\s*8px !important;/g) || []).length,
-    1
+    /\.(?:profileAiStatsRow|profileAiStatLabel|profileAiSplitCards|profileAiMiniCard|profileMainSummaryGrid)(?![\w-])/
   );
 });
 
-test("client workout set rows CSS keeps one no-weight modal grid owner", async () => {
-  const source = await readCssWithImports("src/styles/client-workout-set-rows.css");
+test("client workout set module keeps one no-weight modal grid owner", async () => {
+  const source = await readText("src/features/client/workouts/WorkoutExerciseSets.module.css");
 
   assert.equal(
-    (source.match(/\.workoutSetEditModalFields\.withoutWeight\s*\{\s*grid-template-columns:\s*1fr !important;\s*\}/g) || []).length,
+    (source.match(/\.modalFields\.withoutWeight\s*\{\s*grid-template-columns:\s*1fr;\s*\}/g) || []).length,
     1
-  );
-});
-
-test("client workout card render CSS keeps card sizing in root locks", async () => {
-  const source = await readCssWithImports("src/styles/client-workout-card-render.css");
-
-  assert.doesNotMatch(
-    source,
-    /individualWorkoutCardPro\s*\{\s*height:\s*100% !important;\s*min-height:\s*0 !important;\s*max-height:\s*none !important;\s*\}/
   );
 });
 
@@ -1570,19 +1700,431 @@ test("client workout flow CSS keeps shared bottom panel shell in one owner", asy
   assert.match(sharedPanelMatch[0], /background:\s*linear-gradient\(180deg,\s*#121712 0%,\s*#0d110d 100%\);/);
 });
 
+test("workout list owns its live scoped styles and leaves no legacy page selectors", async () => {
+  const component = await readText("src/features/client/workouts/WorkoutListPage.jsx");
+  const moduleCss = await readText("src/features/client/workouts/WorkoutListPage.module.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldWorkoutListSelector = /\.(?:clientCorePageWorkout[\w-]*|workoutSelect[\w-]*|basicWorkout[\w-]*|individualWorkout[\w-]*)/;
+
+  assert.match(component, /import styles from "\.\/WorkoutListPage\.module\.css";/);
+  assert.match(component, /data-css-module-scope="workout-list"/);
+  assert.match(component, /className=\{`\$\{styles\.page\} \$\{isIndividualWorkoutMode \? styles\.individualMode : styles\.basicMode\}`\}/);
+  assert.match(component, /data-testid="workout-list-card"/);
+  assert.match(component, /data-testid="workout-list-nav"/);
+  assert.match(component, /className:\s*styles\.menuBar/);
+  assert.doesNotMatch(component, /clientCorePageWorkout|workoutSelectPage|individualWorkoutSelectPage|basicWorkoutSelectPage/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /@layer components\s*\{/);
+  assert.match(moduleCss, /\.page\s*\{[\s\S]*?min-height:\s*100dvh;/);
+  assert.match(moduleCss, /\.workoutCard\s*\{[\s\S]*?min-height:\s*var\(--workout-card-min-height\);/);
+  assert.match(moduleCss, /@media \(max-width:\s*40rem\)/);
+  assert.match(moduleCss, /@media \(max-width:\s*23\.125rem\)/);
+  assert.doesNotMatch(legacyCss, oldWorkoutListSelector);
+  assert.equal(await pathExists("src/styles/client-workout-card-render-card.css"), false);
+  assert.equal(await pathExists("src/styles/client-primary-final-rhythm-contract-workout-v432.css"), false);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-individual-ui-nav-v197.css"), false);
+  assert.equal(await pathExists("src/styles/client-workout-empty-state.css"), false);
+});
+
+test("workout plan and its training navigation own only colocated scoped styles", async () => {
+  const component = await readText("src/features/client/workouts/WorkoutPlanPage.jsx");
+  const moduleCss = await readText("src/features/client/workouts/WorkoutPlanPage.module.css");
+  const bottomBar = await readText("src/shared/ui/BottomBar.jsx");
+  const bottomBarCss = await readText("src/shared/ui/BottomBar.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldWorkoutPlanSelector = /\.(?:workoutPlanOverview[\w-]*|individualWorkout(?:BottomPanel|MenuBar)[\w-]*)/;
+
+  assert.match(component, /import styles from "\.\/WorkoutPlanPage\.module\.css";/);
+  assert.match(component, /data-css-module-scope="workout-plan"/);
+  assert.match(component, /className=\{styles\.page\}/);
+  assert.match(component, /className=\{styles\.stats\}/);
+  assert.match(component, /className=\{completed \? styles\.completed : ""\}/);
+  assert.match(component, /className=\{styles\.bottomPanel\}/);
+  assert.doesNotMatch(component, /workoutPlanOverview|individualWorkoutBottomPanel|individualWorkoutMenuBar/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.page\s*\{[\s\S]*?min-height:\s*100dvh;/);
+  assert.match(moduleCss, /\.stats\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /\.bottomPanel\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?width:\s*min\(394px, calc\(100vw - 20px\)\);/);
+  assert.match(bottomBar, /className=\{styles\.training\}/);
+  assert.match(bottomBar, /data-css-module-scope="training-bottom-bar"/);
+  assert.match(bottomBar, /data-testid="client-training-bottom-nav"/);
+  assert.match(bottomBar, /activeTab === "plan" \? styles\.active : ""/);
+  assert.doesNotMatch(bottomBar, /individualWorkoutBottomPanel|individualWorkoutMenuBar/);
+  assert.doesNotMatch(bottomBarCss, /!important/);
+  assert.match(bottomBarCss, /\.training\s*\{[\s\S]*?grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\);/);
+  assert.match(harness, /clientHarnessPage[\s\S]*?"workoutPlan"/);
+  assert.doesNotMatch(legacyCss, oldWorkoutPlanSelector);
+  assert.equal(await pathExists("src/styles/bottom-bars-workout-flow-lock.css"), false);
+  assert.equal(await pathExists("src/styles/bottom-bars-workout-page-lock.css"), false);
+  assert.equal(await pathExists("src/styles/client-workout-plan-tail-individual-card.css"), false);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-bottom-nav.css"), false);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-completed-card-spacing.css"), false);
+});
+
+test("workout history and its delete dialog own only colocated scoped styles", async () => {
+  const component = await readText("src/features/client/workouts/WorkoutHistoryPage.jsx");
+  const moduleCss = await readText("src/features/client/workouts/WorkoutHistoryPage.module.css");
+  const dialog = await readText("src/features/client/workouts/HistoryDeleteConfirmDialog.jsx");
+  const dialogCss = await readText("src/features/client/workouts/HistoryDeleteConfirmDialog.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const adminHub = await readText("src/components/admin/AdminPanelHub.jsx");
+  const accessDenied = await readText("src/components/common/AccessDeniedScreen.jsx");
+  const trainerWorkouts = await readText("src/features/trainer/TrainerAdminWorkoutsRoute.jsx");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldHistorySelector = /\.(?:historyPageCompact|historyPagePremium|progressHistoryPage|historyCompact[\w-]*|historySwipeDeleteAction|historyRefreshBtn|historyDelete(?:Overlay|Modal|Icon|Actions)|historyPremium(?:Card|Back))(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/WorkoutHistoryPage\.module\.css";/);
+  assert.match(component, /data-css-module-scope="workout-history"/);
+  assert.match(component, /className=\{styles\.page\}/);
+  assert.match(component, /className=\{\[styles\.card, isOpen && styles\.open, isSwiped && styles\.swiped\]/);
+  assert.match(component, /data-testid="workout-history-card"/);
+  assert.match(component, /data-testid="workout-history-empty"/);
+  assert.doesNotMatch(component, oldHistorySelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.page\s*\{[\s\S]*?min-height:\s*100dvh;/);
+  assert.match(moduleCss, /\.stats\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /\.card\.swiped \.cardInner\s*\{[\s\S]*?transform:\s*translateX\(-92px\);/);
+  assert.match(moduleCss, /@media \(max-width:\s*480px\)/);
+
+  assert.match(dialog, /import styles from "\.\/HistoryDeleteConfirmDialog\.module\.css";/);
+  assert.match(dialog, /data-css-module-scope="workout-history-delete"/);
+  assert.match(dialog, /className=\{styles\.overlay\}/);
+  assert.match(dialog, /className=\{styles\.danger\}/);
+  assert.doesNotMatch(dialog, oldHistorySelector);
+  assert.doesNotMatch(dialogCss, /!important/);
+  assert.match(dialogCss, /\.overlay\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?min-height:\s*100dvh;/);
+  assert.match(dialogCss, /\.actions\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/);
+
+  assert.match(harness, /import WorkoutHistoryPage from "\.\.\/\.\.\/features\/client\/workouts\/WorkoutHistoryPage";/);
+  assert.match(harness, /clientHarnessPage[\s\S]*?"workoutHistory"/);
+  assert.match(harness, /clientHistoryState/);
+  assert.doesNotMatch(harness, /WorkoutHistoryPage\.jsx\?/);
+  assert.doesNotMatch(legacyCss, oldHistorySelector);
+  assert.doesNotMatch(legacyCss, /@keyframes\s+(?:historyBodyIn|historyDeleteFadeIn|historyDeleteModalIn)\b/);
+  assert.equal(await pathExists("src/styles/client-history-ai-search-history-redesign.css"), false);
+  assert.equal(await pathExists("src/styles/client-history-ai-search-history-width.css"), false);
+  assert.equal(await pathExists("src/styles/theme-light-nested-screens-workout-history.css"), false);
+
+  assert.match(legacyCss, /\.historyEmptyCard\s*\{/);
+  assert.match(adminHub, /className="historyEmptyCard"/);
+  assert.match(accessDenied, /className="historyEmptyCard"/);
+  assert.match(trainerWorkouts, /className="historyEmptyCard"/);
+});
+
+test("workout mode owns its live page styles while the trainer bottom-bar fallback remains available", async () => {
+  const component = await readText("src/features/client/workouts/WorkoutModePage.jsx");
+  const moduleCss = await readText("src/features/client/workouts/WorkoutModePage.module.css");
+  const basicQuiz = await readText("src/features/client/workouts/BasicWorkoutQuizPage.jsx");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldWorkoutModeSelector = /\.(?:workoutModePage|workoutModeHero|workoutModeLead|workoutModeCards|workoutModeCard|workoutModeIcon|workoutModeRemember|workoutModeBack)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/WorkoutModePage\.module\.css";/);
+  assert.match(component, /data-css-module-scope="workout-mode"/);
+  assert.match(component, /className=\{styles\.page\}/);
+  assert.match(component, /className=\{styles\.topButton\}/);
+  assert.match(component, /className=\{\[styles\.card, styles\.premium\]\.join\(" "\)\}/);
+  assert.match(component, /data-testid="workout-mode-card"/);
+  assert.match(component, /data-testid="workout-mode-remember"/);
+  assert.doesNotMatch(component, oldWorkoutModeSelector);
+
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.page\s*\{[\s\S]*?min-height:\s*100dvh;/);
+  assert.match(moduleCss, /\.card\s*\{[\s\S]*?grid-template-columns:\s*46px minmax\(0, 1fr\) 20px;/);
+  assert.match(moduleCss, /var\(--color-workout-mode-page-background\)/);
+  assert.match(moduleCss, /@media \(max-width:\s*390px\)/);
+  assert.doesNotMatch(moduleCss, /clientBottomNav|--client-bottom-nav-/);
+
+  assert.match(harness, /import WorkoutModePage from "\.\.\/\.\.\/features\/client\/workouts\/WorkoutModePage";/);
+  assert.match(harness, /clientHarnessPage[\s\S]*?"workoutMode"/);
+  assert.doesNotMatch(legacyCss, oldWorkoutModeSelector);
+  assert.doesNotMatch(legacyCss, /\.workoutModeTopBar\b/);
+  assert.doesNotMatch(legacyCss, /\.workoutModeTopButton\b/);
+  assert.match(legacyCss, /\.workoutModeBottomBar/);
+  assert.match(basicQuiz, /className:\s*"mainMenuBottomBar profileBottomTabBar workoutModeBottomBar"/);
+
+  assert.equal(await pathExists("src/styles/client-screen-alignment-primary-rhythm-workout-mode.css"), false);
+  assert.equal(await pathExists("src/styles/client-screen-alignment-warm-light-workout-mode.css"), false);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-workout-mode-selector-cards-v305.css"), false);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-workout-mode-selector-remember-v306.css"), false);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-workout-mode-selector-warm-light-v307.css"), false);
+});
+
+test("basic workout quiz owns its live styles and removes its legacy selector branches", async () => {
+  const component = await readText("src/features/client/workouts/BasicWorkoutQuizPage.jsx");
+  const moduleCss = await readText("src/features/client/workouts/BasicWorkoutQuizPage.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldQuizSelector = /\.(?:basicQuizPage|basicQuizTopBar|basicQuizCard|basicQuizSectionHeader|basicQuizPreview|basicQuizPreviewStats|basicQuizStartBtn|workoutModeTopBar|workoutModeHeroTitle|workoutModeTopActions|workoutModeTopButton|workoutModeHeaderButton)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/BasicWorkoutQuizPage\.module\.css";/);
+  assert.match(component, /data-css-module-scope="basic-quiz"/);
+  assert.match(component, /className=\{styles\.page\}/);
+  assert.match(component, /className=\{styles\.topButton\}/);
+  assert.match(component, /className=\{styles\.card\}/);
+  assert.match(component, /className=\{styles\.preview\}/);
+  assert.match(component, /data-css-module-control/);
+  assert.doesNotMatch(component, oldQuizSelector);
+
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.page\s*\{[\s\S]*?min-height:\s*100dvh;/);
+  assert.match(moduleCss, /var\(--color-basic-quiz-page-background\)/);
+  assert.doesNotMatch(moduleCss, /clientBottomNav|--client-bottom-nav-/);
+  assert.match(moduleCss, /@media \(max-width:\s*390px\)/);
+
+  assert.match(harness, /import BasicWorkoutQuizPage from "\.\.\/\.\.\/features\/client\/workouts\/BasicWorkoutQuizPage";/);
+  assert.match(harness, /clientHarnessPage[\s\S]*?"basicQuiz"/);
+  assert.doesNotMatch(legacyCss, oldQuizSelector);
+  assert.match(legacyCss, /\.workoutModeBottomBar/);
+  assert.match(component, /className:\s*"mainMenuBottomBar profileBottomTabBar workoutModeBottomBar"/);
+
+  assert.equal(await pathExists("src/styles/client-workout-mode-basic-quiz-final.css"), false);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-workout-mode-basic-quiz.css"), false);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-workout-mode-quiz-warm-light.css"), false);
+  assert.equal(await pathExists("src/styles/trainer-month-program-editor-workout-mode-selector-shell-v304.css"), false);
+});
+
+test("workout exercise video frame owns only scoped live styles", async () => {
+  const component = await readText("src/features/client/workouts/WorkoutExerciseVideoFrame.jsx");
+  const moduleCss = await readText("src/features/client/workouts/WorkoutExerciseVideoFrame.module.css");
+  const stageViewCss = await readText("src/features/client/workouts/WorkoutRunStageView.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldVideoSelector = /\.(?:workoutExerciseVideoFrame|exerciseVideo|workoutExerciseVideoLoading|workoutExerciseInlinePlayButton|workoutExerciseInlinePauseButton|workoutExerciseFullscreenButton|workoutExerciseVideoFallback)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/WorkoutExerciseVideoFrame\.module\.css";/);
+  assert.match(component, /data-testid="workout-exercise-video-frame"/);
+  assert.match(component, /data-css-module-control="workout-exercise-video"/);
+  assert.match(component, /data-css-module-scope="workout-exercise-video-fallback"/);
+  assert.match(component, /className=\{styles\.frame\}/);
+  assert.match(component, /className=\{styles\.video\}/);
+  assert.doesNotMatch(component, oldVideoSelector);
+
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.frame\s*\{[\s\S]*?aspect-ratio:\s*1 \/ 1;/);
+  assert.match(moduleCss, /var\(--gradient-workout-video-frame\)/);
+  assert.doesNotMatch(moduleCss, /:global\(\.workoutRunPage\)|:global\(\.exerciseSlideCard\)/);
+  assert.match(stageViewCss, /\.exerciseCard\.hasVideo\s*\{[\s\S]*?padding:\s*12px 16px 10px;/);
+  assert.match(stageViewCss, /--workout-exercise-support-margin:\s*2px 0 7px;/);
+  assert.match(moduleCss, /@media \(max-height:\s*740px\)/);
+  assert.match(moduleCss, /@media \(min-width:\s*701px\) and \(max-height:\s*740px\)/);
+
+  assert.match(harness, /import WorkoutExerciseVideoFrame from "\.\.\/\.\.\/features\/client\/workouts\/WorkoutExerciseVideoFrame";/);
+  assert.match(harness, /clientHarnessPage[\s\S]*?"exerciseVideo"/);
+  assert.doesNotMatch(legacyCss, oldVideoSelector);
+  assert.equal(await pathExists("src/styles/client-workout-flow-exercise-video.css"), false);
+});
+
+test("workout exercise sets and validation toast own only scoped live styles", async () => {
+  const component = await readText("src/features/client/workouts/WorkoutExerciseSets.jsx");
+  const moduleCss = await readText("src/features/client/workouts/WorkoutExerciseSets.module.css");
+  const runRoute = await readText("src/features/client/workouts/WorkoutRunRoute.jsx");
+  const runRouteCss = await readText("src/features/client/workouts/WorkoutRunRoute.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldSetSelector = /\.(?:workoutExerciseSets|workoutExerciseSetsTitle|workoutExerciseSetsList|workoutExercisePlanList|workoutExercisePlanRow|workoutExerciseSetNumber|workoutExerciseSetPlan|workoutExerciseSetReps|workoutExerciseSetWeight|workoutExerciseSetActions|workoutExerciseSetEdit|workoutExerciseCompleteButton|workoutSetEditModalBackdrop|workoutSetEditModal|workoutSetEditModalHeader|workoutSetEditModalFields|workoutSetWheelField|workoutSetWheelPicker|workoutSetWheelOption|workoutSetEditDoneButton|workoutAiSharedWeightNote|workoutExerciseValidationToast)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/WorkoutExerciseSets\.module\.css";/);
+  assert.match(component, /data-css-module-scope="workout-exercise-sets"/);
+  assert.match(component, /data-css-module-control="workout-exercise-sets"/);
+  assert.match(component, /data-testid="workout-exercise-set-row"/);
+  assert.match(component, /data-testid="workout-set-edit-modal"/);
+  assert.match(component, /className=\{styles\.root\}/);
+  assert.doesNotMatch(component, oldSetSelector);
+
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /var\(--color-workout-set-list-surface\)/);
+  assert.match(moduleCss, /var\(--gradient-workout-set-done\)/);
+  assert.match(moduleCss, /@media \(max-width:\s*370px\)/);
+  assert.match(moduleCss, /@media \(max-height:\s*740px\)/);
+
+  assert.match(runRoute, /import styles from "\.\/WorkoutRunRoute\.module\.css";/);
+  assert.match(runRoute, /className=\{styles\.validationToast\}/);
+  assert.doesNotMatch(runRouteCss, /!important/);
+  assert.match(runRouteCss, /var\(--color-workout-validation-surface\)/);
+
+  assert.match(harness, /import WorkoutExerciseSets from "\.\.\/\.\.\/features\/client\/workouts\/WorkoutExerciseSets";/);
+  assert.match(harness, /clientHarnessPage[\s\S]*?"exerciseSets"/);
+  assert.doesNotMatch(legacyCss, oldSetSelector);
+
+  for (const removedFile of [
+    "src/styles/client-workout-flow-exercise-sets.css",
+    "src/styles/client-render-target-client-locks-workout-run.css",
+    "src/styles/client-render-target-client-locks-workout-run-narrow.css",
+    "src/styles/client-render-target-workout-rows-hard-override-v125.css",
+    "src/styles/client-render-target-workout-rows-compact-sets-v127.css",
+    "src/styles/client-workout-set-rows-plan.css",
+    "src/styles/client-workout-set-rows-modal-shell.css",
+    "src/styles/client-workout-set-rows-modal-fields.css",
+    "src/styles/client-workout-set-rows-wheel.css",
+    "src/styles/client-workout-set-rows.css"
+  ]) {
+    assert.equal(await pathExists(removedFile), false, `${removedFile} must stay removed`);
+  }
+});
+
+test("workout run route owns its scoped page shell without dead start-slide styles", async () => {
+  const route = await readText("src/features/client/workouts/WorkoutRunRoute.jsx");
+  const component = await readText("src/features/client/workouts/WorkoutRunPageShell.jsx");
+  const moduleCss = await readText("src/features/client/workouts/WorkoutRunPageShell.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+
+  assert.match(route, /import WorkoutRunPageShell from "\.\/WorkoutRunPageShell";/);
+  assert.match(route, /<WorkoutRunPageShell noHeader=\{workoutStarted && !isWorkoutSaved\}>/);
+  assert.doesNotMatch(route, /\bapp workoutRunPage\b|workoutRunPageNoHeader/);
+  assert.match(component, /import styles from "\.\/WorkoutRunPageShell\.module\.css";/);
+  assert.match(component, /className=\{`\$\{styles\.root\} \$\{noHeader \? styles\.noHeader : ""\}`\}/);
+  assert.match(component, /data-css-module-scope="workout-run-page"/);
+  assert.doesNotMatch(`${route}\n${component}\n${moduleCss}`, /startWorkout(?:Slide|BottomPanel|Button|Icon|Image)/);
+
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?--workout-stage-card-height:\s*clamp\(/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?max-width:\s*560px;[\s\S]*?height:\s*100dvh;[\s\S]*?overflow:\s*hidden;/);
+  assert.match(moduleCss, /\.noHeader\s*\{[\s\S]*?--workout-stage-card-height:\s*clamp\(/);
+  assert.match(moduleCss, /var\(--background-workout-run-page\)/);
+  assert.match(moduleCss, /var\(--color-workout-run-page-text\)/);
+  assert.match(moduleCss, /@media \(max-height:\s*740px\)/);
+  assert.match(moduleCss, /@media \(max-width:\s*390px\)/);
+  assert.doesNotMatch(moduleCss, /--workout-stage-card-max-width/);
+
+  assert.match(variables, /--background-workout-run-page:/);
+  assert.match(variables, /--color-workout-run-page-text:/);
+  assert.match(harness, /import WorkoutRunPageShell from "\.\.\/\.\.\/features\/client\/workouts\/WorkoutRunPageShell";/);
+  assert.match(harness, /<WorkoutRunPageShell noHeader=\{noHeader\}>/);
+});
+
+test("workout run overlays own scoped controls and no inline presentation styles", async () => {
+  const component = await readText("src/features/client/workouts/WorkoutRunOverlays.jsx");
+  const moduleCss = await readText("src/features/client/workouts/WorkoutRunOverlays.module.css");
+  const stageView = await readText("src/features/client/workouts/WorkoutRunStageView.jsx");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const oldOverlaySelector = /className="(?:workoutCloseButton|workoutHeader workoutHeaderCompact|backIconBtn universalFixedBackPointer|exerciseCounter|workoutTechniqueButton)"|className=\{`workoutStageTitle/;
+
+  assert.match(component, /import styles from "\.\/WorkoutRunOverlays\.module\.css";/);
+  assert.match(component, /data-css-module-scope="workout-fullscreen-video-overlay"/);
+  assert.match(component, /data-css-module-scope="workout-stage-heading"/);
+  assert.match(component, /data-css-module-control="workout-run-overlays"/);
+  assert.match(component, /className=\{styles\.fullscreenOverlay\}/);
+  assert.match(component, /className=\{styles\.closeButton\}/);
+  assert.match(component, /className=\{styles\.techniqueButton\}/);
+  assert.match(component, /className=\{styles\.notFoundPage\}/);
+  assert.doesNotMatch(component, /className="app"/);
+  assert.doesNotMatch(component, /style=\{\{/);
+  assert.doesNotMatch(component, oldOverlaySelector);
+  assert.doesNotMatch(component, /exerciseCounter/);
+  assert.doesNotMatch(stageView, /<WorkoutStageHeading[\s\S]{0,220}currentExerciseIndex=\{currentExerciseIndex\}/);
+
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /var\(--color-workout-run-close-border\)/);
+  assert.match(moduleCss, /var\(--gradient-workout-run-back\)/);
+  assert.match(moduleCss, /var\(--background-workout-run-not-found-page\)/);
+  assert.match(moduleCss, /\[data-workout-run-no-header="true"\]/);
+  assert.match(moduleCss, /@media \(max-height:\s*720px\)/);
+
+  assert.match(harness, /clientHarnessPage[\s\S]*?"workoutRunOverlays"/);
+  assert.match(harness, /<WorkoutRunExercisePreview/);
+  assert.doesNotMatch(harness, /className=(?:"|\{`)[^\n]*(?:workoutRunPage|workoutStageDeck|exerciseDeck|workoutStageCard|workoutExerciseCard|workoutExerciseMeta|videoOpenCard)/);
+});
+
+test("workout run stages own scoped cards, warmup, finish and navigation styles", async () => {
+  const stageView = await readText("src/features/client/workouts/WorkoutRunStageView.jsx");
+  const stageCss = await readText("src/features/client/workouts/WorkoutRunStageView.module.css");
+  const warmup = await readText("src/features/client/workouts/WorkoutWarmupStage.jsx");
+  const warmupCss = await readText("src/features/client/workouts/WorkoutWarmupStage.module.css");
+  const actionPanel = await readText("src/features/client/workouts/WorkoutStageActionPanel.jsx");
+  const actionPanelCss = await readText("src/features/client/workouts/WorkoutStageActionPanel.module.css");
+  const finish = await readText("src/features/client/workouts/WorkoutFinishStage.jsx");
+  const finishCss = await readText("src/features/client/workouts/WorkoutFinishStage.module.css");
+  const support = await readText("src/features/client/workouts/WorkoutExerciseSupport.jsx");
+  const supportCss = await readText("src/features/client/workouts/WorkoutExerciseSupport.module.css");
+  const oldStageSelector = /className="[^"]*(?:exerciseDeck|workoutStageDeck|exerciseSlideCard|workoutStageCard|warmupExerciseCard|workoutExerciseCard|workoutExerciseMeta|videoOpenCard|workoutFinishCard|workoutFinishScreen)[^"]*"|className=\{`(?!\$\{styles\.)[^\n]*(?:exerciseDeck|workoutStageDeck|exerciseSlideCard|workoutStageCard|warmupExerciseCard|workoutExerciseCard|workoutExerciseMeta|videoOpenCard|workoutFinishCard|workoutFinishScreen)/;
+
+  assert.match(stageView, /import styles from "\.\/WorkoutRunStageView\.module\.css";/);
+  assert.match(stageView, /data-css-module-scope="workout-run-stage"/);
+  assert.match(stageView, /data-workout-stage-card=\{isWarmup \? "warmup" : "exercise"\}/);
+  assert.doesNotMatch(stageView, oldStageSelector);
+  assert.doesNotMatch(finish, oldStageSelector);
+  assert.match(warmup, /import styles from "\.\/WorkoutWarmupStage\.module\.css";/);
+  assert.match(actionPanel, /import styles from "\.\/WorkoutStageActionPanel\.module\.css";/);
+  assert.match(finish, /import styles from "\.\/WorkoutFinishStage\.module\.css";/);
+  assert.match(support, /import styles from "\.\/WorkoutExerciseSupport\.module\.css";/);
+
+  for (const moduleCss of [stageCss, warmupCss, actionPanelCss, finishCss, supportCss]) {
+    assert.doesNotMatch(moduleCss, /!important/);
+  }
+
+  assert.match(stageCss, /var\(--color-workout-run-stage-card-border\)/);
+  assert.match(stageCss, /\.exerciseCard\.hasVideo/);
+  assert.match(stageCss, /@media \(max-height:\s*740px\)/);
+  assert.match(stageCss, /@media \(max-width:\s*640px\)/);
+  assert.match(warmupCss, /var\(--color-workout-warmup-item-surface\)/);
+  assert.match(actionPanelCss, /var\(--background-workout-stage-panel\)/);
+  assert.match(finishCss, /var\(--background-workout-finish-card\)/);
+  assert.match(supportCss, /var\(--color-workout-support-note-surface\)/);
+});
+
+test("workout dialogs own one colocated scoped module without legacy selectors", async () => {
+  const component = await readText("src/components/workout/WorkoutDialogs.jsx");
+  const moduleCss = await readText("src/components/workout/WorkoutDialogs.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const allCssFiles = await collectFiles("src", [".css"]);
+  const allCss = (await Promise.all(allCssFiles.map((file) => readText(file)))).join("\n");
+  const legacySelector = /\.(?:workoutDraftRestoreOverlay|workoutDraftRestoreCard|workoutDraftRestoreActions|workoutExitOverlay|workoutExitCard|workoutExitActions|postWorkoutOverlay|postWorkoutCard|postWorkoutGrid|workoutReadinessOverlay|workoutReadinessStage|workoutReadinessCard|workoutReadinessGrid|workoutReadinessActions)\b/;
+
+  assert.match(component, /import styles from "\.\/WorkoutDialogs\.module\.css";/);
+  assert.match(component, /data-css-module-scope="workout-dialogs"/);
+  assert.match(component, /data-testid="workout-draft-restore-dialog"/);
+  assert.match(component, /data-testid="workout-readiness-dialog"/);
+  assert.match(component, /data-testid="post-workout-feedback-dialog"/);
+  assert.match(component, /data-testid="workout-exit-dialog"/);
+  assert.match(component, /data-testid="workout-incomplete-dialog"/);
+  assert.doesNotMatch(component, legacySelector);
+
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /var\(--background-workout-draft-overlay\)/);
+  assert.match(moduleCss, /var\(--background-workout-readiness-overlay\)/);
+  assert.match(moduleCss, /@media \(max-width:\s*390px\)/);
+  assert.match(moduleCss, /@media \(max-width:\s*640px\)/);
+  assert.match(variables, /--background-workout-dialog-primary:/);
+  assert.match(variables, /--background-workout-readiness-card:/);
+  assert.doesNotMatch(allCss, legacySelector);
+
+  for (const legacyFile of [
+    "src/styles/client-workout-dialogs-lazy.css",
+    "src/styles/client-workout-flow-readiness.css",
+    "src/styles/client-workout-flow-post-workout.css",
+    "src/styles/client-workout-flow-ux-readiness.css",
+    "src/styles/client-workout-flow-ux-exit.css",
+    "src/styles/theme-light-nested-screens-workout-dialogs.css",
+    "src/styles/theme-light-nested-screens-workout-readiness.css",
+    "src/styles/warm-light-fullscreen-mobile-readiness.css"
+  ]) {
+    assert.equal(await pathExists(legacyFile), false);
+  }
+});
+
 test("client workout flow CSS keeps fallback image styles grouped", async () => {
   const source = await readCssWithImports("src/styles/client-workout-flow.css");
 
   assert.equal(
-    (source.match(/\.individualWorkoutSelectPage \.individualWorkoutImageFallback,\s*\.workoutRunPage \.startWorkoutImageFallback\s*\{\s*width:\s*100%;/g) || []).length,
+    (source.match(/\.workoutRunPage \.startWorkoutImageFallback\s*\{\s*width:\s*100%;/g) || []).length,
     1
   );
   assert.equal(
-    (source.match(/\.individualWorkoutSelectPage \.individualWorkoutImageFallback b,\s*\.workoutRunPage \.startWorkoutImageFallback b\s*\{\s*color:\s*rgba\(224,\s*242,\s*182,\s*0\.9\);/g) || []).length,
+    (source.match(/\.workoutRunPage \.startWorkoutImageFallback b\s*\{\s*color:\s*rgba\(224,\s*242,\s*182,\s*0\.9\);/g) || []).length,
     1
   );
   assert.equal(
-    (source.match(/\.individualWorkoutSelectPage \.individualWorkoutImageFallback small,\s*\.workoutRunPage \.startWorkoutImageFallback small\s*\{\s*display:\s*-webkit-box;/g) || []).length,
+    (source.match(/\.workoutRunPage \.startWorkoutImageFallback small\s*\{\s*display:\s*-webkit-box;/g) || []).length,
     1
   );
 });
@@ -1591,19 +2133,19 @@ test("client workout flow CSS keeps select and warmup action controls grouped", 
   const source = await readCssWithImports("src/styles/client-workout-flow.css");
 
   assert.equal(
-    (source.match(/\.individualWorkoutActionRow,\s*\.workoutRunPage \.warmupNavigationRow\s*\{\s*width:\s*100%;/g) || []).length,
+    (source.match(/\.workoutRunPage \.warmupNavigationRow\s*\{\s*width:\s*100%;/g) || []).length,
     1
   );
   assert.equal(
-    (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutBackButton,\s*\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutStartButton,\s*\.workoutRunPage \.warmupBottomPanel \.warmupPreviousButton,\s*\.workoutRunPage \.warmupBottomPanel \.warmupReadyButton\s*\{[\s\S]*?height:\s*78px !important;/g) || []).length,
+    (source.match(/\.workoutRunPage \.warmupBottomPanel \.warmupPreviousButton,\s*\.workoutRunPage \.warmupBottomPanel \.warmupReadyButton\s*\{[\s\S]*?height:\s*78px !important;/g) || []).length,
     1
   );
   assert.equal(
-    (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutBackButton,\s*\.workoutRunPage \.warmupBottomPanel \.warmupPreviousButton\s*\{\s*padding:\s*0 8px !important;/g) || []).length,
+    (source.match(/\.workoutRunPage \.warmupBottomPanel \.warmupPreviousButton\s*\{\s*padding:\s*0 8px !important;/g) || []).length,
     1
   );
   assert.equal(
-    (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutStartButton,\s*\.workoutRunPage \.warmupBottomPanel \.warmupReadyButton\s*\{\s*padding:\s*0 14px !important;/g) || []).length,
+    (source.match(/\.workoutRunPage \.warmupBottomPanel \.warmupReadyButton\s*\{\s*padding:\s*0 14px !important;/g) || []).length,
     1
   );
 });
@@ -1612,10 +2154,9 @@ test("client workout flow CSS keeps start button sizing grouped", async () => {
   const source = await readCssWithImports("src/styles/client-workout-flow.css");
 
   assert.equal(
-    (source.match(/\.individualWorkoutSelectPage > \.individualWorkoutBottomPanel \.individualWorkoutStartButton,\s*\.workoutRunPage \.startWorkoutBottomPanel \.startWorkoutButton\s*\{\s*width:\s*100% !important;\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*max-height:\s*78px !important;\s*margin:\s*0 !important;\s*padding:\s*0 18px !important;\s*border-radius:\s*24px !important;\s*font-size:\s*19px !important;\s*\}/g) || []).length,
+    (source.match(/\.workoutRunPage \.startWorkoutBottomPanel \.startWorkoutButton\s*\{\s*width:\s*100% !important;\s*height:\s*78px !important;\s*min-height:\s*78px !important;\s*max-height:\s*78px !important;\s*margin:\s*0 !important;\s*padding:\s*0 18px !important;\s*border-radius:\s*24px !important;\s*font-size:\s*19px !important;\s*\}/g) || []).length,
     1
   );
-  assert.equal((source.match(/padding:\s*0 18px !important;/g) || []).length, 3);
 });
 
 test("client workout flow CSS keeps compact start panel sizing grouped", async () => {
@@ -1641,304 +2182,63 @@ test("client workout flow CSS keeps compact run action panel sizing grouped", as
   );
 });
 
-test("client workout hero spacing stays in the workout lazy owner", async () => {
-  const renderTarget = await readCssWithImports("src/styles/client-render-target.css");
-  const cardRender = await readCssWithImports("src/styles/client-workout-card-render.css");
+test("food search results owns its live scoped list, states and result cards", async () => {
+  const component = await readText("src/features/client/nutrition/FoodSearchResults.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/FoodSearchResults.module.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const oldSelectors = /\.(?:fatSearchListPremium|fatRecentFoods|fatRecentFoodsTitle|fatRecentFoodButton|fatSearchStatus|fatFallbackSuggestions|myProductsEmptyState|fatSearchResultCard|fatSearchResultIcon|fatSearchResultInfo|fatSearchResultCheck|fatSearchShowMoreButton|fatAiLoadingBelow)(?![\w-])/;
 
-  assert.doesNotMatch(
-    renderTarget,
-    /\.workoutSelectPage\.individualWorkoutSelectPage \.workoutSelectHero\s*\{\s*margin-bottom:\s*10px !important;\s*\}/
-  );
-  assert.equal(
-    (cardRender.match(/\.workoutSelectPage\.individualWorkoutSelectPage \.workoutSelectHero\s*\{\s*margin-bottom:\s*10px !important;\s*\}/g) || []).length,
-    1
-  );
+  assert.match(component, /import styles from "\.\/FoodSearchResults\.module\.css";/);
+  assert.match(component, /data-testid="food-search-results"/);
+  assert.match(component, /data-css-module-scope="food-search-results"/);
+  assert.match(component, /data-food-search-result-card/);
+  assert.doesNotMatch(component, oldSelectors);
+  assert.doesNotMatch(component, /searchTab === "recent"|showRecentFoods|onRecentFoodSelect/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.list\s*\{[\s\S]*?padding:\s*0 0 calc\(198px \+ var\(--safe-area-bottom\)\);[\s\S]*?display:\s*grid;[\s\S]*?gap:\s*10px;/);
+  assert.match(moduleCss, /\.item\s*\{[\s\S]*?min-height:\s*72px;[\s\S]*?grid-template-columns:\s*46px minmax\(0, 1fr\) 28px;[\s\S]*?gap:\s*11px;[\s\S]*?border-radius:\s*19px;/);
+  assert.match(moduleCss, /\.itemAction\s*\{[\s\S]*?width:\s*36px;[\s\S]*?height:\s*36px;[\s\S]*?border-radius:\s*50%;/);
+  assert.match(moduleCss, /\.status\s*\{[\s\S]*?min-height:\s*78px;[\s\S]*?padding:\s*16px;[\s\S]*?border-radius:\s*19px;/);
+  assert.match(moduleCss, /\.loading\s*\{[\s\S]*?min-height:\s*52px;[\s\S]*?margin:\s*8px 0 4px;[\s\S]*?border-radius:\s*18px;/);
+  assert.match(moduleCss, /@media \(max-width:\s*390px\)[\s\S]*?grid-template-columns:\s*42px minmax\(0, 1fr\) 24px;[\s\S]*?font-size:\s*10\.5px;/);
+  assert.doesNotMatch(legacyCss, oldSelectors);
+  assert.equal(await pathExists("src/styles/client-primary-food-flow-search-cleanup-result-check.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-food-editor-search-results-order.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-food-picker-base-ai-mode.css"), false);
 });
 
-test("client food search final CSS keeps one compact product title-wrap lock", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
+test("food search overlay owns scoped search, fixture and product shells", async () => {
+  const component = await readText("src/features/client/nutrition/FoodSearchOverlay.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/FoodSearchOverlay.module.css");
 
-  assert.equal(
-    (source.match(/fatSearchTitleWrap\s*\{\s*width:\s*min\(352px,\s*calc\(100vw - 24px\)\) !important;\s*max-width:\s*min\(352px,\s*calc\(100vw - 24px\)\) !important;\s*\}/g) || []).length,
-    1
-  );
-});
-
-test("client food search final CSS keeps one compact meal header width owner", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-  const nonHasMealHeaderCompactLocks = source.match(
-    /body #root \.fatFoodSearchOverlay \.foodProductRenderScreen \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{\s*width:\s*min\(352px,\s*calc\(100vw - 36px\)\) !important;\s*max-width:\s*min\(352px,\s*calc\(100vw - 36px\)\) !important;\s*\}/g
-  ) || [];
-
-  assert.equal(nonHasMealHeaderCompactLocks.length, 1);
-});
-
-test("client food search final CSS keeps one compact product title owner", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-  const nonHasProductTitleCompactLocks = source.match(
-    /body #root \.fatFoodSearchOverlay \.foodProductRenderScreen \.foodProductFlowTitle h2\s*\{\s*font-size:\s*25px !important;\s*\}/g
-  ) || [];
-
-  assert.equal(nonHasProductTitleCompactLocks.length, 1);
-});
-
-test("client food search final CSS keeps header close shell grouped", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-
-  assert.doesNotMatch(source, /\.fatSearchTopPremium\.fatSearchTopPremiumHome button\.fatSearchClosePremium\s*\{/);
-  assert.equal(
-    (
-      source.match(
-        /\.fatSearchTopPremiumHome \.fatSearchClosePremium,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreen\.fatFoodSearchScreenPremium > \.fatSearchTopPremium\.foodSearchHeaderExactMainAlign > button\.fatSearchClosePremium\.fatSearchClosePremium\s*\{\s*grid-area:\s*close !important;[\s\S]*?box-shadow:\s*0 16px 36px rgba\(36,\s*43,\s*66,\s*0\.08\),\s*inset 0 1px 0 rgba\(255,\s*255,\s*255,\s*0\.95\) !important;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /grid-area:\s*close !important;\s*position:\s*static !important;\s*inset:\s*auto !important;\s*width:\s*48px !important;[\s\S]*?box-shadow:\s*0 16px 36px rgba\(36,\s*43,\s*66,\s*0\.08\),\s*inset 0 1px 0 rgba\(255,\s*255,\s*255,\s*0\.95\) !important;/g
-      ) || []
-    ).length,
-    1
-  );
-});
-
-test("client food search final CSS keeps header title shell grouped", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-
-  assert.equal(
-    (
-      source.match(
-        /\.fatSearchTopPremiumHome \.foodFlowTitleGroup\.foodFlowSearchTitle h2,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.fatFoodSearchScreen\.fatFoodSearchScreenPremium > \.fatSearchTopPremium\.foodSearchHeaderExactMainAlign > \.foodFlowTitleGroup\.foodFlowSearchTitle > h2\s*\{\s*height:\s*48px !important;[\s\S]*?white-space:\s*nowrap !important;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /height:\s*48px !important;\s*min-height:\s*48px !important;\s*max-height:\s*48px !important;\s*margin:\s*0 !important;\s*padding:\s*0 !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*color:\s*var\(--render-title-color,\s*#5f5848\) !important;\s*-webkit-text-fill-color:\s*var\(--render-title-color,\s*#5f5848\) !important;\s*font-size:\s*28px !important;\s*font-weight:\s*900 !important;\s*line-height:\s*1\.06 !important;\s*letter-spacing:\s*0 !important;\s*white-space:\s*nowrap !important;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-});
-
-test("client food search final CSS keeps product title typography in stable flow owner", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-  const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
-  const hardLockStart = source.indexOf("/* Product page header/search alignment hard lock v160 */");
-  const stableFlowBlock = source.slice(stableFlowStart, hardLockStart);
-
-  assert.doesNotMatch(
-    source,
-    /\/\* Food product\/search alignment and amount behavior v156 \*\/[\s\S]*?\.foodProductFlowTitle h2\s*\{\s*font-size:\s*27px !important;\s*line-height:\s*1 !important;\s*\}/
-  );
-  assert.doesNotMatch(
-    source,
-    /\/\* Product page header exact lock v158 \*\/[\s\S]*?\.foodProductFlowTitle h2\s*\{\s*font-size:\s*27px !important;\s*line-height:\s*1 !important;\s*\}/
-  );
-  assert.match(
-    stableFlowBlock,
-    /\.foodProductFlowTitle h2\s*\{[\s\S]*?font-size:\s*27px !important;[\s\S]*?line-height:\s*1\.04 !important;/
-  );
-});
-
-test("client food search final CSS keeps product hero spacing in latest owners", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-  const amountBehaviorStart = source.indexOf("/* Food product/search alignment and amount behavior v156 */");
-  const photoActionStart = source.indexOf("/* Food search AI photo action bar height v157 */", amountBehaviorStart);
-  const exactLockStart = source.indexOf("/* Product page header exact lock v158 */");
-  const stableFlowStart = source.indexOf("/* Product page stable flow v159 */");
-  const hardLockStart = source.indexOf("/* Product page header/search alignment hard lock v160 */");
-  const finalLockStart = source.indexOf("/* Product page header/search alignment final lock v161 */");
-  const mealSelectorStart = source.indexOf("/* Food search meal selector width final lock v162 */");
-  const productAddStart = source.indexOf("/* Food product add page v154 */");
-  const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */", productAddStart);
-  const amountBehaviorBlock = source.slice(amountBehaviorStart, photoActionStart);
-  const exactLockBlock = source.slice(exactLockStart, stableFlowStart);
-  const hardLockBlock = source.slice(hardLockStart, finalLockStart);
-  const finalLockBlock = source.slice(finalLockStart, mealSelectorStart);
-  const stableFlowBlock = source.slice(stableFlowStart, hardLockStart);
-  const productAddBlock = source.slice(productAddStart, headerSizingStart);
-
-  assert.ok(productAddStart >= 0);
-  assert.ok(headerSizingStart > productAddStart);
-  assert.ok(amountBehaviorStart >= 0);
-  assert.ok(photoActionStart > amountBehaviorStart);
-  assert.ok(exactLockStart > photoActionStart);
-  assert.ok(stableFlowStart > exactLockStart);
-  assert.ok(hardLockStart > stableFlowStart);
-  assert.ok(finalLockStart > hardLockStart);
-  assert.ok(mealSelectorStart > finalLockStart);
-  assert.doesNotMatch(productAddBlock, /\.foodProductFlowHeader\s*\{[^{}]*?height:\s*114px !important;/);
-  assert.doesNotMatch(productAddBlock, /\.foodProductTopActions\s*\{/);
-  assert.doesNotMatch(productAddBlock, /\.foodProductTopActions\s*\{[^{}]*?z-index:\s*3 !important;/);
-  assert.doesNotMatch(productAddBlock, /\.foodProductTopActions\s*\{[^{}]*?width:\s*auto !important;/);
-  assert.doesNotMatch(productAddBlock, /\.foodProductFlowTitle\s*\{/);
-  assert.doesNotMatch(productAddBlock, /\.foodProductFlowTitle h2\s*\{/);
-  assert.doesNotMatch(productAddBlock, /\.foodProductFlowTitle h2\s*\{[^{}]*?font-size:\s*28px !important;/);
-  assert.doesNotMatch(productAddBlock, /\.foodProductFlowTitle h2\s*\{[^{}]*?line-height:\s*1\.06 !important;/);
-  assert.doesNotMatch(productAddBlock, /\.foodEditInlineMealHeader\s*\{[^{}]*?width:\s*min\(328px,/);
-  assert.doesNotMatch(productAddBlock, /\.foodEditInlineMealHeader\s*\{[^{}]*?min-height:\s*56px !important;/);
-  assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductFlowHeader\s*\{/);
-  assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductFlowTitle\s*\{/);
-  assert.doesNotMatch(amountBehaviorBlock, /\.foodProductRenderScreen \.foodProductTopActions\s*\{/);
-  assert.doesNotMatch(exactLockBlock, /\.foodProductRenderScreen \.foodProductFlowHeader\s*\{/);
-  assert.doesNotMatch(exactLockBlock, /\.foodProductRenderScreen \.foodProductFlowTitle\s*\{/);
-  assert.doesNotMatch(exactLockBlock, /\.foodProductRenderScreen \.foodProductTopActions\s*\{/);
-  assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowHeader\s*\{/);
-  assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowTitle\s*\{/);
-  assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductTopActions\s*\{/);
-  assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowTitle h2\s*\{/);
-  assert.doesNotMatch(hardLockBlock, /\.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\) \.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{/);
-  assert.doesNotMatch(hardLockBlock, /--food-product-x:\s*15px;/);
-  assert.doesNotMatch(stableFlowBlock, /\.foodProductTopActions\s*\{/);
-  assert.doesNotMatch(finalLockBlock, /--food-product-x:\s*15px;/);
-  assert.doesNotMatch(finalLockBlock, /\.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{[\s\S]*?width:\s*min\(284px,/);
-  assert.doesNotMatch(finalLockBlock, /\.foodProductFlowHeader \.foodEditInlineMealHeader\s*\{[\s\S]*?margin:\s*0 auto !important;/);
-  assert.doesNotMatch(finalLockBlock, /\.foodProductFlowHeader\s*\{[\s\S]*?margin:\s*0 0 16px !important;/);
-  assert.doesNotMatch(finalLockBlock, /\.foodProductRenderScreen\s*\{\s*--food-product-x:\s*14px;/);
-  assert.equal(
-    (source.match(/\.foodProductRenderScreen \.foodProductFlowHeader \+ \.foodEditHeroRender\.foodEditHeroEditable\s*\{\s*margin-top:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.match(
-    stableFlowBlock,
-    /\.foodProductFlowHeader \+ \.foodEditHeroRender\.foodEditHeroEditable\s*\{\s*margin-top:\s*0 !important;\s*\}/
-  );
-  assert.equal((finalLockBlock.match(/--food-product-x:\s*14px;/g) || []).length, 0);
-  assert.match(
-    source,
-    /\/\* Food product page compact alignment and inline edit feel v164 \*\/[\s\S]*?\.foodProductRenderScreen\s*\{\s*--food-product-x:\s*15px;/
-  );
-});
-
-test("client food search final CSS keeps photo action sizing in latest owner", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-  const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
-  const productAddStart = source.indexOf("/* Food product add page v154 */", renderControlsStart);
-  const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */");
-  const amountBehaviorStart = source.indexOf("/* Food product/search alignment and amount behavior v156 */", headerSizingStart);
-  const photoActionStart = source.indexOf("/* Food search AI photo action bar height v157 */", amountBehaviorStart);
-  const exactLockStart = source.indexOf("/* Product page header exact lock v158 */", photoActionStart);
-  const renderControlsBlock = source.slice(renderControlsStart, productAddStart);
-  const headerSizingBlock = source.slice(headerSizingStart, amountBehaviorStart);
-  const photoActionBlock = source.slice(photoActionStart, exactLockStart);
-
-  assert.ok(renderControlsStart >= 0);
-  assert.ok(productAddStart > renderControlsStart);
-  assert.ok(headerSizingStart >= 0);
-  assert.ok(amountBehaviorStart > headerSizingStart);
-  assert.ok(photoActionStart > amountBehaviorStart);
-  assert.ok(exactLockStart > photoActionStart);
-  assert.doesNotMatch(renderControlsBlock, /height:\s*58px !important;/);
-  assert.doesNotMatch(renderControlsBlock, /grid-template-columns:\s*40px minmax\(0,\s*1fr\) 18px !important;/);
-  assert.doesNotMatch(renderControlsBlock, /bottom:\s*calc\(93px \+ env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
-  assert.doesNotMatch(renderControlsBlock, /\.foodSearchModernActionIcon\s*\{[\s\S]*?width:\s*34px !important;/);
-  assert.doesNotMatch(renderControlsBlock, /\.foodSearchModernActionIcon\s*\{[\s\S]*?border-radius:\s*11px !important;/);
-  assert.doesNotMatch(renderControlsBlock, /\.foodSearchFixedPhotoAction strong\s*\{[\s\S]*?font-size:\s*12px !important;/);
-  assert.doesNotMatch(renderControlsBlock, /\.foodSearchFixedPhotoAction small\s*\{[\s\S]*?font-size:\s*10px !important;/);
-  assert.doesNotMatch(headerSizingBlock, /height:\s*68px !important;/);
-  assert.doesNotMatch(headerSizingBlock, /grid-template-columns:\s*42px minmax\(0,\s*1fr\) 20px !important;/);
-  assert.doesNotMatch(headerSizingBlock, /\.foodSearchModernActionIcon\s*\{\s*\}/);
-  assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction strong\s*\{\s*\}/);
-  assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction small\s*\{\s*\}/);
-  assert.doesNotMatch(headerSizingBlock, /\.fatSearchTitleWrap\s*\{[^{}]*?width:\s*100% !important;/);
-  assert.doesNotMatch(headerSizingBlock, /\.fatSearchTitleWrap\s*\{[^{}]*?max-width:\s*none !important;/);
-  assert.doesNotMatch(headerSizingBlock, /\.foodSearchModernActionIcon\s*\{[\s\S]*?width:\s*38px !important;/);
-  assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction strong\s*\{[\s\S]*?font-size:\s*13px !important;/);
-  assert.doesNotMatch(headerSizingBlock, /\.foodSearchFixedPhotoAction small\s*\{[\s\S]*?font-size:\s*10\.5px !important;/);
-  assert.match(
-    photoActionBlock,
-    /\.foodSearchFixedPhotoAction\s*\{[\s\S]*?height:\s*84px !important;[\s\S]*?grid-template-columns:\s*52px minmax\(0,\s*1fr\) 22px !important;/
-  );
-  assert.match(
-    photoActionBlock,
-    /\.foodSearchModernActionIcon\s*\{[\s\S]*?width:\s*46px !important;[\s\S]*?min-height:\s*46px !important;/
-  );
-  assert.match(source, /\/\* Food product\/search alignment and amount behavior v156 \*\/[\s\S]*?\.fatSearchTitleWrap\s*\{[^{}]*?width:\s*min\(376px,\s*calc\(100vw - 24px\)\) !important;[^{}]*?max-width:\s*min\(376px,\s*calc\(100vw - 24px\)\) !important;/);
-  assert.match(photoActionBlock, /\.foodSearchFixedPhotoAction strong\s*\{[\s\S]*?font-size:\s*14px !important;/);
-  assert.match(photoActionBlock, /\.foodSearchFixedPhotoAction small\s*\{[\s\S]*?font-size:\s*11px !important;/);
-});
-
-test("client food search final CSS keeps title button sizing in latest owner", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-  const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
-  const productAddStart = source.indexOf("/* Food product add page v154 */", renderControlsStart);
-  const headerSizingStart = source.indexOf("/* Food search header/action sizing v155 */", productAddStart);
-  const amountBehaviorStart = source.indexOf("/* Food product/search alignment and amount behavior v156 */", headerSizingStart);
-  const renderControlsBlock = source.slice(renderControlsStart, productAddStart);
-  const headerSizingBlock = source.slice(headerSizingStart, amountBehaviorStart);
-
-  assert.ok(renderControlsStart >= 0);
-  assert.ok(productAddStart > renderControlsStart);
-  assert.ok(headerSizingStart > productAddStart);
-  assert.ok(amountBehaviorStart > headerSizingStart);
-  assert.doesNotMatch(renderControlsBlock, /height:\s*46px !important;/);
-  assert.doesNotMatch(renderControlsBlock, /border-radius:\s*10px !important;/);
-  assert.doesNotMatch(renderControlsBlock, /\.fatSearchTitleButtonPremium span\s*\{[\s\S]*?font-size:\s*8px !important;/);
-  assert.doesNotMatch(renderControlsBlock, /\.fatSearchTitleButtonPremium strong\s*\{[\s\S]*?font-size:\s*15px !important;/);
-  assert.match(
-    headerSizingBlock,
-    /\.fatSearchTitleButtonPremium\s*\{[\s\S]*?height:\s*54px !important;[\s\S]*?border-radius:\s*15px !important;/
-  );
-  assert.match(headerSizingBlock, /\.fatSearchTitleButtonPremium span\s*\{[\s\S]*?font-size:\s*9px !important;/);
-  assert.match(headerSizingBlock, /\.fatSearchTitleButtonPremium strong\s*\{[\s\S]*?font-size:\s*16px !important;/);
-});
-
-test("client food search final CSS keeps fixed action bottom mask in latest owner", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-  const oldMaskStart = source.indexOf("/* v169: search results must disappear under the fixed AI photo action instead of showing through it. */");
-  const diaryRowsStart = source.indexOf("/* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */", oldMaskStart);
-  const finalMaskStart = source.indexOf("/* v171: polish nutrition fixed docks, inner scrollbars and safe bottom masking. */", diaryRowsStart);
-  const oldMaskBlock = source.slice(oldMaskStart, diaryRowsStart);
-  const finalMaskBlock = source.slice(finalMaskStart);
-
-  assert.ok(oldMaskStart >= 0);
-  assert.ok(diaryRowsStart > oldMaskStart);
-  assert.ok(finalMaskStart > diaryRowsStart);
-  assert.doesNotMatch(oldMaskBlock, /padding-bottom:\s*calc\(210px \+ env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
-  assert.doesNotMatch(oldMaskBlock, /z-index:\s*38 !important;/);
-  assert.doesNotMatch(oldMaskBlock, /left:\s*-14px !important;/);
-  assert.doesNotMatch(oldMaskBlock, /bottom:\s*calc\(-118px - env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
-  assert.match(finalMaskBlock, /padding-bottom:\s*calc\(198px \+ env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
-  assert.match(finalMaskBlock, /\.foodSearchFixedPhotoAction\s*\{[\s\S]*?z-index:\s*42 !important;[\s\S]*?isolation:\s*isolate !important;/);
-  assert.match(finalMaskBlock, /\.foodSearchFixedPhotoAction::before\s*\{[\s\S]*?left:\s*50% !important;[\s\S]*?bottom:\s*calc\(-128px - env\(safe-area-inset-bottom,\s*0px\)\) !important;/);
-});
-
-test("client food search final CSS hides the mobile product render scrollbar", async () => {
-  const source = await readCssWithImports("src/styles/client-food-search.css");
-
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay:has\(\.foodProductRenderScreen\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\),\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.foodProductRenderScreen\s*\{\s*scrollbar-width:\s*none !important;\s*scrollbar-gutter:\s*auto !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.fatFoodSearchOverlay:has\(\.foodProductRenderScreen\)::-webkit-scrollbar,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchScreenPremium:has\(\.foodProductRenderScreen\)::-webkit-scrollbar,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatFoodSearchOverlay \.foodProductRenderScreen::-webkit-scrollbar\s*\{\s*display:\s*none !important;\s*width:\s*0 !important;\s*\}/g) || []).length,
-    1
-  );
+  assert.match(component, /export function FoodSearchSurface/);
+  assert.match(component, /styles\.searchOverlay/);
+  assert.match(component, /styles\.searchScreen/);
+  assert.match(component, /data-css-module-scope="food-search-overlay"/);
+  assert.match(component, /className=\{styles\.productOverlay\}/);
+  assert.match(component, /className=\{styles\.productLayout\}/);
+  assert.match(component, /data-css-module-scope="food-product-overlay"/);
+  assert.doesNotMatch(component, /fatFoodSearchOverlay|fatFoodSearchScreen|fatFoodSearchScreenPremium/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.searchOverlay\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?overflow:\s*hidden;[\s\S]*?var\(--color-food-search-overlay-background\)/);
+  assert.match(moduleCss, /\.searchScreen\s*\{[\s\S]*?max-width:\s*390px;[\s\S]*?var\(--gradient-food-search-screen\)/);
+  assert.match(moduleCss, /\.fixtureLayout\s*\{[\s\S]*?overflow-y:\s*auto;[\s\S]*?var\(--shadow-food-product-screen\)/);
+  assert.match(moduleCss, /\.productOverlay,\s*\.productLayout\s*\{[\s\S]*?scrollbar-width:\s*none;[\s\S]*?scrollbar-gutter:\s*auto;/);
+  assert.match(moduleCss, /\.productOverlay::-webkit-scrollbar,\s*\.productLayout::-webkit-scrollbar\s*\{[\s\S]*?width:\s*0;[\s\S]*?display:\s*none;/);
 });
 
 test("client food search final CSS keeps diary swipe shell sizing in latest owner", async () => {
+  const owner = await readText("src/styles/client-food-search-diary-rows-cards.css");
   const source = await readCssWithImports("src/styles/client-food-search.css");
-  const renderControlsStart = source.indexOf("/* Food search render controls v153 */");
-  const diaryRowsStart = source.indexOf("/* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */");
-  const finalDocksStart = source.indexOf("/* v171: polish nutrition fixed docks, inner scrollbars and safe bottom masking. */", diaryRowsStart);
-  const earlyBlock = source.slice(0, renderControlsStart);
-  const diaryRowsBlock = source.slice(diaryRowsStart, finalDocksStart);
 
-  assert.ok(renderControlsStart >= 0);
-  assert.ok(diaryRowsStart > renderControlsStart);
-  assert.ok(finalDocksStart > diaryRowsStart);
-  assert.doesNotMatch(earlyBlock, /\.nutritionZoukSwipeShell\s*\{[^{}]*?min-height:\s*58px !important;/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionZoukSwipeShell\s*\{[^{}]*?border-radius:\s*17px !important;/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionZoukSwipeShell \+ \.nutritionZoukSwipeShell\s*\{[^{}]*?border-top:\s*0 !important;/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionZoukSwipeShell \.productDeleteBg\s*\{[^{}]*?border-radius:\s*17px !important;/);
-  assert.match(diaryRowsBlock, /\.nutritionZoukSwipeShell\s*\{[^{}]*?min-height:\s*64px !important;[^{}]*?border-radius:\s*18px !important;/);
-  assert.match(diaryRowsBlock, /\.nutritionZoukSwipeShell \+ \.nutritionZoukSwipeShell\s*\{[^{}]*?border-top:\s*1px solid rgba\(224,\s*229,\s*243,\s*0\.92\) !important;/);
-  assert.match(diaryRowsBlock, /\.nutritionZoukSwipeShell \.productDeleteBg\s*\{[^{}]*?border-radius:\s*18px !important;/);
+  assert.match(owner, /\.nutritionZoukSwipeShell\s*\{[^{}]*?min-height:\s*64px !important;[^{}]*?border-radius:\s*18px !important;/);
+  assert.match(owner, /\.nutritionZoukSwipeShell \+ \.nutritionZoukSwipeShell\s*\{[^{}]*?border-top:\s*1px solid rgba\(224,\s*229,\s*243,\s*0\.92\) !important;/);
+  assert.doesNotMatch(owner, /productDeleteBg/);
+  assert.doesNotMatch(source, /\.nutritionZoukSwipeShell\s*\{[^{}]*?min-height:\s*58px !important;/);
+  assert.doesNotMatch(source, /\.nutritionZoukSwipeShell\s*\{[^{}]*?border-radius:\s*17px !important;/);
+  assert.doesNotMatch(source, /\.nutritionZoukSwipeShell \+ \.nutritionZoukSwipeShell\s*\{[^{}]*?border-top:\s*0 !important;/);
+  assert.doesNotMatch(source, /productDeleteBg/);
 });
 
 test("nutrition orbit CSS keeps inline and modal meal shells grouped", async () => {
@@ -2252,27 +2552,6 @@ test("legacy food search CSS keeps quick actions hidden in root owners", async (
   );
 });
 
-test("legacy food picker CSS keeps empty-state text in the final owner", async () => {
-  const pickerBase = await readCssWithImports("src/styles/nutrition-food-picker-base.css");
-  const finalEmptyStateStart = pickerBase.indexOf("/* empty state */");
-  const oldEmptyStateBlock = pickerBase.slice(0, finalEmptyStateStart);
-  const finalEmptyStateBlock = pickerBase.slice(finalEmptyStateStart);
-
-  assert.ok(finalEmptyStateStart > 0);
-  assert.doesNotMatch(
-    oldEmptyStateBlock,
-    /\.fatSearchStatus strong\s*\{\s*display:\s*block;\s*margin-bottom:\s*8px;\s*color:\s*rgba\(244, 246, 242, 0\.88\);\s*font-size:\s*16px;\s*\}/
-  );
-  assert.doesNotMatch(
-    oldEmptyStateBlock,
-    /\.fatFallbackSuggestions\s*\{\s*width:\s*100%;\s*display:\s*flex;\s*flex-direction:\s*column;\s*gap:\s*9px;\s*margin-top:\s*14px;\s*\}/
-  );
-  assert.match(
-    finalEmptyStateBlock,
-    /\.fatSearchStatus strong\s*\{\s*display:\s*block;\s*margin-bottom:\s*8px;\s*color:\s*rgba\(244,246,242,0\.9\);\s*font-size:\s*16px;\s*font-weight:\s*900;\s*\}[\s\S]*?\.fatFallbackSuggestions\s*\{\s*width:\s*100%;\s*display:\s*flex;\s*flex-direction:\s*column;\s*gap:\s*9px;\s*margin-top:\s*13px;\s*\}/
-  );
-});
-
 test("nutrition food search actions CSS keeps one photo active transform owner", async () => {
   const source = await readCssWithImports("src/styles/nutrition-food-search-actions.css");
 
@@ -2281,19 +2560,19 @@ test("nutrition food search actions CSS keeps one photo active transform owner",
     1
   );
   assert.equal(
-    (source.match(/\.fatFoodSearchScreenPremium:has\(\.fatSearchBottomBarFive\)\s*\{\s*padding-bottom:/g) || []).length,
+    (source.match(/\.fatFoodSearchScreenPremium:not\(\[data-food-search-header-layout\]\):has\(\.fatSearchBottomBarFive\)\s*\{\s*padding-bottom:/g) || []).length,
     1
   );
   assert.doesNotMatch(source, /padding-bottom:\s*138px !important;/);
 });
 
-test("warm light food edit CSS keeps gold action shell grouped", async () => {
+test("warm light food search CSS keeps gold action shell grouped", async () => {
   const source = await readCssWithImports("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (
       source.match(
-        /\.fatFoodSearchScreenPremium \.fatSearchBottomBar button,\s*:root\[data-app-theme="warm-light"\] \.foodEditPageSave,\s*:root\[data-app-theme="warm-light"\] \.foodEditPageBack\s*\{\s*background:\s*linear-gradient\(180deg,\s*#f4e064 0%,\s*#e0c94d 100%\) !important;[\s\S]*?box-shadow:\s*0 12px 28px rgba\(151,119,35,0\.16\),\s*inset 0 1px 0 rgba\(255,255,255,0\.38\) !important;[\s\S]*?-webkit-text-fill-color:\s*#5f5744 !important;\s*\}/g
+        /\.fatFoodSearchScreenPremium \.fatSearchBottomBar button\s*\{\s*background:\s*linear-gradient\(180deg,\s*#f4e064 0%,\s*#e0c94d 100%\) !important;[\s\S]*?box-shadow:\s*0 12px 28px rgba\(151,119,35,0\.16\),\s*inset 0 1px 0 rgba\(255,255,255,0\.38\) !important;[\s\S]*?-webkit-text-fill-color:\s*#5f5744 !important;\s*\}/g
       ) || []
     ).length,
     1
@@ -2325,47 +2604,30 @@ test("warm light food edit CSS keeps search surface shells grouped", async () =>
   );
 });
 
-test("warm light food edit CSS keeps edit label shells grouped", async () => {
+test("warm light food edit CSS keeps only the live segment control shell", async () => {
   const source = await readCssWithImports("src/styles/warm-light-food-edit-back-buttons.css");
 
   assert.equal(
     (
       source.match(
-        /\.foodEditPageContent label,\s*:root\[data-app-theme="warm-light"\] \.foodEditPageGrid label\s*\{\s*background:\s*linear-gradient\(180deg, rgba\(255, 249, 215, 0\.96\) 0%, rgba\(246, 232, 174, 0\.86\) 100%\) !important;\s*border:\s*1px solid rgba\(94, 75, 30, 0\.10\) !important;\s*box-shadow:\s*0 10px 24px rgba\(88, 68, 24, 0\.08\) !important;\s*\}/g
+        /\.foodEditSegmentRow button\s*\{\s*background:\s*linear-gradient\(180deg, rgba\(255,249,215,0\.96\) 0%, rgba\(246,232,174,0\.82\) 100%\) !important;\s*border:\s*1px solid rgba\(94,75,30,0\.10\) !important;\s*box-shadow:\s*0 10px 24px rgba\(88,68,24,0\.10\) !important;\s*\}/g
       ) || []
     ).length,
     1
   );
   assert.doesNotMatch(
     source,
-    /\.foodEditPageContent label\s*\{[\s\S]*?\.foodEditPageGrid label\s*\{\s*background:/
+    /foodEdit(?:AmountCard|MacrosCards|CaloriesMacroCard|RowsCard|RowIcon|RowLabel)/
   );
 });
 
-test("warm light food edit CSS keeps form control shells grouped", async () => {
-  const source = await readCssWithImports("src/styles/warm-light-food-edit-back-buttons.css");
-
-  assert.equal(
-    (
-      source.match(
-        /\.foodEditSegmentRow button,\s*:root\[data-app-theme="warm-light"\] \.foodEditMacrosCards > div,\s*:root\[data-app-theme="warm-light"\] \.foodEditCaloriesMacroCard\s*\{\s*background:\s*linear-gradient\(180deg, rgba\(255,249,215,0\.96\) 0%, rgba\(246,232,174,0\.82\) 100%\) !important;\s*border:\s*1px solid rgba\(94,75,30,0\.10\) !important;\s*box-shadow:\s*0 10px 24px rgba\(88,68,24,0\.10\) !important;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (source.match(/linear-gradient\(180deg, rgba\(255,249,215,0\.96\) 0%, rgba\(246,232,174,0\.82\) 100%\) !important;\s*border:\s*1px solid rgba\(94,75,30,0\.10\) !important;\s*box-shadow:\s*0 10px 24px rgba\(88,68,24,0\.10\) !important;/g) || []).length,
-    1
-  );
-});
-
-test("warm light add food CSS keeps profile action shells grouped", async () => {
+test("warm light add food CSS keeps the remaining refresh action shell grouped", async () => {
   const source = await readText("src/styles/warm-light-add-food-search.css");
 
   assert.equal(
     (
       source.match(
-        /:root\[data-app-theme="warm-light"\] \.menuRefreshIconBtn,\s*:root\[data-app-theme="warm-light"\] \.profileThemeSwitchBtn\s*\{\s*background:\s*linear-gradient\(180deg, rgba\(255, 249, 215, 0\.96\) 0%, rgba\(246, 232, 174, 0\.82\) 100%\) !important;\s*color:\s*#5f5744 !important;\s*border-color:\s*rgba\(94,75,30,0\.12\) !important;\s*box-shadow:\s*0 12px 28px rgba\(88,68,24,0\.12\) !important;\s*\}/g
+        /:root\[data-app-theme="warm-light"\] \.menuRefreshIconBtn\s*\{\s*background:\s*linear-gradient\(180deg, rgba\(255, 249, 215, 0\.96\) 0%, rgba\(246, 232, 174, 0\.82\) 100%\) !important;\s*color:\s*#5f5744 !important;\s*border-color:\s*rgba\(94,75,30,0\.12\) !important;\s*box-shadow:\s*0 12px 28px rgba\(88,68,24,0\.12\) !important;\s*\}/g
       ) || []
     ).length,
     1
@@ -2374,13 +2636,14 @@ test("warm light add food CSS keeps profile action shells grouped", async () => 
     (source.match(/box-shadow:\s*0 12px 28px rgba\(88,68,24,0\.12\) !important;/g) || []).length,
     1
   );
+  assert.doesNotMatch(source, /profileThemeSwitchBtn/);
 });
 
-test("legacy food editor CSS keeps details and unit focus state grouped", async () => {
+test("legacy food editor CSS keeps the remaining details focus states grouped", async () => {
   const source = await readCssWithImports("src/styles/nutrition-food-editor.css");
 
   assert.equal(
-    (source.match(/\.foodEditDetailsPanel input:focus,\s*\.foodEditDetailsPanel textarea:focus,\s*\.foodEditPortionUnitRow select:focus\s*\{\s*border-color:\s*rgba\(38,255,116,0\.42\) !important;\s*box-shadow:\s*0 0 0 3px rgba\(38,255,116,0\.055\) !important;\s*\}/g) || []).length,
+    (source.match(/\.foodEditDetailsPanel input:focus,\s*\.foodEditDetailsPanel textarea:focus\s*\{\s*border-color:\s*rgba\(38,255,116,0\.42\) !important;\s*box-shadow:\s*0 0 0 3px rgba\(38,255,116,0\.055\) !important;\s*\}/g) || []).length,
     1
   );
   assert.equal(
@@ -2393,107 +2656,10 @@ test("nutrition food search actions CSS keeps action active colors grouped", asy
   const source = await readCssWithImports("src/styles/nutrition-food-search-actions.css");
 
   assert.equal(
-    (source.match(/\.fatSearchBottomBarFive > button:not\(\.fatSearchPhotoAction\):active,\s*\.foodProductActionBar button:active:not\(:disabled\)\s*\{\s*background:\s*rgba\(143,\s*188,\s*54,\s*0\.055\) !important;\s*color:\s*#aee94d !important;\s*-webkit-text-fill-color:\s*#aee94d !important;\s*\}/g) || []).length,
+    (source.match(/\.fatSearchBottomBarFive > button:not\(\.fatSearchPhotoAction\):active\s*\{\s*background:\s*rgba\(143,\s*188,\s*54,\s*0\.055\) !important;\s*color:\s*#aee94d !important;\s*-webkit-text-fill-color:\s*#aee94d !important;\s*\}/g) || []).length,
     1
   );
   assert.equal((source.match(/background:\s*rgba\(143,\s*188,\s*54,\s*0\.055\) !important;/g) || []).length, 1);
-});
-
-test("nutrition AI plan CSS keeps narrow score sizing in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/nutrition-ai-plan-lazy.css");
-  const compactStart = source.indexOf("compact premium tuning 2026-05-20");
-  const finalNarrowStart = source.indexOf("@media (max-width: 390px)", compactStart);
-  const twoStateStart = source.indexOf("two-state collapsed/expanded behavior", finalNarrowStart);
-  const finalNarrowBlock = source.slice(finalNarrowStart, twoStateStart);
-
-  assert.ok(compactStart >= 0);
-  assert.ok(finalNarrowStart > compactStart);
-  assert.ok(twoStateStart > finalNarrowStart);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanScore\s*\{\s*width:\s*110px;\s*height:\s*110px;\s*\}/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanGrid\s*\{\s*gap:\s*3px;\s*\}/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanGrid span\s*\{\s*aspect-ratio:\s*1 \/ 1;/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanGrid span\.active\s*\{\s*background:\s*linear-gradient/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanScore\s*\{[\s\S]*?width:\s*118px;/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanScore::after\s*\{[\s\S]*?inset:\s*8px;/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanMacros div\s*\{[\s\S]*?min-height:\s*66px;/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanRskInfo\s*\{[^}]*?gap:\s*8px;/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanRskInfo strong\s*\{[^}]*?font-size:\s*18px;/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanRskFoot\s*\{[^}]*?padding-top:\s*8px;/);
-  assert.doesNotMatch(source.slice(0, compactStart), /\.nutritionAiPlanScoreBlock\s*\{[^}]*?gap:\s*7px;/);
-  assert.match(
-    finalNarrowBlock,
-    /\.nutritionAiPlanScore\s*\{\s*width:\s*118px !important;\s*height:\s*118px !important;\s*\}/
-  );
-  assert.match(
-    source,
-    /compact premium tuning 2026-05-20[\s\S]*?\.nutritionAiPlanGrid span\s*\{[\s\S]*?width:\s*9px !important;[\s\S]*?aspect-ratio:\s*auto !important;[\s\S]*?\.nutritionAiPlanGrid span\.active\s*\{[\s\S]*?box-shadow:\s*0 0 10px rgba\(127,\s*159,\s*58,\s*0\.18\) !important;[\s\S]*?\.nutritionAiPlanRskInfo\s*\{[\s\S]*?gap:\s*8px !important;[\s\S]*?\.nutritionAiPlanRskInfo strong\s*\{[\s\S]*?font-size:\s*19px !important;[\s\S]*?\.nutritionAiPlanRskFoot\s*\{[\s\S]*?padding-top:\s*7px !important;[\s\S]*?\.nutritionAiPlanScoreBlock\s*\{[\s\S]*?gap:\s*8px !important;[\s\S]*?\.nutritionAiPlanScoreBlock > span\s*\{[\s\S]*?color:\s*rgba\(245,\s*247,\s*251,\s*0\.48\) !important;[\s\S]*?\.nutritionAiPlanScore\s*\{[\s\S]*?width:\s*124px !important;[\s\S]*?\.nutritionAiPlanMacros div\s*\{[\s\S]*?min-height:\s*56px !important;/
-  );
-});
-
-test("nutrition AI plan CSS keeps badge and conclusion colors in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/nutrition-ai-plan-lazy.css");
-  const colorStart = source.indexOf("AI PLAN COLORS MATCH MEAL CARDS");
-  const app43Start = source.indexOf("APP43 TARGETED UPDATE", colorStart);
-  const earlyBlock = source.slice(0, colorStart);
-  const colorBlock = source.slice(colorStart, app43Start);
-
-  assert.ok(colorStart >= 0);
-  assert.ok(app43Start > colorStart);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanConclusion\s*\{[^}]*?background:\s*rgba\(127,\s*159,\s*58,\s*0\.075\);/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanBadges span\.good\s*\{[^}]*?background:\s*rgba\(127,\s*159,\s*58,\s*0\.1\);/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanBadges span\.warning,[\s\S]*?\.nutritionAiPlanBadges span\.warn\s*\{[^}]*?background:\s*rgba\(255,\s*191,\s*115,\s*0\.09\);/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanMacroPercent span,[\s\S]*?\.nutritionAiPlanBadges span\s*\{[^}]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.045\);/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanCollapsedTop > div\s*\{[^}]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.035\);/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanCollapsedTop > div\.score\s*\{[^}]*?background:\s*rgba\(127,\s*159,\s*58,\s*0\.08\);/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanCollapsedMacros span\s*\{[^}]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.04\);/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanToggleBtn\s*\{[^}]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.035\);/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanToggleBtn\s*\{[^}]*?color:\s*rgba\(255,\s*255,\s*255,\s*0\.56\);/);
-  assert.doesNotMatch(earlyBlock, /\.nutritionAiPlanCollapsedCard\s*\{[^}]*?background:\s*rgba\(3,\s*10,\s*16,\s*0\.24\);/);
-  assert.match(
-    colorBlock,
-    /\.nutritionAiPlanConclusion\s*\{[\s\S]*?background:\s*[\s\S]*?linear-gradient\(180deg,\s*rgba\(9,\s*20,\s*26,\s*0\.72\),\s*rgba\(5,\s*14,\s*18,\s*0\.78\)\) !important;[\s\S]*?border-color:\s*rgba\(255,\s*255,\s*255,\s*0\.06\) !important;/
-  );
-  assert.match(
-    colorBlock,
-    /\.nutritionAiPlanBadges span\s*\{[\s\S]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.04\) !important;[\s\S]*?border-color:\s*rgba\(255,\s*255,\s*255,\s*0\.055\) !important;/
-  );
-  assert.match(
-    colorBlock,
-    /\.nutritionAiPlanCollapsedTop > div,[\s\S]*?\.nutritionAiPlanCollapsedMacros span,[\s\S]*?\.nutritionAiPlanMacroPercent span,[\s\S]*?\.nutritionAiPlanBadges span\s*\{[\s\S]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.04\) !important;[\s\S]*?border-color:\s*rgba\(255,\s*255,\s*255,\s*0\.055\) !important;/
-  );
-  assert.match(
-    colorBlock,
-    /\.nutritionAiPlanCollapsedTop > div\.score\s*\{[\s\S]*?background:\s*rgba\(127,\s*159,\s*58,\s*0\.10\) !important;[\s\S]*?border-color:\s*rgba\(127,\s*159,\s*58,\s*0\.18\) !important;/
-  );
-  assert.match(
-    colorBlock,
-    /\.nutritionAiPlanCollapsedCard,[\s\S]*?\.nutritionAiPlanConclusion\s*\{[\s\S]*?background:\s*[\s\S]*?linear-gradient\(180deg,\s*rgba\(9,\s*20,\s*26,\s*0\.72\),\s*rgba\(5,\s*14,\s*18,\s*0\.78\)\) !important;/
-  );
-  assert.match(
-    colorBlock,
-    /\.nutritionAiPlanToggleBtn\s*\{[\s\S]*?background:\s*rgba\(255,\s*255,\s*255,\s*0\.045\) !important;[\s\S]*?color:\s*rgba\(255,\s*255,\s*255,\s*0\.58\) !important;/
-  );
-});
-
-test("nutrition AI plan CSS keeps muted span typography grouped", async () => {
-  const source = await readCssWithImports("src/styles/nutrition-ai-plan-lazy.css");
-
-  assert.equal(
-    (
-      source.match(
-        /\.nutritionAiPlanRskInfo span,\s*\.nutritionAiPlanRskFoot span,\s*\.nutritionAiPlanMacros span,\s*\.nutritionAiPlanMacros small,\s*\.nutritionAiPlanMacroPercent span,\s*\.nutritionAiPlanCollapsedTop span,\s*\.nutritionAiPlanCollapsedMacros span\s*\{\s*color:\s*rgba\(255,\s*255,\s*255,\s*0\.42\);\s*font-size:\s*10px;\s*font-weight:\s*950;\s*white-space:\s*nowrap;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /color:\s*rgba\(255,\s*255,\s*255,\s*0\.42\);\s*font-size:\s*10px;\s*font-weight:\s*950;\s*white-space:\s*nowrap;/g
-      ) || []
-    ).length,
-    1
-  );
 });
 
 test("legacy food search calories CSS keeps early mobile column shift out of the old owner", async () => {
@@ -2649,14 +2815,6 @@ test("legacy food editor CSS keeps summary dot sizes in root owners", async () =
   assert.doesNotMatch(source, /\.foodEditBottomActions\s*\{\s*width:calc\(100% - 34px\)!important;/);
   assert.doesNotMatch(source, /\.foodEditDeleteButton,\s*\.foodEditSaveRender\s*\{\s*min-height:60px!important;/);
   assert.doesNotMatch(source, /\.foodEditDeleteButton span:last-child\s*\{\s*font-size:18px!important;/);
-  assert.equal(
-    (source.match(/\.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) > \.fatSearchTopPremium/g) || []).length,
-    1
-  );
-  assert.match(
-    source,
-    /FINAL HARD BACK DEDUPLICATION[\s\S]*?\.fatFoodSearchScreenPremium:has\(\.foodEditRenderScreen\) > \.fatSearchTopPremium,[\s\S]*?display:\s*none !important;[\s\S]*?pointer-events:\s*none !important;/
-  );
   assert.doesNotMatch(source, /\.fatSecretPage:has\(\.foodEditRenderScreen\)[\s\S]*?\.nutritionBackTopLeftV3/);
   assert.match(
     source,
@@ -2664,42 +2822,116 @@ test("legacy food editor CSS keeps summary dot sizes in root owners", async () =
   );
 });
 
-test("legacy food editor CSS keeps warm-light ingredient surfaces grouped", async () => {
-  const source = await readCssWithImports("src/styles/nutrition-food-editor-workout-close.css");
+test("food edit page owns a colocated CSS module without legacy page selectors", async () => {
+  const component = await readText("src/features/client/nutrition/FoodEditPage.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/FoodEditPage.module.css");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const oldSelectors = /\.foodEditPage[\w-]*/;
 
-  assert.equal(
-    (source.match(/\.dishIngredientPickerSheet,\s*:root\[data-app-theme="warm-light"\] \.dishIngredientConfirmCard\s*\{\s*border-color:\s*rgba\(94,75,30,0\.12\) !important;\s*background:\s*radial-gradient\(circle at 50% 0%, rgba\(244,224,100,0\.38\), transparent 62%\),\s*linear-gradient\(180deg, rgba\(255,249,198,0\.98\), rgba\(247,232,151,0\.99\)\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/radial-gradient\(circle at 50% 0%, rgba\(244,224,100,0\.38\), transparent 62%\),\s*linear-gradient\(180deg, rgba\(255,249,198,0\.98\), rgba\(247,232,151,0\.99\)\) !important;/g) || []).length,
-    1
-  );
+  assert.match(component, /import styles from "\.\/FoodEditPage\.module\.css";/);
+  assert.match(component, /data-css-module-scope="food-edit-page"/);
+  assert.match(component, /data-testid="food-edit-page"/);
+  assert.match(component, /data-food-edit-page-part="content"/);
+  assert.match(component, /data-food-edit-page-part="actions"/);
+  assert.match(component, /data-food-edit-page-action="close"/);
+  assert.match(component, /data-food-edit-page-action="confirm"/);
+  assert.doesNotMatch(component, oldSelectors);
+  assert.doesNotMatch(harness, oldSelectors);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.sheet\s*\{[\s\S]*?width:\s*min\(390px, calc\(100vw - 28px\)\);[\s\S]*?max-height:\s*min\(720px, calc\(100dvh - 42px\)\);/);
+  assert.match(moduleCss, /\.actionBar\s*\{[\s\S]*?position:\s*absolute;[\s\S]*?height:\s*78px;[\s\S]*?grid-template-columns:\s*0\.88fr 2\.12fr;/);
+  assert.match(moduleCss, /@media \(max-width:\s*640px\)[\s\S]*?grid-template-rows:\s*156px minmax\(0, 1fr\);/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="dark-green"\]\) \.sheet\s*\{[\s\S]*?width:\s*min\(520px, calc\(100vw - 16px\)\);[\s\S]*?height:\s*100dvh;/);
+  assert.doesNotMatch(legacyCss, oldSelectors);
 });
 
-test("legacy food product summary CSS keeps product info in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/nutrition-food-products-summary.css");
+test("food product page owns a colocated CSS module without legacy product selectors", async () => {
+  const component = await readText("src/features/client/nutrition/FoodProductPage.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/FoodProductPage.module.css");
+  const actionBar = await readText("src/features/client/nutrition/FoodProductActionBar.jsx");
+  const harness = await readText("src/components/client/ClientE2EHarness.jsx");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const oldSelectors = /\.(?:foodProductRenderScreen|foodEditRenderScreen|fatFoodAmountScreen|foodProductActionBar)(?![\w-])/;
 
-  assert.doesNotMatch(
-    source,
-    /\.productFoodIconWrap\s*\{\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*gap:\s*4px !important;\s*width:\s*62px !important;\s*\}/
-  );
-  assert.match(
-    source,
-    /\.productFoodIconWrap\s*\{\s*width:\s*70px !important;\s*min-width:\s*70px !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*gap:\s*4px !important;\s*align-self:\s*center !important;\s*\}/
-  );
-  assert.doesNotMatch(
-    source,
-    /\.productInfoExact\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*justify-content:\s*center !important;\s*padding-left:\s*4px !important;\s*\}/
-  );
-  assert.doesNotMatch(
-    source,
-    /\.productInfoExact strong\s*\{\s*text-align:\s*left !important;\s*overflow:\s*hidden !important;\s*text-overflow:\s*ellipsis !important;\s*white-space:\s*nowrap !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.productInfoExact\s*\{\s*min-width:\s*0 !important;\s*padding-left:\s*4px !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*flex-start !important;\s*justify-content:\s*center !important;\s*text-align:\s*left !important;\s*\}/g) || []).length,
-    1
-  );
+  assert.match(component, /import styles from "\.\/FoodProductPage\.module\.css";/);
+  assert.match(component, /data-css-module-scope="food-product-page"/);
+  assert.match(component, /data-testid="food-product-page"/);
+  assert.match(actionBar, /data-testid="food-product-action-bar"/);
+  assert.doesNotMatch(component, oldSelectors);
+  assert.doesNotMatch(actionBar, oldSelectors);
+  assert.doesNotMatch(harness, oldSelectors);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?min-height:\s*920px;[\s\S]*?padding:\s*55px 15px calc\(112px \+ env\(safe-area-inset-bottom, 0px\)\);[\s\S]*?background:\s*var\(--gradient-food-product-page\);/);
+  assert.match(moduleCss, /@media \(max-width:\s*640px\)[\s\S]*?overflow-y:\s*auto;/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="dark-green"\]\) \.root\s*\{[\s\S]*?max-width:\s*420px;[\s\S]*?display:\s*grid;[\s\S]*?gap:\s*12px;/);
+  assert.doesNotMatch(legacyCss, oldSelectors);
+  assert.equal(await pathExists("src/styles/client-food-search-product-compact.css"), false);
+  assert.equal(await pathExists("src/styles/client-food-search-product-render-action-bar.css"), false);
+  assert.equal(await pathExists("src/styles/client-food-search-product-render-shell.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-food-search-actions-product-bar.css"), false);
+  assert.equal(await pathExists("src/styles/client-primary-final-rhythm-geometry-food-product-v427.css"), false);
+});
+
+test("food edit basic fields own a scoped CSS module without legacy selectors", async () => {
+  const component = await readText("src/features/client/nutrition/FoodEditBasicFields.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/FoodEditBasicFields.module.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const oldSelectors = /\.(?:foodEditIconManualBox|foodEditIconPreviewManual|foodEditIconPresetRow|foodEditPageGrid|foodEditPortionLabel|foodEditPortionUnitRow|foodEditPortionInlineUnit|foodEditPortionUnitToggle|nutritionProductValidation)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/FoodEditBasicFields\.module\.css";/);
+  assert.match(component, /data-css-module-scope="food-edit-basic-fields"/);
+  assert.match(component, /data-testid="food-edit-basic-name"/);
+  assert.match(component, /data-testid="food-edit-basic-icon"/);
+  assert.match(component, /data-testid="food-edit-basic-macros"/);
+  assert.match(component, /data-testid="food-edit-basic-portion"/);
+  assert.match(component, /data-food-edit-basic-action="toggle-unit"/);
+  assert.doesNotMatch(component, oldSelectors);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{\s*display:\s*contents;/);
+  assert.match(moduleCss, /\.macroGrid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="dark-green"\]\) \.presetRow\s*\{[\s\S]*?display:\s*flex;/);
+  assert.match(moduleCss, /@media \(min-width:\s*760px\)[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/);
+  assert.doesNotMatch(legacyCss, /input:not\(\[data-css-module-control="dish-ingredient-picker"\]\):not\(\[data-css-module-control="food-edit-basic-fields"\]\)/);
+  assert.doesNotMatch(legacyCss, oldSelectors);
+});
+
+test("dish ingredient picker owns a scoped CSS module without legacy selectors", async () => {
+  const component = await readText("src/features/client/nutrition/DishIngredientPicker.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/DishIngredientPicker.module.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const oldSelectors = /\.dishIngredient(?:Picker|Search|Result|Manual|Empty|Confirm)[\w-]*/;
+
+  assert.match(component, /import styles from "\.\/DishIngredientPicker\.module\.css";/);
+  assert.match(component, /data-css-module-scope="dish-ingredient-picker"/);
+  assert.match(component, /data-testid="dish-ingredient-picker-sheet"/);
+  assert.match(component, /data-testid="dish-ingredient-confirm-card"/);
+  assert.match(component, /data-dish-ingredient-result-kind="catalog"/);
+  assert.match(component, /data-dish-ingredient-action="add"/);
+  assert.doesNotMatch(component, oldSelectors);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.pickerOverlay\s*\{[\s\S]*?z-index:\s*2147483602;[\s\S]*?padding:\s*max\(14px,/);
+  assert.match(moduleCss, /\.pickerSheet,[\s\S]*?width:\s*min\(390px, calc\(100vw - 24px\)\);[\s\S]*?border-radius:\s*24px;/);
+  assert.match(moduleCss, /\.resultCard\s*\{[\s\S]*?min-height:\s*72px;[\s\S]*?grid-template-columns:\s*46px minmax\(0, 1fr\) 28px;/);
+  assert.match(moduleCss, /@media \(min-width:\s*760px\)[\s\S]*?\.confirmInputWrap\s*\{\s*height:\s*64px;/);
+  assert.match(moduleCss, /@media \(max-width:\s*390px\)[\s\S]*?grid-template-columns:\s*42px minmax\(0, 1fr\) 24px;/);
+  assert.doesNotMatch(legacyCss, oldSelectors);
+  assert.equal(await pathExists("src/styles/nutrition-food-editor-workout-close-ingredient-picker.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-food-editor-workout-close-ingredient-confirm.css"), false);
+});
+
+test("legacy food product summary CSS no longer owns migrated meal modal rows", async () => {
+  const source = await readCssWithImports("src/styles/nutrition-food-products-summary.css");
+  const migratedSelectors = /\.(?:productFoodIconWrap|productFoodIcon|productFoodCaloriesUnder|productInfoExact|productRowExact|productArrowExact)(?![\w-])/;
+
+  assert.doesNotMatch(source, migratedSelectors);
+  assert.equal(await pathExists("src/styles/nutrition-food-products-summary-products-base.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-food-products-summary-icon-tuning.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-food-products-summary-text-tuning.css"), false);
 });
 
 test("admin CRM CSS keeps client card grid breakpoints in the latest owner", async () => {
@@ -2733,35 +2965,169 @@ test("admin history CSS keeps checkbox visuals in the final visible owner", asyn
   );
 });
 
-test("nutrition calendar CSS keeps final size and label color locks in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-history-ai-search.css");
-  const premiumCalendarStart = source.indexOf("/* PREMIUM NUTRITION CALENDAR */");
-  const premiumCalendarEnd = source.indexOf("@media (max-width: 380px)", premiumCalendarStart);
-  const premiumCalendarBlock = source.slice(premiumCalendarStart, premiumCalendarEnd);
-  const earlyNarrowStart = source.indexOf("@media (max-width: 380px)", premiumCalendarStart);
-  const alignmentStart = source.indexOf("/* CALENDAR ALIGNMENT TUNING */", earlyNarrowStart);
-  const earlyNarrowBlock = source.slice(earlyNarrowStart, alignmentStart);
+test("nutrition page shell and bottom navigation own their styles in colocated CSS Modules", async () => {
+  const page = await readText("src/features/client/nutrition/NutritionPage.jsx");
+  const view = await readText("src/features/client/nutrition/NutritionPageView.jsx");
+  const scrollEffect = await readText("src/features/client/nutrition/useNutritionPageScrollEffect.js");
+  const pageCss = await readText("src/features/client/nutrition/NutritionPage.module.css");
+  const bottomBar = await readText("src/shared/ui/BottomBar.jsx");
+  const bottomBarCss = await readText("src/shared/ui/BottomBar.module.css");
+  const sourceFiles = await collectFiles("src", [".js", ".jsx"]);
+  const source = (await Promise.all(sourceFiles.map(readText))).join("\n");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
 
-  assert.doesNotMatch(
-    source,
-    /\.nutritionCalendarDay small\s*\{[\s\S]*?color:\s*rgba\(184,\s*215,\s*108,\s*0\.92\) !important;/
-  );
-  assert.doesNotMatch(
-    premiumCalendarBlock,
-    /\.nutritionCalendarFooter button\s*\{[\s\S]*?min-height:\s*48px !important;[\s\S]*?border-radius:\s*18px !important;[\s\S]*?font-size:\s*14px !important;/
-  );
-  assert.doesNotMatch(
-    earlyNarrowBlock,
-    /\.nutritionCalendarGrid\s*\{\s*gap:\s*5px !important;\s*\}/
-  );
-  assert.doesNotMatch(
-    earlyNarrowBlock,
-    /\.nutritionCalendarDay strong\s*\{\s*font-size:\s*14px !important;\s*\}/
-  );
-  assert.match(
-    source,
-    /\/\* CALENDAR COMPACT PREMIUM TUNING \*\/[\s\S]*?\.nutritionCalendarGrid\s*\{\s*gap:\s*5px !important;\s*\}[\s\S]*?\.nutritionCalendarDay strong\s*\{\s*font-size:\s*14px !important;\s*\}[\s\S]*?\/\* CALENDAR FINAL TUNING \*\/[\s\S]*?\.nutritionCalendarDay small\s*\{\s*color:\s*rgba\(184,\s*215,\s*108,\s*0\.39\) !important;\s*\}[\s\S]*?\.nutritionCalendarFooter button\s*\{\s*min-height:\s*48px !important;\s*border-radius:\s*18px !important;\s*font-size:\s*14px !important;\s*\}/
-  );
+  assert.match(page, /import styles from "\.\/NutritionPage\.module\.css";/);
+  assert.match(page, /className=\{styles\.root\}/);
+  assert.match(page, /data-css-module-scope="nutrition-page"/);
+  assert.match(page, /data-testid="nutrition-page"/);
+  assert.doesNotMatch(page, /fatSecretPage|nutritionFixedHeaderV3|clientCorePageNutrition/);
+  assert.match(scrollEffect, /\[data-testid="nutrition-page"\]/);
+  assert.doesNotMatch(scrollEffect, /fatSecretPage|nutritionFixedHeaderV3|clientCorePageNutrition/);
+  assert.match(view, /variant:\s*"nutrition"/);
+  assert.doesNotMatch(view, /nutritionBottomTabBar/);
+
+  assert.match(bottomBar, /import styles from "\.\/BottomBar\.module\.css";/);
+  assert.match(bottomBar, /variant === "nutrition"/);
+  assert.match(bottomBar, /nutritionVariant\s*\?\s*styles\.nutrition/);
+  assert.match(bottomBar, /className=\{activeTab === "nutrition" \? styles\.active : ""\}/);
+  assert.match(bottomBar, /"nutrition-bottom-bar"/);
+  assert.doesNotMatch(source, /nutritionBottomTabBar/);
+
+  assert.doesNotMatch(pageCss, /!important/);
+  assert.match(pageCss, /\.root\s*\{[\s\S]*?position:\s*relative;[\s\S]*?overflow-y:\s*auto;/);
+  assert.match(pageCss, /@media \(max-width:\s*640px\)/);
+  assert.match(pageCss, /@media \(min-width:\s*1200px\)/);
+  assert.doesNotMatch(bottomBarCss, /!important/);
+  assert.match(bottomBarCss, /\.nutrition\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\);/);
+  assert.match(bottomBarCss, /@media \(max-width:\s*640px\)/);
+  assert.match(bottomBarCss, /stroke-width:\s*2\.4px;/);
+  assert.doesNotMatch(legacyCss, /nutritionBottomTabBar/);
+  assert.doesNotMatch(legacyCss, /clientBottomNav/);
+});
+
+test("nutrition calendar owns its live styles in a colocated CSS Module", async () => {
+  const component = await readText("src/features/client/nutrition/NutritionCalendarModal.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/NutritionCalendarModal.module.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldCalendarSelector = /nutritionCalendar(?:Overlay|Backdrop|Sheet|Grabber|Close|Header|Weekdays|Grid|Day|Footer)/;
+
+  assert.match(component, /import styles from "\.\/NutritionCalendarModal\.module\.css";/);
+  assert.match(component, /data-css-module-scope="nutrition-calendar-modal"/);
+  assert.match(component, /data-nutrition-calendar-day=\{day\.key\}/);
+  assert.match(component, /day\.isSelected \? styles\.selected : ""/);
+  assert.match(moduleCss, /\.overlay\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?z-index:\s*16000;/);
+  assert.match(moduleCss, /@media \(max-width:\s*380px\)/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="dark-green"\]\) \.overlay/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.doesNotMatch(component, oldCalendarSelector);
+  assert.doesNotMatch(legacyCss, oldCalendarSelector);
+  assert.equal(await pathExists("src/styles/client-history-ai-search-calendar.css"), false);
+});
+
+test("nutrition orbit owns only its live scoped styles", async () => {
+  const component = await readText("src/features/client/nutrition/NutritionOrbit.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/NutritionOrbit.module.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldOrbitSelector = /\.(?:nutritionOrbitPreview|nutritionOrbitPreviewCard|nutritionOrbitStage|nutritionOrbitScene|nutritionOrbitProgressPath|nutritionOrbitAddHalo|nutritionOrbitAddCore|nutritionOrbitAddPlus|nutritionOrbitSvgLabel|nutritionOrbitSvgAmount|nutritionOrbitSvgTarget|nutritionOrbitSvgTitle|nutritionOrbitSvgSubtitle|nutritionOrbitHitButton|haloOuter|haloMiddle|haloInner)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/NutritionOrbit\.module\.css";/);
+  assert.match(component, /data-testid="nutrition-orbit"/);
+  assert.match(component, /data-css-module-scope="nutrition-orbit"/);
+  assert.match(component, /data-nutrition-orbit-progress=\{item\.id\}/);
+  assert.match(component, /data-testid="nutrition-orbit-add"/);
+  assert.doesNotMatch(component, /className=\{`[^`]*\$\{item\.id\}/);
+  assert.doesNotMatch(component, oldOrbitSelector);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.card\s*\{[\s\S]*?width:\s*min\(100%, 540px\);[\s\S]*?border-radius:\s*20px;/);
+  assert.match(moduleCss, /@media \(max-width:\s*640px\)/);
+  assert.match(moduleCss, /@media \(min-width:\s*700px\) and \(max-height:\s*820px\)/);
+  assert.match(moduleCss, /@media \(prefers-reduced-motion:\s*reduce\)/);
+  assert.doesNotMatch(legacyCss, oldOrbitSelector);
+  assert.doesNotMatch(legacyCss, /nutritionWaterInline/);
+});
+
+test("nutrition meal modal owns only its live scoped styles", async () => {
+  const component = await readText("src/features/client/nutrition/NutritionMealModal.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/NutritionMealModal.module.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldMealClass = /(?:nutritionMealModal(?:Overlay|Backdrop|Sheet|Header|Icon|List|Add)|product(?:SwipeShell|DeleteBg|RowExact|FoodIconWrap|FoodIcon|FoodCaloriesUnder|InfoExact|ArrowExact))(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/NutritionMealModal\.module\.css";/);
+  assert.match(component, /data-testid="nutrition-meal-modal"/);
+  assert.match(component, /data-css-module-scope="nutrition-meal-modal"/);
+  assert.match(component, /data-testid="nutrition-meal-food"/);
+  assert.match(component, /data-testid="nutrition-meal-add"/);
+  assert.match(component, /deletingFoodId === item\.id[\s\S]*?"translateX\(-120%\)"/);
+  assert.doesNotMatch(component, oldMealClass);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.overlay\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?z-index:\s*9997;/);
+  assert.match(moduleCss, /\.sheet\s*\{[\s\S]*?width:\s*min\(430px, 100%\);[\s\S]*?border-radius:\s*var\(--radius-xl\);/);
+  assert.match(moduleCss, /\.arrow\s*\{[\s\S]*?justify-self:\s*end;/);
+  assert.match(moduleCss, /@media \(max-width:\s*480px\)/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="warm-light"\]\) \.overlay/);
+  assert.doesNotMatch(legacyCss, oldMealClass);
+  assert.equal(await pathExists("src/styles/nutrition-ai-plan-shell-meal-surface-modal-shell-v245.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-ai-plan-shell-meal-surface-modal-content-v246.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-food-products-summary-icon-tuning.css"), false);
+});
+
+test("nutrition summary owns only its live scoped styles", async () => {
+  const component = await readText("src/features/client/nutrition/NutritionSummary.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/NutritionSummary.module.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldSummaryClass = /nutritionAiPlanTop(?:Inline|Card|Title)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/NutritionSummary\.module\.css";/);
+  assert.match(component, /data-testid="nutrition-summary"/);
+  assert.match(component, /data-css-module-scope="nutrition-summary"/);
+  assert.match(component, /data-state=\{isCaloriesOverGoal \? "over-limit" : "within-limit"\}/);
+  assert.match(component, /data-nutrition-summary-part="card"/);
+  assert.doesNotMatch(component, oldSummaryClass);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?max-width:\s*100%;[\s\S]*?border-radius:\s*18px;/);
+  assert.match(moduleCss, /\.card\s*\{[\s\S]*?min-height:\s*78px;[\s\S]*?grid-template-columns:\s*50px minmax\(0, 1fr\) 40px;/);
+  assert.match(moduleCss, /@media \(max-width:\s*520px\)/);
+  assert.match(moduleCss, /@media \(max-width:\s*390px\)/);
+  assert.doesNotMatch(legacyCss, oldSummaryClass);
+});
+
+test("nutrition plan details owns only its live scoped expanded styles", async () => {
+  const component = await readText("src/features/client/nutrition/NutritionPlanDetails.jsx");
+  const moduleCss = await readText("src/features/client/nutrition/NutritionPlanDetails.module.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(legacyFiles.map(readText))).join("\n");
+  const oldPlanClass = /nutritionAiPlan(?:ModalBackdrop|Dashboard|Modal|InlineHidden|Header|TitleBox|ToggleBtn|CollapsedCard|CollapsedHeading|CollapsedContent|CollapsedIcon|CollapsedInsight|CollapsedArrow|CollapsedTop|CollapsedMacros|Body|Rsk|Grid|RskRight|RskInfo|RskFoot|ScoreBlock|Score|MacroPercent|Macros|Conclusion|Badges)(?![\w-])|nutritionAiTrainingDayPill(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/NutritionPlanDetails\.module\.css";/);
+  assert.match(component, /if \(!isExpanded\)\s*\{\s*return null;\s*\}/);
+  assert.match(component, /data-testid="nutrition-plan-details"/);
+  assert.match(component, /data-testid="nutrition-plan-close"/);
+  assert.match(component, /data-testid="nutrition-plan-backdrop"/);
+  assert.match(component, /data-css-module-scope="nutrition-plan-details"/);
+  assert.match(component, /className=\{styles\.dialog\}[\s\S]*?role="dialog"[\s\S]*?aria-modal="true"/);
+  assert.match(component, /data-state=\{isCaloriesOverGoal \? "over-limit" : "within-limit"\}/);
+  assert.match(component, /data-nutrition-plan-part="pixel-grid"/);
+  assert.doesNotMatch(component, /summaryText|onExpand|nutritionAiPlanCollapsed/);
+  assert.doesNotMatch(component, oldPlanClass);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.dialog\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?pointer-events:\s*none;/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?position:\s*fixed;[\s\S]*?width:\s*min\(420px, calc\(100vw - 24px\)\);/);
+  assert.match(moduleCss, /\.calorieProgress\s*\{[\s\S]*?grid-template-columns:\s*72px minmax\(0, 1fr\);/);
+  assert.match(moduleCss, /\.score\s*\{[\s\S]*?width:\s*124px;[\s\S]*?height:\s*124px;/);
+  assert.match(moduleCss, /@media \(max-width:\s*390px\)/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="warm-light"\]\) \.root/);
+  assert.doesNotMatch(legacyCss, oldPlanClass);
+  assert.equal(await pathExists("src/styles/nutrition-ai-plan-lazy-collapsed.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-ai-plan-lazy-colors.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-ai-plan-lazy-compact.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-ai-plan-shell-collapsed-rhythm.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-ai-plan-shell-meal-surface-ai-modal-v243.css"), false);
+  assert.equal(await pathExists("src/styles/nutrition-orbit-calories-water-ai-inline-v234.css"), false);
 });
 
 test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old owners", async () => {
@@ -2912,15 +3278,15 @@ test("legacy nutrition late layout CSS keeps no-op mobile duplicates out of old 
   );
 });
 
-test("legacy nutrition late layout CSS keeps expanded product text grouped", async () => {
+test("legacy nutrition late layout CSS keeps remaining expanded food-item text grouped", async () => {
   const source = await readCssWithImports("src/styles/nutrition-layout.css");
 
   assert.equal(
-    (source.match(/\.productInfoExact strong,\s*\.fatSecretPage \.fatFoodItem strong,\s*\.fatFoodItem strong\s*\{\s*display:\s*block !important;\s*max-width:\s*100% !important;[\s\S]*?font-size:\s*17px !important;[\s\S]*?text-overflow:\s*ellipsis !important;\s*\}/g) || []).length,
+    (source.match(/\.fatSecretPage \.fatFoodItem strong,\s*\.fatFoodItem strong\s*\{\s*display:\s*block !important;\s*max-width:\s*100% !important;[\s\S]*?font-size:\s*17px !important;[\s\S]*?text-overflow:\s*ellipsis !important;\s*\}/g) || []).length,
     1
   );
   assert.equal(
-    (source.match(/\.productInfoExact span,\s*\.fatSecretPage \.fatFoodItem span,\s*\.fatFoodItem span\s*\{\s*display:\s*block !important;\s*margin-top:\s*6px !important;[\s\S]*?font-size:\s*17px !important;[\s\S]*?line-height:\s*1 !important;\s*\}/g) || []).length,
+    (source.match(/\.fatSecretPage \.fatFoodItem span,\s*\.fatFoodItem span\s*\{\s*display:\s*block !important;\s*margin-top:\s*6px !important;[\s\S]*?font-size:\s*17px !important;[\s\S]*?line-height:\s*1 !important;\s*\}/g) || []).length,
     1
   );
   assert.equal(
@@ -3403,19 +3769,6 @@ test("legacy admin program editor CSS keeps empty-state shells grouped", async (
   );
 });
 
-test("legacy month program editor CSS keeps workout badges in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/trainer-month-program-editor.css");
-
-  assert.doesNotMatch(
-    source,
-    /\.individualWorkoutBadges\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*justify-content:\s*flex-start !important;\s*align-items:\s*center !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.individualWorkoutBadges\s*\{\s*width:\s*100% !important;\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*flex-start !important;\s*\}/g) || []).length,
-    1
-  );
-});
-
 test("legacy admin client page CSS does not keep exact duplicate blocks", async () => {
   const source = await readCssWithImports("src/styles/admin-client-page.css");
   const seenBlocks = new Set();
@@ -3452,47 +3805,14 @@ test("legacy admin client page CSS keeps Telegram render sizing grouped", async 
   assert.deepEqual(standaloneBlocks, [".adminClientTelegramLogoRender, .adminClientTelegramAvatarRender"]);
 });
 
-test("profile dashboard CSS keeps AI stats compact sizing in the latest owner", async () => {
-  const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
-  const statsAlignmentStart = source.indexOf("/* STATS ALIGNMENT PERFECT */");
-  const compactStatsStart = source.indexOf("/* COMPACT STATS + AI TITLE */");
-  const oldStatsOwnerBlock = source.slice(0, statsAlignmentStart);
-  const oldStatsBlock = source.slice(statsAlignmentStart, compactStatsStart);
-  const compactStatsBlock = source.slice(compactStatsStart);
-
-  assert.ok(statsAlignmentStart > 0);
-  assert.ok(compactStatsStart > statsAlignmentStart);
-
-  assert.doesNotMatch(
-    oldStatsBlock,
-    /@media\s*\(max-width:\s*420px\)[\s\S]*?\.profileAiStatsRow > div\s*\{\s*height:\s*82px !important;/
-  );
-  assert.doesNotMatch(
-    oldStatsOwnerBlock,
-    /\.profileAiStatsRow span\s*\{\s*min-height:\s*14px !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*\}/
-  );
-  assert.doesNotMatch(
-    oldStatsOwnerBlock,
-    /\.profileAiStatsRow span\s*\{\s*min-height:\s*16px !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*font-size:\s*10px !important;\s*line-height:\s*1 !important;\s*\}/
-  );
-  assert.match(
-    oldStatsBlock,
-    /\.profileAiStatsRow span\s*\{\s*width:\s*100% !important;\s*min-height:\s*14px !important;\s*display:\s*flex !important;\s*align-items:\s*center !important;\s*justify-content:\s*center !important;[\s\S]*?font-size:\s*10px !important;[\s\S]*?margin-bottom:\s*8px !important;\s*\}/
-  );
-  assert.match(
-    compactStatsBlock,
-    /\.profileAiStatsRow > div\s*\{\s*height:\s*72px !important;\s*min-height:\s*72px !important;[\s\S]*?@media\s*\(max-width:\s*420px\)[\s\S]*?\.profileAiStatsRow > div\s*\{\s*height:\s*66px !important;\s*min-height:\s*66px !important;/
-  );
-});
-
 test("profile dashboard CSS keeps unified stats grid in the horizontal owner", async () => {
   const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
   const horizontalStatsStart = source.indexOf("/* HORIZONTAL PROFILE STATS */");
-  const goalSplitStart = source.indexOf("/* GOAL SPLIT: MAINTAIN VS RECOMP */");
-  const horizontalStatsBlock = source.slice(horizontalStatsStart, goalSplitStart);
+  const goalAlignStart = source.indexOf("/* GOAL CARD ALIGN FIX */");
+  const horizontalStatsBlock = source.slice(horizontalStatsStart, goalAlignStart);
 
   assert.ok(horizontalStatsStart > 0);
-  assert.ok(goalSplitStart > horizontalStatsStart);
+  assert.ok(goalAlignStart > horizontalStatsStart);
   assert.equal(
     (source.match(/\.profileUnifiedStats\s*\{\s*grid-template-columns:\s*repeat\(3,\s*1fr\) !important;\s*\}/g) || []).length,
     1
@@ -3507,180 +3827,90 @@ test("profile dashboard CSS keeps unified stats grid in the horizontal owner", a
   );
 });
 
-test("profile dashboard CSS keeps sex and goal active states grouped", async () => {
+test("profile dashboard CSS drops the retired nutrition goal picker", async () => {
   const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
 
-  assert.equal(
-    (
-      source.match(
-        /\.profileSexPicker button\.active,\s*\.profileGoalPicker button\.active\s*\{\s*border-color:\s*rgba\(127,159,58,\.32\);\s*background:\s*rgba\(127,159,58,\.15\);\s*color:\s*rgba\(235,250,195,\.96\);\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (source.match(/border-color:\s*rgba\(127,159,58,\.32\);\s*background:\s*rgba\(127,159,58,\.15\);\s*color:\s*rgba\(235,250,195,\.96\);/g) || []).length,
-    1
-  );
+  assert.doesNotMatch(source, /\.profileGoalPicker|\.profileGoalModeHint|\.profileMacroGrid/);
 });
 
-test("profile dashboard CSS keeps AI coach label typography grouped", async () => {
+test("profile progress insight owns only its live main-dashboard visual", async () => {
+  const component = await readText("src/features/client/profile/ProfileProgressInsightCard.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileProgressInsightCard.module.css");
+  const variables = await readText("src/styles/_variables.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const retiredSelectors = /\.(?:profileAiCoachInsight|profileProgressInsightCard|profileAiCoachToggle|profileAiCoachSummary|profileProgressGauge|profileProgressGaugeDial|profileAiCoachHeadline|profileAiCoachPreview|profileProgressInsightBadges|profileProgressInsightBadge|profileAiCoachExpanded|profileAiCoachStatusRow|insideProgress|profileAiCoachMetrics)(?![\w-])/;
+
+  assert.match(component, /import styles from "\.\/ProfileProgressInsightCard\.module\.css";/);
+  assert.match(component, /data-testid="profile-progress-card"/);
+  assert.match(component, /data-testid="profile-progress-gauge"/);
+  assert.match(component, /data-testid="profile-progress-badges"/);
+  assert.match(component, /styles\[progressInsight\.tone\] \|\| styles\.neutral/);
+  assert.match(component, /--progress-fill/);
+  assert.doesNotMatch(component, retiredSelectors);
+  assert.doesNotMatch(component, /isMainDashboard|expanded|onToggle|currentGoalId|totalWorkouts/);
+  assert.doesNotMatch(component, /<button|<i\s*\/>/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?display:\s*flex;[\s\S]*?padding:\s*15px 14px 14px;/);
+  assert.match(moduleCss, /\.badges\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\);/);
+  assert.match(moduleCss, /@media \(max-width:\s*640px\)[\s\S]*?height:\s*160px;[\s\S]*?grid-template-columns:\s*114px minmax\(0, 1fr\);/);
+  assert.match(moduleCss, /conic-gradient\([\s\S]*?var\(--progress-fill\)/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="dark-green"\]\) \.root\s*\{\s*border-radius:\s*15px;/);
+  assert.match(variables, /--color-profile-progress-border-positive:/);
+  assert.match(variables, /--background-profile-progress-mobile:/);
+  assert.doesNotMatch(legacyCss, retiredSelectors);
+});
+
+test("profile dashboard CSS keeps only live shared Telegram selectors", async () => {
   const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
 
-  assert.doesNotMatch(source, /\.profileAiCoachStatusRow\.insideProgress strong,\s*\.profileAiCoachStatusRow\.insideProgress small\s*\{[\s\S]*?text-overflow:\s*ellipsis !important;/);
-  assert.equal(
-    (
-      source.match(
-        /\.profileAiCoachInsight span,\s*\.profileAiCoachToggle span\s*\{\s*color:\s*rgba\(145,173,78,\.98\);\s*font-size:\s*11px;\s*font-weight:\s*1000;\s*letter-spacing:\s*\.12em;\s*text-transform:\s*uppercase;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (source.match(/color:\s*rgba\(145,173,78,\.98\);\s*font-size:\s*11px;\s*font-weight:\s*1000;\s*letter-spacing:\s*\.12em;\s*text-transform:\s*uppercase;/g) || []).length,
-    1
-  );
+  assert.match(source, /\.adminClientTelegramAvatar img\s*\{[\s\S]*?object-fit:\s*cover;/);
+  assert.match(source, /\.adminClientTelegramBadge\s*\{[\s\S]*?min-height:\s*32px;/);
+  assert.match(source, /\.adminClientTelegramAvatar\s*\{[\s\S]*?place-items:\s*center;/);
+  assert.match(source, /\.adminClientTelegramActions button,\s*\.adminTelegramSendButton\s*\{[\s\S]*?font-weight:\s*950;/);
+  assert.doesNotMatch(source, /profileAvatarBig|profileUnifiedAvatar|profileAiAvatar/);
+  assert.doesNotMatch(source, /\.profileTelegram(?:Status|Avatar|Actions|Save|Modal|Manage|Auth|Login|Widget|Bot|Check)(?![\w-])/);
 });
 
-test("profile dashboard CSS keeps Telegram shells grouped", async () => {
-  const source = await readCssWithImports("src/styles/profile-dashboard-telegram.css");
-
-  assert.equal(
-    (
-      source.match(
-        /\.profileTelegramStatus,\s*\.adminClientTelegramBadge\s*\{\s*min-height:\s*32px;\s*padding:\s*0 10px;\s*border-radius:\s*999px;\s*display:\s*grid;\s*place-items:\s*center;\s*background:\s*rgba\(255,255,255,\.045\);\s*color:\s*rgba\(255,255,255,\.55\);\s*font-size:\s*10px;\s*font-weight:\s*950;\s*white-space:\s*nowrap;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.profileTelegramStatus\.connected,\s*\.adminClientTelegramBadge\.connected\s*\{\s*background:\s*rgba\(42,171,238,\.14\);\s*border:\s*1px solid rgba\(42,171,238,\.24\);\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.profileTelegramAvatar,\s*\.adminClientTelegramAvatar\s*\{\s*display:\s*grid;\s*place-items:\s*center;\s*background:\s*rgba\(42,171,238,\.14\);\s*border:\s*1px solid rgba\(42,171,238,\.18\);\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.profileAvatarBig img,\s*\.profileTelegramAvatar img,\s*\.adminClientTelegramAvatar img,\s*\.profileSettingsTelegramAvatar img,\s*\.profileTelegramManageAvatar img\s*\{\s*width:\s*100%;\s*height:\s*100%;\s*object-fit:\s*cover;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal((source.match(/width:\s*100%;\s*height:\s*100%;\s*object-fit:\s*cover;/g) || []).length, 1);
-  assert.equal(
-    (
-      source.match(
-        /\.profileTelegramActions button,\s*\.profileTelegramSave,\s*\.adminClientTelegramActions button,\s*\.adminTelegramSendButton,\s*\.profileTelegramBotActions button,\s*\.profileTelegramCheckButton\s*\{\s*color:\s*rgba\(205,239,255,\.96\);\s*font-weight:\s*950;\s*cursor:\s*pointer;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.profileTelegramBotActions button,\s*\.profileTelegramCheckButton\s*\{\s*min-height:\s*42px;\s*border-radius:\s*14px;\s*border:\s*1px solid rgba\(42,171,238,\.26\);\s*background:\s*rgba\(42,171,238,\.13\);\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.profileTelegramBotActions button:disabled,\s*\.profileTelegramCheckButton:disabled\s*\{\s*opacity:\s*\.55;\s*cursor:\s*not-allowed;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-});
-
-test("client main CSS keeps compact AI stat text rules in the later owner", async () => {
+test("client main CSS no longer owns migrated dashboard summary or progress cards", async () => {
   const source = await readCssWithImports("src/styles/client-main.css");
 
   assert.equal((source.match(/--main-home-primary-text-size:\s*16\.2px;/g) || []).length, 1);
-  assert.equal(
-    (source.match(/\.profileAiStatsRow\.profileAiStatsRow\.profileAiStatsRow > div\s*\{\s*align-items:\s*center !important;\s*justify-content:\s*center !important;\s*text-align:\s*center !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.match(source, /\.profileAiCoachHeadline span[\s\S]*?text-transform:\s*none !important;/);
-  assert.match(source, /\.profileAiCoachHeadline h2\s*\{\s*color:\s*var\(--main-nutrition-ink\) !important;[\s\S]*?font-size:\s*10\.25px !important;[\s\S]*?letter-spacing:\s*0 !important;\s*\}/);
+  assert.doesNotMatch(source, /profileAiStatsRow|profileAiStatLabel|profileAiSplitCards|profileAiMiniCard|profileMainSummaryGrid/);
+  assert.doesNotMatch(source, /profileAiCoachInsight|profileProgressInsightCard|profileAiCoachHeadline|profileProgressInsightBadge/);
 });
 
-test("client nutrition grid CSS does not keep dashboard icon and chart duplicates", async () => {
-  const nutritionGrid = await readCssWithImports("src/styles/client-nutrition-grid.css");
-  const mainOverrides = await readCssWithImports("src/styles/client-main.css");
+test("profile main measurement snapshot owns its live adaptive states", async () => {
+  const component = await readText("src/features/client/profile/ProfileMainMeasurementSnapshot.jsx");
+  const moduleCss = await readText("src/features/client/profile/ProfileMainMeasurementSnapshot.module.css");
+  const route = await readText("src/features/client/profile/ProfileDashboardRoute.jsx");
+  const model = await readText("src/features/client/profile/profileDashboardModel.js");
+  const variables = await readText("src/styles/_variables.css");
+  const styleFiles = await collectFiles("src/styles", [".css"]);
+  const legacyCss = (await Promise.all(styleFiles.map((file) => readText(file)))).join("\n");
+  const retiredSelectors = /\.(?:profileMainMeasurementSnapshot|mainMeasurementSnapshot|mainMeasurementSnapshotHeader|mainMeasurementSnapshotBody|mainMeasurementWeight|mainMeasurementChart|mainMeasurementChartTrend|mainMeasurementCurrentGuide|mainMeasurementTrendLine|mainMeasurementPointLabel|mainMeasurementTrendPoint|mainMeasurementCurrentBubble|mainMeasurementDateLabel|mainMeasurementSingle|mainMeasurementEmpty|mainMeasurementChartDates)(?![\w-])/;
 
-  const duplicateLocks = [
-    /\.profileAiStatsRow\.profileAiStatsRow\.profileAiStatsRow \.profileAiStatLabel svg\s*\{\s*width:\s*14px !important;\s*height:\s*14px !important;\s*\}/,
-    /\.profileAiSplitCards\.profileAiSplitCards\.profileAiSplitCards \.profileAiMiniCard\.profileAiMiniCard span svg\s*\{\s*width:\s*14px !important;\s*height:\s*14px !important;\s*flex:\s*0 0 14px !important;\s*\}/,
-    /\.mainMeasurementSnapshot\.mainMeasurementSnapshot \.mainMeasurementSnapshotHeader\s*\{\s*height:\s*16px !important;\s*margin-bottom:\s*8px !important;\s*\}/,
-    /\.mainMeasurementSnapshot\.mainMeasurementSnapshot \.mainMeasurementChart svg\s*\{\s*height:\s*44px !important;\s*min-height:\s*44px !important;\s*max-height:\s*44px !important;\s*\}/
-  ];
-
-  for (const lock of duplicateLocks) {
-    assert.doesNotMatch(nutritionGrid, lock);
-    assert.match(mainOverrides, lock);
-  }
-
-  assert.doesNotMatch(
-    nutritionGrid,
-    /\.profileAiStatsRow\.profileAiStatsRow strong,\s*html:root\[data-app-theme="warm-light"\] body #root > \.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiStatsRow\.profileAiStatsRow \.goal strong\s*\{\s*font-size:\s*18px !important;\s*line-height:\s*1 !important;\s*\}/
-  );
-  assert.match(
-    nutritionGrid,
-    /\.profileAiStatsRow\.profileAiStatsRow strong,\s*html:root\[data-app-theme="warm-light"\] body #root > \.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiStatsRow\.profileAiStatsRow \.goal strong\s*\{\s*width:\s*100% !important;\s*margin:\s*0 !important;\s*color:\s*var\(--main-card-text\) !important;\s*font-size:\s*18px !important;\s*line-height:\s*1 !important;/
-  );
-  assert.equal(
-    (
-      nutritionGrid.match(
-        /\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.mainMeasurementChart line\s*\{\s*stroke:\s*#e6e9f2 !important;\s*stroke-width:\s*2 !important;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.doesNotMatch(
-    nutritionGrid,
-    /body #root > \.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.mainMeasurementChart line\s*\{\s*stroke:\s*#e6e9f2 !important;\s*stroke-width:\s*2 !important;\s*\}/
-  );
-});
-
-test("client nutrition grid CSS keeps progress insight spacing in the final owner", async () => {
-  const source = await readCssWithImports("src/styles/client-nutrition-grid.css");
-  const earlyProgressStart = source.indexOf("/* v.1.200: progress card spacing only");
-  const finalProgressStart = source.indexOf("/* v.1.200 final position: progress card spacing only");
-
-  assert.equal(earlyProgressStart, -1);
-  assert.ok(finalProgressStart >= 0);
-  assert.equal(
-    (source.match(/\.profileAiCoachInsight\.profileProgressInsightCard\.profileProgressInsightCard\s*\{\s*height:\s*196px !important;\s*min-height:\s*196px !important;\s*max-height:\s*196px !important;\s*flex-basis:\s*196px !important;\s*padding:\s*20px 20px 16px !important;\s*gap:\s*12px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.match(
-    source.slice(finalProgressStart),
-    /\.profileProgressInsightBadge small\s*\{\s*font-size:\s*8\.5px !important;\s*line-height:\s*1 !important;\s*\}/
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.profileProgressInsightCard \.profileAiCoachHeadline\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*flex-start !important;\s*gap:\s*5px !important;\s*text-align:\s*left !important;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileProgressInsightCard\.profileProgressInsightCard \.profileAiCoachHeadline\s*\{\s*min-width:\s*0 !important;\s*display:\s*flex !important;\s*flex-direction:\s*column !important;\s*align-items:\s*flex-start !important;\s*gap:\s*5px !important;\s*text-align:\s*left !important;\s*\}/
-  );
+  assert.match(component, /import styles from "\.\/ProfileMainMeasurementSnapshot\.module\.css";/);
+  assert.match(component, /data-css-module-scope="profile-main-measurement-snapshot"/);
+  assert.match(component, /data-testid="profile-measurement-snapshot"/);
+  assert.match(component, /data-testid="profile-measurement-snapshot-trend"/);
+  assert.match(component, /data-testid="profile-measurement-snapshot-single"/);
+  assert.match(component, /data-testid="profile-measurement-snapshot-empty"/);
+  assert.doesNotMatch(component, retiredSelectors);
+  assert.doesNotMatch(component, /<i(?:\s|>)/);
+  assert.doesNotMatch(route, /mainMeasurementPoints|measurementPoints=|formatMeasurementDate=\{formatProfileMeasurementDate\}[\s\S]{0,80}ProfileMainMeasurementSnapshot/);
+  assert.doesNotMatch(model, /mainMeasurementWeights|mainMeasurementMin|mainMeasurementMax|mainMeasurementRange|mainMeasurementPoints/);
+  assert.doesNotMatch(moduleCss, /!important/);
+  assert.match(moduleCss, /\.root\s*\{[\s\S]*?height:\s*160px;[\s\S]*?overflow:\s*hidden;/);
+  assert.match(moduleCss, /\.body\s*\{[\s\S]*?grid-template-columns:\s*116px minmax\(0, 1fr\);/);
+  assert.match(moduleCss, /\.trendLine\s*\{[\s\S]*?stroke:\s*url\("#mainMeasurementLineGradient"\);/);
+  assert.match(moduleCss, /@media \(max-width:\s*640px\)[\s\S]*?height:\s*140px;/);
+  assert.match(moduleCss, /@media \(max-width:\s*360px\)[\s\S]*?font-size:\s*11px;/);
+  assert.match(moduleCss, /:global\(:root\[data-app-theme="dark-green"\]\) \.root/);
+  assert.match(variables, /--color-profile-measurement-border:/);
+  assert.match(variables, /--color-profile-measurement-chart-start:/);
+  assert.match(variables, /--background-profile-measurement-empty:/);
+  assert.doesNotMatch(legacyCss, retiredSelectors);
 });
 
 test("client nutrition grid CSS does not keep exact duplicate blocks", async () => {
@@ -3702,34 +3932,9 @@ test("client nutrition grid CSS does not keep exact duplicate blocks", async () 
   }
 
   assert.deepEqual(duplicateBlocks, []);
-  assert.match(
-    source,
-    /\.profileDashboardPage\.clientCorePageMain \.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.clientCorePageNutrition \.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.fatSecretPage\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionBottomTabBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutMenuBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.clientBottomNav > button\.active\s*\{\s*background:\s*#f0edff !important;\s*border-color:\s*#ded7ff !important;\s*color:\s*#5d43e8 !important;\s*box-shadow:\s*inset 0 1px 0 rgba\(255, 255, 255, 0\.9\) !important;\s*\}/
-  );
-  assert.doesNotMatch(
-    source,
-    /\.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.clientCorePageWorkout\.workoutSelectPage\.individualWorkoutSelectPage \.individualWorkoutMenuBar\.clientBottomNav > button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTabbedPage\.clientCorePageCabinet:not\(\.trainerRolePage\) \.mainMenuBottomBar\.profileBottomTabBar\.clientBottomNav > button\.active\s*\{\s*background:\s*#f0edff !important;\s*border-color:\s*#ded7ff !important;\s*color:\s*#5d43e8 !important;\s*box-shadow:\s*inset 0 1px 0 rgba\(255, 255, 255, 0\.9\) !important;\s*\}/
-  );
-  assert.equal(
-    (source.match(/\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionBottomTabBar\.clientBottomNav > button\.active/g) || []).length,
-    1
-  );
-  assert.equal(
-    (source.match(/\.nutritionFixedHeaderV3\.clientCorePageNutrition \.nutritionBottomTabBar\.clientBottomNav > button svg/g) || []).length,
-    1
-  );
-  assert.equal(
-    (
-      source.match(
-        /\.profileAiHero\.profileAiHero\.profileAiHero\s*\{\s*grid-template-columns:\s*58px minmax\(0, 1fr\) 14px !important;\s*column-gap:\s*8px !important;\s*row-gap:\s*0 !important;\s*padding:\s*14px 14px 14px 20px !important;\s*\}/g
-      ) || []
-    ).length,
-    1
-  );
-  assert.doesNotMatch(
-    source,
-    /\.profileDashboardPage\.profileTabbedPage\.mainDashboardPage\.clientCorePage\.clientCorePageMain \.profileAiHero\.profileAiHero\s*\{\s*grid-template-columns:\s*58px minmax\(0, 1fr\) 14px !important;\s*column-gap:\s*8px !important;\s*row-gap:\s*0 !important;\s*padding:\s*14px 14px 14px 20px !important;\s*\}/
-  );
+  assert.doesNotMatch(source, /clientBottomNav/);
+  assert.doesNotMatch(source, /clientCorePageWorkout|workoutSelectPage|individualWorkoutSelectPage/);
+  assert.doesNotMatch(source, /profileAiHero|profileAiAvatar|profileAvatarBig|profileUnifiedAvatar/);
 });
 
 test("desktop cabinet CSS keeps trainer client overview grid locks in the broad mobile owner", async () => {
@@ -3797,11 +4002,11 @@ test("desktop cabinet CSS keeps trainer client list shells grouped", async () =>
   );
 });
 
-test("desktop cabinet CSS keeps trainer notification header shells grouped", async () => {
+test("desktop cabinet CSS keeps remaining trainer header shells grouped", async () => {
   const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
-    (source.match(/\.clientTrainerTasksHead,\s*\.trainerWorkspaceHead,\s*\.profileTrainerNotificationsHead\s*\{\s*display:\s*flex;\s*align-items:\s*center;\s*justify-content:\s*space-between;\s*gap:\s*12px;\s*\}/g) || []).length,
+    (source.match(/\.clientTrainerTasksHead,\s*\.trainerWorkspaceHead\s*\{\s*display:\s*flex;\s*align-items:\s*center;\s*justify-content:\s*space-between;\s*gap:\s*12px;\s*\}/g) || []).length,
     1
   );
   assert.equal(
@@ -3814,9 +4019,10 @@ test("desktop cabinet CSS keeps accent micro labels grouped", async () => {
   const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
-    (source.match(/\.trainerClientDashboardModal > header span,\s*\.profileNutritionInlinePlanHead span\s*\{\s*color:\s*#b5e655;\s*font-size:\s*10px;\s*font-weight:\s*950;\s*letter-spacing:\s*0\.06em;\s*\}/g) || []).length,
+    (source.match(/\.trainerClientDashboardModal > header span\s*\{\s*color:\s*#b5e655;\s*font-size:\s*10px;\s*font-weight:\s*950;\s*letter-spacing:\s*0\.06em;\s*\}/g) || []).length,
     1
   );
+  assert.doesNotMatch(source, /\.profileNutritionInlinePlanHead/);
   assert.equal(
     (source.match(/color:\s*#b5e655;\s*font-size:\s*10px;\s*font-weight:\s*950;\s*letter-spacing:\s*0\.06em;/g) || []).length,
     1
@@ -3827,7 +4033,7 @@ test("desktop cabinet CSS keeps trainer client text shells grouped", async () =>
   const source = await readCssWithImports("src/styles/client-cabinet-desktop.css");
 
   assert.equal(
-    (source.match(/\.clientTrainerTask strong,\s*\.profileTrainerNotificationItem strong,\s*\.trainerClientProgramSummary strong\s*\{\s*overflow:\s*hidden;\s*color:\s*#fff;\s*font-size:\s*14px;\s*text-overflow:\s*ellipsis;\s*white-space:\s*nowrap;\s*\}/g) || []).length,
+    (source.match(/\.clientTrainerTask strong,\s*\.trainerClientProgramSummary strong\s*\{\s*overflow:\s*hidden;\s*color:\s*#fff;\s*font-size:\s*14px;\s*text-overflow:\s*ellipsis;\s*white-space:\s*nowrap;\s*\}/g) || []).length,
     1
   );
   assert.equal(
@@ -3876,18 +4082,19 @@ test("desktop cabinet CSS keeps trainer client mobile columns grouped", async ()
   );
 });
 
-test("dark nutrition hero keeps explicit readable text overrides", async () => {
+test("nutrition header module owns its dark and warm responsive states", async () => {
   const indexCss = await readText("src/styles/index.css");
   const nutritionStackCss = await readText("src/styles/nutrition-stack.css");
-  const darkGreenFoodFlow = await readCssWithImports("src/styles/client-screen-alignment.css");
+  const nutritionHeaderCss = await readText("src/features/client/nutrition/NutritionHeader.module.css");
 
   assert.doesNotMatch(indexCss, /@import "\.\/nutrition-dark-food-flow\.css"/);
   assert.match(nutritionStackCss, /@import "\.\/nutrition-dark-food-flow\.css"/);
   assert.match(indexCss, /@import "\.\/client-screen-alignment\.css"/);
-  assert.match(darkGreenFoodFlow, /nutritionHeroTitleV4 \.clientCorePageTitle/);
-  assert.match(darkGreenFoodFlow, /nutritionWeekV4 \.nutritionDayV4 small/);
-  assert.match(darkGreenFoodFlow, /nutritionStreakV4 span/);
-  assert.match(darkGreenFoodFlow, /rgba\(248,\s*250,\s*255,\s*0\.94\)/);
+  assert.match(nutritionHeaderCss, /\.action\s*\{[\s\S]*background:\s*linear-gradient\(rgba\(18, 21, 19, 0\.98\), rgba\(9, 12, 9, 0\.98\)\)/);
+  assert.match(nutritionHeaderCss, /\.selected \.dot,\s*\.hasFood \.dot\s*\{[\s\S]*background:\s*#6552e6/);
+  assert.match(nutritionHeaderCss, /:global\(:root\[data-app-theme="warm-light"\]\) \.root/);
+  assert.match(nutritionHeaderCss, /@media \(max-width: 700px\)/);
+  assert.doesNotMatch(nutritionHeaderCss, /!important/);
 });
 
 test("verification scripts stay usable in the Windows workspace", async () => {
@@ -4001,7 +4208,7 @@ test("trainer client workspace header selectors expose selected state", async ()
 test("client workout warmup timer presets expose selected state", async () => {
   const warmupStage = await readText("src/features/client/workouts/WorkoutWarmupStage.jsx");
 
-  assert.match(warmupStage, /className=\{timerDuration === seconds \? "active" : ""\}[\s\S]*aria-pressed=\{timerDuration === seconds\}/);
+  assert.match(warmupStage, /className=\{`\$\{styles\.timerButton\} \$\{timerDuration === seconds \? styles\.timerButtonActive : ""\}`\}[\s\S]*aria-pressed=\{timerDuration === seconds\}/);
 });
 
 test("trainer client training program cards expose selected state", async () => {
@@ -4067,14 +4274,17 @@ test("trainer progress photo compare selectors expose readable labels", async ()
 test("client workout next card exposes current step state", async () => {
   const workoutListPage = await readText("src/features/client/workouts/WorkoutListPage.jsx");
 
-  assert.match(workoutListPage, /className=\{`workoutSelectCard individualWorkoutCardPro[\s\S]*aria-current=\{activeNext \? "step" : undefined\}/);
+  assert.match(workoutListPage, /className=\{`\$\{styles\.workoutCard\} \$\{styles\.featuredCard\}[\s\S]*aria-current=\{activeNext \? "step" : undefined\}/);
 });
 
 test("client nutrition weekday strip exposes selected and current date state", async () => {
   const nutritionHeader = await readText("src/features/client/nutrition/NutritionHeader.jsx");
 
-  assert.match(nutritionHeader, /className=\{`nutritionDayV4 \$\{isSelectedDay \? "selected" : ""\}[\s\S]*aria-pressed=\{isSelectedDay\}/);
+  assert.match(nutritionHeader, /className=\{`\$\{styles\.day\} \$\{isSelectedDay \? styles\.selected : ""\}[\s\S]*aria-pressed=\{isSelectedDay\}/);
   assert.match(nutritionHeader, /aria-current=\{isTodayDay \? "date" : undefined\}/);
+  assert.match(nutritionHeader, /data-selected=\{isSelectedDay\}/);
+  assert.match(nutritionHeader, /data-has-food=\{dayHasFood\}/);
+  assert.match(nutritionHeader, /data-today=\{isTodayDay\}/);
 });
 
 test("nutrition base CSS keeps warm-light page shell grouped", async () => {
@@ -4087,19 +4297,6 @@ test("nutrition base CSS keeps warm-light page shell grouped", async () => {
   assert.equal(
     (nutritionBaseCss.match(/border-color:\s*rgba\(96, 78, 27, 0\.24\) !important;[\s\S]*?linear-gradient\(180deg, #fffaf0 0%, #f4e8c8 100%\) !important;[\s\S]*?0 24px 60px rgba\(87, 68, 18, 0\.15\),[\s\S]*?inset 0 1px 0 rgba\(255, 255, 255, 0\.72\) !important;/g) || []).length,
     1
-  );
-});
-
-test("nutrition base CSS keeps warm-light collapsed AI plan surface in the final owner", async () => {
-  const nutritionBaseCss = await readCssWithImports("src/styles/nutrition.css");
-
-  assert.equal(
-    (nutritionBaseCss.match(/:root\[data-app-theme="warm-light"\] \.fatSecretPage\.nutritionFixedHeaderV3 \.nutritionAiPlanDashboard\.collapsed\s*\{\s*border:\s*0 !important;\s*background:\s*#ffffff !important;\s*box-shadow:\s*0 9px 24px rgba\(55, 64, 112, 0\.075\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.doesNotMatch(
-    nutritionBaseCss,
-    /:root\[data-app-theme="warm-light"\] \.fatSecretPage\.nutritionFixedHeaderV3 \.nutritionAiPlanDashboard\.collapsed\s*\{\s*border-color:\s*rgba\(96, 78, 27, 0\.14\) !important;\s*background:\s*rgba\(255, 250, 237, 0\.72\) !important;\s*box-shadow:\s*inset 0 1px 0 rgba\(255, 255, 255, 0\.68\) !important;\s*\}/
   );
 });
 
@@ -4118,21 +4315,16 @@ test("warm-light nutrition CSS keeps summary donut center in the compact owner",
 
 test("client nutrition weekday strip keeps two-letter labels visible", async () => {
   const nutritionCalendar = await readText("src/utils/nutritionCalendar.js");
-  const nutritionBaseCss = await readCssWithImports("src/styles/nutrition.css");
-  const nutritionCss = await readCssWithImports("src/styles/nutrition-food-flow.css");
-  const warmLightNutritionCss = await readCssWithImports("src/styles/warm-light-nutrition.css");
+  const nutritionHeader = await readText("src/features/client/nutrition/NutritionHeader.jsx");
+  const nutritionHeaderCss = await readText("src/features/client/nutrition/NutritionHeader.module.css");
+  const legacyNutritionCss = await readCssWithImports("src/styles/nutrition-stack.css");
 
   assert.match(nutritionCalendar, /NUTRITION_WEEK_LABELS = \["\\u041f\\u041d", "\\u0412\\u0422", "\\u0421\\u0420", "\\u0427\\u0422", "\\u041f\\u0422", "\\u0421\\u0411", "\\u0412\\u0421"\]/);
-  assert.match(nutritionCss, /Preserve both letters in Russian weekday abbreviations/);
-  assert.match(nutritionCss, /\.nutritionDayV4 \{[\s\S]*display: grid !important;[\s\S]*grid-template-areas:[\s\S]*"label"[\s\S]*"marker" !important;[\s\S]*grid-template-rows: 14px 26px !important;/);
-  assert.match(nutritionCss, /\.nutritionWeekV4 \.nutritionDayV4 small \{[\s\S]*min-width: 2\.4ch !important;[\s\S]*width: 2\.4ch !important;[\s\S]*white-space: nowrap !important;/);
-  assert.doesNotMatch(nutritionCss, /Keep weekday labels visually separate from the day markers/);
-  assert.doesNotMatch(nutritionCss, /\.nutritionDayV4 \{[\s\S]*flex-direction: column-reverse !important;/);
-  assert.doesNotMatch(nutritionCss, /\.nutritionDayV4 span \{[\s\S]*width: 28px !important;/);
-  assert.doesNotMatch(nutritionBaseCss, /\.nutritionDayV4 \{[\s\S]*height: 28px !important;[\s\S]*flex-direction: column-reverse !important;/);
-  assert.doesNotMatch(nutritionBaseCss, /\.nutritionDayV4 span \{[\s\S]*height: 3px !important;/);
-  assert.doesNotMatch(warmLightNutritionCss, /\.nutritionDayV4\.selected,[\s\S]*background: linear-gradient\(180deg, #f4e064 0%, #d8bd48 100%\) !important;/);
-  assert.match(warmLightNutritionCss, /\.nutritionDayV4\.selected span,[\s\S]*background: #f4e064 !important;/);
+  assert.match(nutritionHeader, /<small className=\{styles\.dayLabel\}[\s\S]*\{day\.label\}/);
+  assert.match(nutritionHeaderCss, /\.day\s*\{[\s\S]*display:\s*grid;[\s\S]*grid-template-rows:\s*14px 26px;/);
+  assert.match(nutritionHeaderCss, /\.dayLabel\s*\{[\s\S]*width:\s*2\.4ch;[\s\S]*min-width:\s*2\.4ch;[\s\S]*max-width:\s*2\.4ch;[\s\S]*text-transform:\s*uppercase;[\s\S]*white-space:\s*nowrap;/);
+  assert.doesNotMatch(nutritionHeaderCss, /!important|flex-direction:\s*column-reverse/);
+  assert.doesNotMatch(legacyNutritionCss, /nutritionWeekV4|nutritionDayV4/);
 });
 
 test("client nutrition header labels stay readable Russian text", async () => {
@@ -4147,8 +4339,9 @@ test("client nutrition header labels stay readable Russian text", async () => {
 test("client nutrition calendar days expose selected and current date state", async () => {
   const nutritionCalendar = await readText("src/features/client/nutrition/NutritionCalendarModal.jsx");
 
-  assert.match(nutritionCalendar, /day\.isSelected \? "selected" : ""[\s\S]*aria-pressed=\{day\.isSelected\}/);
+  assert.match(nutritionCalendar, /day\.isSelected \? styles\.selected : ""[\s\S]*aria-pressed=\{day\.isSelected\}/);
   assert.match(nutritionCalendar, /aria-current=\{day\.isToday \? "date" : undefined\}/);
+  assert.match(nutritionCalendar, /data-over-goal=\{day\.isOverGoal \? "true" : "false"\}/);
 });
 
 test("client cabinet nutrition week cells expose readable day state", async () => {
@@ -4805,13 +4998,14 @@ test("client icon-only actions expose accessible labels", async () => {
   const runOverlays = await readText("src/features/client/workouts/WorkoutRunOverlays.jsx");
   const dishPicker = await readText("src/features/client/nutrition/DishIngredientPicker.jsx");
 
-  assert.match(aiCoach, /aiCoachBackBtn" type="button"[\s\S]*aria-label="Назад"/);
-  assert.match(basicQuiz, /className="workoutModeTopButton[^"]*" type="button"[\s\S]*aria-label="Открыть режим запуска"/);
-  assert.match(workoutMode, /className="workoutModeTopButton" type="button"[\s\S]*aria-label="Открыть главную"/);
-  assert.match(workoutMode, /className="workoutModeTopButton" type="button"[\s\S]*aria-label="Выбрать режим запуска тренировки"/);
-  assert.match(historyPage, /historyCompactRefresh" type="button"[\s\S]*aria-label="Обновить историю тренировок"/);
+  assert.match(aiCoach, /className=\{styles\.back\}[\s\S]*data-testid="ai-coach-back"[\s\S]*aria-labelledby="ai-coach-back-label"/);
+  assert.match(aiCoach, /className=\{styles\.srOnly\} id="ai-coach-back-label"/);
+  assert.match(basicQuiz, /className=\{styles\.topButton\} type="button"[\s\S]*aria-label="Открыть режим запуска"/);
+  assert.match(workoutMode, /className=\{styles\.topButton\} type="button"[\s\S]*aria-label="Открыть главную"/);
+  assert.match(workoutMode, /className=\{styles\.topButton\} type="button"[\s\S]*aria-label="Выбрать режим запуска тренировки"/);
+  assert.match(historyPage, /className=\{styles\.refresh\}[\s\S]*type="button"[\s\S]*aria-label="Обновить историю тренировок"/);
   assert.match(runOverlays, /type="button"[\s\S]*onClick=\{onClose\}[\s\S]*aria-label="Закрыть видео"/);
-  assert.match(dishPicker, /type="button" onClick=\{onClose\} aria-label="Закрыть выбор ингредиента"/);
+  assert.match(dishPicker, /type="button"[\s\S]*?data-dish-ingredient-action="close"[\s\S]*?onClick=\{onClose\}[\s\S]*?aria-label="Закрыть выбор ингредиента"/);
 });
 
 test("client cabinet action cards expose explicit accessible labels", async () => {
@@ -4820,78 +5014,24 @@ test("client cabinet action cards expose explicit accessible labels", async () =
   assert.match(actionGrid, /aria-label=\{`\$\{eyebrow\}: \$\{title\}`\}/);
 });
 
-test("client cabinet modal shells keep shared CSS owners", async () => {
-  const source = await readCssWithImports("src/styles/workouts.css");
-  const cabinetPolish = await readCssWithImports("src/styles/client-cabinet-desktop.css");
+test("client cabinet nutrition modal owns scoped styles without legacy nutrition selectors", async () => {
   const nutritionModal = await readText("src/features/client/profile/ProfileNutritionModal.jsx");
+  const nutritionModalCss = await readText("src/features/client/profile/ProfileNutritionModal.module.css");
+  const legacyFiles = await collectFiles("src/styles", [".css"]);
+  const legacyStyles = (await Promise.all(legacyFiles.map((file) => readText(file)))).join("\n");
 
-  assert.equal(
-    (source.match(/\.cabinetNutritionModalHead button,\s*\.cabinetUtilityModalHead > button\s*\{\s*flex:\s*0 0 44px;/g) || []).length,
-    1
-  );
-  assert.match(
-    nutritionModal,
-    /className="profileDashboardGrid profileNutritionSection hasPlan cabinetNutritionCombined"/
-  );
-  assert.equal(
-    (cabinetPolish.match(/\.cabinetNutritionModal\s*\.profileNutritionSection\.hasPlan\.cabinetNutritionCombined\s*\.profileAiNutritionPlanCard,\s*\.cabinetNutritionModal\s*\.profileNutritionSection\.hasPlan\.cabinetNutritionCombined\s*\.profileNutritionGoalCard\s*\{\s*flex:\s*0 0 auto !important;/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/\.cabinetNutritionModal\s*\.cabinetNutritionCombined\s*\.profileAiNutritionPlanCard,\s*\.cabinetNutritionModal\s*\.cabinetNutritionCombined\s*\.profileNutritionGoalCard\s*\{/g) || []).length,
-    0
-  );
-  assert.equal(
-    (cabinetPolish.match(/\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen > \.profileDashboardCard,\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileNutritionGoalModalHead\s*\{\s*display:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileDashboardButton,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileDashboardButton\s*\{\s*border-color:\s*transparent !important;\s*background:\s*linear-gradient\(135deg, #6552e6, #2d6ff2\) !important;\s*color:\s*#ffffff !important;\s*box-shadow:\s*0 12px 26px rgba\(76, 68, 201, 0\.22\) !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileAiNutritionPlanCard,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileNutritionGoalCard,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileGoalPicker button,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileMacroGrid > div,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileGoalPicker button,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileMacroGrid > div\s*\{\s*border-color:\s*#e1e4ef !important;\s*background:\s*#ffffff !important;\s*color:\s*#596176 !important;\s*box-shadow:\s*none !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileGoalPicker button\.active,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileGoalPicker button\.active\s*\{\s*border-color:\s*#7565e8 !important;\s*background:\s*#efedff !important;\s*color:\s*#4f3dd2 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.profileNutritionSection\.settingsOpen \.profileGoalModeHint,\s*html:root\[data-app-theme="warm-light"\] body #root\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileGoalModeHint\s*\{\s*border-color:\s*#dedaf8 !important;\s*background:\s*#f3f1ff !important;\s*color:\s*#596176 !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/\.cabinetNutritionModal \.cabinetNutritionCombined \.profileNutritionWeekday,\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileNutritionMonthDay > span\s*\{\s*font-size:\s*9px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/\.cabinetNutritionModal \.cabinetNutritionCombined \.profileNutritionMonthDay > small,\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileNutritionMonthDay > em,\s*\.cabinetNutritionModal \.cabinetNutritionCombined \.profileMacroGrid span\s*\{\s*font-size:\s*8px !important;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsModal,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosModal\s*\{\s*border-color:\s*#dfe3ef;\s*background:\s*radial-gradient\(circle at 50% -8%, rgba\(90, 73, 223, 0\.05\), transparent 32%\),\s*linear-gradient\(180deg, #ffffff 0%, #f7f8fd 100%\);\s*box-shadow:\s*0 24px 64px rgba\(43, 50, 92, 0\.18\);\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsOverlay,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosOverlay\s*\{\s*background:\s*rgba\(35, 40, 68, 0\.2\);\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/\.profileTrainerNotificationsHead h2,\s*\.cabinetProgressPhotosHead h2\s*\{\s*margin:\s*0;\s*color:\s*#fff;\s*font-size:\s*22px;\s*line-height:\s*1\.05;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/\.profileTrainerNotificationsHead > div,\s*\.cabinetProgressPhotosLatest > div:first-child\s*\{\s*display:\s*grid;\s*gap:\s*3px;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsHead h2,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationItem strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsEmpty strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosHead h2,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosLatest strong,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotoSteps strong\s*\{\s*color:\s*#151824;\s*\}/g) || []).length,
-    1
-  );
-  assert.equal(
-    (cabinetPolish.match(/html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationsHead button,\s*html:root\[data-app-theme="warm-light"\] body #root \.profileTrainerNotificationItem,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosHead button,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotosIntro,\s*html:root\[data-app-theme="warm-light"\] body #root \.cabinetProgressPhotoSteps label\s*\{\s*border-color:\s*#e1e4ef;\s*background:\s*#fff;\s*color:\s*#151824;\s*\}/g) || []).length,
-    1
+  assert.match(nutritionModal, /import styles from "\.\/ProfileNutritionModal\.module\.css"/);
+  assert.match(nutritionModal, /data-css-module-scope="profile-nutrition-modal"/);
+  assert.match(nutritionModal, /className=\{styles\.dialog\}/);
+  assert.match(nutritionModal, /className=\{styles\.content\}/);
+  assert.match(nutritionModal, /showPlan \? styles\.planned : ""/);
+  assert.match(nutritionModal, /day\.isSelected \? styles\.activeDay : ""/);
+  assert.match(nutritionModalCss, /\.content\s*\{[\s\S]*max-height:\s*calc\(100dvh - 96px\);/);
+  assert.match(nutritionModalCss, /@media \(max-height: 720px\)[\s\S]*\.content\s*\{[\s\S]*overflow-y:\s*auto;/);
+  assert.doesNotMatch(nutritionModalCss, /!important|\.cabinetNutrition|\.profileNutrition|\.profileGoalPicker|\.profileMacroGrid/);
+  assert.doesNotMatch(
+    legacyStyles,
+    /\.(?:cabinetNutrition(?:ModalOverlay|Modal|ModalHead|Combined)|profileNutrition[A-Za-z0-9_-]*|profileGoalPicker|profileGoalModeHint|profileMacroGrid)(?![A-Za-z0-9_-])/
   );
 });
 
@@ -4935,8 +5075,8 @@ test("client basic workout quiz selectors expose readable labels", async () => {
 test("client cabinet Telegram modal keeps a contained dialog shell", async () => {
   const telegramModal = await readText("src/features/client/profile/ProfileTelegramModal.jsx");
 
-  assert.match(telegramModal, /profileTelegramModalOverlay" role="presentation" onClick=\{onClose\}/);
-  assert.match(telegramModal, /className="profileTelegramModal profileTelegramManageModal"[\s\S]*role="dialog"[\s\S]*aria-modal="true"[\s\S]*onClick=\{\(event\) => event\.stopPropagation\(\)\}/);
+  assert.match(telegramModal, /className=\{styles\.overlay\}[\s\S]*data-testid="profile-telegram-overlay"[\s\S]*role="presentation"[\s\S]*onClick=\{onClose\}/);
+  assert.match(telegramModal, /className=\{styles\.dialog\}[\s\S]*data-testid="profile-telegram-dialog"[\s\S]*role="dialog"[\s\S]*aria-modal="true"[\s\S]*onClick=\{\(event\) => event\.stopPropagation\(\)\}/);
 });
 
 test("client harness stays local-only outside dev", async () => {

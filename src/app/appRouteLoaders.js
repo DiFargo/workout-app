@@ -1,10 +1,6 @@
 export const loadAdminPanelHub = () => import("../components/admin/AdminPanelHub");
-export const loadAiCoachStyles = () => import("../styles/ai-coach-lazy.css");
 export const loadWorkoutStyles = () => import("../styles/client-workout-lazy.css");
-export const loadAiCoachPage = () => Promise.all([
-  loadAiCoachStyles(),
-  import("../features/client/ai/AiCoachPage")
-]).then(([, module]) => module);
+export const loadAiCoachPage = () => import("../features/client/ai/AiCoachPage");
 export const loadBasicWorkoutQuizPage = () => Promise.all([
   loadWorkoutStyles(),
   import("../features/client/workouts/BasicWorkoutQuizPage")

@@ -1,58 +1,7 @@
 @media (max-height: 700px) {
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetTitleRow {
-    min-height: 42px;
-    margin-bottom: 6px;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetTitleRow .profileCabinetPageTitle {
-    min-height: 42px !important;
-  }
 
   .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetSection {
     height: calc(100% - 48px) !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHero {
-    flex-basis: 60px !important;
-    min-height: 60px !important;
-    padding: 4px 8px !important;
-    grid-template-columns: 48px minmax(0, 1fr) 12px !important;
-    gap: 9px !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatarWrap,
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatar {
-    width: 48px !important;
-    height: 48px !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHeroText h1 {
-    font-size: 16px !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview {
-    margin-top: 6px !important;
-    gap: 5px !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
-    padding: 6px 10px !important;
-    grid-template-columns: 38px minmax(0, 1fr) 12px !important;
-    gap: 9px !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardIcon {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 24px !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText strong {
-    font-size: 15px !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText em {
-    display: none !important;
   }
 }
 

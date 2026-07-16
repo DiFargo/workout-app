@@ -1,15 +1,23 @@
-function ProfileCabinetActionCard({ className, icon, avatarUrl, eyebrow, title, note, onClick }) {
+import styles from "./ProfileCabinetActionGrid.module.css";
+
+function ProfileCabinetActionCard({ kind, icon, avatarUrl, eyebrow, title, note, onClick }) {
   return (
-    <button type="button" className={`progressHubCard ${className}`} onClick={onClick} aria-label={`${eyebrow}: ${title}`}>
-      <span className="progressHubCardIcon">
-        {avatarUrl ? <img className="progressHubCardAvatar" src={avatarUrl} alt="" /> : icon}
+    <button
+      type="button"
+      className={styles.card}
+      data-testid={`profile-cabinet-action-${kind}`}
+      onClick={onClick}
+      aria-label={`${eyebrow}: ${title}`}
+    >
+      <span className={styles.icon} data-testid={`profile-cabinet-action-${kind}-icon`}>
+        {avatarUrl ? <img className={styles.avatar} src={avatarUrl} alt="" /> : icon}
       </span>
-      <span className="progressHubCardText">
-        <small>{eyebrow}</small>
-        <strong>{title}</strong>
-        <em>{note}</em>
+      <span className={styles.text}>
+        <small className={styles.eyebrow}>{eyebrow}</small>
+        <strong className={styles.title} data-testid={`profile-cabinet-action-${kind}-title`}>{title}</strong>
+        <em className={styles.note}>{note}</em>
       </span>
-      <i>›</i>
+      <i className={styles.arrow} aria-hidden="true">›</i>
     </button>
   );
 }
@@ -33,9 +41,13 @@ export default function ProfileCabinetActionGrid({
     : latestPhotoText;
 
   return (
-    <div className={`progressHubOverview profileCabinetProgressOverview${showClientOnlyActions ? " hasProgressPhotos" : ""}`}>
+    <div
+      className={`${styles.root}${showClientOnlyActions ? "" : ` ${styles.trainer}`}`}
+      data-css-module-scope="profile-cabinet-action-grid"
+      data-testid="profile-cabinet-action-grid"
+    >
       <ProfileCabinetActionCard
-        className="accountProfile"
+        kind="account"
         icon="👤"
         avatarUrl={accountAvatarUrl}
         eyebrow="АККАУНТ"
@@ -46,7 +58,7 @@ export default function ProfileCabinetActionGrid({
 
       {showClientOnlyActions && (
         <ProfileCabinetActionCard
-          className="bodyControl"
+          kind="body-control"
           icon="📷"
           eyebrow="КОНТРОЛЬ ТЕЛА"
           title="Фото и замеры"
@@ -57,7 +69,7 @@ export default function ProfileCabinetActionGrid({
 
       {showClientOnlyActions && (
         <ProfileCabinetActionCard
-          className="nutrition"
+          kind="nutrition"
           icon="🍽️"
           eyebrow="ПЛАН ПИТАНИЯ"
           title="КБЖУ"
@@ -68,7 +80,7 @@ export default function ProfileCabinetActionGrid({
 
       {showClientOnlyActions && (
         <ProfileCabinetActionCard
-          className="progress cabinetWorkoutJournalButton"
+          kind="workout-journal"
           icon="🗓️"
           eyebrow="ТРЕНИРОВКИ"
           title="Календарь и история"
@@ -79,7 +91,7 @@ export default function ProfileCabinetActionGrid({
 
       {showClientOnlyActions && (
         <ProfileCabinetActionCard
-          className="questionnaire"
+          kind="questionnaire"
           icon="📋"
           eyebrow="ПАРАМЕТРЫ"
           title="Анкета"
@@ -89,7 +101,7 @@ export default function ProfileCabinetActionGrid({
       )}
 
       <ProfileCabinetActionCard
-        className="feedback"
+        kind="feedback"
         icon="💬"
         eyebrow="ОБРАТНАЯ СВЯЗЬ"
         title="Ошибка или идея"

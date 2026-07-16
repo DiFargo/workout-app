@@ -58,7 +58,18 @@ export function useWorkoutRuntimeEffects({
         inlineVideoControlsTimerRef.current = null;
       }
     };
-  }, [selectedWorkoutId, currentExerciseIndex]);
+  }, [
+    currentExerciseIndex,
+    inlineVideoControlsTimerRef,
+    selectedWorkoutId,
+    setExerciseHistoryOpenId,
+    setExerciseNoteOpenId,
+    setExerciseTechniqueOpenId,
+    setExerciseValidationMessage,
+    setInlinePlayingVideoId,
+    setInlineVideoControlsVisible,
+    setVideoLoadingId
+  ]);
 
   useEffect(() => {
     if (!warmupTimerRunning) return undefined;
@@ -77,7 +88,7 @@ export function useWorkoutRuntimeEffects({
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [warmupTimerRunning]);
+  }, [setWarmupTimerRunning, setWarmupTimerSeconds, warmupTimerRunning]);
 
   useEffect(() => {
     if (!restTimerRunning) return undefined;
@@ -96,7 +107,7 @@ export function useWorkoutRuntimeEffects({
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [restTimerRunning]);
+  }, [restTimerRunning, setRestTimerRunning, setRestTimerSeconds]);
 
   useEffect(() => {
     const currentUser = auth.currentUser || user;
@@ -147,7 +158,8 @@ export function useWorkoutRuntimeEffects({
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [
-    user?.uid,
+    auth.currentUser,
+    user,
     selectedWorkoutId,
     currentExerciseIndex,
     workoutStarted,
@@ -173,7 +185,7 @@ export function useWorkoutRuntimeEffects({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [workoutStartedAt, workoutFinishedAt]);
+  }, [setTimerTick, timerTickRef, workoutFinishedAt, workoutStartedAt]);
 
   useEffect(() => {
     if (!workoutVideoCacheKey || !("serviceWorker" in navigator)) return;
@@ -197,5 +209,5 @@ export function useWorkoutRuntimeEffects({
     if (currentExerciseIndex > workout.exercises.length + 1) {
       setCurrentExerciseIndex(0);
     }
-  }, [workout, currentExerciseIndex]);
+  }, [currentExerciseIndex, setCurrentExerciseIndex, workout]);
 }

@@ -3,23 +3,6 @@
    ========================================================= */
 
 /* Ð½Ð° ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾Ð´Ð½Ñƒ ÐºÐ½Ð¾Ð¿ÐºÑƒ Ð½Ð°Ð·Ð°Ð´ */
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTopPremium {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-}
-
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodEditSingleBack {
-  position: relative !important;
-  z-index: 20 !important;
-  pointer-events: auto !important;
-}
-
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTitleWrap,
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchClosePremium,
-.fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .fatSearchTopSpacer {
-  display: none !important;
-}
 
 /* Ñ‚ÐµÐºÑÑ‚ Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ / Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ Ð¾Ð´Ð¸Ð½Ð°ÐºÐ¾Ð²Ð¾Ð³Ð¾ Ñ€Ð°Ð·Ð¼ÐµÑ€Ð° */
 .foodEditDeleteButton,

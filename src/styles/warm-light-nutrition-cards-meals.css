@@ -1,5 +1,4 @@
 /* Search + calendar + calories: slightly yellow warm cards */
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionExact,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard {
   background:
     radial-gradient(circle at 12% 0%, rgba(244, 224, 100, 0.20), transparent 42%),
@@ -28,8 +27,7 @@
 }
 
 /* FINAL MEALS POLISH â€” warm light only */
-:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon,
-:root[data-app-theme="warm-light"] .nutritionQuickCalendarIcon {
+:root[data-app-theme="warm-light"] .nutritionQuickSearchIcon {
   background: transparent !important;
   box-shadow: none !important;
   border: 0 !important;
@@ -57,7 +55,7 @@
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage,
-:root[data-app-theme="warm-light"] .fatSecretPage * {
+:root[data-app-theme="warm-light"] .fatSecretPage *:not([data-css-module-scope]):not([data-css-module-scope] *) {
   color: #5f5744 !important;
 }
 
@@ -75,4 +73,3 @@
 :root[data-app-theme="warm-light"] .fatMealCard * {
   border-color: transparent !important;
 }
-

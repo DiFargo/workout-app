@@ -17,10 +17,16 @@ import ProfileMeasurementWizardPanel from "./ProfileMeasurementWizardPanel";
 import ProfileMeasurementsModal from "./ProfileMeasurementsModal";
 import ProfileNutritionModal from "./ProfileNutritionModal";
 import ProfilePageChrome from "./ProfilePageChrome";
+import {
+  ProfileDashboardContent,
+  ProfileDashboardShell,
+  ProfileDashboardVersion,
+  ProfileMainHeroStatsShell
+} from "./ProfileDashboardShell";
 import ProfilePasswordModal from "./ProfilePasswordModal";
 import ProfileProgressInsightCard from "./ProfileProgressInsightCard";
 import ProfileProgressPhotosModal from "./ProfileProgressPhotosModal";
-import ProfileSettingsModal from "./ProfileSettingsModal";
+import ProfileSettingsModal, { ProfileSettingsLogoutButton } from "./ProfileSettingsModal";
 import ProfileSettingsTab from "./ProfileSettingsTab";
 import ProfileTelegramModal from "./ProfileTelegramModal";
 import ProfileTrainerNotificationsModal from "./ProfileTrainerNotificationsModal";
@@ -128,16 +134,10 @@ export default function ProfileDashboardRoute(ctx) {
     profileBodyMetricsOpen,
     profileEmailConnectOpen,
     profileFeedbackModalOpen,
-    profileMeasurementDraft,
-    profileMeasurementOpen,
-    profileMeasurementSaving,
-    profileMeasurementStatus,
-    profileMeasurementWizardStep,
     profileMeasurements,
     profileMeasurementsModalOpen,
     profileNutritionModalOpen,
     profileNutritionSaveStatus,
-    profileProgressAnalysisOpen,
     profileProgressModalOpen,
     profileProgressPhotoCompareIds,
     profileProgressPhotoCompareView,
@@ -168,7 +168,6 @@ export default function ProfileDashboardRoute(ctx) {
     saveAiBodyMetrics,
     saveClientProgressPhotos,
     saveProfileAccount,
-    saveProfileMeasurement,
     saveProfileNutritionPlanAndClose,
     selectClientProgressPhoto,
     selectNutritionDate,
@@ -182,7 +181,6 @@ export default function ProfileDashboardRoute(ctx) {
     setProfileBodyMetricsOpen,
     setProfileEmailConnectOpen,
     setProfileFeedbackModalOpen,
-    setProfileMeasurementDraft,
     setProfileMeasurementOpen,
     setProfileMeasurementReturnTab,
     setProfileMeasurementStatus,
@@ -190,7 +188,6 @@ export default function ProfileDashboardRoute(ctx) {
     setProfileMeasurementsModalOpen,
     setProfileNutritionModalOpen,
     setProfileNutritionSaveStatus,
-    setProfileProgressAnalysisOpen,
     setProfileProgressModalOpen,
     setProfileProgressPhotoCompareIds,
     setProfileProgressPhotoCompareView,
@@ -269,7 +266,6 @@ export default function ProfileDashboardRoute(ctx) {
     greetingName,
     profileAvatarUrl,
     mainMeasurementSeries,
-    mainMeasurementPoints,
     mainLatestWeight,
     mainWeightChange,
     progressInsight,
@@ -449,18 +445,14 @@ export default function ProfileDashboardRoute(ctx) {
     });
   }
 
+  const profileShellMode = isMainDashboard ? "main" : visibleProfileTab;
+  const useLegacyTrainerShell = currentUserRole === "trainer" && !canUseAdminFeatures();
+
   return (
-    <div
-      className={`${isMainDashboard
-        ? "profileDashboardPage profileTabbedPage mainDashboardPage"
-        : "profileDashboardPage profileTabbedPage"}${
-        isMainDashboard
-          ? " clientCorePage clientCorePageMain"
-          : visibleProfileTab === "cabinet"
-            ? " clientCorePage clientCorePageCabinet"
-            : ""
-      }${currentUserRole === "trainer" && !canUseAdminFeatures() ? " trainerRolePage" : ""}`}
-      data-profile-tab={visibleProfileTab}
+    <ProfileDashboardShell
+      legacyTrainer={useLegacyTrainerShell}
+      mode={profileShellMode}
+      testId="profile-dashboard-route"
     >
       <ProfilePageChrome
         isMainDashboard={isMainDashboard}
@@ -476,20 +468,16 @@ export default function ProfileDashboardRoute(ctx) {
         />
       )}
 
-      <section className="profileUnifiedCard profileAiDashboardCard profileCabinetSection">
+      <ProfileDashboardContent
+        legacyTrainer={useLegacyTrainerShell}
+        mode={profileShellMode}
+      >
         {visibleProfileTab === "cabinet" && isMainDashboard && (
-          <div className="profileMainHeroStatsCard">
+          <ProfileMainHeroStatsShell>
             <ProfileHeroCard
-              isMainDashboard={isMainDashboard}
-              canOpenAccount={!canUseTrainerFeatures()}
               telegramProfile={telegramProfile}
               avatarUrl={profileAvatarUrl}
-              progressScore={progressInsight.score}
               greetingName={greetingName}
-              onOpenAccount={() => {
-                setProfileProgressModalOpen(false);
-                openProfileAccount();
-              }}
             />
             <ProfileMainSummaryCards
               activeGoalLabel={activeGoalLabel}
@@ -501,7 +489,7 @@ export default function ProfileDashboardRoute(ctx) {
               nextTrainingText={nextTrainingText}
               showSplitCards={false}
             />
-          </div>
+          </ProfileMainHeroStatsShell>
         )}
 
         {!isMainDashboard && visibleProfileTab === "cabinet" && (
@@ -546,46 +534,30 @@ export default function ProfileDashboardRoute(ctx) {
 
         {isMainDashboard && (
           <ProfileProgressInsightCard
-            isMainDashboard={isMainDashboard}
             progressInsight={progressInsight}
-            expanded={profileProgressAnalysisOpen}
             statuses={aiCoachStatuses}
-            currentGoalId={currentGoalId}
-            totalWorkouts={totalWorkouts}
-            onToggle={() => setProfileProgressAnalysisOpen((prev) => !prev)}
           />
         )}
 
         {isMainDashboard && (
           <ProfileMainMeasurementSnapshot
             measurementSeries={mainMeasurementSeries}
-            measurementPoints={mainMeasurementPoints}
             latestMeasurement={latestProfileMeasurement}
             latestWeight={mainLatestWeight}
             weightChange={mainWeightChange}
-            formatMeasurementDate={formatProfileMeasurementDate}
           />
         )}
 
         {isMainDashboard && APP_VERSION && (
-          <div className="mainDashboardAppVersion">{APP_VERSION}</div>
+          <ProfileDashboardVersion>{APP_VERSION}</ProfileDashboardVersion>
         )}
 
         <ProfileMeasurementWizardPanel
           visible={visibleProfileTab === "measurements"}
-          open={profileMeasurementOpen}
           latestMeasurement={latestProfileMeasurement}
           measurementFields={getProfileMeasurementFields(activeProfile?.goal || "recomp")}
-          draft={profileMeasurementDraft}
-          status={profileMeasurementStatus}
-          saving={profileMeasurementSaving}
-          step={profileMeasurementWizardStep}
           formatMeasurementDate={formatProfileMeasurementDate}
           getMeasurementValue={getProfileMeasurementValue}
-          onToggle={() => {
-            setProfileMeasurementOpen((prev) => !prev);
-            setProfileMeasurementWizardStep(0);
-          }}
           onStart={() => {
             setProfileMeasurementReturnTab("measurements");
             setProfileMeasurementOpen(false);
@@ -593,16 +565,8 @@ export default function ProfileDashboardRoute(ctx) {
             setProfileMeasurementStatus("");
             setPage(APP_PAGES.MEASUREMENT_WIZARD);
           }}
-          onClose={() => {
-            setProfileMeasurementOpen(false);
-            setProfileMeasurementWizardStep(0);
-          }}
-          onDraftChange={(fieldId, value) => setProfileMeasurementDraft((prev) => ({ ...prev, [fieldId]: value }))}
-          onPreviousStep={() => setProfileMeasurementWizardStep((step) => Math.max(0, step - 1))}
-          onNextStep={(totalWizardScreens) => setProfileMeasurementWizardStep((step) => Math.min(totalWizardScreens - 1, step + 1))}
-          onSave={saveProfileMeasurement}
         />
-      </section>
+      </ProfileDashboardContent>
 
       <ProfileMeasurementsModal
         open={profileMeasurementsModalOpen && !isMainDashboard && visibleProfileTab === "cabinet"}
@@ -732,6 +696,7 @@ export default function ProfileDashboardRoute(ctx) {
               onSave={saveProfileAccount}
             />
             <ProfileAppSettingsSection
+              variant="account"
               isWarmLightTheme={appTheme === APP_THEMES.WARM_LIGHT}
               email={profileAccount?.email || user?.email || ""}
               telegramProfile={telegramProfile}
@@ -746,17 +711,15 @@ export default function ProfileDashboardRoute(ctx) {
               }}
               onTelegramAvatarError={handleTelegramAvatarError}
             />
-            <button type="button" className="profileLogoutBtn profileAccountLogout" onClick={logout}>
-              Выйти из аккаунта
-            </button>
+            <ProfileSettingsLogoutButton onClick={logout} />
           </>
         )}
 
         {profileSettingsModalSection === "profile" && (
           <ProfileBodyMetricsSettingsSection
+            variant="modal"
             open={profileBodyMetricsOpen}
             draft={aiNutritionProfileDraft}
-            activeGoalLabel={activeGoalLabel}
             onToggle={() => setProfileBodyMetricsOpen((prev) => !prev)}
             onDraftChange={(field, value) => setAiNutritionProfileDraft((prev) => ({ ...prev, [field]: value }))}
             onSave={() => {
@@ -768,6 +731,7 @@ export default function ProfileDashboardRoute(ctx) {
 
         {profileSettingsModalSection === "settings" && (
           <ProfileAppSettingsSection
+            variant="modal"
             isWarmLightTheme={appTheme === APP_THEMES.WARM_LIGHT}
             telegramProfile={telegramProfile}
             onToggleTheme={toggleAppTheme}
@@ -827,12 +791,14 @@ export default function ProfileDashboardRoute(ctx) {
         onUpdateTask={updateClientTrainerTask}
       />
 
-      <ProfileFeedbackModal
-        open={profileFeedbackModalOpen && !isMainDashboard && visibleProfileTab === "cabinet"}
-        defaultContact={profileAccount?.email || user?.email || telegramProfile?.username || ""}
-        onClose={() => setProfileFeedbackModalOpen(false)}
-        onSubmit={submitProfileFeedback}
-      />
+      {profileFeedbackModalOpen && !isMainDashboard && visibleProfileTab === "cabinet" ? (
+        <ProfileFeedbackModal
+          open
+          defaultContact={profileAccount?.email || user?.email || telegramProfile?.username || ""}
+          onClose={() => setProfileFeedbackModalOpen(false)}
+          onSubmit={submitProfileFeedback}
+        />
+      ) : null}
 
       <ProfileNutritionModal
         open={profileNutritionModalOpen && !isMainDashboard}
@@ -870,31 +836,34 @@ export default function ProfileDashboardRoute(ctx) {
         onDisconnect={disconnectTelegram}
       />
 
-      <ProfileEmailModal
-        open={profileEmailConnectOpen}
-        email={profileAccount?.email || user?.email || ""}
-        saving={profileAccountSaving}
-        status={profileAccountStatus}
-        onClose={() => setProfileEmailConnectOpen(false)}
-        onRequestEmailChange={requestProfileEmailChange}
-      />
+      {profileEmailConnectOpen ? (
+        <ProfileEmailModal
+          open
+          email={profileAccount?.email || user?.email || ""}
+          saving={profileAccountSaving}
+          status={profileAccountStatus}
+          onClose={() => setProfileEmailConnectOpen(false)}
+          onRequestEmailChange={requestProfileEmailChange}
+        />
+      ) : null}
 
-      <ProfilePasswordModal
-        open={profilePasswordModalOpen}
-        hasPasswordProvider={hasPasswordProvider}
-        hasGoogleProvider={hasGoogleProvider}
-        saving={profileAccountSaving}
-        status={profileAccountStatus}
-        onClose={() => setProfilePasswordModalOpen(false)}
-        onChangePassword={changeProfilePassword}
-        onSendPasswordReset={sendProfilePasswordReset}
-      />
+      {profilePasswordModalOpen ? (
+        <ProfilePasswordModal
+          open
+          hasPasswordProvider={hasPasswordProvider}
+          hasGoogleProvider={hasGoogleProvider}
+          saving={profileAccountSaving}
+          status={profileAccountStatus}
+          onClose={() => setProfilePasswordModalOpen(false)}
+          onChangePassword={changeProfilePassword}
+          onSendPasswordReset={sendProfilePasswordReset}
+        />
+      ) : null}
 
       <ProfileSettingsTab
         visible={visibleProfileTab === "settings"}
         bodyMetricsOpen={profileBodyMetricsOpen}
         draft={aiNutritionProfileDraft}
-        activeGoalLabel={activeGoalLabel}
         isWarmLightTheme={appTheme === APP_THEMES.WARM_LIGHT}
         email={profileAccount?.email || user?.email || ""}
         telegramProfile={telegramProfile}
@@ -912,6 +881,6 @@ export default function ProfileDashboardRoute(ctx) {
         }}
         onTelegramAvatarError={handleTelegramAvatarError}
       />
-    </div>
+    </ProfileDashboardShell>
   );
 }

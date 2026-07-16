@@ -4,6 +4,7 @@ import {
   getAiNutritionDayMacros,
   getAiNutritionWeekForDate
 } from "../../../utils/aiNutritionSchedule";
+import styles from "./ProfileNutritionModal.module.css";
 
 const PROFILE_NUTRITION_GOALS = [
   { id: "maintain", title: "Поддержка" },
@@ -74,38 +75,51 @@ export default function ProfileNutritionModal({
   const currentGoal = profileDraft.goal || activeProfile?.goal || "recomp";
 
   return (
-    <div className="cabinetNutritionModalOverlay" role="presentation" onClick={onClose}>
+    <div
+      className={styles.overlay}
+      data-css-module-scope="profile-nutrition-modal"
+      data-testid="profile-nutrition-overlay"
+      role="presentation"
+      onClick={onClose}
+    >
       <div
-        className="cabinetNutritionModal"
+        className={styles.dialog}
+        data-testid="profile-nutrition-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="cabinetNutritionModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="cabinetNutritionModalHead">
+        <header className={styles.header} data-testid="profile-nutrition-header">
           <div>
             <span>ПЛАН ПИТАНИЯ</span>
             <h2 id="cabinetNutritionModalTitle">План КБЖУ</h2>
           </div>
-          <button type="button" aria-label="Закрыть план КБЖУ" onClick={onClose}>
+          <button
+            className={styles.closeButton}
+            data-testid="profile-nutrition-close"
+            type="button"
+            aria-label="Закрыть план КБЖУ"
+            onClick={onClose}
+          >
             ×
           </button>
         </header>
 
-        <section className="profileDashboardGrid profileNutritionSection hasPlan cabinetNutritionCombined">
-          <div className="profileDashboardCard profileNutritionGoalCard">
-            <div className="profileNutritionInlinePlan">
-              <div className="profileNutritionInlinePlanHead">
+        <section className={styles.content} data-testid="profile-nutrition-content">
+          <div className={`${styles.card} ${styles.goalCard}`} data-testid="profile-nutrition-goal-card">
+            <div className={styles.inlinePlan}>
+              <div className={styles.planHeader}>
                 <span>ВЫБРАТЬ ПЛАН</span>
                 <strong>{getAiNutritionGoalLabel(currentGoal)}</strong>
               </div>
 
-              <div className="profileGoalPicker">
+              <div className={styles.goalPicker} data-testid="profile-nutrition-goal-picker">
                 {PROFILE_NUTRITION_GOALS.map((goal) => (
                   <button
                     key={goal.id}
                     type="button"
-                    className={profileDraft.goal === goal.id ? "active" : ""}
+                    className={profileDraft.goal === goal.id ? styles.activeGoal : undefined}
                     aria-label={`Выбрать цель питания: ${goal.title}`}
                     aria-pressed={profileDraft.goal === goal.id}
                     onClick={() => onGoalChange(goal.id)}
@@ -115,11 +129,11 @@ export default function ProfileNutritionModal({
                 ))}
               </div>
 
-              <div className="profileGoalModeHint">
+              <div className={styles.goalHint}>
                 {getGoalHint(profileDraft.goal)}
               </div>
 
-              <div className="profileMacroGrid">
+              <div className={styles.macroGrid}>
                 <div><span>Ккал</span><strong>{Math.round(draftMacros.calories || nutritionGoals.calories)}</strong></div>
                 <div><span>Белки</span><strong>{Math.round(draftMacros.protein || nutritionGoals.protein)} г</strong></div>
                 <div><span>Жиры</span><strong>{Math.round(draftMacros.fat || nutritionGoals.fat)} г</strong></div>
@@ -128,7 +142,8 @@ export default function ProfileNutritionModal({
 
               <button
                 type="button"
-                className="profileDashboardButton"
+                className={styles.saveButton}
+                data-testid="profile-nutrition-save"
                 data-save-state={saveStatus || "idle"}
                 disabled={saveStatus === "saving" || saveStatus === "saved"}
                 onClick={onSave}
@@ -144,27 +159,31 @@ export default function ProfileNutritionModal({
             </div>
           </div>
 
-          <div className="profileDashboardCard profileAiNutritionPlanCard">
-            <div className="profileNutritionOverview">
-              <div className="profileNutritionCalendarHead">
-                <div>
-                  <h2>План питания</h2>
-                </div>
-              </div>
-
-              <div className="profileNutritionCalendarMonthTitle">
-                <button type="button" onClick={() => onShiftWeek(-1)} aria-label="Предыдущая неделя">
+          <div className={`${styles.card} ${styles.calendarCard}`} data-testid="profile-nutrition-calendar-card">
+            <div className={styles.calendarOverview}>
+              <div className={styles.calendarTitle}>
+                <button
+                  data-testid="profile-nutrition-previous-week"
+                  type="button"
+                  onClick={() => onShiftWeek(-1)}
+                  aria-label="Предыдущая неделя"
+                >
                   ‹
                 </button>
                 <strong>{weekLabel}</strong>
-                <button type="button" onClick={() => onShiftWeek(1)} aria-label="Следующая неделя">
+                <button
+                  data-testid="profile-nutrition-next-week"
+                  type="button"
+                  onClick={() => onShiftWeek(1)}
+                  aria-label="Следующая неделя"
+                >
                   ›
                 </button>
               </div>
 
-              <div className="profileNutritionMonthGrid">
+              <div className={styles.monthGrid}>
                 {WEEKDAYS.map((dayLabel) => (
-                  <span key={dayLabel} className="profileNutritionWeekday">{dayLabel}</span>
+                  <span key={dayLabel} className={styles.weekday}>{dayLabel}</span>
                 ))}
 
                 {weekDays.map((day) => {
@@ -184,22 +203,26 @@ export default function ProfileNutritionModal({
                     <div
                       key={day.key}
                       className={[
-                        "profileNutritionMonthDay",
-                        day.hasFood ? "filled" : "",
-                        showPlan ? "planned" : "",
-                        day.isOverGoal ? "highCalories" : "",
-                        day.isToday ? "today" : "",
-                        day.isSelected ? "active" : ""
+                        styles.day,
+                        showPlan ? styles.planned : "",
+                        day.isOverGoal ? styles.highCalories : "",
+                        day.isToday ? styles.today : "",
+                        day.isSelected ? styles.activeDay : ""
                       ].filter(Boolean).join(" ")}
+                      data-testid="profile-nutrition-day"
+                      data-has-food={day.hasFood ? "true" : "false"}
+                      data-planned={showPlan ? "true" : "false"}
+                      data-over-goal={day.isOverGoal ? "true" : "false"}
+                      data-selected={day.isSelected ? "true" : "false"}
                       aria-label={getProfileNutritionDayLabel(day, plannedMacros, showPlan)}
                       aria-current={day.isToday ? "date" : undefined}
                     >
                       <i
-                        className="profileNutritionCalorieFill"
+                        className={styles.calorieFill}
                         style={{ height: `${day.hasFood ? Math.max(8, caloriePercent) : 0}%` }}
                       />
                       <i
-                        className="profileNutritionProteinFill"
+                        className={styles.proteinFill}
                         style={{ height: `${day.hasFood ? Math.max(5, proteinPercent) : 0}%` }}
                       />
                       <span>{day.dayNumber}</span>
@@ -221,14 +244,14 @@ export default function ProfileNutritionModal({
                 })}
               </div>
 
-              <div className="profileNutritionCalendarLegend">
-                <span><i className="calorieOk" /> Факт</span>
-                <span><i className="proteinFill" /> Белок</span>
-                <span><i className="caloriePlan" /> План</span>
+              <div className={styles.legend}>
+                <span><i className={styles.factLegend} /> Факт</span>
+                <span><i className={styles.proteinLegend} /> Белок</span>
+                <span><i className={styles.planLegend} /> План</span>
               </div>
 
               {selectedTotals.calories > 0 && (
-                <p className="profileNutritionCalendarLogged">
+                <p className={styles.logged}>
                   Записано за день: {Math.round(selectedTotals.calories)} ккал
                 </p>
               )}

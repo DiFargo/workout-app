@@ -51,9 +51,7 @@ html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > butt
   -webkit-text-fill-color: currentColor !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button strong,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) .foodProductActionBar > button strong,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar > button strong {
+html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button strong {
   max-width: 100% !important;
   overflow: hidden !important;
   color: inherit !important;

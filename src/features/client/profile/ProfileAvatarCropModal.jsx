@@ -1,3 +1,5 @@
+import styles from "./ProfileAvatarCropModal.module.css";
+
 export default function ProfileAvatarCropModal({
   open,
   imageRef,
@@ -23,30 +25,33 @@ export default function ProfileAvatarCropModal({
     : 1;
 
   const imageStyle = {
-    width: size.width ? `${size.width * baseScale * zoom}px` : "auto",
-    height: size.height ? `${size.height * baseScale * zoom}px` : "auto",
-    transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px))`
+    "--profile-avatar-crop-image-width": size.width ? `${size.width * baseScale * zoom}px` : "auto",
+    "--profile-avatar-crop-image-height": size.height ? `${size.height * baseScale * zoom}px` : "auto",
+    "--profile-avatar-crop-image-transform": `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px))`
   };
 
   return (
-    <div className="profileAvatarCropOverlay" role="presentation" onClick={onClose}>
+    <div className={styles.overlay} data-testid="profile-avatar-crop-overlay" role="presentation" onClick={onClose}>
       <section
-        className="profileAvatarCropModal"
+        className={styles.dialog}
+        data-css-module-scope="profile-avatar-crop-modal"
+        data-testid="profile-avatar-crop-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="profileAvatarCropTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header>
+        <header className={styles.header}>
           <div>
-            <span>АВАТАР</span>
-            <h2 id="profileAvatarCropTitle">Выбери область фото</h2>
+            <span className={styles.eyebrow}>АВАТАР</span>
+            <h2 className={styles.heading} id="profileAvatarCropTitle">Выбери область фото</h2>
           </div>
-          <button type="button" aria-label="Закрыть редактор аватара" onClick={onClose}>×</button>
+          <button type="button" className={styles.closeButton} data-testid="profile-avatar-crop-close" aria-label="Закрыть редактор аватара" onClick={onClose}>×</button>
         </header>
 
         <div
-          className="profileAvatarCropViewport"
+          className={styles.viewport}
+          data-testid="profile-avatar-crop-viewport"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
@@ -58,14 +63,16 @@ export default function ProfileAvatarCropModal({
             alt=""
             draggable="false"
             onLoad={onImageLoad}
+            className={styles.image}
             style={imageStyle}
           />
-          <div className="profileAvatarCropMask" aria-hidden="true" />
+          <div className={styles.mask} aria-hidden="true" />
         </div>
 
-        <label className="profileAvatarCropZoom">
+        <label className={styles.zoom} data-testid="profile-avatar-crop-zoom">
           <span>−</span>
           <input
+            className={styles.range}
             type="range"
             min="1"
             max="3"
@@ -77,11 +84,11 @@ export default function ProfileAvatarCropModal({
           <span>＋</span>
         </label>
 
-        <p>Перемещай фото пальцем, чтобы лицо оказалось внутри круга.</p>
+        <p className={styles.hint}>Перемещай фото пальцем, чтобы лицо оказалось внутри круга.</p>
 
-        <div className="profileAvatarCropActions">
-          <button type="button" className="secondary" onClick={onClose}>Отмена</button>
-          <button type="button" onClick={onApply}>Готово</button>
+        <div className={styles.actions} data-testid="profile-avatar-crop-actions">
+          <button type="button" className={`${styles.actionButton} ${styles.secondaryButton}`} data-testid="profile-avatar-crop-cancel" onClick={onClose}>Отмена</button>
+          <button type="button" className={styles.actionButton} data-testid="profile-avatar-crop-apply" onClick={onApply}>Готово</button>
         </div>
       </section>
     </div>

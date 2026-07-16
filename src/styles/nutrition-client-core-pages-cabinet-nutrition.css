@@ -13,89 +13,12 @@
   overflow: hidden !important;
 }
 
-.clientCorePageCabinet .profileAiHero {
-  flex: 0 0 82px !important;
-  min-height: 82px !important;
-  padding: 4px 6px !important;
-  grid-template-columns: 64px minmax(0, 1fr) !important;
-  gap: 12px !important;
-}
-
-.clientCorePageCabinet .profileAiAvatarWrap,
-.clientCorePageCabinet .profileAiAvatar {
-  width: 62px !important;
-  height: 62px !important;
-}
-
-.clientCorePageCabinet .profileAiHeroText > span {
-  display: none !important;
-}
-
-.clientCorePageCabinet .profileAiHeroText h1 {
-  max-width: none !important;
-  font-size: 21px !important;
-  font-weight: 800 !important;
-  line-height: 1.12 !important;
-}
-
-.clientCorePageCabinet .profileCabinetProgressOverview {
-  width: 100% !important;
-  min-height: 0 !important;
-  flex: 1 1 auto !important;
-  margin: 8px 0 0 !important;
-  display: grid !important;
-  grid-template-rows: repeat(5, minmax(0, 1fr)) !important;
-  gap: 7px !important;
-}
-
-.clientCorePageCabinet .profileCabinetProgressOverview .progressHubCard {
-  height: 100% !important;
-  min-height: 0 !important;
-  padding: 10px 12px !important;
-  grid-template-columns: 44px minmax(0, 1fr) 14px !important;
-  gap: 10px !important;
-  border-radius: var(--client-item-radius) !important;
-}
-
-.clientCorePageCabinet .profileCabinetProgressOverview .progressHubCardIcon {
-  width: 44px !important;
-  height: 44px !important;
-  border-radius: 13px !important;
-  font-size: 21px !important;
-}
-
-.clientCorePageCabinet .progressHubCardText small {
-  font-size: 9px !important;
-  line-height: 1 !important;
-}
-
-.clientCorePageCabinet .progressHubCardText strong {
-  font-size: 18px !important;
-  line-height: 1.1 !important;
-}
-
-.clientCorePageCabinet .progressHubCardText em {
-  font-size: 11px !important;
-  line-height: 1.2 !important;
-}
-
 /* Nutrition */
 .clientCorePageNutrition {
   display: flex !important;
   flex-direction: column !important;
 }
 
-.clientCorePageNutrition .nutritionHeroTitleV4 {
-  height: 50px !important;
-  min-height: 50px !important;
-  margin: 0 0 5px !important;
-}
-
-.clientCorePageNutrition .nutritionHeroTitleV4 h1 {
-  line-height: 1.04 !important;
-}
-
-.clientCorePageNutrition .nutritionHeroV4,
 .clientCorePageNutrition .nutritionCaloriesRenderCard {
   flex: 0 0 auto !important;
 }

@@ -10,6 +10,7 @@ import {
   getHistoryVolume,
   getHistoryWorkoutParts
 } from "../../../utils/workoutHistoryPresentation";
+import styles from "./WorkoutHistoryPage.module.css";
 
 export default function WorkoutHistoryPage({
   canUseTrainerFeatures,
@@ -42,20 +43,20 @@ export default function WorkoutHistoryPage({
   const latestHistoryWorkout = historyItems[0];
 
   return (
-    <div className="app historyPagePremium historyPageCompact progressHistoryPage">
-      <section className="historyCompactHero">
+    <div className={styles.page} data-testid="workout-history-page" data-css-module-scope="workout-history">
+      <section className={styles.hero} data-testid="workout-history-hero">
         <div>
           <span>История</span>
           <h1>Тренировки</h1>
           <p>{historyItems.length ? `Последняя: ${formatHistoryCardDate(latestHistoryWorkout?.date, true)}` : "Сохраняй тренировки — здесь будет прогресс."}</p>
         </div>
 
-        <button className="historyRefreshBtn historyCompactRefresh" type="button" onClick={loadHistory} aria-label="Обновить историю тренировок">
+        <button className={styles.refresh} data-testid="workout-history-refresh" type="button" onClick={loadHistory} aria-label="Обновить историю тренировок">
           🔄
         </button>
       </section>
 
-      <section className="historyCompactStats">
+      <section className={styles.stats} data-testid="workout-history-stats">
         <div>
           <strong>{historyItems.length}</strong>
           <span>трен.</span>
@@ -71,7 +72,7 @@ export default function WorkoutHistoryPage({
       </section>
 
       {latestHistoryWorkout && (
-        <section className="historyCompactLast">
+        <section className={styles.latest} data-testid="workout-history-latest">
           <span>Последняя</span>
           <strong>{getHistoryWorkoutParts(latestHistoryWorkout.workout).title}</strong>
           <small>
@@ -81,20 +82,20 @@ export default function WorkoutHistoryPage({
       )}
 
       {historyLoading && (
-        <div className="historyEmptyCard historyCompactEmpty">
+        <div className={styles.empty} data-testid="workout-history-empty">
           <h3>Загрузка истории...</h3>
         </div>
       )}
 
       {!historyLoading && historyItems.length === 0 && (
-        <div className="historyEmptyCard historyCompactEmpty">
+        <div className={styles.empty} data-testid="workout-history-empty">
           <h3>История пустая</h3>
           <p>Заверши тренировку, и она появится здесь.</p>
         </div>
       )}
 
       {!historyLoading && historyItems.length > 0 && (
-        <div className="historyCompactList">
+        <div className={styles.list} data-testid="workout-history-list">
           {historyItems.map((item) => {
             const isOpen = openHistoryKey === item.id;
             const date = formatHistoryCardDate(item.date);
@@ -107,20 +108,22 @@ export default function WorkoutHistoryPage({
 
             return (
               <article
-                className={`${isOpen ? "historyCompactCard open" : "historyCompactCard"}${isSwiped ? " swiped" : ""}`}
+                className={[styles.card, isOpen && styles.open, isSwiped && styles.swiped].filter(Boolean).join(" ")}
+                data-testid="workout-history-card"
                 key={item.id}
                 onTouchStart={(event) => handleHistoryTouchStart(event, item.id)}
                 onTouchEnd={(event) => handleHistoryTouchEnd(event, item)}
               >
-                <div className="historySwipeDeleteAction" onClick={() => requestDeleteOwnHistoryWorkout(item)}>
+                <div className={styles.deleteAction} data-testid="workout-history-delete-action" onClick={() => requestDeleteOwnHistoryWorkout(item)}>
                   {historyDeletingId === item.id ? "Удаляю..." : "Удалить"}
                 </div>
 
-                <div className="historyCompactCardInner">
-                  <div className="historyCompactCardTop">
+                <div className={styles.cardInner} data-testid="workout-history-card-inner">
+                  <div className={styles.cardTop}>
                     <button
                       type="button"
-                      className="historyCompactMain"
+                      className={styles.main}
+                      data-testid="workout-history-card-main"
                       onClick={() => setOpenHistoryKey(isOpen ? null : item.id)}
                     >
                       <span>{date}{time ? ` · ${time}` : ""}</span>
@@ -130,7 +133,8 @@ export default function WorkoutHistoryPage({
 
                     <button
                       type="button"
-                      className="historyCompactToggle"
+                      className={styles.toggle}
+                      data-testid="workout-history-card-toggle"
                       onClick={() => setOpenHistoryKey(isOpen ? null : item.id)}
                       aria-label={isOpen ? "Свернуть" : "Развернуть"}
                     >
@@ -138,7 +142,7 @@ export default function WorkoutHistoryPage({
                     </button>
                   </div>
 
-                  <div className="historyCompactMeta">
+                  <div className={styles.meta}>
                     <span>{volume > 0 ? `${Math.round(volume)} кг объём` : "объём —"}</span>
                     {item.postWorkoutFeedback?.title && (
                       <span>{item.postWorkoutFeedback.emoji || "💬"} {item.postWorkoutFeedback.title}</span>
@@ -146,15 +150,15 @@ export default function WorkoutHistoryPage({
                   </div>
 
                   {isOpen && (
-                    <div className="historyCompactBody">
+                    <div className={styles.body}>
                       {(item.exercises || []).map((exercise, index) => (
-                        <div className="historyCompactExercise" key={`${exercise.name}_${index}`}>
-                          <div className="historyCompactExerciseHead">
+                        <div className={styles.exercise} key={`${exercise.name}_${index}`}>
+                          <div className={styles.exerciseHead}>
                             <strong>{exercise.name}</strong>
                             <span>{exercise.sets?.length || 0} подх.</span>
                           </div>
 
-                          <div className="historyCompactSets">
+                          <div className={styles.sets}>
                             {(exercise.sets || []).map((set, setIndex) => (
                               <span key={setIndex}>
                                 {set.set || setIndex + 1}: {set.reps || "—"}×{set.weight || "без веса"}

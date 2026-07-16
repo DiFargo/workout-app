@@ -6,121 +6,26 @@
     background-color: #f4f7fd !important;
   }
 
-  html:root[data-app-theme="warm-light"] body:has(#root .clientBottomNav)::after,
-  html:root[data-app-theme="warm-light"] body:has(#root .fatSearchBottomBar)::after,
-  html:root[data-app-theme="warm-light"] body:has(#root .foodProductActionBar)::after,
-  html:root[data-app-theme="warm-light"] body:has(#root .foodEditPageActionBar)::after {
+  html:root[data-app-theme="warm-light"] body:has(#root .fatSearchBottomBar)::after {
     content: none !important;
     display: none !important;
     pointer-events: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar,
-  html:root[data-app-theme="warm-light"] body #root .foodProductActionBar,
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar {
+  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar {
     overflow: visible !important;
     isolation: isolate !important;
     z-index: 100 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientBottomNav::after,
-  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav::after,
-  html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav::after,
-  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav::after,
-  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav::after,
-  html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar.clientBottomNav::after,
-  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar::after,
-  html:root[data-app-theme="warm-light"] body #root .foodProductActionBar::after,
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar::after {
+  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar::after {
     content: none !important;
     display: none !important;
     pointer-events: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .clientBottomNav > *,
-  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > *,
-  html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav > *,
-  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav > *,
-  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > *,
-  html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar.clientBottomNav > *,
-  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > *,
-  html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > *,
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar > * {
+  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > * {
     position: relative !important;
     z-index: 1 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction {
-    width: min(376px, calc(100vw - 28px)) !important;
-    height: 56px !important;
-    min-height: 56px !important;
-    max-height: 56px !important;
-    bottom: calc(108px + env(safe-area-inset-bottom, 0px)) !important;
-    padding: 8px 11px !important;
-    z-index: 115 !important;
-    grid-template-columns: 36px minmax(0, 1fr) 16px !important;
-    gap: 9px !important;
-    border: 2px solid rgba(111, 83, 255, 0.24) !important;
-    border-radius: 10px !important;
-    outline: 1px solid rgba(255, 255, 255, 0.96) !important;
-    outline-offset: -3px !important;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 247, 255, 0.98)),
-      #ffffff !important;
-    box-shadow:
-      0 8px 18px rgba(83, 70, 168, 0.08),
-      inset 0 0 0 1px rgba(216, 206, 255, 0.52),
-      inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction::after {
-    content: "" !important;
-    position: absolute !important;
-    inset: -1px !important;
-    border: 1px solid rgba(111, 83, 255, 0.18) !important;
-    border-radius: 10px !important;
-    pointer-events: none !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction .foodSearchModernActionIcon {
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    min-height: 32px !important;
-    border: 0 !important;
-    border-radius: 9px !important;
-    background: #f0ebff !important;
-    color: #604cf2 !important;
-    -webkit-text-fill-color: #604cf2 !important;
-    font-size: 16px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction strong {
-    color: #5947ee !important;
-    -webkit-text-fill-color: #5947ee !important;
-    font-size: 11px !important;
-    line-height: 1.05 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction small {
-    color: #626d82 !important;
-    -webkit-text-fill-color: #626d82 !important;
-    font-size: 9px !important;
-    font-weight: 750 !important;
-    line-height: 1.12 !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium .foodSearchFixedPhotoAction em {
-    color: #604cf2 !important;
-    -webkit-text-fill-color: #604cf2 !important;
-    font-size: 16px !important;
   }
 }

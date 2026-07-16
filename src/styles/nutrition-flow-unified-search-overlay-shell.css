@@ -5,7 +5,7 @@ html body #root .fatFoodSearchOverlay {
   -webkit-backdrop-filter: blur(12px) !important;
 }
 
-html body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium {
+html body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
   width: min(430px, calc(100vw - 16px)) !important;
   max-width: 430px !important;
   height: min(860px, calc(100dvh - 16px)) !important;

@@ -1,13 +1,8 @@
 
 :root[data-app-theme="warm-light"] .fatSearchInputWrapPremium input,
 :root[data-app-theme="warm-light"] .fatSearchInput,
-:root[data-app-theme="warm-light"] .fatPhotoAiInput input,
-:root[data-app-theme="warm-light"] .fatFoodAmountScreen input,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen input,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen textarea,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen select,
 :root[data-app-theme="warm-light"] .fatBarcodeCard input,
-:root[data-app-theme="warm-light"] .nutritionFixedHeaderV3 input {
+:root[data-app-theme="warm-light"] .nutritionFixedHeaderV3 input:not([data-css-module-control]) {
   background: rgba(255, 253, 246, 0.76) !important;
   color: var(--text) !important;
   border-color: rgba(96, 78, 27, 0.18) !important;
@@ -15,19 +10,10 @@
 }
 
 :root[data-app-theme="warm-light"] .fatSearchInputWrapPremium input::placeholder,
-:root[data-app-theme="warm-light"] .fatSearchInput::placeholder,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen input::placeholder,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen textarea::placeholder {
+:root[data-app-theme="warm-light"] .fatSearchInput::placeholder {
   color: rgba(69, 56, 24, 0.42) !important;
 }
 
-:root[data-app-theme="warm-light"] .fatSearchStatus.error,
-:root[data-app-theme="warm-light"] .productDeleteBg {
-  background: linear-gradient(135deg, #b8514c, #d37469) !important;
-  color: #fffaf0 !important;
-}
-
-:root[data-app-theme="warm-light"] .fatSearchResultIcon,
 :root[data-app-theme="warm-light"] .fatMealIcon,
 :root[data-app-theme="warm-light"] .mealIconExact {
   background: rgba(244, 224, 100, 0.22) !important;

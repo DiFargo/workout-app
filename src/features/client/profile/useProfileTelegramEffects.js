@@ -47,6 +47,8 @@ export function useProfileTelegramEffects({
         delete window.onTelegramAuthForWorkoutApp;
       }
     };
+    // Recreating the Telegram widget for handler identity changes breaks its iframe.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [telegramConnectOpen]);
 
   useEffect(() => {
@@ -80,5 +82,7 @@ export function useProfileTelegramEffects({
       const cleanUrl = `${window.location.origin}${window.location.pathname}`;
       window.history.replaceState({}, "", cleanUrl);
     }
+    // URL callback parameters are consumed exactly once on route mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

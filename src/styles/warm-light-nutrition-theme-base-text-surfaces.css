@@ -1,8 +1,8 @@
 /* text hierarchy */
-:root[data-app-theme="warm-light"] h1,
-:root[data-app-theme="warm-light"] h2,
-:root[data-app-theme="warm-light"] h3,
-:root[data-app-theme="warm-light"] h4,
+:root[data-app-theme="warm-light"] h1:not([data-css-module-scope]):not([data-css-module-scope] *),
+:root[data-app-theme="warm-light"] h2:not([data-css-module-scope]):not([data-css-module-scope] *),
+:root[data-app-theme="warm-light"] h3:not([data-css-module-scope]):not([data-css-module-scope] *),
+:root[data-app-theme="warm-light"] h4:not([data-css-module-scope]):not([data-css-module-scope] *),
 :root[data-app-theme="warm-light"] .menuTitle,
 :root[data-app-theme="warm-light"] .workoutTitle,
 :root[data-app-theme="warm-light"] .workoutTitleInline,
@@ -13,7 +13,6 @@
 :root[data-app-theme="warm-light"] .fatCaloriesCard strong,
 :root[data-app-theme="warm-light"] .fatSummaryCard strong,
 :root[data-app-theme="warm-light"] .fatFoodInfo strong,
-:root[data-app-theme="warm-light"] .productInfoExact strong,
 :root[data-app-theme="warm-light"] .adminUserRow strong,
 :root[data-app-theme="warm-light"] .historyCardHeader strong,
 :root[data-app-theme="warm-light"] .finishStatBox strong {
@@ -21,9 +20,9 @@
   text-shadow: none !important;
 }
 
-:root[data-app-theme="warm-light"] p,
-:root[data-app-theme="warm-light"] small,
-:root[data-app-theme="warm-light"] label,
+:root[data-app-theme="warm-light"] p:not([data-css-module-scope]):not([data-css-module-scope] *),
+:root[data-app-theme="warm-light"] small:not([data-css-module-scope]):not([data-css-module-scope] *),
+:root[data-app-theme="warm-light"] label:not([data-css-module-scope]):not([data-css-module-scope] *),
 :root[data-app-theme="warm-light"] .daySub,
 :root[data-app-theme="warm-light"] .fatStreakLineTop,
 :root[data-app-theme="warm-light"] .fatStreakLineTop span,
@@ -32,7 +31,6 @@
 :root[data-app-theme="warm-light"] .fatCaloriesCard span,
 :root[data-app-theme="warm-light"] .fatSummaryCard span,
 :root[data-app-theme="warm-light"] .fatFoodInfo span,
-:root[data-app-theme="warm-light"] .productInfoExact span,
 :root[data-app-theme="warm-light"] .previousInfo,
 :root[data-app-theme="warm-light"] .finishWorkoutSubtext,
 :root[data-app-theme="warm-light"] .loginHint {
@@ -96,7 +94,6 @@
 /* workout menu should not stay dark green */
 :root[data-app-theme="warm-light"] .menuPage .bigButton,
 :root[data-app-theme="warm-light"] .workoutMenuCard,
-:root[data-app-theme="warm-light"] .workoutSelectCard,
 :root[data-app-theme="warm-light"] .trainingCard,
 :root[data-app-theme="warm-light"] .workoutCard {
   background: var(--warm-card) !important;
@@ -113,8 +110,6 @@
 /* keep text visible on dark media thumbnails */
 :root[data-app-theme="warm-light"] .dayTitle,
 :root[data-app-theme="warm-light"] .bigButton span,
-:root[data-app-theme="warm-light"] .workoutMenuCard span,
-:root[data-app-theme="warm-light"] .workoutSelectCard span {
+:root[data-app-theme="warm-light"] .workoutMenuCard span {
   color: var(--text) !important;
 }
-

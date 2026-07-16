@@ -1,12 +1,14 @@
+import styles from "./WorkoutRunOverlays.module.css";
+
 export function WorkoutNotFoundPage({ onBackToMenu }) {
   return (
-    <div className="app">
-      <div className="workoutHeader">
-        <button className="backBtn universalFixedBackPointer" type="button" onClick={onBackToMenu}>
+    <div className={styles.notFoundPage} data-css-module-scope="workout-not-found-page">
+      <div className={styles.notFoundHeader}>
+        <button className={styles.backButton} type="button" onClick={onBackToMenu}>
           ← Главное меню
         </button>
 
-        <h1 className="workoutTitle">Тренировка не найдена</h1>
+        <h1 className={styles.notFoundTitle}>Тренировка не найдена</h1>
       </div>
     </div>
   );
@@ -19,34 +21,16 @@ export function WorkoutFullscreenVideoOverlay({ videoSrc, onClose, onVideoError 
 
   return (
     <div
+      className={styles.fullscreenOverlay}
+      data-testid="workout-fullscreen-video-overlay"
+      data-css-module-scope="workout-fullscreen-video-overlay"
       onClick={onClose}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100dvh",
-        background: "rgba(0,0,0,0.95)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 9999
-      }}
     >
       <button
         type="button"
+        className={styles.fullscreenClose}
         onClick={onClose}
         aria-label="Закрыть видео"
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          fontSize: "28px",
-          background: "none",
-          color: "white",
-          border: "none",
-          cursor: "pointer"
-        }}
       >
         ✕
       </button>
@@ -58,11 +42,7 @@ export function WorkoutFullscreenVideoOverlay({ videoSrc, onClose, onVideoError 
         playsInline
         onError={onVideoError}
         onClick={(event) => event.stopPropagation()}
-        style={{
-          width: "100%",
-          maxWidth: "900px",
-          borderRadius: "12px"
-        }}
+        className={styles.fullscreenVideo}
       />
     </div>
   );
@@ -73,7 +53,8 @@ export function WorkoutRunTopControls({ isSaving, showBackButton, onExit, onBack
     <>
       <button
         type="button"
-        className="workoutCloseButton"
+        className={styles.closeButton}
+        data-css-module-control="workout-run-overlays"
         onClick={onExit}
         disabled={isSaving}
         aria-label="Выйти из тренировки"
@@ -81,13 +62,13 @@ export function WorkoutRunTopControls({ isSaving, showBackButton, onExit, onBack
         ×
       </button>
 
-      <div className="workoutHeader workoutHeaderCompact">
+      <div className={styles.topHeader}>
         {showBackButton && (
           <button
-            className="backIconBtn universalFixedBackPointer"
+            className={styles.backButton}
             type="button"
             onClick={onBack}
-            aria-label="Вернуться назад"
+            aria-label="Вернуться к предыдущему экрану"
           >
             ←
           </button>
@@ -100,9 +81,7 @@ export function WorkoutRunTopControls({ isSaving, showBackButton, onExit, onBack
 }
 
 export function WorkoutStageHeading({
-  currentExerciseIndex,
   exercise,
-  exerciseCount,
   isFinishSlide,
   isStartSlide,
   isWorkoutSaved,
@@ -115,17 +94,11 @@ export function WorkoutStageHeading({
   const showTechniqueButton = !isFinishSlide && exercise?.id !== "warmup";
 
   return (
-    <>
-      {!isFinishSlide && (
-        <div className="exerciseCounter">
-          {currentExerciseIndex === 0
-            ? "Разминка"
-            : `Упражнение ${currentExerciseIndex} из ${exerciseCount}`}
-        </div>
-      )}
-
-      <div className={`workoutStageTitle ${showTechniqueButton ? "withTechniqueButton" : ""}`}>
-        <span>
+      <div
+        className={`${styles.stageTitle} ${showTechniqueButton ? styles.withTechniqueButton : ""}`}
+        data-css-module-scope="workout-stage-heading"
+      >
+        <span className={styles.stageTitleText}>
           {isFinishSlide
             ? isWorkoutSaved
               ? "Тренировка завершена"
@@ -135,7 +108,8 @@ export function WorkoutStageHeading({
         {showTechniqueButton && (
           <button
             type="button"
-            className="workoutTechniqueButton"
+            className={styles.techniqueButton}
+            data-css-module-control="workout-run-overlays"
             onClick={onOpenTechnique}
             aria-label="Показать пояснение техники"
             title="Техника выполнения"
@@ -144,6 +118,5 @@ export function WorkoutStageHeading({
           </button>
         )}
       </div>
-    </>
   );
 }

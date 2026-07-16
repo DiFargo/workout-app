@@ -1,4 +1,5 @@
 import { Mail } from "lucide-react";
+import styles from "./ProfileAppSettingsSection.module.css";
 
 export default function ProfileAppSettingsSection({
   isWarmLightTheme,
@@ -9,43 +10,56 @@ export default function ProfileAppSettingsSection({
   onOpenTelegram,
   onTelegramAvatarError,
   heading,
+  variant = "modal",
   darkThemeLabel = "тёмный стиль",
   disconnectedText = "Нажми, чтобы подключить",
   connectedBadge = "Подключён"
 }) {
+  const variantClass = variant === "account"
+    ? styles.account
+    : variant === "tab"
+      ? styles.tab
+      : styles.modal;
+
   return (
-    <section className={heading ? "profileDashboardCard profileAppSettingsSection hasHeading" : "profileDashboardCard profileAppSettingsSection"}>
-      {heading && <p className="profileAccountPanelTitle">{heading}</p>}
-      <div className="profileSettingsActions">
+    <section
+      className={`${styles.section} ${variantClass}${heading ? ` ${styles.hasHeading}` : ""}`}
+      data-testid="profile-app-settings-section"
+      data-profile-app-settings-variant={variant}
+    >
+      {heading && <p className={styles.panelTitle}>{heading}</p>}
+      <div className={styles.actions}>
         {onOpenEmail && (
           <button
             type="button"
-            className={email ? "profileSettingsEmailItem connected" : "profileSettingsEmailItem"}
+            className={`${styles.item} ${styles.emailItem}${email ? ` ${styles.connected}` : ""}`}
+            data-testid="profile-settings-email"
             aria-label={email ? "Открыть настройки почты" : "Привязать почту"}
             onClick={onOpenEmail}
           >
-            <span className="profileSettingsTelegramAvatar profileSettingsEmailAvatar">
+            <span className={`${styles.avatar} ${styles.emailAvatar}`}>
               <Mail size={18} strokeWidth={2.4} />
             </span>
-            <span className="profileSettingsTelegramText">
+            <span className={styles.text}>
               <strong>Почта</strong>
               <small>{email ? `${email} · привязана` : "Нажми, чтобы привязать"}</small>
             </span>
-            <em>{email ? "Привязана" : "Привязать"}</em>
-            <i>›</i>
+            <em className={styles.badge}>{email ? "Привязана" : "Привязать"}</em>
+            <i className={styles.arrow}>›</i>
           </button>
         )}
 
         <button
           type="button"
-          className={telegramProfile.connected ? "profileSettingsTelegramItem connected" : "profileSettingsTelegramItem"}
+          className={`${styles.item}${telegramProfile.connected ? ` ${styles.connected}` : ""}`}
+          data-testid="profile-settings-telegram"
           aria-label={telegramProfile.connected ? "Открыть настройки подключенного Telegram" : "Подключить Telegram"}
           onClick={onOpenTelegram}
         >
-          <span className="profileSettingsTelegramAvatar">
+          <span className={styles.avatar}>
             {telegramProfile.avatarUrl ? <img src={telegramProfile.avatarUrl} alt="" onError={onTelegramAvatarError} /> : "✈️"}
           </span>
-          <span className="profileSettingsTelegramText">
+          <span className={styles.text}>
             <strong>Telegram</strong>
             <small>
               {telegramProfile.connected
@@ -53,24 +67,25 @@ export default function ProfileAppSettingsSection({
                 : disconnectedText}
             </small>
           </span>
-          <em>{telegramProfile.connected ? connectedBadge : "Подключить"}</em>
-          <i>›</i>
+          <em className={styles.badge}>{telegramProfile.connected ? connectedBadge : "Подключить"}</em>
+          <i className={styles.arrow}>›</i>
         </button>
 
         <button
           type="button"
-          className="profileThemeSwitchBtn"
+          className={styles.themeButton}
+          data-testid="profile-settings-theme"
           aria-label={isWarmLightTheme ? `Переключить оформление на ${darkThemeLabel}` : "Переключить оформление на светлый стиль"}
           aria-pressed={isWarmLightTheme}
           onClick={onToggleTheme}
         >
-          <span className="profileThemeIcon">{isWarmLightTheme ? "🌙" : "☀️"}</span>
-          <span className="profileThemeText">
+          <span className={styles.themeIcon}>{isWarmLightTheme ? "🌙" : "☀️"}</span>
+          <span className={styles.themeText}>
             <strong>Оформление</strong>
             <small>{isWarmLightTheme ? `Переключить на ${darkThemeLabel}` : "Переключить на светлый стиль"}</small>
           </span>
-          <span className="profileThemeToggle" aria-hidden="true">
-            <span />
+          <span className={styles.toggle} aria-hidden="true">
+            <span className={styles.toggleKnob} />
           </span>
         </button>
       </div>

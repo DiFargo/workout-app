@@ -1,6 +1,5 @@
 /* Split from client-primary-shell-contract-mobile-rhythm.css: nutrition dashboard cards. */
 @media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopCard,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
     min-height: 88px !important;
     display: grid !important;
@@ -10,7 +9,6 @@
     padding: 14px 18px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanCollapsedArrow,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta i {
     width: auto !important;
     height: auto !important;

@@ -1,29 +1,5 @@
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium {
+html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
   padding: var(--client-title-top) var(--client-shell-x) calc(112px + env(safe-area-inset-bottom)) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome {
-  width: 100% !important;
-  min-height: auto !important;
-  margin: 0 0 18px !important;
-  padding: 0 !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) var(--client-action-size) !important;
-  grid-template-areas:
-    "title close"
-    "meal meal" !important;
-  align-items: center !important;
-  gap: 14px 12px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTitleButtonPremium,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditInlineMealHeader {
-  width: 100% !important;
-  min-height: 58px !important;
-  border: 1px solid var(--client-card-border) !important;
-  border-radius: 16px !important;
-  background: #ffffff !important;
-  box-shadow: 0 12px 30px rgba(55, 64, 112, 0.11) !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchInputWrapPremium {
@@ -34,77 +10,5 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSear
   border-radius: 17px !important;
   background: #ffffff !important;
   box-shadow: 0 10px 28px rgba(55, 64, 112, 0.1) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodSearchFixedPhotoAction {
-  position: fixed !important;
-  left: var(--client-shell-x) !important;
-  right: var(--client-shell-x) !important;
-  bottom: calc(100px + env(safe-area-inset-bottom)) !important;
-  z-index: 70 !important;
-  width: auto !important;
-  min-height: 72px !important;
-  border: 1px solid var(--client-card-border) !important;
-  border-radius: 18px !important;
-  background: #ffffff !important;
-  box-shadow: var(--client-shadow) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductTopActions {
-  position: absolute !important;
-  top: var(--client-title-top) !important;
-  right: var(--client-shell-x) !important;
-  z-index: 42 !important;
-  display: flex !important;
-  gap: 10px !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodProductTopAction {
-  width: var(--client-action-size) !important;
-  height: var(--client-action-size) !important;
-  border-radius: 18px !important;
-  border: 1px solid var(--client-card-border) !important;
-  background: #ffffff !important;
-  box-shadow: 0 12px 28px rgba(55, 64, 112, 0.12) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodEditRenderScreen {
-  padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay {
-  align-items: stretch !important;
-  justify-content: center !important;
-  padding: 0 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageSheet {
-  width: 100% !important;
-  min-height: 100dvh !important;
-  max-height: none !important;
-  padding: var(--client-title-top) var(--client-shell-x) calc(112px + env(safe-area-inset-bottom)) !important;
-  border-radius: 0 !important;
-  overflow-y: auto !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader {
-  min-height: var(--client-title-height) !important;
-  height: var(--client-title-height) !important;
-  margin: 0 0 18px !important;
-  padding: 0 0 0 calc(var(--client-action-size) + 12px) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  position: relative !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeaderBack {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditIconPresetRow {
-  display: none !important;
 }
 

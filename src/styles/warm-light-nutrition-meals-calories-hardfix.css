@@ -5,7 +5,7 @@
 
 /* unify ALL text on nutrition page */
 :root[data-app-theme="warm-light"] .fatSecretPage,
-:root[data-app-theme="warm-light"] .fatSecretPage *:not(.fatMealAdd):not(.fatPlusBtn) {
+:root[data-app-theme="warm-light"] .fatSecretPage *:not(.fatMealAdd):not(.fatPlusBtn):not([data-css-module-scope]):not([data-css-module-scope] *) {
   color: #5f5744 !important;
 }
 
@@ -35,13 +35,6 @@
 }
 
 /* HARD VISIBLE FIX â€” WARM LIGHT ONLY â€” TITLE / CALORIE GRID / MEAL FRAMES */
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionHeroTitleV4 h1,
-:root[data-app-theme="warm-light"] .fatSecretPage .nutritionHeroTitleV4 h1,
-:root[data-app-theme="warm-light"] .nutritionHeroTitleV4 h1 {
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
-  text-shadow: none !important;
-}
 
 /* calorie grid: stronger selector than previous green override */
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard .nutritionCaloriesRenderGrid span.isActive,
@@ -113,7 +106,7 @@
 
 /* all nutrition-page text unified to sample color */
 :root[data-app-theme="warm-light"] .fatSecretPage,
-:root[data-app-theme="warm-light"] .fatSecretPage *:not(.fatPlusBtn):not(.mealPlusExact) {
+:root[data-app-theme="warm-light"] .fatSecretPage *:not(.fatPlusBtn):not(.mealPlusExact):not([data-css-module-scope]):not([data-css-module-scope] *) {
   color: #5f5744 !important;
   -webkit-text-fill-color: #5f5744 !important;
 }
@@ -125,4 +118,3 @@
 }
 
 /* verify marker: hard-fix-v2 */
-

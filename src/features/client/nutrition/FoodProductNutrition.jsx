@@ -1,3 +1,5 @@
+import styles from "./FoodProductNutrition.module.css";
+
 export default function FoodProductNutrition({
   selectedFood,
   amount,
@@ -24,38 +26,47 @@ export default function FoodProductNutrition({
     const roundedAmount = Math.round(nextAmount * 10) / 10;
     onAmountChange(String(roundedAmount || ""));
   };
-  const selectDefaultAmountOnFocus = (event) => {
+  const clearDefaultAmountOnFocus = () => {
     if (isPortionMode || String(amount).trim() !== "100") {
       return;
     }
 
-    const input = event.currentTarget;
-    window.requestAnimationFrame(() => {
-      input.setSelectionRange(0, input.value.length);
-    });
+    onAmountChange("");
   };
 
   return (
     <>
-      <div className="foodEditAmountCard foodProductAmountStepper">
-        <span>{isPortionMode ? `${selectedFood.portion || "Порция"}` : "Граммы"}</span>
-        <div className={`foodProductAmountControls ${isPortionMode ? "isPortionMode" : "isWeightMode"}`}>
+      <div
+        className={styles.amountCard}
+        data-css-module-scope="food-product-nutrition"
+        data-testid="food-product-amount"
+        data-amount-mode={isPortionMode ? "portion" : "weight"}
+      >
+        <span className={styles.amountLabel} data-css-module-text>
+          {isPortionMode ? `${selectedFood.portion || "Порция"}` : "Граммы"}
+        </span>
+        <div className={`${styles.amountControls} ${isPortionMode ? styles.portionMode : styles.weightMode}`}>
           {isPortionMode && (
             <button
               type="button"
-              className="foodProductAmountStep"
+              className={styles.stepButton}
+              data-css-module-control
+              data-food-amount-action="decrease"
               onClick={() => updateSteppedAmount(-step)}
               aria-label="Уменьшить количество"
             >
               −
             </button>
           )}
-          <div className="foodProductAmountInputWrap">
+          <div className={styles.inputWrap}>
             <input
+              className={styles.input}
+              data-css-module-control
+              data-food-amount-input
               value={amount}
               onChange={(event) => onAmountChange(event.target.value)}
-              onFocus={selectDefaultAmountOnFocus}
-              placeholder={isPortionMode ? "1" : "100"}
+              onFocus={clearDefaultAmountOnFocus}
+              placeholder={isPortionMode ? "1" : "0"}
               inputMode="decimal"
               aria-label="Количество продукта"
               aria-invalid={Boolean(amountError)}
@@ -66,7 +77,9 @@ export default function FoodProductNutrition({
           {isPortionMode && (
             <button
               type="button"
-              className="foodProductAmountStep"
+              className={styles.stepButton}
+              data-css-module-control
+              data-food-amount-action="increase"
               onClick={() => updateSteppedAmount(step)}
               aria-label="Увеличить количество"
             >
@@ -75,45 +88,47 @@ export default function FoodProductNutrition({
           )}
         </div>
         {amountError && (
-          <small className="nutritionInlineError" id="nutrition-amount-error">
+          <small className={styles.error} id="nutrition-amount-error" role="alert">
             {amountError}
           </small>
         )}
       </div>
 
-      <div className="foodEditMacrosCards">
-        <div className="foodEditCaloriesMacroCard">
-          <span>Калории</span>
-          <strong>{Math.round(selectedFood.calories * scale)}</strong>
-          <small>ккал</small>
+      <div className={styles.macros} data-testid="food-product-macros">
+        <div className={styles.macroCard}>
+          <span data-css-module-text>Калории</span>
+          <strong data-css-module-text>{Math.round(selectedFood.calories * scale)}</strong>
+          <small data-css-module-text>ккал</small>
         </div>
-        <div>
-          <span>Белки</span>
-          <strong>{roundMacro(selectedFood.protein * scale)}</strong>
-          <small>г</small>
+        <div className={styles.macroCard}>
+          <span data-css-module-text>Белки</span>
+          <strong data-css-module-text>{roundMacro(selectedFood.protein * scale)}</strong>
+          <small data-css-module-text>г</small>
         </div>
-        <div>
-          <span>Жиры</span>
-          <strong>{roundMacro(selectedFood.fat * scale)}</strong>
-          <small>г</small>
+        <div className={styles.macroCard}>
+          <span data-css-module-text>Жиры</span>
+          <strong data-css-module-text>{roundMacro(selectedFood.fat * scale)}</strong>
+          <small data-css-module-text>г</small>
         </div>
-        <div>
-          <span>Углеводы</span>
-          <strong>{roundMacro(selectedFood.carbs * scale)}</strong>
-          <small>г</small>
+        <div className={styles.macroCard}>
+          <span data-css-module-text>Углеводы</span>
+          <strong data-css-module-text>{roundMacro(selectedFood.carbs * scale)}</strong>
+          <small data-css-module-text>г</small>
         </div>
       </div>
 
-      <div className="foodEditRowsCard">
+      <div className={styles.noteCard} data-testid="food-product-note-card">
         <button
           type="button"
-          className={`foodEditRow ${editNote ? "" : "muted"}`}
+          className={`${styles.noteButton} ${editNote ? "" : styles.muted}`}
+          data-css-module-control
+          data-food-product-action="edit-note"
           onClick={onOpenEditPage}
         >
-          <span className="foodEditRowIcon">▤</span>
-          <span className="foodEditRowLabel">Описание продукта</span>
-          <strong>{editNote.trim() || "Не добавлено"}</strong>
-          <em>›</em>
+          <span className={styles.noteIcon} aria-hidden="true">▤</span>
+          <span className={styles.noteLabel} data-css-module-text>Описание продукта</span>
+          <strong className={styles.noteValue} data-css-module-text>{editNote.trim() || "Не добавлено"}</strong>
+          <em className={styles.chevron} aria-hidden="true">›</em>
         </button>
       </div>
     </>

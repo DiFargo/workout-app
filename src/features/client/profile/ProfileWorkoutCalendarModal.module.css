@@ -1,0 +1,389 @@
+.calendar {
+  display: grid;
+  gap: 11px;
+  padding: 12px;
+  border: 1px solid var(--color-workout-calendar-shell-border);
+  border-radius: 16px;
+  background: var(--background-workout-calendar-shell);
+}
+
+.navigation {
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 8px;
+}
+
+.navigationTitle {
+  color: var(--color-workout-calendar-heading);
+  font-size: 14px;
+  font-weight: 900;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.navigationButton {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-workout-calendar-navigation-border);
+  border-radius: 999px;
+  background: var(--background-workout-calendar-navigation);
+  color: var(--color-workout-calendar-navigation);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.planner {
+  min-height: 54px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-workout-calendar-planner-border);
+  border-radius: 14px;
+  background: var(--background-workout-calendar-planner);
+}
+
+.plannerContent {
+  min-width: 0;
+}
+
+.plannerTitle,
+.plannerDescription {
+  display: block;
+}
+
+.plannerTitle {
+  color: var(--color-workout-calendar-heading);
+  font-size: 12px;
+}
+
+.plannerDescription {
+  margin-top: 3px;
+  color: var(--color-workout-calendar-planner-muted);
+  font-size: 9px;
+}
+
+.plannerButton {
+  min-height: 44px;
+  padding: 0 11px;
+  border: 1px solid var(--color-workout-calendar-planner-action-border);
+  border-radius: 10px;
+  background: var(--background-workout-calendar-planner-action);
+  color: var(--color-workout-calendar-planner-action);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.weekday {
+  padding: 3px 0;
+  color: var(--color-workout-calendar-weekday);
+  font-size: 9px;
+  font-weight: 850;
+  text-align: center;
+}
+
+.dayButton {
+  aspect-ratio: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  place-items: center;
+  border: 1px solid var(--color-workout-calendar-day-border);
+  border-radius: 10px;
+  background: var(--background-workout-calendar-day);
+  color: var(--color-workout-calendar-day);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.dayButton.outside {
+  opacity: 0.3;
+}
+
+.dayButton.today {
+  border-color: var(--color-workout-calendar-today-border);
+  box-shadow: var(--shadow-workout-calendar-today);
+}
+
+.dayButton.hasWorkout,
+.dayButton.scheduled {
+  border-color: var(--color-workout-calendar-planned-border);
+  background: var(--background-workout-calendar-planned);
+  color: var(--color-workout-calendar-planned);
+}
+
+.dayButton.completed,
+.dayButton.historyCompleted {
+  border-color: var(--color-workout-calendar-completed-border);
+  background: var(--background-workout-calendar-completed);
+  color: var(--color-workout-calendar-completed);
+}
+
+.dayButton.completedOffDate {
+  border-color: var(--color-workout-calendar-off-date-border);
+  background: var(--background-workout-calendar-off-date);
+  color: var(--color-workout-calendar-off-date);
+}
+
+.dayButton.missed {
+  border-color: var(--color-workout-calendar-missed-border);
+  background: var(--background-workout-calendar-missed);
+  color: var(--color-workout-calendar-missed);
+}
+
+.dayButton.shifted {
+  border-color: var(--color-workout-calendar-shifted-border);
+  background: var(--background-workout-calendar-shifted);
+  color: var(--color-workout-calendar-shifted);
+}
+
+.dayButton.editing:not(.outside) {
+  cursor: pointer;
+}
+
+.dayButton.selected {
+  border-color: var(--color-workout-calendar-selected-border);
+  box-shadow: var(--shadow-workout-calendar-selected);
+}
+
+.dayBadge {
+  position: static;
+  min-width: 22px;
+  min-height: 13px;
+  padding: 1px 5px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--background-workout-calendar-planned-badge);
+  color: var(--color-workout-calendar-planned);
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.dayButton.completed .dayBadge,
+.dayButton.historyCompleted .dayBadge {
+  background: var(--background-workout-calendar-completed-badge);
+  color: var(--color-workout-calendar-completed);
+}
+
+.dayButton.completedOffDate .dayBadge {
+  background: var(--background-workout-calendar-off-date-badge);
+  color: var(--color-workout-calendar-off-date);
+}
+
+.dayButton.missed .dayBadge {
+  background: var(--background-workout-calendar-missed-badge);
+  color: var(--color-workout-calendar-missed);
+}
+
+.dayButton.shifted .dayBadge {
+  background: var(--background-workout-calendar-shifted-badge);
+  color: var(--color-workout-calendar-shifted);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 10px;
+  color: var(--color-workout-calendar-weekday);
+  font-size: 8px;
+  font-weight: 850;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legendDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-workout-calendar-legend-planned);
+}
+
+.legendDot.completed,
+.legendDot.historyCompleted {
+  background: var(--color-workout-calendar-legend-completed);
+}
+
+.legendDot.completedOffDate {
+  background: var(--color-workout-calendar-legend-off-date);
+}
+
+.legendDot.missed {
+  background: var(--color-workout-calendar-legend-missed);
+}
+
+.legendDot.shifted {
+  background: var(--color-workout-calendar-legend-shifted);
+}
+
+.editActions {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 8px;
+}
+
+.actionButton {
+  min-height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--gradient-primary);
+  color: var(--color-workout-calendar-primary);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.secondaryAction {
+  border: 1px solid var(--color-workout-calendar-secondary-border);
+  background: var(--background-workout-calendar-secondary);
+  color: var(--color-workout-calendar-secondary);
+}
+
+.actionButton:disabled {
+  opacity: 0.56;
+}
+
+.status {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--color-workout-calendar-error-border);
+  border-radius: 11px;
+  background: var(--background-workout-calendar-error);
+  color: var(--color-workout-calendar-error);
+  font-size: 10px;
+  text-align: center;
+}
+
+.status.success {
+  border-color: var(--color-workout-calendar-success-border);
+  background: var(--background-workout-calendar-success);
+  color: var(--color-workout-calendar-success);
+}
+
+.dayDetails {
+  padding: 11px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--color-workout-calendar-details-border);
+  border-radius: 16px;
+  background: var(--background-workout-calendar-details);
+}
+
+.dayDetailsLabel,
+.dayDetailsTitle {
+  display: block;
+}
+
+.scheduledBadge {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  background: var(--background-workout-calendar-scheduled-badge);
+  color: var(--color-workout-calendar-scheduled-badge);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.dayDetailsLabel {
+  margin-bottom: 3px;
+  color: var(--color-workout-calendar-details-muted);
+  font-size: 9px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.dayDetailsTitle {
+  color: var(--color-workout-calendar-details-heading);
+  font-size: 13px;
+}
+
+.historyItem {
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 9px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--color-workout-calendar-history-border);
+  border-radius: 13px;
+  background: var(--background-workout-calendar-history);
+  color: var(--color-workout-calendar-history);
+  text-align: left;
+}
+
+.historyIcon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--background-workout-calendar-history-icon);
+}
+
+.historyContent {
+  min-width: 0;
+}
+
+.historyTitle,
+.historyMeta {
+  display: block;
+}
+
+.historyTitle {
+  overflow: hidden;
+  color: var(--color-workout-calendar-details-heading);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.historyMeta,
+.emptyDay {
+  color: var(--color-workout-calendar-details-muted);
+  font-size: 10px;
+}
+
+.historyMeta {
+  margin-top: 3px;
+}
+
+.historyIndicator {
+  color: var(--color-workout-calendar-history-indicator);
+  font-size: 18px;
+  font-style: normal;
+}
+
+.emptyDay {
+  margin: 2px 0;
+  text-align: center;
+}
+
+:global(:root[data-app-theme="warm-light"]) .navigationButton,
+:global(:root[data-app-theme="warm-light"]) .planner,
+:global(:root[data-app-theme="warm-light"]) .dayButton,
+:global(:root[data-app-theme="warm-light"]) .dayDetails,
+:global(:root[data-app-theme="warm-light"]) .historyItem {
+  box-shadow: none;
+}

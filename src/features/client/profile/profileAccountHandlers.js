@@ -36,6 +36,7 @@ function getProfileUpdateLoginEndpoint() {
 export function createProfileAccountHandlers({
   APP_THEMES,
   auth,
+  appTheme,
   db,
   storage,
   profileAccount,
@@ -69,7 +70,17 @@ export function createProfileAccountHandlers({
   }
 
   function toggleAppTheme() {
-    setAppTheme((currentTheme) => (currentTheme === APP_THEMES.WARM_LIGHT ? APP_THEMES.DARK_GREEN : APP_THEMES.WARM_LIGHT));
+    const nextTheme = appTheme === APP_THEMES.WARM_LIGHT ? APP_THEMES.DARK_GREEN : APP_THEMES.WARM_LIGHT;
+    setAppTheme(nextTheme);
+
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+
+    setDoc(doc(db, "users", uid), {
+      appTheme: nextTheme,
+      appThemePreference: "manual",
+      appThemeUpdatedAt: new Date().toISOString()
+    }, { merge: true }).catch((error) => console.warn("Theme preference sync error", error));
   }
 
   function openProfileAccount() {

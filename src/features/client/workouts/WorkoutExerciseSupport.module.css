@@ -1,0 +1,90 @@
+.root {
+  min-height: 14px;
+  padding: 0 2px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px 8px;
+}
+
+.previousInfo {
+  width: auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  overflow: hidden;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  box-shadow: none;
+  flex-shrink: 0;
+  bottom: 0;
+  z-index: 5;
+  color: var(--color-workout-support-text);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.previousInfo small {
+  margin-top: 3px;
+  display: block;
+  color: var(--color-workout-support-expanded-text);
+  font-size: 9px;
+}
+
+.noteButton {
+  box-sizing: border-box;
+  width: auto;
+  min-width: 76px;
+  max-width: 88px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  flex: 0 0 auto;
+  align-self: center;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid var(--color-workout-support-note-border);
+  border-radius: 11px;
+  background: var(--color-workout-support-note-surface);
+  box-shadow: none;
+  color: var(--color-workout-support-note);
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1;
+  bottom: 0;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.noteButton span:last-child {
+  color: var(--color-workout-support-note-icon);
+  font-size: 13px;
+}
+
+.aiAdjustHint {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: none;
+  color: var(--color-workout-support-ai);
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.2;
+  text-align: center;
+}

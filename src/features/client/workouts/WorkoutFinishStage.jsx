@@ -1,3 +1,5 @@
+import styles from "./WorkoutFinishStage.module.css";
+
 export default function WorkoutFinishStage({
   completedExercisesCount,
   exerciseCount,
@@ -22,8 +24,8 @@ export default function WorkoutFinishStage({
   return (
     <>
       {showWorkoutSavedCard && (
-        <div className="workoutSavedFloatingCard">
-          <div className="workoutSavedCheck">✓</div>
+        <div className={styles.savedCard} data-css-module-scope="workout-finish-stage">
+          <div className={styles.savedCheck}>✓</div>
           <strong>Тренировка сохранена</strong>
           <span>{postWorkoutFeedback?.advice || "Отличная работа"}</span>
         </div>
@@ -31,34 +33,36 @@ export default function WorkoutFinishStage({
 
       <div
         key="finish-slide"
-        className={`finishSlideWrap workoutFinishScreen ${
+        className={`${styles.screen} ${
           swipeDirection === "up"
-            ? "slideFromBottom"
+            ? styles.slideFromBottom
             : swipeDirection === "down"
-            ? "slideFromTop"
+            ? styles.slideFromTop
             : ""
         }`}
+        data-testid="workout-finish-screen"
+        data-css-module-scope="workout-finish-stage"
         style={{
           transform: swipeOffset
             ? `translateY(${swipeOffset}px)`
             : undefined
         }}
       >
-        <div className="exercise exerciseSlideCard finishSummaryCard workoutFinishCard workoutStageCard">
-          <div className="workoutFinishTop">
+        <div className={styles.card} data-testid="workout-finish-card">
+          <div className={styles.top}>
             <span>{isWorkoutSaved ? "Выполнена" : "Готова к сохранению"}</span>
             <span>{finishPresentation.day}</span>
           </div>
 
-          <div className="workoutFinishResult">
-            <span className="workoutFinishTrophy" aria-hidden="true">🏆</span>
+          <div className={styles.result}>
+            <span className={styles.trophy} aria-hidden="true">🏆</span>
             <div>
               <p>{isWorkoutSaved ? "Отличная работа" : "Проверь результат"}</p>
             </div>
           </div>
 
           {finishStats.length > 0 && (
-            <div className="workoutFinishStats">
+            <div className={styles.stats}>
               {finishStats.map((stat) => (
                 <div key={stat.label}>
                   <span>{stat.label}</span>
@@ -68,7 +72,7 @@ export default function WorkoutFinishStage({
             </div>
           )}
 
-          <div className="workoutFinishProgress">
+          <div className={styles.progress}>
             <span>Прогресс</span>
             <strong>
               Выполнено {completedExercisesCount} из {exerciseCount} упражнений
@@ -77,16 +81,18 @@ export default function WorkoutFinishStage({
           </div>
 
           {!isWorkoutSaved && incompleteExerciseNames.length > 0 && (
-            <div className="workoutFinishIncomplete">
+            <div className={styles.incomplete}>
               <strong>Остались без данных</strong>
               <span>{incompleteExerciseNames.slice(0, 3).join(" · ")}</span>
             </div>
           )}
 
           {!isWorkoutSaved && (
-            <label className="workoutFinishComment">
+            <label className={styles.comment}>
               <span>Комментарий тренеру</span>
               <textarea
+                className={styles.commentInput}
+                data-css-module-control="workout-finish-stage"
                 value={workoutClientComment}
                 onChange={onClientCommentChange}
                 placeholder="Например: последний подход дался тяжело"
@@ -95,13 +101,13 @@ export default function WorkoutFinishStage({
             </label>
           )}
 
-          <div className="workoutFinishTip">
+          <div className={styles.tip}>
             <span aria-hidden="true">💡</span>
             <p>{finishAdviceText}</p>
           </div>
 
           {finishSyncText && (
-            <div className={`workoutFinishSyncStatus ${workoutHistorySyncState}`}>
+            <div className={`${styles.syncStatus} ${styles[workoutHistorySyncState] || ""}`}>
               <span aria-hidden="true">
                 {workoutHistorySyncState === "local" ? "◷" : workoutHistorySyncState === "synced" ? "✓" : "•"}
               </span>
@@ -111,11 +117,12 @@ export default function WorkoutFinishStage({
         </div>
       </div>
 
-      <div className="workoutFinishActionPanel workoutStageActionPanel">
-        <div className="finishNavigationRow">
+      <div className={styles.actionPanel} data-css-module-scope="workout-finish-stage">
+        <div className={styles.navigationRow}>
           <button
             type="button"
-            className="finishBackButton"
+            className={styles.backButton}
+            data-css-module-control="workout-finish-stage"
             onClick={goToPreviousExercise}
             disabled={isSaving}
             aria-label="Вернуться к последнему упражнению"
@@ -124,7 +131,8 @@ export default function WorkoutFinishStage({
           </button>
           <button
             type="button"
-            className="finishWorkoutButton"
+            className={styles.finishButton}
+            data-css-module-control="workout-finish-stage"
             onClick={onFinishWorkout}
             disabled={isSaving}
           >

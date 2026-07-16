@@ -1,6 +1,7 @@
 import DishEditIngredientsBox from "./DishEditIngredientsBox";
 import DishIngredientPicker from "./DishIngredientPicker";
 import FoodEditBasicFields from "./FoodEditBasicFields";
+import styles from "./FoodEditPage.module.css";
 
 export default function FoodEditPage({
   isOpen,
@@ -40,18 +41,32 @@ export default function FoodEditPage({
   const isDish = selectedFood?.type === "dish";
 
   return (
-    <div className="foodEditPageOverlay">
-      <div className="foodEditPageSheet">
-        <div className="foodEditPageHeader">
-          <span className="foodEditPageHeaderSpacer" aria-hidden="true" />
+    <div
+      className={styles.overlay}
+      data-css-module-scope="food-edit-page"
+      data-food-edit-page-part="overlay"
+    >
+      <div className={styles.sheet} data-testid="food-edit-page">
+        <div className={styles.header} data-food-edit-page-part="header">
+          <span
+            className={styles.headerSpacer}
+            data-food-edit-page-part="header-spacer"
+            aria-hidden="true"
+          />
 
-          <strong className="foodEditPageTitleCenter">
+          <strong
+            className={styles.title}
+            data-food-edit-page-part="title"
+            data-css-module-text="food-edit-page"
+          >
             {isDish ? "Редактирование блюда" : "Редактирование продукта"}
           </strong>
 
           <button
             type="button"
-            className="foodEditPageHeaderClose"
+            className={styles.closeButton}
+            data-food-edit-page-action="close"
+            data-css-module-control="food-edit-page"
             onClick={onCancel}
             aria-label="Закрыть"
           >
@@ -59,7 +74,7 @@ export default function FoodEditPage({
           </button>
         </div>
 
-        <div className="foodEditPageContent">
+        <div className={styles.content} data-food-edit-page-part="content">
           <FoodEditBasicFields
             selectedFood={selectedFood}
             iconPresets={iconPresets}
@@ -97,9 +112,22 @@ export default function FoodEditPage({
             onAddIngredientFromFood={onAddSelectedDishIngredientFromFood}
           />
 
-          <label>
-            <span>{isDish ? "Заметка" : "Описание продукта"}</span>
+          <label
+            className={styles.noteField}
+            data-food-edit-page-part="note-field"
+            data-css-module-control="food-edit-page"
+          >
+            <span
+              className={styles.noteLabel}
+              data-food-edit-page-part="note-label"
+              data-css-module-text="food-edit-page"
+            >
+              {isDish ? "Заметка" : "Описание продукта"}
+            </span>
             <textarea
+              className={styles.noteInput}
+              data-food-edit-page-part="note-input"
+              data-css-module-control="food-edit-page"
               value={editNote}
               onChange={(event) => onEditNoteChange(event.target.value)}
               rows={5}
@@ -108,20 +136,32 @@ export default function FoodEditPage({
           </label>
         </div>
 
-        <nav className="foodEditPageActionBar" aria-label="Действия редактора продукта">
-          <button type="button" onClick={onCancel}>
-            <span aria-hidden="true">←</span>
-            <strong>Назад</strong>
+        <nav
+          className={styles.actionBar}
+          data-food-edit-page-part="actions"
+          aria-label="Действия редактора продукта"
+        >
+          <button
+            type="button"
+            className={styles.actionButton}
+            data-food-edit-page-action="back"
+            data-css-module-control="food-edit-page"
+            onClick={onCancel}
+          >
+            <span aria-hidden="true" data-css-module-text="food-edit-page">←</span>
+            <strong data-css-module-text="food-edit-page">Назад</strong>
           </button>
 
           <button
             type="button"
-            className="foodEditPageConfirmAction"
+            className={`${styles.actionButton} ${styles.confirmAction}`}
+            data-food-edit-page-action="confirm"
+            data-css-module-control="food-edit-page"
             disabled={!String(selectedFood?.name || "").trim()}
             onClick={onConfirm}
           >
-            <span aria-hidden="true">✓</span>
-            <strong>Сохранить</strong>
+            <span aria-hidden="true" data-css-module-text="food-edit-page">✓</span>
+            <strong data-css-module-text="food-edit-page">Сохранить</strong>
           </button>
         </nav>
       </div>

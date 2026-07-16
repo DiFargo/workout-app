@@ -1,4 +1,5 @@
 import { getTrainerTaskStatus } from "../../../domain/clientInsights";
+import styles from "./ProfileTrainerNotificationsModal.module.css";
 
 export default function ProfileTrainerNotificationsModal({
   open,
@@ -14,32 +15,45 @@ export default function ProfileTrainerNotificationsModal({
   }
 
   return (
-    <div className="profileTrainerNotificationsOverlay" role="presentation" onClick={onClose}>
+    <div
+      className={styles.overlay}
+      data-css-module-scope="profile-trainer-notifications"
+      data-testid="profile-trainer-notifications-overlay"
+      role="presentation"
+      onClick={onClose}
+    >
       <section
-        className="profileTrainerNotificationsModal"
+        className={styles.dialog}
+        data-testid="profile-trainer-notifications-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="profileTrainerNotificationsTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="profileTrainerNotificationsHead">
-          <div>
-            <span>ОТ ТРЕНЕРА</span>
-            <h2 id="profileTrainerNotificationsTitle">Уведомления</h2>
+        <header className={styles.header}>
+          <div className={styles.headerText}>
+            <span className={styles.eyebrow}>ОТ ТРЕНЕРА</span>
+            <h2 className={styles.heading} id="profileTrainerNotificationsTitle">Уведомления</h2>
           </div>
-          <button type="button" aria-label="Закрыть уведомления" onClick={onClose}>
+          <button
+            className={styles.closeButton}
+            data-testid="profile-trainer-notifications-close"
+            type="button"
+            aria-label="Закрыть уведомления"
+            onClick={onClose}
+          >
             ×
           </button>
         </header>
 
         {tasks.length > 0 ? (
           <>
-            <p className="profileTrainerNotificationsSummary">
+            <p className={styles.summary} data-testid="profile-trainer-notifications-summary">
               {activeCount > 0
                 ? `${activeCount} ${activeCount === 1 ? "активная задача" : "активных задач"}`
                 : "Все задачи выполнены"}
             </p>
-            <div className="profileTrainerNotificationsList">
+            <div className={styles.list} data-testid="profile-trainer-notifications-list">
               {tasks.map((task) => {
                 const taskStatus = getTrainerTaskStatus(task);
                 const taskDestination = getTaskDestination(task);
@@ -49,25 +63,34 @@ export default function ProfileTrainerNotificationsModal({
                 return (
                   <article
                     key={task.id}
-                    className={`profileTrainerNotificationItem ${taskStatus.id}${taskDestination ? " actionable" : ""}`}
+                    className={`${styles.item} ${styles[taskStatus.id] || ""}${taskDestination ? ` ${styles.actionable}` : ""}`}
+                    data-task-status={taskStatus.id}
+                    data-testid="profile-trainer-notification-item"
                     aria-label={`Задача тренера: ${task.title}. ${taskStatus.label}. ${taskDueText}`}
                   >
-                    <i aria-hidden="true">{taskStatus.id === "completed" ? "✓" : "!"}</i>
-                    <span>
-                      <strong>{task.title}</strong>
-                      <small>
-                        {taskDueText}
-                      </small>
+                    <i className={styles.itemIcon} aria-hidden="true">
+                      {taskStatus.id === "completed" ? "✓" : "!"}
+                    </i>
+                    <span className={styles.itemText}>
+                      <strong className={styles.itemTitle}>{task.title}</strong>
+                      <small className={styles.itemMeta}>{taskDueText}</small>
                     </span>
-                    <em>{taskStatus.label}</em>
-                    <div className="profileTrainerNotificationActions">
+                    <em className={styles.itemStatus}>{taskStatus.label}</em>
+                    <div className={styles.actions} data-testid="profile-trainer-notification-actions">
                       {taskDestination ? (
-                        <button type="button" onClick={() => onOpenTask(task)}>
+                        <button
+                          className={styles.actionButton}
+                          data-testid="profile-trainer-notification-open"
+                          type="button"
+                          onClick={() => onOpenTask(task)}
+                        >
                           Открыть
                         </button>
                       ) : null}
                       {onUpdateTask ? (
                         <button
+                          className={styles.actionButton}
+                          data-testid="profile-trainer-notification-toggle"
                           type="button"
                           onClick={() => onUpdateTask(task, taskStatus.id !== "completed")}
                         >
@@ -81,10 +104,10 @@ export default function ProfileTrainerNotificationsModal({
             </div>
           </>
         ) : (
-          <div className="profileTrainerNotificationsEmpty">
-            <i aria-hidden="true">✓</i>
-            <strong>Новых уведомлений нет</strong>
-            <p>Задачи и рекомендации тренера появятся здесь.</p>
+          <div className={styles.empty} data-testid="profile-trainer-notifications-empty">
+            <i className={styles.emptyIcon} aria-hidden="true">✓</i>
+            <strong className={styles.emptyTitle}>Новых уведомлений нет</strong>
+            <p className={styles.emptyText}>Задачи и рекомендации тренера появятся здесь.</p>
           </div>
         )}
       </section>

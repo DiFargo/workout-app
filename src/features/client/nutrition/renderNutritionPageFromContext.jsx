@@ -207,7 +207,6 @@ const {
       }}
       summaryProps={{
         isCaloriesOverGoal,
-        summaryText: nutritionSummaryCollapsedText,
         onExpand: () => setIsAiNutritionPlanExpanded(true)
       }}
       orbitProps={{
@@ -284,7 +283,6 @@ const {
         nutritionTotals,
         roundMacro,
         currentWeek: aiNutritionCurrentWeek,
-        onExpand: () => setIsAiNutritionPlanExpanded(true),
         onClose: () => setIsAiNutritionPlanExpanded(false)
       }}
       overlayData={{

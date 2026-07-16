@@ -3,11 +3,12 @@ import FoodPortionSelector from "./FoodPortionSelector";
 import FoodProductActionBar from "./FoodProductActionBar";
 import FoodProductHeader from "./FoodProductHeader";
 import FoodProductNutrition from "./FoodProductNutrition";
+import FoodProductTopActions from "./FoodProductTopActions";
 import NutritionDeleteConfirmModal from "./NutritionDeleteConfirmModal";
+import styles from "./FoodProductPage.module.css";
 
 export default function FoodProductPage({
   selectedFood,
-  isEditing,
   editPageOpen,
   meals,
   mealId,
@@ -64,34 +65,21 @@ export default function FoodProductPage({
   onAdd
 }) {
   return (
-    <div className="fatFoodAmountScreen foodEditRenderScreen foodProductRenderScreen">
+    <div
+      className={styles.root}
+      data-css-module-scope="food-product-page"
+      data-testid="food-product-page"
+    >
       {!editPageOpen && (
-        <div className="foodProductTopActions" aria-label="Действия с продуктом">
-          <button
-            type="button"
-            className="foodProductTopAction foodProductTopDelete"
-            disabled={!canDelete}
-            onClick={onDelete}
-            aria-label="Удалить продукт"
-            title="Удалить"
-          >
-            <span aria-hidden="true">🗑</span>
-          </button>
-          <button
-            type="button"
-            className="foodProductTopAction foodProductTopEdit"
-            onClick={onOpenEditPage}
-            aria-label="Редактировать продукт"
-            title="Редактировать"
-          >
-            <span aria-hidden="true">✎</span>
-          </button>
-        </div>
+        <FoodProductTopActions
+          canDelete={canDelete}
+          onDelete={onDelete}
+          onEdit={onOpenEditPage}
+        />
       )}
 
       <FoodProductHeader
         showFlowHeader={!editPageOpen}
-        isEditing={isEditing}
         selectedFood={selectedFood}
         meals={meals}
         mealId={mealId}

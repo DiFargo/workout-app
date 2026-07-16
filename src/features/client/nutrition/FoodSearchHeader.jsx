@@ -1,3 +1,5 @@
+import styles from "./FoodSearchHeader.module.css";
+
 export default function FoodSearchHeader({
   selectedFood,
   searchTab,
@@ -15,49 +17,67 @@ export default function FoodSearchHeader({
   const isSearchPage = !selectedFood && searchTab !== "my";
   const showCloseButton = !createChoiceOpen;
 
+  if (selectedFood) {
+    return null;
+  }
+
   return (
-    <div className={`fatSearchTopPremium ${isSearchPage ? "fatSearchTopPremiumHome foodSearchHeaderExactMainAlign" : ""} ${isMyProductsPage ? "fatSearchTopPremiumMy" : ""}`}>
+    <header
+      className={`${styles.root} ${isMyProductsPage ? styles.myProducts : styles.search}`}
+      data-css-module-scope="food-search-header"
+      data-food-search-header-variant={isMyProductsPage ? "my-products" : "search"}
+      data-testid="food-search-header"
+    >
       {isSearchPage && (
-        <div className="foodFlowTitleGroup foodFlowSearchTitle">
-          <h2>Добавить еду</h2>
+        <div className={styles.titleGroup}>
+          <h2 className={styles.heading} data-css-module-text="food-search-header">Добавить еду</h2>
         </div>
       )}
 
       {isMyProductsPage && (
-        <div className="foodFlowTitleGroup">
-          <span>Питание</span>
-          <h2>Мои продукты</h2>
+        <div className={styles.titleGroup}>
+          <span className={styles.eyebrow} data-css-module-text="food-search-header">Питание</span>
+          <h2 className={styles.heading} data-css-module-text="food-search-header">Мои продукты</h2>
         </div>
       )}
 
-      <div className="fatSearchTitleWrap">
+      <div className={styles.mealWrap} data-testid="food-search-meal-selector">
         <button
           type="button"
-          className="fatSearchTitleButtonPremium"
+          className={styles.mealButton}
+          data-css-module-control="food-search-header"
+          data-food-search-header-action="toggle-meal"
           aria-expanded={mealMenuOpen}
+          aria-controls="food-search-meal-menu"
           onClick={onToggleMealMenu}
         >
-          <span>Добавить в</span>
-          <strong>{selectedMealName}</strong>
+          <span className={styles.mealLabel} data-css-module-text="food-search-header">Добавить в</span>
+          <strong className={styles.mealName} data-css-module-text="food-search-header">{selectedMealName}</strong>
         </button>
 
         {mealMenuOpen && (
-          <div className="fatMealDropdown fatMealDropdownCentered">
+          <div className={styles.mealDropdown} id="food-search-meal-menu" data-testid="food-search-meal-menu">
             {meals.map((meal) => (
               <button
                 type="button"
                 key={meal.id}
-                className={mealId === meal.id ? "active" : ""}
+                className={`${styles.mealOption}${mealId === meal.id ? ` ${styles.selected}` : ""}`}
+                data-css-module-control="food-search-header"
+                data-food-search-meal={meal.id}
                 aria-pressed={mealId === meal.id}
                 onClick={() => onSelectMeal(meal.id)}
               >
-                <span>{meal.icon}</span>
-                <strong>{meal.name}</strong>
+                <span className={styles.mealIcon} aria-hidden="true" data-css-module-text="food-search-header">
+                  {meal.icon}
+                </span>
+                <strong className={styles.optionName} data-css-module-text="food-search-header">{meal.name}</strong>
               </button>
             ))}
             <button
               type="button"
-              className="fatMealDropdownCollapse"
+              className={styles.collapseButton}
+              data-css-module-control="food-search-header"
+              data-food-search-header-action="collapse-meal"
               onClick={onCollapseMealMenu}
               aria-label="Свернуть выбор приёма пищи"
             >
@@ -68,18 +88,20 @@ export default function FoodSearchHeader({
       </div>
 
       {showCloseButton && (
-      <button
-        type="button"
-        className="fatSearchClosePremium"
-        onClick={(event) => {
-          event.stopPropagation();
-          onClose();
-        }}
-        aria-label="Закрыть поиск еды"
-      >
-        ×
-      </button>
+        <button
+          type="button"
+          className={styles.closeButton}
+          data-css-module-control="food-search-header"
+          data-food-search-header-action="close"
+          onClick={(event) => {
+            event.stopPropagation();
+            onClose();
+          }}
+          aria-label="Закрыть поиск еды"
+        >
+          ×
+        </button>
       )}
-    </div>
+    </header>
   );
 }

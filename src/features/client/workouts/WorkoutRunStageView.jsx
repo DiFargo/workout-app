@@ -9,6 +9,48 @@ import WorkoutStageActionPanel from "./WorkoutStageActionPanel";
 import { WorkoutStageHeading } from "./WorkoutRunOverlays";
 import { WorkoutWarmupBody, WorkoutWarmupHeader } from "./WorkoutWarmupStage";
 import { buildWorkoutRunStageModel } from "./workoutRunStageModel";
+import styles from "./WorkoutRunStageView.module.css";
+
+export function WorkoutRunExercisePreview({
+  children,
+  exercise,
+  currentExerciseIndex = 1,
+  exerciseCount = 4,
+  isFinishSlide = false,
+  isWorkoutSaved = false,
+  hasVideo = false,
+  videoOpen = false,
+  onOpenTechnique = () => {}
+}) {
+  return (
+    <div
+      className={`${styles.deck} ${styles.exerciseDeck}`}
+      data-testid="workout-run-stage"
+      data-css-module-scope="workout-run-stage"
+      data-workout-stage="exercise"
+    >
+      <WorkoutStageHeading
+        exercise={exercise}
+        isFinishSlide={isFinishSlide}
+        isStartSlide={false}
+        isWorkoutSaved={isWorkoutSaved}
+        onOpenTechnique={onOpenTechnique}
+      />
+
+      <div
+        className={`${styles.card} ${styles.exerciseCard} ${hasVideo ? styles.hasVideo : ""} ${videoOpen ? styles.videoOpenCard : ""}`}
+        data-testid="workout-stage-card"
+        data-workout-stage-card="exercise"
+      >
+        <div className={styles.exerciseMeta}>
+          <span>День 1 · Упражнение {currentExerciseIndex} из {exerciseCount}</span>
+          <b>{String(currentExerciseIndex).padStart(2, "0")}</b>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 export default function WorkoutRunStageView({
   closeWorkoutExerciseModal,
@@ -110,24 +152,34 @@ export default function WorkoutRunStageView({
 
   if (!exercise && !isFinishSlide && !isStartSlide) {
     return (
-      <div className="exercise">
+      <div className={styles.missingExercise}>
         <h3>Упражнение не найдено</h3>
       </div>
     );
   }
 
+  const isWarmup = exercise?.id === "warmup";
+  const hasExerciseVideo = Boolean(!isWarmup && exercise?.video && !exerciseVideoFailed);
+
   return (
     <div
       ref={deckRef}
-      className="exerciseDeck workoutStageDeck"
+      className={`${styles.deck} ${
+        isWarmup
+          ? styles.warmupDeck
+          : isFinishSlide
+            ? styles.finishDeck
+            : styles.exerciseDeck
+      }`}
+      data-testid="workout-run-stage"
+      data-css-module-scope="workout-run-stage"
+      data-workout-stage={isWarmup ? "warmup" : isFinishSlide ? "finish" : "exercise"}
       onTouchStart={handleExerciseTouchStart}
       onTouchMove={handleExerciseTouchMove}
       onTouchEnd={handleExerciseTouchEnd}
     >
       <WorkoutStageHeading
-        currentExerciseIndex={currentExerciseIndex}
         exercise={exercise}
-        exerciseCount={workout.exercises.length}
         isFinishSlide={isFinishSlide}
         isStartSlide={isStartSlide}
         isWorkoutSaved={isWorkoutSaved}
@@ -178,26 +230,26 @@ export default function WorkoutRunStageView({
         <>
           <div
             key={exercise.id}
-            className={`exercise exerciseSlideCard workoutStageCard ${
-              exercise.id === "warmup" ? "warmupExerciseCard" : ""
-            } ${
-              exercise.id !== "warmup" ? "workoutExerciseCard" : ""
-            } ${
-              openVideoId === exercise.id ? "videoOpenCard" : ""
+            className={`${styles.card} ${
+              isWarmup ? styles.warmupCard : styles.exerciseCard
+            } ${hasExerciseVideo ? styles.hasVideo : ""} ${
+              openVideoId === exercise.id ? styles.videoOpenCard : ""
             } ${
               swipeDirection === "up"
-                ? "slideFromBottom"
+                ? styles.slideFromBottom
                 : swipeDirection === "down"
-                  ? "slideFromTop"
+                  ? styles.slideFromTop
                   : ""
             }`}
+            data-testid="workout-stage-card"
+            data-workout-stage-card={isWarmup ? "warmup" : "exercise"}
             style={{
               transform: swipeOffset
                 ? `translateY(${swipeOffset}px)`
                 : undefined
             }}
           >
-            {exercise.id === "warmup" ? (
+            {isWarmup ? (
               <WorkoutWarmupHeader
                 completedStepsCount={warmupCompletedSteps.length}
                 dayLabel={finishPresentation.day}
@@ -205,7 +257,7 @@ export default function WorkoutRunStageView({
               />
             ) : (
               <>
-                <div className="workoutExerciseMeta">
+                <div className={styles.exerciseMeta}>
                   <span>{finishPresentation.day} · Упражнение {currentExerciseIndex} из {workout.exercises.length}</span>
                   <b>{String(currentExerciseIndex).padStart(2, "0")}</b>
                 </div>
@@ -269,7 +321,7 @@ export default function WorkoutRunStageView({
               </>
             )}
 
-            {exercise.id === "warmup" ? (
+            {isWarmup ? (
               <WorkoutWarmupBody
                 completedSteps={warmupCompletedSteps}
                 onSetTimerPreset={setWarmupTimerPreset}
@@ -296,7 +348,7 @@ export default function WorkoutRunStageView({
               />
             )}
 
-            {exercise.id !== "warmup" && (
+            {!isWarmup && (
               <WorkoutExerciseSupport
                 exercise={exercise}
                 exerciseAiWeightAdjustments={exerciseAiWeightAdjustments}
@@ -326,7 +378,7 @@ export default function WorkoutRunStageView({
 
           <WorkoutStageActionPanel
             isLastExercise={currentExerciseIndex >= workout.exercises.length}
-            isWarmup={exercise.id === "warmup"}
+            isWarmup={isWarmup}
             onNext={goToNextExercise}
             onPrevious={goToPreviousExercise}
             onWarmupBack={requestLeaveWorkout}

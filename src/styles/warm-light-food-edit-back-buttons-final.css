@@ -1,13 +1,10 @@
 /* FINAL REAL OVERRIDE â€” SMALL GOLD BACK BUTTON EVERYWHERE INCLUDING NUTRITION */
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionBackTopLeftV3,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 button.nutritionBackTopLeftV3.backBtn.universalFixedBackPointer,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .addFoodBackOnly,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .addFoodBackOnly,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBackMini.addFoodBackOnly,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodEditBackOnly,
-:root[data-app-theme="warm-light"] .foodEditPageHeader .foodEditPageBack,
 :root[data-app-theme="warm-light"] button.backBtn.universalFixedBackPointer,
 :root[data-app-theme="warm-light"] button.backIconBtn.universalFixedBackPointer,
-:root[data-app-theme="warm-light"] button.workoutSelectBack.universalFixedBackPointer,
 :root[data-app-theme="warm-light"] button.exerciseBackButton,
 :root[data-app-theme="warm-light"] button.finishBackButton {
   width: 34px !important;
@@ -46,13 +43,10 @@
 /* force only one visible arrow in the same size */
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionBackTopLeftV3::before,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 button.nutritionBackTopLeftV3.backBtn.universalFixedBackPointer::before,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .addFoodBackOnly::before,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .addFoodBackOnly::before,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBackMini.addFoodBackOnly::before,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodEditBackOnly::before,
-:root[data-app-theme="warm-light"] .foodEditPageHeader .foodEditPageBack::before,
 :root[data-app-theme="warm-light"] button.backBtn.universalFixedBackPointer::before,
 :root[data-app-theme="warm-light"] button.backIconBtn.universalFixedBackPointer::before,
-:root[data-app-theme="warm-light"] button.workoutSelectBack.universalFixedBackPointer::before,
 :root[data-app-theme="warm-light"] button.exerciseBackButton::before,
 :root[data-app-theme="warm-light"] button.finishBackButton::before {
   content: "â†" !important;
@@ -83,13 +77,10 @@
 /* BACK BUTTON +50% SIZE */
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionBackTopLeftV3,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 button.nutritionBackTopLeftV3.backBtn.universalFixedBackPointer,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .addFoodBackOnly,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .addFoodBackOnly,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBackMini.addFoodBackOnly,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodEditBackOnly,
-:root[data-app-theme="warm-light"] .foodEditPageHeader .foodEditPageBack,
 :root[data-app-theme="warm-light"] button.backBtn.universalFixedBackPointer,
 :root[data-app-theme="warm-light"] button.backIconBtn.universalFixedBackPointer,
-:root[data-app-theme="warm-light"] button.workoutSelectBack.universalFixedBackPointer,
 :root[data-app-theme="warm-light"] button.exerciseBackButton,
 :root[data-app-theme="warm-light"] button.finishBackButton {
   width: 51px !important;
@@ -102,13 +93,10 @@
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionBackTopLeftV3::before,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 button.nutritionBackTopLeftV3.backBtn.universalFixedBackPointer::before,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .addFoodBackOnly::before,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .addFoodBackOnly::before,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBackMini.addFoodBackOnly::before,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodEditBackOnly::before,
-:root[data-app-theme="warm-light"] .foodEditPageHeader .foodEditPageBack::before,
 :root[data-app-theme="warm-light"] button.backBtn.universalFixedBackPointer::before,
 :root[data-app-theme="warm-light"] button.backIconBtn.universalFixedBackPointer::before,
-:root[data-app-theme="warm-light"] button.workoutSelectBack.universalFixedBackPointer::before,
 :root[data-app-theme="warm-light"] button.exerciseBackButton::before,
 :root[data-app-theme="warm-light"] button.finishBackButton::before {
   font-size: 28px !important;
@@ -117,13 +105,10 @@
 /* BACK BUTTON SAME POSITION EVERYWHERE â€” WARM LIGHT */
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionBackTopLeftV3,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 button.nutritionBackTopLeftV3.backBtn.universalFixedBackPointer,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .addFoodBackOnly,
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .addFoodBackOnly,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBackMini.addFoodBackOnly,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodEditBackOnly,
-:root[data-app-theme="warm-light"] .foodEditPageHeader .foodEditPageBack,
 :root[data-app-theme="warm-light"] button.backBtn.universalFixedBackPointer,
 :root[data-app-theme="warm-light"] button.backIconBtn.universalFixedBackPointer,
-:root[data-app-theme="warm-light"] button.workoutSelectBack.universalFixedBackPointer,
 :root[data-app-theme="warm-light"] button.exerciseBackButton,
 :root[data-app-theme="warm-light"] button.finishBackButton {
   position: fixed !important;
@@ -142,11 +127,8 @@
 /* keep same press effect without moving position */
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionBackTopLeftV3:active,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .addFoodBackOnly:active,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodEditBackOnly:active,
-:root[data-app-theme="warm-light"] .foodEditPageHeader .foodEditPageBack:active,
 :root[data-app-theme="warm-light"] button.backBtn.universalFixedBackPointer:active,
 :root[data-app-theme="warm-light"] button.backIconBtn.universalFixedBackPointer:active,
-:root[data-app-theme="warm-light"] button.workoutSelectBack.universalFixedBackPointer:active,
 :root[data-app-theme="warm-light"] button.exerciseBackButton:active,
 :root[data-app-theme="warm-light"] button.finishBackButton:active {
   transform: scale(0.96) !important;
@@ -159,11 +141,9 @@
 :root:not([data-app-theme="warm-light"]) .fatSearchBackMini,
 :root:not([data-app-theme="warm-light"]) .addFoodBackOnly,
 :root:not([data-app-theme="warm-light"]) .foodEditBackOnly,
-:root:not([data-app-theme="warm-light"]) .foodEditPageBack,
 :root:not([data-app-theme="warm-light"]) .exerciseBackButton,
 :root:not([data-app-theme="warm-light"]) .finishBackButton,
-:root:not([data-app-theme="warm-light"]) .nutritionBackTopLeftV3,
-:root:not([data-app-theme="warm-light"]) .workoutSelectBack {
+:root:not([data-app-theme="warm-light"]) .nutritionBackTopLeftV3 {
   background: revert !important;
   background-image: revert !important;
   border: revert !important;

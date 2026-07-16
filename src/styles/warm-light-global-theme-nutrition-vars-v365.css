@@ -34,10 +34,7 @@ body[data-app-theme="warm-light"] {
 :root[data-app-theme="warm-light"] .fatFoodSearchOverlay,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreen,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium,
-:root[data-app-theme="warm-light"] .fatFoodAmountScreen,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen,
 :root[data-app-theme="warm-light"] .fatBarcodeOverlay,
-:root[data-app-theme="warm-light"] .fatPhotoAiInput,
 :root[data-app-theme="warm-light"] .fatSearchBottomBar {
   background:
     radial-gradient(circle at 50% -8%, rgba(244, 224, 100, 0.32), transparent 34%),

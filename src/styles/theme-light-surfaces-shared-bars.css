@@ -1,12 +1,8 @@
 /* Shared bottom navigation and action bars */
 :root[data-app-theme="warm-light"] .mainMenuBottomBar,
 :root[data-app-theme="warm-light"] .profileBottomTabBar,
-:root[data-app-theme="warm-light"] .nutritionBottomTabBar,
-:root[data-app-theme="warm-light"] .individualWorkoutMenuBar,
 :root[data-app-theme="warm-light"] .fatSearchBottomBar,
 :root[data-app-theme="warm-light"] .fatSearchBottomBarFive,
-:root[data-app-theme="warm-light"] .foodProductActionBar,
-:root[data-app-theme="warm-light"] .foodEditPageActionBar,
 :root[data-app-theme="warm-light"] .warmupBottomPanel,
 :root[data-app-theme="warm-light"] .exerciseBottomPanel,
 :root[data-app-theme="warm-light"] .workoutCompletionBottomPanel,
@@ -21,12 +17,8 @@
 
 :root[data-app-theme="warm-light"] .mainMenuBottomBar button,
 :root[data-app-theme="warm-light"] .profileBottomTabBar button,
-:root[data-app-theme="warm-light"] .nutritionBottomTabBar button,
-:root[data-app-theme="warm-light"] .individualWorkoutMenuBar button,
 :root[data-app-theme="warm-light"] .fatSearchBottomBar button,
 :root[data-app-theme="warm-light"] .fatSearchBottomBarFive button,
-:root[data-app-theme="warm-light"] .foodProductActionBar button,
-:root[data-app-theme="warm-light"] .foodEditPageActionBar button,
 :root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar button {
   border-color: transparent !important;
   background: transparent !important;
@@ -36,22 +28,11 @@
 
 :root[data-app-theme="warm-light"] .mainMenuBottomBar button.active,
 :root[data-app-theme="warm-light"] .profileBottomTabBar button.active,
-:root[data-app-theme="warm-light"] .nutritionBottomTabBar button.active,
-:root[data-app-theme="warm-light"] .individualWorkoutMenuBar button.active,
 :root[data-app-theme="warm-light"] .fatSearchBottomBar button.active,
 :root[data-app-theme="warm-light"] .fatSearchBottomBarFive button.active,
-:root[data-app-theme="warm-light"] .foodProductActionBar button.active,
-:root[data-app-theme="warm-light"] .foodEditPageActionBar button.active,
 :root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar button.active {
   border-color: #e1defb !important;
   background: #f0effd !important;
   color: #5542d8 !important;
-}
-
-:root[data-app-theme="warm-light"] .foodProductActionBar .foodProductAddAction,
-:root[data-app-theme="warm-light"] .foodEditPageActionBar .foodEditPageConfirmAction {
-  border-color: #ddd9fa !important;
-  background: #efedff !important;
-  color: #4e3bd0 !important;
 }
 

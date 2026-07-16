@@ -93,11 +93,6 @@ button:active {
   margin-bottom: 7px !important;
 }
 
-.workoutRunPage .videoOpenCard .exerciseVideo {
-  max-height: min(150px, 19dvh) !important;
-  margin-bottom: 7px !important;
-}
-
 /* ÐŸÐ¾Ð»Ñ Ð¿Ð¾Ð´Ñ…Ð¾Ð´Ð¾Ð² */
 .workoutRunPage .setRow {
   gap: 9px !important;
@@ -128,7 +123,7 @@ button:active {
 /* ÐŸÑ€Ð¾ÑˆÐ»Ñ‹Ð¹ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚ */
 .workoutRunPage .previousInfo {
   min-height: 18px;
-  margin: 3px 0 7px !important;
+  margin: var(--workout-exercise-support-margin, 3px 0 7px) !important;
   color: rgba(255, 255, 255, 0.38) !important;
 }
 
@@ -213,22 +208,6 @@ button:active {
 }
 
 /* Ð’Ñ‹Ð±Ð¾Ñ€ Ñ‚Ñ€ÐµÐ½Ð¸Ñ€Ð¾Ð²ÐºÐ¸ â€” Ð°ÐºÐºÑƒÑ€Ð°Ñ‚Ð½ÐµÐµ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ñ */
-.workoutSelectPage {
-  justify-content: flex-start;
-}
-
-.workoutSelectHero {
-  margin-top: 10px;
-}
-
-.workoutSelectCard {
-  transition: transform 0.14s ease, border-color 0.14s ease;
-}
-
-.workoutSelectCard:active {
-  transform: scale(0.985);
-  border-color: rgba(145, 173, 78, 0.42);
-}
 
 /* ÐžÑ‡ÐµÐ½ÑŒ Ð¼Ð°Ð»ÐµÐ½ÑŒÐºÐ¸Ðµ ÑÐºÑ€Ð°Ð½Ñ‹ */
 @media (max-height: 720px) {
@@ -279,7 +258,7 @@ button:active {
   }
 
   .workoutRunPage .previousInfo {
-    margin: 0 0 5px !important;
+    margin: var(--workout-exercise-support-margin, 0 0 5px) !important;
     font-size: 11px !important;
   }
 
@@ -300,4 +279,3 @@ button:active {
     min-height: 54px !important;
   }
 }
-

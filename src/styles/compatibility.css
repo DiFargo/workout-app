@@ -1,41 +1,4 @@
 /* Client cabinet: the greeting card opens the profile modal. */
-.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHeroButton {
-  cursor: pointer !important;
-  outline: none !important;
-  position: relative !important;
-  padding-right: 48px !important;
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease !important;
-}
-
-.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHeroButton::after {
-  content: "›" !important;
-  position: absolute !important;
-  right: 20px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  color: rgba(255, 255, 255, 0.48) !important;
-  font-size: 30px !important;
-  font-weight: 700 !important;
-  line-height: 1 !important;
-}
-
-.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHeroButton:focus-visible {
-  border-color: rgba(145, 173, 78, 0.48) !important;
-  box-shadow: 0 0 0 3px rgba(145, 173, 78, 0.12) !important;
-}
-
-.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHeroButton:active {
-  transform: scale(0.992) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"]
-  .profileAiHeroButton::after {
-  color: #737b91 !important;
-}
 
 
 /* PRETTY START STATS ICONS FINAL FIX */

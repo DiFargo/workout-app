@@ -1,3 +1,5 @@
+import styles from "./FoodSearchBottomBar.module.css";
+
 export default function FoodSearchBottomBar({
   createChoiceOpen,
   searchTab,
@@ -11,10 +13,16 @@ export default function FoodSearchBottomBar({
   const myProductsActive = !createChoiceOpen && searchTab === "my";
 
   return (
-    <div className="fatSearchBottomBar fatSearchBottomBarFour">
+    <div
+      className={styles.root}
+      data-css-module-scope="food-search-bottom-bar"
+      data-testid="food-search-bottom-bar"
+    >
       <button
         type="button"
-        className="fatSearchBackAction"
+        className={styles.button}
+        data-css-module-control="food-search-bottom-bar-action"
+        data-food-search-action="back"
         onClick={onBack}
         aria-label="Назад к питанию"
       >
@@ -24,7 +32,9 @@ export default function FoodSearchBottomBar({
 
       <button
         type="button"
-        className={`fatSearchSearchAction ${searchActive ? "active" : ""}`}
+        className={`${styles.button} ${searchActive ? styles.active : ""}`}
+        data-css-module-control="food-search-bottom-bar-action"
+        data-food-search-action="search"
         aria-pressed={searchActive}
         onClick={onSearch}
       >
@@ -34,7 +44,9 @@ export default function FoodSearchBottomBar({
 
       <button
         type="button"
-        className={`fatSearchCreateAction ${createActive ? "active" : ""}`}
+        className={`${styles.button} ${createActive ? styles.active : ""}`}
+        data-css-module-control="food-search-bottom-bar-action"
+        data-food-search-action="create"
         aria-pressed={createActive}
         onClick={onCreate}
       >
@@ -44,7 +56,9 @@ export default function FoodSearchBottomBar({
 
       <button
         type="button"
-        className={`fatSearchMyProductsAction ${myProductsActive ? "active" : ""}`}
+        className={`${styles.button} ${myProductsActive ? styles.active : ""}`}
+        data-css-module-control="food-search-bottom-bar-action"
+        data-food-search-action="my-products"
         aria-pressed={myProductsActive}
         onClick={onMyProducts}
       >

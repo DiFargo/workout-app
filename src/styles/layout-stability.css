@@ -1,7 +1,5 @@
 /* === CLIENT/WORKOUT BOTTOM BAR + PROGRESS OVERVIEW STABILITY PATCH V844 === */
 html body #root .mainMenuBottomBar.profileBottomTabBar,
-html body #root .nutritionBottomTabBar,
-html body #root .individualWorkoutMenuBar,
 html body #root .workoutModeBottomBar,
 html body #root .trainerRoleBottomBar,
 html body #root nav.mainMenuBottomBar.profileBottomTabBar,
@@ -31,8 +29,6 @@ html body #root .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar 
 }
 
 html body #root .mainMenuBottomBar.profileBottomTabBar > button,
-html body #root .nutritionBottomTabBar > button,
-html body #root .individualWorkoutMenuBar > button,
 html body #root .workoutModeBottomBar > button,
 html body #root .trainerRoleBottomBar > button,
 html body #root nav.mainMenuBottomBar.profileBottomTabBar > button,
@@ -57,8 +53,6 @@ html body #root .mainDashboardPage nav.trainerRoleBottomBar > button {
 }
 
 html body #root .mainMenuBottomBar.profileBottomTabBar > button span,
-html body #root .nutritionBottomTabBar > button span,
-html body #root .individualWorkoutMenuBar > button span,
 html body #root .workoutModeBottomBar > button span,
 html body #root .trainerRoleBottomBar > button span,
 html body #root nav.mainMenuBottomBar.profileBottomTabBar > button span,
@@ -75,8 +69,6 @@ html body #root nav.trainerRoleBottomBar > button span {
 }
 
 html body #root .mainMenuBottomBar.profileBottomTabBar > button strong,
-html body #root .nutritionBottomTabBar > button strong,
-html body #root .individualWorkoutMenuBar > button strong,
 html body #root .workoutModeBottomBar > button strong,
 html body #root .trainerRoleBottomBar > button strong,
 html body #root nav.mainMenuBottomBar.profileBottomTabBar > button strong,
@@ -93,44 +85,10 @@ html body #root nav.trainerRoleBottomBar > button strong {
   overflow: hidden !important;
 }
 
-html body #root .profileTabbedPage:not(.trainerRolePage) .profileCabinetProgressOverview,
-html body #root .mainDashboardPage .profileCabinetProgressOverview,
-html body #root .profileTabbedPage:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetProgressOverview,
-html body #root .clientCorePageMain .profileCabinetProgressOverview,
-html body #root .clientCorePageWorkout .profileCabinetProgressOverview,
-html body #root .clientCorePageNutrition .profileCabinetProgressOverview,
-html body #root .profileDashboardPage .profileCabinetProgressOverview,
-html body #root .progressHubOverview {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-inline: 0 !important;
-  box-sizing: border-box !important;
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  justify-items: stretch !important;
-  align-items: stretch !important;
-}
-
-html body #root .profileTabbedPage:not(.trainerRolePage) .progressHubCard,
-html body #root .mainDashboardPage .progressHubCard,
-html body #root .profileDashboardPage .progressHubCard,
-html body #root .clientCorePageMain .progressHubCard,
-html body #root .clientCorePageWorkout .progressHubCard,
-html body #root .clientCorePageNutrition .progressHubCard {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-  justify-self: stretch !important;
-  align-self: stretch !important;
-  box-sizing: border-box !important;
-}
-
 /* === FINAL LAYOUT SYNCHRONIZER V845 === */
 html body #root .mainDashboardPage .profileCabinetSection,
 html body #root .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection,
 html body #root .mainMenuBottomBar.profileBottomTabBar,
-html body #root .nutritionBottomTabBar,
-html body #root .individualWorkoutMenuBar,
 html body #root .workoutModeBottomBar,
 html body #root .trainerRoleBottomBar,
 html body #root nav.mainMenuBottomBar.profileBottomTabBar,
@@ -167,18 +125,6 @@ html body #root .mainDashboardPage nav.trainerRoleBottomBar[aria-label="Осно
   bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
 }
 
-html body #root .profileDashboardPage .progressHubOverview,
-html body #root .profileTabbedPage:not(.trainerRolePage) .progressHubOverview,
-html body #root .mainDashboardPage .progressHubOverview,
-html body #root .profileTabbedPage:not(.trainerRolePage)[data-profile-tab="cabinet"] .profileCabinetProgressOverview,
-html body #root .clientCorePageMain .profileCabinetProgressOverview,
-html body #root .clientCorePageWorkout .profileCabinetProgressOverview,
-html body #root .clientCorePageNutrition .profileCabinetProgressOverview {
-  margin-top: 8px !important;
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
 @media (max-width: 430px) {
   html body #root .mainDashboardPage .profileCabinetSection,
   html body #root .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
@@ -188,9 +134,7 @@ html body #root .clientCorePageNutrition .profileCabinetProgressOverview {
   }
 
   html body #root .mainMenuBottomBar.profileBottomTabBar,
-  html body #root .nutritionBottomTabBar,
-  html body #root .individualWorkoutMenuBar,
-  html body #root .workoutModeBottomBar {
+html body #root .workoutModeBottomBar {
     width: min(350px, calc(100vw - 52px)) !important;
     max-width: 350px !important;
   }

@@ -27,15 +27,6 @@
 /* Ð¼ÑƒÑÐ¾Ñ€ÐºÐ° ÐºÐ°Ðº Ð½Ð° Ñ€ÐµÐ½Ð´ÐµÑ€Ðµ: Ñ‚Ð¾Ð½ÐºÐ°Ñ Ð±ÐµÐ»Ð°Ñ outline-Ð¸ÐºÐ¾Ð½ÐºÐ° */
 
 /* Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ð±Ð»Ð¾Ðº ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½ÐµÐµ Ð¿Ð¾ÑÐ»Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ "ÐŸÐ¾Ñ€Ñ†Ð¸Ñ" */
-.foodEditRowsCard {
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-}
-
-.foodEditRow {
-  height: 54px !important;
-}
-
 /* Ð²Ñ‹Ð±Ð¾Ñ€ Ð¿Ñ€Ð¸Ñ‘Ð¼Ð° Ð¿Ð¸Ñ‰Ð¸ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ Ð½Ð¸Ð¶Ð½ÐµÐ³Ð¾ Ð±Ð»Ð¾ÐºÐ° */
 
 .foodEditMealSelector button.active {

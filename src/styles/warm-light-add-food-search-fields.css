@@ -22,7 +22,7 @@
   box-shadow: none !important;
 }
 
-:root[data-app-theme="warm-light"] .fatSecretPage input,
+:root[data-app-theme="warm-light"] .fatSecretPage input:not([data-css-module-control]),
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionSearchInput {
   background: transparent !important;
   border: 0 !important;
@@ -33,7 +33,7 @@
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionSearchInput::placeholder,
-:root[data-app-theme="warm-light"] .fatSecretPage input::placeholder {
+:root[data-app-theme="warm-light"] .fatSecretPage input:not([data-css-module-control])::placeholder {
   color: rgba(79, 73, 61, 0.55) !important;
   -webkit-text-fill-color: rgba(79, 73, 61, 0.55) !important;
 }

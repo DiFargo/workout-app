@@ -94,36 +94,3 @@
 .mainDashboardPage .profileCabinetSection {
   margin-top: 0 !important;
 }
-
-.mainDashboardTitle {
-  margin: 6px 0 14px;
-  color: rgba(255, 255, 255, 0.96);
-  font-size: clamp(27px, 7vw, 36px);
-  font-weight: 950;
-  line-height: 1;
-  text-align: center;
-}
-
-.mainDashboardPage .profileAiHeroText {
-  justify-content: center;
-}
-
-.mainDashboardRoleActions {
-  width: 100%;
-  margin: 12px 0 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.mainDashboardRoleActions button {
-  min-height: 48px;
-  padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.075);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.045);
-  color: rgba(255, 255, 255, 0.76);
-  font-size: 12px;
-  font-weight: 850;
-}
-

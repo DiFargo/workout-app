@@ -1,0 +1,457 @@
+.root {
+  display: contents;
+}
+
+.field,
+.iconBox,
+.presetRow,
+.macroGrid,
+.portionRow,
+.validation,
+.field *,
+.iconBox *,
+.presetRow *,
+.macroGrid *,
+.portionRow * {
+  box-sizing: border-box;
+}
+
+.field {
+  width: 100%;
+  margin: 0 0 7px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border: 0;
+  border-radius: 28px;
+  background: transparent;
+  color: var(--color-heading);
+  -webkit-text-fill-color: var(--color-heading);
+}
+
+.labelText {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+  overflow: visible;
+  color: var(--color-food-dialog-label);
+  font-size: 9.5px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-align: start;
+  text-transform: uppercase;
+  -webkit-text-fill-color: var(--color-food-dialog-label-fill);
+}
+
+.input {
+  width: 100%;
+  height: 52px;
+  min-height: 52px;
+  margin: 0;
+  padding: 13px 14px;
+  display: block;
+  border: 1px solid var(--color-food-dialog-border);
+  border-radius: 18px;
+  outline: 0;
+  background: var(--color-food-dialog-surface);
+  color: var(--color-food-dialog-input-text);
+  box-shadow: 0 9px 22px rgba(51, 60, 108, 0.055);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.25;
+  -webkit-text-fill-color: var(--color-food-dialog-text-fill);
+}
+
+.input::placeholder,
+.portionInput::placeholder {
+  color: var(--color-food-dialog-placeholder);
+  -webkit-text-fill-color: var(--color-food-dialog-placeholder-fill);
+}
+
+.iconBox {
+  width: 100%;
+  margin: 0 0 7px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: end;
+  gap: 8px;
+  border: 1px solid var(--color-food-dialog-border);
+  border-radius: 20px;
+  background: var(--color-food-dialog-surface);
+  color: var(--color-food-dialog-text);
+  box-shadow: var(--shadow-food-dialog);
+  -webkit-text-fill-color: var(--color-food-dialog-text-fill);
+}
+
+.iconPreview {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-food-dialog-icon-border);
+  border-radius: 15px;
+  background: var(--color-food-dialog-icon-surface);
+  color: var(--color-food-dialog-icon-accent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-text-fill-color: var(--color-food-dialog-icon-fill);
+}
+
+.iconPreview > span {
+  display: block;
+  color: var(--color-food-edit-icon-glyph);
+  -webkit-text-fill-color: var(--color-food-edit-icon-glyph);
+}
+
+.iconField,
+.macroField {
+  margin: 0;
+}
+
+.macroField,
+.macroInput {
+  min-width: 0;
+}
+
+.iconInput,
+.macroInput {
+  text-align: center;
+}
+
+.presetRow {
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  display: none;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  overflow: hidden;
+  color: var(--color-heading);
+  -webkit-text-fill-color: var(--color-heading);
+}
+
+.presetButton {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  overflow: hidden;
+  border: 1px solid var(--color-food-dialog-border);
+  border-radius: 16px;
+  background: var(--color-food-dialog-surface);
+  color: var(--color-food-edit-preset-text);
+  box-shadow: 0 10px 24px rgba(55, 64, 112, 0.06);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  cursor: pointer;
+  -webkit-text-fill-color: var(--color-food-edit-preset-text);
+}
+
+.presetActive {
+  border-color: var(--color-food-edit-preset-active-border);
+  background: var(--color-food-edit-preset-active-surface);
+  color: var(--color-food-edit-preset-active-text);
+  -webkit-text-fill-color: var(--color-food-edit-preset-active-text);
+}
+
+.macroGrid {
+  width: 100%;
+  margin: 0 0 7px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  color: var(--color-heading);
+  -webkit-text-fill-color: var(--color-heading);
+}
+
+.macroTitle {
+  overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.portionField {
+  gap: 8px;
+}
+
+.portionRow {
+  position: relative;
+  width: 100%;
+  height: 68px;
+  min-height: 68px;
+  max-height: 62px;
+  margin: 0;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 88px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  border: 1px solid var(--color-food-dialog-border);
+  border-radius: 20px;
+  background: var(--color-food-dialog-surface);
+  color: var(--color-food-dialog-text);
+  box-shadow: 0 12px 30px rgba(55, 64, 112, 0.08);
+  -webkit-text-fill-color: var(--color-food-dialog-text-fill);
+}
+
+.portionInput {
+  flex: 1 1 0%;
+  width: 100%;
+  min-width: 0;
+  height: 50px;
+  min-height: 50px;
+  max-height: 62px;
+  margin: 0;
+  padding: 0 16px;
+  display: block;
+  border: 1px solid #e8ebf3;
+  border-radius: 16px;
+  outline: 0;
+  background: var(--color-food-dialog-surface);
+  color: var(--color-food-dialog-input-text);
+  box-shadow: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  -webkit-text-fill-color: var(--color-food-dialog-text-fill);
+}
+
+.portionToggle {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  bottom: 7px;
+  width: 86px;
+  min-width: 0;
+  max-width: 86px;
+  height: 50px;
+  min-height: 50px;
+  margin: 0;
+  padding: 0 12px;
+  display: grid;
+  place-items: center;
+  justify-content: center;
+  border: 1px solid #e8ebf3;
+  border-radius: 16px;
+  background: var(--color-food-dialog-surface);
+  color: var(--color-food-edit-unit-text);
+  box-shadow: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  cursor: pointer;
+  z-index: 5;
+  -webkit-text-fill-color: var(--color-food-edit-unit-text);
+}
+
+.validation {
+  padding: 8px 10px;
+  border: 1px solid var(--color-food-edit-error-border);
+  border-radius: 10px;
+  background: var(--color-food-edit-error-surface);
+  color: var(--color-food-edit-error);
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.presetButton:focus-visible,
+.portionToggle:focus-visible {
+  outline: 0;
+  box-shadow: var(--focus-ring);
+}
+
+.input:focus-visible,
+.portionInput:focus-visible {
+  outline: 0;
+  outline-offset: 2px;
+}
+
+:global(:root[data-app-theme="dark-green"]) .field {
+  border-radius: 0;
+}
+
+:global(:root[data-app-theme="dark-green"]) .iconField {
+  color: var(--color-food-dialog-text);
+  -webkit-text-fill-color: var(--color-food-dialog-text-fill);
+}
+
+:global(:root[data-app-theme="dark-green"]) .input,
+:global(:root[data-app-theme="dark-green"]) .portionInput {
+  outline: medium none currentColor;
+  outline-offset: 0;
+}
+
+:global(:root[data-app-theme="dark-green"]) .input:focus-visible,
+:global(:root[data-app-theme="dark-green"]) .portionInput:focus-visible {
+  outline: 3px solid var(--color-food-edit-focus);
+  outline-offset: 2px;
+}
+
+:global(:root[data-app-theme="dark-green"]) .presetRow {
+  width: 100%;
+  height: auto;
+  margin: 0 0 7px;
+  padding: 1px 0 2px;
+  display: flex;
+  align-items: normal;
+  justify-content: normal;
+  gap: 7px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  color: var(--color-text);
+  -webkit-text-fill-color: var(--color-text);
+}
+
+:global(:root[data-app-theme="dark-green"]) .presetButton {
+  width: 42px;
+  min-width: 42px;
+  max-width: none;
+  height: 42px;
+  min-height: 34px;
+  max-height: none;
+  padding: 0;
+  display: block;
+  flex: 0 1 auto;
+  place-items: normal;
+  overflow: visible;
+  border-radius: 13px;
+  box-shadow: none;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+:global(:root[data-app-theme="dark-green"]) .presetActive {
+  border-color: var(--color-food-edit-preset-active-border);
+  background: var(--color-food-edit-preset-active-surface);
+  color: var(--color-food-edit-preset-active-text);
+  -webkit-text-fill-color: var(--color-food-edit-preset-active-text);
+}
+
+:global(:root[data-app-theme="dark-green"]) .portionField {
+  gap: 7px;
+}
+
+:global(:root[data-app-theme="dark-green"]) .portionRow {
+  height: 62px;
+  min-height: 46px;
+  padding: 0;
+  display: block;
+  grid-template-columns: minmax(0, 1fr) 86px;
+  align-items: stretch;
+  justify-content: normal;
+  gap: 10px;
+  border-radius: 18px;
+  box-shadow: 0 9px 22px rgba(51, 60, 108, 0.055);
+  -webkit-text-fill-color: var(--color-food-dialog-text-fill);
+}
+
+:global(:root[data-app-theme="dark-green"]) .portionInput {
+  width: 100%;
+  height: 52px;
+  min-height: 52px;
+  padding: 13px 14px;
+  display: inline-block;
+  border-color: var(--color-food-dialog-border);
+  border-radius: 18px;
+  box-shadow: 0 9px 22px rgba(51, 60, 108, 0.055);
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.25;
+  text-align: start;
+}
+
+:global(:root[data-app-theme="dark-green"]) .portionToggle {
+  height: 46px;
+  min-width: 86px;
+  min-height: 46px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  place-items: center normal;
+  border-color: var(--color-food-dialog-border);
+  border-radius: 15px;
+  font-size: 15px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+@media (min-width: 400px) {
+  .labelText {
+    font-size: 10px;
+  }
+
+  .iconPreview {
+    width: 46px;
+    min-width: 46px;
+    height: 46px;
+    min-height: 46px;
+  }
+}
+
+@media (min-width: 760px) {
+  .field,
+  .macroGrid {
+    margin-bottom: 10px;
+  }
+
+  .iconBox {
+    grid-template-columns: 62px minmax(0, 1fr);
+    gap: 12px;
+    margin: 10px 0;
+  }
+
+  .iconField,
+  .macroField {
+    margin: 0;
+  }
+
+  .macroGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .presetRow {
+    grid-template-columns: repeat(10, 1fr);
+  }
+
+  .macroField,
+  .macroInput {
+    min-width: auto;
+  }
+
+  .macroTitle {
+    overflow: visible;
+    text-align: start;
+    white-space: normal;
+  }
+}

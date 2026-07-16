@@ -9,16 +9,11 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 h1,
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 small,
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4,
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionQuickActionExact,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCard,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealCard {
   color: #151824 !important;
 }
 
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionQuickActionExact,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCard,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealCard {
   border-color: #e3e6f1 !important;
@@ -26,27 +21,6 @@
   box-shadow: 0 9px 24px rgba(55, 64, 112, 0.075) !important;
 }
 
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span {
-  border-color: #dfe3ef !important;
-  background: #ffffff !important;
-  color: transparent !important;
-  box-shadow: inset 0 0 0 1px rgba(69, 77, 113, 0.04) !important;
-}
-
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected span,
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.hasFood span {
-  border-color: #5a49df !important;
-  background: linear-gradient(135deg, #6552e6, #3f65ec) !important;
-  color: #ffffff !important;
-  box-shadow: 0 8px 18px rgba(90, 73, 223, 0.22) !important;
-}
-
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4.selected small {
-  color: #5a49df !important;
-}
-
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4,
-:root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4 span,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCol span,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealTitle span,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealKcal span {

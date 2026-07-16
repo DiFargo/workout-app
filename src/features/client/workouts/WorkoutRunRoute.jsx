@@ -13,6 +13,8 @@ import {
   WorkoutRunTopControls
 } from "./WorkoutRunOverlays";
 import WorkoutRunStageView from "./WorkoutRunStageView";
+import WorkoutRunPageShell from "./WorkoutRunPageShell";
+import styles from "./WorkoutRunRoute.module.css";
 
 export default function WorkoutRunRoute({
   aiNutritionProfileDraft,
@@ -137,7 +139,7 @@ export default function WorkoutRunRoute({
   };
 
   return (
-    <div className={`app workoutRunPage ${workoutStarted && !isWorkoutSaved ? "workoutRunPageNoHeader" : ""}`}>
+    <WorkoutRunPageShell noHeader={workoutStarted && !isWorkoutSaved}>
       <WorkoutRunTopControls
         isSaving={isSaving}
         showBackButton={shouldShowTopBackButton && isWorkoutSaved}
@@ -221,7 +223,11 @@ export default function WorkoutRunRoute({
       />
 
       {exerciseValidationMessage && (
-        <div className="workoutExerciseValidationToast" role="alert">
+        <div
+          className={styles.validationToast}
+          data-css-module-scope="workout-run-validation-toast"
+          role="alert"
+        >
           <span aria-hidden="true">!</span>
           <strong>{exerciseValidationMessage}</strong>
         </div>
@@ -291,6 +297,6 @@ export default function WorkoutRunRoute({
           showAppError("load", "Видео упражнения не поддерживается или временно недоступно.");
         }}
       />
-    </div>
+    </WorkoutRunPageShell>
   );
 }

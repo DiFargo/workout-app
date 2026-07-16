@@ -1,6 +1,4 @@
-html body #root .fatFoodSearchScreenPremium .fatSearchResultCard,
-html body #root .nutritionZoukFood,
-html body #root .dishIngredientResultCard {
+html body #root .nutritionZoukFood {
   min-height: 72px !important;
   padding: 10px 12px !important;
   display: grid !important;
@@ -11,14 +9,9 @@ html body #root .dishIngredientResultCard {
   text-align: left !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .fatSearchResultIcon,
 html body #root .nutritionZoukIcon,
 html body #root .nutritionZoukMealIcon,
-html body #root .nutritionZoukFoodIcon,
-html body #root .dishIngredientResultCard > span,
-html body #root .foodEditIconRender,
-html body #root .foodEditIconPreviewManual,
-html body #root .dishIngredientConfirmIcon {
+html body #root .nutritionZoukFoodIcon {
   width: 46px !important;
   height: 46px !important;
   min-width: 46px !important;
@@ -32,15 +25,11 @@ html body #root .dishIngredientConfirmIcon {
   font-size: 22px !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo,
-html body #root .nutritionZoukFoodText,
-html body #root .dishIngredientResultCard > div {
+html body #root .nutritionZoukFoodText {
   min-width: 0 !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo strong,
-html body #root .nutritionZoukFoodText strong,
-html body #root .dishIngredientResultCard strong {
+html body #root .nutritionZoukFoodText strong {
   display: block !important;
   overflow: hidden !important;
   color: var(--food-flow-text) !important;
@@ -51,26 +40,10 @@ html body #root .dishIngredientResultCard strong {
   white-space: nowrap !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo span,
-html body #root .fatFoodSearchScreenPremium .fatSearchResultInfo small,
-html body #root .nutritionZoukFoodText small,
-html body #root .dishIngredientResultCard small,
-html body #root .dishIngredientConfirmInfo span {
+html body #root .nutritionZoukFoodText small {
   color: var(--food-flow-muted) !important;
   font-size: 11px !important;
   font-weight: 800 !important;
   line-height: 1.25 !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .fatSearchResultCheck {
-  width: 24px !important;
-  height: 24px !important;
-  border-radius: 50% !important;
-  border-color: #ded9ff !important;
-  background: #f2efff !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .fatSearchResultCheck::before {
-  background: #5d49e6 !important;
 }
 

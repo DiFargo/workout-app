@@ -1,3 +1,5 @@
+import styles from "./ProfileProgressInsightCard.module.css";
+
 function getProgressGaugeTone(score) {
   if (score === null || score === undefined) {
     return {
@@ -20,30 +22,24 @@ function getProgressGaugeTone(score) {
   };
 }
 
-export default function ProfileProgressInsightCard({
-  isMainDashboard,
-  progressInsight,
-  expanded,
-  statuses,
-  currentGoalId,
-  totalWorkouts,
-  onToggle
-}) {
+export default function ProfileProgressInsightCard({ progressInsight, statuses }) {
   const gaugeScore = typeof progressInsight.score === "number"
     ? Math.max(0, Math.min(100, progressInsight.score))
     : null;
   const gaugeTone = getProgressGaugeTone(gaugeScore);
+  const toneClass = styles[progressInsight.tone] || styles.neutral;
 
   return (
-    <div className={`profileAiCoachInsight profileProgressInsightCard ${progressInsight.tone}`}>
-      <button
-        type="button"
-        className="profileAiCoachToggle"
-        onClick={isMainDashboard ? undefined : onToggle}
-      >
-        <div className="profileAiCoachSummary">
+    <section
+      className={`${styles.root} ${toneClass}`}
+      data-css-module-scope="profile-progress-insight-card"
+      data-testid="profile-progress-card"
+    >
+      <div className={styles.toggle}>
+        <div className={styles.summary}>
           <div
-            className="profileProgressGauge"
+            className={styles.gauge}
+            data-testid="profile-progress-gauge"
             style={{
               "--progress-score": gaugeScore ?? 0,
               "--progress-fill": `${Math.round((gaugeScore ?? 0) * 3.6)}deg`,
@@ -55,59 +51,28 @@ export default function ProfileProgressInsightCard({
               ? "Недостаточно данных для оценки прогресса"
               : `Общая оценка прогресса ${progressInsight.score} из 100`}
           >
-            <div className="profileProgressGaugeDial">
-              <i />
+            <div className={styles.dial}>
               <strong>{progressInsight.score ?? "—"}</strong>
             </div>
-            <small style={{
-              top: "54px",
-              bottom: "auto",
-              color: "#778196",
-              WebkitTextFillColor: "#778196",
-              fontSize: "8px"
-            }}>из 100</small>
+            <small className={styles.gaugeCaption}>из 100</small>
           </div>
 
-          <div className="profileAiCoachHeadline">
-            <span>Оценка прогресса</span>
-            <h2>{progressInsight.scoreLabel}</h2>
-            <p>{progressInsight.scoreSummary}</p>
+          <div className={styles.headline} data-testid="profile-progress-headline">
+            <span className={styles.eyebrow}>Оценка прогресса</span>
+            <h2 className={styles.title}>{progressInsight.scoreLabel}</h2>
+            <p className={styles.copy}>{progressInsight.scoreSummary}</p>
           </div>
         </div>
+      </div>
 
-        {!isMainDashboard && <em>{expanded ? "−" : "+"}</em>}
-      </button>
-
-      {(isMainDashboard || !expanded) && (
-        <div className="profileAiCoachPreview profileProgressInsightBadges">
-          {statuses.map((status) => (
-            <span key={status.title} className="profileProgressInsightBadge">
-              <b>{status.icon} {status.title}</b>
-              <small>{status.text}</small>
-            </span>
-          ))}
-        </div>
-      )}
-
-      {!isMainDashboard && expanded && (
-        <div className="profileAiCoachExpanded">
-          <div className="profileAiCoachStatusRow insideProgress">
-            {statuses.map((status) => (
-              <div key={status.title}>
-                <span>{status.icon}</span>
-                <strong>{status.title}</strong>
-                <small>{status.text}</small>
-              </div>
-            ))}
-          </div>
-
-          <div className="profileAiCoachMetrics">
-            <div><span>Жир</span><strong>{currentGoalId === "mass" ? "контроль" : "↓"}</strong></div>
-            <div><span>Мышцы</span><strong>{currentGoalId === "cut" || currentGoalId === "dry" ? "сохранить" : "↑"}</strong></div>
-            <div><span>Сила</span><strong>{totalWorkouts ? "+" : "—"}</strong></div>
-          </div>
-        </div>
-      )}
-    </div>
+      <div className={styles.badges} data-testid="profile-progress-badges">
+        {statuses.map((status) => (
+          <span key={status.title} className={styles.badge} data-testid="profile-progress-badge">
+            <b>{status.icon} {status.title}</b>
+            <small>{status.text}</small>
+          </span>
+        ))}
+      </div>
+    </section>
   );
 }

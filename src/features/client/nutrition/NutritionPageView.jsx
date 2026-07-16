@@ -49,7 +49,7 @@ export default function NutritionPageView({
 
       {!pickerOpen && !calendarOpen && !activeMeal && renderBottomBar?.(
         "nutrition",
-        { className: "mainMenuBottomBar profileBottomTabBar nutritionBottomTabBar" }
+        { variant: "nutrition" }
       )}
     </NutritionPage>
   );

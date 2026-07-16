@@ -41,19 +41,10 @@
   -webkit-text-fill-color: rgba(232, 237, 230, 0.62) !important;
 }
 
-.fatSearchBottomBarFive > button:not(.fatSearchPhotoAction):active,
-.foodProductActionBar button:active:not(:disabled) {
+.fatSearchBottomBarFive > button:not(.fatSearchPhotoAction):active {
   background: rgba(143, 188, 54, 0.055) !important;
   color: #aee94d !important;
   -webkit-text-fill-color: #aee94d !important;
-}
-
-.foodProductActionBar button {
-  transition: transform 0.08s ease-out;
-}
-
-.foodProductActionBar button:active:not(:disabled) {
-  transform: scale(0.96);
 }
 
 .fatSearchBottomBarFive > button.active:not(.fatSearchPhotoAction) {

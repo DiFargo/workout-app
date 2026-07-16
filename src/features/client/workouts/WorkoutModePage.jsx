@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Home, Paperclip } from "lucide-react";
 import { WorkoutModePickerDialog } from "./WorkoutListDialogs";
+import styles from "./WorkoutModePage.module.css";
 
 export default function WorkoutModePage({
   workoutModePreference,
@@ -22,29 +23,29 @@ export default function WorkoutModePage({
   const resolvedWorkoutModePreference = workoutModePreference || { mode: "individual" };
 
   return (
-    <div className="workoutModePage">
-      <header className="workoutModeTopBar">
-        <section className="workoutModeHero">
+    <div className={styles.page} data-testid="workout-mode-page" data-css-module-scope="workout-mode">
+      <header className={styles.topBar} data-testid="workout-mode-header">
+        <section className={styles.hero} data-testid="workout-mode-hero">
           <span>ТРЕНИРОВКИ</span>
           <h1>Режим запуска</h1>
         </section>
-        <div className="workoutModeTopActions">
-          <button className="workoutModeTopButton" type="button" onClick={onBackToMain} aria-label="Открыть главную">
+        <div className={styles.topActions}>
+          <button className={styles.topButton} type="button" onClick={onBackToMain} aria-label="Открыть главную">
             <Home aria-hidden="true" />
           </button>
-          <button className="workoutModeTopButton" type="button" onClick={() => setWorkoutModePickerOpen(true)} aria-label="Выбрать режим запуска тренировки">
+          <button className={styles.topButton} type="button" onClick={() => setWorkoutModePickerOpen(true)} aria-label="Выбрать режим запуска тренировки">
             <Paperclip aria-hidden="true" />
           </button>
         </div>
       </header>
 
-      <p className="workoutModeLead">
+      <p className={styles.lead} data-testid="workout-mode-lead">
         Можно тренироваться по базовой программе или по индивидуальному плану от тренера.
       </p>
 
-      <section className="workoutModeCards">
-        <button className="workoutModeCard" type="button" onClick={onOpenBasicWorkouts}>
-          <span className="workoutModeIcon">Б</span>
+      <section className={styles.cards} data-testid="workout-mode-cards">
+        <button className={styles.card} data-testid="workout-mode-card" type="button" onClick={onOpenBasicWorkouts}>
+          <span className={styles.icon}>Б</span>
           <div>
             <strong>Базовые тренировки</strong>
             <small>Короткий опрос и готовый план из базы приложения.</small>
@@ -52,8 +53,8 @@ export default function WorkoutModePage({
           <i>›</i>
         </button>
 
-        <button className="workoutModeCard premium" type="button" onClick={onOpenIndividualWorkouts}>
-          <span className="workoutModeIcon">И</span>
+        <button className={[styles.card, styles.premium].join(" ")} data-testid="workout-mode-card" type="button" onClick={onOpenIndividualWorkouts}>
+          <span className={styles.icon}>И</span>
           <div>
             <strong>Индивидуальный план</strong>
             <small>Тренировки, которые создал и назначил тренер.</small>
@@ -62,7 +63,7 @@ export default function WorkoutModePage({
         </button>
       </section>
 
-      <label className="workoutModeRemember">
+      <label className={styles.remember} data-testid="workout-mode-remember">
         <input
           type="checkbox"
           checked={workoutModeRemember}

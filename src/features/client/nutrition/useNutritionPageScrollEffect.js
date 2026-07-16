@@ -10,7 +10,7 @@ export function useNutritionPageScrollEffect({ active }) {
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
       document
-        .querySelector(".fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition")
+        .querySelector('[data-testid="nutrition-page"]')
         ?.scrollTo?.({ top: 0, left: 0, behavior: "auto" });
     };
 

@@ -9,7 +9,6 @@
 }
 
 /* Ð¿Ð¾Ð»Ðµ Ð¿Ð¾Ñ€Ñ†Ð¸Ð¸ Ð² Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¾Ñ€Ðµ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð° Ð¿Ñ€Ð¸Ð½Ð¸Ð¼Ð°ÐµÑ‚ Ð»ÑŽÐ±Ð¾Ð¹ Ñ‚ÐµÐºÑÑ‚: 1 Ð¿Ð¾Ñ€Ñ†Ð¸Ñ, ÑÑ‚Ð°ÐºÐ°Ð½, Ð±Ð°Ð½ÐºÐ°, 250 Ð¼Ð» */
-.foodEditPageContent input,
 .foodEditDetailsPanel input {
   text-transform: none !important;
 }
@@ -17,39 +16,3 @@
 /* =========================================================
    FOOD EDIT PORTION UNIT SELECT
    ========================================================= */
-
-.foodEditPortionUnitRow {
-  width: 100% !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 78px !important;
-  gap: 8px !important;
-  align-items: center !important;
-}
-
-.foodEditPortionUnitRow input {
-  min-width: 0 !important;
-}
-
-.foodEditPortionUnitRow select {
-  width: 78px !important;
-  min-height: 54px !important;
-  padding: 0 12px !important;
-
-  border-radius: 18px !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-
-  background:
-    radial-gradient(circle at 50% 0%, rgba(38,255,116,0.08), transparent 62%),
-    rgba(255,255,255,0.04) !important;
-
-  color: rgba(38,255,116,0.95) !important;
-  font-size: 15px !important;
-  font-weight: 950 !important;
-
-  outline: none !important;
-  appearance: none !important;
-  -webkit-appearance: none !important;
-
-  text-align: center !important;
-  text-align-last: center !important;
-}

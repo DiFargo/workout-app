@@ -7,7 +7,7 @@
   padding: 0 !important;
 }
 
-.fatFoodSearchScreen {
+.fatFoodSearchScreen:not([data-food-search-header-layout]) {
   width: 100% !important;
   max-width: 560px !important;
   height: 100dvh !important;
@@ -51,14 +51,6 @@
   justify-self: start !important;
 }
 
-.fatSearchTitleWrap {
-  grid-column: 2 !important;
-  grid-row: 1 !important;
-  align-items: flex-start !important;
-  justify-content: center !important;
-  min-width: 0 !important;
-}
-
 .fatSearchTitleButton {
   justify-content: flex-start !important;
   gap: 8px !important;
@@ -79,14 +71,6 @@
   color: #9aa3b3 !important;
   font-size: 24px !important;
   transform: translateY(1px) !important;
-}
-
-.fatSearchTitleWrap small {
-  margin-top: 5px !important;
-  color: #a0a9b9 !important;
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  text-align: left !important;
 }
 
 .fatSearchTabs button.active {
@@ -144,23 +128,6 @@
   background: #050b14 !important;
 }
 
-.fatSearchStatus {
-  padding: 28px 20px !important;
-  color: #9ba4b4 !important;
-  font-size: 17px !important;
-  font-weight: 700 !important;
-}
-
-.fatMealDropdown {
-  top: 58px !important;
-  left: 0 !important;
-  right: auto !important;
-  min-width: 210px !important;
-  background: #18202d !important;
-  border-color: rgba(255,255,255,0.1) !important;
-  z-index: 2147483646 !important;
-}
-
 .fatBarcodeOverlay {
   z-index: 2147483645 !important;
 }
@@ -176,10 +143,6 @@
 
   .fatSearchTitleButton strong {
     font-size: 25px !important;
-  }
-
-  .fatSearchTitleWrap small {
-    font-size: 14px !important;
   }
 
   .fatSearchInputWrap {

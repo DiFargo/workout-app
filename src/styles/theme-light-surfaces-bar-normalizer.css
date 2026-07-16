@@ -1,7 +1,5 @@
 /* === UNIFIED CLIENT BOTTOM BAR SIZE ACROSS CORE PAGES === */
 .mainMenuBottomBar.profileBottomTabBar,
-.nutritionBottomTabBar,
-.individualWorkoutMenuBar,
 .workoutModeBottomBar {
   box-sizing: border-box !important;
   min-height: 80px !important;
@@ -14,8 +12,6 @@
 
 /* === BOTTOM BAR LAYOUT NORMALIZER (MAIN / TRAINING / NUTRITION / CABINET) === */
 .mainMenuBottomBar.profileBottomTabBar,
-.nutritionBottomTabBar,
-.individualWorkoutMenuBar,
 .workoutModeBottomBar,
 .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
 .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar {
@@ -30,8 +26,6 @@
 }
 
 .mainMenuBottomBar.profileBottomTabBar > button,
-.nutritionBottomTabBar > button,
-.individualWorkoutMenuBar > button,
 .workoutModeBottomBar > button {
   min-height: 68px !important;
   height: 68px !important;
@@ -41,8 +35,6 @@
 }
 
 .mainMenuBottomBar.profileBottomTabBar > button span,
-.nutritionBottomTabBar > button span,
-.individualWorkoutMenuBar > button span,
 .workoutModeBottomBar > button span {
   min-height: 31px !important;
   height: 31px !important;
@@ -52,8 +44,6 @@
 }
 
 .mainMenuBottomBar.profileBottomTabBar > button strong,
-.nutritionBottomTabBar > button strong,
-.individualWorkoutMenuBar > button strong,
 .workoutModeBottomBar > button strong {
   min-height: 16px !important;
   height: 16px !important;
@@ -64,28 +54,15 @@
 }
 
 /* Ensure training containers keep the same anchored width as the navigation bar. */
-.individualWorkoutSelectPage > .individualWorkoutBottomPanel,
-.workoutPlanOverviewPage > .individualWorkoutBottomPanel {
-  width: min(394px, calc(100vw - 20px)) !important;
-  max-width: 394px !important;
-  left: 50% !important;
-  right: auto !important;
-  transform: translateX(-50%) !important;
-}
 
 @media (max-width: 430px) {
   .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
-  .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
-  .mainDashboardPage nav.trainerRoleBottomBar[aria-label="Основные разделы"],
-  .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar.trainerRoleBottomBar[aria-label="Основные разделы"],
-  .mainMenuBottomBar.profileBottomTabBar,
-  .nutritionBottomTabBar,
-  .individualWorkoutMenuBar,
-  .workoutModeBottomBar,
-  .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar,
-  .individualWorkoutSelectPage > .individualWorkoutBottomPanel,
-  .workoutPlanOverviewPage > .individualWorkoutBottomPanel,
-  .clientCorePageWorkout.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
+.mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
+.mainDashboardPage nav.trainerRoleBottomBar[aria-label="Основные разделы"],
+.mainDashboardPage .mainMenuBottomBar.profileBottomTabBar.trainerRoleBottomBar[aria-label="Основные разделы"],
+.mainMenuBottomBar.profileBottomTabBar,
+.workoutModeBottomBar,
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar {
     width: min(350px, calc(100vw - 52px)) !important;
     max-width: 350px !important;
   }
@@ -108,21 +85,6 @@
   .profileTabbedPage .profileCabinetSection {
     margin-left: auto !important;
     margin-right: auto !important;
-  }
-
-  .progressHubOverview,
-  .mainDashboardPage .progressHubOverview,
-  .profileTabbedPage .profileCabinetProgressOverview {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-inline: 0 !important;
-  }
-
-  .progressHubCard,
-  .mainDashboardPage .progressHubCard,
-  .profileTabbedPage .progressHubCard {
-    width: 100% !important;
-    max-width: 100% !important;
   }
 }
 
