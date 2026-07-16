@@ -1,8 +1,5 @@
-import { APP_PAGES } from "../../../app/appPages";
-
 export function createWorkoutListProps({
   appVersion,
-  renderClientMainBottomBar,
   plan,
   history,
   workoutCalendar,
@@ -23,14 +20,8 @@ export function createWorkoutListProps({
   fullscreenVideo,
   showFirstSetupOnboarding,
   historyLoading,
-  isTrainerMode,
   goBackToMain,
-  openTrainingEntry,
-  setPage,
   loadHistory,
-  setProfileActiveTab,
-  openAdminClientsWithFilter,
-  openAdminProgramsOverview,
   openWorkout,
   saveWorkoutModePreference,
   openIndividualWorkouts,
@@ -41,7 +32,6 @@ export function createWorkoutListProps({
 }) {
   return {
     appVersion,
-    renderClientMainBottomBar,
     plan,
     history,
     workoutCalendar: workoutCalendar || {},
@@ -62,17 +52,7 @@ export function createWorkoutListProps({
     fullscreenVideo,
     showFirstSetupOnboarding,
     historyLoading,
-    isTrainerMode,
     onGoMain: goBackToMain,
-    onOpenTraining: openTrainingEntry,
-    onOpenNutrition: () => setPage(APP_PAGES.NUTRITION),
-    onOpenCabinet: () => {
-      loadHistory();
-      setProfileActiveTab("cabinet");
-      setPage(APP_PAGES.PROFILE);
-    },
-    onOpenTrainerClients: () => openAdminClientsWithFilter("all"),
-    onOpenTrainerPrograms: openAdminProgramsOverview,
     loadHistory,
     openWorkout,
     onOpenBasicMode: () => {

@@ -21,6 +21,7 @@ import {
   createWorkoutTaskBlock,
   WORKOUT_BLOCK_TYPES
 } from "../../utils/universalWorkoutBlocks";
+import styles from "./TrainerProgramConstructor.module.css";
 
 const DAY_COLORS = Object.freeze(["violet", "blue", "green", "orange", "rose"]);
 const DEFAULT_SET_FIELDS = Object.freeze(["reps", "weight", "rpe", "rir", "rest", "tempo"]);
@@ -55,7 +56,6 @@ function getSetValue(sets = [], field, fallback = "—") {
 }
 
 export default function TrainerProgramConstructor({
-  styles,
   program,
   months = [],
   exerciseLibrary = [],

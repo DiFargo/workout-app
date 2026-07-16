@@ -1,0 +1,67 @@
+.root {
+  display: none;
+}
+
+@media (max-width: 820px), (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  .root {
+    min-height: 54px;
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    align-items: center;
+    margin-bottom: 13px;
+  }
+
+  .spacer {
+    width: 40px;
+    height: 40px;
+  }
+
+  .title {
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .actions {
+    display: inline-flex;
+    align-items: center;
+    justify-self: end;
+    gap: 8px;
+  }
+
+  .actions > button,
+  .root > button {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid #e6e8f0;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(24, 27, 42, 0.06);
+  }
+
+  .actions > button i,
+  .root > button i {
+    position: absolute;
+    top: -2px;
+    right: -3px;
+    width: 17px;
+    height: 17px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--tn-purple, #7357d9);
+    color: #fff;
+    font-size: 9px;
+    font-style: normal;
+  }
+}

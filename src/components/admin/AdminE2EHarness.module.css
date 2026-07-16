@@ -4703,8 +4703,6 @@ html:root[data-app-theme="warm-light"] body :global(#root) :global(.monthProgram
   color: #c73f58;
   -webkit-text-fill-color: #c73f58;
 }
-html:root[data-app-theme="warm-light"] body :global(#root) :global(.trainerRoleBottomBar) > button:where(.scope) :global(.active),
-html:root[data-app-theme="warm-light"] body :global(#root) :global(.trainerRoleWorkspaceBar) > button:where(.scope) :global(.active),
 html:root[data-app-theme="warm-light"] body :global(#root) :global(.programsTopActionBar) > button:where(.scope) :global(.active),
 html:root[data-app-theme="warm-light"] body :global(#root) :global(.programEditorBottomBar) > button:where(.scope) :global(.active),
 html:root[data-app-theme="warm-light"] body :global(#root) :global(.workoutEditorBottomBar) > button:where(.scope) :global(.active) {

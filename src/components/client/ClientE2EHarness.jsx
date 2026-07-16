@@ -3,7 +3,8 @@ import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
 import { POST_WORKOUT_FEEDBACK_OPTIONS } from "../../domain/workoutPresentation";
-import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
+import AppShell from "../../app/AppShell";
+import { PrimaryBottomNavigation } from "../../shared/ui/BottomBar";
 import FirstSetupOnboarding from "../../features/auth/FirstSetupOnboarding";
 import AiCoachPage from "../../features/client/ai/AiCoachPage";
 import MeasurementWizardPage from "../../features/client/measurements/MeasurementWizardPage";
@@ -799,7 +800,7 @@ export default function ClientE2EHarness() {
       : { activeTab: firstArg, ...secondArg };
 
     return (
-      <ClientMainBottomBar
+      <PrimaryBottomNavigation
         {...props}
         onGoMain={() => setPage("main")}
         onOpenTraining={() => setPage("workouts")}
@@ -811,32 +812,30 @@ export default function ClientE2EHarness() {
 
   function renderHarnessChrome(activeTab, title, children, afterSection = null) {
     return (
-      <ProfileDashboardShell mode={activeTab} testId={`client-harness-${activeTab}`}>
-        {(activeTab === "main" || activeTab === "cabinet") && (
-          <ProfilePageChrome
-            isMainDashboard={activeTab === "main"}
-            renderBottomBar={renderBottomBar}
-            showTrainerNotifications
-            trainerNotificationCount={0}
-            onOpenTrainerNotifications={() => {}}
-          />
-        )}
-        {activeTab === "cabinet" ? (
-          <ProfileCabinetTitleRow onRefresh={() => {}} />
-        ) : activeTab !== "main" ? (
-          <ProfileHarnessTitle>{title}</ProfileHarnessTitle>
-        ) : null}
-        <ProfileDashboardContent mode={activeTab}>
-          {children}
-        </ProfileDashboardContent>
-        {afterSection}
-        {activeTab === "main" && APP_VERSION ? (
-          <ProfileDashboardVersion>{APP_VERSION}</ProfileDashboardVersion>
-        ) : null}
-        {activeTab !== "main" && activeTab !== "cabinet"
-          ? renderBottomBar(activeTab)
-          : null}
-      </ProfileDashboardShell>
+      <AppShell primaryNavigation={renderBottomBar(activeTab)}>
+        <ProfileDashboardShell mode={activeTab} testId={`client-harness-${activeTab}`}>
+          {(activeTab === "main" || activeTab === "cabinet") && (
+            <ProfilePageChrome
+              isMainDashboard={activeTab === "main"}
+              showTrainerNotifications
+              trainerNotificationCount={0}
+              onOpenTrainerNotifications={() => {}}
+            />
+          )}
+          {activeTab === "cabinet" ? (
+            <ProfileCabinetTitleRow onRefresh={() => {}} />
+          ) : activeTab !== "main" ? (
+            <ProfileHarnessTitle>{title}</ProfileHarnessTitle>
+          ) : null}
+          <ProfileDashboardContent mode={activeTab}>
+            {children}
+          </ProfileDashboardContent>
+          {afterSection}
+          {activeTab === "main" && APP_VERSION ? (
+            <ProfileDashboardVersion>{APP_VERSION}</ProfileDashboardVersion>
+          ) : null}
+        </ProfileDashboardShell>
+      </AppShell>
     );
   }
 
@@ -1103,7 +1102,6 @@ export default function ClientE2EHarness() {
       <main data-testid="client-harness-workout-history">
         <WorkoutHistoryPage
           canUseTrainerFeatures={false}
-          renderClientMainBottomBar={renderBottomBar}
           history={visibleHistory}
           historyLoading={workoutHistoryHarnessState === "loading"}
           openHistoryKey={workoutHistoryOpenId}
@@ -1132,7 +1130,6 @@ export default function ClientE2EHarness() {
     return (
       <main data-testid="client-harness-basic-quiz">
         <BasicWorkoutQuizPage
-          renderClientMainBottomBar={renderBottomBar}
           workoutModePreference={{ mode: "basic" }}
           workoutModeRemember={harnessWorkoutModeRemember}
           basicWorkoutQuiz={harnessBasicWorkoutQuiz}
@@ -1160,7 +1157,6 @@ export default function ClientE2EHarness() {
         <WorkoutModePage
           workoutModePreference={{ mode: "individual" }}
           workoutModeRemember={harnessWorkoutModeRemember}
-          renderClientMainBottomBar={renderBottomBar}
           canUseTrainerFeatures={false}
           onBackToMain={() => setPage("main")}
           onOpenBasicWorkouts={() => setPage("workouts")}
@@ -1455,7 +1451,6 @@ export default function ClientE2EHarness() {
       <main data-testid="client-harness-workouts">
         <WorkoutListPage
           appVersion={APP_VERSION}
-          renderClientMainBottomBar={renderBottomBar}
           plan={{
             workouts: visibleHarnessWorkouts,
             assignedProgramId: "client_harness_program",
@@ -1580,8 +1575,9 @@ export default function ClientE2EHarness() {
 
   if (page === "nutrition") {
     return (
-      <main data-testid="client-harness-nutrition">
-        {renderNutritionRoute({
+      <AppShell primaryNavigation={!nutritionPickerOpen && !nutritionCalendarOpen ? renderBottomBar("nutrition") : null}>
+        <main data-testid="client-harness-nutrition">
+          {renderNutritionRoute({
           activeNutritionSearchResultLimit: 8,
           addNutritionFoodFromPicker: openHarnessSelectedFood,
           addNutritionProductManuallyFromPhoto: () => {},
@@ -1669,7 +1665,6 @@ export default function ClientE2EHarness() {
           pendingDishIngredientGrams,
           recentNutritionFoods: harnessSearchFoods,
           removeSelectedDishIngredient: () => {},
-          renderTrainerMainBottomBar: renderBottomBar,
           resetNutritionPhotoAiSearch: () => {},
           resetNutritionPhotoAiState: () => setNutritionPhotoNotFoundOpen(false),
           restoreNutritionFood: () => {},
@@ -1715,8 +1710,9 @@ export default function ClientE2EHarness() {
           updateSelectedNutritionFoodField: updateHarnessSelectedFoodField,
           updateSelectedNutritionPortionUnit: (unit) => updateHarnessSelectedFoodField("portion", `100 ${unit}`),
           visibleNutritionSearchResults
-        })}
-      </main>
+          })}
+        </main>
+      </AppShell>
     );
   }
 

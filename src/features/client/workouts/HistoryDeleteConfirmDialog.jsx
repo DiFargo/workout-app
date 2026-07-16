@@ -1,4 +1,5 @@
 import { getTimestampValue } from "../../../utils/auditSafety";
+import ConfirmDialog from "../../../shared/ui/ConfirmDialog";
 import styles from "./HistoryDeleteConfirmDialog.module.css";
 
 export default function HistoryDeleteConfirmDialog({
@@ -7,9 +8,7 @@ export default function HistoryDeleteConfirmDialog({
   onClose,
   onConfirm
 }) {
-  if (!candidate) return null;
-
-  const workoutDate = getTimestampValue(candidate.date);
+  const workoutDate = getTimestampValue(candidate?.date);
   const dateLabel = workoutDate
     ? new Date(workoutDate).toLocaleDateString("ru-RU", {
         day: "numeric",
@@ -19,29 +18,35 @@ export default function HistoryDeleteConfirmDialog({
     : "без даты";
 
   return (
-    <div className={styles.overlay} data-testid="workout-history-delete-overlay" data-css-module-scope="workout-history-delete" onClick={onClose}>
-      <div className={styles.dialog} data-testid="workout-history-delete-dialog" onClick={(event) => event.stopPropagation()}>
-        <div className={styles.icon}>⌫</div>
-        <h3>Удалить тренировку?</h3>
+    <ConfirmDialog
+      open={Boolean(candidate)}
+      title="Удалить тренировку?"
+      titleAs="h3"
+      description={candidate ? (
         <p>
           {candidate.workout || "Тренировка"}
           <span>{dateLabel} · действие нельзя отменить</span>
         </p>
-
-        <div className={styles.actions}>
-          <button type="button" onClick={onClose} disabled={Boolean(deletingId)}>
-            Отмена
-          </button>
-          <button
-            type="button"
-            className={styles.danger}
-            onClick={onConfirm}
-            disabled={Boolean(deletingId)}
-          >
-            {deletingId ? "Удаляю..." : "Удалить"}
-          </button>
-        </div>
-      </div>
-    </div>
+      ) : null}
+      pending={Boolean(deletingId)}
+      confirmLabel={deletingId ? "Удаляю..." : "Удалить"}
+      onCancel={onClose}
+      onConfirm={onConfirm}
+      classNames={{
+        overlay: styles.overlay,
+        content: styles.dialog,
+        icon: styles.icon,
+        title: styles.title,
+        description: styles.description,
+        actions: styles.actions,
+        action: styles.action,
+        danger: styles.danger
+      }}
+      testIds={{
+        overlay: "workout-history-delete-overlay",
+        content: "workout-history-delete-dialog",
+        titleId: "workout-history-delete-title"
+      }}
+    />
   );
 }

@@ -21,6 +21,10 @@
   color: var(--trainer-text);
 }
 
+.importInput {
+  display: none;
+}
+
 .root,
 .root * {
   box-sizing: border-box;

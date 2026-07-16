@@ -14,11 +14,41 @@ function runDeferredTouchPreload(preload) {
   };
 }
 
-export function ClientMainBottomBar({
+function NavigationItems({
+  items,
+  activeTab,
+  activeClassName,
+  iconClassName,
+  labelClassName,
+  labelElement: LabelElement = "strong"
+}) {
+  return items.map((item) => {
+    const Icon = item.icon;
+    const isActive = activeTab === item.id;
+    const preload = runDeferredTouchPreload(item.onPreload);
+
+    return (
+      <button
+        key={item.id}
+        type="button"
+        data-testid={item.testId}
+        className={isActive ? activeClassName : ""}
+        aria-current={isActive ? "page" : undefined}
+        onPointerDown={preload}
+        onFocus={item.onPreload}
+        onClick={item.onClick}
+      >
+        <span className={iconClassName} aria-hidden="true">
+          {typeof Icon === "string" ? Icon : <Icon />}
+        </span>
+        <LabelElement className={labelClassName}>{item.label}</LabelElement>
+      </button>
+    );
+  });
+}
+
+export function PrimaryBottomNavigation({
   activeTab = "main",
-  className = "mainMenuBottomBar profileBottomTabBar",
-  variant,
-  isTrainerMode,
   onGoMain,
   onOpenTraining,
   onOpenNutrition,
@@ -26,189 +56,23 @@ export function ClientMainBottomBar({
   onPreloadMain,
   onPreloadTraining,
   onPreloadNutrition,
-  onPreloadCabinet,
-  onOpenTrainerClients,
-  onOpenTrainerPrograms,
-  onLoadTrainerCabinet
+  onPreloadCabinet
 }) {
-  const preloadMain = runDeferredTouchPreload(onPreloadMain);
-  const preloadTraining = runDeferredTouchPreload(onPreloadTraining);
-  const preloadNutrition = runDeferredTouchPreload(onPreloadNutrition);
-  const preloadCabinet = runDeferredTouchPreload(onPreloadCabinet);
-
-  if (isTrainerMode) {
-    return (
-      <TrainerMainBottomBar
-        activeTab={activeTab}
-        className={className}
-        onGoMain={onGoMain}
-        onOpenTrainerClients={onOpenTrainerClients}
-        onOpenTrainerPrograms={onOpenTrainerPrograms}
-        onOpenCabinet={onOpenCabinet}
-        onLoadTrainerCabinet={onLoadTrainerCabinet}
-      />
-    );
-  }
-
-  const nutritionVariant = variant === "nutrition";
-  const navigationClassName = nutritionVariant
-    ? styles.nutrition
-    : styles.main;
+  const items = [
+    { id: "main", label: "Главная", icon: Home, testId: "client-nav-main", onClick: onGoMain, onPreload: onPreloadMain },
+    { id: "workouts", label: "Тренировки", icon: Dumbbell, testId: "client-nav-workouts", onClick: onOpenTraining, onPreload: onPreloadTraining },
+    { id: "nutrition", label: "Питание", icon: Utensils, testId: "client-nav-nutrition", onClick: onOpenNutrition, onPreload: onPreloadNutrition },
+    { id: "cabinet", label: "Кабинет", icon: UserRound, testId: "client-nav-cabinet", onClick: onOpenCabinet, onPreload: onPreloadCabinet }
+  ];
 
   return (
     <nav
-      className={navigationClassName}
-      data-css-module-scope={nutritionVariant ? "nutrition-bottom-bar" : "client-main-bottom-bar"}
+      className={styles.main}
+      data-css-module-scope="client-primary-bottom-bar"
       data-testid="client-bottom-nav"
       aria-label="Основные разделы"
     >
-      <button
-        type="button"
-        data-testid="client-nav-main"
-        className={activeTab === "main" ? styles.active : ""}
-        aria-current={activeTab === "main" ? "page" : undefined}
-        onPointerDown={preloadMain}
-        onFocus={onPreloadMain}
-        onClick={onGoMain}
-      >
-        <span aria-hidden="true"><Home /></span>
-        <strong>Главная</strong>
-      </button>
-      <button
-        type="button"
-        data-testid="client-nav-workouts"
-        className={activeTab === "workouts" ? styles.active : ""}
-        aria-current={activeTab === "workouts" ? "page" : undefined}
-        onPointerDown={preloadTraining}
-        onFocus={onPreloadTraining}
-        onClick={onOpenTraining}
-      >
-        <span aria-hidden="true"><Dumbbell /></span>
-        <strong>Тренировки</strong>
-      </button>
-      <button
-        type="button"
-        data-testid="client-nav-nutrition"
-        className={activeTab === "nutrition" ? styles.active : ""}
-        aria-current={activeTab === "nutrition" ? "page" : undefined}
-        onPointerDown={preloadNutrition}
-        onFocus={onPreloadNutrition}
-        onClick={onOpenNutrition}
-      >
-        <span aria-hidden="true"><Utensils /></span>
-        <strong>Питание</strong>
-      </button>
-      <button
-        type="button"
-        data-testid="client-nav-cabinet"
-        className={activeTab === "cabinet" ? styles.active : ""}
-        aria-current={activeTab === "cabinet" ? "page" : undefined}
-        onPointerDown={preloadCabinet}
-        onFocus={onPreloadCabinet}
-        onClick={onOpenCabinet}
-      >
-        <span aria-hidden="true"><UserRound /></span>
-        <strong>Кабинет</strong>
-      </button>
-    </nav>
-  );
-}
-
-export function TrainerMainBottomBar({
-  activeTab = "main",
-  className = "mainMenuBottomBar profileBottomTabBar",
-  onGoMain,
-  onOpenTrainerClients,
-  onOpenTrainerPrograms,
-  onLoadTrainerCabinet
-}) {
-  return (
-    <nav className={`${className} trainerRoleBottomBar`} aria-label="Разделы тренера">
-      <button
-        type="button"
-        className={activeTab === "main" ? "active" : ""}
-        aria-current={activeTab === "main" ? "page" : undefined}
-        onClick={onGoMain}
-      >
-        <span aria-hidden="true">🏠</span>
-        <strong>Главная</strong>
-      </button>
-      <button
-        type="button"
-        className={activeTab === "clients" ? "active" : ""}
-        aria-current={activeTab === "clients" ? "page" : undefined}
-        onClick={onOpenTrainerClients}
-      >
-        <span aria-hidden="true">👥</span>
-        <strong>Клиенты</strong>
-      </button>
-      <button
-        type="button"
-        className={activeTab === "programs" ? "active" : ""}
-        aria-current={activeTab === "programs" ? "page" : undefined}
-        onClick={onOpenTrainerPrograms}
-      >
-        <span aria-hidden="true">📋</span>
-        <strong>Программы</strong>
-      </button>
-      <button
-        type="button"
-        className={activeTab === "cabinet" ? "active" : ""}
-        aria-current={activeTab === "cabinet" ? "page" : undefined}
-        onClick={onLoadTrainerCabinet}
-      >
-        <span aria-hidden="true">👤</span>
-        <strong>Кабинет</strong>
-      </button>
-    </nav>
-  );
-}
-
-export function TrainerWorkspaceBottomBar({
-  activeTab = "clients",
-  onGoMain,
-  onOpenTrainerClients,
-  onOpenTrainerPrograms,
-  onLoadTrainerCabinet
-}) {
-  return (
-    <nav className="adminV3Nav adminV3BottomBar trainerRoleWorkspaceBar" aria-label="Разделы тренера">
-      <button
-        className={activeTab === "main" ? "active" : ""}
-        type="button"
-        aria-current={activeTab === "main" ? "page" : undefined}
-        onClick={onGoMain}
-      >
-        <span className="adminV3NavIcon">🏠</span>
-        <span className="adminV3NavLabel">Главная</span>
-      </button>
-      <button
-        className={activeTab === "clients" ? "active" : ""}
-        type="button"
-        aria-current={activeTab === "clients" ? "page" : undefined}
-        onClick={onOpenTrainerClients}
-      >
-        <span className="adminV3NavIcon">👥</span>
-        <span className="adminV3NavLabel">Клиенты</span>
-      </button>
-      <button
-        className={activeTab === "programs" ? "active" : ""}
-        type="button"
-        aria-current={activeTab === "programs" ? "page" : undefined}
-        onClick={onOpenTrainerPrograms}
-      >
-        <span className="adminV3NavIcon">📋</span>
-        <span className="adminV3NavLabel">Программы</span>
-      </button>
-      <button
-        className={activeTab === "cabinet" ? "active" : ""}
-        type="button"
-        aria-current={activeTab === "cabinet" ? "page" : undefined}
-        onClick={onLoadTrainerCabinet}
-      >
-        <span className="adminV3NavIcon">👤</span>
-        <span className="adminV3NavLabel">Кабинет</span>
-      </button>
+      <NavigationItems items={items} activeTab={activeTab} activeClassName={styles.active} />
     </nav>
   );
 }
@@ -220,6 +84,13 @@ export function ClientTrainingBottomBar({
   onOpenPlan,
   onOpenHistory
 }) {
+  const items = [
+    { id: "main", label: "Главная", icon: "🏠", onClick: onGoMain },
+    { id: "workouts", label: "Тренировки", icon: "🏋️", onClick: onOpenWorkouts },
+    { id: "plan", label: "План", icon: "📋", onClick: onOpenPlan },
+    { id: "history", label: "История", icon: "🗓️", onClick: onOpenHistory }
+  ];
+
   return (
     <nav
       className={styles.training}
@@ -227,32 +98,7 @@ export function ClientTrainingBottomBar({
       data-css-module-scope="training-bottom-bar"
       aria-label="Навигация тренировок"
     >
-      <button type="button" onClick={onGoMain}>
-        <span aria-hidden="true">🏠</span>
-        <strong>Главная</strong>
-      </button>
-      <button
-        type="button"
-        className={activeTab === "workouts" ? styles.active : ""}
-        aria-current={activeTab === "workouts" ? "page" : undefined}
-        onClick={onOpenWorkouts}
-      >
-        <span aria-hidden="true">🏋️</span>
-        <strong>Тренировки</strong>
-      </button>
-      <button
-        type="button"
-        className={activeTab === "plan" ? styles.active : ""}
-        aria-current={activeTab === "plan" ? "page" : undefined}
-        onClick={onOpenPlan}
-      >
-        <span aria-hidden="true">📋</span>
-        <strong>План</strong>
-      </button>
-      <button type="button" onClick={onOpenHistory}>
-        <span aria-hidden="true">🗓️</span>
-        <strong>История</strong>
-      </button>
+      <NavigationItems items={items} activeTab={activeTab} activeClassName={styles.active} />
     </nav>
   );
 }

@@ -17,16 +17,7 @@ export function normalizeTrainerNextSection(section = "dashboard") {
   return TRAINER_NEXT_SECTIONS.has(normalized) ? normalized : "dashboard";
 }
 
-export function isTrainerNextWorkspacePage({ canUseTrainerFeatures, page }) {
-  return (
-    Boolean(canUseTrainerFeatures) &&
-    [APP_PAGES.ADMIN, APP_PAGES.ADMIN_USERS, APP_PAGES.ADMIN_WORKOUTS].includes(page)
-  );
-}
-
 export function createTrainerNavigationActions({
-  canUseTrainerFeatures,
-  page,
   usersList,
   setPage,
   setProfileActiveTab,
@@ -38,12 +29,6 @@ export function createTrainerNavigationActions({
   setTrainerWorkoutTab
 }) {
   return {
-    isTrainerNextWorkspace() {
-      return isTrainerNextWorkspacePage({
-        canUseTrainerFeatures: canUseTrainerFeatures(),
-        page
-      });
-    },
     navigateTrainerNext(section = "dashboard") {
       const nextSection = normalizeTrainerNextSection(section);
 

@@ -1,6 +1,5 @@
 import AccessDeniedScreen from "../../components/common/AccessDeniedScreen";
 import TrainerDashboardWorkspaceRoute from "./TrainerDashboardWorkspaceRoute";
-import TrainerLegacyDashboardRoute from "./TrainerLegacyDashboardRoute";
 import { buildTrainerDashboardPageModel } from "./trainerDashboardPageModel";
 
 export default function TrainerDashboardRoute(ctx) {
@@ -27,7 +26,6 @@ export default function TrainerDashboardRoute(ctx) {
     getClientEffectiveNutritionGoals,
     getClientNutritionDisplayPlan,
     getTrainerClientSummaryFromMap,
-    isTrainerNextWorkspace,
     selectedUserId,
     setPage,
     telegramProfile,
@@ -73,20 +71,11 @@ export default function TrainerDashboardRoute(ctx) {
     usersList
   });
 
-  if (isTrainerNextWorkspace()) {
-    return (
-      <TrainerDashboardWorkspaceRoute
-        {...ctx}
-        {...model}
-        trainerName={model.adminGreetingName}
-      />
-    );
-  }
-
   return (
-    <TrainerLegacyDashboardRoute
+    <TrainerDashboardWorkspaceRoute
       {...ctx}
       {...model}
+      trainerName={model.adminGreetingName}
     />
   );
 }

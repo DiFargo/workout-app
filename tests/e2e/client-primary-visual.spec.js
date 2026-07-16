@@ -265,7 +265,7 @@ test("client main bottom bar stays scoped and adaptive across themes", async ({ 
 
       const navigation = page.getByTestId("client-bottom-nav");
       await expect(navigation).toBeVisible({ timeout: 40_000 });
-      await expect(navigation).toHaveAttribute("data-css-module-scope", "client-main-bottom-bar");
+      await expect(navigation).toHaveAttribute("data-css-module-scope", "client-primary-bottom-bar");
       await expect(navigation).not.toHaveClass(/mainMenuBottomBar|profileBottomTabBar|clientBottomNav/);
       await expect(navigation.locator("button")).toHaveCount(4);
       await expect(page.getByTestId("client-nav-main")).toHaveAttribute("aria-current", "page");

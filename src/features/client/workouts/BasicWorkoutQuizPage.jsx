@@ -6,7 +6,6 @@ import { WorkoutModePickerDialog } from "./WorkoutListDialogs";
 import styles from "./BasicWorkoutQuizPage.module.css";
 
 export default function BasicWorkoutQuizPage({
-  renderClientMainBottomBar,
   workoutModePreference,
   workoutModeRemember,
   basicWorkoutQuiz,
@@ -15,14 +14,6 @@ export default function BasicWorkoutQuizPage({
   onOpenBasicWorkouts,
   onApplyBasicWorkoutPlan,
   onToggleWorkoutModeRemember,
-  canUseTrainerFeatures,
-  onGoMain,
-  onOpenTraining,
-  onOpenNutrition,
-  onOpenCabinet,
-  onOpenTrainerClients,
-  onOpenTrainerPrograms,
-  onLoadTrainerCabinet
 }) {
   const [workoutModePickerOpen, setWorkoutModePickerOpen] = useState(false);
   const previewPlan = buildBasicWorkoutPlanFromQuiz(basicWorkoutQuiz);
@@ -106,20 +97,6 @@ export default function BasicWorkoutQuizPage({
         Подобрать план
       </button>
 
-      {renderClientMainBottomBar?.(
-        "workouts",
-        {
-          className: "mainMenuBottomBar profileBottomTabBar workoutModeBottomBar",
-          isTrainerMode: canUseTrainerFeatures,
-          onGoMain,
-          onOpenTraining,
-          onOpenNutrition,
-          onOpenCabinet,
-          onOpenTrainerClients,
-          onOpenTrainerPrograms,
-          onLoadTrainerCabinet
-        }
-      )}
 
       <WorkoutModePickerDialog
         open={workoutModePickerOpen}

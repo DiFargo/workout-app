@@ -1,3 +1,4 @@
+import BottomActionBar from "../../../shared/ui/BottomActionBar";
 import styles from "./FoodProductActionBar.module.css";
 
 export default function FoodProductActionBar({
@@ -5,38 +6,19 @@ export default function FoodProductActionBar({
   onBack,
   onAdd
 }) {
-  if (hidden) {
-    return null;
-  }
-
   return (
-    <nav
+    <BottomActionBar
+      hidden={hidden}
+      ariaLabel="Действия с продуктом"
+      scope="food-product-action-bar"
+      testId="food-product-action-bar"
       className={styles.root}
-      aria-label="Действия с продуктом"
-      data-css-module-scope="food-product-action-bar"
-      data-testid="food-product-action-bar"
-    >
-      <button
-        type="button"
-        className={styles.button}
-        data-css-module-control="food-product-action"
-        data-food-product-action="back"
-        onClick={onBack}
-      >
-        <span aria-hidden="true" data-css-module-text="food-product-action">←</span>
-        <strong data-css-module-text="food-product-action">Назад к поиску</strong>
-      </button>
-
-      <button
-        type="button"
-        className={`${styles.button} ${styles.add}`}
-        data-css-module-control="food-product-action"
-        data-food-product-action="add"
-        onClick={onAdd}
-      >
-        <span aria-hidden="true" data-css-module-text="food-product-action">✓</span>
-        <strong data-css-module-text="food-product-action">Добавить</strong>
-      </button>
-    </nav>
+      buttonClassName={styles.button}
+      activeClassName={styles.add}
+      items={[
+        { id: "back", label: "Назад к поиску", icon: "←", onClick: onBack },
+        { id: "add", label: "Добавить", icon: "✓", active: true, onClick: onAdd }
+      ]}
+    />
   );
 }

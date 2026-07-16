@@ -1,6 +1,5 @@
 import AccessDeniedScreen from "../../components/common/AccessDeniedScreen";
 import TrainerClientsWorkspaceRoute from "./TrainerClientsWorkspaceRoute";
-import TrainerUsersLegacyRoute from "./TrainerUsersLegacyRoute";
 import { buildTrainerUsersPageModel } from "./trainerUsersPageModel";
 
 export default function TrainerUsersRoute(ctx) {
@@ -15,7 +14,6 @@ export default function TrainerUsersRoute(ctx) {
     adminClientPayment,
     adminClientProgressPhotos,
     adminClientTasks,
-    adminCreatedCredentials,
     adminPhotoCompareIds,
     adminSelectedClient,
     adminUsersSearch,
@@ -44,7 +42,6 @@ export default function TrainerUsersRoute(ctx) {
     getTrainerSummaryDayStart,
     getTrainerSummaryDaysSince,
     getTrainerSummaryTimestamp,
-    isTrainerNextWorkspace,
     selectedUserId,
     setPage,
     telegramProfile,
@@ -60,16 +57,6 @@ export default function TrainerUsersRoute(ctx) {
       />
     );
   }
-
-  const credentialsText = adminCreatedCredentials
-    ? [
-        "Доступ по приглашению",
-        `Логин: ${adminCreatedCredentials.email}`,
-        adminCreatedCredentials.activationUrl
-          ? `Активировать и задать пароль: ${adminCreatedCredentials.activationUrl}`
-          : adminCreatedCredentials.inviteUrl ? `Ссылка: ${adminCreatedCredentials.inviteUrl}` : ""
-      ].filter(Boolean).join("\n")
-    : "";
 
   const model = buildTrainerUsersPageModel({
     adminCalendarDraft,
@@ -114,20 +101,10 @@ export default function TrainerUsersRoute(ctx) {
     usersList
   });
 
-  if (isTrainerNextWorkspace()) {
-    return (
-      <TrainerClientsWorkspaceRoute
-        {...ctx}
-        {...model}
-      />
-    );
-  }
-
   return (
-    <TrainerUsersLegacyRoute
+    <TrainerClientsWorkspaceRoute
       {...ctx}
       {...model}
-      credentialsText={credentialsText}
     />
   );
 }

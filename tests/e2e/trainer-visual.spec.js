@@ -101,20 +101,12 @@ async function expectMinHeights(page, selectors, minHeight = 40) {
   expect(failures).toEqual([]);
 }
 
-async function isVisible(locator) {
-  return locator.evaluate((element) => {
-    const style = window.getComputedStyle(element);
-    const box = element.getBoundingClientRect();
-    return style.display !== "none" && style.visibility !== "hidden" && box.width > 0 && box.height > 0;
-  });
-}
-
 async function openTrainerPrograms(page) {
-  const mobileNav = page.locator(".trainerNextMobileNav");
-  if (await isVisible(mobileNav)) {
-    await expect(page.getByTestId("trainer-nav-more")).toBeVisible({ timeout: 40_000 });
-    await page.getByTestId("trainer-nav-more").click();
-    await expect(page.locator(".trainerNextMoreDrawer")).toBeVisible();
+  const moreButton = page.getByTestId("trainer-nav-more");
+  if ((page.viewportSize()?.width || Number.POSITIVE_INFINITY) <= 820) {
+    await expect(moreButton).toBeVisible({ timeout: 40_000 });
+    await moreButton.click();
+    await expect(page.getByRole("dialog", { name: "Дополнительные разделы" })).toBeVisible();
     await expect(page.getByTestId("trainer-more-workouts")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("trainer-more-workouts").click();
     return;
@@ -163,8 +155,8 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
   await expect(page.locator(".trainerNextRoot")).toBeVisible();
   await expect(page.locator(".trainerNextDashboard")).toBeVisible();
   await expectTapTargets(page, [
-    ".trainerNextMobileNav button",
-    ".trainerNextDesktopNav button",
+    '[data-testid^="trainer-nav-"]',
+    '[data-testid^="trainer-desktop-nav-"]',
     ".trainerNextPrimary",
     ".trainerNextSecondary"
   ]);
@@ -174,7 +166,7 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
   await clickTrainerNav(page, "clients");
   await expect(page.locator(".trainerNextClientsPage")).toBeVisible();
   await expectTapTargets(page, [
-    ".trainerNextMobileNav button",
+    '[data-testid^="trainer-nav-"]',
     ".trainerClientList button",
     ".trainerNextClientCard"
   ]);
@@ -265,7 +257,7 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
     ".trainerNextWorkoutDayItem",
     ".trainerNextExerciseName",
     ".trainerNextHeadActions button",
-    ".trainerNextMobileHeader button"
+    '[data-css-module-scope="mobile-page-header"] button'
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-programs.png");

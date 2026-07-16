@@ -289,6 +289,45 @@ test("CSS Modules do not import legacy stylesheets", async () => {
   }
 });
 
+test("client primary navigation has one production owner", async () => {
+  const sourceFiles = await collectFiles("src", [".js", ".jsx"]);
+  const owners = [];
+
+  for (const file of sourceFiles) {
+    if (/E2EHarness\.jsx$/.test(file)) continue;
+    if (/<PrimaryBottomNavigation\b/.test(await readText(file))) {
+      owners.push(path.normalize(file));
+    }
+  }
+
+  const appCore = await readText("src/AppCore.jsx");
+  const appShell = await readText("src/app/AppShell.jsx");
+
+  assert.deepEqual(owners, [path.normalize("src/AppCore.jsx")]);
+  assert.equal((appCore.match(/<PrimaryBottomNavigation\b/g) || []).length, 1);
+  assert.match(appCore, /<AppShell primaryNavigation=\{primaryNavigation\}>/);
+  assert.match(appShell, /\{primaryNavigation\}/);
+});
+
+test("trainer navigation has one renderer shared by every trainer shell", async () => {
+  const sourceFiles = await collectFiles("src", [".js", ".jsx"]);
+  const renderers = [];
+
+  for (const file of sourceFiles) {
+    if (/<TrainerNavigation\b/.test(await readText(file))) {
+      renderers.push(path.normalize(file));
+    }
+  }
+
+  const shell = await readText("src/components/trainer/TrainerShell.jsx");
+  const navigation = await readText("src/components/trainer/TrainerNavigation.jsx");
+
+  assert.deepEqual(renderers, [path.normalize("src/components/trainer/TrainerShell.jsx")]);
+  assert.match(shell, /<TrainerNavigation/);
+  assert.equal((navigation.match(/const TRAINER_NAVIGATION\s*=\s*\[/g) || []).length, 1);
+  assert.doesNotMatch(navigation, /trainerNextMobileNav|trainerNextMoreDrawer|trainerRoleBottomBar/);
+});
+
 test("profile app settings section owns modal, account, and tab variants", async () => {
   const component = await readText("src/features/client/profile/ProfileAppSettingsSection.jsx");
   const moduleCss = await readText("src/features/client/profile/ProfileAppSettingsSection.module.css");
@@ -318,7 +357,7 @@ test("profile app settings section owns modal, account, and tab variants", async
   assert.doesNotMatch(legacyCss, oldAppSelector);
 });
 
-test("profile dashboard shell owns client layout while preserving the trainer fallback", async () => {
+test("profile dashboard shell owns the client-only layout", async () => {
   const shell = await readText("src/features/client/profile/ProfileDashboardShell.jsx");
   const moduleCss = await readText("src/features/client/profile/ProfileDashboardShell.module.css");
   const route = await readText("src/features/client/profile/ProfileDashboardRoute.jsx");
@@ -326,12 +365,11 @@ test("profile dashboard shell owns client layout while preserving the trainer fa
   const variables = await readText("src/styles/_variables.css");
 
   assert.match(shell, /import styles from "\.\/ProfileDashboardShell\.module\.css";/);
-  assert.match(shell, /data-css-module-scope=\{legacyTrainer \? undefined : "profile-dashboard-shell"\}/);
-  assert.match(shell, /data-testid=\{legacyTrainer \? undefined : "profile-dashboard-content"\}/);
+  assert.match(shell, /data-css-module-scope="profile-dashboard-shell"/);
+  assert.match(shell, /data-testid="profile-dashboard-content"/);
   assert.match(shell, /data-testid="profile-main-hero-stats-shell"/);
   assert.match(shell, /data-testid="profile-dashboard-version"/);
-  assert.match(shell, /legacyTrainer/);
-  assert.match(shell, /trainerRolePage/);
+  assert.doesNotMatch(shell, /legacyTrainer|trainerRolePage|profileDashboardPage|profileUnifiedCard/);
   assert.doesNotMatch(moduleCss, /!important/);
   assert.match(moduleCss, /\.root\s*\{[\s\S]*?overflow:\s*hidden auto;[\s\S]*?scroll-padding-bottom:/);
   assert.match(moduleCss, /\.mainContent\s*\{[\s\S]*?height:\s*calc\(100% - 44px\);/);
@@ -475,42 +513,30 @@ test("trainer UI routes stay behind terminal route boundaries", async () => {
   assert.doesNotMatch(appTerminalRoute, /TrainerProgramManagerView/);
 
   assert.match(trainerUsersRoute, /TrainerClientsWorkspaceRoute/);
-  assert.match(trainerUsersRoute, /TrainerUsersLegacyRoute/);
+  assert.doesNotMatch(trainerUsersRoute, /TrainerUsersLegacyRoute/);
+  assert.equal(await pathExists("src/features/trainer/TrainerUsersLegacyRoute.jsx"), false);
+  assert.equal(await pathExists("src/features/trainer/TrainerLegacyDashboardRoute.jsx"), false);
   assert.match(trainerUsersRoute, /buildTrainerUsersPageModel/);
   assert.match(trainerWorkoutsRoute, /TrainerAdminWorkoutsNextRoute/);
   assert.match(trainerWorkoutsRoute, /TrainerProgramManagerView/);
 });
 
 test("trainer program editor keeps an explicit back action", async () => {
-  const workspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
+  const constructor = await readText("src/components/trainer/TrainerProgramConstructor.jsx");
   const managerView = await readText("src/features/trainer/TrainerProgramManagerView.jsx");
 
-  assert.match(workspace, /export function TrainerProgramConstructor\(\{[\s\S]*?\bonBack,/);
-  assert.match(workspace, /onBack\s*\?\s*\([\s\S]*?<button type="button" onClick=\{onBack\}>[\s\S]*?<ArrowLeft/);
+  assert.match(constructor, /export default function TrainerProgramConstructor\(\{[\s\S]*?\bonBack,/);
+  assert.match(constructor, /<button type="button" onClick=\{onBack\}><ArrowLeft/);
   assert.match(managerView, /<TrainerProgramConstructor[\s\S]*?onBack=\{openAdminProgramsOverview\}/);
+  assert.doesNotMatch(managerView, /TrainerProgramConstructorStyleScope|TrainerWorkspace/);
 });
 
-test("trainer admin user selectors expose selected state", async () => {
-  const usersHeader = await readText("src/features/trainer/TrainerAdminUsersListHeader.jsx");
-  const usersGrid = await readText("src/features/trainer/TrainerAdminUsersClientGrid.jsx");
+test("new trainer workspace selectors expose selected state", async () => {
+  const workspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
 
-  assert.match(usersHeader, /className=\{adminClientFilter === id \? "active" : ""\}[\s\S]*aria-pressed=\{adminClientFilter === id\}/);
-  assert.match(usersGrid, /className=\{active \? "adminClientCard[\s\S]*aria-pressed=\{active\}/);
-});
-
-test("trainer dashboard selectors expose selected state", async () => {
-  const dashboardFilters = await readText("src/features/trainer/TrainerDashboardKpiFilters.jsx");
-  const dashboardGrid = await readText("src/features/trainer/TrainerDashboardGrid.jsx");
-
-  assert.match(dashboardFilters, /className=\{adminClientFilter === id \? "active" : ""\}[\s\S]*aria-pressed=\{adminClientFilter === id\}/);
-  assert.match(dashboardGrid, /className=\{isActive \? "active" : ""\}[\s\S]*aria-pressed=\{isActive\}/);
-});
-
-test("trainer client workspace header selectors expose selected state", async () => {
-  const workspaceHeader = await readText("src/features/trainer/TrainerAdminClientWorkspaceHeader.jsx");
-
-  assert.match(workspaceHeader, /className=\{selectedClient\.role === "trainer" \? "adminTrainerRoleButton active" : "adminTrainerRoleButton"\}[\s\S]*aria-pressed=\{selectedClient\.role === "trainer"\}/);
-  assert.match(workspaceHeader, /className=\{adminUsersSelectedTab === id \? "active" : ""\}[\s\S]*aria-pressed=\{adminUsersSelectedTab === id\}/);
+  assert.match(workspace, /className=\{filter === item\.id \? "active" : ""\}[\s\S]*aria-pressed=\{filter === item\.id\}/);
+  assert.match(workspace, /className=\{active \? "active" : ""\}[\s\S]*aria-pressed=\{active\}[\s\S]*onTabChange/);
+  assert.match(workspace, /className="trainerNextWorkoutDaySelect" aria-pressed=\{isActive\}/);
 });
 
 test("client workout warmup timer presets expose selected state", async () => {
@@ -519,38 +545,10 @@ test("client workout warmup timer presets expose selected state", async () => {
   assert.match(warmupStage, /className=\{`\$\{styles\.timerButton\} \$\{timerDuration === seconds \? styles\.timerButtonActive : ""\}`\}[\s\S]*aria-pressed=\{timerDuration === seconds\}/);
 });
 
-test("trainer client training program cards expose selected state", async () => {
-  const trainingTab = await readText("src/features/trainer/TrainerClientTrainingTab.jsx");
-
-  assert.match(trainingTab, /className=\{isSelected \|\| isAssigned \? "adminSavedProgramCard active" : "adminSavedProgramCard"\}[\s\S]*aria-pressed=\{isSelected \|\| isAssigned\}/);
-});
-
-test("trainer program assignment selectors expose readable labels", async () => {
-  const programTab = await readText("src/features/trainer/TrainerAdminProgramTab.jsx");
-  const trainingTab = await readText("src/features/trainer/TrainerClientTrainingTab.jsx");
-
-  assert.match(programTab, /<select aria-label="Шаблон программы"[\s\S]*value=\{adminSelectedTemplateId\}/);
-  assert.match(programTab, /<select aria-label="Клиент для копирования программы"[\s\S]*value=\{adminCopyTargetUserId\}/);
-  assert.match(trainingTab, /<select aria-label="Сохранённая программа клиента"[\s\S]*value=\{adminSelectedTemplateId\}/);
-  assert.match(trainingTab, /<select[\s\S]*aria-label="Вариант плана питания"[\s\S]*value=\{adminSelectedNutritionPreset\}/);
-});
-
 test("trainer calendar reminder selectors expose readable labels", async () => {
   const adminCalendar = await readText("src/features/trainer/TrainerAdminCalendarTab.jsx");
-  const clientCalendar = await readText("src/features/trainer/TrainerClientCalendarNutritionTab.jsx");
 
   assert.match(adminCalendar, /<select[\s\S]*aria-label="Когда напомнить о тренировке"[\s\S]*className="adminReminderBeforeSelect"/);
-  assert.match(clientCalendar, /<select[\s\S]*aria-label="Когда напомнить о тренировке"[\s\S]*className="adminReminderBeforeSelect"/);
-});
-
-test("trainer transfer selectors expose readable labels", async () => {
-  const transferTab = await readText("src/features/trainer/TrainerAdminTransferTab.jsx");
-  const overviewTools = await readText("src/features/trainer/TrainerClientOverviewAdminTools.jsx");
-
-  assert.match(transferTab, /<select aria-label="Источник данных для переноса"[\s\S]*value=\{adminTransferFromUid\}/);
-  assert.match(transferTab, /<select aria-label="Клиент-получатель данных"[\s\S]*value=\{adminTransferToUid\}/);
-  assert.match(overviewTools, /<select aria-label="Источник данных для переноса"[\s\S]*value=\{adminTransferFromUid\}/);
-  assert.match(overviewTools, /<select aria-label="Клиент-получатель данных"[\s\S]*value=\{adminTransferToUid \|\| selectedClient\.id\}/);
 });
 
 test("trainer workspace program and status selectors expose readable labels", async () => {
@@ -564,12 +562,9 @@ test("trainer workspace program and status selectors expose readable labels", as
 
 test("trainer overview modal selectors expose readable labels", async () => {
   const overviewModals = await readText("src/features/trainer/TrainerClientOverviewModals.jsx");
-  const legacyDetails = await readText("src/features/trainer/TrainerClientOverviewLegacyDetails.jsx");
 
-  for (const source of [overviewModals, legacyDetails]) {
-    assert.match(source, /aria-label=\{slot === 0 \? "Предыдущая фотосессия для сравнения" : "Новая фотосессия для сравнения"\}/);
-    assert.match(source, /<select aria-label="Состояние контроля программы"[\s\S]*value=\{adminPaymentDraft\.status\}/);
-  }
+  assert.match(overviewModals, /aria-label=\{slot === 0 \? "Предыдущая фотосессия для сравнения" : "Новая фотосессия для сравнения"\}/);
+  assert.match(overviewModals, /<select aria-label="Состояние контроля программы"[\s\S]*value=\{adminPaymentDraft\.status\}/);
 });
 
 test("trainer progress photo compare selectors expose readable labels", async () => {
@@ -620,26 +615,25 @@ test("client cabinet nutrition week cells expose readable day state", async () =
   assert.match(profileNutritionModal, /aria-current=\{day\.isToday \? "date" : undefined\}/);
 });
 
-test("trainer admin history bulk selection exposes accessible state", async () => {
-  const historyTab = await readText("src/features/trainer/TrainerAdminHistoryTab.jsx");
+test("trainer history bulk actions stay in the reachable handler layer", async () => {
+  const historyHandlers = await readText("src/features/trainer/trainerClientHistoryHandlers.js");
 
-  assert.match(historyTab, /const allVisibleSelected = visibleHistory\.length > 0 && visibleHistory\.every/);
-  assert.match(historyTab, /<button type="button" aria-pressed=\{allVisibleSelected\}[\s\S]*onClick=\{toggleAdminSelectAllHistory\}/);
-  assert.match(historyTab, /type="checkbox"[\s\S]*checked=\{adminSelectedHistoryIds\.includes\(item\.id\)\}[\s\S]*aria-label=\{`Выбрать тренировку: \$\{item\.workout \|\| "Тренировка"\}`\}/);
+  assert.match(historyHandlers, /function toggleAdminSelectAllHistory\(\)/);
+  assert.match(historyHandlers, /adminSelectedHistoryIds\.map\(\(workoutId\) => deleteDoc/);
+  assert.match(historyHandlers, /setAdminSelectedHistoryIds\(\[\]\)/);
 });
 
 test("trainer program overview cards expose selected state", async () => {
   const overviewPage = await readText("src/features/trainer/TrainerProgramOverviewPage.jsx");
 
-  assert.match(overviewPage, /isSelected \? "programsOverviewCard selected" : "programsOverviewCard"/);
-  assert.match(overviewPage, /styles\.card/);
+  assert.match(overviewPage, /className=\{`\$\{styles\.card\}\$\{isSelected \? ` \$\{styles\.selected\}` : ""\}`\}/);
   assert.match(overviewPage, /aria-pressed=\{isSelected\}/);
 });
 
 test("trainer mobile overflow navigation exposes current page state", async () => {
-  const workspace = await readText("src/components/trainer/TrainerWorkspace.jsx");
+  const navigation = await readText("src/components/trainer/TrainerNavigation.jsx");
 
-  assert.match(workspace, /const active = activeSection === item\.id;[\s\S]*data-testid=\{`trainer-more-\$\{item\.id\}`\}[\s\S]*className=\{active \? "active" : ""\}[\s\S]*aria-current=\{active \? "page" : undefined\}/);
+  assert.match(navigation, /const active = activeSection === item\.id;[\s\S]*data-testid=\{`trainer-more-\$\{item\.id\}`\}[\s\S]*className=\{active \? styles\.active : undefined\}[\s\S]*aria-current=\{active \? "page" : undefined\}/);
 });
 
 test("trainer workouts page program tab exposes selected state", async () => {

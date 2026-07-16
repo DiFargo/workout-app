@@ -89,7 +89,6 @@ const {
   pendingDishIngredientGrams,
   recentNutritionFoods,
   removeSelectedDishIngredient,
-  renderTrainerMainBottomBar,
   resetNutritionPhotoAiSearch,
   resetNutritionPhotoAiState,
   restoreNutritionFood,
@@ -186,7 +185,6 @@ const {
       pickerOpen={nutritionPickerOpen}
       calendarOpen={nutritionCalendarOpen}
       activeMeal={activeNutritionMeal}
-      renderBottomBar={renderTrainerMainBottomBar}
       headerProps={{
         nutritionDateTitle,
         weekDates,

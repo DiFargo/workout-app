@@ -13,20 +13,12 @@ import {
 import styles from "./WorkoutHistoryPage.module.css";
 
 export default function WorkoutHistoryPage({
-  canUseTrainerFeatures,
-  renderClientMainBottomBar,
   history,
   historyLoading,
   openHistoryKey,
   historySwipeId,
   historyDeletingId,
   historyDeleteCandidate,
-  goBackToMain,
-  openTrainingEntry,
-  onOpenNutrition,
-  openProfileCabinet,
-  onOpenTrainerClients,
-  onOpenTrainerPrograms,
   loadHistory,
   handleHistoryTouchStart,
   handleHistoryTouchEnd,
@@ -183,17 +175,6 @@ export default function WorkoutHistoryPage({
         onConfirm={confirmDeleteOwnHistoryWorkout}
       />
 
-      {(renderClientMainBottomBar || (() => null))({
-        activeTab: "workouts",
-        isTrainerMode: canUseTrainerFeatures,
-        onGoMain: goBackToMain,
-        onOpenTraining: openTrainingEntry,
-        onOpenNutrition,
-        onOpenCabinet: openProfileCabinet,
-        onOpenTrainerClients,
-        onOpenTrainerPrograms,
-        onLoadTrainerCabinet: openProfileCabinet
-      })}
     </div>
   );
 }

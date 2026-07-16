@@ -230,7 +230,7 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
     await expect(root).toHaveAttribute("data-css-module-scope", "nutrition-page");
     await expect(root).not.toHaveClass(/fatSecretPage|nutritionFixedHeaderV3|clientCorePageNutrition/);
     await expect(navigation).toBeVisible();
-    await expect(navigation).toHaveAttribute("data-css-module-scope", "nutrition-bottom-bar");
+    await expect(navigation).toHaveAttribute("data-css-module-scope", "client-primary-bottom-bar");
     await expect(navigation).not.toHaveClass(/nutritionBottomTabBar|clientBottomNav/);
     await expect(navigation).toHaveCSS("position", "fixed");
     await expect(navigation).toHaveCSS("height", `${entry.navHeight}px`);
@@ -413,7 +413,7 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await page.locator('[data-food-edit-page-action="close"]').click();
   await expect(page.getByTestId("food-edit-page")).toBeHidden();
 
-  await page.locator('[data-food-product-action="back"]').click();
+  await page.locator('[data-testid="food-product-action-bar"] [data-action="back"]').click();
   await expect(page.getByTestId("food-product-page")).toBeHidden();
 
   await page.locator('[data-food-search-action="my-products"]').click();
@@ -1096,8 +1096,8 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     const noteCard = page.getByTestId("food-product-note-card");
     const actionBar = page.getByTestId("food-product-action-bar");
     const buttons = actionBar.locator("button");
-    const backButton = page.locator('[data-food-product-action="back"]');
-    const addButton = page.locator('[data-food-product-action="add"]');
+    const backButton = actionBar.locator('[data-action="back"]');
+    const addButton = actionBar.locator('[data-action="add"]');
     const mobile = viewport.width <= 700;
     await expect(productHeader).toBeVisible();
     await expect(productHeader).toHaveAttribute("data-css-module-scope", "food-product-header");

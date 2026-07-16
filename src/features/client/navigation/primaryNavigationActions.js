@@ -1,11 +1,9 @@
 import { APP_PAGES } from "../../../app/appPages";
 
-export function createBottomBarActions({
+export function createPrimaryNavigationActions({
   loadHistory,
   setProfileActiveTab,
-  setPage,
-  openAdminClientsWithFilter,
-  openAdminProgramsOverview
+  setPage
 }) {
   function runAfterNavigation(callback) {
     if (typeof callback !== "function") return;
@@ -20,16 +18,10 @@ export function createBottomBarActions({
   }
 
   return {
-    openTrainerCabinetFromBottomBar() {
+    openClientCabinet() {
       setProfileActiveTab("cabinet");
       setPage(APP_PAGES.PROFILE);
       runAfterNavigation(loadHistory);
-    },
-    openTrainerClientsList() {
-      return openAdminClientsWithFilter("all");
-    },
-    openTrainerProgramsList() {
-      return openAdminProgramsOverview();
     }
   };
 }

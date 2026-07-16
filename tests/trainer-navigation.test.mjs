@@ -98,11 +98,10 @@ test("trainer constructor keeps one clear workout day list", async () => {
   assert.doesNotMatch(source, /weekGroups/);
 });
 
-test("trainer workspace does not overlay the brand with the legacy fixed back button", async () => {
-  const source = await readFile(new URL("../src/features/trainer/TrainerProgramManagerHeader.jsx", import.meta.url), "utf8");
+test("trainer workspace no longer ships the legacy fixed back header", async () => {
+  const manager = await readFile(new URL("../src/features/trainer/TrainerProgramManagerView.jsx", import.meta.url), "utf8");
 
-  assert.match(source, /if \(isNextWorkspace\) return null/);
-  assert.match(source, /className="adminFixedMainBack"/);
+  assert.doesNotMatch(manager, /TrainerProgramManagerHeader|adminFixedMainBack|isTrainerNextWorkspace/);
 });
 
 test("trainer constructor Back returns directly to the programs overview", async () => {
@@ -179,14 +178,12 @@ test("subscription lives on the overview and reminders stay compact", async () =
 
 test("trainer navigation omits the standalone messages item", async () => {
   const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
-  const navigation = await readFile(new URL("../src/features/trainer/trainerNavigation.js", import.meta.url), "utf8");
-  const navigationItems = ["NAV_ITEMS", "MOBILE_OVERFLOW_ITEMS", "DESKTOP_NAV_ITEMS"]
-    .map((name) => workspace.match(new RegExp(`const ${name} = \\[([\\s\\S]*?)\\n\\];`))?.[1] || "")
-    .join("\n");
+  const navigation = await readFile(new URL("../src/components/trainer/TrainerNavigation.jsx", import.meta.url), "utf8");
+  const navigationItems = navigation.match(/const TRAINER_NAVIGATION = \[([\s\S]*?)\n\];/)?.[1] || "";
 
   assert.doesNotMatch(navigationItems, /\{ id: "messages", label: "Сообщения"/);
   assert.doesNotMatch(workspace, /\["dashboard", "clients", "messages", "more"\]/);
-  assert.doesNotMatch(navigation, /^\s*"messages",$/m);
+  assert.doesNotMatch(navigationItems, /id: "messages"/);
 });
 
 test("client card exposes compact Messages without the trainer note card", async () => {

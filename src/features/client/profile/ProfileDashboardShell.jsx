@@ -6,21 +6,8 @@ function normalizeMode(mode) {
   return SUPPORTED_MODES.has(mode) ? mode : "cabinet";
 }
 
-function getLegacyRootClass(mode) {
-  if (mode === "main") {
-    return "profileDashboardPage profileTabbedPage mainDashboardPage clientCorePage clientCorePageMain trainerRolePage";
-  }
-
-  if (mode === "cabinet") {
-    return "profileDashboardPage profileTabbedPage clientCorePage clientCorePageCabinet trainerRolePage";
-  }
-
-  return "profileDashboardPage profileTabbedPage trainerRolePage";
-}
-
 export function ProfileDashboardShell({
   children,
-  legacyTrainer = false,
   mode = "cabinet",
   testId
 }) {
@@ -28,10 +15,8 @@ export function ProfileDashboardShell({
 
   return (
     <div
-      className={legacyTrainer
-        ? getLegacyRootClass(normalizedMode)
-        : `${styles.root} ${styles[normalizedMode]}`}
-      data-css-module-scope={legacyTrainer ? undefined : "profile-dashboard-shell"}
+      className={`${styles.root} ${styles[normalizedMode]}`}
+      data-css-module-scope="profile-dashboard-shell"
       data-profile-tab={normalizedMode === "main" ? "cabinet" : normalizedMode}
       data-testid={testId}
     >
@@ -42,17 +27,14 @@ export function ProfileDashboardShell({
 
 export function ProfileDashboardContent({
   children,
-  legacyTrainer = false,
   mode = "cabinet"
 }) {
   const normalizedMode = normalizeMode(mode);
 
   return (
     <section
-      className={legacyTrainer
-        ? "profileUnifiedCard profileAiDashboardCard profileCabinetSection"
-        : `${styles.content} ${styles[`${normalizedMode}Content`]}`}
-      data-testid={legacyTrainer ? undefined : "profile-dashboard-content"}
+      className={`${styles.content} ${styles[`${normalizedMode}Content`]}`}
+      data-testid="profile-dashboard-content"
     >
       {children}
     </section>

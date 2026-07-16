@@ -29,14 +29,6 @@ async function expectNoHorizontalOverflow(page) {
   expect(metrics.documentWidth, JSON.stringify(metrics, null, 2)).toBeLessThanOrEqual(metrics.viewportWidth + 1);
 }
 
-async function isVisible(locator) {
-  return locator.evaluate((element) => {
-    const style = window.getComputedStyle(element);
-    const box = element.getBoundingClientRect();
-    return style.display !== "none" && style.visibility !== "hidden" && box.width > 0 && box.height > 0;
-  });
-}
-
 async function trainerNavButton(page, section) {
   const mobileButton = page.getByTestId(`trainer-nav-${section}`);
   if (await mobileButton.count() && await mobileButton.isVisible()) return mobileButton;
@@ -86,12 +78,11 @@ async function openClientMessages(page) {
 }
 
 async function openTrainerPrograms(page) {
-  const mobileNav = page.locator(".trainerNextMobileNav");
-  if (await isVisible(mobileNav)) {
-    const moreButton = page.getByTestId("trainer-nav-more");
+  const moreButton = page.getByTestId("trainer-nav-more");
+  if ((page.viewportSize()?.width || Number.POSITIVE_INFINITY) <= 820) {
     await expect(moreButton).toBeVisible({ timeout: 40_000 });
     await moreButton.click();
-    await expect(page.locator(".trainerNextMoreDrawer")).toBeVisible();
+    await expect(page.getByRole("dialog", { name: "Дополнительные разделы" })).toBeVisible();
     await expect(page.getByTestId("trainer-more-workouts")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("trainer-more-workouts").click();
     return;
@@ -334,8 +325,9 @@ test("trainer mobile overflow menu opens compact extra sections", async ({ page 
 
   await expect(page.getByTestId("trainer-nav-more")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("trainer-nav-more").click();
-  await expect(page.locator(".trainerNextMoreDrawer")).toBeVisible();
-  await expect(page.locator(".trainerNextMoreDrawer nav button")).toHaveCount(4);
+  const overflowDialog = page.getByRole("dialog", { name: "Дополнительные разделы" });
+  await expect(overflowDialog).toBeVisible();
+  await expect(overflowDialog.locator("nav button")).toHaveCount(4);
   await expect(page.getByTestId("trainer-more-workouts")).toBeVisible();
   await page.getByTestId("trainer-more-workouts").click();
   await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
@@ -362,7 +354,7 @@ test("trainer programs page keeps editor, preview and library usable", async ({ 
 
   const desktopPreviewOpened = await clickIfVisible(page.locator(".trainerNextHeadActions button").first());
   if (!desktopPreviewOpened) {
-    await page.locator(".trainerNextMobileHeader button").first().click();
+    await page.locator('[data-css-module-scope="mobile-page-header"] button').first().click();
   }
   await expect(page.locator(".trainerNextWorkoutPreview")).toBeVisible();
   await expect(page.locator(".trainerNextWorkoutPreview article")).toHaveCount(3);

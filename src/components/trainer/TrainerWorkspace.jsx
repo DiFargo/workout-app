@@ -1,6 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-import styles from "./TrainerWorkspace.module.css";
-import trainerProgramConstructorStyles from "./TrainerProgramConstructor.module.css";
+import { useEffect, useMemo, useRef, useState } from "react";
 import TrainerWorkoutFeedbackReplyModal from "./TrainerWorkoutFeedbackReplyModal";
 import trainerWorkoutFeedbackReplyStyles from "./TrainerWorkoutFeedbackReplyModal.module.css";
 import TrainerClientTasks from "./TrainerClientTasks";
@@ -8,12 +6,17 @@ import TrainerExerciseLoadReviewModal from "./TrainerExerciseLoadReviewModal";
 import trainerExerciseLoadReviewStyles from "./TrainerExerciseLoadReviewModal.module.css";
 import TrainerWorkoutReviewDecisionModal from "./TrainerWorkoutReviewDecisionModal";
 import TrainerClientProgressDashboard from "./TrainerClientProgressDashboard";
+import TrainerAvatar from "./TrainerAvatar";
+import TrainerShell from "./TrainerShell";
+import TrainerCreateClientModal from "./TrainerCreateClientModal";
 import trainerClientWorkoutPlanStyles from "./TrainerClientWorkoutPlan.module.css";
 import trainerClientExercisesTabsStyles from "./TrainerClientExercisesTabs.module.css";
 import trainerClientMessagesStyles from "./TrainerClientMessages.module.css";
 import workspaceFeatureStyles from "./TrainerWorkspaceSubscriptionProgress.module.css";
 import exerciseLibraryEditorStyles from "./TrainerExerciseLibraryEditor.module.css";
-import workspaceUnityStyles from "./TrainerWorkspaceUnity.module.css";
+import MobilePageHeader from "../../shared/ui/MobilePageHeader";
+import ConfirmDialog from "../../shared/ui/ConfirmDialog";
+import trainerConfirmStyles from "./TrainerConfirmDialog.module.css";
 import { analyzeExerciseProgress } from "../../utils/exerciseProgress.js";
 import {
   findTrainerExerciseProgressTarget,
@@ -63,7 +66,6 @@ import {
   EllipsisVertical,
   Eye,
   GripVertical,
-  Home,
   History,
   Mail,
   MessageSquare,
@@ -79,44 +81,22 @@ import {
   Trash2,
   TrendingUp,
   Upload,
-  User,
-  UserPlus,
   Users,
   Utensils,
   X
 } from "lucide-react";
 
-const NAV_ITEMS = [
-  { id: "dashboard", label: "Обзор", mobileLabel: "Дашборд", icon: Home },
-  { id: "clients", label: "Клиенты", icon: Users },
-  { id: "nutrition", label: "Питание", icon: Utensils },
-  { id: "workouts", label: "Программы", icon: Dumbbell },
-  { id: "analytics", label: "Аналитика", icon: BarChart3 },
-  { id: "notifications", label: "Уведомления", icon: Bell },
-  { id: "more", label: "Ещё", mobileLabel: "Ещё", icon: MoreHorizontal }
-];
-
-export function TrainerProgramConstructorStyleScope({ children }) {
-  return <>{children(trainerProgramConstructorStyles)}</>;
-}
-
-const MOBILE_OVERFLOW_ITEMS = [
-  { id: "workouts", label: "Программы", icon: Dumbbell },
-  { id: "analytics", label: "Аналитика", icon: BarChart3 },
-  { id: "notifications", label: "Уведомления", icon: Bell },
-  { id: "more", label: "Кабинет", icon: User }
-];
-
-const DESKTOP_NAV_ITEMS = [
-  { id: "dashboard", label: "Обзор", icon: Home },
-  { id: "clients", label: "Клиенты", icon: Users },
-  { id: "workouts", label: "Программы", icon: Dumbbell },
-  { id: "analytics", label: "Аналитика", icon: BarChart3 },
-  { id: "notifications", label: "Уведомления", icon: Bell },
-  { id: "more", label: "Кабинет", icon: User }
-];
-
-const MOBILE_OVERFLOW_IDS = new Set(MOBILE_OVERFLOW_ITEMS.map((item) => item.id));
+const TRAINER_CONFIRM_CLASS_NAMES = {
+  overlay: trainerConfirmStyles.overlay,
+  backdrop: trainerConfirmStyles.backdrop,
+  content: trainerConfirmStyles.dialog,
+  eyebrow: trainerConfirmStyles.eyebrow,
+  title: trainerConfirmStyles.title,
+  description: trainerConfirmStyles.description,
+  actions: trainerConfirmStyles.actions,
+  action: trainerConfirmStyles.action,
+  danger: trainerConfirmStyles.danger
+};
 
 const NUTRITION_PLAN_PRESETS = {
   maintain: {
@@ -471,49 +451,6 @@ function pluralize(number, one, few, many) {
   return many;
 }
 
-function getInitials(client = {}) {
-  return String(client.name || client.displayName || client.email || "К")
-    .split(/[\s@._-]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-}
-
-function getAvatar(client = {}) {
-  return client.avatarUrl || client.photoURL || client.telegramAvatarUrl || client.telegram?.avatarUrl || "";
-}
-
-function TrainerAvatar({ client, size = "medium" }) {
-  const image = getAvatar(client);
-  return (
-    <span className={`trainerNextAvatar ${size}`}>
-      {image ? <img src={image} alt="" /> : getInitials(client)}
-    </span>
-  );
-}
-
-function TrainerConfirmDialog({ title, text, confirmLabel = "Удалить", onConfirm, onCancel }) {
-  return (
-    <div className="trainerConfirmBackdrop" role="dialog" aria-modal="true" aria-label={title || "Подтверждение действия"} onMouseDown={(event) => {
-      if (event.target === event.currentTarget) onCancel?.();
-    }}>
-      <section className="trainerConfirmDialog">
-        <header>
-          <span>ПОДТВЕРЖДЕНИЕ</span>
-          <h2>{title}</h2>
-          <p>{text}</p>
-        </header>
-        <footer>
-          <button type="button" onClick={onCancel}>Отмена</button>
-          <button className="danger" type="button" onClick={onConfirm}>{confirmLabel}</button>
-        </footer>
-      </section>
-    </div>
-  );
-}
-
 function Sparkline({ tone = "green", values = [2, 3, 3, 5, 4, 7, 8] }) {
   const safeValues = values.length > 1 ? values : [0, 1];
   const min = Math.min(...safeValues);
@@ -540,110 +477,6 @@ function ClientStatus({ status = {} }) {
     lost: "Риск срыва"
   };
   return <span className={`trainerNextStatus ${statusId}`}>{status.label || fallback[statusId] || "Активен"}</span>;
-}
-
-function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvatar }) {
-  const [overflowOpen, setOverflowOpen] = useState(false);
-  const desktopItems = DESKTOP_NAV_ITEMS;
-  const mobileItems = NAV_ITEMS.filter((item) => ["dashboard", "clients", "more"].includes(item.id));
-
-  const renderButton = (item, mobile = false) => {
-    const Icon = item.icon;
-    const active = activeSection === item.id || (mobile && item.id === "more" && MOBILE_OVERFLOW_IDS.has(activeSection));
-    return (
-      <button
-        type="button"
-        key={item.id}
-        data-section={item.id}
-        data-testid={mobile ? `trainer-nav-${item.id}` : `trainer-desktop-nav-${item.id}`}
-        className={active ? "active" : ""}
-        onClick={() => {
-          if (mobile && item.id === "more") {
-            setOverflowOpen(true);
-            return;
-          }
-          onNavigate(item.id);
-        }}
-        aria-current={active ? "page" : undefined}
-      >
-        <span className="trainerNextNavIcon">
-          <Icon size={mobile ? 21 : 18} strokeWidth={1.8} />
-          {item.badge ? <i>{item.badge}</i> : null}
-        </span>
-        <span>{mobile ? item.mobileLabel || item.label : item.label}</span>
-      </button>
-    );
-  };
-
-  return (
-    <>
-      <aside className="trainerNextSidebar">
-        <div className="trainerNextBrand"><strong>T</strong><span>Tren</span></div>
-        <nav>{desktopItems.map((item) => renderButton(item))}</nav>
-        <button className="trainerNextTrainer" type="button" onClick={() => onNavigate("more")}>
-          <TrainerAvatar client={{ name: trainerName, avatarUrl: trainerAvatar }} size="small" />
-          <span><small>Тренер</small><strong>{trainerName || "Тренер"}</strong></span>
-          <ChevronDown size={16} />
-        </button>
-      </aside>
-
-      <nav className="trainerNextMobileNav" aria-label="Разделы тренера">
-        {mobileItems.map((item) => renderButton(item, true))}
-      </nav>
-
-      {overflowOpen ? (
-        <div className="trainerNextMoreBackdrop" role="presentation" onClick={() => setOverflowOpen(false)}>
-          <aside className="trainerNextMoreDrawer" role="dialog" aria-modal="true" aria-label="Дополнительные разделы" onClick={(event) => event.stopPropagation()}>
-            <header>
-              <div>
-                <span>МЕНЮ</span>
-                <h2>Ещё</h2>
-              </div>
-              <button type="button" onClick={() => setOverflowOpen(false)} aria-label="Закрыть"><X size={18} /></button>
-            </header>
-            <nav>
-              {MOBILE_OVERFLOW_ITEMS.map((item) => {
-                const Icon = item.icon;
-                const active = activeSection === item.id;
-                return (
-                  <button
-                    type="button"
-                    key={item.id}
-                    data-section={item.id}
-                    data-testid={`trainer-more-${item.id}`}
-                    className={active ? "active" : ""}
-                    aria-current={active ? "page" : undefined}
-                    onClick={() => {
-                      setOverflowOpen(false);
-                      onNavigate(item.id);
-                    }}
-                  >
-                    <span><Icon size={20} />{item.badge ? <i>{item.badge}</i> : null}</span>
-                    <strong>{item.label}</strong>
-                    <ChevronRight size={17} />
-                  </button>
-                );
-              })}
-            </nav>
-          </aside>
-        </div>
-      ) : null}
-    </>
-  );
-}
-
-export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAvatar, children }) {
-  return (
-    <div className={`${styles.scope} trainerNextRoot ${workspaceUnityStyles.unity}`}>
-      <TrainerNavigation
-        activeSection={activeSection}
-        onNavigate={onNavigate}
-        trainerName={trainerName}
-        trainerAvatar={trainerAvatar}
-      />
-      <main className="trainerNextMain">{children}</main>
-    </div>
-  );
 }
 
 function DashboardMetric({ label, value, detail, tone, icon: Icon, values }) {
@@ -913,14 +746,13 @@ function TrainerDashboard({
 
   return (
     <div className="trainerNextPage trainerNextDashboard">
-      <header className="trainerNextMobileHeader">
-        <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
-        <div className="trainerNextMobileTitle">Дашборд</div>
-        <div className="trainerNextMobileHeaderActions">
+      <MobilePageHeader
+        title="Дашборд"
+        actions={<>
           <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
           <button type="button" onClick={onNotifications} aria-label="Уведомления"><Bell size={22} />{attentionCount > 0 ? <i>{attentionCount}</i> : null}</button>
-        </div>
-      </header>
+        </>}
+      />
 
       <div className="trainerNextDesktopPageHead">
         <div><h1>Обзор</h1><p>Общая картина по всем клиентам</p></div>
@@ -945,85 +777,6 @@ function TrainerDashboard({
       </section>
 
       <DashboardActionCenter actionCenter={actionCenter} onOpenClient={onOpenClient} />
-    </div>
-  );
-}
-
-function ProgressChart({ measurements = [] }) {
-  const [period, setPeriod] = useState("1w");
-  const periods = [
-    { id: "1w", label: "1 неделя", days: 7 },
-    { id: "1m", label: "1 месяц", days: 30 },
-    { id: "3m", label: "3 месяца", days: 90 },
-    { id: "6m", label: "6 месяцев", days: 180 }
-  ];
-  const selectedPeriod = periods.find((item) => item.id === period) || periods[0];
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - selectedPeriod.days);
-  startDate.setHours(0, 0, 0, 0);
-
-  const values = measurements
-    .map((item) => ({
-      item,
-      date: getMeasurementDate(item),
-      weight: getNumericField(item, ["weight", "values.weight"]),
-      muscle: getNumericField(item, ["muscleMass", "muscle", "leanMass", "values.muscleMass", "values.muscle", "values.leanMass"]),
-      fat: getNumericField(item, ["fatPercent", "bodyFat", "fat", "values.fatPercent", "values.bodyFat", "values.fat"])
-    }))
-    .filter((item) => item.date && item.date >= startDate)
-    .sort((a, b) => a.date - b.date);
-
-  const series = [
-    { id: "weight", label: "Вес (кг)", values: values.map((item) => item.weight), className: "weight" },
-    { id: "muscle", label: "Мышечная масса (кг)", values: values.map((item) => item.muscle), className: "muscle" },
-    { id: "fat", label: "Жир (%)", values: values.map((item) => item.fat), className: "fat" }
-  ].map((item) => ({
-    ...item,
-    points: item.values.map((value, index) => ({ value, index })).filter((point) => Number.isFinite(point.value))
-  })).filter((item) => item.points.length >= 2);
-
-  const getSeriesScale = (points) => {
-    const allValues = points.map((point) => point.value);
-    return { min: Math.min(...allValues), max: Math.max(...allValues) };
-  };
-  const getPointCoord = (point, scale) => {
-      const x = 42 + point.index * (390 / Math.max(1, values.length - 1));
-      const y = 126 - ((point.value - scale.min) / Math.max(1, scale.max - scale.min)) * 95;
-      return `${x},${y}`;
-  };
-  const makePoints = (points) => {
-    const scale = getSeriesScale(points);
-    return points.map((point) => getPointCoord(point, scale)).join(" ");
-  };
-  const dateLabels = values.length
-    ? [values[0], values[Math.floor(values.length / 2)], values[values.length - 1]]
-        .filter(Boolean)
-        .map((item) => item.date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }))
-    : [];
-
-  return (
-    <div className="trainerNextProgressChart">
-      <div className="trainerNextChartHead">
-        <strong>Динамика прогресса</strong>
-        <div>{periods.map((item) => <button type="button" className={item.id === period ? "active" : ""} aria-pressed={item.id === period} key={item.id} onClick={() => setPeriod(item.id)}>{item.label}</button>)}</div>
-      </div>
-      {series.length ? (
-        <>
-          <svg viewBox="0 0 480 160" role="img" aria-label="Динамика веса, мышечной массы и процента жира">
-            {[28, 60, 92, 124].map((y) => <line key={y} x1="40" y1={y} x2="444" y2={y} className="grid" />)}
-            {series.map((item) => <polyline key={item.id} points={makePoints(item.points)} className={item.className} />)}
-            {series.find((item) => item.id === "weight")?.points.map((point) => {
-              const weightSeries = series.find((item) => item.id === "weight");
-              const [cx, cy] = getPointCoord(point, getSeriesScale(weightSeries.points)).split(",");
-              return <circle key={`w${point.index}`} cx={cx} cy={cy} r="2.5" className="weightDot" />;
-            })}
-          </svg>
-          <div className="trainerNextChartDates">{dateLabels.map((label, index) => <span key={`${label}-${index}`}>{label}</span>)}</div>
-          <div className="trainerNextLegend">{series.map((item) => <span className={item.className} key={item.id}>{item.label}</span>)}</div>
-        </>
-      ) : (
-        <div className="trainerNextChartEmpty">Недостаточно реальных замеров за выбранный период.</div>
-      )}
     </div>
   );
 }
@@ -2354,10 +2107,6 @@ function ClientExerciseProgress({
   const [expandedExercise, setExpandedExercise] = useState("");
   const [decisionItem, setDecisionItem] = useState(null);
   const [locallyReviewedKeys, setLocallyReviewedKeys] = useState(() => new Set());
-  useEffect(() => {
-    setDecisionItem(null);
-    setLocallyReviewedKeys(new Set());
-  }, [client?.id]);
   const { allExerciseProgress } = getExerciseProgressData(history);
   const persistedReviewedKeys = useMemo(
     () => getTrainerExerciseProgressReviewedKeys(reviews),
@@ -2913,10 +2662,10 @@ function TrainerNutritionPage({ client, nutritionDays, goals, planOptions = [], 
         <div><h1>Питание клиента</h1><p>{client ? `Клиент: ${client.name || client.email}` : "Выберите клиента"}</p></div>
         <button className="trainerNextPrimary" type="button">Отправить план клиенту <ChevronDown size={16} /></button>
       </div>
-      <header className="trainerNextMobileHeader">
-        <div className="trainerNextMobileTitle">Питание и дневник</div>
-        <button type="button" aria-label="Календарь"><CalendarDays size={21} /></button>
-      </header>
+      <MobilePageHeader
+        title="Питание и дневник"
+        actions={<button type="button" aria-label="Календарь"><CalendarDays size={21} /></button>}
+      />
       <NutritionView client={client} nutritionDays={nutritionDays} goals={goals} planOptions={planOptions} onGeneratePlan={onGeneratePlan} onSavePlan={onSavePlan} status={status} />
     </div>
   );
@@ -3639,6 +3388,7 @@ function TrainerClientDetail({
             />
           ) : (
             <ClientExerciseProgress
+              key={client?.id || "client-exercise-progress"}
               client={client}
               history={history}
               workouts={workouts}
@@ -3734,7 +3484,10 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
         <div><h1>Клиенты</h1><p>{clients.length} {pluralize(clients.length, "клиент", "клиента", "клиентов")} в работе</p></div>
         <button className="trainerNextPrimary" type="button" onClick={onCreateClient}><Plus size={18} />Добавить клиента</button>
       </div>
-      <header className="trainerNextMobileHeader"><span className="trainerNextMobileHeaderSpacer" aria-hidden="true" /><div className="trainerNextMobileTitle">Клиенты</div><button type="button" onClick={onCreateClient}><Plus size={22} /></button></header>
+      <MobilePageHeader
+        title="Клиенты"
+        actions={<button type="button" onClick={onCreateClient} aria-label="Добавить клиента"><Plus size={22} /></button>}
+      />
       <div className="trainerNextClientsStandalone">
         <label className="trainerNextSearch open"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Поиск клиента..." /></label>
         <div className="trainerMessageFilters trainerClientFilters" role="group" aria-label="Фильтр клиентов">
@@ -3771,410 +3524,6 @@ function getExerciseSetSummary(sets = [], field, suffix = "") {
   if (!values.length) return "—";
   const uniqueValues = [...new Set(values)];
   return `${uniqueValues.length === 1 ? uniqueValues[0] : `${uniqueValues[0]}…${uniqueValues.at(-1)}`}${suffix}`;
-}
-
-export function TrainerProgramConstructor({
-  program,
-  months = [],
-  activeWorkoutId,
-  onSelectWorkout,
-  onProgramNameChange,
-  onSaveProgram,
-  onDeleteProgram,
-  onBack,
-  onAddMonth,
-  onUpdateMonth,
-  onDeleteMonth,
-  onAddCycle,
-  onCopyCycle,
-  onDeleteCycle,
-  onAddWeek,
-  onDeleteWeek,
-  onAddWorkout,
-  onUpdateWorkout,
-  onDeleteWorkout,
-  onDuplicateWorkout,
-  onAddExercise,
-  onUpdateExercise,
-  onUpdateExerciseName,
-  onDeleteExercise,
-  onMoveExercise,
-  onUpdateExerciseSet,
-  onAddExerciseSet,
-  onRemoveExerciseSet,
-  onUploadExerciseVideo,
-  exerciseVideoUploadingId
-}) {
-  const [openCycles, setOpenCycles] = useState({});
-  const [openWeeks, setOpenWeeks] = useState({});
-  const [expandedExerciseId, setExpandedExerciseId] = useState("");
-  const [confirmAction, setConfirmAction] = useState(null);
-
-  const workoutContexts = months.flatMap((month, monthIndex) =>
-    (month.microcycles || month.blocks || []).flatMap((cycle, cycleIndex) =>
-      (cycle.weeks || []).flatMap((week, weekIndex) =>
-        (week.workouts || []).map((workout, workoutIndex) => ({
-          month,
-          monthIndex,
-          cycle,
-          cycleIndex,
-          week,
-          weekIndex,
-          workout,
-          workoutIndex
-        }))
-      )
-    )
-  );
-  const activeContext = workoutContexts.find(({ workout }) => workout.id === activeWorkoutId)
-    || workoutContexts[0]
-    || null;
-  const activeMonth = activeContext?.month || months[0] || null;
-  const activeCycle = activeContext?.cycle || activeMonth?.microcycles?.[0] || activeMonth?.blocks?.[0] || null;
-  const activeWeek = activeContext?.week || activeCycle?.weeks?.[0] || null;
-  const activeWorkout = activeContext?.workout || activeWeek?.workouts?.[0] || null;
-  const exercises = activeWorkout?.exercises || [];
-
-  function isCycleOpen(cycle, cycleIndex) {
-    if (Object.prototype.hasOwnProperty.call(openCycles, cycle.id)) return openCycles[cycle.id];
-    return cycle.id === activeCycle?.id || cycleIndex === 0;
-  }
-
-  function isWeekOpen(week, weekIndex, cycle) {
-    if (Object.prototype.hasOwnProperty.call(openWeeks, week.id)) return openWeeks[week.id];
-    return week.id === activeWeek?.id || (cycle.id === activeCycle?.id && weekIndex === 0);
-  }
-
-  function selectWorkout(context) {
-    setExpandedExerciseId("");
-    onSelectWorkout(context.workout.id);
-  }
-
-  function confirmDeleteExercise(exercise) {
-    if (!activeContext) return;
-    setConfirmAction({
-      title: "Удалить упражнение?",
-      text: `Упражнение «${exercise.name || "Без названия"}» будет удалено из этого дня программы.`,
-      onConfirm: () => {
-        onDeleteExercise(
-          activeContext.cycle.id,
-          activeContext.week.id,
-          activeContext.workout.id,
-          exercise.id
-        );
-        if (expandedExerciseId === exercise.id) setExpandedExerciseId("");
-        setConfirmAction(null);
-      }
-    });
-  }
-
-  return (
-    <section className="trainerProgramConstructor">
-      <header className="trainerProgramSelectedBar">
-        <CalendarDays size={27} strokeWidth={1.9} />
-        <label>
-          <span>Выбранная программа</span>
-          <input
-            value={program?.name || ""}
-            onChange={(event) => onProgramNameChange(event.target.value)}
-            aria-label="Название программы"
-          />
-        </label>
-        <div>
-          {onBack ? (
-            <button type="button" onClick={onBack}>
-              <ArrowLeft size={17} />Назад
-            </button>
-          ) : null}
-          <button className="danger" type="button" onClick={onDeleteProgram}>
-            <Trash2 size={17} />Удалить
-          </button>
-          <button className="primary" type="button" onClick={() => onSaveProgram()}>
-            <Save size={17} />Сохранить
-          </button>
-        </div>
-      </header>
-
-      <div className="trainerProgramConstructorGrid">
-        <aside className="trainerProgramTree" aria-label="Структура программы">
-          {months.map((month, monthIndex) => {
-            const cycles = month.microcycles || month.blocks || [];
-            const weeksCount = cycles.reduce((sum, cycle) => sum + (cycle.weeks?.length || 0), 0);
-
-            return (
-              <section className={month.id === activeMonth?.id ? "active" : ""} key={month.id}>
-                <div className="trainerProgramMonthRow">
-                  <CalendarDays size={20} />
-                  <label>
-                    <input
-                      value={month.name || `Месяц ${monthIndex + 1}`}
-                      onChange={(event) => onUpdateMonth(month.id, { name: event.target.value })}
-                      aria-label={`Название месяца ${monthIndex + 1}`}
-                    />
-                    <small>{weeksCount} {pluralize(weeksCount, "неделя", "недели", "недель")}</small>
-                  </label>
-                  {months.length > 1 ? (
-                    <button type="button" onClick={() => onDeleteMonth(month.id)} aria-label="Удалить месяц" title="Удалить месяц">
-                      <Trash2 size={15} />
-                    </button>
-                  ) : <ChevronDown size={17} />}
-                </div>
-
-                <div className="trainerProgramCycles">
-                  {cycles.map((cycle, cycleIndex) => {
-                    const cycleOpen = isCycleOpen(cycle, cycleIndex);
-                    const cycleSelected = cycle.id === activeCycle?.id;
-
-                    return (
-                      <div className={`trainerProgramCycle${cycleSelected ? " selected" : ""}`} key={cycle.id}>
-                        <div className="trainerProgramCycleRow">
-                          <GripVertical size={18} />
-                          <label>
-                            <strong>{String(cycle.name || `Микроцикл ${cycleIndex + 1}`).replace(/^Микроцикл/i, "Цикл")}</strong>
-                            <small>{cycle.weeks?.length || 0} {pluralize(cycle.weeks?.length || 0, "неделя", "недели", "недель")}</small>
-                          </label>
-                          <div>
-                            <button type="button" onClick={() => onCopyCycle(cycle.id)} aria-label="Копировать цикл" title="Копировать цикл">
-                              <Copy size={14} />
-                            </button>
-                            <button type="button" onClick={() => onDeleteCycle(cycle.id)} aria-label="Удалить цикл" title="Удалить цикл">
-                              <Trash2 size={14} />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setOpenCycles((current) => ({ ...current, [cycle.id]: !cycleOpen }))}
-                              aria-label={cycleOpen ? "Свернуть цикл" : "Развернуть цикл"}
-                            >
-                              {cycleOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                            </button>
-                          </div>
-                        </div>
-
-                        {cycleOpen ? (
-                          <div className="trainerProgramWeeks">
-                            {(cycle.weeks || []).map((week, weekIndex) => {
-                              const weekOpen = isWeekOpen(week, weekIndex, cycle);
-                              return (
-                                <div className="trainerProgramWeek" key={week.id}>
-                                  <div className="trainerProgramWeekRow">
-                                    <button
-                                      type="button"
-                                      onClick={() => setOpenWeeks((current) => ({ ...current, [week.id]: !weekOpen }))}
-                                      aria-label={weekOpen ? "Свернуть неделю" : "Развернуть неделю"}
-                                    >
-                                      {weekOpen ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
-                                    </button>
-                                    <strong>{week.name || `Неделя ${weekIndex + 1}`}</strong>
-                                    <small>{week.workouts?.length || 0} {pluralize(week.workouts?.length || 0, "тренировка", "тренировки", "тренировок")}</small>
-                                    <button type="button" onClick={() => onDeleteWeek(cycle.id, week.id)} aria-label="Удалить неделю" title="Удалить неделю">
-                                      <Trash2 size={13} />
-                                    </button>
-                                  </div>
-
-                                  {weekOpen ? (
-                                    <div className="trainerProgramDays">
-                                      {(week.workouts || []).map((workout, workoutIndex) => {
-                                        const context = {
-                                          month,
-                                          monthIndex,
-                                          cycle,
-                                          cycleIndex,
-                                          week,
-                                          weekIndex,
-                                          workout,
-                                          workoutIndex
-                                        };
-                                        const selected = workout.id === activeWorkout?.id;
-                                        const compactName = String(workout.name || "")
-                                          .replace(/^Неделя\s*\d+\s*[-–—]\s*/i, "")
-                                          .replace(/^Тренировка\s*\d+\s*[-–—:]?\s*/i, "")
-                                          || `Тренировка ${workoutIndex + 1}`;
-
-                                        return (
-                                          <div className={`trainerProgramDay${selected ? " selected" : ""}`} key={workout.id}>
-                                            <button type="button" onClick={() => selectWorkout(context)}>
-                                              <strong>День {workoutIndex + 1}</strong>
-                                              <small>{compactName}</small>
-                                            </button>
-                                            {selected ? (
-                                              <button type="button" onClick={() => onDuplicateWorkout(cycle.id, week.id, workout.id)} aria-label="Копировать день">
-                                                <Copy size={14} />
-                                              </button>
-                                            ) : null}
-                                          </div>
-                                        );
-                                      })}
-                                      <button className="trainerProgramTreeAdd" type="button" onClick={() => onAddWorkout(cycle.id, week.id)}>
-                                        <Plus size={14} />Добавить день
-                                      </button>
-                                    </div>
-                                  ) : null}
-                                </div>
-                              );
-                            })}
-                            <button className="trainerProgramTreeAdd" type="button" onClick={() => onAddWeek(cycle.id)}>
-                              <Plus size={14} />Добавить неделю
-                            </button>
-                          </div>
-                        ) : null}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <button className="trainerProgramAddCycle" type="button" onClick={() => onAddCycle(month.id)}>
-                  <Plus size={18} />Добавить цикл
-                </button>
-              </section>
-            );
-          })}
-          <button className="trainerProgramAddMonth" type="button" onClick={onAddMonth}>
-            <Plus size={16} />Добавить месяц
-          </button>
-        </aside>
-
-        <section className="trainerProgramDayPanel">
-          {activeContext ? (
-            <>
-              <header className="trainerProgramBreadcrumb">
-                <div>
-                  <span>{activeContext.month.name}</span><ChevronRight size={15} />
-                  <span>{String(activeContext.cycle.name).replace(/^Микроцикл/i, "Цикл")}</span><ChevronRight size={15} />
-                  <span>{activeContext.week.name}</span><ChevronRight size={15} />
-                  <strong>День {activeContext.workoutIndex + 1}</strong>
-                </div>
-                <aside>
-                  <strong>{exercises.length} {pluralize(exercises.length, "упражнение", "упражнения", "упражнений")}</strong>
-                  <button type="button" onClick={() => onDuplicateWorkout(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id)} aria-label="Копировать тренировку" title="Копировать тренировку">
-                    <Copy size={18} />
-                  </button>
-                  <button type="button" onClick={() => onDeleteWorkout(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id)} aria-label="Удалить тренировку" title="Удалить тренировку">
-                    <Trash2 size={18} />
-                  </button>
-                </aside>
-              </header>
-
-              <label className="trainerProgramWorkoutName">
-                <span>Название тренировки</span>
-                <input
-                  value={activeContext.workout.name || ""}
-                  onChange={(event) => onUpdateWorkout(
-                    activeContext.cycle.id,
-                    activeContext.week.id,
-                    activeContext.workout.id,
-                    { name: event.target.value }
-                  )}
-                />
-              </label>
-
-              <div className="trainerProgramExerciseHead">
-                <span>Упражнение</span><span>Подходы</span><span>Повторения</span><span>Вес</span><span>Отдых</span><span />
-              </div>
-
-              <div className="trainerProgramExerciseList">
-                {exercises.map((exercise, index) => {
-                  const sets = Array.isArray(exercise.sets) && exercise.sets.length
-                    ? exercise.sets
-                    : [{ reps: "", weight: "" }];
-                  const requiresWeight = exercise.requiresWeight ?? exercise.usesWeight ?? true;
-                  const video = getExerciseVideo(exercise);
-                  const expanded = expandedExerciseId === exercise.id;
-
-                  return (
-                    <article className={expanded ? "expanded" : ""} key={exercise.id || index}>
-                      <div className="trainerProgramExerciseRow">
-                        <span className="trainerNextExerciseMove">
-                          <GripVertical size={15} />
-                          <button type="button" disabled={index === 0} onClick={() => onMoveExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, -1)} aria-label="Поднять упражнение"><ChevronUp size={13} /></button>
-                          <button type="button" disabled={index === exercises.length - 1} onClick={() => onMoveExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, 1)} aria-label="Опустить упражнение"><ChevronDown size={13} /></button>
-                        </span>
-                        <span className="trainerNextExerciseImage">
-                          {exercise.image || exercise.thumbnail ? (
-                            <img src={exercise.image || exercise.thumbnail} alt="" />
-                          ) : video ? (
-                            <video src={video} muted preload="metadata" aria-hidden="true" />
-                          ) : (
-                            <Dumbbell size={22} />
-                          )}
-                        </span>
-                        <button className="trainerNextExerciseName" type="button" onClick={() => setExpandedExerciseId(expanded ? "" : exercise.id)}>
-                          <strong>{exercise.name || "Упражнение"}</strong>
-                          <small>{video ? "Видео добавлено" : "Без видео"}</small>
-                        </button>
-                        <span className="trainerNextExerciseMetric"><strong>{sets.length}</strong><small>подх.</small></span>
-                        <span className="trainerNextExerciseMetric"><strong>{getExerciseSetSummary(sets, "reps")}</strong><small>повт.</small></span>
-                        <span className="trainerNextExerciseMetric"><strong>{requiresWeight ? getExerciseSetSummary(sets, "weight", " кг") : "—"}</strong><small>вес</small></span>
-                        <span className="trainerNextExerciseMetric"><strong>{exercise.rest || "90 сек"}</strong><small>отдых</small></span>
-                        <div className="trainerNextExerciseActions">
-                          <button type="button" onClick={() => setExpandedExerciseId(expanded ? "" : exercise.id)} aria-label="Редактировать упражнение"><EllipsisVertical size={17} /></button>
-                          <button type="button" onClick={() => confirmDeleteExercise(exercise)} aria-label="Удалить упражнение"><Trash2 size={15} /></button>
-                        </div>
-                      </div>
-
-                      {expanded ? (
-                        <div className="trainerNextExerciseEditor">
-                          <div className="trainerNextExerciseFields">
-                            <label className="wide">
-                              <span>Название</span>
-                              <input value={exercise.name || ""} onChange={(event) => onUpdateExerciseName(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise, event.target.value)} />
-                            </label>
-                            <label>
-                              <span>Отдых</span>
-                              <input value={exercise.rest || ""} onChange={(event) => onUpdateExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, { rest: event.target.value })} placeholder="90 сек" />
-                            </label>
-                            <label className="trainerNextWeightToggle">
-                              <span>Используется вес</span>
-                              <input type="checkbox" checked={requiresWeight} onChange={(event) => onUpdateExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, { requiresWeight: event.target.checked, usesWeight: event.target.checked })} />
-                            </label>
-                            <label className="trainerNextVideoUpload">
-                              <Upload size={16} />
-                              <span>{exerciseVideoUploadingId === exercise.id ? "Загрузка..." : video ? "Заменить видео" : "Загрузить видео"}</span>
-                              <input type="file" accept="video/*" disabled={exerciseVideoUploadingId === exercise.id} onChange={(event) => onUploadExerciseVideo(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, event.target.files?.[0])} />
-                            </label>
-                          </div>
-                          <div className="trainerNextSetEditor">
-                            <div className="trainerNextSetEditorHead"><span>Подход</span><span>Повторы</span><span>Вес, кг</span><span /></div>
-                            {sets.map((set, setIndex) => (
-                              <div className="trainerNextSetRow" key={set.id || setIndex}>
-                                <strong>{setIndex + 1}</strong>
-                                <input value={set.reps ?? ""} onChange={(event) => onUpdateExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, setIndex, { reps: event.target.value })} />
-                                <input value={set.weight ?? ""} disabled={!requiresWeight} onChange={(event) => onUpdateExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, setIndex, { weight: event.target.value })} />
-                                <button type="button" disabled={sets.length <= 1} onClick={() => onRemoveExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, setIndex)} aria-label={`Удалить подход ${setIndex + 1}`}><X size={14} /></button>
-                              </div>
-                            ))}
-                            <button className="trainerNextAddSet" type="button" onClick={() => onAddExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id)}><Plus size={15} />Добавить подход</button>
-                          </div>
-                        </div>
-                      ) : null}
-                    </article>
-                  );
-                })}
-                {!exercises.length ? <div className="trainerNextEmpty">В этой тренировке пока нет упражнений.</div> : null}
-              </div>
-
-              <button className="trainerProgramAddExercise" type="button" onClick={() => onAddExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id)}>
-                <Plus size={19} />Добавить упражнение
-              </button>
-            </>
-          ) : (
-            <div className="trainerProgramEmptyDay">
-              <Dumbbell size={30} />
-              <strong>В программе пока нет тренировок</strong>
-              <span>Добавьте неделю и тренировочный день в дереве слева.</span>
-            </div>
-          )}
-        </section>
-      </div>
-      {confirmAction ? (
-        <TrainerConfirmDialog
-          title={confirmAction.title}
-          text={confirmAction.text}
-          onConfirm={confirmAction.onConfirm}
-          onCancel={() => setConfirmAction(null)}
-        />
-      ) : null}
-    </section>
-  );
 }
 
 function TrainerWorkoutEditor({
@@ -4343,10 +3692,12 @@ function TrainerWorkoutEditor({
           </div>
         ) : null}
       </div> : null}
-      {!embedded ? <header className="trainerNextMobileHeader">
-        <div className="trainerNextMobileTitle">{tab === "library" ? "Библиотека" : "План тренировок"}</div>
-        {tab === "plan" ? <button type="button" onClick={() => setPreviewOpen(true)} aria-label="Предпросмотр"><Eye size={21} /></button> : <span />}
-      </header> : null}
+      {!embedded ? (
+        <MobilePageHeader
+          title={tab === "library" ? "Библиотека" : "План тренировок"}
+          actions={tab === "plan" ? <button type="button" onClick={() => setPreviewOpen(true)} aria-label="Предпросмотр"><Eye size={21} /></button> : null}
+        />
+      ) : null}
       {!embedded ? <div className="trainerNextPageTabs">
         <button type="button" onClick={onOpenProgramManager}>Программы</button>
         <button type="button" className={tab === "library" ? "active" : ""} aria-pressed={tab === "library"} onClick={() => onWorkoutTabChange("library")}>Библиотека упражнений</button>
@@ -4634,34 +3985,17 @@ function TrainerWorkoutEditor({
         </div>
       ) : null}
       {confirmAction ? (
-        <TrainerConfirmDialog
+        <ConfirmDialog
+          open
           title={confirmAction.title}
-          text={confirmAction.text}
+          description={confirmAction.text}
+          eyebrow="ПОДТВЕРЖДЕНИЕ"
+          icon={null}
           onConfirm={confirmAction.onConfirm}
           onCancel={() => setConfirmAction(null)}
+          classNames={TRAINER_CONFIRM_CLASS_NAMES}
         />
       ) : null}
-    </div>
-  );
-}
-
-function CreateClientModal({ state }) {
-  if (!state?.open) return null;
-  return (
-    <div className="trainerNextModalBackdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && state.onClose()}>
-      <section className="trainerNextModal" role="dialog" aria-modal="true" aria-labelledby="trainer-create-client-title">
-        <button className="trainerNextModalClose" type="button" onClick={state.onClose} aria-label="Закрыть">×</button>
-        <div className="trainerNextModalIcon"><UserPlus size={24} /></div>
-        <h2 id="trainer-create-client-title">Пригласить клиента</h2>
-        <p>Клиент сам задаст пароль по ссылке активации и сможет войти по email, логину или Google.</p>
-        <form onSubmit={state.onSubmit}>
-          <label><span>Имя</span><input value={state.name} onChange={(event) => state.onNameChange(event.target.value)} placeholder="Имя клиента" /></label>
-          <label><span>Email</span><input type="email" value={state.email} onChange={(event) => state.onEmailChange(event.target.value)} placeholder="client@email.com" /></label>
-          {state.status ? <p className="trainerNextModalStatus">{state.status}</p> : null}
-          {state.credentials ? <div className="trainerNextCredentials"><strong>Приглашение клиента</strong><code>{state.credentials.email}{state.credentials.activationUrl ? <><br />{state.credentials.activationUrl}</> : state.credentials.inviteUrl ? <><br />{state.credentials.inviteUrl}</> : null}</code></div> : null}
-          <button className="trainerNextPrimary trainerNextModalSubmit" type="submit" disabled={state.loading}>{state.loading ? "Создаю..." : "Создать приглашение"}</button>
-        </form>
-      </section>
     </div>
   );
 }
@@ -4672,16 +4006,15 @@ function TrainerCabinetPage({ trainerName, trainerAvatar, clients = [], counts =
 
   return (
     <div className="trainerNextPage trainerNextCabinetPage">
-      <header className="trainerNextMobileHeader">
-        <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
-        <div className="trainerNextMobileTitle">Кабинет</div>
-        <div className="trainerNextMobileHeaderActions">
+      <MobilePageHeader
+        title="Кабинет"
+        actions={<>
           <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
           <button type="button" onClick={() => onNavigate("notifications")} aria-label="Уведомления">
             <Bell size={21} strokeWidth={1.8} />
           </button>
-        </div>
-      </header>
+        </>}
+      />
 
       <div className="trainerNextDesktopPageHead">
         <div>
@@ -4712,17 +4045,17 @@ function TrainerCabinetPage({ trainerName, trainerAvatar, clients = [], counts =
 
 function TrainerGlobalSubscriptionNotifications({ settings, onLoad, onSave }) {
   const [draft, setDraft] = useState(() => normalizeTrainerSubscriptionNotificationSettings(settings));
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Boolean(onLoad));
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState("");
+  const initialOnLoadRef = useRef(onLoad);
 
   useEffect(() => {
     let active = true;
-    setDraft(normalizeTrainerSubscriptionNotificationSettings(settings));
-    if (!onLoad) return () => { active = false; };
+    const loadSettings = initialOnLoadRef.current;
+    if (!loadSettings) return () => { active = false; };
 
-    setLoading(true);
-    Promise.resolve(onLoad())
+    Promise.resolve(loadSettings())
       .then((result) => {
         if (!active) return;
         if (result === false) {
@@ -5205,14 +4538,13 @@ function TrainerUtilityPage({
 
   return (
     <div className="trainerNextPage trainerUtilityPage">
-      <header className="trainerNextMobileHeader">
-        <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
-        <div className="trainerNextMobileTitle">{config.title}</div>
-        <div className="trainerNextMobileHeaderActions">
+      <MobilePageHeader
+        title={config.title}
+        actions={<>
           <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
           <button type="button" onClick={() => onNavigate("notifications")} aria-label="Уведомления"><Bell size={21} /></button>
-        </div>
-      </header>
+        </>}
+      />
 
       <div className="trainerNextDesktopPageHead">
         <div><h1>{config.title}</h1><p>{config.text}</p></div>
@@ -5474,7 +4806,7 @@ export default function TrainerWorkspace({
   return (
     <TrainerShell activeSection={activeSection} onNavigate={onNavigate} trainerName={trainerName} trainerAvatar={trainerAvatar}>
       {content}
-      <CreateClientModal state={createClientState} />
+      <TrainerCreateClientModal state={createClientState} />
       {showSyncOverlay ? (
         <div className="trainerSyncOverlay" role="status" aria-live="polite" aria-label="Идет синхронизация данных">
           <div className="trainerSyncOverlayCard">

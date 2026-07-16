@@ -3,7 +3,6 @@ import styles from "./ProfilePageChrome.module.css";
 
 export default function ProfilePageChrome({
   isMainDashboard,
-  renderBottomBar,
   showTrainerNotifications,
   trainerNotificationCount,
   onOpenTrainerNotifications
@@ -27,8 +26,6 @@ export default function ProfilePageChrome({
         </button>
       )}
 
-      {!isMainDashboard && renderBottomBar("cabinet")}
-      {isMainDashboard && renderBottomBar("main")}
 
       {isMainDashboard && (
         <h1

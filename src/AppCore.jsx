@@ -47,6 +47,7 @@ import { useProfileUiEffects } from "./features/client/profile/useProfileUiEffec
 import { showAppConfirm, showAppError } from "./utils/appFeedback";
 import { createPerformanceCheckHandlers } from "./utils/performanceChecks";
 import { usePreventMobileZoom } from "./shared/hooks/usePreventMobileZoom";
+import { PrimaryBottomNavigation } from "./shared/ui/BottomBar";
 import {
   getFoodIcon
 } from "./utils/nutritionFoodPresentation";
@@ -210,8 +211,7 @@ import { useTrainerAutoLoadEffect } from "./features/trainer/useTrainerAutoLoadE
 import { useTrainerTelegramThreadEffects } from "./features/trainer/useTrainerTelegramThreadEffects";
 import { createTrainerWorkspaceHandlers } from "./features/trainer/trainerWorkspaceHandlers";
 import { createTrainerBridgeHandlers } from "./features/trainer/trainerBridgeHandlers";
-import { createBottomBarActions } from "./features/client/navigation/bottomBarActions";
-import { createBottomBarRenderers } from "./features/client/navigation/useBottomBarRenderers";
+import { createPrimaryNavigationActions } from "./features/client/navigation/primaryNavigationActions";
 import { createProfileNutritionHandlers } from "./features/client/profile/profileNutritionHandlers";
 import {
   createNutritionFlowMiscHandlers
@@ -226,6 +226,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 
 import * as appConfig from "./constants/appConfig";
 import { APP_PAGES } from "./app/appPages";
+import AppShell from "./app/AppShell";
 import { renderAppRoutePage } from "./app/appRouteRenderer";
 import { preloadTrainerRouteChunks } from "./app/appTerminalRouteLoaders";
 import {
@@ -491,14 +492,11 @@ function AppRuntime() {
     return loadAdminClientOverviewRef.current(...args);
   };
   const {
-    isTrainerNextWorkspace,
     navigateTrainerNext,
     openTrainerNextClient,
     openTrainerProgramManager,
     openTrainerExerciseLibrary
   } = createTrainerNavigationActions({
-    canUseTrainerFeatures,
-    page,
     usersList,
     setPage,
     setProfileActiveTab,
@@ -1927,16 +1925,10 @@ function AppRuntime() {
     loadWorkoutsFromFirebase
   });
 
-  const {
-    openTrainerCabinetFromBottomBar,
-    openTrainerClientsList,
-    openTrainerProgramsList
-  } = createBottomBarActions({
+  const { openClientCabinet } = createPrimaryNavigationActions({
     loadHistory,
     setProfileActiveTab,
-    setPage,
-    openAdminClientsWithFilter,
-    openAdminProgramsOverview
+    setPage
   });
 
   const preloadClientMainTarget = () => {};
@@ -1949,25 +1941,6 @@ function AppRuntime() {
   const preloadClientCabinetTarget = () => {
     preloadClientSecondaryRoutes();
   };
-
-  const {
-    renderClientMainBottomBar,
-    renderTrainerMainBottomBar,
-    renderTrainerWorkspaceBottomBar
-  } = createBottomBarRenderers({
-    isTrainerMode: canUseTrainerFeatures(),
-    onGoMain: goBackToMain,
-    onOpenTraining: openTrainingEntry,
-    onOpenNutrition: () => setPage(APP_PAGES.NUTRITION),
-    onOpenCabinet: openTrainerCabinetFromBottomBar,
-    onPreloadMain: preloadClientMainTarget,
-    onPreloadTraining: preloadClientTrainingTarget,
-    onPreloadNutrition: preloadClientNutritionTarget,
-    onPreloadCabinet: preloadClientCabinetTarget,
-    onOpenTrainerClients: openTrainerClientsList,
-    onOpenTrainerPrograms: openTrainerProgramsList,
-    onLoadTrainerCabinet: openTrainerCabinetFromBottomBar
-  });
 
   const {
     saveTrainerClientNutritionPlan
@@ -2416,13 +2389,51 @@ function AppRuntime() {
 
   const trainerForbiddenClientPage = canUseTrainerFeatures() && isTrainerForbiddenClientPage(page);
   const effectivePage = trainerForbiddenClientPage ? APP_PAGES.ADMIN : page;
+  const clientPrimaryTab = {
+    [APP_PAGES.MAIN]: "main",
+    [APP_PAGES.PROFILE]: "cabinet",
+    [APP_PAGES.WORKOUTS]: "workouts",
+    [APP_PAGES.WORKOUT_MODE]: "workouts",
+    [APP_PAGES.BASIC_WORKOUT_QUIZ]: "workouts",
+    [APP_PAGES.HISTORY]: "workouts",
+    [APP_PAGES.NUTRITION]: "nutrition"
+  }[effectivePage];
+  const clientPrimaryNavigationBlocked = Boolean(
+    selectedWorkoutId
+    || fullscreenVideo
+    || showFirstSetupOnboarding
+    || workoutReadinessOpen
+    || postWorkoutFeedbackOpen
+    || (effectivePage === APP_PAGES.NUTRITION && (
+      nutritionPickerOpen || nutritionCalendarOpen || nutritionMeal
+    ))
+  );
+  const primaryNavigation = clientPrimaryTab
+    && !canUseTrainerFeatures()
+    && !clientPrimaryNavigationBlocked
+    ? (
+      <PrimaryBottomNavigation
+        activeTab={clientPrimaryTab}
+        onGoMain={goBackToMain}
+        onOpenTraining={openTrainingEntry}
+        onOpenNutrition={() => setPage(APP_PAGES.NUTRITION)}
+        onOpenCabinet={openClientCabinet}
+        onPreloadMain={preloadClientMainTarget}
+        onPreloadTraining={preloadClientTrainingTarget}
+        onPreloadNutrition={preloadClientNutritionTarget}
+        onPreloadCabinet={preloadClientCabinetTarget}
+      />
+    )
+    : null;
+  const renderWithAppShell = (content) => (
+    <AppShell primaryNavigation={primaryNavigation}>{content}</AppShell>
+  );
 
   const routedPage = renderAppRoutePage({
     APP_VERSION,
     APP_PAGES,
     auth,
     page: effectivePage,
-    renderClientMainBottomBar,
     workoutModeRemember,
     canUseAdminFeatures,
     canUseTrainerFeatures,
@@ -2437,9 +2448,6 @@ function AppRuntime() {
     openSavedBasicWorkoutsOrQuiz,
     applyBasicWorkoutPlan,
     setBasicWorkoutQuiz,
-    openTrainerClientsList,
-    openTrainerProgramsList,
-    openTrainerCabinetFromBottomBar,
     openAdminProgramsOverview,
     history,
     historyLoading,
@@ -2506,7 +2514,7 @@ function AppRuntime() {
   });
 
   if (isAppRouterPage(effectivePage, { selectedWorkoutId })) {
-    return routedPage;
+    return renderWithAppShell(routedPage);
   }
 
   function renderNutritionPage() {
@@ -2591,7 +2599,6 @@ function AppRuntime() {
       pendingDishIngredientGrams,
       recentNutritionFoods,
       removeSelectedDishIngredient,
-      renderTrainerMainBottomBar,
       resetNutritionPhotoAiSearch,
       resetNutritionPhotoAiState,
       restoreNutritionFood,
@@ -2643,7 +2650,7 @@ function AppRuntime() {
       </Suspense>
     );
   }
-  return renderAppTerminalRoute({
+  return renderWithAppShell(renderAppTerminalRoute({
     ADMIN_CALENDAR_DAYS,
     ADMIN_EMAIL,
     adminActiveDayId,
@@ -2846,7 +2853,6 @@ function AppRuntime() {
     inlineVideoControlsTimerRef,
     inlineVideoControlsVisible,
     isSaving,
-    isTrainerNextWorkspace,
     isWorkoutSaved,
     lastExerciseResults,
     leaveWorkoutToPlan,
@@ -2932,8 +2938,6 @@ function AppRuntime() {
     profileWorkoutHistoryProgramScope,
     profileWorkoutScheduledDates,
     refreshPage,
-    renderClientMainBottomBar,
-    renderTrainerWorkspaceBottomBar,
     requestDeleteOwnHistoryWorkout,
     requestLeaveWorkout,
     restTimerDuration,
@@ -3147,5 +3151,5 @@ function AppRuntime() {
     workoutReadinessOpen,
     workoutReadinessPending,
     workoutStarted
-  });
+  }));
 }

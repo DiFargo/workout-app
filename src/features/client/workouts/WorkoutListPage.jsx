@@ -30,7 +30,6 @@ const versionedLocalAsset = (src, version) => {
 
 export default function WorkoutListPage({
   appVersion,
-  renderClientMainBottomBar,
   plan,
   history,
   workoutCalendar = {},
@@ -51,13 +50,7 @@ export default function WorkoutListPage({
   fullscreenVideo,
   showFirstSetupOnboarding,
   historyLoading,
-  isTrainerMode,
   onGoMain,
-  onOpenTraining,
-  onOpenNutrition,
-  onOpenCabinet,
-  onOpenTrainerClients,
-  onOpenTrainerPrograms,
   loadHistory,
   openWorkout,
   onOpenBasicMode,
@@ -505,18 +498,6 @@ export default function WorkoutListPage({
             <span>Выполнено {completedWorkoutCount} из {sortedWorkouts.length}</span>
           </div>
         )}
-        {(renderClientMainBottomBar || (() => null))({
-          activeTab: "workouts",
-          className: styles.menuBar,
-          isTrainerMode,
-          onGoMain,
-          onOpenTraining,
-          onOpenNutrition,
-          onOpenCabinet,
-          onOpenTrainerClients,
-          onOpenTrainerPrograms,
-          onLoadTrainerCabinet: onOpenCabinet
-        })}
       </div>
 
       <WorkoutModePickerDialog

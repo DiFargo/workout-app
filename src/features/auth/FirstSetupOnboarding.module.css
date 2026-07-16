@@ -547,9 +547,7 @@ html:root[data-app-theme="warm-light"] :global(.firstSetupDays) button:where(.sc
   }
 }html body :global(#root) :global(.mainMenuBottomBar):global(.profileBottomTabBar) > button:where(.scope) :global(.active),
 html body :global(#root) :global(.workoutModeBottomBar) > button:where(.scope) :global(.active),
-html body :global(#root) :global(.trainerRoleBottomBar) > button:where(.scope) :global(.active),
 html body :global(#root) :global(.adminV3Nav):global(.adminV3BottomBar) > button:where(.scope) :global(.active),
-html body :global(#root) :global(.trainerRoleWorkspaceBar) > button:where(.scope) :global(.active),
 html body :global(#root) :global(.programEditorBottomBar) > button:where(.scope) :global(.active),
 html body :global(#root) :global(.workoutEditorBottomBar) > button:where(.scope) :global(.active),
 html body :global(#root) :global(.programsBottomBar) > button:where(.scope) :global(.active),
@@ -559,7 +557,6 @@ html body :global(#root) :global(.mainDashboardPage) :global(.mainMenuBottomBar)
 :root[data-app-theme="warm-light"] body :global(#root) :global(.fatSearchBottomBar) > button:where(.scope) :global(.active),
 :root[data-app-theme="warm-light"] body :global(#root) :global(.fatSearchBottomBarFive) > button:where(.scope) :global(.active),
 :root[data-app-theme="warm-light"] body :global(#root) :global(.workoutModeBottomBar) > button:where(.scope) :global(.active),
-:root[data-app-theme="warm-light"] body :global(#root) :global(.trainerRoleBottomBar) > button:where(.scope) :global(.active),
 :root[data-app-theme="warm-light"] body :global(#root) :global(.adminV3Nav):global(.adminV3BottomBar) > button:where(.scope) :global(.active) {
   border-color: #ddd9fa;
   background: #f0effd;

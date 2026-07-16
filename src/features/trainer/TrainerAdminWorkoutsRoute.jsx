@@ -1,4 +1,5 @@
-import { TrainerShell } from "../../components/trainer/TrainerWorkspace";
+import TrainerShell from "../../components/trainer/TrainerShell";
+import MobilePageHeader from "../../shared/ui/MobilePageHeader";
 import {
   createFourWeekWorkoutProgramBlocks
 } from "../../utils/auditSafety";
@@ -54,7 +55,6 @@ export default function TrainerAdminWorkoutsRoute({
   openTrainerExerciseLibrary,
   openTrainerProgramManager,
   plan,
-  renderTrainerWorkspaceBottomBar,
   saveTrainerClientWorkoutSchedule,
   saveWorkoutsToFirebase,
   setAdminActiveDayId,
@@ -91,8 +91,7 @@ export default function TrainerAdminWorkoutsRoute({
   trainerProgramManagerOpen,
   trainerWorkoutTab,
   user,
-  usersList,
-  isTrainerNextWorkspace
+  usersList
 }) {
   if (!canUseTrainerFeatures()) {
     return (
@@ -108,7 +107,7 @@ export default function TrainerAdminWorkoutsRoute({
 
   const selectedUser = usersList.find((u) => u.id === selectedUserId);
 
-  if (isTrainerNextWorkspace() && !trainerProgramManagerOpen) {
+  if (!trainerProgramManagerOpen) {
     const trainerName = telegramProfile.displayName ||
       auth.currentUser?.displayName ||
       auth.currentUser?.email?.split("@")?.[0] ||
@@ -389,7 +388,6 @@ export default function TrainerAdminWorkoutsRoute({
       handleMonthProgramBack={handleMonthProgramBack}
       importMonthProgramFromFile={importMonthProgramFromFile}
       importMonthProgramWithAi={importMonthProgramWithAi}
-      isTrainerNextWorkspace={isTrainerNextWorkspace}
       loadAdminTrainingTemplates={loadAdminTrainingTemplates}
       loadHistory={loadHistory}
       monthBlocks={monthBlocks}
@@ -409,7 +407,6 @@ export default function TrainerAdminWorkoutsRoute({
       removeMonthExerciseSet={removeMonthExerciseSet}
       removeMonthWeek={removeMonthWeek}
       removeProgramMonth={removeProgramMonth}
-      renderTrainerWorkspaceBottomBar={renderTrainerWorkspaceBottomBar}
       saveMonthExerciseEdit={saveMonthExerciseEdit}
       saveMonthProgramAndOpenOverview={saveMonthProgramAndOpenOverview}
       saveMonthProgramToLibrary={saveMonthProgramToLibrary}
@@ -436,39 +433,33 @@ export default function TrainerAdminWorkoutsRoute({
     />
   );
 
-  if (isTrainerNextWorkspace()) {
-    const trainerName = telegramProfile.displayName ||
-      auth.currentUser?.displayName ||
-      auth.currentUser?.email?.split("@")?.[0] ||
-      "Тренер";
+  const trainerName = telegramProfile.displayName ||
+    auth.currentUser?.displayName ||
+    auth.currentUser?.email?.split("@")?.[0] ||
+    "Тренер";
 
-    return (
-      <TrainerShell
-        appVersion={APP_VERSION}
-        activeSection="workouts"
-        onNavigate={navigateTrainerNext}
-        trainerName={trainerName}
-        trainerAvatar={telegramProfile.avatarUrl}
-      >
-        <div className="trainerNextPage trainerNextWorkoutPage trainerNextProgramsTab">
-          <div className="trainerNextDesktopPageHead">
-            <div>
-              <h1>{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Программы тренировок"}</h1>
-              <p>Создание программ и назначение клиентам</p>
-            </div>
+  return (
+    <TrainerShell
+      appVersion={APP_VERSION}
+      activeSection="workouts"
+      onNavigate={navigateTrainerNext}
+      trainerName={trainerName}
+      trainerAvatar={telegramProfile.avatarUrl}
+    >
+      <div className="trainerNextPage trainerNextWorkoutPage trainerNextProgramsTab">
+        <div className="trainerNextDesktopPageHead">
+          <div>
+            <h1>{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Программы тренировок"}</h1>
+            <p>Создание программ и назначение клиентам</p>
           </div>
-          <header className="trainerNextMobileHeader">
-            <div className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
-          </header>
-          <div className="trainerNextPageTabs">
-            <button type="button" className="active" aria-pressed="true">Программы</button>
-            <button type="button" onClick={openTrainerExerciseLibrary}>Библиотека упражнений</button>
-          </div>
-          {programManagerView}
         </div>
-      </TrainerShell>
-    );
-  }
-
-  return programManagerView;
+        <MobilePageHeader title={adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"} />
+        <div className="trainerNextPageTabs">
+          <button type="button" className="active" aria-pressed="true">Программы</button>
+          <button type="button" onClick={openTrainerExerciseLibrary}>Библиотека упражнений</button>
+        </div>
+        {programManagerView}
+      </div>
+    </TrainerShell>
+  );
 }

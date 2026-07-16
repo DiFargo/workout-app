@@ -161,7 +161,6 @@ export default function ProfileDashboardRoute(ctx) {
     profileWorkoutHistoryProgramScope,
     profileWorkoutScheduledDates,
     refreshPage,
-    renderClientMainBottomBar,
     requestDeleteOwnHistoryWorkout,
     requestProfileEmailChange,
     safeWriteUserJsonStorage,
@@ -446,17 +445,14 @@ export default function ProfileDashboardRoute(ctx) {
   }
 
   const profileShellMode = isMainDashboard ? "main" : visibleProfileTab;
-  const useLegacyTrainerShell = currentUserRole === "trainer" && !canUseAdminFeatures();
 
   return (
     <ProfileDashboardShell
-      legacyTrainer={useLegacyTrainerShell}
       mode={profileShellMode}
       testId="profile-dashboard-route"
     >
       <ProfilePageChrome
         isMainDashboard={isMainDashboard}
-        renderBottomBar={renderClientMainBottomBar}
         showTrainerNotifications={!canUseTrainerFeatures()}
         trainerNotificationCount={trainerNotificationCount}
         onOpenTrainerNotifications={() => setProfileTrainerNotificationsOpen(true)}
@@ -469,7 +465,6 @@ export default function ProfileDashboardRoute(ctx) {
       )}
 
       <ProfileDashboardContent
-        legacyTrainer={useLegacyTrainerShell}
         mode={profileShellMode}
       >
         {visibleProfileTab === "cabinet" && isMainDashboard && (

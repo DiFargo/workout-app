@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
-import TrainerWorkspace, { TrainerShell } from "./TrainerWorkspace";
+import TrainerWorkspace from "./TrainerWorkspace";
+import TrainerShell from "./TrainerShell";
+import MobilePageHeader from "../../shared/ui/MobilePageHeader";
 import * as appConfig from "../../constants/appConfig";
 import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/trainerSubscriptionNotificationSettings";
 
@@ -180,9 +182,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
               <p>Создание программ и назначение клиентам</p>
             </div>
           </div>
-          <header className="trainerNextMobileHeader">
-            <div className="trainerNextMobileTitle">{programLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
-          </header>
+          <MobilePageHeader title={programLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"} />
           <div className="trainerNextPageTabs">
             <button type="button" className="active" aria-pressed="true">Программы</button>
             <button type="button">Библиотека упражнений</button>
@@ -208,7 +208,6 @@ function TrainerE2EHarness({ ProgramManagerView }) {
               exercisesCount: workouts.flatMap((workout) => workout.exercises).length
             })}
             importMonthProgramWithAi={async () => {}}
-            isTrainerNextWorkspace={() => true}
             loadAdminTrainingTemplates={() => {}}
             monthGroups={monthGroups}
             normalizedMonthProgram={{ id: selectedProgramId, name: "tren+" }}

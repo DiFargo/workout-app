@@ -6,18 +6,10 @@ import styles from "./WorkoutModePage.module.css";
 export default function WorkoutModePage({
   workoutModePreference,
   workoutModeRemember,
-  renderClientMainBottomBar,
-  canUseTrainerFeatures,
   onBackToMain,
   onOpenBasicWorkouts,
   onOpenIndividualWorkouts,
   onToggleWorkoutModeRemember,
-  onOpenTraining,
-  onOpenNutrition,
-  onOpenCabinet,
-  onOpenTrainerClients,
-  onOpenTrainerPrograms,
-  onLoadTrainerCabinet
 }) {
   const [workoutModePickerOpen, setWorkoutModePickerOpen] = useState(false);
   const resolvedWorkoutModePreference = workoutModePreference || { mode: "individual" };
@@ -72,20 +64,6 @@ export default function WorkoutModePage({
         <span>Запомнить выбор и больше не спрашивать</span>
       </label>
 
-      {renderClientMainBottomBar?.(
-        "workouts",
-        {
-          className: "mainMenuBottomBar profileBottomTabBar workoutModeBottomBar",
-          isTrainerMode: canUseTrainerFeatures,
-          onGoMain: onBackToMain,
-          onOpenTraining,
-          onOpenNutrition,
-          onOpenCabinet,
-          onOpenTrainerClients,
-          onOpenTrainerPrograms,
-          onLoadTrainerCabinet
-        }
-      )}
 
       <WorkoutModePickerDialog
         open={workoutModePickerOpen}

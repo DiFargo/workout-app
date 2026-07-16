@@ -29,10 +29,8 @@ function renderLazyRoute(route) {
 export default function AppRouter({
   page,
   appVersion,
-  renderClientMainBottomBar,
   workoutModeRemember,
   canUseAdminFeatures,
-  canUseTrainerFeatures,
   renderNutritionPage,
   workoutListProps,
   basicWorkoutQuiz,
@@ -42,13 +40,8 @@ export default function AppRouter({
   onOpenIndividualWorkouts,
   onSetWorkoutModeRemember,
   onSetPage,
-  onOpenTrainingEntry,
   onApplyBasicWorkoutPlan,
   onBasicWorkoutQuizChange,
-  onOpenNutrition,
-  onOpenTrainerClients,
-  onOpenTrainerPrograms,
-  onOpenCabinet,
   openAdminProgramsOverview,
   history,
   historyLoading,
@@ -125,20 +118,12 @@ export default function AppRouter({
     return renderLazyRoute(
       <WorkoutModePage
         appVersion={appVersion}
-        renderClientMainBottomBar={renderClientMainBottomBar}
         workoutModePreference={workoutModePreference}
         workoutModeRemember={workoutModeRemember}
-        canUseTrainerFeatures={canUseTrainerFeatures}
         onBackToMain={onBackToMain}
         onOpenBasicWorkouts={onOpenSavedBasicWorkoutsOrQuiz}
         onOpenIndividualWorkouts={onOpenIndividualWorkouts}
         onToggleWorkoutModeRemember={onSetWorkoutModeRemember}
-        onOpenTraining={onOpenTrainingEntry}
-        onOpenNutrition={onOpenNutrition}
-        onOpenCabinet={onOpenCabinet}
-        onOpenTrainerClients={onOpenTrainerClients}
-        onOpenTrainerPrograms={onOpenTrainerPrograms}
-        onLoadTrainerCabinet={onOpenCabinet}
       />
     );
   }
@@ -147,7 +132,6 @@ export default function AppRouter({
     return renderLazyRoute(
       <BasicWorkoutQuizPage
         appVersion={appVersion}
-        renderClientMainBottomBar={renderClientMainBottomBar}
         workoutModePreference={workoutModePreference}
         workoutModeRemember={workoutModeRemember}
         basicWorkoutQuiz={basicWorkoutQuiz}
@@ -157,14 +141,6 @@ export default function AppRouter({
         onOpenBasicWorkouts={onOpenSavedBasicWorkoutsOrQuiz}
         onApplyBasicWorkoutPlan={onApplyBasicWorkoutPlan}
         onToggleWorkoutModeRemember={onSetWorkoutModeRemember}
-        canUseTrainerFeatures={canUseTrainerFeatures}
-        onGoMain={onBackToMain}
-        onOpenTraining={onOpenTrainingEntry}
-        onOpenNutrition={onOpenNutrition}
-        onOpenCabinet={onOpenCabinet}
-        onOpenTrainerClients={onOpenTrainerClients}
-        onOpenTrainerPrograms={onOpenTrainerPrograms}
-        onLoadTrainerCabinet={onOpenCabinet}
       />
     );
   }
@@ -172,20 +148,12 @@ export default function AppRouter({
   if (page === APP_PAGES.HISTORY) {
     return renderLazyRoute(
       <WorkoutHistoryPage
-        canUseTrainerFeatures={canUseTrainerFeatures}
-        renderClientMainBottomBar={renderClientMainBottomBar}
         history={history}
         historyLoading={historyLoading}
         openHistoryKey={openHistoryKey}
         historySwipeId={historySwipeId}
         historyDeletingId={historyDeletingId}
         historyDeleteCandidate={historyDeleteCandidate}
-        goBackToMain={onBackToMain}
-        openTrainingEntry={onOpenTrainingEntry}
-        onOpenNutrition={onOpenNutrition}
-        openProfileCabinet={onOpenCabinet}
-        onOpenTrainerClients={onOpenTrainerClients}
-        onOpenTrainerPrograms={onOpenTrainerPrograms}
         loadHistory={loadHistory}
         handleHistoryTouchStart={handleHistoryTouchStart}
         handleHistoryTouchEnd={handleHistoryTouchEnd}
@@ -240,7 +208,6 @@ export default function AppRouter({
   if (page === APP_PAGES.MEASUREMENT_WIZARD) {
     return renderLazyRoute(
       <MeasurementWizardPage
-        renderClientMainBottomBar={renderClientMainBottomBar}
         aiNutritionProfile={aiNutritionProfile}
         aiNutritionProfileDraft={aiNutritionProfileDraft}
         profileMeasurements={profileMeasurements}

@@ -6,8 +6,6 @@ import NutritionUndoDeleteToast from "./NutritionUndoDeleteToast";
 export default function NutritionPageView({
   pickerOpen,
   calendarOpen,
-  activeMeal,
-  renderBottomBar,
   headerProps,
   calendarProps,
   summaryProps,
@@ -47,10 +45,6 @@ export default function NutritionPageView({
         onRestore={onUndoDelete}
       />
 
-      {!pickerOpen && !calendarOpen && !activeMeal && renderBottomBar?.(
-        "nutrition",
-        { variant: "nutrition" }
-      )}
     </NutritionPage>
   );
 }
