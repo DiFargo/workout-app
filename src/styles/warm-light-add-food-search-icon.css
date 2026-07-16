@@ -1,6 +1,4 @@
 /* Warm-light search magnifier cleanup. */
-:root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickActionExact .nutritionQuickSearchIcon,
-:root[data-app-theme="warm-light"] .nutritionQuickActionExact .nutritionQuickSearchIcon,
 :root[data-app-theme="warm-light"] .nutritionQuickSearchIcon {
   width: 34px !important;
   height: 34px !important;
@@ -20,8 +18,6 @@
   filter: none !important;
 }
 
-:root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickActionExact .nutritionQuickSearchIcon::before,
-:root[data-app-theme="warm-light"] .nutritionQuickActionExact .nutritionQuickSearchIcon::before,
 :root[data-app-theme="warm-light"] .nutritionQuickSearchIcon::before {
   content: "" !important;
   display: block !important;
@@ -38,8 +34,6 @@
   transform: none !important;
 }
 
-:root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickActionExact .nutritionQuickSearchIcon::after,
-:root[data-app-theme="warm-light"] .nutritionQuickActionExact .nutritionQuickSearchIcon::after,
 :root[data-app-theme="warm-light"] .nutritionQuickSearchIcon::after {
   content: "" !important;
   display: block !important;
@@ -102,7 +96,6 @@
 }
 
 :root[data-app-theme="warm-light"] .nutritionQuickSearchIcon,
-:root[data-app-theme="warm-light"] .nutritionQuickActionExact .nutritionQuickSearchIcon,
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon {
   zoom: 0.65 !important;
   scale: 0.65 !important;

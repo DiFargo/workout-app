@@ -5,13 +5,6 @@
   padding-right: 16px !important;
 }
 
-.fatSearchTitleWrap {
-  position: relative;
-  min-width: 0;
-  text-align: center;
-  justify-self: center;
-}
-
 .fatSearchTitleButton {
   max-width: 100%;
   margin: 0 auto;
@@ -42,57 +35,6 @@
   font-size: 20px;
   line-height: 1;
   transform: translateY(1px);
-}
-
-.fatSearchTitleWrap small {
-  display: block;
-  margin-top: 6px;
-  color: #a4adbb;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.fatMealDropdown {
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(250px, 78vw);
-  padding: 8px;
-  border-radius: 20px;
-  background: #111b29;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.55);
-  z-index: 2147483003;
-}
-
-.fatMealDropdown button {
-  width: 100%;
-  min-height: 48px;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 15px;
-  background: transparent;
-  color: #edf1f7;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  text-align: left;
-}
-
-.fatMealDropdown button.active,
-.fatMealDropdown button:active {
-  background: rgba(32, 214, 106, 0.14);
-}
-
-.fatMealDropdown button span {
-  font-size: 21px;
-}
-
-.fatMealDropdown button strong {
-  font-size: 16px;
-  font-weight: 900;
 }
 
 .fatSearchInputWrap {
@@ -157,20 +99,11 @@
   touch-action: manipulation !important;
 }
 
-.fatSearchTitleWrap {
-  z-index: 2147483620 !important;
-}
-
 .fatSearchTitleButton {
   min-height: 46px !important;
   pointer-events: auto !important;
   -webkit-tap-highlight-color: transparent !important;
   touch-action: manipulation !important;
-}
-
-.fatMealDropdown {
-  z-index: 2147483640 !important;
-  top: calc(100% + 8px) !important;
 }
 
 .fatSearchInputWrap {

@@ -1,5 +1,6 @@
 import { CalendarDays, Search } from "lucide-react";
 import { todayNutritionKey } from "../../../domain/nutritionPresentation";
+import styles from "./NutritionHeader.module.css";
 
 export default function NutritionHeader({
   nutritionDateTitle,
@@ -12,32 +13,44 @@ export default function NutritionHeader({
   onSelectDate
 }) {
   return (
-    <section className="nutritionHeroV4">
-      <div className="nutritionHeroTitleV4">
-        <h1 className="clientCorePageTitle">{nutritionDateTitle}</h1>
-        <div className="nutritionHeaderIconActions">
+    <section
+      className={styles.root}
+      data-testid="nutrition-header"
+      data-css-module-scope="nutrition-header"
+    >
+      <div className={styles.titleRow} data-nutrition-header-part="title-row">
+        <h1 className={styles.title} data-nutrition-header-part="title">{nutritionDateTitle}</h1>
+        <div className={styles.actions} data-nutrition-header-part="actions">
           <button
-            className="nutritionQuickActionExact nutritionHeaderIconButton"
+            className={styles.action}
             type="button"
             onClick={onOpenSearch}
             aria-label="Поиск еды"
             title="Поиск еды"
+            data-testid="nutrition-header-search"
+            data-nutrition-header-action="search"
           >
-            <Search className="nutritionHeaderLucideIcon" aria-hidden="true" />
+            <Search className={styles.icon} aria-hidden="true" data-nutrition-header-icon />
           </button>
           <button
-            className="nutritionQuickActionExact nutritionHeaderIconButton"
+            className={styles.action}
             type="button"
             onClick={onOpenCalendar}
             aria-label="Календарь"
             title="Календарь"
+            data-testid="nutrition-header-calendar"
+            data-nutrition-header-action="calendar"
           >
-            <CalendarDays className="nutritionQuickCalendarIcon" aria-hidden="true" />
+            <CalendarDays
+              className={`${styles.icon} ${styles.calendarIcon}`}
+              aria-hidden="true"
+              data-nutrition-header-icon
+            />
           </button>
         </div>
       </div>
 
-      <div className="nutritionWeekV4">
+      <div className={styles.week} data-nutrition-header-part="week">
         {weekDates.map((day) => {
           const dayHasFood = Boolean(nutrition.days?.[day.key]?.foods?.length);
           const isSelectedDay = day.key === nutritionDateKey;
@@ -51,22 +64,28 @@ export default function NutritionHeader({
           return (
             <button
               type="button"
-              className={`nutritionDayV4 ${isSelectedDay ? "selected" : ""} ${dayHasFood ? "hasFood" : ""} ${isTodayDay ? "today" : ""}`}
+              className={`${styles.day} ${isSelectedDay ? styles.selected : ""} ${dayHasFood ? styles.hasFood : ""} ${isTodayDay ? styles.today : ""}`}
               key={day.key}
               onClick={() => onSelectDate(day.key)}
               aria-label={`Выбрать ${dayAriaLabel}`}
               aria-pressed={isSelectedDay}
               aria-current={isTodayDay ? "date" : undefined}
+              data-nutrition-header-day={day.key}
+              data-selected={isSelectedDay}
+              data-has-food={dayHasFood}
+              data-today={isTodayDay}
             >
-              <span aria-hidden="true" />
-              <small>{day.label.toLocaleUpperCase("ru-RU")}</small>
+              <span className={styles.dot} aria-hidden="true" data-nutrition-header-part="day-dot" />
+              <small className={styles.dayLabel} data-nutrition-header-part="day-label">
+                {day.label}
+              </small>
             </button>
           );
         })}
       </div>
 
-      <div className="nutritionStreakV4">
-        <span>{nutritionStreakText}</span>
+      <div className={styles.streak} data-nutrition-header-part="streak">
+        <span className={styles.streakText} data-nutrition-header-part="streak-text">{nutritionStreakText}</span>
       </div>
     </section>
   );

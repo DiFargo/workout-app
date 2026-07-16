@@ -7,24 +7,8 @@
   box-shadow: none !important;
 }
 
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodFlowTitleGroup > span,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodProductFlowTitle > span {
-  color: #5a49df !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodFlowTitleGroup h2,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodProductFlowTitle h2,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium strong,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNamesTitle,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatRecentFoodsTitle,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchResultInfo strong {
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNamesTitle {
   color: #151824 !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium span,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchResultInfo span,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchResultInfo small {
-  color: #737b91 !important;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium {
@@ -41,10 +25,7 @@
   color: #8d95a9 !important;
 }
 
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNames,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatRecentFoods,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchResultCard,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatRecentFoodButton {
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNames {
   border-color: #e1e4ef !important;
   background: #ffffff !important;
   color: #151824 !important;
@@ -58,17 +39,9 @@
   box-shadow: none !important;
 }
 
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNameButton:active,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchResultCard:active {
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNameButton:active {
   border-color: #8b7deb !important;
   background: #efedff !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchResultIcon,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchResultCheck {
-  border-color: #dddafb !important;
-  background: #efedff !important;
-  color: #5542d8 !important;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBar,
@@ -109,38 +82,6 @@
   color: inherit !important;
 }
 
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatMealDropdown {
-  border-color: #dfe3ef !important;
-  background: #ffffff !important;
-  box-shadow: 0 16px 38px rgba(48, 57, 101, 0.15) !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatMealDropdown button {
-  border-color: #e5e7f1 !important;
-  background: #ffffff !important;
-  color: #151824 !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatMealDropdown button.active {
-  border-color: #ddd9fa !important;
-  background: #efedff !important;
-  color: #4f3dd2 !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRenderScreen {
-  color: #151824 !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditHeroRender,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditAmountCard,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditMacrosCards > div,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRowsCard {
-  border-color: #e1e4ef !important;
-  background: #ffffff !important;
-  color: #151824 !important;
-  box-shadow: 0 9px 25px rgba(55, 64, 112, 0.075) !important;
-}
-
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditSegmentRow button {
   border-color: #e1e4ef !important;
   background: #ffffff !important;
@@ -152,22 +93,3 @@
   background: #efedff !important;
   color: #4e3bd0 !important;
 }
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodProductActionBar {
-  border-color: #dfe3ef !important;
-  background: rgba(255, 255, 255, 0.97) !important;
-  box-shadow: 0 -10px 30px rgba(52, 60, 105, 0.11) !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodProductActionBar button {
-  border-color: transparent !important;
-  background: transparent !important;
-  color: #737b91 !important;
-}
-
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodProductActionBar .foodProductAddAction {
-  border-color: #ddd9fa !important;
-  background: #efedff !important;
-  color: #4e3bd0 !important;
-}
-

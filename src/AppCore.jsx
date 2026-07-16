@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+/* eslint-disable react-hooks/refs -- Event factories capture refs for later handlers; they do not read refs during render. */
 import {
   defaultNutritionState
 } from "./data/nutritionDefaults";
@@ -14,7 +15,6 @@ import {
   getTrainerTaskStatus
 } from "./domain/clientInsights";
 import {
-  getAiHistoryItems,
   getDefaultWorkoutModePreference,
   getProgramHistoryItems
 } from "./domain/workoutPresentation";
@@ -51,7 +51,6 @@ import {
   getFoodIcon
 } from "./utils/nutritionFoodPresentation";
 import {
-  getMyFoodsArray,
   normalizeNutritionFood
 } from "./utils/nutritionFoodModel";
 import {
@@ -71,16 +70,14 @@ import {
   getAiNutritionCurrentWeek,
   getAiNutritionDayMacros,
   getAiNutritionTrainingDays,
-  getAiNutritionWeekForDate,
-  isAiNutritionTrainingDay
+  getAiNutritionWeekForDate
 } from "./utils/aiNutritionSchedule";
 import {
   getClientEffectiveNutritionGoals,
   getClientNutritionDisplayPlan
 } from "./utils/clientNutritionPlan";
 import {
-  loadRecentNutritionFoods,
-  saveRecentNutritionFood
+  loadRecentNutritionFoods
 } from "./utils/nutritionPreferenceStorage";
 import {
   createEmptyAiNutritionProfileDraft,
@@ -93,7 +90,6 @@ import { buildProgressInsight } from "./utils/progressInsight";
 import {
   formatProfileMeasurementDate,
   formatProfileProgressPhotoDate,
-  getMeasurementTimestampValue,
   getProfileMeasurementDelta,
   getProfileMeasurementFields,
   getProfileMeasurementValue,
@@ -113,22 +109,13 @@ import {
   buildWorkoutScheduleDraft
 } from "./utils/workoutSchedule";
 import {
-  clearStaleWorkoutCaches
-} from "./utils/workoutDraftStorage";
-import {
   buildCompletedWorkoutSet,
   getWorkoutAssignmentVersion,
   isWorkoutCompletedWithSet
 } from "./utils/workoutCompletion";
 import { buildWorkoutPageDerivedState } from "./utils/workoutPageDerivedState";
 import {
-  formatHistoryCardDate,
-  formatHistoryTime,
-  getLastExerciseText,
-  getHistorySetCount,
-  getHistoryTopExercise,
-  getHistoryVolume,
-  getHistoryWorkoutParts
+  getLastExerciseText
 } from "./utils/workoutHistoryPresentation";
 import { buildTrainerExerciseLibraryItems } from "./utils/trainerExerciseLibrary";
 import { isClientE2EHarnessEnabled } from "./utils/clientHarness";
@@ -138,36 +125,19 @@ import {
   formatTrainerSummaryDate,
   getTrainerSummaryDayStart,
   getTrainerSummaryDaysSince,
-  getTrainerSummaryPeriodBounds,
   getTrainerSummaryTimestamp
 } from "./utils/trainerSummaryDates";
 import {
-  buildTrainerClientRecentEvents,
   getClientActivityStatus,
   buildTrainerDashboardSummary,
-  getTrainerClientEmptySummary,
-  getTrainerClientFastSummary,
   getTrainerClientSummaryFromMap,
-  getTrainerCompletedWorkoutCountForAssignment,
-  getTrainerDayWord,
-  getTrainerLastMeasurementAt,
-  getTrainerNutritionSummary,
-  getTrainerProgramCompletionPercent,
-  getTrainerSettledCollectionItems,
-  getTrainerSettledDocumentData,
-  getTrainerSummaryReadFailures,
-  getTrainerSortedHistory,
-  getTrainerSortedMeasurements,
-  getTrainerWorkoutActivitySummary
+  getTrainerDayWord
 } from "./utils/trainerClientSummary";
 import {
   buildAdminNutritionMonthOverview,
   getAdminNutritionDayMetrics,
   hasAdminWorkoutOnDate
 } from "./utils/trainerNutritionInsights";
-import {
-  buildAdminClientNutritionStateFromRoot
-} from "./utils/trainerClientMirror";
 import {
   buildTrainerProgramAccessContext,
   canManageTrainerClientProgram,
@@ -191,8 +161,7 @@ import {
 import {
   ADMIN_CALENDAR_DAYS,
   getAdminCalendarDayIdFromDate,
-  getAdminCalendarTrainingDaysLabel,
-  getDefaultAdminCalendar
+  getAdminCalendarTrainingDaysLabel
 } from "./utils/adminClientCalendar";
 import {
   formatProfileWorkoutDateKey,
@@ -208,7 +177,6 @@ import { useModalFocusTrap } from "./shared/hooks/useModalFocusTrap";
 import { createAuthHandlers } from "./features/auth/authHandlers";
 import { createFirstSetupHandlers } from "./features/auth/firstSetupHandlers";
 import {
-  buildClientWorkoutsFromTemplate,
   normalizeExercise,
   sortWorkoutDays
 } from "./utils/workoutPlanNormalization";
@@ -273,7 +241,7 @@ import {
 } from "./app/appStartupGate";
 import { isAppRouterPage } from "./app/appRouterPages";
 import RouteFallback from "./app/RouteFallback";
-import { normalizeAppTheme, APP_THEMES } from "./app/appTheme";
+import { DEFAULT_APP_THEME, normalizeAppTheme, APP_THEMES } from "./app/appTheme";
 import { isClientPrimaryPage, isTrainerForbiddenClientPage, normalizeAppPage } from "./app/appNavigation";
 import {
   createAppSessionNavigationHandlers
@@ -283,19 +251,14 @@ import { useFirebaseSyncStatus } from "./shared/hooks/useFirebaseSyncStatus";
 import { useBodyScrollLock } from "./shared/hooks/useBodyScrollLock";
 import { useAppRuntimeEffects } from "./app/useAppRuntimeEffects";
 import { useAuthBootstrapEffect } from "./app/useAuthBootstrapEffect";
-import {
-  ClientTrainingBottomBar,
-} from "./shared/ui/BottomBar";
 
 const loadWorkoutStyles = () => import("./styles/client-workout-lazy.css");
 const loadNutritionStyles = () => import("./styles/nutrition-stack.css");
-const loadAiCoachStyles = () => import("./styles/ai-coach-lazy.css");
 const loadClientE2EHarness = () => Promise.all([
   loadWorkoutStyles(),
   loadNutritionStyles(),
-  loadAiCoachStyles(),
   import("./components/client/ClientE2EHarness")
-]).then(([, , , module]) => module);
+]).then(([, , module]) => module);
 const loadNutritionRoute = () => Promise.all([
   loadNutritionStyles(),
   import("./features/client/nutrition/NutritionRoute")
@@ -334,11 +297,9 @@ const {
 
 export default function App() {
   useModalFocusTrap();
-
   const showClientHarness = isClientE2EHarnessEnabled();
   const showTrainerHarness = isTrainerE2EHarnessEnabled();
   const showAdminHarness = isAdminE2EHarnessEnabled();
-
   usePreventMobileZoom();
 
   if (showClientHarness) {
@@ -365,6 +326,10 @@ export default function App() {
     );
   }
 
+  return <AppRuntime />;
+}
+
+function AppRuntime() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isAdminClaim, setIsAdminClaim] = useState(false);
@@ -374,7 +339,7 @@ export default function App() {
     try {
       return normalizeAppTheme(localStorage.getItem(APP_THEME_STORAGE_KEY));
     } catch {
-      return APP_THEMES.DARK_GREEN;
+      return DEFAULT_APP_THEME;
     }
   });
   const [appThemeCloudReady, setAppThemeCloudReady] = useState(false);
@@ -393,7 +358,6 @@ export default function App() {
     canUseAdminFeatures,
     canUseTrainerFeatures,
     getCurrentProgramOwner,
-    getCurrentProgramAccessContext,
     canManageTrainingTemplate,
     canManageClientProgram
   } = createAppAccessHandlers({
@@ -476,7 +440,7 @@ export default function App() {
   const [postWorkoutFeedbackOpen, setPostWorkoutFeedbackOpen] = useState(false);
   const [postWorkoutFeedback, setPostWorkoutFeedback] = useState(null);
   const [workoutClientComment, setWorkoutClientComment] = useState("");
-  const [timerTick, setTimerTick] = useState(Date.now());
+  const [timerTick, setTimerTick] = useState(() => Date.now());
   useEffect(() => () => {
     if (exerciseValidationTimerRef.current) {
       window.clearTimeout(exerciseValidationTimerRef.current);
@@ -498,7 +462,7 @@ export default function App() {
     }, INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS);
   }
 
-  const timerTickRef = useRef(Date.now());
+  const timerTickRef = useRef(timerTick);
   const touchStartY = useRef(null);
   const deckRef = useRef(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
@@ -826,7 +790,10 @@ export default function App() {
   const nutritionPhotoInputRef = useRef(null);
   const nutritionPhotoLastFileRef = useRef(null);
   const performanceMarksRef = useRef({});
-  const { startPerformanceCheck, endPerformanceCheck } = createPerformanceCheckHandlers(performanceMarksRef);
+  const { startPerformanceCheck, endPerformanceCheck } = useMemo(
+    () => createPerformanceCheckHandlers(performanceMarksRef),
+    []
+  );
 
   const {
     loadHistory,
@@ -868,7 +835,6 @@ export default function App() {
   });
 
   const {
-    openHistory,
     openCabinetWorkoutHistory,
     toggleCabinetWorkoutHistory
   } = createWorkoutHistoryNavigation({
@@ -892,7 +858,6 @@ export default function App() {
     loadWorkoutsFromFirebase,
     replayFailedHistorySaves,
     replayFailedNutritionSync,
-    saveTrainerNextPlan,
     saveWorkoutsToFirebase
   } = createWorkoutPersistenceHandlers(() => ({
     BASIC_WORKOUT_PLAN_STORAGE_KEY,
@@ -929,7 +894,6 @@ export default function App() {
   const {
     deleteClientEverywhereFromAdminPanel,
     deleteClientFromAdminPanel,
-    downloadTrainerClientExport,
     getTrainerNextCreateClientState,
     handleTrainerClientAction,
     loadUsers,
@@ -974,6 +938,8 @@ export default function App() {
     setAdminAllUsersList,
     setAdminClientEvents,
     setAdminCreateClientModalOpen,
+    setAdminCreateUserStatus,
+    setAdminCreatedCredentials,
     setAdminClientHistory,
     setAdminClientMeasurements,
     setAdminClientNutrition,
@@ -988,6 +954,7 @@ export default function App() {
     setAdminTransferStatus,
     setPlan,
     setSelectedUserId,
+    setTrainerNextSection,
     setTrainerClientSummariesLoading,
     setUsersList,
     showAppConfirm,
@@ -1057,6 +1024,8 @@ export default function App() {
     getDefaultWorkoutModePreference,
     hasRequiredAiNutritionProfileFields,
     loadClientProgressPhotos,
+    // The bootstrap context is evaluated by the effect after all handlers are initialized.
+    // eslint-disable-next-line react-hooks/immutability
     loadClientTrainerTasks,
     loadHistory,
     loadNutritionFromFirebase,
@@ -1065,6 +1034,8 @@ export default function App() {
     loadWorkoutsFromFirebase,
     normalizeAppPage,
     normalizeClientPrimaryPage,
+    // The bootstrap context is evaluated by the effect after all handlers are initialized.
+    // eslint-disable-next-line react-hooks/immutability
     refreshTelegramAvatar,
     replayFailedHistorySaves,
     replayFailedMeasurementSaves,
@@ -1239,7 +1210,6 @@ export default function App() {
 
   const {
     workout,
-    workoutVideoUrls,
     workoutVideoCacheKey,
     workoutDurationText,
     lastExerciseResults
@@ -1307,8 +1277,7 @@ export default function App() {
   const {
     handleGoogleAuth,
     handleLogin,
-    handleLoginPasswordReset,
-    handleRegister
+    handleLoginPasswordReset
   } = createAuthHandlers({
     APP_PAGES,
     auth,
@@ -1377,11 +1346,7 @@ export default function App() {
     openNutritionCalendar,
     shiftNutritionCalendarMonth,
     updateNutritionDay,
-    toggleNutritionFavorite,
-    addWater,
-    updateBodyWeight,
-    findFoodByBarcode,
-    recognizePhotoFood
+    findFoodByBarcode
   } = createNutritionDayHandlers({
     nutritionBarcode,
     nutritionDateKey,
@@ -1414,8 +1379,7 @@ export default function App() {
 
   const {
     openNutritionCreateProductFromPhoto,
-    returnToNutritionMainAfterAdd,
-    addFoodByBarcodeFromPicker
+    returnToNutritionMainAfterAdd
   } = createNutritionFlowMiscHandlers({
     APP_PAGES,
     nutritionBarcode,
@@ -1454,7 +1418,6 @@ export default function App() {
 
   const {
     addNutritionFood,
-    updateNutritionFood,
     confirmNutritionFoodFromPicker
   } = createNutritionFoodCommitHandlers({
     editingNutritionItemId,
@@ -1605,7 +1568,6 @@ export default function App() {
     resetNutritionPhotoAiState,
     selectNutritionPhotoAiCandidate,
     handleNutritionPhotoAiSearch,
-    retryNutritionPhotoAiSearch,
     retryNutritionPhotoFromNotFound,
     addNutritionProductManuallyFromPhoto
   } = createNutritionPhotoAiHandlers({
@@ -1656,6 +1618,8 @@ export default function App() {
     setFirstSetupSaveStatus,
     setOnboardingStep,
     setPage,
+    setProfileAccount,
+    setProfileAccountDraft,
     setShowFirstSetupOnboarding,
     showAppError,
     user
@@ -1681,6 +1645,7 @@ export default function App() {
   } = createProfileAccountHandlers({
     APP_THEMES,
     auth,
+    appTheme,
     db,
     storage,
     profileAccount,
@@ -1809,7 +1774,6 @@ export default function App() {
   });
 
   const {
-    addSet,
     updateSet,
     updateExerciseNote,
     openWorkoutExerciseModal,
@@ -1817,8 +1781,7 @@ export default function App() {
     startRestTimer,
     toggleWorkoutSetCompleted,
     toggleWarmupStep,
-    setWarmupTimerPreset,
-    resetWorkout
+    setWarmupTimerPreset
   } = createWorkoutRuntimeHandlers({
     workout,
     restTimerDuration,
@@ -1882,8 +1845,7 @@ export default function App() {
 
   const {
     getAdminNutritionDaysList,
-    getAdminRecommendations,
-    exportAdminClientCsv
+    getAdminRecommendations
   } = createTrainerNutritionInsightHandlers({
     adminClientHistory,
     adminSelectedClient,
@@ -2116,13 +2078,14 @@ export default function App() {
     mirrorClientForTrainer,
     loadAdminTrainingTemplates
   });
-  loadAdminClientOverviewRef.current = loadAdminClientOverviewFromLoader;
+  useEffect(() => {
+    loadAdminClientOverviewRef.current = loadAdminClientOverviewFromLoader;
+  }, [loadAdminClientOverviewFromLoader]);
 
   const {
     toggleAdminSelectedHistoryId,
     toggleAdminSelectAllHistory,
-    deleteSelectedAdminClientHistory,
-    deleteAdminClientWorkoutHistory
+    deleteSelectedAdminClientHistory
   } = createTrainerClientHistoryHandlers({
     db,
     adminSelectedClient,
@@ -2348,10 +2311,8 @@ export default function App() {
     handleTelegramLoginAuth,
     refreshTelegramAvatar,
     handleTelegramAvatarError,
-    startTelegramBotLink,
     checkTelegramLoginResult,
     refreshTelegramConnection,
-    saveTelegramConnection,
     disconnectTelegram
   } = createProfileTelegramHandlers({
     auth,

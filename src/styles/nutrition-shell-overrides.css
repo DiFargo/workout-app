@@ -15,17 +15,6 @@
   overflow: hidden !important;
 }
 
-.profileDashboardPage.clientCorePageMain .profileAiHero,
-.profileDashboardPage.clientCorePageMain .profileAiStatsRow,
-.profileDashboardPage.clientCorePageMain .profileAiSplitCards {
-  flex: 0 0 auto !important;
-}
-
-.profileDashboardPage.clientCorePageMain .profileAiCoachInsight {
-  min-height: 120px !important;
-  flex: 1 1 auto !important;
-}
-
 .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetSection {
   height: calc(100% - 60px) !important;
   min-height: 0 !important;
@@ -35,51 +24,9 @@
   overflow: hidden !important;
 }
 
-.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHero {
-  flex: 0 0 82px !important;
-  min-height: 82px !important;
-  padding: 4px 6px !important;
-  grid-template-columns: 64px minmax(0, 1fr) !important;
-  gap: 12px !important;
-}
-
-.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatarWrap,
-.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatar {
-  width: 62px !important;
-  height: 62px !important;
-}
-
-.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview {
-  width: 100% !important;
-  min-height: 0 !important;
-  flex: 1 1 auto !important;
-  margin: 8px 0 0 !important;
-  grid-template-rows: repeat(5, minmax(0, 1fr)) !important;
-  gap: 7px !important;
-}
-
-.profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
-  height: 100% !important;
-  min-height: 0 !important;
-  padding: 10px 12px !important;
-}
-
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
   display: flex !important;
   flex-direction: column !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 {
-  height: 50px !important;
-  min-height: 50px !important;
-  margin-bottom: 5px !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
-  min-height: 50px !important;
-  margin: 0 !important;
-  font-size: var(--client-page-title-size) !important;
-  line-height: 1.04 !important;
 }
 
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealList {
@@ -100,10 +47,6 @@
   min-height: 0 !important;
 }
 
-.clientCorePageWorkout .individualWorkoutDeck {
-  height: calc(100% - 110px) !important;
-}
-
 @media (max-height: 800px) {
   .profileDashboardPage.clientCorePageMain,
   .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"],
@@ -114,30 +57,5 @@
   .profileDashboardPage.clientCorePageMain .profileCabinetSection,
   .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetSection {
     height: calc(100% - 51px) !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHero {
-    flex-basis: 70px !important;
-    min-height: 70px !important;
-  }
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatarWrap,
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatar {
-    width: 56px !important;
-    height: 56px !important;
-  }
-
-  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
-  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
-    height: 44px !important;
-    min-height: 44px !important;
-  }
-
-  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle {
-    font-size: 27px !important;
-  }
-
-  .clientCorePageWorkout .individualWorkoutDeck {
-    height: calc(100% - 101px) !important;
   }
 }

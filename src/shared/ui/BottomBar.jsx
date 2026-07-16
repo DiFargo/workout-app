@@ -1,5 +1,6 @@
 ﻿
 import { Dumbbell, Home, UserRound, Utensils } from "lucide-react";
+import styles from "./BottomBar.module.css";
 
 function runDeferredTouchPreload(preload) {
   if (typeof preload !== "function") return undefined;
@@ -16,6 +17,7 @@ function runDeferredTouchPreload(preload) {
 export function ClientMainBottomBar({
   activeTab = "main",
   className = "mainMenuBottomBar profileBottomTabBar",
+  variant,
   isTrainerMode,
   onGoMain,
   onOpenTraining,
@@ -48,12 +50,22 @@ export function ClientMainBottomBar({
     );
   }
 
+  const nutritionVariant = variant === "nutrition";
+  const navigationClassName = nutritionVariant
+    ? styles.nutrition
+    : styles.main;
+
   return (
-    <nav className={`${className} clientBottomNav`} data-testid="client-bottom-nav" aria-label="Основные разделы">
+    <nav
+      className={navigationClassName}
+      data-css-module-scope={nutritionVariant ? "nutrition-bottom-bar" : "client-main-bottom-bar"}
+      data-testid="client-bottom-nav"
+      aria-label="Основные разделы"
+    >
       <button
         type="button"
         data-testid="client-nav-main"
-        className={activeTab === "main" ? "active" : ""}
+        className={activeTab === "main" ? styles.active : ""}
         aria-current={activeTab === "main" ? "page" : undefined}
         onPointerDown={preloadMain}
         onFocus={onPreloadMain}
@@ -65,7 +77,7 @@ export function ClientMainBottomBar({
       <button
         type="button"
         data-testid="client-nav-workouts"
-        className={activeTab === "workouts" ? "active" : ""}
+        className={activeTab === "workouts" ? styles.active : ""}
         aria-current={activeTab === "workouts" ? "page" : undefined}
         onPointerDown={preloadTraining}
         onFocus={onPreloadTraining}
@@ -77,7 +89,7 @@ export function ClientMainBottomBar({
       <button
         type="button"
         data-testid="client-nav-nutrition"
-        className={activeTab === "nutrition" ? "active" : ""}
+        className={activeTab === "nutrition" ? styles.active : ""}
         aria-current={activeTab === "nutrition" ? "page" : undefined}
         onPointerDown={preloadNutrition}
         onFocus={onPreloadNutrition}
@@ -89,7 +101,7 @@ export function ClientMainBottomBar({
       <button
         type="button"
         data-testid="client-nav-cabinet"
-        className={activeTab === "cabinet" ? "active" : ""}
+        className={activeTab === "cabinet" ? styles.active : ""}
         aria-current={activeTab === "cabinet" ? "page" : undefined}
         onPointerDown={preloadCabinet}
         onFocus={onPreloadCabinet}
@@ -209,14 +221,19 @@ export function ClientTrainingBottomBar({
   onOpenHistory
 }) {
   return (
-    <nav className="individualWorkoutMenuBar" aria-label="Навигация тренировок">
+    <nav
+      className={styles.training}
+      data-testid="client-training-bottom-nav"
+      data-css-module-scope="training-bottom-bar"
+      aria-label="Навигация тренировок"
+    >
       <button type="button" onClick={onGoMain}>
         <span aria-hidden="true">🏠</span>
         <strong>Главная</strong>
       </button>
       <button
         type="button"
-        className={activeTab === "workouts" ? "active" : ""}
+        className={activeTab === "workouts" ? styles.active : ""}
         aria-current={activeTab === "workouts" ? "page" : undefined}
         onClick={onOpenWorkouts}
       >
@@ -225,7 +242,7 @@ export function ClientTrainingBottomBar({
       </button>
       <button
         type="button"
-        className={activeTab === "plan" ? "active" : ""}
+        className={activeTab === "plan" ? styles.active : ""}
         aria-current={activeTab === "plan" ? "page" : undefined}
         onClick={onOpenPlan}
       >

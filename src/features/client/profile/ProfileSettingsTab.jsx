@@ -1,11 +1,11 @@
 import ProfileAppSettingsSection from "./ProfileAppSettingsSection";
 import ProfileBodyMetricsSettingsSection from "./ProfileBodyMetricsSettingsSection";
+import styles from "./ProfileSettingsTab.module.css";
 
 export default function ProfileSettingsTab({
   visible,
   bodyMetricsOpen,
   draft,
-  activeGoalLabel,
   isWarmLightTheme,
   email,
   telegramProfile,
@@ -24,18 +24,24 @@ export default function ProfileSettingsTab({
   return (
     <>
       <ProfileBodyMetricsSettingsSection
+        variant="tab"
         open={bodyMetricsOpen}
         draft={draft}
-        activeGoalLabel={activeGoalLabel}
         description="Вес, рост, возраст, активность и тренировочные дни"
-        ageInputClassName="adminReminderTimeInput"
         onToggle={onToggleBodyMetrics}
         onDraftChange={onDraftChange}
         onSave={onSaveBodyMetrics}
       />
 
-      <h1 className="profileSettingsPageTitle">Настройки</h1>
+      <h1
+        className={styles.title}
+        data-css-module-scope="profile-settings-tab"
+        data-testid="profile-settings-tab-title"
+      >
+        Настройки
+      </h1>
       <ProfileAppSettingsSection
+        variant="tab"
         isWarmLightTheme={isWarmLightTheme}
         email={email}
         telegramProfile={telegramProfile}

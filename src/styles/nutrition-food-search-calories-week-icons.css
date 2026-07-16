@@ -1,7 +1,6 @@
 /* ===== WEEK ICON FIX ===== */
 
-.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span,
-.nutritionWeekV4 .nutritionDayV4 span{
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span{
     width: 30px !important;
     height: 30px !important;
 
@@ -14,14 +13,12 @@
     border-width: 1.5px !important;
 }
 
-.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span svg,
-.nutritionWeekV4 .nutritionDayV4 span svg{
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow .fatDayCell span svg{
     width: 13px !important;
     height: 13px !important;
 }
 
-.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatDateHeaderNoArrows .fatDateTitle h1,
-.nutritionHeroV4 .nutritionHeroTitleV4 h1{
+.fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatDateHeaderNoArrows .fatDateTitle h1{
     top:-18px !important;
 
     font-size:34px !important;
@@ -29,8 +26,7 @@
     color:rgba(255,255,255,0.74)!important;
 }
 
-.fatStreakLineTop,
-.nutritionStreakV4{
+.fatStreakLineTop{
     margin-bottom:10px!important;
 }
 

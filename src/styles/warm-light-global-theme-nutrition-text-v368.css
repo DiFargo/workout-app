@@ -1,20 +1,13 @@
 
 :root[data-app-theme="warm-light"] .summaryDotGrid i,
 :root[data-app-theme="warm-light"] .summaryDonut i,
-:root[data-app-theme="warm-light"] .nutritionStreakV4,
-:root[data-app-theme="warm-light"] .nutritionHeroTitleV4,
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderCol strong,
 :root[data-app-theme="warm-light"] .summaryCaloriesInfo strong,
 :root[data-app-theme="warm-light"] .summaryMacroCard strong,
 :root[data-app-theme="warm-light"] .fatMealTitle strong,
 :root[data-app-theme="warm-light"] .fatMealKcal strong,
-:root[data-app-theme="warm-light"] .productInfoExact strong,
 :root[data-app-theme="warm-light"] .productKcalExact strong,
-:root[data-app-theme="warm-light"] .fatSearchResultInfo strong,
-:root[data-app-theme="warm-light"] .fatSearchTitleWrap strong,
-:root[data-app-theme="warm-light"] .fatSearchHistoryNamesTitle,
-:root[data-app-theme="warm-light"] .fatRecentFoodsTitle,
-:root[data-app-theme="warm-light"] .foodEditCaloriesMacroCard strong {
+:root[data-app-theme="warm-light"] .fatSearchHistoryNamesTitle {
   color: var(--text) !important;
 }
 
@@ -23,11 +16,6 @@
 :root[data-app-theme="warm-light"] .summaryMacroCard span,
 :root[data-app-theme="warm-light"] .fatMealTitle span,
 :root[data-app-theme="warm-light"] .fatMealKcal span,
-:root[data-app-theme="warm-light"] .productInfoExact span,
-:root[data-app-theme="warm-light"] .productKcalExact span,
-:root[data-app-theme="warm-light"] .fatSearchResultInfo span,
-:root[data-app-theme="warm-light"] .fatSearchStatus,
-:root[data-app-theme="warm-light"] .foodEditRow,
-:root[data-app-theme="warm-light"] .foodEditRow.muted {
+:root[data-app-theme="warm-light"] .productKcalExact span {
   color: var(--muted) !important;
 }

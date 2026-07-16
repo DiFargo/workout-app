@@ -1,14 +1,8 @@
-﻿/* =========================================================
+/* =========================================================
    FINAL COMPACT SPACING â€” NUTRITION TOP BLOCKS
    Ð£Ð¼ÐµÐ½ÑŒÑˆÐ°ÐµÑ‚ Ð¸ Ð²Ñ‹Ñ€Ð°Ð²Ð½Ð¸Ð²Ð°ÐµÑ‚ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ñ Ð¼ÐµÐ¶Ð´Ñƒ:
    ÑÐµÑ€Ð¸Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸ ÐµÐ´Ñ‹ / Ð¿Ð¾Ð¸ÑÐº ÐµÐ´Ñ‹-ÐºÐ°Ð»ÐµÐ½Ð´Ð°Ñ€ÑŒ / Ð±Ð»Ð¾Ðº ÐºÐ°Ð»Ð¾Ñ€Ð¸Ð¹
    ========================================================= */
-
-.fatSecretPage .nutritionStreakV4,
-.nutritionStreakV4 {
-  margin-top: 6px !important;
-  margin-bottom: 4px !important;
-}
 
 .fatSecretPage .nutritionQuickActionsExact,
 .nutritionQuickActionsExact {
@@ -34,11 +28,6 @@
 }
 
 @media (max-width: 480px) {
-  .fatSecretPage .nutritionStreakV4,
-  .nutritionStreakV4 {
-    margin-top: 5px !important;
-    margin-bottom: 3px !important;
-  }
 
   .fatSecretPage .nutritionQuickActionsExact,
   .nutritionQuickActionsExact {

@@ -8,27 +8,12 @@
   border-bottom-width: 1.5px !important;
 }
 
-.fatSecretPage .nutritionDayV4 span::before,
-.nutritionWeekV4 .nutritionDayV4 span::before {
-  width: 6px !important;
-  height: 10.5px !important;
-  border-right-width: 1.6px !important;
-  border-bottom-width: 1.6px !important;
-}
-
 /* ÐœÐµÐ½ÑŒÑˆÐµ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ðµ Ð¼ÐµÐ¶Ð´Ñƒ Ð±Ð»Ð¾ÐºÐ¾Ð¼ Ð´Ð½ÐµÐ¹ Ð½ÐµÐ´ÐµÐ»Ð¸ Ð¸ ÑÐµÑ€Ð¸ÐµÐ¹ Ð·Ð°Ð¿Ð¸ÑÐ¸ */
 .fatSecretPage.nutritionFixedHeaderV3 .nutritionTopFixedV3 .fatWeekRow {
   margin-bottom: 12px !important;
 }
 
-.fatSecretPage .nutritionWeekV4,
-.nutritionWeekV4 {
-  margin-bottom: 12px !important;
-}
-
 /* ÐœÐµÐ½ÑŒÑˆÐµ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ðµ Ð¼ÐµÐ¶Ð´Ñƒ ÑÐµÑ€Ð¸ÐµÐ¹ Ð·Ð°Ð¿Ð¸ÑÐ¸ Ð¸ ÑÐ»ÐµÐ´ÑƒÑŽÑ‰Ð¸Ð¼ Ð±Ð»Ð¾ÐºÐ¾Ð¼ */
-.fatSecretPage .nutritionStreakV4,
-.nutritionStreakV4,
 .fatStreakLineTop {
   margin-top: 0 !important;
   margin-bottom: 10px !important;

@@ -33,7 +33,6 @@ export function createWorkoutListProps({
   openAdminProgramsOverview,
   openWorkout,
   saveWorkoutModePreference,
-  setSelectedWorkoutId,
   openIndividualWorkouts,
   openSavedBasicWorkoutsOrQuiz,
   openBasicWorkoutQuiz,

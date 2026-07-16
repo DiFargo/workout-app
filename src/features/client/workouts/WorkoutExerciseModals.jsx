@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import styles from "./WorkoutExerciseModals.module.css";
 
 export default function WorkoutExerciseModals({
   exercise,
@@ -17,7 +18,9 @@ export default function WorkoutExerciseModals({
     <>
       {noteOpen && createPortal(
         <div
-          className="workoutExerciseModalOverlay"
+          className={styles.overlay}
+          data-testid="workout-exercise-note-modal"
+          data-css-module-scope="workout-exercise-modals"
           role="presentation"
           onClick={onCloseNote}
           onTouchStart={(event) => event.stopPropagation()}
@@ -25,7 +28,7 @@ export default function WorkoutExerciseModals({
           onTouchEnd={(event) => event.stopPropagation()}
         >
           <section
-            className="workoutExerciseModal"
+            className={styles.modal}
             role="dialog"
             aria-modal="true"
             aria-labelledby="workoutExerciseNoteTitle"
@@ -38,6 +41,8 @@ export default function WorkoutExerciseModals({
               </div>
               <button
                 type="button"
+                className={styles.closeButton}
+                data-css-module-control="workout-exercise-modals"
                 onClick={onCloseNote}
                 aria-label="Закрыть заметку"
               >
@@ -45,6 +50,7 @@ export default function WorkoutExerciseModals({
               </button>
             </header>
             <textarea
+              className={styles.textarea}
               value={exercise.clientNote || ""}
               onChange={(event) => onUpdateNote(exercise.id, event.target.value)}
               placeholder="Например: уменьшить вес или проверить положение локтей"
@@ -52,7 +58,8 @@ export default function WorkoutExerciseModals({
             />
             <button
               type="button"
-              className="workoutExerciseModalDone"
+              className={styles.doneButton}
+              data-css-module-control="workout-exercise-modals"
               onClick={onCloseNote}
             >
               Готово
@@ -64,7 +71,9 @@ export default function WorkoutExerciseModals({
 
       {techniqueOpen && createPortal(
         <div
-          className="workoutExerciseModalOverlay"
+          className={styles.overlay}
+          data-testid="workout-exercise-technique-modal"
+          data-css-module-scope="workout-exercise-modals"
           role="presentation"
           onClick={onCloseTechnique}
           onTouchStart={(event) => event.stopPropagation()}
@@ -72,7 +81,7 @@ export default function WorkoutExerciseModals({
           onTouchEnd={(event) => event.stopPropagation()}
         >
           <section
-            className="workoutExerciseModal workoutTechniqueModal"
+            className={`${styles.modal} ${styles.techniqueModal}`}
             role="dialog"
             aria-modal="true"
             aria-labelledby="workoutExerciseTechniqueTitle"
@@ -85,13 +94,15 @@ export default function WorkoutExerciseModals({
               </div>
               <button
                 type="button"
+                className={styles.closeButton}
+                data-css-module-control="workout-exercise-modals"
                 onClick={onCloseTechnique}
                 aria-label="Закрыть пояснение техники"
               >
                 ×
               </button>
             </header>
-            <div className="workoutTechniqueModalContent">
+            <div className={styles.techniqueContent}>
               <span aria-hidden="true">i</span>
               <p>{techniqueHint}</p>
             </div>

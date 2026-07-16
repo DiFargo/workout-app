@@ -2,8 +2,7 @@
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutBottomPanel,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishActionPanel,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseActionPanel,
-:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupBottomPanel,
-:root[data-app-theme="warm-light"] body #root .workoutPlanOverviewBottomPanel {
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupBottomPanel {
   border: 1px solid #dbe0eb !important;
   background: rgba(247, 250, 255, 0.97) !important;
   box-shadow:

@@ -1,0 +1,160 @@
+.title {
+  width: 100%;
+  height: 32px;
+  min-height: 32px;
+  margin: 0 0 10px;
+  padding: 0 44px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  color: var(--color-profile-main-title);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.08;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notificationButton {
+  width: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  height: 34px;
+  min-height: 34px;
+  max-height: 34px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 13px;
+  right: 20px;
+  z-index: 40;
+  border: 1px solid var(--color-profile-main-notification-border);
+  border-radius: 12px;
+  background: var(--background-profile-main-notification);
+  color: var(--color-profile-main-notification);
+  box-shadow: var(--shadow-profile-main-notification);
+  font-size: 0;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.notificationButton svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  position: static;
+  color: currentColor;
+  stroke: currentColor;
+}
+
+.badge {
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  border: 2px solid var(--color-profile-main-notification-badge-border);
+  border-radius: 10px;
+  background: var(--background-profile-main-notification-badge);
+  color: var(--color-profile-main-notification-badge);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.notificationButton:active {
+  border-color: var(--color-profile-main-notification-active-border);
+  background: var(--background-profile-main-notification-active);
+}
+
+.notificationButton:focus-visible {
+  outline: 2px solid var(--color-profile-main-notification-focus);
+  outline-offset: 2px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .title {
+  height: 50px;
+  min-height: 50px;
+  margin: 8px 0 16px;
+  padding: 0;
+  position: relative;
+  color: var(--color-profile-main-title);
+  font-size: 31px;
+  font-weight: 900;
+  line-height: 1.04;
+}
+
+:global(html:root[data-app-theme="warm-light"]) :global(body) :global(#root) .title.title {
+  color: var(--color-profile-main-title);
+  -webkit-text-fill-color: var(--color-profile-main-title);
+}
+
+:global(:root[data-app-theme="warm-light"]) .notificationButton {
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  top: 38px;
+  border-color: var(--color-profile-main-notification-border);
+  border-radius: 18px;
+  background: var(--background-profile-main-notification);
+  color: var(--color-profile-main-notification);
+  box-shadow: var(--shadow-profile-main-notification);
+}
+
+@media (max-width: 700px) {
+  :global(:root[data-app-theme="warm-light"]) .title {
+    width: calc(100% - 116px);
+    max-width: calc(100% - 116px);
+    height: 48px;
+    min-height: 48px;
+    margin: 34px 0 18px;
+    color: var(--color-profile-main-title-mobile);
+    font-size: 28px;
+    line-height: 1.06;
+  }
+
+  :global(html:root[data-app-theme="warm-light"]) :global(body) :global(#root) .title.title {
+    color: var(--color-profile-main-title-mobile);
+    -webkit-text-fill-color: var(--color-profile-main-title-mobile);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .notificationButton {
+    width: 48px;
+    min-width: 48px;
+    max-width: 48px;
+    height: 48px;
+    min-height: 48px;
+    max-height: 48px;
+    top: 34px;
+    right: 25px;
+    z-index: 8;
+    border-color: var(--color-profile-main-notification-border-mobile);
+    border-radius: 16px;
+    background: var(--background-profile-main-notification-mobile);
+    color: var(--color-profile-main-notification-mobile);
+    box-shadow: var(--shadow-profile-main-notification-mobile);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .notificationButton svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (min-width: 701px) {
+  :global(:root[data-app-theme="dark-green"]) .title {
+    font-size: 25px;
+  }
+}

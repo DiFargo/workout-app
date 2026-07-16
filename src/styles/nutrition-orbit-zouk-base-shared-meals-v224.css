@@ -119,12 +119,3 @@ html body #root .nutritionZoukModalSheet .nutritionZoukEmpty {
   font-weight: 900;
   cursor: pointer;
 }
-
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanCollapsedInsight {
-  min-width: 0;
-  color: #6f778b;
-  font-size: 12px;
-  font-weight: 850;
-  line-height: 1.18;
-  text-align: left;
-}

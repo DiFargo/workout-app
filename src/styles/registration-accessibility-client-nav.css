@@ -34,44 +34,8 @@ nav[aria-label="ÐžÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹
   border-radius: 13px !important;
 }
 
-.individualWorkoutBottomPanel {
-  box-sizing: border-box !important;
-  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
-  height: 82px !important;
-  min-height: 82px !important;
-  max-height: 82px !important;
-  padding: 0 !important;
-}
-
-.individualWorkoutBottomPanel nav[aria-label="ÐžÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"] {
-  position: static !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  transform: none !important;
-}
-
 .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"] {
   bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
-}
-
-.individualWorkoutSelectPage > .individualWorkoutBottomPanel,
-.workoutPlanOverviewPage > .individualWorkoutBottomPanel {
-  box-sizing: border-box !important;
-  height: 82px !important;
-  min-height: 82px !important;
-  max-height: 82px !important;
-  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
-  padding: 0 !important;
-}
-
-.clientCorePageWorkout.individualWorkoutSelectPage > .individualWorkoutBottomPanel {
-  box-sizing: border-box !important;
-  height: 82px !important;
-  min-height: 82px !important;
-  max-height: 82px !important;
-  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
-  padding: 0 !important;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchBackAction,

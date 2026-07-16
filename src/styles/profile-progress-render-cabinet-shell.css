@@ -91,10 +91,7 @@
   filter: none !important;
 }
 
-.profileTabbedPage:not(.mainDashboardPage) .profileCabinetSection,
-.profileTabbedPage:not(.mainDashboardPage) .profileNutritionSection,
-.profileTabbedPage[data-profile-tab="settings"] .profileBodyMetricsSettingsSection,
-.profileTabbedPage[data-profile-tab="settings"] .profileAppSettingsSection {
+.profileTabbedPage:not(.mainDashboardPage) .profileCabinetSection {
   box-sizing: border-box !important;
   width: 100% !important;
   max-width: none !important;
@@ -104,4 +101,3 @@
   background: transparent !important;
   box-shadow: none !important;
 }
-

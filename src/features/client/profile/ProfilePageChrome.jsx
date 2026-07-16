@@ -1,4 +1,5 @@
 import { Bell } from "lucide-react";
+import styles from "./ProfilePageChrome.module.css";
 
 export default function ProfilePageChrome({
   isMainDashboard,
@@ -12,14 +13,16 @@ export default function ProfilePageChrome({
       {isMainDashboard && showTrainerNotifications && (
         <button
           type="button"
-          className="menuRefreshIconBtn"
+          className={styles.notificationButton}
+          data-css-module-scope="profile-page-chrome"
+          data-testid="profile-main-notifications"
           onClick={onOpenTrainerNotifications}
           aria-label={`Уведомления тренера${trainerNotificationCount ? `: ${trainerNotificationCount}` : ""}`}
           title="Уведомления тренера"
         >
           <Bell aria-hidden="true" />
           {trainerNotificationCount > 0 && (
-            <em>{Math.min(trainerNotificationCount, 99)}</em>
+            <em className={styles.badge}>{Math.min(trainerNotificationCount, 99)}</em>
           )}
         </button>
       )}
@@ -27,7 +30,15 @@ export default function ProfilePageChrome({
       {!isMainDashboard && renderBottomBar("cabinet")}
       {isMainDashboard && renderBottomBar("main")}
 
-      {isMainDashboard && <h1 className="mainDashboardTitle clientCorePageTitle">Главное меню</h1>}
+      {isMainDashboard && (
+        <h1
+          className={styles.title}
+          data-css-module-scope="profile-page-chrome"
+          data-testid="profile-main-title"
+        >
+          Главное меню
+        </h1>
+      )}
     </>
   );
 }

@@ -22,7 +22,6 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinish
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPlanBadge,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseMeta b,
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetNumber,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTrophy {
   border-color: #ddd9fa !important;
   background: #efedff !important;
@@ -32,7 +31,6 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinish
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPlanWorkout,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPlanSummary,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseMeta,
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetsHeader,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSupport .previousInfo,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTop,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats span,
@@ -48,7 +46,6 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExercis
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseSteps,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseItem,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupTimer,
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetsList,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTip {
@@ -100,49 +97,6 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupTimerCo
   color: #4f3dd2 !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseVideoFrame {
-  border-color: #dfe3ef !important;
-  background:
-    radial-gradient(circle at 50% 38%, rgba(90, 73, 223, 0.1), transparent 58%),
-    #121521 !important;
-  box-shadow: 0 14px 34px rgba(48, 55, 93, 0.16) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseVideoFallback {
-  background:
-    radial-gradient(circle at 50% 32%, rgba(101, 82, 230, 0.18), transparent 44%),
-    linear-gradient(160deg, #22263a 0%, #11131e 72%) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseVideoFallback strong {
-  color: #ffffff !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseVideoFallback small {
-  color: rgba(255, 255, 255, 0.68) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetsList .setRow + .setRow {
-  border-color: #e3e6f0 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetsList .setRow input {
-  border-color: #dfe3ef !important;
-  background: #ffffff !important;
-  color: #151824 !important;
-  box-shadow: inset 0 1px 2px rgba(47, 54, 91, 0.04) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetsList .setRow input::placeholder {
-  color: #949caf !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSetsList .setRow input:focus {
-  border-color: #7565e8 !important;
-  box-shadow: 0 0 0 3px rgba(90, 73, 223, 0.1) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutAiSharedWeightNote,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSupport .workoutAiAdjustHint {
   color: #5542d8 !important;
 }

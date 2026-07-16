@@ -10,10 +10,6 @@
    FOOD EDIT DETAILS PANEL
    ========================================================= */
 
-.foodEditHeroEditable {
-  position: relative !important;
-}
-
 .foodEditDetailsPanel {
   width: 100% !important;
   margin: -2px 0 14px !important;
@@ -75,8 +71,7 @@
 }
 
 .foodEditDetailsPanel input:focus,
-.foodEditDetailsPanel textarea:focus,
-.foodEditPortionUnitRow select:focus {
+.foodEditDetailsPanel textarea:focus {
   border-color: rgba(38,255,116,0.42) !important;
   box-shadow: 0 0 0 3px rgba(38,255,116,0.055) !important;
 }

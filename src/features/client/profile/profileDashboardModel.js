@@ -352,21 +352,6 @@ export function buildProfileDashboardModel(ctx) {
       : Number.isFinite(mainProfileWeight) && mainProfileWeight > 0
         ? [{ weight: mainProfileWeight, dateLabel: "Сейчас" }]
         : [];
-    const mainMeasurementWeights = mainMeasurementSeries.map((item) => item.weight);
-    const mainMeasurementMin = mainMeasurementWeights.length ? Math.min(...mainMeasurementWeights) : 0;
-    const mainMeasurementMax = mainMeasurementWeights.length ? Math.max(...mainMeasurementWeights) : 0;
-    const mainMeasurementRange = Math.max(1, mainMeasurementMax - mainMeasurementMin);
-    const mainMeasurementPoints = mainMeasurementSeries
-      .map((item, index) => {
-        const x = mainMeasurementSeries.length === 1
-          ? 130
-          : 10 + (index / (mainMeasurementSeries.length - 1)) * 240;
-        const y = mainMeasurementSeries.length === 1
-          ? 36
-          : 62 - ((item.weight - mainMeasurementMin) / mainMeasurementRange) * 46;
-        return `${x.toFixed(1)},${y.toFixed(1)}`;
-      })
-      .join(" ");
     const mainLatestWeight = mainMeasurementSeries.at(-1)?.weight ||
       (Number.isFinite(mainProfileWeight) && mainProfileWeight > 0 ? mainProfileWeight : 0);
     const mainPreviousWeight = mainMeasurementSeries.at(-2)?.weight || 0;
@@ -456,11 +441,6 @@ export function buildProfileDashboardModel(ctx) {
     mainProfileWeight,
     savedMainMeasurementSeries,
     mainMeasurementSeries,
-    mainMeasurementWeights,
-    mainMeasurementMin,
-    mainMeasurementMax,
-    mainMeasurementRange,
-    mainMeasurementPoints,
     mainLatestWeight,
     mainPreviousWeight,
     mainWeightChange,

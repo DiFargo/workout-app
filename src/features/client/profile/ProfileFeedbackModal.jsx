@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import styles from "./ProfileFeedbackModal.module.css";
 
 const FEEDBACK_TYPES = [
   { id: "bug", label: "Ошибка", hint: "Что сломалось или работает странно" },
@@ -31,12 +32,6 @@ export default function ProfileFeedbackModal({
 }) {
   const [draft, setDraft] = useState(() => ({ ...INITIAL_DRAFT, contact: defaultContact }));
   const [status, setStatus] = useState("");
-
-  useEffect(() => {
-    if (!open) return;
-    setDraft({ ...INITIAL_DRAFT, contact: defaultContact });
-    setStatus("");
-  }, [defaultContact, open]);
 
   if (!open) {
     return null;
@@ -92,47 +87,56 @@ export default function ProfileFeedbackModal({
   }
 
   return (
-    <div className="cabinetUtilityModalOverlay profileFeedbackOverlay" role="presentation" onClick={saving ? undefined : onClose}>
+    <div
+      className={styles.overlay}
+      data-testid="profile-feedback-overlay"
+      data-css-module-scope="profile-feedback"
+      role="presentation"
+      onClick={saving ? undefined : onClose}
+    >
       <form
-        className="cabinetUtilityModal profileFeedbackModal"
+        className={styles.dialog}
+        data-testid="profile-feedback-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="profileFeedbackTitle"
         onClick={(event) => event.stopPropagation()}
         onSubmit={handleSubmit}
       >
-        <header className="cabinetUtilityModalHead profileFeedbackHead">
+        <header className={styles.header}>
           <div>
-            <span>ОБРАТНАЯ СВЯЗЬ</span>
-            <h2 id="profileFeedbackTitle">Сообщить нам</h2>
+            <span className={styles.eyebrow}>ОБРАТНАЯ СВЯЗЬ</span>
+            <h2 className={styles.title} id="profileFeedbackTitle">Сообщить нам</h2>
           </div>
-          <button type="button" aria-label="Закрыть обратную связь" disabled={saving} onClick={onClose}>
+          <button className={styles.closeButton} data-testid="profile-feedback-close" type="button" aria-label="Закрыть обратную связь" disabled={saving} onClick={onClose}>
             ×
           </button>
         </header>
 
-        <div className="cabinetUtilityModalBody profileFeedbackBody">
-          <div className="profileFeedbackTypeGrid" role="group" aria-label="Тип сообщения">
+        <div className={styles.body}>
+          <div className={styles.typeGrid} role="group" aria-label="Тип сообщения">
             {FEEDBACK_TYPES.map((type) => (
               <button
                 key={type.id}
                 type="button"
-                className={draft.type === type.id ? "active" : ""}
+                className={`${styles.typeButton} ${draft.type === type.id ? styles.activeType : ""}`}
+                data-testid="profile-feedback-type"
                 aria-pressed={draft.type === type.id}
                 onClick={() => {
                   setDraft((current) => ({ ...current, type: type.id }));
                   setStatus("");
                 }}
               >
-                <strong>{type.label}</strong>
-                <small>{type.hint}</small>
+                <strong className={styles.typeTitle}>{type.label}</strong>
+                <small className={styles.typeHint}>{type.hint}</small>
               </button>
             ))}
           </div>
 
-          <label className="profileFeedbackField">
-            <span>{selectedType.label}</span>
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>{selectedType.label}</span>
             <textarea
+              className={styles.textarea}
               value={draft.message}
               rows={6}
               maxLength={1200}
@@ -143,12 +147,13 @@ export default function ProfileFeedbackModal({
                 setStatus("");
               }}
             />
-            <small>{draft.message.length}/1200</small>
+            <small className={styles.counter}>{draft.message.length}/1200</small>
           </label>
 
-          <label className="profileFeedbackField compact">
-            <span>Контакт для ответа</span>
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>Контакт для ответа</span>
             <input
+              className={styles.input}
               value={draft.contact}
               maxLength={120}
               placeholder="Почта или Telegram, можно оставить пустым"
@@ -157,22 +162,24 @@ export default function ProfileFeedbackModal({
             />
           </label>
 
-          <div className="profileFeedbackAttachment">
-            <label>
+          <div className={styles.attachment}>
+            <label className={styles.attachmentPicker}>
               <input
+                className={styles.fileInput}
                 type="file"
                 accept="image/*,video/*,.pdf,.txt,.log"
                 disabled={saving}
                 onChange={handleAttachmentChange}
               />
-              <span>📎 Прикрепить файл</span>
-              <small>Скрин, фото, видео или лог до 25 МБ</small>
+              <span className={styles.attachmentTitle}>📎 Прикрепить файл</span>
+              <small className={styles.attachmentHint}>Скрин, фото, видео или лог до 25 МБ</small>
             </label>
             {draft.attachmentFile ? (
-              <div className="profileFeedbackAttachmentFile">
-                <span>{draft.attachmentFile.name}</span>
-                <small>{formatAttachmentSize(draft.attachmentFile.size)}</small>
+              <div className={styles.attachmentFile}>
+                <span className={styles.fileName}>{draft.attachmentFile.name}</span>
+                <small className={styles.fileSize}>{formatAttachmentSize(draft.attachmentFile.size)}</small>
                 <button
+                  className={styles.removeAttachment}
                   type="button"
                   aria-label="Убрать вложение"
                   disabled={saving}
@@ -185,7 +192,7 @@ export default function ProfileFeedbackModal({
           </div>
 
           {status ? (
-            <p className={status === "saving" ? "profileFeedbackStatus" : "profileFeedbackStatus visible"}>
+            <p className={`${styles.status} ${status === "saving" ? "" : styles.visibleStatus}`}>
               {status === "saving" ? "Отправляю..." : status}
             </p>
           ) : null}
@@ -193,7 +200,7 @@ export default function ProfileFeedbackModal({
 
         <button
           type="submit"
-          className="profileFeedbackSubmit"
+          className={styles.submit}
           disabled={saving || trimmedMessage.length < 8}
         >
           {saving ? "Отправляю..." : "Отправить"}

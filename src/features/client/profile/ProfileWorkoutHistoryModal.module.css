@@ -1,0 +1,192 @@
+.list {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.embeddedList {
+  max-height: none;
+  padding-right: 1px;
+}
+
+.list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--color-workout-history-scrollbar);
+}
+
+.message {
+  margin: 16px 4px;
+  color: var(--color-workout-history-empty);
+  font-size: 12px;
+  text-align: center;
+}
+
+.item {
+  min-height: 60px;
+  overflow: hidden;
+  border: 1px solid var(--color-workout-history-item-border);
+  border-radius: 14px;
+  background: var(--background-workout-history-item);
+  color: var(--color-workout-history-item-text);
+}
+
+.itemOpen {
+  border-color: var(--color-workout-history-item-open-border);
+}
+
+.itemButton {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 60px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.itemIcon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--background-workout-list-dialog-icon);
+  font-size: 18px;
+}
+
+.itemContent {
+  min-width: 0;
+}
+
+.itemTitle,
+.itemMeta {
+  display: block;
+}
+
+.itemTitle {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemMeta {
+  margin-top: 4px;
+  color: var(--color-workout-history-meta);
+  font-size: 10px;
+}
+
+.itemIndicator {
+  color: var(--color-workout-history-indicator);
+  font-size: 18px;
+  font-style: normal;
+}
+
+.details {
+  min-width: 0;
+  padding: 2px 10px 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.exercise {
+  min-width: 0;
+  padding: 8px;
+  display: grid;
+  gap: 7px;
+  border-radius: 10px;
+  background: var(--background-workout-history-exercise);
+}
+
+.exerciseHeader {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.exerciseTitle {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.exerciseMeta,
+.detailsMessage {
+  color: var(--color-workout-history-detail-muted);
+  font-size: 9px;
+}
+
+.exerciseMeta {
+  flex: 0 0 auto;
+}
+
+.sets {
+  display: grid;
+  gap: 4px;
+}
+
+.set {
+  min-width: 0;
+  min-height: 28px;
+  padding: 0 8px;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  background: var(--background-workout-history-set);
+  color: var(--color-workout-history-set-text);
+  font-size: 9px;
+}
+
+.setIndex {
+  color: var(--color-workout-history-set-index);
+  font-size: 9px;
+}
+
+.setMeta {
+  color: var(--color-workout-history-set-meta);
+  font-size: 9px;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.detailsMessage {
+  margin: 4px;
+  text-align: center;
+}
+
+.deleteButton {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--color-workout-history-delete-border);
+  border-radius: 10px;
+  background: var(--background-workout-history-delete);
+  color: var(--color-workout-history-delete);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.deleteButton:disabled {
+  opacity: 0.55;
+}

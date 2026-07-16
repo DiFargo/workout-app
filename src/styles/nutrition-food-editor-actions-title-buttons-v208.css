@@ -3,23 +3,6 @@
    ========================================================= */
 
 /* OpenAI Ð½Ðµ Ð½Ð°ÐµÐ·Ð¶Ð°ÐµÑ‚ Ð½Ð° Ð½Ð°Ð·Ð²Ð°Ð½Ð¸Ðµ */
-.foodEditHeroRender {
-  align-items: center !important;
-  row-gap: 4px !important;
-}
-
-.foodEditHeroRender strong {
-  margin-bottom: 4px !important;
-  line-height: 1.16 !important;
-}
-
-.foodEditHeroRender small {
-  display: block !important;
-  margin-top: 6px !important;
-  line-height: 1.15 !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
 
 /* Ð´Ð²Ðµ ÐºÐ½Ð¾Ð¿ÐºÐ¸ ÑÐ½Ð¸Ð·Ñƒ Ñ‡ÑƒÑ‚ÑŒ ÑƒÐ¶Ðµ */
 .foodEditBottomActions {

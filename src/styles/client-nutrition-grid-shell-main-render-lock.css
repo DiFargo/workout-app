@@ -4,44 +4,5 @@
     gap: 14px !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHero.profileAiHero .profileAiHeroText h1 {
-    max-width: 100% !important;
-    font-size: clamp(15px, 4.15vw, 17px) !important;
-    line-height: 1.12 !important;
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiHero.profileAiHero .profileAiHeroChevron {
-    width: 14px !important;
-    min-width: 14px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow,
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow > div {
-    height: 82px !important;
-    min-height: 82px !important;
-    max-height: 82px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow > div {
-    padding: 12px 5px 10px !important;
-    justify-content: center !important;
-    gap: 8px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow .profileAiStatLabel,
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow span {
-    font-size: 11px !important;
-    line-height: 1.05 !important;
-    gap: 5px !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiStatsRow.profileAiStatsRow .profileAiStatLabel svg {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
 }
 

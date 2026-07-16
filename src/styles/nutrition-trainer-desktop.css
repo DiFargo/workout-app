@@ -159,74 +159,9 @@
     border-left: 1px solid rgba(255, 255, 255, 0.075);
   }
 
-  .trainerRolePage.clientCorePageCabinet .profileCabinetPageTitle {
-    min-height: 52px !important;
-    margin-bottom: 14px !important;
-    font-size: 34px !important;
-    text-align: left !important;
-  }
-
   .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetSection {
     height: auto !important;
     min-height: 0 !important;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHero {
-    min-height: 118px !important;
-    flex-basis: 118px !important;
-    padding: 18px 22px !important;
-    grid-template-columns: 76px minmax(0, 1fr) 18px !important;
-    gap: 18px !important;
-    border-radius: 22px !important;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatarWrap,
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiAvatar {
-    width: 74px !important;
-    height: 74px !important;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileAiHeroText h1 {
-    font-size: 24px !important;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview {
-    margin-top: 16px !important;
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    grid-template-rows: none !important;
-    gap: 14px !important;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard {
-    height: 112px !important;
-    min-height: 112px !important;
-    padding: 16px 18px !important;
-    grid-template-columns: 52px minmax(0, 1fr) 18px !important;
-    gap: 14px !important;
-    border-radius: 22px !important;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetProgressOverview .progressHubCard:last-child {
-    grid-column: 1 / -1;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardIcon {
-    width: 52px !important;
-    height: 52px !important;
-    font-size: 32px !important;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText small {
-    font-size: 10px !important;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText strong {
-    font-size: 20px !important;
-  }
-
-  .trainerRolePage.clientCorePageCabinet[data-profile-tab="cabinet"] .progressHubCardText em {
-    font-size: 12px !important;
   }
 }
 

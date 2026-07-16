@@ -1,0 +1,302 @@
+.root,
+.header,
+.body,
+.weight,
+.chart,
+.trend,
+.single,
+.empty {
+  box-sizing: border-box;
+}
+
+.root {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 160px;
+  min-height: 160px;
+  max-height: 160px;
+  flex: 0 0 160px;
+  position: relative;
+  margin: 2px 0 0;
+  padding: 25px 18px;
+  display: block;
+  border: 1px solid var(--color-profile-measurement-border);
+  border-radius: 22px;
+  background: var(--background-profile-measurement-card);
+  color: var(--color-profile-measurement-text);
+  box-shadow: var(--shadow-profile-measurement-card);
+  overflow: hidden;
+}
+
+.header {
+  height: 18px;
+  min-height: 18px;
+  position: absolute;
+  top: 25px;
+  right: 18px;
+  left: 18px;
+  z-index: 2;
+  padding-left: 126px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.header span {
+  min-width: 0;
+  display: block;
+  color: var(--color-profile-measurement-title);
+  -webkit-text-fill-color: var(--color-profile-measurement-title);
+  font-size: 16.2px;
+  font-weight: 850;
+  line-height: 1.04;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.body {
+  width: 100%;
+  min-width: 0;
+  height: 108px;
+  min-height: 108px;
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+}
+
+.weight {
+  width: 116px;
+  min-width: 0;
+  height: 108px;
+  min-height: 108px;
+  padding: 12px 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  border-radius: 19px;
+  background: var(--background-profile-measurement-weight);
+  box-shadow: var(--shadow-profile-measurement-weight);
+  overflow: hidden;
+}
+
+.weight span,
+.weight strong,
+.weight em,
+.weight small {
+  max-width: 100%;
+  display: block;
+  font-style: normal;
+}
+
+.weight span {
+  margin: 0 0 8px;
+  color: var(--color-profile-measurement-muted);
+  -webkit-text-fill-color: var(--color-profile-measurement-muted);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.weight strong {
+  color: var(--color-profile-measurement-value);
+  -webkit-text-fill-color: var(--color-profile-measurement-value);
+  font-size: 25px;
+  font-weight: 900;
+  line-height: 0.96;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+}
+
+.weight em {
+  margin: 8px 0 0;
+  color: var(--color-profile-measurement-accent);
+  -webkit-text-fill-color: var(--color-profile-measurement-accent);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.weight small {
+  margin: 10px 0 0;
+  color: var(--color-profile-measurement-muted);
+  -webkit-text-fill-color: var(--color-profile-measurement-muted);
+  font-size: 9px;
+  font-weight: 760;
+  line-height: 1.1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.chart {
+  width: 100%;
+  min-width: 0;
+  height: 88px;
+  min-height: 88px;
+  position: relative;
+  display: block;
+  transform: translateY(20px);
+  overflow: visible;
+}
+
+.trend {
+  width: 100%;
+  min-width: 0;
+  height: 88px;
+  min-height: 88px;
+  display: block;
+  overflow: visible;
+}
+
+.trendLine {
+  fill: none;
+  stroke: url("#mainMeasurementLineGradient");
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 7px 11px var(--shadow-profile-measurement-chart));
+}
+
+.trendPoint {
+  fill: var(--color-profile-measurement-chart-point);
+  stroke: var(--color-profile-measurement-chart-point-border);
+  stroke-width: 2;
+}
+
+.trendPoint.current {
+  fill: var(--color-profile-measurement-chart-current-fill);
+  stroke: var(--color-profile-measurement-chart-current-border);
+  stroke-width: 4;
+}
+
+.currentGuide {
+  stroke: var(--color-profile-measurement-chart-guide);
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+  stroke-linecap: round;
+}
+
+.pointLabel,
+.dateLabel {
+  fill: var(--color-profile-measurement-chart-label);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-anchor: middle;
+}
+
+.dateLabel {
+  fill: var(--color-profile-measurement-chart-date);
+  font-size: 10px;
+}
+
+.currentBubble rect,
+.currentBubble path {
+  fill: var(--background-profile-measurement-chart-bubble);
+}
+
+.currentBubble text {
+  fill: var(--color-profile-measurement-chart-bubble);
+  font-size: 12px;
+  font-weight: 900;
+  text-anchor: middle;
+}
+
+.single,
+.empty {
+  width: 100%;
+  min-width: 0;
+  height: 78px;
+  min-height: 78px;
+  max-height: 78px;
+  display: grid;
+  place-content: center;
+  color: var(--color-profile-measurement-empty);
+  -webkit-text-fill-color: var(--color-profile-measurement-empty);
+  background: var(--background-profile-measurement-empty);
+  text-align: center;
+}
+
+.single {
+  gap: 5px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.single strong,
+.single span {
+  display: block;
+}
+
+.single strong {
+  color: var(--color-profile-measurement-empty-title);
+  -webkit-text-fill-color: var(--color-profile-measurement-empty-title);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.15;
+}
+
+.single span {
+  color: var(--color-profile-measurement-empty);
+  -webkit-text-fill-color: var(--color-profile-measurement-empty);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.empty {
+  padding: 8px;
+  border: 1px dashed var(--color-profile-measurement-empty-border);
+  border-radius: 13px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+:global(:root[data-app-theme="dark-green"]) .root {
+  border-radius: 15px;
+}
+
+@media (max-width: 640px) {
+  .root {
+    height: 140px;
+    min-height: 140px;
+    max-height: 140px;
+    flex-basis: 140px;
+    margin: 0 0 14px;
+    padding: 15px 18px 13px;
+    border-radius: 24px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .root {
+    border-color: var(--color-profile-measurement-border-mobile);
+    background: var(--background-profile-measurement-card-mobile);
+    color: var(--color-profile-measurement-text-mobile);
+    box-shadow: var(--shadow-profile-measurement-card-mobile);
+  }
+
+  .header {
+    top: 15px;
+  }
+
+  :global(:root[data-app-theme="dark-green"]) .root {
+    margin: 2px 0 0;
+    border-radius: 15px;
+  }
+}
+
+@media (max-width: 360px) {
+  .header span {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: -0.025em;
+  }
+}

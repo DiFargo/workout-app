@@ -1,26 +1,4 @@
-html body #root .fatFoodSearchOverlay .fatSearchTopPremium,
-html body #root .fatFoodSearchScreenPremium .foodProductFlowHeader {
-  min-height: 46px !important;
-  margin: 0 0 14px !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
-  align-items: center !important;
-  gap: 10px !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup,
-html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle {
-  min-width: 0 !important;
-  padding: 0 !important;
-  text-align: left !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup > span,
-html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle > span,
-html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader > span,
-html body #root .foodEditPageOverlay .foodEditPageContent label > span,
-html body #root .dishIngredientPickerHeader span,
-html body #root .dishIngredientConfirmInput > span {
+html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader > span {
   color: var(--food-flow-accent) !important;
   font-size: 10px !important;
   font-weight: 950 !important;
@@ -28,12 +6,7 @@ html body #root .dishIngredientConfirmInput > span {
   text-transform: uppercase !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .foodFlowTitleGroup h2,
-html body #root .fatFoodSearchScreenPremium .foodProductFlowTitle h2,
-html body #root .foodEditPageOverlay .foodEditPageTitleCenter,
-html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader h3,
-html body #root .dishIngredientPickerHeader strong,
-html body #root .dishIngredientConfirmInfo strong {
+html body #root .nutritionCreateChoiceSheet .nutritionCreateChoiceHeader h3 {
   margin: 4px 0 0 !important;
   color: var(--food-flow-text) !important;
   font-size: 22px !important;

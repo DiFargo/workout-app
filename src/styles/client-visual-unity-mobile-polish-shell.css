@@ -1,9 +1,7 @@
 /* Real-account shell polish for live client screens. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage {
+  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
     --client-x: 26px;
     --client-top: 70px;
     --client-title-h: 54px;
@@ -15,65 +13,5 @@
     padding-bottom: calc(112px + env(safe-area-inset-bottom)) !important;
     box-sizing: border-box !important;
     overflow-x: hidden !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain.mainDashboardPage > .mainDashboardTitle.clientCorePageTitle,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.individualWorkoutSelectPage .workoutSelectHero,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage.basicWorkoutSelectPage .workoutSelectHero {
-    height: var(--client-title-h) !important;
-    min-height: var(--client-title-h) !important;
-    margin: calc(var(--client-top) + 8px) 0 16px !important;
-    padding: 0 !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 12px !important;
-    position: relative !important;
-    inset: auto !important;
-    transform: none !important;
-    overflow: visible !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain.mainDashboardPage > .mainDashboardTitle.clientCorePageTitle,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.workoutSelectPage .workoutSelectTitle {
-    color: var(--client-title-color) !important;
-    -webkit-text-fill-color: var(--client-title-color) !important;
-    font-size: var(--client-title-fz) !important;
-    line-height: 1.06 !important;
-    font-weight: 900 !important;
-    letter-spacing: 0 !important;
-    text-shadow: none !important;
-    white-space: nowrap !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
-    top: calc(var(--client-top) + 8px) !important;
-    right: var(--client-x) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileTrainerNotificationsButton,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutHeaderActions button {
-    width: 52px !important;
-    min-width: 52px !important;
-    max-width: 52px !important;
-    height: 52px !important;
-    min-height: 52px !important;
-    max-height: 52px !important;
-    border-radius: 17px !important;
-    border: 1px solid #dfe4ee !important;
-    background: rgba(255, 255, 255, 0.96) !important;
-    color: var(--client-title-color) !important;
-    -webkit-text-fill-color: var(--client-title-color) !important;
-    box-shadow: 0 16px 36px rgba(36, 43, 66, 0.08) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow .profileTrainerNotificationsButton {
-    justify-self: end !important;
-    align-self: center !important;
   }
 }

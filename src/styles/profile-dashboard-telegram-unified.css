@@ -15,13 +15,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.045);
 }
 
-.profileUnifiedAvatar {
-  width: 94px !important;
-  height: 94px !important;
-  margin: 0 !important;
-  border-radius: 28px !important;
-}
-
 .profileUnifiedStats {
   margin-top: 22px;
   display: grid;
@@ -76,12 +69,6 @@
   .profileUnifiedCard {
     padding: 18px;
     border-radius: 30px;
-  }
-
-  .profileUnifiedAvatar {
-    width: 74px !important;
-    height: 74px !important;
-    border-radius: 23px !important;
   }
 
   .profileUnifiedStats {
@@ -168,29 +155,11 @@
   }
 }
 
-/* GOAL SPLIT: MAINTAIN VS RECOMP */
-.profileGoalModeHint {
-  margin: 10px 0 12px;
-  padding: 12px 14px;
-  border-radius: 18px;
-  border: 1px solid rgba(127, 159, 58, 0.16);
-  background: rgba(127, 159, 58, 0.08);
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 13px;
-  font-weight: 850;
-  line-height: 1.35;
-}
-
-.profileGoalPicker {
-  grid-template-columns: repeat(2, 1fr);
-}
-
 .firstSetupGoalGrid {
   grid-template-columns: repeat(2, 1fr);
 }
 
 @media (max-width: 520px) {
-  .profileGoalPicker,
   .firstSetupGoalGrid {
     grid-template-columns: 1fr;
   }
@@ -222,127 +191,4 @@
   font-size: clamp(15px, 2vw, 24px) !important;
   padding: 0 4px !important;
   box-sizing: border-box !important;
-}
-
-/* PROFILE CONTROL MEASUREMENT */
-.profileMeasurementPanel {
-  margin-top: 12px;
-  border-radius: 24px;
-  border: 1px solid rgba(127, 159, 58, 0.14);
-  background:
-    radial-gradient(circle at top right, rgba(127, 159, 58, 0.12), transparent 46%),
-    rgba(255, 255, 255, 0.026);
-  overflow: hidden;
-}
-
-.profileMeasurementToggle {
-  width: 100%;
-  min-height: 72px;
-  padding: 14px 16px;
-  border: 0;
-  background: transparent;
-  color: #fff;
-  display: grid;
-  grid-template-columns: 1fr 34px;
-  gap: 12px;
-  align-items: center;
-  text-align: left;
-  cursor: pointer;
-}
-
-.profileMeasurementToggle strong {
-  display: block;
-  color: rgba(255, 255, 255, 0.94);
-  font-size: 17px;
-  font-weight: 1000;
-  margin-bottom: 5px;
-}
-
-.profileMeasurementToggle small {
-  display: block;
-  color: rgba(255, 255, 255, 0.46);
-  font-size: 12px;
-  font-weight: 850;
-  line-height: 1.28;
-}
-
-.profileMeasurementToggle em {
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  background: rgba(127, 159, 58, 0.14);
-  color: rgba(235, 250, 195, 0.96);
-  font-size: 22px;
-  font-weight: 900;
-  font-style: normal;
-}
-
-.profileMeasurementGrid label,
-.profileMeasurementNote {
-  display: grid;
-  gap: 7px;
-}
-
-.profileMeasurementGrid label span,
-.profileMeasurementNote span {
-  color: rgba(255, 255, 255, 0.46);
-  font-size: 11px;
-  font-weight: 950;
-}
-
-.profileMeasurementNote {
-  margin-top: 10px;
-}
-
-.profileMeasurementNote textarea {
-  min-height: 76px;
-  resize: vertical;
-  padding: 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(0, 0, 0, 0.18);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 800;
-  outline: none;
-}
-
-.profileMeasurementSave {
-  width: 100%;
-  min-height: 52px;
-  margin-top: 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(127, 159, 58, 0.24);
-  background: rgba(127, 159, 58, 0.15);
-  color: rgba(235, 250, 195, 0.96);
-  font-size: 15px;
-  font-weight: 950;
-  cursor: pointer;
-}
-
-.profileMeasurementSave:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.profileMeasurementStatus {
-  margin: 0;
-  padding: 0 14px 14px;
-  color: rgba(255, 255, 255, 0.52);
-  font-size: 12px;
-  font-weight: 850;
-}
-
-@media (max-width: 520px) {
-
-  .profileMeasurementToggle {
-    min-height: 68px;
-    padding: 12px;
-  }
-
-  .profileMeasurementToggle strong {
-    font-size: 16px;
-  }
 }

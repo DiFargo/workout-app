@@ -68,8 +68,12 @@ export function useAppRuntimeEffects({
       doc(db, "users", user.uid),
       (snapshot) => {
         const remoteTheme = snapshot.data()?.appTheme;
-        if (remoteTheme === APP_THEMES.WARM_LIGHT || remoteTheme === APP_THEMES.DARK_GREEN) {
+        const remoteThemePreference = snapshot.data()?.appThemePreference;
+        if (remoteTheme === APP_THEMES.WARM_LIGHT ||
+          (remoteTheme === APP_THEMES.DARK_GREEN && remoteThemePreference === "manual")) {
           setAppTheme((currentTheme) => remoteTheme !== currentTheme ? remoteTheme : currentTheme);
+        } else if (remoteTheme === APP_THEMES.DARK_GREEN) {
+          setAppTheme((currentTheme) => currentTheme !== APP_THEMES.WARM_LIGHT ? APP_THEMES.WARM_LIGHT : currentTheme);
         }
         setAppThemeCloudReady(true);
       },

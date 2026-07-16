@@ -14,13 +14,6 @@
   box-sizing: border-box !important;
 }
 
-.fatMealCard.open .productListWideFinal .productRowExact,
-.productListWideFinal .productRowExact {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-}
-
 /* =========================================================
    PRODUCT BLOCK WIDTH +4% FINAL
    ========================================================= */

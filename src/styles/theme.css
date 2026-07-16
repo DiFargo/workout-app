@@ -1,21 +1,5 @@
 /* APP THEME SWITCHER */
 :root,
-:root[data-app-theme="dark-green"] {
-  color-scheme: dark;
-  --bg: #0d0f0d;
-  --card: #171a17;
-  --card-2: #1d211d;
-  --line: #2b302b;
-  --text: #f4f6f2;
-  --muted: #8f968f;
-  --accent: #7f9f3a;
-  --accent-2: #91ad4e;
-  --theme-menu-bg: radial-gradient(circle at top, #182018 0%, #070a08 55%);
-  --theme-button-bg: linear-gradient(180deg, #171c18 0%, #111511 100%);
-  --theme-button-text: #ffffff;
-  --theme-subtle-panel: rgba(255, 255, 255, 0.04);
-}
-
 :root[data-app-theme="warm-light"] {
   color-scheme: light;
   --bg: #f7efd7;
@@ -36,6 +20,22 @@
   --theme-subtle-panel: rgba(35, 27, 16, 0.045);
 }
 
+:root[data-app-theme="dark-green"] {
+  color-scheme: dark;
+  --bg: #0d0f0d;
+  --card: #171a17;
+  --card-2: #1d211d;
+  --line: #2b302b;
+  --text: #f4f6f2;
+  --muted: #8f968f;
+  --accent: #7f9f3a;
+  --accent-2: #91ad4e;
+  --theme-menu-bg: radial-gradient(circle at top, #182018 0%, #070a08 55%);
+  --theme-button-bg: linear-gradient(180deg, #171c18 0%, #111511 100%);
+  --theme-button-text: #ffffff;
+  --theme-subtle-panel: rgba(255, 255, 255, 0.04);
+}
+
 :root[data-app-theme="warm-light"] body,
 :root[data-app-theme="warm-light"] .app {
   background: var(--bg);
@@ -50,7 +50,7 @@
 :root[data-app-theme="warm-light"] .appLogo,
 :root[data-app-theme="warm-light"] .loginBtn,
 :root[data-app-theme="warm-light"] .loginCard .loginBtn,
-:root[data-app-theme="warm-light"] .exercise button,
+:root[data-app-theme="warm-light"] .exercise button:not([data-css-module-control]),
 :root[data-app-theme="warm-light"] .showVideoBtn,
 :root[data-app-theme="warm-light"] .finishWorkoutButton {
   color: #231b10;
@@ -103,4 +103,3 @@
   border-color: var(--line);
   background: rgba(255, 255, 255, 0.42);
 }
-

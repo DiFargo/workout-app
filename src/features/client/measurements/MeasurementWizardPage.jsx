@@ -4,6 +4,7 @@ import {
   getProfileMeasurementFields,
   getProfileMeasurementValue
 } from "../../../utils/profileMeasurements";
+import styles from "./MeasurementWizardPage.module.css";
 
 const versionedMeasurementAsset = (src) => `${src}?v=${encodeURIComponent(APP_VERSION)}`;
 
@@ -90,15 +91,19 @@ export default function MeasurementWizardPage({
   };
 
   return (
-    <div className="measurementFullscreenPage">
-      <div className="measurementFullscreenHeader">
-        <div className="measurementFullscreenProgress">
+    <div
+      className={styles.page}
+      data-css-module-scope="measurement-wizard-page"
+      data-testid="measurement-wizard-page"
+    >
+      <div className={styles.header}>
+        <div className={styles.progress}>
           <span>Шаг {profileMeasurementWizardStep + 1} из {totalWizardScreens}</span>
           <i><em style={{ width: `${progressPercent}%` }} /></i>
         </div>
         <button
           type="button"
-          className="measurementFullscreenClose"
+          className={styles.close}
           onClick={closeMeasurementWizard}
           aria-label="Закрыть без сохранения"
         >
@@ -106,25 +111,28 @@ export default function MeasurementWizardPage({
         </button>
       </div>
 
-      <main className="measurementFullscreenBody">
+      <main className={styles.body}>
         {nextMeasurementField && (
           <img
             src={versionedMeasurementAsset(`/measurements/${nextMeasurementField.id}.webp`)}
             alt=""
             aria-hidden="true"
-            className="measurementFullscreenPreload"
+            className={styles.preload}
             loading="eager"
             decoding="async"
           />
         )}
 
         {isIntroStep && (
-          <section className="measurementFullscreenCard intro">
-            <div className="profileMeasurementWizardVisual measurementIntroVisual">
+          <section
+            className={`${styles.card} ${styles.introCard}`}
+            data-testid="measurement-wizard-intro"
+          >
+            <div className={styles.introVisual}>
               <img
                 src={versionedMeasurementAsset("/measurements/measurement_dashboard.webp")}
                 alt="Как выполнять замеры тела"
-                className="measurementIntroImage"
+                className={styles.introImage}
                 loading="eager"
                 decoding="async"
               />
@@ -133,7 +141,7 @@ export default function MeasurementWizardPage({
             <h2>Как выполнять замеры</h2>
             <p>Мерь утром, одной и той же лентой, в спокойном состоянии. Не втягивай живот и не затягивай ленту слишком сильно.</p>
 
-            <div className="profileMeasurementTips">
+            <div className={styles.tips}>
               <span>Одинаковое время</span>
               <span>Одна лента</span>
               <span>Без натяжения</span>
@@ -143,26 +151,33 @@ export default function MeasurementWizardPage({
         )}
 
         {activeField && (
-          <section className="measurementFullscreenCard measurement">
-            <div className={`measurementFullscreenImageFrame zone-${activeField.id}`}>
+          <section
+            className={`${styles.card} ${styles.measurementCard}`}
+            data-testid="measurement-wizard-measurement"
+          >
+            <div
+              className={styles.imageFrame}
+              data-measurement-zone={activeField.id}
+            >
               <img
                 src={versionedMeasurementAsset(`/measurements/${activeField.id}.webp`)}
                 alt={activeField.label}
-                className="measurementFullscreenImage"
+                className={styles.image}
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
               />
             </div>
 
-            <div className="measurementFullscreenText">
+            <div className={styles.text}>
               <h2>{activeField.label}</h2>
               <p>{activeField.hint}</p>
             </div>
 
-            <label className="measurementFullscreenInput">
+            <label className={styles.input}>
               <div>
                 <input
+                  data-css-module-control
                   inputMode="decimal"
                   value={profileMeasurementDraft[activeField.id] || ""}
                   placeholder="0"
@@ -172,20 +187,23 @@ export default function MeasurementWizardPage({
               </div>
             </label>
 
-            <small className="measurementFullscreenPrevious">
+            <small className={styles.previous}>
               Прошлый раз: {getProfileMeasurementValue(latestProfileMeasurement, activeField)} {activeField.unit}
             </small>
           </section>
         )}
 
         {isReviewStep && (
-          <section className="measurementFullscreenCard review">
+          <section
+            className={`${styles.card} ${styles.reviewCard}`}
+            data-testid="measurement-wizard-review"
+          >
             <h2>Проверь данные</h2>
             <p>Если всё верно — сохрани контрольный замер. Пустые поля можно оставить пустыми.</p>
 
-            <div className="measurementFullscreenReviewGrid">
+            <div className={styles.reviewGrid}>
               {measurementFields.map((field) => (
-                <div key={field.id}>
+                <div key={field.id} data-testid="measurement-wizard-review-cell">
                   <span>{field.label}</span>
                   <strong>{profileMeasurementDraft[field.id] || "0"}</strong>
                   <small>{field.unit}</small>
@@ -193,9 +211,10 @@ export default function MeasurementWizardPage({
               ))}
             </div>
 
-            <label className="profileMeasurementNote wizardNote">
+            <label className={styles.note}>
               <span>Заметка</span>
               <textarea
+                data-css-module-control
                 value={profileMeasurementDraft.note || ""}
                 placeholder={`Например: ${getAiNutritionGoalLabel(activeProfile?.goal || "recomp")} / ${activeField ? activeField.label : "замеры"}`}
                 onChange={(event) => setProfileMeasurementDraft((prev) => ({ ...prev, note: event.target.value }))}
@@ -206,10 +225,10 @@ export default function MeasurementWizardPage({
       </main>
 
       {profileMeasurementStatus && (
-        <p className="measurementFullscreenStatus">{profileMeasurementStatus}</p>
+        <p className={styles.status}>{profileMeasurementStatus}</p>
       )}
 
-      <div className="measurementFullscreenNav">
+      <div className={styles.navigation} data-testid="measurement-wizard-navigation">
         <button
           type="button"
           onClick={handleGoBack}
@@ -219,7 +238,7 @@ export default function MeasurementWizardPage({
 
         <button
           type="button"
-          className="next"
+          className={styles.next}
           disabled={isReviewStep && profileMeasurementSaving}
           onClick={handleGoNext}
         >
@@ -229,4 +248,3 @@ export default function MeasurementWizardPage({
     </div>
   );
 }
-

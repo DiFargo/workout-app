@@ -1,59 +1,13 @@
-/* Measurements: progress tab */
+/* Measurements progress-tab shell. Component colors live in colocated CSS Modules. */
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] {
   background:
     radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.05), transparent 32%),
     linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
 }
 
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection,
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementPanel,
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardCard {
+html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection {
   border-color: #e1e4ef !important;
   background: #ffffff !important;
   color: #151824 !important;
   box-shadow: 0 12px 32px rgba(55, 64, 112, 0.09) !important;
 }
-
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardTop span {
-  color: #5a49df !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardTop strong {
-  color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardTop small,
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardIconWrap p,
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementLastGrid span {
-  color: #737b91 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardIconWrap,
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementLastGrid div {
-  border-color: #e2e5ef !important;
-  background: #f7f8fc !important;
-  color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementDashboardIcon {
-  border-color: #ddd9fa !important;
-  background: #efedff !important;
-  color: #5542d8 !important;
-  box-shadow: 0 9px 22px rgba(77, 68, 199, 0.12) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementLastGrid strong {
-  color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementLastGrid small {
-  color: #5a49df !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileMeasurementStartBtn {
-  border-color: transparent !important;
-  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
-  color: #ffffff !important;
-  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22) !important;
-}
-

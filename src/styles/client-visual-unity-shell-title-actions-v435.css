@@ -1,31 +1,8 @@
 /* v1.78: final client visual unity layer. Keep this file last in styles/index.css. */
 /* v.1.964: shared title rows and header actions. */
 @media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectHero,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumHome,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchTopPremiumMy {
-    width: 100% !important;
-    min-height: var(--client-title-h) !important;
-    height: var(--client-title-h) !important;
-    margin: var(--client-top) 0 16px !important;
-    padding: 0 !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 12px !important;
-    position: relative !important;
-    box-sizing: border-box !important;
-  }
 
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .mainDashboardTitle,
-  html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutSelectTitle,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchMainTitle,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .foodFlowTitleGroup h1 {
+  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchMainTitle {
     width: auto !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -42,11 +19,7 @@
     text-overflow: ellipsis !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .menuRefreshIconBtn,
-  html:root[data-app-theme="warm-light"] body #root .profileTrainerNotificationsButton,
-  html:root[data-app-theme="warm-light"] body #root .nutritionHeaderIconButton,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutHeaderActions button,
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchClosePremium {
+  html:root[data-app-theme="warm-light"] body #root .menuRefreshIconBtn {
     width: var(--client-action) !important;
     min-width: var(--client-action) !important;
     max-width: var(--client-action) !important;
@@ -65,22 +38,6 @@
     position: static !important;
     inset: auto !important;
     transform: none !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
-    position: absolute !important;
-    top: var(--client-top) !important;
-    right: var(--client-x) !important;
-  }
-
-  html:root[data-app-theme="warm-light"] body #root .nutritionHeaderIconActions,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .workoutHeaderActions {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 10px !important;
-    position: static !important;
-    margin: 0 !important;
   }
 
 }

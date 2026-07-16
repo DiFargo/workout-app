@@ -14,10 +14,6 @@
   border-color: rgba(38,255,116,0.62) !important;
 }
 
-.foodEditAmountCard span {
-  white-space: nowrap !important;
-}
-
 .foodEditSegmentRow .weightModeButton.active {
   color: rgba(38,255,116,0.95) !important;
 }

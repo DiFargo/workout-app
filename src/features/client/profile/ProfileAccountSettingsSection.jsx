@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AtSign, Camera, LockKeyhole, Pencil } from "lucide-react";
+import styles from "./ProfileAccountSettingsSection.module.css";
 
 export default function ProfileAccountSettingsSection({
   avatarPreview,
@@ -20,6 +21,8 @@ export default function ProfileAccountSettingsSection({
   const editingFieldRef = useRef("");
   const displayName = String(draft.displayName || "").trim() || "Профиль клиента";
   const login = String(draft.login || "").trim();
+  const statusText = String(status || "");
+  const statusIsSuccess = statusText.includes("сохранены") || statusText.includes("отправлена");
 
   useEffect(() => {
     draftRef.current = draft;
@@ -118,17 +121,21 @@ export default function ProfileAccountSettingsSection({
   }
 
   return (
-    <section className="profileAccountSection profileAccountSummarySection">
-      <div className="profileAccountIdentity profileAccountHeroCard">
-        <label className="profileAccountAvatarCenterAction" aria-label="Изменить аватар">
-          <span className="profileAccountAvatarPreview profileAccountAvatarPreviewLarge">
+    <section
+      className={styles.section}
+      data-testid="profile-account-section"
+      data-css-module-scope="profile-account-settings"
+    >
+      <div className={styles.identity} data-testid="profile-account-identity">
+        <label className={styles.avatarAction} data-testid="profile-account-avatar" aria-label="Изменить аватар">
+          <span className={styles.avatar}>
             {avatarPreview || avatarUrl ? (
               <img src={avatarPreview || avatarUrl} alt="" />
             ) : (
               <span>👤</span>
             )}
           </span>
-          <span className="profileAccountAvatarCamera" aria-hidden="true">
+          <span className={styles.camera} aria-hidden="true">
             <Camera size={13} strokeWidth={2.4} />
           </span>
           <input
@@ -140,11 +147,12 @@ export default function ProfileAccountSettingsSection({
             }}
           />
         </label>
-        <div className={editingField === "displayName" ? "profileAccountHeroNameRow editing" : "profileAccountHeroNameRow"}>
+        <div className={`${styles.nameRow}${editingField === "displayName" ? ` ${styles.editing}` : ""}`}>
           <input
+            className={styles.nameInput}
             ref={displayNameRef}
             readOnly={editingField !== "displayName"}
-            value={draft.displayName}
+            value={draft.displayName || ""}
             onChange={(event) => changeField("displayName", event.target.value)}
             onBlur={(event) => {
               if (editingFieldRef.current === "displayName") {
@@ -154,26 +162,28 @@ export default function ProfileAccountSettingsSection({
             onKeyDown={(event) => handleFieldKeyDown(event, "displayName")}
             placeholder={displayName}
           />
-          <button type="button" className="profileAccountHeroNameEdit" aria-label="Редактировать ник" onMouseDown={(event) => event.preventDefault()} onClick={() => startEdit("displayName")}>
+          <button type="button" className={styles.nameEdit} data-testid="profile-account-name-edit" aria-label="Редактировать ник" onMouseDown={(event) => event.preventDefault()} onClick={() => startEdit("displayName")}>
             <Pencil size={14} strokeWidth={2.2} />
           </button>
         </div>
       </div>
 
-      <section className="profileDashboardCard profileAccountQuickPanel profileAccountDataPanel profileAccountSecurityPanel">
+      <section className={styles.quickPanel} data-testid="profile-account-quick-panel">
         <div
-          className={editingField === "login" ? "profileAccountQuickRow profileAccountLoginRow editing" : "profileAccountQuickRow profileAccountLoginRow"}
+          className={`${styles.quickRow} ${styles.loginRow}${editingField === "login" ? ` ${styles.editing}` : ""}`}
+          data-testid="profile-account-login-row"
           onClick={() => {
             if (editingFieldRef.current !== "login") {
               startEdit("login");
             }
           }}
         >
-          <span className="profileAccountQuickIcon" aria-hidden="true">
+          <span className={styles.quickIcon} aria-hidden="true">
             <AtSign size={15} strokeWidth={2.2} />
           </span>
-          <span className="profileAccountQuickTitle">Логин</span>
+          <span className={styles.quickTitle}>Логин</span>
           <input
+            className={styles.quickInput}
             ref={loginRef}
             readOnly={editingField !== "login"}
             value={login}
@@ -189,26 +199,26 @@ export default function ProfileAccountSettingsSection({
             autoCorrect="off"
             spellCheck="false"
           />
-          <button type="button" className="profileAccountQuickEdit" aria-label="Редактировать логин" onMouseDown={(event) => event.preventDefault()} onClick={() => startEdit("login")}>
+          <button type="button" className={styles.quickEdit} data-testid="profile-account-login-edit" aria-label="Редактировать логин" onMouseDown={(event) => event.preventDefault()} onClick={() => startEdit("login")}>
             <Pencil size={15} strokeWidth={2.2} />
           </button>
         </div>
 
-        <button type="button" className="profileAccountQuickRow profileAccountQuickButton" onMouseDown={(event) => event.preventDefault()} onClick={openPasswordModal}>
-          <span className="profileAccountQuickIcon" aria-hidden="true">
+        <button type="button" className={`${styles.quickRow} ${styles.quickButton}`} data-testid="profile-account-password" onMouseDown={(event) => event.preventDefault()} onClick={openPasswordModal}>
+          <span className={styles.quickIcon} aria-hidden="true">
             <LockKeyhole size={15} strokeWidth={2.2} />
           </span>
-          <span className="profileAccountQuickTitle">Пароль</span>
-          <span className="profileAccountQuickValue">Изменить</span>
-          <span className="profileAccountQuickEdit" aria-hidden="true">
+          <span className={styles.quickTitle}>Пароль</span>
+          <span className={styles.quickValue}>Изменить</span>
+          <span className={styles.quickEdit} aria-hidden="true">
             <Pencil size={15} strokeWidth={2.2} />
           </span>
         </button>
       </section>
 
-      {status && (
-        <p className={status.includes("сохранены") || status.includes("отправлена") ? "profileAccountStatus success" : "profileAccountStatus"}>
-          {status}
+      {statusText && (
+        <p className={`${styles.status}${statusIsSuccess ? ` ${styles.success}` : ""}`} data-testid="profile-account-status">
+          {statusText}
         </p>
       )}
     </section>

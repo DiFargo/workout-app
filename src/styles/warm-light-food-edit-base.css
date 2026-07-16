@@ -1,49 +1,23 @@
 /* FOOD EDIT SCREEN FULL WARM-LIGHT REDESIGN â€” only light theme */
 :root[data-app-theme="warm-light"] .fatFoodSearchOverlay,
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium,
-:root[data-app-theme="warm-light"] .fatFoodAmountScreen.foodEditRenderScreen {
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium {
   background:
     radial-gradient(circle at 50% 0%, rgba(244,224,100,0.22), transparent 34%),
     linear-gradient(180deg, #fff8dc 0%, #f6eabf 48%, #eddaa5 100%) !important;
   color: #5f5744 !important;
 }
 
-:root[data-app-theme="warm-light"] .foodEditRenderScreen,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen * {
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
-}
-
 /* top product card */
-:root[data-app-theme="warm-light"] .foodEditHeroRender,
-:root[data-app-theme="warm-light"] .foodEditHeroEditable {
-  background:
-    radial-gradient(circle at 12% 0%, rgba(244,224,100,0.18), transparent 38%),
-    linear-gradient(180deg, rgba(255,249,215,0.98) 0%, rgba(246,232,174,0.86) 100%) !important;
-  border: 1px solid rgba(94,75,30,0.10) !important;
-  box-shadow:
-    0 14px 30px rgba(88,68,24,0.12),
-    inset 0 1px 0 rgba(255,255,255,0.62) !important;
-}
-
-:root[data-app-theme="warm-light"] .foodEditIconRender {
-  background: rgba(255, 244, 178, 0.62) !important;
-  border: 1px solid rgba(94,75,30,0.08) !important;
-  box-shadow: none !important;
-}
 
 :root[data-app-theme="warm-light"] .foodEditPencilButton,
-:root[data-app-theme="warm-light"] .foodEditBackOnly,
-:root[data-app-theme="warm-light"] .fatSearchClosePremium {
+:root[data-app-theme="warm-light"] .foodEditBackOnly {
   background: rgba(255, 248, 217, 0.72) !important;
   border: 1px solid rgba(94,75,30,0.10) !important;
   box-shadow: 0 8px 20px rgba(88,68,24,0.10) !important;
 }
 
 /* grams/portion buttons */
-:root[data-app-theme="warm-light"] .foodEditSegmentRow button,
-:root[data-app-theme="warm-light"] .foodEditMacrosCards > div,
-:root[data-app-theme="warm-light"] .foodEditCaloriesMacroCard {
+:root[data-app-theme="warm-light"] .foodEditSegmentRow button {
   background:
     linear-gradient(180deg, rgba(255,249,215,0.96) 0%, rgba(246,232,174,0.82) 100%) !important;
   border: 1px solid rgba(94,75,30,0.10) !important;
@@ -55,40 +29,6 @@
   background: linear-gradient(180deg, #f4e064 0%, #e0c94d 100%) !important;
 }
 
-/* amount card */
-:root[data-app-theme="warm-light"] .foodEditAmountCard {
-  background:
-    linear-gradient(180deg, rgba(255,249,215,0.96) 0%, rgba(246,232,174,0.82) 100%) !important;
-  border: 1px solid rgba(94,75,30,0.10) !important;
-  box-shadow: 0 12px 28px rgba(88,68,24,0.10) !important;
-}
-
-:root[data-app-theme="warm-light"] .foodEditAmountCard input {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-/* rows: ÐŸÑ€Ð¸Ñ‘Ð¼ Ð¿Ð¸Ñ‰Ð¸ / Ð—Ð°Ð¼ÐµÑ‚ÐºÐ° */
-:root[data-app-theme="warm-light"] .foodEditRowsCard {
-  background:
-    linear-gradient(180deg, rgba(255,249,215,0.96) 0%, rgba(246,232,174,0.82) 100%) !important;
-  border: 1px solid rgba(94,75,30,0.10) !important;
-  box-shadow: 0 12px 28px rgba(88,68,24,0.10) !important;
-  overflow: hidden !important;
-}
-
-:root[data-app-theme="warm-light"] .foodEditRow {
-  background: transparent !important;
-  border-color: rgba(94,75,30,0.10) !important;
-  box-shadow: none !important;
-}
-
-:root[data-app-theme="warm-light"] .foodEditRowIcon {
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
-  opacity: 0.82 !important;
-}
 
 /* meal selector dropdown inside edit screen */
 
@@ -109,10 +49,7 @@
 /* FORCE LIGHT DELETE BUTTON */
 :root[data-app-theme="warm-light"] button.foodEditDeleteRender,
 :root[data-app-theme="warm-light"] button.foodDeleteRender,
-:root[data-app-theme="warm-light"] button.fatAmountDeleteButton,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodEditDeleteRender,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodDeleteRender,
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .fatAmountDeleteButton {
+:root[data-app-theme="warm-light"] button.fatAmountDeleteButton {
   background:
     linear-gradient(
       180deg,
@@ -128,8 +65,6 @@
 }
 
 /* REAL DELETE BUTTON FIX â€” WARM LIGHT ONLY */
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodEditDeleteButton,
-:root[data-app-theme="warm-light"] .fatFoodAmountScreen .foodEditDeleteButton,
 :root[data-app-theme="warm-light"] button.foodEditDeleteButton {
   background:
     linear-gradient(180deg, rgba(255,249,215,0.96) 0%, rgba(246,232,174,0.86) 100%) !important;
@@ -143,11 +78,8 @@
   box-shadow: 0 10px 24px rgba(88,68,24,0.10) !important;
 }
 
-:root[data-app-theme="warm-light"] .foodEditRenderScreen .foodEditDeleteButton *,
-:root[data-app-theme="warm-light"] .fatFoodAmountScreen .foodEditDeleteButton *,
 :root[data-app-theme="warm-light"] button.foodEditDeleteButton * {
   color: #5f5744 !important;
   -webkit-text-fill-color: #5f5744 !important;
   stroke: #5f5744 !important;
 }
-

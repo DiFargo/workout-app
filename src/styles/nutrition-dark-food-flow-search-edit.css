@@ -1,7 +1,4 @@
 :root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageOverlay,
-:root[data-app-theme="dark-green"] html body #root .dishIngredientPickerOverlay,
-:root[data-app-theme="dark-green"] html body #root .dishIngredientConfirmOverlay,
 :root[data-app-theme="dark-green"] html body #root .nutritionCreateChoiceScreen,
 :root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium .nutritionPhotoNotFound {
   --food-flow-border: var(--line) !important;
@@ -29,68 +26,37 @@
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25) !important;
 }
 
-:root[data-app-theme="dark-green"] html body #root .fatFoodSearchOverlay .fatSearchClosePremium,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageOverlay .foodEditPageHeader button,
 :root[data-app-theme="dark-green"] html body #root .nutritionZoukModalHeader button,
-:root[data-app-theme="dark-green"] html body #root .dishIngredientPickerHeader button,
 :root[data-app-theme="dark-green"] html body #root .nutritionPhotoNotFoundClose {
   border: 1px solid var(--line) !important;
   background: var(--card) !important;
   color: var(--muted) !important;
 }
 
-:root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium,
-:root[data-app-theme="dark-green"] html body #root .dishIngredientSearchBox,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageOverlay .foodEditPageContent input,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageOverlay .foodEditPageContent textarea,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageOverlay .foodEditPortionInlineUnit,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageOverlay .foodEditPortionUnitRow {
+:root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium {
   border: 1px solid var(--line) !important;
   background: var(--card) !important;
   color: var(--text) !important;
 }
 
-:root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input::placeholder,
-:root[data-app-theme="dark-green"] html body #root .dishIngredientSearchBox input::placeholder,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageOverlay .foodEditPageContent input::placeholder,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageOverlay .foodEditPageContent textarea::placeholder {
+:root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input::placeholder {
   color: var(--muted) !important;
 }
 
-:root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium .fatSearchResultIcon,
 :root[data-app-theme="dark-green"] html body #root .nutritionZoukIcon,
 :root[data-app-theme="dark-green"] html body #root .nutritionZoukMealIcon,
-:root[data-app-theme="dark-green"] html body #root .nutritionZoukFoodIcon,
-:root[data-app-theme="dark-green"] html body #root .dishIngredientResultCard > span,
-:root[data-app-theme="dark-green"] html body #root .foodEditIconRender,
-:root[data-app-theme="dark-green"] html body #root .foodEditIconPreviewManual,
-:root[data-app-theme="dark-green"] html body #root .dishIngredientConfirmIcon {
+:root[data-app-theme="dark-green"] html body #root .nutritionZoukFoodIcon {
   border-color: var(--line) !important;
   background: var(--card-2) !important;
 }
 
-:root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium .fatSearchResultCheck {
-  border-color: var(--line) !important;
-  background: var(--card-2) !important;
-}
-
-:root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium .fatSearchResultCheck::before {
-  background: var(--accent) !important;
-}
-
-:root[data-app-theme="dark-green"] html body #root .fatFoodSearchScreenPremium .fatFallbackSuggestions button,
-:root[data-app-theme="dark-green"] html body #root .fatSearchShowMoreButton,
-:root[data-app-theme="dark-green"] html body #root .nutritionCreateChoiceGrid button,
-:root[data-app-theme="dark-green"] html body #root .dishEditIngredientsHeader button,
-:root[data-app-theme="dark-green"] html body #root .dishIngredientConfirmAdd {
+:root[data-app-theme="dark-green"] html body #root .nutritionCreateChoiceGrid button {
   border: 1px solid var(--line) !important;
   background: var(--card-2) !important;
   color: var(--accent) !important;
 }
 
-:root[data-app-theme="dark-green"] html body #root .fatSearchBottomBarFive,
-:root[data-app-theme="dark-green"] html body #root .foodProductActionBar,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageActionBar {
+:root[data-app-theme="dark-green"] html body #root .fatSearchBottomBarFive {
   border: 1px solid var(--line) !important;
   background: rgba(23, 26, 23, 0.96) !important;
   box-shadow:
@@ -98,16 +64,12 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
 }
 
-:root[data-app-theme="dark-green"] html body #root .fatSearchBottomBarFive button,
-:root[data-app-theme="dark-green"] html body #root .foodProductActionBar button,
-:root[data-app-theme="dark-green"] html body #root .foodEditPageActionBar button {
+:root[data-app-theme="dark-green"] html body #root .fatSearchBottomBarFive button {
   color: var(--muted) !important;
 }
 
 :root[data-app-theme="dark-green"] html body #root .fatSearchBottomBarFive button.active,
-:root[data-app-theme="dark-green"] html body #root .fatSearchBottomBarFive .fatSearchPhotoAction,
-:root[data-app-theme="dark-green"] html body #root .foodProductActionBar .foodProductAddAction:not(:disabled),
-:root[data-app-theme="dark-green"] html body #root .foodEditPageActionBar .foodEditPageConfirmAction:not(:disabled) {
+:root[data-app-theme="dark-green"] html body #root .fatSearchBottomBarFive .fatSearchPhotoAction {
   border-color: rgba(181, 230, 85, 0.28) !important;
   background: rgba(127, 159, 58, 0.2) !important;
   color: #b5e655 !important;

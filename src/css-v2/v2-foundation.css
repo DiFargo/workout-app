@@ -1,0 +1,5 @@
+/* CSS V2 foundation. Intentionally visual-neutral until V2 screens are added. */
+
+:root[data-css-variant="v2"] {
+  --css-v2-preview: 1;
+}

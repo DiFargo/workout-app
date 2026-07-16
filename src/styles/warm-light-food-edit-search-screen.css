@@ -99,29 +99,12 @@
   border-bottom: 0 !important;
 }
 
-/* REMOVE LIGHT STRIP BETWEEN HISTORY AND BOTTOM BAR */
-:root[data-app-theme="warm-light"] .fatSearchListPremium {
-  border-bottom: 0 !important;
-  box-shadow: none !important;
-}
-
-:root[data-app-theme="warm-light"] .fatSearchListPremium::after,
-:root[data-app-theme="warm-light"] .fatSearchListPremium::before,
-:root[data-app-theme="warm-light"] .fatRecentFoods::after,
-:root[data-app-theme="warm-light"] .fatRecentFoods::before {
-  display: none !important;
-  content: none !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
 :root[data-app-theme="warm-light"] .fatSearchBottomBar {
   margin-top: 0 !important;
 }
 
 /* FORCE REMOVE WHITE DIVIDER ABOVE BOTTOM ACTION BAR */
-:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium {
+:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
   padding-bottom: 160px !important;
 }
 
@@ -136,15 +119,5 @@
 :root[data-app-theme="warm-light"] .fatSearchBottomBar::after {
   display: none !important;
   content: none !important;
-}
-
-/* actual separator line */
-
-/* remove white strip area */
-:root[data-app-theme="warm-light"] .fatSearchListPremium {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-  border-bottom: 0 !important;
-  background: transparent !important;
 }
 

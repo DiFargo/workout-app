@@ -1,41 +1,4 @@
-html body #root .fatFoodSearchScreenPremium .fatSearchTitleWrap {
-  justify-content: flex-start !important;
-}
-
-html body #root .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)) .fatSearchTitleWrap {
-  width: auto !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium,
-html body #root .fatFoodSearchScreenPremium .foodEditInlineMealButton {
-  min-height: 44px !important;
-  padding: 8px 12px !important;
-  border: 1px solid var(--food-flow-border) !important;
-  border-radius: 15px !important;
-  background: var(--food-flow-card) !important;
-  color: var(--food-flow-text) !important;
-  box-shadow: 0 8px 18px rgba(51, 60, 108, 0.055) !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium span,
-html body #root .fatFoodSearchScreenPremium .foodEditInlineMealLabel {
-  color: var(--food-flow-muted) !important;
-  font-size: 9px !important;
-  font-weight: 900 !important;
-  text-transform: uppercase !important;
-}
-
-html body #root .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium strong,
-html body #root .fatFoodSearchScreenPremium .foodEditInlineMealButton {
-  color: var(--food-flow-text) !important;
-  font-size: 13px !important;
-  font-weight: 950 !important;
-}
-
-html body #root .fatFoodSearchOverlay .fatSearchClosePremium,
-html body #root .foodEditPageOverlay .foodEditPageHeader button,
 html body #root .nutritionZoukModalHeader button,
-html body #root .dishIngredientPickerHeader button,
 html body #root .nutritionPhotoNotFoundClose {
   width: 40px !important;
   height: 40px !important;

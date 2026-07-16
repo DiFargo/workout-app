@@ -38,7 +38,6 @@ export default function AppRouter({
   basicWorkoutQuiz,
   workoutModePreference,
   onBackToMain,
-  onOpenBasicWorkoutQuiz,
   onOpenSavedBasicWorkoutsOrQuiz,
   onOpenIndividualWorkouts,
   onSetWorkoutModeRemember,

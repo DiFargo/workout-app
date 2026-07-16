@@ -1,3 +1,5 @@
+import styles from "./ProfileWorkoutCalendarModal.module.css";
+
 const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
 const STATUS_ORDER = ["missed", "completed_off_date", "completed", "shifted", "planned"];
@@ -25,45 +27,49 @@ export function ProfileWorkoutCalendarContent({
   const scheduledThisMonth = scheduledDates.filter((dateKey) => dateKey.startsWith(monthKey)).length;
 
   return (
-    <div className="cabinetWorkoutCalendar">
-      <div className="cabinetWorkoutCalendarNav">
-        <button type="button" onClick={() => onShiftMonth(-1)} aria-label="Предыдущий месяц">
+    <div
+      className={styles.calendar}
+      data-testid="profile-workout-calendar"
+      data-css-module-scope="profile-workout-calendar"
+    >
+      <div className={styles.navigation}>
+        <button className={styles.navigationButton} data-testid="profile-workout-calendar-shift" type="button" onClick={() => onShiftMonth(-1)} aria-label="Предыдущий месяц">
           ‹
         </button>
-        <strong>
+        <strong className={styles.navigationTitle}>
           {monthDate.toLocaleDateString("ru-RU", {
             month: "long",
             year: "numeric"
           })}
         </strong>
-        <button type="button" onClick={() => onShiftMonth(1)} aria-label="Следующий месяц">
+        <button className={styles.navigationButton} data-testid="profile-workout-calendar-shift" type="button" onClick={() => onShiftMonth(1)} aria-label="Следующий месяц">
           ›
         </button>
       </div>
 
-      <div className="cabinetWorkoutCalendarPlanner">
-        <div>
-          <strong>{editing ? "Выбери дни тренировок" : "План на месяц"}</strong>
-          <small>
+      <div className={styles.planner}>
+        <div className={styles.plannerContent}>
+          <strong className={styles.plannerTitle}>{editing ? "Выбери дни тренировок" : "План на месяц"}</strong>
+          <small className={styles.plannerDescription}>
             {editing
               ? "Нажимай на даты текущего месяца"
               : `${scheduledThisMonth} дней запланировано`}
           </small>
         </div>
         {!editing && (
-          <button type="button" onClick={onStartEdit}>
+          <button className={styles.plannerButton} data-testid="profile-workout-calendar-edit" type="button" onClick={onStartEdit}>
             Изменить
           </button>
         )}
       </div>
 
-      <div className="cabinetWorkoutCalendarWeekdays" aria-hidden="true">
+      <div className={styles.weekdays} aria-hidden="true">
         {WEEKDAYS.map((day) => (
-          <span key={day}>{day}</span>
+          <span className={styles.weekday} key={day}>{day}</span>
         ))}
       </div>
 
-      <div className="cabinetWorkoutCalendarGrid">
+      <div className={styles.grid}>
         {calendarDays.map((day) => {
           const statusClass = STATUS_ORDER
             .find((candidate) => day.scheduleEntries.some((entry) => entry.status === candidate));
@@ -77,16 +83,17 @@ export function ProfileWorkoutCalendarContent({
           return (
             <button
               type="button"
+              data-testid="profile-workout-calendar-day"
               key={day.key}
               className={[
-                day.isCurrentMonth ? "" : "outside",
-                day.isToday ? "today" : "",
-                day.scheduleEntries.length ? "hasWorkout" : "",
-                day.isScheduled ? "scheduled" : "",
-                hasHistoryWorkouts ? "hasHistoryWorkout" : "",
-                visualStatus || "",
-                editing ? "editing" : "",
-                day.key === selectedDate ? "selected" : ""
+                styles.dayButton,
+                day.isCurrentMonth ? "" : styles.outside,
+                day.isToday ? styles.today : "",
+                day.scheduleEntries.length ? styles.hasWorkout : "",
+                day.isScheduled ? styles.scheduled : "",
+                visualStatus ? styles[visualStatus] : "",
+                editing ? styles.editing : "",
+                day.key === selectedDate ? styles.selected : ""
               ].filter(Boolean).join(" ")}
               disabled={editing && !day.isCurrentMonth}
               onClick={() => onDayClick(day)}
@@ -99,43 +106,43 @@ export function ProfileWorkoutCalendarContent({
               ].filter(Boolean).join(", ")}
             >
               <span>{day.date.getDate()}</span>
-              {day.scheduleEntries.length > 0 && <i>{entryLabel}</i>}
-              {!day.scheduleEntries.length && hasHistoryWorkouts && <i>{historyLabel}</i>}
+              {day.scheduleEntries.length > 0 && <i className={styles.dayBadge}>{entryLabel}</i>}
+              {!day.scheduleEntries.length && hasHistoryWorkouts && <i className={styles.dayBadge}>{historyLabel}</i>}
             </button>
           );
         })}
       </div>
 
-      <div className="cabinetWorkoutCalendarLegend" aria-label="Легенда статусов тренировок">
-        <span><i className="planned" />План</span>
-        <span><i className="completed" />В срок</span>
-        <span><i className="historyCompleted" />Прошлые</span>
-        <span><i className="completedOffDate" />Другой день</span>
-        <span><i className="missed" />Пропущена</span>
-        <span><i className="shifted" />Смещена</span>
+      <div className={styles.legend} aria-label="Легенда статусов тренировок">
+        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.planned}`} />План</span>
+        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.completed}`} />В срок</span>
+        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.historyCompleted}`} />Прошлые</span>
+        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.completedOffDate}`} />Другой день</span>
+        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.missed}`} />Пропущена</span>
+        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.shifted}`} />Смещена</span>
       </div>
 
       {editing && (
-        <div className="cabinetWorkoutCalendarEditActions">
-          <button type="button" className="secondary" disabled={saving} onClick={onCancelEdit}>
+        <div className={styles.editActions} data-testid="profile-workout-calendar-edit-actions">
+          <button className={`${styles.actionButton} ${styles.secondaryAction}`} type="button" disabled={saving} onClick={onCancelEdit}>
             Отмена
           </button>
-          <button type="button" disabled={saving} onClick={onSave}>
+          <button className={styles.actionButton} type="button" disabled={saving} onClick={onSave}>
             {saving ? "Сохраняю..." : "Сохранить"}
           </button>
         </div>
       )}
 
       {status && (
-        <p className={status.includes("сохранены") ? "cabinetWorkoutCalendarStatus success" : "cabinetWorkoutCalendarStatus"}>
+        <p className={`${styles.status} ${status.includes("сохранены") ? styles.success : ""}`}>
           {status}
         </p>
       )}
 
-      <div className="cabinetWorkoutCalendarDay">
+      <div className={styles.dayDetails}>
         <div>
-          <span>Выбранный день</span>
-          <strong>
+          <span className={styles.dayDetailsLabel}>Выбранный день</span>
+          <strong className={styles.dayDetailsTitle}>
             {new Date(`${selectedDate}T12:00:00`).toLocaleDateString("ru-RU", {
               day: "numeric",
               month: "long",
@@ -143,7 +150,7 @@ export function ProfileWorkoutCalendarContent({
             })}
           </strong>
           {currentDates.includes(selectedDate) && (
-            <em>Тренировка запланирована</em>
+            <em className={styles.scheduledBadge}>Тренировка запланирована</em>
           )}
         </div>
 
@@ -151,13 +158,15 @@ export function ProfileWorkoutCalendarContent({
           selectedItems.map((item) => (
             <button
               type="button"
+              className={styles.historyItem}
+              data-testid="profile-workout-calendar-history-item"
               key={item.id || `${item.date}_${item.workout}`}
               onClick={() => onOpenHistory(item.id)}
             >
-              <span aria-hidden="true">🏋️</span>
-              <div>
-                <strong>{item.workout || "Тренировка"}</strong>
-                <small>
+              <span className={styles.historyIcon} aria-hidden="true">🏋️</span>
+              <div className={styles.historyContent}>
+                <strong className={styles.historyTitle}>{item.workout || "Тренировка"}</strong>
+                <small className={styles.historyMeta}>
                   {new Date(getTimestampValue(item.date)).toLocaleTimeString("ru-RU", {
                     hour: "2-digit",
                     minute: "2-digit"
@@ -165,50 +174,13 @@ export function ProfileWorkoutCalendarContent({
                   {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
                 </small>
               </div>
-              <i>›</i>
+              <i className={styles.historyIndicator}>›</i>
             </button>
           ))
         ) : (
-          <p>В этот день тренировок нет.</p>
+          <p className={styles.emptyDay}>В этот день тренировок нет.</p>
         )}
       </div>
-    </div>
-  );
-}
-
-export default function ProfileWorkoutCalendarModal({
-  open,
-  modalBodyRef,
-  onClose,
-  ...contentProps
-}) {
-  if (!open) {
-    return null;
-  }
-
-  return (
-    <div className="cabinetUtilityModalOverlay" role="presentation" onClick={onClose}>
-      <section
-        className="cabinetUtilityModal cabinetProgressModal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="cabinetProgressModalTitle"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <header className="cabinetUtilityModalHead">
-          <div>
-            <span>ТРЕНИРОВКИ</span>
-            <h2 id="cabinetProgressModalTitle">Календарь</h2>
-          </div>
-          <button type="button" aria-label="Закрыть календарь тренировок" onClick={onClose}>
-            ×
-          </button>
-        </header>
-
-        <div className="cabinetUtilityModalBody" ref={modalBodyRef}>
-          <ProfileWorkoutCalendarContent {...contentProps} />
-        </div>
-      </section>
     </div>
   );
 }

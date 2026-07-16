@@ -112,7 +112,19 @@ export function useNutritionSearchEffects({
       if (timer) clearTimeout(timer);
       controller.abort();
     };
-  }, [nutritionPickerOpen, nutritionSearchTab, nutritionSearch, nutrition.myFoods]);
+  }, [
+    endPerformanceCheck,
+    nutrition.myFoods,
+    nutritionPickerOpen,
+    nutritionSearch,
+    nutritionSearchTab,
+    setFatSecretError,
+    setFatSecretFoods,
+    setFatSecretLoading,
+    setNutritionFallbackSuggestions,
+    showAppError,
+    startPerformanceCheck
+  ]);
 
   useEffect(() => {
     const query = dishIngredientSearch.trim();
@@ -191,5 +203,13 @@ export function useNutritionSearchEffects({
       if (timer) clearTimeout(timer);
       controller.abort();
     };
-  }, [dishIngredientPickerOpen, dishIngredientSearch]);
+  }, [
+    dishIngredientPickerOpen,
+    dishIngredientSearch,
+    endPerformanceCheck,
+    setDishIngredientExternalFoods,
+    setDishIngredientFallbackSuggestions,
+    setDishIngredientLoading,
+    startPerformanceCheck
+  ]);
 }

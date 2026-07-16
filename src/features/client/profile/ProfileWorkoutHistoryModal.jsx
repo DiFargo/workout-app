@@ -1,3 +1,5 @@
+import styles from "./ProfileWorkoutHistoryModal.module.css";
+
 export function ProfileWorkoutHistoryContent({
   programScope,
   loading,
@@ -7,11 +9,16 @@ export function ProfileWorkoutHistoryContent({
   deletingId,
   getTimestampValue,
   onToggleItem,
-  onRequestDelete
+  onRequestDelete,
+  embedded = false
 }) {
   return (
-    <div className="workoutHistoryModalList">
-      {loading && <p>Загрузка истории...</p>}
+    <div
+      className={`${styles.list} ${embedded ? styles.embeddedList : ""}`}
+      data-testid="profile-workout-history-list"
+      data-css-module-scope="profile-workout-history"
+    >
+      {loading && <p className={styles.message}>Загрузка истории...</p>}
 
       {!loading && items.map((item) => {
         const isOpen = openItemId === item.id;
@@ -27,7 +34,8 @@ export function ProfileWorkoutHistoryContent({
 
         return (
           <div
-            className={`cabinetWorkoutHistoryItem ${isOpen ? "open" : ""}`}
+            className={`${styles.item} ${isOpen ? styles.itemOpen : ""}`}
+            data-testid="profile-workout-history-item"
             key={item.id || `${item.date}_${item.workout}`}
             ref={(node) => {
               if (!itemRefs?.current || !item.id) return;
@@ -37,32 +45,34 @@ export function ProfileWorkoutHistoryContent({
           >
             <button
               type="button"
+              className={styles.itemButton}
+              data-testid="profile-workout-history-toggle"
               onClick={() => onToggleItem(item.id)}
               aria-expanded={isOpen}
               aria-label={`${isOpen ? "Свернуть" : "Развернуть"} тренировку: ${workoutTitle}. ${workoutDateLabel}`}
             >
-              <span aria-hidden="true">{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
-              <div>
-                <strong>{workoutTitle}</strong>
-                <small>{workoutDateLabel}{item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}</small>
+              <span className={styles.itemIcon} aria-hidden="true">{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
+              <div className={styles.itemContent}>
+                <strong className={styles.itemTitle}>{workoutTitle}</strong>
+                <small className={styles.itemMeta}>{workoutDateLabel}{item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}</small>
               </div>
-              <i>{isOpen ? "⌃" : "›"}</i>
+              <i className={styles.itemIndicator}>{isOpen ? "⌃" : "›"}</i>
             </button>
 
             {isOpen && (
-              <div className="cabinetWorkoutHistoryDetails">
+              <div className={styles.details}>
                 {(item.exercises || []).map((exercise, index) => (
-                  <div className="cabinetWorkoutHistoryExercise" key={`${exercise.name}_${index}`}>
-                    <div className="cabinetWorkoutHistoryExerciseHead">
-                      <strong>{exercise.name}</strong>
-                      <small>{exercise.sets?.length || 0} подходов</small>
+                  <div className={styles.exercise} key={`${exercise.name}_${index}`}>
+                    <div className={styles.exerciseHeader}>
+                      <strong className={styles.exerciseTitle}>{exercise.name}</strong>
+                      <small className={styles.exerciseMeta}>{exercise.sets?.length || 0} подходов</small>
                     </div>
-                    <div className="cabinetWorkoutHistorySets">
+                    <div className={styles.sets}>
                       {(exercise.sets || []).map((set, setIndex) => (
-                        <span key={setIndex}>
-                          <b>{set.set || setIndex + 1}</b>
+                        <span className={styles.set} key={setIndex}>
+                          <b className={styles.setIndex}>{set.set || setIndex + 1}</b>
                           {set.reps === "" || set.reps == null ? "—" : set.reps} повт.
-                          <i>
+                          <i className={styles.setMeta}>
                             {set.weight === "" || set.weight == null
                               ? "без веса"
                               : `${set.weight} кг`}
@@ -73,10 +83,11 @@ export function ProfileWorkoutHistoryContent({
                     </div>
                   </div>
                 ))}
-                {!item.exercises?.length && <p>Данные упражнений не сохранены.</p>}
+                {!item.exercises?.length && <p className={styles.detailsMessage}>Данные упражнений не сохранены.</p>}
                 <button
                   type="button"
-                  className="cabinetWorkoutHistoryDelete"
+                  className={styles.deleteButton}
+                  data-testid="profile-workout-history-delete"
                   onClick={() => onRequestDelete(item)}
                   disabled={deletingId === item.id}
                   aria-label={`Удалить тренировку: ${workoutTitle}. ${workoutDateLabel}`}
@@ -90,49 +101,12 @@ export function ProfileWorkoutHistoryContent({
       })}
 
       {!loading && items.length === 0 && (
-        <p>
+        <p className={styles.message}>
           {programScope
             ? "В этой программе завершённых тренировок пока нет."
             : "Завершённые тренировки появятся здесь."}
         </p>
       )}
-    </div>
-  );
-}
-
-export default function ProfileWorkoutHistoryModal({
-  open,
-  programScope,
-  onClose,
-  ...contentProps
-}) {
-  if (!open) {
-    return null;
-  }
-
-  return (
-    <div className="workoutModeModalOverlay" role="presentation" onClick={onClose}>
-      <section
-        className="workoutModeModal workoutHistoryModal cabinetWorkoutHistoryModal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="cabinetWorkoutHistoryModalTitle"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <header className="workoutModeModalHeader">
-          <div>
-            <small>{programScope ? "НАЗНАЧЕННАЯ ПРОГРАММА" : "ЛИЧНЫЙ КАБИНЕТ"}</small>
-            <h2 id="cabinetWorkoutHistoryModalTitle">
-              {programScope?.assignedProgramName || "История тренировок"}
-            </h2>
-          </div>
-          <button type="button" aria-label="Закрыть историю тренировок" onClick={onClose}>
-            ×
-          </button>
-        </header>
-
-        <ProfileWorkoutHistoryContent programScope={programScope} {...contentProps} />
-      </section>
     </div>
   );
 }

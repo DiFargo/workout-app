@@ -167,6 +167,47 @@
   font-weight: 850;
 }
 
+.adminCreateClientModal .adminCredentialsBox {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid #d9d2ff;
+  border-radius: 16px;
+  background: #f5f2ff;
+}
+
+.adminCreateClientModal .adminCredentialsBox span {
+  color: #5d4bd4;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.adminCreateClientModal .adminCredentialsBox strong {
+  overflow-wrap: anywhere;
+  color: #3d328a;
+  font: 700 14px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.adminCreateClientModal .adminCredentialsBox button {
+  width: fit-content;
+  min-height: 42px;
+  margin: 0;
+  padding: 0 16px;
+  border: 1px solid #cfc7ff;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #5741d3;
+  font: 800 14px/1 Arial, sans-serif;
+  box-shadow: 0 7px 16px rgba(82, 65, 181, 0.1);
+  cursor: pointer;
+}
+
+.adminCreateClientModal .adminCredentialsBox button:hover {
+  border-color: #7b68ec;
+  background: #ece8ff;
+}
+
 @media (max-width: 760px) {
   .adminUsersToolbarActions {
     width: 100%;
@@ -179,4 +220,3 @@
   }
 
 }
-

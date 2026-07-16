@@ -1,6 +1,5 @@
 /* One stable shell and header geometry for all primary client pages. */
 .profileDashboardPage.clientCorePageMain,
-.clientCorePageWorkout.individualWorkoutSelectPage,
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
 .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
   box-sizing: border-box !important;
@@ -17,7 +16,6 @@
 }
 
 :root[data-app-theme="warm-light"] .profileDashboardPage.clientCorePageMain,
-:root[data-app-theme="warm-light"] .clientCorePageWorkout.individualWorkoutSelectPage,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
 :root[data-app-theme="warm-light"] .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
   border-color: #dfe3ee !important;
@@ -27,45 +25,5 @@
   box-shadow:
     0 22px 58px rgba(54, 62, 108, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-}
-
-.profileDashboardPage.clientCorePageMain .mainDashboardTitle,
-.clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle,
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle,
-.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetPageTitle {
-  height: 42px !important;
-  min-height: 42px !important;
-  max-height: 42px !important;
-  margin-bottom: 4px !important;
-  font-family: Arial, sans-serif !important;
-  font-size: 21px !important;
-  font-weight: 700 !important;
-  line-height: 42px !important;
-  letter-spacing: 0 !important;
-  text-align: left !important;
-}
-
-.clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle span,
-.clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle strong {
-  color: inherit !important;
-  font-weight: inherit !important;
-}
-
-.profileDashboardPage.clientCorePageMain .mainDashboardTitle {
-  margin-top: 20px !important;
-}
-
-.clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectHero {
-  margin-top: 20px !important;
-}
-
-.profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetTitleRow {
-  margin-top: 20px !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroV4 {
-  position: relative !important;
-  top: 2px !important;
-  padding-top: 8px !important;
 }
 

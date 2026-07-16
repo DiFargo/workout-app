@@ -10,15 +10,12 @@
   font-weight: 800;
 }
 
-.loginCard input[aria-invalid="true"],
-.foodEditAmountCard input[aria-invalid="true"] {
+.loginCard input[aria-invalid="true"] {
   border-color: rgba(220, 74, 74, 0.72) !important;
   box-shadow: 0 0 0 3px rgba(220, 74, 74, 0.1) !important;
 }
 
-.loginFieldError,
-.nutritionInlineError,
-.nutritionProductValidation {
+.loginFieldError {
   color: #dc6767;
   font-size: 11px;
   font-weight: 750;
@@ -58,176 +55,10 @@
   color: #278756;
 }
 
-.foodEditAmountCard {
-  position: relative;
-}
-
-.foodEditAmountCard .nutritionInlineError {
-  display: block;
-  margin-top: 5px;
-}
-
-.nutritionProductValidation {
-  padding: 8px 10px;
-  border: 1px solid rgba(220, 74, 74, 0.2);
-  border-radius: 10px;
-  background: rgba(220, 74, 74, 0.08);
-}
-
-.nutritionDeleteConfirmOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 10020;
-  display: grid;
-  place-items: center;
-  padding: 18px;
-}
-
-.nutritionDeleteConfirmBackdrop {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  border-radius: 0;
-  background: rgba(3, 6, 5, 0.68);
-  backdrop-filter: blur(8px);
-}
-
-.nutritionDeleteConfirmCard {
-  position: relative;
-  z-index: 1;
-  width: min(360px, 100%);
-  padding: 24px 18px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 20px;
-  background: #111811;
-  color: #f4f7f1;
-  text-align: center;
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
-}
-
-.nutritionDeleteConfirmCard > span {
-  display: block;
-  font-size: 28px;
-}
-
-.nutritionDeleteConfirmCard h2 {
-  margin: 8px 0 6px;
-  font-size: 19px;
-}
-
-.nutritionDeleteConfirmCard p {
-  margin: 0;
-  color: rgba(244, 247, 241, 0.65);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.nutritionDeleteConfirmCard > div {
-  margin-top: 18px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.nutritionDeleteConfirmCard > div button {
-  min-height: 46px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 13px;
-  background: rgba(255, 255, 255, 0.05);
-  color: inherit;
-  font-weight: 850;
-}
-
-.nutritionDeleteConfirmCard > div button.danger {
-  border-color: rgba(220, 74, 74, 0.25);
-  background: rgba(220, 74, 74, 0.12);
-  color: #ef8585;
-}
-
-.nutritionDeleteConfirmClose {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  background: transparent;
-  color: rgba(244, 247, 241, 0.65);
-  font-size: 24px;
-}
-
-:root[data-app-theme="warm-light"] .nutritionDeleteConfirmBackdrop {
-  background: rgba(38, 42, 64, 0.32);
-}
-
-:root[data-app-theme="warm-light"] .nutritionDeleteConfirmCard {
-  border-color: #e0e3ed;
-  background: #fff;
-  color: #171923;
-}
-
-:root[data-app-theme="warm-light"] .nutritionDeleteConfirmCard p {
-  color: #73798b;
-}
-
-:root[data-app-theme="warm-light"] .nutritionDeleteConfirmCard > div button {
-  border-color: #e1e4ee;
-  background: #f7f8fc;
-}
-
-.nutritionUndoToast {
-  position: fixed;
-  left: 50%;
-  bottom: calc(104px + env(safe-area-inset-bottom));
-  z-index: 10005;
-  width: min(340px, calc(100vw - 28px));
-  min-height: 48px;
-  padding: 7px 8px 7px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
-  background: rgba(17, 24, 17, 0.96);
-  color: #f4f7f1;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
-  transform: translateX(-50%);
-}
-
-.nutritionUndoToast span {
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.nutritionUndoToast button {
-  min-height: 36px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: 10px;
-  background: rgba(139, 120, 240, 0.16);
-  color: #b8aafb;
-  font-weight: 900;
-}
-
-:root[data-app-theme="warm-light"] .nutritionUndoToast {
-  border-color: #e0e3ed;
-  background: rgba(255, 255, 255, 0.98);
-  color: #171923;
-}
-
-.cabinetProgressPhotosCompare:not([open]) > .cabinetProgressPhotosCompareContent {
-  display: none !important;
-}
-
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4,
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealToggle {
   position: relative !important;
 }
 
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4::after,
 .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealToggle::after {
   content: "" !important;
   position: absolute !important;
@@ -235,42 +66,12 @@
   inset: -8px -3px !important;
 }
 
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeaderIconActions button,
-.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .mealPlusExact,
-.nutritionCalendarClose,
-.nutritionCalendarHeader button {
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .mealPlusExact {
   min-width: 44px !important;
   min-height: 44px !important;
 }
 
 @media (max-width: 360px) {
-  html body #root .profileDashboardPage.clientCorePageMain .profileAiStatsRow > div.goal strong {
-    display: block !important;
-    font-size: 12px !important;
-    line-height: 1.1 !important;
-    overflow-wrap: anywhere !important;
-    word-break: normal !important;
-    white-space: normal !important;
-  }
-
-  .clientCorePageWorkout.individualWorkoutSelectPage .workoutSelectTitle {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    gap: 0 !important;
-    font-size: 15px !important;
-    line-height: 1.12 !important;
-    overflow: visible !important;
-    white-space: normal !important;
-  }
-
-  .clientCorePageWorkout.individualWorkoutSelectPage .workoutHeaderActions button {
-    width: 44px !important;
-    height: 44px !important;
-    min-width: 44px !important;
-    min-height: 44px !important;
-  }
 
   .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealMain {
     grid-template-columns: 38px minmax(0, 1fr) 44px 44px !important;
@@ -310,14 +111,8 @@
     white-space: normal !important;
   }
 
-  .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanDashboard.collapsed .nutritionAiPlanCollapsedMacros {
-    grid-template-columns: repeat(3, minmax(0, 58px)) !important;
-    gap: 5px !important;
-  }
-
   .mainMenuBottomBar button strong,
-  .profileBottomTabBar button strong,
-  .individualWorkoutMenuBar button strong {
+.profileBottomTabBar button strong {
     max-width: 100% !important;
     overflow: visible !important;
     font-size: 9px !important;
@@ -326,4 +121,3 @@
     white-space: normal !important;
   }
 }
-

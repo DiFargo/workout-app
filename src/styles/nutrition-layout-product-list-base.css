@@ -27,40 +27,6 @@
     0 10px 24px rgba(0, 0, 0, 0.22) !important;
 }
 
-.fatSecretPage .productRowExact,
-.productRowExact {
-  width: 100% !important;
-  min-height: 64px !important;
-  padding: 12px 18px !important;
-
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 56px 18px !important;
-  align-items: center !important;
-  gap: 12px !important;
-
-  position: relative !important;
-
-  border: 0 !important;
-  background: transparent !important;
-}
-
-.fatSecretPage .productRowExact:first-child,
-.productRowExact:first-child {
-  border-top: 0 !important;
-}
-
-.fatSecretPage .productRowExact + .productRowExact,
-.productRowExact + .productRowExact {
-  border-top: 1px solid rgba(255, 255, 255, 0.11) !important;
-}
-
-.fatSecretPage .productInfoExact,
-.productInfoExact {
-  min-width: 0 !important;
-}
-
-.fatSecretPage .productInfoExact strong,
-.productInfoExact strong,
 .fatSecretPage .fatFoodItem strong,
 .fatFoodItem strong {
   display: block !important;
@@ -77,8 +43,6 @@
   text-overflow: ellipsis !important;
 }
 
-.fatSecretPage .productInfoExact span,
-.productInfoExact span,
 .fatSecretPage .fatFoodItem span,
 .fatFoodItem span {
   display: block !important;
@@ -102,16 +66,6 @@
   font-variant-numeric: tabular-nums !important;
 }
 
-.fatSecretPage .productArrowExact,
-.productArrowExact {
-  justify-self: end !important;
-
-  color: rgba(247, 248, 251, 0.72) !important;
-  font-size: 30px !important;
-  font-weight: 500 !important;
-  line-height: 1 !important;
-}
-
 @media (max-width: 480px) {
   .fatSecretPage .productListExact,
   .productListExact {
@@ -120,32 +74,8 @@
     border-radius: 21px !important;
   }
 
-  .fatSecretPage .productRowExact,
-  .productRowExact {
-    min-height: 60px !important;
-    padding: 11px 16px !important;
-    grid-template-columns: minmax(0, 1fr) 50px 16px !important;
-    gap: 10px !important;
-  }
-
-  .fatSecretPage .productInfoExact strong,
-  .productInfoExact strong {
-    font-size: 16px !important;
-  }
-
-  .fatSecretPage .productInfoExact span,
-  .productInfoExact span {
-    margin-top: 5px !important;
-    font-size: 16px !important;
-  }
-
   .fatSecretPage .productKcalExact,
   .productKcalExact {
     font-size: 20px !important;
-  }
-
-  .fatSecretPage .productArrowExact,
-  .productArrowExact {
-    font-size: 28px !important;
   }
 }

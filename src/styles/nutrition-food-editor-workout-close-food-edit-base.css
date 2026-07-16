@@ -7,70 +7,10 @@
 }
 
 /* REAL EDIT PRODUCT OVERLAY â€” iPhone + BOTTOM READY BUTTON */
-.foodEditPageSheet {
-  padding-top: max(24px, calc(env(safe-area-inset-top) + 18px)) !important;
-}
-
-.foodEditPageHeader {
-  min-height: 62px !important;
-  padding: 0 16px !important;
-  margin-bottom: 12px !important;
-
-  display: grid !important;
-  grid-template-columns: 54px 1fr 54px !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-
-.foodEditPageHeader > strong {
-  display: block !important;
-  text-align: center !important;
-  padding: 0 6px !important;
-  line-height: 1.08 !important;
-}
-
-.foodEditPageBack {
-  position: static !important;
-  width: 54px !important;
-  height: 54px !important;
-  min-width: 54px !important;
-  min-height: 54px !important;
-  margin: 0 !important;
-  justify-self: start !important;
-}
 
 /* hide any old top save leftovers */
-.foodEditPageHeader > .foodEditPageSave:not(.foodEditPageSaveBottom) {
-  display: none !important;
-}
 
 /* grams button aligned with portion field */
-.foodEditPortionUnitRow {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 92px !important;
-  align-items: stretch !important;
-  gap: 10px !important;
-}
-
-.foodEditPortionUnitRow input,
-.foodEditPortionUnitToggle {
-  height: 54px !important;
-  min-height: 54px !important;
-  max-height: 54px !important;
-  align-self: stretch !important;
-}
-
-.foodEditPortionUnitToggle {
-  width: 92px !important;
-  margin: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
 
 /* bottom ready button under note */
-
-.foodEditPageContent {
-  padding-bottom: calc(18px + env(safe-area-inset-bottom)) !important;
-}
 

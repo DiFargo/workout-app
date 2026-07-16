@@ -21,6 +21,7 @@ import {
   IndividualWorkoutHistoryDialog,
   WorkoutModePickerDialog
 } from "./WorkoutListDialogs";
+import styles from "./WorkoutListPage.module.css";
 
 const versionedLocalAsset = (src, version) => {
   if (typeof src !== "string" || !src.startsWith("/")) return src;
@@ -217,24 +218,28 @@ export default function WorkoutListPage({
   }
 
   return (
-    <div className={isIndividualWorkoutMode ? "workoutSelectPage individualWorkoutSelectPage clientCorePage clientCorePageWorkout" : "workoutSelectPage basicWorkoutSelectPage clientCorePage clientCorePageWorkout"}>
-      <div className="workoutSelectHero">
-        <h1 className="workoutSelectTitle clientCorePageTitle">
+    <div
+      className={`${styles.page} ${isIndividualWorkoutMode ? styles.individualMode : styles.basicMode}`}
+      data-css-module-scope="workout-list"
+    >
+      <div className={styles.hero}>
+        <h1 className={styles.pageTitle} data-testid="workout-list-title">
           {isIndividualWorkoutMode ? (
             "Мой план"
           ) : (
             <>
-              <span className="basicWorkoutTitleLine">Базовые</span>
-              <span className="basicWorkoutTitleLine">тренировки</span>
+              <span className={styles.titleLine}>Базовые</span>
+              <span className={styles.titleLine}>тренировки</span>
             </>
           )}
         </h1>
 
-        <div className="workoutHeaderActions">
+        <div className={styles.headerActions}>
           {isIndividualWorkoutMode && (
             <button
               type="button"
-              className="workoutHistoryHeaderButton"
+              className={styles.headerButton}
+              data-testid="workout-history-button"
               aria-label="Открыть историю тренировок"
               onClick={() => {
                 loadHistory();
@@ -247,7 +252,7 @@ export default function WorkoutListPage({
           {!isIndividualWorkoutMode && isBasicWorkoutMode && (
             <button
               type="button"
-              className="workoutHistoryHeaderButton basicWorkoutSettingsButton"
+              className={`${styles.headerButton} ${styles.settingsButton}`}
               aria-label="Изменить базовый план"
               onClick={onOpenBasicSettings}
             >
@@ -256,7 +261,8 @@ export default function WorkoutListPage({
           )}
           <button
             type="button"
-            className="workoutModeHeaderButton"
+            className={styles.headerButton}
+            data-testid="workout-mode-button"
             aria-label="Выбрать режим запуска тренировки"
             onClick={() => setWorkoutModeModalOpen(true)}
           >
@@ -269,13 +275,16 @@ export default function WorkoutListPage({
             ? "Листай тренировки и выбирай нужную"
             : "Выбери тренировку из подобранного плана"}
         </p>
-        <div className="workoutSelectLine" />
+        <div className={styles.heroLine} />
       </div>
 
-      <div className={isDeckWorkoutMode ? "workoutSelectList individualWorkoutDeck" : "workoutSelectList"}>
+      <div
+        className={`${styles.workoutList} ${isDeckWorkoutMode ? styles.workoutDeck : ""}`}
+        data-testid="workout-list-deck"
+      >
         {sortedWorkouts.length === 0 ? (
-          <div className="workoutProgramEmptyState">
-            <div className="workoutProgramEmptyIcon">⏳</div>
+          <div className={styles.emptyState} data-testid="workout-list-empty-state">
+            <div className={styles.emptyIcon}>⏳</div>
             <h2>Тренировка ещё не назначена</h2>
             <p>Тренер пока не назначил тебе программу. Как только тренировка появится в твоём профиле, она отобразится здесь.</p>
             <button type="button" onClick={onGoMain}>Вернуться в меню</button>
@@ -308,45 +317,46 @@ export default function WorkoutListPage({
             return (
               <>
                 <article
-                  className={`workoutSelectCard individualWorkoutCardPro ${completed ? "completed" : ""} ${activeNext ? "activeNext" : ""}`}
+                  className={`${styles.workoutCard} ${styles.featuredCard} ${completed ? styles.completed : ""} ${activeNext ? styles.activeNext : ""}`}
                   aria-current={activeNext ? "step" : undefined}
                   key={w.id}
                   data-workout-card-id={w.id}
+                  data-testid="workout-list-card"
                   onPointerDown={handleIndividualWorkoutSwipeStart}
                   onPointerUp={handleIndividualWorkoutSwipeEnd}
                   onPointerCancel={() => {
                     swipeStartRef.current = null;
                   }}
                 >
-                  <span className="individualWorkoutProTop">
-                    <span className="individualWorkoutBadges">
+                  <span className={styles.cardTop}>
+                    <span className={styles.badges}>
                       {completed ? (
-                        <span className="individualWorkoutCompletedBadge">✓ Выполнена</span>
+                        <span className={`${styles.badge} ${styles.completedBadge}`}>✓ Выполнена</span>
                       ) : hasActiveWorkoutDraft ? (
-                        <span className="individualWorkoutProgressBadge">В процессе</span>
+                        <span className={`${styles.badge} ${styles.progressBadge}`}>В процессе</span>
                       ) : activeNext ? (
-                        <span className="individualWorkoutNextBadge">Следующая</span>
+                        <span className={`${styles.badge} ${styles.nextBadge}`}>Следующая</span>
                       ) : null}
                       {activeWorkoutPendingSync && (
-                        <span className="individualWorkoutSyncBadge">Ожидает синхронизации</span>
+                        <span className={`${styles.badge} ${styles.syncBadge}`}>Ожидает синхронизации</span>
                       )}
                     </span>
-                    <span className="individualWorkoutWeek">{item.day}</span>
+                    <span className={styles.workoutWeek}>{item.day}</span>
                   </span>
 
-                  <span className="individualWorkoutProBody">
-                    <span className="individualWorkoutProInfo">
-                      <span className="individualWorkoutTitle">{item.title}</span>
-                      <span className="individualWorkoutAccentLine" />
+                  <span className={styles.cardBody}>
+                    <span className={styles.cardInfo}>
+                      <span className={styles.workoutTitle}>{item.title}</span>
+                      <span className={styles.accentLine} />
 
-                      <span className="individualWorkoutStats">
+                      <span className={styles.workoutStats}>
                         <span><b>🏋️</b>{item.exerciseCount} упражнений</span>
                         <span><b>▰</b>{item.setCount} подходов</span>
                         <span><b>⏱</b>{item.duration}</span>
                       </span>
                     </span>
 
-                    <span className="individualWorkoutProImage">
+                    <span className={styles.workoutImage}>
                       {coverImage || fallbackImage ? (
                         <img
                           src={coverImage || fallbackImage}
@@ -363,7 +373,7 @@ export default function WorkoutListPage({
                           }}
                         />
                       ) : (
-                        <span className="individualWorkoutImageFallback">
+                        <span className={styles.imageFallback}>
                           <b>{item.title}</b>
                           <small>{w.exercises?.[0]?.name || "Персональная тренировка"}</small>
                         </span>
@@ -372,7 +382,8 @@ export default function WorkoutListPage({
 
                     <button
                       type="button"
-                      className="individualWorkoutCardStartButton"
+                      className={styles.startButton}
+                      data-testid="workout-start-button"
                       onClick={(event) => {
                         if (swipeSuppressClickRef.current) {
                           event.preventDefault();
@@ -387,7 +398,7 @@ export default function WorkoutListPage({
                 </article>
                 {adjacentCoverImages.map((image) => (
                   <img
-                    className="individualWorkoutCoverPreload"
+                    className={styles.coverPreload}
                     src={image}
                     alt=""
                     width="1"
@@ -425,21 +436,21 @@ export default function WorkoutListPage({
 
             return (
               <button
-                className="workoutSelectCard"
+                className={styles.workoutCard}
                 type="button"
                 key={w.id}
                 onClick={() => openWorkout(w.id)}
               >
-                <span className="workoutSelectImageWrap">
-                  <img src={item.image} alt="" className="workoutSelectImage" />
+                <span className={styles.listImageWrap}>
+                  <img src={item.image} alt="" className={styles.listImage} />
                 </span>
 
-                <span className="workoutSelectText">
-                  <span className="workoutSelectDay">{item.day}</span>
-                  <span className="workoutSelectName">{item.title}</span>
+                <span className={styles.listText}>
+                  <span className={styles.listDay}>{item.day}</span>
+                  <span className={styles.listName}>{item.title}</span>
                 </span>
 
-                <span className="workoutSelectArrow">›</span>
+                <span className={styles.listArrow}>›</span>
               </button>
             );
           })
@@ -447,7 +458,7 @@ export default function WorkoutListPage({
       </div>
 
       {isDeckWorkoutMode && sortedWorkouts.length > 1 && (
-        <div className="individualWorkoutNav">
+        <div className={styles.workoutNav} data-testid="workout-list-nav">
           <button
             type="button"
             aria-label="Предыдущая тренировка"
@@ -459,13 +470,13 @@ export default function WorkoutListPage({
             ←
           </button>
 
-          <div className="individualWorkoutCenterNav">
+          <div className={styles.centerNav}>
             {swipeHintVisible && (
-              <small className="individualWorkoutSwipeHint">
+              <small className={styles.swipeHint}>
                 Свайпни, чтобы выбрать тренировку
               </small>
             )}
-            <span className="individualWorkoutSwipeAffordance" aria-hidden="true">
+            <span className={styles.swipeAffordance} aria-hidden="true">
               ‹ свайп ›
             </span>
           </div>
@@ -483,10 +494,11 @@ export default function WorkoutListPage({
         </div>
       )}
 
-      <div className="individualWorkoutBottomPanel">
+      <div className={styles.bottomPanel}>
         {isDeckWorkoutMode && sortedWorkouts.length > 0 && (
           <div
-            className="individualWorkoutBottomProgress"
+            className={styles.bottomProgress}
+            data-testid="workout-list-progress"
             style={{ "--completed-workouts-progress": `${completedWorkoutProgressPercent}%` }}
           >
             <span>{activeWorkoutIndex + 1} из {sortedWorkouts.length}</span>
@@ -495,7 +507,7 @@ export default function WorkoutListPage({
         )}
         {(renderClientMainBottomBar || (() => null))({
           activeTab: "workouts",
-          className: "individualWorkoutMenuBar",
+          className: styles.menuBar,
           isTrainerMode,
           onGoMain,
           onOpenTraining,

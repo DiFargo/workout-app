@@ -1,54 +1,12 @@
 
-:root[data-app-theme="warm-light"] body #root .workoutDraftRestoreOverlay,
-:root[data-app-theme="warm-light"] body #root .workoutExitOverlay,
-:root[data-app-theme="warm-light"] body #root .postWorkoutOverlay,
-:root[data-app-theme="warm-light"] body #root .historyDeleteOverlay {
-  background: rgba(35, 40, 68, 0.24) !important;
-  backdrop-filter: blur(14px) !important;
-}
-
-:root[data-app-theme="warm-light"] body #root .workoutDraftRestoreCard,
-:root[data-app-theme="warm-light"] body #root .workoutExitCard,
-:root[data-app-theme="warm-light"] body #root .postWorkoutCard,
-:root[data-app-theme="warm-light"] body #root .historyDeleteModal {
-  border-color: #dfe3ef !important;
-  background: #ffffff !important;
-  color: #151824 !important;
-  box-shadow: 0 24px 64px rgba(43, 50, 92, 0.2) !important;
-}
-
-:root[data-app-theme="warm-light"] body #root .workoutDraftRestoreIcon,
-:root[data-app-theme="warm-light"] body #root .workoutExitIcon,
-:root[data-app-theme="warm-light"] body #root .postWorkoutBadge {
-  border-color: #ddd9fa !important;
-  background: #efedff !important;
-  color: #5542d8 !important;
-}
-
-:root[data-app-theme="warm-light"] body #root .workoutDraftRestoreCard h2,
-:root[data-app-theme="warm-light"] body #root .workoutExitCard h2,
-:root[data-app-theme="warm-light"] body #root .postWorkoutCard h2,
-:root[data-app-theme="warm-light"] body #root .historyDeleteModal h3,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishScreen h3 {
   color: #151824 !important;
 }
 
-:root[data-app-theme="warm-light"] body #root .workoutDraftRestoreCard p,
-:root[data-app-theme="warm-light"] body #root .workoutExitCard p,
-:root[data-app-theme="warm-light"] body #root .postWorkoutCard p,
-:root[data-app-theme="warm-light"] body #root .postWorkoutGrid small,
-:root[data-app-theme="warm-light"] body #root .workoutReadinessGrid small,
-:root[data-app-theme="warm-light"] body #root .historyDeleteModal p,
-:root[data-app-theme="warm-light"] body #root .historyDeleteModal p span,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress p {
   color: #737b91 !important;
 }
 
-:root[data-app-theme="warm-light"] body #root .workoutDraftRestartButton,
-:root[data-app-theme="warm-light"] body #root .workoutExitActions button:first-child,
-:root[data-app-theme="warm-light"] body #root .postWorkoutGrid button,
-:root[data-app-theme="warm-light"] body #root .workoutReadinessActions button:first-child,
-:root[data-app-theme="warm-light"] body #root .historyDeleteActions button,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPreviousButton,
 :root[data-app-theme="warm-light"] body #root .exercisePrevButton,
 :root[data-app-theme="warm-light"] body #root .finishNavigationRow .finishBackButton {
@@ -56,14 +14,3 @@
   background: #f7f8fc !important;
   color: #596176 !important;
 }
-
-:root[data-app-theme="warm-light"] body #root .workoutDraftRestoreButton,
-:root[data-app-theme="warm-light"] body #root .workoutExitActions button:last-child,
-:root[data-app-theme="warm-light"] body #root .postWorkoutGrid button.active,
-:root[data-app-theme="warm-light"] body #root .workoutReadinessActions button:last-child,
-:root[data-app-theme="warm-light"] body #root .historyDeleteActions button.danger {
-  border-color: transparent !important;
-  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
-  color: #ffffff !important;
-}
-

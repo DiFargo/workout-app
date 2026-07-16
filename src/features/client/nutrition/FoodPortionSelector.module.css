@@ -1,0 +1,213 @@
+.root {
+  width: 100%;
+  margin: 0 0 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  font-family: var(--font-family-compact-ui);
+}
+
+.modeButton,
+.dropdownButton {
+  width: 100%;
+  height: 46px;
+  min-height: 46px;
+  max-height: 46px;
+  margin: 0;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--color-food-history-border);
+  border-radius: 14px;
+  outline: 0;
+  background: var(--color-surface);
+  color: var(--color-food-flow-text);
+  font: inherit;
+  box-shadow: 0 10px 24px rgba(40, 48, 70, 0.035);
+  cursor: pointer;
+  -webkit-text-fill-color: currentColor;
+}
+
+.modeButton:hover,
+.dropdownButton:hover {
+  border-color: var(--color-food-history-border);
+  background: var(--color-surface);
+  color: var(--color-food-flow-text);
+}
+
+.modeButton.active,
+.modeButton.active:hover,
+.dropdownButton:active {
+  border-color: var(--color-food-nav-active-border);
+  background: var(--color-food-nav-active-surface);
+  color: var(--color-food-nav-active);
+}
+
+.modeButton strong,
+.dropdownButton strong {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+.modeIcon {
+  flex: none;
+  color: inherit;
+  font-size: 17px;
+  line-height: 1;
+  -webkit-text-fill-color: currentColor;
+}
+
+.dropdown {
+  position: relative;
+  z-index: 30;
+  width: 100%;
+  min-width: 0;
+}
+
+.dropdownButton {
+  justify-content: space-between;
+}
+
+.dropdownButton em {
+  flex: none;
+  color: inherit;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+  -webkit-text-fill-color: currentColor;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  z-index: 90;
+  max-height: min(260px, 45vh);
+  padding: 7px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--color-food-history-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+  box-shadow: 0 22px 60px rgba(51, 60, 108, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.menuItem {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 11px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  outline: 0;
+  background: transparent;
+  color: var(--color-food-flow-text);
+  font: inherit;
+  text-align: left;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-text-fill-color: currentColor;
+}
+
+.menuItem:hover,
+.menuItem:active {
+  background: var(--color-food-history-item);
+  color: var(--color-food-flow-text);
+}
+
+.menuItem span {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+.menuItem small {
+  flex: none;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1.15;
+  -webkit-text-fill-color: currentColor;
+}
+
+.menuItem.selected,
+.menuItem.selected:hover,
+.menuItem.selected:active {
+  border-color: var(--color-food-nav-active-border);
+  background: var(--color-food-nav-active-surface);
+  color: var(--color-food-nav-active);
+}
+
+.menuItem.selected small {
+  color: inherit;
+  opacity: 0.72;
+}
+
+.modeButton:focus-visible,
+.dropdownButton:focus-visible,
+.menuItem:focus-visible {
+  outline: 0;
+  box-shadow: var(--focus-ring);
+}
+
+:global(:root[data-app-theme="dark-green"]) .modeButton,
+:global(:root[data-app-theme="dark-green"]) .dropdownButton,
+:global(:root[data-app-theme="dark-green"]) .menu {
+  border-color: var(--color-control-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+}
+
+:global(:root[data-app-theme="dark-green"]) .menuItem {
+  color: var(--color-text);
+}
+
+:global(:root[data-app-theme="dark-green"]) .menuItem:hover,
+:global(:root[data-app-theme="dark-green"]) .menuItem:active {
+  background: var(--color-control-surface);
+  color: var(--color-text);
+}
+
+:global(:root[data-app-theme="warm-light"]) .modeIcon,
+:global(:root[data-app-theme="warm-light"]) .dropdownButton em {
+  color: var(--color-food-product-page-text);
+  -webkit-text-fill-color: currentColor;
+}
+
+@media (max-width: 350px) {
+  .root {
+    gap: 8px;
+  }
+
+  .modeButton,
+  .dropdownButton {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .modeButton strong,
+  .dropdownButton strong {
+    font-size: 13px;
+  }
+}

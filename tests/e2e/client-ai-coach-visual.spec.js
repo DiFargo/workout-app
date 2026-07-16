@@ -55,42 +55,67 @@ async function expectTapTargets(page, selectors, minSize = 40) {
 test("client AI coach visual audit covers insights and nutrition plan states", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=aiCoach");
+  for (const theme of ["warm-light", "dark-green"]) {
+    for (const width of [320, 390, 1366]) {
+      await page.setViewportSize({ width, height: width === 320 ? 720 : 844 });
+      await page.goto(`/?clientHarness=1&clientHarnessPage=aiCoach&clientHarnessTheme=${theme}`);
+      await expect(page.getByTestId("client-harness-ai-coach")).toBeVisible({ timeout: 40_000 });
+      await expect(page.getByTestId("ai-coach-page")).toBeVisible();
+      await expect(page.getByTestId("ai-coach-hero")).toBeVisible();
+      await expect(page.getByTestId("ai-coach-result")).toBeVisible();
+      await expect(page.locator("[data-testid^='ai-coach-feature-']")).toHaveCount(8);
+      await expect(page.locator("[data-testid^='ai-coach-feature-'][aria-pressed='true']")).toHaveCount(1);
+      await expectNoHorizontalOverflow(page);
+
+      const visualContract = await page.getByTestId("ai-coach-page").evaluate((root) => {
+        const heading = root.querySelector("h1");
+        const rootRect = root.getBoundingClientRect();
+        const backRect = root.querySelector("[data-testid='ai-coach-back']")?.getBoundingClientRect();
+        return {
+          width: Math.round(rootRect.width),
+          headingColor: heading ? getComputedStyle(heading).color : "",
+          backWidth: Math.round(backRect?.width || 0),
+          backHeight: Math.round(backRect?.height || 0)
+        };
+      });
+      expect(visualContract.width).toBeLessThanOrEqual(560);
+      expect(visualContract.headingColor).toBe("rgb(255, 255, 255)");
+      expect(visualContract.backWidth).toBe(46);
+      expect(visualContract.backHeight).toBe(46);
+    }
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?clientHarness=1&clientHarnessPage=aiCoach&clientHarnessTheme=warm-light");
   await expect(page.getByTestId("client-harness-ai-coach")).toBeVisible({ timeout: 40_000 });
-  await expect(page.locator(".aiCoachPage")).toBeVisible();
-  await expect(page.locator(".aiCoachHero")).toBeVisible();
-  await expect(page.locator(".aiCoachResultCard")).toBeVisible();
-  await expect(page.locator(".aiCoachFeatureCard")).toHaveCount(8);
-  await expect(page.locator(".aiCoachFeatureCard[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
-    ".aiCoachBackBtn",
-    ".aiCoachFeatureCard"
+    "[data-testid='ai-coach-back']",
+    "[data-testid^='ai-coach-feature-']"
   ]);
-  await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-ai-coach-overview.png");
 
   await page.getByTestId("ai-coach-feature-nutritionPlan").click();
-  await expect(page.locator(".aiNutritionOnboardingCard")).toBeVisible();
+  await expect(page.getByTestId("ai-nutrition-onboarding")).toBeVisible();
   await expect(page.getByTestId("ai-coach-feature-nutritionPlan")).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".aiNutritionTrainingDaysGrid button[aria-pressed='true']")).not.toHaveCount(0);
-  await expect(page.locator(".aiNutritionGoalPicker button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.getByTestId("ai-nutrition-training-days").locator("button[aria-pressed='true']")).not.toHaveCount(0);
+  await expect(page.getByTestId("ai-nutrition-goals").locator("button[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
-    ".aiNutritionProfileLinkBtn",
-    ".aiNutritionTrainingDaysGrid button",
-    ".aiNutritionGoalPicker button",
-    ".aiNutritionPrimaryBtn"
+    "[data-testid='ai-nutrition-profile-link']",
+    "[data-testid='ai-nutrition-training-days'] button",
+    "[data-testid='ai-nutrition-goals'] button",
+    "[data-testid='ai-nutrition-create']"
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-ai-coach-nutrition-onboarding.png");
 
-  await page.locator(".aiNutritionPrimaryBtn").click();
-  await expect(page.locator(".aiNutritionPlanCardFull")).toBeVisible();
+  await page.getByTestId("ai-nutrition-create").click();
+  await expect(page.getByTestId("ai-nutrition-plan")).toBeVisible();
   await expectTapTargets(page, [
-    ".aiNutritionAdaptBtn",
-    ".aiNutritionPlanActions button"
+    "[data-testid='ai-nutrition-adapt']",
+    "[data-testid='ai-nutrition-plan-actions'] button"
   ]);
-  await page.locator(".aiNutritionAdaptBtn").click();
-  await expect(page.locator(".aiNutritionAdaptResult")).toBeVisible();
+  await page.getByTestId("ai-nutrition-adapt").click();
+  await expect(page.getByTestId("ai-nutrition-adapt-result")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-ai-coach-nutrition-plan.png");
 

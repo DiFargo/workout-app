@@ -2,17 +2,3 @@
 .profileDashboardPage.clientCorePageMain .appVersionBadge {
   display: none !important;
 }
-
-.profileDashboardPage.clientCorePageMain .menuRefreshIconBtn {
-  top: 17px !important;
-  right: 20px !important;
-  width: 36px !important;
-  height: 36px !important;
-  min-width: 36px !important;
-  min-height: 36px !important;
-  border-radius: 12px !important;
-}
-
-.profileDashboardPage.clientCorePageMain .mainDashboardTitle {
-  padding-right: 44px !important;
-}

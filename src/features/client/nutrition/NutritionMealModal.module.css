@@ -1,0 +1,426 @@
+.overlay {
+  --meal-backdrop: rgba(0, 0, 0, 0.62);
+  --meal-backdrop-color: #fff;
+  --meal-overlay-text: #151824;
+  --meal-sheet-border: rgba(255, 255, 255, 0.09);
+  --meal-sheet-background: linear-gradient(180deg, rgba(18, 21, 19, 0.98), rgba(9, 12, 9, 0.98));
+  --meal-sheet-text: var(--color-text);
+  --meal-sheet-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+  --meal-header-muted: rgba(244, 247, 241, 0.7);
+  --meal-header-total: rgba(255, 255, 255, 0.5);
+  --meal-header-title: #f5f7f3;
+  --meal-icon-border: rgba(255, 255, 255, 0.07);
+  --meal-icon-background: rgba(255, 255, 255, 0.045);
+  --meal-close-border: rgba(255, 255, 255, 0.08);
+  --meal-close-background: rgba(255, 255, 255, 0.045);
+  --meal-close-color: rgba(255, 255, 255, 0.72);
+  --meal-row-background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.025), transparent 44%),
+    linear-gradient(180deg, rgba(13, 26, 25, 0.985), rgba(9, 20, 20, 0.99));
+  --meal-row-active:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.035), transparent 44%),
+    linear-gradient(180deg, rgba(17, 32, 31, 0.99), rgba(10, 23, 23, 0.99));
+  --meal-delete-background:
+    radial-gradient(circle at 100% 50%, rgba(255, 88, 88, 0.2), transparent 58%),
+    linear-gradient(90deg, rgba(18, 30, 29, 0.1), rgba(64, 22, 22, 0.64));
+  --meal-delete-color: rgba(255, 230, 230, 0.92);
+  --meal-food-icon-border: rgba(255, 255, 255, 0.08);
+  --meal-food-icon-background:
+    radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.1), transparent 42%),
+    linear-gradient(180deg, rgba(17, 25, 23, 0.96) 0%, rgba(9, 14, 13, 0.98) 100%);
+  --meal-food-icon-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 20px rgba(0, 0, 0, 0.18);
+  --meal-calories: #31d56c;
+  --meal-calories-label: rgba(255, 255, 255, 0.62);
+  --meal-food-name: rgba(247, 248, 251, 0.94);
+  --meal-food-amount: rgba(30, 255, 111, 0.75);
+  --meal-food-amount-fill: rgba(255, 255, 255, 0.58);
+  --meal-arrow: rgba(247, 248, 251, 0.72);
+  --meal-arrow-fill: rgba(255, 255, 255, 0.66);
+  --meal-add-border: rgba(145, 173, 78, 0.34);
+  --meal-add-background: linear-gradient(180deg, rgba(50, 65, 33, 0.95), rgba(31, 43, 24, 0.98));
+  --meal-add-color: #dff3ae;
+
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(14px, env(safe-area-inset-top)) 12px max(14px, env(safe-area-inset-bottom));
+  color: var(--meal-overlay-text);
+}
+
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  --meal-backdrop: rgba(35, 40, 68, 0.18);
+  --meal-backdrop-color: #5f5744;
+  --meal-overlay-text: #5f5744;
+  --meal-sheet-border: rgba(72, 58, 29, 0.14);
+  --meal-sheet-background: var(--color-surface);
+  --meal-sheet-text: var(--color-heading);
+  --meal-sheet-shadow: 0 24px 60px rgba(43, 50, 92, 0.18);
+  --meal-header-muted: var(--color-heading);
+  --meal-header-total: var(--color-heading);
+  --meal-header-title: #5f5744;
+  --meal-icon-border: rgba(72, 58, 29, 0.14);
+  --meal-close-color: var(--color-heading);
+  --meal-row-background: #f8f9fd;
+  --meal-row-active: #f1f3f9;
+  --meal-delete-background: linear-gradient(135deg, #b8514c, #d37469);
+  --meal-delete-color: var(--color-heading);
+  --meal-food-icon-border: rgba(94, 75, 30, 0.08);
+  --meal-food-icon-background: linear-gradient(180deg, rgba(244, 224, 100, 0.24) 0%, rgba(224, 201, 77, 0.14) 100%);
+  --meal-food-icon-shadow: none;
+  --meal-calories: var(--color-heading);
+  --meal-calories-label: var(--color-heading);
+  --meal-food-name: var(--color-heading);
+  --meal-food-amount: var(--color-heading);
+  --meal-food-amount-fill: var(--color-heading);
+  --meal-arrow: var(--color-heading);
+  --meal-arrow-fill: var(--color-heading);
+  --meal-add-border: rgba(72, 58, 29, 0.14);
+  --meal-add-background: var(--gradient-primary);
+  --meal-add-color: var(--color-heading);
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--meal-backdrop);
+  color: var(--meal-backdrop-color);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+.sheet {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: min(430px, 100%);
+  max-height: min(78dvh, 650px);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  border: 1px solid var(--meal-sheet-border);
+  border-radius: var(--radius-xl);
+  background: var(--meal-sheet-background);
+  color: var(--meal-sheet-text);
+  box-shadow: var(--meal-sheet-shadow);
+}
+
+.header {
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 40px;
+  gap: 12px;
+  align-items: center;
+}
+
+.headerInfo {
+  min-width: 0;
+}
+
+.icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--meal-icon-border);
+  border-radius: 16px;
+  background: var(--meal-icon-background);
+  font-size: 27px;
+}
+
+.headerEyebrow,
+.headerTotal {
+  display: block;
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1.5;
+}
+
+.headerEyebrow {
+  color: var(--meal-header-muted);
+  -webkit-text-fill-color: currentColor;
+}
+
+.headerTotal {
+  color: var(--meal-header-total);
+  -webkit-text-fill-color: currentColor;
+}
+
+.title {
+  margin: 3px 0;
+  overflow: hidden;
+  color: var(--meal-header-title);
+  font-size: 23px;
+  font-weight: 950;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+.closeButton {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--meal-close-border);
+  border-radius: 50%;
+  background: var(--meal-close-background);
+  color: var(--meal-close-color);
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-text-fill-color: currentColor;
+}
+
+.list {
+  min-height: 0;
+  display: grid;
+  gap: 7px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.swipeShell {
+  position: relative;
+  width: 100%;
+  min-height: 68px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: transparent;
+}
+
+.deleteBackground {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding-right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: var(--meal-delete-background);
+  opacity: 0.95;
+}
+
+.deleteIcon {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  color: var(--meal-delete-color);
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  -webkit-text-fill-color: currentColor;
+}
+
+.row {
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  min-height: 64px;
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px 18px;
+  gap: 12px;
+  align-items: center;
+  border: 0;
+  border-radius: 0;
+  background: var(--meal-row-background);
+  color: var(--meal-sheet-text);
+  cursor: pointer;
+  touch-action: pan-y;
+  will-change: transform, opacity;
+  transition: transform 0.24s ease, opacity 0.22s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.row:active {
+  background: var(--meal-row-active);
+}
+
+.deleting {
+  pointer-events: none;
+}
+
+.foodIconWrap {
+  width: 52px;
+  min-width: 52px;
+  margin-left: -10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  align-self: center;
+}
+
+.foodIcon {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--meal-food-icon-border);
+  border-radius: 12px;
+  background: var(--meal-food-icon-background);
+  color: var(--meal-sheet-text);
+  font-size: 20px;
+  line-height: 1;
+  box-shadow: var(--meal-food-icon-shadow);
+  -webkit-text-fill-color: currentColor;
+}
+
+.calories {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--meal-calories);
+  font-size: 10px;
+  font-weight: 950;
+  line-height: 1;
+  opacity: 0.82;
+  -webkit-text-fill-color: currentColor;
+}
+
+.caloriesLabel {
+  margin-top: 1px;
+  display: block;
+  color: var(--meal-calories-label);
+  font-size: 8px;
+  font-weight: 850;
+  line-height: 1;
+  -webkit-text-fill-color: currentColor;
+}
+
+.info {
+  min-width: 0;
+  padding-left: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.name,
+.amount {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  color: var(--meal-food-name);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.25px;
+  -webkit-text-fill-color: currentColor;
+}
+
+.amount {
+  margin-top: 4px;
+  color: var(--meal-food-amount);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1;
+  -webkit-text-fill-color: var(--meal-food-amount-fill);
+}
+
+.arrow {
+  width: 24px;
+  min-width: 24px;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--meal-arrow);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1;
+  -webkit-text-fill-color: var(--meal-arrow-fill);
+}
+
+.addButton {
+  width: 100%;
+  min-height: 54px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--meal-add-border);
+  border-radius: 18px;
+  background: var(--meal-add-background);
+  color: var(--meal-add-color);
+  font-size: 15px;
+  font-weight: 950;
+  line-height: 1.5;
+  cursor: pointer;
+  -webkit-text-fill-color: currentColor;
+}
+
+.addIcon {
+  font-size: 21px;
+  line-height: 1;
+}
+
+@media (max-width: 480px) {
+  .deleteBackground {
+    padding-right: 20px;
+  }
+
+  .row {
+    min-height: 60px;
+    padding: 11px 16px;
+    grid-template-columns: minmax(0, 1fr) 50px 16px;
+    gap: 10px;
+  }
+
+  .name {
+    font-size: 12px;
+  }
+
+  .amount {
+    font-size: 11px;
+  }
+
+  .arrow {
+    font-size: 28px;
+  }
+}
+
+@media (min-width: 481px) {
+  .deleteIcon {
+    font-size: 18px;
+  }
+}

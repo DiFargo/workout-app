@@ -1,3 +1,11 @@
+@layer reset, base, legacy, components;
+
+@import "./_variables.css" layer(base);
+/*
+ * Keep unmigrated styles unlayered during the transition so their established
+ * cascade remains byte-for-byte compatible with production. A component moves
+ * into the components layer only after its legacy class names are removed.
+ */
 @import "./tokens.css";
 @import "./theme.css";
 @import "./base.css";
@@ -25,3 +33,34 @@
 @import "./client-bottom-safe-area.css";
 @import "./client-nutrition-grid.css";
 @import "./client-main.css";
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+}
+
+@layer base {
+  html {
+    min-height: 100%;
+    font-family: var(--font-family-sans);
+    background: var(--color-background);
+  }
+
+  body {
+    min-height: 100%;
+    margin: 0;
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: var(--line-height-body);
+  }
+}

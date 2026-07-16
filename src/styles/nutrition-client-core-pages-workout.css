@@ -1,68 +1,5 @@
 
 /* Workouts */
-.clientCorePageWorkout {
-  padding-bottom: 98px !important;
-}
-
-.clientCorePageWorkout .workoutSelectHero {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  min-height: 60px !important;
-  margin: 0 0 8px !important;
-  padding: 0 !important;
-}
-
-.clientCorePageWorkout .workoutSelectTitle {
-  min-height: 60px !important;
-  margin: 0 !important;
-  flex-direction: column !important;
-}
-
-.clientCorePageWorkout .workoutSelectTitle span,
-.clientCorePageWorkout .workoutSelectTitle strong {
-  font-size: var(--client-page-title-size) !important;
-  font-weight: 850 !important;
-  line-height: 0.98 !important;
-  letter-spacing: 0 !important;
-}
-
-.clientCorePageWorkout .workoutSelectTitle strong {
-  color: #a9d13f !important;
-}
-
-.clientCorePageWorkout .workoutSelectHero > p,
-.clientCorePageWorkout .workoutSelectLine {
-  display: none !important;
-}
-
-.clientCorePageWorkout .individualWorkoutDeck {
-  width: 100% !important;
-  height: calc(100% - 102px) !important;
-  min-height: 0 !important;
-  max-height: none !important;
-}
-
-.clientCorePageWorkout .individualWorkoutCardPro {
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  border-radius: var(--client-primary-radius) !important;
-}
-
-.clientCorePageWorkout > .individualWorkoutNav {
-  min-height: 28px !important;
-  margin: 6px auto 0 !important;
-}
-
-.clientCorePageWorkout .individualWorkoutTitle {
-  font-size: 27px !important;
-  line-height: 1.04 !important;
-}
-
-.clientCorePageWorkout .individualWorkoutStats span {
-  font-size: 13px !important;
-}
 
 @media (max-height: 800px) {
   .clientCorePage {
@@ -78,36 +15,6 @@
   .clientCorePageMain .profileCabinetSection,
   .clientCorePageCabinet .profileCabinetSection {
     height: calc(100% - 51px) !important;
-  }
-
-  .clientCorePageCabinet .profileAiHero {
-    flex-basis: 70px !important;
-    min-height: 70px !important;
-  }
-
-  .clientCorePageCabinet .profileAiAvatarWrap,
-  .clientCorePageCabinet .profileAiAvatar {
-    width: 56px !important;
-    height: 56px !important;
-  }
-
-  .clientCorePageCabinet .profileCabinetProgressOverview {
-    margin-top: 6px !important;
-    gap: 6px !important;
-  }
-
-  .clientCorePageWorkout .workoutSelectHero,
-  .clientCorePageWorkout .workoutSelectTitle {
-    min-height: 54px !important;
-  }
-
-  .clientCorePageWorkout .workoutSelectTitle span,
-  .clientCorePageWorkout .workoutSelectTitle strong {
-    font-size: 27px !important;
-  }
-
-  .clientCorePageWorkout .individualWorkoutDeck {
-    height: calc(100% - 93px) !important;
   }
 }
 

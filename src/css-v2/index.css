@@ -1,0 +1,9 @@
+/*
+ * Isolated entrypoint for the CSS V2 preview at /cssV2.
+ *
+ * The production CSS remains available at /. Add only V2 styles here or in
+ * files imported from here. Scope every selector with [data-css-variant="v2"]
+ * while the preview is being rebuilt screen by screen.
+ */
+
+@import "./v2-foundation.css";

@@ -1,0 +1,220 @@
+.root {
+  box-sizing: border-box;
+  width: auto;
+  min-width: 0;
+  height: 108px;
+  min-height: 108px;
+  max-height: 108px;
+  margin: 0 -12px;
+  padding: 18px 22px;
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 18px;
+  position: relative;
+  border: 1px solid var(--color-profile-hero-border);
+  border-bottom-color: var(--color-profile-hero-divider);
+  border-radius: 20px 20px 0 0;
+  background: var(--background-profile-hero);
+  color: var(--color-profile-hero);
+  box-shadow: var(--shadow-profile-hero);
+  overflow: hidden;
+}
+
+.avatarWrap {
+  box-sizing: border-box;
+  width: 70px;
+  min-width: 70px;
+  max-width: 70px;
+  height: 70px;
+  min-height: 70px;
+  max-height: 70px;
+  position: relative;
+  border-radius: 50%;
+}
+
+.avatar {
+  box-sizing: border-box;
+  width: 70px;
+  min-width: 70px;
+  max-width: 70px;
+  height: 70px;
+  min-height: 70px;
+  max-height: 70px;
+  margin: 2px;
+  display: block;
+  border: 1px solid var(--color-profile-hero-avatar-border);
+  border-radius: 50%;
+  background: var(--background-profile-hero-avatar);
+  color: inherit;
+  box-shadow: var(--shadow-profile-hero-avatar);
+  font-size: 34px;
+  line-height: 51px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.avatar.telegram {
+  border-color: var(--color-profile-hero-telegram-border);
+  background: var(--background-profile-hero-telegram);
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.fallback {
+  opacity: var(--opacity-profile-hero-avatar-fallback);
+}
+
+.text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.title {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  color: var(--color-profile-hero-title);
+  font-size: 23px;
+  font-weight: 850;
+  line-height: 1.12;
+  letter-spacing: 0;
+  overflow: visible;
+}
+
+:global(html:root[data-app-theme="warm-light"]) :global(body) :global(#root) .title.title {
+  color: var(--color-profile-hero-title);
+  -webkit-text-fill-color: var(--color-profile-hero-title);
+}
+
+@media (max-width: 700px) {
+  .root {
+    width: 100%;
+    height: 96px;
+    min-height: 96px;
+    max-height: 96px;
+    margin: 0;
+    padding: 14px 24px;
+    grid-template-columns: 62px minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 0;
+    border-color: var(--color-profile-hero-border-mobile);
+    border-bottom: 0;
+    border-radius: 24px 24px 0 0;
+    color: var(--color-profile-hero-mobile);
+    box-shadow: var(--shadow-profile-hero-mobile);
+  }
+
+  .avatarWrap,
+  .avatar {
+    width: 62px;
+    min-width: 62px;
+    max-width: 70px;
+    height: 70px;
+    min-height: 70px;
+    max-height: 70px;
+  }
+
+  .avatar {
+    box-shadow: none;
+  }
+
+  .text {
+    display: block;
+  }
+
+  .title {
+    color: var(--color-profile-hero-title-mobile);
+    font-size: 19px;
+    font-weight: 950;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  :global(html:root[data-app-theme="warm-light"]) :global(body) :global(#root) .title.title {
+    color: var(--color-profile-hero-title-mobile);
+    -webkit-text-fill-color: var(--color-profile-hero-title-mobile);
+  }
+}
+
+:global(:root[data-app-theme="dark-green"]) .root {
+  width: 100%;
+  height: 90px;
+  min-height: 90px;
+  max-height: 90px;
+  margin: 0;
+  padding: 8px 12px 5px;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 11px;
+  border-color: var(--color-profile-hero-border);
+  border-bottom: 0;
+  border-radius: 15px 15px 0 0;
+  background: var(--background-profile-hero);
+  color: var(--color-profile-hero);
+  box-shadow: var(--shadow-profile-hero);
+  overflow: visible;
+}
+
+:global(:root[data-app-theme="dark-green"]) .avatarWrap {
+  width: 48px;
+  min-width: auto;
+  max-width: none;
+  height: 48px;
+  min-height: auto;
+  max-height: none;
+  border-radius: 0;
+}
+
+:global(:root[data-app-theme="dark-green"]) .avatar {
+  width: 48px;
+  min-width: 0;
+  max-width: none;
+  height: 48px;
+  min-height: 0;
+  max-height: none;
+  display: grid;
+  place-items: center;
+  border-color: var(--color-profile-hero-avatar-border);
+  background: var(--background-profile-hero-avatar);
+  box-shadow: var(--shadow-profile-hero-avatar);
+  overflow: visible;
+}
+
+:global(:root[data-app-theme="dark-green"]) .text {
+  align-items: normal;
+}
+
+:global(:root[data-app-theme="dark-green"]) .title {
+  width: auto;
+  max-width: 240px;
+  color: var(--color-profile-hero-title);
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  white-space: normal;
+  overflow: hidden;
+}
+
+:global(html:root[data-app-theme="dark-green"]) :global(body) :global(#root) .title.title {
+  color: var(--color-profile-hero-title);
+  -webkit-text-fill-color: var(--color-profile-hero-title);
+}
+
+@media (max-height: 800px) {
+  :global(:root[data-app-theme="dark-green"]) .root {
+    height: 80px;
+    min-height: 80px;
+    max-height: 80px;
+  }
+}

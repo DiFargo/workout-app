@@ -7,54 +7,16 @@ html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium {
   --food-flow-accent: #5a49df !important;
 }
 
-html:root[data-app-theme="warm-light"] .fatFoodSearchOverlay .fatFoodSearchScreenPremium:not(:has(.foodEditRenderScreen)),
-html:root[data-app-theme="warm-light"] .fatFoodSearchOverlay .fatFoodSearchScreenPremium:has(.foodEditRenderScreen) {
+html:root[data-app-theme="warm-light"] .fatFoodSearchOverlay .fatFoodSearchScreenPremium {
   background:
     radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.05), transparent 32%),
     linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
   color: #151824 !important;
 }
 
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRenderScreen {
-  background:
-    radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.05), transparent 32%),
-    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
-  color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodFlowTitleGroup h2,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodProductFlowTitle h2,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchTitleButtonPremium strong,
 html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNamesTitle,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNameButton,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchResultInfo strong,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditHeroRender.foodEditHeroEditable > strong,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditAmountCard strong,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditMacrosCards strong,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRowsCard strong {
+html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNameButton {
   color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRenderScreen h2,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRenderScreen h3,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRenderScreen strong,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRenderScreen button {
-  color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodFlowTitleGroup > span,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodProductFlowTitle > span {
-  color: #5a49df !important;
-}
-
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodProductFlowHeader .foodEditInlineMealHeader,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditHeroRender.foodEditHeroEditable,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditAmountCard,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditMacrosCards > div,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRowsCard {
-  border-color: #e1e4ef !important;
-  background: #ffffff !important;
-  box-shadow: 0 9px 25px rgba(55, 64, 112, 0.075) !important;
 }
 
 html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditHeroIcon,
@@ -63,84 +25,3 @@ html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditSegm
   background: #efedff !important;
   color: #4e3bd0 !important;
 }
-
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodProductFlowHeader .foodEditInlineMealLabel,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditMacrosCards span,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditRowsCard span,
-html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditHeroRender small {
-  color: #737b91 !important;
-}
-
-html:root[data-app-theme="warm-light"] .foodEditPageOverlay {
-  background:
-    radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.05), transparent 32%),
-    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%) !important;
-}
-
-html:root[data-app-theme="warm-light"] .foodEditPageOverlay .foodEditPageSheet {
-  background: transparent !important;
-}
-
-html:root[data-app-theme="warm-light"] .foodEditPageOverlay .foodEditPageHeader {
-  background: transparent !important;
-}
-
-html:root[data-app-theme="warm-light"] .foodEditPageOverlay .foodEditPageHeader .foodEditPageTitleCenter,
-html:root[data-app-theme="warm-light"] .foodEditPageOverlay .foodEditPageHeader > strong,
-html:root[data-app-theme="warm-light"] .foodEditPageOverlay .foodEditPageContent label > span {
-  color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodProductFlowHeader .foodProductFlowTitle h2,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodEditHeroRender.foodEditHeroEditable > strong,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodEditAmountCard strong,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodEditMacrosCards > div strong,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodEditRowsCard strong {
-  color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodEditHeroRender small,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodEditAmountCard span,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodEditMacrosCards > div span,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodEditRowsCard span,
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .foodEditRowsCard em {
-  color: #737b91 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader .foodEditPageTitleCenter,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageHeader > strong,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageContent label > span,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageContent input,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageContent textarea {
-  color: #151824 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageContent input::placeholder,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageContent textarea::placeholder {
-  color: #949caf !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionUnitToggle,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow button {
-  border-color: #e1e4ef !important;
-  background: #ffffff !important;
-  color: #596176 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPortionUnitToggle.active,
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditIconPresetRow button.active {
-  border-color: #7565e8 !important;
-  background: #efedff !important;
-  color: #4f3dd2 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar button {
-  color: #737b91 !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .foodEditPageOverlay .foodEditPageActionBar .foodEditPageConfirmAction {
-  border-color: #ddd9fa !important;
-  background: #efedff !important;
-  color: #4e3bd0 !important;
-}
-

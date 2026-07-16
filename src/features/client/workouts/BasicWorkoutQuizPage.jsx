@@ -3,6 +3,7 @@ import { Paperclip } from "lucide-react";
 
 import { buildBasicWorkoutPlanFromQuiz } from "../../../utils/basicWorkoutPlanBuilder";
 import { WorkoutModePickerDialog } from "./WorkoutListDialogs";
+import styles from "./BasicWorkoutQuizPage.module.css";
 
 export default function BasicWorkoutQuizPage({
   renderClientMainBottomBar,
@@ -28,26 +29,27 @@ export default function BasicWorkoutQuizPage({
   const resolvedWorkoutModePreference = workoutModePreference || { mode: "basic" };
 
   return (
-    <div className="basicQuizPage">
-      <header className="workoutModeTopBar basicQuizTopBar">
-        <h1 className="workoutModeHeroTitle">Базовые тренировки</h1>
-        <div className="workoutModeTopActions workoutHeaderActions">
-          <button className="workoutModeTopButton workoutModeHeaderButton" type="button" onClick={() => setWorkoutModePickerOpen(true)} aria-label="Открыть режим запуска">
+    <div className={styles.page} data-testid="basic-quiz-page" data-css-module-scope="basic-quiz">
+      <header className={styles.topBar} data-testid="basic-quiz-header">
+        <h1 className={styles.title} data-testid="basic-quiz-title">Базовые тренировки</h1>
+        <div className={styles.topActions}>
+          <button className={styles.topButton} type="button" onClick={() => setWorkoutModePickerOpen(true)} aria-label="Открыть режим запуска">
             <Paperclip aria-hidden="true" />
           </button>
         </div>
       </header>
 
-      <section className="basicQuizCard">
-        <div className="basicQuizSectionHeader">
+      <section className={styles.card} data-testid="basic-quiz-card">
+        <div className={styles.sectionHeader}>
           <span>БАЗОВЫЙ ПОДБОР</span>
           <h2>Подбор плана</h2>
           <p>Ответь на 3 вопроса — приложение предложит стартовый план тренировок.</p>
         </div>
 
-        <label>
+        <label className={styles.field} data-testid="basic-quiz-field">
           <span>Цель</span>
           <select
+            data-css-module-control
             aria-label="Цель тренировки"
             value={basicWorkoutQuiz.goal}
             onChange={(event) => onBasicWorkoutQuizChange((prev) => ({ ...prev, goal: event.target.value }))}
@@ -57,9 +59,10 @@ export default function BasicWorkoutQuizPage({
           </select>
         </label>
 
-        <label>
+        <label className={styles.field} data-testid="basic-quiz-field">
           <span>Опыт</span>
           <select
+            data-css-module-control
             aria-label="Опыт тренировок"
             value={basicWorkoutQuiz.level}
             onChange={(event) => onBasicWorkoutQuizChange((prev) => ({ ...prev, level: event.target.value }))}
@@ -69,9 +72,10 @@ export default function BasicWorkoutQuizPage({
           </select>
         </label>
 
-        <label>
+        <label className={styles.field} data-testid="basic-quiz-field">
           <span>Сколько тренировок в неделю</span>
           <select
+            data-css-module-control
             aria-label="Тренировок в неделю"
             value={basicWorkoutQuiz.days}
             onChange={(event) => onBasicWorkoutQuizChange((prev) => ({ ...prev, days: event.target.value }))}
@@ -82,11 +86,11 @@ export default function BasicWorkoutQuizPage({
         </label>
       </section>
 
-      <section className="basicQuizPreview">
+      <section className={styles.preview} data-testid="basic-quiz-preview">
         <span>Рекомендуемый план</span>
         <strong>{previewPlan.name}</strong>
         <p>{previewPlan.description}</p>
-        <div className="basicQuizPreviewStats">
+        <div className={styles.previewStats} data-testid="basic-quiz-stats">
           <span>
             <b>{previewPlan.workouts.length}</b>
             <small>тренировки</small>
@@ -98,7 +102,7 @@ export default function BasicWorkoutQuizPage({
         </div>
       </section>
 
-      <button className="basicQuizStartBtn" type="button" onClick={onApplyBasicWorkoutPlan}>
+      <button className={styles.startButton} data-testid="basic-quiz-start" type="button" onClick={onApplyBasicWorkoutPlan}>
         Подобрать план
       </button>
 

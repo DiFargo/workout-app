@@ -1,3 +1,5 @@
+import styles from "./ProfileMainMeasurementSnapshot.module.css";
+
 function clampNumber(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
@@ -17,8 +19,6 @@ export default function ProfileMainMeasurementSnapshot({
   weightChange
 }) {
   const safeSeries = Array.isArray(measurementSeries) ? measurementSeries.slice(-4) : [];
-  const isEmpty = safeSeries.length === 0;
-  const isSinglePoint = safeSeries.length === 1;
   const latestWeightLabel = formatSnapshotWeight(latestWeight);
   const chartMin = Math.min(...safeSeries.map((item) => Number(item.weight)).filter(Number.isFinite), Number(latestWeight) || 0);
   const chartMax = Math.max(...safeSeries.map((item) => Number(item.weight)).filter(Number.isFinite), Number(latestWeight) || 0);
@@ -44,15 +44,17 @@ export default function ProfileMainMeasurementSnapshot({
 
   return (
     <section
-      className={`mainMeasurementSnapshot ${isEmpty ? "emptyTrend" : ""} ${isSinglePoint ? "singlePointTrend" : ""}`}
+      className={styles.root}
+      data-state={chartPoints.length >= 2 ? "trend" : chartPoints.length === 1 ? "single" : "empty"}
+      data-css-module-scope="profile-main-measurement-snapshot"
+      data-testid="profile-measurement-snapshot"
       aria-label="Последние замеры веса"
     >
-      <div className="mainMeasurementSnapshotHeader">
+      <div className={styles.header} data-testid="profile-measurement-snapshot-header">
         <span>Последние замеры</span>
-        <i aria-hidden="true">›</i>
       </div>
-      <div className="mainMeasurementSnapshotBody">
-        <div className="mainMeasurementWeight">
+      <div className={styles.body} data-testid="profile-measurement-snapshot-body">
+        <div className={styles.weight} data-testid="profile-measurement-snapshot-weight">
           <span>Текущий вес</span>
           <strong>{latestWeightLabel}</strong>
           {weightChange !== 0 && (
@@ -60,35 +62,36 @@ export default function ProfileMainMeasurementSnapshot({
           )}
           <small>{latestMeasurement ? "к прошлому замеру" : "добавь первый замер"}</small>
         </div>
-        <div className="mainMeasurementChart">
+        <div className={styles.chart} data-testid="profile-measurement-snapshot-chart">
           {chartPoints.length >= 2 ? (
             <svg
-              className="mainMeasurementChartTrend"
+              className={styles.trend}
+              data-testid="profile-measurement-snapshot-trend"
               viewBox="0 0 280 118"
               role="img"
               aria-label="Изменение веса по последним замерам"
             >
               <defs>
                 <linearGradient id="mainMeasurementLineGradient" x1="0" x2="1" y1="0" y2="0">
-                  <stop offset="0%" stopColor="#6354f4" />
-                  <stop offset="100%" stopColor="#7a4cff" />
+                  <stop offset="0%" stopColor="var(--color-profile-measurement-chart-start)" />
+                  <stop offset="100%" stopColor="var(--color-profile-measurement-chart-end)" />
                 </linearGradient>
               </defs>
               {lastPoint && (
                 <line
-                  className="mainMeasurementCurrentGuide"
+                  className={styles.currentGuide}
                   x1={lastPoint.x}
                   y1={lastPoint.y + 7}
                   x2={lastPoint.x}
                   y2="96"
                 />
               )}
-              <polyline className="mainMeasurementTrendLine" points={chartPolyline} />
+              <polyline className={styles.trendLine} points={chartPolyline} />
               {chartPoints.map((point, index) => (
                 index === chartPoints.length - 1 ? null : (
                   <text
                     key={`${point.dateLabel}-weight-${index}`}
-                    className="mainMeasurementPointLabel"
+                    className={styles.pointLabel}
                     x={point.x}
                     y={point.y - 14}
                   >
@@ -99,14 +102,14 @@ export default function ProfileMainMeasurementSnapshot({
               {chartPoints.map((point, index) => (
                 <circle
                   key={`${point.dateLabel}-point-${index}`}
-                  className={`mainMeasurementTrendPoint ${index === chartPoints.length - 1 ? "current" : ""}`}
+                  className={`${styles.trendPoint} ${index === chartPoints.length - 1 ? styles.current : ""}`}
                   cx={point.x}
                   cy={point.y}
                   r={index === chartPoints.length - 1 ? "7" : "4.8"}
                 />
               ))}
               {lastPoint && (
-                <g className="mainMeasurementCurrentBubble">
+                <g className={styles.currentBubble}>
                   <rect x={bubbleX} y={bubbleY} width={bubbleWidth} height="25" rx="7" />
                   <path d={`M ${bubbleX + bubblePointerX - 7} ${bubbleY + 24} L ${bubbleX + bubblePointerX + 7} ${bubbleY + 24} L ${lastPoint.x} ${bubbleY + 35} Z`} />
                   <text x={bubbleX + bubbleWidth / 2} y={bubbleY + 17}>{lastPoint.weightLabel}</text>
@@ -115,7 +118,7 @@ export default function ProfileMainMeasurementSnapshot({
               {chartPoints.map((point, index) => (
                 <text
                   key={`${point.dateLabel}-date-${index}`}
-                  className="mainMeasurementDateLabel"
+                  className={styles.dateLabel}
                   x={point.x}
                   y="110"
                 >
@@ -124,12 +127,12 @@ export default function ProfileMainMeasurementSnapshot({
               ))}
             </svg>
           ) : chartPoints.length === 1 ? (
-            <div className="mainMeasurementSingle">
+            <div className={styles.single} data-testid="profile-measurement-snapshot-single">
               <strong>Первая точка сохранена</strong>
               <span>Добавь ещё один замер, чтобы увидеть динамику.</span>
             </div>
           ) : (
-            <div className="mainMeasurementEmpty">
+            <div className={styles.empty} data-testid="profile-measurement-snapshot-empty">
               Добавь первый замер, чтобы отслеживать динамику веса
             </div>
           )}

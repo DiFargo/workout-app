@@ -28,42 +28,6 @@
 }
 
 /* Ñ‚ÐµÐ¿ÐµÑ€ÑŒ ÐšÐ‘Ð–Ð£ = 4 Ð±Ð»Ð¾ÐºÐ° */
-.foodEditMacrosCards {
-  grid-template-columns: repeat(4, 1fr) !important;
-  gap: 8px !important;
-}
-
-.foodEditMacrosCards div {
-  min-width: 0 !important;
-}
-
-.foodEditMacrosCards span {
-  font-size: 11px !important;
-  white-space: nowrap !important;
-}
-
-.foodEditMacrosCards strong {
-  font-size: 18px !important;
-}
-
-.foodEditMacrosCards small {
-  font-size: 10px !important;
-}
-
-@media (max-width: 480px) {
-  .foodEditMacrosCards {
-    gap: 7px !important;
-  }
-
-  .foodEditMacrosCards span {
-    font-size: 10px !important;
-  }
-
-  .foodEditMacrosCards strong {
-    font-size: 16px !important;
-  }
-}
-
 /* =========================================================
    FOOD EDIT SAVE LOGIC UX FIX
    ========================================================= */
@@ -79,35 +43,6 @@
 }
 
 /* =========================================================
-   PERSONAL FOOD DATABASE
-   ========================================================= */
-
-.fatSearchResultInfo span {
-  display: block !important;
-  color: rgba(130, 240, 118, 0.74) !important;
-}
-
-.fatSearchResultCard:has(.fatSearchResultInfo span) {
-  transition: transform 0.16s ease, border-color 0.16s ease;
-}
-
-.fatSearchResultCard:active {
-  transform: scale(0.985) !important;
-}
-
-/* =========================================================
-   PERSONAL DB SEARCH FIRST
-   ========================================================= */
-
-.fatSearchStatus strong {
-  line-height: 1.25 !important;
-}
-
-.fatSearchResultInfo span {
-  color: rgba(130, 240, 118, 0.78) !important;
-}
-
-/* =========================================================
    FOOD SEARCH BOTTOM ACTION BAR
    ========================================================= */
 
@@ -117,7 +52,7 @@
 }
 
 /* Ð¼ÐµÑÑ‚Ð¾ ÑÐ½Ð¸Ð·Ñƒ, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð±Ð°Ñ€ Ð½Ðµ Ð¿ÐµÑ€ÐµÐºÑ€Ñ‹Ð²Ð°Ð» Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ‹ */
-.fatFoodSearchScreenPremium {
+.fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
   padding-bottom: 98px !important;
 }
 
@@ -187,55 +122,6 @@
 }
 
 /* Ð¿Ñ€ÐµÐ²ÑŒÑŽ Ñ„Ð¾Ñ‚Ð¾ Ñ‚ÐµÐ¿ÐµÑ€ÑŒ ÐºÐ¾Ð¼Ð¿Ð°ÐºÑ‚Ð½Ð¾ Ð½Ð°Ð´ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð°Ð¼Ð¸ */
-.fatPhotoAiInput {
-  display: none !important;
-}
-
-.fatPhotoAiFloatingPreview {
-  width: 100% !important;
-  margin: 10px 0 8px !important;
-  padding: 10px !important;
-
-  display: grid !important;
-  grid-template-columns: 46px minmax(0, 1fr) 34px !important;
-  gap: 10px !important;
-  align-items: center !important;
-
-  border-radius: 18px !important;
-  border: 1px solid rgba(255,255,255,0.07) !important;
-  background: rgba(255,255,255,0.035) !important;
-}
-
-.fatPhotoAiFloatingPreview img {
-  width: 46px !important;
-  height: 46px !important;
-  object-fit: cover !important;
-  border-radius: 14px !important;
-}
-
-.fatPhotoAiFloatingPreview strong {
-  display: block !important;
-  font-size: 13px !important;
-  color: rgba(247,248,251,0.88) !important;
-}
-
-.fatPhotoAiFloatingPreview span,
-.fatPhotoAiFloatingPreview small {
-  display: block !important;
-  margin-top: 3px !important;
-  font-size: 11px !important;
-  color: rgba(247,248,251,0.48) !important;
-}
-
-.fatPhotoAiFloatingPreview button {
-  width: 32px !important;
-  height: 32px !important;
-  border: none !important;
-  border-radius: 50% !important;
-  background: rgba(255,255,255,0.06) !important;
-  color: rgba(247,248,251,0.7) !important;
-  font-size: 20px !important;
-}
 
 @media (max-width: 380px) {
   .fatSearchBottomBar {

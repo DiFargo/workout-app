@@ -1,4 +1,5 @@
 import { getTimestampValue } from "../../../utils/auditSafety";
+import styles from "./HistoryDeleteConfirmDialog.module.css";
 
 export default function HistoryDeleteConfirmDialog({
   candidate,
@@ -18,22 +19,22 @@ export default function HistoryDeleteConfirmDialog({
     : "без даты";
 
   return (
-    <div className="historyDeleteOverlay" onClick={onClose}>
-      <div className="historyDeleteModal" onClick={(event) => event.stopPropagation()}>
-        <div className="historyDeleteIcon">⌫</div>
+    <div className={styles.overlay} data-testid="workout-history-delete-overlay" data-css-module-scope="workout-history-delete" onClick={onClose}>
+      <div className={styles.dialog} data-testid="workout-history-delete-dialog" onClick={(event) => event.stopPropagation()}>
+        <div className={styles.icon}>⌫</div>
         <h3>Удалить тренировку?</h3>
         <p>
           {candidate.workout || "Тренировка"}
           <span>{dateLabel} · действие нельзя отменить</span>
         </p>
 
-        <div className="historyDeleteActions">
+        <div className={styles.actions}>
           <button type="button" onClick={onClose} disabled={Boolean(deletingId)}>
             Отмена
           </button>
           <button
             type="button"
-            className="danger"
+            className={styles.danger}
             onClick={onConfirm}
             disabled={Boolean(deletingId)}
           >

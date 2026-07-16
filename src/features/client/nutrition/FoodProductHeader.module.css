@@ -1,0 +1,336 @@
+.flowHeader,
+.hero {
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-family-compact-ui);
+}
+
+.flowHeader {
+  position: relative;
+  height: 124px;
+  min-height: 124px;
+  max-height: 124px;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  grid-template-areas:
+    "title actions"
+    "meal meal";
+  align-items: start;
+  gap: 14px 12px;
+}
+
+.flowTitle {
+  grid-area: title;
+  min-width: 0;
+  width: 100%;
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.eyebrow {
+  display: none;
+}
+
+.heading {
+  min-width: 0;
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: var(--color-heading);
+  font-size: 27px;
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: 0;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+.mealCard {
+  position: relative;
+  grid-area: meal;
+  z-index: 4;
+  width: 100%;
+  min-width: 0;
+  height: 54px;
+  min-height: 54px;
+  margin: 0;
+  padding: 5px 12px 4px;
+  display: grid;
+  grid-template-rows: 8px 33px;
+  align-items: center;
+  justify-items: center;
+  gap: 1px;
+  border: 1px solid var(--color-food-history-border);
+  border-radius: 16px;
+  background: var(--color-surface);
+  color: var(--color-food-flow-text);
+  box-shadow: 0 12px 30px rgba(55, 64, 112, 0.11);
+}
+
+.mealLabel {
+  display: block;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: var(--color-accent);
+  font-size: 8px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+.mealButton {
+  width: 100%;
+  min-width: 0;
+  height: 33px;
+  min-height: 33px;
+  margin: 0;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 10px;
+  outline: 0;
+  background: transparent;
+  color: var(--color-food-flow-text);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.05;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-text-fill-color: currentColor;
+}
+
+.mealButton::after {
+  content: "⌄";
+  flex: none;
+  color: var(--color-accent);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  transform: translateY(-1px);
+  -webkit-text-fill-color: currentColor;
+}
+
+.mealButton[aria-expanded="true"]::after {
+  transform: rotate(180deg) translateY(1px);
+}
+
+.mealButton:hover,
+.mealButton:active {
+  background: var(--color-food-nav-active-surface);
+  color: var(--color-food-flow-text);
+}
+
+.mealButton:focus-visible,
+.mealOption:focus-visible {
+  outline: 0;
+  box-shadow: var(--focus-ring);
+}
+
+.mealDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  z-index: 60;
+  width: min(300px, calc(100vw - 44px));
+  max-width: calc(100vw - 44px);
+  padding: 8px;
+  display: grid;
+  gap: 2px;
+  border: 1px solid var(--color-food-history-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-overlay);
+  transform: translateX(-50%);
+}
+
+.mealOption {
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  border: 0;
+  border-radius: 14px;
+  outline: 0;
+  background: transparent;
+  color: var(--color-food-flow-text);
+  font: inherit;
+  text-align: left;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-text-fill-color: currentColor;
+}
+
+.mealOption:hover,
+.mealOption:active {
+  background: var(--color-surface-muted);
+  color: var(--color-food-flow-text);
+}
+
+.mealOption.selected,
+.mealOption.selected:hover,
+.mealOption.selected:active {
+  background: var(--color-food-nav-active-surface);
+  color: var(--color-food-nav-active);
+}
+
+.mealIcon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--color-food-nav-active-surface);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.mealName {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+.hero {
+  height: 96px;
+  min-height: 96px;
+  margin: 0 0 12px;
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+  border: 1px solid var(--color-food-history-border);
+  border-radius: 18px;
+  background: var(--color-surface);
+  color: var(--color-food-flow-text);
+  box-shadow: 0 18px 42px rgba(40, 48, 70, 0.05);
+}
+
+.iconStack {
+  width: 76px;
+  min-width: 76px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--color-food-nav-active-surface);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.source {
+  max-width: 76px;
+  margin: 0;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+.productName {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--color-food-flow-text);
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1.08;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+
+:global(:root[data-app-theme="dark-green"]) .mealCard,
+:global(:root[data-app-theme="dark-green"]) .hero,
+:global(:root[data-app-theme="dark-green"]) .mealDropdown {
+  border-color: var(--color-control-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  -webkit-text-fill-color: currentColor;
+  box-shadow: var(--shadow-card);
+}
+
+:global(:root[data-app-theme="dark-green"]) .heading,
+:global(:root[data-app-theme="dark-green"]) .mealButton,
+:global(:root[data-app-theme="dark-green"]) .mealOption,
+:global(:root[data-app-theme="dark-green"]) .productName {
+  color: var(--color-text);
+}
+
+:global(:root[data-app-theme="dark-green"]) .source {
+  color: var(--color-text-muted);
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealCard,
+:global(:root[data-app-theme="warm-light"]) .iconStack,
+:global(:root[data-app-theme="warm-light"]) .icon {
+  color: var(--color-food-product-page-text);
+}
+
+@media (max-width: 380px) {
+  .heading {
+    font-size: 25px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mealButton::after {
+    transition: none;
+  }
+}

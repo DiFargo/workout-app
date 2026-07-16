@@ -1,9 +1,4 @@
 /* v169: search results must disappear under the fixed AI photo action instead of showing through it. */
-html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay
-.fatFoodSearchScreenPremium:not(:has(.foodProductRenderScreen)) .foodSearchFixedPhotoAction > * {
-  position: relative !important;
-  z-index: 1 !important;
-}
 
 /* v170: diary product rows should look like clean product cards; red swipe layer appears only during delete. */
 html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukFoods {
@@ -23,20 +18,6 @@ html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutr
 
 html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell + .nutritionZoukSwipeShell {
   border-top: 1px solid rgba(224, 229, 243, 0.92) !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .productDeleteBg {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  border-radius: 18px !important;
-  background: linear-gradient(135deg, #ec5b5b, #d94646) !important;
-  transition: opacity 0.16s ease, visibility 0.16s ease !important;
-}
-
-html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell:has(.nutritionZoukFood[style*="translateX(-"]) .productDeleteBg,
-html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell.deleting .productDeleteBg {
-  opacity: 1 !important;
-  visibility: visible !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFood {

@@ -8,8 +8,6 @@
 :root[data-app-theme="warm-light"] .fatSearchBackMini,
 :root[data-app-theme="warm-light"] .addFoodBackOnly,
 :root[data-app-theme="warm-light"] .foodEditBackOnly,
-:root[data-app-theme="warm-light"] .foodEditPageBack,
-:root[data-app-theme="warm-light"] .foodEditPageHeader .foodEditPageBack,
 :root[data-app-theme="warm-light"] button[aria-label*="ÐÐ°Ð·Ð°Ð´"],
 :root[data-app-theme="warm-light"] button[aria-label*="Ð½Ð°Ð·Ð°Ð´"] {
   width: 64px !important;

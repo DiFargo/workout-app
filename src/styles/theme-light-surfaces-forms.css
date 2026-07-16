@@ -1,7 +1,7 @@
 /* Forms and settings */
-:root[data-app-theme="warm-light"] input,
-:root[data-app-theme="warm-light"] select,
-:root[data-app-theme="warm-light"] textarea {
+:root[data-app-theme="warm-light"] input:not([data-css-module-control]),
+:root[data-app-theme="warm-light"] select:not([data-css-module-control]),
+:root[data-app-theme="warm-light"] textarea:not([data-css-module-control]) {
   caret-color: #5a49df;
 }
 
@@ -22,4 +22,3 @@
 :root[data-app-theme="warm-light"] .adminV3Shell textarea::placeholder {
   color: #9aa1b3 !important;
 }
-

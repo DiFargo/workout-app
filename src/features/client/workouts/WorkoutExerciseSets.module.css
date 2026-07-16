@@ -1,0 +1,543 @@
+.list {
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--color-workout-set-list-surface);
+}
+
+.row {
+  box-sizing: border-box;
+  min-height: 52px;
+  margin: 0;
+  padding: 6px 8px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: 40px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 0;
+  background: transparent;
+}
+
+.row + .row {
+  border-top: 1px solid var(--color-workout-set-divider);
+}
+
+.number {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-workout-set-number-surface);
+  color: var(--color-workout-set-number-text);
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.sharedWeightNote {
+  margin: 4px 2px 0;
+  display: block;
+  color: var(--color-workout-set-note);
+  font-size: 9.5px;
+  font-weight: 750;
+  line-height: 1.1;
+  text-align: right;
+}
+
+@media (max-width: 390px) {
+  :global(html[data-app-theme="dark-green"]) .row {
+    grid-template-columns: 32px minmax(0, 0.9fr) minmax(0, 1.35fr);
+  }
+}
+
+:global(html[data-app-theme="dark-green"]) .root button {
+  position: static;
+  z-index: 5;
+  width: 100%;
+  min-height: clamp(46px, 6.7dvh, 58px);
+  padding: 10px 14px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--color-accent-strong), var(--color-accent));
+  color: var(--color-workout-set-legacy-control-text);
+  box-shadow: none;
+  cursor: pointer;
+  font-size: clamp(16px, 4.8vw, 21px);
+  font-weight: 900;
+}
+
+:global(html[data-app-theme="warm-light"]) .root {
+  width: 100%;
+  margin: 14px 0 0;
+}
+
+:global(html[data-app-theme="warm-light"]) .title {
+  min-width: 0;
+  min-height: 0;
+  margin: 0 0 9px;
+  color: var(--color-workout-set-title);
+  font-size: 13px;
+  font-weight: 950;
+  line-height: 1.15;
+}
+
+:global(html[data-app-theme="warm-light"]) .list {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 11px;
+  background: var(--color-workout-set-list-surface);
+}
+
+:global(html[data-app-theme="warm-light"]) .row {
+  position: relative;
+  height: 60px;
+  min-height: 60px;
+  padding: 0 110px 0 0;
+  grid-template-columns: 42px minmax(0, 1fr);
+  column-gap: 13px;
+  row-gap: 0;
+  align-items: stretch;
+  border: 1px solid var(--color-workout-set-row-border);
+  border-radius: 15px;
+  background: var(--color-workout-set-row-surface);
+  box-shadow: var(--shadow-workout-set-row);
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+:global(html[data-app-theme="warm-light"]) .row + .row {
+  border-top-color: var(--color-workout-set-row-border);
+}
+
+:global(html[data-app-theme="warm-light"]) .row.completed {
+  border-color: var(--color-workout-set-row-completed-border);
+  background: var(--gradient-workout-set-row-completed);
+  box-shadow: var(--shadow-workout-set-row-completed);
+}
+
+:global(html[data-app-theme="warm-light"]) .row:focus-visible {
+  outline: none;
+  border-color: var(--color-workout-set-row-focus-border);
+  box-shadow: var(--shadow-workout-set-row-focus);
+}
+
+:global(html[data-app-theme="warm-light"]) .number {
+  align-self: stretch;
+  justify-self: stretch;
+  width: 42px;
+  height: 58px;
+  min-width: 42px;
+  min-height: 58px;
+  max-width: 42px;
+  max-height: 58px;
+  margin: 0;
+  position: static;
+  inset: auto;
+  transform: none;
+  border-radius: 15px 0 0 15px;
+  background: var(--color-workout-set-number-surface);
+  color: var(--color-workout-set-number-text);
+  box-shadow: none;
+  filter: none;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  font-size: 19px;
+  font-weight: 950;
+}
+
+:global(html[data-app-theme="warm-light"]) .plan {
+  align-self: center;
+  min-width: 0;
+  height: 38px;
+  min-height: 38px;
+  max-height: 38px;
+  display: grid;
+  grid-template-rows: 15px 20px;
+  gap: 2px;
+  align-content: center;
+  align-items: flex-start;
+  justify-content: stretch;
+  overflow: hidden;
+}
+
+:global(html[data-app-theme="warm-light"]) .reps,
+:global(html[data-app-theme="warm-light"]) .weight {
+  max-width: 100%;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+:global(html[data-app-theme="warm-light"]) .reps {
+  color: var(--color-workout-set-reps);
+  font-size: 11.5px;
+  font-weight: 800;
+  line-height: 15px;
+  letter-spacing: 0;
+  text-overflow: clip;
+}
+
+:global(html[data-app-theme="warm-light"]) .weight {
+  color: var(--color-workout-set-weight);
+  font-size: 16px;
+  font-weight: 950;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-overflow: clip;
+}
+
+:global(html[data-app-theme="warm-light"]) .actions {
+  position: absolute;
+  top: 9px;
+  right: 8px;
+  align-self: center;
+  width: 94px;
+  height: 42px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 36px 50px;
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+}
+
+:global(html[data-app-theme="warm-light"]) .root .editButton {
+  order: 1;
+  align-self: center;
+  width: 50px;
+  height: 42px;
+  min-width: 50px;
+  min-height: 42px;
+  max-width: 50px;
+  max-height: 42px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-workout-set-edit-border);
+  border-radius: 12px;
+  background: var(--color-workout-set-edit-surface);
+  color: var(--color-workout-set-edit);
+  box-shadow: none;
+  display: grid;
+  place-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 0;
+  cursor: pointer;
+}
+
+:global(html[data-app-theme="warm-light"]) .editButton svg {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  display: block;
+}
+
+:global(html[data-app-theme="warm-light"]) .completeButton {
+  order: 0;
+  align-self: center;
+  justify-self: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  max-width: 34px;
+  max-height: 34px;
+  padding: 0;
+  border: 1px solid var(--color-workout-set-complete-border);
+  border-radius: 999px;
+  background: var(--color-workout-set-complete-surface);
+  color: var(--color-workout-set-complete);
+  box-shadow: var(--shadow-workout-set-complete);
+  display: grid;
+  place-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 0;
+  pointer-events: none;
+}
+
+:global(html[data-app-theme="warm-light"]) .completeButton svg {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  display: block;
+}
+
+:global(html[data-app-theme="warm-light"]) .completed .completeButton {
+  border-color: transparent;
+  background: var(--gradient-workout-set-complete-active);
+  color: var(--color-workout-set-complete-active);
+  box-shadow: var(--shadow-workout-set-complete-active);
+}
+
+:global(html[data-app-theme="warm-light"]) .sharedWeightNote {
+  color: var(--color-workout-set-note);
+}
+
+:global(html[data-app-theme="warm-light"]) .modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  box-sizing: border-box;
+  padding: 19px;
+  display: grid;
+  place-items: center;
+  background: var(--color-workout-set-modal-backdrop);
+  backdrop-filter: blur(7px);
+}
+
+:global(html[data-app-theme="warm-light"]) .modal {
+  box-sizing: border-box;
+  width: min(336px, 100%);
+  max-width: 100%;
+  padding: 16px;
+  border: 1px solid var(--color-workout-set-modal-border);
+  border-radius: 24px;
+  background: var(--color-workout-set-modal-surface);
+  box-shadow: var(--shadow-workout-set-modal);
+  overflow: hidden;
+}
+
+:global(html[data-app-theme="warm-light"]) .modal *,
+:global(html[data-app-theme="warm-light"]) .modal *::before,
+:global(html[data-app-theme="warm-light"]) .modal *::after {
+  box-sizing: border-box;
+}
+
+:global(html[data-app-theme="warm-light"]) .modalHeader {
+  margin-bottom: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+:global(html[data-app-theme="warm-light"]) .modalHeader > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+:global(html[data-app-theme="warm-light"]) .modalHeader span {
+  color: var(--color-workout-set-modal-eyebrow);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+:global(html[data-app-theme="warm-light"]) .modalHeader strong {
+  color: var(--color-workout-set-modal-heading);
+  font-size: 21px;
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+:global(html[data-app-theme="warm-light"]) .modal .closeButton {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-workout-set-modal-border);
+  border-radius: 14px;
+  background: var(--color-workout-set-modal-close-surface);
+  color: var(--color-workout-set-modal-close);
+  box-shadow: var(--shadow-workout-set-modal-close);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+:global(html[data-app-theme="warm-light"]) .modalFields {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+:global(html[data-app-theme="warm-light"]) .modalFields.withoutWeight {
+  grid-template-columns: 1fr;
+}
+
+:global(html[data-app-theme="warm-light"]) .wheelField {
+  min-width: 0;
+  margin: 0;
+  padding: 11px 10px;
+  display: grid;
+  gap: 9px;
+  border: 1px solid var(--color-workout-set-wheel-border);
+  border-radius: 20px;
+  background: var(--gradient-workout-set-wheel-field);
+  box-shadow: var(--shadow-workout-set-wheel-field);
+}
+
+:global(html[data-app-theme="warm-light"]) .wheelField > span {
+  color: var(--color-workout-set-wheel-label);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+}
+
+:global(html[data-app-theme="warm-light"]) .wheelPicker {
+  --workout-set-wheel-item-height: 42px;
+  position: relative;
+  width: 100%;
+  height: calc(var(--workout-set-wheel-item-height) * 5);
+  padding: calc(var(--workout-set-wheel-item-height) * 2) 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 18px;
+  contain: content;
+  background: var(--gradient-workout-set-wheel);
+  scroll-snap-type: y mandatory;
+  scroll-padding-block: calc(var(--workout-set-wheel-item-height) * 2);
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: var(--mask-workout-set-wheel);
+  mask-image: var(--mask-workout-set-wheel);
+}
+
+:global(html[data-app-theme="warm-light"]) .wheelPicker::-webkit-scrollbar {
+  display: none;
+}
+
+:global(html[data-app-theme="warm-light"]) .wheelPicker::before,
+:global(html[data-app-theme="warm-light"]) .wheelPicker::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 1px;
+  display: block;
+  background: var(--color-workout-set-wheel-divider);
+  pointer-events: none;
+}
+
+:global(html[data-app-theme="warm-light"]) .wheelPicker::before {
+  top: calc(50% - (var(--workout-set-wheel-item-height) / 2));
+}
+
+:global(html[data-app-theme="warm-light"]) .wheelPicker::after {
+  top: calc(50% + (var(--workout-set-wheel-item-height) / 2));
+}
+
+:global(html[data-app-theme="warm-light"]) .modal .wheelOption {
+  width: 100%;
+  height: var(--workout-set-wheel-item-height);
+  min-height: var(--workout-set-wheel-item-height);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 13px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-workout-set-wheel-option);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 850;
+  line-height: 1;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  cursor: pointer;
+  opacity: 0.58;
+  transition: background-color 120ms ease, box-shadow 120ms ease, color 120ms ease, font-size 120ms ease, opacity 120ms ease, transform 120ms ease;
+}
+
+:global(html[data-app-theme="warm-light"]) .modal .wheelOption.active {
+  background: var(--color-workout-set-wheel-option-active-surface);
+  box-shadow: var(--shadow-workout-set-wheel-option-active);
+  color: var(--color-workout-set-wheel-option-active);
+  font-size: 23px;
+  font-weight: 950;
+  opacity: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+  transform: scale(1.03);
+}
+
+:global(html[data-app-theme="warm-light"]) .wheelPicker:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-workout-set-wheel-focus);
+}
+
+:global(html[data-app-theme="warm-light"]) .modal .doneButton {
+  width: 100%;
+  height: 50px;
+  min-height: clamp(46px, 6.7dvh, 58px);
+  margin: 13px 0 0;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 17px;
+  background: var(--gradient-workout-set-done);
+  color: var(--color-workout-set-done);
+  box-shadow: var(--shadow-workout-set-done);
+  font-size: 16px;
+  font-weight: 950;
+}
+
+  @media (max-width: 370px) {
+  :global(html[data-app-theme="warm-light"]) .row {
+    height: 60px;
+    min-height: 60px;
+    padding-right: 104px;
+    grid-template-columns: 40px minmax(0, 1fr);
+    column-gap: 12px;
+  }
+
+  :global(html[data-app-theme="warm-light"]) .number {
+    width: 40px;
+    height: 56px;
+    min-width: 40px;
+    min-height: 56px;
+    max-width: 40px;
+    max-height: 56px;
+  }
+
+  :global(html[data-app-theme="warm-light"]) .actions {
+    right: 8px;
+    width: 92px;
+    grid-template-columns: 36px 48px;
+    gap: 8px;
+  }
+
+  :global(html[data-app-theme="warm-light"]) .modal {
+    padding: 14px;
+  }
+
+  :global(html[data-app-theme="warm-light"]) .modalFields {
+    gap: 9px;
+  }
+}
+
+@media (max-width: 390px) {
+  :global(html[data-app-theme="warm-light"]) .completeButton {
+    font-size: 13px;
+  }
+}
+
+@media (max-height: 740px) {
+  :global(html[data-app-theme="warm-light"]) .modal .doneButton {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+}

@@ -6,7 +6,6 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
   --nutrition-main-card-muted: #6d6574;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopCard,
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukHeader {
   grid-template-columns: 50px minmax(0, 1fr) auto !important;
   gap: 12px !important;
@@ -16,7 +15,6 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   color: var(--nutrition-main-card-color) !important;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanCollapsedIcon,
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukIcon {
   width: 46px !important;
   height: 46px !important;
@@ -29,7 +27,6 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   line-height: 1 !important;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopTitle,
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukTitle {
   min-width: 0 !important;
   display: grid !important;
@@ -37,7 +34,6 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   align-content: center !important;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopTitle strong,
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukTitle strong {
   display: block !important;
   max-width: 100% !important;
@@ -51,7 +47,6 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   white-space: nowrap !important;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopTitle small,
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukTitle small {
   display: -webkit-box !important;
   max-width: 100% !important;
@@ -67,7 +62,6 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   -webkit-line-clamp: 2 !important;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanCollapsedArrow,
 html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeta i {
   width: 40px !important;
   height: 40px !important;
@@ -89,43 +83,12 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
   line-height: 1 !important;
 }
 
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitSvgLabel {
-  font-size: 12px !important;
-  font-weight: 950 !important;
-  letter-spacing: 0 !important;
-}
-
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitSvgAmount {
-  font-size: 24px !important;
-  font-weight: 950 !important;
-  letter-spacing: 0 !important;
-}
-
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitSvgTarget {
-  font-size: 11.5px !important;
-  font-weight: 850 !important;
-  letter-spacing: 0 !important;
-}
-
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitSvgTitle {
-  font-size: 22px !important;
-  font-weight: 950 !important;
-  letter-spacing: 0 !important;
-}
-
-html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitSvgSubtitle {
-  font-size: 10.8px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0 !important;
-}
-
 @media (max-width: 390px) {
   html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
     --nutrition-main-card-title: 17px;
     --nutrition-main-card-text: 12px;
   }
 
-  html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanTopCard,
   html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukHeader {
     grid-template-columns: 46px minmax(0, 1fr) auto !important;
     gap: 10px !important;
@@ -133,7 +96,6 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
     padding-left: 12px !important;
   }
 
-  html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline .nutritionAiPlanCollapsedIcon,
   html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukIcon {
     width: 44px !important;
     height: 44px !important;
@@ -145,4 +107,3 @@ html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > 
     display: none !important;
   }
 }
-

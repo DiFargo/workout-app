@@ -9,9 +9,7 @@
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage {
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
     --client-page-x: 22px;
     --client-page-title-top: 56px;
     --client-page-title-height: 54px;
@@ -32,18 +30,14 @@
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::before,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::before,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::before,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage::before,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage::before {
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::before {
     content: none !important;
     display: none !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::after,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::after,
-  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::after,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage::after,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.basicWorkoutSelectPage::after {
+  html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::after {
     content: "" !important;
     position: fixed !important;
     left: 0 !important;
@@ -59,7 +53,6 @@
   html:root[data-app-theme="warm-light"] body #root .clientCorePage .clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
-  html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout .appVersionBadge.clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge {
     position: absolute !important;
     top: 18px !important;

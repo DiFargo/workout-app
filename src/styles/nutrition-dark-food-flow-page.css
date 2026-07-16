@@ -1,6 +1,5 @@
 /* V858: dark-green nutrition pages and food flows must not leak white surfaces. */
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3 .nutritionAiPlanDashboard {
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
   --nutrition-flow-border: var(--line) !important;
   --nutrition-flow-card: var(--card) !important;
   --nutrition-flow-card-soft: var(--card-2) !important;
@@ -14,22 +13,14 @@
   font-family: inherit !important;
 }
 
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionHeroTitleV4 .clientCorePageTitle,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionDayV4 span,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionStreakV4,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCol strong,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopTitle strong,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle strong,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionSummaryRender h2,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionSummaryRender strong,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionWeekV4,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCard,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionAiPlanDashboard.collapsed.nutritionAiPlanTopInline,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitPreviewCard,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionSummaryRender,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionSummaryMacro,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanCollapsedMacros span {
+:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionSummaryMacro {
   border-color: var(--line) !important;
   background: var(--card) !important;
   color: var(--text) !important;
@@ -37,33 +28,20 @@
 }
 
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCol span,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopTitle small,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle small,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta small,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionSummaryRender p,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionSummaryRender small,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanCollapsedIcon,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukIcon,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionSummaryIcon {
   color: var(--muted) !important;
 }
 
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanCollapsedArrow,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta i,
 :root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionSummaryExpand {
   border-color: var(--line) !important;
   background: var(--card-2) !important;
   color: var(--muted) !important;
   box-shadow: 0 10px 18px rgba(0, 0, 0, 0.16) !important;
-}
-
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitSvgAmount,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitSvgTitle {
-  fill: var(--text) !important;
-}
-
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitSvgTarget,
-:root[data-app-theme="dark-green"] html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionOrbitPreview .nutritionOrbitSvgSubtitle {
-  fill: var(--muted) !important;
 }
 

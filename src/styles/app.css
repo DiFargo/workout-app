@@ -98,7 +98,7 @@
   line-height: 1.2;
 }
 
-.exercise button,
+.exercise button:not([data-css-module-control]),
 .showVideoBtn {
   width: 100%;
   padding: 16px;
@@ -110,15 +110,6 @@
   font-size: 17px;
   font-weight: 900;
   box-shadow: none;
-}
-
-.exerciseVideo {
-  width: 100%;
-  max-height: 160px;
-  border-radius: 18px;
-  margin-bottom: 10px;
-  background: #000;
-  object-fit: cover;
 }
 
 .exercise input {
@@ -137,5 +128,3 @@
   text-overflow: ellipsis;
   text-align: center;
 }
-
-

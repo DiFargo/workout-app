@@ -1,9 +1,4 @@
-html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium,
-html body #root .dishIngredientSearchBox,
-html body #root .foodEditPageOverlay .foodEditPageContent input,
-html body #root .foodEditPageOverlay .foodEditPageContent textarea,
-html body #root .foodEditPageOverlay .foodEditPortionInlineUnit,
-html body #root .foodEditPageOverlay .foodEditPortionUnitRow {
+html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium {
   border: 1px solid var(--food-flow-border) !important;
   border-radius: 18px !important;
   background: #ffffff !important;
@@ -17,19 +12,13 @@ html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium {
   padding: 0 12px !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input,
-html body #root .dishIngredientSearchBox input,
-html body #root .foodEditPageOverlay .foodEditPageContent input,
-html body #root .foodEditPageOverlay .foodEditPageContent textarea {
+html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input {
   color: var(--food-flow-text) !important;
   font-size: 15px !important;
   font-weight: 800 !important;
 }
 
-html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input::placeholder,
-html body #root .dishIngredientSearchBox input::placeholder,
-html body #root .foodEditPageOverlay .foodEditPageContent input::placeholder,
-html body #root .foodEditPageOverlay .foodEditPageContent textarea::placeholder {
+html body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input::placeholder {
   color: #98a0b3 !important;
 }
 

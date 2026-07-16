@@ -3,7 +3,6 @@ html:root[data-app-theme="warm-light"] body #root .clientCorePage .appVersionBad
 html:root[data-app-theme="warm-light"] body #root .clientCorePage .clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
-html:root[data-app-theme="warm-light"] body #root .clientCorePageWorkout.individualWorkoutSelectPage .appVersionBadge.clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge {
   color: #737b91 !important;
   -webkit-text-fill-color: #737b91 !important;

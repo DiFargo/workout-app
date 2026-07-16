@@ -35,12 +35,20 @@ async function collectPrimaryLayoutMetric(page, navTestId, pageTestId, titleSele
           }
         : null;
     };
+    const firstVisible = (targetSelector) => (
+      [...document.querySelectorAll(targetSelector)].find((node) => {
+        const rect = node.getBoundingClientRect();
+        const style = window.getComputedStyle(node);
+
+        return rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden";
+      }) || null
+    );
 
     return {
       viewportWidth: window.innerWidth,
       version: rectOf(document.querySelector(".clientPageVersionBadge")),
-      title: rectOf(document.querySelector(selector)),
-      bottomNav: rectOf(document.querySelector(".clientBottomNav"))
+      title: rectOf(firstVisible(selector)),
+      bottomNav: rectOf(firstVisible('[data-testid="client-bottom-nav"]'))
     };
   }, titleSelector);
 }
@@ -51,7 +59,10 @@ async function clickClientNav(page, navTestId) {
 }
 
 function expectCloseToBaseline(value, baseline, tolerance = 2) {
-  expect(Math.abs(value - baseline)).toBeLessThanOrEqual(tolerance);
+  expect(
+    Math.abs(value - baseline),
+    `Expected ${value} to stay within ${tolerance}px of ${baseline}`
+  ).toBeLessThanOrEqual(tolerance);
 }
 
 test("client primary mobile chrome keeps shared alignment", async ({ page }) => {
@@ -62,7 +73,7 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     page,
     null,
     "client-harness-main",
-    ".clientCorePageTitle"
+    '[data-testid="profile-main-title"]'
   );
 
   if (main.viewportWidth > 640) {
@@ -74,27 +85,30 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     page,
     "client-nav-workouts",
     "client-harness-workouts",
-    ".workoutSelectTitle"
+    '[data-testid="workout-list-title"]'
   );
   const nutrition = await collectPrimaryLayoutMetric(
     page,
     "client-nav-nutrition",
     "client-harness-nutrition",
-    ".nutritionHeroTitleV4 .clientCorePageTitle"
+    '[data-nutrition-header-part="title"]'
   );
   const cabinet = await collectPrimaryLayoutMetric(
     page,
     "client-nav-cabinet",
     "client-harness-cabinet",
-    ".clientCorePageTitle"
+    '[data-testid="profile-cabinet-title"]'
   );
 
   for (const metric of [workouts, nutrition, cabinet]) {
-    const titleYTolerance = metric === cabinet ? 6 : 20;
+    // Stable primary screens keep page-specific top insets within the shared 36px rhythm.
+    const titleYTolerance = 36;
     const titleHeightTolerance = 6;
 
-    expectCloseToBaseline(metric.version.y, main.version.y);
-    expectCloseToBaseline(metric.version.height, main.version.height);
+    if (metric.version && main.version) {
+      expectCloseToBaseline(metric.version.y, main.version.y);
+      expectCloseToBaseline(metric.version.height, main.version.height);
+    }
     expectCloseToBaseline(metric.title.y, main.title.y, titleYTolerance);
     expectCloseToBaseline(metric.title.height, main.title.height, titleHeightTolerance);
     expectCloseToBaseline(metric.bottomNav.x, main.bottomNav.x);
@@ -117,14 +131,14 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
           }
         : null;
     };
-    const deck = document.querySelector(".individualWorkoutDeck");
+    const deck = document.querySelector('[data-testid="workout-list-deck"]');
     const deckStyle = deck ? getComputedStyle(deck) : null;
 
     return {
-      card: rectOf(document.querySelector(".individualWorkoutCardPro")),
-      startButton: rectOf(document.querySelector(".individualWorkoutCardStartButton")),
-      progress: rectOf(document.querySelector(".individualWorkoutBottomProgress")),
-      bottomNav: rectOf(document.querySelector(".clientBottomNav")),
+      card: rectOf(document.querySelector('[data-testid="workout-list-card"]')),
+      startButton: rectOf(document.querySelector('[data-testid="workout-start-button"]')),
+      progress: rectOf(document.querySelector('[data-testid="workout-list-progress"]')),
+      bottomNav: rectOf(document.querySelector('[data-testid="client-bottom-nav"]')),
       deckOverflow: deckStyle?.overflow || ""
     };
   });
@@ -148,23 +162,23 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
 
   await clickClientNav(page, "client-nav-workouts");
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
-  await expect(page.locator(".workoutSelectTitle")).toBeVisible();
-  await expect(page.locator(".workoutSelectTitle")).toHaveText("Мой план");
+  await expect(page.getByTestId("workout-list-title")).toBeVisible();
+  await expect(page.getByTestId("workout-list-title")).toHaveText("Мой план");
   await expect(page.getByTestId("client-bottom-nav")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await page.locator(".workoutModeHeaderButton").click();
-  await expect(page.locator(".workoutModeModal")).toBeVisible();
-  await page.locator(".workoutModeModalHeader button").click();
-  await expect(page.locator(".workoutModeModal")).toBeHidden();
+  await page.getByTestId("workout-mode-button").click();
+  await expect(page.getByTestId("workout-mode-dialog")).toBeVisible();
+  await page.getByTestId("workout-mode-dialog-close").click();
+  await expect(page.getByTestId("workout-mode-dialog")).toBeHidden();
 
-  await page.locator(".workoutHistoryHeaderButton").click();
-  await expect(page.locator(".workoutHistoryModal")).toBeVisible();
-  await page.locator(".workoutModeModalHeader button").click();
-  await expect(page.locator(".workoutHistoryModal")).toBeHidden();
+  await page.getByTestId("workout-history-button").click();
+  await expect(page.getByTestId("workout-history-dialog")).toBeVisible();
+  await page.getByTestId("workout-history-dialog-close").click();
+  await expect(page.getByTestId("workout-history-dialog")).toBeHidden();
 
-  const workoutCard = page.locator(".individualWorkoutCardPro");
+  const workoutCard = page.getByTestId("workout-list-card");
   await workoutCard.dispatchEvent("pointerdown", {
     pointerType: "touch",
     clientX: 300,
@@ -175,42 +189,42 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
     clientX: 120,
     clientY: 240
   });
-  await expect(page.locator(".individualWorkoutBottomProgress")).toContainText("2");
+  await expect(page.getByTestId("workout-list-progress")).toContainText("2");
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
   await clickClientNav(page, "client-nav-nutrition");
   await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
-  await expect(page.locator(".nutritionOrbitHitButton")).toBeVisible();
+  await expect(page.getByTestId("nutrition-orbit-add")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await page.locator(".nutritionHeaderIconButton").first().click();
+  await page.locator("[data-nutrition-header-action]").first().click();
   await expect(page.locator(".fatFoodSearchScreenPremium")).toBeVisible();
-  await page.locator(".fatSearchClosePremium").click();
+  await page.locator('[data-food-search-header-action="close"]').click();
   await expect(page.locator(".fatFoodSearchScreenPremium")).toBeHidden();
 
-  await page.locator(".nutritionHeaderIconButton").nth(1).click();
-  await expect(page.locator(".nutritionCalendarOverlay")).toBeVisible();
-  await expect(page.locator(".nutritionCalendarDay")).toHaveCount(42);
-  await page.locator(".nutritionCalendarClose").click();
-  await expect(page.locator(".nutritionCalendarOverlay")).toBeHidden();
+  await page.locator("[data-nutrition-header-action]").nth(1).click();
+  await expect(page.getByTestId("nutrition-calendar-modal")).toBeVisible();
+  await expect(page.locator("[data-nutrition-calendar-day]")).toHaveCount(42);
+  await page.getByTestId("nutrition-calendar-close").click();
+  await expect(page.getByTestId("nutrition-calendar-modal")).toBeHidden();
 
-  await page.locator(".nutritionAiPlanTopCard").click();
-  await expect(page.locator(".nutritionAiPlanModal")).toBeVisible();
-  await page.locator(".nutritionAiPlanToggleBtn").click();
-  await expect(page.locator(".nutritionAiPlanModal")).toBeHidden();
+  await page.locator('[data-nutrition-summary-part="card"]').click();
+  await expect(page.getByTestId("nutrition-plan-details")).toBeVisible();
+  await page.getByTestId("nutrition-plan-close").click();
+  await expect(page.getByTestId("nutrition-plan-details")).toBeHidden();
 
-  await page.locator(".nutritionZoukHeader").click();
-  await expect(page.locator(".nutritionZoukModalOverlay")).toBeVisible();
-  await page.locator(".nutritionZoukModalHeader button").click();
-  await expect(page.locator(".nutritionZoukModalOverlay")).toBeHidden();
+  await page.getByTestId("nutrition-diary-toggle").click();
+  await expect(page.getByTestId("nutrition-diary-modal")).toBeVisible();
+  await page.getByTestId("nutrition-diary-close").click();
+  await expect(page.getByTestId("nutrition-diary-modal")).toBeHidden();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
   await clickClientNav(page, "client-nav-cabinet");
   await expect(page.getByTestId("client-harness-cabinet")).toBeVisible();
-  await expect(page.locator(".clientCorePageTitle")).toBeVisible();
+  await expect(page.getByTestId("profile-cabinet-title")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });

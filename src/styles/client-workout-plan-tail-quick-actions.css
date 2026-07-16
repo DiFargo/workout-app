@@ -4,94 +4,12 @@
    ÐÐ¾Ð²Ñ‹Ð¹ Ð±Ð»Ð¾Ðº ÑÐ¾Ð·Ð´Ð°Ð½ Ñ Ð½ÑƒÐ»Ñ Ð¸ Ð½Ðµ Ð·Ð°Ð²Ð¸ÑÐ¸Ñ‚ Ð¾Ñ‚ ÑÑ‚Ð°Ñ€Ñ‹Ñ… ÑÑ‚Ð¸Ð»ÐµÐ¹.
    ========================================================= */
 
-.nutritionQuickActionExact {
-  width: 100% !important;
-  height: 62px !important;
-  min-height: 62px !important;
-  padding: 0 20px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 12px !important;
-
-  border-radius: 17px !important;
-  border: 1px solid rgba(255, 255, 255, 0.13) !important;
-
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.035), transparent 50%),
-    linear-gradient(180deg, rgba(15,24,28,0.88), rgba(7,13,16,0.96)) !important;
-
-  color: rgba(246,248,251,0.92) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.035),
-    0 10px 24px rgba(0,0,0,0.22) !important;
-
-  font-size: 17px !important;
-  font-weight: 850 !important;
-  line-height: 1 !important;
-  letter-spacing: -0.42px !important;
-  white-space: nowrap !important;
-
-  appearance: none !important;
-  -webkit-appearance: none !important;
-}
-
-.nutritionQuickActionExact:active {
-  transform: scale(0.985) !important;
-}
-
-.nutritionQuickCalendarIcon {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 24px !important;
-  line-height: 1 !important;
-}
-
 @media (max-width: 480px) {
 
-  .nutritionQuickActionExact {
-    height: 58px !important;
-    min-height: 58px !important;
-    padding: 0 14px !important;
-    gap: 9px !important;
-    border-radius: 16px !important;
-    font-size: 15px !important;
-  }
-
-  .nutritionQuickSearchIcon,
-  .nutritionQuickCalendarIcon {
+  .nutritionQuickSearchIcon {
     width: 24px !important;
     height: 24px !important;
     min-width: 24px !important;
-  }
-
-  .nutritionQuickCalendarIcon {
-    font-size: 22px !important;
-  }
-}
-
-@media (max-width: 390px) {
-
-  .nutritionQuickActionExact {
-    height: 56px !important;
-    min-height: 56px !important;
-    padding: 0 11px !important;
-    gap: 8px !important;
-    font-size: 14px !important;
-  }
-}
-
-@media (max-width: 360px) {
-  .nutritionQuickActionExact {
-    padding: 0 8px !important;
-    gap: 7px !important;
-    font-size: 13px !important;
   }
 }
 

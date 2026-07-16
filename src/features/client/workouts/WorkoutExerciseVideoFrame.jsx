@@ -1,3 +1,5 @@
+import styles from "./WorkoutExerciseVideoFrame.module.css";
+
 export default function WorkoutExerciseVideoFrame({
   exercise,
   exerciseVideoFailed,
@@ -21,13 +23,15 @@ export default function WorkoutExerciseVideoFrame({
 
   return (
     <div
-      className={`workoutExerciseVideoFrame ${!exercise.video || exerciseVideoFailed ? "fallback" : ""}`}
+      data-testid="workout-exercise-video-frame"
+      className={styles.frame}
     >
       {hasVideo ? (
         <>
           <video
             key={`${exercise.id}:${videoRetryToken}`}
-            className="exerciseVideo"
+            className={styles.video}
+            data-css-module-control="workout-exercise-video"
             src={exercise.video}
             playsInline
             preload="auto"
@@ -52,12 +56,13 @@ export default function WorkoutExerciseVideoFrame({
             onError={onVideoError}
           />
           {videoLoadingId === exercise.id && (
-            <span className="workoutExerciseVideoLoading">Загрузка видео...</span>
+            <span className={styles.loading}>Загрузка видео...</span>
           )}
           {inlinePlayingVideoId !== exercise.id && (
             <button
               type="button"
-              className={`workoutExerciseInlinePlayButton ${inlineVideoControlsVisible ? "" : "is-hidden"}`}
+              className={`${styles.inlineControl} ${styles.playButton} ${inlineVideoControlsVisible ? "" : styles.hidden}`}
+              data-css-module-control="workout-exercise-video"
               onClick={(event) => {
                 event.stopPropagation();
                 const video = event.currentTarget.parentElement?.querySelector("video");
@@ -71,7 +76,8 @@ export default function WorkoutExerciseVideoFrame({
           {inlinePlayingVideoId === exercise.id && (
             <button
               type="button"
-              className={`workoutExerciseInlinePauseButton ${inlineVideoControlsVisible ? "" : "is-hidden"}`}
+              className={`${styles.inlineControl} ${styles.pauseButton} ${inlineVideoControlsVisible ? "" : styles.hidden}`}
+              data-css-module-control="workout-exercise-video"
               onClick={(event) => {
                 event.stopPropagation();
                 event.currentTarget.parentElement?.querySelector("video")?.pause();
@@ -83,7 +89,8 @@ export default function WorkoutExerciseVideoFrame({
           )}
           <button
             type="button"
-            className="workoutExerciseFullscreenButton"
+            className={styles.fullscreenButton}
+            data-css-module-control="workout-exercise-video"
             onClick={(event) => {
               event.stopPropagation();
               event.currentTarget.parentElement?.querySelector("video")?.pause();
@@ -96,11 +103,16 @@ export default function WorkoutExerciseVideoFrame({
           </button>
         </>
       ) : (
-        <div className="workoutExerciseVideoFallback">
+        <div className={styles.fallbackContent} data-css-module-scope="workout-exercise-video-fallback">
           <strong>{exercise.video ? "Видео техники недоступно" : "Видео появится позже"}</strong>
           <small>{fallbackHint}</small>
           {exercise.video && exerciseVideoFailed && (
-            <button type="button" onClick={onRetryVideo}>
+            <button
+              type="button"
+              className={styles.retryButton}
+              data-css-module-control="workout-exercise-video"
+              onClick={onRetryVideo}
+            >
               Повторить загрузку
             </button>
           )}

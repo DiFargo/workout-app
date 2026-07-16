@@ -1,4 +1,5 @@
 import { formatIndividualWorkoutHistoryDate } from "../../../utils/workoutHistoryPresentation";
+import styles from "./WorkoutListDialogs.module.css";
 
 export function WorkoutModePickerDialog({
   open,
@@ -14,24 +15,29 @@ export function WorkoutModePickerDialog({
 
   return (
     <div
-      className="workoutModeModalOverlay"
+      className={styles.overlay}
+      data-css-module-scope="workout-list-dialogs"
+      data-testid="workout-mode-dialog-overlay"
       role="presentation"
       onClick={onClose}
     >
       <section
-        className="workoutModeModal"
+        className={styles.dialog}
+        data-testid="workout-mode-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="workoutModeModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="workoutModeModalHeader">
+        <header className={styles.header} data-testid="workout-mode-dialog-header">
           <div>
-            <small>ТРЕНИРОВКИ</small>
-            <h2 id="workoutModeModalTitle">Режим запуска</h2>
+            <small className={styles.eyebrow}>ТРЕНИРОВКИ</small>
+            <h2 className={styles.title} id="workoutModeModalTitle">Режим запуска</h2>
           </div>
           <button
             type="button"
+            className={styles.closeButton}
+            data-testid="workout-mode-dialog-close"
             aria-label="Закрыть выбор режима"
             onClick={onClose}
           >
@@ -39,39 +45,42 @@ export function WorkoutModePickerDialog({
           </button>
         </header>
 
-        <div className="workoutModeModalOptions">
+        <div className={styles.options} data-testid="workout-mode-dialog-options">
           <button
             type="button"
-            className={workoutModePreference.mode === "basic" ? "active" : ""}
+            className={`${styles.option} ${workoutModePreference.mode === "basic" ? styles.optionActive : ""}`}
+            data-testid="workout-mode-option"
             aria-pressed={workoutModePreference.mode === "basic"}
             onClick={onOpenBasic}
           >
-            <span>Б</span>
-            <div>
-              <strong>Базовые тренировки</strong>
-              <small>Подбор готовой программы по цели и опыту</small>
+            <span className={styles.optionIcon}>Б</span>
+            <div className={styles.optionContent}>
+              <strong className={styles.optionTitle}>Базовые тренировки</strong>
+              <small className={styles.optionDescription}>Подбор готовой программы по цели и опыту</small>
             </div>
-            <i>›</i>
+            <i className={styles.optionIndicator}>›</i>
           </button>
 
           <button
             type="button"
-            className={workoutModePreference.mode === "individual" ? "active" : ""}
+            className={`${styles.option} ${workoutModePreference.mode === "individual" ? styles.optionActive : ""}`}
+            data-testid="workout-mode-option"
             aria-pressed={workoutModePreference.mode === "individual"}
             onClick={onOpenIndividual}
           >
-            <span>И</span>
-            <div>
-              <strong>Индивидуальный план</strong>
-              <small>Программа, назначенная вашим тренером</small>
+            <span className={styles.optionIcon}>И</span>
+            <div className={styles.optionContent}>
+              <strong className={styles.optionTitle}>Индивидуальный план</strong>
+              <small className={styles.optionDescription}>Программа, назначенная вашим тренером</small>
             </div>
-            <i>✓</i>
+            <i className={styles.optionIndicator}>✓</i>
           </button>
         </div>
 
-        <label className="workoutModeModalRemember">
+        <label className={styles.remember} data-testid="workout-mode-dialog-remember">
           <input
             type="checkbox"
+            className={styles.rememberInput}
             checked={rememberChecked}
             onChange={(event) => onRememberChoiceChange?.(event.target.checked)}
           />
@@ -93,24 +102,29 @@ export function IndividualWorkoutHistoryDialog({
 
   return (
     <div
-      className="workoutModeModalOverlay"
+      className={styles.overlay}
+      data-testid="workout-history-dialog-overlay"
+      data-css-module-scope="workout-list-dialogs"
       role="presentation"
       onClick={onClose}
     >
       <section
-        className="workoutModeModal workoutHistoryModal"
+        className={`${styles.dialog} ${styles.historyDialog}`}
+        data-testid="workout-history-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="workoutHistoryModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="workoutModeModalHeader">
+        <header className={styles.header} data-testid="workout-history-dialog-header">
           <div>
-            <small>ИНДИВИДУАЛЬНЫЙ ПЛАН</small>
-            <h2 id="workoutHistoryModalTitle">История тренировок</h2>
+            <small className={styles.eyebrow}>ИНДИВИДУАЛЬНЫЙ ПЛАН</small>
+            <h2 className={styles.title} id="workoutHistoryModalTitle">История тренировок</h2>
           </div>
           <button
             type="button"
+            className={styles.closeButton}
+            data-testid="workout-history-dialog-close"
             aria-label="Закрыть историю тренировок"
             onClick={onClose}
           >
@@ -118,18 +132,19 @@ export function IndividualWorkoutHistoryDialog({
           </button>
         </header>
 
-        <div className="workoutHistoryModalList">
-          {historyLoading && <p>Загрузка истории...</p>}
+        <div className={styles.historyList} data-testid="workout-history-dialog-list">
+          {historyLoading && <p className={styles.historyMessage}>Загрузка истории...</p>}
 
           {!historyLoading && historyItems.map((item) => (
             <div
-              className="workoutHistoryModalItem"
+              className={styles.historyItem}
+              data-testid="workout-history-dialog-item"
               key={item.id || `${item.date}_${item.workout}`}
             >
-              <span aria-hidden="true">{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
-              <div>
-                <strong>{item.workout || "Тренировка"}</strong>
-                <small>
+              <span className={styles.historyIcon} aria-hidden="true">{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
+              <div className={styles.historyContent}>
+                <strong className={styles.historyTitle}>{item.workout || "Тренировка"}</strong>
+                <small className={styles.historyMeta}>
                   {formatIndividualWorkoutHistoryDate(item.date)}
                   {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
                 </small>
@@ -138,14 +153,15 @@ export function IndividualWorkoutHistoryDialog({
           ))}
 
           {!historyLoading && historyItems.length === 0 && (
-            <p>В этой программе завершённых тренировок пока нет.</p>
+            <p className={styles.historyMessage}>В этой программе завершённых тренировок пока нет.</p>
           )}
         </div>
 
         {historyItems.length > 0 && (
           <button
             type="button"
-            className="workoutHistoryModalAll"
+            className={styles.historyAllButton}
+            data-testid="workout-history-dialog-all"
             onClick={onOpenAll}
           >
             Открыть историю тренировок

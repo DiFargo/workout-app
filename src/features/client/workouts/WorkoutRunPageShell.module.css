@@ -1,0 +1,53 @@
+.root {
+  --workout-stage-card-height: clamp(
+    420px,
+    calc(100dvh - 236px - max(26px, calc(env(safe-area-inset-bottom) + 18px))),
+    680px
+  );
+  --workout-stage-card-radius: 34px;
+  --workout-stage-panel-height: 98px;
+  --workout-stage-panel-bottom: max(26px, calc(env(safe-area-inset-bottom) + 18px));
+
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 560px;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    max(14px, calc(env(safe-area-inset-top) + 10px))
+    14px
+    max(8px, env(safe-area-inset-bottom));
+  overflow: hidden;
+  background: var(--background-workout-run-page);
+  color: var(--color-workout-run-page-text);
+}
+
+.noHeader {
+  --workout-stage-card-height: clamp(
+    464px,
+    calc(
+      100dvh
+      - max(14px, calc(env(safe-area-inset-top) + 10px))
+      - 178px
+      - var(--workout-stage-panel-bottom)
+    ),
+    724px
+  );
+}
+
+@media (max-height: 740px) {
+  .root {
+    padding-top: max(10px, calc(env(safe-area-inset-top) + 8px));
+  }
+}
+
+@media (max-width: 390px) {
+  .root {
+    --workout-stage-card-radius: 30px;
+
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}

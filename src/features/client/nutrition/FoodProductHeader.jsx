@@ -1,3 +1,5 @@
+import styles from "./FoodProductHeader.module.css";
+
 export default function FoodProductHeader({
   showFlowHeader,
   selectedFood,
@@ -13,18 +15,30 @@ export default function FoodProductHeader({
   return (
     <>
       {showFlowHeader && (
-        <div className="foodProductFlowHeader">
-          <div className="foodProductFlowTitle">
-            <span>Питание</span>
-            <h2>Продукт</h2>
+        <div
+          className={styles.flowHeader}
+          data-css-module-scope="food-product-header"
+          data-testid="food-product-flow-header"
+        >
+          <div className={styles.flowTitle}>
+            <span className={styles.eyebrow} data-css-module-text="food-product-header">Питание</span>
+            <h2
+              className={styles.heading}
+              data-css-module-text="food-product-header"
+              data-food-product-header-title
+            >
+              Продукт
+            </h2>
           </div>
 
-          <div className="foodEditInlineMealHeader">
-            <span className="foodEditInlineMealLabel">Добавить в</span>
+          <div className={styles.mealCard} data-testid="food-product-meal-selector">
+            <span className={styles.mealLabel} data-css-module-text="food-product-header">Добавить в</span>
 
             <button
               type="button"
-              className="foodEditInlineMealButton"
+              className={styles.mealButton}
+              data-css-module-control="food-product-header"
+              data-food-product-header-action="toggle-meal"
               aria-expanded={mealMenuOpen}
               onClick={onToggleMealMenu}
             >
@@ -32,17 +46,23 @@ export default function FoodProductHeader({
             </button>
 
             {mealMenuOpen && (
-              <div className="foodEditMealPickerDropdown foodEditMealPickerDropdownInline">
+              <div className={styles.mealDropdown} data-testid="food-product-meal-menu">
                 {meals.map((meal) => (
                   <button
                     type="button"
                     key={meal.id}
-                    className={mealId === meal.id ? "active" : ""}
+                    className={`${styles.mealOption}${mealId === meal.id ? ` ${styles.selected}` : ""}`}
+                    data-css-module-control="food-product-header"
+                    data-food-product-meal={meal.id}
                     aria-pressed={mealId === meal.id}
                     onClick={() => onSelectMeal(meal.id)}
                   >
-                    <span>{meal.icon}</span>
-                    <strong>{meal.name}</strong>
+                    <span className={styles.mealIcon} aria-hidden="true" data-css-module-text="food-product-header">
+                      {meal.icon}
+                    </span>
+                    <strong className={styles.mealName} data-css-module-text="food-product-header">
+                      {meal.name}
+                    </strong>
                   </button>
                 ))}
               </div>
@@ -51,12 +71,22 @@ export default function FoodProductHeader({
         </div>
       )}
 
-      <div className="foodEditHeroRender foodEditHeroEditable">
-        <div className="foodEditIconSourceStack">
-          <span className="foodEditIconRender">{selectedFood.icon || getFoodIcon(selectedFood)}</span>
-          <small>{selectedFood.source || selectedFood.portion || "Продукт"}</small>
+      <div
+        className={styles.hero}
+        data-css-module-scope="food-product-header"
+        data-testid="food-product-hero"
+      >
+        <div className={styles.iconStack}>
+          <span className={styles.icon} aria-hidden="true" data-css-module-text="food-product-header">
+            {selectedFood.icon || getFoodIcon(selectedFood)}
+          </span>
+          <small className={styles.source} data-css-module-text="food-product-header">
+            {selectedFood.source || selectedFood.portion || "Продукт"}
+          </small>
         </div>
-        <strong>{selectedFood.name}</strong>
+        <strong className={styles.productName} data-css-module-text="food-product-header">
+          {selectedFood.name}
+        </strong>
       </div>
     </>
   );

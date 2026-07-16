@@ -1,6 +1,4 @@
 /* FORCE PRODUCT PENCIL OUTSIDE HERO â€” TOP RIGHT */
-.foodEditRenderScreen > .foodEditPencilTopRight,
-.fatFoodAmountScreen.foodEditRenderScreen > .foodEditPencilTopRight,
 button.foodEditPencilButton.foodEditPencilTopRight {
   position: fixed !important;
   top: max(16px, calc(env(safe-area-inset-top) + 12px)) !important;
@@ -28,21 +26,5 @@ button.foodEditPencilButton.foodEditPencilTopRight {
   transform: none !important;
 }
 
-.foodEditHeroRender.foodEditHeroEditable .foodEditPencilButton {
-  display: none !important;
-}
-
 /* EDIT PAGE BACK MUST RETURN TO PRODUCT, NOT CLOSE PRODUCT SCREEN */
-.foodEditPageOverlay {
-  z-index: 2147483646 !important;
-}
-
-.foodEditPageOverlay .foodEditPageBack {
-  z-index: 2147483647 !important;
-  pointer-events: auto !important;
-}
-
-.foodEditRenderScreen:has(.foodEditPageOverlay) > .foodEditBackOnly {
-  display: none !important;
-}
 

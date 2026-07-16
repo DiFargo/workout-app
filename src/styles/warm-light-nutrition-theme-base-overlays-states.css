@@ -14,8 +14,8 @@
 }
 
 /* active tabs and selected states */
-:root[data-app-theme="warm-light"] .active,
-:root[data-app-theme="warm-light"] .selected,
+:root[data-app-theme="warm-light"] .active:not([data-css-module-scope] *),
+:root[data-app-theme="warm-light"] .selected:not([data-css-module-scope] *),
 :root[data-app-theme="warm-light"] .fatTab.active,
 :root[data-app-theme="warm-light"] .fatTab.selected,
 :root[data-app-theme="warm-light"] .nutritionTab.active,
@@ -45,7 +45,7 @@
   scrollbar-color: rgba(101, 82, 230, 0.58) rgba(239, 236, 255, 0.36);
 }
 
-:root[data-app-theme="warm-light"] *:focus {
+:root[data-app-theme="warm-light"] *:focus:not([data-css-module-scope] *) {
   outline-color: rgba(183,149,45,0.34) !important;
 }
 
@@ -75,13 +75,13 @@
 }
 
 /* final safety: any old dark nutrition panels inside warm mode */
-:root[data-app-theme="warm-light"] .fatSecretPage [class*="Card"],
-:root[data-app-theme="warm-light"] .fatSecretPage [class*="Panel"],
-:root[data-app-theme="warm-light"] .fatSecretPage [class*="Sheet"],
-:root[data-app-theme="warm-light"] .fatSecretPage [class*="Modal"],
-:root[data-app-theme="warm-light"] .nutritionPage [class*="Card"],
-:root[data-app-theme="warm-light"] .nutritionPage [class*="Panel"],
-:root[data-app-theme="warm-light"] .nutritionPage [class*="Sheet"],
-:root[data-app-theme="warm-light"] .nutritionPage [class*="Modal"] {
+:root[data-app-theme="warm-light"] .fatSecretPage [class*="Card"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *),
+:root[data-app-theme="warm-light"] .fatSecretPage [class*="Panel"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *),
+:root[data-app-theme="warm-light"] .fatSecretPage [class*="Sheet"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *),
+:root[data-app-theme="warm-light"] .fatSecretPage [class*="Modal"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *),
+:root[data-app-theme="warm-light"] .nutritionPage [class*="Card"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *),
+:root[data-app-theme="warm-light"] .nutritionPage [class*="Panel"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *),
+:root[data-app-theme="warm-light"] .nutritionPage [class*="Sheet"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *),
+:root[data-app-theme="warm-light"] .nutritionPage [class*="Modal"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *) {
   border-color: var(--line) !important;
 }

@@ -1,6 +1,7 @@
 import { getWorkoutPresentation } from "../../../domain/workoutPresentation";
 import { sortWorkoutDays } from "../../../utils/workoutPlanNormalization";
 import { ClientTrainingBottomBar } from "../../../shared/ui/BottomBar";
+import styles from "./WorkoutPlanPage.module.css";
 
 export default function WorkoutPlanPage({
   plan,
@@ -38,23 +39,23 @@ export default function WorkoutPlanPage({
   }, []);
 
   return (
-    <div className="workoutPlanOverviewPage">
-      <main className="workoutPlanOverviewShell">
-        <header className="workoutPlanOverviewHeader">
+    <div className={styles.page} data-testid="workout-plan-page" data-css-module-scope="workout-plan">
+      <main className={styles.shell}>
+        <header className={styles.header}>
           <span>ПРОГРАММА ТРЕНЕРА</span>
           <h1>План тренировок</h1>
           <p>{plan.assignedProgramName || user?.assignedProgramName || "Индивидуальная программа"}</p>
         </header>
 
-        <section className="workoutPlanOverviewStats">
+        <section className={styles.stats} data-testid="workout-plan-stats">
           <div><strong>{workoutPlanWeeks.length}</strong><span>недель</span></div>
           <div><strong>{sortedPlanWorkouts.length}</strong><span>тренировок</span></div>
           <div><strong>{completedPlanWorkoutCount}</strong><span>выполнено</span></div>
         </section>
 
-        <div className="workoutPlanWeekList">
+        <div className={styles.weekList}>
           {workoutPlanWeeks.length ? workoutPlanWeeks.map((week) => (
-            <section className="workoutPlanWeek" key={week.name}>
+            <section className={styles.week} data-testid="workout-plan-week" key={week.name}>
               <h2>{week.name}</h2>
               <div>
                 {week.items.map(({ workout: workoutItem, presentation, index }) => {
@@ -63,7 +64,7 @@ export default function WorkoutPlanPage({
                   return (
                     <button
                       type="button"
-                      className={completed ? "completed" : ""}
+                      className={completed ? styles.completed : ""}
                       key={workoutItem.id}
                       onClick={() => onOpenWorkoutIndex(index)}
                     >
@@ -79,7 +80,7 @@ export default function WorkoutPlanPage({
               </div>
             </section>
           )) : (
-            <div className="workoutPlanOverviewEmpty">
+            <div className={styles.empty}>
               <strong>План пока не назначен</strong>
               <span>После назначения тренером здесь появятся недели и тренировки.</span>
             </div>
@@ -87,7 +88,7 @@ export default function WorkoutPlanPage({
         </div>
       </main>
 
-      <div className="individualWorkoutBottomPanel workoutPlanOverviewBottomPanel">
+      <div className={styles.bottomPanel} data-testid="workout-plan-bottom-panel">
         <ClientTrainingBottomBar
           activeTab="plan"
           onGoMain={onGoBackToMain}

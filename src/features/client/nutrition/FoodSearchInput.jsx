@@ -1,12 +1,23 @@
+import styles from "./FoodSearchInput.module.css";
+
 export default function FoodSearchInput({
   value,
   onChange,
-  onReset
+  onReset,
+  variant = "search"
 }) {
+  const isMyProducts = variant === "my-products";
+
   return (
-    <div className="fatSearchInputWrapPremium">
-      <span>⌕</span>
+    <div
+      className={`${styles.root} ${isMyProducts ? styles.myProducts : styles.search}`}
+      data-css-module-scope="food-search-input"
+      data-testid="food-search-input"
+    >
+      <span className={styles.searchIcon} aria-hidden="true">⌕</span>
       <input
+        className={styles.input}
+        data-css-module-control="food-search-input"
         type="search"
         inputMode="search"
         enterKeyHint="search"
@@ -21,7 +32,12 @@ export default function FoodSearchInput({
         placeholder="Поиск еды, бренда или блюда..."
       />
       {value && (
-        <button type="button" onClick={onReset} aria-label="Сбросить поиск">
+        <button
+          className={styles.clearButton}
+          type="button"
+          onClick={onReset}
+          aria-label="Сбросить поиск"
+        >
           ×
         </button>
       )}

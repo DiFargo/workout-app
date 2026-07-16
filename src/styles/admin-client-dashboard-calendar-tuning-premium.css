@@ -2,7 +2,6 @@
 
 .calendarDayCard,
 .calendarNutritionDay,
-.nutritionCalendarDay,
 .adminNutritionCalendarDay {
   border-radius: 18px !important;
   border: 1px solid rgba(255,255,255,.045) !important;
@@ -17,7 +16,6 @@
 
 .calendarDayCard.good,
 .calendarNutritionDay.good,
-.nutritionCalendarDay.good,
 .adminNutritionCalendarDay.good {
   background:
     radial-gradient(circle at 50% 0%, rgba(173,255,84,.08), transparent 55%),
@@ -26,7 +24,6 @@
 
 .calendarDayCard.bad,
 .calendarNutritionDay.bad,
-.nutritionCalendarDay.bad,
 .adminNutritionCalendarDay.bad {
   background:
     radial-gradient(circle at 50% 0%, rgba(255,84,84,.08), transparent 55%),
@@ -34,7 +31,6 @@
 }
 
 .calendarGrid,
-.nutritionCalendarGrid,
 .adminNutritionCalendarGrid {
   gap: 8px !important;
 }
@@ -43,7 +39,6 @@
 
   .calendarDayCard,
   .calendarNutritionDay,
-  .nutritionCalendarDay,
   .adminNutritionCalendarDay {
     border-radius: 16px !important;
     padding: 7px 5px !important;
@@ -56,8 +51,6 @@
 
 .adminCalendarDays,
 .adminNutritionCalendarGrid,
-.nutritionCalendarGrid,
 .calendarGrid {
   order: 3 !important;
 }
-

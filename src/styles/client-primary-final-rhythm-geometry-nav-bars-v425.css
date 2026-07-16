@@ -1,13 +1,6 @@
 /* v.1.962: navigation and action bar geometry. */
 @media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root nav.individualWorkoutMenuBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav,
-  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour,
-  html:root[data-app-theme="warm-light"] body #root .foodProductActionBar,
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar {
+  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour {
     position: fixed !important;
     left: max(10px, env(safe-area-inset-left)) !important;
     right: max(10px, env(safe-area-inset-right)) !important;
@@ -29,25 +22,15 @@
     transform: none !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button,
-  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button,
-  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav > button,
-  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button,
-  html:root[data-app-theme="warm-light"] body #root .foodProductActionBar > button,
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar > button {
-    height: 68px !important;
-    min-height: 68px !important;
+  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button {
+    height: var(--client-bottom-nav-button-height, 68px) !important;
+    min-height: var(--client-bottom-nav-button-min-height, 68px) !important;
     border-radius: 16px !important;
     color: #737b91 !important;
     -webkit-text-fill-color: #737b91 !important;
   }
 
-  html:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar.clientBottomNav > button.active,
-  html:root[data-app-theme="warm-light"] body #root .individualWorkoutMenuBar.clientBottomNav > button.active,
-  html:root[data-app-theme="warm-light"] body #root .nutritionBottomTabBar.clientBottomNav > button.active,
-  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button.active,
-  html:root[data-app-theme="warm-light"] body #root .foodProductActionBar .foodProductAddAction,
-  html:root[data-app-theme="warm-light"] body #root .foodEditPageActionBar .foodEditPageConfirmAction {
+  html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button.active {
     border-color: #ded7ff !important;
     background: #f0edff !important;
     color: #5d43e8 !important;

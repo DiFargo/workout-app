@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import styles from "./NutritionDeleteConfirmModal.module.css";
 
 export default function NutritionDeleteConfirmModal({
   open,
@@ -11,32 +12,41 @@ export default function NutritionDeleteConfirmModal({
   }
 
   return createPortal(
-    <div className="nutritionDeleteConfirmOverlay" role="dialog" aria-modal="true" aria-labelledby="nutrition-delete-title">
+    <div
+      className={styles.overlay}
+      data-css-module-scope="nutrition-delete-confirm"
+      data-testid="nutrition-delete-confirm-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="nutrition-delete-title"
+    >
       <button
         type="button"
-        className="nutritionDeleteConfirmBackdrop"
+        className={styles.backdrop}
+        data-testid="nutrition-delete-confirm-backdrop"
         onClick={onCancel}
         aria-label="Отменить удаление"
       />
-      <section className="nutritionDeleteConfirmCard">
+      <section className={styles.card}>
         <button
           type="button"
-          className="nutritionDeleteConfirmClose"
+          className={styles.closeButton}
+          data-testid="nutrition-delete-confirm-close"
           onClick={onCancel}
           aria-label="Закрыть"
         >
           ×
         </button>
-        <span aria-hidden="true">⌫</span>
-        <h2 id="nutrition-delete-title">Удалить из моей базы?</h2>
-        <p>
+        <span className={styles.icon} aria-hidden="true">⌫</span>
+        <h2 className={styles.title} id="nutrition-delete-title">Удалить из моей базы?</h2>
+        <p className={styles.description}>
           «{foodName || "Продукт"}» будет удалён без возможности восстановления.
         </p>
-        <div>
-          <button type="button" onClick={onCancel}>
+        <div className={styles.actions}>
+          <button className={styles.actionButton} type="button" onClick={onCancel}>
             Отмена
           </button>
-          <button type="button" className="danger" onClick={onConfirm}>
+          <button type="button" className={`${styles.actionButton} ${styles.dangerAction}`} onClick={onConfirm}>
             Удалить
           </button>
         </div>
