@@ -1,9 +1,0 @@
-/* v.1.962: food search geometry. */
-@media (max-width: 640px) {
-
-  html:root[data-app-theme="warm-light"] body #root .fatSearchInputWrapPremium {
-    min-height: 64px !important;
-    border-radius: 18px !important;
-  }
-
-}

@@ -1,9 +1,0 @@
-/* Profile measurements tab shell. Measurement content is owned by its CSS Module. */
-.profileTabbedPage[data-profile-tab="measurements"] {
-  overflow: hidden !important;
-}
-
-.profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection {
-  height: 100% !important;
-  padding: 36px 14px 10px !important;
-}

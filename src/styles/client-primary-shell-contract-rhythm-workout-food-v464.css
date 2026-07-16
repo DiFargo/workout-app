@@ -1,7 +1,0 @@
-/* Split from client-primary-shell-contract-mobile-rhythm.css: workout selection and food flow controls. */
-@media (max-width: 640px) {
-
-  html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
-    padding-top: var(--client-top) !important;
-  }
-}

@@ -1,6 +1,5 @@
 import { lazy, Suspense } from "react";
 import ProfileDashboardRoute from "../features/client/profile/ProfileDashboardRoute";
-import "../styles/client-profile-lazy.css";
 import {
   loadTrainerAdminWorkoutsRoute,
   loadTrainerDashboardRoute,

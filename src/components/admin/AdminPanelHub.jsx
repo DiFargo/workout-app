@@ -1,4 +1,5 @@
-import "../../styles/admin-lazy.css";
+import styles from "./AdminPanelHub.module.css";
+import accessStyles from "./AdminAccessDenied.module.css";
 
 export default function AdminPanelHub({
   canUseAdminFeatures,
@@ -7,7 +8,7 @@ export default function AdminPanelHub({
 }) {
   if (!canUseAdminFeatures()) {
     return (
-      <div className="app">
+      <div className={`${accessStyles.scope} app`}>
         <button className="backBtn" type="button" onClick={() => setPage("main")}>
           ← Главное меню
         </button>
@@ -20,7 +21,7 @@ export default function AdminPanelHub({
   }
 
   return (
-    <div className="adminPanelHubPage">
+    <div className={`${styles.scope} adminPanelHubPage`}>
       <button
         className="adminFixedMainBack"
         type="button"

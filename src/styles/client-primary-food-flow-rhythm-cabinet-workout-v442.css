@@ -1,6 +1,0 @@
-/* Split from client-primary-food-flow-rhythm-narrow.css: cabinet header and workout card tail locks. */
-
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMenuBottomBar.profileBottomTabBar,
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain nav.mainMenuBottomBar.profileBottomTabBar {
-  z-index: 90 !important;
-}

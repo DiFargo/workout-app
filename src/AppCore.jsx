@@ -253,17 +253,8 @@ import { useBodyScrollLock } from "./shared/hooks/useBodyScrollLock";
 import { useAppRuntimeEffects } from "./app/useAppRuntimeEffects";
 import { useAuthBootstrapEffect } from "./app/useAuthBootstrapEffect";
 
-const loadWorkoutStyles = () => import("./styles/client-workout-lazy.css");
-const loadNutritionStyles = () => import("./styles/nutrition-stack.css");
-const loadClientE2EHarness = () => Promise.all([
-  loadWorkoutStyles(),
-  loadNutritionStyles(),
-  import("./components/client/ClientE2EHarness")
-]).then(([, , module]) => module);
-const loadNutritionRoute = () => Promise.all([
-  loadNutritionStyles(),
-  import("./features/client/nutrition/NutritionRoute")
-]).then(([, module]) => module);
+const loadClientE2EHarness = () => import("./components/client/ClientE2EHarness");
+const loadNutritionRoute = () => import("./features/client/nutrition/NutritionRoute");
 const loadTrainerE2EHarness = () => import("./features/trainer/TrainerFullE2EHarness");
 const loadAdminE2EHarness = () => import("./components/admin/AdminE2EHarness");
 

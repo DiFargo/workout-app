@@ -41,7 +41,7 @@
   --meal-add-color: #dff3ae;
 
   position: fixed;
-  inset: 0;
+  inset: 0 var(--viewport-inline-compensation) 0 0;
   z-index: 9997;
   display: flex;
   align-items: center;

@@ -1,0 +1,511 @@
+/* Generated from ../workout-app/src/styles/index.css for its reachable component classes. */
+@layer reset, base, legacy, components;:root[data-app-theme="warm-light"] :where(.scope) :global(.appLogo),
+:root[data-app-theme="warm-light"] :where(.scope) :global(.loginBtn),
+:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) :global(.loginBtn) {
+  color: #231b10;
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginPage),
+:root[data-app-theme="warm-light"] :where(.scope):global(.appSplash) {
+  background:
+    radial-gradient(circle at top, rgba(255, 221, 112, 0.44) 0%, transparent 44%),
+    linear-gradient(180deg, #fff8e5 0%, #f2dfaa 100%);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginHero) h1,
+:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) h2 {
+  color: var(--text);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginHero) p,
+:root[data-app-theme="warm-light"] :where(.scope) :global(.loginHint) {
+  color: var(--muted);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) {
+  background: var(--card);
+  border-color: var(--line);
+  box-shadow: 0 16px 40px rgba(104, 78, 23, 0.14);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) input {
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--text);
+  border-color: var(--line);
+}:where(.scope):global(.appSplash) {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background:
+    radial-gradient(circle at 50% 38%, rgba(127, 159, 58, 0.18) 0%, transparent 34%),
+    radial-gradient(circle at 50% 58%, rgba(127, 159, 58, 0.08) 0%, transparent 42%),
+    linear-gradient(180deg, #0e140e 0%, #050805 100%);
+
+  color: var(--text);
+  overflow: hidden;
+}:where(.scope) :global(.splashInner) {
+  width: min(78vw, 360px);
+  min-height: 360px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 34px 24px;
+  border-radius: 38px;
+
+  background:
+    linear-gradient(180deg, rgba(23, 30, 23, 0.72) 0%, rgba(9, 12, 9, 0.42) 100%);
+
+  border: 1px solid rgba(127, 159, 58, 0.16);
+
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  position: relative;
+}:where(.scope) :global(.splashInner)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), transparent 36%);
+  pointer-events: none;
+}:where(.scope) :global(.splashMark) {
+  width: 86px;
+  height: 86px;
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 28px;
+
+  background:
+    linear-gradient(180deg, rgba(127, 159, 58, 0.24), rgba(127, 159, 58, 0.11));
+
+  border: 1px solid rgba(127, 159, 58, 0.22);
+
+  font-size: 42px;
+
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}:where(.scope) :global(.splashLogo) {
+  color: var(--accent);
+  font-size: clamp(82px, 22vw, 122px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: 5px;
+  text-shadow: 0 18px 46px rgba(0, 0, 0, 0.55);
+}:where(.scope) :global(.splashText) {
+  margin-top: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+}:where(.scope) :global(.splashProgress) {
+  width: 100%;
+  height: 9px;
+  margin-top: 28px;
+
+  overflow: hidden;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.075);
+  border: 1px solid rgba(255, 255, 255, 0.035);
+}:where(.scope) :global(.splashProgress) span {
+  display: block;
+  width: 42%;
+  height: 100%;
+
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 22px rgba(127, 159, 58, 0.38);
+  animation: splashLoading 1.2s ease-in-out infinite;
+}:where(.scope) :global(.splashDots) {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}:where(.scope) :global(.splashDots) i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(145, 173, 78, 0.8);
+  animation: splashDot 1.1s ease-in-out infinite;
+}:where(.scope) :global(.splashDots) i:nth-child(2) {
+  animation-delay: 0.16s;
+}:where(.scope) :global(.splashDots) i:nth-child(3) {
+  animation-delay: 0.32s;
+}@keyframes splashLoading {
+  0% {
+    transform: translateX(-115%);
+  }
+
+  55% {
+    transform: translateX(95%);
+  }
+
+  100% {
+    transform: translateX(245%);
+  }
+}@keyframes splashDot {
+  0%, 100% {
+    opacity: 0.32;
+    transform: translateY(0) scale(0.86);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1);
+  }
+}@media (max-width: 480px) {
+  :where(.scope) :global(.splashInner) {
+    width: min(82vw, 340px);
+    min-height: 340px;
+    padding: 30px 22px;
+    border-radius: 34px;
+  }
+
+  :where(.scope) :global(.splashMark) {
+    width: 78px;
+    height: 78px;
+    border-radius: 25px;
+    font-size: 38px;
+  }
+}:where(.scope) :global(.loginPage) {
+  min-height: 100vh;
+  width: 100%;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}:where(.scope) :global(.loginHero) {
+  width: 100%;
+  text-align: center;
+}:where(.scope) :global(.appLogo) {
+  width: 78px;
+  height: 78px;
+  margin: 0 auto 16px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 900;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.38);
+}:where(.scope) :global(.loginHero) h1 {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: var(--text);
+}:where(.scope) :global(.loginHero) p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}:where(.scope) :global(.loginCard) {
+  width: 100%;
+  max-width: 390px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+}:where(.scope) :global(.loginCard) h2 {
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: 26px;
+}:where(.scope) :global(.loginInviteNote) {
+  margin: -4px 0 4px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: center;
+}:where(.scope) :global(.loginCard) input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: #090b09;
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}:where(.scope) :global(.loginCard) input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(127, 159, 58, 0.1);
+}:where(.scope) :global(.passwordBox) {
+  position: relative;
+  width: 100%;
+}:where(.scope) :global(.passwordBox) input {
+  padding-right: 60px;
+}:where(.scope) :global(.eyeBtn) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 42px;
+  height: 42px;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  color: var(--muted);
+  font-size: 22px;
+  cursor: pointer;
+}:where(.scope) :global(.loginBtn),
+:where(.scope) :global(.loginCard) :global(.loginBtn) {
+  width: 100%;
+  min-height: 72px;
+  margin-top: 6px;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #10120f;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: none;
+}:where(.scope) :global(.loginBtn):active {
+  transform: scale(0.98);
+}:where(.scope) :global(.loginGoogleBtn) {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 850;
+  cursor: pointer;
+}:where(.scope) :global(.loginGoogleBtn) span {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff;
+  color: #151824;
+  font-size: 14px;
+  font-weight: 950;
+}:where(.scope) :global(.loginGoogleBtn):disabled {
+  opacity: 0.55;
+  cursor: default;
+}:where(.scope) :global(.loginError) {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(212, 90, 90, 0.12);
+  color: #d97979;
+  text-align: center;
+  font-size: 14px;
+}:where(.scope) :global(.loginHint) {
+  margin: 0;
+  text-align: center;
+  color: #737a73;
+  font-size: 13px;
+}:where(.scope) :global(.splashText) {
+  display: none;
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginPage),
+:root[data-app-theme="warm-light"] :where(.scope):global(.appSplash) {
+  background:
+    radial-gradient(circle at 50% -7%, rgba(216, 184, 111, 0.28), transparent 34%),
+    radial-gradient(circle at 8% 14%, rgba(255, 255, 255, 0.42), transparent 30%),
+    linear-gradient(180deg, #fbf3df 0%, #f2e4c5 52%, #ead8ad 100%);
+  color: var(--text);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginHint) {
+  color: var(--muted);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) {
+  background:
+    linear-gradient(180deg, rgba(255, 250, 239, 0.98) 0%, rgba(246, 235, 211, 0.98) 100%);
+  color: var(--text);
+  border-color: var(--line);
+  box-shadow:
+    0 14px 34px var(--warm-shadow),
+    inset 0 1px 0 rgba(255,255,255,0.68);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) input {
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--text);
+  border-color: var(--line);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.62);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginBtn) {
+  background: linear-gradient(135deg, #c79d4c 0%, #d9b86f 100%);
+  color: #21180d;
+  border-color: rgba(92, 72, 36, 0.14);
+  box-shadow: 0 10px 24px rgba(145, 105, 38, 0.18);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashLogo),
+:root[data-app-theme="warm-light"] :where(.scope) :global(.appLogo) {
+  color: #a77f35;
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginPage) {
+  background: var(--warm-page);
+  color: var(--text);
+}:root[data-app-theme="warm-light"] :where(.scope):global(.appSplash) {
+  background: var(--warm-page);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashInner) {
+  background: linear-gradient(180deg, rgba(255, 252, 235, 0.84), rgba(239, 223, 181, 0.74));
+  border-color: rgba(72, 58, 29, 0.12);
+  box-shadow: var(--warm-shadow-lg);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashMark) {
+  background: linear-gradient(180deg, rgba(244, 224, 100, 0.44), rgba(244, 224, 100, 0.20));
+  border-color: rgba(72, 58, 29, 0.12);
+  box-shadow: var(--warm-shadow-sm);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashLogo) {
+  color: #b9902e;
+  text-shadow: none;
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashText) {
+  color: var(--muted);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashProgress) {
+  background: rgba(72, 58, 29, 0.08);
+  border-color: rgba(72, 58, 29, 0.08);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashProgress) span {
+  background: linear-gradient(90deg, #c9a436, var(--warm-yellow), #e0c24e);
+  box-shadow: 0 0 18px rgba(244, 224, 100, 0.46);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashDots) i {
+  background: #c8aa3b;
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginHint) {
+  color: var(--muted);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) {
+  background: var(--warm-card);
+  color: var(--text);
+  border: 1px solid var(--line);
+  box-shadow: var(--warm-shadow-md);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginBtn) {
+  background: linear-gradient(180deg, #f6e46c 0%, #d7b73e 100%);
+  color: #211b12;
+  border-color: rgba(72, 58, 29, 0.14);
+  box-shadow: 0 10px 22px rgba(151, 119, 35, 0.18), inset 0 1px 0 rgba(255,255,255,0.46);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) input {
+  background: rgba(255, 253, 243, 0.72);
+  color: var(--text);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.62), 0 8px 20px rgba(88,68,24,0.07);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.appLogo) {
+  background: linear-gradient(180deg, rgba(244,224,100,0.42), rgba(244,224,100,0.18));
+  color: #211b12;
+  border-color: rgba(72, 58, 29, 0.12);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashLogo) {
+  color: #f4e064;
+  text-shadow:
+    0 10px 26px rgba(120, 92, 20, 0.16),
+    0 0 18px rgba(244, 224, 100, 0.18);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashProgress) span,
+:root[data-app-theme="warm-light"] :where(.scope) :global(.splashDots) i {
+  background: #f4e064;
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashProgress) span {
+  box-shadow: 0 0 18px rgba(244, 224, 100, 0.45);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.splashMark) {
+  background:
+    linear-gradient(180deg, rgba(244, 224, 100, 0.34), rgba(244, 224, 100, 0.14));
+}html:root[data-app-theme="warm-light"] :where(.scope):global(.appSplash),
+html:root[data-app-theme="warm-light"] :where(.scope) :global(.loginPage) {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(90, 73, 223, 0.07), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f6f7fc 100%);
+  color: #151824;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.splashInner),
+html:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) {
+  border-color: #dfe3ef;
+  background: rgba(255, 255, 255, 0.94);
+  color: #151824;
+  box-shadow:
+    0 24px 64px rgba(45, 53, 98, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.splashMark),
+html:root[data-app-theme="warm-light"] :where(.scope) :global(.appLogo) {
+  border-color: #dedafb;
+  background: #efedff;
+  color: #5542d8;
+  box-shadow: 0 10px 25px rgba(77, 68, 199, 0.14);
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.splashLogo) {
+  color: #5a49df;
+  text-shadow: none;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.splashText),
+html:root[data-app-theme="warm-light"] :where(.scope) :global(.loginHero) p,
+html:root[data-app-theme="warm-light"] :where(.scope) :global(.loginHint) {
+  color: #737b91;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.splashProgress) {
+  border-color: #e2e5ef;
+  background: #e9ebf3;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.splashProgress) span {
+  background: linear-gradient(90deg, #5a49df, #2d6ff2);
+  box-shadow: 0 0 18px rgba(74, 78, 222, 0.2);
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.splashDots) i {
+  background: #6c5ce5;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.loginHero) h1,
+html:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) h2 {
+  color: #151824;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.loginCard) input {
+  border-color: #dfe3ef;
+  background: #ffffff;
+  color: #151824;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.loginBtn) {
+  border-color: transparent;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22);
+}:where(.scope) :global(.loginField) {
+  display: grid;
+  gap: 6px;
+}:where(.scope) :global(.loginField) > span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}:where(.scope) :global(.loginCard) input[aria-invalid="true"] {
+  border-color: rgba(220, 74, 74, 0.72);
+  box-shadow: 0 0 0 3px rgba(220, 74, 74, 0.1);
+}:where(.scope) :global(.loginFieldError) {
+  color: #dc6767;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.3;
+}:where(.scope) :global(.loginNotice) {
+  padding: 10px 12px;
+  border: 1px solid rgba(111, 196, 130, 0.22);
+  border-radius: 14px;
+  background: rgba(111, 196, 130, 0.1);
+  color: #8fd49f;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.35;
+}:where(.scope) :global(.loginBtn):disabled,
+:where(.scope) :global(.loginResetBtn):disabled {
+  cursor: wait;
+  opacity: 0.62;
+}:where(.scope) :global(.loginResetBtn) {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.loginNotice) {
+  border-color: rgba(39, 135, 86, 0.2);
+  background: #eef9f3;
+  color: #278756;
+}@keyframes clientRouteFallbackSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

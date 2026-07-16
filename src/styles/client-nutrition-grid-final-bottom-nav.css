@@ -1,4 +1,0 @@
-html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeta::after {
-  content: none !important;
-  display: none !important;
-}

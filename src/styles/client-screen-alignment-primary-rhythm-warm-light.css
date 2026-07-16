@@ -1,6 +1,0 @@
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
-html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
-html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
-  padding-top: 30px !important;
-}
-

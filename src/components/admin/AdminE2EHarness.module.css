@@ -1,0 +1,4940 @@
+/* Generated from src/styles/admin-internals-lazy.css for its reachable component classes. */
+:where(.scope) :global(.adminCalendarDays) button,
+:where(.scope) :global(.adminCalendarTestButton) {
+  min-height: 40px;
+}
+
+@media (min-width: 1100px) {
+  :global(#root):has(:where(.scope) :global(.adminUsersCrmPage)),
+:global(#root):has(:where(.scope) :global(.monthProgramOverviewMode)) {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+  }
+
+  :where(.scope) :global(.adminUsersCrmPage) {
+    width: min(100%, 1440px);
+    max-width: 1440px;
+    margin: 0 auto;
+    grid-template-columns: 1fr;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  :where(.scope) :global(.adminUsersCrmMain):not(:global(.adminUsersCrmMainClientPage)) {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 34px 48px 214px;
+  }
+
+  :where(.scope) :global(.adminUsersCrmGridCardsOnly),
+:where(.scope) :global(.adminUsersClientsPanelFull) {
+    max-width: none;
+  }
+
+  :where(.scope) :global(.adminUsersClientsPanelFull) {
+    min-height: 0;
+    padding: 20px;
+  }
+
+  :where(.scope) :global(.adminClientCardsGridFive) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: minmax(172px, auto);
+    gap: 16px;
+  }
+
+  :where(.scope) :global(.adminClientCardWide),
+:where(.scope) :global(.adminClientAddCard) {
+    min-height: 172px;
+    padding: 18px;
+  }
+
+  :where(.scope) :global(.adminUsersCrmMainClientPage) {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 28px 48px 214px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) {
+    width: 100%;
+    max-width: 1240px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricGridRender) {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    border: 0;
+    background: transparent;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender),
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardWideRender) {
+    min-height: 96px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.065);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.028);
+  }
+
+  :where(.scope) :global(.monthProgramEditorPage):global(.monthProgramPremium):global(.monthProgramOverviewMode) {
+    width: min(100%, 1320px);
+    max-width: 1320px;
+    min-height: 100dvh;
+    padding-right: 48px;
+    padding-left: 48px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium):global(.monthProgramOverviewMode) :global(.programsCompactHeader) {
+    min-height: 54px;
+    margin-bottom: 14px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium):global(.monthProgramOverviewMode) :global(.programsCompactHeader) h1 {
+    font-size: 28px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium):global(.monthProgramOverviewMode) :global(.programsOverviewSection) {
+    min-height: 300px;
+    padding: 24px;
+    border-radius: 26px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium):global(.monthProgramOverviewMode) :global(.programsOverviewGrid) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium):global(.monthProgramOverviewMode) :global(.programsOverviewCard) {
+    min-height: 178px;
+    padding: 18px;
+  }
+}
+:global(.adminDesktopNav) button:where(.scope) :global(.active) {
+  border-color: rgba(127,159,58,.28);
+  background: rgba(127,159,58,.14);
+  color: rgba(233,250,189,.95);
+}
+:global(.adminStatCard):where(.scope) :global(.danger) strong {
+  color: #ff8b8b;
+}
+:global(.adminPanelHead) button:where(.scope) :global(.danger) {
+  border-color: rgba(255, 90, 90, 0.22);
+  background: rgba(255, 90, 90, 0.11);
+  color: #ff9b9b;
+}
+:global(.adminClientListDesktop) button:where(.scope) :global(.active) {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.12);
+}
+:global(.adminFilterRow) button:where(.scope) :global(.active) {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.16);
+  color: rgba(235,250,195,.95);
+}
+:where(.scope) :global(.adminV3OpenEditor) {
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(255,255,255,.045);
+  color: rgba(255,255,255,.82);
+  border-radius: 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+:global(.adminV3Nav) button:where(.scope) :global(.active),
+:global(.adminV3WorkspaceActions) button:not(:where(.scope) :global(.danger)),
+:where(.scope) :global(.adminV3OpenEditor) {
+  border-color: rgba(127,159,58,.25);
+  background: rgba(127,159,58,.13);
+  color: rgba(235,250,195,.94);
+}
+:global(.adminV3WorkspaceActions) button:where(.scope) :global(.danger) {
+  border-color: rgba(255,90,90,.22);
+  background: rgba(255,90,90,.11);
+  color: #ff9b9b;
+}
+:global(.adminV3Filters) button:where(.scope) :global(.active),
+:global(.adminV3Tabs) button:where(.scope) :global(.active) {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.16);
+  color: rgba(235,250,195,.95);
+}
+:global(.adminV3ClientTable) button:where(.scope) :global(.active) {
+  border-color: rgba(127,159,58,.3);
+  background: rgba(127,159,58,.105);
+}
+:where(.scope) :global(.adminV3OpenEditor) {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 12px;
+}
+:where(.scope) :global(.adminV3OpenEditor):disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+:where(.scope) :global(.adminUsersCrmPage) {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(127,159,58,.08), transparent 32%),
+    linear-gradient(180deg, #070a07, #050705);
+  color: #f4f6f2;
+}
+:global(.adminUsersSideAction):where(.scope) :global(.active),
+:global(.adminClientWorkspaceActions) button:not(:where(.scope) :global(.danger)) {
+  border-color: rgba(127,159,58,.25);
+  background: rgba(127,159,58,.13);
+  color: rgba(235,250,195,.94);
+}
+:where(.scope) :global(.adminUsersCrmMain) {
+  min-width: 0;
+  max-width: 1480px;
+  padding: 26px 28px 70px;
+}
+:where(.scope) :global(.adminUsersCrmHeader) {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+}
+:where(.scope) :global(.adminUsersCrmHeader) > div > span {
+  color: rgba(145,173,78,.9);
+  font-size: 10px;
+  font-weight: 1000;
+  letter-spacing: .09em;
+}
+:where(.scope) :global(.adminUsersCrmHeader) h1 {
+  margin: 6px 0 8px;
+  font-size: clamp(34px, 4vw, 54px);
+  line-height: .95;
+  letter-spacing: -1.8px;
+}
+:where(.scope) :global(.adminUsersCrmHeader) p {
+  margin: 0;
+  color: rgba(255,255,255,.48);
+  font-size: 13px;
+  font-weight: 800;
+}
+:global(.adminClientWorkspaceActions) button:where(.scope) :global(.danger) {
+  border-color: rgba(255,90,90,.22);
+  background: rgba(255,90,90,.11);
+  color: #ff9b9b;
+}
+:where(.scope) :global(.adminUsersCrmGrid) {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  margin-top: 18px;
+}
+:where(.scope) :global(.adminUsersClientsPanel),
+:where(.scope) :global(.adminClientWorkspaceCrm) {
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255,255,255,.036), rgba(255,255,255,.022));
+  border: 1px solid rgba(255,255,255,.055);
+  box-shadow: 0 18px 48px rgba(0,0,0,.18);
+}
+:where(.scope) :global(.adminUsersClientsPanel) {
+  padding: 18px;
+}
+:where(.scope) :global(.adminUsersToolbar) h2 {
+  margin: 0 0 14px;
+  font-size: 22px;
+  line-height: 1.05;
+}
+:where(.scope) :global(.adminUsersToolbar) input {
+  min-height: 46px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.075);
+  background: rgba(0,0,0,.22);
+  color: #fff;
+  padding: 0 12px;
+  font-weight: 850;
+}
+:where(.scope) :global(.adminUsersToolbar) {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+:where(.scope) :global(.adminUsersToolbar) p {
+  margin: 4px 0 0;
+  color: rgba(255,255,255,.45);
+  font-size: 12px;
+  font-weight: 850;
+}
+:where(.scope) :global(.adminUsersToolbar) input {
+  width: min(320px, 42%);
+}
+:where(.scope) :global(.adminUsersFilterPills),
+:where(.scope) :global(.adminClientTabsCrm) {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+:where(.scope) :global(.adminUsersFilterPills) button,
+:where(.scope) :global(.adminClientTabsCrm) button {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(255,255,255,.035);
+  color: rgba(255,255,255,.66);
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+:where(.scope) :global(.adminUsersFilterPills) button:global(.active),
+:where(.scope) :global(.adminClientTabsCrm) button:global(.active) {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.16);
+  color: rgba(235,250,195,.95);
+}
+:where(.scope) :global(.adminClientCardsGrid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+}
+:where(.scope) :global(.adminClientCard) {
+  min-height: 134px;
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.032);
+  color: #fff;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 10px;
+  align-items: start;
+  cursor: pointer;
+}
+:where(.scope) :global(.adminClientCard):global(.active) {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.105);
+}
+:where(.scope) :global(.adminClientAvatar) {
+  width: 42px;
+  height: 42px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: rgba(127,159,58,.13);
+}
+:where(.scope) :global(.adminClientCard) strong {
+  display: block;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:where(.scope) :global(.adminClientCard) small {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255,255,255,.44);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:where(.scope) :global(.adminClientCard) em,
+:where(.scope) :global(.adminClientCard) i {
+  grid-column: 1 / -1;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 900;
+}
+:where(.scope) :global(.adminClientCard) em {
+  color: rgba(235,250,195,.84);
+}
+:where(.scope) :global(.adminClientCard) i {
+  justify-self: start;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.045);
+  color: rgba(255,255,255,.56);
+}
+:where(.scope) :global(.adminClientWorkspaceCrm) {
+  margin-top: 14px;
+  padding: 18px;
+}
+:where(.scope) :global(.adminClientTabsCrm) {
+  margin: 16px 0 14px;
+}
+:where(.scope) :global(.adminClientTabContent) {
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(0,0,0,.12);
+  border: 1px solid rgba(255,255,255,.05);
+}
+@media (max-width: 1100px) {
+  :where(.scope) :global(.adminUsersCrmPage) {
+    grid-template-columns: 1fr;
+  }
+
+  :where(.scope) :global(.adminUsersCrmGrid) {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 720px) {
+  :where(.scope) :global(.adminUsersCrmMain) {
+    padding: 18px 14px 46px;
+  }
+
+  :where(.scope) :global(.adminUsersCrmHeader),
+:where(.scope) :global(.adminUsersToolbar) {
+    flex-direction: column;
+  }
+
+  :where(.scope) :global(.adminUsersToolbar) input {
+    width: 100%;
+  }
+
+  :where(.scope) :global(.adminClientCardsGrid) {
+    grid-template-columns: 1fr;
+  }
+}
+:where(.scope) :global(.adminUsersCrmGridCardsOnly) {
+  display: block;
+  margin-top: 18px;
+}
+:where(.scope) :global(.adminUsersClientsPanelFull) {
+  width: 100%;
+}
+:where(.scope) :global(.adminUsersToolbarActions) {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+:where(.scope) :global(.adminUsersToolbarActions) input {
+  width: min(360px, 42vw);
+}
+:where(.scope) :global(.adminClientCardsGridFive) {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+:where(.scope) :global(.adminClientCardRect) {
+  min-height: 150px;
+  padding: 14px;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+  align-items: start;
+}
+:where(.scope) :global(.adminClientCardRect) :global(.adminClientAvatar),
+:where(.scope) :global(.adminClientAddIcon) {
+  width: 42px;
+  height: 42px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  background: rgba(127,159,58,.13);
+}
+:where(.scope) :global(.adminClientCardRect) div {
+  min-width: 0;
+}
+:where(.scope) :global(.adminClientCardRect) strong {
+  font-size: 14px;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:where(.scope) :global(.adminClientCardRect) small {
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+:where(.scope) :global(.adminClientCardRect) em {
+  grid-column: 1 / -1;
+  align-self: end;
+  color: rgba(235,250,195,.86);
+}
+:where(.scope) :global(.adminClientCardRect) i {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 2px;
+}
+:where(.scope) :global(.adminClientAddCard) {
+  border-style: dashed;
+  border-color: rgba(127,159,58,.34);
+  background:
+    radial-gradient(circle at top left, rgba(127,159,58,.16), transparent 44%),
+    rgba(127,159,58,.065);
+}
+:where(.scope) :global(.adminClientAddIcon) {
+  font-size: 25px;
+  font-weight: 900;
+  color: rgba(235,250,195,.95);
+}
+@media (max-width: 760px) {
+  :where(.scope) :global(.adminUsersToolbarActions) {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  :where(.scope) :global(.adminUsersToolbarActions) input {
+    width: 100%;
+  }
+
+}
+:where(.scope) :global(.adminUsersCrmMain) {
+  max-width: 1760px;
+  padding-top: 22px;
+}
+:where(.scope) :global(.adminUsersCrmHeader) {
+  max-width: 1500px;
+  margin: 0 auto 14px;
+  align-items: center;
+}
+:where(.scope) :global(.adminUsersCrmHeader) h1 {
+  font-size: clamp(38px, 4vw, 64px);
+  margin-bottom: 6px;
+}
+:where(.scope) :global(.adminUsersCrmHeader) p {
+  max-width: 760px;
+  line-height: 1.35;
+}
+:where(.scope) :global(.adminUsersClientsPanelFull) {
+  min-height: 620px;
+  padding: 18px;
+}
+:where(.scope) :global(.adminUsersToolbar) {
+  align-items: center;
+  margin-bottom: 10px;
+}
+:where(.scope) :global(.adminUsersToolbar) h2 {
+  font-size: 25px;
+  margin: 0 0 3px;
+}
+:where(.scope) :global(.adminUsersToolbarActions) input {
+  width: min(430px, 36vw);
+  min-height: 46px;
+}
+:where(.scope) :global(.adminUsersFilterPills) {
+  margin-bottom: 12px;
+}
+:where(.scope) :global(.adminClientCardsGridFive) {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+:where(.scope) :global(.adminClientCardWide) {
+  min-height: 132px;
+  padding: 12px;
+  border-radius: 18px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+:where(.scope) :global(.adminClientCardWide):hover {
+  transform: translateY(-3px);
+  border-color: rgba(127,159,58,.28);
+  background: rgba(127,159,58,.075);
+}
+:where(.scope) :global(.adminClientCardWide) :global(.adminClientAvatar),
+:where(.scope) :global(.adminClientCardWide) :global(.adminClientAddIcon) {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+}
+:where(.scope) :global(.adminClientCardMain) {
+  min-width: 0;
+}
+:where(.scope) :global(.adminClientCardWide) strong {
+  font-size: 14px;
+  line-height: 1.1;
+}
+:where(.scope) :global(.adminClientCardWide) small {
+  margin-top: 3px;
+  font-size: 10px;
+}
+:where(.scope) :global(.adminClientCardWide) em {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  line-height: 1.25;
+  min-height: 28px;
+  color: rgba(235,250,195,.86);
+}
+:where(.scope) :global(.adminClientCardBottom) {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+:where(.scope) :global(.adminClientCardBottom) i {
+  margin: 0;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.055);
+  color: rgba(255,255,255,.65);
+  font-size: 10px;
+  font-weight: 950;
+  font-style: normal;
+}
+:where(.scope) :global(.adminClientCardBottom) b {
+  color: rgba(255,255,255,.45);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+:where(.scope) :global(.adminClientAddCard) {
+  min-height: 132px;
+}
+:where(.scope) :global(.adminClientAddCard) :global(.adminClientAddIcon) {
+  font-size: 24px;
+}
+:where(.scope) :global(.adminClientWorkspaceCrm) {
+  margin-top: 0;
+  padding: 16px;
+  border-radius: 24px;
+  position: sticky;
+  top: 16px;
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+}
+:where(.scope) :global(.adminClientTabsCrm) {
+  position: sticky;
+  top: -16px;
+  z-index: 5;
+  padding: 10px 0;
+  background: linear-gradient(180deg, rgba(8,11,8,.98), rgba(8,11,8,.88));
+  backdrop-filter: blur(12px);
+}
+:where(.scope) :global(.adminClientTabsCrm) button {
+  min-height: 32px;
+  font-size: 10.5px;
+}
+:where(.scope) :global(.adminClientTabContent) {
+  padding: 12px;
+}
+@media (max-width: 1120px) {
+
+  :where(.scope) :global(.adminClientWorkspaceCrm) {
+    position: static;
+    max-height: none;
+  }
+
+  :where(.scope) :global(.adminClientCardsGridFive) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+
+  :where(.scope) :global(.adminClientCardsGridFive) {
+    grid-template-columns: 1fr;
+  }
+}
+:where(.scope) :global(.adminClientWorkspaceCrm) {
+  position: static;
+  max-height: none;
+  margin-top: 16px;
+}
+:where(.scope) :global(.adminUsersCrmGridCardsOnly) {
+  margin-top: 0;
+}
+:global(.adminProgramDayTabs) button:where(.scope) :global(.active) {
+  border-color: rgba(127,159,58,.34);
+  background: rgba(127,159,58,.12);
+}
+:global(.adminProgramWorkoutHeader) button:where(.scope) :global(.danger),
+:global(.adminProgramRowActions) button:where(.scope) :global(.danger) {
+  border-color: rgba(255,90,90,.25);
+  background: rgba(255,90,90,.13);
+  color: #ff9b9b;
+}
+:global(.adminProgramExerciseRow):where(.scope) :global(.active) {
+  transform: translateY(-1px);
+  border-color: rgba(127,159,58,.28);
+  background: rgba(127,159,58,.085);
+}
+:global(.adminProgramDayTabs) button:where(.scope) :global(.active) {
+  background: rgba(127,159,58,.1);
+}
+:global(.adminProgramExerciseRow):where(.scope) :global(.active) {
+  transform: none;
+  border-color: rgba(127,159,58,.26);
+  background: rgba(127,159,58,.072);
+}
+:global(.adminDrawerTabs) button:where(.scope) :global(.active) {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.16);
+  color: rgba(235,250,195,.95);
+}
+@keyframes adminDrawerFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes adminDrawerSlideIn {
+  from { transform: translateX(28px); opacity: .7; }
+  to { transform: translateX(0); opacity: 1; }
+}
+:global(.adminProgramCard):where(.scope) :global(.active),
+:global(.adminProgramDayCard):where(.scope) :global(.active) {
+  transform: translateY(-2px);
+  border-color: rgba(127,159,58,.3);
+  background: rgba(127,159,58,.1);
+}
+:global(.adminProgramDayActions) button:where(.scope) :global(.danger) {
+  border-color: rgba(255,90,90,.25);
+  background: rgba(255,90,90,.13);
+  color: #ff9b9b;
+}
+:global(.adminSavedProgramCard):where(.scope) :global(.active) {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.1);
+}
+:where(.scope) :global(.monthProgramEditorPage) {
+  min-height: 100dvh;
+  padding: max(22px, env(safe-area-inset-top)) 14px 28px;
+  background: #0d0f0d;
+  color: #fff;
+}
+:where(.scope) :global(.monthProgramEditorPage) {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+@media (min-width: 761px) {
+  :where(.scope) :global(.monthProgramEditorPage) {
+    max-width: 620px;
+  }
+}
+:global(.monthProgramModeButtons) button:where(.scope) :global(.active) {
+  background: rgba(127, 159, 58, 0.18);
+  color: rgba(217, 242, 154, 0.95);
+  border: 1px solid rgba(127, 159, 58, 0.24);
+}
+:global(.monthProgramTabs) button:where(.scope) :global(.active) {
+  background: rgba(127, 159, 58, 0.18);
+  color: rgba(217, 242, 154, 0.96);
+}
+:global(.programLibraryActions) button:where(.scope) :global(.danger) {
+  background: rgba(125, 28, 28, 0.18);
+  color: rgba(255, 205, 205, 0.96);
+  border: 1px solid rgba(255, 120, 120, 0.2);
+}
+:where(.scope) :global(.adminUsersCrmHeader) h1 {
+  color: #fff;
+  font-size: clamp(24px, 2.6vw, 34px);
+  letter-spacing: -0.7px;
+  line-height: 1.05;
+}
+:where(.scope) :global(.adminUsersToolbar) h2 {
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: -0.25px;
+  line-height: 1.1;
+}
+:where(.scope) :global(.adminUsersFilterPills) {
+  display: none;
+}
+:where(.scope) :global(.adminUsersCrmGridCardsOnly),
+:where(.scope) :global(.adminUsersClientsPanelFull) {
+  width: 100%;
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+}
+:where(.scope) :global(.adminUsersClientsPanelFull) {
+  padding: 14px;
+}
+:where(.scope) :global(.adminClientCardsGridFive) {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 8px;
+}
+@media (min-width: 980px) {
+  :where(.scope) :global(.adminClientCardsGridFive) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  :where(.scope) :global(.adminUsersCrmHeader) h1 {
+    font-size: 26px;
+  }
+
+  :where(.scope) :global(.adminUsersToolbar) h2 {
+    font-size: 17px;
+  }
+
+  :where(.scope) :global(.adminUsersToolbar) {
+    gap: 10px;
+  }
+
+  :where(.scope) :global(.adminUsersToolbarActions) input {
+    width: 100%;
+  }
+
+  :where(.scope) :global(.adminUsersClientsPanelFull) {
+    max-width: calc(100vw - 22px);
+  }
+}
+@media (min-width: 701px) {
+  :where(.scope) :global(.adminUsersCrmGridCardsOnly),
+:where(.scope) :global(.adminUsersClientsPanelFull) {
+    max-width: 1120px;
+  }
+
+  :where(.scope) :global(.adminClientCardsGridFive) {
+    grid-template-columns: repeat(3, minmax(280px, 1fr));
+    grid-auto-rows: minmax(168px, auto);
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  :where(.scope) :global(.adminClientCardWide),
+:where(.scope) :global(.adminClientAddCard) {
+    min-height: 168px;
+    height: 100%;
+    padding: 16px;
+  }
+
+  :where(.scope) :global(.adminClientCardWide) strong,
+:where(.scope) :global(.adminClientCardWide) small {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  :where(.scope) :global(.adminUsersCrmMain):not(:global(.adminUsersCrmMainClientPage)) {
+    padding-bottom: 270px;
+  }
+}
+:where(.scope) :global(.adminUsersCrmMainClientPage) {
+  width: 100%;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) {
+  width: min(100%, 1180px);
+  margin: 18px auto 0;
+}
+@media (max-width: 700px) {
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) {
+    margin-top: 8px;
+    border-radius: 22px;
+  }
+}
+:global(.monthExerciseWeightMode):where(.scope) :global(.active) {
+  border-color: rgba(139, 120, 240, 0.34);
+  background: rgba(117, 101, 232, 0.1);
+}
+:global(.monthExerciseWeightMode):where(.scope) :global(.active) i {
+  background: rgba(117, 101, 232, 0.18);
+  color: #b7adff;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.monthExerciseWeightMode):where(.scope) :global(.active) {
+  border-color: #d8d2fb;
+  background: #f0edff;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.monthExerciseWeightMode):where(.scope) :global(.active) i {
+  background: #e2ddff;
+  color: #5542d8;
+}
+@media (min-width: 900px) {
+  :global(.monthProgramPremiumDayEditor):global(.exercise-fullscreen-open) :global(.monthProgramPremiumExercise):where(.scope) :global(.selected) {
+    grid-template-areas:
+      "title title"
+      "video name"
+      "video mode"
+      "video legend"
+      "video sets"
+      "video add"
+      "actions actions";
+    grid-template-rows: auto auto auto auto minmax(0, 1fr) auto 64px;
+  }
+}
+:where(.scope) :global(.adminUsersCrmMainClientPage) {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 18px 72px;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+  width: 100%;
+  margin-bottom: 34px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: center;
+}
+:where(.scope) :global(.adminClientIdentityRender) {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 104px minmax(0, auto) auto;
+  gap: 24px;
+  align-items: center;
+  justify-content: start;
+}
+:where(.scope) :global(.adminClientInitialsRender) {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(145, 230, 78, .42);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145,230,78,.20), transparent 54%),
+    rgba(127,159,58,.08);
+  color: rgba(218,255,126,.96);
+  font-size: 34px;
+  font-weight: 1000;
+  box-shadow: 0 0 42px rgba(127,159,58,.12);
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) h2 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: clamp(34px, 4.2vw, 50px);
+  line-height: .95;
+  letter-spacing: -1.6px;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) p {
+  margin: 0;
+  color: rgba(255,255,255,.62);
+  font-size: 18px;
+  font-weight: 850;
+}
+:where(.scope) :global(.adminClientWorkspaceActionsRender) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(108px, auto));
+  gap: 12px;
+  width: auto;
+}
+:where(.scope) :global(.adminClientWorkspaceActionsRender) button {
+  min-height: 58px;
+  padding: 0 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(145,173,78,.45);
+  background: linear-gradient(180deg, rgba(127,159,58,.20), rgba(127,159,58,.09));
+  color: rgba(244,255,202,.98);
+  font-size: 16px;
+  font-weight: 950;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+:where(.scope) :global(.adminClientWorkspaceActionsRender) button:global(.danger) {
+  border-color: rgba(255,95,95,.54);
+  background: linear-gradient(180deg, rgba(255,95,95,.20), rgba(255,95,95,.08));
+  color: #ff8787;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+  margin: 0 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0;
+  border-radius: 24px 24px 0 0;
+  border: 1px solid rgba(255,255,255,.09);
+  background: linear-gradient(180deg, rgba(20,25,22,.88), rgba(12,15,13,.92));
+  overflow: hidden;
+  backdrop-filter: blur(18px);
+  position: relative;
+  top: auto;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button {
+  min-height: 72px;
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid rgba(255,255,255,.055);
+  background: transparent;
+  color: rgba(255,255,255,.72);
+  font-size: 15px;
+  font-weight: 950;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button:global(.active) {
+  color: rgba(213,255,112,.98);
+  background: linear-gradient(180deg, rgba(127,159,58,.18), rgba(127,159,58,.05));
+  box-shadow: inset 0 -3px 0 rgba(145,230,78,.9);
+}
+:where(.scope) :global(.adminClientMetricGridRender) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+:where(.scope) :global(.adminClientMetricCardRender) {
+  min-height: 132px;
+  padding: 22px 24px;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 18px;
+  align-content: center;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,.09);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,.06), transparent 42%),
+    rgba(255,255,255,.035);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 14px 32px rgba(0,0,0,.18);
+}
+:where(.scope) :global(.adminClientMetricCardRender) i {
+  grid-row: 1 / 3;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: rgba(127,159,58,.13);
+  color: rgba(187,255,86,.95);
+  font-style: normal;
+  font-size: 24px;
+}
+:where(.scope) :global(.adminClientMetricCardRender) span {
+  color: rgba(255,255,255,.58);
+  font-size: 16px;
+  font-weight: 850;
+}
+:where(.scope) :global(.adminClientMetricCardRender) strong {
+  margin: 8px 0 0;
+  color: #fff;
+  font-size: 24px;
+  line-height: 1.05;
+  font-weight: 1000;
+}
+:where(.scope) :global(.adminClientMetricCardWideRender) {
+  grid-column: span 1;
+}
+:global(.adminClientTelegramBadge):where(.scope) :global(.connected) {
+  border-color: rgba(127,159,58,.32);
+  background: rgba(127,159,58,.15);
+  color: rgba(213,255,112,.98);
+}
+:global(.adminClientTelegramActionsRender) button:where(.scope) :global(.danger) {
+  border-color: rgba(255,95,95,.42);
+  background: rgba(255,95,95,.10);
+  color: #ff8585;
+}
+@media (max-width: 1080px) {
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+    grid-template-columns: 1fr;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  :where(.scope) :global(.adminClientMetricGridRender) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 720px) {
+  :where(.scope) :global(.adminUsersCrmMainClientPage) {
+    padding: 14px 10px 52px;
+  }
+
+  :where(.scope) :global(.adminClientIdentityRender) {
+    grid-template-columns: 76px 1fr;
+    gap: 14px;
+  }
+
+  :where(.scope) :global(.adminClientInitialsRender) {
+    width: 76px;
+    height: 76px;
+    font-size: 25px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) h2 {
+    font-size: 32px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) p {
+    font-size: 14px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) button {
+    min-height: 48px;
+    font-size: 13px;
+    padding: 0 12px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+    display: flex;
+    overflow-x: auto;
+    border-radius: 20px 20px 0 0;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button {
+    min-width: 116px;
+    min-height: 58px;
+    font-size: 12px;
+  }
+
+  :where(.scope) :global(.adminClientMetricGridRender) {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) {
+    grid-column: span 1;
+    min-height: 104px;
+  }
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage),
+:where(.scope) :global(.adminClientWorkspaceCrmPage) * {
+  min-width: 0;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+  align-items: center;
+}
+:where(.scope) :global(.adminClientIdentityRender) > div:not(:global(.adminClientInitialsRender)):not(:global(.adminClientStatusRender)) {
+  min-width: 0;
+}
+:where(.scope) :global(.adminClientWorkspaceActionsRender) button,
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button,
+:where(.scope) :global(.adminClientMetricCardRender) strong,
+:where(.scope) :global(.adminClientMetricCardRender) span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:where(.scope) :global(.adminClientMetricCardRender) strong,
+:where(.scope) :global(.adminClientMetricCardRender) span {
+  white-space: nowrap;
+}
+:where(.scope) :global(.adminClientMetricCardRender) {
+  box-sizing: border-box;
+}
+@media (max-width: 720px) {
+  :where(.scope) :global(.adminUsersCrmMainClientPage) {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12px 12px 42px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  :where(.scope) :global(.adminClientIdentityRender) {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 74px minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+  }
+
+  :where(.scope) :global(.adminClientInitialsRender) {
+    width: 74px;
+    height: 74px;
+    font-size: 26px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) h2 {
+    margin: 0 0 6px;
+    font-size: 30px;
+    line-height: 1.02;
+    letter-spacing: -0.8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) p {
+    max-width: 100%;
+    font-size: 13px;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) button {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+    width: 100%;
+    margin-top: 4px;
+    display: flex;
+    overflow-x: auto;
+    border-radius: 18px 18px 0 0;
+    scrollbar-width: none;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm)::-webkit-scrollbar {
+    display: none;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button {
+    min-width: 112px;
+    min-height: 54px;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+}
+@media (max-width: 720px) {
+  :where(.scope) :global(.adminClientMetricGridRender) {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) {
+    min-height: 82px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    column-gap: 10px;
+    align-content: center;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) i {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) span {
+    font-size: 11px;
+    line-height: 1.15;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) strong {
+    margin-top: 5px;
+    font-size: 18px;
+    line-height: 1.08;
+    max-width: 100%;
+  }
+
+}
+@media (max-width: 420px) {
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :where(.scope) :global(.adminClientMetricGridRender) {
+    grid-template-columns: 1fr;
+  }
+}
+:where(.scope) :global(.adminUsersCrmPage):has(:global(.adminUsersCrmMainClientPage)) {
+  grid-template-columns: 1fr;
+}
+:where(.scope) :global(.adminUsersCrmPage):has(:global(.adminUsersCrmMainClientPage)) :global(.adminUsersCrmSidebar) {
+  display: none;
+}
+:where(.scope) :global(.adminUsersCrmMainClientPage) {
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 22px 20px 58px;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+  width: 100%;
+  margin: 0 0 34px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: center;
+}
+:where(.scope) :global(.adminClientIdentityRender) {
+  display: grid;
+  grid-template-columns: 104px minmax(0, auto) auto;
+  gap: 24px;
+  align-items: center;
+  justify-content: start;
+  min-width: 0;
+}
+:where(.scope) :global(.adminClientInitialsRender) {
+  width: 104px;
+  height: 104px;
+  font-size: 34px;
+  line-height: 1;
+  flex: none;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) h2 {
+  margin: 0 0 10px;
+  font-size: 38px;
+  line-height: 1.02;
+  letter-spacing: -1px;
+  color: #fff;
+  white-space: nowrap;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.2;
+  color: rgba(255,255,255,.66);
+  white-space: nowrap;
+}
+:where(.scope) :global(.adminClientWorkspaceActionsRender) {
+  display: grid;
+  grid-template-columns: 138px 154px 86px 154px;
+  gap: 12px;
+  align-items: center;
+  justify-content: end;
+  width: auto;
+  flex: none;
+}
+:where(.scope) :global(.adminClientWorkspaceActionsRender) button {
+  width: 100%;
+  min-width: 0;
+  min-height: 58px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  font-size: 16px;
+  line-height: 1;
+  white-space: nowrap;
+  text-align: center;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+  width: 100%;
+  height: 80px;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  overflow: hidden;
+  border-radius: 24px 24px 0 0;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button {
+  min-width: 0;
+  min-height: 80px;
+  height: 80px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  line-height: 1;
+  white-space: nowrap;
+}
+:where(.scope) :global(.adminClientMetricGridRender) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+:where(.scope) :global(.adminClientMetricCardRender) {
+  min-height: 132px;
+  padding: 22px 20px;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 18px;
+  align-content: center;
+  align-items: center;
+  border-radius: 20px;
+}
+:where(.scope) :global(.adminClientMetricCardRender) i {
+  grid-row: 1 / 3;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  line-height: 1;
+}
+:where(.scope) :global(.adminClientMetricCardRender) span {
+  display: block;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.2;
+  white-space: normal;
+  color: rgba(255,255,255,.60);
+}
+:where(.scope) :global(.adminClientMetricCardRender) strong {
+  display: block;
+  margin: 8px 0 0;
+  font-size: 25px;
+  line-height: 1.08;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: #fff;
+}
+@media (max-width: 980px) {
+  :where(.scope) :global(.adminUsersCrmMainClientPage) {
+    max-width: 760px;
+    padding: 18px 14px 48px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  :where(.scope) :global(.adminClientIdentityRender) {
+    grid-template-columns: 88px minmax(0, 1fr) auto;
+    gap: 18px;
+    width: 100%;
+  }
+
+  :where(.scope) :global(.adminClientInitialsRender) {
+    width: 88px;
+    height: 88px;
+    font-size: 30px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) {
+    width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    justify-content: stretch;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) button {
+    min-height: 52px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+    height: 64px;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button {
+    min-width: 132px;
+    height: 64px;
+    min-height: 64px;
+    font-size: 14px;
+    flex: 0 0 auto;
+  }
+
+  :where(.scope) :global(.adminClientMetricGridRender) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) {
+    min-height: 112px;
+    padding: 18px;
+  }
+}
+@media (max-width: 560px) {
+  :where(.scope) :global(.adminUsersCrmMainClientPage) {
+    max-width: 100%;
+    padding: 16px 12px 42px;
+  }
+
+  :where(.scope) :global(.adminClientIdentityRender) {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  :where(.scope) :global(.adminClientInitialsRender) {
+    width: 72px;
+    height: 72px;
+    font-size: 26px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) h2 {
+    font-size: 30px;
+    margin-bottom: 6px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) p {
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceActionsRender) button {
+    min-height: 42px;
+    padding: 0 6px;
+    font-size: 11px;
+    border-radius: 12px;
+  }
+
+  :where(.scope) :global(.adminClientMetricGridRender) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) {
+    min-height: 92px;
+    padding: 12px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    column-gap: 10px;
+    border-radius: 16px;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) i {
+    width: 32px;
+    height: 32px;
+    border-radius: 11px;
+    font-size: 15px;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) strong {
+    font-size: 18px;
+    line-height: 1.1;
+  }
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+  grid-template-columns: 1fr 1fr 1.35fr .95fr .95fr .95fr;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) span {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: rgba(145, 173, 78, 0.92);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1.08;
+  letter-spacing: -0.4px;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) p {
+  max-width: 720px;
+  margin: 10px 0 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 14px;
+  line-height: 1.45;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) {
+  margin-top: 18px;
+}
+@media (max-width: 980px) {
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+    display: flex;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 560px) {
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) h3 {
+    font-size: 22px;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) p {
+    font-size: 12px;
+  }
+}
+:where(.scope) :global(.adminClientTabsCrm) button:global(.active),
+:where(.scope) :global(.adminClientTabsCrm) button:hover {
+  color: #d8ff86;
+}
+:where(.scope) :global(.adminClientWorkspaceActionsRender) {
+  display: flex;
+  grid-template-columns: none;
+  justify-content: flex-end;
+  align-items: center;
+  width: auto;
+  gap: 0;
+}
+:where(.scope) :global(.adminClientWorkspaceActionsRender) button {
+  width: auto;
+  min-width: 132px;
+  min-height: 52px;
+  padding: 0 22px;
+}
+:global(.adminClientDangerZoneBottom) button:where(.scope) :global(.danger) {
+  min-width: 150px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 95, 95, 0.42);
+  background: rgba(255, 95, 95, 0.12);
+  color: #ff8a8a;
+  font-size: 14px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+
+  :global(.adminClientDangerZoneBottom) button:where(.scope) :global(.danger) {
+    width: 100%;
+  }
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+  display: flex;
+  grid-template-columns: none;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  border-radius: 24px 24px 0 0;
+  background: rgba(12, 16, 14, 0.92);
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm)::-webkit-scrollbar {
+  display: none;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button {
+  flex: 0 0 auto;
+  min-width: 142px;
+  width: auto;
+  height: 72px;
+  min-height: 72px;
+  padding: 0 18px;
+  white-space: nowrap;
+  scroll-snap-align: start;
+}
+@media (max-width: 760px) {
+  :where(.scope) :global(.adminUsersCrmMainClientPage),
+:where(.scope) :global(.adminClientWorkspaceCrmPage) {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0 0 0;
+    height: 64px;
+    min-height: 64px;
+    touch-action: pan-x;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button {
+    min-width: 128px;
+    height: 64px;
+    min-height: 64px;
+    padding: 0 14px;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button:first-child {
+    min-width: 112px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button:nth-child(3) {
+    min-width: 168px;
+  }
+}
+@media (max-width: 760px) {
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 58px;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    overflow-x: visible;
+    overflow-y: visible;
+    border-radius: 22px 22px 0 0;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button,
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button:first-child,
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button:nth-child(3) {
+    flex: initial;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    height: 58px;
+    min-height: 58px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    line-height: 1.05;
+    white-space: normal;
+    text-align: center;
+    overflow: visible;
+    text-overflow: initial;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button:global(.active)::after {
+    left: 12px;
+    right: 12px;
+  }
+}
+@media (max-width: 390px) {
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) {
+    grid-auto-rows: 54px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button,
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button:first-child,
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsCrm) button:nth-child(3) {
+    height: 54px;
+    min-height: 54px;
+    font-size: 11px;
+    padding: 0 6px;
+  }
+}
+@media (max-width: 560px) {
+  :where(.scope) :global(.adminClientMetricGridRender) {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) {
+    width: 100%;
+    min-height: 62px;
+    padding: 12px 14px;
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) minmax(72px, auto);
+    grid-template-rows: 1fr;
+    column-gap: 12px;
+    align-items: center;
+    align-content: center;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) i {
+    grid-column: 1;
+    grid-row: 1;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) span {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.2;
+    color: rgba(255, 255, 255, 0.58);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardRender) strong {
+    grid-column: 3;
+    grid-row: 1;
+    min-width: 0;
+    max-width: 154px;
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.12;
+    color: #fff;
+    text-align: right;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  :where(.scope) :global(.adminClientMetricCardWideRender) {
+    grid-column: auto;
+  }
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricGridRender) {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  margin: 0 0 20px;
+  overflow: hidden;
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.105);
+  background:
+    linear-gradient(180deg, rgba(25, 31, 29, 0.96), rgba(17, 22, 20, 0.96));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 18px 48px rgba(0, 0, 0, 0.22);
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender),
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardWideRender),
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardSplitRender) {
+  width: 100%;
+  min-height: 82px;
+  height: auto;
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto 16px;
+  align-items: center;
+  column-gap: 15px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  position: relative;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender):not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 78px;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.075);
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender)::before {
+  content: "Ã¢â‚¬Âº";
+  grid-column: 4;
+  grid-row: 1;
+  justify-self: end;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) i {
+  grid-column: 1;
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  margin: 0;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(127, 159, 58, 0.14);
+  color: #aee957;
+  font-size: 20px;
+  line-height: 1;
+  filter: none;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) span {
+  grid-column: 2;
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: left;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) strong {
+  grid-column: 3;
+  min-width: 94px;
+  max-width: 46vw;
+  color: #fff;
+  font-size: 21px;
+  font-weight: 950;
+  line-height: 1.12;
+  text-align: right;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  text-overflow: unset;
+  overflow: visible;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) em {
+  display: none;
+}
+@media (max-width: 700px) {
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabContentRender) {
+    padding: 14px 14px 18px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricGridRender) {
+    border-radius: 24px;
+    margin-bottom: 18px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender),
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardWideRender) {
+    min-height: 78px;
+    padding: 13px 15px;
+    grid-template-columns: 44px minmax(0, 1fr) minmax(76px, auto) 14px;
+    column-gap: 13px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender):not(:last-child)::after {
+    left: 72px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) i {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 14px;
+    font-size: 18px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) span {
+    font-size: 16px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) strong {
+    min-width: 70px;
+    max-width: 42vw;
+    font-size: 20px;
+  }
+}
+@media (max-width: 420px) {
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabContentRender) {
+    padding: 12px 11px 16px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender),
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardWideRender) {
+    min-height: 74px;
+    padding: 12px 12px;
+    grid-template-columns: 40px minmax(0, 1fr) minmax(62px, auto) 12px;
+    column-gap: 11px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender):not(:last-child)::after {
+    left: 63px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) i {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 13px;
+    font-size: 17px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) span {
+    font-size: 15px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) strong {
+    min-width: 58px;
+    max-width: 38vw;
+    font-size: 18px;
+  }
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricGridRender) {
+  gap: 0;
+  border-radius: 24px;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender)::before {
+  content: none;
+  display: none;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender),
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardWideRender) {
+  min-height: 64px;
+  padding: 9px 14px;
+  grid-template-columns: 38px minmax(0, 1fr) minmax(54px, auto);
+  column-gap: 11px;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender):not(:last-child)::after {
+  left: 62px;
+  right: 14px;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) i {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 13px;
+  font-size: 16px;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) span {
+  font-size: 14px;
+  line-height: 1.15;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) strong {
+  min-width: 0;
+  max-width: 44vw;
+  font-size: 16px;
+  line-height: 1.12;
+}
+@media (max-width: 420px) {
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricGridRender) {
+    border-radius: 22px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender),
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardWideRender) {
+    min-height: 58px;
+    padding: 8px 11px;
+    grid-template-columns: 34px minmax(0, 1fr) minmax(46px, auto);
+    column-gap: 10px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender):not(:last-child)::after {
+    left: 55px;
+    right: 11px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) i {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 12px;
+    font-size: 15px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) span {
+    font-size: 13px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) strong {
+    max-width: 42vw;
+    font-size: 15px;
+  }
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) {
+  padding-bottom: 112px;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsFoodBar) {
+  position: sticky;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 50;
+  width: min(100%, 520px);
+  margin: 12px auto 18px;
+  padding: 7px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  overflow: visible;
+  border-radius: 24px;
+  background: rgba(11, 14, 11, 0.94);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 18px 46px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.045);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsFoodBar) button {
+  min-width: 0;
+  min-height: 58px;
+  height: 58px;
+  padding: 7px 5px 6px;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255,255,255,.58);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 11px;
+  line-height: 1.05;
+  font-weight: 900;
+  white-space: nowrap;
+  box-shadow: none;
+}
+:where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsFoodBar) button:global(.active) {
+  background: linear-gradient(180deg, rgba(127,159,58,.22), rgba(127,159,58,.1));
+  border-color: rgba(145,173,78,.24);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 8px 20px rgba(0,0,0,.18);
+}
+@media (max-width: 560px) {
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom));
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsFoodBar) {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: auto;
+    margin: 0;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsFoodBar) button {
+    min-height: 56px;
+    height: 56px;
+    font-size: 10.5px;
+  }
+}
+:global(.adminV3Nav):global(.adminV3BottomBar) button:where(.scope) :global(.active) {
+  background: linear-gradient(180deg, rgba(127,159,58,.22), rgba(127,159,58,.11));
+  border-color: rgba(145,173,78,.34);
+  color: rgba(244,255,214,.96);
+}
+:global(.adminDashboardPage) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Dashboard) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Workspace) :where(.scope) :global(.adminClientCard) {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
+    linear-gradient(180deg, #171a17 0%, #111511 100%);
+  background-color: #171a17;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+}
+:global(.adminDashboardPage) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Dashboard) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Workspace) :where(.scope) :global(.adminClientCard) {
+  min-height: 168px;
+  padding: 18px;
+  border-radius: 26px;
+}
+@media (max-width: 700px) {
+
+  :global(.adminDashboardPage) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Dashboard) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Workspace) :where(.scope) :global(.adminClientCard) {
+    min-height: 156px;
+    padding: 16px;
+    border-radius: 24px;
+  }
+}
+:global(.adminDashboardPage) :where(.scope) :global(.adminClientCard),
+:global(.adminDashboard) :where(.scope) :global(.adminClientCard),
+:global(.adminDashboardRoot) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Dashboard) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Workspace) :where(.scope) :global(.adminClientCard) {
+  min-height: 168px;
+  padding: 18px;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
+    linear-gradient(180deg, #171a17 0%, #111511 100%);
+  background-color: #171a17;
+}
+@media (max-width: 700px) {
+
+  :global(.adminDashboardPage) :where(.scope) :global(.adminClientCard),
+:global(.adminDashboard) :where(.scope) :global(.adminClientCard),
+:global(.adminDashboardRoot) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Dashboard) :where(.scope) :global(.adminClientCard),
+:global(.adminV3Workspace) :where(.scope) :global(.adminClientCard) {
+    min-height: 156px;
+    padding: 16px;
+    border-radius: 24px;
+  }
+}
+:global(.adminV3Nav):global(.adminV3BottomBar) button:where(.scope) :global(.active) {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.22), transparent 58%),
+    #202719;
+  background-color: #202719;
+}
+:global(.clientBottomBar) button:where(.scope) :global(.active),
+:global(.adminClientBottomBar) button:where(.scope) :global(.active),
+:global(.adminClientTabBar) button:where(.scope) :global(.active),
+:global(.adminV3ClientBottomBar) button:where(.scope) :global(.active),
+:global(.clientTabBar) button:where(.scope) :global(.active),
+:global(.clientMobileBar) button:where(.scope) :global(.active) {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.24), transparent 58%),
+    #202719;
+  background-color: #202719;
+  color: #f4f6f2;
+  border-color: rgba(127, 159, 58, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(127, 159, 58, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+}
+:global(.adminClientPage) :global(.adminV3Nav) button:where(.scope) :global(.active),
+:global(.adminClientWorkspace) :global(.adminV3Nav) button:where(.scope) :global(.active),
+:global(.adminClientDashboard) :global(.adminV3Nav) button:where(.scope) :global(.active),
+:global(.clientDashboard) :global(.adminV3Nav) button:where(.scope) :global(.active),
+:global(.clientOverview) :global(.adminV3Nav) button:where(.scope) :global(.active) {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.24), transparent 58%),
+    #202719;
+  background-color: #202719;
+  border-color: rgba(127, 159, 58, 0.38);
+}
+div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] {
+  box-sizing: border-box;
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 99999;
+
+  width: calc(100vw - 24px);
+  max-width: 560px;
+  height: 98px;
+  min-height: 98px;
+  max-height: 98px;
+
+  margin-left: auto;
+  margin-right: auto;
+  padding: 9px 10px 11px;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  justify-items: stretch;
+  justify-content: stretch;
+  gap: 9px;
+
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(180deg, #121712 0%, #0d110d 100%);
+  background-color: #10140f;
+
+  box-shadow:
+    0 -18px 44px rgba(0, 0, 0, 0.66),
+    0 0 0 1px rgba(255, 255, 255, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  overflow: hidden;
+}
+div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] > button {
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+
+  height: 78px;
+  min-height: 78px;
+  max-height: 78px;
+
+  margin: 0;
+  padding: 9px 6px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: linear-gradient(180deg, #191d19 0%, #111511 100%);
+  background-color: #171a17;
+  color: rgba(255, 255, 255, 0.64);
+
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+  transform: none;
+  line-height: 1;
+  overflow: hidden;
+}
+div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] > button:global(.active) {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.32), transparent 62%),
+    linear-gradient(180deg, #253018 0%, #1b2416 100%);
+  background-color: #202719;
+  border-color: rgba(127, 159, 58, 0.44);
+  color: #f4f6f2;
+  box-shadow:
+    0 0 0 1px rgba(127, 159, 58, 0.13),
+    inset 0 1px 0 rgba(255,255,255,.055);
+}
+div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] > button > :global(.adminClientTabIcon) {
+  box-sizing: border-box;
+  width: 100%;
+  height: 31px;
+  min-height: 31px;
+  max-height: 31px;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 27px;
+  line-height: 31px;
+  transform: translateY(-1px);
+}
+div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] > button > :global(.adminClientTabLabel) {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  height: 16px;
+  min-height: 16px;
+  max-height: 16px;
+  margin: 0;
+  padding: 0;
+
+  display: block;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 16px;
+  text-align: center;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: translateY(-1px);
+}
+:where(.scope) :global(.adminClientTabContent) {
+  padding-bottom: 200px;
+}
+@media (max-width: 420px) {
+  div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] {
+    left: 10px;
+    right: 10px;
+    width: calc(100vw - 20px);
+    height: 98px;
+    min-height: 98px;
+    max-height: 98px;
+    padding: 9px 9px 11px;
+    gap: 8px;
+    border-radius: 30px;
+  }
+
+  div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] > button {
+    height: 78px;
+    min-height: 78px;
+    max-height: 78px;
+    border-radius: 24px;
+  }
+}
+:where(.scope) :global(.monthProgramEditorPage):global(.monthProgramPremium) {
+  width: 100%;
+  max-width: 560px;
+  padding: max(14px, env(safe-area-inset-top)) 12px calc(150px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at 50% -10%, rgba(131, 167, 58, 0.12), transparent 30%),
+    #0d0f0d;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumTopbar),
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramTabs),
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumActions),
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumHero),
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumBlocks),
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumAddBlock),
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBottomSave) {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumTopbar) {
+  min-height: 64px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 10px;
+  border-radius: 18px;
+  background: rgba(20, 24, 20, 0.94);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumTopbar) :global(.adminFixedMainBack) {
+  width: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumTopbar) :global(.adminFixedMainBack) b {
+  display: none;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumTopbar) h1 {
+  margin: 2px 0 0;
+  font-size: 20px;
+  line-height: 1.1;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumTopbar) p {
+  display: none;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramTabs) {
+  margin-bottom: 10px;
+  padding: 4px;
+  border-radius: 16px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramTabs) button {
+  min-height: 40px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumActions) {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 18px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramModeButtons) {
+  gap: 6px;
+  margin-bottom: 8px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramModeButtons) button,
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramModePanel) select,
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramImportBtn) {
+  min-height: 44px;
+  border-radius: 13px;
+  font-size: 13px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramImportBtn) {
+  margin-top: 8px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumBlocks) {
+  gap: 10px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumBlock) {
+  padding: 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.035);
+  overflow: visible;
+}
+:global(.monthProgramPremiumDays) button:where(.scope) :global(.active) {
+  border-color: rgba(151, 188, 70, 0.42);
+  background: rgba(131, 167, 58, 0.2);
+  color: #e2f5b3;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumExerciseList) {
+  gap: 8px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumExercise) {
+  position: relative;
+  padding: 10px;
+  border-radius: 15px;
+  overflow: visible;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthExerciseRow):global(.compact) {
+  grid-template-columns: minmax(0, 1fr) 76px 36px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthExerciseRow):global(.compact) input:nth-child(1) {
+  grid-column: auto;
+  grid-row: auto;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthVideoUploadBtn) {
+  min-height: 38px;
+  border-radius: 11px;
+  font-size: 11px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthExerciseSets):global(.compact) {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthAddSetBtn):global(.compact) {
+  min-height: 34px;
+  margin-top: 6px;
+  border-radius: 11px;
+  font-size: 11px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthAddExerciseBtn) {
+  min-height: 44px;
+  margin-top: 9px;
+  border-radius: 13px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBottomSave) {
+  bottom: max(96px, calc(env(safe-area-inset-bottom) + 88px));
+  margin-top: 12px;
+  padding: 7px;
+  border-radius: 18px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBottomSave) button {
+  min-height: 50px;
+  border-radius: 14px;
+  font-size: 15px;
+}
+@media (min-width: 761px) {
+  :where(.scope) :global(.monthProgramEditorPage):global(.monthProgramPremium) {
+    max-width: 860px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumTopbar) {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumActions) {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 180px;
+    gap: 8px;
+    align-items: center;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramModeButtons) {
+    margin-bottom: 0;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramImportBtn) {
+    margin-top: 0;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumWeeks) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumDayEditor) {
+    padding: 14px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumExerciseList) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramEmpty):global(.compact),
+:where(.scope) :global(.monthProgramPremium) :global(.monthAddExerciseBtn) {
+    grid-column: 1 / -1;
+  }
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumActions),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumHero),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramTabs),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumAddBlock),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramEditorNameField),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBlock):not(:global(.active)) {
+  display: none;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBlocks) {
+  display: block;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBlock):global(.active) {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBlock):global(.active) > :global(.monthProgramPremiumBlockHead),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBlock):global(.active) > :global(.monthProgramPremiumWeeks) {
+  display: none;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumDayEditor) {
+  margin-top: 0;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBottomSave) {
+  bottom: max(138px, calc(env(safe-area-inset-bottom) + 130px));
+}
+@media (min-width: 761px) {
+  :where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) {
+    max-width: 760px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramBottomSave) {
+    position: static;
+    margin-top: 14px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramBottomSave) button {
+    max-width: 320px;
+    margin-left: auto;
+  }
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramOverviewMode) :global(.monthProgramPremiumTopbar) {
+  align-items: start;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramOverviewMode) :global(.monthProgramPremiumTopbar) p {
+  display: block;
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.35;
+  text-align: left;
+}
+:where(.scope) :global(.programsOverviewSection) {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+}
+:where(.scope) :global(.programsOverviewSection) + :global(.programsOverviewSection) {
+  margin-top: 10px;
+}
+:where(.scope) :global(.programsOverviewGrid) {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+:where(.scope) :global(.programsOverviewCard) {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.18);
+  color: #fff;
+  text-align: left;
+}
+:where(.scope) :global(.programsOverviewCard):global(.selected) {
+  border-color: rgba(147, 184, 67, 0.46);
+  background: rgba(125, 157, 54, 0.1);
+}
+:where(.scope) :global(.programsOverviewCardTitle) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+:where(.scope) :global(.programsOverviewCardTitle) strong {
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 15px;
+  font-weight: 950;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+:where(.scope) :global(.programsOverviewCardTitle) span {
+  flex: 0 0 auto;
+  padding: 4px 7px;
+  border-radius: 8px;
+  background: rgba(141, 176, 65, 0.18);
+  color: #dff1af;
+  font-size: 9px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+:where(.scope) :global(.programsOverviewCard) > p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+:where(.scope) :global(.programsOverviewCardStats) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 9px;
+}
+:where(.scope) :global(.programsOverviewCardStats) span {
+  min-width: 0;
+  padding: 6px 7px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(255, 255, 255, 0.44);
+  font-size: 9px;
+  font-weight: 800;
+}
+:where(.scope) :global(.programsOverviewCardStats) b {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 11px;
+}
+@media (min-width: 761px) {
+  :where(.scope) :global(.monthProgramEditorPage):global(.monthProgramPremium):global(.monthProgramOverviewMode) {
+    max-width: 1040px;
+  }
+
+  :where(.scope) :global(.programsOverviewSection) {
+    padding: 16px;
+  }
+
+  :where(.scope) :global(.programsOverviewGrid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  :where(.scope) :global(.programsOverviewCardStats) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] {
+  bottom: max(26px, calc(env(safe-area-inset-bottom) + 18px));
+
+  height: 98px;
+  min-height: 98px;
+  max-height: 98px;
+
+  padding: 9px 10px 11px;
+  gap: 9px;
+  border-radius: 30px;
+
+  align-items: stretch;
+  justify-items: stretch;
+  overflow: hidden;
+}
+div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] > button {
+  height: 78px;
+  min-height: 78px;
+  max-height: 78px;
+
+  padding: 8px 6px 10px;
+  gap: 4px;
+  border-radius: 24px;
+
+  align-items: center;
+  justify-content: center;
+}
+div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] > button > :global(.adminClientTabIcon) {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+
+  font-size: 27px;
+  line-height: 32px;
+  transform: translateY(-3px);
+}
+div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] > button > :global(.adminClientTabLabel) {
+  height: 16px;
+  min-height: 16px;
+  max-height: 16px;
+
+  font-size: 12px;
+  line-height: 16px;
+  transform: translateY(-2px);
+}
+:where(.scope) :global(.adminClientTabContent) {
+  padding-bottom: 214px;
+}
+@media (max-width: 420px) {
+  div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] {
+    bottom: max(24px, calc(env(safe-area-inset-bottom) + 18px));
+    left: 10px;
+    right: 10px;
+    width: calc(100vw - 20px);
+
+    height: 98px;
+    min-height: 98px;
+    max-height: 98px;
+    padding: 9px 9px 11px;
+    gap: 8px;
+  }
+
+  div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] > button {
+    height: 78px;
+    min-height: 78px;
+    max-height: 78px;
+    padding: 8px 5px 10px;
+  }
+}
+:where(.scope) :global(.adminUsersCrmMain),
+:where(.scope) :global(.adminUsersCrmGrid),
+:where(.scope) :global(.adminUsersClientsPanel) {
+  padding-bottom: 190px;
+}
+:global(.adminV3Nav):global(.adminV3BottomBar) button:not(:where(.scope) :global(.active)) {
+  opacity: 1;
+}
+:global(.adminV3Nav):global(.adminV3BottomBar) button:where(.scope) :global(.active) {
+  color: #f4f6f2;
+}
+:where(.scope) :global(.adminUsersCrmMain) {
+  padding-top: 6px;
+}
+:global(.adminClientTelegramOnlyTab) :where(.scope) :global(.adminV3OpenEditor) {
+  margin-top: 14px;
+}
+:where(.scope) :global(.adminClientWorkspaceActionsRender) {
+  display: none;
+}
+:global(.adminClientTransferBlock) :where(.scope) :global(.adminV3OpenEditor),
+:global(.adminClientNotesBlock) :where(.scope) :global(.adminV3OpenEditor) {
+  min-height: 42px;
+  padding: 10px 14px;
+}
+:where(.scope) :global(.adminClientIdentityRender) {
+  min-width: 0;
+}
+:where(.scope) :global(.adminClientIdentityRender) h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(28px, 6vw, 42px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+:where(.scope) :global(.adminClientIdentityRender) p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 520px) {
+
+  :where(.scope) :global(.adminClientIdentityRender) h2 {
+    font-size: 30px;
+  }
+
+  :where(.scope) :global(.adminClientIdentityRender) p {
+    font-size: 13px;
+  }
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+  min-height: 0;
+  height: auto;
+  padding: 13px 14px;
+  margin: 0 0 12px;
+
+  display: block;
+
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(127, 159, 58, 0.16), transparent 38%),
+    linear-gradient(180deg, rgba(18, 22, 18, 0.98), rgba(11, 14, 11, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.26);
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) {
+  min-height: 0;
+
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-areas:
+    "avatar name"
+    "avatar status";
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 4px;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientInitialsRender) {
+  grid-area: avatar;
+
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  min-height: 56px;
+  margin: 0;
+
+  border-radius: 18px;
+  font-size: 24px;
+  font-weight: 900;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(circle at 50% 20%, rgba(170, 230, 75, .25), transparent 60%),
+    linear-gradient(180deg, #1d2a13, #11170f);
+  border: 1px solid rgba(170, 230, 75, .34);
+  color: #c9ff67;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) > div:not(:global(.adminClientInitialsRender)):not(:global(.adminClientStatusRender)) {
+  grid-area: name;
+  min-width: 0;
+  align-self: end;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 25px;
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) p {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+  line-height: 1.15;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientStatusRender) {
+  grid-area: status;
+  align-self: start;
+
+  width: fit-content;
+  min-height: 25px;
+  margin: 2px 0 0;
+  padding: 4px 10px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  border-radius: 999px;
+  background: rgba(110, 255, 80, 0.10);
+  border: 1px solid rgba(110, 255, 80, 0.20);
+  color: #aaff67;
+
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientStatusRender) i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #68ff52;
+  box-shadow: 0 0 16px rgba(104, 255, 82, .7);
+}
+@media (max-width: 520px) {
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+    padding: 12px 13px;
+    border-radius: 22px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) {
+    grid-template-columns: 52px minmax(0, 1fr);
+    column-gap: 11px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientInitialsRender) {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
+    border-radius: 17px;
+    font-size: 23px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) h2 {
+    font-size: 24px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) p {
+    font-size: 11px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientStatusRender) {
+    min-height: 24px;
+    padding: 4px 9px;
+    font-size: 11px;
+  }
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+  padding: 10px 12px;
+  margin: 0 0 10px;
+  border-radius: 21px;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) {
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  grid-template-areas: "avatar name status";
+  column-gap: 11px;
+  row-gap: 0;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientInitialsRender) {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 17px;
+  font-size: 22px;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) > div:not(:global(.adminClientInitialsRender)):not(:global(.adminClientStatusRender)) {
+  align-self: center;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) h2 {
+  font-size: 23px;
+  line-height: 1;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) p {
+  margin-top: 5px;
+  font-size: 11px;
+  line-height: 1.1;
+  max-width: 100%;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientStatusRender) {
+  grid-area: status;
+  align-self: center;
+  justify-self: end;
+
+  min-height: 25px;
+  margin: 0;
+  padding: 5px 9px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+:where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientStatusRender) i {
+  width: 7px;
+  height: 7px;
+}
+@media (max-width: 520px) {
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) {
+    padding: 10px 11px;
+    border-radius: 20px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) {
+    grid-template-columns: 46px minmax(0, 1fr) auto;
+    column-gap: 10px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientInitialsRender) {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    min-height: 46px;
+    border-radius: 16px;
+    font-size: 21px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) h2 {
+    font-size: 22px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) p {
+    font-size: 10.5px;
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientStatusRender) {
+    min-height: 24px;
+    padding: 5px 8px;
+    font-size: 10.5px;
+  }
+}
+@media (max-width: 370px) {
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientIdentityRender) {
+    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-areas:
+      "avatar name"
+      "avatar status";
+  }
+
+  :where(.scope) :global(.adminClientWorkspaceHeaderRender) :global(.adminClientStatusRender) {
+    justify-self: start;
+    margin-top: 3px;
+  }
+}
+:where(.scope) :global(.adminCalendarDays) {
+  order: 3;
+}
+:where(.scope) :global(.adminCalendarDays) {
+  order: 2;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarPreview):empty {
+  display: none;
+  min-height: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  overflow: hidden;
+}
+:where(.scope) :global(.adminClientTabContent) {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+@media (max-width: 420px) {
+  :where(.scope) :global(.adminClientTabContent),
+:where(.scope) :global(.adminCalendarPanel) {
+    box-sizing: border-box;
+    max-width: calc(100vw - 24px);
+  }
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  margin: 0;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) span {
+  display: none;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) h3 {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: -.035em;
+  color: #fff;
+  text-shadow: 0 1px 16px rgba(255,255,255,.08);
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTelegram) {
+  order: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: fit-content;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 20px;
+  margin: 4px auto 0;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+  background: rgba(99,255,82,.08);
+  border: 1px solid rgba(99,255,82,.18);
+  color: rgba(190,255,160,.92);
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTelegram):global(.connected) {
+  background: rgba(92, 255, 84, .08);
+  border-color: rgba(92, 255, 84, .16);
+  color: rgba(220,255,210,.9);
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTelegram)::before {
+  content: "";
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.34);
+  flex: 0 0 auto;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTelegram):global(.connected)::before {
+  background: #53ff43;
+  box-shadow: 0 0 12px rgba(83,255,67,.6);
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) {
+  order: 2;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 0;
+  width: 100%;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) button {
+  min-height: 54px;
+  height: 54px;
+  padding: 0;
+  border-radius: 16px;
+  background: rgba(3, 7, 7, .52);
+  border: 1px solid rgba(255,255,255,.06);
+  color: rgba(255,255,255,.58);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) button:global(.active) {
+  background: linear-gradient(180deg, rgba(93,131,38,.45), rgba(55,81,28,.32));
+  border-color: rgba(155,205,56,.34);
+  color: #e6ffb4;
+  box-shadow: 0 0 18px rgba(119,180,40,.16), inset 0 1px 0 rgba(255,255,255,.06);
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) button strong {
+  font-size: 15px;
+  font-weight: 950;
+  line-height: 1;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) button span {
+  display: none;
+}
+:where(.scope) :global(.adminCalendarDaysHintText) {
+  order: 3;
+  margin: 4px 0 0;
+  color: rgba(255,255,255,.58);
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.45;
+  font-weight: 650;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarPerDaySettings) {
+  order: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsRow) {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    "day workout remind"
+    "hour hour hour";
+  column-gap: 12px;
+  row-gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 16px 14px 14px;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.028));
+  border: 1px solid rgba(255,255,255,.075);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+  box-sizing: border-box;
+}
+:where(.scope) :global(.adminCalendarDaySettingsHeader) {
+  grid-area: day;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+:where(.scope) :global(.adminCalendarDaySettingsTitle) {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 58px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(143, 202, 52, .30), rgba(76, 107, 31, .20));
+  border: 1px solid rgba(151,205,56,.22);
+  color: #edffbf;
+  font-size: 25px;
+  font-weight: 950;
+  text-shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+:where(.scope) :global(.adminCalendarDaySettingsName) {
+  display: none;
+}
+:where(.scope) :global(.adminCalendarDayTimeGrid) {
+  display: contents;
+}
+:where(.scope) :global(.adminCalendarDayTimeGrid) label {
+  display: block;
+  min-height: 0;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
+:where(.scope) :global(.adminCalendarDayTimeGrid) label:first-child {
+  grid-area: workout;
+}
+:where(.scope) :global(.adminCalendarDayTimeGrid) label:last-child {
+  grid-area: remind;
+}
+:where(.scope) :global(.adminCalendarDaySettingsRow) label span {
+  display: block;
+  margin: 0 0 9px;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 900;
+  color: rgba(255,255,255,.70);
+  white-space: nowrap;
+  text-align: left;
+}
+:where(.scope) :global(.adminCalendarDaySettingsRow) input {
+  width: 100%;
+  height: 46px;
+  min-height: 46px;
+  border-radius: 16px;
+  background: rgba(2,7,7,.46);
+  border: 1px solid rgba(255,255,255,.095);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 850;
+  text-align: center;
+  box-sizing: border-box;
+}
+:where(.scope) :global(.adminCalendarHourReminder) {
+  grid-area: hour;
+  width: 100%;
+  height: 48px;
+  min-height: 48px;
+  padding: 0 10px 0 0;
+  border-radius: 0;
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,.075);
+  background: transparent;
+  color: rgba(255,255,255,.78);
+  font-size: 17px;
+  font-weight: 850;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+:where(.scope) :global(.adminCalendarHourReminder) i {
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.13);
+  position: relative;
+  flex: 0 0 auto;
+}
+:where(.scope) :global(.adminCalendarHourReminder) i::before {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 2px;
+  top: 2px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.78);
+  transition: .18s ease;
+}
+:where(.scope) :global(.adminCalendarHourReminder):global(.active) {
+  background: rgba(127,159,58,.16);
+  border-color: rgba(127,159,58,.30);
+  color: rgba(255,255,255,.92);
+}
+:where(.scope) :global(.adminCalendarHourReminder):global(.active) i {
+  background: rgba(48, 205, 53, .75);
+}
+:where(.scope) :global(.adminCalendarHourReminder):global(.active) i::before {
+  transform: translateX(20px);
+  background: #fff;
+}
+:where(.scope) :global(.adminCalendarNoDaysHint) {
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+  color: rgba(255,255,255,.52);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+:where(.scope) :global(.adminCalendarEqualButtonsWrap) {
+  order: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+:where(.scope) :global(.adminCalendarEqualButtonsWrap) > button,
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarEqualButton),
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminV3OpenEditor),
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTestButton) {
+  width: 100%;
+  min-height: 62px;
+  height: 62px;
+  max-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 0 18px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 900;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTestButton) {
+  background: linear-gradient(180deg, rgba(6, 37, 42, .88), rgba(4, 25, 28, .96));
+  border: 1px solid rgba(64, 174, 205, .22);
+  color: rgba(196,235,245,.78);
+  box-shadow: none;
+  font-size: 14px;
+  line-height: 1.1;
+}
+@media (max-width: 420px) {
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHead) h3 {
+    font-size: 27px;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTelegram) {
+    height: 34px;
+    min-height: 34px;
+    padding: 0 17px;
+    font-size: 14px;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) {
+    gap: 6px;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) button {
+    min-height: 50px;
+    height: 50px;
+    border-radius: 15px;
+  }
+
+  :where(.scope) :global(.adminCalendarDaysHintText) {
+    font-size: 15px;
+    line-height: 1.42;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsRow) {
+    grid-template-columns: 58px minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 9px;
+    row-gap: 11px;
+    padding: 14px 12px 12px;
+    border-radius: 21px;
+  }
+
+  :where(.scope) :global(.adminCalendarDaySettingsTitle) {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
+    border-radius: 16px;
+    font-size: 22px;
+  }
+
+  :where(.scope) :global(.adminCalendarDaySettingsRow) label span {
+    font-size: 12px;
+    margin-bottom: 7px;
+  }
+
+  :where(.scope) :global(.adminCalendarDaySettingsRow) input {
+    height: 42px;
+    min-height: 42px;
+    border-radius: 15px;
+    font-size: 15px;
+  }
+
+  :where(.scope) :global(.adminCalendarHourReminder) {
+    height: 44px;
+    min-height: 44px;
+    font-size: 15px;
+  }
+
+  :where(.scope) :global(.adminCalendarHourReminder) i {
+    width: 46px;
+    height: 26px;
+  }
+
+  :where(.scope) :global(.adminCalendarHourReminder) i::before {
+    width: 22px;
+    height: 22px;
+  }
+
+  :where(.scope) :global(.adminCalendarHourReminder):global(.active) i::before {
+    transform: translateX(20px);
+  }
+
+  :where(.scope) :global(.adminCalendarEqualButtonsWrap) > button,
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarEqualButton),
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminV3OpenEditor),
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTestButton) {
+    min-height: 58px;
+    height: 58px;
+    max-height: 58px;
+    border-radius: 19px;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTestButton) {
+    font-size: 13px;
+  }
+}
+:where(.scope) :global(.adminCalendarDaySettingsRow){
+  align-items:flex-start;
+}
+:where(.scope) :global(.adminCalendarDaySettingsRow) label{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  min-width:0;
+}
+:where(.scope) :global(.adminCalendarDaySettingsRow) label span{
+  display:block;
+  margin-bottom:8px;
+  color:rgba(255,255,255,.72);
+  font-size:12px;
+  font-weight:850;
+  line-height:1.15;
+  text-align:left;
+  white-space:nowrap;
+}
+:where(.scope) :global(.adminReminderTimeInput){
+  width:100%;
+  height:44px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.34);
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  padding:0 14px;
+  box-sizing:border-box;
+  text-align:center;
+  appearance:none;
+  -webkit-appearance:none;
+}
+:where(.scope) :global(.adminReminderBeforeSelect){
+  width:100%;
+  height:44px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(28,31,28,.98), rgba(17,19,17,.98));
+  color:#fff;
+  font-size:16px;
+  font-weight:850;
+  padding:0 42px 0 14px;
+  box-sizing:border-box;
+  appearance:none;
+  -webkit-appearance:none;
+  outline:none;
+  cursor:pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(190,255,123,.9) 50%),
+    linear-gradient(135deg, rgba(190,255,123,.9) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 18px,
+    calc(100% - 12px) 18px;
+  background-size:6px 6px, 6px 6px;
+  background-repeat:no-repeat;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 10px 22px rgba(0,0,0,.16);
+}
+:where(.scope) :global(.adminReminderBeforeSelect) option{
+  background:#151815;
+  color:#fff;
+}
+:where(.scope) :global(.adminCalendarDayTimeGrid){
+  gap:14px;
+}
+:where(.scope) :global(.adminCalendarHourReminder){
+  margin-top:6px;
+}
+:where(.scope) :global(.adminCalendarHourReminder) span{
+  font-size:13px;
+  font-weight:850;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsRow),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarDaySettingsRow) {
+  grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    "day workout remind"
+    "hour hour hour";
+  column-gap: 10px;
+  row-gap: 12px;
+  align-items: start;
+  padding: 14px 12px;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsTitle),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarDaySettingsTitle) {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  max-width: 42px;
+  max-height: 42px;
+  font-size: 15px;
+  border-radius: 14px;
+  align-self: start;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDayTimeGrid),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarDayTimeGrid) {
+  display: contents;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarWorkoutTimeField),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarWorkoutTimeField) {
+  grid-area: workout;
+  min-width: 0;
+  width: 100%;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarReminderBeforeField),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarReminderBeforeField) {
+  grid-area: remind;
+  min-width: 0;
+  width: 100%;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsRow) label,
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarDaySettingsRow) label {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsRow) label span,
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarDaySettingsRow) label span {
+  display: block;
+  width: 100%;
+  min-height: 14px;
+  margin: 0 0 7px;
+  padding: 0;
+  color: rgba(255,255,255,.68);
+  font-size: 10px;
+  line-height: 1.05;
+  font-weight: 900;
+  text-align: left;
+  white-space: nowrap;
+  letter-spacing: -.02em;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarWorkoutTimeField) input,
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarWorkoutTimeField) input,
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminReminderTimeInput),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminReminderTimeInput) {
+  width: 100%;
+  height: 42px;
+  min-height: 42px;
+  max-height: 42px;
+  padding: 0 10px;
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.38);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 950;
+  text-align: center;
+  box-sizing: border-box;
+  appearance: auto;
+  -webkit-appearance: auto;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarReminderBeforeField) select,
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarReminderBeforeField) select,
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminReminderBeforeSelect),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminReminderBeforeSelect) {
+  width: 100%;
+  height: 42px;
+  min-height: 42px;
+  max-height: 42px;
+  padding: 0 34px 0 12px;
+  border-radius: 15px;
+  border: 1px solid rgba(145,173,78,.16);
+  background-color: rgba(8,13,10,.96);
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(216,255,149,.95) 50%),
+    linear-gradient(135deg, rgba(216,255,149,.95) 50%, transparent 50%),
+    linear-gradient(180deg, rgba(38,48,34,.58), rgba(8,13,10,.96));
+  background-position:
+    calc(100% - 17px) 18px,
+    calc(100% - 11px) 18px,
+    0 0;
+  background-size:
+    6px 6px,
+    6px 6px,
+    100% 100%;
+  background-repeat: no-repeat;
+  color: rgba(255,255,255,.94);
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 42px;
+  text-align: left;
+  box-sizing: border-box;
+  outline: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 8px 18px rgba(0,0,0,.18);
+  appearance: none;
+  -webkit-appearance: none;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminReminderBeforeSelect) option,
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminReminderBeforeSelect) option {
+  background: #111711;
+  color: #fff;
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHourReminder),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarHourReminder) {
+  grid-area: hour;
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 2px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,.065);
+}
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHourReminder) span,
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarHourReminder) span {
+  font-size: 13px;
+  font-weight: 850;
+  color: rgba(255,255,255,.78);
+}
+@media (max-width: 420px) {
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsRow),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarDaySettingsRow) {
+    grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 8px;
+    padding: 12px 10px;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsTitle),
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarDaySettingsTitle) {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    max-width: 38px;
+    max-height: 38px;
+    font-size: 13px;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsRow) label span,
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarDaySettingsRow) label span {
+    font-size: 9px;
+    margin-bottom: 6px;
+  }
+
+  :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarWorkoutTimeField) input,
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarWorkoutTimeField) input,
+:global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarReminderBeforeField) select,
+:global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarReminderBeforeField) select {
+    height: 38px;
+    min-height: 38px;
+    max-height: 38px;
+    font-size: 12px;
+    border-radius: 13px;
+  }
+}
+:where(.scope) :global(.adminReminderTimeManualInput){
+  letter-spacing:.04em;
+  caret-color:#dfff95;
+}
+:where(.scope) :global(.adminReminderTimeManualInput)::placeholder{
+  color:rgba(255,255,255,.28);
+}
+:where(.scope) :global(.adminReminderTimeManualInput)::-webkit-calendar-picker-indicator{
+  display:none;
+  opacity:0;
+  pointer-events:none;
+}
+:where(.scope) :global(.adminReminderTimeManualInput)::-webkit-inner-spin-button,
+:where(.scope) :global(.adminReminderTimeManualInput)::-webkit-outer-spin-button{
+  display:none;
+  -webkit-appearance:none;
+  margin:0;
+}
+:where(.scope) :global(.adminFixedMainBack) {
+  position: sticky;
+  top: max(12px, calc(env(safe-area-inset-top) + 8px));
+  z-index: 1200;
+
+  width: 46px;
+  min-width: 46px;
+  max-width: 46px;
+  height: 46px;
+  min-height: 46px;
+
+  margin: 0 0 14px 0;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.055);
+  color: rgba(255,255,255,.86);
+
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.32),
+    inset 0 1px 0 rgba(255,255,255,.04);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  cursor: pointer;
+}
+:where(.scope) :global(.adminFixedMainBack) span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 800;
+}
+:where(.scope) :global(.adminFixedMainBack):global(.adminV3Back),
+:where(.scope) :global(.adminFixedMainBack):global(.adminUsersBack),
+:where(.scope) :global(.adminFixedMainBack):global(.backBtn),
+:where(.scope) :global(.adminFixedMainBack):global(.monthProgramBackButton) {
+  width: 46px;
+  min-width: 46px;
+  max-width: 46px;
+  height: 46px;
+  min-height: 46px;
+  padding: 0;
+}
+@media (min-width: 760px) {
+  :where(.scope) :global(.adminFixedMainBack) {
+    width: auto;
+    max-width: none;
+    min-width: 46px;
+    padding: 0 16px;
+    gap: 8px;
+  }
+
+  :where(.scope) :global(.adminFixedMainBack) b {
+    display: inline;
+    font-size: 14px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  :where(.scope) :global(.adminFixedMainBack) span {
+    width: auto;
+    font-size: 22px;
+  }
+}
+@media (max-width: 759px) {
+  :where(.scope) :global(.adminFixedMainBack) {
+    left: 14px;
+  }
+}
+:where(.scope) :global(.adminFixedMainBack) {
+  position: fixed;
+  top: max(14px, calc(env(safe-area-inset-top) + 10px));
+  left: max(14px, calc(env(safe-area-inset-left) + 14px));
+  z-index: 9999;
+
+  width: 46px;
+  min-width: 46px;
+  max-width: 46px;
+  height: 46px;
+  min-height: 46px;
+  max-height: 46px;
+
+  margin: 0;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(14,18,16,.72);
+  color: rgba(255,255,255,.9);
+
+  box-shadow: 0 12px 30px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+:where(.scope) :global(.adminFixedMainBack) span {
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 850;
+}
+:where(.scope) :global(.adminFixedMainBack) b {
+  display: none;
+}
+:where(.scope) :global(.adminUsersCrmPage) {
+  padding-top: max(0px, env(safe-area-inset-top));
+}
+@media (min-width: 760px) {
+  :where(.scope) :global(.adminFixedMainBack) {
+    width: 46px;
+    min-width: 46px;
+    max-width: 46px;
+    padding: 0;
+  }
+
+}
+:global(.adminTrainerRoleButton):where(.scope) :global(.active) {
+  border-color: rgba(171, 125, 255, .32);
+  background: rgba(171, 125, 255, .14);
+  color: rgba(238, 226, 255, .94);
+}
+@keyframes profileTabFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (min-width: 701px) {
+
+  nav:global(.adminV3Nav):global(.adminV3BottomBar) > button:where(.scope) :global(.active),
+:global(.adminV3Nav):global(.adminV3BottomBar) > button:where(.scope) :global(.active) {
+    border-color: rgba(145, 173, 78, .30);
+    background: linear-gradient(180deg, #252d21 0%, #1a2118 100%);
+    color: #eaffb9;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  }
+
+  nav:global(.adminV3Nav):global(.adminV3BottomBar) > button:where(.scope) :global(.active) :global(.adminV3NavIcon),
+:global(.adminV3Nav):global(.adminV3BottomBar) > button:where(.scope) :global(.active) :global(.adminV3NavIcon) {
+    filter: drop-shadow(0 0 10px rgba(145,173,78,.32));
+  }
+
+  :where(.scope) :global(.adminUsersCrmMain),
+:where(.scope) :global(.adminUsersCrmMainClientPage) {
+    padding-bottom: 214px;
+  }
+
+  :where(.scope) :global(.adminUsersCrmMain):not(:global(.adminUsersCrmMainClientPage)) {
+    padding-bottom: 214px;
+  }
+
+  div:where(.scope) :global(.adminClientTabsCrm):global(.adminClientTabsFoodBar)[role="tablist"] {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: max(26px, calc(env(safe-area-inset-bottom) + 18px));
+    top: auto;
+    transform: none;
+    z-index: 9500;
+    width: calc(100vw - 24px);
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programsCompactHeader) {
+  width: 100%;
+  min-height: 38px;
+  margin: 0 0 10px;
+  padding: 4px 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programsCompactHeader) h1 {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 950;
+  text-align: center;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramOverviewMode) :global(.programsOverviewPage) {
+  padding-top: 0;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramEditorNameField) {
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 11px 12px;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramEditorNameField) span {
+  display: block;
+  margin-bottom: 5px;
+  color: rgba(164, 196, 91, 0.84);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramEditorNameField) input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 15px;
+  font-weight: 900;
+  outline: none;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionBlock) {
+  padding: 0;
+  overflow: hidden;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) {
+  width: 100%;
+  min-height: 62px;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  border: 0;
+  border-radius: 19px;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) div,
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) strong,
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) span {
+  min-width: 0;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) strong,
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) span {
+  display: block;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) strong {
+  font-size: 15px;
+  font-weight: 950;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) span {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.43);
+  font-size: 11px;
+  font-weight: 800;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) small {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 10px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) b {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(131, 167, 58, 0.13);
+  color: rgba(221, 242, 173, 0.9);
+  font-size: 18px;
+  line-height: 1;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionBlock):global(.expanded) {
+  border-color: rgba(131, 167, 58, 0.2);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionBlock):global(.expanded) :global(.monthProgramAccordionHead) {
+  border-radius: 19px 19px 0 0;
+  background: rgba(131, 167, 58, 0.055);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionBlock) > :global(.monthProgramPremiumWeeks) {
+  padding: 0 10px 10px;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramAccordionHead) {
+  display: none;
+}
+@media (min-width: 761px) {
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramEditorNameField) {
+    max-width: 560px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) {
+    min-height: 66px;
+    padding: 12px 14px;
+  }
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramEditorSaveIcon) {
+  position: fixed;
+  top: max(14px, calc(env(safe-area-inset-top) + 10px));
+  right: max(14px, calc(env(safe-area-inset-right) + 14px));
+  z-index: 9999;
+  width: 46px;
+  min-width: 46px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(190, 230, 112, 0.48);
+  border-radius: 14px;
+  background: linear-gradient(145deg, #91ad4e, #6f9134);
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(77, 112, 35, 0.38);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-size: 20px;
+  line-height: 1;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramEditorSaveIcon):active {
+  transform: scale(0.96);
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.programsCompactHeader),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBackToOverview),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthAddExerciseBtn) {
+  display: none;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) {
+  padding-top: max(14px, env(safe-area-inset-top));
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumExercise) {
+  cursor: pointer;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumExercise):global(.selected) {
+  border-color: rgba(145, 173, 78, 0.5);
+  background: rgba(127, 159, 58, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(145, 173, 78, 0.12);
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthExerciseRow):global(.compact) {
+  grid-template-columns: minmax(0, 1fr) 76px;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthExerciseRow):global(.compact) > button {
+  display: none;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumWeeks) {
+  gap: 7px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumWeek) {
+  padding: 0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumWeekHead) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  margin: 0;
+  padding-right: 8px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorToggle) {
+  width: 100%;
+  min-height: 52px;
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 0;
+  border-radius: 13px;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorToggle) span,
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorToggle) strong,
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorToggle) small {
+  display: block;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorToggle) strong {
+  font-size: 14px;
+  font-weight: 950;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorToggle) small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+  font-weight: 800;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorToggle) b {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(131, 167, 58, 0.12);
+  color: rgba(221, 242, 173, 0.9);
+  font-size: 17px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumWeek):global(.expanded) :global(.weekEditorToggle) {
+  background: rgba(131, 167, 58, 0.055);
+  border-radius: 13px 13px 0 0;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorAddDay) {
+  width: auto;
+  min-width: 58px;
+  min-height: 32px;
+  padding: 0 9px;
+  border-color: rgba(145, 173, 78, 0.2);
+  border-radius: 9px;
+  background: rgba(127, 159, 58, 0.12);
+  color: rgba(221, 242, 173, 0.92);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorDayList) {
+  padding: 0 9px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorDayCard) {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.16);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorDayOpen) {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorDayOpen) strong {
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorDayOpen) span {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 9px;
+  font-weight: 800;
+}
+@media (min-width: 761px) {
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumWeeks) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.weekEditorDayOpen) strong {
+    font-size: 13px;
+  }
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonths) {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonth) {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.025);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonthHead) {
+  min-height: 42px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonthHead) span,
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonthHead) h2 {
+  display: block;
+  margin: 0;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonthHead) span {
+  color: rgba(164, 196, 91, 0.76);
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonthHead) h2 {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 15px;
+  font-weight: 950;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonthHead) > button,
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockControls) button {
+  min-height: 32px;
+  padding: 0 9px;
+  border: 1px solid rgba(145, 173, 78, 0.2);
+  border-radius: 9px;
+  background: rgba(127, 159, 58, 0.12);
+  color: rgba(221, 242, 173, 0.92);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonth) :global(.monthProgramPremiumBlocks) {
+  gap: 8px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonthAddBlock) {
+  min-height: 32px;
+  margin: 8px 0 0 auto;
+  padding: 0 10px;
+  display: block;
+  border: 1px solid rgba(145, 173, 78, 0.2);
+  border-radius: 9px;
+  background: rgba(127, 159, 58, 0.12);
+  color: rgba(221, 242, 173, 0.92);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockHeaderRow) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockHeaderRow) :global(.monthProgramAccordionHead) {
+  min-width: 0;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockControls) {
+  padding-right: 9px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockControls) button {
+  min-height: 29px;
+  padding: 0 7px;
+  font-size: 9px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockControls) :global(.monthProgramHeaderToggle),
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorHeaderToggle) {
+  min-height: 29px;
+  padding: 0 7px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorHeadActions) {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockControls) :global(.monthProgramCopyIcon) {
+  width: 30px;
+  min-width: 30px;
+  padding: 0;
+  font-size: 17px;
+  line-height: 1;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramMonth):not(:global(.active)),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramMonth):global(.active) > :global(.monthProgramMonthHead),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramMonth):global(.active) > :global(.monthProgramMonthAddBlock),
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBlock):global(.active) > :global(.monthProgramBlockHeaderRow) {
+  display: none;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramMonth):global(.active) {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBlocks) > :global(.programEditorSwipeRow):not(:global(.active)) {
+  display: none;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBlocks) > :global(.programEditorSwipeRow):global(.active) {
+  padding-right: 0;
+}
+:where(.scope) :global(.monthProgramPremium):global(.monthProgramPremiumDayMode) :global(.monthProgramPremiumBlocks) > :global(.programEditorSwipeRow):global(.active) > :global(.programEditorSwipeDelete) {
+  display: none;
+}
+@media (max-width: 420px) {
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockHeaderRow) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockControls) {
+    padding: 0 7px 0 0;
+    justify-content: flex-end;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockControls) button,
+:where(.scope) :global(.monthProgramPremium) :global(.weekEditorHeadActions) button {
+    padding-left: 6px;
+    padding-right: 6px;
+    font-size: 8px;
+  }
+}
+@media (min-width: 761px) {
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonths) {
+    gap: 14px;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonth) {
+    padding: 12px;
+  }
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeRow) {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeContent) {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  transition: transform 180ms ease, box-shadow 140ms ease;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeRow):hover > :global(.programEditorSwipeContent),
+:where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeRow):active > :global(.programEditorSwipeContent) {
+  box-shadow: inset 0 0 0 1px rgba(164, 196, 91, 0.14);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeRow):active {
+  cursor: grabbing;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeRow):global(.delete-open) > :global(.programEditorSwipeContent) {
+  transform: translateX(-76px);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeDelete) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  width: 76px;
+  height: 100%;
+  padding: 0 8px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 0 13px 13px 0;
+  background: #a83434;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeRow):global(.delete-open) > :global(.programEditorSwipeDelete) {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopySheetBackdrop) {
+  position: fixed;
+  inset: 0;
+  z-index: 10020;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopySheet) {
+  width: 100%;
+  max-width: 520px;
+  padding: 10px 14px calc(16px + env(safe-area-inset-bottom));
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px 18px 12px 12px;
+  background: #151915;
+  box-shadow: 0 -18px 42px rgba(0, 0, 0, 0.42);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopySheetHandle) {
+  width: 38px;
+  height: 4px;
+  margin: 0 auto 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopySheet) h2 {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 17px;
+  font-weight: 950;
+  text-align: center;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopyTargetList) {
+  display: grid;
+  gap: 10px;
+  max-height: min(56vh, 420px);
+  overflow-y: auto;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopyTargetMonth) {
+  padding: 9px;
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopyTargetMonth) h3 {
+  margin: 0 0 2px;
+  color: rgba(164, 196, 91, 0.88);
+  font-size: 11px;
+  font-weight: 950;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopyTargetMonth) button,
+:where(.scope) :global(.monthProgramPremium) :global(.programCopySheetActions) button {
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  font-weight: 900;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopyTargetMonth) button {
+  text-align: left;
+}
+:where(.scope) :global(.monthProgramPremium) :global(.programCopySheetActions) {
+  margin-top: 13px;
+  display: flex;
+  justify-content: flex-end;
+}
+@media (min-width: 761px) {
+  :where(.scope) :global(.monthProgramPremium) :global(.programCopySheetBackdrop) {
+    align-items: center;
+  }
+
+  :where(.scope) :global(.monthProgramPremium) :global(.programCopySheet) {
+    border-radius: 18px;
+  }
+}
+:global(.monthProgramPremiumDayEditor):global(.exercise-fullscreen-open) :global(.monthProgramPremiumExercise):where(.scope) :global(.selected) {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  width: 100%;
+  height: 100dvh;
+  margin: 0;
+  padding:
+    max(14px, calc(env(safe-area-inset-top) + 10px))
+    14px
+    calc(100px + env(safe-area-inset-bottom));
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 0;
+  border-radius: 0;
+  background: #0d100d;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+:global(.monthProgramPremiumDayEditor):global(.exercise-fullscreen-open) :global(.monthProgramPremiumExercise):where(.scope) :global(.selected) :global(.monthExerciseFullscreenHeader) {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  min-height: 46px;
+  margin: 0 0 14px;
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 88px;
+  align-items: center;
+  background: #0d100d;
+}
+:global(.monthProgramPremiumDayEditor):global(.exercise-fullscreen-open) :global(.monthProgramPremiumExercise):where(.scope) :global(.selected) :global(.monthProgramPremiumExerciseNumber) {
+  display: none;
+}
+:global(.monthProgramPremiumDayEditor) :global(.monthExerciseEditorNav) button:where(.scope) :global(.danger) {
+  color: rgba(255, 142, 142, 0.92);
+}
+@media (min-width: 761px) {
+  :global(.monthProgramPremiumDayEditor):global(.exercise-fullscreen-open) :global(.monthProgramPremiumExercise):where(.scope) :global(.selected) {
+    left: 50%;
+    width: min(100%, 680px);
+    transform: translateX(-50%);
+    border-left: 1px solid rgba(255, 255, 255, 0.07);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+  }
+}
+:where(.scope) :global(.adminUsersCrmMain) :global(.adminUsersFilterPills) {
+  display: flex;
+  width: min(100%, 1120px);
+  margin: 0 auto 12px;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramEditorPage):global(.monthProgramPremium) {
+  --accent: #5a49df;
+  --accent-2: #2d6ff2;
+  --text: #151824;
+  --muted: #737b91;
+  --line: #e1e4ef;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.055), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%);
+  color: #151824;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage) h1,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage) h2,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage) h3,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage) strong,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) h1,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) h2,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) h3,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) strong {
+  color: #151824;
+  text-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmHeader) p,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientIdentityRender) p,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarDaysHintText),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarNoDaysHint) {
+  color: #737b91;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersClientsPanel),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceCrm),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceHeaderRender),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientCard),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientTabContent),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientMetricCardRender),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarPanel),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.programsOverviewSection),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.programsOverviewCard) {
+  border-color: #e1e4ef;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientCard):global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminSavedProgramCard):where(.scope) :global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.programsOverviewCard):global(.selected),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.monthProgramPremiumExercise):where(.scope) :global(.selected) {
+  border-color: #7565e8;
+  background: #efedff;
+  box-shadow: 0 0 0 3px rgba(90, 73, 223, 0.07);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientMetricCardRender) span,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.programsOverviewCardStats) {
+  color: #737b91;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage) input,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage) select,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage) textarea,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) input,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) select,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) textarea {
+  border-color: #dfe3ef;
+  background: #f7f8fc;
+  color: #151824;
+  box-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage) input::placeholder,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmPage) textarea::placeholder,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) input::placeholder,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) textarea::placeholder {
+  color: #9aa1b3;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersFilterPills),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientTabsCrm),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarToggles) {
+  border-color: #e1e4ef;
+  background: #f4f6fc;
+  color: #596176;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersFilterPills) button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientTabsCrm) button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarToggles) button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarEqualButton),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonthHead) > button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramBlockControls) button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramMonthAddBlock),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.weekEditorAddDay),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.weekEditorHeaderToggle),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramHeaderToggle),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthAddExerciseBtn),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthAddSetBtn) {
+  border-color: #dfe3ef;
+  background: #ffffff;
+  color: #596176;
+  box-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersFilterPills) button:global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientTabsCrm) button:global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminV3Tabs) button:where(.scope) :global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminV3Filters) button:where(.scope) :global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarToggles) button:global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarEqualButton):global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminProgramGridFilters) button:where(.scope) :global(.active) {
+  border-color: #7565e8;
+  background: #efedff;
+  color: #4f3dd2;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminV3OpenEditor),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramEditorSaveIcon),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthVideoUploadBtn):global(.added),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.exerciseEditBar) button:global(.save),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthExerciseEditorNav) button:global(.save) {
+  border-color: transparent;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarTestButton),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminFixedMainBack) {
+  border-color: #e1e4ef;
+  background: #f4f6fc;
+  color: #596176;
+  box-shadow: 0 8px 22px rgba(55, 64, 112, 0.08);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programCopySheetBackdrop) {
+  background: rgba(35, 40, 68, 0.24);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programCopySheet) {
+  border-color: #dfe3ef;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: 0 24px 64px rgba(43, 50, 92, 0.2);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programCopyTargetMonth),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programCopyTargetMonth) button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programCopySheetActions) button {
+  border-color: #e1e4ef;
+  background: #f7f8fc;
+  color: #596176;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programCopySheetHandle) {
+  background: #d8dce8;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.weekEditorToggle),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.weekEditorDayOpen),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthExerciseListItem),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthExerciseSearchResults) button {
+  background: transparent;
+  color: #151824;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramAccordionHead) b,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.weekEditorToggle) b,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumExerciseNumber) {
+  background: #efedff;
+  color: #5542d8;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.monthProgramPremiumDayEditor):global(.exercise-fullscreen-open) :global(.monthProgramPremiumExercise):where(.scope) :global(.selected) {
+  background: #f7f8fd;
+  color: #151824;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.monthProgramPremiumDayEditor):global(.exercise-fullscreen-open) :global(.monthProgramPremiumExercise):where(.scope) :global(.selected) :global(.monthExerciseFullscreenHeader) {
+  background: rgba(247, 248, 253, 0.97);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminClientDangerZoneBottom) :where(.scope) :global(.danger),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeDelete),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programEditorBottomBarDelete),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.workoutEditorBottomBarDelete),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.monthProgramPremiumDayEditor) :global(.exerciseEditBar) button:where(.scope) :global(.danger),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.monthProgramPremiumDayEditor) :global(.monthExerciseEditorNav) button:where(.scope) :global(.danger) {
+  border-color: rgba(223, 82, 102, 0.22);
+  background: #fff0f3;
+  color: #c73f58;
+  -webkit-text-fill-color: #c73f58;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.trainerRoleBottomBar) > button:where(.scope) :global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.trainerRoleWorkspaceBar) > button:where(.scope) :global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.programsTopActionBar) > button:where(.scope) :global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.programEditorBottomBar) > button:where(.scope) :global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.workoutEditorBottomBar) > button:where(.scope) :global(.active) {
+  border-color: #e1defb;
+  background: #f0effd;
+  color: #5542d8;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmMain),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersCrmGrid),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceCrmPage) {
+  background: transparent;
+  background-color: transparent;
+  color: #151824;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminUsersToolbar),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientMetricGridRender),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarDaySettingsRow),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarPreview),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumTopbar),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramTabs),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumActions),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumHero),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumStats) > div,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumDayEditor),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramBottomSave) {
+  border-color: #e1e4ef;
+  background: #ffffff;
+  background-color: #ffffff;
+  color: #151824;
+  box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientMetricCardRender),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientMetricCardWideRender) {
+  background: transparent;
+  box-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender):not(:last-child)::after {
+  background: #e5e8f1;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) i,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientAvatar),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientInitialsRender),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientAddIcon) {
+  border-color: #ddd9fa;
+  background: #efedff;
+  color: #5542d8;
+  box-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) span,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarDaySettingsRow) label span,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarHourReminder) span {
+  color: #737b91;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientMetricCardRender) strong {
+  color: #151824;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientAddCard) {
+  border-color: #d9d5fa;
+  background: #f4f2ff;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsFoodBar) {
+  border-color: #dfe3ef;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow:
+    0 14px 34px rgba(52, 60, 105, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsFoodBar) button {
+  border-color: transparent;
+  background: transparent;
+  color: #7b8295;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientWorkspaceCrmPage) :global(.adminClientTabsFoodBar) button:global(.active) {
+  border-color: #e1defb;
+  background: #f0effd;
+  color: #5542d8;
+  box-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) button {
+  border-color: #e1e4ef;
+  background: #f7f8fc;
+  color: #596176;
+  box-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDays) button:global(.active) {
+  border-color: #7565e8;
+  background: #efedff;
+  color: #4f3dd2;
+  box-shadow: 0 0 0 3px rgba(90, 73, 223, 0.07);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarDaySettingsTitle) {
+  border-color: #ddd9fa;
+  background: #efedff;
+  color: #5542d8;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarWorkoutTimeField) input,
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarWorkoutTimeField) input,
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminReminderTimeInput),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminReminderTimeInput),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarReminderBeforeField) select,
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarReminderBeforeField) select,
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminReminderBeforeSelect),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminReminderBeforeSelect) {
+  border-color: #dfe3ef;
+  background: #ffffff;
+  background-color: #ffffff;
+  background-image: none;
+  color: #151824;
+  box-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminReminderBeforeSelect) option,
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminReminderBeforeSelect) option {
+  background: #ffffff;
+  color: #151824;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarHourReminder),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminClientNutritionCalendarContent) :where(.scope) :global(.adminCalendarHourReminder) {
+  border-color: #e1e4ef;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTelegram) {
+  border-color: #e1e4ef;
+  background: #f7f8fc;
+  color: #596176;
+  box-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminCalendarPanelMerged) :where(.scope) :global(.adminCalendarTelegram):global(.connected),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminClientTelegramBadge):where(.scope) :global(.connected) {
+  border-color: #bcd1ff;
+  background: #eef4ff;
+  color: #2d6ff2;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumTopbar) p,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumStats) span,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumBlockHead) small,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumWeekHead) span,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumDays) > span,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewCard) > p,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewCardStats) span {
+  color: #737b91;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumField) > span,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumBlockHead) span,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumDayHead) span,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewSectionHead) span {
+  color: #5a49df;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumWeek),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewEmpty) {
+  border-color: #e1e4ef;
+  background: #f7f8fc;
+  color: #596176;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumWeekHead) button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumDays) button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewSectionHead) > button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewConstructorActions) label {
+  border-color: #dfe3ef;
+  background: #ffffff;
+  color: #596176;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumDays) button:global(.active) {
+  border-color: #7565e8;
+  background: #efedff;
+  color: #4f3dd2;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumDayHead) button {
+  border-color: rgba(223, 82, 102, 0.22);
+  background: #fff0f3;
+  color: #c73f58;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumExerciseNumber),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewCardTitle) span {
+  background: #efedff;
+  color: #5542d8;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewCardStats) span {
+  border: 1px solid #e5e8f1;
+  background: #f4f6fc;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewCardStats) b {
+  color: #151824;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewConstructorActions) button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programsOverviewEditButton),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramBottomSave) button,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programEditorBottomBarSave) {
+  border-color: transparent;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.2);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.monthProgramPremiumAddBlock) {
+  border-color: #cfc9f8;
+  background: #f4f2ff;
+  color: #5542d8;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeRow):hover > :global(.programEditorSwipeContent),
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.monthProgramPremium) :global(.programEditorSwipeRow):active > :global(.programEditorSwipeContent) {
+  box-shadow: inset 0 0 0 1px rgba(90, 73, 223, 0.18);
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarHead) p,
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarSettingsGrid) span {
+  color: #737b91;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarHead) span {
+  color: #5a49df;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminCalendarSettingsGrid) input {
+  border-color: #dfe3ef;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: none;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientCardBottom) i {
+  border-color: #ddd9fa;
+  background: #efedff;
+  color: #5542d8;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope) :global(.adminClientCardBottom) b {
+  color: #151824;
+}
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.adminTrainerRoleButton):where(.scope) :global(.active) {
+  border-color: #7565e8;
+  background: #efedff;
+  color: #4f3dd2;
+}
+:where(.scope) :global(.adminHarnessCrmSurface) :global(.adminClientWorkspaceActionsRender) {
+  display: flex;
+}
+:where(.scope) :global(.adminHarnessCrmSurface) :global(.adminClientWorkspaceActionsRender) button {
+  min-height: 44px;
+}

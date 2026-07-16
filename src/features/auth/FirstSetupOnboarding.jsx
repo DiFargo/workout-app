@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import styles from "./FirstSetupOnboarding.module.css";
 
 import { hasRequiredAiNutritionProfileFields } from "../../utils/profileDefaults";
 
@@ -204,7 +205,7 @@ export default function FirstSetupOnboarding({
   if (!open) return null;
 
   return (
-    <div className="firstSetupOverlay">
+    <div className={`${styles.scope} firstSetupOverlay`}>
       <div className="firstSetupCard">
         <button
           type="button"

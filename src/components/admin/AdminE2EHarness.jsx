@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../styles/admin-internals-lazy.css";
+import styles from "./AdminE2EHarness.module.css";
 import TrainerAdminCalendarTab from "../../features/trainer/TrainerAdminCalendarTab";
 import AdminPanelHub from "./AdminPanelHub";
 
@@ -284,7 +284,7 @@ export default function AdminE2EHarness() {
 
   if (surface === "users") {
     return (
-      <main data-testid="admin-harness-root">
+      <main className={styles.scope} data-testid="admin-harness-root">
         <AdminUsersHarnessSurface onAction={setLastAction} />
         <output data-testid="admin-harness-action">{lastAction}</output>
       </main>
@@ -293,7 +293,7 @@ export default function AdminE2EHarness() {
 
   if (surface === "programs") {
     return (
-      <main data-testid="admin-harness-root">
+      <main className={styles.scope} data-testid="admin-harness-root">
         <AdminProgramsHarnessSurface onAction={setLastAction} />
         <output data-testid="admin-harness-action">{lastAction}</output>
       </main>
@@ -302,7 +302,7 @@ export default function AdminE2EHarness() {
 
   if (surface === "calendar") {
     return (
-      <main data-testid="admin-harness-root">
+      <main className={styles.scope} data-testid="admin-harness-root">
         <AdminCalendarHarnessSurface onAction={setLastAction} />
         <output data-testid="admin-harness-action">{lastAction}</output>
       </main>
@@ -310,7 +310,7 @@ export default function AdminE2EHarness() {
   }
 
   return (
-    <main data-testid="admin-harness-root">
+    <main className={styles.scope} data-testid="admin-harness-root">
       <AdminPanelHub
         canUseAdminFeatures={() => canAccessAdmin}
         setPage={(page) => setLastAction(`page:${page}`)}

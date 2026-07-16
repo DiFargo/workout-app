@@ -1,8 +1,0 @@
-/* v201: main inner render lock, excludes header/nav and gauge drawing. */
-@media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiDashboardCard {
-    gap: 14px !important;
-  }
-
-}
-

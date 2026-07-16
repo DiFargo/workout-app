@@ -56,7 +56,7 @@
 
 @media (max-width: 640px) {
   :global(:root[data-app-theme="warm-light"]) .root {
-    width: 100%;
+    width: calc(100% - var(--viewport-inline-compensation));
     max-width: none;
     height: 100dvh;
     min-height: 100dvh;

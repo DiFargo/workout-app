@@ -1,6 +1,9 @@
+import splashStyles from "./AppSplash.module.css";
+import loginStyles from "./LoginPage.module.css";
+
 export function AppSplash() {
   return (
-    <div className="appSplash">
+    <div className={`${splashStyles.scope} appSplash`}>
       <div className="splashInner">
         <div className="splashMark">🏋️</div>
         <div className="splashLogo">GYM</div>
@@ -38,7 +41,7 @@ export function LoginPage({
   handleLoginPasswordReset
 }) {
   return (
-    <div className="loginPage">
+    <div className={`${loginStyles.scope} loginPage`}>
       <div className="loginHero">
         <div className="appLogo">W</div>
         <h1>Workout</h1>

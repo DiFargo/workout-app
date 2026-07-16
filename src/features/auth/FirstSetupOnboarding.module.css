@@ -1,0 +1,596 @@
+/* Generated from ../workout-app/src/styles/index.css for its reachable component classes. */
+@layer reset, base, legacy, components;@keyframes splashLoading {
+  0% {
+    transform: translateX(-115%);
+  }
+
+  55% {
+    transform: translateX(95%);
+  }
+
+  100% {
+    transform: translateX(245%);
+  }
+}@keyframes splashDot {
+  0%, 100% {
+    opacity: 0.32;
+    transform: translateY(0) scale(0.86);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1);
+  }
+}:root[data-app-theme="warm-light"] :global(.fatWeekRow) :global(.fatDayCell):where(.scope) :global(.active) span,
+:root[data-app-theme="warm-light"] :global(.fatDayCell):where(.scope) :global(.active) span {
+  background: linear-gradient(135deg, #c79d4c 0%, #d9b86f 100%);
+  color: #21180d;
+  border-color: rgba(121, 86, 31, 0.20);
+}:root[data-app-theme="warm-light"] :global(.fatDayCell):where(.scope) :global(.active) {
+  background: linear-gradient(180deg, #f7e965 0%, #d6bd44 100%);
+  color: #211b12;
+}:root[data-app-theme="warm-light"] :global(.fatCalorieDot):where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.fatDot):where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.calorieDot):where(.scope) :global(.active) {
+  background: #57d867;
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.active):not([data-css-module-scope] *),
+:root[data-app-theme="warm-light"] :global(.fatTab):where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.nutritionTab):where(.scope) :global(.active) {
+  border-color: rgba(183,149,45,0.32);
+}:root[data-app-theme="warm-light"] :global(.fatTab):where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.nutritionTab):where(.scope) :global(.active) {
+  background: rgba(244, 224, 100, 0.32);
+  color: var(--text);
+}:root[data-app-theme="warm-light"] :global(.fatDayCell):where(.scope) :global(.active) {
+  background: linear-gradient(180deg,#f4e064 0%,#d8bd48 100%);
+}:root[data-app-theme="warm-light"] :global(.foodEditSegmentRow) button:where(.scope) :global(.active) {
+  border-color: #7666e8;
+  background: #efedff;
+  color: #4e3bd0;
+}:root[data-app-theme="warm-light"] :global(.mainMenuBottomBar) button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.profileBottomTabBar) button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.fatSearchBottomBar) button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.fatSearchBottomBarFive) button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.adminV3Nav):global(.adminV3BottomBar) button:where(.scope) :global(.active) {
+  border-color: #e1defb;
+  background: #f0effd;
+  color: #5542d8;
+}:root[data-app-theme="warm-light"] :global(.adminV3Sidebar) button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.adminV3Tabs) button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.adminV3Filters) button:where(.scope) :global(.active) {
+  border-color: #dedafb;
+  background: #efedff;
+  color: #4f3dd2;
+}:global(.trainerAttentionCard):where(.scope) :global(.active) :global(.trainerAttentionIcon),
+:global(.trainerClientStatusBadge):where(.scope) :global(.active) {
+  color: #8fd05a;
+}:root[data-app-theme="warm-light"] :global(.fatFoodSearchScreenPremium) :global(.fatSearchBottomBar) button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] :global(.fatFoodSearchScreenPremium) :global(.fatSearchBottomBarFive) button:where(.scope) :global(.active) {
+  border-color: #dfdcfa;
+  background: #efedff;
+  color: #513fd4;
+}:root[data-app-theme="warm-light"] :global(.fatFoodSearchScreenPremium) :global(.foodEditSegmentRow) button:where(.scope) :global(.active) {
+  border-color: #7666e8;
+  background: #efedff;
+  color: #4e3bd0;
+}html:root[data-app-theme="warm-light"] :global(.fatFoodSearchScreenPremium) :global(.foodEditSegmentRow) button:where(.scope) :global(.active) {
+  border-color: #ddd9fa;
+  background: #efedff;
+  color: #4e3bd0;
+}html:root[data-app-theme="warm-light"] :where(.scope):global(.firstSetupOverlay) {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(90, 73, 223, 0.07), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f6f7fc 100%);
+  color: #151824;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupCard) {
+  border-color: #dfe3ef;
+  background: rgba(255, 255, 255, 0.94);
+  color: #151824;
+  box-shadow:
+    0 24px 64px rgba(45, 53, 98, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupCard) p {
+  color: #737b91;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupCard) h2 {
+  color: #151824;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupInput) {
+  border-color: #dfe3ef;
+  background: #ffffff;
+  color: #151824;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupPrimary) {
+  border-color: transparent;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22);
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupSecondary),
+html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupChoiceGrid) button,
+html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupGoalGrid) button {
+  border-color: #e1e4ef;
+  background: #ffffff;
+  color: #596176;
+}html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupChoiceGrid) button:global(.active),
+html:root[data-app-theme="warm-light"] :where(.scope) :global(.firstSetupGoalGrid) button:global(.active),
+html:root[data-app-theme="warm-light"] :global(.firstSetupDays) button:where(.scope) :global(.active) {
+  border-color: #7565e8;
+  background: #efedff;
+  color: #4f3dd2;
+}html:root[data-app-theme="warm-light"] body :global(#root) :global(.workoutRunPage) :global(.warmupTimerControls) button:where(.scope) :global(.active) {
+  border-color: #7565e8;
+  background: #efedff;
+  color: #4f3dd2;
+}:where(.scope):global(.firstSetupOverlay) {
+  box-sizing: border-box;
+  padding: 12px;
+  background: #f4f5fa;
+  backdrop-filter: none;
+  -webkit-user-select: none;
+  user-select: none;
+}:where(.scope) :global(.firstSetupCard) {
+  box-sizing: border-box;
+  width: min(420px, 100%);
+  height: min(780px, calc(100dvh - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 22px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e5e7f0;
+  border-radius: 24px;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: 0 18px 50px rgba(45, 52, 91, 0.12);
+}:where(.scope) :global(.firstSetupProgress) {
+  width: 100%;
+  min-height: 20px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  color: #252a39;
+  font-size: 11px;
+  font-weight: 700;
+}:where(.scope) :global(.firstSetupProgress) > div {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 4px;
+}:where(.scope) :global(.firstSetupProgress) i {
+  height: 4px;
+  border-radius: 999px;
+  background: #e6e8ef;
+}:where(.scope) :global(.firstSetupProgress) i:global(.active) {
+  background: linear-gradient(90deg, #6552e6, #7841dd);
+}:where(.scope) :global(.firstSetupHeader) {
+  flex: 0 0 auto;
+  margin-top: clamp(26px, 6dvh, 52px);
+  text-align: center;
+}:where(.scope) :global(.firstSetupCard) :global(.firstSetupHeader) h2 {
+  margin: 0;
+  color: #151824;
+  font-size: clamp(23px, 6vw, 29px);
+  font-weight: 850;
+  line-height: 1.08;
+  letter-spacing: 0;
+}:where(.scope) :global(.firstSetupCard) :global(.firstSetupHeader) p {
+  max-width: 310px;
+  margin: 10px auto 0;
+  color: #737b91;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}:where(.scope) :global(.firstSetupBody) {
+  min-height: 0;
+  flex: 1 1 auto;
+  margin: 16px 0 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}:where(.scope) :global(.firstSetupField) {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+  color: #737b91;
+  font-size: 12px;
+  font-weight: 650;
+}:where(.scope) :global(.firstSetupInput) {
+  box-sizing: border-box;
+  width: 100%;
+  height: 58px;
+  min-height: 58px;
+  padding: 0 58px 0 15px;
+  border: 1px solid #dfe3ef;
+  border-radius: 14px;
+  outline: none;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: none;
+  font-size: 17px;
+  font-weight: 750;
+  -webkit-user-select: text;
+  user-select: text;
+}:where(.scope) :global(.firstSetupField) > :global(.firstSetupInput) {
+  padding-right: 15px;
+}:where(.scope) :global(.firstSetupInput):focus {
+  border-color: #7664e8;
+  box-shadow: 0 0 0 3px rgba(101, 82, 230, 0.1);
+}:where(.scope) :global(.firstSetupWelcomeVisual) {
+  position: relative;
+  width: min(250px, 76vw);
+  height: 225px;
+  margin: 0 auto;
+}:where(.scope) :global(.firstSetupWelcomeVisual) span {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 12px 15px rgba(68, 57, 170, 0.15));
+}:where(.scope) :global(.firstSetupClipboard) {
+  inset: 18px 45px 20px;
+  border-radius: 38px;
+  background: linear-gradient(145deg, #f1efff, #ffffff);
+  font-size: 112px;
+}:where(.scope) :global(.firstSetupDumbbell) {
+  left: 0;
+  bottom: 7px;
+  font-size: 62px;
+  transform: rotate(-8deg);
+}:where(.scope) :global(.firstSetupApple) {
+  right: 8px;
+  bottom: 5px;
+  font-size: 58px;
+}:where(.scope) :global(.firstSetupBottle) {
+  top: 70px;
+  right: 0;
+  font-size: 42px;
+}:where(.scope) :global(.firstSetupChoiceGrid):global(.firstSetupSexGrid) {
+  gap: 12px;
+}:where(.scope) :global(.firstSetupSexGrid) button {
+  height: 190px;
+  padding: 14px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid #dfe3ef;
+  border-radius: 17px;
+  background: #ffffff;
+  color: #151824;
+}:where(.scope) :global(.firstSetupSexGrid) button span {
+  font-size: 84px;
+  line-height: 1;
+}:where(.scope) :global(.firstSetupSexGrid) button strong {
+  font-size: 14px;
+}:where(.scope) :global(.firstSetupActivityList) {
+  display: grid;
+  gap: 8px;
+}:where(.scope) :global(.firstSetupActivityList) button {
+  min-height: 65px;
+  padding: 9px 13px;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #dfe3ef;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #151824;
+  text-align: left;
+}:where(.scope) :global(.firstSetupActivityList) button > span:first-child {
+  font-size: 25px;
+  text-align: center;
+}:where(.scope) :global(.firstSetupActivityList) button > span:nth-child(2) {
+  display: grid;
+  gap: 3px;
+}:where(.scope) :global(.firstSetupActivityList) strong,
+:where(.scope) :global(.firstSetupActivityList) small {
+  display: block;
+}:where(.scope) :global(.firstSetupActivityList) strong {
+  font-size: 14px;
+}:where(.scope) :global(.firstSetupActivityList) small {
+  color: #737b91;
+  font-size: 11px;
+}:where(.scope) :global(.firstSetupActivityList) button > i {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #b5bac8;
+  border-radius: 50%;
+}:where(.scope) :global(.firstSetupActivityList) button:global(.active) {
+  border-color: #6b55e6;
+  background: #f6f4ff;
+}:where(.scope) :global(.firstSetupActivityList) button:global(.active) > i {
+  border: 5px solid #6552e6;
+}:where(.scope) :global(.firstSetupGoalStep) {
+  width: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, auto) auto;
+  gap: 12px;
+}:where(.scope) :global(.firstSetupCard) :global(.firstSetupGoalGrid) {
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}:where(.scope) :global(.firstSetupGoalGrid) button {
+  min-height: 110px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid #dfe3ef;
+  border-radius: 15px;
+  background: #ffffff;
+  color: #151824;
+  text-align: center;
+}:where(.scope) :global(.firstSetupGoalGrid) button > span {
+  font-size: 29px;
+}:where(.scope) :global(.firstSetupGoalGrid) button strong {
+  font-size: 12px;
+  line-height: 1.15;
+}:where(.scope) :global(.firstSetupGoalGrid) button small {
+  color: #737b91;
+  font-size: 9.5px;
+  line-height: 1.2;
+}:where(.scope) :global(.firstSetupSexGrid) button:global(.active),
+:where(.scope) :global(.firstSetupGoalGrid) button:global(.active) {
+  border-color: #6b55e6;
+  background: #f6f4ff;
+  box-shadow: inset 0 0 0 1px #6b55e6;
+}:where(.scope) :global(.firstSetupReview) {
+  padding: 8px 14px;
+  display: grid;
+  border: 1px solid #dfe3ef;
+  border-radius: 16px;
+  background: #ffffff;
+}:where(.scope) :global(.firstSetupReview) > div {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #eef0f5;
+}:where(.scope) :global(.firstSetupReview) > div:last-child {
+  border-bottom: 0;
+}:where(.scope) :global(.firstSetupReview) > div > span {
+  color: #6552e6;
+  font-size: 14px;
+  text-align: center;
+}:where(.scope) :global(.firstSetupReview) small {
+  color: #737b91;
+  font-size: 11px;
+}:where(.scope) :global(.firstSetupReview) strong {
+  max-width: 160px;
+  overflow: hidden;
+  color: #151824;
+  font-size: 12px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}:where(.scope) :global(.firstSetupBottom) {
+  min-height: 56px;
+  flex: 0 0 auto;
+  margin-top: auto;
+  gap: 9px;
+}:where(.scope) :global(.firstSetupPrimary),
+:where(.scope) :global(.firstSetupSecondary) {
+  height: 56px;
+  min-height: 56px;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 800;
+}:where(.scope) :global(.firstSetupPrimary) {
+  background: linear-gradient(135deg, #6552e6, #7540df);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(91, 69, 211, 0.22);
+}:where(.scope) :global(.firstSetupSecondary) {
+  flex: 0 0 98px;
+  border: 1px solid #e1e4ef;
+  background: #ffffff;
+  color: #5f6679;
+}:where(.scope) :global(.firstSetupPrimary):disabled {
+  background: #d8dbe5;
+  color: #9298a8;
+  box-shadow: none;
+}:root[data-app-theme="dark-green"] :where(.scope):global(.firstSetupOverlay) {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(101, 82, 230, 0.12), transparent 38%),
+    #070a08;
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupCard) {
+  border-color: rgba(157, 181, 151, 0.18);
+  background: linear-gradient(180deg, #111712 0%, #0a0f0b 100%);
+  color: #f5f7f4;
+  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.42);
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupProgress) {
+  color: #d8ddd8;
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupProgress) i {
+  background: rgba(255, 255, 255, 0.12);
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupCard) :global(.firstSetupHeader) h2,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupSexGrid) button,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupActivityList) button,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupGoalGrid) button,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupReview) strong {
+  color: #f5f7f4;
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupCard) :global(.firstSetupHeader) p,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupField),
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupActivityList) small,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupGoalGrid) button small,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupReview) small {
+  color: #9aa49c;
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupInput),
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupSexGrid) button,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupActivityList) button,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupGoalGrid) button,
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupReview),
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupSecondary) {
+  border-color: rgba(157, 181, 151, 0.18);
+  background: rgba(255, 255, 255, 0.045);
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupInput) {
+  color: #f5f7f4;
+  caret-color: #806bf0;
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupInput)::placeholder {
+  color: #687269;
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupSexGrid) button:global(.active),
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupActivityList) button:global(.active),
+:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupGoalGrid) button:global(.active) {
+  border-color: #806bf0;
+  background: rgba(101, 82, 230, 0.17);
+  box-shadow: inset 0 0 0 1px rgba(128, 107, 240, 0.65);
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupActivityList) button > i {
+  border-color: #69736b;
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupReview) > div {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupSecondary) {
+  color: #d8ddd8;
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupPrimary):disabled {
+  background: #252b26;
+  color: #6f7870;
+}:root[data-app-theme="dark-green"] :where(.scope) :global(.firstSetupClipboard) {
+  background: linear-gradient(145deg, rgba(101, 82, 230, 0.2), rgba(255, 255, 255, 0.04));
+}@media (max-height: 720px) {
+  :where(.scope) :global(.firstSetupCard) {
+    height: calc(100dvh - 12px);
+    max-height: calc(100dvh - 12px);
+    padding: 14px 14px 12px;
+  }
+
+  :where(.scope) :global(.firstSetupHeader) {
+    margin-top: 16px;
+  }
+
+  :where(.scope) :global(.firstSetupCard) :global(.firstSetupHeader) h2 {
+    font-size: 22px;
+  }
+
+  :where(.scope) :global(.firstSetupCard) :global(.firstSetupHeader) p {
+    margin-top: 6px;
+    font-size: 11px;
+  }
+
+  :where(.scope) :global(.firstSetupBody) {
+    margin: 9px 0;
+  }
+
+  :where(.scope) :global(.firstSetupWelcomeVisual) {
+    height: 175px;
+  }
+
+  :where(.scope) :global(.firstSetupClipboard) {
+    font-size: 84px;
+  }
+
+  :where(.scope) :global(.firstSetupSexGrid) button {
+    height: 145px;
+  }
+
+  :where(.scope) :global(.firstSetupSexGrid) button span {
+    font-size: 60px;
+  }
+
+  :where(.scope) :global(.firstSetupActivityList) {
+    gap: 5px;
+  }
+
+  :where(.scope) :global(.firstSetupActivityList) button {
+    min-height: 52px;
+    padding-block: 5px;
+  }
+
+  :where(.scope) :global(.firstSetupGoalGrid) button {
+    min-height: 78px;
+    padding: 7px 5px;
+  }
+
+  :where(.scope) :global(.firstSetupGoalGrid) button > span {
+    font-size: 20px;
+  }
+
+  :where(.scope) :global(.firstSetupGoalGrid) button strong {
+    font-size: 11px;
+  }
+
+  :where(.scope) :global(.firstSetupGoalGrid) button small {
+    font-size: 8.5px;
+  }
+
+  :where(.scope) :global(.firstSetupInput),
+:where(.scope) :global(.firstSetupPrimary),
+:where(.scope) :global(.firstSetupSecondary) {
+    height: 50px;
+    min-height: 50px;
+  }
+
+  :where(.scope) :global(.firstSetupReview) > div {
+    min-height: 35px;
+  }
+}@media (max-width: 520px) {
+  :where(.scope) :global(.firstSetupCard) :global(.firstSetupGoalGrid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}@media (max-height: 620px) {
+  :where(.scope) :global(.firstSetupCard) :global(.firstSetupHeader) p {
+    display: none;
+  }
+
+  :where(.scope) :global(.firstSetupGoalStep) {
+    gap: 7px;
+  }
+
+  :where(.scope) :global(.firstSetupCard) :global(.firstSetupGoalGrid) {
+    gap: 6px;
+  }
+
+  :where(.scope) :global(.firstSetupCard) :global(.firstSetupGoalGrid) button {
+    min-height: 65px;
+  }
+
+  :where(.scope) :global(.firstSetupCard) :global(.firstSetupGoalGrid) button small {
+    display: none;
+  }
+}html body :global(#root) :global(.mainMenuBottomBar):global(.profileBottomTabBar) > button:where(.scope) :global(.active),
+html body :global(#root) :global(.workoutModeBottomBar) > button:where(.scope) :global(.active),
+html body :global(#root) :global(.trainerRoleBottomBar) > button:where(.scope) :global(.active),
+html body :global(#root) :global(.adminV3Nav):global(.adminV3BottomBar) > button:where(.scope) :global(.active),
+html body :global(#root) :global(.trainerRoleWorkspaceBar) > button:where(.scope) :global(.active),
+html body :global(#root) :global(.programEditorBottomBar) > button:where(.scope) :global(.active),
+html body :global(#root) :global(.workoutEditorBottomBar) > button:where(.scope) :global(.active),
+html body :global(#root) :global(.programsBottomBar) > button:where(.scope) :global(.active),
+html body :global(#root) :global(.mainDashboardPage) :global(.mainMenuBottomBar):global(.profileBottomTabBar) > button:where(.scope) :global(.active) {
+  color: #f4f8f0;
+}:root[data-app-theme="warm-light"] body :global(#root) :global(.mainMenuBottomBar):global(.profileBottomTabBar) > button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] body :global(#root) :global(.fatSearchBottomBar) > button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] body :global(#root) :global(.fatSearchBottomBarFive) > button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] body :global(#root) :global(.workoutModeBottomBar) > button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] body :global(#root) :global(.trainerRoleBottomBar) > button:where(.scope) :global(.active),
+:root[data-app-theme="warm-light"] body :global(#root) :global(.adminV3Nav):global(.adminV3BottomBar) > button:where(.scope) :global(.active) {
+  border-color: #ddd9fa;
+  background: #f0effd;
+  color: #4834dd;
+}@keyframes clientRouteFallbackSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}html:root[data-app-theme="warm-light"] body :global(#root) :global(.fatFoodSearchScreenPremium):has(:global(.fatSearchMyProductsAction):where(.scope) :global(.active)) :global(.fatSearchInputWrapPremium) {
+  margin-top: 0;
+}html:root[data-app-theme="warm-light"] body :global(#root) :global(.fatFoodSearchScreenPremium) :global(.fatSearchBottomBarFive) :global(.fatSearchCreateAction):where(.scope) :global(.active) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}html:root[data-app-theme="warm-light"] body :global(#root) :global(.fatFoodSearchScreenPremium) :global(.fatSearchBottomBarFive) :global(.fatSearchCreateAction):where(.scope) :global(.active),
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.fatFoodSearchScreenPremium) :global(.fatSearchBottomBarFive) :global(.fatSearchCreateAction):where(.scope) :global(.active) span,
+html:root[data-app-theme="warm-light"] body :global(#root) :global(.fatFoodSearchScreenPremium) :global(.fatSearchBottomBarFive) :global(.fatSearchCreateAction):where(.scope) :global(.active) strong {
+  color: #4834dd;
+  -webkit-text-fill-color: #4834dd;
+}html:root[data-app-theme="warm-light"] body :global(#root) :global(.fatSearchBottomBarFour) > button:where(.scope) :global(.active) {
+  border-color: #ded8ff;
+  background: #f0edff;
+  color: #4f35e8;
+  -webkit-text-fill-color: #4f35e8;
+}@media (max-width: 640px) {
+
+  html:root[data-app-theme="warm-light"] body :global(#root) :global(.fatSearchBottomBar):global(.fatSearchBottomBarFour) > button:where(.scope) :global(.active) {
+    border-color: #ded7ff;
+    background: #f0edff;
+    color: #5d43e8;
+    -webkit-text-fill-color: #5d43e8;
+  }
+
+}

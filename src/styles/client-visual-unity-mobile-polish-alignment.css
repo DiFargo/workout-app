@@ -1,9 +1,0 @@
-/* Final mobile alignment pass: keep nutrition as the vertical reference and
-   neutralize legacy title clipping on the workout page. */
-@media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle,
-  html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle {
-    margin-top: calc(var(--client-top, 70px) + 8px) !important;
-  }
-}
-

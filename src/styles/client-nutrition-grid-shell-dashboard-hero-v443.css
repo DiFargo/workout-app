@@ -1,7 +1,0 @@
-/* Split from client-nutrition-grid-shell-dashboard-lock.css: dashboard card, hero, stats and mini cards. */
-@media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection {
-    gap: 15px !important;
-    padding-bottom: calc(122px + env(safe-area-inset-bottom, 0px)) !important;
-  }
-}

@@ -1,0 +1,107 @@
+/* Generated from ../workout-app/src/styles/index.css for its reachable component classes. */
+@layer reset, base, legacy, components;:root[data-app-theme="warm-light"] :where(.scope):global(.app) {
+  background: var(--bg);
+  color: var(--text);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.backBtn) {
+  color: var(--muted);
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.42);
+}:where(.scope):global(.app) {
+  max-width: 560px;
+  min-height: 100vh;
+  margin: 0 auto;
+
+  padding-top: max(34px, calc(env(safe-area-inset-top) + 22px));
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-bottom: 22px;
+
+  background: var(--bg);
+}:where(.scope):global(.app) :global(.workoutTitle),
+:where(.scope):global(.app) :global(.workoutTitleInline) {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 900;
+
+  color: rgba(255, 255, 255, 0.88);
+
+  text-align: center;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  line-height: 1.25;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}:where(.scope):global(.app) :global(.workoutTitle)::after,
+:where(.scope):global(.app) :global(.workoutTitleInline)::after {
+  display: none;
+}:where(.scope) :global(.backBtn) {
+  margin-bottom: 18px;
+}:where(.scope) :global(.backBtn) {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #aaa;
+  padding: 12px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 800;
+}@keyframes splashLoading {
+  0% {
+    transform: translateX(-115%);
+  }
+
+  55% {
+    transform: translateX(95%);
+  }
+
+  100% {
+    transform: translateX(245%);
+  }
+}@keyframes splashDot {
+  0%, 100% {
+    opacity: 0.32;
+    transform: translateY(0) scale(0.86);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1);
+  }
+}:root[data-app-theme="warm-light"] :where(.scope):global(.app) {
+  background:
+    radial-gradient(circle at 50% -7%, rgba(216, 184, 111, 0.28), transparent 34%),
+    radial-gradient(circle at 8% 14%, rgba(255, 255, 255, 0.42), transparent 30%),
+    linear-gradient(180deg, #fbf3df 0%, #f2e4c5 52%, #ead8ad 100%);
+  color: var(--text);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.backBtn) {
+  background: rgba(255, 250, 239, 0.70);
+  color: #5c4a28;
+  border-color: rgba(92, 72, 36, 0.16);
+  box-shadow: 0 10px 24px rgba(94, 70, 30, 0.12);
+}:root[data-app-theme="warm-light"] :where(.scope):global(.app) {
+  background: var(--warm-page);
+  color: var(--text);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.backBtn) {
+  background: rgba(255, 251, 237, 0.76);
+  color: rgba(33, 27, 18, 0.78);
+  border-color: var(--line);
+  box-shadow: var(--warm-shadow-sm);
+}:root[data-app-theme="warm-light"] :where(.scope) :global(.adminPanelHubCard) {
+  border-color: #e1e4ef;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08);
+}html:root[data-app-theme="warm-light"] body :global(#root) :where(.scope):global(.app):global(.workoutRunPage) {
+  background:
+    radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.055), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%);
+  color: #151824;
+}@keyframes clientRouteFallbackSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
