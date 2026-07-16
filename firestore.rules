@@ -142,6 +142,7 @@ service cloud.firestore {
           "workoutTime",
           "telegram",
           "telegramNotificationsEnabled",
+          "subscription",
           "updatedAt"
         ]);
     }

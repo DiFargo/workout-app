@@ -459,6 +459,26 @@ test("trainer mirror-only clients skip deep private summary reads", () => {
   assert.equal(canLoadTrainerClientDeepSummary({ id: "client_2", trainerLinkOnly: true }), false);
 });
 
+test("trainer summary marks an ending subscription as attention", () => {
+  const summary = getTrainerClientFastSummary({
+    id: "client_subscription",
+    assignedProgramId: "program_1",
+    lastWorkoutAt: new Date().toISOString(),
+    lastNutritionAt: new Date().toISOString(),
+    lastMeasurementAt: new Date().toISOString(),
+    subscription: {
+      cycleId: "current",
+      endDate: "2099-12-31",
+      purchasedSessions: 12,
+      usedSessions: 11
+    }
+  });
+
+  assert.equal(summary.subscriptionStatus.id, "ending");
+  assert.match(summary.subscriptionAttentionLabel, /1 трениров/);
+  assert.equal(getClientActivityStatus(summary).id, "attention");
+});
+
 test("trainer dashboard summary builds counts, focus and recent events", () => {
   const clients = [
     { id: "lost", name: "Lost" },

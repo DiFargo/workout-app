@@ -363,6 +363,43 @@ test("assigned trainer can update client notification settings through workout c
   }));
 });
 
+test("assigned trainer can update only the subscription of their client", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "trainer-2"), { role: "trainer" });
+    await setDoc(doc(db, "users", "client-1"), {
+      role: "client",
+      trainerId: "trainer-1",
+      subscription: {
+        cycleId: "july",
+        startDate: "2026-07-01",
+        endDate: "2026-07-31",
+        purchasedSessions: 12,
+        usedSessions: 9,
+        remainingSessions: 3
+      }
+    });
+  });
+
+  const assignedTrainerDb = testEnv.authenticatedContext("trainer-1").firestore();
+  const otherTrainerDb = testEnv.authenticatedContext("trainer-2").firestore();
+  const update = {
+    subscription: {
+      cycleId: "august",
+      startDate: "2026-08-01",
+      endDate: "2026-08-31",
+      purchasedSessions: 12,
+      usedSessions: 0,
+      remainingSessions: 12
+    },
+    updatedAt: "2026-07-16T10:00:00.000Z"
+  };
+
+  await assertSucceeds(updateDoc(doc(assignedTrainerDb, "users", "client-1"), update));
+  await assertFails(updateDoc(doc(otherTrainerDb, "users", "client-1"), update));
+});
+
 test("assigned trainer can publish active program lifecycle fields", async () => {
   await testEnv.withSecurityRulesDisabled(async (context) => {
     const db = context.firestore();

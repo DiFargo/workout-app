@@ -1,3 +1,5 @@
+import styles from "./TrainerProgramManagerBottomControls.module.css";
+
 export default function TrainerProgramManagerBottomControls({
   adminOpenWorkoutId,
   adminProgramImportInputRef,
@@ -26,7 +28,7 @@ export default function TrainerProgramManagerBottomControls({
     <>
       <input
         ref={adminProgramImportInputRef}
-        className="programsBottomBarImportInput"
+        className={styles.importInput}
         type="file"
         accept="application/json,.json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.xlsx"
         onChange={(event) => {

@@ -12,6 +12,7 @@ import {
   normalizeTrainerNextExerciseDefaults
 } from "./trainerWorkoutEditHelpers";
 import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
+import { patchExerciseInTrainerTemplate } from "../../utils/trainerExerciseLibrary.js";
 
 const DEFAULT_EXERCISE_NAME = "\u041d\u043e\u0432\u043e\u0435 \u0443\u043f\u0440\u0430\u0436\u043d\u0435\u043d\u0438\u0435";
 const DEFAULT_DAY_NAME = "\u0414\u0435\u043d\u044c";
@@ -49,7 +50,12 @@ export function createTrainerPlanEditorHandlers({
   auth,
   storage,
   setAdminExerciseVideoUploadingId,
-  setAdminClientStatus
+  setAdminClientStatus,
+  adminTrainingTemplates,
+  setAdminTrainingTemplates,
+  db,
+  doc,
+  setDoc
 }) {
   const persistPlan = (nextPlan) => {
     setPlan(nextPlan);
@@ -88,6 +94,90 @@ export function createTrainerPlanEditorHandlers({
     )));
 
     persistPlan(createTrainerNextPlan(plan, nextWorkouts));
+  }
+
+  async function saveTrainerExerciseProgressAdjustment({
+    workoutId,
+    exerciseId,
+    workoutIndex,
+    exerciseIndex,
+    patch
+  } = {}) {
+    if (!patch || typeof patch !== "object") return false;
+
+    const workouts = getPlanWorkouts(plan);
+    const resolvedWorkoutIndex = workouts.findIndex((workout, index) => (
+      (workoutId && workout.id === workoutId) || (!workoutId && index === workoutIndex)
+    ));
+    const targetWorkout = workouts[resolvedWorkoutIndex];
+    if (!targetWorkout) return false;
+
+    const exercises = Array.isArray(targetWorkout.exercises) ? targetWorkout.exercises : [];
+    const resolvedExerciseIndex = exercises.findIndex((exercise, index) => (
+      (exerciseId && exercise.id === exerciseId) || (!exerciseId && index === exerciseIndex)
+    ));
+    const targetExercise = exercises[resolvedExerciseIndex];
+    if (!targetExercise) return false;
+
+    const ownerUid = selectedUserId || auth.currentUser?.uid || "";
+    if (!ownerUid || !targetWorkout.id) {
+      setAdminClientStatus("Не удалось определить тренировку клиента.");
+      return false;
+    }
+
+    const nextExercises = exercises.map((exercise, index) => (
+      index === resolvedExerciseIndex ? { ...exercise, ...patch } : exercise
+    ));
+    const nextWorkout = { ...targetWorkout, exercises: nextExercises };
+    const nextWorkouts = workouts.map((workout, index) => (
+      index === resolvedWorkoutIndex ? nextWorkout : workout
+    ));
+    const assignedProgramId = nextWorkout.assignedProgramId || plan?.assignedProgramId || "";
+    const assignedTemplate = (adminTrainingTemplates || []).find((template) => template.id === assignedProgramId);
+
+    try {
+      await setDoc(doc(db, "users", ownerUid, "workouts", nextWorkout.id), {
+        ...nextWorkout,
+        id: nextWorkout.id,
+        order: Number(nextWorkout.order || resolvedWorkoutIndex + 1),
+        sortOrder: Number(nextWorkout.sortOrder || resolvedWorkoutIndex + 1),
+        assignedProgramId,
+        assignedProgramName: nextWorkout.assignedProgramName || plan?.assignedProgramName || assignedTemplate?.name || "",
+        assignedProgramUpdatedAt: nextWorkout.assignedProgramUpdatedAt || plan?.assignedProgramUpdatedAt || "",
+        assignedBy: auth.currentUser?.uid || nextWorkout.assignedBy || "",
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+      setPlan(createTrainerNextPlan(plan, nextWorkouts));
+      setAdminClientStatus("Нагрузка упражнения обновлена.");
+      return true;
+    } catch (error) {
+      console.error("Trainer exercise progress adjustment save failed:", error);
+      setAdminClientStatus("Не удалось сохранить изменение нагрузки.");
+      return false;
+    }
+  }
+
+  async function updateTrainerLibraryExercise(exercise, patch) {
+    const source = exercise?.librarySource;
+    if (!source || !exercise?.id || !patch || typeof patch !== "object") return;
+
+    if (source.type === "plan" && source.workoutId) {
+      updateTrainerNextExercise(source.workoutId, exercise.id, patch);
+      return;
+    }
+
+    if (source.type !== "template" || !source.templateId) return;
+    const template = (adminTrainingTemplates || []).find((item) => item.id === source.templateId);
+    if (!template) return;
+
+    const nextTemplate = patchExerciseInTrainerTemplate(template, exercise.id, patch);
+    setAdminTrainingTemplates((current) => current.map((item) => item.id === source.templateId ? nextTemplate : item));
+    try {
+      await setDoc(doc(db, "trainingTemplates", source.templateId), nextTemplate, { merge: true });
+    } catch (error) {
+      console.error("Trainer library exercise save error:", error);
+      setAdminClientStatus("Не удалось сохранить упражнение в библиотеке.");
+    }
   }
 
   function updateTrainerNextExerciseSet(...args) {
@@ -374,6 +464,8 @@ export function createTrainerPlanEditorHandlers({
   return {
     updateTrainerNextWorkout,
     updateTrainerNextExercise,
+    saveTrainerExerciseProgressAdjustment,
+    updateTrainerLibraryExercise,
     updateTrainerNextExerciseSet,
     addTrainerNextExerciseSet,
     removeTrainerNextExerciseSet,

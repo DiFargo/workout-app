@@ -1,3 +1,5 @@
+import { normalizeWorkoutTaskBlocks } from "./universalWorkoutBlocks.js";
+
 export function normalizeTrainerMonthProgram(program = {}, options = {}) {
   const getNowIso = typeof options.getNowIso === "function"
     ? options.getNowIso
@@ -38,7 +40,7 @@ export function normalizeTrainerMonthProgram(program = {}, options = {}) {
         return {
           id: sourceWeek.id || `week_${absoluteWeek}`,
           name: sourceWeek.name || `Неделя ${absoluteWeek}`,
-          workouts: sourceWeek.workouts || []
+          workouts: (sourceWeek.workouts || []).map(normalizeWorkoutTaskBlocks)
         };
       })
     };

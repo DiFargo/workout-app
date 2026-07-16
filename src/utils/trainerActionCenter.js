@@ -218,12 +218,12 @@ export function buildTrainerActionCenter(clients = [], summaries = {}, now = Dat
 }
 
 export function getTrainerActionItemTargetTab(item = {}, groupId = "") {
-  if (groupId === "feedbackItems") return "notes";
+  if (groupId === "feedbackItems") return "messages";
   if (groupId === "taskItems") return "notifications";
   if (groupId === "programEndingItems") return "workouts";
   if (groupId === "todayWorkouts" || groupId === "missedWorkouts") return "workouts";
 
-  if (item.summary?.workoutFeedbackAttention?.id) return "notes";
+  if (item.summary?.workoutFeedbackAttention?.id) return "messages";
   if (Number(item.summary?.activeTrainerTasksCount) > 0) return "notifications";
   if (item.summary?.programEndingAttention?.id) return "workouts";
 
@@ -231,7 +231,7 @@ export function getTrainerActionItemTargetTab(item = {}, groupId = "") {
   if (type === "workout" || type === "program" || type === "programEnding" || type === "noProgram") return "workouts";
   if (type === "nutrition") return "nutrition";
   if (type === "measure") return "bodyProgress";
-  if (type === "feedback") return "notes";
+  if (type === "feedback") return "messages";
   if (type === "task") return "notifications";
   return "overview";
 }
@@ -373,8 +373,13 @@ export function buildTrainerWorkoutReview(historyItem = {}, plannedWorkout = {})
   ].filter(Boolean);
 
   return {
-    workoutId: historyItem.id || historyItem.workoutId || plannedWorkout.id || "",
+    historyId: historyItem.id || historyItem.clientSaveId || "",
+    sourceWorkoutId: historyItem.workoutId || "",
+    plannedWorkoutId: plannedWorkout.id || "",
+    workoutId: historyItem.workoutId || plannedWorkout.id || historyItem.id || historyItem.clientSaveId || "",
     workoutName: historyItem.workoutName || historyItem.name || plannedWorkout.name || plannedWorkout.title || "",
+    workoutDate: historyItem.completedAt || historyItem.finishedAt || historyItem.date || historyItem.createdAt || "",
+    assignmentVersion: historyItem.assignedProgramUpdatedAt || historyItem.assignmentVersion || plannedWorkout.assignedProgramUpdatedAt || "",
     plannedExercisesCount: plannedExercises.length,
     completedExercisesCount: completedExerciseNames.size || actualExercises.filter((exercise) => getExerciseSets(exercise).some(isCompletedSet)).length,
     plannedSetsCount,

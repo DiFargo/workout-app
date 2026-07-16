@@ -1,9 +1,12 @@
 const STATUS_META = {
-  progress: { label: "Прогресс", tone: "positive", priority: 3 },
+  progress: { label: "Показатели выросли", tone: "positive", priority: 3 },
+  mixed: { label: "Смешанная динамика", tone: "warning", priority: 3 },
   stable: { label: "Стабильность", tone: "neutral", priority: 1 },
   adaptation: { label: "Адаптация программы", tone: "warning", priority: 2 },
   regression: { label: "Возможный регресс", tone: "negative", priority: 4 }
 };
+
+const NON_WORK_SET_TYPES = new Set(["warmup", "warm-up", "разминка", "разминочный"]);
 
 function toNumber(value) {
   const number = Number.parseFloat(String(value ?? "").replace(",", "."));
@@ -78,19 +81,38 @@ function formatRange(range) {
   return range.min === range.max ? `${range.min}` : `${range.min}-${range.max}`;
 }
 
-function buildSession(workout, exercise, date) {
+function getWeightMultiplier(exercise = {}) {
+  const explicit = toNumber(exercise.weightMultiplier);
+  if (explicit > 0) return explicit;
+  const mode = String(exercise.weightMode || exercise.loadMode || "").toLowerCase();
+  return ["per_hand", "per_dumbbell", "each_dumbbell"].includes(mode) ? 2 : 1;
+}
+
+function isWorkingSet(set = {}) {
+  const type = String(set.setType || set.type || "work").trim().toLowerCase();
+  return !NON_WORK_SET_TYPES.has(type) && set.excludeFromVolume !== true;
+}
+
+function buildSession(workout, exercise, date, plannedExercise = null) {
+  const weightMultiplier = getWeightMultiplier(exercise);
   const sets = (exercise.sets || [])
-    .map((set) => ({
-      reps: toNumber(set.reps ?? set.enteredReps),
-      weight: toNumber(set.weight ?? set.enteredWeight ?? set.aiSuggestedWeight),
-      completed: set.completed !== false
+    .map((set, index) => ({
+      index,
+      reps: toNumber(set.enteredReps ?? set.actualReps ?? set.reps),
+      weight: toNumber(set.enteredWeight ?? set.actualWeight ?? set.weight ?? set.aiSuggestedWeight),
+      rpe: toNumber(set.enteredRpe ?? set.actualRpe ?? set.rpe),
+      rir: toNumber(set.enteredRir ?? set.actualRir ?? set.rir),
+      completed: set.completed !== false,
+      working: isWorkingSet(set),
+      note: String(set.enteredNote ?? set.actualNote ?? set.note ?? "").trim(),
+      setType: String(set.setType || set.type || "work")
     }))
-    .filter((set) => set.completed && set.reps > 0);
+    .filter((set) => set.completed && set.working && set.reps > 0);
   if (!sets.length) return null;
 
   const weightedSets = sets.filter((set) => set.weight > 0);
   const totalReps = sets.reduce((sum, set) => sum + set.reps, 0);
-  const volume = weightedSets.reduce((sum, set) => sum + set.weight * set.reps, 0);
+  const volume = weightedSets.reduce((sum, set) => sum + set.weight * weightMultiplier * set.reps, 0);
   const e1rm = weightedSets.reduce(
     (best, set) => Math.max(best, set.weight * (1 + set.reps / 30)),
     0
@@ -112,12 +134,32 @@ function buildSession(workout, exercise, date) {
     ),
     targetRange: getTargetRange(exercise, exercise.sets || []),
     sets: sets.length,
+    actualSets: sets.map((set) => ({ ...set, volume: round(set.weight * weightMultiplier * set.reps) })),
+    plannedSets: (plannedExercise?.sets || []).map((set, index) => ({
+      index,
+      reps: set.targetReps ?? set.reps ?? "",
+      weight: set.targetWeight ?? set.weight ?? "",
+      rpe: set.rpe ?? "",
+      rir: set.rir ?? "",
+      setType: set.setType || set.type || "work"
+    })),
     totalReps: round(totalReps),
     averageReps: round(totalReps / sets.length),
     bestWeight: round(Math.max(0, ...weightedSets.map((set) => set.weight))),
     volume: round(volume),
     e1rm: round(e1rm),
-    bodyweightOnly: !weightedSets.length
+    bodyweightOnly: !weightedSets.length,
+    weightMultiplier,
+    weightConvention: weightMultiplier === 2 ? "per_hand" : "total_external_load",
+    weightConventionLabel: weightMultiplier === 2 ? "Вес указан на одну руку/гантель" : "Вес указан как общий внешний вес",
+    e1rmFormula: "Формула Эпли: вес × (1 + повторения / 30), по лучшему рабочему подходу",
+    e1rmLowConfidence: weightedSets.some((set) => set.reps > 12),
+    clientComment: String(exercise.clientNote || workout.clientComment || "").trim(),
+    painReported: Boolean(exercise.painReported || workout.painReported || /бол|травм/i.test(String(exercise.clientNote || workout.clientComment || ""))),
+    loadChangedByClient: (plannedExercise?.sets || []).some((plannedSet, index) => {
+      const actualSet = sets.find((set) => set.index === index);
+      return actualSet && toNumber(plannedSet.weight) > 0 && actualSet.weight !== toNumber(plannedSet.weight);
+    })
   };
 }
 
@@ -141,6 +183,10 @@ function classify(previous, current) {
   const rangeChanged = rangesDiffer(previous.targetRange, current.targetRange);
   const adapted = programChanged || rangeChanged;
   const weighted = previous.e1rm > 0 && current.e1rm > 0;
+  const mixedDynamics = weighted && (
+    (changes.volumePct > 0 && changes.e1rmPct < 0) ||
+    (changes.reps > 0 && changes.weight < 0)
+  );
   const clearProgress = weighted
     ? changes.e1rmPct >= 2.5 || (changes.volumePct >= 7 && changes.e1rmPct > -5)
     : changes.repsPct >= 7 || changes.sets > 0;
@@ -149,12 +195,15 @@ function classify(previous, current) {
     : changes.repsPct <= -12 && changes.sets <= 0;
 
   let status = "stable";
-  if (clearProgress) status = "progress";
-  else if (adapted) status = "adaptation";
+  if (adapted) status = "adaptation";
+  else if (mixedDynamics) status = "mixed";
+  else if (clearProgress) status = "progress";
   else if (clearRegression) status = "regression";
 
   let explanation;
-  if (status === "progress") {
+  if (status === "mixed") {
+    explanation = `Силовая выносливость изменилась: повторения ${changes.reps >= 0 ? "+" : ""}${changes.reps}, объём ${changes.volumePct >= 0 ? "+" : ""}${changes.volumePct}%, рабочий вес ${changes.weight >= 0 ? "+" : ""}${changes.weight} кг, оценочный 1ПМ ${changes.e1rmPct >= 0 ? "+" : ""}${changes.e1rmPct}%. Повышать вес автоматически не следует.`;
+  } else if (status === "progress") {
     if (changes.weight > 0 && changes.reps >= 0) {
       explanation = `Рабочий вес вырос на ${changes.weight} кг без снижения общего числа повторений.`;
     } else if (changes.e1rmPct >= 2.5) {
@@ -200,7 +249,12 @@ export function analyzeExerciseProgress(history = []) {
       (workout.exercises || []).forEach((exercise) => {
         const name = String(exercise.name || "").trim();
         if (!name) return;
-        const session = buildSession(workout, exercise, date);
+        const plannedExercises = workout.plannedSnapshot?.exercises || [];
+        const plannedExercise = plannedExercises.find((planned) => (
+          (exercise.id && planned.id === exercise.id) ||
+          String(planned.name || "").trim().toLocaleLowerCase("ru-RU") === name.toLocaleLowerCase("ru-RU")
+        ));
+        const session = buildSession(workout, exercise, date, plannedExercise);
         if (!session) return;
         const key = name.toLocaleLowerCase("ru-RU");
         const item = exercises.get(key) || { name, sessions: [] };

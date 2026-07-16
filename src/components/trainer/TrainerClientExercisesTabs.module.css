@@ -1,0 +1,69 @@
+.section {
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+  padding-top: 16px;
+}
+
+.switcher {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 7px;
+  border: 1px solid #e4e7ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(43, 35, 75, 0.05);
+}
+
+.switcher button {
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 1px solid #e6e1fa;
+  border-radius: 10px;
+  background: #fff;
+  color: #6437f5;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.switcher button:hover {
+  border-color: #bca9fa;
+  background: #faf9ff;
+}
+
+.switcher button:focus-visible {
+  outline: 3px solid rgba(100, 55, 245, 0.2);
+  outline-offset: 2px;
+}
+
+.switcher button.active {
+  border-color: #6437f5;
+  background: #6437f5;
+  color: #fff;
+  box-shadow: 0 7px 16px rgba(100, 55, 245, 0.18);
+}
+
+@media (max-width: 640px) {
+  .section {
+    gap: 12px;
+    padding-top: 12px;
+  }
+
+  .switcher {
+    gap: 6px;
+    padding: 6px;
+    border-radius: 12px;
+  }
+
+  .switcher button {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+}
