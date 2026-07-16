@@ -1,5 +1,6 @@
 import {
   CalendarDays as ProgramCalendarIcon,
+  Check as ProgramCheckIcon,
   Dumbbell as ProgramDumbbellIcon,
   FileText as ProgramFileTextIcon,
   ListChecks as ProgramListIcon,
@@ -13,6 +14,29 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { getTrainerProgramStatusMeta } from "../../utils/trainerProgramLifecycle.js";
+import styles from "./TrainerProgramOverviewPage.module.css";
+
+function getProgramLibraryStatusMeta(program = {}) {
+  const status = getTrainerProgramStatusMeta(program);
+
+  if (status.id === "draft") {
+    return { ...status, label: "Черновик", description: "Видит только тренер" };
+  }
+
+  if (status.id === "archived") {
+    return { ...status, label: "Архив", description: "Программу нельзя назначить клиенту" };
+  }
+
+  if (
+    status.id === "assigned" ||
+    status.id === "active" ||
+    (Array.isArray(program.assignedClientIds) && program.assignedClientIds.length > 0)
+  ) {
+    return { ...status, tone: "used", label: "Используется", description: "Программа назначена одному или нескольким клиентам" };
+  }
+
+  return { ...status, tone: "ready", label: "Готова", description: "Программу можно использовать и назначать клиентам" };
+}
 
 export default function TrainerProgramOverviewPage({
   adminProgramCreateChoiceOpen,
@@ -69,10 +93,9 @@ export default function TrainerProgramOverviewPage({
   }
 
   return (
-    <main className="programsOverviewPage">
-      <nav className="adminV3Nav programsTopActionBar" aria-label="Действия с программами">
-        {!isNextWorkspace && (
-          <>
+    <main className={isNextWorkspace ? styles.root : "programsOverviewPage"}>
+      {!isNextWorkspace && (
+        <nav className="adminV3Nav programsTopActionBar" aria-label="Действия с программами">
             <button type="button" onClick={onGoAdmin}>
               <span className="adminV3NavIcon">←</span>
               <span className="adminV3NavLabel">Главная</span>
@@ -81,48 +104,57 @@ export default function TrainerProgramOverviewPage({
               <span className="adminV3NavIcon">＋</span>
               <span className="adminV3NavLabel">Создать</span>
             </button>
-          </>
-        )}
-        <button
-          type="button"
-          disabled={!selectedTemplate}
-          onClick={() => openProgramFromLibrary(selectedTemplate?.id)}
-        >
-          {isNextWorkspace ? <ProgramEditIcon size={19} /> : <span className="adminV3NavIcon">✎</span>}
-          <span className="adminV3NavLabel">Редактировать</span>
-        </button>
-        {!isNextWorkspace && (
+            <button
+              type="button"
+              disabled={!selectedTemplate}
+              onClick={() => openProgramFromLibrary(selectedTemplate?.id)}
+            >
+              <span className="adminV3NavIcon">✎</span>
+              <span className="adminV3NavLabel">Редактировать</span>
+            </button>
           <button type="button" onClick={() => adminProgramImportInputRef.current?.click()}>
             <span className="adminV3NavIcon">↑</span>
             <span className="adminV3NavLabel">Загрузить</span>
           </button>
-        )}
-        {isNextWorkspace && (
-          <button
-            className="danger"
-            type="button"
-            disabled={!selectedTemplate}
-            onClick={deleteSelectedProgramFromLibrary}
-          >
-            <ProgramTrashIcon size={19} />
-            <span className="adminV3NavLabel">Удалить</span>
-          </button>
-        )}
-      </nav>
+        </nav>
+      )}
 
-      <section className="programsOverviewSection">
-        <div className="programsOverviewSectionHead">
+      <section className={isNextWorkspace ? styles.section : "programsOverviewSection"}>
+        <div className={isNextWorkspace ? styles.sectionHead : "programsOverviewSectionHead"}>
           <div>
             <span>БИБЛИОТЕКА</span>
             <h2>Готовые программы</h2>
             <p>Выберите программу для просмотра и редактирования.</p>
           </div>
-          <button type="button" onClick={loadAdminTrainingTemplates} aria-label="Обновить программы">
-            <ProgramRefreshIcon size={17} />Обновить
-          </button>
+          <div className={styles.headerActions}>
+            {isNextWorkspace && (
+              <>
+                <button
+                  type="button"
+                  disabled={!selectedTemplate}
+                  onClick={() => openProgramFromLibrary(selectedTemplate?.id)}
+                >
+                  <ProgramEditIcon size={18} />
+                  Редактировать
+                </button>
+                <button
+                  className={styles.deleteAction}
+                  type="button"
+                  disabled={!selectedTemplate}
+                  onClick={deleteSelectedProgramFromLibrary}
+                >
+                  <ProgramTrashIcon size={18} />
+                  Удалить
+                </button>
+              </>
+            )}
+            <button type="button" onClick={loadAdminTrainingTemplates} aria-label="Обновить программы">
+              <ProgramRefreshIcon size={17} />Обновить
+            </button>
+          </div>
         </div>
 
-        {adminTrainingTemplates.length === 0 ? (
+        {adminTrainingTemplates.length === 0 && !isNextWorkspace ? (
           <div className="programsOverviewEmpty">
             <strong>{canUseAdminFeatures() ? "Пока нет готовых программ" : "У вас пока нет программ"}</strong>
             <p>Создайте первую программу или загрузите Excel/JSON.</p>
@@ -138,11 +170,11 @@ export default function TrainerProgramOverviewPage({
             </div>
           </div>
         ) : (
-          <div className="programsOverviewGrid">
+          <div className={isNextWorkspace ? styles.grid : "programsOverviewGrid"}>
             {adminTrainingTemplates.map((template) => {
               const stats = getTemplateStats(template);
               const isSelected = adminSelectedTemplateId === template.id;
-              const statusMeta = getTrainerProgramStatusMeta(template);
+              const statusMeta = getProgramLibraryStatusMeta(template);
               const createdAt = template.createdAt ? new Date(template.createdAt) : null;
               const createdLabel = createdAt && !Number.isNaN(createdAt.getTime())
                 ? createdAt.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
@@ -150,21 +182,27 @@ export default function TrainerProgramOverviewPage({
 
               return (
                 <button
-                  className={isSelected ? "programsOverviewCard selected" : "programsOverviewCard"}
+                  className={isNextWorkspace
+                    ? `${styles.card}${isSelected ? ` ${styles.selected}` : ""}`
+                    : `${isSelected ? "programsOverviewCard selected" : "programsOverviewCard"}`}
                   type="button"
                   aria-pressed={isSelected}
                   key={template.id}
                   onClick={() => setAdminSelectedTemplateId(template.id)}
                 >
-                  <div className="programsOverviewCardTitle">
+                  <div className={isNextWorkspace ? styles.cardTitle : "programsOverviewCardTitle"}>
                     <i><ProgramDumbbellIcon size={29} /></i>
                     <div>
                       <strong>{template.name || "Без названия"}</strong>
                       <p>{template.description || "Готовая тренировочная программа из библиотеки."}</p>
                     </div>
-                    {isSelected && <span><b>✓</b>Выбрана</span>}
+                    {isSelected && (
+                      <span className={styles.selectedMark} aria-label="Выбрана" title="Выбрана">
+                        <ProgramCheckIcon size={15} aria-hidden="true" />
+                      </span>
+                    )}
                   </div>
-                  <div className="programsOverviewCardStats">
+                  <div className={isNextWorkspace ? styles.cardStats : "programsOverviewCardStats"}>
                     <span><ProgramCalendarIcon size={16} /><b>{stats.weeksCount}</b><small>недель</small></span>
                     <span><ProgramDumbbellIcon size={16} /><b>{stats.workoutsCount}</b><small>тренировок</small></span>
                     <span><ProgramCycleIcon size={16} /><b>{stats.blocksCount}</b><small>микроцикла</small></span>
@@ -172,19 +210,20 @@ export default function TrainerProgramOverviewPage({
                   </div>
                   <footer>
                     <span>Создана: {createdLabel}</span>
-                    <span className={`programsOverviewStatusBadge status-${statusMeta.tone}`} title={statusMeta.description}>
+                    <span className={isNextWorkspace
+                      ? `${styles.statusBadge}${statusMeta.tone === "used" ? ` ${styles.statusUsed}` : ""}`
+                      : `programsOverviewStatusBadge status-${statusMeta.tone}`} title={statusMeta.description}>
                       {statusMeta.label}
                     </span>
-                    <b>•••</b>
                   </footer>
                 </button>
               );
             })}
             {isNextWorkspace && (
-              <button className="programsOverviewCreateCard" type="button" onClick={() => setAdminProgramCreateChoiceOpen(true)}>
-                <ProgramPlusIcon size={21} />
-                <strong>Создать или загрузить новую программу</strong>
-                <span>Выберите: начать с нуля или импортировать готовую программу</span>
+              <button className={styles.createCard} type="button" onClick={() => setAdminProgramCreateChoiceOpen(true)}>
+                <i><ProgramPlusIcon size={38} /></i>
+                <strong>Добавить программу</strong>
+                <span>Создать с нуля или импортировать</span>
               </button>
             )}
           </div>
@@ -192,8 +231,8 @@ export default function TrainerProgramOverviewPage({
       </section>
 
       {isNextWorkspace && adminProgramCreateChoiceOpen && !aiImportOpen && (
-        <div className="programCreateChoiceOverlay" role="dialog" aria-modal="true" aria-labelledby="programCreateChoiceTitle" onClick={closeCreateChoice}>
-          <section className="programCreateChoiceSheet" onClick={(event) => event.stopPropagation()}>
+        <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="programCreateChoiceTitle" onClick={closeCreateChoice}>
+          <section className={styles.choiceSheet} onClick={(event) => event.stopPropagation()}>
             <header>
               <div>
                 <span>НОВАЯ ПРОГРАММА</span>
@@ -238,8 +277,8 @@ export default function TrainerProgramOverviewPage({
       )}
 
       {isNextWorkspace && adminProgramCreateChoiceOpen && aiImportOpen && (
-        <div className="programCreateChoiceOverlay" role="dialog" aria-modal="true" aria-labelledby="programAiImportTitle" onClick={closeCreateChoice}>
-          <form className="programCreateChoiceSheet programAiImportSheet" onSubmit={handleAiImportSubmit} onClick={(event) => event.stopPropagation()}>
+        <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="programAiImportTitle" onClick={closeCreateChoice}>
+          <form className={`${styles.choiceSheet} ${styles.aiImportSheet}`} onSubmit={handleAiImportSubmit} onClick={(event) => event.stopPropagation()}>
             <header>
               <div>
                 <span>ИИ ИМПОРТ</span>
@@ -247,10 +286,10 @@ export default function TrainerProgramOverviewPage({
               </div>
               <button type="button" onClick={closeCreateChoice} aria-label="Закрыть">×</button>
             </header>
-            <p className="programAiImportHint">
+            <p className={styles.aiImportHint}>
               Загрузите фото, PDF/DOCX или вставьте текст программы. ИИ распознает дни, упражнения, подходы и повторения.
             </p>
-            <label className="programAiImportText">
+            <label className={styles.aiImportText}>
               <span>Текст программы</span>
               <textarea
                 value={aiImportText}
@@ -259,7 +298,7 @@ export default function TrainerProgramOverviewPage({
                 rows={7}
               />
             </label>
-            <label className="programAiImportFile">
+            <label className={styles.aiImportFile}>
               <ProgramFileTextIcon size={22} />
               <span>
                 <strong>{aiImportFile ? aiImportFile.name : "Прикрепить файл"}</strong>
@@ -274,8 +313,8 @@ export default function TrainerProgramOverviewPage({
                 }}
               />
             </label>
-            {aiImportError && <p className="programAiImportError">{aiImportError}</p>}
-            <div className="programAiImportActions">
+            {aiImportError && <p className={styles.aiImportError}>{aiImportError}</p>}
+            <div className={styles.aiImportActions}>
               <button type="button" onClick={() => setAiImportOpen(false)} disabled={aiImportLoading}>Назад</button>
               <button type="submit" disabled={aiImportLoading}>
                 {aiImportLoading ? "Анализирую..." : "Создать черновик"}

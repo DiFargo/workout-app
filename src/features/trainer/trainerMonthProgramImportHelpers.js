@@ -51,16 +51,20 @@ export function createTrainerMonthProgramImportHelpers({
           id: week.id || `week_${importStamp}_${microcycleIndex}_${weekIndex}`,
           name: week.name || `Неделя ${microcycleIndex * 2 + weekIndex + 1}`,
           workouts: (Array.isArray(week.workouts) ? week.workouts : []).map((workout, workoutIndex) => ({
+            ...workout,
             id: workout.id || `workout_${importStamp}_${microcycleIndex}_${weekIndex}_${workoutIndex}`,
             name: workout.name || `${week.name || `Неделя ${microcycleIndex * 2 + weekIndex + 1}`} — Тренировка ${workoutIndex + 1}`,
+            taskBlocks: Array.isArray(workout.taskBlocks) ? workout.taskBlocks : [],
             exercises: (Array.isArray(workout.exercises) ? workout.exercises : []).map((exercise, exerciseIndex) =>
               applyExerciseLibraryDefaults({
+                ...exercise,
                 id: exercise.id || `exercise_${importStamp}_${microcycleIndex}_${weekIndex}_${workoutIndex}_${exerciseIndex}`,
                 name: exercise.name || "Упражнение",
                 video: exercise.video || exercise.videoUrl || exercise.videoURL || "",
                 requiresWeight: exercise.requiresWeight,
                 sets: Array.isArray(exercise.sets) && exercise.sets.length
                   ? exercise.sets.map((set) => ({
+                      ...set,
                       reps: set.reps ?? 8,
                       weight: String(set.weight ?? "")
                     }))
@@ -121,6 +125,11 @@ export function createTrainerMonthProgramImportHelpers({
       let setsColumn = 1;
       let repsColumn = 2;
       let weightColumn = 3;
+      let rpeColumn = -1;
+      let rirColumn = -1;
+      let restColumn = -1;
+      let tempoColumn = -1;
+      let instructionColumn = -1;
       let currentWorkout = null;
       const sharedWorkouts = [];
       const workoutsByWeek = new Map();
@@ -140,9 +149,19 @@ export function createTrainerMonthProgramImportHelpers({
           const nextSetsColumn = headerCells.findIndex((value) => value.includes("подход"));
           const nextRepsColumn = headerCells.findIndex((value) => value.includes("повтор"));
           const nextWeightColumn = headerCells.findIndex((value) => value.includes("вес"));
+          const nextRpeColumn = headerCells.findIndex((value) => value.includes("rpe"));
+          const nextRirColumn = headerCells.findIndex((value) => value.includes("rir"));
+          const nextRestColumn = headerCells.findIndex((value) => value.includes("отдых"));
+          const nextTempoColumn = headerCells.findIndex((value) => value.includes("темп"));
+          const nextInstructionColumn = headerCells.findIndex((value) => value.includes("инструк") || value.includes("замет"));
           if (nextSetsColumn >= 0) setsColumn = nextSetsColumn;
           if (nextRepsColumn >= 0) repsColumn = nextRepsColumn;
           if (nextWeightColumn >= 0) weightColumn = nextWeightColumn;
+          rpeColumn = nextRpeColumn;
+          rirColumn = nextRirColumn;
+          restColumn = nextRestColumn;
+          tempoColumn = nextTempoColumn;
+          instructionColumn = nextInstructionColumn;
           return;
         }
 
@@ -190,9 +209,16 @@ export function createTrainerMonthProgramImportHelpers({
         const setsCount = Math.max(1, Math.round(readNumber(cells[setsColumn], 3)));
         const reps = cleanCell(cells[repsColumn]) || "8";
         const weight = cleanCell(cells[weightColumn]);
+        const rpe = rpeColumn >= 0 ? cleanCell(cells[rpeColumn]) : "";
+        const rir = rirColumn >= 0 ? cleanCell(cells[rirColumn]) : "";
+        const rest = restColumn >= 0 ? cleanCell(cells[restColumn]) : "";
+        const tempo = tempoColumn >= 0 ? cleanCell(cells[tempoColumn]) : "";
+        const instruction = instructionColumn >= 0 ? cleanCell(cells[instructionColumn]) : "";
         currentWorkout.exercises.push(applyExerciseLibraryDefaults({
           name: exerciseName,
-          sets: Array.from({ length: setsCount }, () => ({ reps, weight }))
+          instruction,
+          enabledFields: ["reps", "weight", ...(rpe ? ["rpe"] : []), ...(rir ? ["rir"] : []), ...(rest ? ["rest"] : []), ...(tempo ? ["tempo"] : [])],
+          sets: Array.from({ length: setsCount }, () => ({ reps, weight, rpe, rir, rest, tempo }))
         }, adminExerciseLibrary));
       });
 

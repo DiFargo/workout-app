@@ -337,7 +337,8 @@ test("application styles use the modular styles entrypoint", async () => {
     assert.match(clientProfileLazyCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
     assert.doesNotMatch(indexCss, new RegExp(`@import "${profileLazyImport.replace(".", "\\.")}"`));
   }
-  assert.match(trainerWorkspace, /['"]\.\.\/\.\.\/styles\/trainer-lazy\.css['"]/);
+  assert.match(trainerWorkspace, /['"]\.\/TrainerWorkspace\.module\.css['"]/);
+  assert.doesNotMatch(trainerWorkspace, /styles\/trainer-lazy\.css/);
   assert.match(adminPanelHub, /['"]\.\.\/\.\.\/styles\/admin-lazy\.css['"]/);
   assert.match(adminE2EHarness, /['"]\.\.\/\.\.\/styles\/admin-internals-lazy\.css['"]/);
   assert.match(adminLazyCss, /@import "\.\/adminPanelHub\.css"/);
@@ -432,13 +433,15 @@ test("application styles use the modular styles entrypoint", async () => {
     path.normalize("src/app/appTerminalRoutes.jsx"),
     path.normalize("src/app/appTerminalRouteLoaders.js"),
     path.normalize("src/components/trainer/TrainerWorkspace.jsx"),
+    path.normalize("src/features/trainer/TrainerProgramOverviewPage.jsx"),
     path.normalize("src/components/admin/AdminPanelHub.jsx"),
     path.normalize("src/components/admin/AdminE2EHarness.jsx")
   ]);
 
   for (const file of allSourceFiles) {
     const source = await readText(file);
-    if (!/\.css['"]/.test(source)) continue;
+    const cssImports = [...source.matchAll(/['"]([^'"]+\.css)['"]/g)].map((match) => match[1]);
+    if (!cssImports.length || cssImports.every((cssImport) => cssImport.endsWith(".module.css"))) continue;
     assert.ok(
       allowedCssImportFiles.has(path.normalize(file)),
       `Unexpected CSS import outside approved entrypoints: ${file}`
@@ -575,7 +578,10 @@ test("modular CSS import graph resolves without cycles", async () => {
   const allCssFiles = [
     ...(await collectFiles("src/styles", [".css"])),
     ...(await collectFiles("src/components", [".css"]))
-  ].map((file) => path.normalize(file)).sort();
+  ]
+    .filter((file) => !file.endsWith(".module.css"))
+    .map((file) => path.normalize(file))
+    .sort();
   const reachableCssFiles = [...visited].sort();
 
   assert.ok(visited.has(path.normalize("src/styles/index.css")));
@@ -3959,7 +3965,7 @@ test("trainer program editor keeps an explicit back action", async () => {
 
   assert.match(workspace, /export function TrainerProgramConstructor\(\{[\s\S]*?\bonBack,/);
   assert.match(workspace, /onBack\s*\?\s*\([\s\S]*?<button type="button" onClick=\{onBack\}>[\s\S]*?<ArrowLeft/);
-  assert.match(managerView, /<TrainerProgramConstructor[\s\S]*?onBack=\{handleMonthProgramBack\}/);
+  assert.match(managerView, /<TrainerProgramConstructor[\s\S]*?onBack=\{openAdminProgramsOverview\}/);
 });
 
 test("trainer program editor CSS keeps bottom bar labels grouped", async () => {
@@ -4176,7 +4182,9 @@ test("trainer admin history bulk selection exposes accessible state", async () =
 test("trainer program overview cards expose selected state", async () => {
   const overviewPage = await readText("src/features/trainer/TrainerProgramOverviewPage.jsx");
 
-  assert.match(overviewPage, /className=\{isSelected \? "programsOverviewCard selected" : "programsOverviewCard"\}[\s\S]*type="button"[\s\S]*aria-pressed=\{isSelected\}/);
+  assert.match(overviewPage, /isSelected \? "programsOverviewCard selected" : "programsOverviewCard"/);
+  assert.match(overviewPage, /styles\.card/);
+  assert.match(overviewPage, /aria-pressed=\{isSelected\}/);
 });
 
 test("trainer mobile overflow navigation exposes current page state", async () => {

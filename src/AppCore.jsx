@@ -224,6 +224,7 @@ import { createWorkoutPersistenceHandlers } from "./features/client/workouts/wor
 import { useWorkoutRuntimeEffects } from "./features/client/workouts/useWorkoutRuntimeEffects";
 import { saveCompletedWorkoutToFirebase } from "./features/client/workouts/workoutFirebaseSaveHandlers";
 import { createTrainerClientCalendarHandlers } from "./features/trainer/trainerClientCalendarHandlers";
+import { normalizeTrainerSubscriptionNotificationSettings } from "./utils/trainerSubscriptionNotificationSettings";
 import { createTrainerClientHistoryHandlers } from "./features/trainer/trainerClientHistoryHandlers";
 import { createTrainerClientOverviewLoader } from "./features/trainer/trainerClientOverviewLoader";
 import { createTrainerClientSummaryLoader } from "./features/trainer/trainerClientSummaryLoader";
@@ -300,7 +301,7 @@ const loadNutritionRoute = () => Promise.all([
   loadNutritionStyles(),
   import("./features/client/nutrition/NutritionRoute")
 ]).then(([, module]) => module);
-const loadTrainerE2EHarness = () => import("./components/trainer/TrainerE2EHarness");
+const loadTrainerE2EHarness = () => import("./features/trainer/TrainerFullE2EHarness");
 const loadAdminE2EHarness = () => import("./components/admin/AdminE2EHarness");
 
 const ClientE2EHarness = lazy(loadClientE2EHarness);
@@ -523,6 +524,7 @@ export default function App() {
   const [adminClientStatus, setAdminClientStatus] = useState("");
   const [adminClientFilter, setAdminClientFilter] = useState("all");
   const [trainerNextSection, setTrainerNextSection] = useState("dashboard");
+  const [trainerSubscriptionNotificationSettings, setTrainerSubscriptionNotificationSettings] = useState(() => normalizeTrainerSubscriptionNotificationSettings());
   const [trainerProgramManagerOpen, setTrainerProgramManagerOpen] = useState(false);
   const [trainerWorkoutTab, setTrainerWorkoutTab] = useState("programs");
   const [adminUsersSelectedTab, setAdminUsersSelectedTab] = useState("overview");
@@ -1844,7 +1846,12 @@ export default function App() {
     auth,
     storage,
     setAdminExerciseVideoUploadingId,
-    setAdminClientStatus
+    setAdminClientStatus,
+    adminTrainingTemplates,
+    setAdminTrainingTemplates,
+    db,
+    doc,
+    setDoc
   });
 
   const trainerNextWorkspaceHandlers = createTrainerWorkspaceHandlers({
@@ -2143,8 +2150,7 @@ export default function App() {
     saveAdminClientCalendar,
     sendAdminTestWorkoutReminder,
     saveTrainerClientWorkoutSchedule,
-    saveTrainerClientNotificationSettings,
-    openClientTelegramConnection
+    saveTrainerClientNotificationSettings, loadTrainerSubscriptionNotificationSettings, saveTrainerSubscriptionNotificationSettings, openClientTelegramConnection
   } = createTrainerClientCalendarHandlers({
     db,
     auth,
@@ -2159,8 +2165,7 @@ export default function App() {
     setAdminCalendarTesting,
     setAdminClientStatus,
     setAdminSelectedClient,
-    setUsersList,
-    setPlan,
+    setUsersList, trainerSubscriptionNotificationSettings, setTrainerSubscriptionNotificationSettings, setPlan,
     recordTrainerEvent
   });
 
@@ -2990,7 +2995,7 @@ export default function App() {
     saveProfileAccount,
     saveProfileMeasurement,
     saveProfileNutritionPlanAndClose,
-    saveTrainerClientNotificationSettings,
+    saveTrainerClientNotificationSettings, loadTrainerSubscriptionNotificationSettings, saveTrainerSubscriptionNotificationSettings,
     saveTrainerClientNutritionPlan,
     saveTrainerClientWorkoutSchedule,
     saveWorkoutsToFirebase,
@@ -3157,6 +3162,7 @@ export default function App() {
     trainerClientSummariesLoading,
     trainerExerciseLibraryItems,
     trainerNextSection,
+    trainerSubscriptionNotificationSettings,
     trainerNextWorkspaceHandlers,
     trainerProgramManagerOpen,
     trainerWorkoutTab,
