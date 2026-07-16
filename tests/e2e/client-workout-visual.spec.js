@@ -572,7 +572,7 @@ test("CSS V2 workout list stays separated and overflow-free at target viewports"
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-workouts")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-workouts").click();
     await expect(page.locator('[data-css-module-scope="workout-list"]')).toBeVisible();
@@ -598,7 +598,7 @@ test("CSS V2 workout plan stays scoped, adaptive and functional", async ({ page 
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutPlan&clientHarnessTheme=warm-light");
+    await page.goto("/?clientHarness=1&clientHarnessPage=workoutPlan&clientHarnessTheme=warm-light");
     await expect(page.getByTestId("client-harness-workout-plan")).toBeVisible({ timeout: 40_000 });
     await expect(page.locator('[data-css-module-scope="workout-plan"]')).toBeVisible();
     await expect(page.locator('[data-css-module-scope="training-bottom-bar"]')).toBeVisible();
@@ -618,21 +618,21 @@ test("CSS V2 workout plan stays scoped, adaptive and functional", async ({ page 
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutPlan&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutPlan&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("client-harness-workout-plan")).toBeVisible({ timeout: 40_000 });
   await expectWorkoutPlanSpacing(page);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-workout-plan-dark-390x844.png");
 
   await page.goto(
-    "/cssV2?clientHarness=1&clientHarnessPage=workoutPlan&clientHarnessTheme=warm-light&clientWorkoutState=empty"
+    "/?clientHarness=1&clientHarnessPage=workoutPlan&clientHarnessTheme=warm-light&clientWorkoutState=empty"
   );
   await expect(page.getByText("План пока не назначен")).toBeVisible({ timeout: 40_000 });
   await expectWorkoutPlanSpacing(page, { empty: true });
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-workout-plan-empty-390x844.png");
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutPlan&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutPlan&clientHarnessTheme=warm-light");
   await page.getByTestId("workout-plan-week").first().locator("button").first().click();
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
 
@@ -654,7 +654,7 @@ test("CSS V2 workout history stays scoped, adaptive and functional", async ({ pa
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=warm-light");
+    await page.goto("/?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=warm-light");
     await expect(page.getByTestId("client-harness-workout-history")).toBeVisible({ timeout: 40_000 });
     await expect(page.locator('[data-css-module-scope="workout-history"]')).toBeVisible();
     await expect(page.getByTestId("workout-history-card")).toHaveCount(2);
@@ -674,7 +674,7 @@ test("CSS V2 workout history stays scoped, adaptive and functional", async ({ pa
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("client-harness-workout-history")).toBeVisible({ timeout: 40_000 });
   await expectWorkoutHistorySpacing(page);
   await expectNoHorizontalOverflow(page);
@@ -687,7 +687,7 @@ test("CSS V2 workout history stays scoped, adaptive and functional", async ({ pa
   await expect(page.getByTestId("workout-history-card-toggle").first()).toHaveAttribute("aria-label", "Развернуть");
 
   await page.goto(
-    "/cssV2?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=warm-light&clientHistoryState=swiped"
+    "/?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=warm-light&clientHistoryState=swiped"
   );
   await expect(page.getByTestId("workout-history-delete-action").first()).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("workout-history-delete-action").first().click();
@@ -698,14 +698,14 @@ test("CSS V2 workout history stays scoped, adaptive and functional", async ({ pa
   await expect(page.locator('[data-css-module-scope="workout-history-delete"]')).toBeHidden();
 
   await page.goto(
-    "/cssV2?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=warm-light&clientHistoryState=empty"
+    "/?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=warm-light&clientHistoryState=empty"
   );
   await expect(page.getByText("История пустая")).toBeVisible({ timeout: 40_000 });
   await expectWorkoutHistorySpacing(page, { empty: true });
   await expectNoHorizontalOverflow(page);
 
   await page.goto(
-    "/cssV2?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=warm-light&clientHistoryState=loading"
+    "/?clientHarness=1&clientHarnessPage=workoutHistory&clientHarnessTheme=warm-light&clientHistoryState=loading"
   );
   await expect(page.getByText("Загрузка истории...")).toBeVisible({ timeout: 40_000 });
   await expectWorkoutHistorySpacing(page, { empty: true });
@@ -729,7 +729,7 @@ test("CSS V2 workout mode stays scoped, adaptive and functional", async ({ page 
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutMode&clientHarnessTheme=warm-light");
+    await page.goto("/?clientHarness=1&clientHarnessPage=workoutMode&clientHarnessTheme=warm-light");
     await expect(page.getByTestId("client-harness-workout-mode")).toBeVisible({ timeout: 40_000 });
     await expect(page.locator('[data-css-module-scope="workout-mode"]')).toBeVisible();
     await expectTapTargets(page, [
@@ -747,7 +747,7 @@ test("CSS V2 workout mode stays scoped, adaptive and functional", async ({ page 
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutMode&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutMode&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("client-harness-workout-mode")).toBeVisible({ timeout: 40_000 });
   await expectWorkoutModeSpacing(page);
   await expectNoHorizontalOverflow(page);
@@ -788,7 +788,7 @@ test("CSS V2 basic workout quiz stays scoped, adaptive and functional", async ({
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=basicQuiz&clientHarnessTheme=warm-light");
+    await page.goto("/?clientHarness=1&clientHarnessPage=basicQuiz&clientHarnessTheme=warm-light");
     await expect(page.getByTestId("client-harness-basic-quiz")).toBeVisible({ timeout: 40_000 });
     await expect(page.locator('[data-css-module-scope="basic-quiz"]')).toBeVisible();
     await expectTapTargets(page, [
@@ -806,7 +806,7 @@ test("CSS V2 basic workout quiz stays scoped, adaptive and functional", async ({
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=basicQuiz&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=basicQuiz&clientHarnessTheme=warm-light");
   const selects = page.getByTestId("basic-quiz-field").locator("select");
   await selects.nth(0).selectOption("beginner");
   await selects.nth(1).selectOption("beginner");
@@ -816,7 +816,7 @@ test("CSS V2 basic workout quiz stays scoped, adaptive and functional", async ({
   await expect(selects.nth(2)).toHaveValue("3");
   await expect(page.getByTestId("basic-quiz-stats").locator("b").first()).toHaveText("3");
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=basicQuiz&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessPage=basicQuiz&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("client-harness-basic-quiz")).toBeVisible({ timeout: 40_000 });
   await expectBasicQuizSpacing(page);
   await expectNoHorizontalOverflow(page);
@@ -847,7 +847,7 @@ test("CSS V2 workout exercise video frame stays scoped, adaptive and functional"
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=paused&clientHarnessTheme=warm-light");
+    await page.goto("/?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=paused&clientHarnessTheme=warm-light");
     const frame = page.getByTestId("workout-exercise-video-frame");
     await expect(frame).toBeVisible({ timeout: 40_000 });
     await expect(frame.locator("video")).toBeVisible();
@@ -858,15 +858,15 @@ test("CSS V2 workout exercise video frame stays scoped, adaptive and functional"
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=loading&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=loading&clientHarnessTheme=warm-light");
   await expect(page.getByTestId("workout-exercise-video-frame").locator("video + span")).toBeVisible();
   await expectExerciseVideoFrameSpacing(page);
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=hidden&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=hidden&clientHarnessTheme=warm-light");
   await expect(page.getByTestId("workout-exercise-video-frame").locator("button").first()).toHaveCSS("opacity", "0");
   await expectExerciseVideoFrameSpacing(page);
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=fallback&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=fallback&clientHarnessTheme=warm-light");
   const fallbackFrame = page.getByTestId("workout-exercise-video-frame");
   await expect(fallbackFrame.locator("video")).toHaveCount(0);
   const retryButton = fallbackFrame.locator("button");
@@ -876,7 +876,7 @@ test("CSS V2 workout exercise video frame stays scoped, adaptive and functional"
   await expectExerciseVideoFrameSpacing(page);
   await expectNoHorizontalOverflow(page);
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=paused&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=paused&clientHarnessTheme=dark-green");
   const darkFrame = page.getByTestId("workout-exercise-video-frame");
   const video = darkFrame.locator("video");
   await expect(video).toBeVisible();
@@ -904,7 +904,7 @@ test("CSS V2 workout exercise sets stay scoped, adaptive and functional", async 
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseSets&clientHarnessTheme=warm-light");
+    await page.goto("/?clientHarness=1&clientHarnessPage=exerciseSets&clientHarnessTheme=warm-light");
     const sets = page.getByTestId("workout-exercise-sets");
     await expect(sets).toBeVisible({ timeout: 40_000 });
     await expect(sets).toHaveAttribute("data-css-module-scope", "workout-exercise-sets");
@@ -916,13 +916,13 @@ test("CSS V2 workout exercise sets stay scoped, adaptive and functional", async 
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseSets&clientExerciseSetsState=completed&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=exerciseSets&clientExerciseSetsState=completed&clientHarnessTheme=warm-light");
   const completedRow = page.getByTestId("workout-exercise-set-row").first();
   await expect(completedRow).toHaveAttribute("aria-pressed", "true");
   await completedRow.click();
   await expect(completedRow).toHaveAttribute("aria-pressed", "false");
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseSets&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=exerciseSets&clientHarnessTheme=warm-light");
   const sets = page.getByTestId("workout-exercise-sets");
   await expect(sets).toBeVisible({ timeout: 40_000 });
   await sets.locator("button").first().click();
@@ -936,12 +936,12 @@ test("CSS V2 workout exercise sets stay scoped, adaptive and functional", async 
   await expect(modal).toBeHidden();
   await expect(page.getByTestId("workout-exercise-set-row").first()).toContainText("12 повторений");
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseSets&clientExerciseSetsState=bodyweight&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=exerciseSets&clientExerciseSetsState=bodyweight&clientHarnessTheme=warm-light");
   await page.getByTestId("workout-exercise-sets").locator("button").first().click();
   await expect(page.getByTestId("workout-set-edit-modal").getByTestId("workout-set-wheel-picker")).toHaveCount(1);
   await expectNoHorizontalOverflow(page);
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseSets&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessPage=exerciseSets&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("workout-exercise-sets")).toBeVisible({ timeout: 40_000 });
   await expect(page.getByTestId("workout-exercise-set-row")).toHaveCount(3);
   await expectNoHorizontalOverflow(page);
@@ -964,7 +964,7 @@ test("CSS V2 workout run overlays stay scoped, adaptive and functional", async (
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientHarnessTheme=warm-light");
+    await page.goto("/?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientHarnessTheme=warm-light");
     const scope = page.locator('[data-css-module-scope="workout-stage-heading"]');
     const closeButton = page.getByRole("button", { name: "Выйти из тренировки" });
     const techniqueButton = page.getByRole("button", { name: "Показать пояснение техники" });
@@ -978,18 +978,18 @@ test("CSS V2 workout run overlays stay scoped, adaptive and functional", async (
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientWorkoutRunOverlayState=saved&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientWorkoutRunOverlayState=saved&clientHarnessTheme=warm-light");
   const backButton = page.getByRole("button", { name: "Вернуться к предыдущему экрану" });
   await expect(backButton).toHaveCSS("width", "51px");
   await expect(backButton).toHaveCSS("height", "51px");
   await backButton.click();
   await expect(page.getByTestId("client-harness-main")).toBeVisible();
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientWorkoutRunOverlayState=notFound&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientWorkoutRunOverlayState=notFound&clientHarnessTheme=warm-light");
   await page.getByRole("button", { name: /Главное меню/ }).click();
   await expect(page.getByTestId("client-harness-main")).toBeVisible();
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientWorkoutRunOverlayState=fullscreen&clientHarnessTheme=warm-light");
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientWorkoutRunOverlayState=fullscreen&clientHarnessTheme=warm-light");
   const fullscreen = page.getByTestId("workout-fullscreen-video-overlay");
   await expect(fullscreen).toBeVisible();
   await expect(fullscreen).toHaveCSS("position", "fixed");
@@ -999,7 +999,7 @@ test("CSS V2 workout run overlays stay scoped, adaptive and functional", async (
   await page.getByRole("button", { name: "Закрыть видео" }).click();
   await expect(page.getByTestId("client-harness-main")).toBeVisible();
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientHarnessTheme=dark-green");
   await expect(page.locator('[data-css-module-scope="workout-stage-heading"]')).toBeVisible();
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-workout-run-overlays-dark-390x844.png");
@@ -1023,7 +1023,7 @@ test("CSS V2 workout run stages stay scoped and adaptive through the full flow",
     for (const viewport of primaryViewports) {
       await page.setViewportSize(viewport);
       await page.goto(
-        `/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=${stage}&clientHarnessTheme=warm-light`
+        `/?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=${stage}&clientHarnessTheme=warm-light`
       );
       await expect(page.getByTestId("workout-run-stage")).toBeVisible({ timeout: 40_000 });
       await expect(page.getByTestId("workout-run-stage")).toHaveAttribute(
@@ -1047,7 +1047,7 @@ test("CSS V2 workout run stages stay scoped and adaptive through the full flow",
   ]) {
     await page.setViewportSize(viewport);
     await page.goto(
-      "/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=finish&clientHarnessTheme=warm-light"
+      "/?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=finish&clientHarnessTheme=warm-light"
     );
     await expect(page.getByTestId("workout-finish-screen")).toBeVisible({ timeout: 40_000 });
     await expectWorkoutRunStageSpacing(page, "finish");
@@ -1061,7 +1061,7 @@ test("CSS V2 workout run stages stay scoped and adaptive through the full flow",
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(
-    "/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=saved&clientHarnessTheme=warm-light"
+    "/?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=saved&clientHarnessTheme=warm-light"
   );
   await expect(page.getByTestId("workout-run-stage")).toBeVisible({ timeout: 40_000 });
   await expectWorkoutRunStageSpacing(page, "finish");
@@ -1069,7 +1069,7 @@ test("CSS V2 workout run stages stay scoped and adaptive through the full flow",
 
   for (const stage of ["exercise", "finish"]) {
     await page.goto(
-      `/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=${stage}&clientHarnessTheme=dark-green`
+      `/?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=${stage}&clientHarnessTheme=dark-green`
     );
     await expect(page.getByTestId("workout-run-stage")).toBeVisible({ timeout: 40_000 });
     await expectWorkoutRunStageSpacing(page, stage);
@@ -1078,7 +1078,7 @@ test("CSS V2 workout run stages stay scoped and adaptive through the full flow",
   }
 
   await page.goto(
-    "/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=warmup&clientHarnessTheme=warm-light"
+    "/?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=warmup&clientHarnessTheme=warm-light"
   );
   const warmupPreset = page.locator('[data-css-module-control="workout-warmup"][aria-pressed]').first();
   await warmupPreset.click();

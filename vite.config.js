@@ -15,6 +15,30 @@ const stagingFirebaseKeys = [
   'VITE_FIREBASE_APP_ID',
 ]
 
+function redirectRetiredCssV2Path() {
+  const redirect = (req, res, next) => {
+    const [pathname, query = ''] = (req.url || '').split('?', 2)
+    if (pathname !== '/cssV2' && !pathname.startsWith('/cssV2/')) {
+      next()
+      return
+    }
+
+    res.statusCode = 302
+    res.setHeader('Location', query ? `/?${query}` : '/')
+    res.end()
+  }
+
+  return {
+    name: 'redirect-retired-css-v2-path',
+    configureServer(server) {
+      server.middlewares.use(redirect)
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(redirect)
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_FIREBASE_')
@@ -25,7 +49,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [react()],
+    plugins: [redirectRetiredCssV2Path(), react()],
     define: {
       __APP_VERSION__: JSON.stringify(pkg.version),
     },

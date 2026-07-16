@@ -245,9 +245,9 @@ test("CSS V2 is the only stylesheet architecture", async () => {
   assert.match(indexCss, /^@layer reset, base, components;/);
   assert.deepEqual(collectCssImports(indexCss), ["./_variables.css"]);
 
-  const variantSource = await readText("src/app/cssVariant.js");
-  assert.match(variantSource, /export const CSS_VARIANT = "v2";/);
-  assert.doesNotMatch(variantSource, /current|css-v2|isCssV2PreviewPath/);
+  assert.equal(await pathExists("src/app/cssVariant.js"), false);
+  const mainSource = await readText("src/main.jsx");
+  assert.doesNotMatch(mainSource, /cssVariant|data-css-variant|loadCssVariant/);
 });
 
 test("component styles are imported as colocated CSS Modules", async () => {

@@ -155,7 +155,7 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
 
   for (const entry of cases) {
     await page.setViewportSize({ width: entry.width, height: entry.height });
-    await page.goto(`/cssV2?clientHarness=1&clientHarnessTheme=${entry.theme}`);
+    await page.goto(`/?clientHarness=1&clientHarnessTheme=${entry.theme}`);
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
 
@@ -218,7 +218,7 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
 
   for (const entry of cases) {
     await page.setViewportSize({ width: entry.width, height: entry.height });
-    await page.goto(`/cssV2?clientHarness=1&clientHarnessTheme=${entry.theme}`);
+    await page.goto(`/?clientHarness=1&clientHarnessTheme=${entry.theme}`);
     await page.getByTestId("client-nav-nutrition").click();
 
     const root = page.getByTestId("nutrition-page");
@@ -485,7 +485,7 @@ test("client nutrition visual audit covers AI photo not-found modal", async ({ p
 test("client nutrition photo analysis process keeps its scoped loading state", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/cssV2?clientHarness=1&clientNutritionPhotoAnalyzing=1");
+  await page.goto("/?clientHarness=1&clientNutritionPhotoAnalyzing=1");
   await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
   const process = page.getByTestId("food-photo-ai-search-process");
   await expect(process).toBeVisible();
@@ -508,7 +508,7 @@ test("CSS V2 nutrition barcode placeholder stays fullscreen at target heights", 
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientNutritionBarcode=1");
+    await page.goto("/?clientHarness=1&clientNutritionBarcode=1");
     const overlay = page.getByTestId("nutrition-barcode-overlay");
     await expect(overlay).toBeVisible();
     await expect(page.getByTestId("nutrition-barcode-placeholder")).toBeVisible();
@@ -522,7 +522,7 @@ test("CSS V2 nutrition barcode placeholder stays fullscreen at target heights", 
 test("client nutrition delete confirmation keeps its scoped modal contract", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionDeleteConfirm");
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionDeleteConfirm");
   await expect(page.getByTestId("client-harness-nutrition-delete-confirm")).toBeVisible();
   await expect(page.getByTestId("nutrition-delete-confirm-modal")).toBeVisible();
   await expectTapTargets(page, [
@@ -541,7 +541,7 @@ test("client nutrition delete confirmation keeps its scoped modal contract", asy
 test("client nutrition undo toast stays above navigation and restores cleanly", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionUndoToast");
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionUndoToast");
   await expect(page.getByTestId("client-harness-nutrition-undo-toast")).toBeVisible();
   await expect(page.getByTestId("nutrition-undo-toast")).toBeVisible();
   await expectAboveBottomBar(page, '[data-testid="nutrition-undo-toast"]');
@@ -709,7 +709,7 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator("[data-nutrition-header-action]").first().click();
@@ -776,7 +776,7 @@ test("CSS V2 food search page keeps stable scoped recent and photo-action layout
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator("[data-nutrition-header-action]").first().click();
@@ -844,7 +844,7 @@ test("CSS V2 food search results keep stable scoped search and my-products cards
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator("[data-nutrition-header-action]").first().click();
@@ -937,7 +937,7 @@ test("CSS V2 food search input keeps stable scoped geometry", async ({ page }, t
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator("[data-nutrition-header-action]").first().click();
@@ -1005,7 +1005,7 @@ test("CSS V2 food search bottom bar keeps stable scoped navigation", async ({ pa
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator("[data-nutrition-header-action]").first().click();
@@ -1070,7 +1070,7 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator("[data-nutrition-header-action]").first().click();
@@ -1215,7 +1215,7 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-nutrition").click();
   await page.locator("[data-nutrition-header-action]").first().click();
@@ -1246,7 +1246,7 @@ test("CSS V2 nutrition search history keeps stable scoped rows", async ({ page }
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionSearchHistory");
+    await page.goto("/?clientHarness=1&clientHarnessPage=nutritionSearchHistory");
 
     const history = page.getByTestId("food-search-history-names");
     const title = history.locator("div").first();
@@ -1297,7 +1297,7 @@ test("CSS V2 dish ingredients stay scoped and responsive", async ({ page }, test
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionDishIngredients");
+    await page.goto("/?clientHarness=1&clientHarnessPage=nutritionDishIngredients");
 
     const ingredients = page.getByTestId("dish-edit-ingredients");
     const addButton = page.locator('[data-dish-ingredients-action="add"]');
@@ -1349,7 +1349,7 @@ test("CSS V2 food edit basic fields stay scoped and match the responsive referen
     const themeQuery = testCase.theme === "warm-light"
       ? ""
       : `&clientHarnessTheme=${encodeURIComponent(testCase.theme)}`;
-    await page.goto(`/cssV2?clientHarness=1${themeQuery}`);
+    await page.goto(`/?clientHarness=1${themeQuery}`);
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator("[data-nutrition-header-action]").first().click();
@@ -1425,7 +1425,7 @@ test("CSS V2 dish ingredient picker stays scoped and matches the responsive refe
     const themeQuery = testCase.theme === "warm-light"
       ? ""
       : `&clientHarnessTheme=${encodeURIComponent(testCase.theme)}`;
-    await page.goto(`/cssV2?clientHarness=1${themeQuery}`);
+    await page.goto(`/?clientHarness=1${themeQuery}`);
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator("[data-nutrition-header-action]").first().click();
@@ -1514,7 +1514,7 @@ test("CSS V2 photo AI preview keeps result and analysis states scoped", async ({
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionPhotoPreview");
+    await page.goto("/?clientHarness=1&clientHarnessPage=nutritionPhotoPreview");
 
     const preview = page.getByTestId("nutrition-photo-ai-preview");
     const previewImage = preview.locator("img");
@@ -1550,7 +1550,7 @@ test("CSS V2 photo AI preview keeps result and analysis states scoped", async ({
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionPhotoPreview&clientPhotoPreviewState=analyzing&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionPhotoPreview&clientPhotoPreviewState=analyzing&clientHarnessTheme=dark-green");
 
   const analyzingPreview = page.getByTestId("nutrition-photo-ai-preview");
   await expect(analyzingPreview).toHaveAttribute("data-state", "analyzing");
@@ -1579,7 +1579,7 @@ test("CSS V2 nutrition diary stays usable at target viewports", async ({ page },
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
 
@@ -1620,7 +1620,7 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and theme state
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator("[data-nutrition-header-action]").nth(1).click();
@@ -1674,7 +1674,7 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and theme state
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-nutrition").click();
   await page.locator("[data-nutrition-header-action]").nth(1).click();
@@ -1707,7 +1707,7 @@ test("CSS V2 nutrition orbit keeps scoped reference geometry, motion and add flo
 
   for (const viewport of viewports) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    await page.goto("/cssV2?clientHarness=1");
+    await page.goto("/?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
 
@@ -1753,7 +1753,7 @@ test("CSS V2 nutrition orbit keeps scoped reference geometry, motion and add flo
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-nutrition").click();
 
@@ -1785,7 +1785,7 @@ test("CSS V2 nutrition meal modal keeps scoped reference geometry, themes and ac
 
   for (const viewport of viewports) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionMealModal");
+    await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal");
 
     const modal = page.getByTestId("nutrition-meal-modal");
     const sheet = page.locator('[data-nutrition-meal-part="sheet"]');
@@ -1826,7 +1826,7 @@ test("CSS V2 nutrition meal modal keeps scoped reference geometry, themes and ac
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionMealModal&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal&clientHarnessTheme=dark-green");
   const darkSheet = page.locator('[data-nutrition-meal-part="sheet"]');
   await expect(darkSheet).toBeVisible({ timeout: 40_000 });
   await expect(darkSheet).toHaveCSS("border-color", "rgba(255, 255, 255, 0.09)");
@@ -1835,16 +1835,16 @@ test("CSS V2 nutrition meal modal keeps scoped reference geometry, themes and ac
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-meal-modal-scoped-dark.png");
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionMealModal");
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal");
   await page.getByTestId("nutrition-meal-close").click();
   await expect(page.getByTestId("nutrition-meal-modal")).toBeHidden();
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionMealModal");
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal");
   await page.getByTestId("nutrition-meal-food").click();
   await expect(page.getByTestId("food-product-hero")).toBeVisible();
   await expect(page.getByTestId("nutrition-meal-modal")).toBeHidden();
 
-  await page.goto("/cssV2?clientHarness=1&clientHarnessPage=nutritionMealModal");
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal");
   await page.getByTestId("nutrition-meal-add").click();
   await expect(page.getByTestId("food-search-header")).toBeVisible();
   await expect(page.getByTestId("nutrition-meal-modal")).toBeHidden();
@@ -1865,7 +1865,7 @@ test("CSS V2 nutrition summary keeps scoped reference geometry, themes and actio
 
   for (const viewport of viewports) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    await page.goto("/cssV2?clientHarness=1&clientHarnessTheme=warm-light");
+    await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
 
@@ -1903,7 +1903,7 @@ test("CSS V2 nutrition summary keeps scoped reference geometry, themes and actio
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-nutrition").click();
 
@@ -1947,7 +1947,7 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
 
   for (const viewport of viewports) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    await page.goto("/cssV2?clientHarness=1&clientHarnessTheme=warm-light");
+    await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
     await page.locator('[data-nutrition-summary-part="card"]').click();
@@ -2003,7 +2003,7 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessTheme=dark-green");
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-nutrition").click();
   await page.locator('[data-nutrition-summary-part="card"]').click();

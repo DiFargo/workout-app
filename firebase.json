@@ -1,6 +1,18 @@
 {
   "hosting": {
     "public": "dist",
+    "redirects": [
+      {
+        "source": "/cssV2",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/cssV2/**",
+        "destination": "/",
+        "type": 301
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
