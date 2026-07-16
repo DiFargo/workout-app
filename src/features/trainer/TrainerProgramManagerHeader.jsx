@@ -9,6 +9,8 @@ export default function TrainerProgramManagerHeader({
 }) {
   const isNextWorkspace = isTrainerNextWorkspace();
 
+  if (isNextWorkspace) return null;
+
   return (
     <header className="programsCompactHeader">
       <button

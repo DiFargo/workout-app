@@ -6,6 +6,7 @@ import { getDefaultAdminCalendar } from "../../utils/adminClientCalendar";
 import { getMeasurementTimestampValue } from "../../utils/profileMeasurements";
 import { getTrainerSummaryTimestamp } from "../../utils/trainerSummaryDates";
 import { normalizeExercise, sortWorkoutDays } from "../../utils/workoutPlanNormalization";
+import { filterTrainerCurrentPlanWorkouts } from "./trainerCurrentPlanWorkouts";
 
 const STATUS_LOAD_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0434\u0430\u043d\u043d\u044b\u0435 \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
 
@@ -168,12 +169,15 @@ export function createTrainerClientOverviewLoader({
       const clientHistory = getDocsAsItems(historySnap);
       clientHistory.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-      const clientWorkouts = sortWorkoutDays(getDocsAsItems(workoutsSnap).map((workout) => ({
+      const loadedWorkouts = getDocsAsItems(workoutsSnap).map((workout) => ({
         ...workout,
         name: workout.name || "\u0411\u0435\u0437 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f",
         status: workout.status || "planned",
         exercises: (workout.exercises || []).map(normalizeExercise)
-      })));
+      }));
+      const clientWorkouts = sortWorkoutDays(
+        filterTrainerCurrentPlanWorkouts(loadedWorkouts, freshClient)
+      );
 
       const clientMeasurements = getDocsAsItems(measurementsSnap);
       clientMeasurements.sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
@@ -216,7 +220,7 @@ export function createTrainerClientOverviewLoader({
       const mergedNutritionState = buildAdminClientNutritionStateFromRoot(freshClient, nutritionState);
       const fullClientForView = {
         ...freshClient,
-        assignedWorkoutCount: Math.max(Number(freshClient.assignedWorkoutCount) || 0, clientWorkouts.length),
+        assignedWorkoutCount: clientWorkouts.length,
         nutritionGoals: freshClient.nutritionGoals || mergedNutritionState.goals,
         nutritionPlan: freshClient.nutritionPlan || mergedNutritionState.nutritionPlan,
         aiNutritionPlan: freshClient.aiNutritionPlan || mergedNutritionState.aiNutritionPlan

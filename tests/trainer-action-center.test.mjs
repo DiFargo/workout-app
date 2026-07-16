@@ -97,7 +97,7 @@ test("trainer action center keeps one priority row per client with several signa
 });
 
 test("trainer action items open the relevant client tab", () => {
-  assert.equal(getTrainerActionItemTargetTab({}, "feedbackItems"), "notes");
+  assert.equal(getTrainerActionItemTargetTab({}, "feedbackItems"), "messages");
   assert.equal(getTrainerActionItemTargetTab({}, "taskItems"), "notifications");
   assert.equal(getTrainerActionItemTargetTab({}, "programEndingItems"), "workouts");
   assert.equal(getTrainerActionItemTargetTab({}, "todayWorkouts"), "workouts");

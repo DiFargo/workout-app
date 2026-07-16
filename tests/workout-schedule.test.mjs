@@ -94,6 +94,20 @@ test("planned workout slots ignore history from an older assignment", () => {
   assert.equal(slots[0].isCompleted, false);
 });
 
+test("a completed workout name does not complete another workout with the same name", () => {
+  const slots = buildPlannedWorkoutSlots({
+    workouts: [
+      { id: "day_1", name: "Тренировка 1" },
+      { id: "day_5", name: "Тренировка 1" }
+    ],
+    history: [{ workoutId: "day_1", workoutName: "Тренировка 1", date: "2026-07-15" }],
+    now: new Date("2026-07-15T12:00:00.000Z")
+  });
+
+  assert.equal(slots[0].status, "completed");
+  assert.equal(slots[1].status, "planned");
+});
+
 test("workout calendar sync preserves statuses and records updater", () => {
   const synced = syncWorkoutCalendarWithPlan({
     scheduledDates: ["2026-06-15"],

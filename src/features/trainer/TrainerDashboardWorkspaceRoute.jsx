@@ -3,6 +3,7 @@ import TrainerClientOverviewModals from "./TrainerClientOverviewModals";
 
 export default function TrainerDashboardWorkspaceRoute({
   APP_VERSION,
+  adminClientEvents,
   adminClientHistory,
   adminClientMeasurements,
   adminNewTaskDueDate,
@@ -31,6 +32,8 @@ export default function TrainerDashboardWorkspaceRoute({
   refreshPage,
   saveTrainerClientNutritionPlan,
   saveTrainerClientNotificationSettings,
+  loadTrainerSubscriptionNotificationSettings,
+  saveTrainerSubscriptionNotificationSettings,
   saveTrainerClientWorkoutSchedule,
   saveWorkoutsToFirebase,
   selectedClient,
@@ -52,6 +55,7 @@ export default function TrainerDashboardWorkspaceRoute({
   telegramProfile,
   trainerActionCenter,
   trainerClientSummariesLoading,
+  trainerSubscriptionNotificationSettings,
   trainerExerciseLibraryItems,
   trainerName,
   trainerNextActiveSection,
@@ -109,6 +113,7 @@ export default function TrainerDashboardWorkspaceRoute({
       createClientState={getTrainerNextCreateClientState()}
       measurements={adminClientMeasurements}
       history={adminClientHistory}
+      exerciseProgressReviews={adminClientEvents}
       nutritionDays={clientNutritionDays}
       nutritionGoals={selectedEffectiveNutritionGoals}
       nutritionPlanOptions={trainerNutritionPlanOptions}
@@ -118,12 +123,16 @@ export default function TrainerDashboardWorkspaceRoute({
       onGenerateNutritionPlan={() => setAdminClientStatus("Параметры AI-плана открыты в разделе питания.")}
       onSaveNutritionPlan={saveTrainerClientNutritionPlan}
       onSaveNotifications={saveTrainerClientNotificationSettings}
+      trainerSubscriptionNotificationSettings={trainerSubscriptionNotificationSettings}
+      onLoadTrainerSubscriptionNotifications={loadTrainerSubscriptionNotificationSettings}
+      onSaveTrainerSubscriptionNotifications={saveTrainerSubscriptionNotificationSettings}
       onTestNotification={() => sendAdminTestWorkoutReminder(selectedClient)}
       onConnectTelegram={openClientTelegramConnection}
       onSendMessage={sendTrainerClientMessage}
       telegramMessages={adminClientTelegramMessages}
       onCreateTask={() => setAdminTaskComposerOpen(true)}
       onClientAction={handleTrainerClientAction}
+      onResolveExerciseProgress={(payload) => handleTrainerClientAction("resolve_exercise_progress", selectedClient, payload)}
       workouts={sortWorkoutDays(plan.workouts || [])}
       exerciseLibrary={trainerExerciseLibraryItems}
       programTemplates={adminTrainingTemplates}
@@ -134,6 +143,7 @@ export default function TrainerDashboardWorkspaceRoute({
       programStatus={adminClientStatus}
       onUpdateWorkout={trainerNextWorkspaceHandlers.onUpdateWorkout}
       onUpdateExercise={trainerNextWorkspaceHandlers.onUpdateExercise}
+      onSaveExerciseProgressAdjustment={trainerNextWorkspaceHandlers.onSaveExerciseProgressAdjustment}
       onUpdateExerciseSet={trainerNextWorkspaceHandlers.onUpdateExerciseSet}
       onAddExerciseSet={trainerNextWorkspaceHandlers.onAddExerciseSet}
       onRemoveExerciseSet={trainerNextWorkspaceHandlers.onRemoveExerciseSet}

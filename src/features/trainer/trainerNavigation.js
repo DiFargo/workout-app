@@ -4,7 +4,6 @@ const TRAINER_NEXT_SECTIONS = new Set([
   "dashboard",
   "clients",
   "notifications",
-  "messages",
   "analytics",
   "cabinet",
   "more",
@@ -50,7 +49,14 @@ export function createTrainerNavigationActions({
 
       setTrainerNextSection(nextSection === "more" ? "cabinet" : nextSection);
 
-      if (nextSection === "workouts" || nextSection === "nutrition") {
+      if (nextSection === "workouts") {
+        setTrainerProgramManagerOpen(true);
+        setTrainerWorkoutTab("plan");
+        setPage(APP_PAGES.ADMIN_WORKOUTS);
+        return;
+      }
+
+      if (nextSection === "nutrition") {
         setPage(APP_PAGES.ADMIN_WORKOUTS);
         return;
       }
@@ -83,7 +89,8 @@ export function createTrainerNavigationActions({
       setPage(APP_PAGES.ADMIN_WORKOUTS);
     },
     openTrainerExerciseLibrary() {
-      setTrainerWorkoutTab("programs");
+      setTrainerProgramManagerOpen(false);
+      setTrainerWorkoutTab("library");
       setPage(APP_PAGES.ADMIN_WORKOUTS);
     }
   };

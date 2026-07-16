@@ -4,12 +4,29 @@ import { failOnRuntimeErrors } from "./runtime-errors.js";
 test.setTimeout(60_000);
 
 async function expectNoHorizontalOverflow(page) {
-  const metrics = await page.evaluate(() => ({
-    documentWidth: document.documentElement.scrollWidth,
-    viewportWidth: window.innerWidth
-  }));
+  const metrics = await page.evaluate(() => {
+    const viewportWidth = window.innerWidth;
+    const offenders = [...document.querySelectorAll("body *")]
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          element: `${element.tagName.toLowerCase()}.${String(element.className || "").trim().replace(/\s+/g, ".")}`,
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width)
+        };
+      })
+      .filter((item) => item.left < -1 || item.right > viewportWidth + 1)
+      .slice(0, 12);
 
-  expect(metrics.documentWidth).toBeLessThanOrEqual(metrics.viewportWidth + 1);
+    return {
+      documentWidth: document.documentElement.scrollWidth,
+      viewportWidth,
+      offenders
+    };
+  });
+
+  expect(metrics.documentWidth, JSON.stringify(metrics, null, 2)).toBeLessThanOrEqual(metrics.viewportWidth + 1);
 }
 
 async function attachScreenshot(page, testInfo, name) {
@@ -119,7 +136,27 @@ async function clickTrainerNav(page, section) {
   await button.click();
 }
 
-test("trainer visual audit covers dashboard, clients, messages and programs", async ({ page }, testInfo) => {
+function clientTabs(page) {
+  return page.locator(".trainerNextClientTabs");
+}
+
+async function openClientTab(page, name) {
+  const button = clientTabs(page).getByRole("button", { name, exact: true });
+  await expect(button).toBeVisible();
+  await button.click();
+  await expect(button).toHaveAttribute("aria-pressed", "true");
+}
+
+async function openExerciseSection(page, name) {
+  await openClientTab(page, "Тренировки");
+  const sectionNav = page.getByRole("navigation", { name: "Разделы упражнений клиента" });
+  await expect(sectionNav).toBeVisible();
+  const button = sectionNav.getByRole("button", { name, exact: true });
+  await button.click();
+  await expect(button).toHaveAttribute("aria-pressed", "true");
+}
+
+test("trainer visual audit covers dashboard, clients and programs", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
   await page.goto("/?trainerHarness=1");
@@ -146,12 +183,19 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
 
   await page.getByRole("button", { name: /Germes/ }).first().click();
   await expect(page.getByRole("heading", { name: "Germes" })).toBeVisible();
-  await expect(page.locator(".trainerNextClientTabs button")).toHaveCount(7);
+  await expect(clientTabs(page).getByRole("button")).toHaveCount(6);
+  await expect(clientTabs(page).getByRole("button", { name: "Тренировки", exact: true })).toBeVisible();
+  await expect(clientTabs(page).getByRole("button", { name: "Сообщения", exact: true })).toBeVisible();
+  await expect(clientTabs(page).getByRole("button", { name: "Заметки", exact: true })).toHaveCount(0);
   await expect(page.locator(".trainerNextClientTabs button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".trainerNextChartHead button[aria-pressed='true']")).toHaveCount(1);
-  await page.locator(".trainerNextClientTabs button").nth(4).click();
+  const overviewTasks = page.locator("details").filter({ hasText: "Задания клиенту" });
+  await expect(overviewTasks).toHaveCount(1);
+  await expect(overviewTasks.getByText("Задания клиенту", { exact: true })).toBeVisible();
+  await openExerciseSection(page, "Прогресс упражнений");
+  await page.getByRole("button", { name: /Фильтры/ }).click();
   await expect(page.locator(".trainerExerciseProgressToolbar button[aria-pressed='true']")).toHaveCount(1);
-  await page.locator(".trainerNextClientTabs button").nth(3).click();
+  await openClientTab(page, "Фото и замеры");
   await expect(page.locator(".trainerClientBodyProgress")).toBeVisible();
   await expect(page.locator(".trainerPhotoViewTabs").first().locator("button[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, [
@@ -162,13 +206,13 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-client-card.png");
 
-  await page.locator(".trainerNextClientTabs button").nth(2).click();
+  await openClientTab(page, "Питание");
   await expect(page.locator(".trainerNutritionAnalytics")).toBeVisible();
   await page.locator(".trainerNutritionDiaryCollapsed").click();
   await expect(page.locator(".trainerNutritionDiary aside button[aria-pressed='true']")).toHaveCount(1);
   await expectNoHorizontalOverflow(page);
 
-  await page.locator(".trainerNextClientTabs button").nth(5).click();
+  await openClientTab(page, "Уведомления");
   await expect(page.locator(".trainerNotificationCalendarGrid")).toBeVisible();
   await expect(page.locator(".trainerNotificationLegend")).toBeVisible();
   await expect(page.locator(".trainerReminderPeriod button[aria-pressed='true']")).toHaveCount(2);
@@ -182,32 +226,35 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-client-notifications.png");
 
-  await clickTrainerNav(page, "messages");
-  await expect(page.locator(".trainerMessageCenter")).toBeVisible();
-  await expect(page.locator(".trainerMessageFilters button[aria-pressed='true']")).toHaveCount(1);
-  await expect(page.locator(".trainerMessageList > button[aria-pressed='true']")).toHaveCount(1);
+  await openClientTab(page, "Сообщения");
+  const messagesPanel = page.getByRole("region", { name: "Сообщения клиента" });
+  const messageFilters = messagesPanel.getByRole("navigation", { name: "Фильтры сообщений клиента" });
+  const messageReplies = messagesPanel.getByRole("button", { name: "Ответить", exact: true });
+  await expect(messagesPanel.getByRole("heading", { name: "Сообщения клиента", exact: true })).toBeVisible();
+  await expect(messageFilters.getByRole("button")).toHaveCount(3);
+  await expect(messageFilters.getByRole("button", { name: /^Все/ })).toHaveAttribute("aria-pressed", "true");
+  await expect(messageReplies).toHaveCount(2);
+  await expect(page.locator(".trainerNextNoteCard")).toHaveCount(0);
+  await expect(page.getByText("Тестовая заметка", { exact: true })).toHaveCount(0);
+  await expect(messagesPanel.getByText("Задания клиенту", { exact: true })).toHaveCount(0);
+  await expect(messagesPanel.getByRole("button", { name: "Отметить все обработанными", exact: true })).toBeVisible();
   await expectTapTargets(page, [
-    ".trainerMessageFilters button",
-    ".trainerMessageList > button",
-    ".trainerNextMobileNav button"
-  ]);
+    "[aria-label='Фильтры сообщений клиента'] button",
+    "[aria-labelledby='trainer-client-messages-title'] article button",
+    "[aria-labelledby='trainer-client-messages-title'] > header button"
+  ], 32);
   await expectNoHorizontalOverflow(page);
-  await attachScreenshot(page, testInfo, "trainer-messages.png");
+  await attachScreenshot(page, testInfo, "trainer-client-messages.png");
 
-  await page.locator(".trainerMessageList > button").first().click();
-  await expect(page.locator(".trainerMessageModal")).toBeVisible();
-  await expect(page.locator(".trainerMessageModalSend")).toBeDisabled();
-  await page.locator(".trainerMessageCoachHint button").first().click();
-  await expect(page.locator(".trainerMessageModalSend")).toBeEnabled();
-  await expectTapTargets(page, [
-    ".trainerMessageCoachHint button",
-    ".trainerMessageModalSend",
-    ".trainerMessageModalHead button"
-  ]);
+  await messageReplies.first().click();
+  const messageReplyDialog = page.getByRole("dialog", { name: "Ответ клиенту" });
+  await expect(messageReplyDialog).toBeVisible();
+  await expect(messageReplyDialog).toContainText("Комментарий клиента");
+  await expect(messageReplyDialog.getByRole("button", { name: "Отметить обработанным", exact: true })).toBeVisible();
   await expectNoHorizontalOverflow(page);
-  await attachScreenshot(page, testInfo, "trainer-message-modal.png");
-  await page.locator(".trainerMessageModalHead button").click();
-  await expect(page.locator(".trainerMessageModal")).toBeHidden();
+  await attachScreenshot(page, testInfo, "trainer-client-message-reply.png");
+  await messageReplyDialog.getByRole("button", { name: "Закрыть" }).click();
+  await expect(messageReplyDialog).toBeHidden();
 
   await openTrainerPrograms(page);
   await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
@@ -233,6 +280,24 @@ test("trainer visual audit covers dashboard, clients, messages and programs", as
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-program-editor.png");
+
+  await page.locator(".trainerNextPageTabs button").first().click();
+  await expect(page.getByRole("heading", { name: "Готовые программы" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Добавить программу" })).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "trainer-program-library-v2.png");
+
+  await page.getByRole("button", { name: "Добавить программу" }).click();
+  await expect(page.getByRole("dialog", { name: "Создать или загрузить?" })).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "trainer-program-create-sheet-v2.png");
+  await page.getByRole("button", { name: "Закрыть" }).click();
+
+  await page.getByRole("button", { name: /Редактировать/ }).click();
+  await expect(page.getByRole("textbox", { name: "Название программы" })).toHaveValue("tren+");
+  await expect(page.getByRole("heading", { name: "Дни программы" })).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "trainer-program-constructor-v2.png");
 
   assertNoRuntimeErrors();
 });

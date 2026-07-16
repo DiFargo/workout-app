@@ -1,4 +1,5 @@
 import { exerciseUsesExternalWeight } from "./auditSafety.js";
+import { buildExecutableWorkout } from "./universalWorkoutBlocks.js";
 
 export function makeThreeSets(sets = [], defaultReps = 8) {
   const cleanSets = Array.isArray(sets) ? sets : [];
@@ -85,7 +86,7 @@ export function buildClientWorkoutsFromTemplate(template = {}) {
   );
   const sourceWorkouts = structuredWorkouts.length ? structuredWorkouts : (template.workouts || []);
 
-  return sourceWorkouts.map((workoutItem, workoutIndex) => ({
+  return sourceWorkouts.map((workoutItem, workoutIndex) => buildExecutableWorkout({
     id: workoutItem.id || `assigned_workout_${workoutIndex + 1}_${Date.now()}`,
     name: workoutItem.name || `Тренировка ${workoutIndex + 1}`,
     blockId: workoutItem.blockId || "",
@@ -94,14 +95,17 @@ export function buildClientWorkoutsFromTemplate(template = {}) {
     weekName: workoutItem.weekName || "",
     order: Number(workoutItem.order || workoutItem.sortOrder || workoutIndex + 1),
     sortOrder: Number(workoutItem.sortOrder || workoutItem.order || workoutIndex + 1),
+    taskBlocks: workoutItem.taskBlocks || [],
     exercises: (workoutItem.exercises || []).map((exercise, exerciseIndex) => ({
+      ...exercise,
       id: exercise.id || `exercise_${workoutIndex + 1}_${exerciseIndex + 1}`,
       name: exercise.name || "Упражнение",
       video: exercise.video || exercise.videoUrl || exercise.videoURL || "",
       requiresWeight: exerciseUsesExternalWeight(exercise),
       sets: Array.isArray(exercise.sets) && exercise.sets.length
         ? exercise.sets.map((set) => ({
-            reps: Number(set.reps) || 8,
+            ...set,
+            reps: set.reps ?? 8,
             weight: String(set.weight ?? "")
           }))
         : [{ reps: exercise.name?.includes("Пресс") ? 15 : 8, weight: "" }]

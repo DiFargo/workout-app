@@ -66,6 +66,11 @@ export function buildPlannedWorkoutSlots({
   ].map(toWorkoutDateKey).filter(Boolean))].sort();
   const plannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
   const completionMaps = buildCompletionMaps(relevantHistory);
+  const workoutNameCounts = safeWorkouts.reduce((counts, workout, index) => {
+    const name = getWorkoutKey(workout?.name || `Тренировка ${index + 1}`);
+    if (name) counts.set(name, (counts.get(name) || 0) + 1);
+    return counts;
+  }, new Map());
   const lastPlannedDate = sortedDates[sortedDates.length - 1] || todayKey;
   let nextShiftDate = addDays(lastPlannedDate > todayKey ? lastPlannedDate : todayKey, 2);
 
@@ -83,8 +88,11 @@ export function buildPlannedWorkoutSlots({
       workout?.plannedDate ||
       sortedDates[index]
     );
+    const workoutNameKey = getWorkoutKey(workoutName);
     const completion = completionMaps.byId.get(getWorkoutKey(workoutId)) ||
-      completionMaps.byName.get(getWorkoutKey(workoutName));
+      (workoutNameCounts.get(workoutNameKey) === 1
+        ? completionMaps.byName.get(workoutNameKey)
+        : null);
     const manualStatus = String(workout?.status || planned?.status || "planned").trim().toLowerCase();
     const completedDate = completion?.completedDate ||
       (manualStatus === "completed" ? toWorkoutDateKey(plannedDate || workout?.completedAt || workout?.statusUpdatedAt) : "");

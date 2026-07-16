@@ -83,7 +83,7 @@ export function createTrainerMessagingHandlers({
     }
   }
 
-  async function sendTrainerClientMessage(text, client = adminSelectedClient) {
+  async function sendTrainerClientMessage(text, client = adminSelectedClient, replyContext = null) {
     const message = String(text || "").trim();
     if (!client?.id || !message) {
       setAdminClientStatus(STATUS_SELECT_CLIENT_AND_MESSAGE);
@@ -91,27 +91,83 @@ export function createTrainerMessagingHandlers({
     }
 
     const telegram = getClientTelegramProfile(client);
+    const hasReplyContext = Boolean(replyContext?.sourceCommentId);
+    const replyDocumentId = hasReplyContext
+      ? String(replyContext.replyId || `feedback_reply_${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g, "_")
+      : "";
+    const replyDocumentRef = replyDocumentId
+      ? doc(db, "users", client.id, "telegramMessages", replyDocumentId)
+      : null;
+    const sentAt = new Date().toISOString();
+    const linkedMessage = hasReplyContext ? {
+      type: "manual",
+      direction: "out",
+      text: message,
+      status: "sending",
+      sentAt,
+      sentByUid: auth.currentUser?.uid || "",
+      sentByEmail: auth.currentUser?.email || user?.email || "",
+      sourceCommentId: replyContext.sourceCommentId,
+      workoutId: replyContext.workoutId || "",
+      exerciseId: replyContext.exerciseId || "",
+      replyContext: {
+        ...replyContext,
+        clientId: client.id,
+        sourceStatus: "processed",
+        processedAt: sentAt
+      }
+    } : null;
+
+    if (replyDocumentRef && linkedMessage) {
+      try {
+        await setDoc(replyDocumentRef, linkedMessage, { merge: true });
+      } catch (error) {
+        console.error("Unable to create linked trainer reply:", error);
+        setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_INTERNAL_FAILED));
+        return false;
+      }
+    }
+
     if (telegram.connected && telegram.username) {
-      return sendAdminTelegramMessage(client, message);
+      const sent = await sendAdminTelegramMessage(client, message);
+      if (replyDocumentRef) {
+        await setDoc(replyDocumentRef, {
+          status: sent ? "sent" : "error",
+          channel: "telegram",
+          ...(sent ? { deliveredAt: new Date().toISOString() } : {})
+        }, { merge: true }).catch((error) => console.warn("Unable to update linked reply status:", error));
+      }
+      return sent;
     }
 
     setAdminClientStatus(STATUS_INTERNAL_SAVING);
 
     try {
-      await addDoc(collection(db, "users", client.id, "telegramMessages"), {
-        type: "manual",
-        direction: "out",
-        text: message,
-        status: "saved",
-        sentAt: new Date().toISOString(),
-        sentByUid: auth.currentUser?.uid || "",
-        sentByEmail: auth.currentUser?.email || user?.email || ""
-      });
+      if (replyDocumentRef) {
+        await setDoc(replyDocumentRef, {
+          status: "sent",
+          channel: "internal",
+          deliveredAt: new Date().toISOString()
+        }, { merge: true });
+      } else {
+        await addDoc(collection(db, "users", client.id, "telegramMessages"), {
+          type: "manual",
+          direction: "out",
+          text: message,
+          status: "saved",
+          sentAt: new Date().toISOString(),
+          sentByUid: auth.currentUser?.uid || "",
+          sentByEmail: auth.currentUser?.email || user?.email || ""
+        });
+      }
       setAdminClientStatus(STATUS_INTERNAL_SAVED);
       recordTrainerEvent(client.id, "message", "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u0435\u0435 \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435", message.slice(0, 160));
       return true;
     } catch (error) {
       console.error("Trainer message save failed:", error);
+      if (replyDocumentRef) {
+        await setDoc(replyDocumentRef, { status: "error" }, { merge: true }).catch(() => {});
+      }
       setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_INTERNAL_FAILED));
       return false;
     }

@@ -1,0 +1,93 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10020;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(35, 40, 68, 0.24);
+  backdrop-filter: blur(14px);
+}
+
+.sheet {
+  width: 100%;
+  max-width: 520px;
+  padding: 10px 14px calc(16px + env(safe-area-inset-bottom));
+  border: 1px solid #dfe3ef;
+  border-radius: 18px 18px 12px 12px;
+  background: #ffffff;
+  color: #151824;
+  box-shadow: 0 24px 64px rgba(43, 50, 92, 0.2);
+}
+
+.handle {
+  width: 38px;
+  height: 4px;
+  margin: 0 auto 12px;
+  border-radius: 999px;
+  background: #d8dce8;
+}
+
+.sheet h2 {
+  margin: 0 0 12px;
+  color: #151824;
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.targetList {
+  display: grid;
+  gap: 10px;
+  max-height: min(56vh, 420px);
+  overflow-y: auto;
+}
+
+.targetMonth {
+  padding: 9px;
+  display: grid;
+  gap: 6px;
+  border: 1px solid #e1e4ef;
+  border-radius: 12px;
+  background: #f7f8fc;
+}
+
+.targetMonth h3 {
+  margin: 0 0 2px;
+  color: #5a49df;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.targetMonth button,
+.actions button {
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid #e1e4ef;
+  border-radius: 10px;
+  background: #f7f8fc;
+  color: #596176;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.targetMonth button {
+  text-align: left;
+}
+
+.actions {
+  margin-top: 13px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (min-width: 761px) {
+  .backdrop {
+    align-items: center;
+  }
+
+  .sheet {
+    border-radius: 18px;
+  }
+}

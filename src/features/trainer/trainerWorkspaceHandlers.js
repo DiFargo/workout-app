@@ -1,6 +1,8 @@
 export function createTrainerWorkspaceHandlers({
   updateTrainerNextWorkout,
   updateTrainerNextExercise,
+  saveTrainerExerciseProgressAdjustment,
+  updateTrainerLibraryExercise,
   updateTrainerNextExerciseSet,
   addTrainerNextExerciseSet,
   removeTrainerNextExerciseSet,
@@ -28,6 +30,18 @@ export function createTrainerWorkspaceHandlers({
         return;
       }
       setAdminClientStatus("Не удалось сохранить изменение упражнения.");
+    },
+    onSaveExerciseProgressAdjustment: async (...args) => {
+      if (typeof saveTrainerExerciseProgressAdjustment === "function") {
+        return saveTrainerExerciseProgressAdjustment(...args);
+      }
+      setAdminClientStatus("Не удалось сохранить изменение нагрузки.");
+      return false;
+    },
+    onUpdateLibraryExercise: (...args) => {
+      if (typeof updateTrainerLibraryExercise === "function") {
+        updateTrainerLibraryExercise(...args);
+      }
     },
     onUpdateExerciseSet: (...args) => {
       if (typeof updateTrainerNextExerciseSet === "function") {
