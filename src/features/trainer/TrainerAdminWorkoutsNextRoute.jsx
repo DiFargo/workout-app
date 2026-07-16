@@ -47,6 +47,7 @@ export default function TrainerAdminWorkoutsNextRoute({
       programStatus={adminClientStatus}
       onUpdateWorkout={trainerNextWorkspaceHandlers.onUpdateWorkout}
       onUpdateExercise={trainerNextWorkspaceHandlers.onUpdateExercise}
+      onUpdateLibraryExercise={trainerNextWorkspaceHandlers.onUpdateLibraryExercise}
       onUpdateExerciseSet={trainerNextWorkspaceHandlers.onUpdateExerciseSet}
       onAddExerciseSet={trainerNextWorkspaceHandlers.onAddExerciseSet}
       onRemoveExerciseSet={trainerNextWorkspaceHandlers.onRemoveExerciseSet}

@@ -1,10 +1,12 @@
 import { onRequest, onCall, HttpsError } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onDocumentCreated, onDocumentDeleted } from "firebase-functions/v2/firestore";
 import { defineSecret } from "firebase-functions/params";
 import admin from "firebase-admin";
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
 import { getDueProgressReminderTypes, getDueReminderOffsets, getMinskDateKey, getNextScheduledWorkout } from "./reminderSchedule.js";
+import { buildSubscriptionReminderLine, getDueSubscriptionNotifications, resolveSubscriptionNotificationSettings } from "./subscriptionReminders.js";
 
 admin.initializeApp();
 
@@ -204,7 +206,7 @@ function isValidLoginAlias(value) {
   return /^[a-z0-9._-]{3,32}$/.test(String(value || ""));
 }
 
-async function sendTelegramMessage({ chatId, telegramUserId, username, text, token }) {
+async function sendTelegramMessage({ chatId, telegramUserId, username, text, token, replyMarkup = null }) {
   const targetChatId = normalizeTelegramTarget({ chatId, telegramUserId, username });
 
   if (!targetChatId) {
@@ -217,7 +219,8 @@ async function sendTelegramMessage({ chatId, telegramUserId, username, text, tok
     body: JSON.stringify({
       chat_id: targetChatId,
       text,
-      disable_web_page_preview: true
+      disable_web_page_preview: true,
+      ...(replyMarkup ? { reply_markup: replyMarkup } : {})
     })
   });
 
@@ -1016,6 +1019,196 @@ export const telegramDailyWorkoutReminders = onSchedule(
 
     await Promise.allSettled(jobs);
   }
+);
+
+function getTrainerLocalTime(now, timeZone = "Europe/Minsk") {
+  try {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).formatToParts(now);
+    return `${parts.find((part) => part.type === "hour")?.value || "00"}:${parts.find((part) => part.type === "minute")?.value || "00"}`;
+  } catch {
+    return "10:00";
+  }
+}
+
+function isSubscriptionNotificationTime(settings = {}, trainer = {}, now = new Date()) {
+  const target = String(settings.sendTime || "10:00");
+  const [targetHour, targetMinute] = target.split(":").map(Number);
+  const [hour, minute] = getTrainerLocalTime(now, settings.timeZone || trainer.timeZone || "Europe/Minsk").split(":").map(Number);
+  return hour === targetHour && Math.floor(minute / 15) === Math.floor((targetMinute || 0) / 15);
+}
+
+function buildSubscriptionTelegramMessage(client, reminder) {
+  const subscription = client.subscription || {};
+  const title = reminder.kind === "expired" ? "⛔ Абонемент клиента закончился" : "⚠️ У клиента заканчивается абонемент";
+  const lastWorkout = client.lastWorkoutAt || client.lastWorkoutDate || "не указана";
+  return [
+    title,
+    "",
+    `Клиент: ${client.name || client.displayName || client.email || "Клиент"}`,
+    `Абонемент: ${subscription.purchasedSessions || subscription.totalSessions || 0} тренировок`,
+    `Осталось: ${reminder.remainingSessions || 0} тренировок`,
+    `Действует до: ${subscription.endDate || "не указано"}`,
+    `Последняя тренировка: ${getResourceDateKey(lastWorkout) || "не указана"}`
+  ].join("\n");
+}
+
+export const telegramDailySubscriptionReminders = onSchedule(
+  {
+    schedule: "every 15 minutes",
+    timeZone: "Europe/Minsk",
+    region: "europe-west1",
+    secrets: [TELEGRAM_BOT_TOKEN]
+  },
+  async () => {
+    const now = new Date();
+    const usersSnapshot = await admin.firestore().collection("users").get();
+    const groupedByTrainer = new Map();
+
+    usersSnapshot.docs.forEach((clientDoc) => {
+      const client = { id: clientDoc.id, ...(clientDoc.data() || {}) };
+      const trainerId = client.assignedTrainerId || client.trainerId || client.coachId || "";
+      if (!trainerId || !client.subscription) return;
+      const group = groupedByTrainer.get(trainerId) || [];
+      group.push(client);
+      groupedByTrainer.set(trainerId, group);
+    });
+
+    await Promise.allSettled([...groupedByTrainer.entries()].map(async ([trainerId, clients]) => {
+      const trainerRef = admin.firestore().collection("users").doc(trainerId);
+      const trainerSnap = await trainerRef.get();
+      if (!trainerSnap.exists) return;
+      const trainer = trainerSnap.data() || {};
+      const telegram = trainer.telegram || {};
+      const chatId = telegram.chatId || trainer.telegramChatId || "";
+      const telegramUserId = telegram.telegramUserId || trainer.telegramUserId || "";
+      const username = telegram.username || trainer.telegramUsername || "";
+      if (!normalizeTelegramTarget({ chatId, telegramUserId, username })) return;
+
+      const entries = clients.flatMap((client) => {
+        const settings = resolveSubscriptionNotificationSettings(trainer, client);
+        return getDueSubscriptionNotifications(client.subscription, settings, now)
+          .map((reminder) => ({ client, reminder, settings }));
+      });
+      if (!entries.length) return;
+
+      const dueEntries = [];
+      for (const entry of entries) {
+        if (!isSubscriptionNotificationTime(entry.settings, trainer, now)) continue;
+        const logId = `${entry.client.id}_${entry.reminder.key}`;
+        const logRef = trainerRef.collection("subscriptionReminderLog").doc(logId);
+        if (!(await logRef.get()).exists) dueEntries.push({ ...entry, logId, logRef });
+      }
+      if (!dueEntries.length) return;
+
+      const digestEntries = dueEntries.filter((entry) => entry.settings.digestMode !== "separate");
+      const separateEntries = dueEntries.filter((entry) => entry.settings.digestMode === "separate");
+      const token = TELEGRAM_BOT_TOKEN.value();
+
+      if (digestEntries.length) {
+        const digestByClient = new Map();
+        const reminderPriority = { expired: 3, sessions: 2, date: 1 };
+        digestEntries.forEach((entry) => {
+          const current = digestByClient.get(entry.client.id);
+          if (!current || reminderPriority[entry.reminder.kind] > reminderPriority[current.reminder.kind]) {
+            digestByClient.set(entry.client.id, entry);
+          }
+        });
+        const text = ["📋 Абонементы, требующие внимания", "", ...[...digestByClient.values()].map(({ client, reminder }) => buildSubscriptionReminderLine(client, reminder))].join("\n");
+        await sendTelegramMessage({ chatId, telegramUserId, username, text, token });
+        await Promise.all(digestEntries.map(({ logRef, client, reminder }) => logRef.set({
+          clientId: client.id,
+          subscriptionCycleId: client.subscription?.cycleId || "legacy",
+          reminderKey: reminder.key,
+          kind: reminder.kind,
+          status: "sent",
+          sentAt: admin.firestore.FieldValue.serverTimestamp()
+        })));
+      }
+
+      for (const { client, reminder, logRef } of separateEntries) {
+        const clientUrl = `https://tren-85720.web.app/?trainerClient=${encodeURIComponent(client.id)}`;
+        await sendTelegramMessage({
+          chatId,
+          telegramUserId,
+          username,
+          text: buildSubscriptionTelegramMessage(client, reminder),
+          token,
+          replyMarkup: {
+            inline_keyboard: [
+              [{ text: "Открыть клиента", url: clientUrl }],
+              [{ text: "Продлить абонемент", url: `${clientUrl}&subscription=renew` }],
+              [{ text: "Написать клиенту", url: `${clientUrl}&compose=1` }]
+            ]
+          }
+        });
+        await logRef.set({
+          clientId: client.id,
+          subscriptionCycleId: client.subscription?.cycleId || "legacy",
+          reminderKey: reminder.key,
+          kind: reminder.kind,
+          status: "sent",
+          sentAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    }));
+  }
+);
+
+async function adjustSubscriptionUsageForHistoryEvent(event, delta) {
+  const uid = event.params.uid;
+  const historyRef = event.data?.ref;
+  const history = event.data?.data() || {};
+  const userRef = admin.firestore().collection("users").doc(uid);
+
+  await admin.firestore().runTransaction(async (transaction) => {
+    const userSnap = await transaction.get(userRef);
+    if (!userSnap.exists) return;
+    const user = userSnap.data() || {};
+    const subscription = user.subscription || null;
+    if (!subscription) return;
+    const cycleId = String(subscription.cycleId || subscription.lastRenewedAt || subscription.startDate || "legacy");
+
+    if (delta > 0) {
+      const workoutDate = getResourceDateKey(history.date || history.finishedAt || history.createdAt);
+      const startDate = getResourceDateKey(subscription.startDate);
+      if (startDate && workoutDate && workoutDate < startDate) return;
+      if (history.subscriptionCycleId === cycleId) return;
+    } else if (history.subscriptionCycleId !== cycleId) {
+      return;
+    }
+
+    const purchasedSessions = Math.max(0, Number(subscription.purchasedSessions || subscription.totalSessions) || 0);
+    const currentUsed = Math.max(0, Number(subscription.usedSessions) || 0);
+    const usedSessions = Math.max(0, currentUsed + delta);
+    transaction.set(userRef, {
+      subscription: {
+        ...subscription,
+        cycleId,
+        purchasedSessions,
+        usedSessions,
+        remainingSessions: Math.max(0, purchasedSessions - usedSessions),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }
+    }, { merge: true });
+    if (delta > 0 && historyRef) {
+      transaction.set(historyRef, { subscriptionCycleId: cycleId }, { merge: true });
+    }
+  });
+}
+
+export const subscriptionUsageOnWorkoutCreated = onDocumentCreated(
+  { document: "users/{uid}/history/{historyId}", region: "europe-west1" },
+  async (event) => adjustSubscriptionUsageForHistoryEvent(event, 1)
+);
+
+export const subscriptionUsageOnWorkoutDeleted = onDocumentDeleted(
+  { document: "users/{uid}/history/{historyId}", region: "europe-west1" },
+  async (event) => adjustSubscriptionUsageForHistoryEvent(event, -1)
 );
 
 export const telegramSetWebhook = onRequest(

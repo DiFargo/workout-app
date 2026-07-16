@@ -2,6 +2,7 @@ import {
   exerciseUsesExternalWeight,
   findExerciseLibraryMatch
 } from "../../utils/auditSafety";
+import { appendExerciseSets } from "./trainerExerciseSetUtils";
 
 export function createTrainerMonthExerciseHandlers({
   adminExerciseEditSnapshotRef,
@@ -137,7 +138,7 @@ export function createTrainerMonthExerciseHandlers({
     });
   }
 
-  function addMonthExerciseSet(blockId, weekId, workoutId, exerciseId) {
+  function addMonthExerciseSet(blockId, weekId, workoutId, exerciseId, options = {}) {
     const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
     updateMonthWorkout(blockId, weekId, workoutId, {
       exercises: (sourceWorkout?.exercises || []).map((exercise) => {
@@ -145,10 +146,15 @@ export function createTrainerMonthExerciseHandlers({
 
         return {
           ...exercise,
-          sets: [
-            ...(Array.isArray(exercise.sets) && exercise.sets.length ? exercise.sets : [{ reps: 8, weight: "" }]),
-            { reps: 8, weight: "" }
-          ]
+          sets: appendExerciseSets(exercise.sets, {
+            ...options,
+            defaults: {
+              rest: exercise.rest ?? "",
+              tempo: exercise.tempo ?? "",
+              rpe: exercise.rpe ?? "",
+              rir: exercise.rir ?? ""
+            }
+          })
         };
       })
     });

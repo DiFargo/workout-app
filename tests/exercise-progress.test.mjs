@@ -67,3 +67,59 @@ test("additional completed set increases total training volume", () => {
   assert.equal(result.previous.volume, 400);
   assert.equal(result.current.volume, 600);
 });
+
+test("volume and percentage use the same actual completed working sets", () => {
+  const result = analyzeExerciseProgress([
+    workout("2026-06-12", 20, 12, "8-12", "program-a", 3),
+    workout("2026-06-27", 18, 15, "8-12", "program-a", 3)
+  ])[0];
+
+  assert.equal(result.previous.volume, 720);
+  assert.equal(result.current.volume, 810);
+  assert.equal(result.changes.volume, 90);
+  assert.equal(result.changes.volumePct, 12.5);
+  assert.equal(result.changes.reps, 9);
+  assert.equal(result.status, "mixed");
+});
+
+test("actual entered values win over the trainer plan", () => {
+  const first = workout("2026-06-01", 20, 10);
+  const second = workout("2026-06-08", 20, 10);
+  second.exercises[0].sets[0] = {
+    weight: 20,
+    reps: 10,
+    enteredWeight: 18,
+    enteredReps: 15,
+    completed: true
+  };
+
+  const result = analyzeExerciseProgress([first, second])[0];
+  assert.equal(result.current.bestWeight, 18);
+  assert.equal(result.current.totalReps, 15);
+  assert.equal(result.current.volume, 270);
+});
+
+test("warmup and incomplete sets are excluded from progress volume", () => {
+  const first = workout("2026-06-01", 20, 10);
+  const second = workout("2026-06-08", 20, 10);
+  second.exercises[0].sets.push(
+    { weight: 50, reps: 10, completed: true, setType: "warmup" },
+    { weight: 50, reps: 10, completed: false, setType: "work" }
+  );
+
+  const result = analyzeExerciseProgress([first, second])[0];
+  assert.equal(result.current.volume, 200);
+  assert.equal(result.current.sets, 1);
+});
+
+test("per hand weight convention applies one multiplier consistently", () => {
+  const first = workout("2026-06-01", 20, 10);
+  const second = workout("2026-06-08", 20, 12);
+  first.exercises[0].weightMode = "per_hand";
+  second.exercises[0].weightMode = "per_hand";
+
+  const result = analyzeExerciseProgress([first, second])[0];
+  assert.equal(result.previous.volume, 400);
+  assert.equal(result.current.volume, 480);
+  assert.equal(result.current.weightConvention, "per_hand");
+});

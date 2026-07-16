@@ -160,6 +160,7 @@ export async function handleTrainerClientActionWithDeps({
   setAdminClientProgressPhotos,
   setAdminClientNutrition,
   action,
+  payload,
   client = adminSelectedClient
 }) {
   if (!client?.id) {
@@ -173,6 +174,119 @@ export async function handleTrainerClientActionWithDeps({
   }
 
   try {
+    if (action === "resolve_client_messages") {
+      const rawSourceCommentIds = Array.isArray(payload?.sourceCommentIds)
+        ? payload.sourceCommentIds
+        : [payload?.sourceCommentId];
+      const sourceCommentIds = [...new Set(
+        rawSourceCommentIds
+          .map((sourceCommentId) => String(sourceCommentId || "").trim())
+          .filter(Boolean)
+      )];
+
+      if (!sourceCommentIds.length) {
+        setAdminClientStatus("Не удалось определить сообщения для обработки.");
+        return false;
+      }
+
+      const event = await recordTrainerEvent(
+        client.id,
+        "client_message_resolution",
+        sourceCommentIds.length === 1
+          ? "Сообщение обработано без ответа"
+          : `Сообщения обработаны без ответа: ${sourceCommentIds.length}`,
+        JSON.stringify({
+          sourceCommentIds,
+          decision: "handled_without_reply"
+        })
+      );
+
+      if (!event) {
+        setAdminClientStatus("Не удалось отметить сообщения обработанными.");
+        return false;
+      }
+
+      setAdminClientStatus(
+        sourceCommentIds.length === 1
+          ? "Сообщение отмечено обработанным."
+          : `Сообщения отмечены обработанными: ${sourceCommentIds.length}.`
+      );
+      return event;
+    }
+
+    if (action === "resolve_exercise_progress") {
+      const reviewKey = String(payload?.reviewKey || "").trim();
+      const exerciseName = String(payload?.exerciseName || "").trim();
+      const decision = payload?.decision === "adjusted" ? "adjusted" : "accepted";
+      if (!reviewKey || !exerciseName) {
+        setAdminClientStatus("Не удалось определить сигнал прогресса.");
+        return false;
+      }
+
+      const details = JSON.stringify({
+        reviewKey,
+        decision,
+        exerciseName,
+        previousDate: payload?.previousDate || "",
+        currentDate: payload?.currentDate || "",
+        workoutId: payload?.workoutId || "",
+        exerciseId: payload?.exerciseId || ""
+      });
+      const event = await recordTrainerEvent(
+        client.id,
+        "exercise_progress_review",
+        decision === "adjusted"
+          ? `Нагрузка скорректирована: ${exerciseName}`
+          : `Нагрузка проверена: ${exerciseName}`,
+        details
+      );
+      if (!event) {
+        setAdminClientStatus("Не удалось сохранить решение по нагрузке.");
+        return false;
+      }
+      setAdminClientStatus(decision === "adjusted"
+        ? "Нагрузка скорректирована, сигнал закрыт."
+        : "Нагрузка подтверждена, сигнал закрыт.");
+      return event;
+    }
+
+    if (action === "resolve_workout_review") {
+      const reviewKey = String(payload?.reviewKey || "").trim();
+      const workoutName = String(payload?.workoutName || "").trim();
+      const decision = payload?.decision === "adjusted" ? "adjusted" : "accepted";
+      if (!reviewKey || !workoutName) {
+        setAdminClientStatus("Не удалось определить разбор тренировки.");
+        return false;
+      }
+
+      const details = JSON.stringify({
+        reviewKey,
+        decision,
+        workoutName,
+        historyId: payload?.historyId || "",
+        sourceWorkoutId: payload?.sourceWorkoutId || "",
+        plannedWorkoutId: payload?.plannedWorkoutId || "",
+        targetWorkoutId: payload?.targetWorkoutId || "",
+        workoutDate: payload?.workoutDate || ""
+      });
+      const event = await recordTrainerEvent(
+        client.id,
+        "workout_review",
+        decision === "adjusted"
+          ? `Следующая тренировка скорректирована после: ${workoutName}`
+          : `Разбор тренировки подтверждён: ${workoutName}`,
+        details
+      );
+      if (!event) {
+        setAdminClientStatus("Не удалось сохранить решение по тренировке.");
+        return false;
+      }
+      setAdminClientStatus(decision === "adjusted"
+        ? "Корректировка сохранена, сигнал закрыт."
+        : "Корректировка не требуется, сигнал закрыт.");
+      return event;
+    }
+
     if (action === "archive" || action === "restore") {
       const archived = action === "archive";
       const patch = {

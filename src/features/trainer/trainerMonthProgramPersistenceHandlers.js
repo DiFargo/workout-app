@@ -217,6 +217,24 @@ export function createTrainerMonthProgramPersistenceHandlers({
         createdAt: new Date(importStamp).toISOString()
       });
 
+      const importedWorkouts = (nextProgram.blocks || []).flatMap((block) =>
+        (block.weeks || []).flatMap((week) => week.workouts || [])
+      );
+      const importedExercises = importedWorkouts.flatMap((workout) => workout.exercises || []);
+      const importedTaskBlocks = importedWorkouts.flatMap((workout) => workout.taskBlocks || []);
+      const groupCount = importedTaskBlocks.filter((block) => block.type === "group").length;
+      const intervalCount = importedTaskBlocks.filter((block) => block.type === "interval").length;
+      const importApproved = typeof window === "undefined" || window.confirm([
+        "Предварительный просмотр импорта",
+        `Тренировочных дней: ${importedWorkouts.length}`,
+        `Упражнений: ${importedExercises.length}`,
+        `Групп упражнений: ${groupCount}`,
+        `Интервальных блоков: ${intervalCount}`,
+        "",
+        "Импортировать программу?"
+      ].join("\n"));
+      if (!importApproved) return;
+
       setAdminProgramEditorMode("create");
       setAdminProgramLibraryTab("editor");
       setAdminOpenWorkoutId("");
