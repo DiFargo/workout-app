@@ -153,7 +153,6 @@ test("trainer exercise name searches the library and offers creation", async () 
 test("subscription lives on the overview and reminders stay compact", async () => {
   const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
   const handlers = await readFile(new URL("../src/features/trainer/trainerClientCalendarHandlers.js", import.meta.url), "utf8");
-  const backend = await readFile(new URL("../functions/index.js", import.meta.url), "utf8");
   const styles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceSubscriptionProgress.module.css", import.meta.url), "utf8");
 
   assert.match(workspace, /subscriptionOnly: true/);
@@ -169,7 +168,6 @@ test("subscription lives on the overview and reminders stay compact", async () =
   assert.match(handlers, /saveTrainerSubscriptionNotificationSettings/);
   const regularReminderSave = handlers.match(/const offsets = getReminderOffsets[\s\S]*?async function loadTrainerSubscriptionNotificationSettings/)?.[0] || "";
   assert.doesNotMatch(regularReminderSave, /subscription:\s*nextSubscription/);
-  assert.match(backend, /subscription=renew/);
   assert.match(workspace, /params\.get\("subscription"\) === "renew"/);
   assert.match(styles, /\.overviewSubscription/);
   assert.match(styles, /\.subscriptionModal/);

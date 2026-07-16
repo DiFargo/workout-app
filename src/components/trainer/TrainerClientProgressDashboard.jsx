@@ -188,7 +188,11 @@ export default function TrainerClientProgressDashboard({
   ];
 
   return (
-    <section className={styles.dashboard} aria-labelledby="trainer-client-progress-dashboard-title">
+    <section
+      className={styles.dashboard}
+      aria-labelledby="trainer-client-progress-dashboard-title"
+      data-testid="trainer-client-progress-dashboard"
+    >
       <header className={styles.dashboardHeader}>
         <div>
           <h2 id="trainer-client-progress-dashboard-title">Динамика прогресса</h2>

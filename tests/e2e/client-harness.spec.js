@@ -200,9 +200,9 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   assertNoRuntimeErrors();
 
   await page.locator("[data-nutrition-header-action]").first().click();
-  await expect(page.locator(".fatFoodSearchScreenPremium")).toBeVisible();
+  await expect(page.getByTestId("food-search-screen")).toBeVisible();
   await page.locator('[data-food-search-header-action="close"]').click();
-  await expect(page.locator(".fatFoodSearchScreenPremium")).toBeHidden();
+  await expect(page.getByTestId("food-search-screen")).toBeHidden();
 
   await page.locator("[data-nutrition-header-action]").nth(1).click();
   await expect(page.getByTestId("nutrition-calendar-modal")).toBeVisible();
