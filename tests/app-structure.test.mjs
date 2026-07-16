@@ -309,6 +309,13 @@ test("client primary navigation has one production owner", async () => {
   assert.match(appShell, /\{primaryNavigation\}/);
 });
 
+test("nutrition keeps primary navigation visible until an overlay opens", async () => {
+  const appCore = await readText("src/AppCore.jsx");
+
+  assert.match(appCore, /nutritionPickerOpen \|\| nutritionCalendarOpen \|\| nutritionMealMenuOpen/);
+  assert.doesNotMatch(appCore, /nutritionPickerOpen \|\| nutritionCalendarOpen \|\| nutritionMeal\s/);
+});
+
 test("trainer navigation has one renderer shared by every trainer shell", async () => {
   const sourceFiles = await collectFiles("src", [".js", ".jsx"]);
   const renderers = [];

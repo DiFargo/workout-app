@@ -2405,7 +2405,7 @@ function AppRuntime() {
     || workoutReadinessOpen
     || postWorkoutFeedbackOpen
     || (effectivePage === APP_PAGES.NUTRITION && (
-      nutritionPickerOpen || nutritionCalendarOpen || nutritionMeal
+      nutritionPickerOpen || nutritionCalendarOpen || nutritionMealMenuOpen
     ))
   );
   const primaryNavigation = clientPrimaryTab
