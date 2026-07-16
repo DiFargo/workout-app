@@ -1,0 +1,55 @@
+.root,
+.root * {
+  box-sizing: border-box;
+}
+
+.root {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  min-height: 920px;
+  margin: 0;
+  padding: 55px 15px calc(112px + env(safe-area-inset-bottom, 0px));
+  display: block;
+  flex-direction: column;
+  gap: 0;
+  overflow: visible;
+  background: var(--gradient-food-product-page);
+  color: var(--color-food-product-page-text);
+  font-family: inherit;
+  scrollbar-width: none;
+  scrollbar-color: var(--scrollbar-food-product-page);
+  -webkit-text-fill-color: var(--color-food-product-page-text);
+}
+
+:global(:root[data-app-theme="warm-light"]) .root {
+  scrollbar-color: var(--scrollbar-food-product-page);
+}
+
+.root::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .root {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+:global(:root[data-app-theme="dark-green"]) .root {
+  width: min(560px, 100%);
+  max-width: 420px;
+  min-height: auto;
+  margin: 0 auto;
+  padding: max(20px, calc(env(safe-area-inset-top) + 16px)) 16px calc(112px + env(safe-area-inset-bottom));
+  display: grid;
+  gap: 12px;
+  overflow: visible;
+  background: transparent;
+  color: var(--color-food-product-page-text);
+  scrollbar-width: auto;
+  scrollbar-color: var(--scrollbar-food-product-page);
+  -webkit-text-fill-color: var(--color-food-product-page-text);
+}

@@ -1,0 +1,465 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Check, Pencil } from "lucide-react";
+import styles from "./WorkoutExerciseSets.module.css";
+
+const WHEEL_ITEM_HEIGHT = 42;
+const REPS_SLIDER_MIN = 1;
+const REPS_SLIDER_STEP = 1;
+const REPS_SLIDER_FLOOR_MAX = 30;
+const REPS_SLIDER_PADDING = 10;
+const WEIGHT_SLIDER_MIN = 0;
+const WEIGHT_SLIDER_STEP = 0.5;
+const WEIGHT_SLIDER_FLOOR_MAX = 120;
+const WEIGHT_SLIDER_PADDING = 40;
+
+function getPlannedValue(actualValue, plannedValue) {
+  if (actualValue !== undefined && actualValue !== null && String(actualValue).trim() !== "") {
+    return String(actualValue);
+  }
+
+  if (plannedValue !== undefined && plannedValue !== null && String(plannedValue).trim() !== "") {
+    return String(plannedValue);
+  }
+
+  return "";
+}
+
+function parseNumericValue(value, fallbackValue) {
+  const parsedValue = Number.parseFloat(String(value ?? "").replace(",", "."));
+  return Number.isFinite(parsedValue) ? parsedValue : fallbackValue;
+}
+
+function clampNumericValue(value, minValue, maxValue) {
+  return Math.min(maxValue, Math.max(minValue, value));
+}
+
+function formatWeightValue(value) {
+  const roundedValue = Math.round(value * 2) / 2;
+  return Number.isInteger(roundedValue) ? String(roundedValue) : roundedValue.toFixed(1);
+}
+
+function buildSetSliderState(value, plannedValue, config) {
+  const fallbackValue = parseNumericValue(plannedValue, config.defaultValue);
+  const currentValue = parseNumericValue(value, fallbackValue);
+  const maxValue = Math.max(
+    config.floorMax,
+    Math.ceil((currentValue + config.padding) / config.step) * config.step
+  );
+  const clampedValue = clampNumericValue(currentValue, config.min, maxValue);
+
+  return {
+    min: config.min,
+    max: maxValue,
+    step: config.step,
+    value: clampedValue
+  };
+}
+
+function getRepsSliderState(value, plannedValue) {
+  return buildSetSliderState(value, plannedValue, {
+    min: REPS_SLIDER_MIN,
+    step: REPS_SLIDER_STEP,
+    floorMax: REPS_SLIDER_FLOOR_MAX,
+    padding: REPS_SLIDER_PADDING,
+    defaultValue: 10
+  });
+}
+
+function getWeightSliderState(value, plannedValue) {
+  return buildSetSliderState(value, plannedValue, {
+    min: WEIGHT_SLIDER_MIN,
+    step: WEIGHT_SLIDER_STEP,
+    floorMax: WEIGHT_SLIDER_FLOOR_MAX,
+    padding: WEIGHT_SLIDER_PADDING,
+    defaultValue: 0
+  });
+}
+
+function buildWheelOptions({ min, max, step }, formatter = String) {
+  const optionCount = Math.round((max - min) / step);
+
+  return Array.from({ length: optionCount + 1 }, (_, index) => {
+    const value = Math.round((min + index * step) * 10) / 10;
+    return {
+      value,
+      label: formatter(value)
+    };
+  });
+}
+
+function isSameWheelValue(leftValue, rightValue) {
+  return Math.abs(Number(leftValue) - Number(rightValue)) < 0.001;
+}
+
+function scrollWheelToValue(element, options, value, behavior = "auto") {
+  if (!element) {
+    return;
+  }
+
+  const selectedIndex = options.findIndex((option) => isSameWheelValue(option.value, value));
+  if (selectedIndex < 0) {
+    return;
+  }
+
+  element.scrollTo({
+    top: selectedIndex * WHEEL_ITEM_HEIGHT,
+    behavior
+  });
+}
+
+function getWheelValueFromScroll(scrollTop, options) {
+  const index = clampNumericValue(Math.round(scrollTop / WHEEL_ITEM_HEIGHT), 0, options.length - 1);
+  return options[index]?.value;
+}
+
+export default function WorkoutExerciseSets({
+  exercise,
+  hasExternalWeight,
+  onToggleSetCompleted,
+  onUpdateSet,
+  sharedExerciseAiWeightAdjustment
+}) {
+  const [editingSetDraft, setEditingSetDraft] = useState(null);
+  const repsWheelRef = useRef(null);
+  const weightWheelRef = useRef(null);
+  const wheelScrollFrameRef = useRef({ reps: null, weight: null });
+  const wheelSnapTimeoutRef = useRef({ reps: null, weight: null });
+  const initializedWheelKeyRef = useRef("");
+  const editingSetIndex = editingSetDraft?.index ?? null;
+  const editingSet = editingSetIndex !== null ? exercise.sets[editingSetIndex] : null;
+  const editingSetKey = editingSetIndex !== null ? `${exercise.id}:${editingSetIndex}` : "";
+  const repsSliderState = useMemo(
+    () => (editingSetDraft ? getRepsSliderState(editingSetDraft.reps, editingSet?.reps) : null),
+    [editingSetDraft, editingSet?.reps]
+  );
+  const weightSliderState = useMemo(
+    () => (editingSetDraft ? getWeightSliderState(editingSetDraft.weight, editingSet?.weight) : null),
+    [editingSetDraft, editingSet?.weight]
+  );
+  const repsWheelOptions = useMemo(
+    () => (repsSliderState ? buildWheelOptions(repsSliderState, (value) => String(Math.round(value))) : []),
+    [repsSliderState]
+  );
+  const weightWheelOptions = useMemo(
+    () => (weightSliderState ? buildWheelOptions(weightSliderState, formatWeightValue) : []),
+    [weightSliderState]
+  );
+
+  const clearWheelSettleWork = useCallback(() => {
+    Object.values(wheelScrollFrameRef.current).forEach((frameId) => {
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+    });
+
+    Object.values(wheelSnapTimeoutRef.current).forEach((timeoutId) => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    });
+
+    wheelScrollFrameRef.current = { reps: null, weight: null };
+    wheelSnapTimeoutRef.current = { reps: null, weight: null };
+  }, []);
+
+  useEffect(() => {
+    if (!editingSetKey || !repsSliderState || initializedWheelKeyRef.current === editingSetKey) {
+      return;
+    }
+
+    initializedWheelKeyRef.current = editingSetKey;
+    window.requestAnimationFrame(() => {
+      scrollWheelToValue(repsWheelRef.current, repsWheelOptions, repsSliderState.value);
+      if (weightSliderState) {
+        scrollWheelToValue(weightWheelRef.current, weightWheelOptions, weightSliderState.value);
+      }
+    });
+  }, [editingSetKey, repsSliderState, repsWheelOptions, weightSliderState, weightWheelOptions]);
+
+  useEffect(() => () => {
+    clearWheelSettleWork();
+  }, [clearWheelSettleWork]);
+
+  function closeEditModal() {
+    clearWheelSettleWork();
+    initializedWheelKeyRef.current = "";
+    setEditingSetDraft(null);
+  }
+
+  function saveEditModal() {
+    if (!editingSetDraft) {
+      return;
+    }
+
+    onUpdateSet(exercise.id, editingSetDraft.index, "enteredReps", editingSetDraft.reps.replace(/[^0-9]/g, ""));
+
+    if (hasExternalWeight) {
+      onUpdateSet(
+        exercise.id,
+        editingSetDraft.index,
+        "enteredWeight",
+        editingSetDraft.weight
+          .replace(/[^0-9.,]/g, "")
+          .replace(",", ".")
+      );
+    }
+
+    closeEditModal();
+  }
+
+  function handleSetRowKeyDown(event, index) {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    event.preventDefault();
+    onToggleSetCompleted(exercise.id, index);
+  }
+
+  function setRepsFromWheel(value) {
+    setEditingSetDraft((draft) => (draft ? { ...draft, reps: String(Math.round(Number(value))) } : draft));
+  }
+
+  function setWeightFromWheel(value) {
+    setEditingSetDraft((draft) => (draft ? { ...draft, weight: formatWeightValue(Number(value)) } : draft));
+  }
+
+  function handleWheelScroll(event, options, field) {
+    const element = event.currentTarget;
+    const nextValue = getWheelValueFromScroll(element.scrollTop, options);
+
+    if (nextValue === undefined) {
+      return;
+    }
+
+    if (wheelScrollFrameRef.current[field] !== null) {
+      window.cancelAnimationFrame(wheelScrollFrameRef.current[field]);
+    }
+
+    wheelScrollFrameRef.current[field] = window.requestAnimationFrame(() => {
+      if (field === "reps") {
+        setRepsFromWheel(nextValue);
+      } else {
+        setWeightFromWheel(nextValue);
+      }
+
+      wheelScrollFrameRef.current[field] = null;
+    });
+
+    if (wheelSnapTimeoutRef.current[field] !== null) {
+      window.clearTimeout(wheelSnapTimeoutRef.current[field]);
+    }
+
+    wheelSnapTimeoutRef.current[field] = window.setTimeout(() => {
+      const settledValue = getWheelValueFromScroll(element.scrollTop, options);
+
+      if (settledValue === undefined) {
+        return;
+      }
+
+      if (field === "reps") {
+        setRepsFromWheel(settledValue);
+      } else {
+        setWeightFromWheel(settledValue);
+      }
+
+      const settledIndex = options.findIndex((option) => isSameWheelValue(option.value, settledValue));
+      const settledScrollTop = settledIndex * WHEEL_ITEM_HEIGHT;
+
+      // A hard swipe can stop between snap points on mobile. Align once after it settles,
+      // without starting a second smooth scroll that would fight the user's gesture.
+      if (Math.abs(element.scrollTop - settledScrollTop) > 1) {
+        scrollWheelToValue(element, options, settledValue);
+      }
+
+      wheelSnapTimeoutRef.current[field] = null;
+    }, 140);
+  }
+
+  return (
+    <section
+      className={styles.root}
+      data-testid="workout-exercise-sets"
+      data-css-module-scope="workout-exercise-sets"
+    >
+      <div className={styles.title}>План на сегодня</div>
+      <div className={styles.list}>
+        {exercise.sets.map((set, index) => {
+          const repsValue = getPlannedValue(set.enteredReps, set.reps);
+          const weightValue = getPlannedValue(set.enteredWeight, set.weight);
+          const repsText = repsValue ? `${repsValue} повторений` : "Повторы не указаны";
+          const weightText = hasExternalWeight
+            ? (weightValue ? `${weightValue} кг` : "Вес не указан")
+            : "Свой вес";
+
+          return (
+            <div
+              data-testid="workout-exercise-set-row"
+              className={`${styles.row} ${set.completed ? styles.completed : ""}`}
+              key={`${exercise.id}:${index}`}
+              role="button"
+              tabIndex={0}
+              onClick={() => onToggleSetCompleted(exercise.id, index)}
+              onKeyDown={(event) => handleSetRowKeyDown(event, index)}
+              aria-pressed={set.completed}
+            >
+              <span
+                className={styles.number}
+                aria-hidden="true"
+                aria-label={set.completed ? `Снять отметку с подхода ${index + 1}` : `Отметить подход ${index + 1}`}
+              >
+                {index + 1}
+              </span>
+
+              <div className={styles.plan}>
+                <span className={styles.reps}>{repsText}</span>
+                <strong className={styles.weight}>{weightText}</strong>
+              </div>
+
+              <div className={styles.actions}>
+                <button
+                  type="button"
+                  className={styles.editButton}
+                  data-css-module-control="workout-exercise-sets"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setEditingSetDraft({
+                      index,
+                      reps: repsValue || "10",
+                      weight: weightValue || "0"
+                    });
+                  }}
+                  aria-label={`Изменить подход ${index + 1}`}
+                >
+                  <Pencil size={15} strokeWidth={2.2} aria-hidden="true" />
+                </button>
+
+                <span
+                  className={styles.completeButton}
+                  aria-label={set.completed ? `Подход ${index + 1} выполнен` : `Выполнить подход ${index + 1}`}
+                  aria-pressed={set.completed}
+                >
+                  <Check size={20} strokeWidth={3} aria-hidden="true" />
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {editingSet && (
+        <div className={styles.modalBackdrop} role="presentation" onClick={closeEditModal}>
+          <div
+            data-testid="workout-set-edit-modal"
+            className={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Редактировать подход ${editingSetIndex + 1}`}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <div>
+                <span>Подход {editingSetIndex + 1}</span>
+                <strong>Редактировать</strong>
+              </div>
+              <button
+                className={styles.closeButton}
+                data-css-module-control="workout-exercise-sets"
+                type="button"
+                onClick={closeEditModal}
+                aria-label="Закрыть"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className={`${styles.modalFields} ${hasExternalWeight ? "" : styles.withoutWeight}`}>
+              <div className={styles.wheelField}>
+                <span>Повторы</span>
+                <div
+                  data-testid="workout-set-wheel-picker"
+                  ref={repsWheelRef}
+                  className={styles.wheelPicker}
+                  role="listbox"
+                  tabIndex={0}
+                  aria-label={`Повторы, подход ${editingSetIndex + 1}`}
+                  onScroll={(event) => handleWheelScroll(event, repsWheelOptions, "reps")}
+                >
+                  {repsWheelOptions.map((option) => {
+                    const active = isSameWheelValue(option.value, repsSliderState.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={`${styles.wheelOption} ${active ? styles.active : ""}`}
+                        data-css-module-control="workout-exercise-sets"
+                        role="option"
+                        aria-selected={active}
+                        onClick={() => {
+                          setRepsFromWheel(option.value);
+                          scrollWheelToValue(repsWheelRef.current, repsWheelOptions, option.value, "smooth");
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {hasExternalWeight && (
+                <div className={styles.wheelField}>
+                  <span>Вес, кг</span>
+                  <div
+                    data-testid="workout-set-wheel-picker"
+                    ref={weightWheelRef}
+                    className={styles.wheelPicker}
+                    role="listbox"
+                    tabIndex={0}
+                    aria-label={`Вес, подход ${editingSetIndex + 1}`}
+                    onScroll={(event) => handleWheelScroll(event, weightWheelOptions, "weight")}
+                  >
+                    {weightWheelOptions.map((option) => {
+                      const active = isSameWheelValue(option.value, weightSliderState.value);
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          className={`${styles.wheelOption} ${active ? styles.active : ""}`}
+                          data-css-module-control="workout-exercise-sets"
+                          role="option"
+                          aria-selected={active}
+                          onClick={() => {
+                            setWeightFromWheel(option.value);
+                            scrollWheelToValue(weightWheelRef.current, weightWheelOptions, option.value, "smooth");
+                          }}
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              className={styles.doneButton}
+              data-css-module-control="workout-exercise-sets"
+              onClick={saveEditModal}
+            >
+              Готово
+            </button>
+          </div>
+        </div>
+      )}
+
+      {sharedExerciseAiWeightAdjustment && (
+        <small className={styles.sharedWeightNote}>
+          Коррекция готовности: {sharedExerciseAiWeightAdjustment}
+        </small>
+      )}
+    </section>
+  );
+}

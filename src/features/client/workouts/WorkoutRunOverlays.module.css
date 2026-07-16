@@ -1,0 +1,280 @@
+.topHeader {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 460px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  margin: 0 auto 2px;
+  padding: 0;
+  display: block;
+  overflow: visible;
+  text-align: center;
+}
+
+:global([data-workout-run-no-header="true"]) .topHeader {
+  height: 0;
+  min-height: 0;
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.closeButton {
+  position: fixed;
+  top: max(16px, calc(env(safe-area-inset-top) + 12px));
+  right: max(16px, calc(env(safe-area-inset-right) + 16px));
+  bottom: auto;
+  left: auto;
+  z-index: 9600;
+  box-sizing: border-box;
+  width: 42px;
+  min-width: 42px;
+  max-width: 42px;
+  height: 42px;
+  min-height: 42px;
+  max-height: 42px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-workout-run-close-border);
+  border-radius: 50%;
+  background: var(--color-workout-run-close-surface);
+  box-shadow: var(--shadow-workout-run-close);
+  color: var(--color-workout-run-close);
+  -webkit-text-fill-color: var(--color-workout-run-close);
+  font-size: 27px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transform: none;
+  backdrop-filter: none;
+}
+
+.closeButton::before {
+  content: none;
+  display: none;
+}
+
+.closeButton:active {
+  transform: scale(0.96);
+}
+
+.backButton {
+  position: fixed;
+  top: max(16px, calc(env(safe-area-inset-top) + 12px));
+  right: auto;
+  bottom: auto;
+  left: 16px;
+  z-index: 2147483647;
+  box-sizing: border-box;
+  width: 51px;
+  min-width: 51px;
+  max-width: 51px;
+  height: 51px;
+  min-height: 51px;
+  max-height: 51px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-workout-run-back-border);
+  border-radius: 50%;
+  background: var(--gradient-workout-run-back);
+  box-shadow: var(--shadow-workout-run-back);
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  font-size: 0;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transform: none;
+  backdrop-filter: var(--filter-workout-run-back);
+}
+
+.backButton::before {
+  content: "â†";
+  display: block;
+  color: var(--color-workout-run-back);
+  -webkit-text-fill-color: var(--color-workout-run-back);
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  transform: none;
+}
+
+:global(html[data-app-theme="dark-green"]) .backButton,
+:global(html[data-app-theme="dark-green"]) .backButton::before {
+  font-weight: 800;
+}
+
+:global(html[data-app-theme="dark-green"]) .backButton::before {
+  transform: translateY(-1px);
+}
+
+.backButton:active {
+  transform: scale(0.96);
+}
+
+.stageTitle {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 560px;
+  height: 56px;
+  min-height: 56px;
+  margin: 0 auto 4px;
+  padding: 0 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--color-workout-run-heading);
+  text-align: center;
+}
+
+.stageTitleText {
+  display: -webkit-box;
+  max-width: 100%;
+  max-height: 2.04em;
+  overflow: hidden;
+  color: var(--color-workout-run-heading);
+  font-size: clamp(24px, 6.2vw, 27px);
+  font-weight: 950;
+  line-height: 1.02;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  text-shadow: none;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.withTechniqueButton {
+  gap: 8px;
+}
+
+.withTechniqueButton .stageTitleText {
+  width: auto;
+  max-width: calc(100% - 36px);
+  max-height: none;
+  display: block;
+  overflow: visible;
+  font-size: 15px;
+  line-height: 1.05;
+  text-overflow: clip;
+  -webkit-box-orient: initial;
+  -webkit-line-clamp: unset;
+}
+
+.techniqueButton {
+  box-sizing: border-box;
+  width: 28px;
+  min-width: 28px;
+  max-width: 28px;
+  height: 28px;
+  min-height: 28px;
+  max-height: 28px;
+  flex: 0 0 28px;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-workout-run-technique-border);
+  border-radius: 50%;
+  background: var(--color-workout-run-technique-surface);
+  box-shadow: none;
+  color: var(--color-workout-run-technique);
+  -webkit-text-fill-color: var(--color-workout-run-technique);
+  font-size: 14px;
+  font-weight: 950;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.notFoundPage {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 560px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 34px 14px 22px;
+  background: var(--background-workout-run-not-found-page);
+  color: var(--color-workout-run-not-found-page-text);
+  font-family: var(--font-family-compact-ui);
+}
+
+.notFoundHeader {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 70px 0 0;
+  text-align: center;
+}
+
+.notFoundTitle {
+  margin: 0;
+  padding: 2px 0;
+  overflow: hidden;
+  color: var(--color-workout-run-not-found-title);
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.25;
+  letter-spacing: -1px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 390px) {
+  .notFoundPage {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
+
+.fullscreenOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.95);
+}
+
+.fullscreenClose {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #ffffff;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.fullscreenVideo {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 12px;
+}
+
+@media (max-height: 720px) {
+  .topHeader {
+    height: 38px;
+    min-height: 38px;
+    max-height: 38px;
+  }
+
+  :global([data-workout-run-no-header="true"]) .topHeader {
+    height: 0;
+    min-height: 0;
+    max-height: 0;
+  }
+}

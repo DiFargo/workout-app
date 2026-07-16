@@ -1,0 +1,330 @@
+.main,
+.main * {
+  box-sizing: border-box;
+}
+
+.main {
+  width: min(394px, calc(100vw - 16px));
+  max-width: 394px;
+  height: 80px;
+  min-height: 80px;
+  max-height: 80px;
+  margin: 0;
+  padding: 6px;
+  display: grid;
+  position: fixed;
+  z-index: var(--z-training-nav);
+  left: 50%;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 4px;
+  overflow: hidden;
+  border: 1px solid var(--color-nutrition-nav-border);
+  border-radius: var(--radius-training-nav);
+  background: var(--color-nutrition-nav-surface);
+  color: var(--color-nutrition-nav-muted);
+  box-shadow: var(--shadow-nutrition-nav);
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 24px;
+  transform: translateX(-50%);
+  backdrop-filter: var(--filter-training-nav);
+  -webkit-backdrop-filter: var(--filter-training-nav);
+  isolation: isolate;
+}
+
+.main > button {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 68px;
+  min-height: 68px;
+  max-height: 68px;
+  margin: 0;
+  padding: 6px 2px 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: var(--radius-training-nav-button);
+  background: transparent;
+  color: var(--color-nutrition-nav-muted);
+  box-shadow: none;
+  font: inherit;
+  line-height: 16px;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.main > button > span {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 31px;
+  min-height: 31px;
+  max-height: 31px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font-size: 26px;
+  line-height: 31px;
+  filter: grayscale(1) saturate(0) opacity(0.78);
+}
+
+.main > button svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  color: inherit;
+  stroke: currentColor;
+}
+
+.main > button > strong {
+  width: 100%;
+  max-width: 100%;
+  height: 16px;
+  min-height: 16px;
+  max-height: 16px;
+  margin: 0;
+  display: block;
+  overflow: hidden;
+  color: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.main > button:nth-child(2) > strong,
+.main > button:nth-child(3) > strong {
+  font-size: 10px;
+}
+
+.main > .active {
+  border-color: var(--color-nutrition-nav-active-border);
+  background: var(--color-nutrition-nav-active-surface);
+  color: var(--color-nutrition-nav-active);
+  box-shadow: var(--shadow-nutrition-nav-active);
+}
+
+.main > .active > span {
+  filter: none;
+}
+
+.main > button:focus-visible {
+  outline: 2px solid var(--color-nutrition-nav-active);
+  outline-offset: -3px;
+}
+
+@media (max-width: 900px) {
+  :global(:root[data-app-theme="warm-light"]) .main {
+    right: auto;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: 50%;
+    width: min(394px, calc(100vw - 20px));
+    max-width: 394px;
+    height: 76px;
+    min-height: 76px;
+    max-height: 76px;
+    padding: 7px;
+    border-color: var(--color-nutrition-nav-border-compact);
+    background: var(--color-nutrition-nav-surface-compact);
+    box-shadow: var(--shadow-nutrition-nav-compact);
+    transform: translateX(-50%);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .main > button {
+    height: 60px;
+    min-height: 60px;
+    max-height: 60px;
+    padding: 5px 2px 4px;
+    display: grid;
+    grid-template-rows: 28px 16px;
+    place-items: center;
+    align-content: center;
+    gap: 2px;
+    border-radius: 16px;
+    color: var(--color-nutrition-nav-muted-compact);
+    font-size: 16px;
+    line-height: 13.3333px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .main > button > span {
+    width: 24px;
+    height: 30px;
+    min-height: 30px;
+    max-height: 31px;
+    font-size: 25px;
+    line-height: 25px;
+    filter: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .main > button > strong {
+    width: auto;
+    max-width: 100%;
+    overflow: visible;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 11px;
+    transform: translateY(-1px);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .main > button svg {
+    stroke-width: 2.4px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .main > .active {
+    border-color: var(--color-nutrition-nav-active-border-compact);
+    background: var(--color-nutrition-nav-active-surface-compact);
+    color: var(--color-nutrition-nav-active-compact);
+    box-shadow: var(--shadow-nutrition-nav-active-compact);
+  }
+}
+
+@media (max-width: 640px) {
+  :global(:root[data-app-theme="warm-light"]) .main {
+    width: calc(100vw - 20px);
+    max-width: none;
+  }
+}
+
+.training,
+.training * {
+  box-sizing: border-box;
+}
+
+.training {
+  position: fixed;
+  z-index: var(--z-training-nav);
+  left: 50%;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  display: grid;
+  width: min(394px, calc(100vw - 20px));
+  max-width: 394px;
+  height: 80px;
+  min-height: 80px;
+  max-height: 80px;
+  margin: 0;
+  padding: 6px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 4px;
+  overflow: hidden;
+  color: var(--color-workout-plan-page-text);
+  background: var(--color-nutrition-nav-surface);
+  border: 1px solid var(--color-nutrition-nav-border);
+  border-radius: var(--radius-training-nav);
+  box-shadow: var(--shadow-nutrition-nav);
+  transform: translateX(-50%);
+  backdrop-filter: var(--filter-training-nav);
+  -webkit-backdrop-filter: var(--filter-training-nav);
+}
+
+.training > button {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  height: 68px;
+  min-height: 68px;
+  max-height: 68px;
+  margin: 0;
+  padding: 6px 2px 5px;
+  flex-direction: column;
+  grid-template-rows: 32px 16px;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+  color: var(--color-nutrition-nav-muted);
+  font: inherit;
+  text-align: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-training-nav-button);
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.training > button > span {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 31px;
+  min-height: 31px;
+  max-height: 31px;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font-size: 26px;
+  line-height: 31px;
+  filter: grayscale(1) saturate(0) opacity(0.78);
+}
+
+.training > button > strong {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 16px;
+  min-height: 16px;
+  max-height: 16px;
+  margin: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.training > .active {
+  color: var(--color-nutrition-nav-active);
+  background: var(--color-nutrition-nav-active-surface);
+  border-color: var(--color-nutrition-nav-active-border);
+  box-shadow: var(--shadow-nutrition-nav-active);
+}
+
+.training > .active > span {
+  filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .training {
+  isolation: isolate;
+}
+
+:global(:root[data-app-theme="warm-light"]) .training::after {
+  position: absolute;
+  z-index: 0;
+  right: -18px;
+  bottom: -34px;
+  left: -18px;
+  display: block;
+  height: 42px;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f4f7fd 42%, #f4f7fd 100%);
+}
+
+:global(:root[data-app-theme="warm-light"]) .training > button {
+  position: relative;
+  z-index: 1;
+}
+
+:global(:root[data-app-theme="warm-light"]) .training > button > span {
+  color: var(--color-workout-plan-subtitle);
+}

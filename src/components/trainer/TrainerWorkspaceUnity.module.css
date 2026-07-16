@@ -1,0 +1,229 @@
+.unity {
+  --trainer-content-width: 1320px;
+  --trainer-page-gutter: 32px;
+  --trainer-page-block: 28px;
+  --trainer-section-gap: 18px;
+  --trainer-card-radius: 14px;
+  --trainer-dialog-radius: 18px;
+  --trainer-control-height: 42px;
+  --trainer-surface: #ffffff;
+  --trainer-surface-soft: #f8f8fc;
+  --trainer-border: #e1e4ed;
+  --trainer-text: #171922;
+  --trainer-muted: #747b8d;
+  --trainer-accent: #6534ef;
+  color: var(--trainer-text);
+}
+
+.unity,
+.unity * {
+  box-sizing: border-box;
+}
+
+/* Every primary trainer tab uses the same content frame. */
+.unity :global(.trainerNextPage) {
+  width: min(100%, var(--trainer-content-width));
+  margin-inline: auto;
+  padding: var(--trainer-page-block) var(--trainer-page-gutter) 44px;
+}
+
+.unity :global(.trainerNextPage) {
+  min-height: 100dvh;
+}
+
+.unity :global(.trainerNextDesktopPageHead) {
+  min-height: 64px;
+  margin-bottom: var(--trainer-section-gap);
+  align-items: flex-start;
+}
+
+.unity :global(.trainerNextDesktopPageHead h1) {
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.unity :global(.trainerNextDesktopPageHead p) {
+  max-width: 680px;
+  margin-top: 6px;
+  color: var(--trainer-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Tabs keep one height and baseline on clients, workouts and nutrition. */
+.unity :global(.trainerNextClientTabs),
+.unity :global(.trainerNextPageTabs) {
+  min-height: 48px;
+  margin: 0 0 var(--trainer-section-gap);
+  border-bottom: 1px solid var(--trainer-border);
+}
+
+.unity :global(.trainerNextClientTabs button),
+.unity :global(.trainerNextPageTabs button) {
+  min-height: 48px;
+  padding-inline: 16px;
+  color: #555b6b;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.unity :global(.trainerNextClientTabs button.active),
+.unity :global(.trainerNextPageTabs button.active) {
+  color: var(--trainer-accent);
+}
+
+/* Main content surfaces share the same edge, radius and density. */
+.unity :global(.trainerNextSimplePanel),
+.unity :global(.trainerUtilityCard),
+.unity :global(.trainerUtilityBody),
+.unity :global(.trainerNextClientTable),
+.unity :global(.trainerNextLibrary),
+.unity :global(.trainerNextProgramControl),
+.unity :global(.trainerNextWorkoutDays),
+.unity :global(.trainerNextExercisePanel),
+.unity :global(.trainerNextNutritionEditor),
+.unity :global(.trainerNextNutritionDiary),
+.unity :global(.trainerAnalyticsPanel),
+.unity :global(.trainerNotificationFeed),
+.unity :global(.trainerNotificationSettings) {
+  border-color: var(--trainer-border);
+  border-radius: var(--trainer-card-radius);
+  background: var(--trainer-surface);
+}
+
+.unity :global(.trainerNextClientOverview),
+.unity :global(.trainerNextWorkoutLayout),
+.unity :global(.trainerAnalyticsStack),
+.unity :global(.trainerNotificationsLayout) {
+  gap: var(--trainer-section-gap);
+}
+
+.unity :global(.trainerNextPanelTitle) {
+  min-height: 56px;
+  align-items: center;
+}
+
+.unity :global(.trainerNextPanelTitle h2) {
+  margin: 0;
+  color: var(--trainer-text);
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+/* Controls align across all tabs. */
+.unity :global(.trainerNextPrimary),
+.unity :global(.trainerNextSecondary),
+.unity :global(.trainerNextOutlineAdd),
+.unity :global(.trainerNextHeadActions button),
+.unity :global(.trainerUtilityPage button) {
+  min-height: var(--trainer-control-height);
+  border-radius: 10px;
+  font-weight: 650;
+}
+
+.unity :global(input:not([type="checkbox"]):not([type="radio"])),
+.unity :global(select) {
+  min-height: var(--trainer-control-height);
+  border-radius: 10px;
+}
+
+.unity :global(textarea) {
+  border-radius: 10px;
+}
+
+/* All trainer dialogs use one visual frame; their purposeful widths remain. */
+.unity :global(.trainerNextModalBackdrop),
+.unity :global(.trainerClientModalBackdrop),
+.unity :global(.trainerConfirmBackdrop) {
+  padding: 24px;
+  background: rgba(20, 22, 31, 0.42);
+  backdrop-filter: blur(7px);
+}
+
+.unity :global(.trainerNextModal),
+.unity :global(.trainerNextWorkoutPreview),
+.unity :global(.trainerNextModalBackdrop) > [role="dialog"],
+.unity :global(.trainerPhotoPreviewModal),
+.unity :global(.trainerConfirmDialog) {
+  max-height: calc(100dvh - 48px);
+  border: 1px solid var(--trainer-border);
+  border-radius: var(--trainer-dialog-radius);
+  background: var(--trainer-surface);
+  box-shadow: 0 24px 72px rgba(24, 27, 39, 0.22);
+}
+
+.unity :global(.trainerNextModalClose) {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border-radius: 12px;
+}
+
+.unity :global(.trainerNextModal h2),
+.unity :global(.trainerNextWorkoutPreview > h2) {
+  color: var(--trainer-text);
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 1050px) {
+  .unity {
+    --trainer-page-gutter: 24px;
+    --trainer-page-block: 24px;
+  }
+}
+
+@media (max-width: 820px) {
+  .unity {
+    --trainer-page-gutter: 14px;
+    --trainer-page-block: 12px;
+    --trainer-section-gap: 14px;
+    --trainer-card-radius: 14px;
+  }
+
+  .unity :global(.trainerNextPage) {
+    padding: var(--trainer-page-block) var(--trainer-page-gutter) calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .unity :global(.trainerNextDesktopPageHead) {
+    display: none;
+  }
+
+  .unity :global(.trainerNextClientTabs),
+  .unity :global(.trainerNextPageTabs) {
+    min-height: 44px;
+    margin-bottom: 14px;
+  }
+
+  .unity :global(.trainerNextClientTabs) {
+    width: calc(100% + (var(--trainer-page-gutter) * 2));
+    margin-left: calc(-1 * var(--trainer-page-gutter));
+  }
+
+  .unity :global(.trainerNextClientTabs button),
+  .unity :global(.trainerNextPageTabs button) {
+    min-height: 44px;
+    padding-inline: 13px;
+  }
+
+  .unity :global(.trainerNextModalBackdrop),
+  .unity :global(.trainerClientModalBackdrop),
+  .unity :global(.trainerConfirmBackdrop) {
+    align-items: end;
+    padding: 12px;
+  }
+
+  .unity :global(.trainerNextModal),
+  .unity :global(.trainerNextWorkoutPreview),
+  .unity :global(.trainerNextModalBackdrop) > [role="dialog"],
+  .unity :global(.trainerPhotoPreviewModal),
+  .unity :global(.trainerConfirmDialog) {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+    border-radius: 18px;
+  }
+}

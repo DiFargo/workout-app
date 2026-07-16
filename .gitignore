@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+.config/
+.npm-cache/
+test-results/
+test-artifacts/
+.codex-remote-attachments/
 
 # Editor directories and files
 .vscode/*

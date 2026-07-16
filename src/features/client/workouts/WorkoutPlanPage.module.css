@@ -1,0 +1,241 @@
+  .page,
+  .page * {
+    box-sizing: border-box;
+  }
+
+  .page {
+    min-height: 100dvh;
+    padding:
+      max(28px, env(safe-area-inset-top))
+      12px
+      calc(136px + env(safe-area-inset-bottom));
+    color: var(--color-workout-plan-page-text);
+    background: var(--gradient-workout-plan-page);
+  }
+
+  .shell {
+    width: min(560px, 100%);
+    margin: 0 auto;
+  }
+
+  .header {
+    display: grid;
+    padding: 8px 10px 22px;
+    justify-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+
+  .header > span {
+    color: var(--color-workout-plan-accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+
+  .header h1 {
+    margin: 0;
+    color: var(--color-workout-plan-heading);
+    font-size: clamp(27px, 7vw, 36px);
+    font-weight: 850;
+    letter-spacing: 0;
+    line-height: 1.05;
+  }
+
+  .header p {
+    max-width: 420px;
+    margin: 2px 0 0;
+    color: var(--color-workout-plan-subtitle);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .stats {
+    display: grid;
+    min-height: 82px;
+    padding: 10px 8px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    background: var(--gradient-workout-plan-stats);
+    border: 1px solid var(--color-workout-plan-stats-border);
+    border-radius: 24px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  }
+
+  .stats > div {
+    display: grid;
+    min-width: 0;
+    align-content: center;
+    justify-items: center;
+    gap: 4px;
+    text-align: center;
+  }
+
+  .stats > div + div {
+    border-left: 1px solid var(--color-workout-plan-divider);
+  }
+
+  .stats strong {
+    color: var(--color-workout-plan-stat-value);
+    font-size: 24px;
+    font-weight: 850;
+    line-height: 1;
+  }
+
+  .stats span {
+    color: var(--color-workout-plan-stat-label);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .weekList {
+    display: grid;
+    margin-top: 14px;
+    gap: 12px;
+  }
+
+  .week {
+    overflow: hidden;
+    background: var(--color-workout-plan-card-surface);
+    border: 1px solid var(--color-workout-plan-card-border);
+    border-radius: 24px;
+  }
+
+  .week h2 {
+    margin: 0;
+    padding: 15px 17px 11px;
+    color: var(--color-workout-plan-week-heading);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+
+  .week > div {
+    display: grid;
+  }
+
+  .week button {
+    display: grid;
+    width: 100%;
+    min-height: 72px;
+    padding: 12px 15px 12px 17px;
+    grid-template-columns: minmax(0, 1fr) 32px;
+    align-items: center;
+    gap: 12px;
+    color: var(--color-workout-plan-button-text);
+    font: inherit;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-top: 1px solid var(--color-workout-plan-row-border);
+    border-radius: 0;
+    cursor: pointer;
+  }
+
+  .week button:active {
+    background: rgba(151, 190, 73, 0.08);
+  }
+
+  .week button > span {
+    display: grid;
+    min-width: 0;
+    gap: 3px;
+  }
+
+  .week button small,
+  .week button em {
+    overflow: hidden;
+    color: var(--color-workout-plan-row-muted);
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 650;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .week button strong {
+    overflow: hidden;
+    color: var(--color-workout-plan-row-text);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .week button > i {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    color: var(--color-workout-plan-icon);
+    font-size: 20px;
+    font-style: normal;
+    background: var(--color-workout-plan-icon-surface);
+    border: 1px solid var(--color-workout-plan-icon-border);
+    border-radius: 11px;
+  }
+
+  .week button.completed > i {
+    color: var(--color-workout-plan-complete);
+    background: var(--color-workout-plan-complete-surface);
+    border-color: var(--color-workout-plan-complete-border);
+  }
+
+  .empty {
+    display: grid;
+    min-height: 220px;
+    padding: 28px 24px;
+    align-content: center;
+    justify-items: center;
+    gap: 8px;
+    text-align: center;
+    background: var(--color-workout-plan-card-surface);
+    border: 1px solid var(--color-workout-plan-card-border);
+    border-radius: 24px;
+  }
+
+  .empty strong {
+    color: var(--color-workout-plan-page-text);
+    font-size: 18px;
+  }
+
+  .empty span {
+    max-width: 360px;
+    color: var(--color-workout-plan-row-muted);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .bottomPanel {
+    position: fixed;
+    z-index: 12000;
+    right: 0;
+    bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px));
+    left: 0;
+    width: min(394px, calc(100vw - 20px));
+    max-width: 394px;
+    height: 80px;
+    min-height: 80px;
+    max-height: 80px;
+    margin-inline: auto;
+    padding: 0;
+    gap: 0;
+    background: var(--color-workout-plan-panel-surface);
+    border: var(--border-workout-plan-panel);
+    box-shadow: var(--shadow-workout-plan-panel);
+  }
+
+  @media (min-width: 760px) {
+    .page {
+      padding-top: 42px;
+    }
+
+    .week button:hover {
+      background: rgba(151, 190, 73, 0.065);
+    }
+  }

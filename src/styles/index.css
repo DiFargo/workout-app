@@ -1,0 +1,41 @@
+@layer reset, base, components;
+
+@import "./_variables.css" layer(base);
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+}
+
+@layer base {
+  html {
+    min-height: 100%;
+    overflow-x: hidden;
+    font-family: var(--font-family-sans);
+    background: var(--color-background);
+  }
+
+  body {
+    min-height: 100%;
+    margin: 0;
+    background: var(--color-background);
+    color: var(--color-text);
+    line-height: var(--line-height-body);
+  }
+}
+
+@media (pointer: fine) {
+  :root {
+    --viewport-inline-compensation: 15px;
+  }
+}

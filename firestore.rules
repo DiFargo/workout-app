@@ -1,0 +1,553 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn() &&
+        "admin" in request.auth.token &&
+        request.auth.token.admin == true;
+    }
+
+    function isTrainer() {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "trainer";
+    }
+
+    function isOwnerOrAdmin(uid) {
+      return isOwner(uid) || isAdmin();
+    }
+
+    function protectedUserFields() {
+      return [
+        "role",
+        "trainerId",
+        "assignedTrainerId",
+        "coachId",
+        "createdByUid",
+        "assignedProgramId",
+        "assignedProgramName",
+        "assignedProgramAt",
+        "assignedProgramUpdatedAt",
+        "assignedProgramLifecycleStatus",
+        "assignedProgramVisibility",
+        "assignedProgramPublishedAt",
+        "assignedProgramAssignedByUid",
+        "assignedWorkoutCount",
+        "adminClaimUpdatedAt",
+        "trainerRoleUpdatedAt"
+      ];
+    }
+
+    function isSafeOwnerCreate(uid) {
+      return isOwner(uid) &&
+        (!request.resource.data.keys().hasAny(protectedUserFields()) ||
+          request.resource.data.role == "client") &&
+        !request.resource.data.keys().hasAny([
+          "trainerId",
+          "assignedTrainerId",
+          "coachId",
+          "createdByUid",
+          "assignedProgramId",
+          "assignedProgramName",
+          "assignedProgramAt",
+          "assignedProgramUpdatedAt",
+          "assignedProgramLifecycleStatus",
+          "assignedProgramVisibility",
+          "assignedProgramPublishedAt",
+          "assignedProgramAssignedByUid",
+          "assignedWorkoutCount",
+          "adminClaimUpdatedAt",
+          "trainerRoleUpdatedAt"
+        ]);
+    }
+
+    function isSafeOwnerUpdate(uid) {
+      return isOwner(uid) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedUserFields());
+    }
+
+    function isAssignedTrainerData(data) {
+      return isTrainer() && (
+        data.trainerId == request.auth.uid ||
+        data.assignedTrainerId == request.auth.uid ||
+        data.coachId == request.auth.uid ||
+        data.createdByUid == request.auth.uid
+      );
+    }
+
+    function isAssignedTrainer(uid) {
+      return isAssignedTrainerData(get(/databases/$(database)/documents/users/$(uid)).data);
+    }
+
+    function isOwnedTrainingTemplate(templateId) {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/trainingTemplates/$(templateId)) &&
+        get(/databases/$(database)/documents/trainingTemplates/$(templateId)).data.ownerUid == request.auth.uid;
+    }
+
+    function isTrainerProgramAssignment() {
+      return isTrainer() &&
+        isAssignedTrainerData(resource.data) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "assignedProgramId",
+          "assignedProgramName",
+          "assignedProgramAt",
+          "assignedProgramUpdatedAt",
+          "assignedProgramLifecycleStatus",
+          "assignedProgramVisibility",
+          "assignedProgramPublishedAt",
+          "assignedProgramAssignedByUid",
+          "assignedWorkoutCount",
+          "workoutCalendar"
+        ]) &&
+        request.resource.data.assignedProgramUpdatedAt is string &&
+        (
+          request.resource.data.assignedProgramId == "" ||
+          (
+            request.resource.data.assignedProgramLifecycleStatus == "active" &&
+            request.resource.data.assignedProgramVisibility == "client_active" &&
+            request.resource.data.assignedProgramPublishedAt is string &&
+            request.resource.data.assignedProgramAssignedByUid == request.auth.uid
+          )
+        ) &&
+        (
+          (
+            request.resource.data.assignedProgramId == "" &&
+            request.resource.data.assignedProgramName == "" &&
+            request.resource.data.assignedWorkoutCount == 0
+          ) ||
+          (
+            isOwnedTrainingTemplate(request.resource.data.assignedProgramId) &&
+            request.resource.data.assignedProgramName ==
+              get(/databases/$(database)/documents/trainingTemplates/$(request.resource.data.assignedProgramId)).data.name
+          )
+        );
+    }
+
+    function isTrainerClientScheduleUpdate() {
+      return isTrainer() &&
+        isAssignedTrainerData(resource.data) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "workoutCalendar",
+          "trainingDays",
+          "workoutTime",
+          "telegram",
+          "telegramNotificationsEnabled",
+          "updatedAt"
+        ]);
+    }
+
+    function isTrainerClientArchiveUpdate() {
+      return isTrainer() &&
+        isAssignedTrainerData(resource.data) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "archived",
+          "active",
+          "archivedAt",
+          "restoredAt",
+          "updatedAt"
+        ]);
+    }
+
+    function isTrainerNutritionPlanUpdate() {
+      return isTrainer() &&
+        isAssignedTrainerData(resource.data) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "nutritionGoals",
+          "nutritionPlan",
+          "nutritionPlanUpdatedAt",
+          "updatedAt"
+        ]);
+    }
+
+    function trainerNutritionStateFields() {
+      return [
+        "goals",
+        "nutritionPlan",
+        "updatedAt"
+      ];
+    }
+
+    function isTrainerNutritionStatePlanCreate(uid, docId) {
+      return docId == "state" &&
+        isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.keys().hasOnly(trainerNutritionStateFields());
+    }
+
+    function isTrainerNutritionStatePlanUpdate(uid, docId) {
+      return docId == "state" &&
+        isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(trainerNutritionStateFields());
+    }
+
+    function isTrainerOutgoingMessage(uid) {
+      return isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.keys().hasOnly([
+          "type",
+          "direction",
+          "text",
+          "status",
+          "sentAt",
+          "sentByUid",
+          "sentByEmail"
+        ]) &&
+        request.resource.data.type == "manual" &&
+        request.resource.data.direction == "out" &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() > 0 &&
+        request.resource.data.status == "saved" &&
+        request.resource.data.sentAt is string &&
+        request.resource.data.sentByUid == request.auth.uid &&
+        request.resource.data.sentByEmail is string;
+    }
+
+    function isTrainerMessageReadUpdate(uid) {
+      return isTrainer() &&
+        isAssignedTrainer(uid) &&
+        resource.data.type == "incoming" &&
+        resource.data.direction == "in" &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "trainerReadAt",
+          "trainerReadByUid"
+        ]) &&
+        request.resource.data.trainerReadAt is string &&
+        request.resource.data.trainerReadByUid == request.auth.uid;
+    }
+
+    function isTrainerCreatingAssignedClient() {
+      return isTrainer() &&
+        request.resource.data.role == "client" &&
+        request.resource.data.createdByUid == request.auth.uid &&
+        isAssignedTrainerData(request.resource.data);
+    }
+
+    function inviteFields() {
+      return [
+        "email",
+        "name",
+        "status",
+        "authUid",
+        "trainerId",
+        "trainerEmail",
+        "createdByUid",
+        "createdByEmail",
+        "createdAt",
+        "updatedAt",
+        "inviteUrl",
+        "acceptedAt",
+        "acceptedUid"
+      ];
+    }
+
+    function isTrainerInviteWrite() {
+      return (isAdmin() || isTrainer()) &&
+        request.resource.data.keys().hasOnly(inviteFields()) &&
+        request.resource.data.email is string &&
+        request.resource.data.status in ["active", "created", "accepted", "revoked"] &&
+        (
+          isAdmin() ||
+          (
+            request.resource.data.trainerId == request.auth.uid &&
+            request.resource.data.createdByUid == request.auth.uid
+          )
+        );
+    }
+
+    function isInviteAcceptance() {
+      return signedIn() &&
+        resource.data.email == request.auth.token.email &&
+        request.resource.data.email == resource.data.email &&
+        request.resource.data.trainerId == resource.data.trainerId &&
+        request.resource.data.createdByUid == resource.data.createdByUid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "status",
+          "acceptedAt",
+          "acceptedUid",
+          "updatedAt"
+        ]) &&
+        request.resource.data.status == "accepted" &&
+        request.resource.data.acceptedUid == request.auth.uid;
+    }
+
+    function isInvitedOwnerCreate(uid) {
+      return isOwner(uid) &&
+        exists(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)) &&
+        get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.status in ["active", "created"] &&
+        request.resource.data.role == "client" &&
+        request.resource.data.email == request.auth.token.email &&
+        request.resource.data.trainerId == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerId &&
+        request.resource.data.assignedTrainerId == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerId &&
+        request.resource.data.coachId == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerId &&
+        request.resource.data.createdByUid == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerId &&
+        request.resource.data.trainerEmail == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerEmail &&
+        request.resource.data.assignedTrainerEmail == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerEmail &&
+        request.resource.data.coachEmail == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerEmail;
+    }
+
+    function isTrainerOwnedProgramWorkout(uid) {
+      return isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.assignedBy == request.auth.uid &&
+        isOwnedTrainingTemplate(request.resource.data.assignedProgramId) &&
+        request.resource.data.assignedProgramName ==
+          get(/databases/$(database)/documents/trainingTemplates/$(request.resource.data.assignedProgramId)).data.name;
+    }
+
+    function isTrainerWorkoutScheduleUpdate(uid) {
+      return isTrainer() &&
+        isAssignedTrainer(uid) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "scheduledDate",
+          "plannedDate",
+          "scheduleOrder",
+          "status",
+          "statusUpdatedAt",
+          "completedAt",
+          "movedToDate",
+          "updatedAt"
+        ]);
+    }
+
+    match /loginAliases/{aliasId} {
+      allow read: if true;
+      allow create: if signedIn() &&
+        request.resource.data.keys().hasOnly([
+          "email",
+          "uid",
+          "createdAt",
+          "updatedAt"
+        ]) &&
+        (
+          (
+            request.resource.data.uid == request.auth.uid &&
+            request.resource.data.email == request.auth.token.email
+          ) ||
+          (
+            isAdmin() ||
+            (
+              isTrainer() &&
+              isAssignedTrainer(request.resource.data.uid)
+            )
+          )
+        );
+      allow update: if signedIn() &&
+        request.resource.data.keys().hasOnly([
+          "email",
+          "uid",
+          "createdAt",
+          "updatedAt"
+        ]) &&
+        (
+          (
+            resource.data.uid == request.auth.uid &&
+            request.resource.data.uid == request.auth.uid &&
+            request.resource.data.email == request.auth.token.email
+          ) ||
+          (
+            isAdmin() ||
+            (
+              isTrainer() &&
+              resource.data.uid == request.resource.data.uid &&
+              isAssignedTrainer(resource.data.uid)
+            )
+          )
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /clientInvites/{inviteId} {
+      allow read: if signedIn() && (
+        isAdmin() ||
+        resource.data.email == request.auth.token.email ||
+        (
+          isTrainer() &&
+          (
+            resource.data.trainerId == request.auth.uid ||
+            resource.data.createdByUid == request.auth.uid
+          )
+        )
+      );
+      allow create: if isTrainerInviteWrite();
+      allow update: if isTrainerInviteWrite() || isInviteAcceptance();
+      allow delete: if isAdmin() || (isTrainer() && resource.data.trainerId == request.auth.uid);
+    }
+
+    match /users/{uid} {
+      allow create: if isAdmin() || isInvitedOwnerCreate(uid) || isTrainerCreatingAssignedClient();
+      allow read: if isOwnerOrAdmin(uid) || isAssignedTrainerData(resource.data);
+      allow update: if isAdmin() || isSafeOwnerUpdate(uid) || isTrainerProgramAssignment() || isTrainerClientScheduleUpdate() || isTrainerClientArchiveUpdate() || isTrainerNutritionPlanUpdate();
+      allow delete: if isAdmin();
+
+      match /workouts/{workoutId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow create: if isOwnerOrAdmin(uid) || isTrainerOwnedProgramWorkout(uid);
+        allow update: if isOwnerOrAdmin(uid) || isTrainerOwnedProgramWorkout(uid) || isTrainerWorkoutScheduleUpdate(uid);
+        allow delete: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
+      }
+
+      match /history/{historyId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isOwnerOrAdmin(uid);
+      }
+
+      match /nutrition/{docId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow create: if isOwnerOrAdmin(uid) || isTrainerNutritionStatePlanCreate(uid, docId);
+        allow update: if isOwnerOrAdmin(uid) || isTrainerNutritionStatePlanUpdate(uid, docId);
+        allow delete: if isOwnerOrAdmin(uid);
+      }
+
+      match /nutrition/{docId}/{subPath=**} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isOwnerOrAdmin(uid);
+      }
+
+      match /measurements/{measurementId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isOwnerOrAdmin(uid);
+      }
+
+      match /trainerTasks/{taskId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow create, delete: if isAdmin() || (isTrainer() && isAssignedTrainer(uid));
+        allow update: if isAdmin() ||
+          (isTrainer() && isAssignedTrainer(uid)) ||
+          (
+            isOwner(uid) &&
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              "status",
+              "completedAt",
+              "updatedAt"
+            ])
+          );
+      }
+
+      match /progressPhotos/{photoId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
+      }
+
+      match /trainerEvents/{eventId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow create: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
+        allow update, delete: if isAdmin() || (isTrainer() && isAssignedTrainer(uid));
+      }
+
+      match /payments/{paymentId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow write: if isAdmin() || (isTrainer() && isAssignedTrainer(uid));
+      }
+
+      match /telegramMessages/{messageId} {
+        allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
+        allow create: if isOwnerOrAdmin(uid) || isTrainerOutgoingMessage(uid);
+        allow update: if isOwnerOrAdmin(uid) || isTrainerMessageReadUpdate(uid);
+        allow delete: if isOwnerOrAdmin(uid);
+      }
+
+      match /{collectionId}/{subPath=**} {
+        allow read, write: if isOwnerOrAdmin(uid);
+      }
+    }
+
+    match /trainerNotes/{noteId} {
+      allow read: if isAdmin() || (
+        isTrainer() &&
+        noteId.matches("^" + request.auth.uid + "_.*$")
+      );
+      allow create: if isAdmin() || (
+        isTrainer() &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        isAssignedTrainer(request.resource.data.clientId)
+      );
+      allow update, delete: if isAdmin() || (
+        isTrainer() &&
+        resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.clientId == resource.data.clientId &&
+        isAssignedTrainer(resource.data.clientId)
+      );
+    }
+
+    // Общая база продуктов: читать могут авторизованные, писать только admin.
+    match /nutritionGlobal/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /nutritionGlobal/{docId}/{subPath=**} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Админские системные документы.
+    match /admin/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /admin/{docId}/{subPath=**} {
+      allow read, write: if isAdmin();
+    }
+
+
+    // Библиотека программ тренировок
+    match /trainingTemplates/{templateId} {
+      allow read: if isAdmin() || (
+        isTrainer() &&
+        resource.data.ownerUid == request.auth.uid
+      );
+      allow create: if (
+        isAdmin() &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.ownerRole == "admin" &&
+        request.resource.data.createdByUid == request.auth.uid &&
+        request.resource.data.updatedByUid == request.auth.uid
+      ) || (
+        isTrainer() &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.ownerRole == "trainer" &&
+        request.resource.data.createdByUid == request.auth.uid &&
+        request.resource.data.updatedByUid == request.auth.uid
+      );
+      allow update: if isAdmin() || (
+        isTrainer() &&
+        resource.data.ownerUid == request.auth.uid &&
+        resource.data.ownerRole == "trainer" &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        request.resource.data.ownerRole == "trainer" &&
+        request.resource.data.createdByUid == resource.data.createdByUid &&
+        request.resource.data.updatedByUid == request.auth.uid
+      );
+      allow delete: if isAdmin() || (
+        isTrainer() &&
+        resource.data.ownerUid == request.auth.uid &&
+        resource.data.ownerRole == "trainer"
+      );
+    }
+
+    match /trainingTemplates/{templateId}/{subPath=**} {
+      allow read, write: if isAdmin() || (
+        isTrainer() &&
+        exists(/databases/$(database)/documents/trainingTemplates/$(templateId)) &&
+        get(/databases/$(database)/documents/trainingTemplates/$(templateId)).data.ownerUid == request.auth.uid
+      );
+    }
+
+    // По умолчанию всё закрыто.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

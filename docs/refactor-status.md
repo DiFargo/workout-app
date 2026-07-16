@@ -1,0 +1,579 @@
+# Refactor Status
+
+Last updated at app version `v.1.791`.
+
+## Stable Now
+
+- `src/App.jsx` is a thin `AppErrorBoundary` + `AppCore` wrapper.
+- `src/main.jsx` is a thin React entrypoint with core CSS and service worker registration.
+- `src/AppCore.jsx` is still large, but now acts mostly as a coordinator for state, route context and handler wiring.
+- JS/JSX source modules are guarded against unreachable files and import cycles.
+- CSS files are guarded so every CSS file under `src/styles` and `src/components` stays reachable from the core or approved lazy CSS entrypoints.
+- Shared hooks live in `src/shared/hooks`.
+- Main route, terminal route, nutrition route and E2E harness screens are lazy-loaded.
+- Client loading fallback CSS now shares warm-light panel/spinner shells with the base fallback owner, guarded by app structure tests.
+- Client, trainer, admin hub and admin internals harnesses cover the main local visual smoke surfaces.
+- Client harness preview is available on local dev/preview only and now renders populated main and cabinet visual surfaces for manual checks.
+- Client main menu and cabinet now use the restored `v.1.648` card composition in both production route and local harness preview.
+- Client harness main measurement snapshot now uses populated trend-chart data so the preview matches the restored `v.1.648` main screen.
+- Client harness main preview now matches the `v.1.648` reference rhythm more closely with ILYA greeting, workout summary, purple progress ring and two-column measurement chart.
+- Client harness main preview now has a compact 430px lock so the greeting stays on one line and the measurement title remains inside its chart column.
+- Client harness main preview now centers the progress `из 100` caption inside the restored purple score ring.
+- Client harness main preview now restores the archived hero composition: greeting plus goal, target weight and workout count inside one card, followed by the compact date, progress and measurement cards.
+- Client harness main preview now keeps its header on the shared client chrome rhythm, restores the reference SVG date icons and uses an isolated reference score-ring class so old progress-gauge variants no longer affect the local render.
+- Client harness main preview now restores the compact archived block proportions, aligns the main header with the cabinet chrome, starts the reference score ring at 6 o'clock and keeps the greeting inside the hero card.
+- Client harness main preview now lifts the main-menu stack to the archived screenshot rhythm, positions the isolated score ring to the reference left offset and keeps the progress badges inside the card.
+- Client harness main preview now removes hero-stat divider pseudo-elements and keeps progress badges in normal card flow so the progress card has no empty absolute layer.
+- Client harness main preview now locks the restored reference card internals: shared main/cabinet title baseline, compact progress-card copy, visible bottom padding under badges and a non-wrapping current-weight note.
+- Client main measurement snapshot is guarded against mobile header/body overlap in the primary visual audit.
+- `npm.cmd run verify` runs build, bundle budget, unit tests and critical lint.
+- Empty CSS placeholder files were removed; `src/styles/index.css` remains the core app CSS entrypoint, with workout, nutrition, trainer and admin heavy stacks loaded lazily.
+- Trainer workspace CSS now keeps workout schedule/status pill-label shells in one grouped owner.
+- Trainer workspace CSS now keeps repeated purple active controls in one grouped owner.
+- Trainer workspace CSS now keeps shared section, photo preview and notification calendar header layouts in one grouped owner.
+- Trainer workspace CSS now keeps shared analytics, measurement and photo four-column grids in one grouped owner.
+- Trainer workspace CSS now keeps workout month and schedule today highlights in one grouped owner.
+- Trainer workspace CSS now keeps workout month and schedule weekday label typography in one grouped owner.
+- Trainer workspace CSS now keeps notification feed and client identity ellipsis typography in one grouped owner.
+- Trainer workspace CSS now keeps message modal and workout schedule flex header layouts in one grouped owner.
+- Trainer workspace CSS now keeps measurement and exercise micro-label typography in one grouped owner.
+- Trainer workspace CSS now keeps measurement chart and workout schedule month flex layouts in one grouped owner.
+- Trainer workspace CSS now keeps measurement collapsed and workout month stat grids in one grouped owner.
+- Trainer workspace CSS now keeps measurement and program panel shells in one grouped owner.
+- Trainer workspace CSS now keeps measurement and exercise progress status colors in grouped owners.
+- Trainer workspace CSS now keeps message, analytics and notification muted caption typography in one grouped owner.
+- Trainer workspace CSS now keeps avatar, photo and exercise media cover sizing in one grouped owner.
+- Trainer workspace CSS now keeps client identity/name and selected-program action row flex layouts in one grouped owner.
+- Trainer workspace CSS now keeps breadcrumb and exercise action hover states in one grouped owner.
+- Trainer workspace CSS now keeps notification offset and reminder period dividers in one grouped owner.
+- Trainer workspace CSS now keeps mobile exercise progress and nutrition custom-period two-column grids in one grouped owner.
+- Trainer workspace CSS now keeps mobile exercise action grids in one grouped owner.
+- Trainer workspace CSS now keeps mobile exercise editor layouts in one grouped owner.
+- Trainer workspace CSS now keeps program and workout-day action hover states in one grouped owner.
+- Trainer workspace CSS now keeps notification connected-state colors in one grouped owner.
+- Trainer workspace CSS now keeps drawer and photo preview modal micro-label typography in one grouped owner.
+- Trainer workspace CSS now keeps mobile measurement summary, notification schedule and measurement field grids in grouped owners.
+- Trainer workspace CSS now keeps notification offset and progress reminder muted caption typography in one grouped owner.
+- Trainer workspace CSS now keeps panel, photo compare and workout editor muted paragraph typography in grouped owners.
+- Trainer workspace CSS now keeps client table and measurement muted small-label typography in one grouped owner.
+- Trainer workspace CSS now keeps shared disabled action cursor and opacity states in one grouped owner.
+- Trainer workspace CSS now keeps disabled program button border and text color states in one grouped owner.
+- Trainer workspace CSS now keeps compact layout, legend, delete-hover and schedule disabled-state pairs in grouped owners.
+- Trainer workspace CSS now keeps emphasis typography in grouped owners.
+- Trainer workspace CSS now keeps client section stack spacing in grouped owners.
+- Trainer workspace CSS now keeps inline text stack spacing in grouped owners.
+- Trainer workspace CSS now keeps micro-copy typography in grouped owners.
+- Trainer workspace CSS now keeps list-tail dividers in one grouped owner.
+- Trainer workspace CSS now keeps measurement status colors in grouped owners.
+- Trainer workspace CSS now keeps compact text-field stacks in one grouped owner.
+- Trainer workspace CSS now keeps compact row text stacks in one grouped owner.
+- Trainer workspace CSS now keeps workout/nutrition mobile header grids in one grouped owner.
+- Trainer workspace CSS now keeps exercise/program first action button sizing in one grouped owner.
+- Trainer workspace CSS now keeps risk, history and action stacks in one grouped owner.
+- Trainer workspace CSS now keeps workout schedule/status emphasis color in one grouped owner.
+- Trainer workspace CSS now keeps drawer, coach and program stack gaps in one grouped owner.
+- Trainer workspace CSS now keeps sidebar, utility and library micro-stacks in one grouped owner.
+- Trainer workspace CSS now keeps shared 14px stack layout in one grouped owner.
+- Trainer workspace CSS now keeps muted 8px micro-label typography in one grouped owner.
+- Trainer workspace CSS now keeps muted 9px micro-label typography in one grouped owner.
+- Trainer workspace CSS now keeps muted 10px micro-label typography in one grouped owner.
+- Trainer workspace CSS now keeps shared 10px stack layout in one grouped owner.
+- Trainer workspace CSS now keeps shared 11px strong-label typography in one grouped owner.
+- Trainer workspace CSS now keeps shared 10px compact-label typography in one grouped owner.
+- Trainer workspace CSS now keeps shared purple color styling in one grouped owner.
+- Trainer workspace CSS now keeps shared purple focus-border styling in one grouped owner.
+- Trainer workspace CSS now keeps shared min-width resets in one grouped owner.
+- Trainer workspace CSS now keeps shared green color styling in one grouped owner.
+- Trainer workspace CSS now keeps shared purple background styling in one grouped owner.
+- Trainer workspace CSS now keeps nutrition page tab active styling in the shared purple active owner.
+- Trainer workspace CSS now keeps shared purple active glow styling in one grouped owner.
+- Trainer workspace CSS now keeps mobile two-column metric and notification-offset grids in one grouped owner.
+- Trainer workspace CSS now keeps shared white panel shell styling in one grouped owner across dashboard, nutrition, client and notification cards.
+- Trainer workspace CSS now keeps shared 16px title typography in one grouped owner across analytics, notification, client and nutrition cards.
+- Trainer workspace CSS no longer keeps the duplicate standalone workout preview stack owner after the shared stack owner.
+- Client nutrition grid CSS no longer keeps the duplicate standalone client bottom nav active owner after the shared active owner.
+- Client nutrition grid CSS no longer keeps the early duplicate main profile AI hero grid owner before the more specific hero grid owner.
+- Client nutrition grid CSS no longer keeps the early duplicate main profile progress insight headline layout owner before the final headline layout owner.
+- Client nutrition grid CSS no longer keeps the early duplicate main measurement chart line owner before the final chart line owner.
+- Client primary final CSS no longer keeps early duplicate food action bar button and active owners before the final shared action owners.
+- Client primary final CSS no longer keeps the early duplicate main AI stats row cell owner before the final stats row cell owner.
+- Client visual unity CSS no longer keeps the old `v.1.100` product editor header rhythm owner before the `v.1.102` final cascade lock.
+- Client primary final CSS no longer keeps the early duplicate cabinet bottom pseudo-layer before the final rhythm owner.
+- Admin client dashboard polish CSS no longer keeps the early duplicate nutrition month summary-below layout owner before the final V44 owner.
+- Client primary final CSS now shares the food action bar `strong` typography rule across search, product and editor bars, guarded by app structure tests.
+- Client primary final CSS now keeps food search action stack shells in grouped owners.
+- Client primary final CSS now keeps food search create-action inactive/active colors in grouped owners.
+- Client nutrition late layout CSS now shares expanded meal/product text typography in one grouped owner, guarded by app structure tests.
+- Warm-light food edit CSS now shares food-search input/history surface shell styling in one grouped owner, guarded by app structure tests.
+- Warm-light food edit CSS now shares product edit content/grid label shell styling in one grouped owner, guarded by app structure tests.
+- Warm-light food edit CSS now shares product edit segment/macro card shell styling in one grouped owner, guarded by app structure tests.
+- Admin lazy CSS no longer uses the redundant `admin.css` alias; `adminPanelHub.css` is imported directly.
+- Admin hub CSS no longer carries trainer role button rules that are only used by trainer/admin internals.
+- Admin internals CSS for DEV-only visual coverage is isolated in `admin-internals-lazy.css`, keeping the production admin hub chunk lightweight.
+- Admin client dashboard polish CSS now shares nutrition month summary shell/label styling across top and below sections, guarded by app structure tests.
+- Admin hub and admin internals CSS entrypoints are now structurally guarded against accidental heavy import drift.
+- Admin client four-column grid breakpoint ownership stays in the later admin internals stylesheet instead of the earlier CRM shell.
+- Admin program editor CSS no longer keeps an empty desktop media block.
+- Admin program editor CSS now keeps shared micro-label typography in one grouped owner.
+- Admin program editor CSS now keeps stats label typography in one grouped owner.
+- Admin program editor CSS now keeps template dock/strip layout in one grouped owner.
+- Admin calendar CSS no longer keeps pre-final `adminCalendarPanelMerged` layout layers before the final V62 owner.
+- Admin calendar button CSS no longer keeps unused exact selectors for removed `adminCalendarToggle`, `adminCalendarSaveBtn` and `adminCalendarTestBtn` classes.
+- Food editor summary CSS no longer keeps intermediate compact and first scale-up calorie grid tuning before the later second scale-up owner.
+- Food editor CSS no longer keeps intermediate product header, control and macro sizing before the later pixel-tune owner.
+- Food editor bottom action CSS no longer keeps overwritten delete/save sizing before the later functional bottom-action owner.
+- Food editor back-panel CSS no longer keeps an early duplicate hide rule before the final hard back deduplication owner.
+- Food editor CSS no longer keeps the old food-edit-only nutrition back hide rule before the broader food search overlay owner.
+- Client primary CSS no longer keeps an early main-only bottom pseudo-layer before the shared final rhythm owner.
+- Workout flow CSS now keeps the repeated fixed bottom panel shell in one shared selector group.
+- Workout flow CSS now keeps duplicate select/start fallback image styles in shared selector groups.
+- Workout flow CSS now keeps duplicate select and warmup bottom action controls in shared selector groups.
+- Workout navigation CSS now keeps duplicate compact exercise and finish navigation heights in one media owner.
+- Workout set-row CSS no longer keeps the older core render-target lock before the workout lazy final set-row owner.
+- Expanded nutrition product-list side spacing stays in the width owner, while the exact-spacing block keeps only its sibling gap fix.
+- Expanded nutrition product-list width tuning no longer carries obsolete intermediate reduce/minus sections.
+- Expanded nutrition product-list bottom spacing skips the old match-spacing section and stays in the real bottom-gap owner.
+- Expanded nutrition product-list final width owner no longer mixes in bottom margin ownership.
+- Expanded nutrition product-list guaranteed block now keeps only position and sizing support, leaving width values to the final owner.
+- Expanded nutrition product-list force-width block keeps only active overflow support while later rules own width and side margins.
+- Expanded nutrition product-list guaranteed block no longer repeats open-card overflow owned by the inline width support block.
+- Expanded nutrition product row exact sizing no longer repeats max-width and box sizing in the inline width support block.
+- Expanded nutrition product-list obsolete 10-percent-wider section is removed before the force-width owner.
+- Exact nutrition product-list rebuild keeps structure, spacing, and visuals without owning width values.
+- Expanded nutrition product-list radius now stays in the later hard-width owner instead of the force-width block.
+- Nutrition delete rows no longer keep overwritten collapse/flash animation rules in the earlier late-layout stylesheet; the following food-editor tail stylesheet owns the final no-collapse behavior.
+- Food search five-action bottom bar spacing now has one screen padding owner in `nutrition-food-search-actions.css`.
+- Nutrition AI plan narrow score/grid sizing now lives in the later compact tuning owner.
+- Nutrition AI plan dot and active-dot visuals now stay in the later compact tuning owner.
+- Nutrition AI plan score and macro card dimensions now stay in the later compact tuning owner.
+- Nutrition AI plan RSK info gap and strong typography now stay in the later compact tuning owner.
+- Nutrition AI plan RSK foot and score-block spacing now stay in the later compact tuning owner.
+- Workout flow slide animation shell CSS is now grouped for exercise and finish slides.
+- Workout navigation compact back/previous button sizing now stays in one owner.
+- Workout navigation pseudo reset CSS is now grouped for back, previous and close actions.
+- Workout navigation compact back/previous active-state CSS now stays in one owner.
+- Workout exercise close active-state CSS now stays in the base close-button owner.
+- Workout exercise close positioning CSS now stays in the scoped close-button owner.
+- Workout close slide positioning CSS now stays in the shared start/exercise slide owner.
+- Workout select/start button sizing CSS now stays in one workout-flow owner.
+- Workout compact start-panel sizing CSS now stays in the shared stage/start owner.
+- Cabinet nutrition modal AI plan and goal card shells now stay in one combined-section CSS owner.
+- Cabinet nutrition modal warm-light save button shell CSS now stays in one grouped owner.
+- Cabinet nutrition modal warm-light neutral card/picker/macro surfaces now stay in one grouped owner.
+- Cabinet nutrition modal warm-light picker active and hint CSS now stay in grouped owners.
+- Cabinet nutrition modal calendar/macro micro-label typography CSS now stays in grouped owners.
+- Cabinet nutrition modal settings-open hidden legacy surfaces now stay in one grouped owner.
+- Cabinet trainer notifications and progress photos modal warm-light shells now stay in one grouped owner.
+- Cabinet trainer notifications and progress photos warm-light overlays now stay in one grouped owner.
+- Cabinet trainer notifications and progress photos warm-light surface CSS now stays in one grouped owner.
+- Cabinet trainer notifications and progress photos warm-light heading text CSS now stays in one grouped owner.
+- Cabinet trainer notifications and progress photos base heading CSS now stays in one grouped owner.
+- Cabinet trainer notifications and progress photos text-container grid CSS now stays in one grouped owner.
+- Profile and admin Telegram status badge shells now stay in grouped profile dashboard owners.
+- Profile and admin Telegram avatar shells now stay in one grouped profile dashboard owner.
+- Profile and admin Telegram avatar image-fit CSS now stays in one grouped profile dashboard owner.
+- Telegram action button text/cursor CSS now stays in one grouped profile dashboard owner.
+- Telegram bot/check action button shell CSS now stays in one grouped profile dashboard owner.
+- Telegram bot/check disabled-state CSS now stays in one grouped profile dashboard owner.
+- Nutrition weekday strip CSS now uses an explicit label/marker grid so Russian two-letter day labels stay separated from circular markers.
+- Nutrition food-flow CSS no longer keeps the obsolete pre-final flex weekday strip layer before the final grid owner.
+- Warm-light nutrition polish CSS no longer keeps the obsolete pre-final weekday selected/background layer before the visible polish owner.
+- Nutrition base CSS no longer keeps the obsolete 34px/28px weekday strip layer before the current compact and grid owners.
+- Nutrition base CSS now groups the warm-light nutrition/client page shell surface in one owner.
+- Nutrition base CSS no longer keeps the obsolete warm-light collapsed AI plan surface before the final collapsed-summary owner.
+- Trainer mobile page-shell CSS is now grouped across narrow and coarse landscape owners.
+- Nutrition orbit CSS now keeps shared inline and modal meal shells in one owner.
+- Nutrition base CSS now keeps compact meal-card sizing in the desktop compact owner.
+- Nutrition food search action active colors now stay in one owner.
+- Nutrition AI plan conclusion and badge backgrounds now stay in the later meal-card color owner.
+- Nutrition AI plan neutral macro/badge and collapsed-card backgrounds now stay in the later meal-card color owner.
+- Nutrition AI plan collapsed card and toggle colors now stay in the later meal-card color owner.
+- Nutrition AI plan muted span typography now stays in one grouped owner.
+- Food search header close-button shell now stays in one grouped owner.
+- Food search header title shell now stays in one grouped owner.
+- Legacy bottom bar button and label shell CSS now stays in the final baseline owner.
+- Client visual unity goal-stat typography now stays in the final full-card owner.
+- Warm-light food search/edit gold action shell CSS now stays in one grouped owner.
+- Mobile client smoke waits long enough for slow cold auth bootstrap runs observed in Playwright mobile.
+- Client smoke tests wait past the auth bootstrap fallback window, matching the app's signed-out loading behavior on slower mobile runs.
+- Client workout visual audit waits for the harness bottom navigation before clicking, reducing cold-start timeout flakes.
+- Client workout flow late CSS is owned by `client-workout-lazy.css` instead of the core app stylesheet.
+- Client workout run polish and exercise notes CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
+- Client workout navigation/close and set-row CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
+- Client workout final set-row sizing is guarded in `client-workout-set-rows.css`, keeping that owner out of `client-render-target.css`.
+- Client workout select hero spacing is guarded in `client-workout-card-render.css`, keeping that owner out of `client-render-target.css`.
+- Client workout draft restore, readiness and post-workout feedback dialog CSS are owned by `client-workout-lazy.css` instead of the core app stylesheet.
+- Client harness, nutrition visual and primary visual audits also wait for bottom navigation before route clicks.
+- Trainer workspace and trainer visual audits wait for trainer navigation controls before route clicks.
+- Trainer visual audit covers deeper client workflow states: notification calendar, expanded message modal and program exercise editor controls.
+- Trainer workspace CSS now keeps the mobile bottom navigation shell in one owner.
+- Trainer workspace CSS now keeps nutrition plan and notification action button shells in one owner.
+- Trainer workspace CSS now keeps shared assignment and nutrition form field shells in one owner.
+- Trainer workspace CSS now keeps cabinet and utility card shells in one owner.
+- Trainer workspace CSS now keeps mobile metric and goal two-column grids in one owner.
+- Trainer workspace CSS now keeps mobile measurement two-column grids in one owner.
+- Trainer workspace CSS now keeps nutrition muted micro labels in one owner.
+- Trainer workspace CSS now keeps nutrition typography and notification panel shells in grouped owners.
+- Trainer workspace CSS now keeps calendar grid and notification hidden-input controls in grouped owners.
+- Trainer workspace CSS now keeps workout calendar status colors in grouped owners.
+- Trainer workspace CSS now keeps panel shells and scrollbar styling in grouped owners.
+- Trainer workspace CSS now keeps shared header layouts in one grouped owner.
+- Trainer workspace CSS now keeps shared four-column grids in one grouped owner.
+- Trainer workspace CSS now keeps workout calendar today highlights in one grouped owner.
+- Trainer workspace CSS now keeps workout calendar weekday labels in one grouped owner.
+- Trainer workspace CSS now keeps notification/client identity ellipsis typography in one grouped owner.
+- Trainer workspace CSS now keeps message/schedule flex header layouts in one grouped owner.
+- Trainer workspace CSS now keeps measurement/exercise micro-label typography in one grouped owner.
+- Trainer workspace CSS now keeps measurement chart/schedule month flex layouts in one grouped owner.
+- Trainer workspace CSS now keeps measurement collapsed/workout month stat grids in one grouped owner.
+- Trainer workspace CSS now keeps measurement/program panel shells in one grouped owner.
+- Trainer workspace CSS now keeps measurement/exercise progress status colors in grouped owners.
+- Trainer workspace CSS now keeps message/analytics/notification muted caption typography in one grouped owner.
+- Trainer workspace CSS now keeps avatar/photo/exercise media cover sizing in one grouped owner.
+- Trainer workspace CSS now keeps client identity/name and selected-program action row flex layouts in one grouped owner.
+- Trainer workspace CSS now keeps breadcrumb/exercise action hover states in one grouped owner.
+- Trainer workspace CSS now keeps notification offset/reminder period dividers in one grouped owner.
+- Trainer workspace CSS now keeps mobile exercise progress/nutrition custom-period two-column grids in one grouped owner.
+- Trainer workspace CSS now keeps mobile exercise action grids in one grouped owner.
+- Trainer workspace CSS now keeps mobile exercise editor layouts in one grouped owner.
+- Trainer workspace CSS now keeps program/workout-day action hover states in one grouped owner.
+- Trainer workspace CSS now keeps notification connected-state colors in one grouped owner.
+- Trainer workspace CSS now keeps drawer/photo preview modal micro-label typography in one grouped owner.
+- Trainer workspace CSS now keeps mobile measurement summary, notification schedule and measurement field grids in grouped owners.
+- Trainer workspace CSS now keeps notification offset/progress reminder muted caption typography in one grouped owner.
+- Trainer workspace CSS now keeps panel/photo compare/workout editor muted paragraph typography in grouped owners.
+- Trainer workspace CSS now keeps client table/measurement muted small-label typography in one grouped owner.
+- Trainer workspace CSS now keeps shared disabled action cursor/opacity states in one grouped owner.
+- Trainer workspace CSS now keeps disabled program button border/text color states in one grouped owner.
+- Trainer workspace CSS now keeps compact layout, legend, delete-hover and schedule disabled-state pairs in grouped owners.
+- Trainer workspace CSS now keeps emphasis typography in grouped owners.
+- Trainer lazy CSS no longer uses the redundant `trainer.css` alias; `trainer-workspace.css` is imported directly.
+- Core CSS no longer uses the redundant `themes.css` and `client-main.css` aliases; `theme.css` and `auth.css` are imported directly.
+- Core CSS no longer uses the redundant `layout.css` and `components.css` grouping aliases; their child files are imported directly.
+- Core CSS no longer uses import-only `legacy-stack.css`, `legacy-stack-foundation.css`, `legacy-stack-workflows.css` and `legacy-stack-final-polish.css`; `index.css` imports their child files directly in the same order.
+- Active CSS entrypoints no longer use import-only `legacy-light-stack.css`, `legacy-nutrition-stack.css` and `legacy-admin-stack.css`; their child imports are inlined into `index.css`, `nutrition-stack.css` and `trainer-lazy.css`.
+- Client nutrition visual coverage now includes search results, product amount/edit surfaces and My Database before deeper CSS cleanup.
+- Client nutrition CSS cleanup removed an older duplicated product/edit action-bar block; later food search CSS owns those product surfaces.
+- Client workout visual coverage now includes the empty assigned plan state before workout empty-state CSS cleanup.
+- Client workout empty-state styling now has one scoped owner in `client-workout-empty-state.css`; old global legacy duplicates were removed.
+- Client cabinet workout history modal is covered by the primary visual audit, including its compact delete action.
+- Client cabinet measurements modal is covered by the primary visual audit, including its close/start actions.
+- Client cabinet nutrition modal is covered by the primary visual audit, including its close, goal picker, save and week navigation actions.
+- Client cabinet workout calendar modal is covered by the primary visual audit, including its close, month navigation, history entry and edit actions.
+- Client cabinet modal CSS now keeps nutrition and utility close button sizing in one owner.
+- Client cabinet progress photos modal is covered by the primary visual audit, including its upload steps and save action.
+- Client cabinet settings, trainer notifications and Telegram management modals are covered by the primary visual audit, including close/action tap targets.
+- Client nutrition visual audit now checks weekday strip geometry and marker sizes so labels cannot crowd day markers.
+- Client nutrition weekday strip keeps compact equal mobile cells and bounded markers under the nutrition visual audit.
+- Client nutrition week labels now use unambiguous two-letter Russian weekdays.
+- Client nutrition week labels now render as uppercase two-letter abbreviations so the mobile header cannot collapse to ambiguous one-letter days.
+- Client nutrition weekday strip keeps both letters visible on narrow mobile screens with a dedicated CSS structure guard.
+- Client nutrition header action labels use readable Russian text under structure and nutrition visual audits.
+- Client nutrition weekday cells now lock label and marker centers to prevent mobile header drift.
+- Client nutrition weekday cells now expose selected day and current-date state through `aria-pressed` and `aria-current`.
+- Client nutrition calendar days now expose selected day and current-date state through `aria-pressed` and `aria-current`.
+- Client cabinet nutrition week cells now expose readable day summaries and current-date state under the primary visual audit.
+- Client nutrition grid CSS no longer repeats main dashboard icon and measurement chart locks owned by `client-main.css`.
+- Client nutrition food-search/product polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client nutrition AI photo not-found modal is covered by the nutrition visual audit, and its CSS is owned by `nutrition-stack.css`.
+- Client nutrition create product/dish choice modal is covered by the nutrition visual audit.
+- Client nutrition custom dish editor, ingredient picker and ingredient confirmation are covered by the nutrition visual audit.
+- Client nutrition custom dish ingredient picker and confirmation now share warm-light surface styling in one grouped owner, guarded by app structure tests.
+- Client warm-light profile refresh/theme action shells now share one add-food cleanup owner, guarded by app structure tests.
+- Client profile sex/goal active picker styling now shares one profile dashboard owner, guarded by app structure tests.
+- Client profile AI coach insight/toggle label typography now shares one profile dashboard owner, guarded by app structure tests.
+- Client first setup sex/goal active choice styling now shares one registration owner, guarded by app structure tests.
+- Client workout history modal/cabinet item icon and title styling now share grouped registration owners, guarded by app structure tests.
+- Client warm-light nutrition header/calendar close shell styling now shares one registration owner, guarded by app structure tests.
+- Client workout history modal/cabinet item text internals now share grouped registration owners, guarded by app structure tests.
+- Client AI Coach overview, AI nutrition onboarding and generated plan states are covered by the client AI Coach visual audit.
+- Client AI Coach route CSS is owned by `ai-coach-lazy.css` instead of the core app stylesheet.
+- Client nutrition AI plan and AI photo process CSS are owned by `nutrition-ai-plan-lazy.css` inside the nutrition lazy stack.
+- Client nutrition food icon editor and training-day calorie highlight CSS are owned by `nutrition-food-icon-lazy.css` inside the nutrition lazy stack.
+- Remaining profile body metrics and first setup core rules are owned by `profile-first-setup-core.css`; the old mixed AI/nutrition/workout stylesheet name is no longer imported.
+- Client nutrition flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client nutrition orbit CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client nutrition warm-light add-food/search cleanup CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client nutrition dark-green food-flow CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client food editor/search polish CSS is now owned by `nutrition-stack.css` instead of the core app stylesheet.
+- Client nutrition week day buttons expose full-date accessible labels and selected state, and the nutrition visual audit guards them.
+- Client cabinet Telegram management modal exposes dialog semantics and an accessible close control under the primary visual audit.
+- Client cabinet Telegram management modal now uses the same contained dialog/backdrop shell as the other cabinet modals.
+- Client cabinet nutrition goal picker exposes accessible goal labels and selected state under the primary visual audit.
+- Client cabinet settings visual harness renders the real app-settings section and guards theme/Telegram accessibility attributes.
+- Client cabinet trainer notification items expose task, status and due-date accessible labels under the primary visual audit.
+- Client cabinet workout calendar date buttons expose selected and current-date accessibility state under the primary visual audit.
+- Client cabinet measurements modal start action exposes an explicit accessible label under the primary visual audit.
+- Client cabinet measurements modal value cards expose readable measurement labels under the primary visual audit.
+- Client cabinet workout history expand and delete actions expose workout-specific accessible labels under the primary visual audit.
+- Client cabinet progress photo upload inputs expose view-specific accessible labels under the primary visual audit.
+- Client cabinet progress photo compare tabs expose selected `aria-pressed` state under the primary visual audit.
+- Client cabinet progress photo compare selectors expose readable labels under the primary visual audit.
+- Legacy trainer workspace bottom navigation exposes active-page `aria-current` state.
+- Trainer transfer, program assignment, nutrition preset, workout status and overview modal selectors expose readable labels under the app structure audit.
+- Modal dialogs now have a structure guard requiring `aria-modal` plus a readable `aria-label` or `aria-labelledby`.
+- Client visual unity CSS exact duplicate product-editor blocks were removed under the client nutrition visual audit.
+- Client render target CSS duplicate workout set-row block was removed; the remaining set-row owner is guarded by app structure tests.
+- Admin client dashboard polish CSS no longer keeps empty media blocks, and small no-op trainer/cabinet duplicates were removed under visual guards.
+- Admin client dashboard polish CSS no longer keeps overwritten calendar panel/header/telegram/day-grid no-op blocks before the final calendar owner.
+- Admin client dashboard polish CSS no longer keeps overwritten calendar settings row/title/input/reminder shell blocks before the final calendar owner.
+- Admin client dashboard polish CSS no longer keeps overwritten calendar panel/header/span/per-day shell blocks before the final calendar owner.
+- Admin client dashboard polish CSS no longer keeps overwritten calendar Telegram/toggle pseudo blocks before the final calendar owner.
+- Admin client dashboard polish CSS no longer keeps overwritten calendar label/time-grid/equal-button shell blocks before the final calendar owner.
+- Admin client dashboard polish CSS no longer keeps an overwritten pre-final narrow calendar mobile block before the final calendar owner.
+- Client workout card render CSS no longer keeps repeated media-only card sizing blocks; root sizing locks remain guarded.
+- Client food search final CSS no longer keeps the older duplicate compact product title-wrap media lock; the later product header lock remains guarded.
+- Legacy nutrition header CSS now keeps one compact page padding owner instead of repeating the same mobile page padding across narrower breakpoints.
+- Admin CRM CSS no longer keeps older duplicate client card grid breakpoints; the later workspace breakpoint owner remains guarded.
+- Client food search final CSS now keeps one compact product meal-header width owner instead of repeating the same non-`:has()` mobile lock.
+- Client food search final CSS now keeps one compact product title font-size owner instead of repeating the same non-`:has()` mobile lock.
+- Nutrition calendar CSS now keeps final label color and footer sizing locks in the final calendar owner, guarded by app structure tests.
+- Client food search final CSS now keeps product title typography in the stable-flow owner, guarded by app structure tests.
+- Client food search final CSS now keeps product hero spacing and narrow mobile x-locks in their latest owners.
+- Admin calendar reminders CSS now keeps fixed back-label visibility in one root owner, guarded by app structure tests.
+- Legacy food search CSS now keeps hidden quick-action ownership in root rules instead of repeating the same hide rules inside narrow media blocks.
+- Nutrition food-search bottom bar CSS now keeps the photo active transform in one root owner, guarded by app structure tests.
+- Legacy food search calories CSS no longer repeats the early mobile first-column shift before the later closer-to-grid owner.
+- Client workout set rows CSS now keeps the no-weight modal grid in one root owner, guarded by app structure tests.
+- Legacy food search calories CSS now keeps compact dot sizing in the latest mobile owner, guarded by app structure tests.
+- Profile dashboard CSS now keeps AI stat compact sizing in the latest compact owner, guarded by app structure tests.
+- Desktop cabinet CSS now keeps trainer client overview two-column locks in the broad mobile owner, guarded by app structure tests.
+- Legacy food editor CSS now keeps summary dot sizes in root owners, guarded by app structure tests.
+- Nutrition calendar CSS now keeps compact grid gap and day-number size in the final compact owner, guarded by app structure tests.
+- Nutrition late layout CSS now keeps repeated mobile no-op spacing and meal-card locks out of older owners, guarded by app structure tests.
+- Nutrition late layout CSS now keeps the compact meal plus-button size in the lower-height owner instead of repeating it in the older compact block.
+- Nutrition calories tail CSS now keeps narrow calorie number sizes in the later compact-height owner, guarded by app structure tests.
+- Nutrition summary calories CSS now keeps compact gap and pixel sizing in later final owners, guarded by app structure tests.
+- Nutrition late layout CSS now keeps the compact calories-card top offset in the final gap owner, guarded by app structure tests.
+- Nutrition header CSS now keeps pixel-meter span sizing in the later compact owner, guarded by app structure tests.
+- Nutrition header CSS now keeps calorie-row font sizes in later compact owners, guarded by app structure tests.
+- Nutrition header CSS now keeps meal-title font sizes in later compact owners, guarded by app structure tests.
+- Nutrition header CSS now keeps meal-kcal font sizes in later compact owners, guarded by app structure tests.
+- Nutrition header CSS now keeps early narrow meal text sizes in later compact owners, guarded by app structure tests.
+- Nutrition header CSS now keeps early narrow layout sizes in later compact owners, guarded by app structure tests.
+- Nutrition header CSS now keeps reference narrow layout sizes in later compact owners, guarded by app structure tests.
+- Client main CSS now keeps compact AI stat text rules in the later compact owner, guarded by app structure tests.
+- Nutrition product rows now keep product icon wrapper sizing in the later final owner, guarded by app structure tests.
+- Admin nutrition month summary order now stays in the later final owner, guarded by app structure tests.
+- Admin history checkbox visuals now stay in the later visible-fix owner, guarded by app structure tests.
+- Profile AI stats label layout now stays in the later full-width owner, guarded by app structure tests.
+- Warm-light nutrition summary donut center now stays in the compact owner, guarded by app structure tests.
+- Food picker empty-state text and fallback suggestion layout now stay in the later empty-state owner, guarded by app structure tests.
+- Profile unified stats grid now stays in the horizontal stats owner, guarded by app structure tests.
+- Nutrition calorie pixel-meter width now stays in the summary calories owner, guarded by app structure tests.
+- Nutrition calorie row child transforms now stay in the micro-align owner, guarded by app structure tests.
+- Nutrition page compact padding now stays in the compact premium owner, guarded by app structure tests.
+- Nutrition render-grid dot sizing now stays in the wider mobile calories owner, guarded by app structure tests.
+- Profile AI avatar broad sizing now stays in the render-target owner, guarded by app structure tests.
+- Client nutrition grid CSS now keeps progress insight spacing in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps bottom navigation sizing in the later owner, guarded by app structure tests.
+- Client primary final CSS now keeps shared bottom/action bar sizing in the later mobile owner, guarded by app structure tests.
+- Client primary final CSS now keeps food action bar fixed sizing in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps main AI stats row sizing and text rules in the final owner, guarded by app structure tests.
+- Client primary final CSS no longer keeps overwritten main AI stats text color/size rules before the later mobile owner.
+- Client primary final CSS no longer keeps an overwritten main AI stats child-layout block before the EOF owner.
+- Client primary final CSS now keeps profile AI hero sizing in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps nutrition arrow and meta sizing in the root owner, guarded by app structure tests.
+- Client primary final CSS now keeps primary page title typography in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps primary page title row spacing in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps primary header action sizing in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps client title row sizing in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps client title action styling in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps workout start button fixed styling in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps header action layout in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps client page variables and background in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps product and editor food action bars in the unified owner, guarded by app structure tests.
+- Client primary final CSS now keeps profile AI hero heading typography in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps food editor mobile header and sheet layout in the final owner, guarded by app structure tests.
+- Client primary final CSS no longer keeps an overwritten food editor header order duplicate before the EOF owner.
+- Client primary final CSS now keeps workout stats layout in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps fixed photo action spacing in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps product flow title typography in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps product flow header layout in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps product top actions layout in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps the old food action bar shell in one legacy owner before the final fixed owner, guarded by app structure tests.
+- Client primary final CSS now keeps the product flow header fallback group in one legacy owner before the final product header owner, guarded by app structure tests.
+- Client primary final CSS now keeps food search header, input and recent-grid layout rules in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps profile AI split-card full-owner rules in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps profile AI stats row child text rules in the remaining guarded owners.
+- Client primary final CSS now keeps workout badge layout rules in the final owner, guarded by app structure tests.
+- Client primary final CSS now keeps compact workout badge layout rules in one guarded owner.
+- Client primary final CSS now keeps narrow workout badge grid rules in one guarded owner.
+- Client primary final CSS no longer keeps an overwritten 0.45fr workout badge grid before the later 0.48fr owner.
+- Client primary final CSS now keeps the workout start button mobile bottom offset in one guarded owner.
+- Client primary final CSS no longer keeps an overwritten mobile workout start button sizing block before the final EOF owner.
+- Client primary final CSS now keeps workout card compact sizing and body radius rules in one guarded owner.
+- Client primary final CSS no longer keeps an overwritten mobile workout card visual-shell block before the final EOF owner.
+- Client primary final CSS now keeps workout compact shell rules in root owners instead of repeating no-op mobile media blocks.
+- Client primary final CSS now keeps workout mobile hero and action placement rules in one guarded owner.
+- Client primary final CSS now keeps workout 42px badge pill rules in one guarded root owner.
+- Client primary final CSS no longer keeps an overwritten mobile workout next/week badge sizing block before the final EOF owner.
+- Client primary final CSS now keeps workout select line hide rules in one guarded root owner.
+- Client primary final CSS now keeps profile AI hero compact cluster rules in guarded root owners.
+- Trainer message filters expose selected `aria-pressed` state under trainer smoke and visual audits.
+- Trainer message list items expose selected `aria-pressed` state under trainer smoke and visual audits.
+- Trainer nutrition analytics period buttons expose selected `aria-pressed` state under trainer smoke.
+- Trainer notification reminder periods and workout calendar dates expose selected `aria-pressed` state under trainer smoke.
+- Admin trainer-calendar day, hour-reminder and reminder toggle controls expose selected `aria-pressed` state, and the calendar panel is clamped against mobile overflow under the admin visual audit.
+- Trainer calendar reminder-before selectors expose readable labels under the app structure audit.
+- First setup sex, activity and goal choices expose selected `aria-pressed` state under the client primary visual audit.
+- Profile body metric sex choices expose selected `aria-pressed` state under the client primary visual audit.
+- Profile body metric goal and activity selectors expose readable labels under the client primary visual audit.
+- Production trainer admin user filters and client cards expose selected `aria-pressed` state under the app structure audit.
+- Production trainer dashboard filters and client rows expose selected `aria-pressed` state under the app structure audit.
+- Production trainer client workspace role toggle and tabs expose selected `aria-pressed` state under the app structure audit.
+- Client workout warmup timer presets expose selected `aria-pressed` state under the app structure audit.
+- Production trainer client training program cards expose selected `aria-pressed` state under the app structure audit.
+- Trainer program assignment and nutrition preset selectors expose readable labels under the app structure audit.
+- Client workout next card exposes current step state with `aria-current` under the app structure audit.
+- Legacy trainer dashboard client tabs expose selected `aria-pressed` state under the app structure audit.
+- Legacy trainer admin history bulk selection exposes selected state and labeled workout checkboxes under the app structure audit.
+- Production trainer program overview cards expose selected `aria-pressed` state under the app structure audit.
+- Trainer mobile overflow navigation items expose current-page `aria-current` state under the app structure audit.
+- Trainer workouts page active program tab exposes selected `aria-pressed` state under the app structure audit.
+- Legacy trainer/admin action buttons declare explicit `type="button"` under the app structure audit.
+- Admin and access-denied navigation buttons declare explicit `type="button"` under the app structure audit.
+- All production JSX buttons declare explicit `type` under the app structure audit.
+- Client icon-only back, close and refresh actions expose accessible labels under the app structure audit.
+- Profile legacy CSS is owned by `client-profile-lazy.css` under the app structure audit.
+- Additional profile/cabinet CSS is owned by `client-profile-lazy.css` under the app structure audit.
+- Measurement CSS is owned by `client-measurements-lazy.css` under the app structure audit.
+- Client cabinet action cards expose explicit accessible labels under the app structure audit.
+- First setup CSS is owned by `client-first-setup-lazy.css` under the app structure audit.
+- Nutrition weekday labels are stable two-letter values from `buildNutritionWeekDates`.
+- Workout flow CSS is owned by `client-workout-lazy.css` under workout visual audits.
+- Core workout CSS is owned by `client-workout-lazy.css`, including standalone workout route loaders.
+- Exercise weight-mode CSS is owned by trainer/admin internals style entrypoints.
+- Workout readiness choices expose selected `aria-pressed` state under the workout visual audit.
+- Workout mode picker choices expose selected `aria-pressed` state under the workout visual audit.
+- Basic workout quiz selectors expose readable labels under the app structure audit.
+- Nutrition portion selector choices expose selected `aria-pressed` state under the nutrition visual audit.
+- Nutrition food-search bottom bar tabs expose selected `aria-pressed` state under the nutrition visual audit.
+- Nutrition meal picker choices expose expanded and selected state under the nutrition visual audit.
+- Nutrition product icon presets expose selected `aria-pressed` state under the nutrition visual audit.
+- Nutrition product portion unit toggle exposes selected `aria-pressed` state under the nutrition visual audit.
+- Trainer client card tabs expose selected `aria-pressed` state under trainer workspace and visual audits.
+- Trainer workout library tab exposes selected `aria-pressed` state under trainer workspace and visual audits.
+- AI Coach nutrition onboarding training-day and goal choices expose selected `aria-pressed` state under the AI Coach visual audit.
+- AI Coach feature cards expose selected `aria-pressed` state under the AI Coach visual audit.
+- Trainer workout day selector exposes selected `aria-pressed` state under trainer workspace and visual audits.
+- Trainer client photo view tabs expose selected `aria-pressed` state under trainer workspace and visual audits.
+- Trainer client progress photo comparison selectors expose readable labels under the app structure audit.
+- Trainer nutrition diary day buttons expose selected `aria-pressed` state under trainer workspace and visual audits.
+- Trainer progress chart periods and exercise progress filters expose selected `aria-pressed` state under trainer workspace and visual audits.
+- Admin harness filter pills, client cards, workspace tabs and program cards expose selected `aria-pressed` state under the admin visual audit.
+- Admin users CRM and programs overview internals are covered by the admin visual audit through DEV-only harness surfaces.
+- Client primary final CSS keeps profile AI supporting compact rules in guarded root owners after removing late duplicate blocks.
+- Client primary final CSS keeps nutrition AI/Zouk top card grid rules in one guarded root owner after removing a late duplicate block.
+- Client primary final CSS keeps food search home compact header rules in guarded root owners after removing late duplicate blocks.
+- Client primary final CSS keeps food edit product compact header rules in guarded root owners after removing late duplicate blocks.
+- Client primary final CSS keeps profile AI hero pseudo-element hide rules in one guarded root owner after removing duplicate blocks.
+- Client primary final CSS keeps profile AI stats row spacing rules in one guarded owner after removing a duplicate block.
+- Client primary final CSS keeps profile refresh button positioning rules in one guarded owner after removing a duplicate block.
+- Client primary final CSS keeps profile avatar 70px mobile sizing rules in one guarded owner after removing a duplicate block.
+- Client primary final CSS keeps food product/edit action bar grid rules in one guarded owner after removing duplicate blocks.
+- Client primary final CSS keeps profile progress overview grid rules in one guarded owner after removing a duplicate block.
+- Client primary final CSS no longer keeps an overwritten profile progress insight card shell before later card owners.
+- Client primary final CSS no longer keeps an overwritten workout header action layout before the later final owner.
+- Client primary final CSS no longer keeps an overwritten food search recent grid layout before later final owners.
+- Client primary final CSS no longer keeps overwritten food recent-card sizing or AI stats centering no-op rules before later owners.
+- Client primary final CSS no longer keeps overwritten pseudo reset, hero radius, pointer-only, or top variable no-op rules before later owners.
+- Client nutrition grid, render-target, and food editor CSS no longer keep small overwritten typography/layout no-op blocks before later owners.
+- Nutrition product edit modal action bar now resets the inherited centered-bar transform in the card-sheet lock, with visual coverage guarding the bar inside the sheet.
+- Client food search final CSS no longer keeps product flow title wrapper layout in the older product-add section before the stable-flow owner.
+- Client food search final CSS no longer keeps product flow title text layout in the older product-add section before the stable/final owner.
+- Client food search final CSS no longer keeps product top action layout in the older product-add section before the stable-flow owner.
+- Client food search final CSS no longer keeps product render top action layout in the older stable-flow section before the final owners.
+- Client food search final CSS no longer keeps standalone food search close button sizing after the grouped close-shell owner.
+- Client primary final CSS no longer keeps the food search header meal title-wrap layout in a duplicate home-specific owner.
+- Client primary final CSS no longer keeps nutrition AI/Zouk top-card grid layout in a duplicate collapsed inline subset owner.
+- Legacy profile dashboard Telegram CSS no longer repeats AI coach inside-progress text overflow after the shared status-row text owner.
+- Client render target CSS no longer repeats compact profile AI avatar sizing in the page-specific subset owner after the shared avatar owner.
+- Legacy desktop cabinet polish CSS now groups trainer/cabinet strong text overflow across task, notification and program summary rows.
+- Legacy desktop cabinet polish CSS now groups trainer/cabinet header shell layout across task, workspace and notification headers.
+- Legacy desktop cabinet polish CSS now groups trainer/cabinet accent micro labels across the trainer dashboard modal and inline nutrition plan headers.
+- Client food search CSS now hides the product render fullscreen scrollbar rail while preserving scroll on mobile product editing.
+- Legacy client workout flow CSS now groups compact run action panel sizing across warmup, exercise and finish bottom panels.
+- Legacy trainer program editor CSS now groups repeated nav label typography across top, programs, program editor and workout editor bars.
+- Client food search CSS now locks the product editor action bar inside the edit sheet and guards button overflow in visual coverage.
+- Client nutrition grid CSS now groups nutrition bottom nav active and icon locks across shared and fixed-header surfaces.
+- Client render target CSS now groups hero and progress-card text stack rules across main, cabinet and nutrition surfaces.
+- Client render target CSS now keeps main stats compact height in one final owner after removing late height-only duplicate locks.
+- Legacy food editor CSS now groups details input/textarea and portion-unit select focus states in one owner.
+- Profile dashboard Telegram CSS now groups avatar image cover rules across profile, settings and manage surfaces.
+- Admin client dashboard polish CSS now groups nutrition month summary-below typography and mobile card sizing with the summary owners.
+- AI Coach lazy CSS now groups nutrition plan week and two-column grid layout in one owner.
+- Legacy admin client page CSS now groups Telegram render logo/avatar sizing in one owner.
+- Legacy admin program editor CSS now groups the shared button shell across top and grid editor surfaces.
+- Legacy admin program editor CSS now groups stats row/grid layout in one owner.
+- Legacy admin program editor CSS now groups the shared max-width shell across editor surfaces.
+- Legacy admin program editor CSS now groups muted header paragraph typography in one owner.
+- Legacy admin program editor CSS now groups accent button states across editor surfaces.
+- Legacy admin program editor CSS now groups the shared topbar shell across editor surfaces.
+- Legacy admin program editor CSS now groups the shared form-control shell across editor surfaces.
+- Legacy admin program editor CSS now groups stat value typography across editor surfaces.
+- Legacy admin program editor CSS now groups empty-state typography across editor surfaces.
+- Legacy admin program editor CSS now groups empty-state shell alignment across editor surfaces.
+- Client main final overrides now guard mobile card readability for hero, stat, split-card and progress badge text.
+- Client primary final CSS keeps profile AI goal-stat font sizing in one guarded owner after removing a duplicate block.
+- Client primary final CSS keeps workout deck spacing rules in one guarded owner after removing a duplicate block.
+- Client primary final CSS keeps food search home child layout and recent-card rules in guarded owners after removing duplicate blocks.
+- Client primary final CSS keeps max-640 product, food edit, workout title, refresh, profile hero and recent-card rules in guarded owners after removing duplicate blocks.
+- Client primary final CSS exact duplicate block scan now returns zero after removing final food edit and nutrition meta duplicate blocks.
+- Client render target CSS exact duplicate block scan now returns zero after removing duplicate profile hero and avatar locks.
+- Client nutrition grid CSS exact duplicate block scan now returns zero after removing duplicate main dashboard inner layout locks.
+- Legacy admin client page CSS exact duplicate block scan now returns zero after removing duplicate mobile tab, metric and Telegram quick-message locks.
+- Legacy nutrition header CSS exact duplicate block scan now returns zero after removing duplicate compact calorie-row strong sizing.
+- Admin calendar CSS now keeps the equal-button stack and active reminder state in the final `V62` owner after removing another overwritten pre-final day-settings block.
+- Admin calendar CSS now keeps connected Telegram and final equal-button text spacing in the `V62` owner after removing the last pre-final equal-button shell.
+- Admin calendar CSS now keeps header width and Telegram nowrap/order in the `V62` owner after removing another pre-final header shell.
+- Admin calendar CSS now keeps high-specificity Save/Test/Toggle button sizing in the `V62` owner after removing pre-final button shells.
+- Admin calendar CSS no longer keeps pre-final V52 test-button and Telegram shells now covered by the guarded `V62` owner.
+- Legacy desktop cabinet polish CSS now keeps trainer client KPI and macro metric caption typography in one guarded owner.
+- Legacy desktop cabinet polish CSS now keeps trainer client attention and progress caption typography in one guarded owner.
+- Legacy desktop cabinet polish CSS now keeps trainer client hero, section and control muted caption typography in one guarded owner.
+- Legacy desktop cabinet polish CSS now keeps trainer client AI, control and activity list shells in one guarded owner.
+- Legacy desktop cabinet polish CSS now keeps trainer client section, attention, AI and program text shells in one guarded owner.
+- Legacy desktop cabinet polish CSS now keeps trainer mobile task, photo and payment form columns in one guarded owner.
+- Legacy desktop cabinet polish CSS now keeps trainer client mobile photo, hero and progress columns in one guarded owner.
+- Legacy desktop cabinet polish CSS now keeps trainer mobile progress, event and payment auto-column resets in one guarded owner.
+- Legacy desktop cabinet polish CSS now keeps trainer progress, event and payment full-width column resets in one guarded owner.
+
+## Current Build Shape
+
+From the latest verified build:
+
+- main app JS chunk: about `472.34 KiB` raw, `131.46 KiB` gzip.
+- main JS budget: `600 KiB` raw, `170 KiB` gzip.
+- main CSS bundle: about `1120.80 KiB` raw, `113.89 KiB` gzip.
+- CSS budget: `2100 KiB` raw, `270 KiB` gzip.
+- CSS source files under `src`: 100 total in the latest `npm.cmd run report:css` pass, about `3273.14 KiB` total source CSS.
+
+The JS side has already received the biggest low-risk win. The next meaningful size problem is route-by-route CSS cleanup after stable screenshots, not more AppCore slicing.
+
+## Do Not Do Next
+
+- Do not keep splitting `AppCore.jsx` only to reduce line count.
+- Do not delete legacy CSS by filename or intuition.
+- Do not move Firebase, trainer or nutrition persistence while doing structure cleanup.
+- Do not make visual redesign changes inside architecture cleanup commits.
+
+## Best Next Steps
+
+1. Keep `AppCore.jsx` stable unless a concrete product change touches a contained area.
+2. Treat CSS as the next architecture track:
+   - start with `npm.cmd run report:css`;
+   - map large CSS files to screens/components;
+   - keep route-specific CSS behind approved lazy entrypoints;
+   - keep the current CSS budget green while reducing it gradually;
+   - only remove classes after usage search and visual/e2e checks.
+3. Consider lazy-loading trainer/client heavy data helpers only when their state and handlers can move with the route cleanly.
+4. Run `npm.cmd run verify` after structural changes and `npm.cmd run test:e2e` after route/loading changes.
+
+## Recent Verification
+
+- `npm.cmd run test`: passed with `420` passed.
+- `npm.cmd run build`: passed.
+- `npm.cmd run check:bundle`: passed.
+- `npm.cmd run report:css`: passed.
+- `npm.cmd run test:e2e`: passed, `37` passed and `1` skipped.

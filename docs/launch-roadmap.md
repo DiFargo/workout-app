@@ -1,0 +1,91 @@
+# MVP Launch Roadmap
+
+Цель: довести приложение до закрытой beta и MVP-запуска к сентябрю без потери стабильности текущей рабочей версии.
+
+## Текущий статус
+
+- Неделя 1 закрыта: diff стабилизирован, CSS/bundle budget зелёный, build/test/e2e пройдены, commit/push выполнены.
+- Неделя 2 частично закрыта на production: клиентский вход, главная, тренировки, питание, замеры и кабинет проверены на тестовом клиенте.
+- Неделя 3 частично закрыта на production: тренерский dashboard, клиентская карточка и синхронизация назначенной программы проверены на тестовом тренере.
+- Найденные production-риски уже исправлены: localStorage quota fallback, синхронизация trainer/client plan counts, lazy nutrition CSS, service worker update flow и cache headers.
+- Локальные visual audits покрывают client main/cabinet, client nutrition, client workouts, trainer workspace, admin hub и DEV-only admin internals harness.
+- Production smoke оформлен в `docs/production-smoke-checklist.md`.
+- CSS cleanup baseline оформлен в `docs/css-cleanup-baseline.md`.
+- Route-by-route CSS cleanup started with the covered admin hub, trainer workspace and core client entry stacks.
+- Дальше идти без деплоя, пока изменение не требует production-проверки.
+
+## Неделя 1: стабильная база
+
+- Стабилизировать текущий diff.
+- Починить CSS/bundle budget.
+- Проверить `build`, `test`, `test:e2e`, `lint:critical`.
+- Сделать backup commit/push после зелёных проверок.
+
+Статус: закрыто.
+
+## Неделя 2: клиентский production smoke
+
+- Проверять не localhost, а production URL.
+- Пройти реальные сценарии клиента:
+  - вход;
+  - главная;
+  - тренировки;
+  - питание;
+  - замеры;
+  - кабинет;
+  - поиск и добавление еды;
+  - выполнение тренировки.
+
+Статус: частично закрыто. Оставить как повторяемый smoke-чек перед релизами и после изменений в клиентских маршрутах.
+
+## Неделя 3: тренер и синхронизация
+
+- Проверить сценарии тренера:
+  - dashboard;
+  - клиенты;
+  - карточка клиента;
+  - назначение программы;
+  - статусы тренировок;
+  - питание клиента;
+  - сообщения;
+  - уведомления.
+- Проверить синхронизацию клиент <-> тренер.
+
+Статус: частично закрыто. Базовая синхронизация назначенной программы и прогресса исправлена и проверена; остались расширенные сценарии сообщений, уведомлений и редактирования программы.
+
+## Admin coverage
+
+- Admin hub имеет DEV-only harness и visual audit.
+- Access denied state покрыт локальным e2e.
+- Admin CRM и programs overview покрыты DEV-only internals harness и visual audit; heavy internals CSS изолирован от production admin hub chunk.
+
+## Неделя 4: адаптация на устройствах
+
+- Проверить 2-3 реальных телефона.
+- Закрыть явные проблемы:
+  - нижний бар;
+  - заголовки;
+  - safe area;
+  - переполнение карточек;
+  - модалки;
+  - клавиатура и ввод.
+
+## Недели 5-6: P1 и оптимизация
+
+- Закрыть P1 из аудита.
+- Оптимизировать ассеты.
+- Убрать критичные визуальные баги.
+- Уменьшить CSS/JS вес без изменения UX.
+
+## Недели 7-8: закрытая beta
+
+- Дать доступ нескольким клиентам и тренерам.
+- Собрать баги по реальному использованию.
+- Исправлять только блокеры и сильную боль.
+
+## Перед запуском
+
+- Финальная проверка security/rules.
+- Финальная сборка.
+- Production E2E/smoke.
+- Релизная точка: commit, tag, push, deploy.

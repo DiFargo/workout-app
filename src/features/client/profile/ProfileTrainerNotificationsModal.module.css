@@ -1,0 +1,237 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 16000;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom));
+  background: var(--background-profile-trainer-notifications-overlay);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dialog {
+  box-sizing: border-box;
+  width: min(100%, 420px);
+  max-height: min(650px, calc(100dvh - 32px));
+  padding: 18px;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 14px;
+  overflow: hidden;
+  border: 1px solid var(--color-profile-trainer-notifications-dialog-border);
+  border-radius: 26px;
+  background: var(--background-profile-trainer-notifications-dialog);
+  box-shadow: var(--shadow-profile-trainer-notifications-dialog);
+  color: var(--color-profile-trainer-notifications-text);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.headerText {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.eyebrow {
+  color: var(--color-profile-trainer-notifications-eyebrow);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.heading {
+  margin: 0;
+  color: var(--color-profile-trainer-notifications-heading);
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+.closeButton {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  border: 1px solid var(--color-profile-trainer-notifications-control-border);
+  border-radius: 13px;
+  background: var(--background-profile-trainer-notifications-control);
+  color: var(--color-profile-trainer-notifications-control);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.summary {
+  margin: 0;
+  color: var(--color-profile-trainer-notifications-summary);
+  font-size: 12px;
+}
+
+.list {
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.item {
+  width: 100%;
+  min-height: 66px;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-profile-trainer-notifications-item-border);
+  border-radius: 15px;
+  background: var(--background-profile-trainer-notifications-item);
+  color: var(--color-profile-trainer-notifications-text);
+  font: inherit;
+  text-align: left;
+  cursor: default;
+}
+
+.actionable {
+  cursor: default;
+}
+
+.itemIcon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-profile-trainer-notifications-icon-border);
+  border-radius: 50%;
+  color: var(--color-profile-trainer-notifications-icon);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.itemText {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.itemTitle {
+  overflow: hidden;
+  color: var(--color-profile-trainer-notifications-item-title);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemMeta,
+.itemStatus {
+  color: var(--color-profile-trainer-notifications-muted);
+  font-size: 10px;
+  font-style: normal;
+}
+
+.overdue .itemIcon {
+  border-color: var(--color-profile-trainer-notifications-overdue-border);
+  color: var(--color-profile-trainer-notifications-overdue);
+}
+
+.completed {
+  opacity: 0.62;
+}
+
+.completed .itemIcon {
+  border-color: var(--background-profile-trainer-notifications-completed);
+  background: var(--background-profile-trainer-notifications-completed);
+  color: var(--color-profile-trainer-notifications-completed);
+}
+
+.actions {
+  grid-column: 2 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.actionButton {
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--color-profile-trainer-notifications-action-border);
+  border-radius: 999px;
+  background: var(--background-profile-trainer-notifications-action);
+  color: var(--color-profile-trainer-notifications-action);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.closeButton:focus-visible,
+.actionButton:focus-visible {
+  outline: 2px solid var(--color-profile-trainer-notifications-focus);
+  outline-offset: 2px;
+}
+
+.empty {
+  min-height: 210px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-profile-trainer-notifications-empty-icon-border);
+  border-radius: 50%;
+  background: var(--background-profile-trainer-notifications-empty-icon);
+  color: var(--color-profile-trainer-notifications-empty-icon);
+  font-size: 22px;
+  font-style: normal;
+}
+
+.emptyTitle {
+  color: var(--color-profile-trainer-notifications-item-title);
+  font-size: 17px;
+}
+
+.emptyText {
+  max-width: 260px;
+  margin: 0;
+  color: var(--color-profile-trainer-notifications-empty-text);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@media (max-width: 380px) {
+  .dialog {
+    padding: 15px;
+    border-radius: 22px;
+  }
+
+  .item {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .itemStatus {
+    grid-column: 2;
+  }
+}

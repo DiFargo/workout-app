@@ -1,0 +1,234 @@
+.searchOverlay,
+.searchScreen {
+  box-sizing: border-box;
+  scrollbar-width: none;
+  scrollbar-gutter: auto;
+}
+
+.searchOverlay {
+  position: fixed;
+  inset: 0 var(--viewport-inline-compensation) 0 0;
+  z-index: 2147483600;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--color-food-search-overlay-background);
+  color: var(--color-food-search-overlay-text);
+  font-family: inherit;
+}
+
+.searchScreen {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  margin: 6px auto;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  border-radius: 24px;
+  background-color: var(--color-food-search-screen-background);
+  background-image: var(--gradient-food-search-screen);
+  color: var(--color-food-search-screen-text);
+  font-family: var(--font-family-compact-ui);
+}
+
+.searchOverlay::-webkit-scrollbar,
+.searchScreen::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+.fixtureOverlay {
+  color: var(--color-food-product-overlay-text);
+}
+
+.headerLayout {
+  width: calc(100% - 5px);
+  height: calc(100dvh - 12px);
+  min-height: calc(100dvh - 12px);
+  max-height: calc(100dvh - 12px);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border: 0;
+  box-shadow: none;
+  color: var(--color-food-flow-text);
+}
+
+.fixtureLayout {
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: calc(100dvh - 12px);
+  padding: 58px 26px calc(112px + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  border: 1px solid var(--color-food-product-screen-border);
+  background-color: var(--color-food-product-screen-background);
+  background-image: var(--gradient-food-product-screen);
+  box-shadow: var(--shadow-food-product-screen);
+}
+
+.searchLayout {
+  padding: 0 12px calc(112px + env(safe-area-inset-bottom, 0px));
+}
+
+.myProductsLayout {
+  padding: 58px 26px calc(112px + env(safe-area-inset-bottom, 0px));
+  background: #f4f7fd;
+}
+
+.productOverlay,
+.productLayout {
+  box-sizing: border-box;
+  scrollbar-width: none;
+  scrollbar-gutter: auto;
+}
+
+.productOverlay {
+  position: fixed;
+  inset: 0 var(--viewport-inline-compensation) 0 0;
+  z-index: 2147483600;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--color-food-product-overlay);
+  color: var(--color-food-product-overlay-text);
+  font-family: inherit;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  scrollbar-color: var(--scrollbar-food-product-page);
+  -webkit-text-fill-color: var(--color-food-product-overlay-text);
+}
+
+.productOverlay[data-css-module-scope="food-product-overlay"] {
+  position: fixed;
+  z-index: 2147483600;
+}
+
+.productOverlay::-webkit-scrollbar,
+.productLayout::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+.productLayout {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: calc(100dvh - 16px);
+  margin: 0 auto;
+  padding: 0 12px calc(112px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid var(--color-food-product-screen-border);
+  border-radius: 26px;
+  background-color: var(--color-food-product-screen-background);
+  background-image: var(--gradient-food-product-screen);
+  color: var(--color-food-product-screen-text);
+  font-family: Arial, sans-serif;
+  box-shadow: var(--shadow-food-product-screen);
+  scrollbar-color: var(--scrollbar-food-product-page);
+  -webkit-text-fill-color: var(--color-food-product-screen-text-fill);
+}
+
+:global(:root[data-app-theme="dark-green"]) .productOverlay {
+  padding: 8px;
+  scrollbar-width: auto;
+  scrollbar-color: auto;
+}
+
+:global(:root[data-app-theme="warm-light"]) .productOverlay,
+:global(:root[data-app-theme="warm-light"]) .productLayout {
+  scrollbar-color: var(--scrollbar-food-product-page);
+}
+
+:global(:root[data-app-theme="warm-light"]) .productLayout {
+  color: var(--color-food-product-screen-text);
+}
+
+:global(:root[data-app-theme="dark-green"]) .productLayout {
+  padding: 18px 12px calc(106px + env(safe-area-inset-bottom, 0px));
+  border-radius: 24px;
+  scrollbar-color: auto;
+}
+
+:global(:root[data-app-theme="dark-green"]) .headerLayout {
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  min-height: calc(100dvh - 12px);
+  max-height: none;
+  margin: 0;
+  border-radius: 0;
+  color: var(--color-text);
+  background-color: var(--color-food-search-screen-background);
+  background-image: var(--gradient-food-search-screen);
+}
+
+:global(:root[data-app-theme="dark-green"]) .searchOverlay {
+  padding: 8px;
+}
+
+:global(:root[data-app-theme="dark-green"]) .fixtureLayout {
+  max-width: 430px;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: calc(100dvh - 16px);
+  margin: 0;
+  padding: 18px 12px calc(106px + env(safe-area-inset-bottom, 0px));
+  border-radius: 24px;
+}
+
+@media (min-width: 641px) {
+  .searchScreen {
+    background-image: var(--gradient-food-search-screen-wide);
+  }
+
+  .fixtureLayout {
+    height: calc(100dvh - 12px);
+    min-height: calc(100dvh - 12px);
+    max-height: calc(100dvh - 12px);
+    background-color: var(--color-food-product-screen-background-wide);
+    background-image: var(--gradient-food-product-screen-wide);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .productLayout {
+    background-color: var(--color-food-product-screen-background-wide);
+    background-image: var(--gradient-food-product-screen-wide);
+  }
+}
+
+@media (max-width: 640px) {
+  :global(:root[data-app-theme="warm-light"]) .fixtureOverlay {
+    font-family: var(--font-family-sans);
+  }
+
+  .fixtureLayout {
+    padding-top: 0;
+  }
+
+  .myProductsLayout {
+    padding: 0 18px calc(112px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 399px) {
+  .productLayout {
+    border-radius: 24px;
+  }
+}
+
+@media (max-width: 380px) {
+  .productLayout {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}

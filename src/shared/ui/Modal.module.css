@@ -1,0 +1,30 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--color-dialog-backdrop, rgba(15, 18, 26, 0.54));
+  cursor: pointer;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 420px);
+  box-sizing: border-box;
+}

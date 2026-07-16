@@ -1,0 +1,107 @@
+.process {
+  width: 100%;
+  min-height: 82px;
+  margin: 10px 0;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--spacing-md);
+  border: 1px solid #dfe3ef;
+  border-radius: 18px;
+  background: var(--color-surface);
+  color: var(--color-heading);
+  box-shadow: 0 9px 25px rgba(55, 64, 112, 0.075);
+}
+
+:global(:root[data-app-theme="dark-green"]) .process {
+  border-color: var(--color-border);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(127, 159, 58, 0.15), transparent 42%),
+    linear-gradient(180deg, rgba(15, 23, 16, 0.95), rgba(8, 13, 9, 0.98));
+  color: var(--color-text);
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.orbit {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(127, 159, 58, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(127, 159, 58, 0.18);
+}
+
+.orbitRing {
+  position: absolute;
+  inset: 6px;
+  border: 3px solid rgba(127, 159, 58, 0.12);
+  border-top-color: rgba(145, 173, 78, 0.95);
+  border-radius: 50%;
+  animation: orbit 0.9s linear infinite;
+}
+
+.orbitCore {
+  position: absolute;
+  inset: 17px;
+  border-radius: 50%;
+  background: rgba(145, 173, 78, 0.9);
+  box-shadow: 0 0 18px rgba(145, 173, 78, 0.4);
+  animation: corePulse 1.15s ease-in-out infinite;
+}
+
+.content {
+  min-width: 0;
+}
+
+.title {
+  display: block;
+  color: var(--color-heading);
+  font-size: var(--font-size-sm);
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.description {
+  margin: 5px 0 0;
+  color: var(--color-heading);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+:global(:root[data-app-theme="dark-green"]) .title {
+  color: rgba(247, 248, 251, 0.9);
+}
+
+:global(:root[data-app-theme="dark-green"]) .description {
+  color: rgba(247, 248, 251, 0.5);
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes corePulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.74);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbitRing,
+  .orbitCore {
+    animation: none;
+  }
+}

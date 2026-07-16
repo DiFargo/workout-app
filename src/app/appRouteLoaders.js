@@ -1,0 +1,20 @@
+export const loadAdminPanelHub = () => import("../components/admin/AdminPanelHub");
+export const loadAiCoachPage = () => import("../features/client/ai/AiCoachPage");
+export const loadBasicWorkoutQuizPage = () => import("../features/client/workouts/BasicWorkoutQuizPage");
+export const loadMeasurementWizardPage = () => import("../features/client/measurements/MeasurementWizardPage");
+export const loadWorkoutHistoryPage = () => import("../features/client/workouts/WorkoutHistoryPage");
+export const loadWorkoutListPage = () => import("../features/client/workouts/WorkoutListPage");
+export const loadWorkoutModePage = () => import("../features/client/workouts/WorkoutModePage");
+export const loadWorkoutPlanPage = () => import("../features/client/workouts/WorkoutPlanPage");
+
+export function preloadClientRouteChunks() {
+  return Promise.allSettled([
+    loadWorkoutListPage(),
+    loadWorkoutModePage(),
+    loadWorkoutHistoryPage(),
+    loadWorkoutPlanPage(),
+    loadBasicWorkoutQuizPage(),
+    loadMeasurementWizardPage(),
+    loadAiCoachPage()
+  ]);
+}

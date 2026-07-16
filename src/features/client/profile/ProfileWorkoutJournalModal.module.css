@@ -1,0 +1,141 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  box-sizing: border-box;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--background-profile-modal-overlay);
+  backdrop-filter: var(--filter-profile-modal-overlay);
+  -webkit-backdrop-filter: var(--filter-profile-modal-overlay);
+}
+
+.dialog {
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 430px);
+  height: min(780px, calc(100dvh - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 14px;
+  display: grid;
+  grid-template-rows: 48px 48px minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+  border: 1px solid var(--color-profile-modal-border);
+  border-radius: 26px;
+  background: var(--background-profile-modal);
+  box-shadow: var(--shadow-profile-modal);
+  color: var(--color-profile-modal);
+}
+
+.header {
+  position: relative;
+  z-index: 2;
+  padding: 0 2px 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eyebrow {
+  display: block;
+  color: var(--color-profile-modal-eyebrow);
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.title {
+  margin: 2px 0 0;
+  color: var(--color-profile-modal-heading);
+  font-size: 21px;
+  line-height: 1;
+}
+
+.closeButton {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-profile-modal-close-border);
+  border-radius: 13px;
+  background: var(--background-profile-modal-close);
+  color: var(--color-profile-modal-close);
+  font-size: 23px;
+  line-height: 1;
+}
+
+.tabs {
+  box-sizing: border-box;
+  padding: 3px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  border: 1px solid var(--color-workout-journal-tabs-border);
+  border-radius: 16px;
+  background: var(--background-workout-journal-tabs);
+}
+
+.tab {
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--color-workout-journal-tab-border);
+  border-radius: 13px;
+  background: var(--background-workout-journal-tab);
+  color: var(--color-workout-journal-tab);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.activeTab {
+  border-color: var(--color-workout-journal-tab-active-border);
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-workout-journal-tab-active);
+  color: var(--color-workout-journal-tab-active);
+}
+
+.body {
+  min-height: 0;
+  padding: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.body::-webkit-scrollbar {
+  display: none;
+}
+
+.panel {
+  min-height: 0;
+}
+
+.historyPanel {
+  height: 100%;
+  display: grid;
+}
+
+:global(:root[data-app-theme="warm-light"]) .dialog strong {
+  color: var(--color-profile-modal-heading);
+}
+
+:global(:root[data-app-theme="warm-light"]) .dialog small,
+:global(:root[data-app-theme="warm-light"]) .dialog em {
+  color: var(--color-profile-modal-muted);
+}
+
+@media (max-height: 720px) {
+  .dialog {
+    padding: 10px;
+    grid-template-rows: 42px 46px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+}

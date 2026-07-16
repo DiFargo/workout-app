@@ -1,0 +1,2032 @@
+import { expect, test } from "@playwright/test";
+import { failOnRuntimeErrors } from "./runtime-errors.js";
+
+test.setTimeout(60_000);
+
+async function expectNoHorizontalOverflow(page) {
+  const metrics = await page.evaluate(() => ({
+    documentWidth: document.documentElement.scrollWidth,
+    viewportWidth: window.innerWidth
+  }));
+
+  expect(metrics.documentWidth).toBeLessThanOrEqual(metrics.viewportWidth + 1);
+}
+
+async function attachScreenshot(page, testInfo, name) {
+  await testInfo.attach(name, {
+    body: await page.screenshot({ fullPage: true }),
+    contentType: "image/png"
+  });
+}
+
+async function expectTapTargets(page, selectors, minSize = 44) {
+  const failures = await page.evaluate(({ targetSelectors, minimumSize }) => {
+    const isVisible = (node) => {
+      const style = window.getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+
+      return (
+        style.visibility !== "hidden" &&
+        style.display !== "none" &&
+        rect.width > 0 &&
+        rect.height > 0
+      );
+    };
+
+    return targetSelectors.flatMap((selector) => (
+      [...document.querySelectorAll(selector)]
+        .filter(isVisible)
+        .map((node, index) => {
+          const rect = node.getBoundingClientRect();
+          return {
+            selector,
+            index,
+            width: Math.round(rect.width),
+            height: Math.round(rect.height)
+          };
+        })
+        .filter((item) => item.width < minimumSize || item.height < minimumSize)
+    ));
+  }, { targetSelectors: selectors, minimumSize: minSize });
+
+  expect(failures).toEqual([]);
+}
+
+async function openClientNutritionHarness(page, theme = "warm-light") {
+  const themeQuery = theme === "warm-light"
+    ? ""
+    : `&clientHarnessTheme=${encodeURIComponent(theme)}`;
+  await page.goto(`/?clientHarness=1${themeQuery}`);
+  await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-nutrition").click();
+}
+
+async function expectAboveBottomBar(page, floatingSelector) {
+  const metrics = await page.evaluate((selector) => {
+    const rectOf = (node) => {
+      const rect = node?.getBoundingClientRect();
+      return rect
+        ? {
+            y: Math.round(rect.y),
+            bottom: Math.round(rect.bottom)
+          }
+        : null;
+    };
+
+    return {
+      floating: rectOf(document.querySelector(selector)),
+      bottomBar: rectOf(document.querySelector('[data-testid="food-search-bottom-bar"], [data-testid="client-bottom-nav"]'))
+    };
+  }, floatingSelector);
+
+  expect(metrics.floating).not.toBeNull();
+  expect(metrics.bottomBar).not.toBeNull();
+  expect(metrics.floating.bottom).toBeLessThanOrEqual(metrics.bottomBar.y + 1);
+}
+
+async function expectNutritionWeekStripReadable(page) {
+  const metrics = await page.evaluate(() => {
+    const week = document.querySelector('[data-nutrition-header-part="week"]')?.getBoundingClientRect();
+    const days = [...document.querySelectorAll("[data-nutrition-header-day]")].map((day) => {
+      const dayRect = day.getBoundingClientRect();
+      const labelRect = day.querySelector("small")?.getBoundingClientRect();
+      const markerRect = day.querySelector("span")?.getBoundingClientRect();
+
+      return {
+        dayLeft: Math.round(dayRect.left),
+        dayRight: Math.round(dayRect.right),
+        dayTop: Math.round(dayRect.top),
+        dayBottom: Math.round(dayRect.bottom),
+        dayWidth: Math.round(dayRect.width),
+        labelCenterX: Math.round((labelRect?.left || 0) + (labelRect?.width || 0) / 2),
+        labelBottom: Math.round(labelRect?.bottom || 0),
+        labelText: day.querySelector("small")?.textContent?.trim() || "",
+        markerCenterX: Math.round((markerRect?.left || 0) + (markerRect?.width || 0) / 2),
+        markerTop: Math.round(markerRect?.top || 0),
+        markerWidth: Math.round(markerRect?.width || 0),
+        markerHeight: Math.round(markerRect?.height || 0),
+        ariaLabel: day.getAttribute("aria-label") || "",
+        ariaPressed: day.getAttribute("aria-pressed") || "",
+        ariaCurrent: day.getAttribute("aria-current") || "",
+        isToday: day.getAttribute("data-today") === "true"
+      };
+    });
+
+    return {
+      weekLeft: Math.round(week?.left || 0),
+      weekRight: Math.round(week?.right || 0),
+      weekWidth: Math.round(week?.width || 0),
+      weekTop: Math.round(week?.top || 0),
+      weekBottom: Math.round(week?.bottom || 0),
+      days
+    };
+  });
+
+  expect(metrics.days).toHaveLength(7);
+  expect(metrics.days.map((day) => day.labelText)).toEqual(["\u041f\u041d", "\u0412\u0422", "\u0421\u0420", "\u0427\u0422", "\u041f\u0422", "\u0421\u0411", "\u0412\u0421"]);
+  expect(metrics.days.every((day) => day.labelText.length >= 2)).toBe(true);
+  expect(metrics.days.every((day) => day.ariaLabel.startsWith("Выбрать "))).toBe(true);
+  expect(metrics.days.some((day) => day.ariaPressed === "true")).toBe(true);
+  expect(metrics.days.filter((day) => day.ariaCurrent === "date")).toHaveLength(metrics.days.filter((day) => day.isToday).length);
+  for (const day of metrics.days) {
+    expect(day.dayLeft).toBeGreaterThanOrEqual(metrics.weekLeft);
+    expect(day.dayRight).toBeLessThanOrEqual(metrics.weekRight);
+    expect(day.dayTop).toBeGreaterThanOrEqual(metrics.weekTop);
+    expect(day.dayBottom).toBeLessThanOrEqual(metrics.weekBottom);
+    expect(day.dayWidth).toBeLessThanOrEqual(Math.ceil(metrics.weekWidth / 7));
+    expect(day.markerTop - day.labelBottom).toBeGreaterThanOrEqual(4);
+    expect(Math.abs(day.markerCenterX - day.labelCenterX)).toBeLessThanOrEqual(1);
+    expect(day.markerWidth).toBeLessThanOrEqual(28);
+    expect(day.markerHeight).toBeLessThanOrEqual(28);
+  }
+}
+
+test("CSS V2 nutrition header stays scoped and responsive across the viewport matrix", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const cases = [
+    { width: 360, height: 800, theme: "warm-light", actionSize: 48, titleSize: 28, labelSize: 15 },
+    { width: 390, height: 844, theme: "warm-light", actionSize: 48, titleSize: 28, labelSize: 15 },
+    { width: 430, height: 932, theme: "warm-light", actionSize: 48, titleSize: 28, labelSize: 15 },
+    { width: 768, height: 1024, theme: "warm-light", actionSize: 52, titleSize: 31, labelSize: 12 },
+    { width: 1440, height: 900, theme: "warm-light", actionSize: 52, titleSize: 31, labelSize: 12 },
+    { width: 390, height: 844, theme: "dark-green", actionSize: 42, titleSize: 24, labelSize: 12 }
+  ];
+
+  for (const entry of cases) {
+    await page.setViewportSize({ width: entry.width, height: entry.height });
+    await page.goto(`/?clientHarness=1&clientHarnessTheme=${entry.theme}`);
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+
+    const header = page.getByTestId("nutrition-header");
+    const title = header.locator('[data-nutrition-header-part="title"]');
+    const actions = header.locator("[data-nutrition-header-action]");
+    const week = header.locator('[data-nutrition-header-part="week"]');
+    const days = header.locator("[data-nutrition-header-day]");
+    const labels = header.locator('[data-nutrition-header-part="day-label"]');
+    const dots = header.locator('[data-nutrition-header-part="day-dot"]');
+
+    await expect(header).toBeVisible();
+    await expect(header).toHaveAttribute("data-css-module-scope", "nutrition-header");
+    await expect(title).toHaveCSS("font-size", `${entry.titleSize}px`);
+    await expect(actions).toHaveCount(2);
+    await expect(actions.first()).toHaveCSS("width", `${entry.actionSize}px`);
+    await expect(actions.first()).toHaveCSS("height", `${entry.actionSize}px`);
+    await expect(week).toHaveCSS("height", "54px");
+    await expect(days).toHaveCount(7);
+    await expect(days.first()).toHaveCSS("height", "46px");
+    await expect(labels.first()).toHaveCSS("font-size", `${entry.labelSize}px`);
+    await expect(dots.first()).toHaveCSS("width", "26px");
+    await expect(dots.first()).toHaveCSS("height", "26px");
+    await expect(header.locator('[data-selected="true"][aria-pressed="true"]')).toHaveCount(1);
+    await expect(header.locator(".nutritionHeroV4, .nutritionHeroTitleV4, .nutritionHeaderIconButton, .nutritionWeekV4, .nutritionDayV4, .nutritionStreakV4")).toHaveCount(0);
+
+    const geometry = await header.evaluate((node) => {
+      const headerRect = node.getBoundingClientRect();
+      const dayRects = [...node.querySelectorAll("[data-nutrition-header-day]")].map((day) => day.getBoundingClientRect());
+      return {
+        left: headerRect.left,
+        right: headerRect.right,
+        dayInsideWeek: dayRects.every((rect) => rect.left >= headerRect.left && rect.right <= headerRect.right)
+      };
+    });
+    expect(geometry.left).toBeGreaterThanOrEqual(0);
+    expect(geometry.right).toBeLessThanOrEqual(entry.width);
+    expect(geometry.dayInsideWeek).toBe(true);
+    await expectNutritionWeekStripReadable(page);
+    await expectNoHorizontalOverflow(page);
+
+    await page.getByTestId("nutrition-header-calendar").click();
+    await expect(page.getByTestId("nutrition-calendar-modal")).toBeVisible();
+    await page.getByTestId("nutrition-calendar-close").click();
+    await expect(page.getByTestId("nutrition-calendar-modal")).toBeHidden();
+  }
+});
+
+test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport matrix", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const cases = [
+    { width: 360, height: 800, theme: "warm-light", navHeight: 76, strokeWidth: "2.4px" },
+    { width: 390, height: 844, theme: "warm-light", navHeight: 76, strokeWidth: "2.4px" },
+    { width: 430, height: 932, theme: "warm-light", navHeight: 76, strokeWidth: "2.4px" },
+    { width: 768, height: 1024, theme: "warm-light", navHeight: 76, strokeWidth: "2.4px" },
+    { width: 1440, height: 900, theme: "warm-light", navHeight: 80, strokeWidth: "2px" },
+    { width: 390, height: 844, theme: "dark-green", navHeight: 80, strokeWidth: "2px" }
+  ];
+
+  for (const entry of cases) {
+    await page.setViewportSize({ width: entry.width, height: entry.height });
+    await page.goto(`/?clientHarness=1&clientHarnessTheme=${entry.theme}`);
+    await page.getByTestId("client-nav-nutrition").click();
+
+    const root = page.getByTestId("nutrition-page");
+    const navigation = page.getByTestId("client-bottom-nav");
+    const buttons = navigation.locator(":scope > button");
+    const icons = navigation.locator(":scope > button svg");
+
+    await expect(root).toBeVisible();
+    await expect(root).toHaveAttribute("data-css-module-scope", "nutrition-page");
+    await expect(root).not.toHaveClass(/fatSecretPage|nutritionFixedHeaderV3|clientCorePageNutrition/);
+    await expect(navigation).toBeVisible();
+    await expect(navigation).toHaveAttribute("data-css-module-scope", "client-primary-bottom-bar");
+    await expect(navigation).not.toHaveClass(/nutritionBottomTabBar|clientBottomNav/);
+    await expect(navigation).toHaveCSS("position", "fixed");
+    await expect(navigation).toHaveCSS("height", `${entry.navHeight}px`);
+    await expect(buttons).toHaveCount(4);
+    await expect(icons).toHaveCount(4);
+    await expect(icons.first()).toHaveCSS("stroke-width", entry.strokeWidth);
+    await expect(page.getByTestId("client-nav-nutrition")).toHaveAttribute("aria-current", "page");
+
+    const geometry = await page.evaluate(() => {
+      const rootNode = document.querySelector('[data-testid="nutrition-page"]');
+      const navNode = document.querySelector('[data-testid="client-bottom-nav"]');
+      const rootRect = rootNode.getBoundingClientRect();
+      const navRect = navNode.getBoundingClientRect();
+      const buttonRects = [...navNode.querySelectorAll(":scope > button")].map((button) => button.getBoundingClientRect());
+      return {
+        viewport: { width: innerWidth, height: innerHeight },
+        documentWidth: document.documentElement.scrollWidth,
+        root: { left: rootRect.left, right: rootRect.right, width: rootRect.width },
+        navigation: { left: navRect.left, right: navRect.right, top: navRect.top, bottom: navRect.bottom, width: navRect.width },
+        buttonsInsideNavigation: buttonRects.every((rect) => (
+          rect.left >= navRect.left && rect.right <= navRect.right
+          && rect.top >= navRect.top && rect.bottom <= navRect.bottom
+        )),
+        buttonWidths: buttonRects.map((rect) => Math.round(rect.width * 100) / 100)
+      };
+    });
+
+    expect(geometry.documentWidth).toBeLessThanOrEqual(geometry.viewport.width + 1);
+    expect(geometry.root.left).toBeGreaterThanOrEqual(0);
+    expect(geometry.root.right).toBeLessThanOrEqual(geometry.viewport.width);
+    expect(geometry.navigation.left).toBeGreaterThanOrEqual(0);
+    expect(geometry.navigation.right).toBeLessThanOrEqual(geometry.viewport.width);
+    expect(geometry.navigation.top).toBeGreaterThanOrEqual(0);
+    expect(geometry.navigation.bottom).toBeLessThanOrEqual(geometry.viewport.height);
+    if (entry.theme === "warm-light" && entry.width <= 640) {
+      expect(geometry.navigation.width).toBe(entry.width - 20);
+    } else {
+      expect(geometry.navigation.width).toBeLessThanOrEqual(394);
+    }
+    expect(geometry.buttonsInsideNavigation).toBe(true);
+    expect(Math.max(...geometry.buttonWidths) - Math.min(...geometry.buttonWidths)).toBeLessThanOrEqual(1);
+    if (entry.theme === "warm-light" && entry.width >= 1200) {
+      expect(geometry.root.width).toBe(1040);
+    }
+    if (entry.theme === "warm-light" && entry.width > 640 && entry.width < 1200) {
+      expect(geometry.root.width).toBe(390);
+    }
+  }
+});
+
+test("client nutrition visual audit covers dense actions and modal entry points", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await openClientNutritionHarness(page);
+  await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
+  await expect(page.locator('[data-nutrition-header-part="title"]')).toBeVisible();
+  await expect(page.getByLabel("Поиск еды")).toBeVisible();
+  await expect(page.getByLabel("Календарь")).toBeVisible();
+
+  await expectNutritionWeekStripReadable(page);
+  await expectNoHorizontalOverflow(page);
+  await expectTapTargets(page, [
+    "[data-nutrition-header-action]",
+    '[data-testid="nutrition-orbit-add"]',
+    '[data-testid="nutrition-diary-toggle"]',
+    '[data-nutrition-summary-part="card"]',
+    '[data-testid="client-bottom-nav"] button'
+  ]);
+  await attachScreenshot(page, testInfo, "client-nutrition-main.png");
+
+  await page.locator("[data-nutrition-header-action]").first().click();
+  await expect(page.getByTestId("food-search-screen")).toBeVisible();
+  await expect(page.locator('[data-testid="food-search-bottom-bar"] button[aria-pressed="true"]')).toHaveCount(1);
+  await expect(page.locator('[data-food-search-action="search"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByTestId("food-search-header")).toHaveAttribute("data-css-module-scope", "food-search-header");
+  await expect(page.locator('[data-food-search-header-action="toggle-meal"]')).toHaveAttribute("aria-expanded", /^(true|false)$/);
+  await page.locator('[data-food-search-header-action="toggle-meal"]').click();
+  await expect(page.getByTestId("food-search-meal-menu")).toBeVisible();
+  await expect(page.locator("[data-food-search-meal][aria-pressed='true']")).toHaveCount(1);
+  await page.locator('[data-food-search-header-action="collapse-meal"]').click();
+  await expect(page.getByTestId("food-search-meal-menu")).toBeHidden();
+  await expectTapTargets(page, [
+    '[data-food-search-header-action="close"]',
+    '[data-food-search-header-action="toggle-meal"]',
+    "[data-food-search-recent-card]",
+    '[data-testid="food-search-photo-action"]',
+    '[data-testid="food-search-bottom-bar"] button'
+  ]);
+  await expectAboveBottomBar(page, '[data-testid="food-search-photo-action"]');
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-food-search.png");
+
+  await page.locator('[data-food-search-action="create"]').click();
+  await expect(page.getByTestId("nutrition-create-choice")).toBeVisible();
+  await expect(page.locator('[data-testid="food-search-bottom-bar"] button[aria-pressed="true"]')).toHaveCount(1);
+  await expect(page.locator('[data-food-search-action="create"]')).toHaveAttribute("aria-pressed", "true");
+  await expectTapTargets(page, [
+    '[data-testid="nutrition-create-choice-close"]',
+    '[data-testid="nutrition-create-choice-option"]',
+    '[data-testid="food-search-bottom-bar"] button'
+  ], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-create-choice.png");
+  await page.getByTestId("nutrition-create-choice-close").click();
+  await expect(page.getByTestId("nutrition-create-choice")).toBeHidden();
+
+  await page.getByTestId("food-search-input").locator("input").fill("yogurt");
+  await expect(page.locator("[data-food-search-result-card]")).toHaveCount(2);
+  await expectTapTargets(page, ["[data-food-search-result-card]", '[data-testid="food-search-photo-action"]', '[data-testid="food-search-bottom-bar"] button']);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-food-results.png");
+
+  await page.locator("[data-food-search-result-card]").first().click();
+  await expect(page.getByTestId("food-product-page")).toBeVisible();
+  await expect(page.getByTestId("food-portion-selector")).toBeVisible();
+  await expect(page.locator('[data-food-product-header-action="toggle-meal"]')).toHaveAttribute("aria-expanded", /^(true|false)$/);
+  await page.locator('[data-food-product-header-action="toggle-meal"]').click();
+  await expect(page.getByTestId("food-product-meal-menu")).toBeVisible();
+  await expect(page.locator("[data-food-product-meal][aria-pressed='true']")).toHaveCount(1);
+  await page.locator("[data-food-product-meal]").nth(1).click();
+  await expect(page.getByTestId("food-product-meal-menu")).toBeHidden();
+  await expect(page.locator('[data-food-portion-action="grams"]')).toHaveAttribute("aria-pressed", /^(true|false)$/);
+  await page.locator('[data-food-portion-action="toggle-menu"]').click();
+  await expect(page.getByTestId("food-portion-menu")).toBeVisible();
+  await expect(page.locator("[data-food-portion-unit]")).toHaveAttribute("aria-pressed", /^(true|false)$/);
+  await page.locator("[data-food-portion-unit]").first().click();
+  await expect(page.getByTestId("food-portion-menu")).toBeHidden();
+  await expect(page.locator('[data-food-portion-action="grams"]')).toHaveAttribute("aria-pressed", "false");
+  await page.locator('[data-food-portion-action="toggle-menu"]').click();
+  await expect(page.getByTestId("food-portion-menu")).toBeVisible();
+  await expect(page.locator("[data-food-portion-unit][aria-pressed='true']")).toHaveCount(1);
+  await page.locator('[data-food-portion-action="toggle-menu"]').click();
+  await expect(page.getByTestId("food-portion-menu")).toBeHidden();
+  await expectTapTargets(page, [
+    "[data-food-product-top-action]",
+    '[data-testid="food-product-action-bar"] button'
+  ], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-product-screen.png");
+
+  await page.locator('[data-food-product-top-action="edit"]').click();
+  await expect(page.getByTestId("food-edit-page")).toBeVisible();
+  const editActionBarMetrics = await page.evaluate(() => {
+    const sheet = document.querySelector('[data-testid="food-edit-page"]')?.getBoundingClientRect();
+    const actionBar = document.querySelector('[data-food-edit-page-part="actions"]')?.getBoundingClientRect();
+    const actionBarStyle = document.querySelector('[data-food-edit-page-part="actions"]')
+      ? window.getComputedStyle(document.querySelector('[data-food-edit-page-part="actions"]'))
+      : null;
+
+    return {
+      transform: actionBarStyle?.transform || "",
+      leftInset: sheet && actionBar ? Math.round(actionBar.left - sheet.left) : null,
+      rightInset: sheet && actionBar ? Math.round(sheet.right - actionBar.right) : null,
+      bottomInset: sheet && actionBar ? Math.round(sheet.bottom - actionBar.bottom) : null,
+      actionBarWidth: actionBar ? Math.round(actionBar.width) : null,
+      sheetWidth: sheet ? Math.round(sheet.width) : null,
+      buttonOverflow: [...document.querySelectorAll('[data-food-edit-page-part="actions"] button')]
+        .map((button) => button.getBoundingClientRect())
+        .some((button) => actionBar && (button.left < actionBar.left - 1 || button.right > actionBar.right + 1))
+    };
+  });
+  expect(editActionBarMetrics.transform).toBe("none");
+  expect(editActionBarMetrics.leftInset).toBeGreaterThanOrEqual(8);
+  expect(editActionBarMetrics.rightInset).toBeGreaterThanOrEqual(8);
+  expect(editActionBarMetrics.bottomInset).toBeGreaterThanOrEqual(8);
+  expect(editActionBarMetrics.actionBarWidth).toBeLessThan(editActionBarMetrics.sheetWidth);
+  expect(editActionBarMetrics.buttonOverflow).toBe(false);
+  await expect(page.getByTestId("food-edit-basic-presets").locator("button").first()).toHaveAttribute("aria-pressed", /^(true|false)$/);
+  const firstIconPreset = await page.getByTestId("food-edit-basic-presets").locator("button").first().textContent();
+  await page.getByTestId("food-edit-basic-icon").locator("input").fill(firstIconPreset || "");
+  await expect(page.getByTestId("food-edit-basic-presets").locator("button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator('[data-food-edit-basic-action="toggle-unit"]')).toHaveAttribute("aria-pressed", /^(true|false)$/);
+  await expectTapTargets(page, [
+    '[data-food-edit-page-action="close"]',
+    '[data-testid="food-edit-basic-presets"] button',
+    '[data-food-edit-page-part="actions"] button'
+  ], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-product-edit-sheet.png");
+  await page.locator('[data-food-edit-page-action="close"]').click();
+  await expect(page.getByTestId("food-edit-page")).toBeHidden();
+
+  await page.locator('[data-testid="food-product-action-bar"] [data-action="back"]').click();
+  await expect(page.getByTestId("food-product-page")).toBeHidden();
+
+  await page.locator('[data-food-search-action="my-products"]').click();
+  await expect(page.locator("[data-food-search-result-card]")).toHaveCount(1);
+  await expect(page.locator('[data-testid="food-search-bottom-bar"] button[aria-pressed="true"]')).toHaveCount(1);
+  await expect(page.locator('[data-food-search-action="my-products"]')).toHaveAttribute("aria-pressed", "true");
+  await expectTapTargets(page, ["[data-food-search-result-card]", '[data-testid="food-search-bottom-bar"] button']);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-my-products.png");
+
+  await page.locator('[data-food-search-header-action="close"]').click();
+  await expect(page.getByTestId("food-search-screen")).toBeHidden();
+
+  await page.locator("[data-nutrition-header-action]").nth(1).click();
+  await expect(page.getByTestId("nutrition-calendar-modal")).toBeVisible();
+  await expect(page.locator("[data-nutrition-calendar-day]")).toHaveCount(42);
+  await expect(page.locator("[data-nutrition-calendar-day][aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator("[data-nutrition-calendar-day][aria-current='date']")).toHaveCount(1);
+  await expectTapTargets(page, ['[data-testid="nutrition-calendar-close"]'], 42);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-calendar.png");
+  await page.getByTestId("nutrition-calendar-close").click();
+  await expect(page.getByTestId("nutrition-calendar-modal")).toBeHidden();
+
+  await page.getByTestId("nutrition-diary-toggle").click();
+  await expect(page.getByTestId("nutrition-diary-modal")).toBeVisible();
+  await expectTapTargets(page, [
+    '[data-testid="nutrition-diary-close"]',
+    '[data-testid="nutrition-diary-add"]',
+    '[data-testid="nutrition-diary-food"]'
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-diary-modal.png");
+  await page.getByTestId("nutrition-diary-close").click();
+  await expect(page.getByTestId("nutrition-diary-modal")).toBeHidden();
+
+  await page.locator('[data-nutrition-summary-part="card"]').click();
+  await expect(page.getByTestId("nutrition-plan-details")).toBeVisible();
+  await expectTapTargets(page, ["[data-testid='nutrition-plan-close']"]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-analysis-modal.png");
+  await page.getByTestId("nutrition-plan-close").click();
+  await expect(page.getByTestId("nutrition-plan-details")).toBeHidden();
+
+  assertNoRuntimeErrors();
+});
+
+test("client nutrition visual audit covers AI photo not-found modal", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1&clientNutritionPhotoNotFound=1");
+  await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
+  await expect(page.getByTestId("food-search-screen")).toBeVisible();
+  await expect(page.getByTestId("nutrition-photo-not-found-modal")).toBeVisible();
+
+  await expectTapTargets(page, [
+    '[data-testid="nutrition-photo-not-found-close"]',
+    '[data-testid="nutrition-photo-not-found-modal"] button'
+  ], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-photo-not-found.png");
+
+  await page.getByTestId("nutrition-photo-not-found-close").click();
+  await expect(page.getByTestId("nutrition-photo-not-found-modal")).toBeHidden();
+
+  assertNoRuntimeErrors();
+});
+
+test("client nutrition photo analysis process keeps its scoped loading state", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1&clientNutritionPhotoAnalyzing=1");
+  await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
+  const process = page.getByTestId("food-photo-ai-search-process");
+  await expect(process).toBeVisible();
+  await expect(process).toContainText("ИИ ищет продукт по фото");
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-photo-analysis-process.png");
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 nutrition barcode placeholder stays fullscreen at target heights", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 640 },
+    { width: 390, height: 844 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1&clientNutritionBarcode=1");
+    const overlay = page.getByTestId("nutrition-barcode-overlay");
+    await expect(overlay).toBeVisible();
+    await expect(page.getByTestId("nutrition-barcode-placeholder")).toBeVisible();
+    await expect(overlay).toContainText("Поиск по штрихкоду появится позже");
+    await expectNoHorizontalOverflow(page);
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("client nutrition delete confirmation keeps its scoped modal contract", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionDeleteConfirm");
+  await expect(page.getByTestId("client-harness-nutrition-delete-confirm")).toBeVisible();
+  await expect(page.getByTestId("nutrition-delete-confirm-modal")).toBeVisible();
+  await expectTapTargets(page, [
+    '[data-testid="nutrition-delete-confirm-close"]',
+    '[data-testid="nutrition-delete-confirm-modal"] button:not([data-testid="nutrition-delete-confirm-backdrop"])'
+  ]);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-delete-confirm.png");
+
+  await page.getByTestId("nutrition-delete-confirm-close").click();
+  await expect(page.getByTestId("nutrition-delete-confirm-modal")).toBeHidden();
+
+  assertNoRuntimeErrors();
+});
+
+test("client nutrition undo toast stays above navigation and restores cleanly", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionUndoToast");
+  await expect(page.getByTestId("client-harness-nutrition-undo-toast")).toBeVisible();
+  await expect(page.getByTestId("nutrition-undo-toast")).toBeVisible();
+  await expectAboveBottomBar(page, '[data-testid="nutrition-undo-toast"]');
+  await expectTapTargets(page, ['[data-testid="nutrition-undo-restore"]'], 36);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-undo-toast.png");
+
+  await page.getByTestId("nutrition-undo-restore").click();
+  await expect(page.getByTestId("nutrition-undo-toast")).toBeHidden();
+
+  assertNoRuntimeErrors();
+});
+
+test("food edit page keeps its scoped responsive geometry", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const cases = [
+    {
+      name: "warm-360",
+      viewport: { width: 360, height: 800 },
+      theme: "warm-light",
+      expected: { sheetWidth: 317, sheetHeight: 710, contentWidth: 287, contentHeight: 548, actionWidth: 287, actionHeight: 78, closeSize: 48 }
+    },
+    {
+      name: "warm-390",
+      viewport: { width: 390, height: 844 },
+      theme: "warm-light",
+      expected: { sheetWidth: 347, sheetHeight: 710, contentWidth: 317, contentHeight: 548, actionWidth: 317, actionHeight: 78, closeSize: 48 }
+    },
+    {
+      name: "warm-430",
+      viewport: { width: 430, height: 932 },
+      theme: "warm-light",
+      expected: { sheetWidth: 387, sheetHeight: 710, contentWidth: 357, contentHeight: 548, actionWidth: 357, actionHeight: 78, closeSize: 48 }
+    },
+    {
+      name: "warm-768",
+      viewport: { width: 768, height: 1024 },
+      theme: "warm-light",
+      expected: { sheetWidth: 390, sheetHeight: 710, contentWidth: 360, contentHeight: 548, actionWidth: 360, actionHeight: 78, closeSize: 48 }
+    },
+    {
+      name: "warm-1440",
+      viewport: { width: 1440, height: 900 },
+      theme: "warm-light",
+      expected: { sheetWidth: 390, sheetHeight: 710, contentWidth: 360, contentHeight: 548, actionWidth: 360, actionHeight: 78, closeSize: 48 }
+    },
+    {
+      name: "dark-390",
+      viewport: { width: 390, height: 844 },
+      theme: "dark-green",
+      expected: { sheetWidth: 374, sheetHeight: 844, contentWidth: 348, contentHeight: 662, actionWidth: 368, actionHeight: 80, closeSize: 40 }
+    }
+  ];
+
+  for (const testCase of cases) {
+    await page.setViewportSize(testCase.viewport);
+    await openClientNutritionHarness(page, testCase.theme);
+    await page.locator("[data-nutrition-header-action]").first().click();
+    await expect(page.getByTestId("food-search-screen")).toBeVisible();
+    await page.getByTestId("food-search-input").locator("input").fill("yogurt");
+    await page.locator("[data-food-search-result-card]").first().click();
+    await page.locator('[data-food-product-top-action="edit"]').click();
+    await expect(page.getByTestId("food-edit-page")).toBeVisible();
+
+    const metrics = await page.evaluate(() => {
+      const rect = (selector) => {
+        const bounds = document.querySelector(selector)?.getBoundingClientRect();
+        return bounds
+          ? { width: bounds.width, height: bounds.height, left: bounds.left, right: bounds.right }
+          : null;
+      };
+
+      return {
+        scopeCount: document.querySelectorAll('[data-css-module-scope="food-edit-page"]').length,
+        oldClassCount: document.querySelectorAll('[class*="foodEditPage"]').length,
+        sheet: rect('[data-testid="food-edit-page"]'),
+        content: rect('[data-food-edit-page-part="content"]'),
+        action: rect('[data-food-edit-page-part="actions"]'),
+        close: rect('[data-food-edit-page-action="close"]'),
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: window.innerWidth
+      };
+    });
+
+    const closeTo = (actual, expected) => {
+      expect(Math.abs(actual - expected), testCase.name).toBeLessThanOrEqual(1);
+    };
+
+    expect(metrics.scopeCount, testCase.name).toBe(1);
+    expect(metrics.oldClassCount, testCase.name).toBe(0);
+    expect(metrics.sheet, testCase.name).not.toBeNull();
+    expect(metrics.content, testCase.name).not.toBeNull();
+    expect(metrics.action, testCase.name).not.toBeNull();
+    expect(metrics.close, testCase.name).not.toBeNull();
+    closeTo(metrics.sheet.width, testCase.expected.sheetWidth);
+    closeTo(metrics.sheet.height, testCase.expected.sheetHeight);
+    closeTo(metrics.content.width, testCase.expected.contentWidth);
+    closeTo(metrics.content.height, testCase.expected.contentHeight);
+    closeTo(metrics.action.width, testCase.expected.actionWidth);
+    closeTo(metrics.action.height, testCase.expected.actionHeight);
+    closeTo(metrics.close.width, testCase.expected.closeSize);
+    closeTo(metrics.close.height, testCase.expected.closeSize);
+    expect(metrics.documentWidth, testCase.name).toBeLessThanOrEqual(metrics.viewportWidth + 1);
+
+    if (testCase.name === "warm-390") {
+      const nameInput = page.getByTestId("food-edit-basic-name").locator("input");
+      const confirm = page.locator('[data-food-edit-page-action="confirm"]');
+      await nameInput.fill("");
+      await expect(confirm).toBeDisabled();
+      await nameInput.fill("Harness Greek Yogurt");
+      await expect(confirm).toBeEnabled();
+    }
+  }
+});
+
+test("client nutrition visual audit covers custom dish ingredient picker", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await openClientNutritionHarness(page);
+  await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
+
+  await page.locator("[data-nutrition-header-action]").first().click();
+  await expect(page.getByTestId("food-search-screen")).toBeVisible();
+  await page.locator('[data-food-search-action="create"]').click();
+  await expect(page.getByTestId("nutrition-create-choice")).toBeVisible();
+  await page.getByTestId("nutrition-create-choice-option").nth(1).click();
+
+  await expect(page.getByTestId("food-edit-page")).toBeVisible();
+  await expect(page.getByTestId("dish-edit-ingredients")).toBeVisible();
+  await expectTapTargets(page, ['[data-dish-ingredients-action="add"]', '[data-food-edit-page-part="actions"] button'], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-custom-dish-editor.png");
+
+  await page.locator('[data-dish-ingredients-action="add"]').click();
+  await expect(page.getByTestId("dish-ingredient-picker-sheet")).toBeVisible();
+  await expect(page.locator("[data-dish-ingredient-result]")).not.toHaveCount(0);
+  await expectTapTargets(page, ['[data-dish-ingredient-action="close"]', "[data-dish-ingredient-result]"], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-dish-ingredient-picker.png");
+
+  await page.locator("[data-dish-ingredient-result]").first().click();
+  await expect(page.getByTestId("dish-ingredient-confirm-card")).toBeVisible();
+  await expectTapTargets(page, ['[data-testid="dish-ingredient-confirm-actions"] button'], 40);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-dish-ingredient-confirm.png");
+
+  await page.locator('[data-dish-ingredient-action="add"]').click();
+  await expect(page.locator('[data-dish-ingredients-action="remove"]')).toHaveCount(1);
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 food search header keeps stable scoped search and my-products layouts", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator("[data-nutrition-header-action]").first().click();
+
+    const header = page.getByTestId("food-search-header");
+    const title = header.locator("h2");
+    const mealSelector = page.getByTestId("food-search-meal-selector");
+    const mealButton = page.locator('[data-food-search-header-action="toggle-meal"]');
+    const closeButton = page.locator('[data-food-search-header-action="close"]');
+    await expect(header).toBeVisible();
+    await expect(header).toHaveAttribute("data-css-module-scope", "food-search-header");
+    await expect(header).toHaveAttribute("data-food-search-header-variant", "search");
+    await expect(header).toHaveCSS("height", "124px");
+    await expect(header).toHaveCSS("margin-top", "46px");
+    await expect(title).toHaveCSS("font-size", "28px");
+    await expect(mealSelector).toHaveCSS("height", "54px");
+    await expect(mealButton).toHaveCSS("height", "54px");
+    await expect(closeButton).toHaveCSS("width", "48px");
+    await expect(closeButton).toHaveCSS("height", "48px");
+    await expect(page.locator(".fatSearchTopPremium, .foodSearchHeaderExactMainAlign, .foodFlowTitleGroup, .fatSearchTitleWrap, .fatSearchTitleButtonPremium, .fatMealDropdown, .fatSearchClosePremium")).toHaveCount(0);
+
+    await mealButton.click();
+    const mealMenu = page.getByTestId("food-search-meal-menu");
+    const mealOptions = page.locator("[data-food-search-meal]");
+    const collapseButton = page.locator('[data-food-search-header-action="collapse-meal"]');
+    await expect(mealMenu).toBeVisible();
+    await expect(mealMenu).toHaveCSS("position", "fixed");
+    await expect(mealMenu).toHaveCSS("width", "320px");
+    await expect(mealOptions).toHaveCount(4);
+    await expect(mealOptions.first()).toHaveCSS("height", "54px");
+    await expect(collapseButton).toHaveCSS("height", viewport.width <= 640 ? "42px" : "44px");
+    await collapseButton.click();
+    await expect(mealMenu).toBeHidden();
+
+    await page.locator('[data-food-search-action="my-products"]').click();
+    await expect(header).toHaveAttribute("data-food-search-header-variant", "my-products");
+    await expect(header).toHaveCSS("height", viewport.width <= 640 ? "136px" : "122px");
+    await expect(header).toHaveCSS("margin-top", viewport.width <= 640 ? "70px" : "0px");
+    await expect(header.locator("h2")).toHaveCSS("font-size", viewport.width <= 640 ? "30px" : "22px");
+    await expect(page.getByTestId("food-search-meal-selector")).toHaveCSS("width", "270px");
+    await expect(page.locator('[data-food-search-header-action="toggle-meal"]')).toHaveCSS("height", "58px");
+    await expect(page.locator('[data-food-search-header-action="close"]')).toHaveCSS("width", viewport.width <= 640 ? "52px" : "42px");
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-food-search-header-${viewport.width}.png`);
+    }
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 food search page keeps stable scoped recent and photo-action layouts", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator("[data-nutrition-header-action]").first().click();
+
+    const landing = page.getByTestId("food-search-modern-landing");
+    const grid = page.getByTestId("food-search-recent-grid");
+    const recentItems = page.locator("[data-food-search-recent-card]");
+    const recentItem = recentItems.first();
+    const photoAction = page.getByTestId("food-search-photo-action");
+    const expectedCardHeight = viewport.width <= 380 ? "78px" : "82px";
+    const expectedCardRadius = viewport.width <= 640 ? "14px" : "13px";
+    const expectedPhotoWidth = `${Math.min(376, viewport.width - 24)}px`;
+    const expectedPhotoBottom = viewport.width <= 380 ? "108px" : "112px";
+
+    await expect(landing).toBeVisible();
+    await expect(landing).toHaveAttribute("data-css-module-scope", "food-search-page");
+    await expect(landing).toHaveCSS("display", "flex");
+    await expect(grid).toHaveCSS("display", "grid");
+    await expect(grid).toHaveCSS("gap", "10px");
+    await expect(recentItems).toHaveCount(6);
+    await expect(recentItem).toHaveCSS("height", expectedCardHeight);
+    await expect(recentItem).toHaveCSS("border-radius", expectedCardRadius);
+    await expect(recentItem).toHaveCSS("border-color", "rgb(225, 229, 238)");
+    await expect(recentItem.locator("strong")).toHaveCSS("font-size", "10px");
+
+    await expect(photoAction).toBeVisible();
+    await expect(photoAction).toHaveAttribute("data-css-module-scope", "food-search-page");
+    await expect(photoAction).toHaveCSS("position", "fixed");
+    await expect(photoAction).toHaveCSS("width", expectedPhotoWidth);
+    await expect(photoAction).toHaveCSS("height", "84px");
+    await expect(photoAction).toHaveCSS("bottom", expectedPhotoBottom);
+    await expect(photoAction).toHaveCSS("grid-template-columns", viewport.width <= 360 ? "52px 206px 22px" : viewport.width <= 390 ? "52px 236px 22px" : "52px 246px 22px");
+    await expect(photoAction.locator("strong")).toHaveCSS("color", "rgb(91, 77, 240)");
+    await expect(photoAction.locator("small")).toHaveCSS("color", "rgb(111, 119, 139)");
+    await expect(photoAction.locator("em")).toHaveCSS("color", "rgb(95, 76, 255)");
+    await expect(page.getByTestId("food-search-photo-input")).toBeHidden();
+    await expect(page.locator(".foodSearchModernLanding, .foodSearchModernSectionHeader, .foodSearchRecentGrid, .foodSearchRecentCard, .foodSearchFixedPhotoAction, .foodSearchModernActionIcon, .fatPhotoAiInput")).toHaveCount(0);
+    await expectTapTargets(page, ["[data-food-search-recent-card]", '[data-testid="food-search-photo-action"]']);
+    await expectAboveBottomBar(page, '[data-testid="food-search-photo-action"]');
+    await expectNoHorizontalOverflow(page);
+
+    const landingBox = await landing.boundingBox();
+    expect(landingBox).not.toBeNull();
+    expect(Math.abs(landingBox.y - 260)).toBeLessThanOrEqual(0.5);
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-food-search-page-${viewport.width}.png`);
+    }
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 food search results keep stable scoped search and my-products cards", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator("[data-nutrition-header-action]").first().click();
+    await page.getByTestId("food-search-input").locator("input").fill("yogurt");
+
+    const list = page.getByTestId("food-search-results");
+    const items = page.locator("[data-food-search-result-card]");
+    const item = items.first();
+    const icon = item.locator(":scope > span:first-child");
+    const title = item.locator(":scope > div > strong");
+    const meta = item.locator(":scope > div > span");
+    const portion = item.locator("em");
+    const details = item.locator("small");
+    const action = item.locator("[data-food-search-result-action]");
+    const narrow = viewport.width <= 390;
+    const expectedColumns = viewport.width === 360
+      ? "42px 206px 24px"
+      : viewport.width === 390
+        ? "42px 236px 24px"
+        : "46px 244px 28px";
+
+    await expect(list).toBeVisible();
+    await expect(list).toHaveAttribute("data-css-module-scope", "food-search-results");
+    await expect(list).toHaveCSS("display", "grid");
+    await expect(list).toHaveCSS("gap", "10px");
+    await expect(list).toHaveCSS("padding-bottom", "198px");
+    await expect(items).toHaveCount(2);
+    await expect(item).toHaveCSS("height", "72px");
+    await expect(item).toHaveCSS("min-height", "72px");
+    await expect(item).toHaveCSS("grid-template-columns", expectedColumns);
+    await expect(item).toHaveCSS("gap", narrow ? "9px" : "11px");
+    await expect(item).toHaveCSS("padding", "10px 12px");
+    await expect(item).toHaveCSS("border-radius", "19px");
+    await expect(item).toHaveCSS("border-color", "rgb(226, 229, 239)");
+    await expect(item).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(icon).toHaveCSS("width", narrow ? "42px" : "46px");
+    await expect(icon).toHaveCSS("height", narrow ? "42px" : "46px");
+    await expect(icon).toHaveCSS("border-radius", "15px");
+    await expect(icon).toHaveCSS("background-color", "rgb(241, 239, 255)");
+    await expect(title).toHaveCSS("font-size", narrow ? "14px" : "15px");
+    await expect(title).toHaveCSS("font-weight", "950");
+    await expect(meta).toHaveCSS("gap", "10px");
+    await expect(portion).toHaveCSS("font-size", narrow ? "13px" : "15px");
+    await expect(details).toHaveCSS("font-size", narrow ? "10.5px" : "11px");
+    await expect(action).toHaveCSS("width", "36px");
+    await expect(action).toHaveCSS("height", "36px");
+    await expect(action).toHaveCSS("border-radius", "50%");
+    await expect(page.locator(".fatSearchListPremium, .fatSearchResultCard, .fatSearchResultIcon, .fatSearchResultInfo, .fatSearchResultCheck")).toHaveCount(0);
+    await expectTapTargets(page, ["[data-food-search-result-card]"]);
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-food-search-results-${viewport.width}.png`);
+    }
+
+    await page.locator('[data-food-search-action="my-products"]').click();
+    await expect(items).toHaveCount(1);
+    await expect(list).toHaveAttribute("data-css-module-scope", "food-search-results");
+    await expect(list).toHaveCSS("padding-bottom", "198px");
+    await expect(item).toHaveCSS("height", "72px");
+    await expect(item).toHaveCSS("grid-template-columns", narrow ? /42px .+ 24px/ : /46px .+ 28px/);
+    await expectTapTargets(page, ["[data-food-search-result-card]"]);
+    await expectNoHorizontalOverflow(page);
+  }
+
+  await page.evaluate(() => {
+    document.documentElement.dataset.appTheme = "dark-green";
+  });
+  const darkItem = page.locator("[data-food-search-result-card]").first();
+  await expect(darkItem).toHaveCSS("background-color", "rgb(23, 26, 23)");
+  await expect(darkItem).toHaveCSS("border-color", "rgb(43, 48, 43)");
+  await expect(darkItem.locator(":scope > div > strong")).toHaveCSS("color", "rgb(244, 246, 242)");
+  await expect(darkItem.locator(":scope > span:first-child")).toHaveCSS("background-color", "rgb(34, 39, 34)");
+  await expectNoHorizontalOverflow(page);
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 food search input keeps stable scoped geometry", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator("[data-nutrition-header-action]").first().click();
+
+    const searchInput = page.getByTestId("food-search-input");
+    const input = searchInput.locator("input");
+    await expect(searchInput).toBeVisible();
+    await expect(searchInput).toHaveAttribute("data-css-module-scope", "food-search-input");
+    await expect(page.locator(".fatSearchInputWrapPremium")).toHaveCount(0);
+    await expect(searchInput).toHaveCSS("display", "flex");
+    await expect(searchInput).toHaveCSS("min-height", "54px");
+    await expect(searchInput).toHaveCSS("border-radius", "15px");
+    await expect(input).toHaveCSS("min-height", "52px");
+    await expect(input).toHaveCSS("color", "rgb(21, 24, 36)");
+
+    const searchBox = await searchInput.boundingBox();
+    expect(searchBox).not.toBeNull();
+    expect(searchBox.height).toBeCloseTo(54, 1);
+    expect(searchBox.x).toBeGreaterThanOrEqual(0);
+    expect(searchBox.x + searchBox.width).toBeLessThanOrEqual(viewport.width + 1);
+
+    await input.fill("yogurt");
+    const clearButton = page.getByLabel("Сбросить поиск");
+    await expect(clearButton).toBeVisible();
+    const clearBox = await clearButton.boundingBox();
+    expect(clearBox).not.toBeNull();
+    expect(clearBox.width).toBeCloseTo(30, 1);
+    expect(clearBox.height).toBeCloseTo(30, 1);
+    await clearButton.click();
+    await expect(input).toHaveValue("");
+
+    await page.locator('[data-food-search-action="my-products"]').click();
+    await expect(searchInput).toHaveCSS("display", "grid");
+    await expect(searchInput).toHaveCSS("min-height", "62px");
+    await expect(searchInput).toHaveCSS("border-radius", "17px");
+    await expect(input).toHaveCSS("min-height", "54px");
+    await expect(input).toHaveCSS("color", "rgb(22, 26, 36)");
+
+    const myProductsBox = await searchInput.boundingBox();
+    expect(myProductsBox).not.toBeNull();
+    expect(myProductsBox.height).toBeCloseTo(62, 1);
+    expect(myProductsBox.x).toBeGreaterThanOrEqual(0);
+    expect(myProductsBox.x + myProductsBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-food-search-input-${viewport.width}.png`);
+    }
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 food search bottom bar keeps stable scoped navigation", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator("[data-nutrition-header-action]").first().click();
+
+    const bottomBar = page.getByTestId("food-search-bottom-bar");
+    const buttons = bottomBar.locator("button");
+    const mobile = viewport.width <= 700;
+    await expect(bottomBar).toBeVisible();
+    await expect(bottomBar).toHaveAttribute("data-css-module-scope", "food-search-bottom-bar");
+    await expect(page.locator(".fatSearchBottomBar, .fatSearchBackAction, .fatSearchSearchAction, .fatSearchCreateAction, .fatSearchMyProductsAction")).toHaveCount(0);
+    await expect(bottomBar).toHaveCSS("position", "fixed");
+    await expect(bottomBar).toHaveCSS("height", mobile ? "84px" : "80px");
+    await expect(bottomBar).toHaveCSS("padding", mobile ? "8px" : "6px");
+    await expect(bottomBar).toHaveCSS("border-radius", "20px");
+    await expect(buttons).toHaveCount(4);
+    await expect(bottomBar.locator('button[aria-pressed="true"]')).toHaveCount(1);
+    await expect(page.locator('[data-food-search-action="search"]')).toHaveAttribute("aria-pressed", "true");
+
+    for (const button of await buttons.all()) {
+      await expect(button).toHaveCSS("display", "flex");
+      await expect(button).toHaveCSS("height", "68px");
+      await expect(button.locator("strong")).toHaveCSS("text-transform", "uppercase");
+      const buttonBox = await button.boundingBox();
+      expect(buttonBox).not.toBeNull();
+      expect(buttonBox.height).toBeCloseTo(68, 1);
+    }
+
+    const bottomBarBox = await bottomBar.boundingBox();
+    expect(bottomBarBox).not.toBeNull();
+    expect(bottomBarBox.x).toBeGreaterThanOrEqual(0);
+    expect(bottomBarBox.x + bottomBarBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-food-search-bottom-bar-${viewport.width}.png`);
+    }
+
+    await page.locator('[data-food-search-action="my-products"]').click();
+    await expect(page.locator('[data-food-search-action="my-products"]')).toHaveAttribute("aria-pressed", "true");
+    await expect(bottomBar.locator('button[aria-pressed="true"]')).toHaveCount(1);
+
+    await page.locator('[data-food-search-action="create"]').click();
+    await expect(page.locator('[data-food-search-action="create"]')).toHaveAttribute("aria-pressed", "true");
+    await expect(bottomBar.locator('button[aria-pressed="true"]')).toHaveCount(1);
+    await expect(page.getByTestId("nutrition-create-choice")).toBeVisible();
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 food product action bar keeps stable scoped actions", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator("[data-nutrition-header-action]").first().click();
+    await page.getByTestId("food-search-input").locator("input").fill("yogurt");
+    await page.locator("[data-food-search-result-card]").first().click();
+
+    const productHeader = page.getByTestId("food-product-flow-header");
+    const productTitle = page.locator("[data-food-product-header-title]");
+    const mealSelector = page.getByTestId("food-product-meal-selector");
+    const mealButton = page.locator('[data-food-product-header-action="toggle-meal"]');
+    const productHero = page.getByTestId("food-product-hero");
+    const topActions = page.getByTestId("food-product-top-actions");
+    const topActionButtons = page.locator("[data-food-product-top-action]");
+    const deleteAction = page.locator('[data-food-product-top-action="delete"]');
+    const editAction = page.locator('[data-food-product-top-action="edit"]');
+    const portionSelector = page.getByTestId("food-portion-selector");
+    const gramsButton = page.locator('[data-food-portion-action="grams"]');
+    const portionMenuButton = page.locator('[data-food-portion-action="toggle-menu"]');
+    const amountCard = page.getByTestId("food-product-amount");
+    const amountInput = page.locator("[data-food-amount-input]");
+    const macros = page.getByTestId("food-product-macros");
+    const macroCards = macros.locator(":scope > div");
+    const noteCard = page.getByTestId("food-product-note-card");
+    const actionBar = page.getByTestId("food-product-action-bar");
+    const buttons = actionBar.locator("button");
+    const backButton = actionBar.locator('[data-action="back"]');
+    const addButton = actionBar.locator('[data-action="add"]');
+    const mobile = viewport.width <= 700;
+    await expect(productHeader).toBeVisible();
+    await expect(productHeader).toHaveAttribute("data-css-module-scope", "food-product-header");
+    await expect(productHeader).toHaveCSS("height", "124px");
+    await expect(productHeader).toHaveCSS("grid-template-columns", /.+ 120px/);
+    await expect(productTitle).toHaveCSS("font-size", viewport.width <= 380 ? "25px" : "27px");
+    await expect(mealSelector).toBeVisible();
+    await expect(mealSelector).toHaveCSS("height", "54px");
+    await expect(mealButton).toHaveCSS("height", "33px");
+    await expect(mealButton).toHaveAttribute("aria-expanded", "false");
+    await expect(productHero).toBeVisible();
+    await expect(productHero).toHaveAttribute("data-css-module-scope", "food-product-header");
+    await expect(productHero).toHaveCSS("height", "96px");
+    await expect(productHero).toHaveCSS("padding", "12px 18px");
+    await expect(productHero.locator("[aria-hidden='true']").first()).toHaveCSS("width", "46px");
+    await expect(productHero.locator("strong")).toHaveCSS("font-size", "21px");
+    await expect(page.locator(".foodProductFlowHeader, .foodProductFlowTitle, .foodEditInlineMealHeader, .foodEditInlineMealButton, .foodEditMealPickerDropdown, .foodEditHeroRender, .foodEditIconSourceStack, .foodEditIconRender")).toHaveCount(0);
+    await expect(topActions).toBeVisible();
+    await expect(topActions).toHaveAttribute("data-css-module-scope", "food-product-top-actions");
+    await expect(topActions).toHaveCSS("position", "absolute");
+    await expect(topActions).toHaveCSS("width", "108px");
+    await expect(topActions).toHaveCSS("height", "48px");
+    await expect(topActionButtons).toHaveCount(2);
+    await expect(deleteAction).toHaveCSS("width", "48px");
+    await expect(deleteAction).toHaveCSS("height", "48px");
+    await expect(editAction).toHaveCSS("width", "48px");
+    await expect(editAction).toHaveCSS("height", "48px");
+    await expect(deleteAction).toBeDisabled();
+    await expect(editAction).toBeEnabled();
+    await expect(page.locator(".foodProductTopActions, .foodProductTopAction, .foodProductTopDelete, .foodProductTopEdit")).toHaveCount(0);
+
+    const headerBox = await productHeader.boundingBox();
+    const mealSelectorBox = await mealSelector.boundingBox();
+    expect(headerBox).not.toBeNull();
+    expect(mealSelectorBox).not.toBeNull();
+    expect(mealSelectorBox.width).toBeCloseTo(headerBox.width, 0);
+
+    await mealButton.click();
+    const mealMenu = page.getByTestId("food-product-meal-menu");
+    await expect(mealMenu).toBeVisible();
+    await expect(mealMenu.locator("button")).toHaveCount(4);
+    await expect(page.locator('[data-food-product-meal="breakfast"]')).toHaveAttribute("aria-pressed", "true");
+    await page.locator('[data-food-product-meal="lunch"]').click();
+    await expect(mealMenu).toBeHidden();
+    await expect(mealButton).toHaveAttribute("aria-expanded", "false");
+    await expectNoHorizontalOverflow(page);
+
+    await expect(portionSelector).toBeVisible();
+    await expect(portionSelector).toHaveAttribute("data-css-module-scope", "food-portion-selector");
+    await expect(page.locator(".foodEditSegmentRow, .weightModeButton, .foodEditPortionDropdown, .foodEditPortionDropdownButton, .foodEditPortionDropdownMenu")).toHaveCount(0);
+    await expect(portionSelector).toHaveCSS("display", "grid");
+    await expect(portionSelector).toHaveCSS("grid-template-columns", /.+ .+/);
+    await expect(gramsButton).toHaveCSS("height", "46px");
+    await expect(portionMenuButton).toHaveCSS("height", "46px");
+    await expect(gramsButton).toHaveAttribute("aria-pressed", "true");
+    await expect(amountCard).toBeVisible();
+    await expect(amountCard).toHaveAttribute("data-css-module-scope", "food-product-nutrition");
+    await expect(amountCard).toHaveAttribute("data-amount-mode", "weight");
+    await expect(page.locator(".foodEditAmountCard, .foodProductAmountControls, .foodProductAmountStep, .foodProductAmountInputWrap, .foodEditMacrosCards, .foodEditRowsCard, .foodEditRow")).toHaveCount(0);
+    await expect(amountCard).toHaveCSS("min-height", "76px");
+    await expect(amountCard).toHaveCSS("padding", "12px 14px");
+    await expect(amountInput).toHaveCSS("font-size", "22px");
+    await expect(macros).toHaveCSS("display", "grid");
+    await expect(macros).toHaveCSS("grid-template-columns", /.+ .+ .+ .+/);
+    await expect(macroCards).toHaveCount(4);
+    await expect(macroCards.first()).toHaveCSS("min-height", "82px");
+    await expect(noteCard).toHaveCSS("height", "70px");
+    await expect(noteCard.locator("button")).toHaveCSS("height", "70px");
+    await expect(actionBar).toBeVisible();
+    await expect(actionBar).toHaveAttribute("data-css-module-scope", "food-product-action-bar");
+    await expect(actionBar).toHaveCSS("position", "fixed");
+    await expect(actionBar).toHaveCSS("height", mobile ? "84px" : "78px");
+    await expect(actionBar).toHaveCSS("padding", mobile ? "8px" : "6px");
+    await expect(actionBar).toHaveCSS("border-radius", "20px");
+    await expect(buttons).toHaveCount(2);
+    await expect(backButton).toHaveCSS("height", mobile ? "68px" : "64px");
+    await expect(backButton).toHaveCSS("color", "rgb(123, 131, 150)");
+    await expect(addButton).toHaveCSS("height", mobile ? "68px" : "64px");
+    await expect(addButton).toHaveCSS("background-color", "rgb(240, 237, 255)");
+    await expect(addButton).toHaveCSS("color", "rgb(79, 53, 232)");
+
+    const backBox = await backButton.boundingBox();
+    const addBox = await addButton.boundingBox();
+    const actionBarBox = await actionBar.boundingBox();
+    expect(backBox).not.toBeNull();
+    expect(addBox).not.toBeNull();
+    expect(actionBarBox).not.toBeNull();
+    expect(addBox.width / backBox.width).toBeCloseTo(2, 1);
+    expect(actionBarBox.x).toBeGreaterThanOrEqual(0);
+    expect(actionBarBox.x + actionBarBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    await expectNoHorizontalOverflow(page);
+
+    await portionMenuButton.click();
+    const portionMenu = page.getByTestId("food-portion-menu");
+    await expect(portionMenu).toBeVisible();
+    await expect(portionMenu.locator("button")).toHaveCount(1);
+    await expectNoHorizontalOverflow(page);
+    await portionMenu.locator("button").click();
+    await expect(portionMenu).toBeHidden();
+    await expect(amountCard).toHaveAttribute("data-amount-mode", "portion");
+    const stepButtons = page.locator("[data-food-amount-action]");
+    await expect(stepButtons).toHaveCount(2);
+    const amountBeforeIncrease = Number(await amountInput.inputValue());
+    await page.locator('[data-food-amount-action="increase"]').click();
+    expect(Number(await amountInput.inputValue())).toBeGreaterThan(amountBeforeIncrease);
+    await page.locator('[data-food-amount-action="decrease"]').click();
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-food-product-action-bar-${viewport.width}.png`);
+    }
+
+    await backButton.click();
+    await expect(page.getByTestId("food-product-page")).toBeHidden();
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
+  await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-nutrition").click();
+  await page.locator("[data-nutrition-header-action]").first().click();
+  await page.getByTestId("food-search-input").locator("input").fill("yogurt");
+  await page.locator("[data-food-search-result-card]").first().click();
+  const darkTopActions = page.getByTestId("food-product-top-actions");
+  await expect(darkTopActions).toHaveAttribute("data-css-module-scope", "food-product-top-actions");
+  await expect(darkTopActions).toHaveCSS("position", "static");
+  await expect(darkTopActions).toHaveCSS("height", "30px");
+  await expect(page.locator('[data-food-product-top-action="delete"]')).toHaveCSS("height", "30px");
+  await expect(page.locator('[data-food-product-top-action="edit"]')).toHaveCSS("height", "30px");
+  await expectNoHorizontalOverflow(page);
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 nutrition search history keeps stable scoped rows", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1&clientHarnessPage=nutritionSearchHistory");
+
+    const history = page.getByTestId("food-search-history-names");
+    const title = history.locator("div").first();
+    const rows = history.locator("button");
+    await expect(history).toBeVisible();
+    await expect(history).toHaveAttribute("data-css-module-scope", "food-search-history-names");
+    await expect(page.locator(".fatSearchHistoryNames, .fatSearchHistoryNameButton")).toHaveCount(0);
+    await expect(history).toHaveCSS("padding", "13px");
+    await expect(history).toHaveCSS("border-radius", "20px");
+    await expect(history).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(title).toHaveCSS("font-size", viewport.width <= 390 ? "15px" : "17px");
+    await expect(rows).toHaveCount(3);
+
+    for (const row of await rows.all()) {
+      await expect(row).toHaveCSS("display", "flex");
+      await expect(row).toHaveCSS("min-height", "58px");
+      await expect(row).toHaveCSS("border-radius", "15px");
+      const rowBox = await row.boundingBox();
+      expect(rowBox).not.toBeNull();
+      expect(rowBox.height).toBeCloseTo(58, 1);
+      expect(rowBox.x).toBeGreaterThanOrEqual(0);
+      expect(rowBox.x + rowBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    }
+
+    await rows.first().click();
+    await expect(page.getByTestId("food-search-history-selection")).toHaveText("Harness Greek Yogurt");
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-food-search-history-${viewport.width}.png`);
+    }
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 dish ingredients stay scoped and responsive", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1&clientHarnessPage=nutritionDishIngredients");
+
+    const ingredients = page.getByTestId("dish-edit-ingredients");
+    const addButton = page.locator('[data-dish-ingredients-action="add"]');
+    const removeButtons = page.locator('[data-dish-ingredients-action="remove"]');
+    await expect(ingredients).toBeVisible();
+    await expect(ingredients).toHaveAttribute("data-css-module-scope", "dish-edit-ingredients");
+    await expect(page.locator(".dishEditIngredientsBox, .dishEditIngredientsHeader, .dishEditIngredientsList, .dishEditIngredientRow")).toHaveCount(0);
+    await expect(ingredients).toHaveCSS("padding", "12px");
+    await expect(ingredients).toHaveCSS("border-radius", "20px");
+    await expect(ingredients).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(addButton).toHaveCSS("min-height", "48px");
+    await expect(removeButtons).toHaveCount(2);
+
+    const ingredientBox = await ingredients.boundingBox();
+    expect(ingredientBox).not.toBeNull();
+    expect(ingredientBox.x).toBeGreaterThanOrEqual(0);
+    expect(ingredientBox.x + ingredientBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-dish-edit-ingredients-${viewport.width}.png`);
+    }
+
+    await page.getByRole("button", { name: "Удалить Куриная грудка" }).click();
+    await page.getByRole("button", { name: "Удалить Рис басмати" }).click();
+    await expect(page.getByTestId("dish-edit-ingredients-empty")).toBeVisible();
+    await addButton.click();
+    await expect(page.getByRole("button", { name: "Удалить Авокадо" })).toBeVisible();
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 food edit basic fields stay scoped and match the responsive reference", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const cases = [
+    { name: "warm-360", width: 360, height: 800, theme: "warm-light", fieldWidth: 283, fieldHeight: 70.39, iconHeight: 96.39, gridHeight: 70.39, macroWidth: 63.25, portionHeight: 87.39, presetDisplay: "none", toggleHeight: 50 },
+    { name: "warm-390", width: 390, height: 844, theme: "warm-light", fieldWidth: 313, fieldHeight: 70.39, iconHeight: 96.39, gridHeight: 70.39, macroWidth: 70.75, portionHeight: 87.39, presetDisplay: "none", toggleHeight: 50 },
+    { name: "warm-430", width: 430, height: 932, theme: "warm-light", fieldWidth: 353, fieldHeight: 71, iconHeight: 97, gridHeight: 71, macroWidth: 80.75, portionHeight: 88, presetDisplay: "none", toggleHeight: 50 },
+    { name: "warm-768", width: 768, height: 1024, theme: "warm-light", fieldWidth: 356, fieldHeight: 71, iconHeight: 97, gridHeight: 152, macroWidth: 173, portionHeight: 88, presetDisplay: "none", toggleHeight: 50 },
+    { name: "warm-1440", width: 1440, height: 900, theme: "warm-light", fieldWidth: 356, fieldHeight: 71, iconHeight: 97, gridHeight: 152, macroWidth: 173, portionHeight: 88, presetDisplay: "none", toggleHeight: 50 },
+    { name: "dark-390", width: 390, height: 844, theme: "dark-green", fieldWidth: 316, fieldHeight: 70.39, iconHeight: 96.39, gridHeight: 70.39, macroWidth: 71.5, portionHeight: 80.39, presetDisplay: "flex", toggleHeight: 46 }
+  ];
+
+  for (const testCase of cases) {
+    await page.setViewportSize({ width: testCase.width, height: testCase.height });
+    const themeQuery = testCase.theme === "warm-light"
+      ? ""
+      : `&clientHarnessTheme=${encodeURIComponent(testCase.theme)}`;
+    await page.goto(`/?clientHarness=1${themeQuery}`);
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator("[data-nutrition-header-action]").first().click();
+    await page.getByTestId("food-search-input").locator("input").fill("Harness");
+    await page.locator("[data-food-search-result-card]").first().click();
+    await page.locator('[data-food-product-top-action="edit"]').click();
+
+    const root = page.getByTestId("food-edit-basic-fields");
+    const name = page.getByTestId("food-edit-basic-name");
+    const icon = page.getByTestId("food-edit-basic-icon");
+    const presets = page.getByTestId("food-edit-basic-presets");
+    const macros = page.getByTestId("food-edit-basic-macros");
+    const firstMacro = macros.locator("label").first();
+    const portion = page.getByTestId("food-edit-basic-portion");
+    const toggle = page.locator('[data-food-edit-basic-action="toggle-unit"]');
+
+    await expect(root).toHaveAttribute("data-css-module-scope", "food-edit-basic-fields");
+    await expect(page.locator(".foodEditIconManualBox, .foodEditIconPresetRow, .foodEditPageGrid, .foodEditPortionUnitRow, .foodEditPortionUnitToggle")).toHaveCount(0);
+    await expect(presets).toHaveCSS("display", testCase.presetDisplay);
+
+    const nameBox = await name.boundingBox();
+    const iconBox = await icon.boundingBox();
+    const gridBox = await macros.boundingBox();
+    const macroBox = await firstMacro.boundingBox();
+    const portionBox = await portion.boundingBox();
+    const toggleBox = await toggle.boundingBox();
+    expect(nameBox).not.toBeNull();
+    expect(iconBox).not.toBeNull();
+    expect(gridBox).not.toBeNull();
+    expect(macroBox).not.toBeNull();
+    expect(portionBox).not.toBeNull();
+    expect(toggleBox).not.toBeNull();
+    expect(nameBox.width).toBeCloseTo(testCase.fieldWidth, 1);
+    expect(nameBox.height).toBeCloseTo(testCase.fieldHeight, 1);
+    expect(iconBox.width).toBeCloseTo(testCase.fieldWidth, 1);
+    expect(iconBox.height).toBeCloseTo(testCase.iconHeight, 1);
+    expect(gridBox.width).toBeCloseTo(testCase.fieldWidth, 1);
+    expect(gridBox.height).toBeCloseTo(testCase.gridHeight, 1);
+    expect(macroBox.width).toBeCloseTo(testCase.macroWidth, 1);
+    expect(portionBox.width).toBeCloseTo(testCase.fieldWidth, 1);
+    expect(portionBox.height).toBeCloseTo(testCase.portionHeight, 1);
+    expect(toggleBox.height).toBeCloseTo(testCase.toggleHeight, 1);
+
+    const initialUnitState = await toggle.getAttribute("aria-pressed");
+    await toggle.click();
+    await expect(toggle).not.toHaveAttribute("aria-pressed", initialUnitState);
+
+    await expectNoHorizontalOverflow(page);
+
+    if (testCase.name === "warm-390" || testCase.name === "warm-1440" || testCase.name === "dark-390") {
+      await attachScreenshot(page, testInfo, `client-food-edit-basic-fields-${testCase.name}.png`);
+    }
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 dish ingredient picker stays scoped and matches the responsive reference", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const cases = [
+    { name: "warm-360", width: 360, height: 800, theme: "warm-light", sheetWidth: 317, sheetHeight: 772, confirmWidth: 309, confirmHeight: 232.39 },
+    { name: "warm-390", width: 390, height: 844, theme: "warm-light", sheetWidth: 347, sheetHeight: 816, confirmWidth: 339, confirmHeight: 232.39 },
+    { name: "warm-430", width: 430, height: 932, theme: "warm-light", sheetWidth: 387, sheetHeight: 904, confirmWidth: 379, confirmHeight: 237 },
+    { name: "warm-768", width: 768, height: 1024, theme: "warm-light", sheetWidth: 390, sheetHeight: 996, confirmWidth: 390, confirmHeight: 247 },
+    { name: "warm-1440", width: 1440, height: 900, theme: "warm-light", sheetWidth: 390, sheetHeight: 872, confirmWidth: 390, confirmHeight: 247 },
+    { name: "dark-390", width: 390, height: 844, theme: "dark-green", sheetWidth: 347, sheetHeight: 816, confirmWidth: 339, confirmHeight: 232.39 }
+  ];
+
+  for (const testCase of cases) {
+    await page.setViewportSize({ width: testCase.width, height: testCase.height });
+    const themeQuery = testCase.theme === "warm-light"
+      ? ""
+      : `&clientHarnessTheme=${encodeURIComponent(testCase.theme)}`;
+    await page.goto(`/?clientHarness=1${themeQuery}`);
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator("[data-nutrition-header-action]").first().click();
+    await page.locator('[data-food-search-action="create"]').click();
+    await page.getByTestId("nutrition-create-choice-option").nth(1).click();
+    await page.locator('[data-dish-ingredients-action="add"]').click();
+
+    const picker = page.getByTestId("dish-ingredient-picker");
+    const pickerSheet = page.getByTestId("dish-ingredient-picker-sheet");
+    const searchInput = page.locator('[data-testid="dish-ingredient-search"] input');
+    const results = page.locator("[data-dish-ingredient-result]");
+    await expect(picker).toHaveAttribute("data-css-module-scope", "dish-ingredient-picker");
+    await expect(picker).toHaveCSS("position", "fixed");
+    await expect(pickerSheet).toBeVisible();
+    await expect(results).not.toHaveCount(0);
+    await expect(page.locator(".dishIngredientPickerOverlay, .dishIngredientPickerSheet, .dishIngredientResultCard")).toHaveCount(0);
+
+    const pickerBox = await pickerSheet.boundingBox();
+    const resultBox = await results.first().boundingBox();
+    expect(pickerBox).not.toBeNull();
+    expect(resultBox).not.toBeNull();
+    expect(pickerBox.width).toBeCloseTo(testCase.sheetWidth, 1);
+    expect(pickerBox.height).toBeCloseTo(testCase.sheetHeight, 1);
+    expect(resultBox.height).toBeCloseTo(72, 1);
+    await expectTapTargets(page, ['[data-dish-ingredient-action="close"]', "[data-dish-ingredient-result]"], 40);
+    await expectNoHorizontalOverflow(page);
+
+    await searchInput.fill("zzzzzz");
+    const manualResult = page.locator('[data-dish-ingredient-result-kind="manual"]');
+    await expect(manualResult).toBeVisible();
+    expect((await manualResult.boundingBox()).height).toBeCloseTo(160, 1);
+
+    await searchInput.fill("~");
+    const emptyResult = page.getByTestId("dish-ingredient-empty");
+    await expect(emptyResult).toBeVisible();
+    expect((await emptyResult.boundingBox()).height).toBeCloseTo(160, 1);
+
+    await searchInput.fill("");
+    await expect(results.first()).toBeVisible();
+    await results.first().click();
+
+    const confirm = page.getByTestId("dish-ingredient-confirm");
+    const confirmCard = page.getByTestId("dish-ingredient-confirm-card");
+    const confirmInput = page.locator('[data-testid="dish-ingredient-confirm-input"] input');
+    const confirmActions = page.getByTestId("dish-ingredient-confirm-actions");
+    await expect(confirm).toHaveAttribute("data-css-module-scope", "dish-ingredient-picker");
+    await expect(confirmCard).toBeVisible();
+    await expect(page.locator(".dishIngredientConfirmOverlay, .dishIngredientConfirmCard, .dishIngredientConfirmActions")).toHaveCount(0);
+
+    const confirmBox = await confirmCard.boundingBox();
+    const confirmInputBox = await confirmInput.boundingBox();
+    const confirmActionsBox = await confirmActions.boundingBox();
+    expect(confirmBox).not.toBeNull();
+    expect(confirmInputBox).not.toBeNull();
+    expect(confirmActionsBox).not.toBeNull();
+    expect(confirmBox.width).toBeCloseTo(testCase.confirmWidth, 1);
+    expect(confirmBox.height).toBeCloseTo(testCase.confirmHeight, 1);
+    expect(confirmInputBox.height).toBeCloseTo(testCase.width >= 760 ? 62 : 52, 1);
+    expect(confirmActionsBox.height).toBeCloseTo(48, 1);
+    await expectTapTargets(page, ['[data-testid="dish-ingredient-confirm-actions"] button'], 40);
+    await expectNoHorizontalOverflow(page);
+
+    if (testCase.name === "warm-390" || testCase.name === "warm-1440" || testCase.name === "dark-390") {
+      await attachScreenshot(page, testInfo, `client-dish-ingredient-picker-${testCase.name}.png`);
+    }
+
+    await page.locator('[data-dish-ingredient-action="add"]').click();
+    await expect(confirm).toBeHidden();
+    await expect(page.locator('[data-dish-ingredients-action="remove"]')).toHaveCount(1);
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 photo AI preview keeps result and analysis states scoped", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1&clientHarnessPage=nutritionPhotoPreview");
+
+    const preview = page.getByTestId("nutrition-photo-ai-preview");
+    const previewImage = preview.locator("img");
+    const candidates = page.locator("[data-photo-ai-candidate]");
+    const resetButton = page.locator('[data-photo-ai-action="reset"]');
+    const compact = viewport.width <= 380;
+
+    await expect(preview).toBeVisible();
+    await expect(preview).toHaveAttribute("data-css-module-scope", "nutrition-photo-ai-preview");
+    await expect(preview).toHaveAttribute("data-state", "result");
+    await expect(page.locator(".fatPhotoAiFloatingPreview, .fatPhotoAiPreviewImage, .fatPhotoAiCandidates")).toHaveCount(0);
+    await expect(preview).toHaveCSS("padding", compact ? "10px" : "12px");
+    await expect(preview).toHaveCSS("border-radius", "18px");
+    await expect(preview).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(previewImage).toHaveCSS("width", compact ? "46px" : "52px");
+    await expect(previewImage).toHaveCSS("height", compact ? "46px" : "52px");
+    await expect(candidates).toHaveCount(3);
+    await expect(resetButton).toHaveCSS("width", "32px");
+    await expect(resetButton).toHaveCSS("height", "32px");
+
+    const previewBox = await preview.boundingBox();
+    expect(previewBox).not.toBeNull();
+    expect(previewBox.x).toBeGreaterThanOrEqual(0);
+    expect(previewBox.x + previewBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    await expectNoHorizontalOverflow(page);
+
+    await candidates.first().click();
+    await expect(page.getByTestId("nutrition-photo-candidate-selection")).toHaveText("harness_chicken");
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-nutrition-photo-preview-${viewport.width}.png`);
+    }
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionPhotoPreview&clientPhotoPreviewState=analyzing&clientHarnessTheme=dark-green");
+
+  const analyzingPreview = page.getByTestId("nutrition-photo-ai-preview");
+  await expect(analyzingPreview).toHaveAttribute("data-state", "analyzing");
+  await expect(page.getByTestId("nutrition-photo-ai-candidates")).toHaveCount(0);
+  await expect(page.getByTestId("nutrition-photo-ai-dots").locator("i")).toHaveCount(3);
+  await expect(analyzingPreview).toHaveCSS("border-radius", "18px");
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-photo-preview-analyzing-dark.png");
+
+  await page.locator('[data-photo-ai-action="reset"]').click();
+  await expect(analyzingPreview).toBeHidden();
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 nutrition diary stays usable at target viewports", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+
+    const diaryToggle = page.getByTestId("nutrition-diary-toggle");
+    await expect(page.locator('[data-css-module-scope="nutrition-diary"]')).toBeVisible();
+    await diaryToggle.scrollIntoViewIfNeeded();
+    const toggleBox = await diaryToggle.boundingBox();
+    expect(toggleBox).not.toBeNull();
+    expect(toggleBox.x).toBeGreaterThanOrEqual(0);
+    expect(toggleBox.x + toggleBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    await expectNoHorizontalOverflow(page);
+
+    await diaryToggle.click();
+    await expect(page.getByTestId("nutrition-diary-modal")).toBeVisible();
+    await expectTapTargets(page, [
+      '[data-testid="nutrition-diary-close"]',
+      '[data-testid="nutrition-diary-add"]',
+      '[data-testid="nutrition-diary-food"]'
+    ]);
+    await expectNoHorizontalOverflow(page);
+    await page.getByTestId("nutrition-diary-close").click();
+  }
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 nutrition calendar keeps scoped responsive geometry and theme states", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 360, height: 800, sheetWidth: 313, sheetHeight: 471, dayHeight: 44, radius: "25px" },
+    { width: 390, height: 844, sheetWidth: 329, sheetHeight: 501, dayHeight: 47, radius: "28px" },
+    { width: 430, height: 932, sheetWidth: 369, sheetHeight: 501, dayHeight: 47, radius: "28px" },
+    { width: 768, height: 1024, sheetWidth: 420, sheetHeight: 501, dayHeight: 47, radius: "28px" },
+    { width: 1440, height: 900, sheetWidth: 420, sheetHeight: 501, dayHeight: 47, radius: "28px" }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator("[data-nutrition-header-action]").nth(1).click();
+
+    const modal = page.getByTestId("nutrition-calendar-modal");
+    const sheet = page.getByTestId("nutrition-calendar-sheet");
+    const days = page.locator("[data-nutrition-calendar-day]");
+    const selectedDay = page.locator('[data-nutrition-calendar-day][aria-pressed="true"]');
+    const today = page.locator('[data-nutrition-calendar-day][aria-current="date"]');
+    const regularDay = page.locator('[data-nutrition-calendar-day][data-current-month="true"][data-has-food="false"][aria-pressed="false"]').first();
+    const previousMonth = page.locator('[data-nutrition-calendar-action="previous-month"]');
+    const nextMonth = page.locator('[data-nutrition-calendar-action="next-month"]');
+    const monthLabel = page.getByTestId("nutrition-calendar-header").locator("strong");
+
+    await expect(modal).toBeVisible();
+    await expect(modal).toHaveAttribute("data-css-module-scope", "nutrition-calendar-modal");
+    await expect(days).toHaveCount(42);
+    await expect(selectedDay).toHaveCount(1);
+    await expect(today).toHaveCount(1);
+    await expect(page.locator(".nutritionCalendarOverlay, .nutritionCalendarSheet, .nutritionCalendarDay, .nutritionCalendarClose")).toHaveCount(0);
+    await expect(sheet).toHaveCSS("border-radius", viewport.radius);
+    await expect(sheet).toHaveCSS("opacity", "1");
+
+    const sheetBox = await sheet.boundingBox();
+    const dayBox = await regularDay.boundingBox();
+    expect(sheetBox).not.toBeNull();
+    expect(dayBox).not.toBeNull();
+    expect(sheetBox.width).toBeCloseTo(viewport.sheetWidth, 0);
+    expect(sheetBox.height).toBeCloseTo(viewport.sheetHeight, 0);
+    expect(dayBox.height).toBeCloseTo(viewport.dayHeight, 0);
+    expect(sheetBox.x).toBeGreaterThanOrEqual(0);
+    expect(sheetBox.x + sheetBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    await expectTapTargets(page, [
+      '[data-testid="nutrition-calendar-close"]',
+      '[data-testid="nutrition-calendar-footer"] button'
+    ]);
+    await expectNoHorizontalOverflow(page);
+
+    const initialMonth = await monthLabel.textContent();
+    await previousMonth.click();
+    await expect(monthLabel).not.toHaveText(initialMonth || "");
+    await nextMonth.click();
+    await expect(monthLabel).toHaveText(initialMonth || "");
+
+    if (viewport.width === 390 || viewport.width === 1440) {
+      await attachScreenshot(page, testInfo, `client-nutrition-calendar-scoped-${viewport.width}.png`);
+    }
+
+    await page.getByTestId("nutrition-calendar-close").click();
+    await expect(modal).toBeHidden();
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
+  await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-nutrition").click();
+  await page.locator("[data-nutrition-header-action]").nth(1).click();
+
+  const darkSheet = page.getByTestId("nutrition-calendar-sheet");
+  const darkSelectedDay = page.locator('[data-nutrition-calendar-day][aria-pressed="true"]');
+  const darkPrimaryAction = page.locator('[data-nutrition-calendar-action="done"]');
+  await expect(darkSheet).toHaveCSS("border-color", "rgba(255, 255, 255, 0.09)");
+  await expect(darkSheet).toHaveCSS("background-image", /linear-gradient/);
+  await expect(darkSelectedDay).toHaveCSS("background-image", /linear-gradient/);
+  await expect(darkPrimaryAction).toHaveCSS("background-image", /linear-gradient/);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-calendar-scoped-dark.png");
+
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 nutrition orbit keeps scoped reference geometry, motion and add flow", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { name: "360", width: 360, height: 800, cardWidth: 303, cardHeight: 260.08, hitWidth: 72.53, marginTop: "-6px" },
+    { name: "390", width: 390, height: 844, cardWidth: 325, cardHeight: 278.94, hitWidth: 77.83, marginTop: "-6px" },
+    { name: "430", width: 430, height: 932, cardWidth: 365, cardHeight: 313.23, hitWidth: 87.47, marginTop: "-6px" },
+    { name: "768", width: 768, height: 1024, cardWidth: 336, cardHeight: 288.36, hitWidth: 80.48, marginTop: "0px" },
+    { name: "768-short", width: 768, height: 800, cardWidth: 336, cardHeight: 320, hitWidth: 88, marginTop: "0px", sceneWidth: 374 },
+    { name: "1440", width: 1440, height: 900, cardWidth: 540, cardHeight: 463.28, hitWidth: 129.66, marginTop: "0px" }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/?clientHarness=1");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+
+    const orbit = page.getByTestId("nutrition-orbit");
+    const card = page.locator('[data-nutrition-orbit-part="card"]');
+    const scene = page.locator('[data-nutrition-orbit-part="scene"]');
+    const addButton = page.getByTestId("nutrition-orbit-add");
+    const progressPaths = page.locator("[data-nutrition-orbit-progress]");
+    const halo = page.locator('[data-nutrition-orbit-halo="outer"]');
+
+    await expect(orbit).toBeVisible();
+    await expect(orbit).toHaveAttribute("data-css-module-scope", "nutrition-orbit");
+    await expect(progressPaths).toHaveCount(4);
+    await expect(page.locator(".nutritionOrbitPreview, .nutritionOrbitPreviewCard, .nutritionOrbitHitButton, .nutritionOrbitSvgTitle")).toHaveCount(0);
+    await expect(card).toHaveCSS("border-radius", "20px");
+    await expect(card).toHaveCSS("border-color", "rgb(227, 230, 241)");
+    await expect(card).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(orbit).toHaveCSS("margin-top", viewport.marginTop);
+
+    const cardBox = await card.boundingBox();
+    const sceneBox = await scene.boundingBox();
+    const hitBox = await addButton.boundingBox();
+    expect(cardBox).not.toBeNull();
+    expect(sceneBox).not.toBeNull();
+    expect(hitBox).not.toBeNull();
+    expect(cardBox.width).toBeCloseTo(viewport.cardWidth, 0);
+    expect(cardBox.height).toBeCloseTo(viewport.cardHeight, 0);
+    expect(hitBox.width).toBeCloseTo(viewport.hitWidth, 0);
+    expect(hitBox.height).toBeCloseTo(viewport.hitWidth, 0);
+    expect(hitBox.width).toBeGreaterThanOrEqual(44);
+    expect(cardBox.x).toBeGreaterThanOrEqual(0);
+    expect(cardBox.x + cardBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    if (viewport.sceneWidth) {
+      await expect(scene).toHaveCSS("width", `${viewport.sceneWidth}px`);
+    }
+
+    await expect(halo).not.toHaveCSS("animation-name", "none");
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.name === "390" || viewport.name === "1440") {
+      await attachScreenshot(page, testInfo, `client-nutrition-orbit-scoped-${viewport.name}.png`);
+    }
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
+  await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-nutrition").click();
+
+  const darkCard = page.locator('[data-nutrition-orbit-part="card"]');
+  const darkTitle = page.locator('[data-nutrition-orbit-text="title"]');
+  await expect(darkCard).toHaveCSS("width", "336px");
+  await expect(darkCard).toHaveCSS("height", "288.359px");
+  await expect(darkCard).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(darkTitle).toHaveCSS("fill", "rgb(21, 24, 36)");
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-orbit-scoped-dark.png");
+
+  await page.getByTestId("nutrition-orbit-add").click();
+  await expect(page.getByRole("dialog", { name: "Поиск еды" })).toBeVisible();
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 nutrition meal modal keeps scoped reference geometry, themes and actions", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { name: "360", width: 360, height: 800, sheetWidth: 321, sheetHeight: 257, rowWidth: 291, rowHeight: 81 },
+    { name: "390", width: 390, height: 844, sheetWidth: 351, sheetHeight: 257, rowWidth: 321, rowHeight: 81 },
+    { name: "430", width: 430, height: 932, sheetWidth: 391, sheetHeight: 257, rowWidth: 361, rowHeight: 81 },
+    { name: "768", width: 768, height: 1024, sheetWidth: 430, sheetHeight: 259, rowWidth: 400, rowHeight: 83 },
+    { name: "1440", width: 1440, height: 900, sheetWidth: 430, sheetHeight: 259, rowWidth: 400, rowHeight: 83 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal");
+
+    const modal = page.getByTestId("nutrition-meal-modal");
+    const sheet = page.locator('[data-nutrition-meal-part="sheet"]');
+    const row = page.getByTestId("nutrition-meal-food");
+    const addButton = page.getByTestId("nutrition-meal-add");
+
+    await expect(modal).toBeVisible({ timeout: 40_000 });
+    await expect(modal).toHaveAttribute("data-css-module-scope", "nutrition-meal-modal");
+    await expect(page.locator(".nutritionMealModalOverlay, .nutritionMealModalSheet, .productRowExact, .productInfoExact")).toHaveCount(0);
+    await expect(modal).toHaveCSS("position", "fixed");
+    await expect(modal).toHaveCSS("z-index", "9997");
+    await expect(sheet).toHaveCSS("border-radius", "28px");
+    await expect(sheet).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(page.locator('[data-nutrition-meal-part="header"] h2')).toHaveCSS("color", "rgb(95, 87, 68)");
+    await expect(row).toHaveCSS("transition-property", "transform, opacity, background");
+
+    const sheetBox = await sheet.boundingBox();
+    const rowBox = await row.boundingBox();
+    const addBox = await addButton.boundingBox();
+    expect(sheetBox).not.toBeNull();
+    expect(rowBox).not.toBeNull();
+    expect(addBox).not.toBeNull();
+    expect(sheetBox.width).toBeCloseTo(viewport.sheetWidth, 0);
+    expect(sheetBox.height).toBeCloseTo(viewport.sheetHeight, 0);
+    expect(rowBox.width).toBeCloseTo(viewport.rowWidth, 0);
+    expect(rowBox.height).toBeCloseTo(viewport.rowHeight, 0);
+    expect(addBox.width).toBeCloseTo(viewport.rowWidth, 0);
+    expect(addBox.height).toBeCloseTo(54, 0);
+    expect(sheetBox.x).toBeGreaterThanOrEqual(0);
+    expect(sheetBox.x + sheetBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    expect(sheetBox.y).toBeGreaterThanOrEqual(0);
+    expect(sheetBox.y + sheetBox.height).toBeLessThanOrEqual(viewport.height + 1);
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.name === "390" || viewport.name === "1440") {
+      await attachScreenshot(page, testInfo, `client-nutrition-meal-modal-scoped-${viewport.name}.png`);
+    }
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal&clientHarnessTheme=dark-green");
+  const darkSheet = page.locator('[data-nutrition-meal-part="sheet"]');
+  await expect(darkSheet).toBeVisible({ timeout: 40_000 });
+  await expect(darkSheet).toHaveCSS("border-color", "rgba(255, 255, 255, 0.09)");
+  await expect(darkSheet).toHaveCSS("background-image", /linear-gradient/);
+  await expect(page.locator('[data-nutrition-meal-part="header"] h2')).toHaveCSS("color", "rgb(245, 247, 243)");
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-meal-modal-scoped-dark.png");
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal");
+  await page.getByTestId("nutrition-meal-close").click();
+  await expect(page.getByTestId("nutrition-meal-modal")).toBeHidden();
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal");
+  await page.getByTestId("nutrition-meal-food").click();
+  await expect(page.getByTestId("food-product-hero")).toBeVisible();
+  await expect(page.getByTestId("nutrition-meal-modal")).toBeHidden();
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=nutritionMealModal");
+  await page.getByTestId("nutrition-meal-add").click();
+  await expect(page.getByTestId("food-search-header")).toBeVisible();
+  await expect(page.getByTestId("nutrition-meal-modal")).toBeHidden();
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 nutrition summary keeps scoped reference geometry, themes and actions", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { name: "360", width: 360, height: 800, rootWidth: 303, rootHeight: 78, cardWidth: 303, titleSize: "17px" },
+    { name: "390", width: 390, height: 844, rootWidth: 325, rootHeight: 78, cardWidth: 325, titleSize: "17px" },
+    { name: "430", width: 430, height: 932, rootWidth: 365, rootHeight: 78, cardWidth: 365, titleSize: "18px" },
+    { name: "768", width: 768, height: 1024, rootWidth: 336, rootHeight: 93, cardWidth: 310, titleSize: "18px" },
+    { name: "1440", width: 1440, height: 900, rootWidth: 986, rootHeight: 93, cardWidth: 960, titleSize: "18px" }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+
+    const summary = page.getByTestId("nutrition-summary");
+    const card = page.locator('[data-nutrition-summary-part="card"]');
+    const arrow = page.locator('[data-nutrition-summary-part="arrow"]');
+    const title = summary.locator("strong");
+
+    await expect(summary).toBeVisible({ timeout: 40_000 });
+    await expect(summary).toHaveAttribute("data-css-module-scope", "nutrition-summary");
+    await expect(summary).toHaveAttribute("data-state", "within-limit");
+    await expect(page.locator(".nutritionAiPlanTopInline, .nutritionAiPlanTopCard, .nutritionAiPlanTopTitle")).toHaveCount(0);
+    await expect(card).toHaveCSS("min-height", "78px");
+    await expect(card).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(arrow).toHaveCSS("width", "18px");
+    await expect(arrow).toHaveCSS("height", "36px");
+    await expect(arrow).toHaveCSS("border-top-width", "0px");
+    await expect(title).toHaveCSS("font-size", viewport.titleSize);
+
+    const summaryBox = await summary.boundingBox();
+    const cardBox = await card.boundingBox();
+    expect(summaryBox).not.toBeNull();
+    expect(cardBox).not.toBeNull();
+    expect(summaryBox.width).toBeCloseTo(viewport.rootWidth, 0);
+    expect(summaryBox.height).toBeCloseTo(viewport.rootHeight, 0);
+    expect(cardBox.width).toBeCloseTo(viewport.cardWidth, 0);
+    expect(cardBox.height).toBeCloseTo(78, 0);
+    expect(summaryBox.x).toBeGreaterThanOrEqual(0);
+    expect(summaryBox.x + summaryBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.name === "390" || viewport.name === "1440") {
+      await attachScreenshot(page, testInfo, `client-nutrition-summary-scoped-${viewport.name}.png`);
+    }
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
+  await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-nutrition").click();
+
+  const darkSummary = page.getByTestId("nutrition-summary");
+  const darkCard = page.locator('[data-nutrition-summary-part="card"]');
+  const darkArrow = page.locator('[data-nutrition-summary-part="arrow"]');
+  await expect(darkSummary).toBeVisible({ timeout: 40_000 });
+  await expect(darkSummary).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(darkArrow).toHaveCSS("width", "40px");
+  await expect(darkArrow).toHaveCSS("height", "40px");
+  await expect(darkArrow).toHaveCSS("border-top-width", "1px");
+  const darkSummaryBox = await darkSummary.boundingBox();
+  const darkCardBox = await darkCard.boundingBox();
+  expect(darkSummaryBox).not.toBeNull();
+  expect(darkCardBox).not.toBeNull();
+  expect(darkSummaryBox.width).toBeCloseTo(336, 0);
+  expect(darkSummaryBox.height).toBeCloseTo(93, 0);
+  expect(darkCardBox.width).toBeCloseTo(310, 0);
+  expect(darkCardBox.height).toBeCloseTo(78, 0);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-summary-scoped-dark.png");
+
+  await darkCard.click();
+  await expect(page.getByTestId("nutrition-plan-details")).toBeVisible();
+  await page.getByTestId("nutrition-plan-close").click();
+  await expect(page.getByTestId("nutrition-plan-details")).toBeHidden();
+  assertNoRuntimeErrors();
+});
+
+test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and actions", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
+
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { name: "360", width: 360, height: 800, rootWidth: 345, rootHeight: 721.14, panelHeight: 103.5, scoreSize: 118 },
+    { name: "390", width: 390, height: 844, rootWidth: 375, rootHeight: 721.14, panelHeight: 103.5, scoreSize: 118 },
+    { name: "430", width: 430, height: 932, rootWidth: 415, rootHeight: 715.23, panelHeight: 107, scoreSize: 124 },
+    { name: "768", width: 768, height: 1024, rootWidth: 420, rootHeight: 715.23, panelHeight: 107, scoreSize: 124 },
+    { name: "1440", width: 1440, height: 900, rootWidth: 420, rootHeight: 715.23, panelHeight: 107, scoreSize: 124 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
+    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+    await page.getByTestId("client-nav-nutrition").click();
+    await page.locator('[data-nutrition-summary-part="card"]').click();
+
+    const modal = page.getByTestId("nutrition-plan-details");
+    const dialog = page.getByRole("dialog", { name: "План питания" });
+    const backdrop = page.getByTestId("nutrition-plan-backdrop");
+    const close = page.getByTestId("nutrition-plan-close");
+    const caloriePanel = page.locator('[data-nutrition-plan-part="calorie-progress"]');
+    const score = page.locator('[data-nutrition-plan-part="score"]');
+
+    await expect(modal).toBeVisible({ timeout: 40_000 });
+    await expect(backdrop).toBeVisible();
+    await expect(modal).toHaveAttribute("data-css-module-scope", "nutrition-plan-details");
+    await expect(modal).toHaveAttribute("data-state", "within-limit");
+    await expect(dialog).toHaveAttribute("aria-modal", "true");
+    await expect(page.locator(".nutritionAiPlanDashboard, .nutritionAiPlanModal, .nutritionAiPlanToggleBtn")).toHaveCount(0);
+    await expect(modal).toHaveCSS("position", "fixed");
+    await expect(modal).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(modal).toHaveCSS("border-top-color", "rgb(227, 230, 241)");
+    await expect(close).toHaveCSS("width", "44px");
+    await expect(close).toHaveCSS("height", "44px");
+
+    const modalBox = await modal.boundingBox();
+    const panelBox = await caloriePanel.boundingBox();
+    const scoreBox = await score.boundingBox();
+    expect(modalBox).not.toBeNull();
+    expect(panelBox).not.toBeNull();
+    expect(scoreBox).not.toBeNull();
+    expect(modalBox.width).toBeCloseTo(viewport.rootWidth, 0);
+    expect(modalBox.height).toBeCloseTo(viewport.rootHeight, 0);
+    expect(panelBox.height).toBeCloseTo(viewport.panelHeight, 0);
+    expect(scoreBox.width).toBeCloseTo(viewport.scoreSize, 0);
+    expect(scoreBox.height).toBeCloseTo(viewport.scoreSize, 0);
+    expect(modalBox.x).toBeGreaterThanOrEqual(0);
+    expect(modalBox.x + modalBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    expect(modalBox.y).toBeGreaterThanOrEqual(0);
+    expect(modalBox.y + modalBox.height).toBeLessThanOrEqual(viewport.height + 1);
+    await expectNoHorizontalOverflow(page);
+
+    if (viewport.name === "390") {
+      const firstActivePixel = page.locator('[data-nutrition-plan-pixel="active"]').first();
+      await expect(firstActivePixel).toHaveCSS("background-image", /linear-gradient.*rgb\(244, 224, 100\)/);
+      await modal.evaluate((node) => {
+        node.dataset.state = "over-limit";
+      });
+      await expect(firstActivePixel).toHaveCSS("background-image", /linear-gradient.*rgb\(227, 78, 78\)/);
+    }
+
+    if (viewport.name === "390" || viewport.name === "1440") {
+      await attachScreenshot(page, testInfo, `client-nutrition-plan-details-scoped-${viewport.name}.png`);
+    }
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?clientHarness=1&clientHarnessTheme=dark-green");
+  await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-nutrition").click();
+  await page.locator('[data-nutrition-summary-part="card"]').click();
+
+  const darkModal = page.getByTestId("nutrition-plan-details");
+  const darkClose = page.getByTestId("nutrition-plan-close");
+  await expect(darkModal).toBeVisible({ timeout: 40_000 });
+  await expect(darkModal).toHaveCSS("background-color", "rgba(255, 255, 255, 0.027)");
+  await expect(darkModal).toHaveCSS("border-top-color", "rgba(255, 255, 255, 0.07)");
+  await expect(darkClose).toHaveCSS("width", "32px");
+  await expect(darkClose).toHaveCSS("height", "32px");
+  const darkBox = await darkModal.boundingBox();
+  expect(darkBox).not.toBeNull();
+  expect(darkBox.width).toBeCloseTo(366, 0);
+  expect(darkBox.height).toBeCloseTo(711, 0);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-nutrition-plan-details-scoped-dark.png");
+
+  await page.getByTestId("nutrition-plan-backdrop").click({ position: { x: 2, y: 2 } });
+  await expect(page.getByTestId("nutrition-plan-details")).toBeHidden();
+  await page.locator('[data-nutrition-summary-part="card"]').click();
+  await expect(page.getByTestId("nutrition-plan-details")).toBeVisible();
+  await page.getByTestId("nutrition-plan-close").click();
+  await expect(page.getByTestId("nutrition-plan-details")).toBeHidden();
+  assertNoRuntimeErrors();
+});

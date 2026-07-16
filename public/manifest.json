@@ -3,6 +3,7 @@
   "short_name": "Workout",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0f0f0f",
   "theme_color": "#0f0f0f",
   "icons": [

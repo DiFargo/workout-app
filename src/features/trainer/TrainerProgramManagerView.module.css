@@ -1,0 +1,48 @@
+.root {
+  --trainer-content-width: 1320px;
+  --trainer-page-gutter: 32px;
+  --trainer-page-block: 28px;
+  --trainer-section-gap: 18px;
+  --trainer-card-radius: 14px;
+  --trainer-control-height: 42px;
+  --trainer-surface: #ffffff;
+  --trainer-border: #e1e4ed;
+  --trainer-text: #171922;
+  --trainer-muted: #747b8d;
+  --trainer-accent: #6534ef;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 14px 0 0;
+  overflow-x: visible;
+  background: transparent;
+  color: var(--trainer-text);
+}
+
+.importInput {
+  display: none;
+}
+
+.root,
+.root * {
+  box-sizing: border-box;
+}
+
+@media (max-width: 1050px) {
+  .root {
+    --trainer-page-gutter: 24px;
+    --trainer-page-block: 24px;
+  }
+}
+
+@media (max-width: 760px) {
+  .root {
+    --trainer-page-gutter: 14px;
+    --trainer-page-block: 12px;
+    --trainer-section-gap: 14px;
+    padding-top: 8px;
+  }
+
+}

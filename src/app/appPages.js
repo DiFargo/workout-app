@@ -1,0 +1,51 @@
+export const APP_PAGES = Object.freeze({
+  MAIN: "main",
+  WORKOUTS: "workouts",
+  WORKOUT_MODE: "workoutMode",
+  WORKOUT_PLAN: "workoutPlan",
+  HISTORY: "history",
+  NUTRITION: "nutrition",
+  MEASUREMENT_WIZARD: "measurementWizard",
+  PROFILE: "profile",
+  ADMIN: "admin",
+  ADMIN_USERS: "adminUsers",
+  ADMIN_WORKOUTS: "adminWorkouts",
+  ADMIN_PANEL: "adminPanel",
+  BASIC_WORKOUT_QUIZ: "basicWorkoutQuiz",
+  AI_COACH: "aiCoach"
+});
+
+export const APP_PAGE_GROUPS = Object.freeze({
+  CLIENT_CORE: [
+    APP_PAGES.MAIN,
+    APP_PAGES.WORKOUTS,
+    APP_PAGES.NUTRITION,
+    APP_PAGES.PROFILE
+  ],
+  CLIENT_WORKFLOW: [
+    APP_PAGES.WORKOUT_MODE,
+    APP_PAGES.WORKOUT_PLAN,
+    APP_PAGES.HISTORY,
+    APP_PAGES.BASIC_WORKOUT_QUIZ
+  ],
+  TRAINER: [
+    APP_PAGES.ADMIN,
+    APP_PAGES.ADMIN_USERS,
+    APP_PAGES.ADMIN_WORKOUTS,
+    APP_PAGES.ADMIN_PANEL,
+    APP_PAGES.MEASUREMENT_WIZARD
+  ],
+  ADMIN: [
+    APP_PAGES.ADMIN,
+    APP_PAGES.ADMIN_USERS,
+    APP_PAGES.ADMIN_WORKOUTS,
+    APP_PAGES.ADMIN_PANEL
+  ],
+  MEASUREMENT_AND_NUTRITION: [
+    APP_PAGES.NUTRITION,
+    APP_PAGES.MEASUREMENT_WIZARD,
+    APP_PAGES.HISTORY
+  ]
+});
+
+export const DEFAULT_APP_PAGE = APP_PAGES.MAIN;

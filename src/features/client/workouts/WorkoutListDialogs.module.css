@@ -1,0 +1,253 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 16000;
+  box-sizing: border-box;
+  padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
+  display: grid;
+  place-items: center;
+  background: var(--background-workout-list-dialog-overlay);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dialog {
+  box-sizing: border-box;
+  width: min(100%, 350px);
+  padding: 16px;
+  border: 1px solid var(--color-workout-list-dialog-border);
+  border-radius: 22px;
+  background: var(--background-workout-list-dialog);
+  box-shadow: var(--shadow-workout-list-dialog);
+  color: var(--color-workout-list-dialog-text);
+}
+
+.header {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eyebrow {
+  margin-bottom: 4px;
+  display: block;
+  color: var(--color-workout-list-dialog-eyebrow);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.title {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.1;
+}
+
+.closeButton {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0;
+  border: 1px solid var(--color-workout-list-dialog-control-border);
+  border-radius: 13px;
+  background: var(--background-workout-list-dialog-close);
+  color: inherit;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+}
+
+.option {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 76px;
+  padding: 11px 12px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid var(--color-workout-list-dialog-control-border);
+  border-radius: 16px;
+  background: var(--background-workout-list-dialog-option);
+  color: inherit;
+  text-align: left;
+}
+
+.optionActive {
+  border-color: var(--color-workout-list-dialog-active-border);
+  background: var(--background-workout-list-dialog-active);
+}
+
+.optionIcon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--background-workout-list-dialog-icon);
+  color: var(--color-workout-list-dialog-icon);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.optionContent {
+  min-width: 0;
+}
+
+.optionTitle,
+.optionDescription {
+  display: block;
+}
+
+.optionTitle {
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.optionDescription {
+  margin-top: 5px;
+  color: var(--color-workout-list-dialog-muted);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.optionIndicator {
+  color: var(--color-workout-list-dialog-indicator);
+  font-size: 20px;
+  font-style: normal;
+  text-align: center;
+}
+
+.remember {
+  box-sizing: border-box;
+  min-height: 48px;
+  margin-top: 12px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-workout-list-dialog-control-border);
+  border-radius: 16px;
+  background: var(--background-workout-list-dialog-option);
+  color: var(--color-workout-list-dialog-remember);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.rememberInput {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--color-workout-list-dialog-checkbox);
+}
+
+.historyDialog {
+  width: min(100%, 370px);
+  max-height: min(680px, calc(100dvh - 28px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
+.historyList {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.historyList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.historyList::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--color-workout-history-scrollbar);
+}
+
+.historyItem {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 60px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--color-workout-history-item-border);
+  border-radius: 14px;
+  background: var(--background-workout-history-item);
+  color: var(--color-workout-history-item-text);
+  text-align: left;
+}
+
+.historyIcon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--background-workout-list-dialog-icon);
+  font-size: 18px;
+}
+
+.historyContent {
+  min-width: 0;
+}
+
+.historyTitle,
+.historyMeta {
+  display: block;
+}
+
+.historyTitle {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.historyMeta {
+  margin-top: 4px;
+  color: var(--color-workout-history-meta);
+  font-size: 10px;
+}
+
+.historyMessage {
+  margin: 16px 4px;
+  color: var(--color-workout-history-empty);
+  font-size: 12px;
+  text-align: center;
+}
+
+.historyAllButton {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 10px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--background-workout-history-primary);
+  color: var(--color-workout-history-primary);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+}

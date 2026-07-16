@@ -1,21 +1,34 @@
 {
   "name": "workout-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.240",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:staging": "vite build --mode staging",
+    "build:production": "vite build --mode production",
+    "test": "node --test tests/*.test.mjs",
+    "test:rules": "set XDG_CONFIG_HOME=.config&& npx --yes --cache ./.npm-cache firebase-tools@15.20.0 emulators:exec --only firestore \"node --test tests/firestore-rules.rules.mjs\"",
+    "test:e2e": "playwright test",
+    "verify": "scripts\\verify.cmd",
+    "check:bundle": "node scripts/check-build-budget.mjs",
+    "report:css": "node scripts/report-css-size.mjs",
     "lint": "eslint .",
+    "lint:critical": "eslint src/utils/clientUx.js src/utils/trainerAttention.js src/utils/trainerNutritionPlan.js tests/client-ux.test.mjs tests/trainer-attention.test.mjs tests/trainer-nutrition-plan.test.mjs tests/security-boundaries.test.mjs tests/firestore-rules.rules.mjs tests/e2e/client-smoke.spec.js tests/e2e/trainer-workspace.spec.js playwright.config.js",
     "preview": "vite preview"
   },
   "dependencies": {
     "firebase": "^12.12.1",
+    "lucide-react": "^0.468.0",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "read-excel-file": "^9.0.10"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@firebase/rules-unit-testing": "^5.0.1",
+    "@playwright/test": "^1.60.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",

@@ -1,0 +1,1149 @@
+# CSS Cleanup Baseline
+
+Goal: reduce CSS risk and weight route by route, never by blind deletion.
+
+Current verified budget:
+
+- Main JS budget: `600 KiB` raw, `170 KiB` gzip.
+- Main CSS budget: `2100 KiB` raw, `270 KiB` gzip.
+- Latest main CSS bundle: about `1200.34 KiB` raw, `118.78 KiB` gzip.
+- Latest source CSS report: `100` files, about `3364.43 KiB` total source CSS.
+
+## Screenshot Coverage
+
+Covered by Playwright visual audits:
+
+- Client main dashboard: `tests/e2e/client-primary-visual.spec.js`
+- Client cabinet, cabinet workout history modal, measurements modal, nutrition modal, workout calendar modal and progress photos modal: `tests/e2e/client-primary-visual.spec.js`
+- Client nutrition main, food search, food results, product amount screen, product edit sheet, My Database, calendar, diary and analysis modal: `tests/e2e/client-nutrition-visual.spec.js`
+- Client workout cards, swipe, workout mode modal, workout history modal and empty assigned plan state: `tests/e2e/client-workout-visual.spec.js`
+- Client loading fallback: guarded structurally in `tests/app-structure.test.mjs` and exercised indirectly by lazy-route E2E coverage.
+- Trainer dashboard, clients, client card, messages and programs: `tests/e2e/trainer-visual.spec.js`
+- Admin panel hub, denied state, admin users CRM harness and admin programs overview harness: `tests/e2e/admin-visual.spec.js`
+
+Not covered deeply yet:
+
+- Live production-only auth and Firestore permission edge cases.
+
+## Largest CSS Files From Latest Report
+
+Start mapping here before any cleanup:
+
+- `src/styles/client-primary.css` - `207.12 KiB`
+- `src/components/trainer/trainer-workspace.css` - `168.45 KiB`
+- `src/styles/client-main.css` - `159.34 KiB`
+- `src/styles/client-nutrition-grid.css` - `146.48 KiB`
+- `src/styles/client-render-target.css` - `99.23 KiB`
+- `src/styles/nutrition-food-editor.css` - `91.43 KiB`
+- `src/styles/client-cabinet-desktop.css` - `89.35 KiB`
+- `src/styles/client-workout-flow.css` - `83.81 KiB`
+- `src/styles/trainer-month-program-editor.css` - `83.19 KiB`
+- `src/styles/profile-dashboard-telegram.css` - `81.55 KiB`
+- `src/styles/admin-client-page.css` - `81.30 KiB`
+- `src/styles/client-visual-unity.css` - `75.56 KiB`
+- `src/styles/registration-accessibility.css` - `68.14 KiB`
+- `src/styles/client-food-search.css` - `68.01 KiB`
+
+## Cleanup Order
+
+1. Client primary screens.
+   - Reason: main and cabinet now have direct screenshot coverage.
+   - Candidate files: `client-primary.css`, `client-render-target.css`, `client-visual-unity.css`, `client-cabinet-desktop.css`.
+   - Continued in `v.1.651`: removed the early duplicate cabinet bottom pseudo-layer from `client-primary.css`.
+   - Started in `v.1.282`: removed one-line core aliases `themes.css` and `client-main.css`; `index.css` now imports `theme.css` and `auth.css` directly.
+   - Continued in `v.1.283`: removed core aggregators `layout.css` and `components.css`; `index.css` now imports their base component CSS directly.
+   - Expanded in `v.1.288`: visual coverage now includes the cabinet workout history modal and its compact delete action.
+   - Expanded in `v.1.289`: visual coverage now includes the cabinet measurements modal and its close/start actions.
+   - Expanded in `v.1.290`: visual coverage now includes the cabinet nutrition modal, its goal picker, week navigation and save action.
+   - Expanded in `v.1.291`: visual coverage now includes the cabinet workout calendar modal, history entry and edit controls.
+   - Continued in `v.1.292`: removed four import-only legacy stack aggregator files by importing their child CSS directly from `index.css`.
+   - Continued in `v.1.293`: removed remaining import-only light, nutrition and admin stack aggregators by importing their child CSS directly from the active entrypoints.
+   - Expanded in `v.1.294`: visual coverage now includes the cabinet progress photos modal, upload steps and save action.
+   - Expanded in `v.1.296`: visual coverage now includes cabinet settings, trainer notifications and Telegram management modals with close/action tap-target guards.
+   - Continued in `v.1.571`: grouped duplicate cabinet nutrition and utility modal close-button CSS in `workouts.css`.
+   - Continued in `v.1.726`: removed the early duplicate AI stats row label layout owner from `profile-dashboard-telegram.css`; the final stats alignment owner remains guarded.
+   - Stabilized in `v.1.791`: locked the client harness main reference-card internals after visual regression feedback; `npm.cmd run report:css` remains under budget.
+
+2. Client workouts.
+   - Reason: workout cards and modals have visual coverage and fixed tap targets.
+   - Candidate files: `client-workout-card-render.css`, `client-workout-flow.css`, workout-related blocks in broad legacy files.
+   - Expanded in `v.1.286`: visual coverage now includes the empty assigned plan state before cleanup of workout empty-state CSS.
+   - Continued in `v.1.287`: removed old global empty-state rules from legacy files; `client-workout-empty-state.css` is the scoped owner.
+   - Continued in `v.1.568`: grouped duplicate select and warmup bottom action-control CSS in `client-workout-flow.css`.
+   - Continued in `v.1.572`: grouped duplicate compact exercise and finish navigation height CSS in `workouts.css`.
+   - Continued in `v.1.577`: grouped shared exercise and finish slide animation-shell CSS in `workoutFlow.css`.
+   - Continued in `v.1.578`: grouped compact exercise back/previous button sizing in `workout-navigation-close.css`.
+   - Continued in `v.1.579`: grouped workout back/previous/close pseudo reset CSS in `workout-navigation-close.css`.
+   - Continued in `v.1.580`: grouped compact exercise back/previous active-state CSS in `workout-navigation-close.css`.
+   - Continued in `v.1.581`: removed duplicate exercise close active-state CSS from `workout-navigation-close.css`.
+   - Continued in `v.1.582`: consolidated scoped exercise close positioning CSS in `workout-navigation-close.css`.
+   - Continued in `v.1.583`: grouped workout close slide relative positioning CSS in `workout-navigation-close.css`.
+   - Continued in `v.1.584`: grouped select/start button sizing CSS in `client-workout-flow.css`.
+   - Continued in `v.1.585`: removed duplicate compact start-panel sizing CSS from `client-workout-flow.css`.
+   - Continued in `v.1.590`: removed early duplicate bottom-bar button and label shells from `bottom-bars.css`.
+   - Continued in `v.1.591`: moved duplicate main goal-stat typography to the final owner in `client-visual-unity.css`.
+   - Continued in `v.1.724`: removed the early duplicate individual workout badges layout owner from `trainer-month-program-editor.css`; the final badges owner remains guarded.
+
+3. Client nutrition.
+   - Reason: densest route, already covered by modal screenshots.
+   - Candidate files: `client-nutrition-grid.css`, `nutrition-food-editor.css`, `nutrition.css`, `nutrition-layout.css`.
+   - Expanded in `v.1.284`: visual coverage now includes search results, product amount screen, product edit sheet and My Database.
+   - Continued in `v.1.285`: removed an older duplicated product/edit action-bar block from `client-visual-unity.css`; later food search CSS owns those surfaces.
+   - Fixed in `v.1.295`: nutrition week strip keeps readable weekday labels separated from day markers and is guarded by geometry checks in the nutrition visual audit.
+   - Continued in `v.1.300`: food-search/product polish CSS moved from the core app entrypoint into `nutrition-stack.css`, under the existing nutrition visual audit.
+   - Expanded in `v.1.301`: AI photo not-found modal has visual coverage and its CSS moved from core into `nutrition-stack.css`.
+   - Expanded in `v.1.302`: nutrition create product/dish choice modal has visual coverage before broader food-flow CSS cleanup.
+   - Expanded in `v.1.303`: custom dish editor, ingredient picker and ingredient confirmation have visual coverage before broader food-flow CSS cleanup.
+   - Continued in `v.1.304`: broad nutrition flow CSS moved from the core app entrypoint into `nutrition-stack.css`, under expanded nutrition visual coverage.
+   - Continued in `v.1.305`: nutrition orbit CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition main visual coverage.
+   - Continued in `v.1.574`: grouped shared inline and modal Zouk meal-shell CSS in `nutrition-orbit.css`.
+   - Continued in `v.1.575`: removed the early compact meal-card sizing repeat from `nutrition.css`; desktop compact sizing remains in the later owner.
+   - Continued in `v.1.586`: grouped food search and product action active colors in `nutrition-food-search-actions.css`.
+   - Continued in `v.1.587`: grouped AI plan muted span typography in `nutrition-ai-plan-lazy.css`.
+   - Continued in `v.1.588`: grouped food search header close-button shell CSS in `client-food-search.css`.
+   - Continued in `v.1.589`: grouped food search header title shell CSS in `client-food-search.css`.
+   - Continued in `v.1.592`: grouped warm-light food search/edit gold action shell CSS in `warm-light-food-edit-back-buttons.css`.
+   - Continued in `v.1.593`: grouped food search, product and editor action-bar `strong` typography in `client-primary.css`.
+   - Continued in `v.1.594`: grouped expanded meal/product text typography in `nutrition-layout.css`.
+   - Continued in `v.1.595`: grouped warm-light food search input/history surface shell CSS in `warm-light-food-edit-back-buttons.css`.
+   - Continued in `v.1.596`: grouped warm-light product edit content/grid label shell CSS in `warm-light-food-edit-back-buttons.css`.
+   - Continued in `v.1.597`: grouped warm-light product edit segment/macro card shell CSS in `warm-light-food-edit-back-buttons.css`.
+   - Continued in `v.1.600`: grouped warm-light custom dish ingredient picker/confirmation surface CSS in `nutrition-food-editor-workout-close.css`.
+   - Continued in `v.1.601`: grouped warm-light profile refresh/theme action shell CSS in `warm-light-add-food-search.css`.
+   - Continued in `v.1.602`: grouped client profile sex/goal active picker CSS in `profile-dashboard-telegram.css`.
+   - Continued in `v.1.603`: grouped client profile AI coach insight/toggle label typography CSS in `profile-dashboard-telegram.css`.
+   - Continued in `v.1.604`: grouped first setup sex/goal active choice CSS in `registration-accessibility.css`.
+   - Continued in `v.1.605`: grouped client workout history modal/cabinet item icon and title CSS in `registration-accessibility.css`.
+   - Continued in `v.1.606`: grouped warm-light nutrition header/calendar close shell CSS in `registration-accessibility.css`.
+   - Continued in `v.1.607`: grouped client workout history modal/cabinet item text internals CSS in `registration-accessibility.css`.
+   - Continued in `v.1.608`: grouped cabinet nutrition modal AI plan/goal card shells in `client-cabinet-desktop.css`.
+   - Continued in `v.1.621`: grouped cabinet nutrition modal warm-light save button shell CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.624`: grouped cabinet nutrition modal warm-light picker active/hint CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.625`: grouped cabinet nutrition modal warm-light neutral card/picker/macro surfaces in `client-cabinet-desktop.css`.
+   - Continued in `v.1.626`: grouped trainer notifications and progress photos warm-light surface CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.627`: grouped trainer notifications and progress photos warm-light heading text CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.628`: grouped trainer notifications and progress photos base heading CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.629`: grouped trainer notifications and progress photos text-container grid CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.630`: grouped cabinet nutrition modal calendar/macro micro-label typography CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.631`: grouped cabinet nutrition modal settings-open hidden legacy surfaces in `client-cabinet-desktop.css`.
+   - Continued in `v.1.632`: grouped trainer client KPI/macro metric caption typography CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.633`: grouped trainer client attention/progress caption typography CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.634`: grouped trainer client hero/section/control muted caption typography CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.635`: grouped trainer client AI/control/activity list shell CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.636`: grouped trainer client section/attention/AI/program text shell CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.637`: grouped trainer mobile task/photo/payment form column CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.638`: grouped trainer client mobile photo/hero/progress column CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.639`: grouped trainer mobile progress/event/payment auto-column CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.640`: grouped trainer progress/event/payment full-width column CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.622`: grouped warm-light trainer notifications and progress photos modal shells in `client-cabinet-desktop.css`.
+   - Continued in `v.1.623`: grouped warm-light trainer notifications and progress photos overlay CSS in `client-cabinet-desktop.css`.
+   - Continued in `v.1.609`: grouped profile/admin Telegram status badge shells in `profile-dashboard-telegram.css`.
+   - Continued in `v.1.610`: grouped profile/admin Telegram avatar shells in `profile-dashboard-telegram.css`.
+   - Continued in `v.1.611`: grouped profile/admin Telegram avatar image-fit CSS in `profile-dashboard-telegram.css`.
+   - Continued in `v.1.612`: grouped Telegram action button text/cursor CSS in `profile-dashboard-telegram.css`.
+   - Continued in `v.1.613`: grouped Telegram bot/check action button shell CSS in `profile-dashboard-telegram.css`.
+   - Continued in `v.1.614`: grouped Telegram bot/check disabled-state CSS in `profile-dashboard-telegram.css`.
+   - Fixed in `v.1.615`: nutrition weekday strip uses an explicit label/marker grid and smaller markers so compact Russian labels stay readable.
+   - Continued in `v.1.616`: removed the obsolete pre-final nutrition weekday strip flex layer from `nutrition-food-flow.css`.
+   - Continued in `v.1.617`: removed the obsolete warm-light nutrition weekday selected/background layer from `warm-light-nutrition.css`.
+   - Continued in `v.1.618`: removed the obsolete 34px/28px nutrition weekday strip layer from `nutrition.css`.
+   - Continued in `v.1.619`: grouped the warm-light nutrition/client page shell surface in `nutrition.css`.
+   - Continued in `v.1.620`: removed the obsolete warm-light collapsed AI plan surface pre-owner from `nutrition.css`.
+   - Continued in `v.1.723`: removed the early duplicate product info layout owner from `nutrition-food-products-summary.css`; the final product info owner remains guarded.
+   - Continued in `v.1.725`: removed the early duplicate calorie row grid owner from `nutrition-header-layout.css`; the later reference owner remains guarded.
+   - Fixed in `v.1.306`: nutrition weekday labels now use unambiguous two-letter labels and the visual audit guards marker sizes.
+   - Continued in `v.1.307`: warm-light add-food/search cleanup CSS moved from the core app entrypoint into `nutrition-stack.css`, under nutrition visual coverage.
+   - Continued in `v.1.308`: dark-green nutrition food-flow CSS moved from the core app entrypoint into `nutrition-stack.css`, with the dark nutrition readability guard updated.
+
+4. Trainer workspace.
+   - Reason: dashboard, clients, messages and programs have coverage; the CSS is large but route-scoped.
+   - Candidate file: `src/components/trainer/trainer-workspace.css`.
+   - Started in `v.1.281`: removed the one-line `trainer.css` alias and imported `trainer-workspace.css` directly from `trainer-lazy.css`.
+   - Continued in `v.1.569`: removed the duplicate narrow mobile bottom-nav shell from `trainer-workspace.css`.
+   - Continued in `v.1.570`: grouped duplicate nutrition plan and notification action button CSS in `trainer-workspace.css`.
+   - Continued in `v.1.573`: grouped shared assignment and nutrition form field shells in `trainer-workspace.css`.
+   - Continued in `v.1.576`: grouped the shared mobile page shell across narrow and coarse landscape trainer owners in `trainer-workspace.css`.
+   - Continued in `v.1.641`: grouped trainer cabinet and utility card shell CSS in `trainer-workspace.css`.
+   - Continued in `v.1.642`: grouped trainer mobile metric/goal two-column grid CSS in `trainer-workspace.css`.
+   - Continued in `v.1.643`: grouped trainer mobile measurement grid CSS in `trainer-workspace.css`.
+   - Continued in `v.1.644`: grouped trainer nutrition muted micro-label CSS in `trainer-workspace.css`.
+   - Continued in `v.1.645`: grouped trainer nutrition typography and notification panel shell CSS in `trainer-workspace.css`.
+   - Continued in `v.1.646`: grouped trainer calendar grid and notification hidden-input CSS in `trainer-workspace.css`.
+   - Continued in `v.1.647`: grouped trainer workout calendar status color CSS in `trainer-workspace.css`.
+   - Continued in `v.1.648`: grouped trainer panel shell and scrollbar CSS in `trainer-workspace.css`.
+   - Continued in `v.1.652`: grouped repeated trainer purple active controls in `trainer-workspace.css`.
+   - Continued in `v.1.653`: grouped trainer workout schedule pill-label CSS in `trainer-workspace.css`.
+   - Continued in `v.1.654`: grouped trainer shared header layout CSS in `trainer-workspace.css`.
+   - Continued in `v.1.655`: grouped trainer shared four-column grid CSS in `trainer-workspace.css`.
+   - Continued in `v.1.656`: grouped trainer workout calendar today highlight CSS in `trainer-workspace.css`.
+   - Continued in `v.1.657`: grouped trainer workout calendar weekday label CSS in `trainer-workspace.css`.
+   - Continued in `v.1.658`: grouped trainer notification/client identity ellipsis typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.659`: grouped trainer message and workout schedule flex header layout CSS in `trainer-workspace.css`.
+   - Continued in `v.1.660`: grouped trainer measurement/exercise micro-label typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.661`: grouped trainer measurement chart and workout schedule month flex layout CSS in `trainer-workspace.css`.
+   - Continued in `v.1.662`: grouped trainer measurement collapsed and workout month stat grid CSS in `trainer-workspace.css`.
+   - Continued in `v.1.663`: grouped trainer measurement and program panel shell CSS in `trainer-workspace.css`.
+   - Continued in `v.1.664`: grouped trainer measurement and exercise progress status color CSS in `trainer-workspace.css`.
+   - Continued in `v.1.665`: grouped trainer message, analytics and notification muted caption typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.666`: grouped trainer avatar, photo and exercise media cover CSS in `trainer-workspace.css`.
+   - Continued in `v.1.667`: grouped trainer client identity/name and selected-program action row flex layout CSS in `trainer-workspace.css`.
+   - Continued in `v.1.668`: grouped trainer breadcrumb and exercise action hover CSS in `trainer-workspace.css`.
+   - Continued in `v.1.669`: grouped trainer notification offset and reminder period divider CSS in `trainer-workspace.css`.
+   - Continued in `v.1.670`: grouped trainer mobile exercise progress and nutrition custom-period two-column CSS in `trainer-workspace.css`.
+   - Continued in `v.1.671`: grouped trainer mobile exercise action grid CSS in `trainer-workspace.css`.
+   - Continued in `v.1.672`: grouped trainer mobile exercise editor layout CSS in `trainer-workspace.css`.
+   - Continued in `v.1.673`: grouped trainer program and workout-day action hover CSS in `trainer-workspace.css`.
+   - Continued in `v.1.674`: grouped trainer notification connected-state color CSS in `trainer-workspace.css`.
+   - Continued in `v.1.675`: grouped trainer drawer and photo preview modal micro-label typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.676`: grouped trainer mobile measurement summary, notification schedule and measurement field grid CSS in `trainer-workspace.css`.
+   - Continued in `v.1.677`: grouped trainer notification offset and progress reminder muted caption CSS in `trainer-workspace.css`.
+   - Continued in `v.1.678`: grouped trainer panel, photo compare and workout editor muted paragraph typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.679`: grouped trainer client table and measurement muted small-label typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.680`: grouped trainer shared disabled action cursor/opacity CSS in `trainer-workspace.css`.
+   - Continued in `v.1.681`: grouped trainer disabled program button border and text color CSS in `trainer-workspace.css`.
+   - Continued in `v.1.682`: grouped trainer compact layout, legend, delete-hover and schedule disabled-state CSS in `trainer-workspace.css`.
+   - Continued in `v.1.683`: grouped trainer emphasis typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.684`: grouped trainer client section stack CSS in `trainer-workspace.css`.
+   - Continued in `v.1.685`: grouped trainer inline text stack CSS in `trainer-workspace.css`.
+   - Continued in `v.1.686`: grouped trainer micro-copy typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.687`: grouped trainer list-tail divider CSS in `trainer-workspace.css`.
+   - Continued in `v.1.688`: grouped trainer measurement status color CSS in `trainer-workspace.css`.
+   - Continued in `v.1.689`: grouped trainer compact text-field stack CSS in `trainer-workspace.css`.
+   - Continued in `v.1.690`: grouped trainer compact row text stack CSS in `trainer-workspace.css`.
+   - Continued in `v.1.691`: grouped trainer workout/nutrition mobile header grid CSS in `trainer-workspace.css`.
+   - Continued in `v.1.692`: grouped trainer exercise/program first action button sizing CSS in `trainer-workspace.css`.
+   - Continued in `v.1.693`: grouped trainer risk/history/action stack CSS in `trainer-workspace.css`.
+   - Continued in `v.1.694`: grouped trainer workout schedule/status emphasis color CSS in `trainer-workspace.css`.
+   - Continued in `v.1.695`: grouped trainer drawer/coach/program stack gap CSS in `trainer-workspace.css`.
+   - Continued in `v.1.696`: grouped trainer sidebar/utility/library micro-stack CSS in `trainer-workspace.css`.
+   - Continued in `v.1.697`: grouped trainer shared 14px stack layout CSS in `trainer-workspace.css`.
+   - Continued in `v.1.698`: grouped trainer muted 8px micro-label typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.699`: grouped trainer muted 9px micro-label typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.700`: grouped trainer muted 10px micro-label typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.701`: grouped trainer shared 10px stack layout CSS in `trainer-workspace.css`.
+   - Continued in `v.1.702`: grouped trainer shared 11px strong-label typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.703`: grouped trainer shared 10px compact-label typography CSS in `trainer-workspace.css`.
+   - Continued in `v.1.704`: grouped trainer shared purple color CSS in `trainer-workspace.css`.
+   - Continued in `v.1.705`: grouped trainer shared purple focus-border CSS in `trainer-workspace.css`.
+   - Continued in `v.1.706`: grouped trainer shared min-width reset CSS in `trainer-workspace.css`.
+   - Continued in `v.1.707`: grouped trainer shared green color CSS in `trainer-workspace.css`.
+   - Continued in `v.1.708`: grouped trainer shared purple background CSS in `trainer-workspace.css`.
+   - Continued in `v.1.709`: folded trainer nutrition page tab active CSS into the shared purple active owner in `trainer-workspace.css`.
+   - Continued in `v.1.710`: grouped trainer shared purple active glow CSS in `trainer-workspace.css`.
+   - Continued in `v.1.711`: grouped trainer mobile two-column metric and notification-offset grids in `trainer-workspace.css`.
+   - Continued in `v.1.712`: grouped trainer shared white panel shell CSS across dashboard, nutrition, client and notification cards in `trainer-workspace.css`.
+   - Continued in `v.1.713`: grouped trainer shared 16px title typography across analytics, notification, client and nutrition cards in `trainer-workspace.css`.
+   - Continued in `v.1.714`: removed the duplicate trainer workout preview stack owner after the shared stack owner in `trainer-workspace.css`.
+   - Continued in `v.1.715`: removed the duplicate standalone client bottom nav active owner after the shared active owner in `client-nutrition-grid.css`.
+   - Continued in `v.1.716`: removed the early duplicate main profile AI hero grid owner before the more specific hero grid owner in `client-nutrition-grid.css`.
+   - Continued in `v.1.717`: removed the early duplicate main profile progress insight headline layout owner before the final headline layout owner in `client-nutrition-grid.css`.
+   - Continued in `v.1.718`: removed the early duplicate main measurement chart line owner before the final chart line owner in `client-nutrition-grid.css`.
+   - Continued in `v.1.719`: removed the early duplicate food action bar button and active owners before the final shared action owners in `client-primary.css`.
+   - Continued in `v.1.720`: removed the early duplicate main AI stats row cell owner before the final stats row cell owner in `client-primary.css`.
+   - Continued in `v.1.721`: removed the old `v.1.100` product editor header rhythm owner from `client-visual-unity.css`; the later `v.1.102` final cascade lock remains guarded.
+   - Continued in `v.1.722`: removed the early duplicate admin nutrition month summary-below layout owner from `admin-client-dashboard.css`; the final V44 owner remains guarded.
+
+5. Admin hub and internals.
+   - Reason: hub, users CRM and program overview surfaces have harness coverage.
+   - Candidate files: `adminPanelHub.css`, admin CRM/program rules inside admin lazy stack.
+   - Started in `v.1.280`: removed the one-line `admin.css` alias and imported `adminPanelHub.css` directly from `admin-lazy.css`.
+   - Expanded in `v.1.297`: admin visual coverage now includes DEV-only users CRM and programs overview harness surfaces with tap-target and overflow checks.
+   - Continued in `v.1.298`: admin internals CSS moved behind `admin-internals-lazy.css` so the production admin hub chunk stays lightweight.
+   - Guarded in `v.1.299`: `tests/app-structure.test.mjs` now rejects heavy admin internals imports in the production admin hub CSS entrypoint.
+
+## Guardrails
+
+- Run `npm.cmd run report:css` before and after cleanup.
+- Search class usage with `rg` before removing selectors.
+- Prefer moving route-specific CSS into existing lazy entrypoints over deleting uncertain legacy blocks.
+- After each route cleanup, run the matching targeted visual spec first.
+- Before committing, run `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css`.
+- Clean admin CRM internals only under the deeper admin harness and targeted admin visual audit.
+
+## Completed Cleanup
+
+- `v.1.280`: deleted `src/styles/admin.css`, which only re-exported `adminPanelHub.css`; `src/styles/admin-lazy.css` now imports `adminPanelHub.css` directly.
+- Verification for `v.1.280`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.281`: deleted `src/styles/trainer.css`, which only re-exported `src/components/trainer/trainer-workspace.css`; `src/styles/trainer-lazy.css` now imports the trainer workspace CSS directly.
+- Verification for `v.1.281`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.282`: deleted `src/styles/themes.css` and `src/styles/client-main.css`, which only re-exported `theme.css` and `auth.css`; `src/styles/index.css` now imports those files directly.
+- Verification for `v.1.282`: `tests/e2e/client-smoke.spec.js`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.283`: deleted `src/styles/layout.css` and `src/styles/components.css`, which only grouped base component imports; `src/styles/index.css` now imports their children directly.
+- Verification for `v.1.283`: `tests/app-structure.test.mjs`, `tests/e2e/client-smoke.spec.js`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.284`: removed an obsolete product meal-button override from `client-visual-unity.css` after deeper nutrition visual coverage proved the later product CSS owns that state.
+- Verification for `v.1.284`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.285`: removed the older duplicated product/edit action-bar block from `client-visual-unity.css`; `client-food-search.css` keeps the current product and edit-sheet action bar rules.
+- Verification for `v.1.285`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.287`: removed duplicated global `.workoutProgramEmptyState` and `.workoutProgramEmptyIcon` rules from `client-history-ai-search.css` and `admin-program-editor.css`; the scoped `client-workout-empty-state.css` now owns the client workout empty plan state.
+- Verification for `v.1.287`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.289`: expanded the client primary visual audit to cover the cabinet measurements modal and fixed its close button to a stable 44px tap target.
+- Verification for `v.1.289`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.290`: expanded the client primary visual audit to cover the cabinet nutrition modal, accepted string dates in AI nutrition schedule helpers and fixed modal nutrition controls to stable 44px tap targets.
+- Verification for `v.1.290`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.291`: expanded the client primary visual audit to cover the cabinet workout calendar modal and fixed its close, month navigation, edit and save/cancel controls to stable 44px tap targets.
+- Verification for `v.1.291`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.292`: deleted import-only aggregators `legacy-stack.css`, `legacy-stack-foundation.css`, `legacy-stack-workflows.css` and `legacy-stack-final-polish.css`; `index.css` now imports the same child CSS files directly in the same order.
+- Verification for `v.1.292`: `tests/app-structure.test.mjs`, client primary/nutrition/workout visual specs and `npm.cmd run report:css` passed before full verification.
+- `v.1.293`: deleted import-only aggregators `legacy-light-stack.css`, `legacy-nutrition-stack.css` and `legacy-admin-stack.css`; `index.css`, `nutrition-stack.css` and `trainer-lazy.css` now import the same child CSS files directly.
+- Verification for `v.1.293`: `tests/app-structure.test.mjs`, client primary/nutrition, trainer and admin visual specs and `npm.cmd run report:css` passed before full verification.
+- `v.1.294`: expanded the client primary visual audit to cover the cabinet progress photos modal, upload step labels and save action.
+- Verification for `v.1.294`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.295`: fixed the nutrition week strip spacing so weekday labels no longer crowd the day markers on compact mobile headers.
+- Verification for `v.1.295`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.296`: expanded the client primary visual audit to cover cabinet settings, trainer notifications and Telegram management modals, and fixed their compact close controls to stable 40px tap targets.
+- Verification for `v.1.296`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.297`: expanded the admin visual audit to cover DEV-only admin users CRM and programs overview harness surfaces, including CRM filter/action/tab tap targets.
+- Verification for `v.1.297`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and `npm.cmd run report:css` passed before full verification.
+- `v.1.298`: split admin internals CSS into `admin-internals-lazy.css` for the DEV-only harness; `admin-lazy.css` again keeps the production admin hub lightweight.
+- Verification for `v.1.298`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run build`, `npm.cmd run check:bundle` and `npm.cmd run report:css` passed before full verification.
+- `v.1.299`: added a structural guard so heavy admin CRM/program CSS cannot drift back into the production `admin-lazy.css` entrypoint, and gave the mobile login smoke enough room to wait for the 15s auth bootstrap fallback.
+- Verification for `v.1.299`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js` and repeated mobile `tests/e2e/client-smoke.spec.js` passed before full verification.
+- `v.1.300`: moved `client-food-search.css` from core `index.css` into the nutrition lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.300`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run build` and `npm.cmd run report:css` passed before full verification.
+- `v.1.301`: added nutrition AI photo not-found modal visual coverage, moved `nutrition-photo-not-found.css` into the nutrition lazy stack and extended mobile auth smoke waits for cold auth bootstrap runs.
+- Verification for `v.1.301`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, repeated mobile `tests/e2e/client-smoke.spec.js`, `npm.cmd run build` and `npm.cmd run report:css` passed before full verification.
+- `v.1.302`: expanded nutrition visual coverage to the create product/dish choice modal and its bottom-bar entry point.
+- Verification for `v.1.302`: `tests/e2e/client-nutrition-visual.spec.js`, `tests/app-structure.test.mjs`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.303`: expanded nutrition visual coverage to the custom dish ingredient picker and ingredient confirmation flow.
+- Verification for `v.1.303`: `tests/e2e/client-nutrition-visual.spec.js`, `tests/app-structure.test.mjs`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.304`: moved `nutrition-flow.css` from core `index.css` into the nutrition lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.304`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.305`: moved `nutrition-orbit.css` from core `index.css` into the nutrition lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.305`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.306`: fixed the nutrition week strip by switching to two-letter weekday labels, reusing the shared calendar helper in the E2E harness and guarding marker sizes in `tests/e2e/client-nutrition-visual.spec.js`.
+- Verification for `v.1.306`: `tests/nutrition-calendar.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.307`: moved `warm-light-add-food-search.css` from core `index.css` into the nutrition lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.307`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run build`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.308`: moved `nutrition-dark-food-flow.css` from core `index.css` into the nutrition lazy stack and updated the dark nutrition readability guard.
+- Verification for `v.1.308`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run build`, `npm.cmd run verify`, repeated `npm.cmd run test:e2e` after one timeout flake, and `npm.cmd run report:css` passed.
+- `v.1.309`: stabilized `tests/e2e/client-workout-visual.spec.js` by waiting for the client harness workout nav before clicking and allowing cold harness startup room.
+- Verification for `v.1.309`: `tests/e2e/client-workout-visual.spec.js`, `tests/app-structure.test.mjs`, `npm.cmd run build`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.310`: extended client harness nav waits across client harness, nutrition visual and primary visual audits.
+- Verification for `v.1.310`: client harness/nutrition/primary visual specs, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.311`: extended trainer navigation waits across trainer workspace and trainer visual audits.
+- Verification for `v.1.311`: trainer workspace/visual specs, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.312`: moved `client-workout-flow.css` from core `index.css` into the workout lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.312`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.313`: moved `workout-flow-layout.css` and `workout-exercise-notes.css` from core `index.css` into the workout lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.313`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.314`: moved `workout-navigation-close.css` and `client-workout-set-rows.css` from core `index.css` into the workout lazy stack and guarded the ownership in `tests/app-structure.test.mjs`.
+- Verification for `v.1.314`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.315`: added client AI Coach visual audit coverage for overview, AI nutrition onboarding and generated plan states before extracting mixed AI/nutrition/workout CSS, and fixed AI nutrition training-day tap targets.
+- Verification for `v.1.315`: `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.316`: moved route-specific AI Coach CSS from the mixed core stylesheet into `ai-coach-lazy.css` and guarded the lazy import in `tests/app-structure.test.mjs`.
+- Verification for `v.1.316`: `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.317`: moved nutrition AI plan and AI photo process CSS from the mixed core stylesheet into `nutrition-ai-plan-lazy.css` under the nutrition lazy stack.
+- Verification for `v.1.317`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.318`: added workout dialog visual coverage and moved draft restore, readiness and post-workout feedback CSS into `client-workout-dialogs-lazy.css` under the workout lazy stack.
+- Verification for `v.1.318`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.319`: moved nutrition food icon editor and training-day calorie highlight CSS into `nutrition-food-icon-lazy.css` under the nutrition lazy stack.
+- Verification for `v.1.319`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.320`: retired the old mixed `legacy-ai-nutrition-workout-readiness.css` name by moving the remaining core profile/first-setup rules to `profile-first-setup-core.css`.
+- Verification for `v.1.320`: `tests/app-structure.test.mjs`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.321`: strengthened the nutrition week strip after the production screenshot review by adding full-date `aria-label` text and selected `aria-pressed` state to day buttons, with visual-audit guards.
+- Verification for `v.1.321`: `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.322`: strengthened the covered cabinet Telegram management modal with dialog semantics and an accessible close button guard.
+- Verification for `v.1.322`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.323`: strengthened the covered cabinet nutrition goal picker with accessible goal labels and selected `aria-pressed` state.
+- Verification for `v.1.323`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.324`: expanded the cabinet settings harness to render the real app-settings section and guarded theme/Telegram accessibility attributes.
+- Verification for `v.1.324`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.325`: strengthened covered cabinet trainer notification items with task, status and due-date accessible labels.
+- Verification for `v.1.325`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.326`: strengthened covered cabinet workout calendar date buttons with selected `aria-pressed` and current-date `aria-current` state.
+- Verification for `v.1.326`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.327`: strengthened the covered cabinet measurements modal start action with an explicit accessible label.
+- Verification for `v.1.327`: `tests/profile-measurements.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.328`: strengthened the covered cabinet workout history expand and delete actions with workout-specific accessible labels.
+- Verification for `v.1.328`: `tests/workout-history-presentation.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.329`: strengthened the covered cabinet progress photo upload inputs with view-specific accessible labels.
+- Verification for `v.1.329`: `tests/profile-progress.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.330`: strengthened legacy trainer workspace bottom navigation with active-page `aria-current` state.
+- Verification for `v.1.330`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.331`: strengthened trainer message filters with selected `aria-pressed` state.
+- Verification for `v.1.331`: `tests/app-structure.test.mjs`, `tests/trainer-attention.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.332`: strengthened trainer nutrition analytics period buttons with selected `aria-pressed` state.
+- Verification for `v.1.332`: `tests/trainer-nutrition-plan.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.333`: strengthened workout readiness choices with selected `aria-pressed` state.
+- Verification for `v.1.333`: `tests/workout-presentation.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.334`: strengthened workout mode picker choices with selected `aria-pressed` state.
+- Verification for `v.1.334`: `tests/workout-presentation.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.335`: strengthened nutrition portion selector choices with selected `aria-pressed` state.
+- Verification for `v.1.335`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.336`: strengthened nutrition food-search bottom bar tabs with selected `aria-pressed` state.
+- Verification for `v.1.336`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.337`: strengthened nutrition meal picker choices with expanded and selected state.
+- Verification for `v.1.337`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.338`: strengthened nutrition product icon presets with selected `aria-pressed` state.
+- Verification for `v.1.338`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.339`: strengthened nutrition product portion unit toggle with selected `aria-pressed` state.
+- Verification for `v.1.339`: `tests/nutrition-food-model.test.mjs`, `tests/client-ux.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.340`: strengthened trainer client card tabs with selected `aria-pressed` state.
+- Verification for `v.1.340`: `tests/trainer-attention.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.341`: locked client nutrition weekday label and marker centers on mobile.
+- Verification for `v.1.341`: `tests/nutrition-calendar.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.342`: strengthened trainer workout library tab with selected `aria-pressed` state.
+- Verification for `v.1.342`: `tests/trainer-attention.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.343`: strengthened AI Coach nutrition onboarding choices with selected `aria-pressed` state.
+- Verification for `v.1.343`: `tests/nutrition-plan-builder.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.344`: strengthened AI Coach feature cards with selected `aria-pressed` state.
+- Verification for `v.1.344`: `tests/progress-insight.test.mjs`, `tests/nutrition-plan-builder.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/client-ai-coach-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.345`: strengthened trainer workout day selector with selected `aria-pressed` state.
+- Verification for `v.1.345`: `tests/trainer-attention.test.mjs`, `tests/trainer-program-access.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.346`: strengthened trainer client photo view tabs with selected `aria-pressed` state.
+- Verification for `v.1.346`: `tests/profile-measurements.test.mjs`, `tests/trainer-attention.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.347`: strengthened trainer nutrition diary day buttons with selected `aria-pressed` state.
+- Verification for `v.1.347`: `tests/trainer-attention.test.mjs`, `tests/trainer-nutrition-plan.test.mjs`, `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.348`: stabilized the client nutrition weekday strip with equal compact mobile cells and bounded day markers.
+- Verification for `v.1.348`: `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.349`: strengthened trainer progress chart periods and exercise progress filters with selected `aria-pressed` state.
+- Verification for `v.1.349`: `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.350`: strengthened admin harness filter pills, client cards, workspace tabs and program cards with selected `aria-pressed` state.
+- Verification for `v.1.350`: `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.351`: strengthened client cabinet progress photo compare tabs with selected `aria-pressed` state.
+- Verification for `v.1.351`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.352`: strengthened trainer message list items with selected `aria-pressed` state.
+- Verification for `v.1.352`: `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.353`: strengthened trainer notification reminder periods and workout calendar dates with selected `aria-pressed` state.
+- Verification for `v.1.353`: `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.354`: strengthened admin trainer-calendar day, hour-reminder and reminder toggle controls with selected `aria-pressed` state and clamped the mobile calendar panel against horizontal overflow.
+- Verification for `v.1.354`: `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.355`: strengthened first setup sex, activity and goal choices with selected `aria-pressed` state.
+- Verification for `v.1.355`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.356`: strengthened profile body metric sex choices with selected `aria-pressed` state.
+- Verification for `v.1.356`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.357`: strengthened production trainer admin user filters and client cards with selected `aria-pressed` state.
+- Verification for `v.1.357`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.358`: stabilized client nutrition weekday labels as uppercase two-letter abbreviations.
+- Verification for `v.1.358`: `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.359`: strengthened production trainer dashboard filters and client rows with selected `aria-pressed` state.
+- Verification for `v.1.359`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.360`: strengthened production trainer client workspace role toggle and tabs with selected `aria-pressed` state.
+- Verification for `v.1.360`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.361`: strengthened client workout warmup timer presets with selected `aria-pressed` state.
+- Verification for `v.1.361`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.362`: strengthened production trainer client training program cards with selected `aria-pressed` state.
+- Verification for `v.1.362`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.363`: marked the client workout next card with current step state.
+- Verification for `v.1.363`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.364`: strengthened legacy trainer dashboard client tabs with selected `aria-pressed` state.
+- Verification for `v.1.364`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.365`: strengthened legacy trainer admin history bulk selection with selected state and labeled workout checkboxes.
+- Verification for `v.1.365`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.366`: strengthened production trainer program overview cards with selected `aria-pressed` state.
+- Verification for `v.1.366`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.367`: strengthened trainer mobile overflow navigation with current-page `aria-current` state.
+- Verification for `v.1.367`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.368`: strengthened trainer workouts page active program tab with selected `aria-pressed` state.
+- Verification for `v.1.368`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.369`: strengthened legacy trainer/admin action buttons with explicit `type="button"`.
+- Verification for `v.1.369`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.370`: strengthened admin and access-denied navigation buttons with explicit `type="button"`.
+- Verification for `v.1.370`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.371`: strengthened all production JSX buttons with explicit `type`.
+- Verification for `v.1.371`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-ai-coach-visual.spec.js --project=mobile-chromium`, trainer/admin mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.372`: strengthened client icon-only back, close and refresh actions with accessible labels.
+- Verification for `v.1.372`: `tests/app-structure.test.mjs`, client AI Coach/workout/nutrition mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.373`: moved profile legacy CSS ownership from `index.css` into `client-profile-lazy.css`.
+- Verification for `v.1.373`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.374`: moved additional profile/cabinet legacy CSS ownership from `index.css` into `client-profile-lazy.css`.
+- Verification for `v.1.374`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.375`: moved measurement legacy CSS ownership from `index.css` into `client-measurements-lazy.css`.
+- Verification for `v.1.375`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.376`: strengthened client cabinet action cards with explicit accessible labels.
+- Verification for `v.1.376`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.377`: moved first setup CSS ownership from `index.css` into `client-first-setup-lazy.css`.
+- Verification for `v.1.377`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.378`: stabilized nutrition weekday labels as two-letter calendar model values.
+- Verification for `v.1.378`: `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.379`: moved workout flow CSS ownership from `index.css` into `client-workout-lazy.css`.
+- Verification for `v.1.379`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.380`: moved exercise weight-mode CSS ownership from `index.css` into trainer/admin internals style entrypoints.
+- Verification for `v.1.380`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.381`: moved core workout CSS ownership from `index.css` into `client-workout-lazy.css` and guarded standalone workout route style loading.
+- Verification for `v.1.381`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.382`: moved food editor/search polish CSS ownership from `index.css` into `nutrition-stack.css`.
+- Verification for `v.1.382`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-smoke.spec.js --project=desktop-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.383`: strengthened the client nutrition weekday strip with explicit current-date semantics while keeping the stabilized mobile geometry covered.
+- Verification for `v.1.383`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.384`: strengthened the client nutrition calendar modal with explicit selected-day and current-date semantics.
+- Verification for `v.1.384`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.385`: strengthened the client cabinet nutrition weekly calendar cells with readable summaries and current-date semantics.
+- Verification for `v.1.385`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.386`: aligned the client cabinet Telegram modal shell with the contained dialog/backdrop semantics used by the other cabinet modals.
+- Verification for `v.1.386`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.387`: strengthened the client cabinet measurements modal with readable labels for latest measurement value cards.
+- Verification for `v.1.387`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.388`: strengthened the client cabinet progress photos comparison controls with readable photo-session selector labels.
+- Verification for `v.1.388`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.389`: strengthened the client profile body metric goal and activity selectors with readable labels.
+- Verification for `v.1.389`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.390`: strengthened client nutrition header search, calendar and weekday action-label guards so readable Russian labels stay covered.
+- Verification for `v.1.390`: `tests/app-structure.test.mjs`, `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.391`: strengthened basic workout quiz goal, experience and weekly workout selectors with readable labels.
+- Verification for `v.1.391`: `tests/app-structure.test.mjs`, `tests/basic-workout-plan-builder.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.392`: strengthened trainer progress photo comparison selectors with readable labels.
+- Verification for `v.1.392`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.393`: strengthened trainer program assignment and nutrition preset selectors with readable labels.
+- Verification for `v.1.393`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.394`: strengthened trainer calendar reminder-before selectors with readable labels.
+- Verification for `v.1.394`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.395`: reinforced the client nutrition weekday strip so two-letter Russian labels cannot be clipped on narrow mobile screens.
+- Verification for `v.1.395`: `tests/app-structure.test.mjs`, `tests/nutrition-calendar.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.396`: strengthened trainer transfer, program, nutrition preset, workout status and overview modal selectors with readable labels.
+- Verification for `v.1.396`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.397`: strengthened trainer, workout and first-setup modal dialog semantics with readable dialog names.
+- Verification for `v.1.397`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.398`: removed exact duplicate product-editor blocks from `client-visual-unity.css`; the later `v.1.102` cascade lock remains the owner.
+- Verification for `v.1.398`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.399`: removed the duplicate workout set-row `v127` block from `client-render-target.css`; the later `v126` set-row owner remains.
+- Verification for `v.1.399`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.400`: removed empty admin media blocks plus no-op duplicate trainer program and cabinet progress-photo CSS rules.
+- Verification for `v.1.400`: `tests/app-structure.test.mjs`, admin/trainer/client primary mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.401`: removed repeated media-only workout card sizing blocks from `client-workout-card-render.css`; the root card sizing locks remain.
+- Verification for `v.1.401`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.402`: removed the older duplicate compact product title-wrap media lock from `client-food-search.css`; the later product header lock remains.
+- Verification for `v.1.402`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.403`: removed repeated mobile page padding locks from narrower nutrition breakpoints; the later `max-width: 480px` padding owner remains.
+- Verification for `v.1.403`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.404`: removed older duplicate admin client card grid breakpoints; the later workspace breakpoint owner remains.
+- Verification for `v.1.404`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.405`: removed the older duplicate compact product meal-header width lock from `client-food-search.css`; the later product stable-flow owner remains.
+- Verification for `v.1.405`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.406`: removed the older duplicate compact product title font-size lock from `client-food-search.css`; the later product stable-flow owner remains.
+- Verification for `v.1.406`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `npm.cmd run report:css` passed.
+- `v.1.407`: removed stale early nutrition calendar label color and footer sizing locks; the final calendar tuning block remains the owner.
+- Verification for `v.1.407`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.408`: removed stale early product title typography locks from `client-food-search.css`; the stable-flow product title owner remains.
+- Verification for `v.1.408`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.409`: removed stale early product hero spacing and narrow mobile x-locks from `client-food-search.css`; the later owners remain.
+- Verification for `v.1.409`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.410`: removed the duplicate desktop media fixed back-label visibility lock from `admin-calendar-reminders.css`; the root owner remains.
+- Verification for `v.1.410`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.411`: removed duplicate narrow-media quick-action hide rules from legacy food search CSS; root hide owners remain.
+- Verification for `v.1.411`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.412`: removed the duplicate narrow-media food-search photo active transform; the root bottom-bar owner remains.
+- Verification for `v.1.412`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.413`: removed the stale early mobile first-column calorie-row shift from `nutrition-food-search-calories.css`; the later closer-to-grid owner remains.
+- Verification for `v.1.413`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.414`: removed the duplicate narrow-media no-weight workout set modal grid lock from `client-workout-set-rows.css`; the root owner remains.
+- Verification for `v.1.414`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.415`: removed the duplicate old narrow-media compact calorie dot sizing from `nutrition-food-search-calories.css`; the later mobile owner remains.
+- Verification for `v.1.415`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.416`: removed the stale old mobile AI stats sizing block from `profile-dashboard-telegram.css`; the compact owner and final mobile owner remain.
+- Verification for `v.1.416`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.417`: removed the duplicate narrow mobile trainer client overview two-column grid lock from `client-cabinet-desktop.css`; the broad mobile owner remains.
+- Verification for `v.1.417`: `tests/app-structure.test.mjs`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.418`: removed duplicate mobile summary dot span sizes from `nutrition-food-editor.css`; the root summary dot owners remain.
+- Verification for `v.1.418`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.419`: removed duplicate early narrow nutrition calendar grid gap and day-number size locks from `client-history-ai-search.css`; the final compact calendar owner remains.
+- Verification for `v.1.419`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.420`: removed no-op mobile duplicate quick-action, meal-card and expanded-product-list rules from `nutrition-layout.css`; root or later owners remain guarded.
+- Verification for `v.1.420`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.421`: removed the older compact meal `fatPlusBtn` 24px duplicate from `nutrition-layout.css`; the later lower-height owner remains guarded.
+- Verification for `v.1.421`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.422`: removed early narrow calorie-number size duplicates from `client-workout-plan-tail.css`; the later compact-height owner remains guarded.
+- Verification for `v.1.422`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.423`: removed older nutrition summary calorie gap and pixel-size duplicates from `nutrition-summary-calories.css`; later final owners remain guarded.
+- Verification for `v.1.423`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.424`: removed the older micro-gap calories-card top offset from `nutrition-layout.css`; the final gap owner remains guarded.
+- Verification for `v.1.424`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.425`: removed the older narrow pixel-meter span size duplicate from `nutrition-header-layout.css`; the later compact owner remains guarded.
+- Verification for `v.1.425`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.426`: removed older narrow calorie-row font-size duplicates from `nutrition-header-layout.css`; the later compact owners remain guarded.
+- Verification for `v.1.426`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.427`: removed the older narrow meal-title font-size duplicate from `nutrition-header-layout.css`; the later compact owners remain guarded.
+- Verification for `v.1.427`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.428`: removed older narrow meal-kcal font-size duplicates from `nutrition-header-layout.css`; the later compact owners remain guarded.
+- Verification for `v.1.428`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.429`: removed older refined narrow meal text font-size duplicates from `nutrition-header-layout.css`; the later compact owners remain guarded.
+- Verification for `v.1.429`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.430`: removed the older refined narrow nutrition layout block from `nutrition-header-layout.css`; the later compact owners remain guarded.
+- Verification for `v.1.430`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.431`: removed older reference narrow layout sizes from `nutrition-header-layout.css`; the later compact owners remain guarded while the reference gap remains.
+- Verification for `v.1.431`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.432`: removed duplicate compact AI stat text rules from `client-main.css`; the later compact owner remains guarded.
+- Verification for `v.1.432`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.433`: removed duplicate progress insight spacing rules from `client-nutrition-grid.css`; the final progress spacing owner remains guarded.
+- Verification for `v.1.433`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.434`: removed duplicate client bottom navigation sizing rules from `client-primary.css`; the later primary final owner remains guarded.
+- Verification for `v.1.434`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.435`: removed duplicate shared bottom/action bar sizing rules from `client-primary.css`; the later mobile final owner remains guarded.
+- Verification for `v.1.435`: `tests/app-structure.test.mjs`, client primary/nutrition mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.436`: removed duplicate food action bar fixed sizing rules from `client-primary.css`; the final food action bar owner remains guarded.
+- Verification for `v.1.436`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.437`: removed duplicate main AI stats row sizing and text rules from `client-primary.css`; the final main stats owner remains guarded.
+- Verification for `v.1.437`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.438`: removed duplicate profile AI hero sizing rules from `client-primary.css`; the final profile hero owner remains guarded.
+- Verification for `v.1.438`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.439`: removed duplicate narrow nutrition arrow and meta sizing rules from `client-primary.css`; the root nutrition arrow owner remains guarded.
+- Verification for `v.1.439`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.440`: removed duplicate primary page title typography rules from `client-primary.css`; the final page title typography owner remains guarded.
+- Verification for `v.1.440`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.441`: removed duplicate primary page title row spacing rules from `client-primary.css`; the final page title row owner remains guarded.
+- Verification for `v.1.441`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.442`: removed duplicate primary header action sizing rules from `client-primary.css`; the final header action owner remains guarded.
+- Verification for `v.1.442`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.443`: removed duplicate client title row sizing rules from `client-primary.css`; the final client title row owner remains guarded.
+- Verification for `v.1.443`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.444`: removed duplicate client title action styling rules from `client-primary.css`; the final client title action owner remains guarded.
+- Verification for `v.1.444`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.445`: removed duplicate workout start button fixed styling rules from `client-primary.css`; the final workout start button owner remains guarded.
+- Verification for `v.1.445`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.446`: removed duplicate header action layout rules from `client-primary.css`; the final header action layout owner remains guarded.
+- Verification for `v.1.446`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.447`: removed duplicate client page variable/background rules from `client-primary.css`; the final client page variables owner remains guarded.
+- Verification for `v.1.447`: `tests/app-structure.test.mjs`, client primary/nutrition/workout mobile visual audits, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.448`: removed duplicate product-only food action bar rules from `client-primary.css`; the unified product/editor action bar owner remains guarded.
+- Verification for `v.1.448`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.449`: removed duplicate profile AI hero heading typography from `client-primary.css`; the final profile hero heading owner remains guarded.
+- Verification for `v.1.449`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.450`: removed duplicate food editor mobile header/sheet layout from `client-primary.css`; the final food editor header owner remains guarded.
+- Verification for `v.1.450`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.451`: removed duplicate workout stats layout rules from `client-primary.css`; the final workout stats owner remains guarded.
+- Verification for `v.1.451`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.452`: removed duplicate fixed photo action spacing from `client-primary.css`; the final fixed photo action owner remains guarded.
+- Verification for `v.1.452`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.453`: removed duplicate product flow title typography from `client-primary.css`; the final product flow title owner remains guarded.
+- Verification for `v.1.453`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.454`: removed duplicate product flow header layout from `client-primary.css`; the final product flow header owner remains guarded.
+- Verification for `v.1.454`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.455`: removed duplicate product top actions layout from `client-primary.css`; the final product top actions owner remains guarded.
+- Verification for `v.1.455`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.456`: removed an earlier duplicate food action bar shell block from `client-primary.css`; the remaining legacy shell and final fixed owner stay guarded.
+- Verification for `v.1.456`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.457`: removed an earlier duplicate product flow header fallback group from `client-primary.css`; the remaining fallback group and final product header owner stay guarded.
+- Verification for `v.1.457`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.458`: removed duplicate food search header, input and recent-grid layout rules from `client-primary.css`; the final food search header owner remains guarded.
+- Verification for `v.1.458`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.459`: removed duplicate profile AI split-card full-owner rules from `client-primary.css`; the final split-card owner remains guarded.
+- Verification for `v.1.459`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.460`: removed duplicate early profile AI stats row child text rules from `client-primary.css`; the remaining stats row owners stay guarded.
+- Verification for `v.1.460`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.461`: removed duplicate workout badge layout rules from `client-primary.css`; the final workout badge owner remains guarded.
+- Verification for `v.1.461`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.462`: removed duplicate workout badge compact layout rules from `client-primary.css`; the remaining compact badge owner stays guarded.
+- Verification for `v.1.462`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.463`: removed duplicate workout badge narrow grid rules from `client-primary.css`; the remaining narrow badge owner stays guarded.
+- Verification for `v.1.463`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.464`: removed duplicate workout start button mobile bottom offset from `client-primary.css`; the remaining mobile offset owner stays guarded.
+- Verification for `v.1.464`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.465`: removed duplicate workout card compact sizing and body radius rules from `client-primary.css`; the remaining compact workout card owner stays guarded.
+- Verification for `v.1.465`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.466`: removed duplicate workout compact shell no-op repeats from `client-primary.css`; the root compact shell owners remain guarded.
+- Verification for `v.1.466`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.467`: removed duplicate workout mobile hero and action placement rules from `client-primary.css`; the remaining mobile owner stays guarded.
+- Verification for `v.1.467`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.468`: removed duplicate workout 42px badge pill rules from `client-primary.css`; the root badge pill owner stays guarded.
+- Verification for `v.1.468`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.469`: removed duplicate workout select line hide rules from `client-primary.css`; the root hide owner stays guarded.
+- Verification for `v.1.469`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.470`: removed duplicate profile AI hero compact cluster rules from `client-primary.css`; the root AI hero compact owners stay guarded.
+- Verification for `v.1.470`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.471`: removed duplicate profile AI supporting compact rules from `client-primary.css`; the root hero sizing, card color and avatar-ring owners stay guarded.
+- Verification for `v.1.471`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.472`: removed duplicate nutrition AI/Zouk top card grid rules from `client-primary.css`; the root nutrition top card owner stays guarded.
+- Verification for `v.1.472`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.473`: removed duplicate food search home header, title, close, input and recent-grid compact rules from `client-primary.css`; the root food search compact owners stay guarded.
+- Verification for `v.1.473`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.474`: removed duplicate food edit product header, sheet and back-button compact rules from `client-primary.css`; the root food edit compact owners stay guarded.
+- Verification for `v.1.474`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.475`: removed duplicate profile AI hero pseudo-element hide rules from `client-primary.css`; the root combined profile hero pseudo-element owner stays guarded.
+- Verification for `v.1.475`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.476`: removed duplicate profile AI stats row margin and radius rules from `client-primary.css`; the remaining stats row spacing owner stays guarded.
+- Verification for `v.1.476`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.477`: removed duplicate profile refresh button absolute-position rules from `client-primary.css`; the remaining profile header action owner stays guarded.
+- Verification for `v.1.477`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.478`: removed duplicate profile avatar 70px sizing rules from `client-primary.css`; the remaining mobile avatar sizing owner stays guarded.
+- Verification for `v.1.478`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.479`: removed duplicate food product/edit action bar grid rules from `client-primary.css`; the remaining action bar grid owner stays guarded.
+- Verification for `v.1.479`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.480`: removed duplicate profile progress overview grid rules from `client-primary.css`; the remaining cabinet overview grid owner stays guarded.
+- Verification for `v.1.480`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.481`: removed duplicate profile AI goal-stat font sizing from `client-primary.css`; the remaining main stats row goal owner stays guarded.
+- Verification for `v.1.481`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.482`: removed duplicate workout deck spacing rules from `client-primary.css`; the remaining workout deck owner stays guarded.
+- Verification for `v.1.482`: `tests/app-structure.test.mjs`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.483`: removed duplicate food search home child layout and recent-card rules from `client-primary.css`; the remaining home search owners stay guarded.
+- Verification for `v.1.483`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.484`: removed duplicate max-640 product title, food edit icon, workout title, refresh, profile hero and recent-card rules from `client-primary.css`; the remaining owners stay guarded.
+- Verification for `v.1.484`: `tests/app-structure.test.mjs`, mobile client nutrition/primary/workout visual specs, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.485`: removed the final root/media exact duplicate food edit and nutrition meta rules from `client-primary.css`; exact duplicate block scan for that file now returns zero.
+- Verification for `v.1.485`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.486`: removed duplicate profile hero and avatar locks from `client-render-target.css`; exact duplicate block scan for that file now returns zero.
+- Verification for `v.1.486`: `tests/app-structure.test.mjs`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.487`: removed duplicate main dashboard inner layout rules from `client-nutrition-grid.css`; exact duplicate block scan for that file now returns zero.
+- Verification for `v.1.487`: `tests/app-structure.test.mjs`, mobile client primary/nutrition visual specs, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.488`: removed duplicate admin client tab, metric and Telegram quick-message rules from `admin-client-page.css`; exact duplicate block scan for that file now returns zero.
+- Verification for `v.1.488`: `tests/app-structure.test.mjs`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.489`: removed the remaining duplicate calorie-row strong sizing rule from `nutrition-header-layout.css`; exact duplicate block scan for that file now returns zero.
+- Verification for `v.1.489`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css` and `git diff --check` passed.
+- `v.1.490`: expanded trainer visual coverage for client notification calendar, message modal and program exercise editor, then raised related compact trainer tap targets to stable 40px heights.
+- `v.1.491`: removed the final workout set-row 58px owner from `client-render-target.css`; `client-workout-set-rows.css` now owns that lazy workout sizing guard.
+- `v.1.492`: removed dashboard icon and measurement chart duplicate locks from `client-nutrition-grid.css`; `client-main.css` remains the later owner.
+- `v.1.493`: removed unused trainer role button rules from `adminPanelHub.css`; `admin-calendar-reminders.css` remains the trainer/admin internals owner.
+- `v.1.494`: removed duplicate workout select hero spacing from `client-render-target.css`; `client-workout-card-render.css` remains the lazy workout owner.
+- `v.1.495`: removed the earlier duplicate admin client four-column grid breakpoint from `admin-shell-crm.css`; `trainer-month-program-editor.css` remains the later owner.
+- `v.1.496`: removed repeated expanded nutrition product-list bottom/side spacing from `nutrition-layout.css`; the width owner and real bottom-gap owner remain separate.
+- `v.1.497`: removed obsolete expanded nutrition product-list reduce/minus width tuning from `nutrition-layout.css`; the final width owner remains in place.
+- `v.1.498`: removed obsolete expanded nutrition product-list match-bottom-spacing tuning from `nutrition-layout.css`; real bottom-gap ownership remains in place.
+- `v.1.499`: removed bottom margin overrides from the expanded nutrition product-list final width owner in `nutrition-layout.css`; real bottom-gap ownership remains in place.
+- `v.1.500`: removed repeated expanded nutrition product-list width and side-margin values from the guaranteed block in `nutrition-layout.css`; the final width owner remains in place.
+- `v.1.501`: removed overwritten expanded nutrition product-list width and side-margin values from the force-width block in `nutrition-layout.css`; the later rule in the same section remains in place.
+- `v.1.502`: removed the obsolete expanded nutrition product-list 10-percent-wider section from `nutrition-layout.css`; the force-width owner remains in place.
+- `v.1.503`: removed overwritten exact nutrition product-list width values from `nutrition-layout.css`; later width owners remain in place.
+- `v.1.504`: removed an overwritten expanded nutrition product-list radius from the force-width block in `nutrition-layout.css`; the hard-width owner remains in place.
+- `v.1.505`: removed overwritten expanded nutrition product-list width and side-margin values from the force-width block in `nutrition-layout.css`; later width owners remain in place.
+- `v.1.506`: removed the repeated open-card overflow owner from the guaranteed expanded nutrition product-list block in `nutrition-layout.css`; inline width support keeps the active owner.
+- `v.1.507`: removed repeated exact product-row max-width and box-sizing values from the inline width support block in `nutrition-layout.css`; the force product block remains the active owner.
+- `v.1.508`: removed an empty desktop media block from `admin-program-editor.css` and guarded that file against empty media blocks.
+- `v.1.509`: removed overwritten nutrition delete collapse/flash animation rules from `nutrition-layout.css`; the following `nutrition-food-editor.css` import keeps the final no-collapse delete behavior.
+- `v.1.510`: removed the overwritten five-action food search bottom-bar screen padding from `nutrition-food-search-actions.css`; the later final spacing owner remains guarded.
+- `v.1.511`: removed overwritten narrow AI nutrition plan score/grid sizing from `nutrition-ai-plan-lazy.css`; the later compact tuning media owner remains guarded.
+- `v.1.512`: removed overwritten AI nutrition plan grid dot and active-dot visuals from `nutrition-ai-plan-lazy.css`; the later compact tuning owner remains guarded.
+- `v.1.513`: removed overwritten AI nutrition plan score and macro card dimensions from `nutrition-ai-plan-lazy.css`; the later compact tuning owner remains guarded.
+- `v.1.514`: removed overwritten AI nutrition plan RSK info gap and strong typography from `nutrition-ai-plan-lazy.css`; the later compact tuning owner remains guarded.
+- `v.1.515`: removed overwritten AI nutrition plan RSK foot and score-block spacing from `nutrition-ai-plan-lazy.css`; the later compact tuning owner remains guarded.
+- `v.1.516`: removed overwritten AI nutrition plan conclusion and badge backgrounds from `nutrition-ai-plan-lazy.css`; the later meal-card color owner remains guarded.
+- `v.1.517`: removed overwritten AI nutrition plan neutral macro/badge and collapsed-card backgrounds from `nutrition-ai-plan-lazy.css`; the later meal-card color owner remains guarded.
+- `v.1.518`: removed overwritten AI nutrition plan collapsed card and toggle colors from `nutrition-ai-plan-lazy.css`; the later meal-card color owner remains guarded.
+- `v.1.519`: removed overwritten delete/close button border resets from food editor and workout close CSS; final border owners remain guarded.
+- `v.1.520`: removed overwritten product food-search header layout locks from `client-food-search.css`; the later stable-flow owner remains guarded.
+- `v.1.521`: removed overwritten product food-search hard-lock header internals from `client-food-search.css`; the final product header owner remains guarded.
+- `v.1.522`: removed overwritten product inline meal-header width/margin values from `client-food-search.css`; the compact final owner remains guarded.
+- `v.1.523`: removed overwritten narrow product title, meal-header and x-offset values from `client-food-search.css`; later product owners remain guarded.
+- `v.1.524`: removed overwritten product x-offset variable owners from `client-food-search.css`; the final compact product owner remains guarded.
+- `v.1.525`: removed the overwritten product header margin from `client-food-search.css`; the final compact product header margin remains guarded.
+- `v.1.526`: removed overwritten AI photo action intermediate sizing from `client-food-search.css`; the `v157` photo action owner remains guarded.
+- `v.1.527`: removed overwritten early AI photo action render-control sizing from `client-food-search.css`; the `v155/v157` final owners remain guarded.
+- `v.1.528`: removed overwritten early food search title-button sizing from `client-food-search.css`; the `v155` title button owner remains guarded.
+- `v.1.529`: removed overwritten fixed AI photo action bottom-mask rules from `client-food-search.css`; the `v171` safe bottom mask owner remains guarded.
+- `v.1.530`: removed overwritten product page header, title and meal-header sizing from `client-food-search.css`; the `v159/v161` product page owners remain guarded.
+- `v.1.531`: removed overwritten diary swipe-shell sizing from `client-food-search.css`; the `v170` diary card owner remains guarded.
+- `v.1.532`: removed overwritten food search title-wrap width from `client-food-search.css`; the `v156/v158` title-wrap owners remain guarded.
+- `v.1.533`: removed overwritten mobile workout next/week badge sizing from `client-primary.css`; the `v1.77b` EOF workout badge owner remains guarded.
+- `v.1.534`: removed overwritten mobile workout start-button sizing from `client-primary.css`; the `v1.77b` EOF workout button owner remains guarded.
+- `v.1.535`: removed overwritten mobile workout card visual-shell styling from `client-primary.css`; the `v1.77b` EOF workout card owner remains guarded.
+- `v.1.536`: removed overwritten main AI stats text color/size rules from `client-primary.css`; the later mobile stats text owner remains guarded.
+- `v.1.537`: removed overwritten main AI stats child-layout rules from `client-primary.css`; the EOF stats child owner remains guarded.
+- `v.1.538`: removed overwritten food editor header order duplicate from `client-primary.css`; the EOF food editor header owner remains guarded.
+- `v.1.539`: removed overwritten 0.45fr workout badge grid rules from `client-primary.css`; the later 0.48fr badge grid owner remains guarded.
+- `v.1.540`: removed overwritten profile progress insight card shell rules from `client-primary.css`; the later profile card owners remain guarded.
+- `v.1.541`: removed overwritten workout header action layout rules from `client-primary.css`; the later final header action owner remains guarded.
+- `v.1.542`: removed overwritten food search recent grid rules from `client-primary.css`; the later final grid owners remain guarded.
+- `v.1.543`: removed overwritten food recent-card sizing and AI stats centering no-op rules from `client-primary.css`; later owners remain guarded.
+- `v.1.544`: removed overwritten pseudo reset, profile hero radius, pointer-only, and top variable no-op rules from `client-primary.css`; later owners remain guarded.
+- `v.1.545`: removed small overwritten typography/layout no-op blocks from client nutrition grid, render-target and food editor CSS; later owners remain guarded.
+- `v.1.546`: removed overwritten admin calendar panel/header/telegram/day-grid no-op blocks from `admin-client-dashboard.css`; final calendar owner remains guarded.
+- `v.1.547`: removed overwritten admin calendar settings row/title/input/reminder shell blocks from `admin-client-dashboard.css`; final calendar owner remains guarded.
+- `v.1.548`: removed overwritten admin calendar panel/header/span/per-day shell blocks from `admin-client-dashboard.css`; final calendar owner remains guarded.
+- `v.1.549`: removed overwritten admin calendar Telegram/toggle pseudo blocks from `admin-client-dashboard.css`; final calendar owner remains guarded.
+- `v.1.550`: removed overwritten admin calendar label/time-grid/equal-button shell blocks from `admin-client-dashboard.css`; final calendar owner remains guarded.
+- `v.1.551`: removed an overwritten pre-final narrow calendar mobile block from `admin-client-dashboard.css`; final calendar owner remains guarded.
+- `v.1.552`: removed an overwritten pre-final calendar equal-buttons/day-settings block from `admin-client-dashboard.css`; the final `V62` owner now keeps the equal-button stack and active reminder state guarded.
+- `v.1.553`: removed the remaining pre-final calendar equal-button shell from `admin-client-dashboard.css`; connected Telegram and final button text spacing now live in the guarded `V62` owner.
+- `v.1.554`: removed another pre-final calendar header/Telegram shell from `admin-client-dashboard.css`; header width and Telegram nowrap/order now live in the guarded `V62` owner.
+- `v.1.555`: removed pre-final calendar Save/Test/Toggle button shells from `admin-client-dashboard.css`; high-specificity button sizing now lives in the guarded `V62` owner.
+- `v.1.556`: removed pre-final V52 calendar test-button and Telegram shells from `admin-client-dashboard.css`; guarded `V62` remains the owner.
+- `v.1.557`: removed pre-final `adminCalendarPanelMerged` layout layers from `admin-client-dashboard.css`; final `V62` calendar rules remain guarded.
+- `v.1.558`: removed unused exact admin calendar button selectors from `admin-client-dashboard.css`; live wildcard button owners remain guarded.
+- `v.1.559`: removed intermediate food summary compact/first-scale calorie grid tuning from `nutrition-food-editor.css`; the later second scale-up owner remains guarded.
+- `v.1.560`: removed intermediate food editor product header/control/macro sizing from `nutrition-food-editor.css`; later pixel-tune owners remain guarded.
+- `v.1.561`: removed overwritten food editor delete/save bottom-action sizing from `nutrition-food-editor.css`; later functional owners remain guarded.
+- `v.1.562`: removed the older workout set-row core render-target lock from `client-render-target.css`; final sizing remains in `client-workout-set-rows.css`.
+- `v.1.563`: removed the early duplicate food-edit top-panel hide rule from `nutrition-food-editor.css`; the final hard back deduplication block remains guarded.
+- `v.1.564`: removed the early main-only client bottom pseudo-layer from `client-primary.css`; the shared final rhythm owner remains guarded.
+- `v.1.565`: removed the old food-edit-only nutrition back hide rule from `nutrition-food-editor.css`; the broader food search overlay hide owner remains guarded.
+- `v.1.566`: consolidated the repeated workout run fixed bottom panel shell in `client-workout-flow.css`; the shared selector owner is guarded.
+- `v.1.567`: consolidated duplicate workout select/start fallback image styles in `client-workout-flow.css`; shared selector owners are guarded.
+- `v.1.574`: consolidated shared inline and modal Zouk meal-shell rules in `nutrition-orbit.css`; the grouped owner is guarded by the app structure test.
+- `v.1.575`: removed the early compact meal-card sizing repeat from `nutrition.css`; the desktop compact owner is guarded by the app structure test.
+- `v.1.576`: consolidated shared trainer mobile page-shell rules across narrow and coarse landscape media in `trainer-workspace.css`; the grouped owner is guarded by the app structure test.
+- `v.1.577`: consolidated shared exercise and finish slide animation-shell rules in `workoutFlow.css`; the grouped owner is guarded by the app structure test.
+- `v.1.578`: consolidated compact exercise back/previous button sizing in `workout-navigation-close.css`; the grouped owner is guarded by the app structure test.
+- `v.1.579`: consolidated workout back/previous/close pseudo reset CSS in `workout-navigation-close.css`; the grouped owner is guarded by the app structure test.
+- `v.1.580`: consolidated compact exercise back/previous active-state CSS in `workout-navigation-close.css`; the grouped owner is guarded by the app structure test.
+- `v.1.581`: removed duplicate exercise close active-state CSS from `workout-navigation-close.css`; the base close-button active owner is guarded by the app structure test.
+- `v.1.582`: consolidated scoped exercise close positioning CSS in `workout-navigation-close.css`; the single scoped owner is guarded by the app structure test.
+- `v.1.583`: consolidated workout close slide relative positioning CSS in `workout-navigation-close.css`; the shared start/exercise slide owner is guarded by the app structure test.
+- `v.1.584`: consolidated select/start button sizing CSS in `client-workout-flow.css`; the grouped owner is guarded by the app structure test.
+- `v.1.585`: removed duplicate compact start-panel sizing CSS from `client-workout-flow.css`; the shared stage/start compact owner is guarded by the app structure test.
+- `v.1.586`: consolidated food search and product action active colors in `nutrition-food-search-actions.css`; the grouped owner is guarded by the app structure test.
+- `v.1.587`: consolidated AI plan muted span typography in `nutrition-ai-plan-lazy.css`; the grouped owner is guarded by the app structure test.
+- `v.1.588`: consolidated food search header close-button shell CSS in `client-food-search.css`; the grouped owner is guarded by the app structure test.
+- `v.1.589`: consolidated food search header title shell CSS in `client-food-search.css`; the grouped owner is guarded by the app structure test.
+- `v.1.590`: removed early duplicate bottom-bar button and label shells from `bottom-bars.css`; the final baseline owner is guarded by the app structure test.
+- `v.1.591`: moved duplicate main goal-stat typography to the final full-card owner in `client-visual-unity.css`; the final owner is guarded by the app structure test.
+- `v.1.592`: consolidated warm-light food search/edit gold action shell CSS in `warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
+- `v.1.593`: consolidated food search, product and editor action-bar `strong` typography in `client-primary.css`; the grouped owner is guarded by the app structure test.
+- `v.1.594`: consolidated expanded meal/product text typography in `nutrition-layout.css`; the grouped owner is guarded by the app structure test.
+- `v.1.595`: consolidated warm-light food search input/history surface shell CSS in `warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
+- `v.1.596`: consolidated warm-light product edit content/grid label shell CSS in `warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
+- `v.1.597`: consolidated warm-light product edit segment/macro card shell CSS in `warm-light-food-edit-back-buttons.css`; the grouped owner is guarded by the app structure test.
+- `v.1.598`: consolidated client loading fallback panel/spinner shell CSS in `client-loading-fallback.css`; the grouped owners are guarded by the app structure test.
+- `v.1.599`: consolidated admin client nutrition month summary shell/label CSS in `admin-client-dashboard.css`; the grouped owners are guarded by the app structure test.
+- `v.1.600`: consolidated warm-light custom dish ingredient picker/confirmation surface CSS in `nutrition-food-editor-workout-close.css`; the grouped owner is guarded by the app structure test.
+- `v.1.601`: consolidated warm-light profile refresh/theme action shell CSS in `warm-light-add-food-search.css`; the grouped owner is guarded by the app structure test.
+- `v.1.602`: consolidated client profile sex/goal active picker CSS in `profile-dashboard-telegram.css`; the grouped owner is guarded by the app structure test.
+- `v.1.603`: consolidated client profile AI coach insight/toggle label typography CSS in `profile-dashboard-telegram.css`; the grouped owner is guarded by the app structure test.
+- `v.1.604`: consolidated first setup sex/goal active choice CSS in `registration-accessibility.css`; the grouped owner is guarded by the app structure test.
+- `v.1.605`: consolidated client workout history modal/cabinet item icon and title CSS in `registration-accessibility.css`; the grouped owners are guarded by the app structure test.
+- `v.1.606`: consolidated warm-light nutrition header/calendar close shell CSS in `registration-accessibility.css`; the grouped owner is guarded by the app structure test.
+- `v.1.607`: consolidated client workout history modal/cabinet item text internals CSS in `registration-accessibility.css`; the grouped owners are guarded by the app structure test.
+- `v.1.608`: consolidated cabinet nutrition modal AI plan and goal card shells in `client-cabinet-desktop.css`; the combined-section owner is guarded by the app structure test.
+- `v.1.609`: consolidated profile and admin Telegram status badge shells in `profile-dashboard-telegram.css`; the grouped owners are guarded by the app structure test.
+- `v.1.610`: consolidated profile and admin Telegram avatar shells in `profile-dashboard-telegram.css`; the grouped owner is guarded by the app structure test.
+- `v.1.611`: consolidated profile and admin Telegram avatar image-fit CSS in `profile-dashboard-telegram.css`; the grouped owner is guarded by the app structure test.
+- `v.1.612`: consolidated Telegram action button text/cursor CSS in `profile-dashboard-telegram.css`; the grouped owner is guarded by the app structure test.
+- `v.1.613`: consolidated Telegram bot/check action button shell CSS in `profile-dashboard-telegram.css`; the grouped owner is guarded by the app structure test.
+- `v.1.614`: consolidated Telegram bot/check disabled-state CSS in `profile-dashboard-telegram.css`; the grouped owner is guarded by the app structure test.
+- `v.1.615`: tightened the nutrition weekday strip into an explicit two-row label/marker grid in `nutrition-food-flow.css`; the geometry owner is guarded by structure and visual tests.
+- Verification for `v.1.615`: `tests/app-structure.test.mjs`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run report:css`, `npm.cmd run verify` and `npm.cmd run test:e2e` passed.
+- `v.1.616`: removed the obsolete pre-final nutrition weekday strip flex/28px marker layer from `nutrition-food-flow.css`; the final grid owner is now guarded against the old layer returning.
+- Verification for `v.1.616`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify` and `npm.cmd run test:e2e` passed.
+- `v.1.617`: removed the obsolete warm-light nutrition weekday selected/background layer from `warm-light-nutrition.css`; the later visible polish marker owner is guarded by the app structure test.
+- Verification for `v.1.617`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify` and `npm.cmd run test:e2e` passed.
+- `v.1.618`: removed the obsolete 34px/28px nutrition weekday strip layer from `nutrition.css`; later compact/grid owners now hold the active geometry and are guarded structurally.
+- Verification for `v.1.618`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify` and `npm.cmd run test:e2e` passed.
+- `v.1.619`: grouped the duplicate warm-light nutrition/client page shell surface in `nutrition.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.619`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.620`: removed the obsolete warm-light collapsed AI plan surface pre-owner from `nutrition.css`; the final white collapsed-summary owner is guarded by the app structure test.
+- Verification for `v.1.620`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.621`: grouped cabinet nutrition modal warm-light save button shell CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.621`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.622`: grouped warm-light trainer notifications and progress photos modal shells in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.622`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.623`: grouped warm-light trainer notifications and progress photos overlay CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.623`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.624`: grouped cabinet nutrition modal warm-light picker active/hint CSS in `client-cabinet-desktop.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.624`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.625`: grouped cabinet nutrition modal warm-light neutral card/picker/macro surfaces in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.625`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.626`: grouped trainer notifications and progress photos warm-light surface CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.626`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.627`: grouped trainer notifications and progress photos warm-light heading text CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.627`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.628`: grouped trainer notifications and progress photos base heading CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.628`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.629`: grouped trainer notifications and progress photos text-container grid CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.629`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.630`: grouped cabinet nutrition modal calendar/macro micro-label typography CSS in `client-cabinet-desktop.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.630`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.631`: grouped cabinet nutrition modal settings-open hidden legacy surfaces in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.631`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.632`: grouped trainer client KPI/macro metric caption typography CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.632`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.633`: grouped trainer client attention/progress caption typography CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.633`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.634`: grouped trainer client hero/section/control muted caption typography CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.634`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.635`: grouped trainer client AI/control/activity list shell CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.635`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.636`: grouped trainer client section/attention/AI/program text shell CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.636`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.637`: grouped trainer mobile task/photo/payment form column CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.637`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.638`: grouped trainer client mobile photo/hero/progress column CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.638`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.639`: grouped trainer mobile progress/event/payment auto-column CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.639`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.640`: grouped trainer progress/event/payment full-width column CSS in `client-cabinet-desktop.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.640`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.641`: grouped trainer cabinet and utility card shell CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.641`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.642`: grouped trainer mobile metric/goal two-column grid CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.642`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.643`: grouped trainer mobile measurement grid CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.643`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.644`: grouped trainer nutrition muted micro-label CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.644`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.645`: grouped trainer nutrition typography and notification panel shell CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.645`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.646`: grouped trainer calendar grid and notification hidden-input CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.646`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.647`: grouped trainer workout calendar status color CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.647`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.648`: grouped trainer panel shell and scrollbar CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.648`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.649`: grouped food search action stack shell CSS in `client-primary.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.649`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.650`: grouped food search create-action inactive/active color CSS in `client-primary.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.650`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.651`: removed the early duplicate cabinet bottom pseudo-layer from `client-primary.css`; the final rhythm owner remains guarded by the app structure test.
+- Verification for `v.1.651`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.652`: grouped repeated trainer purple active controls in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.652`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.653`: grouped trainer workout schedule pill-label CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.653`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.654`: grouped trainer shared header layout CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.654`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.655`: grouped trainer shared four-column grid CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.655`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.656`: grouped trainer workout calendar today highlight CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.656`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.657`: grouped trainer workout calendar weekday label CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.657`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.658`: grouped trainer notification/client identity ellipsis typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.658`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.659`: grouped trainer message and workout schedule flex header layout CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.659`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.660`: grouped trainer measurement/exercise micro-label typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.660`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.661`: grouped trainer measurement chart and workout schedule month flex layout CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.661`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.662`: grouped trainer measurement collapsed and workout month stat grid CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.662`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.663`: grouped trainer measurement and program panel shell CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.663`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.664`: grouped trainer measurement and exercise progress status color CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.664`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.665`: grouped trainer message, analytics and notification muted caption typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.665`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.666`: grouped trainer avatar, photo and exercise media cover CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.666`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.667`: grouped trainer client identity/name and selected-program action row flex layout CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.667`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.668`: grouped trainer breadcrumb and exercise action hover CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.668`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.669`: grouped trainer notification offset and reminder period divider CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.669`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.670`: grouped trainer mobile exercise progress and nutrition custom-period two-column CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.670`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.671`: grouped trainer mobile exercise action grid CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.671`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.672`: grouped trainer mobile exercise editor layout CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.672`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.673`: grouped trainer program and workout-day action hover CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.673`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.674`: grouped trainer notification connected-state color CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.674`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.675`: grouped trainer drawer and photo preview modal micro-label typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.675`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.676`: grouped trainer mobile measurement summary, notification schedule and measurement field grid CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.676`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.677`: grouped trainer notification offset and progress reminder muted caption CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.677`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.678`: grouped trainer panel, photo compare and workout editor muted paragraph typography CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.678`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.679`: grouped trainer client table and measurement muted small-label typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.679`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.680`: grouped trainer shared disabled action cursor/opacity CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.680`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.681`: grouped trainer disabled program button border and text color CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.681`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.682`: grouped trainer compact layout, legend, delete-hover and schedule disabled-state CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.682`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.683`: grouped trainer emphasis typography CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.683`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.684`: grouped trainer client section stack CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.684`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.685`: grouped trainer inline text stack CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.685`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.686`: grouped trainer micro-copy typography CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.686`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.687`: grouped trainer list-tail divider CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.687`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.688`: grouped trainer measurement status color CSS in `trainer-workspace.css`; the shared owners are guarded by the app structure test.
+- Verification for `v.1.688`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.689`: grouped trainer compact text-field stack CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.689`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.690`: grouped trainer compact row text stack CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.690`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.691`: grouped trainer workout/nutrition mobile header grid CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.691`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.692`: grouped trainer exercise/program first action button sizing CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.692`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.693`: grouped trainer risk/history/action stack CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.693`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.694`: grouped trainer workout schedule/status emphasis color CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.694`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.695`: grouped trainer drawer/coach/program stack gap CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.695`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.696`: grouped trainer sidebar/utility/library micro-stack CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.696`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.697`: grouped trainer shared 14px stack layout CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.697`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.698`: grouped trainer muted 8px micro-label typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.698`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.699`: grouped trainer muted 9px micro-label typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.699`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.700`: grouped trainer muted 10px micro-label typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.700`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.701`: grouped trainer shared 10px stack layout CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.701`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.702`: grouped trainer shared 11px strong-label typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.702`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.703`: grouped trainer shared 10px compact-label typography CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.703`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.704`: grouped trainer shared purple color CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.704`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.705`: grouped trainer shared purple focus-border CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.705`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.706`: grouped trainer shared min-width reset CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.706`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.707`: grouped trainer shared green color CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.707`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.708`: grouped trainer shared purple background CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.708`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.709`: folded trainer nutrition page tab active CSS into the shared purple active owner in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.709`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.710`: grouped trainer shared purple active glow CSS in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.710`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.711`: grouped trainer mobile two-column metric and notification-offset grids in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.711`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.712`: grouped trainer shared white panel shell CSS across dashboard, nutrition, client and notification cards in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.712`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.713`: grouped trainer shared 16px title typography across analytics, notification, client and nutrition cards in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.713`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.714`: removed the duplicate trainer workout preview stack owner after the shared stack owner in `trainer-workspace.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.714`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/trainer-workspace.spec.js --project=mobile-chromium`, `tests/e2e/trainer-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.715`: removed the duplicate standalone client bottom nav active owner after the shared active owner in `client-nutrition-grid.css`; the shared owner is guarded by the app structure test.
+- Verification for `v.1.715`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.716`: removed the early duplicate main profile AI hero grid owner before the more specific hero grid owner in `client-nutrition-grid.css`; the specific owner is guarded by the app structure test.
+- Verification for `v.1.716`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.717`: removed the early duplicate main profile progress insight headline layout owner before the final headline layout owner in `client-nutrition-grid.css`; the final owner is guarded by the app structure test.
+- Verification for `v.1.717`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.718`: removed the early duplicate main measurement chart line owner before the final chart line owner in `client-nutrition-grid.css`; the final owner is guarded by the app structure test.
+- Verification for `v.1.718`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.719`: removed the early duplicate food action bar button and active owners before the final shared action owners in `client-primary.css`; the final owners are guarded by the app structure test.
+- Verification for `v.1.719`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.720`: removed the early duplicate main AI stats row cell owner before the final stats row cell owner in `client-primary.css`; the final owner is guarded by the app structure test.
+- Verification for `v.1.720`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-harness.spec.js --project=mobile-chromium`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.721`: removed the old `v.1.100` product editor header rhythm owner from `client-visual-unity.css`; the later `v.1.102` final cascade lock is guarded by the app structure test.
+- Verification for `v.1.721`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.722`: removed the early duplicate admin nutrition month summary-below layout owner from `admin-client-dashboard.css`; the final V44 owner is guarded by the app structure test.
+- Verification for `v.1.722`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.723`: removed the early duplicate product info layout owner from `nutrition-food-products-summary.css`; the final owner is guarded by the app structure test.
+- Verification for `v.1.723`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.724`: removed the early duplicate individual workout badges layout owner from `trainer-month-program-editor.css`; the final owner is guarded by the app structure test.
+- Verification for `v.1.724`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.725`: removed the early duplicate calorie row grid owner from `nutrition-header-layout.css`; the later reference owner is guarded by the app structure test.
+- Verification for `v.1.725`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.726`: removed the early duplicate AI stats row label layout owner from `profile-dashboard-telegram.css`; the final stats alignment owner is guarded by the app structure test.
+- Verification for `v.1.726`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.727`: removed the early duplicate product icon wrapper owner from `nutrition-food-products-summary.css`; the later final owner is guarded by the app structure test.
+- Verification for `v.1.727`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.728`: removed the early duplicate admin nutrition month summary order owner from `admin-client-dashboard.css`; the later final owner is guarded by the app structure test.
+- Verification for `v.1.728`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.729`: removed the early duplicate admin history checkbox visual owner from `client-history-ai-search.css`; the later visible-fix owner is guarded by the app structure test.
+- Verification for `v.1.729`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.730`: removed the early duplicate profile AI stats label layout owner from `profile-dashboard-telegram.css`; the later full-width owner is guarded by the app structure test.
+- Verification for `v.1.730`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.731`: removed the intermediate warm-light summary donut center owner from `warm-light-nutrition.css`; the compact donut center owner is guarded by the app structure test.
+- Verification for `v.1.731`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.732`: removed older food picker empty-state text and fallback suggestion layout owners from `nutrition-food-picker-base.css`; the later empty-state owner is guarded by the app structure test.
+- Verification for `v.1.732`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.733`: removed the redundant mobile profile unified stats three-column grid lock from `profile-dashboard-telegram.css`; the horizontal stats owner is guarded by the app structure test.
+- Verification for `v.1.733`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.734`: removed the redundant mobile nutrition pixel-meter width owner from `nutrition-header-layout.css`; the summary calories owner is guarded by the app structure test.
+- Verification for `v.1.734`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.735`: removed older calorie-row child transform owners from `nutrition-food-search-calories.css`; the micro-align owner is guarded by the app structure test.
+- Verification for `v.1.735`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.736`: removed the older mobile nutrition page padding owner from `nutrition-header-layout.css`; the compact premium owner is guarded by the app structure test.
+- Verification for `v.1.736`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.737`: removed the narrower tail repeat for nutrition render-grid dot sizing from `client-workout-plan-tail.css`; the wider mobile calories owner is guarded by the app structure test.
+- Verification for `v.1.737`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.738`: removed the primary-layer warm-light profile AI avatar broad sizing repeat from `client-primary.css`; the render-target owner is guarded by the app structure test.
+- Verification for `v.1.738`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.739`: fixed the warm-light product edit modal action bar by resetting the inherited centered-bar transform in the card-sheet lock; nutrition visual coverage now asserts the editor action bar stays inside the sheet.
+- Verification for `v.1.739`: preview geometry check, `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.740`: removed the older product-add product flow title wrapper layout owner from `client-food-search.css`; the stable-flow owner remains guarded by the app structure test and nutrition visual coverage.
+- Verification for `v.1.740`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.741`: removed the older product-add product flow title text owner from `client-food-search.css`; the stable/final title owners remain guarded by the app structure test and nutrition visual coverage.
+- Verification for `v.1.741`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.742`: removed the older product-add product top action layout owner from `client-food-search.css`; the stable-flow top action owner remains guarded by the app structure test and nutrition visual coverage.
+- Verification for `v.1.742`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.743`: removed the older stable-flow product render top action layout owner from `client-food-search.css`; the final action owners remain guarded by the app structure test and nutrition visual coverage.
+- Verification for `v.1.743`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.744`: removed the standalone food search close button sizing owner from `client-food-search.css`; the grouped close-shell owner remains guarded by the app structure test and nutrition visual coverage.
+- Verification for `v.1.744`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.745`: removed the duplicate home-specific food search header meal title-wrap owner from `client-primary.css`; the shared header owner remains guarded by the app structure test and nutrition visual coverage.
+- Verification for `v.1.745`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-nutrition-visual.spec.js` and `tests/e2e/client-primary-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.746`: removed the duplicate collapsed-inline nutrition AI/Zouk top-card grid owner from `client-primary.css`; the shared header owner remains guarded by the app structure test and nutrition visual coverage.
+- Verification for `v.1.746`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-nutrition-visual.spec.js` and `tests/e2e/client-primary-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.747`: removed the duplicate inside-progress AI coach text overflow owner from `profile-dashboard-telegram.css`; the shared status-row text owner remains guarded by the app structure test and client primary visual coverage.
+- Verification for `v.1.747`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.748`: removed the duplicate page-specific compact profile AI avatar sizing owner from `client-render-target.css`; the shared avatar owner remains guarded by the app structure test and client primary visual coverage.
+- Verification for `v.1.748`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.749`: grouped trainer/cabinet strong text overflow in `client-cabinet-desktop.css`; the task, notification and program summary row owners remain guarded by the app structure test and visual coverage.
+- Verification for `v.1.749`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js`, `tests/e2e/trainer-visual.spec.js` and `tests/e2e/trainer-workspace.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.750`: grouped trainer/cabinet header shell layout in `client-cabinet-desktop.css`; task, workspace and notification headers remain guarded by the app structure test and visual coverage.
+- Verification for `v.1.750`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js`, `tests/e2e/trainer-visual.spec.js` and `tests/e2e/trainer-workspace.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.751`: hid the nutrition product render fullscreen scrollbar rail while preserving scroll; the product edit action bar remains visually checked in preview and guarded by the app structure test.
+- Verification for `v.1.751`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, preview browser product edit visual check, `tests/e2e/client-nutrition-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.752`: grouped trainer/cabinet accent micro labels in `client-cabinet-desktop.css`; trainer dashboard modal and inline nutrition plan header labels remain guarded by the app structure test and visual coverage.
+- Verification for `v.1.752`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js`, `tests/e2e/client-nutrition-visual.spec.js`, `tests/e2e/trainer-visual.spec.js` and `tests/e2e/trainer-workspace.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.753`: populated the local client harness main and cabinet preview surfaces and allowed `?clientHarness=1` on localhost preview while keeping it unavailable on non-local production hosts.
+- Verification for `v.1.753`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js` and `tests/e2e/client-harness.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.754`: grouped compact workout run bottom action panel sizing across warmup, exercise and finish states in `client-workout-flow.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.754`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-workout-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.756`: grouped trainer program editor nav label typography across top, programs, program editor and workout editor bars in `trainer-program-editor.css`, and locked the product editor action bar inside its edit sheet in `client-food-search.css`; both surfaces are guarded by structure/visual coverage.
+- Verification for `v.1.756`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/trainer-workspace.spec.js` and `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.757`: grouped nutrition bottom nav active-state and icon sizing locks across the shared nutrition selector and fixed-header nutrition surface in `client-nutrition-grid.css`; the grouped owners are guarded by the app structure test.
+- Verification for `v.1.757`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-nutrition-visual.spec.js` and `tests/e2e/client-primary-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.758`: grouped render-target hero and progress-card text stack rules across main, cabinet and nutrition cards in `client-render-target.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.758`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js` and `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.759`: removed late height-only duplicate locks for the main render-target stats row in `client-render-target.css`; the final compact owner is guarded by the app structure test.
+- Verification for `v.1.759`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.760`: grouped food editor details input/textarea and portion-unit select focus states in `nutrition-food-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.760`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-nutrition-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.761`: grouped profile Telegram/avatar image cover rules across profile, settings and manage surfaces in `profile-dashboard-telegram.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.761`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, mobile `tests/e2e/client-primary-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.762`: grouped admin nutrition month summary-below typography and mobile card sizing with the existing summary owners in `admin-client-dashboard.css`; the grouped owners are guarded by the app structure test.
+- Verification for `v.1.762`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.763`: grouped AI Coach nutrition plan week and two-column grid layout in `ai-coach-lazy.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.763`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/client-ai-coach-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.764`: grouped admin client Telegram render logo/avatar sizing in `admin-client-page.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.764`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.765`: grouped the admin program editor shared button shell across top and grid editor surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.765`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.766`: grouped admin program editor stats row/grid layout in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.766`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.767`: grouped admin program editor shared max-width shell across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.767`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.768`: grouped admin program editor muted header paragraph typography across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.768`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.769`: grouped admin program editor accent button states across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.769`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.770`: grouped admin program editor topbar shell across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.770`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.771`: grouped admin program editor micro-label typography across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.771`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.772`: grouped admin program editor stats label typography across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.772`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.773`: grouped admin program editor template dock/strip layout across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.773`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.774`: fixed the client main measurement snapshot mobile layout so the header, weight block and chart stay in separate non-overlapping rows; the layout is guarded by the client primary visual audit.
+- Verification for `v.1.774`: client measurement snapshot rect-check, `npm.cmd run report:css`, `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.775`: grouped admin program editor form-control shell across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.775`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.776`: grouped admin program editor stat value typography across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.776`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.777`: grouped admin program editor empty-state typography across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.777`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.778`: grouped admin program editor empty-state shell alignment across editor and grid surfaces in `admin-program-editor.css`; the grouped owner is guarded by the app structure test.
+- Verification for `v.1.778`: `tests/app-structure.test.mjs`, `npm.cmd run report:css`, `tests/e2e/admin-visual.spec.js`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.779`: restored readable mobile client main/cabinet card spacing in `client-main.css`; hero spacing and key text clipping are guarded by the client primary visual audit.
+- Verification for `v.1.779`: `tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npm.cmd run report:css`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.780`: restored the `v.1.648` mobile client main/cabinet composition in `ProfileDashboardRoute`, `ClientE2EHarness` and `client-main.css`; the client primary visual audit now guards the main-only training summary and cabinet action-list shape.
+- Verification for `v.1.780`: `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npx.cmd playwright test tests/e2e/client-workout-visual.spec.js --project=mobile-chromium`, `npx.cmd playwright test tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.781`: replaced the client harness main measurement single-point placeholder with a populated trend chart so the local preview matches the restored `v.1.648` main screen.
+- Verification for `v.1.781`: `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.782`: tuned the local client harness main preview closer to the `v.1.648` reference with the ILYA greeting, workout summary cards, purple progress ring, three progress badges and a two-column measurement chart.
+- Verification for `v.1.782`: `npm.cmd run build`, `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, local Playwright screenshot checks at 584px and 390px, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.783`: added a compact 430px local preview lock so the restored main greeting stays on one line and the measurement chart title no longer clips.
+- Verification for `v.1.783`: `npm.cmd run build`, in-app browser geometry/screenshot check at 430px, `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.784`: centered the restored client harness progress gauge `из 100` caption inside the purple score ring.
+- Verification for `v.1.784`: `npm.cmd run build`, 430px Playwright geometry/screenshot check, `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.785`: restored the archived client harness main-menu composition with hero stats inside the greeting card and compact reference positions for date, progress and measurement cards.
+- Verification for `v.1.785`: `npm.cmd run build`, in-app browser geometry checks at 584px and compact mobile widths, `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npx.cmd playwright test tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.786`: kept the client harness main header on shared chrome sizing, replaced date emoji with SVG icons and fixed the measurement tooltip fill.
+- Verification for `v.1.786`: `npm.cmd run build`, `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, in-app browser visual check, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.787`: isolated the client harness main progress preview on a dedicated reference score-ring class and removed the harness match to old progress-gauge variants.
+- Verification for `v.1.787`: `npm.cmd run build`, `npm.cmd run report:css`, in-app browser DOM/style check, `npx.cmd playwright test tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.788`: aligned the client harness main header with cabinet chrome sizing, started the reference progress ring from 6 o'clock and kept the greeting text inside its compact hero card.
+- Verification for `v.1.788`: `npm.cmd run verify`, `npm.cmd run test:e2e`, `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium` and `git diff --check` passed.
+- `v.1.789`: tightened the client harness main-menu reference match by lifting the stack to the archived screenshot rhythm, moving the isolated score ring left, keeping progress badges inside the card and restoring the measurement chart column.
+- Verification for `v.1.789`: `npm.cmd run build`, Playwright screenshot/geometry check against the archived reference rhythm, `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.
+- `v.1.790`: removed the client harness hero stat pseudo dividers and returned progress insight badges to the normal card flow so the card no longer carries an empty absolute-positioned layer.
+- Verification for `v.1.790`: `npm.cmd run build`, Playwright screenshot/DOM pseudo-element check, `npm.cmd run report:css`, `npx.cmd playwright test tests/e2e/client-harness.spec.js --project=mobile-chromium`, `npx.cmd playwright test tests/e2e/client-primary-visual.spec.js --project=mobile-chromium`, `npm.cmd run verify`, `npm.cmd run test:e2e` and `git diff --check` passed.

@@ -1,0 +1,125 @@
+.overlay,
+.overlay * {
+  box-sizing: border-box;
+}
+
+.overlay {
+  position: fixed;
+  z-index: 21000;
+  inset: 0;
+  display: flex;
+  min-height: 100dvh;
+  padding: 22px;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-workout-history-page);
+  background: var(--color-workout-history-delete-overlay);
+  backdrop-filter: var(--filter-workout-history-delete-overlay);
+  -webkit-backdrop-filter: var(--filter-workout-history-delete-overlay);
+  animation: overlayIn 0.18s ease;
+}
+
+.dialog {
+  width: min(92vw, 360px);
+  padding: 22px;
+  color: var(--color-workout-history-page);
+  text-align: center;
+  background-color: var(--color-workout-history-delete-surface);
+  background-image: var(--gradient-workout-history-delete-modal);
+  border: 1px solid var(--color-workout-history-delete-border);
+  border-radius: 28px;
+  box-shadow: var(--shadow-workout-history-delete);
+  animation: dialogIn 0.22s ease;
+}
+
+.icon {
+  display: flex;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-workout-history-delete-icon);
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.5;
+  background: var(--color-workout-history-delete-icon-surface);
+  border-radius: 20px;
+}
+
+.title {
+  margin: 0;
+  color: var(--color-workout-history-delete-heading);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  line-height: 1.5;
+}
+
+.description {
+  margin: 10px 0 18px;
+  color: var(--color-workout-history-delete-text);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.description p {
+  margin: 0;
+}
+
+.description p span {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-workout-history-delete-muted);
+  font-size: 12px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.action {
+  min-height: 48px;
+  margin: 0;
+  padding: 0;
+  color: var(--color-workout-history-delete-secondary);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.5;
+  text-align: center;
+  background: var(--color-workout-history-delete-secondary-surface);
+  border: 1px solid var(--color-workout-history-delete-secondary-border);
+  border-radius: 17px;
+  cursor: pointer;
+}
+
+.danger {
+  color: var(--color-workout-history-delete-danger);
+  background: var(--color-workout-history-delete-danger-surface);
+  border-color: var(--color-workout-history-delete-danger-border);
+}
+
+.action:disabled {
+  opacity: 0.6;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

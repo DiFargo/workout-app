@@ -1,0 +1,365 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  background: var(--background-profile-measurements-overlay);
+  backdrop-filter: var(--filter-profile-measurements-overlay);
+  -webkit-backdrop-filter: var(--filter-profile-measurements-overlay);
+}
+
+.dialog {
+  box-sizing: border-box;
+  width: min(100%, 390px);
+  max-height: calc(100dvh - 32px);
+  padding: 18px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--color-profile-measurements-dialog-border);
+  border-radius: 24px;
+  background: var(--background-profile-measurements-dialog);
+  box-shadow: var(--shadow-profile-measurements-dialog);
+  color: var(--color-profile-measurements-text);
+  scrollbar-width: none;
+}
+
+.dialog::-webkit-scrollbar,
+.grid::-webkit-scrollbar,
+.empty::-webkit-scrollbar {
+  display: none;
+}
+
+.bodyControlDialog {
+  width: min(100%, 430px);
+  height: min(820px, calc(100dvh - 24px));
+  max-height: min(820px, calc(100dvh - 24px));
+  padding: 15px;
+  display: grid;
+  grid-template-rows: auto 48px auto minmax(0, 1fr) auto;
+  gap: 12px;
+  overflow: hidden;
+  border-radius: 27px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.header span,
+.header h2,
+.header small {
+  display: block;
+}
+
+.header span {
+  color: var(--color-profile-measurements-eyebrow);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.header h2 {
+  margin: 5px 0 2px;
+  color: var(--color-profile-measurements-heading);
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.header small {
+  color: var(--color-profile-measurements-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.closeButton {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-profile-measurements-close-border);
+  border-radius: 13px;
+  background: var(--background-profile-measurements-close);
+  color: var(--color-profile-measurements-close);
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bodyControlDialog .header {
+  box-sizing: border-box;
+  min-height: 86px;
+  padding: 2px 0 0 4px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  align-items: start;
+  gap: 12px;
+}
+
+.bodyControlDialog .header > div {
+  min-width: 0;
+  padding-top: 1px;
+  display: grid;
+  align-content: start;
+  gap: 3px;
+}
+
+.bodyControlDialog .header span {
+  color: var(--color-profile-measurements-tabbed-eyebrow);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+}
+
+.bodyControlDialog .header h2 {
+  margin: 0;
+  color: var(--color-profile-measurements-tabbed-heading);
+  font-size: 25px;
+  line-height: 1.02;
+}
+
+.bodyControlDialog .header small {
+  min-height: 17px;
+  color: var(--color-profile-measurements-tabbed-muted);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.bodyControlDialog .closeButton {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  align-self: start;
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  border-color: var(--color-profile-measurements-tabbed-close-border);
+  border-radius: 14px;
+  background: var(--background-profile-measurements-tabbed-close);
+  color: var(--color-profile-measurements-tabbed-close);
+  font-size: 24px;
+  font-weight: 500;
+  box-shadow: var(--shadow-profile-measurements-tabbed-close);
+}
+
+.bodyControlTabs {
+  box-sizing: border-box;
+  height: 48px;
+  padding: 3px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 6px;
+  border: 1px solid var(--color-profile-measurements-tabs-border);
+  border-radius: 16px;
+  background: var(--background-profile-measurements-tabs);
+}
+
+.bodyControlTabs button {
+  min-width: 0;
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 8px;
+  border: 1px solid var(--color-profile-measurements-tab-border);
+  border-radius: 13px;
+  background: var(--background-profile-measurements-tab);
+  color: var(--color-profile-measurements-tab);
+  font-size: 12px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.bodyControlTabs button.active {
+  border-color: var(--color-profile-measurements-tab-active-border);
+  background: var(--background-profile-measurements-tab-active);
+  color: var(--color-profile-measurements-tab-active);
+  box-shadow: var(--shadow-profile-measurements-tab-active);
+}
+
+.summary {
+  margin: 16px 0 14px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--color-profile-measurements-summary-border);
+  border-radius: 17px;
+  background: var(--background-profile-measurements-summary);
+}
+
+.summary span {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-profile-measurements-summary-icon-border);
+  border-radius: 15px;
+  background: var(--background-profile-measurements-summary-icon);
+  color: var(--color-profile-measurements-summary-icon);
+  font-size: 23px;
+}
+
+.summary p {
+  margin: 0;
+  color: var(--color-profile-measurements-summary);
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.grid > div {
+  box-sizing: border-box;
+  min-height: 68px;
+  padding: 9px 6px;
+  border: 1px solid var(--color-profile-measurements-cell-border);
+  border-radius: 14px;
+  background: var(--background-profile-measurements-cell);
+  color: var(--color-profile-measurements-text);
+  text-align: center;
+}
+
+.grid span,
+.grid strong,
+.grid small {
+  display: block;
+}
+
+.grid span {
+  min-height: 26px;
+  color: var(--color-profile-measurements-label);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.grid strong {
+  display: inline;
+  color: var(--color-profile-measurements-value);
+  font-size: 17px;
+  line-height: 1;
+}
+
+.grid small {
+  display: inline;
+  margin-left: 3px;
+  color: var(--color-profile-measurements-unit);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.empty {
+  margin: 0;
+  padding: 20px 16px;
+  border: 1px dashed var(--color-profile-measurements-empty-border);
+  border-radius: 16px;
+  color: var(--color-profile-measurements-empty);
+  font-size: 13px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.startButton {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 14px;
+  border: 1px solid var(--color-profile-measurements-start-border);
+  border-radius: 17px;
+  background: var(--background-profile-measurements-start);
+  color: var(--color-profile-measurements-start);
+  font-size: 17px;
+  font-weight: 900;
+  box-shadow: var(--shadow-profile-measurements-start);
+  cursor: pointer;
+}
+
+.closeButton:focus-visible,
+.bodyControlTabs button:focus-visible,
+.startButton:focus-visible {
+  outline: 2px solid var(--color-profile-measurements-focus);
+  outline-offset: 2px;
+}
+
+@media (max-height: 720px) {
+  .dialog:not(.bodyControlDialog) {
+    padding: 14px;
+  }
+
+  .summary {
+    margin: 12px 0 10px;
+    padding: 9px 10px;
+  }
+
+  .summary span {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .grid > div {
+    min-height: 58px;
+    padding: 7px 4px;
+  }
+
+  .grid span {
+    min-height: 22px;
+    font-size: 9px;
+  }
+
+  .startButton {
+    min-height: 48px;
+    margin-top: 10px;
+  }
+}
+
+.bodyControlDialog .summary {
+  margin: 0;
+}
+
+.bodyControlDialog .grid,
+.bodyControlDialog .empty {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.bodyControlDialog .grid {
+  align-content: start;
+  grid-auto-rows: minmax(58px, auto);
+  gap: 7px;
+}
+
+.bodyControlDialog .grid > div {
+  min-height: 58px;
+  padding: 7px 5px;
+}
+
+.bodyControlDialog .grid span {
+  min-height: 20px;
+  font-size: 9px;
+  line-height: 1.1;
+}
+
+.bodyControlDialog .grid strong {
+  font-size: 16px;
+}
+
+.bodyControlDialog .startButton {
+  margin-top: 0;
+}

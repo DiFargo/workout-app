@@ -1,16 +1,175 @@
 {
   "hosting": {
     "public": "dist",
+    "redirects": [
+      {
+        "source": "/cssV2",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/cssV2/**",
+        "destination": "/",
+        "type": 301
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
+    "headers": [
+      {
+        "source": "/sw.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/index.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/workout-covers/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=2592000,stale-while-revalidate=604800"
+          }
+        ]
+      }
+    ],
     "rewrites": [
+      {
+        "source": "/api/fatsecret/search",
+        "function": {
+          "functionId": "fatsecretSearch",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/nutrition/search",
+        "function": {
+          "functionId": "nutritionSearch",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/open-food-facts/search",
+        "function": {
+          "functionId": "openFoodFactsSearch",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/profile/update-email",
+        "function": {
+          "functionId": "profileUpdateEmail",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/profile/update-login",
+        "function": {
+          "functionId": "profileUpdateLogin",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/ai-food-photo",
+        "function": {
+          "functionId": "aiFoodPhoto",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/ai-workout-program-import",
+        "function": {
+          "functionId": "aiWorkoutProgramImport",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/telegram/login-verify",
+        "function": {
+          "functionId": "telegramLoginVerify",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/refresh-avatar",
+        "function": {
+          "functionId": "telegramRefreshAvatar",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/send-message",
+        "function": {
+          "functionId": "telegramSendMessage",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/test-workout-reminder",
+        "function": {
+          "functionId": "telegramTestWorkoutReminder",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/admin/deleteUser",
+        "function": {
+          "functionId": "deleteUser",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/trainer/create-invite",
+        "function": {
+          "functionId": "trainerCreateInvite",
+          "region": "europe-west1"
+        }
+      },
       {
         "source": "**",
         "destination": "/index.html"
       }
     ]
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ],
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }

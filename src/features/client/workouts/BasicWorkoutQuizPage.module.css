@@ -1,0 +1,368 @@
+.page {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    max(22px, env(safe-area-inset-top))
+    16px
+    calc(112px + env(safe-area-inset-bottom));
+  color: var(--color-basic-quiz-page);
+  background: var(--color-basic-quiz-page-background);
+}
+
+.card,
+.preview {
+  padding: 16px;
+  background: var(--color-basic-quiz-surface);
+  border: 1px solid var(--color-basic-quiz-border);
+  border-radius: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.field > span,
+.preview > span,
+.sectionHeader > span {
+  color: var(--color-basic-quiz-eyebrow);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.field select {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 14px;
+  color: var(--color-basic-quiz-field-value);
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--color-basic-quiz-field-surface);
+  border: 1px solid var(--color-basic-quiz-field-border);
+  border-radius: 13px;
+}
+
+.preview {
+  margin-top: 12px;
+}
+
+.preview > strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-basic-quiz-heading);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.preview > p {
+  margin: 8px 0 12px;
+  color: var(--color-basic-quiz-muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.previewStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.previewStats > span {
+  color: var(--color-basic-quiz-stat-container);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.previewStats b {
+  padding: 10px;
+  color: var(--color-basic-quiz-stat-value);
+  font-size: 22px;
+  text-align: center;
+  background: var(--color-basic-quiz-stat-surface);
+  border-radius: 12px;
+}
+
+.previewStats small {
+  color: var(--color-basic-quiz-stat-label);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.startButton {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 14px;
+  color: var(--color-basic-quiz-start);
+  font-size: 15px;
+  font-weight: 900;
+  background: var(--gradient-basic-quiz-start);
+  border: 0;
+  border-radius: 14px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .page,
+:global(:root[data-app-theme="warm-light"]) .page * {
+  box-sizing: border-box;
+}
+
+:global(:root[data-app-theme="warm-light"]) .page {
+  padding:
+    max(30px, env(safe-area-inset-top))
+    22px
+    calc(112px + env(safe-area-inset-bottom));
+  overflow-x: hidden;
+}
+
+:global(:root[data-app-theme="warm-light"]) .topBar {
+  display: grid;
+  width: 100%;
+  min-height: 48px;
+  margin: 4px 0 24px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .title {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  color: var(--color-basic-quiz-title);
+  font-size: 24px;
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.04;
+  text-shadow: none;
+  -webkit-text-fill-color: var(--color-basic-quiz-title);
+}
+
+:global(:root[data-app-theme="warm-light"]) .topActions {
+  display: flex;
+  height: 48px;
+  padding-top: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .topButton {
+  display: grid;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  padding: 0;
+  place-items: center;
+  color: var(--color-basic-quiz-action);
+  background: var(--color-basic-quiz-action-surface);
+  border: 1px solid var(--color-basic-quiz-action-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-basic-quiz-action);
+}
+
+:global(:root[data-app-theme="warm-light"]) .topButton svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.7;
+}
+
+:global(:root[data-app-theme="warm-light"]) .card,
+:global(:root[data-app-theme="warm-light"]) .preview {
+  display: grid;
+  width: 100%;
+  gap: 12px;
+  background: var(--color-basic-quiz-surface);
+  border: 1px solid var(--color-basic-quiz-border);
+  border-radius: 22px;
+  box-shadow: var(--shadow-basic-quiz-surface);
+}
+
+:global(:root[data-app-theme="warm-light"]) .card {
+  min-height: 216px;
+  padding: 15px;
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .field > span,
+:global(:root[data-app-theme="warm-light"]) .preview > span,
+:global(:root[data-app-theme="warm-light"]) .sectionHeader > span {
+  display: block;
+  color: var(--color-basic-quiz-eyebrow);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader h2 {
+  margin: 0;
+  color: var(--color-basic-quiz-heading);
+  font-size: 14px;
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.16;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader p {
+  max-width: 300px;
+  margin: 0;
+  color: var(--color-basic-quiz-section-muted);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+:global(:root[data-app-theme="warm-light"]) .field {
+  display: grid;
+  min-width: 0;
+  min-height: 48px;
+  padding: 7px 10px;
+  grid-template-columns: minmax(92px, 0.78fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  color: var(--color-basic-quiz-field-row-text);
+  background: var(--color-basic-quiz-field-row-surface);
+  border: 1px solid var(--color-basic-quiz-field-row-border);
+  border-radius: 15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .field > span {
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  line-height: 1.05;
+}
+
+:global(:root[data-app-theme="warm-light"]) .field select {
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  min-height: 34px;
+  padding: 0 26px 0 0;
+  overflow: hidden;
+  color: var(--color-basic-quiz-field-value);
+  font-size: 13px;
+  font-weight: 950;
+  line-height: 34px;
+  text-overflow: ellipsis;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: var(--shadow-basic-quiz-field);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .preview {
+  min-height: 156px;
+  margin-top: 12px;
+  padding: 15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .preview > strong {
+  display: block;
+  margin-top: 7px;
+  color: var(--color-basic-quiz-heading);
+  font-size: 14px;
+  font-weight: 950;
+  line-height: 1.16;
+}
+
+:global(:root[data-app-theme="warm-light"]) .preview > p {
+  margin: 7px 0 10px;
+  color: var(--color-basic-quiz-muted);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+:global(:root[data-app-theme="warm-light"]) .previewStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .previewStats > span {
+  display: grid;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 8px;
+  place-items: center;
+  gap: 2px;
+  background: var(--color-basic-quiz-stat-cell-surface);
+  border-radius: 14px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .previewStats b {
+  color: var(--color-basic-quiz-stat-value);
+  font-size: 15px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+:global(:root[data-app-theme="warm-light"]) .previewStats small {
+  color: var(--color-basic-quiz-stat-label);
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+:global(:root[data-app-theme="warm-light"]) .startButton {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 30px;
+  margin-bottom: 8px;
+  padding: 0 18px;
+  color: var(--color-basic-quiz-start);
+  font-size: 18px;
+  font-weight: 950;
+  background: var(--gradient-basic-quiz-start);
+  border: 0;
+  border-radius: 20px;
+  box-shadow: var(--shadow-basic-quiz-start);
+}
+
+:global(:root[data-app-theme="warm-light"]) .page :global(.workoutModeModalHeader small),
+:global(:root[data-app-theme="warm-light"]) .page :global(.workoutModeModalOptions > button > span),
+:global(:root[data-app-theme="warm-light"]) .page :global(.workoutModeModalOptions small),
+:global(:root[data-app-theme="warm-light"]) .page :global(.workoutModeModalRemember) {
+  color: var(--color-workout-mode-dialog-muted-context);
+}
+
+:global(:root[data-app-theme="warm-light"]) .page :global(.workoutModeModalHeader h2) {
+  color: var(--color-workout-mode-dialog-heading-context);
+}
+
+:global(:root[data-app-theme="warm-light"]) .page :global(.workoutModeModalOptions > button.active) {
+  border-color: var(--color-workout-mode-dialog-active-border-context);
+}
+
+@media (max-width: 390px) {
+  :global(:root[data-app-theme="warm-light"]) .page {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+}
