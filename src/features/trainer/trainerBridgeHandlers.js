@@ -242,11 +242,10 @@ export function createTrainerBridgeHandlers(getContext) {
     });
   }
 
-  async function handleTrainerClientAction(action, client) {
+  async function handleTrainerClientAction(action, client, payload) {
     if (action === "delete") {
       return deleteClientEverywhereFromAdminPanel(client || getContext().adminSelectedClient);
     }
-
     const {
       adminClientHistory,
       adminClientMeasurements,
@@ -300,6 +299,7 @@ export function createTrainerBridgeHandlers(getContext) {
       setAdminClientProgressPhotos,
       setAdminClientNutrition,
       action,
+      payload,
       client: client || adminSelectedClient
     });
   }

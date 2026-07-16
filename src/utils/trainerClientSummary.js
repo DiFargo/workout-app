@@ -2,6 +2,7 @@ import { sumNutritionFoods } from "./nutritionFoodTotals.js";
 import { pluralizeRu } from "./trainerAttention.js";
 import { getClientPaymentAttention } from "../domain/clientInsights.js";
 import { getMeasurementTimestampValue } from "./profileMeasurements.js";
+import { getSubscriptionAttentionLabel, getSubscriptionStatus } from "./clientSubscription.js";
 import {
   getTrainerAssignmentVersionKey,
   getTrainerSummaryDateKey,
@@ -326,6 +327,7 @@ export function getClientActivityStatus(summary = {}) {
     (Number(summary.activeTrainerTasksCount) || 0) > 0 ||
     summary.workoutFeedbackAttention?.id ||
     summary.programEndingAttention?.id ||
+    ["ending", "expired"].includes(summary.subscriptionStatus?.id) ||
     summary.plateau?.isPlateau ||
     ["overdue", "soon"].includes(summary.paymentAttention?.id)
   ) {
@@ -367,6 +369,9 @@ export function getClientAttentionReasons(summary = {}) {
   if (summary.programEndingAttention?.reason) {
     reasons.push(summary.programEndingAttention.reason.toLowerCase());
   }
+  if (["ending", "expired"].includes(summary.subscriptionStatus?.id)) {
+    reasons.push(summary.subscriptionAttentionLabel || summary.subscriptionStatus.label.toLowerCase());
+  }
   if (summary.plateau?.isPlateau) reasons.push(`вес стоит ${summary.plateau.days} ${getTrainerDayWord(summary.plateau.days)}`);
   if (["overdue", "soon"].includes(summary.paymentAttention?.id)) {
     reasons.push(summary.paymentAttention.label.toLowerCase());
@@ -396,6 +401,8 @@ export function getTrainerClientEmptySummary(client = {}) {
     activeTrainerTasksCount: Number(client.activeTrainerTasksCount) || 0,
     workoutFeedbackAttention: client.workoutFeedbackAttention || null,
     programEndingAttention: client.programEndingAttention || null,
+    subscriptionStatus: getSubscriptionStatus(client.subscription || {}),
+    subscriptionAttentionLabel: client.subscription ? getSubscriptionAttentionLabel(client.subscription) : "",
     recentEvents: [],
     programCompletionPercent: null
   };
@@ -479,6 +486,12 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
     ) || 0,
     workoutFeedbackAttention: client.workoutFeedbackAttention || previousSummary.workoutFeedbackAttention || null,
     programEndingAttention,
+    subscriptionStatus: client.subscription
+      ? getSubscriptionStatus(client.subscription)
+      : previousSummary.subscriptionStatus || getSubscriptionStatus({}),
+    subscriptionAttentionLabel: client.subscription
+      ? getSubscriptionAttentionLabel(client.subscription)
+      : previousSummary.subscriptionAttentionLabel || "",
     recentEvents: previousSummary.recentEvents || [],
     programCompletionPercent: Number.isFinite(explicitCompletion)
       ? Math.round(explicitCompletion)

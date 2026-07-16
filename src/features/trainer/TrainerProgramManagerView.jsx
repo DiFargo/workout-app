@@ -1,9 +1,11 @@
-import { TrainerProgramConstructor } from "../../components/trainer/TrainerWorkspace";
+import { TrainerProgramConstructorStyleScope } from "../../components/trainer/TrainerWorkspace";
+import TrainerProgramConstructor from "../../components/trainer/TrainerProgramConstructor";
 import TrainerProgramCopySheet from "./TrainerProgramCopySheet";
 import TrainerProgramLegacyEditor from "./TrainerProgramLegacyEditor";
 import TrainerProgramManagerBottomControls from "./TrainerProgramManagerBottomControls";
 import TrainerProgramManagerHeader from "./TrainerProgramManagerHeader";
 import TrainerProgramOverviewPage from "./TrainerProgramOverviewPage";
+import styles from "./TrainerProgramManagerView.module.css";
 
 export default function TrainerProgramManagerView({
   APP_PAGES,
@@ -89,8 +91,12 @@ export default function TrainerProgramManagerView({
   updateProgramMonth,
   uploadMonthExerciseVideo
 }) {
+  const isNextWorkspace = isTrainerNextWorkspace();
+
   return (
-    <div className={`monthProgramEditorPage monthProgramPremium${adminProgramLibraryTab === "overview" ? " monthProgramOverviewMode" : ""}${adminOpenWorkoutId ? " monthProgramPremiumDayMode" : ""}${isTrainerNextWorkspace() ? " trainerProgramManager" : ""}`}>
+    <div className={isNextWorkspace
+      ? styles.root
+      : `monthProgramEditorPage monthProgramPremium${adminProgramLibraryTab === "overview" ? " monthProgramOverviewMode" : ""}${adminOpenWorkoutId ? " monthProgramPremiumDayMode" : ""}`}>
       <TrainerProgramManagerHeader
         adminOpenProgramBlocks={adminOpenProgramBlocks}
         adminOpenWorkoutId={adminOpenWorkoutId}
@@ -120,9 +126,12 @@ export default function TrainerProgramManagerView({
           setAdminSelectedTemplateId={setAdminSelectedTemplateId}
         />
       ) : isTrainerNextWorkspace() ? (
-        <TrainerProgramConstructor
+        <TrainerProgramConstructorStyleScope>
+          {(constructorStyles) => <TrainerProgramConstructor
+          styles={constructorStyles}
           program={normalizedMonthProgram}
           months={monthGroups}
+          exerciseLibrary={adminExerciseLibrary}
           activeWorkoutId={adminOpenWorkoutId}
           onSelectWorkout={(workoutId) => {
             setAdminSelectedExerciseId("");
@@ -132,7 +141,7 @@ export default function TrainerProgramManagerView({
           onProgramNameChange={updateMonthProgramName}
           onSaveProgram={saveMonthProgramToLibrary}
           onDeleteProgram={deleteSelectedProgramFromLibrary}
-          onBack={handleMonthProgramBack}
+          onBack={openAdminProgramsOverview}
           onAddMonth={addProgramMonth}
           onUpdateMonth={updateProgramMonth}
           onDeleteMonth={removeProgramMonth}
@@ -152,13 +161,15 @@ export default function TrainerProgramManagerView({
           onUpdateExerciseName={updateMonthExerciseName}
           onDeleteExercise={removeMonthExercise}
           onDuplicateExercise={duplicateMonthExercise}
+          onDuplicateExercise={duplicateMonthExercise}
           onMoveExercise={moveMonthExercise}
           onUpdateExerciseSet={updateMonthExerciseSet}
           onAddExerciseSet={addMonthExerciseSet}
           onRemoveExerciseSet={removeMonthExerciseSet}
           onUploadExerciseVideo={uploadMonthExerciseVideo}
           exerciseVideoUploadingId={adminExerciseVideoUploadingId}
-        />
+        />}
+        </TrainerProgramConstructorStyleScope>
       ) : (
         <TrainerProgramLegacyEditor
           addMonthBlock={addMonthBlock}

@@ -1,12 +1,14 @@
-import { doc, setDoc, writeBatch } from "firebase/firestore";
+import { doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
 
 import { buildWorkoutScheduleDraftWithExistingStatuses } from "../../utils/workoutSchedule";
 import { sortWorkoutDays } from "../../utils/workoutPlanNormalization";
 import { normalizeAdminProgressReminderInterval } from "../../utils/adminClientCalendar";
 import { getClientTelegramProfile } from "../../utils/clientTelegramProfile";
+import { normalizeClientSubscription, renewClientSubscription } from "../../utils/clientSubscription";
 import { fetchAuthorized } from "../../utils/apiClient";
 import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus";
 import { validateTrainerWorkoutScheduleDates } from "../../utils/trainerProgramValidation";
+import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/trainerSubscriptionNotificationSettings";
 
 const STATUS_SELECT_CLIENT = "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0432\u044b\u0431\u0435\u0440\u0438 \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
 const STATUS_CALENDAR_SAVING = "\u0421\u043e\u0445\u0440\u0430\u043d\u044f\u044e \u043a\u0430\u043b\u0435\u043d\u0434\u0430\u0440\u044c...";
@@ -55,6 +57,8 @@ export function createTrainerClientCalendarHandlers({
   setAdminClientStatus,
   setAdminSelectedClient,
   setUsersList,
+  trainerSubscriptionNotificationSettings,
+  setTrainerSubscriptionNotificationSettings,
   setPlan,
   recordTrainerEvent
 }) {
@@ -303,6 +307,37 @@ export function createTrainerClientCalendarHandlers({
       return false;
     }
 
+    if (settings.subscriptionOnly) {
+      const updatedAt = new Date().toISOString();
+      const subscription = settings.renewSubscription
+        ? renewClientSubscription(client.subscription || {}, settings.subscription || {})
+        : normalizeClientSubscription({
+            ...(client.subscription || {}),
+            ...(settings.subscription || {})
+          });
+      const patch = { subscription };
+      let previousClient = null;
+
+      setAdminSelectedClient((prev) => {
+        if (prev?.id === client.id) previousClient = prev;
+        return prev?.id === client.id ? { ...prev, ...patch } : prev;
+      });
+      setUsersList((prev) => prev.map((item) => item.id === client.id ? { ...item, ...patch } : item));
+      setAdminClientStatus(STATUS_NOTIFICATIONS_SAVING);
+
+      try {
+        await setDoc(doc(db, "users", client.id), { ...patch, updatedAt }, { merge: true });
+        setAdminClientStatus(STATUS_NOTIFICATIONS_SAVED);
+        return true;
+      } catch (error) {
+        console.error("Subscription save failed:", error);
+        setAdminSelectedClient((prev) => prev?.id === client.id && previousClient ? previousClient : prev);
+        setUsersList((prev) => prev.map((item) => item.id === client.id && previousClient ? previousClient : item));
+        setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_NOTIFICATIONS_FAILED));
+        return false;
+      }
+    }
+
     const offsets = getReminderOffsets(settings.offsets);
 
     if (!offsets.length) {
@@ -351,7 +386,6 @@ export function createTrainerClientCalendarHandlers({
       ...currentTelegram,
       notificationsEnabled: enabled
     };
-
     const patch = {
       workoutCalendar: nextCalendar,
       telegram: nextTelegram,
@@ -391,6 +425,48 @@ export function createTrainerClientCalendarHandlers({
     }
   }
 
+  async function loadTrainerSubscriptionNotificationSettings() {
+    const trainerId = auth.currentUser?.uid || "";
+    if (!trainerId) return normalizeTrainerSubscriptionNotificationSettings();
+
+    try {
+      const snapshot = await getDoc(doc(db, "users", trainerId));
+      const next = normalizeTrainerSubscriptionNotificationSettings(
+        snapshot.exists() ? snapshot.data()?.subscriptionNotificationSettings : {}
+      );
+      setTrainerSubscriptionNotificationSettings?.(next);
+      return next;
+    } catch (error) {
+      console.error("Trainer subscription notification settings load failed:", error);
+      return false;
+    }
+  }
+
+  async function saveTrainerSubscriptionNotificationSettings(settings = {}) {
+    const trainerId = auth.currentUser?.uid || "";
+    if (!trainerId) return false;
+
+    const previous = normalizeTrainerSubscriptionNotificationSettings(trainerSubscriptionNotificationSettings);
+    const updatedAt = new Date().toISOString();
+    const next = {
+      ...normalizeTrainerSubscriptionNotificationSettings(settings),
+      updatedAt
+    };
+    setTrainerSubscriptionNotificationSettings?.(next);
+
+    try {
+      await setDoc(doc(db, "users", trainerId), {
+        subscriptionNotificationSettings: next,
+        updatedAt
+      }, { merge: true });
+      return next;
+    } catch (error) {
+      console.error("Trainer subscription notification settings save failed:", error);
+      setTrainerSubscriptionNotificationSettings?.(previous);
+      return false;
+    }
+  }
+
   function openClientTelegramConnection() {
     window.open(`https://t.me/${TELEGRAM_BOT_USERNAME}`, "_blank", "noopener,noreferrer");
     setAdminClientStatus(STATUS_OPEN_BOT);
@@ -403,6 +479,8 @@ export function createTrainerClientCalendarHandlers({
     sendAdminTestWorkoutReminder,
     saveTrainerClientWorkoutSchedule,
     saveTrainerClientNotificationSettings,
+    loadTrainerSubscriptionNotificationSettings,
+    saveTrainerSubscriptionNotificationSettings,
     openClientTelegramConnection
   };
 }
