@@ -16,5 +16,8 @@ export function useTrainerAutoLoadEffect({
 
     loadUsers();
     loadAdminTrainingTemplates();
+    // Loader identities change with the orchestration context. The access and page
+    // keys are the intended reload boundary; including loaders would create a loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, isAdminClaim, currentUserRole, user?.uid, user?.email]);
 }

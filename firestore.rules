@@ -321,7 +321,9 @@ service cloud.firestore {
     }
 
     match /loginAliases/{aliasId} {
-      allow read: if true;
+      allow read: if signedIn() && (
+        isAdmin() || resource.data.uid == request.auth.uid
+      );
       allow create: if signedIn() &&
         request.resource.data.keys().hasOnly([
           "email",

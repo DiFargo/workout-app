@@ -75,9 +75,10 @@ test("admin claim can update protected role fields", async () => {
   }));
 });
 
-test("login aliases are readable before auth but writable only by the owner", async () => {
+test("login aliases are private and writable only by the owner", async () => {
   const ownerDb = testEnv.authenticatedContext("client-1", { email: "client@example.com" }).firestore();
   const strangerDb = testEnv.authenticatedContext("client-2", { email: "stranger@example.com" }).firestore();
+  const adminDb = testEnv.authenticatedContext("admin-1", { admin: true }).firestore();
   const publicDb = testEnv.unauthenticatedContext().firestore();
 
   await assertSucceeds(setDoc(doc(ownerDb, "loginAliases", "client"), {
@@ -87,7 +88,10 @@ test("login aliases are readable before auth but writable only by the owner", as
     updatedAt: "2026-07-09T00:00:00.000Z"
   }));
 
-  await assertSucceeds(getDoc(doc(publicDb, "loginAliases", "client")));
+  await assertFails(getDoc(doc(publicDb, "loginAliases", "client")));
+  await assertFails(getDoc(doc(strangerDb, "loginAliases", "client")));
+  await assertSucceeds(getDoc(doc(ownerDb, "loginAliases", "client")));
+  await assertSucceeds(getDoc(doc(adminDb, "loginAliases", "client")));
   await assertFails(setDoc(doc(strangerDb, "loginAliases", "client"), {
     email: "stranger@example.com",
     uid: "client-2",

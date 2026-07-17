@@ -249,8 +249,8 @@ export default function TrainerClientOverviewLegacyDetails({
                       <>
                         <strong>{new Date(`${photo.date}T12:00:00`).toLocaleDateString("ru-RU")}</strong>
                         <div>
-                          {[photo.frontUrl, photo.sideUrl, photo.backUrl].filter(Boolean).map((url) => (
-                            <img key={url} src={url} alt="" loading="lazy" />
+                          {[photo.frontUrl, photo.sideUrl, photo.backUrl].filter(Boolean).map((url, index) => (
+                            <img key={`${index}_${url}`} src={url} alt="" loading="lazy" />
                           ))}
                         </div>
                         {photo.comment && <small>{photo.comment}</small>}

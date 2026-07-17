@@ -11,6 +11,8 @@ export function getTrainerNextCreateClientStateWithDeps({
   createUserFromAdminPanel,
   generateAdminPassword,
   setAdminCreateClientModalOpen,
+  setAdminCreateUserStatus,
+  setAdminCreatedCredentials,
   setAdminNewUserEmail,
   setAdminNewUserName,
   setAdminNewUserPassword
@@ -18,15 +20,30 @@ export function getTrainerNextCreateClientStateWithDeps({
   return buildTrainerCreateClientState({
     open: adminCreateClientModalOpen,
     name: adminNewUserName,
-    email: adminNewUserEmail,
+    login: adminNewUserEmail,
     password: adminNewUserPassword,
     loading: adminCreateUserLoading,
     status: adminCreateUserStatus,
     credentials: adminCreatedCredentials
   }, {
-    onClose: () => setAdminCreateClientModalOpen(false),
+    onClose: () => {
+      setAdminCreateClientModalOpen(false);
+      setAdminNewUserName("");
+      setAdminNewUserEmail("");
+      setAdminNewUserPassword("");
+      setAdminCreateUserStatus("");
+      setAdminCreatedCredentials(null);
+    },
+    onOpen: () => {
+      setAdminNewUserName("");
+      setAdminNewUserEmail("");
+      setAdminNewUserPassword("");
+      setAdminCreateUserStatus("");
+      setAdminCreatedCredentials(null);
+      setAdminCreateClientModalOpen(true);
+    },
     onNameChange: setAdminNewUserName,
-    onEmailChange: setAdminNewUserEmail,
+    onLoginChange: setAdminNewUserEmail,
     onPasswordChange: setAdminNewUserPassword,
     onGeneratePassword: generateAdminPassword,
     onSubmit: createUserFromAdminPanel

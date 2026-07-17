@@ -13,6 +13,7 @@ import {
   mapLoginAuthError,
   validateLoginFields
 } from "../../utils/clientUx";
+import { resolveEmailForLogin } from "./loginResolution";
 
 const googleProvider = new GoogleAuthProvider();
 const ACTIVE_INVITE_STATUSES = new Set(["active", "created"]);
@@ -21,21 +22,6 @@ function makeAuthError(code) {
   const error = new Error(code);
   error.code = code;
   return error;
-}
-
-async function resolveEmailForLogin(db, validation) {
-  if (validation.isEmail) {
-    return validation.email.toLowerCase();
-  }
-
-  const aliasSnapshot = await getDoc(doc(db, "loginAliases", validation.loginAlias));
-  const email = String(aliasSnapshot.data()?.email || "").trim().toLowerCase();
-
-  if (!aliasSnapshot.exists() || !email) {
-    throw makeAuthError("auth/login-not-found");
-  }
-
-  return email;
 }
 
 async function ensureLoginAlias(db, user, preferredAlias = "") {
@@ -194,7 +180,7 @@ export function createAuthHandlers({
 
     setLoginSubmitting(true);
     try {
-      const email = await resolveEmailForLogin(db, validation);
+      const email = await resolveEmailForLogin(validation);
       const result = await signInWithEmailAndPassword(
         auth,
         email,
@@ -220,7 +206,7 @@ export function createAuthHandlers({
 
     setPasswordResetSending(true);
     try {
-      const email = await resolveEmailForLogin(db, validation);
+      const email = await resolveEmailForLogin(validation);
       await sendPasswordResetEmail(auth, email);
       setLoginNotice("Если аккаунт существует, ссылка для смены пароля отправлена на почту.");
     } catch (error) {

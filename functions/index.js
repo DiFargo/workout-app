@@ -14,6 +14,9 @@ const TELEGRAM_BOT_TOKEN = defineSecret("TELEGRAM_BOT_TOKEN");
 const ADMIN_BOOTSTRAP_SECRET = defineSecret("ADMIN_BOOTSTRAP_SECRET");
 const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
 const TELEGRAM_WEBHOOK_URL = "https://europe-west1-tren-85720.cloudfunctions.net/telegramWebhook";
+const FIREBASE_WEB_API_KEY = "AIzaSyBq50IlvE_e4H08hTzSkkV3FIsRMDuzowg";
+const WORKOUT_APP_URL = "https://tren-85720.web.app/";
+const INVITE_LOGIN_EMAIL_DOMAIN = "invite.tren-85720.app";
 const MAX_AI_IMAGE_DATA_LENGTH = 8 * 1024 * 1024;
 const MAX_AI_PROGRAM_TEXT_LENGTH = 35000;
 const MAX_AI_PROGRAM_FILE_DATA_LENGTH = 10 * 1024 * 1024;
@@ -124,6 +127,14 @@ async function enforceRateLimit(uid, action, { limit, windowMs }) {
   });
 }
 
+function getPublicRequestIdentity(req) {
+  const forwardedFor = String(req.headers?.["x-forwarded-for"] || "")
+    .split(",")[0]
+    .trim();
+  const address = forwardedFor || String(req.ip || req.socket?.remoteAddress || "unknown");
+  return `public:${crypto.createHash("sha256").update(address).digest("hex")}`;
+}
+
 function normalizeTelegramTarget({ chatId, telegramUserId, username }) {
   const directChatId = String(chatId || "").trim();
   const userId = String(telegramUserId || "").trim();
@@ -136,10 +147,53 @@ function normalizeAccountEmail(value) {
   return String(value || "").trim().toLowerCase();
 }
 
+function getInternalInviteEmail(login) {
+  return `${normalizeLoginAlias(login)}@${INVITE_LOGIN_EMAIL_DOMAIN}`;
+}
+
 function getDefaultLoginAliasForEmail(email) {
   const cleanEmail = normalizeAccountEmail(email);
   const [localPart] = cleanEmail.split("@");
   return /^[a-z0-9._-]{3,32}$/.test(localPart || "") ? localPart : "";
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"]/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;"
+  }[character]));
+}
+
+function renderInviteLinkNoticePage({ email, login, title, message, statusLabel }) {
+  const accountEmail = escapeHtml(login ? `Логин: ${login}` : email);
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Workout - доступ к приложению</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f4ff;color:#181827;font:16px Arial,sans-serif;padding:20px}.card{width:min(100%,430px);background:#fff;border:1px solid #e4e1f4;border-radius:28px;padding:30px;box-shadow:0 20px 50px #33236b20}.mark{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:#eee9ff;color:#633cff;font-size:27px;font-weight:800}.eyebrow{margin:22px 0 8px;color:#6846ec;font-size:12px;font-weight:800;letter-spacing:.08em}h1{margin:0;font-size:29px;line-height:1.1}p{color:#777386;line-height:1.45}.email{font-weight:700;color:#28243a}.status{margin-top:22px;padding:12px;border-radius:12px;background:#f3f1ff;color:#5536c7;font-size:14px}.login-link{display:block;width:100%;border-radius:15px;margin-top:20px;padding:16px;background:#643cf2;color:#fff;font-size:17px;font-weight:800;text-align:center;text-decoration:none}</style></head><body><main class="card"><div class="mark">W</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>${title}</h1><p>${message} <span class="email">${accountEmail}</span>.</p><div class="status">${statusLabel}</div><a class="login-link" href="${WORKOUT_APP_URL}">Перейти ко входу</a></main></body></html>`;
+}
+
+async function isPasswordResetActionActive(actionCode) {
+  try {
+    const response = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key=${FIREBASE_WEB_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ oobCode: actionCode })
+      }
+    );
+    return response.ok;
+  } catch (error) {
+    console.warn("Unable to verify invite action code:", error);
+    return null;
+  }
+}
+
+function renderInviteActivationPage({ actionCode, email, login }) {
+  const code = JSON.stringify(String(actionCode || ""));
+  const accountEmail = JSON.stringify(login ? `Логин: ${login}` : String(email || ""));
+  const appUrl = JSON.stringify("https://tren-85720.web.app/");
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Workout - создание пароля</title><style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f4ff;color:#181827;font:16px Arial,sans-serif;padding:20px}.card{width:min(100%,430px);background:#fff;border:1px solid #e4e1f4;border-radius:28px;padding:30px;box-shadow:0 20px 50px #33236b20}.mark{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:#eee9ff;color:#633cff;font-size:27px;font-weight:800}.eyebrow{margin:22px 0 8px;color:#6846ec;font-size:12px;font-weight:800;letter-spacing:.08em}h1{margin:0;font-size:29px;line-height:1.1}p{color:#777386;line-height:1.45}.email{font-weight:700;color:#28243a}label{display:block;margin-top:24px;font-size:14px;font-weight:700}input{width:100%;margin-top:8px;padding:15px 16px;border:1px solid #dedbea;border-radius:14px;font:17px Arial;outline:none}input:focus{border-color:#6846ec;box-shadow:0 0 0 4px #6846ec17}button,.login-link{width:100%;border:0;border-radius:15px;margin-top:20px;padding:16px;background:#643cf2;color:#fff;font-size:17px;font-weight:800;cursor:pointer;text-align:center;text-decoration:none}button:disabled{opacity:.6;cursor:wait}.login-link{display:none}.login-link.show{display:block}.hint{font-size:13px;margin-top:14px}.status{display:none;margin-top:16px;padding:12px;border-radius:12px;background:#f3f1ff;color:#5536c7;font-size:14px}.status.error{background:#fff0f0;color:#b13b46}.status.show{display:block}</style></head><body><main class="card"><div class="mark">W</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>Создай пароль</h1><p>Пароль будет привязан к аккаунту <span class="email" id="email"></span>. После сохранения можно войти в Workout.</p><form id="form"><label>Новый пароль<input id="password" type="password" minlength="6" required autocomplete="new-password" placeholder="Минимум 6 символов"></label><label>Повтори пароль<input id="repeat" type="password" minlength="6" required autocomplete="new-password" placeholder="Повтори пароль"></label><button id="submit" type="submit">Сохранить пароль</button></form><div id="status" class="status"></div><a id="login-link" class="login-link" href=${appUrl}>Перейти ко входу</a><p class="hint">Ссылка действует ограниченное время и может быть использована один раз.</p></main><script>const code=${code},email=${accountEmail},apiKey="AIzaSyBq50IlvE_e4H08hTzSkkV3FIsRMDuzowg";document.getElementById("email").textContent=email;const form=document.getElementById("form"),status=document.getElementById("status"),button=document.getElementById("submit"),loginLink=document.getElementById("login-link");function show(message,error=false){status.textContent=message;status.className="status show"+(error?" error":"")}form.addEventListener("submit",async e=>{e.preventDefault();const password=document.getElementById("password").value,repeat=document.getElementById("repeat").value;if(password!==repeat)return show("Пароли не совпадают.",true);button.disabled=true;button.textContent="Сохраняю...";try{const r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({oobCode:code,newPassword:password})});if(!r.ok)throw new Error();show("Пароль создан. Теперь можно войти в приложение.");form.hidden=true;loginLink.classList.add("show")}catch{show("Ссылка недействительна или срок её действия истёк. Попроси тренера создать новое приглашение.",true);button.disabled=false;button.textContent="Сохранить пароль"}});</script></body></html>`;
 }
 
 function normalizeLoginAlias(value) {
@@ -346,6 +400,47 @@ export const bootstrapFirstAdmin = onCall(
   }
 );
 
+export const resolveLoginAlias = onRequest(
+  {
+    cors: true,
+    memory: "256MiB",
+    region: "europe-west1",
+    timeoutSeconds: 15
+  },
+  async (req, res) => {
+    if (req.method !== "POST") {
+      return json(res, 405, { ok: false, error: "Method not allowed" });
+    }
+
+    try {
+      await enforceRateLimit(getPublicRequestIdentity(req), "resolve-login-alias", {
+        limit: 30,
+        windowMs: 10 * 60 * 1000
+      });
+
+      const login = normalizeLoginAlias(req.body?.login);
+      if (!isValidLoginAlias(login)) {
+        return json(res, 404, { ok: false, error: "auth/login-not-found" });
+      }
+
+      const snapshot = await admin.firestore().collection("loginAliases").doc(login).get();
+      const email = normalizeAccountEmail(snapshot.data()?.email);
+      if (!snapshot.exists || !email) {
+        return json(res, 404, { ok: false, error: "auth/login-not-found" });
+      }
+
+      return json(res, 200, { ok: true, email });
+    } catch (error) {
+      console.error("resolveLoginAlias error:", error);
+      const status = getHttpErrorStatus(error);
+      return json(res, status, {
+        ok: false,
+        error: status === 429 ? "auth/too-many-requests" : "auth/network-request-failed"
+      });
+    }
+  }
+);
+
 export const trainerCreateInvite = onRequest(
   { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30 },
   async (req, res) => {
@@ -357,9 +452,14 @@ export const trainerCreateInvite = onRequest(
         return json(res, 403, { error: "Trainer access required" });
       }
 
-      const email = normalizeAccountEmail(req.body?.email);
-      const name = String(req.body?.name || "").trim() || email.split("@")[0] || "Клиент";
-      if (!email || !email.includes("@")) return json(res, 400, { error: "Valid email is required" });
+      const login = normalizeLoginAlias(req.body?.login);
+      if (!isValidLoginAlias(login)) return json(res, 400, { error: "Invalid login" });
+
+      const email = getInternalInviteEmail(login);
+      const name = String(req.body?.name || "").trim() || login || "Клиент";
+      const db = admin.firestore();
+      const existingLogin = await db.collection("loginAliases").doc(login).get();
+      if (existingLogin.exists) return json(res, 409, { error: "auth/login-already-in-use" });
 
       try {
         await admin.auth().getUserByEmail(email);
@@ -377,33 +477,91 @@ export const trainerCreateInvite = onRequest(
       const appUrl = "https://tren-85720.web.app/";
       const inviteUrl = `${appUrl}?invite=${encodeURIComponent(email)}`;
       const activationUrl = await admin.auth().generatePasswordResetLink(email, { url: inviteUrl });
+      const activationToken = crypto.randomBytes(18).toString("base64url");
+      const shareUrl = `${appUrl}invite/${activationToken}`;
       const clientPayload = {
-        email, name, role: "client", createdAt: now, updatedAt: now,
+        email, emailIsInternal: true, loginLower: login, accountProfile: { login },
+        name, role: "client", createdAt: now, updatedAt: now,
         createdByUid: context.uid, createdByEmail: trainerEmail,
         trainerId: context.uid, assignedTrainerId: context.uid, coachId: context.uid,
         trainerEmail, assignedTrainerEmail: trainerEmail, coachEmail: trainerEmail,
         assignedProgramId: "", assignedProgramName: ""
       };
-      const batch = admin.firestore().batch();
-      const clientRef = admin.firestore().collection("users").doc(createdUser.uid);
+      const batch = db.batch();
+      const clientRef = db.collection("users").doc(createdUser.uid);
       batch.set(clientRef, clientPayload);
-      batch.set(admin.firestore().collection("users").doc(context.uid).collection("trainerClients").doc(createdUser.uid), {
+      batch.set(db.collection("users").doc(context.uid).collection("trainerClients").doc(createdUser.uid), {
         clientId: createdUser.uid, uid: createdUser.uid, email, name, role: "client",
+        loginLower: login,
         trainerId: context.uid, trainerEmail, assignedTrainerId: context.uid,
         assignedTrainerEmail: trainerEmail, createdAt: now, updatedAt: now
       });
-      batch.set(admin.firestore().collection("clientInvites").doc(email), {
-        email, name, status: "active", authUid: createdUser.uid, trainerId: context.uid,
+      batch.set(db.collection("clientInvites").doc(email), {
+        email, emailIsInternal: true, login, name, status: "active", authUid: createdUser.uid, trainerId: context.uid,
         trainerEmail, createdByUid: context.uid, createdByEmail: trainerEmail,
-        createdAt: now, updatedAt: now, inviteUrl
+        createdAt: now, updatedAt: now, inviteUrl, activationToken
       });
-      const login = getDefaultLoginAliasForEmail(email);
-      if (login) batch.set(admin.firestore().collection("loginAliases").doc(login), { email, uid: createdUser.uid, createdAt: now, updatedAt: now });
+      batch.set(db.collection("inviteLinks").doc(activationToken), {
+        activationUrl, email, login, inviteId: email, createdAt: now, expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString()
+      });
+      batch.set(db.collection("loginAliases").doc(login), { email, uid: createdUser.uid, createdAt: now, updatedAt: now });
       await batch.commit();
-      return json(res, 200, { client: { id: createdUser.uid, ...clientPayload }, inviteUrl, activationUrl });
+      return json(res, 200, { client: { id: createdUser.uid, ...clientPayload }, login, inviteUrl, activationUrl, shareUrl });
     } catch (error) {
       console.error("trainerCreateInvite error:", error);
       return json(res, getHttpErrorStatus(error), { error: error?.code || error?.message || "Unable to create invite" });
+    }
+  }
+);
+
+export const openClientInvite = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 15 },
+  async (req, res) => {
+    const requestPath = String(req.originalUrl || req.url || req.path || "").split("?")[0];
+    const token = requestPath.split("/").filter(Boolean).at(-1) || "";
+    if (!/^[A-Za-z0-9_-]{16,}$/.test(token)) return res.status(404).send("Invitation not found");
+
+    try {
+      const snapshot = await admin.firestore().collection("inviteLinks").doc(token).get();
+      const link = snapshot.exists ? snapshot.data() || {} : null;
+      if (!link?.activationUrl) {
+        return res.status(410).send("Invitation expired");
+      }
+      if (link.status === "used") {
+        return res.status(200).type("html").send(renderInviteLinkNoticePage({
+          email: link.email,
+          login: link.login,
+          title: "Пароль уже создан",
+          message: "Эта ссылка уже была использована для аккаунта",
+          statusLabel: "Войди в Workout по логину и паролю."
+        }));
+      }
+      if (link.expiresAt && Date.parse(link.expiresAt) < Date.now()) {
+        return res.status(410).type("html").send(renderInviteLinkNoticePage({
+          email: link.email,
+          login: link.login,
+          title: "Срок ссылки истёк",
+          message: "Для аккаунта",
+          statusLabel: "Попроси тренера создать новое приглашение."
+        }));
+      }
+      const actionCode = new URL(link.activationUrl).searchParams.get("oobCode");
+      if (!actionCode) return res.status(410).send("Invitation expired");
+      const isActionActive = await isPasswordResetActionActive(actionCode);
+      if (isActionActive === false) {
+        await snapshot.ref.set({ status: "used", usedAt: new Date().toISOString() }, { merge: true });
+        return res.status(200).type("html").send(renderInviteLinkNoticePage({
+          email: link.email,
+          login: link.login,
+          title: "Пароль уже создан",
+          message: "Эта ссылка уже была использована для аккаунта",
+          statusLabel: "Войди в Workout по логину и паролю."
+        }));
+      }
+      return res.status(200).type("html").send(renderInviteActivationPage({ actionCode, email: link.email, login: link.login }));
+    } catch (error) {
+      console.error("openClientInvite error:", error);
+      return res.status(500).send("Invitation temporarily unavailable");
     }
   }
 );
@@ -1753,7 +1911,7 @@ export const deleteUser = onRequest(
       const context = await getAuthenticatedContext(req);
       assertAdminContext(context);
       await enforceRateLimit(context.uid, "admin-delete-user", {
-        limit: 10,
+        limit: 50,
         windowMs: 10 * 60 * 1000
       });
 
@@ -1761,10 +1919,62 @@ export const deleteUser = onRequest(
       if (!uid) return json(res, 400, { ok: false, error: "uid is required" });
       if (uid === context.uid) return json(res, 400, { ok: false, error: "Admin cannot delete the active account" });
 
-      await admin.auth().deleteUser(uid);
-      await admin.firestore().recursiveDelete(admin.firestore().collection("users").doc(uid));
+      const db = admin.firestore();
+      const userRef = db.collection("users").doc(uid);
+      const userSnapshot = await userRef.get();
+      if (!userSnapshot.exists) return json(res, 404, { ok: false, error: "Client not found" });
 
-      return json(res, 200, { ok: true, uid });
+      const userData = userSnapshot.data() || {};
+      if (String(userData.role || "client") !== "client") {
+        return json(res, 409, { ok: false, error: "Only client accounts can be deleted here" });
+      }
+
+      let authUser = null;
+      try {
+        authUser = await admin.auth().getUser(uid);
+      } catch (error) {
+        if (error?.code !== "auth/user-not-found") throw error;
+      }
+
+      const cleanupRefs = new Map();
+      const addCleanupRef = (ref) => {
+        if (ref?.path && ref.path !== userRef.path) cleanupRefs.set(ref.path, ref);
+      };
+      const emails = new Set([
+        userData.email,
+        authUser?.email
+      ].map((value) => normalizeAccountEmail(value)).filter(Boolean));
+      const logins = new Set([
+        userData.loginLower,
+        userData.accountProfile?.login
+      ].map((value) => normalizeLoginAlias(value)).filter(Boolean));
+      const trainerIds = new Set([
+        userData.trainerId,
+        userData.assignedTrainerId,
+        userData.coachId,
+        userData.createdByUid
+      ].map((value) => String(value || "").trim()).filter(Boolean));
+
+      const [loginAliasesSnapshot, clientInvitesSnapshot, ...inviteLinkSnapshots] = await Promise.all([
+        db.collection("loginAliases").where("uid", "==", uid).get(),
+        db.collection("clientInvites").where("authUid", "==", uid).get(),
+        ...[...emails].map((email) => db.collection("inviteLinks").where("email", "==", email).get())
+      ]);
+
+      loginAliasesSnapshot.forEach((item) => addCleanupRef(item.ref));
+      clientInvitesSnapshot.forEach((item) => addCleanupRef(item.ref));
+      inviteLinkSnapshots.forEach((snapshot) => snapshot.forEach((item) => addCleanupRef(item.ref)));
+      logins.forEach((login) => addCleanupRef(db.collection("loginAliases").doc(login)));
+      emails.forEach((email) => addCleanupRef(db.collection("clientInvites").doc(email)));
+      trainerIds.forEach((trainerId) => addCleanupRef(
+        db.collection("users").doc(trainerId).collection("trainerClients").doc(uid)
+      ));
+
+      if (authUser) await admin.auth().deleteUser(uid);
+      await db.recursiveDelete(userRef);
+      await Promise.all([...cleanupRefs.values()].map((ref) => ref.delete()));
+
+      return json(res, 200, { ok: true, uid, cleanupCount: cleanupRefs.size });
     } catch (error) {
       console.error("deleteUser error:", error);
       return json(res, getHttpErrorStatus(error), { ok: false, error: error.message });

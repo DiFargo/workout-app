@@ -7,17 +7,17 @@ test("trainer create client state keeps entered values and callbacks", () => {
   const handlers = {
     onClose() {},
     onNameChange() {},
-    onEmailChange() {},
+    onLoginChange() {},
     onPasswordChange() {},
     onGeneratePassword() {},
     onSubmit() {}
   };
-  const credentials = { email: "client@example.com", password: "secret" };
+  const credentials = { login: "client.fit", password: "secret" };
 
   const state = buildTrainerCreateClientState({
     open: true,
     name: "Client",
-    email: "client@example.com",
+    login: "client.fit",
     password: "secret",
     loading: true,
     status: "created",
@@ -26,7 +26,7 @@ test("trainer create client state keeps entered values and callbacks", () => {
 
   assert.equal(state.open, true);
   assert.equal(state.name, "Client");
-  assert.equal(state.email, "client@example.com");
+  assert.equal(state.login, "client.fit");
   assert.equal(state.password, "secret");
   assert.equal(state.loading, true);
   assert.equal(state.status, "created");
@@ -39,7 +39,7 @@ test("trainer create client state has stable empty defaults", () => {
 
   assert.equal(state.open, false);
   assert.equal(state.name, "");
-  assert.equal(state.email, "");
+  assert.equal(state.login, "");
   assert.equal(state.password, "");
   assert.equal(state.loading, false);
   assert.equal(state.status, null);

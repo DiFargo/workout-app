@@ -8,8 +8,7 @@ export default function TrainerAdminCreateClientModal({
   credentialsText,
   setAdminCreateClientModalOpen,
   setAdminNewUserEmail,
-  setAdminNewUserName,
-  setAdminNewUserPassword
+  setAdminNewUserName
 }) {
   return (
     <div className="adminCreateClientModalOverlay">
@@ -23,7 +22,7 @@ export default function TrainerAdminCreateClientModal({
         </button>
 
         <h2>Пригласить клиента</h2>
-        <p>Клиент сам задаст пароль по ссылке активации и сможет войти по email, логину или Google.</p>
+        <p>Клиент сам задаст пароль по ссылке активации и войдёт по выбранному логину.</p>
 
         <form className="adminCreateUserForm" onSubmit={createUserFromAdminPanel}>
           <label>
@@ -36,12 +35,12 @@ export default function TrainerAdminCreateClientModal({
           </label>
 
           <label>
-            <span>Логин / email</span>
+            <span>Логин</span>
             <input
               value={adminNewUserEmail}
               onChange={(event) => setAdminNewUserEmail(event.target.value)}
-              placeholder="client@email.com"
-              type="email"
+              placeholder="например: ilya.fit"
+              type="text"
               autoComplete="off"
             />
           </label>
@@ -55,10 +54,14 @@ export default function TrainerAdminCreateClientModal({
 
         {adminCreatedCredentials && (
           <div className="adminCredentialsBox">
-            <span>Приглашение для клиента</span>
-            <pre>{credentialsText}</pre>
-            <button type="button" onClick={() => navigator.clipboard?.writeText(credentialsText)}>
-              Скопировать приглашение
+            <span>Ссылка активации</span>
+            <strong>Логин: {adminCreatedCredentials.login || adminCreatedCredentials.email}</strong>
+            <code>{adminCreatedCredentials.shareUrl || adminCreatedCredentials.inviteUrl}</code>
+            <button
+              type="button"
+              onClick={() => navigator.clipboard?.writeText(adminCreatedCredentials.shareUrl || adminCreatedCredentials.activationUrl || credentialsText)}
+            >
+              Скопировать ссылку
             </button>
           </div>
         )}

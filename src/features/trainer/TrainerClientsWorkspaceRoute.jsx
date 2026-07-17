@@ -18,6 +18,7 @@ export default function TrainerClientsWorkspaceRoute({
   adminTrainerNote,
   adminUsersSelectedTab,
   assignSavedProgramToClient,
+  canUseAdminFeatures,
   clientNutritionDays,
   createAdminClientTask,
   getAdminClientGoalLabel,
@@ -47,7 +48,6 @@ export default function TrainerClientsWorkspaceRoute({
   sendTrainerClientMessage,
   setAdminClientPageOpen,
   setAdminClientStatus,
-  setAdminCreateClientModalOpen,
   setAdminNewTaskDueDate,
   setAdminNewTaskTitle,
   setAdminSelectedTemplateId,
@@ -105,7 +105,7 @@ export default function TrainerClientsWorkspaceRoute({
       onClientTabChange={setAdminUsersSelectedTab}
       onOpenClient={openTrainerNextClient}
       onCloseClient={() => setAdminClientPageOpen(false)}
-      onCreateClient={() => setAdminCreateClientModalOpen(true)}
+      onCreateClient={getTrainerNextCreateClientState().onOpen}
       createClientState={getTrainerNextCreateClientState()}
       measurements={adminClientMeasurements}
       history={adminClientHistory}
@@ -124,6 +124,7 @@ export default function TrainerClientsWorkspaceRoute({
       telegramMessages={adminClientTelegramMessages}
       onCreateTask={() => setAdminTaskComposerOpen(true)}
       onClientAction={handleTrainerClientAction}
+      canDeleteClients={canUseAdminFeatures()}
       workouts={sortWorkoutDays(plan.workouts || [])}
       exerciseLibrary={trainerExerciseLibraryItems}
       programTemplates={adminTrainingTemplates}

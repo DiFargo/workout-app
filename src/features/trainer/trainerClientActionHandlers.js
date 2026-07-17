@@ -1,11 +1,11 @@
 import { collection, doc, getDocs, setDoc, writeBatch } from "firebase/firestore";
 
-import { createClientResourceId } from "../../domain/clientInsights";
+import { createClientResourceId } from "../../domain/clientInsights.js";
 import {
   buildTrainerClientExportRows,
   trainerExportRowsToCsv,
   trainerExportRowsToHtmlRows
-} from "../../utils/trainerClientExport";
+} from "../../utils/trainerClientExport.js";
 
 export async function deleteClientFromTrainerPanelWithDeps({
   db,
@@ -23,6 +23,7 @@ export async function deleteClientFromTrainerPanelWithDeps({
   setAdminClientNutrition,
   setAdminClientPageOpen,
   setAdminClientStatus,
+  setTrainerNextSection,
   client,
   options = {}
 }) {
@@ -44,33 +45,42 @@ export async function deleteClientFromTrainerPanelWithDeps({
   }
 
   try {
-    const batch = writeBatch(db);
     const removeTrainerLinkOnly = !canUseAdminFeatures() && client.trainerLinkOnly;
 
-    if (!removeTrainerLinkOnly) {
-      batch.delete(doc(db, "users", client.id));
-    }
+    if (!options.remoteDeleted) {
+      const batch = writeBatch(db);
 
-    if (!canUseAdminFeatures()) {
-      const trainerUid = auth.currentUser?.uid || user?.uid || "";
-      if (trainerUid) {
-        batch.delete(
-          doc(db, "users", trainerUid, "trainerClients", client.trainerLinkDocId || client.id)
-        );
+      if (!removeTrainerLinkOnly) {
+        batch.delete(doc(db, "users", client.id));
       }
+
+      if (!canUseAdminFeatures()) {
+        const trainerUid = auth.currentUser?.uid || user?.uid || "";
+        if (trainerUid) {
+          batch.delete(
+            doc(db, "users", trainerUid, "trainerClients", client.trainerLinkDocId || client.id)
+          );
+        }
+      }
+
+      await batch.commit();
     }
 
-    await batch.commit();
-
-    if (selectedUserId === client.id) {
+    if (selectedUserId === client.id || options.remoteDeleted) {
       setSelectedUserId(null);
       setAdminSelectedClient(null);
       setAdminClientHistory([]);
       setAdminClientNutrition(null);
       setAdminClientPageOpen(false);
+      setTrainerNextSection?.("clients");
     }
 
-    await loadUsers();
+    try {
+      await loadUsers();
+    } catch (error) {
+      if (!options.remoteDeleted) throw error;
+      console.warn("Клиент удалён, но список не удалось обновить автоматически:", error);
+    }
     setAdminClientStatus(
       removeTrainerLinkOnly
         ? "Устаревшая карточка клиента удалена из списка тренера."

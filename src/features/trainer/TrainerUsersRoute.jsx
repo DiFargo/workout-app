@@ -64,9 +64,9 @@ export default function TrainerUsersRoute(ctx) {
   const credentialsText = adminCreatedCredentials
     ? [
         "Доступ по приглашению",
-        `Логин: ${adminCreatedCredentials.email}`,
-        adminCreatedCredentials.activationUrl
-          ? `Активировать и задать пароль: ${adminCreatedCredentials.activationUrl}`
+        `Логин: ${adminCreatedCredentials.login || adminCreatedCredentials.email}`,
+        adminCreatedCredentials.shareUrl
+          ? `Активировать и задать пароль: ${adminCreatedCredentials.shareUrl}`
           : adminCreatedCredentials.inviteUrl ? `Ссылка: ${adminCreatedCredentials.inviteUrl}` : ""
       ].filter(Boolean).join("\n")
     : "";

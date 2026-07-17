@@ -67,6 +67,13 @@
         }
       },
       {
+        "source": "/api/auth/resolve-login",
+        "function": {
+          "functionId": "resolveLoginAlias",
+          "region": "europe-west1"
+        }
+      },
+      {
         "source": "/api/profile/update-email",
         "function": {
           "functionId": "profileUpdateEmail",
@@ -133,6 +140,13 @@
         "source": "/api/trainer/create-invite",
         "function": {
           "functionId": "trainerCreateInvite",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/invite/**",
+        "function": {
+          "functionId": "openClientInvite",
           "region": "europe-west1"
         }
       },

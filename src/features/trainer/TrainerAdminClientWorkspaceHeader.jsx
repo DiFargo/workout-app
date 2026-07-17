@@ -40,13 +40,15 @@ export default function TrainerAdminClientWorkspaceHeader({
         >
           ← К списку клиентов
         </button>
-        <button
-          type="button"
-          className="adminClientDesktopDelete"
-          onClick={() => deleteClientEverywhereFromAdminPanel(selectedClient)}
-        >
-          Удалить клиента
-        </button>
+        {canUseAdminFeatures() && !["admin", "trainer"].includes(selectedClient.role || "client") && (
+          <button
+            type="button"
+            className="adminClientDesktopDelete"
+            onClick={() => deleteClientEverywhereFromAdminPanel(selectedClient)}
+          >
+            Удалить клиента
+          </button>
+        )}
       </div>
 
       <div className="adminClientWorkspaceHeader adminClientWorkspaceHeaderRender trainerClientHero">

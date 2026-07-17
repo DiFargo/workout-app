@@ -16,7 +16,6 @@ export default function TrainerAdminWorkoutsNextRoute({
   saveTrainerClientWorkoutSchedule,
   saveWorkoutsToFirebase,
   selectedUser,
-  setAdminCreateClientModalOpen,
   setAdminSelectedTemplateId,
   sortWorkoutDays,
   telegramProfile,
@@ -61,7 +60,7 @@ export default function TrainerAdminWorkoutsNextRoute({
       onDuplicateDay={trainerNextWorkspaceHandlers.onDuplicateDay}
       onRemoveDay={trainerNextWorkspaceHandlers.onRemoveDay}
       onSaveWorkouts={saveWorkoutsToFirebase}
-      onCreateClient={() => setAdminCreateClientModalOpen(true)}
+      onCreateClient={getTrainerNextCreateClientState().onOpen}
       createClientState={getTrainerNextCreateClientState()}
       onNavigate={navigateTrainerNext}
       mode="workouts"

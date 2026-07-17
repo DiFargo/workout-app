@@ -147,7 +147,7 @@ function TrainerE2EHarness() {
       createClientState={{
         open: false,
         name: "",
-        email: "",
+        login: "",
         password: "",
         status: "",
         credentials: null,
@@ -155,7 +155,7 @@ function TrainerE2EHarness() {
         onClose: () => {},
         onSubmit: () => {},
         onNameChange: () => {},
-        onEmailChange: () => {},
+        onLoginChange: () => {},
         onPasswordChange: () => {},
         onGeneratePassword: () => {}
       }}

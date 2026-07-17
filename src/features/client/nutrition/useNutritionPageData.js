@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { nutritionMeals as defaultNutritionMeals } from "../../../data/nutritionDefaults";
 import { buildNutritionPageModel } from "./nutritionPageModel";
 
 /**
@@ -16,7 +17,7 @@ export function useNutritionPageData({
   nutritionDateKey,
   isNutritionToday,
   nutritionToday,
-  nutritionMeals,
+  nutritionMeals = defaultNutritionMeals,
   expandedNutritionMeals,
   nutritionWeekDates,
   nutritionCurrentStreak

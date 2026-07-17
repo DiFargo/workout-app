@@ -124,8 +124,8 @@ export default function TrainerClientOverviewModals({
                       <>
                         <strong>{formatTrainerSummaryDate(photo.date || photo.createdAt)}</strong>
                         <div>
-                          {[photo.frontUrl, photo.sideUrl, photo.backUrl].filter(Boolean).map((url) => (
-                            <img key={url} src={url} alt="" loading="lazy" />
+                          {[photo.frontUrl, photo.sideUrl, photo.backUrl].filter(Boolean).map((url, index) => (
+                            <img key={`${index}_${url}`} src={url} alt="" loading="lazy" />
                           ))}
                         </div>
                         {photo.comment && <small>{photo.comment}</small>}

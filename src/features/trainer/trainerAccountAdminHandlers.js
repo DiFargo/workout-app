@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 
 async function copyAdminSubcollection(db, sourceUid, targetUid, collectionName) {
   const snapshot = await getDocs(collection(db, "users", sourceUid, collectionName));
@@ -19,29 +19,23 @@ async function copyAdminSubcollection(db, sourceUid, targetUid, collectionName) 
 }
 
 export async function deleteClientEverywhereFromAdminPanelWithDeps({
-  db,
   canUseAdminFeatures,
-  canManageClientProgram,
   showAppConfirm,
   fetchAuthorized,
   deleteClientFromAdminPanel,
-  loadUsers,
   setAdminClientStatus,
   client
 }) {
   if (!client?.id) return;
 
   if (!canUseAdminFeatures()) {
-    if (!canManageClientProgram(client)) {
-      setAdminClientStatus("Можно удалить только своего клиента.");
-      return;
-    }
+    setAdminClientStatus("Полное удаление клиента доступно только администратору.");
+    return false;
+  }
 
-    const confirmed = await showAppConfirm(`Удалить клиента ${client.email || client.name || client.id} из базы приложения? Аккаунт Firebase Auth останется активным.`);
-    if (!confirmed) return;
-
-    await deleteClientFromAdminPanel(client, { skipConfirm: true });
-    return;
+  if (["admin", "trainer"].includes(client.role || "client")) {
+    setAdminClientStatus("На этом экране можно удалять только аккаунты клиентов.");
+    return false;
   }
 
   const confirmed = await showAppConfirm(`Полностью удалить клиента ${client.email || client.name || client.id}? Будет попытка удалить Auth через Cloud Function и профиль из Firestore.`);
@@ -54,17 +48,24 @@ export async function deleteClientEverywhereFromAdminPanelWithDeps({
       body: JSON.stringify({ uid: client.id })
     });
 
-    if (!response.ok) {
-      throw new Error("Cloud Function deleteUser недоступна");
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || payload.ok !== true) {
+      const responseError = new Error(payload.error || "Cloud Function deleteUser недоступна");
+      responseError.status = response.status;
+      throw responseError;
     }
 
-    await deleteDoc(doc(db, "users", client.id));
+    await deleteClientFromAdminPanel(client, { skipConfirm: true, remoteDeleted: true });
     setAdminClientStatus("Клиент удалён из Firebase Auth и Firestore.");
-    await loadUsers();
+    return true;
   } catch (error) {
     console.error("Полное удаление Auth недоступно:", error);
-    await deleteClientFromAdminPanel(client);
-    setAdminClientStatus("Auth-удаление требует Cloud Function. Профиль Firestore удалён, Auth мог остаться.");
+    setAdminClientStatus(
+      error?.status === 429 || /Too many requests/i.test(error?.message || "")
+        ? "Слишком много удалений подряд. Подождите минуту и повторите попытку."
+        : "Не получилось завершить удаление. Обновите список клиентов и повторите попытку."
+    );
+    return false;
   }
 }
 

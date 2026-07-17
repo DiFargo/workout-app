@@ -62,23 +62,17 @@ export function createTrainerBridgeHandlers(getContext) {
 
   async function deleteClientEverywhereFromAdminPanel(client) {
     const {
-      canManageClientProgram,
       canUseAdminFeatures,
-      db,
       deleteClientFromAdminPanel,
-      loadUsers,
       setAdminClientStatus,
       showAppConfirm
     } = getContext();
 
     return deleteClientEverywhereFromAdminPanelWithDeps({
-      db,
       canUseAdminFeatures,
-      canManageClientProgram,
       showAppConfirm,
       fetchAuthorized,
       deleteClientFromAdminPanel,
-      loadUsers,
       setAdminClientStatus,
       client
     });
@@ -201,6 +195,7 @@ export function createTrainerBridgeHandlers(getContext) {
       setAdminClientStatus,
       setAdminSelectedClient,
       setSelectedUserId,
+      setTrainerNextSection,
       showAppConfirm,
       user
     } = getContext();
@@ -221,6 +216,7 @@ export function createTrainerBridgeHandlers(getContext) {
       setAdminClientNutrition,
       setAdminClientPageOpen,
       setAdminClientStatus,
+      setTrainerNextSection,
       client,
       options
     });
@@ -247,6 +243,10 @@ export function createTrainerBridgeHandlers(getContext) {
   }
 
   async function handleTrainerClientAction(action, client) {
+    if (action === "delete") {
+      return deleteClientEverywhereFromAdminPanel(client || getContext().adminSelectedClient);
+    }
+
     const {
       adminClientHistory,
       adminClientMeasurements,
@@ -316,6 +316,8 @@ export function createTrainerBridgeHandlers(getContext) {
       createUserFromAdminPanel,
       generateAdminPassword,
       setAdminCreateClientModalOpen,
+      setAdminCreateUserStatus,
+      setAdminCreatedCredentials,
       setAdminNewUserEmail,
       setAdminNewUserName,
       setAdminNewUserPassword
@@ -332,6 +334,8 @@ export function createTrainerBridgeHandlers(getContext) {
       createUserFromAdminPanel,
       generateAdminPassword,
       setAdminCreateClientModalOpen,
+      setAdminCreateUserStatus,
+      setAdminCreatedCredentials,
       setAdminNewUserEmail,
       setAdminNewUserName,
       setAdminNewUserPassword
