@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const CSS_ROOTS = [path.resolve("src", "styles"), path.resolve("src", "components")];
+const CSS_ROOT = path.resolve("src");
 
 function collectCssFiles(dir, files = []) {
   if (!fs.existsSync(dir)) return files;
@@ -22,7 +22,7 @@ function formatKiB(bytes) {
   return `${(bytes / 1024).toFixed(2)} KiB`;
 }
 
-const files = CSS_ROOTS.flatMap((root) => collectCssFiles(root));
+const files = collectCssFiles(CSS_ROOT);
 const rows = files
   .map((file) => ({
     file: path.relative(process.cwd(), file),

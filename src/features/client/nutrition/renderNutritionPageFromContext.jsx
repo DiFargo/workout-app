@@ -162,7 +162,7 @@ const {
     aiNutritionCurrentWeek,
     isNutritionTrainingDayToday,
     aiNutritionTodayPlanMacros,
-    aiNutritionScoreStyle,
+    nutritionScoreSegments,
     nutritionSummaryCollapsedText,
     nutritionOrbitItems
   } = buildNutritionPageModel({
@@ -275,7 +275,7 @@ const {
         caloriesLeft,
         caloriesConsumed,
         effectiveGoals: effectiveNutritionGoals,
-        scoreStyle: aiNutritionScoreStyle,
+        scoreSegments: nutritionScoreSegments,
         nutritionDay: aiNutritionDay,
         proteinPercent,
         fatPercent,

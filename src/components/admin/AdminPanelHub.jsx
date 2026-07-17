@@ -1,4 +1,5 @@
-import "../../styles/admin-lazy.css";
+import "./AdminPanelHub.module.css";
+import trainerWorkspaceStyles from "../trainer/TrainerWorkspace.module.css";
 
 export default function AdminPanelHub({
   canUseAdminFeatures,
@@ -7,7 +8,7 @@ export default function AdminPanelHub({
 }) {
   if (!canUseAdminFeatures()) {
     return (
-      <div className="app">
+      <div className={`app ${trainerWorkspaceStyles.workspaceRoot}`}>
         <button className="backBtn" type="button" onClick={() => setPage("main")}>
           ← Главное меню
         </button>
@@ -20,7 +21,7 @@ export default function AdminPanelHub({
   }
 
   return (
-    <div className="adminPanelHubPage">
+    <div className={`adminPanelHubPage ${trainerWorkspaceStyles.workspaceRoot}`}>
       <button
         className="adminFixedMainBack"
         type="button"

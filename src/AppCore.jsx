@@ -1,4 +1,11 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import "./styles/_variables.css";
+import "./AppCoreFoundation.module.css";
+import "./AppCoreTheme.module.css";
+import "./AppCoreSurface.module.css";
+import "./AppCoreLayout.module.css";
+import "./AppCoreClientFlow.module.css";
+import "./AppCoreClientVisual.module.css";
 /* eslint-disable react-hooks/refs -- Event factories capture refs for later handlers; they do not read refs during render. */
 import {
   defaultNutritionState
@@ -226,11 +233,9 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import * as appConfig from "./constants/appConfig";
 import { APP_PAGES } from "./app/appPages";
 import { renderAppRoutePage } from "./app/appRouteRenderer";
-import { preloadTrainerRouteChunks } from "./app/appTerminalRouteLoaders";
 import {
   preloadClientSecondaryRoutes,
-  preloadClientTrainingRoutes,
-  scheduleClientBackgroundRoutePreloads
+  preloadClientTrainingRoutes
 } from "./app/clientRoutePreload";
 import {
   AppTerminalRouteRenderer as renderAppTerminalRoute
@@ -252,17 +257,8 @@ import { useBodyScrollLock } from "./shared/hooks/useBodyScrollLock";
 import { useAppRuntimeEffects } from "./app/useAppRuntimeEffects";
 import { useAuthBootstrapEffect } from "./app/useAuthBootstrapEffect";
 
-const loadWorkoutStyles = () => import("./styles/client-workout-lazy.css");
-const loadNutritionStyles = () => import("./styles/nutrition-stack.css");
-const loadClientE2EHarness = () => Promise.all([
-  loadWorkoutStyles(),
-  loadNutritionStyles(),
-  import("./components/client/ClientE2EHarness")
-]).then(([, , module]) => module);
-const loadNutritionRoute = () => Promise.all([
-  loadNutritionStyles(),
-  import("./features/client/nutrition/NutritionRoute")
-]).then(([, module]) => module);
+const loadClientE2EHarness = () => import("./components/client/ClientE2EHarness");
+const loadNutritionRoute = () => import("./features/client/nutrition/NutritionRoute");
 const loadTrainerE2EHarness = () => import("./components/trainer/TrainerE2EHarness");
 const loadAdminE2EHarness = () => import("./components/admin/AdminE2EHarness");
 
@@ -1116,17 +1112,6 @@ function AppRuntime() {
     setSelectedUserId,
     setShowFirstSetupOnboarding
   });
-
-  useEffect(() => {
-    if (!isLoggedIn || appLoading) return undefined;
-
-    return scheduleClientBackgroundRoutePreloads({
-      isClient: currentUserRole === "client",
-      isTrainerLike: isAdminClaim || currentUserRole === "admin" || currentUserRole === "trainer",
-      loadNutritionRoute,
-      preloadTrainerRouteChunks
-    });
-  }, [appLoading, currentUserRole, isAdminClaim, isLoggedIn]);
 
   const hasTransientScreen =
     Boolean(selectedWorkoutId) ||

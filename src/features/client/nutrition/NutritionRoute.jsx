@@ -1,5 +1,11 @@
 import { renderNutritionRoute } from "./renderNutritionRoute";
+import { useNutritionPageData } from "./useNutritionPageData";
 
 export default function NutritionRoute(props) {
-  return renderNutritionRoute(props);
+  const nutritionPageData = useNutritionPageData(props);
+
+  return renderNutritionRoute({
+    ...props,
+    buildNutritionPageModel: () => nutritionPageData
+  });
 }

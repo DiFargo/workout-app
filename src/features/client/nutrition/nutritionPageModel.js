@@ -96,11 +96,14 @@ export function buildNutritionPageModel({
   const macroCaloriesFat = Math.max(0, Number(nutritionTotals.fat) || 0) * 9;
   const macroCaloriesCarbs = Math.max(0, Number(nutritionTotals.carbs) || 0) * 4;
   const macroCaloriesTotal = Math.max(1, macroCaloriesProtein + macroCaloriesFat + macroCaloriesCarbs);
-  const proteinCircleEnd = Math.round((macroCaloriesProtein / macroCaloriesTotal) * 100);
-  const fatCircleEnd = Math.round(((macroCaloriesProtein + macroCaloriesFat) / macroCaloriesTotal) * 100);
-  const aiNutritionScoreStyle = {
-    background: `conic-gradient(#ff7d7d 0% ${proteinCircleEnd}%, #ffd15a ${proteinCircleEnd}% ${fatCircleEnd}%, #70cde3 ${fatCircleEnd}% 100%)`
-  };
+  const proteinScoreSegment = Math.round((macroCaloriesProtein / macroCaloriesTotal) * 100);
+  const fatScoreSegment = Math.round((macroCaloriesFat / macroCaloriesTotal) * 100);
+  const carbsScoreSegment = Math.max(0, 100 - proteinScoreSegment - fatScoreSegment);
+  const nutritionScoreSegments = [
+    { id: "protein", offset: 0, value: proteinScoreSegment },
+    { id: "fat", offset: proteinScoreSegment, value: fatScoreSegment },
+    { id: "carbs", offset: proteinScoreSegment + fatScoreSegment, value: carbsScoreSegment }
+  ];
   const nutritionSummaryCollapsedText = buildNutritionSummaryCollapsedText({
     isCaloriesOverGoal,
     proteinPercent,
@@ -140,7 +143,7 @@ export function buildNutritionPageModel({
     aiNutritionCurrentWeek,
     isNutritionTrainingDayToday,
     aiNutritionTodayPlanMacros,
-    aiNutritionScoreStyle,
+    nutritionScoreSegments,
     nutritionSummaryCollapsedText,
     nutritionOrbitItems
   };

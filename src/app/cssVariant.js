@@ -11,5 +11,5 @@ export function loadCssVariant() {
   document.documentElement.dataset.cssVariant = variant;
   document.body.dataset.cssVariant = variant;
 
-  return isCssV2 ? import("../css-v2/index.css") : Promise.resolve();
+  return isCssV2 ? import("./CssVariantPreview.module.css") : Promise.resolve();
 }

@@ -1,0 +1,57 @@
+@layer components {
+  .root {
+    width: 124px;
+    height: 124px;
+    overflow: visible;
+    filter: drop-shadow(0 16px 17px rgb(0 0 0 / 20%));
+  }
+
+  .track,
+  .segment {
+    fill: none;
+    stroke-width: 4.4;
+  }
+
+  .track {
+    stroke: var(--color-nutrition-score-track);
+  }
+
+  .segment {
+    transform: rotate(-90deg);
+    transform-origin: center;
+    stroke-linecap: butt;
+  }
+
+  .protein {
+    stroke: var(--color-nutrition-macro-protein);
+  }
+
+  .fat {
+    stroke: var(--color-nutrition-macro-fat);
+  }
+
+  .carbs {
+    stroke: var(--color-nutrition-macro-carbs);
+  }
+
+  .center {
+    fill: var(--color-nutrition-score-center);
+    stroke: var(--color-nutrition-score-center-border);
+    stroke-width: 0.35;
+  }
+
+  .value {
+    fill: var(--color-nutrition-score-text);
+    font-family: var(--font-family-compact-ui);
+    font-size: 9px;
+    font-weight: 950;
+    letter-spacing: -0.4px;
+  }
+
+  @media (max-width: 390px) {
+    .root {
+      width: 118px;
+      height: 118px;
+    }
+  }
+}

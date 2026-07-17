@@ -1,7 +1,0 @@
-html body #root .nutritionZoukModalOverlay {
-  z-index: 16000 !important;
-}
-
-html body #root .nutritionZoukModalSheet {
-  z-index: 16001 !important;
-}

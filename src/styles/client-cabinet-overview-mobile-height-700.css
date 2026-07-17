@@ -1,7 +1,0 @@
-@media (max-height: 700px) {
-
-  .profileTabbedPage.clientCorePageCabinet[data-profile-tab="cabinet"] .profileCabinetSection {
-    height: calc(100% - 48px) !important;
-  }
-}
-

@@ -1,6 +1,10 @@
 import { lazy, Suspense } from "react";
 import ProfileDashboardRoute from "../features/client/profile/ProfileDashboardRoute";
-import "../styles/client-profile-lazy.css";
+import "./AppTerminalProfileInfo.module.css";
+import "./AppTerminalProfileWellness.module.css";
+import "./AppTerminalCabinetBase.module.css";
+import "./AppTerminalCabinetTrainer.module.css";
+import "../features/client/measurements/ClientMeasurements.module.css";
 import {
   loadTrainerAdminWorkoutsRoute,
   loadTrainerDashboardRoute,
@@ -66,10 +70,6 @@ export default function AppTerminalRoute({ ctx }) {
   }
 
   return renderLazyTerminalRoute(
-    <WorkoutRunRoute
-      {...ctx}
-      setProfileDraft={ctx.setAiNutritionProfileDraft}
-      onFirstSetupSubmit={ctx.handleFirstSetupSubmit}
-    />
+    <WorkoutRunRoute runtime={ctx} />
   );
 }

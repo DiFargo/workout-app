@@ -1,7 +1,0 @@
-/* Split from client-nutrition-grid-final-dashboard-alignment.css: dashboard hero and stat alignment. */
-@media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection {
-    gap: 14px !important;
-    padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important;
-  }
-}

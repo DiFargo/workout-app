@@ -1,0 +1,566 @@
+:global {
+/* === V98 PROFILE BAR LIKE TRAINERSKAYA === */
+/* ÐÐ¸Ð¶Ð½Ð¸Ð¹ Ð±Ð°Ñ€ Ð»Ð¸Ñ‡Ð½Ð¾Ð³Ð¾ ÐºÐ°Ð±Ð¸Ð½ÐµÑ‚Ð°: Ñ€Ð°Ð·Ð¼ÐµÑ€/Ð¿Ð»Ð¾Ñ‚Ð½Ð¾ÑÑ‚ÑŒ ÐºÐ°Ðº Ð² Ð¢Ñ€ÐµÐ½ÐµÑ€ÑÐºÐ¾Ð¹, Ð½ÐµÐ¿Ñ€Ð¾Ð·Ñ€Ð°Ñ‡Ð½Ñ‹Ð¹ Ñ„Ð¾Ð½ */
+
+/* === V100 PROFILE BAR EXACT TRAINER HEIGHT === */
+/* Ð ÐµÐ°Ð»ÑŒÐ½Ñ‹Ðµ Ñ€Ð°Ð·Ð¼ÐµÑ€Ñ‹ Ð±Ð°Ñ€Ð° Ð¢Ñ€ÐµÐ½ÐµÑ€ÑÐºÐ¾Ð¹: bar 98px, buttons 78px */
+
+.profileTabbedPage {
+  padding-bottom: calc(126px + env(safe-area-inset-bottom)) !important;
+}
+
+.profileBottomTabBar {
+  box-sizing: border-box !important;
+  position: fixed !important;
+  left: 12px !important;
+  right: 12px !important;
+  bottom: max(26px, calc(env(safe-area-inset-bottom) + 18px)) !important;
+  transform: none !important;
+  z-index: 9500 !important;
+
+  width: calc(100vw - 24px) !important;
+  max-width: 560px !important;
+  height: 98px !important;
+  min-height: 98px !important;
+  max-height: 98px !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 9px 10px 11px !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  justify-items: stretch !important;
+  justify-content: stretch !important;
+  gap: 9px !important;
+
+  border-radius: 30px !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  background: linear-gradient(180deg, #121712 0%, #0d110d 100%) !important;
+  background-color: #10140f !important;
+  opacity: 1 !important;
+
+  box-shadow:
+    0 -18px 44px rgba(0, 0, 0, 0.66),
+    0 0 0 1px rgba(255, 255, 255, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden !important;
+}
+
+.profileBottomTabBar button {
+  box-sizing: border-box !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  height: 78px !important;
+  min-height: 78px !important;
+  max-height: 78px !important;
+
+  margin: 0 !important;
+  padding: 8px 6px 10px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+
+  border-radius: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.075) !important;
+  background: linear-gradient(180deg, #191d19 0%, #111511 100%) !important;
+  background-color: #171a17 !important;
+  color: rgba(255, 255, 255, 0.64) !important;
+
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035) !important;
+  transform: none !important;
+  line-height: var(--client-bottom-nav-button-line-height, 1) !important;
+  overflow: hidden !important;
+}
+
+.profileBottomTabBar button span {
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 27px !important;
+  line-height: 32px !important;
+  transform: translateY(-3px) !important;
+  filter: none !important;
+}
+
+.profileBottomTabBar button strong {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  max-height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: block !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 16px !important;
+  text-align: center !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  transform: translateY(-2px) !important;
+}
+
+.profileBottomTabBar button.active {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.32), transparent 62%),
+    linear-gradient(180deg, #253018 0%, #1b2416 100%) !important;
+  background-color: #202719 !important;
+  border-color: rgba(127, 159, 58, 0.44) !important;
+  color: #f4f6f2 !important;
+  box-shadow:
+    0 0 0 1px rgba(127, 159, 58, 0.13),
+    inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+
+@media (max-width: 390px) {
+  .profileBottomTabBar {
+    left: 10px !important;
+    right: 10px !important;
+    width: calc(100vw - 20px) !important;
+    height: 98px !important;
+    min-height: 98px !important;
+    max-height: 98px !important;
+    padding: 9px 9px 11px !important;
+    gap: 8px !important;
+    border-radius: 30px !important;
+  }
+
+  .profileBottomTabBar button {
+    height: 78px !important;
+    min-height: 78px !important;
+    max-height: 78px !important;
+    padding: 8px 5px 10px !important;
+    border-radius: 24px !important;
+  }
+
+  .profileBottomTabBar button span {
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+    font-size: 27px !important;
+    line-height: 32px !important;
+  }
+
+  .profileBottomTabBar button strong {
+    height: 16px !important;
+    min-height: 16px !important;
+    max-height: 16px !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+  }
+}
+
+
+/* Profile measurements tab viewport shell. Component internals live in colocated CSS Modules. */
+.profileTabbedPage[data-profile-tab="measurements"] {
+  min-height: 100dvh !important;
+  overflow: hidden !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection {
+  width: min(460px, calc(100vw - 28px)) !important;
+  height: min(710px, calc(100dvh - 154px)) !important;
+  margin: 0 auto !important;
+  padding: 12px !important;
+  border-radius: 30px !important;
+}
+
+@media (max-width: 390px) {
+  .profileTabbedPage[data-profile-tab="measurements"] {
+    padding-top: 22px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection {
+    width: calc(100vw - 20px) !important;
+    padding: 10px !important;
+    border-radius: 26px !important;
+  }
+}
+
+/* PROFILE TABS: UNIFIED WORKOUT VISUAL SYSTEM V257 */
+.profileTabbedPage:not(.mainDashboardPage) {
+  --profile-workout-width: min(560px, calc(100vw - 28px));
+  min-height: 100dvh !important;
+  padding-top: 22px !important;
+  overflow-x: hidden !important;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(127, 159, 58, 0.13), transparent 34%),
+    linear-gradient(180deg, #081008 0%, #040704 100%) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileCabinetSection {
+  box-sizing: border-box !important;
+  width: var(--profile-workout-width) !important;
+  max-width: 560px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  border-color: rgba(127, 159, 58, 0.22) !important;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(127, 159, 58, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+  box-shadow:
+    0 22px 58px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileCabinetSection {
+  border-radius: 30px !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+  min-height: min(690px, calc(100dvh - 154px)) !important;
+  margin-top: 0 !important;
+  padding: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection::-webkit-scrollbar {
+  display: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHistoryButton {
+  min-height: 54px !important;
+  margin-top: auto !important;
+  border: 1px solid rgba(127, 159, 58, 0.24) !important;
+  border-radius: 18px !important;
+  background: rgba(127, 159, 58, 0.11) !important;
+  box-shadow: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection {
+  border-color: rgba(127, 159, 58, 0.22) !important;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(127, 159, 58, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(22, 29, 21, 0.98), rgba(6, 10, 7, 0.98)) !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] {
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"]::-webkit-scrollbar {
+  display: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileCabinetSection {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 16px 12px 10px !important;
+  border-radius: 30px 30px 0 0 !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button:focus {
+  outline: none !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button:focus-visible {
+  outline: 2px solid rgba(181, 230, 85, 0.58) !important;
+  outline-offset: -3px !important;
+}
+
+@media (max-width: 390px) {
+  .profileTabbedPage:not(.mainDashboardPage) {
+    --profile-workout-width: calc(100vw - 20px);
+  }
+
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+    min-height: calc(100dvh - 154px) !important;
+    padding: 10px !important;
+    border-radius: 28px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="settings"] .profileCabinetSection {
+    border-radius: 28px 28px 0 0 !important;
+  }
+
+}
+
+/* PROFILE TABS: FINAL RHYTHM AND MEASUREMENT WIZARD V257 */
+.profileTabbedPage:not(.mainDashboardPage) {
+  padding-bottom: calc(118px + env(safe-area-inset-bottom)) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: calc(100dvh - 154px) !important;
+  overflow-y: auto !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHistoryButton {
+  margin-top: 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileLogoutBtn {
+  min-height: 52px !important;
+  border-radius: 18px !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+@media (max-width: 390px) {
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+}
+
+/* PROFILE TABS: RENDER-MATCHED CABINET SYSTEM V258 */
+.profileTabbedPage:not(.mainDashboardPage) {
+  --profile-shell-width: min(390px, calc(100vw - 20px));
+  --profile-shell-inner: min(374px, calc(100vw - 36px));
+  box-sizing: border-box !important;
+  position: relative !important;
+  width: var(--profile-shell-width) !important;
+  max-width: 390px !important;
+  height: calc(100dvh - 12px) !important;
+  min-height: calc(100dvh - 12px) !important;
+  max-height: calc(100dvh - 12px) !important;
+  margin: 6px auto !important;
+  padding: 0 0 92px !important;
+  overflow-x: hidden !important;
+  border: 1px solid rgba(145, 173, 78, 0.26) !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(127, 159, 58, 0.12), transparent 30%),
+    linear-gradient(180deg, #0c130d 0%, #071008 100%) !important;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+  font-family: Arial, sans-serif !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  transform: translateX(-50%) !important;
+  box-sizing: border-box !important;
+  width: var(--profile-shell-inner) !important;
+  max-width: 374px !important;
+  height: 82px !important;
+  min-height: 82px !important;
+  max-height: 82px !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  border-radius: 17px !important;
+  background: linear-gradient(180deg, rgba(22, 29, 23, 0.98), rgba(11, 16, 12, 0.99)) !important;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button {
+  height: 68px !important;
+  min-height: 68px !important;
+  max-height: 68px !important;
+  padding: 7px 3px 6px !important;
+  gap: 2px !important;
+  border-color: transparent !important;
+  border-radius: 13px !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  box-shadow: none !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button span {
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  font-size: 27px !important;
+  line-height: 32px !important;
+  filter: none !important;
+  transform: translateY(-3px) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button strong {
+  height: 16px !important;
+  min-height: 16px !important;
+  max-height: 16px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 16px !important;
+  transform: translateY(-2px) !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button.active {
+  border-color: rgba(145, 173, 78, 0.14) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(145, 173, 78, 0.15), transparent 68%),
+    rgba(127, 159, 58, 0.045) !important;
+  color: #b5e655 !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar button.active span {
+  color: #b5e655 !important;
+  filter: none !important;
+}
+
+.profileTabbedPage:not(.mainDashboardPage) .profileCabinetSection {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] {
+  overflow: hidden !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+  height: 100% !important;
+  max-height: none !important;
+  padding: 24px 14px 10px !important;
+  overflow-y: auto !important;
+}
+
+.profileTabbedPage[data-profile-tab="cabinet"] .profileAiHistoryButton {
+  flex: 0 0 58px !important;
+  width: 100% !important;
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+  margin-top: auto !important;
+  margin-bottom: 3px !important;
+  padding: 0 16px !important;
+  border: 1px solid rgba(145, 173, 78, 0.34) !important;
+  border-radius: 15px !important;
+  background: rgba(127, 159, 58, 0.075) !important;
+  color: #fff !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+
+
+/* Profile measurements tab shell. Measurement content is owned by its CSS Module. */
+.profileTabbedPage[data-profile-tab="measurements"] {
+  overflow: hidden !important;
+}
+
+.profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection {
+  height: 100% !important;
+  padding: 36px 14px 10px !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileCabinetSection {
+  height: auto !important;
+  padding: 42px 14px 0 !important;
+}
+
+.profileTabbedPage[data-profile-tab="settings"] .profileLogoutBtn {
+  flex: 0 0 58px !important;
+  width: 100% !important;
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+  margin-top: auto !important;
+  border: 1px solid rgba(241, 91, 73, 0.42) !important;
+  border-radius: 15px !important;
+  background: linear-gradient(180deg, rgba(130, 54, 34, 0.52), rgba(92, 36, 27, 0.58)) !important;
+  color: #ff8b76 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+
+
+/* === PROGRESS HUB V274 === */
+
+@media (max-width: 430px) {
+  .profileCabinetSection {
+    padding-inline: 12px !important;
+  }
+}
+
+/* === RESPONSIVE PERSONAL CABINET LAST LAYER V283 === */
+
+@media (min-width: 410px) {
+  .profileTabbedPage[data-profile-tab="cabinet"] {
+    --profile-shell-width: min(560px, calc(100vw - 20px));
+    --profile-shell-inner: min(528px, calc(100vw - 36px));
+    width: var(--profile-shell-width) !important;
+    max-width: 560px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileBottomTabBar {
+    width: var(--profile-shell-inner) !important;
+    max-width: 528px !important;
+  }
+}
+
+@media (min-width: 720px) {
+  .profileTabbedPage[data-profile-tab="cabinet"] {
+    height: min(860px, calc(100dvh - 24px)) !important;
+    min-height: min(680px, calc(100dvh - 24px)) !important;
+    max-height: calc(100dvh - 24px) !important;
+    margin: 12px auto !important;
+    border-radius: 30px !important;
+  }
+
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+    padding: 22px 22px 12px !important;
+  }
+}
+
+@media (max-width: 370px) {
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileBottomTabBar button strong {
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 359px), (max-width: 719px) and (max-height: 720px) {
+  .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+    padding-top: 12px !important;
+  }
+}
+
+
+
+}

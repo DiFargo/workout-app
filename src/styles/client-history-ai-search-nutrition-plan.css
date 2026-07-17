@@ -1,9 +1,0 @@
-/* FIX: AI nutrition plan colors match main nutrition page */
-
-.fatSecretPage .nutritionAiPlanMiniBtn,
-.nutritionAiPlanMiniBtn {
-  background: rgba(127, 159, 58, 0.10) !important;
-  border-color: rgba(127, 159, 58, 0.19) !important;
-  color: rgba(184, 215, 108, 0.88) !important;
-}
-

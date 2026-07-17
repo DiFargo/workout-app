@@ -4,6 +4,7 @@ import {
   getProfileMeasurementFields,
   getProfileMeasurementValue
 } from "../../../utils/profileMeasurements";
+import "./ClientMeasurements.module.css";
 import styles from "./MeasurementWizardPage.module.css";
 
 const versionedMeasurementAsset = (src) => `${src}?v=${encodeURIComponent(APP_VERSION)}`;

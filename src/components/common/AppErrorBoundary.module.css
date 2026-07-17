@@ -1,0 +1,62 @@
+@layer components {
+  .root {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: var(--space-5, 1.25rem);
+    background: var(--color-app-error-canvas);
+    color: var(--color-app-error-text);
+    font-family: var(--font-family-sans);
+  }
+
+  .card {
+    width: min(26.25rem, 100%);
+    padding: var(--space-6, 1.5rem);
+    border: 1px solid var(--color-app-error-border);
+    border-radius: var(--radius-xl, 1.5rem);
+    background: var(--color-app-error-surface);
+    box-shadow: var(--shadow-app-error);
+  }
+
+  .eyebrow,
+  .title,
+  .copy {
+    margin: 0;
+  }
+
+  .eyebrow {
+    margin-bottom: var(--space-2, 0.5rem);
+    color: var(--color-app-error-muted);
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-bold);
+  }
+
+  .title {
+    margin-bottom: var(--space-3, 0.75rem);
+    font-size: 1.5rem;
+    line-height: 1.08;
+  }
+
+  .copy {
+    margin-bottom: var(--space-5, 1.25rem);
+    color: var(--color-app-error-copy);
+    line-height: 1.45;
+  }
+
+  .reload {
+    width: 100%;
+    min-height: 3rem;
+    border: 0;
+    border-radius: var(--radius-lg, 1rem);
+    background: var(--color-app-error-action);
+    color: var(--color-app-error-action-text);
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+  }
+
+  .reload:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring, 0 0 0 0.2rem rgb(157 124 255 / 45%));
+  }
+}

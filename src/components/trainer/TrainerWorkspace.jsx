@@ -1,9 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-if (new URLSearchParams(window.location.search).get("newCss") === "1") {
-  import("../../../css-new/trainer-lazy.css");
-} else {
-  import("../../styles/trainer-lazy.css");
-}
+import workspaceStyles from "./TrainerWorkspace.module.css";
 import { analyzeExerciseProgress } from "../../utils/exerciseProgress.js";
 import {
   buildPlannedWorkoutSlots,
@@ -510,7 +506,7 @@ function ClientStatus({ status = {} }) {
   return <span className={`trainerNextStatus ${statusId}`}>{status.label || fallback[statusId] || "Активен"}</span>;
 }
 
-function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvatar }) {
+function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvatar, appVersion }) {
   const [overflowOpen, setOverflowOpen] = useState(false);
   const desktopItems = DESKTOP_NAV_ITEMS;
   const mobileItems = NAV_ITEMS.filter((item) => ["dashboard", "clients", "messages", "more"].includes(item.id));
@@ -547,6 +543,7 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
     <>
       <aside className="trainerNextSidebar">
         <div className="trainerNextBrand"><strong>T</strong><span>Tren</span></div>
+        {appVersion ? <span className="trainerNextVersion">{appVersion}</span> : null}
         <nav>{desktopItems.map((item) => renderButton(item))}</nav>
         <button className="trainerNextTrainer" type="button" onClick={() => onNavigate("more")}>
           <TrainerAvatar client={{ name: trainerName, avatarUrl: trainerAvatar }} size="small" />
@@ -600,14 +597,15 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
   );
 }
 
-export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAvatar, children }) {
+export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAvatar, appVersion, children }) {
   return (
-    <div className="trainerNextRoot">
+    <div className={`trainerNextRoot ${workspaceStyles.workspaceRoot}`}>
       <TrainerNavigation
         activeSection={activeSection}
         onNavigate={onNavigate}
         trainerName={trainerName}
         trainerAvatar={trainerAvatar}
+        appVersion={appVersion}
       />
       <main className="trainerNextMain">{children}</main>
     </div>
@@ -2965,7 +2963,8 @@ function TrainerClientDetail({
   onSendMessage,
   onCreateTask,
   messages = [],
-  onClientAction
+  onClientAction,
+  canDeleteClient = false
 }) {
   const name = client.name || client.email || "Клиент";
   const profileFacts = [
@@ -2985,8 +2984,11 @@ function TrainerClientDetail({
     { id: "duplicate", label: "Дублировать клиента", icon: "📋" },
     { id: "export_excel", label: "Экспорт Excel", icon: "📊" },
     { id: "export_pdf", label: "Экспорт PDF", icon: "📄" },
-    { id: "disable_notifications", label: "Отключить уведомления", icon: "🔕" }
-  ];
+    { id: "disable_notifications", label: "Отключить уведомления", icon: "🔕" },
+    canDeleteClient
+      ? { id: "delete", label: "Удалить клиента", icon: "🗑️", danger: true }
+      : null
+  ].filter(Boolean);
 
   async function submitMessage() {
     const text = messageText.trim();
@@ -3995,12 +3997,13 @@ function CreateClientModal({ state }) {
         <button className="trainerNextModalClose" type="button" onClick={state.onClose} aria-label="Закрыть">×</button>
         <div className="trainerNextModalIcon"><UserPlus size={24} /></div>
         <h2 id="trainer-create-client-title">Пригласить клиента</h2>
-        <p>Клиент сам задаст пароль по ссылке активации и сможет войти по email, логину или Google.</p>
+        <p>Клиент сам задаст пароль по ссылке активации и войдёт по выбранному логину.</p>
         <form onSubmit={state.onSubmit}>
           <label><span>Имя</span><input value={state.name} onChange={(event) => state.onNameChange(event.target.value)} placeholder="Имя клиента" /></label>
-          <label><span>Email</span><input type="email" value={state.email} onChange={(event) => state.onEmailChange(event.target.value)} placeholder="client@email.com" /></label>
+          <label><span>Логин</span><input value={state.login} onChange={(event) => state.onLoginChange(event.target.value)} placeholder="например: ilya.fit" autoComplete="off" autoCapitalize="none" spellCheck="false" /></label>
+          <small className="trainerNextModalHint">Латиница, цифры, точка, дефис или _; от 3 до 32 символов.</small>
           {state.status ? <p className="trainerNextModalStatus">{state.status}</p> : null}
-          {state.credentials ? <div className="trainerNextCredentials"><strong>Приглашение клиента</strong><code>{state.credentials.email}{state.credentials.activationUrl ? <><br />{state.credentials.activationUrl}</> : state.credentials.inviteUrl ? <><br />{state.credentials.inviteUrl}</> : null}</code></div> : null}
+          {state.credentials ? <div className="trainerNextCredentials"><strong>Ссылка активации</strong><small>Логин: {state.credentials.login}</small><div className="trainerNextCredentialLinkRow"><code>{state.credentials.shareUrl || state.credentials.inviteUrl}</code><button className="trainerNextCopyInviteLink" type="button" aria-label="Скопировать ссылку" title="Скопировать ссылку" onClick={() => navigator.clipboard?.writeText(state.credentials.shareUrl || state.credentials.activationUrl || state.credentials.inviteUrl)}><Copy size={19} strokeWidth={2.25} /></button></div></div> : null}
           <button className="trainerNextPrimary trainerNextModalSubmit" type="submit" disabled={state.loading}>{state.loading ? "Создаю..." : "Создать приглашение"}</button>
         </form>
       </section>
@@ -4491,6 +4494,7 @@ function TrainerUtilityPage({ section, clients = [], clientSummaries = {}, onNav
 }
 
 export default function TrainerWorkspace({
+  appVersion = "",
   mode = "dashboard",
   activeSection = "dashboard",
   onNavigate,
@@ -4555,6 +4559,7 @@ export default function TrainerWorkspace({
   telegramMessages = [],
   onCreateTask,
   onClientAction,
+  canDeleteClients = false,
   onRefresh,
   onLogout
 }) {
@@ -4628,6 +4633,7 @@ export default function TrainerWorkspace({
         messages={telegramMessages}
         onCreateTask={onCreateTask}
         onClientAction={onClientAction}
+        canDeleteClient={canDeleteClients && !["admin", "trainer"].includes(selectedClient.role || "client")}
         onSaveWorkouts={onSaveWorkouts}
       />
     );
@@ -4702,7 +4708,7 @@ export default function TrainerWorkspace({
   }
 
   return (
-    <TrainerShell activeSection={activeSection} onNavigate={onNavigate} trainerName={trainerName} trainerAvatar={trainerAvatar}>
+    <TrainerShell activeSection={activeSection} onNavigate={onNavigate} trainerName={trainerName} trainerAvatar={trainerAvatar} appVersion={appVersion}>
       {content}
       <CreateClientModal state={createClientState} />
       {showSyncOverlay ? (

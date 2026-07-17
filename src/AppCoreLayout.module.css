@@ -1,0 +1,1017 @@
+:global {
+/* V507: P1 validation, recovery actions and narrow-screen polish. */
+.loginField {
+  display: grid;
+  gap: 6px;
+}
+
+.loginField > span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.loginCard input[aria-invalid="true"] {
+  border-color: rgba(220, 74, 74, 0.72) !important;
+  box-shadow: 0 0 0 3px rgba(220, 74, 74, 0.1) !important;
+}
+
+.loginFieldError {
+  color: #dc6767;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.loginNotice {
+  padding: 10px 12px;
+  border: 1px solid rgba(111, 196, 130, 0.22);
+  border-radius: 14px;
+  background: rgba(111, 196, 130, 0.1);
+  color: #8fd49f;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.loginBtn:disabled,
+.loginResetBtn:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.loginResetBtn {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+:root[data-app-theme="warm-light"] .loginNotice {
+  border-color: rgba(39, 135, 86, 0.2);
+  background: #eef9f3;
+  color: #278756;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealToggle {
+  position: relative !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealToggle::after {
+  content: "" !important;
+  position: absolute !important;
+  display: block !important;
+  inset: -8px -3px !important;
+}
+
+.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .mealPlusExact {
+  min-width: 44px !important;
+  min-height: 44px !important;
+}
+
+@media (max-width: 360px) {
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealMain {
+    grid-template-columns: 38px minmax(0, 1fr) 44px 44px !important;
+    gap: 4px !important;
+    padding-inline: 6px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealIcon {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealTitle strong {
+    font-size: 15px !important;
+    line-height: 1.08 !important;
+    overflow: visible !important;
+    overflow-wrap: anywhere !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealTitle {
+    overflow: visible !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealKcal {
+    min-width: 0 !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealKcal span {
+    font-size: 8.5px !important;
+  }
+
+  .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCol span {
+    font-size: 7px !important;
+    line-height: 1.05 !important;
+    white-space: normal !important;
+  }
+
+  .mainMenuBottomBar button strong,
+.profileBottomTabBar button strong {
+    max-width: 100% !important;
+    overflow: visible !important;
+    font-size: 9px !important;
+    line-height: 1.05 !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+}
+
+/* === FINAL CORE BOTTOM BAR ALIGNMENT LOCK (MAIN / TRAINING / NUTRITION / CABINET) === */
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar,
+.workoutModeBottomBar {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  position: fixed !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  margin: 0 auto !important;
+  padding: 5px 6px !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 3px !important;
+  box-sizing: border-box !important;
+  min-height: 80px !important;
+  height: 80px !important;
+  max-height: 80px !important;
+  border-radius: 16px !important;
+}
+
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar > button,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar > button,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar > button,
+.workoutModeBottomBar > button {
+  box-sizing: border-box !important;
+  min-height: 68px !important;
+  height: 68px !important;
+  max-height: 68px !important;
+  padding: 6px 2px 5px !important;
+  border-radius: 13px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+}
+
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar > button span,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar > button span,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar > button span,
+.workoutModeBottomBar > button span {
+  width: 100% !important;
+  min-height: 31px !important;
+  height: 31px !important;
+  max-height: 31px !important;
+  font-size: 26px !important;
+  line-height: 31px !important;
+}
+
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar > button strong,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar > button strong,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar > button strong,
+.workoutModeBottomBar > button strong {
+  width: 100% !important;
+  min-height: 16px !important;
+  height: 16px !important;
+  max-height: 16px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 16px !important;
+}
+
+@media (max-width: 360px) {
+  nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar.profileBottomTabBar > button strong,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].profileBottomTabBar > button strong,
+nav[aria-label="ÐÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ñ€Ð°Ð·Ð´ÐµÐ»Ñ‹"].mainMenuBottomBar > button strong,
+.workoutModeBottomBar > button strong {
+    font-size: 11px !important;
+    line-height: 16px !important;
+  }
+}
+
+.monthProgramMonthTitleEditor {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 4px;
+}
+
+.monthProgramMonthTitleEditor input {
+  width: min(360px, 100%);
+  height: 38px;
+  padding: 0 11px;
+  border: 1px solid #e4e5eb;
+  border-radius: 7px;
+  outline: none;
+  background: #fff;
+  color: #171821;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+
+/* === MAIN DASHBOARD NAV LOCK (prevents page drift) === */
+.mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
+.mainDashboardPage nav.trainerRoleBottomBar[aria-label="Основные разделы"],
+.mainDashboardPage .mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
+.mainDashboardPage .mainMenuBottomBar.profileBottomTabBar.trainerRoleBottomBar[aria-label="Основные разделы"] {
+  left: 50% !important;
+  right: auto !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
+  transform: translateX(-50%) !important;
+  margin-inline: auto !important;
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  position: fixed !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+}
+
+.mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"] > button,
+.mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar.trainerRoleBottomBar[aria-label="Основные разделы"] > button,
+.mainDashboardPage nav.trainerRoleBottomBar[aria-label="Основные разделы"] > button {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.monthProgramMonthTitleEditor input:focus {
+  border-color: #6844f5;
+}
+
+.monthProgramRemoveMonth {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #f0dcdc;
+  border-radius: 7px;
+  background: #fff;
+  color: #c95454;
+  font-size: 20px;
+}
+
+.monthProgramAddMonth {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+  border: 1px dashed #aa9cf2;
+  border-radius: 8px;
+  background: #fbfaff;
+  color: #6341e8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.trainerProgramManager {
+  --trainer-program-purple: #6844f5;
+}
+
+.trainerProgramManager .programsCompactHeader,
+.trainerProgramManager .programsOverviewPage,
+.trainerProgramManager .monthProgramEditorNameField,
+.trainerProgramManager .monthProgramMonths {
+  width: min(1180px, calc(100% - 32px));
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.trainerProgramManager .programsTopActionBar {
+  border-color: #e4e5eb;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.trainerProgramManager .programsOverviewCard,
+.trainerProgramManager .monthProgramMonth,
+.trainerProgramManager .monthProgramBlock,
+.trainerProgramManager .monthProgramPremiumWeek {
+  border-radius: 8px;
+}
+
+@media (max-width: 700px) {
+  .monthProgramMonthTitleEditor input {
+    height: 36px;
+    font-size: 15px;
+  }
+
+  .trainerProgramManager .programsCompactHeader,
+  .trainerProgramManager .programsOverviewPage,
+  .trainerProgramManager .monthProgramEditorNameField,
+  .trainerProgramManager .monthProgramMonths {
+    width: calc(100% - 24px);
+  }
+}
+
+
+/* === CLIENT/WORKOUT BOTTOM BAR + PROGRESS OVERVIEW STABILITY PATCH V844 === */
+html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  margin-inline: auto !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  z-index: 12000 !important;
+  box-sizing: border-box !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+  padding: 6px !important;
+  min-height: 80px !important;
+  height: 80px !important;
+  max-height: 80px !important;
+  border-radius: 16px !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button,
+html body #root .workoutModeBottomBar > button,
+html body #root .trainerRoleBottomBar > button,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar > button,
+html body #root nav.trainerRoleBottomBar > button,
+html body #root .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar > button,
+html body #root .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar.trainerRoleBottomBar > button,
+html body #root .mainDashboardPage nav.trainerRoleBottomBar > button {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  min-height: 68px !important;
+  height: 68px !important;
+  max-height: 68px !important;
+  padding: 6px 2px 5px !important;
+  border-radius: 13px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button span,
+html body #root .workoutModeBottomBar > button span,
+html body #root .trainerRoleBottomBar > button span,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar > button span,
+html body #root nav.trainerRoleBottomBar > button span {
+  width: 100% !important;
+  min-height: 31px !important;
+  height: 31px !important;
+  max-height: 31px !important;
+  font-size: 26px !important;
+  line-height: 31px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button strong,
+html body #root .workoutModeBottomBar > button strong,
+html body #root .trainerRoleBottomBar > button strong,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar > button strong,
+html body #root nav.trainerRoleBottomBar > button strong {
+  width: 100% !important;
+  min-height: 16px !important;
+  height: 16px !important;
+  max-height: 16px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 16px !important;
+  text-align: center !important;
+  display: block !important;
+  overflow: hidden !important;
+}
+
+/* === FINAL LAYOUT SYNCHRONIZER V845 === */
+html body #root .mainDashboardPage .profileCabinetSection,
+html body #root .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection,
+html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar {
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
+html body #root .mainDashboardPage .profileCabinetSection,
+html body #root .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar,
+html body #root .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
+html body #root .mainDashboardPage nav.trainerRoleBottomBar[aria-label="Основные разделы"] {
+  left: 50% !important;
+  right: auto !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
+  transform: translateX(-50%) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  position: fixed !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+}
+
+@media (max-width: 430px) {
+  html body #root .mainDashboardPage .profileCabinetSection,
+  html body #root .profileTabbedPage[data-profile-tab="cabinet"] .profileCabinetSection {
+    width: min(100%, calc(100vw - 28px)) !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .workoutModeBottomBar {
+    width: min(350px, calc(100vw - 52px)) !important;
+    max-width: 350px !important;
+  }
+}
+
+
+/* === V853: unified bottom bar anchor across pages (main / nutrition / cabinet / training) === */
+html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .adminV3Nav.adminV3BottomBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .mainDashboardPage .trainerRoleBottomBar,
+html body #root .mainTabbedProfileWrapper .mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  margin-inline: auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  z-index: 12000 !important;
+}
+
+@media (max-width: 430px) {
+  html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .mainDashboardPage .trainerRoleBottomBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar {
+    width: min(394px, calc(100vw - 20px)) !important;
+    max-width: 394px !important;
+    height: 80px !important;
+    min-height: 80px !important;
+    max-height: 80px !important;
+  }
+}
+
+/* === V854: hard normalize all bottom navigation bars so they stay visually identical === */
+html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .mainDashboardPage .trainerRoleBottomBar,
+html body #root .mainTabbedProfileWrapper .mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar {
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  border-radius: 16px !important;
+  background: rgba(12, 20, 14, 0.97) !important;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button span,
+html body #root .workoutModeBottomBar > button span,
+html body #root .trainerRoleBottomBar > button span,
+html body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavIcon,
+html body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavLabel,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button span {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  max-height: 31px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 26px !important;
+  line-height: 31px !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+
+/* V855: final one-pixel strict baseline for all bottom bars across all pages. */
+html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.trainerRoleWorkspaceBar,
+html body #root .adminV3Nav.adminV3BottomBar.trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.programEditorBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.workoutEditorBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.programsBottomBar,
+html body #root .trainerRoleWorkspaceBar,
+html body #root .programEditorBottomBar,
+html body #root .workoutEditorBottomBar,
+html body #root .programsBottomBar,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .mainDashboardPage .trainerRoleBottomBar,
+html body #root .mainTabbedProfileWrapper .mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  margin-inline: auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  z-index: 12000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.055) !important;
+  border-radius: 16px !important;
+  background: rgba(12, 20, 14, 0.97) !important;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button,
+html body #root .workoutModeBottomBar > button,
+html body #root .trainerRoleBottomBar > button,
+html body #root .adminV3Nav.adminV3BottomBar > button,
+html body #root .adminV3Nav.adminV3BottomBar .adminV3NavButton,
+html body #root .trainerRoleWorkspaceBar > button,
+html body #root .programEditorBottomBar > button,
+html body #root .workoutEditorBottomBar > button,
+html body #root .programsBottomBar > button,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button,
+html body #root .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar > button,
+html body #root .mainDashboardPage nav.trainerRoleBottomBar > button,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar > button,
+html body #root nav.trainerRoleBottomBar > button {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 68px !important;
+  min-height: 68px !important;
+  max-height: 68px !important;
+  margin: 0 !important;
+  padding: 6px 2px 5px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  border: 1px solid transparent !important;
+  border-radius: 13px !important;
+  background: transparent !important;
+  color: rgba(232, 237, 230, 0.62) !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button span,
+html body #root .workoutModeBottomBar > button span,
+html body #root .trainerRoleBottomBar > button span,
+html body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavIcon,
+html body #root .trainerRoleWorkspaceBar > button .adminV3NavIcon,
+html body #root .programEditorBottomBar > button .adminV3NavIcon,
+html body #root .workoutEditorBottomBar > button .adminV3NavIcon,
+html body #root .programsBottomBar > button .adminV3NavIcon,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button span {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  max-height: 31px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  transform: none !important;
+  font-size: 26px !important;
+  line-height: 31px !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button strong,
+html body #root .workoutModeBottomBar > button strong,
+html body #root .trainerRoleBottomBar > button strong,
+html body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavLabel,
+html body #root .adminV3Nav.adminV3BottomBar > button > .adminV3NavLabel,
+html body #root .trainerRoleWorkspaceBar > button .adminV3NavLabel,
+html body #root .programEditorBottomBar > button .adminV3NavLabel,
+html body #root .workoutEditorBottomBar > button .adminV3NavLabel,
+html body #root .programsBottomBar > button .adminV3NavLabel,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button strong {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 16px !important;
+  height: 16px !important;
+  max-height: 16px !important;
+  margin: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  color: inherit !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 16px !important;
+  text-align: center !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  transform: none !important;
+}
+
+html body #root .mainMenuBottomBar.profileBottomTabBar > button.active,
+html body #root .workoutModeBottomBar > button.active,
+html body #root .trainerRoleBottomBar > button.active,
+html body #root .adminV3Nav.adminV3BottomBar > button.active,
+html body #root .trainerRoleWorkspaceBar > button.active,
+html body #root .programEditorBottomBar > button.active,
+html body #root .workoutEditorBottomBar > button.active,
+html body #root .programsBottomBar > button.active,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button.active {
+  color: #f4f8f0 !important;
+}
+
+html body #root .adminV3Nav.adminV3BottomBar .adminV3NavIcon,
+html body #root .adminV3Nav.adminV3BottomBar .adminV3NavLabel,
+html body #root .trainerRoleWorkspaceBar .adminV3NavIcon,
+html body #root .trainerRoleWorkspaceBar .adminV3NavLabel,
+html body #root .programEditorBottomBar .adminV3NavIcon,
+html body #root .programEditorBottomBar .adminV3NavLabel,
+html body #root .workoutEditorBottomBar .adminV3NavIcon,
+html body #root .workoutEditorBottomBar .adminV3NavLabel,
+html body #root .programsBottomBar .adminV3NavIcon,
+html body #root .programsBottomBar .adminV3NavLabel {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+  color: inherit !important;
+  font-size: 20px !important;
+  line-height: 30px !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  max-height: 31px !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+@media (max-width: 430px) {
+  html body #root .mainMenuBottomBar.profileBottomTabBar,
+html body #root .workoutModeBottomBar,
+html body #root .trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.trainerRoleWorkspaceBar,
+html body #root .adminV3Nav.adminV3BottomBar.trainerRoleBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.programEditorBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.workoutEditorBottomBar,
+html body #root .adminV3Nav.adminV3BottomBar.programsBottomBar,
+html body #root .trainerRoleWorkspaceBar,
+html body #root .programEditorBottomBar,
+html body #root .workoutEditorBottomBar,
+html body #root .programsBottomBar,
+html body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+html body #root .mainDashboardPage .trainerRoleBottomBar,
+html body #root .mainTabbedProfileWrapper .mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.mainMenuBottomBar.profileBottomTabBar,
+html body #root nav.trainerRoleBottomBar {
+    width: min(394px, calc(100vw - 16px)) !important;
+  }
+}
+
+
+
+/* ==========================================================
+   Warm Light visual hardening for global screens and bars
+   ========================================================== */
+
+:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFive,
+:root[data-app-theme="warm-light"] body #root .workoutModeBottomBar,
+:root[data-app-theme="warm-light"] body #root .trainerRoleBottomBar,
+:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar,
+:root[data-app-theme="warm-light"] body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+:root[data-app-theme="warm-light"] body #root .mainDashboardPage .trainerRoleBottomBar,
+:root[data-app-theme="warm-light"] body #root .mainTabbedProfileWrapper .mainMenuBottomBar.profileBottomTabBar,
+:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar,
+:root[data-app-theme="warm-light"] body #root nav.trainerRoleBottomBar {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(394px, calc(100vw - 20px)) !important;
+  max-width: 394px !important;
+  margin-inline: auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  z-index: 12000 !important;
+  border: 1px solid #dbe0eb !important;
+  border-radius: 16px !important;
+  background: rgba(247, 250, 255, 0.98) !important;
+  box-shadow:
+    0 14px 32px rgba(35, 43, 79, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  padding: 6px !important;
+  gap: 4px !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar > button,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > button,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFive > button,
+:root[data-app-theme="warm-light"] body #root .workoutModeBottomBar > button,
+:root[data-app-theme="warm-light"] body #root .trainerRoleBottomBar > button,
+:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar > button,
+:root[data-app-theme="warm-light"] body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button,
+:root[data-app-theme="warm-light"] body #root .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar > button,
+:root[data-app-theme="warm-light"] body #root .mainDashboardPage nav.trainerRoleBottomBar > button,
+:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar > button,
+:root[data-app-theme="warm-light"] body #root nav.trainerRoleBottomBar > button {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: var(--client-bottom-nav-button-height, 68px) !important;
+  min-height: var(--client-bottom-nav-button-min-height, 68px) !important;
+  max-height: var(--client-bottom-nav-button-max-height, 68px) !important;
+  margin: 0 !important;
+  padding: var(--client-bottom-nav-button-padding, 6px 2px 5px) !important;
+  display: var(--client-bottom-nav-button-display, flex) !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--client-bottom-nav-button-gap, 2px) !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--client-bottom-nav-button-radius, 13px) !important;
+  background: transparent !important;
+  color: rgba(97, 106, 128, 0.82) !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar > button span,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > button span,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFive > button span,
+:root[data-app-theme="warm-light"] body #root .workoutModeBottomBar > button span,
+:root[data-app-theme="warm-light"] body #root .trainerRoleBottomBar > button span,
+:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavIcon,
+:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavLabel,
+:root[data-app-theme="warm-light"] body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button span {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  max-height: 31px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  font-size: 26px !important;
+  line-height: 31px !important;
+  transform: none !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar > button strong,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > button strong,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFive > button strong,
+:root[data-app-theme="warm-light"] body #root .workoutModeBottomBar > button strong,
+:root[data-app-theme="warm-light"] body #root .trainerRoleBottomBar > button strong,
+:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar > button .adminV3NavLabel,
+:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar > button > .adminV3NavLabel,
+:root[data-app-theme="warm-light"] body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar > button strong {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 16px !important;
+  height: 16px !important;
+  max-height: 16px !important;
+  margin: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  color: inherit !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 16px !important;
+  text-align: center !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  transform: none !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar > button.active,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > button.active,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFive > button.active,
+:root[data-app-theme="warm-light"] body #root .workoutModeBottomBar > button.active,
+:root[data-app-theme="warm-light"] body #root .trainerRoleBottomBar > button.active,
+:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar > button.active {
+  border-color: #ddd9fa !important;
+  background: #f0effd !important;
+  color: #4834dd !important;
+}
+
+@media (max-width: 430px) {
+  :root[data-app-theme="warm-light"] body #root .mainMenuBottomBar.profileBottomTabBar,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar,
+:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFive,
+:root[data-app-theme="warm-light"] body #root .workoutModeBottomBar,
+:root[data-app-theme="warm-light"] body #root .trainerRoleBottomBar,
+:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar,
+:root[data-app-theme="warm-light"] body #root .mainDashboardPage .mainMenuBottomBar.profileBottomTabBar,
+:root[data-app-theme="warm-light"] body #root .mainDashboardPage .trainerRoleBottomBar,
+:root[data-app-theme="warm-light"] body #root nav.mainMenuBottomBar.profileBottomTabBar,
+:root[data-app-theme="warm-light"] body #root nav.trainerRoleBottomBar {
+    width: min(394px, calc(100vw - 16px)) !important;
+    max-width: 394px !important;
+  }
+}
+
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupBottomPanel .warmupPreviousButton {
+  border: 1px solid #dbe0eb !important;
+  background: #ffffff !important;
+  color: #2d3342 !important;
+  box-shadow: none !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupBottomPanel .warmupReadyButton,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseNextButton,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkoutButton,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishSlideWrap .exerciseSlideCard button,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseActionPanel .exerciseNextButton,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseActionPanel .exerciseReadyButton {
+  border: 1px solid transparent !important;
+  background: linear-gradient(135deg, #6552e6, #2d6ff2) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22) !important;
+}
+
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutStageActionPanel,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .startWorkoutBottomPanel,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishActionPanel,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseActionPanel,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupBottomPanel {
+  border: 1px solid #dbe0eb !important;
+  background: rgba(247, 250, 255, 0.97) !important;
+  box-shadow:
+    0 -10px 30px rgba(52, 60, 105, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupBottomPanel .warmupPreviousButton,
+:root[data-app-theme="warm-light"] body #root .finishNavigationRow .finishBackButton,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .exercisePrevButton,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseBackButton,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishNavigationRow .finishBackButton {
+  border: 1px solid #dbe0eb !important;
+  background: #ffffff !important;
+  color: #2d3342 !important;
+  -webkit-text-fill-color: #2d3342 !important;
+  box-shadow:
+    0 12px 24px rgba(34, 43, 79, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishCard,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutStageCard.workoutFinishCard {
+  border-color: #dfe3ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 18px 44px rgba(50, 59, 104, 0.12) !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTop,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishResult p,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress p,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete span,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTip p {
+  color: #737b91 !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTop span:first-child,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTrophy,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress strong,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats strong,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete strong {
+  color: #5542d8 !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTip,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress {
+  border-color: #e2e5ef !important;
+  background: #f7f8fc !important;
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats > div,
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats > div + div {
+  border-color: #e3e6f0 !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutSavedFloatingCard {
+  border-color: #e2e5ef !important;
+  background: #ffffff !important;
+  color: #151824 !important;
+  box-shadow: 0 22px 58px rgba(43, 50, 92, 0.14) !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutSavedCheck {
+  border-color: #ddd9fa !important;
+  background: #efedff !important;
+  color: #5542d8 !important;
+}
+
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishScreen h3 {
+  color: #151824 !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress p {
+  color: #737b91 !important;
+}
+
+:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPreviousButton,
+:root[data-app-theme="warm-light"] body #root .exercisePrevButton,
+:root[data-app-theme="warm-light"] body #root .finishNavigationRow .finishBackButton {
+  border-color: #e1e4ef !important;
+  background: #f7f8fc !important;
+  color: #596176 !important;
+}
+
+
+
+}

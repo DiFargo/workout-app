@@ -1,4 +1,13 @@
+import NutritionMacroScoreRing from "./NutritionMacroScoreRing";
 import styles from "./NutritionPlanDetails.module.css";
+
+const CALORIE_PIXELS = Array.from({ length: 25 }, (_, index) => index);
+const BADGE_CLASS_BY_TYPE = {
+  good: styles.good,
+  warning: styles.warning,
+  warn: styles.warning,
+  info: styles.info
+};
 
 export default function NutritionPlanDetails({
   isExpanded,
@@ -10,7 +19,7 @@ export default function NutritionPlanDetails({
   caloriesLeft,
   caloriesConsumed,
   effectiveGoals,
-  scoreStyle,
+  scoreSegments,
   nutritionDay,
   proteinPercent,
   fatPercent,
@@ -23,13 +32,6 @@ export default function NutritionPlanDetails({
   if (!isExpanded) {
     return null;
   }
-
-  const badgeClassByType = {
-    good: styles.good,
-    warning: styles.warning,
-    warn: styles.warning,
-    info: styles.info
-  };
 
   return (
     <div
@@ -77,7 +79,7 @@ export default function NutritionPlanDetails({
         <div className={styles.body} data-nutrition-plan-part="body">
           <div className={styles.calorieProgress} data-nutrition-plan-part="calorie-progress">
             <div className={styles.pixelGrid} aria-hidden="true" data-nutrition-plan-part="pixel-grid">
-                  {Array.from({ length: 25 }).map((_, index) => (
+                  {CALORIE_PIXELS.map((index) => (
                     <span
                       key={index}
                       className={`${styles.pixel} ${index < Math.round((caloriePercent / 100) * 25) ? styles.pixelActive : ""}`}
@@ -108,11 +110,7 @@ export default function NutritionPlanDetails({
 
           <div className={styles.scoreBlock} data-nutrition-plan-part="score-block">
             <span className={styles.scoreLabel} data-nutrition-plan-text="score-label">Score питания</span>
-            <div className={styles.score} style={scoreStyle} data-nutrition-plan-part="score">
-              <div className={styles.scoreInner} data-nutrition-plan-part="score-inner">
-                <strong className={styles.scoreValue} data-nutrition-plan-text="score-value">{nutritionDay.score}</strong>
-              </div>
-            </div>
+            <NutritionMacroScoreRing score={nutritionDay.score} segments={scoreSegments} />
           </div>
         </div>
 
@@ -148,7 +146,7 @@ export default function NutritionPlanDetails({
         <div className={styles.badges} data-nutrition-plan-part="badges">
           {nutritionDay.badges.map((badge) => (
             <span
-              className={`${styles.badge} ${badgeClassByType[badge.type] || ""}`}
+              className={`${styles.badge} ${BADGE_CLASS_BY_TYPE[badge.type] || ""}`}
               key={badge.text}
               data-nutrition-plan-part="badge"
               data-badge-type={badge.type}

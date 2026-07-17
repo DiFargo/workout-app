@@ -1,6 +1,6 @@
 import FirstSetupOnboarding from "../features/auth/FirstSetupOnboarding";
 import { AppSplash, LoginPage } from "../components/auth/AuthScreens";
-import "../styles/client-first-setup-lazy.css";
+import "./AppStartupGate.module.css";
 
 export function getFirstSetupCompletedLocally({
   isLoggedIn,

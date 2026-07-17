@@ -1,0 +1,9 @@
+:global {
+.adminHarnessCrmSurface .adminClientWorkspaceActionsRender {
+  display: flex !important;
+}
+
+.adminHarnessCrmSurface .adminClientWorkspaceActionsRender button {
+  min-height: 44px !important;
+}
+}

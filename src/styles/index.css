@@ -1,66 +1,24 @@
-@layer reset, base, legacy, components;
+@layer reset, base, components;
 
-@import "./_variables.css" layer(base);
+@import "./_reset.css" layer(reset);
 /*
  * Keep unmigrated styles unlayered during the transition so their established
  * cascade remains byte-for-byte compatible with production. A component moves
  * into the components layer only after its legacy class names are removed.
  */
-@import "./tokens.css";
-@import "./theme.css";
-@import "./base.css";
-@import "./app.css";
-@import "./menu.css";
-@import "./splash.css";
-@import "./auth.css";
-@import "./compatibility.css";
-@import "./warm-light-global-theme.css";
-@import "./warm-light-nutrition.css";
-@import "./theme-light-surfaces.css";
-@import "./theme-light-specificity.css";
-@import "./theme-light-nested-screens.css";
-@import "./client-viewport-fit.css";
-@import "./registration-accessibility.css";
-@import "./client-core.css";
-@import "./layout-stability.css";
-@import "./bottom-bars.css";
-@import "./warm-light-fullscreen.css";
-@import "./client-screen-alignment.css";
-@import "./client-loading-fallback.css";
-@import "./client-primary.css";
-@import "./client-visual-unity.css";
-@import "./client-render-target.css";
-@import "./client-bottom-safe-area.css";
-@import "./client-nutrition-grid.css";
-@import "./client-main.css";
-
-@layer reset {
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-
-  button,
-  input,
-  select,
-  textarea {
-    font: inherit;
-  }
-}
 
 @layer base {
   html {
     min-height: 100%;
     font-family: var(--font-family-sans);
-    background: var(--color-background);
+    background: var(--color-background, #f4f2fb);
   }
 
   body {
     min-height: 100%;
     margin: 0;
-    background: var(--color-background);
-    color: var(--color-text);
+    background: var(--color-background, #f4f2fb);
+    color: var(--color-text, #262333);
     line-height: var(--line-height-body);
   }
 }

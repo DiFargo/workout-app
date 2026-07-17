@@ -1,9 +1,0 @@
-html body #root .nutritionCreateChoiceGrid button {
-  min-height: 48px !important;
-  border: 1px solid #ded9ff !important;
-  border-radius: 16px !important;
-  background: #f2efff !important;
-  color: #5542d8 !important;
-  font-weight: 950 !important;
-  box-shadow: 0 8px 18px rgba(84, 55, 230, 0.08) !important;
-}

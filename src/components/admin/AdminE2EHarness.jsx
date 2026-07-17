@@ -1,5 +1,6 @@
 import { useState } from "react";
-import "../../styles/admin-internals-lazy.css";
+import "./AdminE2EHarness.module.css";
+import trainerWorkspaceStyles from "../trainer/TrainerWorkspace.module.css";
 import TrainerAdminCalendarTab from "../../features/trainer/TrainerAdminCalendarTab";
 import AdminPanelHub from "./AdminPanelHub";
 
@@ -64,7 +65,7 @@ function AdminUsersHarnessSurface({ onAction }) {
   const selectedClient = harnessClients.find((client) => client.id === selectedId) || harnessClients[0];
 
   return (
-    <div className="adminUsersCrmPage adminHarnessCrmSurface" data-testid="admin-users-harness">
+    <div className={`adminUsersCrmPage adminHarnessCrmSurface ${trainerWorkspaceStyles.workspaceRoot}`} data-testid="admin-users-harness">
       <main className="adminUsersCrmMain adminUsersCrmMainClientPage">
         <header className="adminUsersCrmHeader">
           <div>
@@ -181,7 +182,7 @@ function AdminUsersHarnessSurface({ onAction }) {
 
 function AdminProgramsHarnessSurface({ onAction }) {
   return (
-    <div className="monthProgramEditorPage monthProgramPremium monthProgramOverviewMode" data-testid="admin-programs-harness">
+    <div className={`monthProgramEditorPage monthProgramPremium monthProgramOverviewMode ${trainerWorkspaceStyles.workspaceRoot}`} data-testid="admin-programs-harness">
       <header className="programsCompactHeader">
         <button className="adminFixedMainBack" type="button" onClick={() => onAction("programs-back")}>
           <span>←</span>
@@ -258,7 +259,7 @@ function AdminCalendarHarnessSurface({ onAction }) {
   }
 
   return (
-    <main className="adminUsersCrmPage adminHarnessCrmSurface" data-testid="admin-calendar-harness">
+    <main className={`adminUsersCrmPage adminHarnessCrmSurface ${trainerWorkspaceStyles.workspaceRoot}`} data-testid="admin-calendar-harness">
       <TrainerAdminCalendarTab
         adminCalendarDays={adminCalendarDays}
         adminCalendarDraft={draft}
@@ -284,7 +285,7 @@ export default function AdminE2EHarness() {
 
   if (surface === "users") {
     return (
-      <main data-testid="admin-harness-root">
+      <main className={trainerWorkspaceStyles.workspaceRoot} data-testid="admin-harness-root">
         <AdminUsersHarnessSurface onAction={setLastAction} />
         <output data-testid="admin-harness-action">{lastAction}</output>
       </main>
@@ -293,7 +294,7 @@ export default function AdminE2EHarness() {
 
   if (surface === "programs") {
     return (
-      <main data-testid="admin-harness-root">
+      <main className={trainerWorkspaceStyles.workspaceRoot} data-testid="admin-harness-root">
         <AdminProgramsHarnessSurface onAction={setLastAction} />
         <output data-testid="admin-harness-action">{lastAction}</output>
       </main>
@@ -302,7 +303,7 @@ export default function AdminE2EHarness() {
 
   if (surface === "calendar") {
     return (
-      <main data-testid="admin-harness-root">
+      <main className={trainerWorkspaceStyles.workspaceRoot} data-testid="admin-harness-root">
         <AdminCalendarHarnessSurface onAction={setLastAction} />
         <output data-testid="admin-harness-action">{lastAction}</output>
       </main>
@@ -310,7 +311,7 @@ export default function AdminE2EHarness() {
   }
 
   return (
-    <main data-testid="admin-harness-root">
+    <main className={trainerWorkspaceStyles.workspaceRoot} data-testid="admin-harness-root">
       <AdminPanelHub
         canUseAdminFeatures={() => canAccessAdmin}
         setPage={(page) => setLastAction(`page:${page}`)}

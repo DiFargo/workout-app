@@ -1,5 +1,0 @@
-@media (max-width: 640px) {
-  html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain {
-    --main-home-primary-text-size: 16.2px;
-  }
-}

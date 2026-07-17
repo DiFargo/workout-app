@@ -1,0 +1,100 @@
+:global {
+/* === ADMIN PANEL MENU V87 === */
+
+.adminPanelHubPage {
+  min-height: 100vh;
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: max(82px, calc(env(safe-area-inset-top) + 74px)) 16px 34px;
+  background:
+    radial-gradient(circle at top, rgba(255,183,77,.11), transparent 38%),
+    var(--bg);
+}
+
+.adminPanelHubPage .adminFixedMainBack {
+  min-height: 40px !important;
+  padding-block: 0 !important;
+}
+
+.adminPanelHubHero {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.adminPanelHubHero span {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(255, 183, 77, .86);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .14em;
+}
+
+.adminPanelHubHero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 950;
+  letter-spacing: -.04em;
+}
+
+.adminPanelHubHero p {
+  max-width: 360px;
+  margin: 10px auto 0;
+  color: rgba(255,255,255,.52);
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.38;
+}
+
+.adminPanelHubGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.adminPanelHubCard {
+  width: 100%;
+  min-height: 104px;
+  padding: 18px;
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,.075);
+  background:
+    linear-gradient(180deg, rgba(24,27,23,.96), rgba(13,15,13,.96));
+  color: #fff;
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 14px;
+  row-gap: 4px;
+  text-align: left;
+  box-shadow: 0 16px 34px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.adminPanelHubCard i {
+  grid-row: 1 / 3;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  background: rgba(255,183,77,.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 23px;
+}
+
+.adminPanelHubCard strong {
+  font-size: 18px;
+  font-weight: 950;
+  line-height: 1.15;
+}
+
+.adminPanelHubCard small {
+  color: rgba(255,255,255,.48);
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+}

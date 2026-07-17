@@ -1,7 +1,0 @@
-/* v1.66 final alignment: food search header and main dashboard first-card gap. */
-
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard,
-html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileCabinetSection {
-  margin-top: 0 !important;
-}
-

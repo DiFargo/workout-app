@@ -1,7 +1,0 @@
-html:root[data-app-theme="warm-light"] body #root .nutritionZoukModalSheet .nutritionZoukSwipeShell .nutritionZoukFood {
-  position: relative !important;
-  z-index: 2 !important;
-  transition: transform 0.18s ease, opacity 0.18s ease !important;
-  touch-action: pan-y !important;
-  will-change: transform !important;
-}
