@@ -389,7 +389,6 @@ export async function hydrateRemoteTelegramProfile({
 }
 
 export function applySignedOutBootstrapState({
-  STORAGE_KEY,
   setClientProgressPhotos,
   setCurrentUserRole,
   setFirstSetupProfileHydrated,
