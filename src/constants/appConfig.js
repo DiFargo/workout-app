@@ -1,4 +1,16 @@
-export const APP_VERSION = `v.${typeof __APP_VERSION__ === "undefined" ? "test" : __APP_VERSION__}`;
+export function formatAppVersion(version) {
+  const normalizedVersion = String(version || "test").trim();
+  const semverParts = normalizedVersion.match(/^(\d+)\.(\d+)\.(\d+)$/);
+
+  if (!semverParts) return `v.${normalizedVersion}`;
+
+  const [, major, minor, build] = semverParts;
+  return `v.${major}.${minor}.${build.padStart(3, "0")}`;
+}
+
+export const APP_VERSION = formatAppVersion(
+  typeof __APP_VERSION__ === "undefined" ? "test" : __APP_VERSION__
+);
 export const BARCODE_SEARCH_ENABLED = false;
 export const INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS = 850;
 export const STORAGE_KEY = "workout_tracker_v1";

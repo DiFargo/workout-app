@@ -261,8 +261,13 @@ export async function loadRemoteUserBootstrapState({
     setWorkoutModeRemember(Boolean(resolvedWorkoutModePreference?.remember));
     safeWriteUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, user.uid, resolvedWorkoutModePreference);
 
-    if (remoteTheme === APP_THEMES.WARM_LIGHT || remoteTheme === APP_THEMES.DARK_GREEN) {
+    const isLegacyDefaultDarkTheme =
+      remoteTheme === APP_THEMES.DARK_GREEN && roleData.appThemePreference !== "manual";
+    if (remoteTheme === APP_THEMES.WARM_LIGHT ||
+      (remoteTheme === APP_THEMES.DARK_GREEN && !isLegacyDefaultDarkTheme)) {
       setAppTheme(remoteTheme);
+    } else if (isLegacyDefaultDarkTheme) {
+      setAppTheme(APP_THEMES.WARM_LIGHT);
     }
 
     if (remoteProfileCompleted) {

@@ -1,20 +1,22 @@
+import styles from "./AuthScreens.module.css";
+
 export function AppSplash() {
   return (
-    <div className="appSplash">
-      <div className="splashInner">
-        <div className="splashMark">🏋️</div>
-        <div className="splashLogo">GYM</div>
-        <div className="splashText">Загрузка тренировки</div>
-        <div className="splashProgress">
+    <main className={styles.appSplash} role="status" aria-label="Загрузка приложения">
+      <div className={styles.splashInner}>
+        <div className={styles.splashMark}>🏋️</div>
+        <div className={styles.splashLogo}>GYM</div>
+        <div className={styles.splashText}>Загрузка тренировки</div>
+        <div className={styles.splashProgress}>
           <span />
         </div>
-        <div className="splashDots" aria-hidden="true">
+        <div className={styles.splashDots} aria-hidden="true">
           <i />
           <i />
           <i />
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

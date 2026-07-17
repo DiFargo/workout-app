@@ -122,7 +122,9 @@ test("the application shell lazy-loads the runtime coordinator", async () => {
 
   assert.match(source, /const AppCore = lazy\(\(\) => import\(["']\.\/AppCore["']\)\)/);
   assert.match(source, /<Suspense/);
-  assert.match(source, /App\.module\.css/);
+  assert.match(source, /import \{ AppSplash \} from ["']\.\/components\/auth\/AuthScreens["']/);
+  assert.match(source, /fallback=\{<AppSplash \/>\}/);
+  assert.doesNotMatch(source, /App\.module\.css/);
 });
 
 test("source modules are reachable and acyclic", async () => {

@@ -316,5 +316,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
       clearBootstrapTimers();
       unsubscribe();
     };
+    // Auth owns this subscription lifecycle. Re-subscribing when the context factory
+    // is recreated would replay the complete bootstrap after every app render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

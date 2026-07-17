@@ -11,6 +11,8 @@ export async function submitFirstSetupProfileWithDeps({
   setFirstSetupSaveStatus,
   setOnboardingStep,
   setPage,
+  setProfileAccount,
+  setProfileAccountDraft,
   setShowFirstSetupOnboarding
 }) {
   if (!hasRequiredAiNutritionProfileFields(aiNutritionProfileDraft)) return;
@@ -36,6 +38,18 @@ export async function submitFirstSetupProfileWithDeps({
     // Local completion marker is best effort only.
   }
 
+  const displayName = String(aiNutritionProfileDraft.name || "").trim();
+  if (displayName) {
+    setProfileAccount?.((currentAccount) => ({
+      ...currentAccount,
+      displayName
+    }));
+    setProfileAccountDraft?.((currentDraft) => ({
+      ...currentDraft,
+      displayName
+    }));
+  }
+
   setFirstSetupCompletedInSession(true);
   setShowFirstSetupOnboarding(false);
   setOnboardingStep(0);
@@ -56,6 +70,8 @@ export function createFirstSetupHandlers(getContext) {
       setFirstSetupSaveStatus,
       setOnboardingStep,
       setPage,
+      setProfileAccount,
+      setProfileAccountDraft,
       setShowFirstSetupOnboarding,
       showAppError,
       user
@@ -74,6 +90,8 @@ export function createFirstSetupHandlers(getContext) {
       setFirstSetupSaveStatus,
       setOnboardingStep,
       setPage,
+      setProfileAccount,
+      setProfileAccountDraft,
       setShowFirstSetupOnboarding
     });
   }

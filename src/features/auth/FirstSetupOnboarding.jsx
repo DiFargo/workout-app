@@ -183,11 +183,7 @@ export default function FirstSetupOnboarding({
     ));
   }, [
     onboardingStep,
-    profileDraft.age,
-    profileDraft.weight,
-    profileDraft.height,
-    profileDraft.targetWeight,
-    profileDraft.goal,
+    profileDraft,
     setProfileDraft
   ]);
 
