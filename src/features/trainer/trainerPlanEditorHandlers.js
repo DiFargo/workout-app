@@ -1,5 +1,3 @@
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
 import {
   getTrainerNextExerciseId,
   getTrainerNextExerciseSetIndex,
@@ -12,6 +10,7 @@ import {
   normalizeTrainerNextExerciseDefaults
 } from "./trainerWorkoutEditHelpers";
 import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
+import { uploadStorageFile } from "../../utils/firebaseStorage";
 
 const DEFAULT_EXERCISE_NAME = "\u041d\u043e\u0432\u043e\u0435 \u0443\u043f\u0440\u0430\u0436\u043d\u0435\u043d\u0438\u0435";
 const DEFAULT_DAY_NAME = "\u0414\u0435\u043d\u044c";
@@ -47,7 +46,6 @@ export function createTrainerPlanEditorHandlers({
   trainerExerciseLibraryItems,
   selectedUserId,
   auth,
-  storage,
   setAdminExerciseVideoUploadingId,
   setAdminClientStatus
 }) {
@@ -291,10 +289,11 @@ export function createTrainerPlanEditorHandlers({
       }
 
       const safeName = String(file.name || "exercise-video").replace(/[^\w\u0430-\u044f\u0410-\u042f\u0451\u0401.-]+/g, "_");
-      const storageRef = ref(storage, `exercise-videos/${owner}/${selectedUserId || owner}/${Date.now()}-${safeName}`);
-
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
+      const uploadedVideo = await uploadStorageFile(
+        `exercise-videos/${owner}/${selectedUserId || owner}/${Date.now()}-${safeName}`,
+        file
+      );
+      const url = uploadedVideo.url;
 
       const nextWorkouts = mapTrainerNextWorkoutSetExercise(getPlanWorkouts(plan), workoutId, exerciseId, (exercises) => exercises.map((exercise) => (
         exercise.id === exerciseId ? { ...exercise, video: url, videoAutoFilledFrom: "" } : exercise

@@ -32,26 +32,41 @@ export function getWorkoutCover(workout) {
   return bestMatch?.file || "";
 }
 
+const LEGACY_WORKOUT_COVER_PATHS = Object.freeze({
+  "/workout-covers/1arms.webp": "/workout-covers/arms.webp",
+  "/workout-covers/1bent.webp": "/workout-covers/bent.webp",
+  "/workout-covers/1chest.webp": "/workout-covers/chest.webp",
+  "/workout-covers/1incline_smith_press.webp": "/workout-covers/incline_smith_press.webp",
+  "/workout-covers/1legs.webp": "/workout-covers/legs.webp",
+  "/workout-covers/1shoulders.webp": "/workout-covers/shoulders.webp",
+  "/workout-covers/1tbar_row.webp": "/workout-covers/tbar_row.webp"
+});
+
+function normalizeWorkoutCoverPath(value) {
+  const path = typeof value === "string" ? value.trim() : "";
+  return LEGACY_WORKOUT_COVER_PATHS[path] || path;
+}
+
 export const WORKOUT_MENU_ITEMS = [
   {
     day: "День 1",
     title: "Спина + плечи",
-    image: "/workout-covers/menu-day-1.png"
+    image: "/workout-covers/bent.webp"
   },
   {
     day: "День 2",
     title: "Грудь + плечи + руки",
-    image: "/workout-covers/menu-day-2.png"
+    image: "/workout-covers/chest.webp"
   },
   {
     day: "День 3",
     title: "Спина + плечи",
-    image: "/workout-covers/menu-day-3.png"
+    image: "/workout-covers/shoulders.webp"
   },
   {
     day: "День 4",
     title: "Грудь + руки",
-    image: "/workout-covers/menu-day-4.png"
+    image: "/workout-covers/arms.webp"
   }
 ];
 
@@ -65,7 +80,7 @@ export function getWorkoutPresentationImage(workoutItem, workoutTitle, workoutMe
     workoutItem?.poster ||
     exerciseImage;
 
-  if (directImage) return directImage;
+  if (directImage) return normalizeWorkoutCoverPath(directImage);
 
   const content = `${workoutTitle} ${(workoutItem?.exercises || []).map((exercise) => exercise?.name || "").join(" ")}`.toLowerCase();
   if (/спин|плеч|тяга|подтяг|дельт/.test(content)) return workoutMenuItems[0]?.image || "";

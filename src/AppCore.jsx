@@ -226,7 +226,7 @@ import {
   getTimestampValue
 } from "./utils/auditSafety";
 
-import { auth, db, storage } from "./firebase";
+import { auth, db } from "./firebase";
 
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
@@ -970,7 +970,6 @@ function AppRuntime() {
     MEASUREMENTS_STORAGE_KEY,
     auth,
     db,
-    storage,
     aiNutritionProfile,
     aiNutritionProfileDraft,
     measurementReplayInProgressRef,
@@ -1632,7 +1631,6 @@ function AppRuntime() {
     auth,
     appTheme,
     db,
-    storage,
     profileAccount,
     profileAccountDraft,
     profileAccountAvatarFile,
@@ -1790,7 +1788,6 @@ function AppRuntime() {
     trainerExerciseLibraryItems,
     selectedUserId,
     auth,
-    storage,
     setAdminExerciseVideoUploadingId,
     setAdminClientStatus
   });
@@ -2012,7 +2009,6 @@ function AppRuntime() {
   } = createTrainerClientControlHandlers({
     auth,
     db,
-    storage,
     adminSelectedClient,
     adminPaymentDraft,
     adminProgressPhotoFiles,
@@ -3081,7 +3077,6 @@ function AppRuntime() {
     startPerformanceCheck,
     startProfileAvatarCropDrag,
     startRestTimer,
-    storage,
     swipeDirection,
     swipeOffset,
     telegramConnectOpen,

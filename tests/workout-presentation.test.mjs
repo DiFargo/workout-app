@@ -34,6 +34,11 @@ test("workout presentation image prefers direct image and then fallback groups",
   );
 
   assert.equal(
+    getWorkoutPresentationImage({ image: "/workout-covers/1arms.webp" }, "Руки"),
+    "/workout-covers/arms.webp"
+  );
+
+  assert.equal(
     getWorkoutPresentationImage({ exercises: [{ name: "Тяга нижнего блока" }] }, "Спина"),
     WORKOUT_MENU_ITEMS[0].image
   );

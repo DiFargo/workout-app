@@ -31,7 +31,7 @@ import ProfileSettingsTab from "./ProfileSettingsTab";
 import ProfileTelegramModal from "./ProfileTelegramModal";
 import ProfileTrainerNotificationsModal from "./ProfileTrainerNotificationsModal";
 import ProfileWorkoutJournalModal from "./ProfileWorkoutJournalModal";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { uploadStorageFile } from "../../../utils/firebaseStorage";
 
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 25 * 1024 * 1024;
 
@@ -214,7 +214,6 @@ export default function ProfileDashboardRoute(ctx) {
     shiftProfileWorkoutMonthKey,
     sortWorkoutDays,
     startProfileAvatarCropDrag,
-    storage,
     telegramConnectOpen,
     telegramLoginWidgetReady,
     telegramLinking,
@@ -403,17 +402,12 @@ export default function ProfileDashboardRoute(ctx) {
     let attachment = null;
 
     if (attachmentFile) {
-      if (!storage) {
-        throw new Error("Storage is required to upload feedback attachment");
-      }
-
       if (attachmentFile.size > MAX_FEEDBACK_ATTACHMENT_BYTES) {
         throw new Error("Feedback attachment is too large");
       }
 
       const safeName = getSafeFeedbackAttachmentName(attachmentFile);
-      const attachmentRef = ref(storage, `feedback/${user.uid}/${feedbackId}/${Date.now()}-${safeName}`);
-      await uploadBytes(attachmentRef, attachmentFile, {
+      const uploadedAttachment = await uploadStorageFile(`feedback/${user.uid}/${feedbackId}/${Date.now()}-${safeName}`, attachmentFile, {
         contentType: attachmentFile.type || "application/octet-stream",
         customMetadata: {
           feedbackId,
@@ -424,10 +418,10 @@ export default function ProfileDashboardRoute(ctx) {
 
       attachment = {
         name: attachmentFile.name,
-        path: attachmentRef.fullPath,
+        path: uploadedAttachment.path,
         size: attachmentFile.size,
         type: attachmentFile.type || "",
-        url: await getDownloadURL(attachmentRef)
+        url: uploadedAttachment.url
       };
     }
 

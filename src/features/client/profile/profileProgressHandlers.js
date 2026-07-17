@@ -1,8 +1,8 @@
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { createClientResourceId } from "../../../domain/clientInsights";
 import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
+import { uploadStorageFile } from "../../../utils/firebaseStorage";
 import { compressProgressPhoto } from "../../../utils/imageCompression";
 import {
   getFailedMeasurementQueue,
@@ -23,7 +23,6 @@ export function createProfileProgressHandlers({
   MEASUREMENTS_STORAGE_KEY,
   auth,
   db,
-  storage,
   aiNutritionProfile,
   aiNutritionProfileDraft,
   measurementReplayInProgressRef,
@@ -148,12 +147,11 @@ export function createProfileProgressHandlers({
     try {
       const uploadedEntries = await Promise.all(requiredViews.map(async (view) => {
         const compressed = await compressProgressPhoto(profileProgressPhotoFiles[view]);
-        const photoRef = ref(storage, `progress-photos/${uid}/${photoId}/${view}.webp`);
-        await uploadBytes(photoRef, compressed, {
+        const uploadedPhoto = await uploadStorageFile(`progress-photos/${uid}/${photoId}/${view}.webp`, compressed, {
           contentType: "image/webp",
           cacheControl: "public,max-age=31536000,immutable"
         });
-        return [`${view}Url`, await getDownloadURL(photoRef)];
+        return [`${view}Url`, uploadedPhoto.url];
       }));
       const photoUrls = Object.fromEntries(uploadedEntries);
       const now = new Date().toISOString();

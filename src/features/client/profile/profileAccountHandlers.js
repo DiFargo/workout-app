@@ -8,13 +8,9 @@ import {
   updateProfile
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes
-} from "firebase/storage";
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import { getDefaultLoginAlias } from "../../../utils/clientUx";
+import { uploadStorageFile } from "../../../utils/firebaseStorage";
 
 const googleReauthProvider = new GoogleAuthProvider();
 const PROFILE_UPDATE_EMAIL_FUNCTION_URL = "https://europe-west1-tren-85720.cloudfunctions.net/profileUpdateEmail";
@@ -38,7 +34,6 @@ export function createProfileAccountHandlers({
   auth,
   appTheme,
   db,
-  storage,
   profileAccount,
   profileAccountDraft,
   profileAccountAvatarFile,
@@ -234,11 +229,10 @@ export function createProfileAccountHandlers({
       const avatarFile = avatarFileOverride || profileAccountAvatarFile;
       if (avatarFile) {
         const extension = avatarFile.name.split(".").pop() || "jpg";
-        const avatarRef = ref(storage, `users/${currentUser.uid}/profile/avatar.${extension}`);
-        await uploadBytes(avatarRef, avatarFile, {
+        const uploadedAvatar = await uploadStorageFile(`users/${currentUser.uid}/profile/avatar.${extension}`, avatarFile, {
           contentType: avatarFile.type || "image/jpeg"
         });
-        avatarUrl = await getDownloadURL(avatarRef);
+        avatarUrl = uploadedAvatar.url;
       }
 
       await updateProfile(currentUser, { displayName, photoURL: avatarUrl || null });

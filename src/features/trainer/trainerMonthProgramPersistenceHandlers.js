@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { createFourWeekWorkoutProgramBlocks } from "../../utils/auditSafety";
+import { uploadStorageFile } from "../../utils/firebaseStorage";
 import { buildDraftProgramMetadata } from "../../utils/trainerProgramLifecycle.js";
 import { requestTrainerAiProgramImport } from "./trainerAiProgramImport";
 import { createTrainerMonthProgramImportHelpers } from "./trainerMonthProgramImportHelpers";
@@ -50,7 +50,6 @@ export function createTrainerMonthProgramPersistenceHandlers({
   setMonthProgram,
   setPlan,
   showAppError,
-  storage,
   user
 }) {
   const {
@@ -143,10 +142,11 @@ export function createTrainerMonthProgramPersistenceHandlers({
         return;
       }
       const safeName = String(file.name || "exercise-video").replace(/[^\wа-яА-ЯёЁ.-]+/g, "_");
-      const storageRef = ref(storage, `exercise-videos/${owner.uid}/${monthProgram.id || "draft"}/${Date.now()}-${safeName}`);
-
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
+      const uploadedVideo = await uploadStorageFile(
+        `exercise-videos/${owner.uid}/${monthProgram.id || "draft"}/${Date.now()}-${safeName}`,
+        file
+      );
+      const url = uploadedVideo.url;
 
       const programWithVideo = normalizeMonthProgram({
         ...monthProgram,

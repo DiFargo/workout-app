@@ -84,7 +84,6 @@ export default function TrainerAdminWorkoutsRoute({
   showAppConfirm,
   showAppError,
   sortWorkoutDays,
-  storage,
   telegramProfile,
   trainerExerciseLibraryItems,
   trainerNextWorkspaceHandlers,
@@ -277,7 +276,6 @@ export default function TrainerAdminWorkoutsRoute({
     setMonthProgram,
     setPlan,
     showAppError,
-    storage,
     user
   });
 

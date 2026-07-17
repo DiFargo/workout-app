@@ -1,16 +1,15 @@
 import { doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import {
   createClientResourceId,
   getClientPaymentAttention
 } from "../../domain/clientInsights";
+import { uploadStorageFile } from "../../utils/firebaseStorage";
 import { compressProgressPhoto } from "../../utils/imageCompression";
 
 export function createTrainerClientControlHandlers({
   auth,
   db,
-  storage,
   adminSelectedClient,
   adminPaymentDraft,
   adminProgressPhotoFiles,
@@ -67,12 +66,11 @@ export function createTrainerClientControlHandlers({
       const photoUrls = {};
       for (const [view, file] of selectedFiles) {
         const compressed = await compressProgressPhoto(file);
-        const photoRef = ref(storage, `progress-photos/${clientId}/${photoId}/${view}.webp`);
-        await uploadBytes(photoRef, compressed, {
+        const uploadedPhoto = await uploadStorageFile(`progress-photos/${clientId}/${photoId}/${view}.webp`, compressed, {
           contentType: "image/webp",
           cacheControl: "public,max-age=31536000,immutable"
         });
-        photoUrls[`${view}Url`] = await getDownloadURL(photoRef);
+        photoUrls[`${view}Url`] = uploadedPhoto.url;
       }
 
       const photo = {
