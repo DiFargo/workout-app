@@ -219,7 +219,7 @@ export default function WorkoutListPage({
 
   return (
     <div
-      className={`${styles.page} ${isIndividualWorkoutMode ? styles.individualMode : styles.basicMode}`}
+      className={`${styles.page} ${isIndividualWorkoutMode ? styles.individualMode : styles.basicMode} ${isDeckWorkoutMode ? styles.deckMode : ""}`}
       data-css-module-scope="workout-list"
     >
       <div className={styles.hero}>

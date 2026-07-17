@@ -12,13 +12,17 @@
     background: var(--color-background);
   }
 
-  .individualMode {
-    --render-accent: #5d43e8;
+  .basicMode {
+    --workout-card-min-height: 5.75rem;
+  }
+
+  .individualMode,
+  .deckMode {
     --workout-card-min-height: clamp(27rem, calc(100dvh - 18.25rem), 34.5rem);
   }
 
-  .basicMode {
-    --workout-card-min-height: 5.75rem;
+  .individualMode {
+    --render-accent: #5d43e8;
   }
 
   .hero {
