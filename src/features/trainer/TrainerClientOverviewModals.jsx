@@ -35,7 +35,7 @@ export default function TrainerClientOverviewModals({
             if (event.target === event.currentTarget) setAdminTaskComposerOpen(false);
           }}
         >
-          <section className="trainerClientDashboardModal" role="dialog" aria-modal="true" aria-labelledby="trainerTaskModalTitle">
+          <section className="trainerClientDashboardModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainerTaskModalTitle">
             <header>
               <div>
                 <span>ЗАДАЧА КЛИЕНТУ</span>
@@ -85,7 +85,7 @@ export default function TrainerClientOverviewModals({
             if (event.target === event.currentTarget) setAdminPhotoCompareOpen(false);
           }}
         >
-          <section className="trainerClientDashboardModal trainerClientPhotoCompareModal" role="dialog" aria-modal="true" aria-labelledby="trainerPhotoCompareTitle">
+          <section className="trainerClientDashboardModal trainerClientPhotoCompareModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainerPhotoCompareTitle">
             <header>
               <div>
                 <span>ФОТО ПРОГРЕССА</span>
@@ -146,7 +146,7 @@ export default function TrainerClientOverviewModals({
             if (event.target === event.currentTarget) setAdminProgramControlOpen(false);
           }}
         >
-          <section className="trainerClientDashboardModal" role="dialog" aria-modal="true" aria-labelledby="trainerProgramControlTitle">
+          <section className="trainerClientDashboardModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainerProgramControlTitle">
             <header>
               <div>
                 <span>КОНТРОЛЬ ПРОГРАММЫ</span>

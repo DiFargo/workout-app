@@ -11,9 +11,6 @@ export default function NutritionCalendarModal({
   return (
     <div
       className={styles.overlay}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Календарь"
       data-testid="nutrition-calendar-modal"
       data-css-module-scope="nutrition-calendar-modal"
     >
@@ -25,7 +22,14 @@ export default function NutritionCalendarModal({
         data-nutrition-calendar-action="backdrop"
       />
 
-      <div className={styles.sheet} data-testid="nutrition-calendar-sheet">
+      <div
+        className={styles.sheet}
+        data-testid="nutrition-calendar-sheet"
+        role="dialog"
+        aria-modal="true"
+        data-modal-surface="true"
+        aria-label="Календарь"
+      >
         <div className={styles.grabber} aria-hidden="true" data-nutrition-calendar-grabber />
         <button
           type="button"

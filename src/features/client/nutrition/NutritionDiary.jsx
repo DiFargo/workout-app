@@ -51,6 +51,7 @@ export default function NutritionDiary({
           data-testid="nutrition-diary-modal"
           role="dialog"
           aria-modal="true"
+          data-modal-surface="true"
           aria-label="Дневник питания"
         >
           <button

@@ -87,6 +87,7 @@ export default function ProfileNutritionModal({
         data-testid="profile-nutrition-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="cabinetNutritionModalTitle"
         onClick={(event) => event.stopPropagation()}
       >

@@ -496,10 +496,10 @@ function TrainerAvatar({ client, size = "medium" }) {
 
 function TrainerConfirmDialog({ title, text, confirmLabel = "Удалить", onConfirm, onCancel }) {
   return (
-    <div className="trainerConfirmBackdrop" role="dialog" aria-modal="true" aria-label={title || "Подтверждение действия"} onMouseDown={(event) => {
+    <div className="trainerConfirmBackdrop" onMouseDown={(event) => {
       if (event.target === event.currentTarget) onCancel?.();
     }}>
-      <section className="trainerConfirmDialog">
+      <section className="trainerConfirmDialog" role="dialog" aria-modal="true" data-modal-surface="true" aria-label={title || "Подтверждение действия"}>
         <header>
           <span>ПОДТВЕРЖДЕНИЕ</span>
           <h2>{title}</h2>
@@ -1025,7 +1025,7 @@ function ClientSubscriptionCard({ client, onSave }) {
 
       {open ? (
         <div className={`trainerNextModalBackdrop ${workspaceFeatureStyles.subscriptionModalBackdrop}`} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}>
-          <section className={workspaceFeatureStyles.subscriptionModal} role="dialog" aria-modal="true" aria-labelledby="trainer-subscription-modal-title">
+          <section className={workspaceFeatureStyles.subscriptionModal} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-subscription-modal-title">
             <button type="button" className={workspaceFeatureStyles.subscriptionModalClose} onClick={() => setOpen(false)} aria-label="Закрыть"><X size={18} /></button>
             <header><span>АБОНЕМЕНТ</span><h2 id="trainer-subscription-modal-title">Редактирование абонемента</h2><p>Срок действия и баланс тренировок клиента.</p></header>
             <div className={workspaceFeatureStyles.subscriptionModalGrid}>
@@ -1853,7 +1853,7 @@ function ClientWorkoutHistoryBlock({ history = [] }) {
 
     {historyModalOpen ? (
       <div className="trainerClientModalBackdrop trainerWorkoutHistoryModalBackdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setHistoryModalOpen(false)}>
-        <section className="trainerWorkoutHistoryModal" role="dialog" aria-modal="true" aria-labelledby="trainer-workout-history-modal-title" onMouseDown={(event) => event.stopPropagation()}>
+        <section className="trainerWorkoutHistoryModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-workout-history-modal-title" onMouseDown={(event) => event.stopPropagation()}>
           <header>
             <div>
               <span>ИСТОРИЯ ТРЕНИРОВОК</span>
@@ -4497,7 +4497,7 @@ function TrainerWorkoutEditor({
 
       {libraryEditorExercise ? (
         <div className={`trainerNextModalBackdrop ${exerciseLibraryEditorStyles.backdrop}`} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setLibraryEditorTarget(null)}>
-          <section className={`trainerNextWorkoutPreview ${exerciseLibraryEditorStyles.modal}`} role="dialog" aria-modal="true" aria-labelledby="trainer-library-editor-title">
+          <section className={`trainerNextWorkoutPreview ${exerciseLibraryEditorStyles.modal}`} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-library-editor-title">
             <button type="button" className="trainerNextModalClose" onClick={() => setLibraryEditorTarget(null)} aria-label="Закрыть редактор упражнения"><X size={18} /></button>
             <header className={exerciseLibraryEditorStyles.header}>
               <small>БИБЛИОТЕКА УПРАЖНЕНИЙ</small>
@@ -4537,7 +4537,7 @@ function TrainerWorkoutEditor({
 
       {previewOpen ? (
         <div className="trainerNextModalBackdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setPreviewOpen(false)}>
-          <section className="trainerNextWorkoutPreview" role="dialog" aria-modal="true" aria-labelledby="trainer-workout-preview-title">
+          <section className="trainerNextWorkoutPreview" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-workout-preview-title">
             <button type="button" className="trainerNextModalClose" onClick={() => setPreviewOpen(false)} aria-label="Закрыть предпросмотр"><X size={18} /></button>
             <small>ПРЕДПРОСМОТР ДЛЯ КЛИЕНТА</small>
             <h2 id="trainer-workout-preview-title">{client?.name || "План тренировок"}</h2>
@@ -4574,7 +4574,7 @@ function CreateClientModal({ state }) {
   if (!state?.open) return null;
   return (
     <div className="trainerNextModalBackdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && state.onClose()}>
-      <section className="trainerNextModal" role="dialog" aria-modal="true" aria-labelledby="trainer-create-client-title">
+      <section className="trainerNextModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-create-client-title">
         <button className="trainerNextModalClose" type="button" onClick={state.onClose} aria-label="Закрыть">×</button>
         <div className="trainerNextModalIcon"><UserPlus size={24} /></div>
         <h2 id="trainer-create-client-title">Пригласить клиента</h2>
@@ -4979,6 +4979,7 @@ function TrainerUtilityPage({
                 className="trainerMessageModal"
                 role="dialog"
                 aria-modal="true"
+                data-modal-surface="true"
                 aria-labelledby="trainer-message-reply-title"
               >
                 <header className="trainerMessageModalHead">

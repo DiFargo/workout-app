@@ -26,6 +26,7 @@ export function WorkoutModePickerDialog({
         data-testid="workout-mode-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="workoutModeModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
@@ -113,6 +114,7 @@ export function IndividualWorkoutHistoryDialog({
         data-testid="workout-history-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="workoutHistoryModalTitle"
         onClick={(event) => event.stopPropagation()}
       >

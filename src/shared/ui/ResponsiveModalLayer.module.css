@@ -1,5 +1,6 @@
-/* Shared responsive composition for every accessible application dialog. */
-:global([role="dialog"][aria-modal="true"]:not(.trainerNextMoreDrawer)) {
+/* A modal surface is explicitly marked so a fullscreen backdrop never gets
+ * mistaken for the dialog itself at a tablet breakpoint. */
+:global([data-modal-surface="true"]) {
   box-sizing: border-box;
   max-width: min(var(--layout-modal-max-inline), calc(100vw - (var(--layout-modal-gutter) * 2))) !important;
   max-height: calc(100dvh - (var(--layout-modal-gutter) * 2)) !important;
@@ -9,19 +10,19 @@
   scrollbar-gutter: stable;
 }
 
-:global([role="dialog"][aria-modal="true"]:not(.trainerNextMoreDrawer) button) {
+:global([data-modal-surface="true"] button) {
   min-height: 44px;
 }
 
 @media (max-width: 699px) {
-  :global([role="dialog"][aria-modal="true"]:not(.trainerNextMoreDrawer)) {
+  :global([data-modal-surface="true"]) {
     width: calc(100vw - (var(--layout-modal-gutter) * 2)) !important;
     border-radius: 20px !important;
   }
 }
 
 @media (min-width: 700px) and (max-width: 979px) {
-  :global([role="dialog"][aria-modal="true"]:not(.trainerNextMoreDrawer)) {
+  :global([data-modal-surface="true"]) {
     border-radius: 20px !important;
   }
 }

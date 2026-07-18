@@ -30,6 +30,7 @@ export default function ProfileWorkoutJournalModal({
         data-testid="profile-workout-journal-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="cabinetWorkoutJournalTitle"
         onClick={(event) => event.stopPropagation()}
       >

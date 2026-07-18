@@ -10,7 +10,7 @@ export function WorkoutExitDialog({ open, onStay, onLeave }) {
       data-testid="workout-exit-dialog"
       data-css-module-scope="workout-dialogs"
     >
-      <div className={styles.exitCard} role="dialog" aria-modal="true" aria-label="Выход из тренировки">
+      <div className={styles.exitCard} role="dialog" aria-modal="true" data-modal-surface="true" aria-label="Выход из тренировки">
         <span className={styles.exitIcon} aria-hidden="true">↩</span>
         <h2>Выйти из тренировки?</h2>
         <p>Введённые данные сохранены в черновике. Ты сможешь продолжить позже.</p>
@@ -32,7 +32,7 @@ export function WorkoutIncompleteDialog({ open, completion, onContinue, onSave }
       data-testid="workout-incomplete-dialog"
       data-css-module-scope="workout-dialogs"
     >
-      <div className={styles.exitCard} role="dialog" aria-modal="true" aria-labelledby="workout-incomplete-title">
+      <div className={styles.exitCard} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="workout-incomplete-title">
         <span className={styles.exitIcon} aria-hidden="true">!</span>
         <h2 id="workout-incomplete-title">Сохранить неполную тренировку?</h2>
         <p>
@@ -66,6 +66,7 @@ export function PostWorkoutFeedbackDialog({
         className={styles.postCard}
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="post-workout-feedback-title"
       >
         <span className={styles.postBadge}>AI feedback</span>
@@ -198,6 +199,7 @@ export function WorkoutDraftRestoreDialog({
         className={styles.draftCard}
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="workoutDraftRestoreTitle"
         aria-describedby="workoutDraftRestoreDescription"
       >

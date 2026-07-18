@@ -27,6 +27,7 @@ export default function ProfileMeasurementsModal({
         data-testid="profile-measurements-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="profileMeasurementsModalTitle"
         onClick={(event) => event.stopPropagation()}
       >

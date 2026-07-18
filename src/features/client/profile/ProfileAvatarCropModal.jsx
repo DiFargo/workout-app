@@ -38,6 +38,7 @@ export default function ProfileAvatarCropModal({
         data-testid="profile-avatar-crop-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="profileAvatarCropTitle"
         onClick={(event) => event.stopPropagation()}
       >

@@ -31,6 +31,7 @@ export function FoodSearchSurface({
         data-testid={screenTestId}
         role={dialog ? "dialog" : undefined}
         aria-modal={dialog ? "true" : undefined}
+        data-modal-surface={dialog ? "true" : undefined}
         aria-label={ariaLabel}
       >
         {children}
@@ -86,6 +87,7 @@ export default function FoodSearchOverlay({
         data-testid="food-search-screen"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-label="Поиск еды"
       >
         <FoodSearchHeader {...headerProps} />

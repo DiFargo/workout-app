@@ -39,6 +39,7 @@ export default function ProfileEmailModal({
         data-testid="profile-email-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="profileEmailManageTitle"
         onClick={(event) => event.stopPropagation()}
       >

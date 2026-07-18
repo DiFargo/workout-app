@@ -27,6 +27,7 @@ export default function ProfileTrainerNotificationsModal({
         data-testid="profile-trainer-notifications-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="profileTrainerNotificationsTitle"
         onClick={(event) => event.stopPropagation()}
       >

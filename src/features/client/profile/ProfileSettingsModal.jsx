@@ -55,6 +55,7 @@ export default function ProfileSettingsModal({
         data-profile-settings-section={section}
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="cabinetSettingsModalTitle"
         onClick={(event) => event.stopPropagation()}
       >

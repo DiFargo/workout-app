@@ -354,6 +354,7 @@ export default function WorkoutExerciseSets({
             className={styles.modal}
             role="dialog"
             aria-modal="true"
+            data-modal-surface="true"
             aria-label={`Редактировать подход ${editingSetIndex + 1}`}
             onClick={(event) => event.stopPropagation()}
           >

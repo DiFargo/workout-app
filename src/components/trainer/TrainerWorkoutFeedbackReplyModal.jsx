@@ -71,7 +71,7 @@ export default function TrainerWorkoutFeedbackReplyModal({
     <div className={styles.backdrop} role="presentation" onMouseDown={(event) => {
       if (event.target === event.currentTarget) onRequestClose();
     }}>
-      <section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="trainer-feedback-reply-title">
+      <section className={styles.modal} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-feedback-reply-title">
         <header className={styles.header}>
           <div>
             <span>{isReply ? "ОТВЕТ НА КОММЕНТАРИЙ" : "СООБЩЕНИЕ КЛИЕНТУ"}</span>

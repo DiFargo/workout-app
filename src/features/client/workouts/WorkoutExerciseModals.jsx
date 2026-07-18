@@ -31,6 +31,7 @@ export default function WorkoutExerciseModals({
             className={styles.modal}
             role="dialog"
             aria-modal="true"
+            data-modal-surface="true"
             aria-labelledby="workoutExerciseNoteTitle"
             onClick={(event) => event.stopPropagation()}
           >
@@ -84,6 +85,7 @@ export default function WorkoutExerciseModals({
             className={`${styles.modal} ${styles.techniqueModal}`}
             role="dialog"
             aria-modal="true"
+            data-modal-surface="true"
             aria-labelledby="workoutExerciseTechniqueTitle"
             onClick={(event) => event.stopPropagation()}
           >

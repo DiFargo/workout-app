@@ -38,6 +38,7 @@ export default function NutritionPlanDetails({
       className={styles.dialog}
       role="dialog"
       aria-modal="true"
+      data-modal-surface="true"
       aria-label="План питания"
       data-nutrition-plan-part="dialog"
     >

@@ -22,6 +22,7 @@ export default function NutritionPhotoNotFoundModal({
         data-testid="nutrition-photo-not-found-modal"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="nutritionPhotoNotFoundTitle"
       >
         <button

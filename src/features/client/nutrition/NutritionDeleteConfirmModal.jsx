@@ -18,6 +18,7 @@ export default function NutritionDeleteConfirmModal({
       data-testid="nutrition-delete-confirm-modal"
       role="dialog"
       aria-modal="true"
+      data-modal-surface="true"
       aria-labelledby="nutrition-delete-title"
     >
       <button

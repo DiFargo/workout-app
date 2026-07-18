@@ -22,7 +22,7 @@ export default function TrainerWorkoutReviewDecisionModal({
 
   return (
     <div className={styles.backdrop} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && !saving && onClose?.()}>
-      <section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="trainer-workout-review-decision-title">
+      <section className={styles.modal} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-workout-review-decision-title">
         <button className={styles.close} type="button" aria-label="Закрыть решение по тренировке" onClick={onClose} disabled={saving}>
           <X size={20} />
         </button>

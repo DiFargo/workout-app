@@ -110,6 +110,7 @@ export default function DishIngredientPicker({
             data-testid="dish-ingredient-picker-sheet"
             role="dialog"
             aria-modal="true"
+            data-modal-surface="true"
             aria-labelledby="dish-ingredient-picker-title"
             tabIndex={-1}
             onClick={(event) => event.stopPropagation()}
@@ -239,6 +240,7 @@ export default function DishIngredientPicker({
             data-testid="dish-ingredient-confirm-card"
             role="dialog"
             aria-modal="true"
+            data-modal-surface="true"
             aria-labelledby="dish-ingredient-confirm-title"
           >
             <div className={styles.confirmTop} data-testid="dish-ingredient-confirm-top">

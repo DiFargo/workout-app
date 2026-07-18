@@ -145,6 +145,7 @@ export default function TrainerExerciseLoadReviewModal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-busy={Boolean(savingMode)}
         aria-labelledby="trainer-load-review-title"
         aria-describedby="trainer-load-review-description"

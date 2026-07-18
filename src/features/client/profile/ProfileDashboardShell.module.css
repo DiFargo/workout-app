@@ -151,6 +151,41 @@
   }
 }
 
+/* Tablet keeps the client application as one calm, readable surface instead
+ * of stretching phone layouts across the entire viewport. */
+@media (min-width: 700px) and (max-width: 979px) {
+  :global(:root[data-app-theme="warm-light"]) .root {
+    width: min(720px, calc(100vw - (var(--layout-tablet-gutter) * 2)));
+    max-width: 720px;
+    height: calc(100dvh - 24px);
+    min-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 12px auto;
+    padding: 24px 28px calc(118px + env(safe-area-inset-bottom, 0px));
+    border-radius: 28px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .mainContent,
+  :global(:root[data-app-theme="warm-light"]) .cabinetContent {
+    width: 100%;
+    max-width: 640px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .measurements,
+  :global(:root[data-app-theme="warm-light"]) .settings,
+  :global(:root[data-app-theme="warm-light"]) .nutrition {
+    width: min(720px, calc(100vw - (var(--layout-tablet-gutter) * 2)));
+    max-width: 720px;
+    height: calc(100dvh - 24px);
+    min-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 12px auto;
+    border-radius: 28px;
+  }
+}
+
 @media (min-width: 901px) {
   .main {
     width: 560px;

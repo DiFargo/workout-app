@@ -513,7 +513,7 @@ export default function TrainerProgramConstructor({
 
       {confirmDelete ? (
         <div className={styles.modalBackdrop} role="presentation" onMouseDown={() => setConfirmDelete(null)}>
-          <section className={styles.confirmModal} role="dialog" aria-modal="true" aria-labelledby="trainer-program-confirm-title" onMouseDown={(event) => event.stopPropagation()}>
+          <section className={styles.confirmModal} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-program-confirm-title" onMouseDown={(event) => event.stopPropagation()}>
             <h2 id="trainer-program-confirm-title">{confirmDelete.title}</h2><p>{confirmDelete.text}</p>
             <div><button type="button" onClick={() => setConfirmDelete(null)}>Отмена</button><button className={styles.deleteButton} type="button" onClick={confirmDelete.action}>Удалить</button></div>
           </section>

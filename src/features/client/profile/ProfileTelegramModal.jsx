@@ -25,6 +25,7 @@ export default function ProfileTelegramModal({
         data-testid="profile-telegram-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="profileTelegramManageTitle"
         onClick={(event) => event.stopPropagation()}
       >

@@ -1214,6 +1214,33 @@
     }
   }
 
+  @media (min-width: 43.75rem) and (max-width: 61.1875rem) {
+    .page {
+      width: min(720px, calc(100vw - (var(--layout-tablet-gutter) * 2)));
+      min-height: calc(100dvh - 24px);
+      height: calc(100dvh - 24px);
+      margin: 12px auto;
+      padding-right: 24px;
+      padding-left: 24px;
+      border: 1px solid var(--color-border);
+      border-radius: 28px;
+      box-shadow: 0 1.375rem 3.625rem rgba(54, 62, 108, 0.1);
+    }
+
+    .page.basicMode {
+      overflow-y: auto;
+    }
+
+    .page .hero,
+    .page .workoutList,
+    .page .featuredCard,
+    .page .workoutNav {
+      max-width: 640px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .headerButton,
     .workoutCard {

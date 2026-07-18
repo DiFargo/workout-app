@@ -99,6 +99,7 @@ export default function ProfileFeedbackModal({
         data-testid="profile-feedback-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="profileFeedbackTitle"
         onClick={(event) => event.stopPropagation()}
         onSubmit={handleSubmit}

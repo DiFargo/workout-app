@@ -87,6 +87,7 @@ export default function ProfilePasswordModal({
         data-testid="profile-password-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="profilePasswordManageTitle"
         onClick={(event) => event.stopPropagation()}
       >

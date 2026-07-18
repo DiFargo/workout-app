@@ -46,7 +46,14 @@ export default function FoodEditPage({
       data-css-module-scope="food-edit-page"
       data-food-edit-page-part="overlay"
     >
-      <div className={styles.sheet} data-testid="food-edit-page">
+      <div
+        className={styles.sheet}
+        data-testid="food-edit-page"
+        role="dialog"
+        aria-modal="true"
+        data-modal-surface="true"
+        aria-label={isDish ? "Редактирование блюда" : "Редактирование продукта"}
+      >
         <div className={styles.header} data-food-edit-page-part="header">
           <span
             className={styles.headerSpacer}

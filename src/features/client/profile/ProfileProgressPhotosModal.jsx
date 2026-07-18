@@ -51,6 +51,7 @@ export default function ProfileProgressPhotosModal({
         data-testid="profile-progress-photos-dialog"
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
         aria-labelledby="profileProgressPhotosTitle"
         onClick={(event) => event.stopPropagation()}
       >
