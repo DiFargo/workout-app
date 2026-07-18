@@ -45,12 +45,6 @@ export default function TrainerExerciseLoadReviewModal({
   const requiresWeight = target?.exercise?.requiresWeight ?? target?.exercise?.usesWeight ?? true;
 
   useEffect(() => {
-    setSets(cloneSets(target?.exercise));
-    setRest(target?.exercise?.rest || "90 сек");
-    setError("");
-  }, [target?.exercise, target?.workoutId]);
-
-  useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const focusTimer = window.setTimeout(() => okayButtonRef.current?.focus(), 80);

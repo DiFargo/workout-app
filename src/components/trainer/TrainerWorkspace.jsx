@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import workspaceStyles from "./TrainerWorkspace.module.css";
 import trainerProgramConstructorStyles from "./TrainerProgramConstructor.module.css";
 import TrainerWorkoutFeedbackReplyModal from "./TrainerWorkoutFeedbackReplyModal";
@@ -946,85 +946,6 @@ function TrainerDashboard({
       </section>
 
       <DashboardActionCenter actionCenter={actionCenter} onOpenClient={onOpenClient} />
-    </div>
-  );
-}
-
-function ProgressChart({ measurements = [] }) {
-  const [period, setPeriod] = useState("1w");
-  const periods = [
-    { id: "1w", label: "1 неделя", days: 7 },
-    { id: "1m", label: "1 месяц", days: 30 },
-    { id: "3m", label: "3 месяца", days: 90 },
-    { id: "6m", label: "6 месяцев", days: 180 }
-  ];
-  const selectedPeriod = periods.find((item) => item.id === period) || periods[0];
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - selectedPeriod.days);
-  startDate.setHours(0, 0, 0, 0);
-
-  const values = measurements
-    .map((item) => ({
-      item,
-      date: getMeasurementDate(item),
-      weight: getNumericField(item, ["weight", "values.weight"]),
-      muscle: getNumericField(item, ["muscleMass", "muscle", "leanMass", "values.muscleMass", "values.muscle", "values.leanMass"]),
-      fat: getNumericField(item, ["fatPercent", "bodyFat", "fat", "values.fatPercent", "values.bodyFat", "values.fat"])
-    }))
-    .filter((item) => item.date && item.date >= startDate)
-    .sort((a, b) => a.date - b.date);
-
-  const series = [
-    { id: "weight", label: "Вес (кг)", values: values.map((item) => item.weight), className: "weight" },
-    { id: "muscle", label: "Мышечная масса (кг)", values: values.map((item) => item.muscle), className: "muscle" },
-    { id: "fat", label: "Жир (%)", values: values.map((item) => item.fat), className: "fat" }
-  ].map((item) => ({
-    ...item,
-    points: item.values.map((value, index) => ({ value, index })).filter((point) => Number.isFinite(point.value))
-  })).filter((item) => item.points.length >= 2);
-
-  const getSeriesScale = (points) => {
-    const allValues = points.map((point) => point.value);
-    return { min: Math.min(...allValues), max: Math.max(...allValues) };
-  };
-  const getPointCoord = (point, scale) => {
-      const x = 42 + point.index * (390 / Math.max(1, values.length - 1));
-      const y = 126 - ((point.value - scale.min) / Math.max(1, scale.max - scale.min)) * 95;
-      return `${x},${y}`;
-  };
-  const makePoints = (points) => {
-    const scale = getSeriesScale(points);
-    return points.map((point) => getPointCoord(point, scale)).join(" ");
-  };
-  const dateLabels = values.length
-    ? [values[0], values[Math.floor(values.length / 2)], values[values.length - 1]]
-        .filter(Boolean)
-        .map((item) => item.date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }))
-    : [];
-
-  return (
-    <div className="trainerNextProgressChart">
-      <div className="trainerNextChartHead">
-        <strong>Динамика прогресса</strong>
-        <div>{periods.map((item) => <button type="button" className={item.id === period ? "active" : ""} aria-pressed={item.id === period} key={item.id} onClick={() => setPeriod(item.id)}>{item.label}</button>)}</div>
-      </div>
-      {series.length ? (
-        <>
-          <svg viewBox="0 0 480 160" role="img" aria-label="Динамика веса, мышечной массы и процента жира">
-            {[28, 60, 92, 124].map((y) => <line key={y} x1="40" y1={y} x2="444" y2={y} className="grid" />)}
-            {series.map((item) => <polyline key={item.id} points={makePoints(item.points)} className={item.className} />)}
-            {series.find((item) => item.id === "weight")?.points.map((point) => {
-              const weightSeries = series.find((item) => item.id === "weight");
-              const [cx, cy] = getPointCoord(point, getSeriesScale(weightSeries.points)).split(",");
-              return <circle key={`w${point.index}`} cx={cx} cy={cy} r="2.5" className="weightDot" />;
-            })}
-          </svg>
-          <div className="trainerNextChartDates">{dateLabels.map((label, index) => <span key={`${label}-${index}`}>{label}</span>)}</div>
-          <div className="trainerNextLegend">{series.map((item) => <span className={item.className} key={item.id}>{item.label}</span>)}</div>
-        </>
-      ) : (
-        <div className="trainerNextChartEmpty">Недостаточно реальных замеров за выбранный период.</div>
-      )}
     </div>
   );
 }
@@ -2355,10 +2276,6 @@ function ClientExerciseProgress({
   const [expandedExercise, setExpandedExercise] = useState("");
   const [decisionItem, setDecisionItem] = useState(null);
   const [locallyReviewedKeys, setLocallyReviewedKeys] = useState(() => new Set());
-  useEffect(() => {
-    setDecisionItem(null);
-    setLocallyReviewedKeys(new Set());
-  }, [client?.id]);
   const { allExerciseProgress } = getExerciseProgressData(history);
   const persistedReviewedKeys = useMemo(
     () => getTrainerExerciseProgressReviewedKeys(reviews),
@@ -2514,6 +2431,7 @@ function ClientExerciseProgress({
       </div>
       {decisionItem ? (
         <TrainerExerciseLoadReviewModal
+          key={`${decisionItem.reviewKey}:${decisionTarget?.workoutId || "none"}:${decisionTarget?.exerciseId || "none"}`}
           item={decisionItem}
           target={decisionTarget}
           reviewKey={decisionItem.reviewKey}
@@ -3644,6 +3562,7 @@ function TrainerClientDetail({
             />
           ) : (
             <ClientExerciseProgress
+              key={client?.id || "trainer-client-exercise-progress"}
               client={client}
               history={history}
               workouts={workouts}
@@ -4721,14 +4640,19 @@ function TrainerGlobalSubscriptionNotifications({ settings, onLoad, onSave }) {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState("");
+  const loadSettingsRef = useRef(onLoad);
+
+  useEffect(() => {
+    loadSettingsRef.current = onLoad;
+  }, [onLoad]);
 
   useEffect(() => {
     let active = true;
-    setDraft(normalizeTrainerSubscriptionNotificationSettings(settings));
-    if (!onLoad) return () => { active = false; };
+    const loadSettings = loadSettingsRef.current;
+    if (!loadSettings) return () => { active = false; };
 
     setLoading(true);
-    Promise.resolve(onLoad())
+    Promise.resolve(loadSettings())
       .then((result) => {
         if (!active) return;
         if (result === false) {
