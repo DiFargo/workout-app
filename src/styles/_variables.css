@@ -9,6 +9,9 @@
   --layout-mobile-nav-clearance: calc(96px + env(safe-area-inset-bottom));
   --layout-tablet-rail-width: 76px;
   --layout-tablet-gutter: 24px;
+  --layout-client-shell-tablet-max: 720px;
+  --layout-client-shell-desktop-max: 1040px;
+  --layout-client-shell-desktop-gutter: 32px;
   --layout-modal-gutter: 16px;
   --layout-modal-max-inline: 640px;
 

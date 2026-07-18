@@ -22,6 +22,7 @@ import {
   WorkoutModePickerDialog
 } from "./WorkoutListDialogs";
 import styles from "./WorkoutListPage.module.css";
+import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 
 const versionedLocalAsset = (src, version) => {
   if (typeof src !== "string" || !src.startsWith("/")) return src;
@@ -219,7 +220,8 @@ export default function WorkoutListPage({
 
   return (
     <div
-      className={`${styles.page} ${isIndividualWorkoutMode ? styles.individualMode : styles.basicMode} ${isDeckWorkoutMode ? styles.deckMode : ""}`}
+      className={`${styles.page} ${isIndividualWorkoutMode ? styles.individualMode : styles.basicMode} ${isDeckWorkoutMode ? styles.deckMode : ""} ${adaptiveShellStyles.shell}`}
+      data-client-adaptive-shell="true"
       data-css-module-scope="workout-list"
     >
       <div className={styles.hero}>

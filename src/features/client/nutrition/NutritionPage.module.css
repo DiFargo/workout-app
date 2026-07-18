@@ -81,27 +81,6 @@
 
 @media (min-width: 700px) {
   :global(:root[data-app-theme="warm-light"]) .root {
-    width: min(720px, calc(100vw - (var(--layout-tablet-gutter) * 2)));
-    max-width: 720px;
-    height: calc(100dvh - 24px);
-    min-height: calc(100dvh - 24px);
-    max-height: calc(100dvh - 24px);
-    margin: 12px auto;
     padding: 24px 28px calc(118px + var(--safe-area-bottom));
-    border-radius: 28px;
-  }
-}
-
-@media (min-width: 980px) and (max-width: 1199px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    width: min(920px, calc(100vw - 64px));
-    max-width: 920px;
-  }
-}
-
-@media (min-width: 1200px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    width: min(1040px, calc(100vw - 64px));
-    max-width: 1040px;
   }
 }

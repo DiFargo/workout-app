@@ -1,0 +1,45 @@
+.shell.shell {
+  box-sizing: border-box;
+}
+
+@media (max-width: 699px) {
+  .shell.shell {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    margin: 0 auto;
+    border-radius: 24px;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 979px) {
+  .shell.shell {
+    width: min(
+      var(--layout-client-shell-tablet-max),
+      calc(100vw - (var(--layout-tablet-gutter) * 2))
+    );
+    max-width: var(--layout-client-shell-tablet-max);
+    height: calc(100dvh - 24px);
+    min-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 12px auto;
+    border-radius: 28px;
+  }
+}
+
+@media (min-width: 980px) {
+  .shell.shell {
+    width: min(
+      var(--layout-client-shell-desktop-max),
+      calc(100vw - (var(--layout-client-shell-desktop-gutter) * 2))
+    );
+    max-width: var(--layout-client-shell-desktop-max);
+    height: calc(100dvh - 24px);
+    min-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 12px auto;
+    border-radius: 30px;
+  }
+}

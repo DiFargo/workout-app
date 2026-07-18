@@ -228,3 +228,52 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });
+
+test("primary client tabs keep one adaptive shell geometry", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium", "One browser covers the responsive viewport matrix.");
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  const viewports = [
+    { width: 768, height: 1024, shellWidth: 720 },
+    { width: 1440, height: 900, shellWidth: 1040 }
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto("/?clientHarness=1");
+
+    const shellRects = [];
+    const tabs = [
+      { nav: null, page: "client-harness-main" },
+      { nav: "client-nav-workouts", page: "client-harness-workouts" },
+      { nav: "client-nav-nutrition", page: "client-harness-nutrition" },
+      { nav: "client-nav-cabinet", page: "client-harness-cabinet" }
+    ];
+
+    for (const tab of tabs) {
+      if (tab.nav) await clickClientNav(page, tab.nav);
+      await expect(page.getByTestId(tab.page)).toBeVisible();
+
+      const shell = page.locator('[data-client-adaptive-shell="true"]');
+      await expect(shell).toHaveCount(1);
+      shellRects.push(await shell.evaluate((node) => {
+        const rect = node.getBoundingClientRect();
+        return {
+          x: Math.round(rect.x),
+          y: Math.round(rect.y),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height)
+        };
+      }));
+    }
+
+    const [baseline, ...otherShells] = shellRects;
+    expect(baseline.width).toBe(viewport.shellWidth);
+    expect(baseline.height).toBe(viewport.height - 24);
+    for (const shellRect of otherShells) {
+      expect(shellRect).toEqual(baseline);
+    }
+    await expectNoHorizontalOverflow(page);
+  }
+
+  assertNoRuntimeErrors();
+});

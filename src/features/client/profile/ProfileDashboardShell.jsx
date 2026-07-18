@@ -1,4 +1,5 @@
 import styles from "./ProfileDashboardShell.module.css";
+import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 
 const SUPPORTED_MODES = new Set(["main", "cabinet", "measurements", "settings", "nutrition"]);
 
@@ -30,8 +31,9 @@ export function ProfileDashboardShell({
     <div
       className={legacyTrainer
         ? getLegacyRootClass(normalizedMode)
-        : `${styles.root} ${styles[normalizedMode]}`}
+        : `${styles.root} ${styles[normalizedMode]} ${adaptiveShellStyles.shell}`}
       data-css-module-scope={legacyTrainer ? undefined : "profile-dashboard-shell"}
+      data-client-adaptive-shell={legacyTrainer ? undefined : "true"}
       data-profile-tab={normalizedMode === "main" ? "cabinet" : normalizedMode}
       data-testid={testId}
     >
