@@ -2,6 +2,14 @@
 :root[data-app-theme="warm-light"] {
   color-scheme: light;
 
+  /* Shared responsive scale: mobile < 700px, tablet 700–979px, desktop >= 980px. */
+  --layout-page-inline: 16px;
+  --layout-page-block: 20px;
+  --layout-content-max: 1320px;
+  --layout-mobile-nav-clearance: calc(96px + env(safe-area-inset-bottom));
+  --layout-tablet-rail-width: 76px;
+  --layout-tablet-gutter: 24px;
+
   --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-family-compact-ui: Arial, sans-serif;
   --font-size-xs: 0.75rem;
@@ -1535,6 +1543,21 @@
   --color-profile-role-action-text: rgba(255, 255, 255, 0.76);
   --transition-fast: 160ms ease;
   --transition-standard: 240ms ease;
+}
+
+@media (min-width: 700px) {
+  :root {
+    --layout-page-inline: 24px;
+    --layout-page-block: 24px;
+    --layout-mobile-nav-clearance: calc(100px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 980px) {
+  :root {
+    --layout-page-inline: 34px;
+    --layout-page-block: 30px;
+  }
 }
 
 :root[data-app-theme="dark-green"] {

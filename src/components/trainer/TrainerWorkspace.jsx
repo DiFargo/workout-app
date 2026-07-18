@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import workspaceStyles from "./TrainerWorkspace.module.css";
+import adaptiveStyles from "./TrainerWorkspaceAdaptive.module.css";
 import trainerProgramConstructorStyles from "./TrainerProgramConstructor.module.css";
 import TrainerWorkoutFeedbackReplyModal from "./TrainerWorkoutFeedbackReplyModal";
 import trainerWorkoutFeedbackReplyStyles from "./TrainerWorkoutFeedbackReplyModal.module.css";
@@ -634,7 +635,7 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
 
 export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAvatar, appVersion, children }) {
   return (
-    <div className={`trainerNextRoot ${workspaceStyles.workspaceRoot}`}>
+    <div className={`trainerNextRoot ${workspaceStyles.workspaceRoot} ${adaptiveStyles.root}`}>
       <TrainerNavigation
         activeSection={activeSection}
         onNavigate={onNavigate}

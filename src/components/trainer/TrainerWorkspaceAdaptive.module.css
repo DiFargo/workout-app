@@ -1,0 +1,95 @@
+.root {
+  --trainer-adaptive-page-padding: var(--layout-page-inline);
+}
+
+/*
+ * The trainer workspace uses a dedicated tablet rail. It keeps navigation and
+ * desktop information density available without forcing a 768px screen into
+ * the phone-only bottom-navigation layout.
+ */
+@media (min-width: 700px) and (max-width: 979px) {
+  .root :global(.trainerNextSidebar) {
+    display: flex;
+    width: var(--layout-tablet-rail-width);
+    padding: 18px 10px 14px;
+  }
+
+  .root :global(.trainerNextBrand) {
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 0 18px;
+  }
+
+  .root :global(.trainerNextBrand span),
+  .root :global(.trainerNextVersion),
+  .root :global(.trainerNextSidebar nav button > span:last-child),
+  .root :global(.trainerNextTrainer > span),
+  .root :global(.trainerNextTrainer > svg) {
+    display: none;
+  }
+
+  .root :global(.trainerNextSidebar nav button) {
+    justify-content: center;
+    min-height: 46px;
+    padding: 0;
+  }
+
+  .root :global(.trainerNextTrainer) {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 0;
+    padding: 10px 0 0;
+  }
+
+  .root :global(.trainerNextMain) {
+    margin-left: var(--layout-tablet-rail-width);
+  }
+
+  .root :global(.trainerNextPage) {
+    width: 100%;
+    max-width: var(--layout-content-max);
+    padding: var(--layout-page-block) var(--layout-tablet-gutter) 40px;
+  }
+
+  .root :global(.trainerNextDesktopPageHead) {
+    display: flex;
+    min-height: auto;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .root :global(.trainerNextMobileNav),
+  .root :global(.trainerNextMobileHeader),
+  .root :global(.trainerNextMobileActions) {
+    display: none;
+  }
+
+  .root :global(.trainerNextMetrics),
+  .root :global(.trainerActionCenterGrid),
+  .root :global(.trainerCabinetStats) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .root :global(.trainerNextPageTabs) {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .root :global(.trainerNextClientTable) {
+    overflow-x: auto;
+  }
+
+  .root :global(.trainerNextClientTableHead),
+  .root :global(.trainerNextClientTable > button) {
+    min-width: 720px;
+  }
+}
+
+@media (min-width: 980px) {
+  .root :global(.trainerNextPage) {
+    padding-right: var(--layout-page-inline);
+    padding-left: var(--layout-page-inline);
+  }
+}

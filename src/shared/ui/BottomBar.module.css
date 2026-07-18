@@ -126,7 +126,7 @@
   outline-offset: -3px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 979px) {
   :global(:root[data-app-theme="warm-light"]) .main {
     right: 10px;
     bottom: max(8px, env(safe-area-inset-bottom));
@@ -337,7 +337,7 @@
   stroke: currentColor;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 979px) {
   :global(:root[data-app-theme="warm-light"]) .nutrition {
     right: auto;
     bottom: 8px;
@@ -406,7 +406,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 699px) {
   :global(:root[data-app-theme="warm-light"]) .nutrition {
     width: calc(100vw - 20px);
     max-width: none;
@@ -422,7 +422,7 @@
   }
 }
 
-@media (min-width: 641px) and (max-width: 900px) {
+@media (min-width: 700px) and (max-width: 979px) {
   :global(:root[data-app-theme="warm-light"]) .nutrition {
     color: var(--color-nutrition-page-text-wide);
   }
@@ -438,7 +438,7 @@
   }
 }
 
-@media (min-width: 901px) {
+@media (min-width: 980px) {
   :global(:root[data-app-theme="warm-light"]) .nutrition,
   :global(:root[data-app-theme="warm-light"]) .nutrition > button {
     -webkit-text-fill-color: var(--color-heading);
@@ -572,4 +572,20 @@
 
 :global(:root[data-app-theme="warm-light"]) .training > button > span {
   color: var(--color-workout-plan-subtitle);
+}
+
+/* The shared tablet navigation is centred and wide enough for touch targets. */
+@media (min-width: 700px) and (max-width: 979px) {
+  .main,
+  .nutrition,
+  .training,
+  :global(:root[data-app-theme="warm-light"]) .main,
+  :global(:root[data-app-theme="warm-light"]) .nutrition,
+  :global(:root[data-app-theme="warm-light"]) .training {
+    right: auto;
+    left: 50%;
+    width: min(560px, calc(100vw - 48px));
+    max-width: 560px;
+    transform: translateX(-50%);
+  }
 }
