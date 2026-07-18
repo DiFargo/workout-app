@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import "./styles/_variables.css";
+import "./shared/ui/ResponsiveModalLayer.module.css";
 import "./AppCoreFoundation.module.css";
 import "./AppCoreTheme.module.css";
 import "./AppCoreSurface.module.css";

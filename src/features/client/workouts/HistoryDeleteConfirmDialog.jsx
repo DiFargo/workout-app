@@ -20,7 +20,7 @@ export default function HistoryDeleteConfirmDialog({
 
   return (
     <div className={styles.overlay} data-testid="workout-history-delete-overlay" data-css-module-scope="workout-history-delete" onClick={onClose}>
-      <div className={styles.dialog} data-testid="workout-history-delete-dialog" onClick={(event) => event.stopPropagation()}>
+      <div className={styles.dialog} data-testid="workout-history-delete-dialog" role="dialog" aria-modal="true" aria-label="Подтверждение удаления тренировки" onClick={(event) => event.stopPropagation()}>
         <div className={styles.icon}>⌫</div>
         <h3>Удалить тренировку?</h3>
         <p>

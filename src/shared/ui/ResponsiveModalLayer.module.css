@@ -1,0 +1,27 @@
+/* Shared responsive composition for every accessible application dialog. */
+:global([role="dialog"][aria-modal="true"]:not(.trainerNextMoreDrawer)) {
+  box-sizing: border-box;
+  max-width: min(var(--layout-modal-max-inline), calc(100vw - (var(--layout-modal-gutter) * 2))) !important;
+  max-height: calc(100dvh - (var(--layout-modal-gutter) * 2)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+:global([role="dialog"][aria-modal="true"]:not(.trainerNextMoreDrawer) button) {
+  min-height: 44px;
+}
+
+@media (max-width: 699px) {
+  :global([role="dialog"][aria-modal="true"]:not(.trainerNextMoreDrawer)) {
+    width: calc(100vw - (var(--layout-modal-gutter) * 2)) !important;
+    border-radius: 20px !important;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 979px) {
+  :global([role="dialog"][aria-modal="true"]:not(.trainerNextMoreDrawer)) {
+    border-radius: 20px !important;
+  }
+}
