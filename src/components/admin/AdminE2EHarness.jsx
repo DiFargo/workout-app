@@ -1,6 +1,7 @@
 import { useState } from "react";
-import "./AdminE2EHarness.module.css";
 import trainerWorkspaceStyles from "../trainer/TrainerWorkspace.module.css";
+import "./AdminE2EHarness.module.css";
+import styles from "./AdminResponsive.module.css";
 import TrainerAdminCalendarTab from "../../features/trainer/TrainerAdminCalendarTab";
 import AdminPanelHub from "./AdminPanelHub";
 
@@ -65,7 +66,7 @@ function AdminUsersHarnessSurface({ onAction }) {
   const selectedClient = harnessClients.find((client) => client.id === selectedId) || harnessClients[0];
 
   return (
-    <div className={`adminUsersCrmPage adminHarnessCrmSurface ${trainerWorkspaceStyles.workspaceRoot}`} data-testid="admin-users-harness">
+    <div className={`adminUsersCrmPage adminHarnessCrmSurface ${trainerWorkspaceStyles.workspaceRoot} ${styles.root}`} data-testid="admin-users-harness">
       <main className="adminUsersCrmMain adminUsersCrmMainClientPage">
         <header className="adminUsersCrmHeader">
           <div>
@@ -156,7 +157,7 @@ function AdminUsersHarnessSurface({ onAction }) {
                 <p>{selectedClient.email} · assigned trainer · Telegram connected</p>
               </div>
             </div>
-            <div className="adminClientWorkspaceActionsRender">
+            <div className={`adminClientWorkspaceActionsRender ${styles.actions}`}>
               <button type="button" onClick={() => onAction("message")}>Message</button>
               <button type="button" onClick={() => onAction("assign")}>Assign</button>
               <button type="button" className="danger" onClick={() => onAction("pause")}>Pause</button>

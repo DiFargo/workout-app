@@ -85,6 +85,14 @@
   .root :global(.trainerNextClientTable > button) {
     min-width: 720px;
   }
+
+  .root :global(.adminUsersFilterPills button),
+  .root :global(.adminClientTabsCrm button),
+  .root :global(.adminClientTabsFoodBar button),
+  .root :global(.adminCalendarToggles button) {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }
 
 @media (min-width: 980px) {

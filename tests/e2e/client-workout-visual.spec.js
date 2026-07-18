@@ -260,7 +260,7 @@ async function expectWorkoutPlanSpacing(page, { empty = false } = {}) {
       nav: rectOf(document.querySelector('[data-testid="client-training-bottom-nav"]')),
       rowCount: rows.length,
       navPosition: getComputedStyle(
-        document.querySelector('[data-testid="client-training-bottom-nav"]')
+        document.querySelector('[data-testid="client-training-bottom-nav"]')?.parentElement
       ).position
     };
   }, { expectEmpty: empty });
@@ -312,7 +312,7 @@ async function expectWorkoutHistorySpacing(page, { empty = false } = {}) {
       tail: rectOf(tail),
       nav: rectOf(navNode),
       cardCount: cards.length,
-      navPosition: navNode ? getComputedStyle(navNode).position : ""
+      navPosition: navNode ? getComputedStyle(navNode.parentElement).position : ""
     };
   }, { expectEmpty: empty });
 
@@ -360,7 +360,7 @@ async function expectWorkoutModeSpacing(page) {
       remember: rectOf(document.querySelector('[data-testid="workout-mode-remember"]')),
       nav: rectOf(navNode),
       cardCount: cards.length,
-      navPosition: navNode ? getComputedStyle(navNode).position : ""
+      navPosition: navNode ? getComputedStyle(navNode.parentElement).position : ""
     };
   });
 
@@ -411,7 +411,7 @@ async function expectBasicQuizSpacing(page) {
       nav: rectOf(navNode),
       selectCount: document.querySelectorAll('[data-testid="basic-quiz-field"] select').length,
       moduleControlCount: document.querySelectorAll('[data-testid="basic-quiz-field"] select[data-css-module-control]').length,
-      navPosition: navNode ? getComputedStyle(navNode).position : ""
+      navPosition: navNode ? getComputedStyle(navNode.parentElement).position : ""
     };
   });
 
@@ -929,7 +929,8 @@ test("CSS V2 workout exercise sets stay scoped, adaptive and functional", async 
   const modal = page.getByTestId("workout-set-edit-modal");
   await expect(modal).toBeVisible();
   await expect(modal.getByTestId("workout-set-wheel-picker")).toHaveCount(2);
-  await expect(modal).toHaveCSS("max-width", "100%");
+  const modalWidth = await modal.evaluate((node) => node.getBoundingClientRect().width);
+  expect(modalWidth).toBeLessThanOrEqual(358);
   await expect(modal.getByTestId("workout-set-wheel-picker").first()).toHaveCSS("height", "210px");
   await modal.getByRole("option", { name: "12", exact: true }).first().click();
   await modal.locator(":scope > button").click();

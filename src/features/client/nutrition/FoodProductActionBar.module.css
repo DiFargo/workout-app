@@ -1,10 +1,12 @@
 .root {
   position: fixed;
-  left: 50%;
+  right: 0;
   bottom: max(10px, env(safe-area-inset-bottom));
+  left: 0;
   z-index: 99990;
   width: min(374px, calc(100vw - 20px));
   max-width: 374px;
+  margin-inline: auto;
   height: 78px;
   min-height: 78px;
   padding: 6px;
@@ -19,7 +21,6 @@
   font-family: var(--font-family-compact-ui);
   box-shadow: var(--shadow-food-nav);
   backdrop-filter: blur(16px);
-  transform: translateX(-50%);
 }
 
 .button {

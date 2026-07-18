@@ -285,11 +285,13 @@ test("client main bottom bar stays scoped and adaptive across themes", async ({ 
           width: Math.round(rect.width),
           height: Math.round(rect.height),
           buttonHeight: Math.round(buttonRect?.height || 0),
-          position: getComputedStyle(node).position
+          position: getComputedStyle(node).position,
+          dockPosition: getComputedStyle(node.parentElement).position
         };
       });
 
-      expect(mainMetrics.position).toBe("fixed");
+      expect(mainMetrics.position).toBe("relative");
+      expect(mainMetrics.dockPosition).toBe("fixed");
       expect(mainMetrics.width).toBeLessThanOrEqual(394);
       expect(mainMetrics.height).toBe(theme === "warm-light" && width <= 900 ? 76 : 80);
       expect(mainMetrics.buttonHeight).toBe(theme === "warm-light" && width <= 900 ? 60 : 68);
@@ -443,7 +445,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
         saveTop: save.top,
         saveBottom: save.bottom,
         overlayZ: Number.parseInt(window.getComputedStyle(overlay).zIndex, 10),
-        bottomNavZ: Number.parseInt(window.getComputedStyle(bottomNav).zIndex, 10),
+        bottomNavZ: Number.parseInt(window.getComputedStyle(bottomNav.parentElement).zIndex, 10),
         saveIsTopmost: Boolean(centerElement?.closest('[data-testid="profile-nutrition-save"]'))
       };
     });

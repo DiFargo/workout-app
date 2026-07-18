@@ -56,12 +56,13 @@ export function ClientMainBottomBar({
     : styles.main;
 
   return (
-    <nav
-      className={navigationClassName}
-      data-css-module-scope={nutritionVariant ? "nutrition-bottom-bar" : "client-main-bottom-bar"}
-      data-testid="client-bottom-nav"
-      aria-label="Основные разделы"
-    >
+    <div className={`${styles.dock} ${nutritionVariant ? styles.nutritionDock : styles.mainDock}`}>
+      <nav
+        className={navigationClassName}
+        data-css-module-scope={nutritionVariant ? "nutrition-bottom-bar" : "client-main-bottom-bar"}
+        data-testid="client-bottom-nav"
+        aria-label="Основные разделы"
+      >
       <button
         type="button"
         data-testid="client-nav-main"
@@ -110,7 +111,8 @@ export function ClientMainBottomBar({
         <span aria-hidden="true"><UserRound /></span>
         <strong>Кабинет</strong>
       </button>
-    </nav>
+      </nav>
+    </div>
   );
 }
 
@@ -221,12 +223,13 @@ export function ClientTrainingBottomBar({
   onOpenHistory
 }) {
   return (
-    <nav
-      className={styles.training}
-      data-testid="client-training-bottom-nav"
-      data-css-module-scope="training-bottom-bar"
-      aria-label="Навигация тренировок"
-    >
+    <div className={`${styles.dock} ${styles.trainingDock}`}>
+      <nav
+        className={styles.training}
+        data-testid="client-training-bottom-nav"
+        data-css-module-scope="training-bottom-bar"
+        aria-label="Навигация тренировок"
+      >
       <button type="button" onClick={onGoMain}>
         <span aria-hidden="true">🏠</span>
         <strong>Главная</strong>
@@ -253,6 +256,7 @@ export function ClientTrainingBottomBar({
         <span aria-hidden="true">🗓️</span>
         <strong>История</strong>
       </button>
-    </nav>
+      </nav>
+    </div>
   );
 }

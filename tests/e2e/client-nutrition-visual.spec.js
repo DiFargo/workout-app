@@ -232,7 +232,7 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
     await expect(navigation).toBeVisible();
     await expect(navigation).toHaveAttribute("data-css-module-scope", "nutrition-bottom-bar");
     await expect(navigation).not.toHaveClass(/nutritionBottomTabBar|clientBottomNav/);
-    await expect(navigation).toHaveCSS("position", "fixed");
+    await expect(navigation.locator("..")).toHaveCSS("position", "fixed");
     await expect(navigation).toHaveCSS("height", `${entry.navHeight}px`);
     await expect(buttons).toHaveCount(4);
     await expect(icons).toHaveCount(4);
@@ -276,7 +276,7 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
       expect(geometry.root.width).toBe(1040);
     }
     if (entry.theme === "warm-light" && entry.width > 640 && entry.width < 1200) {
-      expect(geometry.root.width).toBe(390);
+      expect(geometry.root.width).toBe(Math.min(720, entry.width - 48));
     }
   }
 });

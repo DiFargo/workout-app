@@ -1,3 +1,5 @@
+import styles from "./TrainerCalendarResponsive.module.css";
+
 export default function TrainerAdminCalendarTab({
   adminCalendarDays,
   adminCalendarDraft,
@@ -12,7 +14,7 @@ export default function TrainerAdminCalendarTab({
   updateAdminCalendarDaySetting
 }) {
   return (
-    <div className="adminClientTabContent">
+    <div className={`adminClientTabContent ${styles.root}`}>
       <div className="adminCalendarPanel">
         <div className="adminCalendarHead">
           <div>

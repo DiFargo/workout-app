@@ -84,7 +84,7 @@
     width: min(720px, calc(100vw - (var(--layout-tablet-gutter) * 2)));
     max-width: 720px;
     height: calc(100dvh - 24px);
-    min-height: 100dvh;
+    min-height: calc(100dvh - 24px);
     max-height: calc(100dvh - 24px);
     margin: 12px auto;
     padding: 24px 28px calc(118px + var(--safe-area-bottom));

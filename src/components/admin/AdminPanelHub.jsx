@@ -1,5 +1,6 @@
-import "./AdminPanelHub.module.css";
 import trainerWorkspaceStyles from "../trainer/TrainerWorkspace.module.css";
+import "./AdminPanelHub.module.css";
+import styles from "./AdminResponsive.module.css";
 
 export default function AdminPanelHub({
   canUseAdminFeatures,
@@ -9,7 +10,7 @@ export default function AdminPanelHub({
   if (!canUseAdminFeatures()) {
     return (
       <div className={`app ${trainerWorkspaceStyles.workspaceRoot}`}>
-        <button className="backBtn" type="button" onClick={() => setPage("main")}>
+        <button className={`backBtn ${styles.deniedBack}`} type="button" onClick={() => setPage("main")}>
           ← Главное меню
         </button>
         <div className="historyEmptyCard">

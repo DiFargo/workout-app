@@ -22628,3 +22628,9 @@
 
 
 /* end of trainer workspace styles */
+
+:global(.adminUsersCrmPage .adminUsersFilterPills button),
+:global(.adminUsersCrmPage .adminClientTabsCrm button) {
+  min-width: 44px !important;
+  min-height: 44px !important;
+}

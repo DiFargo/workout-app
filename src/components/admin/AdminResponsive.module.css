@@ -1,0 +1,19 @@
+.deniedBack {
+  min-height: 44px !important;
+  display: inline-flex;
+  align-items: center;
+}
+
+.actions {
+  display: flex !important;
+}
+
+.actions > button {
+  min-height: 44px !important;
+}
+
+.root :global(.adminUsersFilterPills button),
+.root :global(.adminClientTabsCrm button) {
+  min-width: 44px !important;
+  min-height: 44px !important;
+}

@@ -368,15 +368,16 @@
 
 .navigation {
   position: fixed;
-  left: 50%;
+  right: 0;
   bottom: max(14px, calc(env(safe-area-inset-bottom) + 12px));
+  left: 0;
   z-index: 9800;
   width: min(calc(100vw - 24px), 536px);
+  margin-inline: auto;
   padding: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  transform: translateX(-50%);
   border: 1px solid var(--color-measurement-wizard-nav-border);
   border-radius: 30px;
   background: var(--background-measurement-wizard-nav);

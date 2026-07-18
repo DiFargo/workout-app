@@ -1,0 +1,19 @@
+:global(.firstSetupSexGrid button) {
+  min-height: 44px !important;
+}
+
+:global(.firstSetupPrimary),
+:global(.firstSetupSecondary) {
+  min-height: 44px !important;
+  max-height: none !important;
+}
+
+.activityOption {
+  min-height: 44px !important;
+  max-height: none !important;
+}
+
+.goalOption {
+  min-height: 44px !important;
+  max-height: none !important;
+}

@@ -16,6 +16,18 @@
   padding-block: 0 !important;
 }
 
+.deniedBack {
+  min-height: 44px !important;
+  display: inline-flex;
+  align-items: center;
+}
+
+.backBtn {
+  min-height: 44px !important;
+  display: inline-flex;
+  align-items: center;
+}
+
 .adminPanelHubHero {
   text-align: center;
   margin-bottom: 18px;

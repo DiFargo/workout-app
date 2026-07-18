@@ -6,4 +6,18 @@
 .adminHarnessCrmSurface .adminClientWorkspaceActionsRender button {
   min-height: 44px !important;
 }
+
+.actions {
+  display: flex !important;
+}
+
+.actions > button {
+  min-height: 44px !important;
+}
+
+.adminHarnessCrmSurface .adminUsersFilterPills button,
+.adminHarnessCrmSurface .adminClientTabsCrm button {
+  min-width: 44px !important;
+  min-height: 44px !important;
+}
 }

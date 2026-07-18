@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import styles from "./FirstSetupOnboarding.module.css";
 
 import { hasRequiredAiNutritionProfileFields } from "../../utils/profileDefaults";
 
@@ -305,7 +306,7 @@ export default function FirstSetupOnboarding({
                 <button
                   type="button"
                   key={id}
-                  className={profileDraft.activity === id ? "active" : ""}
+                  className={`${styles.activityOption} ${profileDraft.activity === id ? "active" : ""}`}
                   aria-pressed={profileDraft.activity === id}
                   onClick={() => updateProfileDraft({ activity: id })}
                 >
@@ -324,7 +325,7 @@ export default function FirstSetupOnboarding({
                   <button
                     type="button"
                     key={id}
-                    className={profileDraft.goal === id ? "active" : ""}
+                    className={`${styles.goalOption} ${profileDraft.goal === id ? "active" : ""}`}
                     aria-pressed={profileDraft.goal === id}
                     onClick={() => updateProfileDraft({ goal: id })}
                   >

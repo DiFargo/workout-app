@@ -409,5 +409,22 @@
   color: #fff;
 }
 
+/* Keep onboarding choices and navigation actions reachable on compact
+ * viewport heights even when older global page rules are loaded. */
+html body #root .firstSetupSexGrid button {
+  min-height: 44px !important;
+}
+
+html body #root .firstSetupActivityList button,
+html body #root .firstSetupGoalGrid button {
+  min-height: 44px !important;
+  max-height: none !important;
+}
+
+html body #root .firstSetupPrimary,
+html body #root .firstSetupSecondary {
+  min-height: 44px !important;
+  max-height: none !important;
+}
 
 }

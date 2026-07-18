@@ -1,9 +1,30 @@
+.dock {
+  position: fixed;
+  right: 0;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  left: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.mainDock,
+.trainingDock {
+  z-index: var(--z-training-nav);
+}
+
+.nutritionDock {
+  z-index: 90;
+  bottom: 14px;
+}
+
 .main,
 .main * {
   box-sizing: border-box;
 }
 
 .main {
+  z-index: var(--z-training-nav);
   width: min(394px, calc(100vw - 16px));
   max-width: 394px;
   height: 80px;
@@ -12,10 +33,7 @@
   margin: 0;
   padding: 6px;
   display: grid;
-  position: fixed;
-  z-index: var(--z-training-nav);
-  left: 50%;
-  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  position: relative;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
   justify-content: stretch;
@@ -29,7 +47,7 @@
   font-family: inherit;
   font-size: 16px;
   line-height: 24px;
-  transform: translateX(-50%);
+  pointer-events: auto;
   backdrop-filter: var(--filter-training-nav);
   -webkit-backdrop-filter: var(--filter-training-nav);
   isolation: isolate;
@@ -127,11 +145,12 @@
 }
 
 @media (max-width: 979px) {
-  :global(:root[data-app-theme="warm-light"]) .main {
-    right: 10px;
+  :global(:root[data-app-theme="warm-light"]) .mainDock {
     bottom: max(8px, env(safe-area-inset-bottom));
-    left: 10px;
-    width: auto;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .main {
+    width: min(394px, calc(100vw - 20px));
     max-width: 394px;
     height: 76px;
     min-height: 76px;
@@ -140,7 +159,6 @@
     border-color: var(--color-nutrition-nav-border-compact);
     background: var(--color-nutrition-nav-surface-compact);
     box-shadow: var(--shadow-nutrition-nav-compact);
-    transform: none;
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
   }
@@ -199,10 +217,8 @@
 }
 
 .nutrition {
-  position: fixed;
-  z-index: 12000;
-  left: 50%;
-  bottom: 14px;
+  z-index: 90;
+  position: relative;
   width: min(394px, calc(100vw - 16px));
   max-width: 394px;
   height: 80px;
@@ -224,7 +240,7 @@
   border: 1px solid var(--color-nutrition-nav-border);
   border-radius: 16px;
   box-shadow: var(--shadow-nutrition-nav);
-  transform: translateX(-50%);
+  pointer-events: auto;
   isolation: isolate;
 }
 
@@ -305,7 +321,6 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .nutrition {
-  z-index: 90;
   color: var(--color-heading);
   background: var(--color-nutrition-nav-surface);
   border-radius: 20px;
@@ -338,10 +353,11 @@
 }
 
 @media (max-width: 979px) {
-  :global(:root[data-app-theme="warm-light"]) .nutrition {
-    right: auto;
+  :global(:root[data-app-theme="warm-light"]) .nutritionDock {
     bottom: 8px;
-    left: 50%;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .nutrition {
     width: min(394px, calc(100vw - 20px));
     max-width: 394px;
     height: 76px;
@@ -352,7 +368,6 @@
     background: var(--color-nutrition-nav-surface-compact);
     border-color: var(--color-nutrition-nav-border-compact);
     box-shadow: var(--shadow-nutrition-nav-compact);
-    transform: translateX(-50%);
   }
 
   :global(:root[data-app-theme="warm-light"]) .nutrition::after {
@@ -451,10 +466,8 @@
 }
 
 .training {
-  position: fixed;
   z-index: var(--z-training-nav);
-  left: 50%;
-  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  position: relative;
   display: grid;
   width: min(394px, calc(100vw - 20px));
   max-width: 394px;
@@ -472,7 +485,7 @@
   border: 1px solid var(--color-nutrition-nav-border);
   border-radius: var(--radius-training-nav);
   box-shadow: var(--shadow-nutrition-nav);
-  transform: translateX(-50%);
+  pointer-events: auto;
   backdrop-filter: var(--filter-training-nav);
   -webkit-backdrop-filter: var(--filter-training-nav);
 }
@@ -572,20 +585,4 @@
 
 :global(:root[data-app-theme="warm-light"]) .training > button > span {
   color: var(--color-workout-plan-subtitle);
-}
-
-/* The shared tablet navigation is centred and wide enough for touch targets. */
-@media (min-width: 700px) and (max-width: 979px) {
-  .main,
-  .nutrition,
-  .training,
-  :global(:root[data-app-theme="warm-light"]) .main,
-  :global(:root[data-app-theme="warm-light"]) .nutrition,
-  :global(:root[data-app-theme="warm-light"]) .training {
-    right: auto;
-    left: 50%;
-    width: min(560px, calc(100vw - 48px));
-    max-width: 560px;
-    transform: translateX(-50%);
-  }
 }
