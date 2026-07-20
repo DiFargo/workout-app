@@ -341,11 +341,11 @@ export default function WorkoutListPage({
           </div>
         )}
       >
-        <p className={styles.heroSubtitle}>
-          {isIndividualWorkoutMode
-            ? "Листай тренировки и выбирай нужную"
-            : "Выбери тренировку из подобранного плана"}
-        </p>
+        {!isIndividualWorkoutMode && (
+          <p className={styles.heroSubtitle}>
+            Выбери тренировку из подобранного плана
+          </p>
+        )}
       </ClientPageHeader>
 
       <div
@@ -405,28 +405,28 @@ export default function WorkoutListPage({
                     settleIndividualWorkoutSwipe();
                   }}
                 >
-                  <span className={styles.cardTop}>
-                    <span className={styles.badges}>
+                  <span className={styles.cardTop} data-testid="workout-card-top">
+                    <span className={styles.badges} data-testid="workout-card-badges">
                       {completed ? (
-                        <span className={`${styles.badge} ${styles.completedBadge}`}>✓ Выполнена</span>
+                        <span className={`${styles.badge} ${styles.completedBadge}`} data-testid="workout-card-status">✓ Выполнена</span>
                       ) : hasActiveWorkoutDraft ? (
-                        <span className={`${styles.badge} ${styles.progressBadge}`}>В процессе</span>
+                        <span className={`${styles.badge} ${styles.progressBadge}`} data-testid="workout-card-status">В процессе</span>
                       ) : activeNext ? (
-                        <span className={`${styles.badge} ${styles.nextBadge}`}>Следующая</span>
+                        <span className={`${styles.badge} ${styles.nextBadge}`} data-testid="workout-card-status">Следующая</span>
                       ) : null}
                       {activeWorkoutPendingSync && (
                         <span className={`${styles.badge} ${styles.syncBadge}`}>Ожидает синхронизации</span>
                       )}
                     </span>
-                    <span className={styles.workoutWeek}>{item.day}</span>
+                    <span className={styles.workoutWeek} data-testid="workout-card-day">{item.day}</span>
                   </span>
 
-                  <span className={styles.cardBody}>
-                    <span className={styles.cardInfo}>
-                      <span className={styles.workoutTitle}>{item.title}</span>
+                  <span className={styles.cardBody} data-testid="workout-card-body">
+                    <span className={styles.cardInfo} data-testid="workout-card-info">
+                      <span className={styles.workoutTitle} data-testid="workout-card-title">{item.title}</span>
                       <span className={styles.accentLine} />
 
-                      <span className={styles.workoutStats}>
+                      <span className={styles.workoutStats} data-testid="workout-card-stats">
                         <span><b>🏋️</b>{item.exerciseCount} упражнений</span>
                         <span><b>▰</b>{item.setCount} подходов</span>
                         <span><b>⏱</b>{item.duration}</span>
@@ -553,8 +553,8 @@ export default function WorkoutListPage({
                 Свайпни, чтобы выбрать тренировку
               </small>
             )}
-            <span className={styles.swipeAffordance} aria-hidden="true">
-              ‹ свайп ›
+            <span className={styles.swipeAffordance} data-testid="workout-swipe-affordance" aria-hidden="true">
+              ‹ Свайпни влево или вправо ›
             </span>
           </div>
 

@@ -1976,14 +1976,14 @@
   min-height: 44px;
   padding: 0;
   color: #202326;
-  background: #ffffff;
-  border: 1px solid #e1e4e5;
-  border-radius: 16px;
-  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  background: #e9ebea;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerButton.headerButton:hover {
-  background: #ffffff;
+  background: #e9ebea;
   transform: none;
 }
 
@@ -2050,9 +2050,9 @@
 :global(:root[data-app-theme="warm-light"]) .featuredCard.featuredCard {
   display: block;
   width: 100%;
-  height: clamp(390px, calc(100dvh - 294px), 470px);
-  min-height: clamp(390px, calc(100dvh - 294px), 470px);
-  max-height: 470px;
+  height: clamp(372px, calc(100dvh - 338px), 430px);
+  min-height: clamp(372px, calc(100dvh - 338px), 430px);
+  max-height: 430px;
   padding: 0;
   grid-template-columns: none;
   grid-template-rows: none;
@@ -2082,27 +2082,66 @@
   box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
 }
 
+:global(:root[data-app-theme="warm-light"]) .cardBody.cardBody::before,
+:global(:root[data-app-theme="warm-light"]) .cardBody.cardBody::after {
+  content: none;
+  display: none;
+}
+
 :global(:root[data-app-theme="warm-light"]) .cardTop.cardTop {
   position: absolute;
   z-index: 5;
-  top: 14px;
-  right: 14px;
-  left: 14px;
+  top: 16px;
+  right: 16px;
+  left: 16px;
+  width: auto;
+  height: 26px;
+  min-height: 26px;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  grid-template-columns: none;
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .badges.badges {
+  width: auto;
+  max-width: calc(100% - 92px);
+  height: 26px;
+  min-height: 26px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .badge.badge,
 :global(:root[data-app-theme="warm-light"]) .workoutWeek.workoutWeek {
+  width: auto;
+  max-width: 160px;
+  height: 26px;
   min-height: 26px;
-  padding: 7px 10px;
+  max-height: 26px;
+  margin: 0;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
   border-radius: 13px;
   color: #627588;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(237, 241, 243, 0.94);
   font-size: 10px;
   font-weight: 700;
   line-height: 12px;
-  backdrop-filter: blur(12px);
+  text-transform: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  backdrop-filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutWeek.workoutWeek {
+  margin-left: auto;
 }
 
 :global(:root[data-app-theme="warm-light"]) .completedBadge.completedBadge {
@@ -2118,18 +2157,20 @@
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage {
   inset: 0 0 auto;
   width: 100%;
-  height: 54%;
+  height: 58%;
   border-radius: 23px 23px 0 0;
   opacity: 1;
   background: #edf1f3;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage::after {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 56%, #ffffff 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 48%, #ffffff 100%);
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage img {
   object-position: center 28%;
+  opacity: 1;
+  filter: saturate(0.72) brightness(1.03) contrast(0.94);
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback {
@@ -2142,12 +2183,19 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .cardInfo.cardInfo {
+  position: absolute;
+  z-index: 3;
   top: auto;
   right: 16px;
-  bottom: 82px;
+  bottom: 80px;
   left: 16px;
+  width: auto;
+  height: auto;
+  display: grid;
   gap: 7px;
   color: #202326;
+  overflow: visible;
+  transform: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutTitle.workoutTitle {
@@ -2172,9 +2220,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutStats.workoutStats > span {
+  width: 100%;
+  height: 32px;
   min-width: 0;
   min-height: 32px;
   padding: 0 6px;
+  display: flex;
+  grid-template-columns: none;
+  align-items: center;
   justify-content: center;
   gap: 4px;
   overflow: hidden;
@@ -2191,7 +2244,9 @@
 :global(:root[data-app-theme="warm-light"]) .workoutStats.workoutStats b {
   width: auto;
   height: auto;
-  display: inline;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: #627588;
   background: transparent;
   font-size: 12px;
@@ -2204,9 +2259,11 @@
   width: calc(100% - 32px);
   min-width: calc(100% - 32px);
   max-width: none;
-  min-height: 48px;
-  height: 48px;
+  min-height: 50px;
+  height: 50px;
   padding: 0 18px;
+  display: grid;
+  place-items: center;
   color: #ffffff;
   background: #627588;
   border: 0;
@@ -2214,6 +2271,15 @@
   box-shadow: none;
   font-size: 14px;
   font-weight: 700;
+  line-height: normal;
+  text-align: center;
+  transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .startButton.startButton::before,
+:global(:root[data-app-theme="warm-light"]) .startButton.startButton::after {
+  content: none;
+  display: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyState.emptyState {
@@ -2257,26 +2323,52 @@
 
 :global(:root[data-app-theme="warm-light"]) .workoutNav.workoutNav {
   width: 100%;
-  min-height: 46px;
-  margin: 9px auto 0;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
-  gap: 8px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  margin: 0;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  gap: 0;
+  pointer-events: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutNav.workoutNav > button {
-  width: 44px;
-  height: 44px;
-  color: #627588;
-  background: #ffffff;
-  border: 1px solid #e1e4e5;
-  border-radius: 16px;
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .centerNav.centerNav {
+  width: 100%;
+  height: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 :global(:root[data-app-theme="warm-light"]) .swipeHint.swipeHint,
 :global(:root[data-app-theme="warm-light"]) .swipeAffordance.swipeAffordance {
   color: #74797f;
-  font-size: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
   letter-spacing: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .swipeAffordance.swipeAffordance {
+  width: auto;
+  height: 28px;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 14px;
+  text-transform: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .bottomProgress.bottomProgress {
@@ -2284,18 +2376,25 @@
   z-index: auto;
   inset: auto;
   width: 100%;
-  min-height: 28px;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
   margin: 0;
-  padding: 0 4px 8px;
+  padding: 9px 12px 13px;
   align-items: flex-start;
   color: #74797f;
-  background: #f3f4f3;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
   font-size: 10px;
   font-weight: 600;
   transform: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .bottomProgress.bottomProgress::after {
+  right: 12px;
+  bottom: 8px;
+  left: 12px;
   height: 3px;
   border-radius: 2px;
   background: linear-gradient(
@@ -2322,9 +2421,9 @@
 
 @media (max-width: 640px) {
   :global(:root[data-app-theme="warm-light"]) .workoutNav.workoutNav {
-    height: 24px;
-    min-height: 24px;
-    max-height: 24px;
+    height: 36px;
+    min-height: 36px;
+    max-height: 36px;
   }
 }
 
@@ -2340,11 +2439,11 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows:
     auto
-    clamp(360px, calc(100dvh - 294px), 470px)
-    24px
-    28px;
+    clamp(372px, calc(100dvh - 338px), 430px)
+    36px
+    48px;
   align-content: start;
-  row-gap: 8px;
+  row-gap: 10px;
   overflow: hidden;
   overscroll-behavior: none;
 }
@@ -2373,9 +2472,9 @@
 
 :global(:root[data-app-theme="warm-light"]) .individualMode .workoutNav.workoutNav {
   grid-row: 3;
-  height: 24px;
-  min-height: 24px;
-  max-height: 24px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
   margin: 0;
 }
 
@@ -2385,8 +2484,8 @@
 
 :global(:root[data-app-theme="warm-light"]) .individualMode .bottomProgress.bottomProgress {
   grid-row: 4;
-  height: 28px;
-  min-height: 28px;
-  max-height: 28px;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
   margin: 0;
 }

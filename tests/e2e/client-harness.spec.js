@@ -125,8 +125,11 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
       const rect = node?.getBoundingClientRect();
       return rect
         ? {
+            x: Math.round(rect.x),
             y: Math.round(rect.y),
+            width: Math.round(rect.width),
             height: Math.round(rect.height),
+            right: Math.round(rect.right),
             bottom: Math.round(rect.bottom)
           }
         : null;
@@ -135,8 +138,13 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     const deckStyle = deck ? getComputedStyle(deck) : null;
 
     return {
+      viewportWidth: window.innerWidth,
+      header: rectOf(document.querySelector('[data-testid="workout-list-header"]')),
       card: rectOf(document.querySelector('[data-testid="workout-list-card"]')),
+      cardTop: rectOf(document.querySelector('[data-testid="workout-card-top"]')),
+      cardInfo: rectOf(document.querySelector('[data-testid="workout-card-info"]')),
       startButton: rectOf(document.querySelector('[data-testid="workout-start-button"]')),
+      swipe: rectOf(document.querySelector('[data-testid="workout-swipe-affordance"]')),
       progress: rectOf(document.querySelector('[data-testid="workout-list-progress"]')),
       bottomNav: rectOf(document.querySelector('[data-testid="client-bottom-nav"]')),
       deckOverflow: deckStyle?.overflow || ""
@@ -144,8 +152,16 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
   });
 
   expect(workoutCardMetric.deckOverflow).toBe("visible");
+  expect(workoutCardMetric.header.bottom).toBeLessThanOrEqual(workoutCardMetric.card.y);
+  expect(workoutCardMetric.cardTop.y).toBeGreaterThanOrEqual(workoutCardMetric.card.y);
+  expect(workoutCardMetric.cardInfo.y).toBeGreaterThan(workoutCardMetric.cardTop.bottom);
+  expect(workoutCardMetric.cardInfo.bottom).toBeLessThan(workoutCardMetric.startButton.y);
   expect(workoutCardMetric.startButton.bottom).toBeLessThanOrEqual(workoutCardMetric.card.bottom);
-  expect(workoutCardMetric.card.bottom).toBeLessThan(workoutCardMetric.progress.y);
+  expect(workoutCardMetric.card.bottom).toBeLessThan(workoutCardMetric.swipe.y);
+  expect(workoutCardMetric.swipe.bottom).toBeLessThanOrEqual(workoutCardMetric.progress.y);
+  expect(Math.abs(
+    workoutCardMetric.swipe.x + workoutCardMetric.swipe.width / 2 - workoutCardMetric.viewportWidth / 2
+  )).toBeLessThanOrEqual(1);
   expect(workoutCardMetric.progress.bottom).toBeLessThanOrEqual(workoutCardMetric.bottomNav.y);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
