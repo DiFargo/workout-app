@@ -7,7 +7,12 @@
   color: #202326;
 }
 
-.actions { display: flex; gap: 8px; }
+.actions {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .action {
   width: 44px;
   height: 44px;

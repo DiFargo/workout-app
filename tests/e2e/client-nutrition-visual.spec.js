@@ -185,19 +185,29 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
 
     const geometry = await page.evaluate(() => {
       const headerNode = document.querySelector('[data-testid="nutrition-header"]');
+      const headerBarNode = headerNode.querySelector('[data-nutrition-header-part="title-row"]');
+      const actionNodes = [...headerNode.querySelectorAll("[data-nutrition-header-action]")];
       const weekNode = document.querySelector('[data-nutrition-header-part="week"]');
       const headerRect = headerNode.getBoundingClientRect();
+      const headerBarRect = headerBarNode.getBoundingClientRect();
+      const actionRects = actionNodes.map((action) => action.getBoundingClientRect());
       const weekRect = weekNode.getBoundingClientRect();
       const dayRects = [...weekNode.querySelectorAll("[data-nutrition-header-day]")].map((day) => day.getBoundingClientRect());
       return {
         left: headerRect.left,
         right: headerRect.right,
+        actionRightInset: Math.round(headerRect.right - actionRects.at(-1).right),
+        actionsVerticallyCentered: actionRects.every((rect) => (
+          Math.abs((rect.top + rect.height / 2) - (headerBarRect.top + headerBarRect.height / 2)) <= 1
+        )),
         weekBelowHeader: weekRect.top >= headerRect.bottom,
         dayInsideWeek: dayRects.every((rect) => rect.left >= weekRect.left && rect.right <= weekRect.right)
       };
     });
     expect(geometry.left).toBeGreaterThanOrEqual(0);
     expect(geometry.right).toBeLessThanOrEqual(entry.width);
+    expect(geometry.actionRightInset).toBe(entry.width <= 370 ? 32 : 36);
+    expect(geometry.actionsVerticallyCentered).toBe(true);
     expect(geometry.weekBelowHeader).toBe(true);
     expect(geometry.dayInsideWeek).toBe(true);
     await expectNutritionWeekStripReadable(page);
