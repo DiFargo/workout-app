@@ -15,20 +15,27 @@ async function expectRect(locator, expected) {
   }).toEqual(expected);
 }
 
-async function expectStickyHeaderWhileScrolling(page, header) {
-  const shell = page.getByTestId("profile-dashboard-route");
-  const initialHeaderBox = await header.boundingBox();
-  expect(initialHeaderBox).not.toBeNull();
+async function expectStickyHeaderWhileScrolling(header) {
+  const metrics = await header.evaluate(async (node) => {
+    const shell = node.closest('[data-testid="profile-dashboard-route"]');
+    if (!shell) return null;
 
-  await shell.evaluate((node) => node.scrollTo({ top: 80 }));
-  await expect.poll(() => shell.evaluate((node) => node.scrollTop)).toBeGreaterThan(0);
+    const initialY = node.getBoundingClientRect().y;
+    shell.scrollTo({ top: 80 });
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-  const scrolledHeaderBox = await header.boundingBox();
-  expect(scrolledHeaderBox).not.toBeNull();
-  expect(Math.round(scrolledHeaderBox.y)).toBe(Math.round(initialHeaderBox.y));
+    const result = {
+      initialY,
+      scrolledY: node.getBoundingClientRect().y,
+      scrollTop: shell.scrollTop
+    };
+    shell.scrollTo({ top: 0 });
+    return result;
+  });
 
-  await shell.evaluate((node) => node.scrollTo({ top: 0 }));
-  await expect.poll(() => shell.evaluate((node) => node.scrollTop)).toBe(0);
+  expect(metrics).not.toBeNull();
+  expect(metrics.scrollTop).toBeGreaterThan(0);
+  expect(Math.round(metrics.scrolledY)).toBe(Math.round(metrics.initialY));
 }
 
 test("calm iOS client screens match the 402 by 874 reference geometry", async ({ page }, testInfo) => {
@@ -47,7 +54,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 474, width: 370, height: 174 });
   await expectRect(page.getByTestId("profile-main-last-workout"), { x: 16, y: 662, width: 370, height: 50 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
-  await expectStickyHeaderWhileScrolling(page, page.getByTestId("profile-main-header"));
+  await expectStickyHeaderWhileScrolling(page.getByTestId("profile-main-header"));
 
   await page.getByTestId("client-nav-cabinet").click();
   await expect(page.getByTestId("profile-cabinet-title")).toHaveText("Кабинет");
@@ -58,7 +65,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 17, y: 485, width: 368, height: 70 });
   await expectRect(page.getByTestId("profile-cabinet-action-feedback"), { x: 17, y: 625, width: 368, height: 70 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
-  await expectStickyHeaderWhileScrolling(page, page.locator('[data-css-module-scope="profile-cabinet-title-row"]'));
+  await expectStickyHeaderWhileScrolling(page.locator('[data-css-module-scope="profile-cabinet-title-row"]'));
 
   await page.getByTestId("client-nav-nutrition").click();
   await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveText("Питание");
