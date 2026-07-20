@@ -59,6 +59,7 @@ export default function FoodEditPage({
         <ClientPageHeader
           compact
           controlsVariant="workout"
+          frameClassName={styles.headerFrame}
           className={styles.header}
           title={isDish ? "Редактирование блюда" : "Редактирование продукта"}
           eyebrow="Питание"

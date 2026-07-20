@@ -661,8 +661,9 @@ test("food edit page keeps its scoped responsive geometry", async ({ page }, tes
       const editCloseBox = await editClose.boundingBox();
       expect(editHeaderBox).not.toBeNull();
       expect(editCloseBox).not.toBeNull();
+      const expectedRightInset = Math.max(16, (testCase.viewport.width - 402) / 2 + 16);
       expect(
-        Math.abs(editHeaderBox.x + editHeaderBox.width - editCloseBox.x - editCloseBox.width - 16),
+        Math.abs(testCase.viewport.width - editCloseBox.x - editCloseBox.width - expectedRightInset),
         testCase.name
       ).toBeLessThanOrEqual(1);
     }

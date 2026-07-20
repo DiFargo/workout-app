@@ -58,6 +58,10 @@
   color: var(--color-food-edit-page-chrome-text);
 }
 
+.headerFrame {
+  min-width: 0;
+}
+
 .headerSpacer {
   width: 48px;
   height: 48px;
@@ -602,6 +606,13 @@
   padding-top: max(54px, calc(env(safe-area-inset-top, 0px) + 3px));
   display: block;
   background: rgba(243, 244, 243, 0.94);
+}
+
+:global(:root[data-app-theme="warm-light"]) .headerFrame {
+  width: calc(100% + 32px);
+  max-width: none;
+  margin-right: -16px;
+  margin-left: -16px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerSpacer { width: 44px; height: 44px; }
