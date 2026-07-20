@@ -22,7 +22,8 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
 
-  await expectRect(page.getByTestId("profile-main-title"), { x: 20, y: 62, width: 362, height: 44 });
+  await expect(page.getByTestId("profile-main-header")).toHaveCSS("position", "sticky");
+  await expectRect(page.getByTestId("profile-main-title"), { x: 169, y: 73, width: 63, height: 22 });
   await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 62, width: 44, height: 44 });
   await expectRect(page.getByTestId("profile-main-hero"), { x: 16, y: 126, width: 370, height: 96 });
   await expectRect(page.getByTestId("profile-main-next-workout"), { x: 16, y: 236, width: 370, height: 128 });
