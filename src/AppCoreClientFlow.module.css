@@ -127,12 +127,14 @@ html:root[data-app-theme="warm-light"] body #root .clientRouteFallbackSpinner {
 
 .clientRouteFallbackText,
 html:root[data-app-theme="warm-light"] body #root .clientRouteFallbackText {
-  color: #74797f;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 18px;
-  white-space: nowrap;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  position: absolute !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
 }
 
 html:root[data-app-theme="warm-light"],

@@ -15,6 +15,22 @@ async function expectRect(locator, expected) {
   }).toEqual(expected);
 }
 
+async function expectStickyHeaderWhileScrolling(page, header) {
+  const shell = page.getByTestId("profile-dashboard-route");
+  const initialHeaderBox = await header.boundingBox();
+  expect(initialHeaderBox).not.toBeNull();
+
+  await shell.evaluate((node) => node.scrollTo({ top: 80 }));
+  await expect.poll(() => shell.evaluate((node) => node.scrollTop)).toBeGreaterThan(0);
+
+  const scrolledHeaderBox = await header.boundingBox();
+  expect(scrolledHeaderBox).not.toBeNull();
+  expect(Math.round(scrolledHeaderBox.y)).toBe(Math.round(initialHeaderBox.y));
+
+  await shell.evaluate((node) => node.scrollTo({ top: 0 }));
+  await expect.poll(() => shell.evaluate((node) => node.scrollTop)).toBe(0);
+}
+
 test("calm iOS client screens match the 402 by 874 reference geometry", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "The reference uses one deterministic mobile browser.");
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
@@ -23,47 +39,49 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
 
   await expect(page.getByTestId("profile-main-header")).toHaveCSS("position", "sticky");
-  await expectRect(page.getByTestId("profile-main-title"), { x: 169, y: 73, width: 63, height: 22 });
-  await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 62, width: 44, height: 44 });
-  await expectRect(page.getByTestId("profile-main-hero"), { x: 16, y: 126, width: 370, height: 96 });
-  await expectRect(page.getByTestId("profile-main-next-workout"), { x: 16, y: 236, width: 370, height: 128 });
-  await expectRect(page.getByTestId("profile-progress-card"), { x: 16, y: 378, width: 370, height: 136 });
-  await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 528, width: 370, height: 174 });
-  await expectRect(page.getByTestId("profile-main-last-workout"), { x: 16, y: 716, width: 370, height: 50 });
+  await expectRect(page.getByTestId("profile-main-title"), { x: 169, y: 19, width: 63, height: 22 });
+  await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 8, width: 44, height: 44 });
+  await expectRect(page.getByTestId("profile-main-hero"), { x: 16, y: 72, width: 370, height: 96 });
+  await expectRect(page.getByTestId("profile-main-next-workout"), { x: 16, y: 182, width: 370, height: 128 });
+  await expectRect(page.getByTestId("profile-progress-card"), { x: 16, y: 324, width: 370, height: 136 });
+  await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 474, width: 370, height: 174 });
+  await expectRect(page.getByTestId("profile-main-last-workout"), { x: 16, y: 662, width: 370, height: 50 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
+  await expectStickyHeaderWhileScrolling(page, page.getByTestId("profile-main-header"));
 
   await page.getByTestId("client-nav-cabinet").click();
   await expect(page.getByTestId("profile-cabinet-title")).toHaveText("Кабинет");
-  await expectRect(page.getByTestId("profile-cabinet-title-row"), { x: 20, y: 62, width: 362, height: 44 });
-  await expectRect(page.getByTestId("profile-cabinet-action-account"), { x: 16, y: 126, width: 370, height: 100 });
-  await expectRect(page.getByTestId("profile-cabinet-action-body-control"), { x: 17, y: 277, width: 368, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-workout-journal"), { x: 17, y: 417, width: 368, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 17, y: 539, width: 368, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-feedback"), { x: 17, y: 679, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-title-row"), { x: 20, y: 8, width: 362, height: 44 });
+  await expectRect(page.getByTestId("profile-cabinet-action-account"), { x: 16, y: 72, width: 370, height: 100 });
+  await expectRect(page.getByTestId("profile-cabinet-action-body-control"), { x: 17, y: 223, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-workout-journal"), { x: 17, y: 363, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 17, y: 485, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-feedback"), { x: 17, y: 625, width: 368, height: 70 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
+  await expectStickyHeaderWhileScrolling(page, page.locator('[data-css-module-scope="profile-cabinet-title-row"]'));
 
   await page.getByTestId("client-nav-nutrition").click();
   await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveText("Питание");
-  await expectRect(page.locator('[data-nutrition-header-part="title-row"]'), { x: 20, y: 62, width: 362, height: 44 });
-  await expectRect(page.getByTestId("nutrition-header-search"), { x: 286, y: 62, width: 44, height: 44 });
-  await expectRect(page.getByTestId("nutrition-header-calendar"), { x: 338, y: 62, width: 44, height: 44 });
-  await expectRect(page.locator('[data-nutrition-header-part="week"]'), { x: 16, y: 126, width: 370, height: 64 });
-  await expectRect(page.getByTestId("nutrition-orbit"), { x: 16, y: 202, width: 370, height: 270 });
-  await expectRect(page.locator('[data-css-module-scope="nutrition-diary"]'), { x: 16, y: 484, width: 370, height: 35 });
-  await expectRect(page.getByTestId("nutrition-diary-list"), { x: 16, y: 519, width: 370, height: 150 });
-  await expectRect(page.getByTestId("nutrition-summary"), { x: 16, y: 685, width: 370, height: 72 });
+  await expectRect(page.locator('[data-nutrition-header-part="title-row"]'), { x: 20, y: 8, width: 362, height: 44 });
+  await expectRect(page.getByTestId("nutrition-header-search"), { x: 286, y: 8, width: 44, height: 44 });
+  await expectRect(page.getByTestId("nutrition-header-calendar"), { x: 338, y: 8, width: 44, height: 44 });
+  await expectRect(page.locator('[data-nutrition-header-part="week"]'), { x: 16, y: 64, width: 370, height: 64 });
+  await expectRect(page.getByTestId("nutrition-orbit"), { x: 16, y: 140, width: 370, height: 270 });
+  await expectRect(page.locator('[data-css-module-scope="nutrition-diary"]'), { x: 16, y: 422, width: 370, height: 35 });
+  await expectRect(page.getByTestId("nutrition-diary-list"), { x: 16, y: 457, width: 370, height: 150 });
+  await expectRect(page.getByTestId("nutrition-summary"), { x: 16, y: 623, width: 370, height: 72 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
 
   await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=exercise&clientHarnessTheme=warm-light");
-  await expectRect(page.getByRole("button", { name: "Вернуться к предыдущему экрану" }), { x: 16, y: 58, width: 44, height: 44 });
-  await expectRect(page.getByRole("button", { name: "Выйти из тренировки" }), { x: 342, y: 58, width: 44, height: 44 });
-  await expectRect(page.locator('[data-css-module-scope="workout-stage-heading"]'), { x: 16, y: 58, width: 370, height: 44 });
-  await expectRect(page.getByTestId("workout-exercise-progress"), { x: 160, y: 108, width: 82, height: 25 });
-  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 16, y: 132, width: 370, height: 280 });
-  await expectRect(page.getByTestId("workout-exercise-video-frame").locator("video"), { x: 28, y: 145, width: 346, height: 250 });
-  await expectRect(page.getByTestId("workout-plan-section"), { x: 16, y: 425, width: 370, height: 295 });
-  await expectRect(page.getByTestId("workout-plan-card"), { x: 16, y: 462, width: 370, height: 258 });
-  await expectRect(page.getByTestId("workout-rest-timer"), { x: 16, y: 733, width: 370, height: 54 });
+  await expectRect(page.getByRole("button", { name: "Вернуться к предыдущему экрану" }), { x: 16, y: 8, width: 44, height: 44 });
+  await expectRect(page.getByRole("button", { name: "Выйти из тренировки" }), { x: 342, y: 8, width: 44, height: 44 });
+  await expectRect(page.locator('[data-css-module-scope="workout-stage-heading"]'), { x: 16, y: 8, width: 370, height: 44 });
+  await expectRect(page.getByTestId("workout-exercise-progress"), { x: 160, y: 54, width: 82, height: 25 });
+  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 16, y: 78, width: 370, height: 280 });
+  await expectRect(page.getByTestId("workout-exercise-video-frame").locator("video"), { x: 28, y: 91, width: 346, height: 250 });
+  await expectRect(page.getByTestId("workout-plan-section"), { x: 16, y: 371, width: 370, height: 295 });
+  await expectRect(page.getByTestId("workout-plan-card"), { x: 16, y: 408, width: 370, height: 258 });
+  await expectRect(page.getByTestId("workout-rest-timer"), { x: 16, y: 679, width: 370, height: 54 });
   await expectRect(page.locator('[data-css-module-scope="workout-stage-action-panel"]'), { x: 0, y: 797, width: 402, height: 77 });
 
   assertNoRuntimeErrors();

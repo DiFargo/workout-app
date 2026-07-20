@@ -240,7 +240,11 @@ export default function WorkoutListPage({
       y: event.clientY,
       axis: ""
     };
-    event.currentTarget.setPointerCapture?.(event.pointerId);
+    try {
+      event.currentTarget.setPointerCapture?.(event.pointerId);
+    } catch {
+      // Synthetic and already-ended pointers can reach this handler in WebKit.
+    }
     setSwipeMotion({ offset: 0, phase: "dragging" });
   }
 

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./styles/_variables.css";
 import "./shared/ui/ResponsiveModalLayer.module.css";
 import "./AppCoreFoundation.module.css";
@@ -404,7 +404,10 @@ function AppRuntime() {
     days: "4"
   });
 
-  const [page, setPage] = useState(APP_PAGES.MAIN);
+  const [page, setPageState] = useState(APP_PAGES.MAIN);
+  const setPage = useCallback((nextPage) => {
+    startTransition(() => setPageState(nextPage));
+  }, []);
   useNutritionPageScrollEffect({ active: page === APP_PAGES.NUTRITION });
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [individualWorkoutIndex, setIndividualWorkoutIndex] = useState(0);

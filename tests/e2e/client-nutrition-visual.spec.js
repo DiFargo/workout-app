@@ -162,10 +162,10 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
     const header = page.getByTestId("nutrition-header");
     const title = header.locator('[data-nutrition-header-part="title"]');
     const actions = header.locator("[data-nutrition-header-action]");
-    const week = header.locator('[data-nutrition-header-part="week"]');
-    const days = header.locator("[data-nutrition-header-day]");
-    const labels = header.locator('[data-nutrition-header-part="day-label"]');
-    const dots = header.locator('[data-nutrition-header-part="day-dot"]');
+    const week = page.locator('[data-nutrition-header-part="week"]');
+    const days = page.locator("[data-nutrition-header-day]");
+    const labels = page.locator('[data-nutrition-header-part="day-label"]');
+    const dots = page.locator('[data-nutrition-header-part="day-dot"]');
 
     await expect(header).toBeVisible();
     await expect(header).toHaveAttribute("data-css-module-scope", "nutrition-header");
@@ -180,20 +180,25 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
     await expect(days.first()).toHaveCSS("height", "50px");
     await expect(labels.first()).toHaveCSS("font-size", "9.5px");
     await expect(dots.first()).toBeHidden();
-    await expect(header.locator('[data-selected="true"][aria-pressed="true"]')).toHaveCount(1);
-    await expect(header.locator(".nutritionHeroV4, .nutritionHeroTitleV4, .nutritionHeaderIconButton, .nutritionWeekV4, .nutritionDayV4, .nutritionStreakV4")).toHaveCount(0);
+    await expect(week.locator('[data-selected="true"][aria-pressed="true"]')).toHaveCount(1);
+    await expect(page.locator(".nutritionHeroV4, .nutritionHeroTitleV4, .nutritionHeaderIconButton, .nutritionWeekV4, .nutritionDayV4, .nutritionStreakV4")).toHaveCount(0);
 
-    const geometry = await header.evaluate((node) => {
-      const headerRect = node.getBoundingClientRect();
-      const dayRects = [...node.querySelectorAll("[data-nutrition-header-day]")].map((day) => day.getBoundingClientRect());
+    const geometry = await page.evaluate(() => {
+      const headerNode = document.querySelector('[data-testid="nutrition-header"]');
+      const weekNode = document.querySelector('[data-nutrition-header-part="week"]');
+      const headerRect = headerNode.getBoundingClientRect();
+      const weekRect = weekNode.getBoundingClientRect();
+      const dayRects = [...weekNode.querySelectorAll("[data-nutrition-header-day]")].map((day) => day.getBoundingClientRect());
       return {
         left: headerRect.left,
         right: headerRect.right,
-        dayInsideWeek: dayRects.every((rect) => rect.left >= headerRect.left && rect.right <= headerRect.right)
+        weekBelowHeader: weekRect.top >= headerRect.bottom,
+        dayInsideWeek: dayRects.every((rect) => rect.left >= weekRect.left && rect.right <= weekRect.right)
       };
     });
     expect(geometry.left).toBeGreaterThanOrEqual(0);
     expect(geometry.right).toBeLessThanOrEqual(entry.width);
+    expect(geometry.weekBelowHeader).toBe(true);
     expect(geometry.dayInsideWeek).toBe(true);
     await expectNutritionWeekStripReadable(page);
     await expectNoHorizontalOverflow(page);
@@ -723,7 +728,7 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
     await expect(header).toHaveAttribute("data-food-search-header-variant", "search");
     await expect(header).toHaveAttribute("data-client-page-header", "true");
     await expect(header).toHaveCSS("position", "sticky");
-    await expect(header).toHaveCSS("height", "186px");
+    await expect(header).toHaveCSS("height", "132px");
     await expect(header).toHaveCSS("margin-top", "0px");
     await expect(title).toHaveCSS("font-size", "16px");
     await expect(mealSelector).toHaveCSS("height", "60px");
@@ -747,7 +752,7 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
 
     await page.locator('[data-food-search-action="my-products"]').click();
     await expect(header).toHaveAttribute("data-food-search-header-variant", "my-products");
-    await expect(header).toHaveCSS("height", "186px");
+    await expect(header).toHaveCSS("height", "132px");
     await expect(header).toHaveCSS("margin-top", "0px");
     await expect(header.locator("h1")).toHaveCSS("font-size", "16px");
     await expect(page.getByTestId("food-search-meal-selector")).toBeVisible();
@@ -1101,7 +1106,7 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(productHeader).toHaveAttribute("data-css-module-scope", "food-product-header");
     await expect(productHeader).toHaveAttribute("data-client-page-header", "true");
     await expect(productHeader).toHaveCSS("position", "sticky");
-    await expect(productHeader).toHaveCSS("height", "186px");
+    await expect(productHeader).toHaveCSS("height", "132px");
     await expect(productHeader).toHaveCSS("display", "block");
     await expect(productTitle).toHaveCSS("font-size", "16px");
     await expect(mealSelector).toBeVisible();

@@ -12,45 +12,47 @@ export default function NutritionHeader({
   onSelectDate
 }) {
   return (
-    <ClientPageHeader
-      title="Питание"
-      titlePart="title"
-      titleTestId="nutrition-header-title"
-      className={styles.root}
-      testId="nutrition-header"
-      scope="nutrition-header"
-      barPart="title-row"
-      actions={(
-        <div className={styles.actions} data-nutrition-header-part="actions">
-          <button
-            className={styles.action}
-            type="button"
-            onClick={onOpenSearch}
-            aria-label="Поиск еды"
-            title="Поиск еды"
-            data-testid="nutrition-header-search"
-            data-nutrition-header-action="search"
-          >
-            <Search className={styles.icon} aria-hidden="true" data-nutrition-header-icon />
-          </button>
-          <button
-            className={styles.action}
-            type="button"
-            onClick={onOpenCalendar}
-            aria-label="Календарь"
-            title="Календарь"
-            data-testid="nutrition-header-calendar"
-            data-nutrition-header-action="calendar"
-          >
-            <CalendarDays
-              className={`${styles.icon} ${styles.calendarIcon}`}
-              aria-hidden="true"
-              data-nutrition-header-icon
-            />
-          </button>
-        </div>
-      )}
-    >
+    <>
+      <ClientPageHeader
+        title="Питание"
+        titlePart="title"
+        titleTestId="nutrition-header-title"
+        className={styles.root}
+        testId="nutrition-header"
+        scope="nutrition-header"
+        barPart="title-row"
+        actions={(
+          <div className={styles.actions} data-nutrition-header-part="actions">
+            <button
+              className={styles.action}
+              type="button"
+              onClick={onOpenSearch}
+              aria-label="Поиск еды"
+              title="Поиск еды"
+              data-testid="nutrition-header-search"
+              data-nutrition-header-action="search"
+            >
+              <Search className={styles.icon} aria-hidden="true" data-nutrition-header-icon />
+            </button>
+            <button
+              className={styles.action}
+              type="button"
+              onClick={onOpenCalendar}
+              aria-label="Календарь"
+              title="Календарь"
+              data-testid="nutrition-header-calendar"
+              data-nutrition-header-action="calendar"
+            >
+              <CalendarDays
+                className={`${styles.icon} ${styles.calendarIcon}`}
+                aria-hidden="true"
+                data-nutrition-header-icon
+              />
+            </button>
+          </div>
+        )}
+      />
+
       <div className={styles.week} data-nutrition-header-part="week">
         {weekDates.map((day) => {
           const dayHasFood = Boolean(nutrition.days?.[day.key]?.foods?.length);
@@ -85,6 +87,6 @@ export default function NutritionHeader({
           );
         })}
       </div>
-    </ClientPageHeader>
+    </>
   );
 }

@@ -15,9 +15,9 @@
 :global(:root[data-app-theme="warm-light"]) .topHeader.topHeader {
   width: min(402px, 100vw);
   max-width: 402px;
-  height: 106px;
-  min-height: 106px;
-  max-height: 106px;
+  height: calc(44px + max(8px, env(safe-area-inset-top, 0px)));
+  min-height: calc(44px + max(8px, env(safe-area-inset-top, 0px)));
+  max-height: calc(44px + max(8px, env(safe-area-inset-top, 0px)));
   margin: 0;
   position: fixed;
   top: 0;
@@ -44,7 +44,7 @@
   display: grid;
   place-items: center;
   position: fixed;
-  top: max(62px, calc(env(safe-area-inset-top, 0px) + 3px));
+  top: max(8px, env(safe-area-inset-top, 0px));
   z-index: 102;
   border: 0;
   border-radius: 50%;
@@ -69,7 +69,7 @@
   margin: 0;
   padding: 0 58px;
   position: fixed;
-  top: max(62px, calc(env(safe-area-inset-top, 0px) + 3px));
+  top: max(8px, env(safe-area-inset-top, 0px));
   left: 50%;
   z-index: 101;
   display: flex;

@@ -10,13 +10,15 @@
   position: sticky !important;
   top: 0 !important;
   z-index: 900 !important;
-  padding: max(62px, calc(env(safe-area-inset-top, 0px) + 3px)) 0 0 !important;
+  align-self: stretch;
+  padding: max(8px, env(safe-area-inset-top, 0px)) 0 0 !important;
   background: rgba(243, 244, 243, 0.88) !important;
   color: #202326;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   backdrop-filter: saturate(170%) blur(22px) !important;
   -webkit-backdrop-filter: saturate(170%) blur(22px) !important;
   isolation: isolate;
+  transform: translateZ(0);
 }
 
 .root::after {

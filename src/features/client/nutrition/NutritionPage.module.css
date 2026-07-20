@@ -9,6 +9,9 @@
   padding: 0 0 calc(108px + env(safe-area-inset-bottom, 0px));
   position: relative;
   overflow: hidden auto;
+  overscroll-behavior-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   color: #202326;
   background: #f3f4f3;
   border: 0;
