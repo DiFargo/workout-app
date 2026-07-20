@@ -143,6 +143,7 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
       headerAction: rectOf(document.querySelector('[data-testid="workout-mode-button"]')),
       card: rectOf(document.querySelector('[data-testid="workout-list-card"]')),
       cardTop: rectOf(document.querySelector('[data-testid="workout-card-top"]')),
+      cardBody: rectOf(document.querySelector('[data-testid="workout-card-body"]')),
       cardInfo: rectOf(document.querySelector('[data-testid="workout-card-info"]')),
       startButton: rectOf(document.querySelector('[data-testid="workout-start-button"]')),
       swipe: rectOf(document.querySelector('[data-testid="workout-swipe-affordance"]')),
@@ -156,6 +157,8 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
   expect(workoutCardMetric.header.right - workoutCardMetric.headerAction.right)
     .toBe(workoutCardMetric.viewportWidth <= 370 ? 16 : 20);
   expect(workoutCardMetric.header.bottom).toBeLessThanOrEqual(workoutCardMetric.card.y);
+  expect(workoutCardMetric.card.height).toBeGreaterThanOrEqual(372);
+  expect(Math.abs(workoutCardMetric.cardBody.height - workoutCardMetric.card.height)).toBeLessThanOrEqual(1);
   expect(workoutCardMetric.cardTop.y).toBeGreaterThanOrEqual(workoutCardMetric.card.y);
   expect(workoutCardMetric.cardInfo.y).toBeGreaterThan(workoutCardMetric.cardTop.bottom);
   expect(workoutCardMetric.cardInfo.bottom).toBeLessThan(workoutCardMetric.startButton.y);
