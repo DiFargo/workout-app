@@ -444,14 +444,16 @@
 
 :global(:root[data-app-theme="warm-light"]) .backdrop { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 :global(:root[data-app-theme="warm-light"]) .sheet {
-  width: min(370px, 100%);
-  max-width: 370px;
+  width: min(370px, calc(100vw - 32px)) !important;
+  max-width: 370px !important;
   padding: 14px;
   border: 1px solid #e1e4e5;
-  border-radius: 26px;
+  border-radius: 26px !important;
   background: #fff;
   color: #202326;
   box-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
+  overflow: hidden !important;
+  scrollbar-gutter: auto !important;
 }
 
 :global(:root[data-app-theme="warm-light"]) .grabber { width: 36px; height: 5px; background: #d3d8db; }

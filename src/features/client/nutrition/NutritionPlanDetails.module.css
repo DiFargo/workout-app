@@ -594,16 +594,20 @@
   --plan-close-text: #202326;
   top: auto;
   bottom: max(16px, env(safe-area-inset-bottom));
-  width: min(370px, calc(100vw - 32px));
-  max-height: calc(100dvh - max(32px, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px)));
+  width: min(370px, calc(100vw - 32px)) !important;
+  max-width: 370px !important;
+  max-height: calc(100dvh - max(32px, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px))) !important;
   padding: 16px;
   border: 1px solid #e1e4e5;
-  border-radius: 26px;
+  border-radius: 26px !important;
   background: #fff;
   color: #202326;
   -webkit-text-fill-color: #202326;
   box-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
   transform: translateX(-50%);
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: auto !important;
 }
 
 :global(:root[data-app-theme="warm-light"]) .header { grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; }

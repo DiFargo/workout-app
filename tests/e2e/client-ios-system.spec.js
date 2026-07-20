@@ -50,7 +50,9 @@ test("all client warm-light flows use one calm iOS visual system", async ({ page
     await test.step(surfaceName, async () => {
       await page.goto(url);
       await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
+      await expect(page.locator('[data-testid^="client-harness-"]').first()).toBeAttached({ timeout: 40_000 });
       await expect(page.locator("body")).toBeVisible();
+      await expect(page.locator("body")).toHaveCSS("background-color", "rgb(243, 244, 243)");
 
       const audit = await page.evaluate((blockedFragments) => {
         const html = document.documentElement;

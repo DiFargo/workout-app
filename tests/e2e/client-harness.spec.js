@@ -233,8 +233,8 @@ test("primary client tabs keep one adaptive shell geometry", async ({ page }, te
   test.skip(testInfo.project.name !== "desktop-chromium", "One browser covers the responsive viewport matrix.");
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { width: 768, height: 1024, shellWidth: 720 },
-    { width: 1440, height: 900, shellWidth: 1040 }
+    { width: 768, height: 1024, shellWidth: 402, shellHeight: 874 },
+    { width: 1440, height: 900, shellWidth: 402, shellHeight: 874 }
   ];
 
   for (const viewport of viewports) {
@@ -255,7 +255,7 @@ test("primary client tabs keep one adaptive shell geometry", async ({ page }, te
 
       const shell = page.locator('[data-client-adaptive-shell="true"]');
       await expect(shell).toHaveCount(1);
-      shellRects.push(await shell.evaluate((node) => {
+      const shellRect = await shell.evaluate((node) => {
         const rect = node.getBoundingClientRect();
         return {
           x: Math.round(rect.x),
@@ -263,12 +263,23 @@ test("primary client tabs keep one adaptive shell geometry", async ({ page }, te
           width: Math.round(rect.width),
           height: Math.round(rect.height)
         };
-      }));
+      });
+      shellRects.push(shellRect);
+
+      const dockRect = await page.getByTestId("client-bottom-nav").evaluate((node) => {
+        const rect = node.getBoundingClientRect();
+        return {
+          top: Math.round(rect.top),
+          bottom: Math.round(rect.bottom)
+        };
+      });
+      expect(dockRect.top).toBeGreaterThanOrEqual(shellRect.y);
+      expect(dockRect.bottom).toBeLessThanOrEqual(shellRect.y + shellRect.height);
     }
 
     const [baseline, ...otherShells] = shellRects;
     expect(baseline.width).toBe(viewport.shellWidth);
-    expect(baseline.height).toBe(viewport.height - 24);
+    expect(baseline.height).toBe(viewport.shellHeight);
     for (const shellRect of otherShells) {
       expect(shellRect).toEqual(baseline);
     }

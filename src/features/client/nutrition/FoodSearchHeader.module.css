@@ -533,6 +533,7 @@
 :global(:root[data-app-theme="warm-light"]) .mealDropdown {
   top: max(126px, calc(env(safe-area-inset-top) + 110px));
   width: min(370px, calc(100vw - 32px));
+  max-width: min(370px, calc(100vw - 32px));
   padding: 8px;
   gap: 2px;
   border: 1px solid #e1e4e5;

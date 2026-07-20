@@ -370,7 +370,19 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealLabel { color: #74797f; font-size: 10px; font-weight: 500; text-transform: none; }
-:global(:root[data-app-theme="warm-light"]) .mealButton { color: #202326; font-size: 15px; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .mealButton {
+  position: relative;
+  height: 33px;
+  min-height: 33px;
+  color: #202326;
+  font-size: 15px;
+  font-weight: 650;
+}
+:global(:root[data-app-theme="warm-light"]) .mealButton::before {
+  content: "";
+  position: absolute;
+  inset: -6px 0 -5px;
+}
 :global(:root[data-app-theme="warm-light"]) .mealButton::after { color: #627588; }
 
 :global(:root[data-app-theme="warm-light"]) .mealDropdown {

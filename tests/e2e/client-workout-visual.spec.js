@@ -191,7 +191,8 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
       card: rectOf(card),
       panel: rectOf(panel),
       buttons,
-      deckOverflow: deck ? getComputedStyle(deck).overflow : "",
+      deckOverflowX: deck ? getComputedStyle(deck).overflowX : "",
+      deckOverflowY: deck ? getComputedStyle(deck).overflowY : "",
       panelPosition: panel ? getComputedStyle(panel).position : ""
     };
   });
@@ -204,7 +205,8 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
   const shortCalmExercise = metrics.theme === "warm-light"
     && expectedStage === "exercise"
     && metrics.viewportHeight <= 860;
-  expect(metrics.deckOverflow, layoutSummary).toBe(shortCalmExercise ? "auto" : "hidden");
+  expect(metrics.deckOverflowX, layoutSummary).toBe("hidden");
+  expect(metrics.deckOverflowY, layoutSummary).toBe(shortCalmExercise ? "auto" : "hidden");
   expect(metrics.panelPosition, layoutSummary).toBe("fixed");
   expect(metrics.deck.left, layoutSummary).toBeGreaterThanOrEqual(0);
   expect(metrics.deck.right, layoutSummary).toBeLessThanOrEqual(metrics.viewportWidth + 1);

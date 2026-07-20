@@ -591,7 +591,7 @@
 :global(:root[data-app-theme="warm-light"]) .mainDock,
 :global(:root[data-app-theme="warm-light"]) .nutritionDock {
   right: 0;
-  bottom: 14px;
+  bottom: calc(max(0px, 100dvh - 874px) + 14px);
   left: 0;
   z-index: 90;
 }
@@ -698,7 +698,7 @@
 /* Training sub-navigation follows the same calm iOS dock geometry. */
 :global(:root[data-app-theme="warm-light"]) .trainingDock.trainingDock {
   right: 0;
-  bottom: 14px;
+  bottom: calc(max(0px, 100dvh - 874px) + 14px);
   left: 0;
 }
 

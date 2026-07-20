@@ -489,11 +489,11 @@
 
 :global(:root[data-app-theme="warm-light"]) .pickerSheet,
 :global(:root[data-app-theme="warm-light"]) .confirmCard {
-  width: min(370px, calc(100vw - 32px));
-  max-width: 370px;
+  width: min(370px, calc(100vw - 32px)) !important;
+  max-width: 370px !important;
   padding: 16px;
   border: 1px solid #e1e4e5;
-  border-radius: 26px;
+  border-radius: 26px !important;
   background: #fff;
   color: #202326;
   -webkit-text-fill-color: #202326;
@@ -501,7 +501,11 @@
   font-family: var(--font-family-sans);
 }
 
-:global(:root[data-app-theme="warm-light"]) .pickerSheet { max-height: min(720px, calc(100dvh - 32px)); }
+:global(:root[data-app-theme="warm-light"]) .pickerSheet {
+  max-height: min(720px, calc(100dvh - 32px)) !important;
+  overflow: hidden !important;
+  scrollbar-gutter: auto !important;
+}
 :global(:root[data-app-theme="warm-light"]) .pickerHeader { min-height: 44px; }
 
 :global(:root[data-app-theme="warm-light"]) .closeButton {

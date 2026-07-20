@@ -44,6 +44,11 @@
   opacity: 1;
   background: rgba(0, 0, 0, 0.48);
 }
+:global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.96);
+}
 :global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton {
   width: 30px;
   min-width: 30px;

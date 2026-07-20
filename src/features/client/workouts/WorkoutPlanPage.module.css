@@ -175,7 +175,12 @@
     width: min(382px, calc(100vw - 20px));
     max-width: 382px;
     height: 76px;
+    min-height: 76px;
+    max-height: 76px;
     margin: 0 auto;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
   }
 
   .page {

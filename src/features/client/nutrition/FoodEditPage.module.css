@@ -577,18 +577,20 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .sheet {
-  width: min(100%, 402px);
-  max-width: 402px;
-  height: 100dvh;
-  min-height: 100dvh;
-  max-height: 100dvh;
+  width: min(100%, 402px) !important;
+  max-width: 402px !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
   padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 16px calc(104px + env(safe-area-inset-bottom, 0px));
   border: 0;
-  border-radius: 0;
+  border-radius: 0 !important;
   background: #f3f4f3;
   color: #202326;
   box-shadow: none;
   font-family: var(--font-family-sans);
+  overflow: hidden !important;
+  scrollbar-gutter: auto !important;
 }
 
 :global(:root[data-app-theme="warm-light"]) .header {

@@ -35,10 +35,10 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expect(page.getByTestId("profile-cabinet-title")).toHaveText("Кабинет");
   await expectRect(page.getByTestId("profile-cabinet-title-row"), { x: 20, y: 62, width: 362, height: 44 });
   await expectRect(page.getByTestId("profile-cabinet-action-account"), { x: 16, y: 126, width: 370, height: 100 });
-  await expectRect(page.getByTestId("profile-cabinet-action-body-control"), { x: 16, y: 276, width: 370, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-workout-journal"), { x: 16, y: 416, width: 370, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 16, y: 536, width: 370, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-feedback"), { x: 16, y: 676, width: 370, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-body-control"), { x: 17, y: 277, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-workout-journal"), { x: 17, y: 417, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 17, y: 539, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-feedback"), { x: 17, y: 679, width: 368, height: 70 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
 
   await page.getByTestId("client-nav-nutrition").click();

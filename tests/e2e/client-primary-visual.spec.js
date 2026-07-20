@@ -66,7 +66,10 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
     await expect(title).toHaveText("Главная");
     await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
     await expect(page.getByTestId("profile-main-last-workout")).toBeVisible();
-    await expect(page.getByTestId("profile-dashboard-version")).toBeHidden();
+    const version = page.getByTestId("profile-dashboard-version");
+    await expect(version).toHaveCSS("clip-path", "inset(50%)");
+    await expect(version).toHaveCSS("width", "1px");
+    await expect(version).toHaveCSS("height", "1px");
   } else {
     await expect(title).toHaveText("Кабинет");
     await expect(page.getByTestId("profile-cabinet-refresh")).toBeVisible();
@@ -295,8 +298,8 @@ test("client main bottom bar stays scoped and adaptive across themes", async ({ 
       expect(mainMetrics.position).toBe("relative");
       expect(mainMetrics.dockPosition).toBe("fixed");
       expect(mainMetrics.width).toBeLessThanOrEqual(394);
-      expect(mainMetrics.height).toBe(theme === "warm-light" && width <= 900 ? 76 : 80);
-      expect(mainMetrics.buttonHeight).toBe(theme === "warm-light" && width <= 900 ? 58 : 68);
+      expect(mainMetrics.height).toBe(theme === "warm-light" ? 76 : 80);
+      expect(mainMetrics.buttonHeight).toBe(theme === "warm-light" ? 58 : 68);
       if (theme === "warm-light" && width <= 900) {
         expect(mainMetrics.x).toBe(mainMetrics.pageX + 10);
         expect(mainMetrics.right).toBe(mainMetrics.pageRight - 10);

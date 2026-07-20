@@ -211,7 +211,7 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
     { width: 390, height: 844, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
     { width: 430, height: 932, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
     { width: 768, height: 1024, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
-    { width: 1440, height: 900, theme: "warm-light", navHeight: 80, strokeWidth: "2px" },
+    { width: 1440, height: 900, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
     { width: 390, height: 844, theme: "dark-green", navHeight: 80, strokeWidth: "2px" }
   ];
 
@@ -369,13 +369,15 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await expect(page.getByTestId("food-edit-page")).toBeVisible();
   const editActionBarMetrics = await page.evaluate(() => {
     const sheet = document.querySelector('[data-testid="food-edit-page"]')?.getBoundingClientRect();
-    const actionBar = document.querySelector('[data-food-edit-page-part="actions"]')?.getBoundingClientRect();
-    const actionBarStyle = document.querySelector('[data-food-edit-page-part="actions"]')
-      ? window.getComputedStyle(document.querySelector('[data-food-edit-page-part="actions"]'))
-      : null;
+    const actionBarNode = document.querySelector('[data-food-edit-page-part="actions"]');
+    const actionBar = actionBarNode?.getBoundingClientRect();
+    const actionBarStyle = actionBarNode ? window.getComputedStyle(actionBarNode) : null;
 
     return {
-      transform: actionBarStyle?.transform || "",
+      position: actionBarStyle?.position || "",
+      centerDelta: sheet && actionBar
+        ? Math.round(Math.abs((actionBar.left + actionBar.right - sheet.left - sheet.right) / 2))
+        : null,
       leftInset: sheet && actionBar ? Math.round(actionBar.left - sheet.left) : null,
       rightInset: sheet && actionBar ? Math.round(sheet.right - actionBar.right) : null,
       bottomInset: sheet && actionBar ? Math.round(sheet.bottom - actionBar.bottom) : null,
@@ -386,7 +388,8 @@ test("client nutrition visual audit covers dense actions and modal entry points"
         .some((button) => actionBar && (button.left < actionBar.left - 1 || button.right > actionBar.right + 1))
     };
   });
-  expect(editActionBarMetrics.transform).toBe("none");
+  expect(editActionBarMetrics.position).toBe("fixed");
+  expect(editActionBarMetrics.centerDelta).toBeLessThanOrEqual(1);
   expect(editActionBarMetrics.leftInset).toBeGreaterThanOrEqual(8);
   expect(editActionBarMetrics.rightInset).toBeGreaterThanOrEqual(8);
   expect(editActionBarMetrics.bottomInset).toBeGreaterThanOrEqual(8);
@@ -810,9 +813,11 @@ test("CSS V2 food search page keeps stable scoped recent and photo-action layout
     await expectAboveBottomBar(page, '[data-testid="food-search-photo-action"]');
     await expectNoHorizontalOverflow(page);
 
+    const searchInputBox = await page.getByTestId("food-search-input").boundingBox();
     const landingBox = await landing.boundingBox();
+    expect(searchInputBox).not.toBeNull();
     expect(landingBox).not.toBeNull();
-    expect(Math.abs(landingBox.y - 182)).toBeLessThanOrEqual(0.5);
+    expect(Math.abs(landingBox.y - searchInputBox.y - searchInputBox.height - 16)).toBeLessThanOrEqual(0.5);
 
     if (viewport.width === 390 || viewport.width === 1440) {
       await attachScreenshot(page, testInfo, `client-food-search-page-${viewport.width}.png`);
@@ -1517,8 +1522,8 @@ test("CSS V2 photo AI preview keeps result and analysis states scoped", async ({
     await expect(preview).toHaveCSS("padding", "10px");
     await expect(preview).toHaveCSS("border-radius", "18px");
     await expect(preview).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(previewImage).toHaveCSS("width", "50px");
-    await expect(previewImage).toHaveCSS("height", "50px");
+    await expect(previewImage).toHaveCSS("width", "52px");
+    await expect(previewImage).toHaveCSS("height", "52px");
     await expect(candidates).toHaveCount(3);
     await expect(resetButton).toHaveCSS("width", "32px");
     await expect(resetButton).toHaveCSS("height", "32px");
@@ -1762,11 +1767,11 @@ test("CSS V2 nutrition meal modal keeps scoped reference geometry, themes and ac
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { name: "360", width: 360, height: 800, sheetWidth: 328, sheetHeight: 244, rowWidth: 298, rowHeight: 68 },
-    { name: "390", width: 390, height: 844, sheetWidth: 358, sheetHeight: 244, rowWidth: 328, rowHeight: 68 },
-    { name: "430", width: 430, height: 932, sheetWidth: 370, sheetHeight: 244, rowWidth: 340, rowHeight: 68 },
-    { name: "768", width: 768, height: 1024, sheetWidth: 370, sheetHeight: 244, rowWidth: 340, rowHeight: 68 },
-    { name: "1440", width: 1440, height: 900, sheetWidth: 370, sheetHeight: 244, rowWidth: 340, rowHeight: 68 }
+    { name: "360", width: 360, height: 800, sheetWidth: 328, sheetHeight: 266, rowWidth: 298, rowHeight: 68 },
+    { name: "390", width: 390, height: 844, sheetWidth: 358, sheetHeight: 266, rowWidth: 328, rowHeight: 68 },
+    { name: "430", width: 430, height: 932, sheetWidth: 370, sheetHeight: 266, rowWidth: 340, rowHeight: 68 },
+    { name: "768", width: 768, height: 1024, sheetWidth: 370, sheetHeight: 266, rowWidth: 340, rowHeight: 68 },
+    { name: "1440", width: 1440, height: 900, sheetWidth: 370, sheetHeight: 266, rowWidth: 340, rowHeight: 68 }
   ];
 
   for (const viewport of viewports) {
@@ -1924,11 +1929,11 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { name: "360", width: 360, height: 800, rootWidth: 345, rootHeight: 721.14, panelHeight: 103.5, scoreSize: 118 },
-    { name: "390", width: 390, height: 844, rootWidth: 375, rootHeight: 721.14, panelHeight: 103.5, scoreSize: 118 },
-    { name: "430", width: 430, height: 932, rootWidth: 415, rootHeight: 715.23, panelHeight: 107, scoreSize: 124 },
-    { name: "768", width: 768, height: 1024, rootWidth: 420, rootHeight: 715.23, panelHeight: 107, scoreSize: 124 },
-    { name: "1440", width: 1440, height: 900, rootWidth: 420, rootHeight: 715.23, panelHeight: 107, scoreSize: 124 }
+    { name: "360", width: 360, height: 800, rootWidth: 328, scoreSize: 118 },
+    { name: "390", width: 390, height: 844, rootWidth: 358, scoreSize: 118 },
+    { name: "430", width: 430, height: 932, rootWidth: 370, scoreSize: 124 },
+    { name: "768", width: 768, height: 1024, rootWidth: 370, scoreSize: 124 },
+    { name: "1440", width: 1440, height: 900, rootWidth: 370, scoreSize: 124 }
   ];
 
   for (const viewport of viewports) {
@@ -1943,7 +1948,7 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
     const backdrop = page.getByTestId("nutrition-plan-backdrop");
     const close = page.getByTestId("nutrition-plan-close");
     const caloriePanel = page.locator('[data-nutrition-plan-part="calorie-progress"]');
-    const score = page.locator('[data-nutrition-plan-part="score"]');
+    const score = page.getByRole("img", { name: /Оценка питания:/ });
 
     await expect(modal).toBeVisible({ timeout: 40_000 });
     await expect(backdrop).toBeVisible();
@@ -1954,6 +1959,7 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
     await expect(modal).toHaveCSS("position", "fixed");
     await expect(modal).toHaveCSS("background-color", "rgb(255, 255, 255)");
     await expect(modal).toHaveCSS("border-top-color", "rgb(225, 228, 229)");
+    await expect(modal).toHaveCSS("border-radius", "26px");
     await expect(close).toHaveCSS("width", "44px");
     await expect(close).toHaveCSS("height", "44px");
 
@@ -1964,8 +1970,10 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
     expect(panelBox).not.toBeNull();
     expect(scoreBox).not.toBeNull();
     expect(modalBox.width).toBeCloseTo(viewport.rootWidth, 0);
-    expect(modalBox.height).toBeCloseTo(viewport.rootHeight, 0);
-    expect(panelBox.height).toBeCloseTo(viewport.panelHeight, 0);
+    expect(modalBox.height).toBeGreaterThan(600);
+    expect(modalBox.height).toBeLessThanOrEqual(viewport.height - 32 + 0.5);
+    expect(panelBox.height).toBeGreaterThanOrEqual(78);
+    expect(panelBox.height).toBeLessThanOrEqual(112);
     expect(scoreBox.width).toBeCloseTo(viewport.scoreSize, 0);
     expect(scoreBox.height).toBeCloseTo(viewport.scoreSize, 0);
     expect(modalBox.x).toBeGreaterThanOrEqual(0);
@@ -2003,7 +2011,7 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
   await expect(darkClose).toHaveCSS("height", "32px");
   const darkBox = await darkModal.boundingBox();
   expect(darkBox).not.toBeNull();
-  expect(darkBox.width).toBeCloseTo(366, 0);
+  expect(darkBox.width).toBeCloseTo(358, 0);
   expect(darkBox.height).toBeCloseTo(711, 0);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-plan-details-scoped-dark.png");

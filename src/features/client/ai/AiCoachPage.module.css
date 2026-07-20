@@ -827,6 +827,71 @@
   }
 }
 
+/* Keep the established high-contrast palette when the app switches away from
+ * warm-light. The base token sheet also serves the default light theme, so the
+ * AI surface owns its dark-green overrides locally instead of inheriting the
+ * calm light aliases. */
+:global(:root[data-app-theme="dark-green"]) .root {
+  --background-ai-coach-page: radial-gradient(circle at top, rgba(127, 159, 58, 0.16) 0%, transparent 34%), linear-gradient(180deg, #0d110d 0%, #070a08 100%);
+  --color-ai-coach-text: #f4f6f2;
+  --color-ai-coach-heading: #ffffff;
+  --color-ai-coach-heading-soft: rgba(255, 255, 255, 0.88);
+  --color-ai-coach-heading-strong: rgba(255, 255, 255, 0.9);
+  --color-ai-coach-muted: rgba(255, 255, 255, 0.48);
+  --color-ai-coach-muted-soft: rgba(255, 255, 255, 0.42);
+  --color-ai-coach-muted-strong: rgba(255, 255, 255, 0.46);
+  --color-ai-coach-muted-faint: rgba(255, 255, 255, 0.34);
+  --color-ai-coach-copy: rgba(255, 255, 255, 0.58);
+  --color-ai-coach-copy-plan: rgba(255, 255, 255, 0.54);
+  --color-ai-coach-accent: rgba(183, 212, 109, 0.96);
+  --color-ai-coach-accent-bright: #c6ee76;
+  --color-ai-coach-primary-text: #10120f;
+  --color-ai-coach-adapt: rgba(220, 245, 154, 0.94);
+  --color-ai-coach-back: rgba(255, 255, 255, 0.82);
+  --color-ai-coach-back-border: rgba(255, 255, 255, 0.12);
+  --background-ai-coach-back: rgba(255, 255, 255, 0.04);
+  --shadow-ai-coach-back: none;
+  --color-ai-coach-border: rgba(255, 255, 255, 0.08);
+  --color-ai-coach-border-soft: rgba(255, 255, 255, 0.06);
+  --color-ai-coach-feature-border: rgba(255, 255, 255, 0.075);
+  --color-ai-coach-accent-border: rgba(127, 159, 58, 0.28);
+  --color-ai-coach-accent-soft-border: rgba(127, 159, 58, 0.16);
+  --color-ai-coach-feature-active-border: rgba(127, 159, 58, 0.38);
+  --color-ai-coach-score-border: rgba(127, 159, 58, 0.18);
+  --color-ai-coach-good-border: rgba(127, 159, 58, 0.24);
+  --color-ai-coach-warning-border: rgba(255, 180, 90, 0.22);
+  --color-ai-coach-training-active: rgba(235, 255, 185, 0.94);
+  --color-ai-coach-focus: #b5e655;
+  --background-ai-coach-card: linear-gradient(145deg, rgba(255, 255, 255, 0.055), transparent 34%), linear-gradient(180deg, rgba(24, 29, 24, 0.94) 0%, rgba(13, 16, 13, 0.96) 100%);
+  --background-ai-coach-plan-card: radial-gradient(circle at top left, rgba(127, 159, 58, 0.18), transparent 42%), linear-gradient(180deg, rgba(24, 29, 24, 0.96), rgba(13, 16, 13, 0.98));
+  --background-ai-coach-feature: linear-gradient(180deg, rgba(24, 29, 24, 0.86), rgba(13, 16, 13, 0.92));
+  --background-ai-coach-feature-active: radial-gradient(circle at top left, rgba(127, 159, 58, 0.18), transparent 48%), linear-gradient(180deg, rgba(24, 29, 24, 0.96), rgba(13, 16, 13, 0.98));
+  --background-ai-coach-feature-icon: rgba(255, 255, 255, 0.055);
+  --background-ai-coach-surface-soft: rgba(255, 255, 255, 0.04);
+  --background-ai-coach-surface-subtle: rgba(255, 255, 255, 0.038);
+  --background-ai-coach-accent-soft: rgba(127, 159, 58, 0.12);
+  --background-ai-coach-accent-icon: rgba(127, 159, 58, 0.16);
+  --background-ai-coach-accent-panel: rgba(127, 159, 58, 0.1);
+  --background-ai-coach-score: rgba(127, 159, 58, 0.14);
+  --background-ai-coach-meter: rgba(255, 255, 255, 0.07);
+  --background-ai-coach-body-card: radial-gradient(circle at 0% 0%, rgba(127, 159, 58, 0.1), transparent 42%), rgba(255, 255, 255, 0.04);
+  --background-ai-coach-body-value: rgba(0, 0, 0, 0.18);
+  --background-ai-coach-training-active: linear-gradient(135deg, rgba(127, 159, 58, 0.32), rgba(145, 173, 78, 0.2));
+  --background-ai-coach-training-day: radial-gradient(circle at 0% 50%, rgba(127, 159, 58, 0.12), transparent 45%), rgba(255, 255, 255, 0.04);
+  --background-ai-coach-adapt-result: rgba(127, 159, 58, 0.07);
+  --background-ai-coach-week-active: rgba(127, 159, 58, 0.085);
+  --background-ai-coach-good: rgba(127, 159, 58, 0.1);
+  --background-ai-coach-warning: rgba(255, 180, 90, 0.08);
+  --gradient-ai-coach-primary: linear-gradient(135deg, #91ad4e, #6e8836);
+  --shadow-ai-coach-card: 0 20px 54px rgba(0, 0, 0, 0.34);
+  --shadow-ai-coach-plan-card: 0 22px 58px rgba(0, 0, 0, 0.36);
+  --shadow-ai-coach-feature: 0 14px 32px rgba(0, 0, 0, 0.22);
+  --shadow-ai-coach-meter: 0 0 18px rgba(127, 159, 58, 0.34);
+  --shadow-ai-coach-score: 0 16px 32px rgba(127, 159, 58, 0.2);
+  --shadow-ai-coach-inset: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  --shadow-ai-coach-training-active: 0 0 18px rgba(127, 159, 58, 0.12);
+}
+
 /* Calm iOS surface. Dark-green keeps its established high-contrast layout. */
 :global(:root[data-app-theme="warm-light"]) .root {
   max-width: 402px;

@@ -20,7 +20,7 @@
     border-radius: 20px !important;
   }
 
-  :global(:root[data-app-theme="warm-light"] body #root [data-testid^="profile-"][data-testid$="-overlay"]) {
+  :global(:root[data-app-theme="warm-light"] body #root [data-testid^="profile-"][data-testid$="-overlay"]:not([data-testid="profile-avatar-crop-overlay"])) {
     padding:
       max(52px, calc(env(safe-area-inset-top) + 40px))
       0

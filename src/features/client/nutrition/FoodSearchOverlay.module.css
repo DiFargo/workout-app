@@ -247,18 +247,25 @@
 :global(:root[data-app-theme="warm-light"]) .headerLayout,
 :global(:root[data-app-theme="warm-light"]) .productLayout,
 :global(:root[data-app-theme="warm-light"]) .fixtureLayout {
-  width: min(100%, 402px);
-  max-width: 402px;
+  width: min(100%, 402px) !important;
+  max-width: 402px !important;
   height: 100dvh;
   min-height: 100dvh;
-  max-height: 100dvh;
+  max-height: 100dvh !important;
   margin: 0 auto;
   border: 0;
-  border-radius: 0;
+  border-radius: 0 !important;
   background: #f3f4f3;
   color: #202326;
   box-shadow: none;
   font-family: var(--font-family-sans);
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchScreen,
+:global(:root[data-app-theme="warm-light"]) .headerLayout {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  scrollbar-gutter: auto !important;
 }
 
 :global(:root[data-app-theme="warm-light"]) .searchLayout {
@@ -271,7 +278,9 @@
 
 :global(:root[data-app-theme="warm-light"]) .productLayout {
   padding: 0 16px calc(106px + env(safe-area-inset-bottom, 0px));
-  overflow-y: auto;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: auto !important;
   -webkit-text-fill-color: #202326;
 }
 
