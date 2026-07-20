@@ -1,0 +1,205 @@
+.root,
+.root * {
+  box-sizing: border-box;
+}
+
+.root {
+  width: 100%;
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  padding: max(62px, calc(env(safe-area-inset-top, 0px) + 3px)) 0 0;
+  background: rgba(243, 244, 243, 0.94);
+  color: #202326;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  backdrop-filter: saturate(160%) blur(18px);
+  -webkit-backdrop-filter: saturate(160%) blur(18px);
+  isolation: isolate;
+}
+
+.root::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: rgba(32, 35, 38, 0.06);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bar {
+  width: calc(100% - 40px);
+  min-height: 44px;
+  height: 44px;
+  margin: 0 20px;
+  padding: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.heading {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 2px;
+  color: #74797f;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 12px;
+  text-transform: none;
+}
+
+.title {
+  margin: 0;
+  overflow: hidden;
+  color: #202326;
+  font-size: 34px;
+  font-weight: 730;
+  letter-spacing: -1.2px;
+  line-height: 44px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  min-width: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back {
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0 0 0 -10px;
+  padding: 0 4px 0 0;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #627588;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 560;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.back svg {
+  width: 27px;
+  height: 27px;
+  flex: 0 0 auto;
+  stroke-width: 2.25;
+}
+
+.back:active {
+  opacity: 0.55;
+  transform: translateX(-2px);
+}
+
+.back:focus-visible {
+  outline: 3px solid rgba(98, 117, 136, 0.22);
+  outline-offset: 1px;
+}
+
+.compact .bar {
+  min-height: 44px;
+  height: 44px;
+  padding-bottom: 0;
+}
+
+.compact .title {
+  font-size: 26px;
+  font-weight: 720;
+  letter-spacing: -0.7px;
+  line-height: 30px;
+}
+
+.compact .eyebrow {
+  margin-bottom: 0;
+  line-height: 10px;
+}
+
+.compact .heading {
+  padding-right: 52px;
+}
+
+.compact .back + .heading {
+  margin-left: -2px;
+}
+
+.extension {
+  width: 100%;
+  padding: 20px 16px 0;
+}
+
+.compact .extension {
+  padding-top: 6px;
+  padding-bottom: 10px;
+}
+
+:global(:root[data-app-theme="dark-green"]) .root {
+  background: rgba(9, 12, 10, 0.92);
+  color: var(--color-text);
+}
+
+:global(:root[data-app-theme="dark-green"]) .title {
+  color: var(--color-text);
+}
+
+:global(:root[data-app-theme="dark-green"]) .eyebrow {
+  color: var(--color-text-muted);
+}
+
+:global(:root[data-app-theme="dark-green"]) .back {
+  color: var(--color-accent);
+}
+
+:global(:root[data-app-theme="dark-green"]) .root::after {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 370px) {
+  .bar {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .title {
+    font-size: 31px;
+  }
+
+  .compact .title {
+    font-size: 23px;
+  }
+
+  .back span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back {
+    transition: none;
+  }
+}

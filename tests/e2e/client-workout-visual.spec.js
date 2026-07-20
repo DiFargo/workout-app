@@ -847,7 +847,7 @@ test("CSS V2 basic workout quiz stays scoped, adaptive and functional", async ({
   await expect(page.getByTestId("client-harness-basic-quiz")).toBeVisible({ timeout: 40_000 });
   await expectBasicQuizSpacing(page);
   await expectNoHorizontalOverflow(page);
-  await page.getByTestId("basic-quiz-header").locator("button").click();
+  await page.getByRole("button", { name: "Открыть режим запуска" }).click();
   await expect(page.getByTestId("workout-mode-dialog")).toBeVisible();
   await expectTapTargets(page, ['[data-testid="workout-mode-dialog"] button'], 38);
   await expectNoHorizontalOverflow(page);

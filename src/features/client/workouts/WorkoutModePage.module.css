@@ -22,7 +22,7 @@
   max-width: 402px;
   min-height: 100dvh;
   margin: 0 auto;
-  padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(110px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px calc(110px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -35,13 +35,9 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .topBar.topBar {
-  width: 100%;
-  min-height: 54px;
-  margin: 0 0 16px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 12px;
+  width: calc(100% + 32px);
+  min-height: 0;
+  margin: 0 -16px 16px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .hero.hero {
@@ -71,6 +67,7 @@
 :global(:root[data-app-theme="warm-light"]) .topActions.topActions {
   height: 44px;
   padding: 0;
+  display: flex;
   gap: 8px;
 }
 

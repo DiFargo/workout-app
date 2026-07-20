@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Paperclip } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./ProfileFeedbackModal.module.css";
 
 const FEEDBACK_TYPES = [
@@ -105,15 +106,18 @@ export default function ProfileFeedbackModal({
         onClick={(event) => event.stopPropagation()}
         onSubmit={handleSubmit}
       >
-        <header className={styles.header}>
-          <div>
-            <span className={styles.eyebrow}>ОБРАТНАЯ СВЯЗЬ</span>
-            <h2 className={styles.title} id="profileFeedbackTitle">Сообщить нам</h2>
-          </div>
-          <button className={styles.closeButton} data-testid="profile-feedback-close" type="button" aria-label="Закрыть обратную связь" disabled={saving} onClick={onClose}>
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          className={styles.header}
+          title="Обратная связь"
+          titleId="profileFeedbackTitle"
+          eyebrow="Сообщить нам"
+          onBack={onClose}
+          backDisabled={saving}
+          backTestId="profile-feedback-close"
+          backAriaLabel="Вернуться в кабинет"
+          scope="profile-feedback-header"
+        />
 
         <div className={styles.body}>
           <div className={styles.typeGrid} role="group" aria-label="Тип сообщения">

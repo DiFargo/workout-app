@@ -1,5 +1,6 @@
 import { CalendarDays, Search } from "lucide-react";
 import { todayNutritionKey } from "../../../domain/nutritionPresentation";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./NutritionHeader.module.css";
 
 export default function NutritionHeader({
@@ -11,13 +12,15 @@ export default function NutritionHeader({
   onSelectDate
 }) {
   return (
-    <section
+    <ClientPageHeader
+      title="Питание"
+      titlePart="title"
+      titleTestId="nutrition-header-title"
       className={styles.root}
-      data-testid="nutrition-header"
-      data-css-module-scope="nutrition-header"
-    >
-      <div className={styles.titleRow} data-nutrition-header-part="title-row">
-        <h1 className={styles.title} data-nutrition-header-part="title">Питание</h1>
+      testId="nutrition-header"
+      scope="nutrition-header"
+      barPart="title-row"
+      actions={(
         <div className={styles.actions} data-nutrition-header-part="actions">
           <button
             className={styles.action}
@@ -46,8 +49,8 @@ export default function NutritionHeader({
             />
           </button>
         </div>
-      </div>
-
+      )}
+    >
       <div className={styles.week} data-nutrition-header-part="week">
         {weekDates.map((day) => {
           const dayHasFood = Boolean(nutrition.days?.[day.key]?.foods?.length);
@@ -82,6 +85,6 @@ export default function NutritionHeader({
           );
         })}
       </div>
-    </section>
+    </ClientPageHeader>
   );
 }

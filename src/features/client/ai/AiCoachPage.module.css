@@ -9,11 +9,16 @@
   min-height: 100dvh;
   max-width: 560px;
   margin: 0 auto;
-  padding: max(26px, calc(env(safe-area-inset-top) + 16px)) 14px calc(18px + env(safe-area-inset-bottom));
+  padding: 0 14px calc(18px + env(safe-area-inset-bottom));
   background: var(--background-ai-coach-page);
   color: var(--color-ai-coach-text);
   font-family: inherit;
   overflow-x: hidden;
+}
+
+.pageHeader {
+  width: calc(100% + 28px);
+  margin: 0 -14px 12px;
 }
 
 .back {

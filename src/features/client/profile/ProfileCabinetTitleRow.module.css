@@ -1,14 +1,7 @@
 .root {
-  box-sizing: border-box;
-  width: calc(100% - 40px);
-  height: 44px;
-  margin: max(62px, calc(env(safe-area-inset-top, 0px) + 3px)) 20px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin: 0 0 20px;
 }
 
-.title { margin: 0; color: #202326; font-size: 34px; font-weight: 700; line-height: 44px; letter-spacing: -1.2px; }
 .refresh {
   width: 44px;
   height: 44px;

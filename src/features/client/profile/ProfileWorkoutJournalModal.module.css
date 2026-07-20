@@ -3,7 +3,7 @@
   inset: 0;
   z-index: 12000;
   box-sizing: border-box;
-  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  padding: 0;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -15,16 +15,16 @@
 .dialog {
   position: relative;
   box-sizing: border-box;
-  width: min(100%, 430px);
-  height: min(780px, calc(100dvh - 24px));
-  max-height: calc(100dvh - 24px);
-  padding: 14px;
+  width: min(402px, 100vw);
+  height: min(874px, 100dvh);
+  max-height: 100dvh;
+  padding: 0;
   display: grid;
-  grid-template-rows: 48px 48px minmax(0, 1fr);
-  gap: 10px;
+  grid-template-rows: auto 48px minmax(0, 1fr);
+  gap: 8px;
   overflow: hidden;
   border: 1px solid var(--color-profile-modal-border);
-  border-radius: 26px;
+  border-radius: 0;
   background: var(--background-profile-modal);
   box-shadow: var(--shadow-profile-modal);
   color: var(--color-profile-modal);
@@ -32,44 +32,12 @@
 
 .header {
   position: relative;
-  z-index: 2;
-  padding: 0 2px 0 6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.eyebrow {
-  display: block;
-  color: var(--color-profile-modal-eyebrow);
-  font-size: 10px;
-  font-weight: 950;
-}
-
-.title {
-  margin: 2px 0 0;
-  color: var(--color-profile-modal-heading);
-  font-size: 21px;
-  line-height: 1;
-}
-
-.closeButton {
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  min-height: 44px;
-  padding: 0;
-  border: 1px solid var(--color-profile-modal-close-border);
-  border-radius: 13px;
-  background: var(--background-profile-modal-close);
-  color: var(--color-profile-modal-close);
-  font-size: 23px;
-  line-height: 1;
+  z-index: 4;
 }
 
 .tabs {
   box-sizing: border-box;
+  margin: 0 16px;
   padding: 3px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -100,7 +68,7 @@
 
 .body {
   min-height: 0;
-  padding: 2px;
+  padding: 2px 16px 24px;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
@@ -130,12 +98,14 @@
 
 @media (max-height: 720px) {
   .dialog {
-    padding: 10px;
-    grid-template-rows: 42px 46px minmax(0, 1fr);
+    padding: 0;
+    grid-template-rows: auto 46px minmax(0, 1fr);
     gap: 6px;
   }
+}
 
-  .title {
-    font-size: 18px;
+@media (min-width: 403px) {
+  .dialog {
+    border-radius: 54px;
   }
 }

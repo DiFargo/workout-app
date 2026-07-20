@@ -17,6 +17,7 @@ import { safeReadJsonStorage, safeWriteJsonStorage } from "../../../utils/storag
 import { getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
 import { INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY } from "../../../constants/appConfig";
 import { WorkoutDraftRestoreDialog } from "../../../components/workout/WorkoutDialogs";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
   IndividualWorkoutHistoryDialog,
   WorkoutModePickerDialog
@@ -71,9 +72,12 @@ export default function WorkoutListPage({
   const [swipeHintVisible, setSwipeHintVisible] = useState(
     () => safeReadJsonStorage(INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY, true) !== false
   );
+  const [swipeMotion, setSwipeMotion] = useState({ offset: 0, phase: "idle" });
   const basicQuizRedirectedRef = useRef(false);
   const swipeStartRef = useRef(null);
   const swipeSuppressClickRef = useRef(false);
+  const swipeTimerRef = useRef(null);
+  const swipeFrameRef = useRef(null);
 
   const isIndividualWorkoutMode = workoutModePreference.mode === "individual";
   const isBasicWorkoutMode = workoutModePreference.mode === "basic" || plan.source === "basic";
@@ -133,6 +137,11 @@ export default function WorkoutListPage({
     basicQuizRedirectedRef.current = true;
     onOpenBasicMode();
   }, [onOpenBasicMode, shouldOpenBasicQuiz]);
+
+  useEffect(() => () => {
+    window.clearTimeout(swipeTimerRef.current);
+    window.cancelAnimationFrame(swipeFrameRef.current);
+  }, []);
   const hasActiveWorkoutDraft = Boolean(
     activeWorkoutDraft?.workoutId === activeIndividualWorkout?.id &&
     (
@@ -182,6 +191,36 @@ export default function WorkoutListPage({
     setIndividualWorkoutIndexInitialized(true);
   }
 
+  function settleIndividualWorkoutSwipe() {
+    setSwipeMotion((current) => ({ ...current, offset: 0, phase: "settling" }));
+    window.clearTimeout(swipeTimerRef.current);
+    swipeTimerRef.current = window.setTimeout(() => {
+      setSwipeMotion({ offset: 0, phase: "idle" });
+    }, 420);
+  }
+
+  function animateIndividualWorkout(direction) {
+    if (!sortedWorkouts.length || swipeMotion.phase === "exiting") return;
+
+    const exitsLeft = direction === "next";
+    swipeSuppressClickRef.current = true;
+    setSwipeMotion({ offset: exitsLeft ? -430 : 430, phase: "exiting" });
+    window.clearTimeout(swipeTimerRef.current);
+    swipeTimerRef.current = window.setTimeout(() => {
+      moveIndividualWorkout(direction);
+      setSwipeMotion({ offset: exitsLeft ? 82 : -82, phase: "entering" });
+      window.cancelAnimationFrame(swipeFrameRef.current);
+      swipeFrameRef.current = window.requestAnimationFrame(() => {
+        swipeFrameRef.current = window.requestAnimationFrame(() => {
+          settleIndividualWorkoutSwipe();
+        });
+      });
+      window.setTimeout(() => {
+        swipeSuppressClickRef.current = false;
+      }, 260);
+    }, 190);
+  }
+
   function dismissIndividualWorkoutSwipeHint() {
     if (!swipeHintVisible) return;
     setSwipeHintVisible(false);
@@ -189,12 +228,43 @@ export default function WorkoutListPage({
   }
 
   function handleIndividualWorkoutSwipeStart(event) {
-    if (event.pointerType === "mouse" || sortedWorkouts.length < 2) return;
+    if (
+      sortedWorkouts.length < 2 ||
+      swipeMotion.phase === "exiting" ||
+      event.target.closest("button")
+    ) return;
 
     swipeStartRef.current = {
+      pointerId: event.pointerId,
       x: event.clientX,
-      y: event.clientY
+      y: event.clientY,
+      axis: ""
     };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    setSwipeMotion({ offset: 0, phase: "dragging" });
+  }
+
+  function handleIndividualWorkoutSwipeMove(event) {
+    const start = swipeStartRef.current;
+    if (!start || start.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+
+    if (!start.axis && Math.max(Math.abs(deltaX), Math.abs(deltaY)) > 7) {
+      start.axis = Math.abs(deltaX) > Math.abs(deltaY) * 1.15 ? "x" : "y";
+    }
+
+    if (start.axis === "y") {
+      swipeStartRef.current = null;
+      settleIndividualWorkoutSwipe();
+      return;
+    }
+
+    if (start.axis !== "x") return;
+    event.preventDefault();
+    const resistedOffset = Math.sign(deltaX) * Math.min(138, Math.abs(deltaX) * 0.82);
+    setSwipeMotion({ offset: resistedOffset, phase: "dragging" });
   }
 
   function handleIndividualWorkoutSwipeEnd(event) {
@@ -204,14 +274,13 @@ export default function WorkoutListPage({
 
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
-    if (Math.abs(deltaX) < 44 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return;
+    if (Math.abs(deltaX) < 44 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) {
+      settleIndividualWorkoutSwipe();
+      return;
+    }
 
-    swipeSuppressClickRef.current = true;
     dismissIndividualWorkoutSwipeHint();
-    moveIndividualWorkout(deltaX < 0 ? "next" : "previous");
-    window.setTimeout(() => {
-      swipeSuppressClickRef.current = false;
-    }, 180);
+    animateIndividualWorkout(deltaX < 0 ? "next" : "previous");
   }
 
   if (shouldOpenBasicQuiz) {
@@ -224,19 +293,14 @@ export default function WorkoutListPage({
       data-client-adaptive-shell="true"
       data-css-module-scope="workout-list"
     >
-      <div className={styles.hero}>
-        <h1 className={styles.pageTitle} data-testid="workout-list-title">
-          {isIndividualWorkoutMode ? (
-            "Мой план"
-          ) : (
-            <>
-              <span className={styles.titleLine}>Базовые</span>
-              <span className={styles.titleLine}>тренировки</span>
-            </>
-          )}
-        </h1>
-
-        <div className={styles.headerActions}>
+      <ClientPageHeader
+        className={styles.hero}
+        title={isIndividualWorkoutMode ? "Мой план" : "Тренировки"}
+        titleTestId="workout-list-title"
+        testId="workout-list-header"
+        scope="workout-list-header"
+        actions={(
+          <div className={styles.headerActions}>
           {isIndividualWorkoutMode && (
             <button
               type="button"
@@ -270,15 +334,15 @@ export default function WorkoutListPage({
           >
             <Paperclip aria-hidden="true" />
           </button>
-        </div>
-
-        <p>
+          </div>
+        )}
+      >
+        <p className={styles.heroSubtitle}>
           {isIndividualWorkoutMode
             ? "Листай тренировки и выбирай нужную"
             : "Выбери тренировку из подобранного плана"}
         </p>
-        <div className={styles.heroLine} />
-      </div>
+      </ClientPageHeader>
 
       <div
         className={`${styles.workoutList} ${isDeckWorkoutMode ? styles.workoutDeck : ""}`}
@@ -324,10 +388,17 @@ export default function WorkoutListPage({
                   key={w.id}
                   data-workout-card-id={w.id}
                   data-testid="workout-list-card"
+                  data-swipe-phase={swipeMotion.phase}
+                  style={{
+                    "--workout-swipe-x": `${swipeMotion.offset}px`,
+                    "--workout-swipe-rotation": `${swipeMotion.offset * 0.012}deg`
+                  }}
                   onPointerDown={handleIndividualWorkoutSwipeStart}
+                  onPointerMove={handleIndividualWorkoutSwipeMove}
                   onPointerUp={handleIndividualWorkoutSwipeEnd}
                   onPointerCancel={() => {
                     swipeStartRef.current = null;
+                    settleIndividualWorkoutSwipe();
                   }}
                 >
                   <span className={styles.cardTop}>
@@ -466,7 +537,7 @@ export default function WorkoutListPage({
             aria-label="Предыдущая тренировка"
             onClick={() => {
               dismissIndividualWorkoutSwipeHint();
-              moveIndividualWorkout("previous");
+              animateIndividualWorkout("previous");
             }}
           >
             ←
@@ -488,7 +559,7 @@ export default function WorkoutListPage({
             aria-label="Следующая тренировка"
             onClick={() => {
               dismissIndividualWorkoutSwipeHint();
-              moveIndividualWorkout("next");
+              animateIndividualWorkout("next");
             }}
           >
             →

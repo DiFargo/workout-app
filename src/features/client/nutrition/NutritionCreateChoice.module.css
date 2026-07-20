@@ -300,3 +300,124 @@
   font-size: 11px;
   font-weight: 450;
 }
+
+/* The creation chooser follows the exact geometry and interaction rules of
+   the primary iOS dock; only the actions inside it are different. */
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  padding: 0;
+  background: rgba(32, 35, 38, 0.12);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .sheet {
+  width: min(394px, calc(100vw - 20px));
+  max-width: 394px;
+  height: 76px;
+  min-height: 76px;
+  max-height: 76px;
+  margin-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+  padding: 7px;
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  gap: 4px;
+  overflow: hidden;
+  border-color: var(--color-nutrition-nav-border-compact);
+  border-radius: var(--radius-training-nav);
+  background: var(--color-nutrition-nav-surface-compact);
+  box-shadow: 0 10px 30px rgba(57, 67, 75, 0.16);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .header {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton {
+  position: static;
+  width: 60px;
+  height: 60px;
+  border: 0;
+  border-radius: var(--radius-training-nav-button);
+  background: #edf1f3;
+  color: #627588;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton svg,
+:global(:root[data-app-theme="warm-light"]) .optionIcon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2.4;
+}
+
+:global(:root[data-app-theme="warm-light"]) .eyebrow,
+:global(:root[data-app-theme="warm-light"]) .description,
+:global(:root[data-app-theme="warm-light"]) .optionDescription {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+:global(:root[data-app-theme="warm-light"]) .grid {
+  min-width: 0;
+  height: 60px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .option {
+  width: 100%;
+  min-width: 0;
+  min-height: 60px;
+  height: 60px;
+  padding: 5px 4px 4px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 30px 16px;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-training-nav-button);
+  background: transparent;
+  color: #74797f;
+  box-shadow: none;
+  text-align: center;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionIcon {
+  grid-row: auto;
+  width: 24px;
+  height: 30px;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionTitle {
+  align-self: center;
+  color: #202326;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 11px;
+  white-space: nowrap;
+}
+
+:global(:root[data-app-theme="warm-light"]) .option:active,
+:global(:root[data-app-theme="warm-light"]) .closeButton:active {
+  background: #edf1f3;
+  color: #627588;
+  transform: scale(0.97);
+}

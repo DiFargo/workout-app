@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Home, Paperclip } from "lucide-react";
+import { Paperclip } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import { WorkoutModePickerDialog } from "./WorkoutListDialogs";
 import styles from "./WorkoutModePage.module.css";
 
@@ -24,20 +25,23 @@ export default function WorkoutModePage({
 
   return (
     <div className={styles.page} data-testid="workout-mode-page" data-css-module-scope="workout-mode">
-      <header className={styles.topBar} data-testid="workout-mode-header">
-        <section className={styles.hero} data-testid="workout-mode-hero">
-          <span>ТРЕНИРОВКИ</span>
-          <h1>Режим запуска</h1>
-        </section>
-        <div className={styles.topActions}>
-          <button className={styles.topButton} type="button" onClick={onBackToMain} aria-label="Открыть главную">
-            <Home aria-hidden="true" />
-          </button>
+      <ClientPageHeader
+        compact
+        className={styles.topBar}
+        title="Режим запуска"
+        eyebrow="Тренировки"
+        onBack={onBackToMain}
+        backAriaLabel="Вернуться на главную"
+        testId="workout-mode-header"
+        scope="workout-mode-header"
+        actions={(
+          <div className={styles.topActions}>
           <button className={styles.topButton} type="button" onClick={() => setWorkoutModePickerOpen(true)} aria-label="Выбрать режим запуска тренировки">
             <Paperclip aria-hidden="true" />
           </button>
-        </div>
-      </header>
+          </div>
+        )}
+      />
 
       <p className={styles.lead} data-testid="workout-mode-lead">
         Можно тренироваться по базовой программе или по индивидуальному плану от тренера.

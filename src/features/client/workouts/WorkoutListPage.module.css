@@ -53,6 +53,13 @@
     font-size: var(--font-size-sm);
   }
 
+  .heroSubtitle {
+    max-width: 29rem;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
   .heroLine {
     width: 3rem;
     height: 0.25rem;
@@ -251,6 +258,29 @@
     box-shadow: none;
     cursor: grab;
     touch-action: pan-y;
+    transform: translate3d(var(--workout-swipe-x, 0px), 0, 0)
+      rotate(var(--workout-swipe-rotation, 0deg));
+    transform-origin: 50% 82%;
+    transition:
+      transform 420ms cubic-bezier(0.22, 1.28, 0.36, 1),
+      opacity 240ms ease;
+    will-change: transform, opacity;
+  }
+
+  .featuredCard[data-swipe-phase="dragging"] {
+    transition: none;
+  }
+
+  .featuredCard[data-swipe-phase="exiting"] {
+    opacity: 0.42;
+    transition:
+      transform 190ms cubic-bezier(0.4, 0, 0.7, 0.2),
+      opacity 170ms ease;
+  }
+
+  .featuredCard[data-swipe-phase="entering"] {
+    opacity: 0.68;
+    transition: none;
   }
 
   .featuredCard:active {
@@ -1873,7 +1903,7 @@
   height: auto;
   max-height: none;
   margin: 0 auto;
-  padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(112px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px calc(112px + env(safe-area-inset-bottom, 0px));
   display: flex;
   overflow: hidden auto;
   border: 0;
@@ -1889,12 +1919,9 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .hero.hero {
-  width: 100%;
-  min-height: 62px;
-  margin: 0 auto 14px;
-  padding: 0;
-  display: grid;
-  gap: 4px;
+  width: calc(100% + 32px);
+  min-height: 0;
+  margin: 0 -16px 14px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .pageTitle.pageTitle {
@@ -1929,9 +1956,17 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerActions.headerActions {
-  top: 0;
-  right: 0;
+  position: static;
   gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .heroSubtitle.heroSubtitle {
+  max-width: 100%;
+  margin: 0;
+  color: #74797f;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 17px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerButton.headerButton {
@@ -2025,6 +2060,15 @@
   border: 0;
   background: transparent;
   box-shadow: none;
+  transform: translate3d(var(--workout-swipe-x, 0px), 0, 0)
+    rotate(var(--workout-swipe-rotation, 0deg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featuredCard,
+  .featuredCard[data-swipe-phase] {
+    transition-duration: 1ms;
+  }
 }
 
 :global(:root[data-app-theme="warm-light"]) .cardBody.cardBody {

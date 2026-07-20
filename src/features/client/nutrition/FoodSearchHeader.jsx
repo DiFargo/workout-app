@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import styles from "./FoodSearchHeader.module.css";
 
 export default function FoodSearchHeader({
@@ -99,7 +100,8 @@ export default function FoodSearchHeader({
           }}
           aria-label="Закрыть поиск еды"
         >
-          ×
+          <ChevronLeft aria-hidden="true" />
+          <span className={styles.backLabel}>Назад</span>
         </button>
       )}
     </header>

@@ -583,7 +583,7 @@
   height: 100dvh !important;
   min-height: 100dvh !important;
   max-height: 100dvh !important;
-  padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 16px calc(104px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px calc(104px + env(safe-area-inset-bottom, 0px));
   border: 0;
   border-radius: 0 !important;
   background: #f3f4f3;
@@ -595,12 +595,13 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .header {
-  height: 44px;
-  min-height: 44px;
-  margin-bottom: 12px;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
-  grid-template-rows: 44px;
-  gap: 8px;
+  width: calc(100% + 32px);
+  height: auto;
+  min-height: 0;
+  margin: 0 -16px 12px;
+  padding-top: max(54px, calc(env(safe-area-inset-top, 0px) + 3px));
+  display: block;
+  background: rgba(243, 244, 243, 0.94);
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerSpacer { width: 44px; height: 44px; }

@@ -3,6 +3,7 @@ import { Paperclip } from "lucide-react";
 
 import { buildBasicWorkoutPlanFromQuiz } from "../../../utils/basicWorkoutPlanBuilder";
 import { WorkoutModePickerDialog } from "./WorkoutListDialogs";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./BasicWorkoutQuizPage.module.css";
 
 export default function BasicWorkoutQuizPage({
@@ -30,14 +31,24 @@ export default function BasicWorkoutQuizPage({
 
   return (
     <div className={styles.page} data-testid="basic-quiz-page" data-css-module-scope="basic-quiz">
-      <header className={styles.topBar} data-testid="basic-quiz-header">
-        <h1 className={styles.title} data-testid="basic-quiz-title">Базовые тренировки</h1>
-        <div className={styles.topActions}>
+      <ClientPageHeader
+        compact
+        className={styles.topBar}
+        title="Базовые тренировки"
+        titleTestId="basic-quiz-title"
+        eyebrow="Подбор плана"
+        onBack={onOpenTraining}
+        backAriaLabel="Вернуться к тренировкам"
+        testId="basic-quiz-header"
+        scope="basic-quiz-header"
+        actions={(
+          <div className={styles.topActions}>
           <button className={styles.topButton} type="button" onClick={() => setWorkoutModePickerOpen(true)} aria-label="Открыть режим запуска">
             <Paperclip aria-hidden="true" />
           </button>
-        </div>
-      </header>
+          </div>
+        )}
+      />
 
       <section className={styles.card} data-testid="basic-quiz-card">
         <div className={styles.sectionHeader}>

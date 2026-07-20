@@ -1,8 +1,9 @@
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./ProfileSettingsModal.module.css";
 
 function getProfileSettingsModalTitle(section) {
   if (section === "account") return "Профиль и настройки";
-  if (section === "profile") return "Профиль";
+  if (section === "profile") return "Анкета";
   return "Настройки";
 }
 
@@ -59,23 +60,17 @@ export default function ProfileSettingsModal({
         aria-labelledby="cabinetSettingsModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className={styles.header}>
-          <div>
-            <span className={styles.eyebrow}>ЛИЧНЫЙ КАБИНЕТ</span>
-            <h2 className={styles.title} id="cabinetSettingsModalTitle">
-              {getProfileSettingsModalTitle(section)}
-            </h2>
-          </div>
-          <button
-            className={styles.closeButton}
-            data-testid="profile-settings-close"
-            type="button"
-            aria-label={`Закрыть ${getProfileSettingsCloseLabel(section)}`}
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          className={styles.header}
+          title={getProfileSettingsModalTitle(section)}
+          titleId="cabinetSettingsModalTitle"
+          eyebrow="Личный кабинет"
+          onBack={onClose}
+          backTestId="profile-settings-close"
+          backAriaLabel={`Вернуться из раздела «${getProfileSettingsCloseLabel(section)}»`}
+          scope="profile-settings-header"
+        />
 
         <div className={styles.body}>
           {children}

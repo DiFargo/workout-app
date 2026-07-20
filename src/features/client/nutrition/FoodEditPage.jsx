@@ -1,6 +1,7 @@
 import DishEditIngredientsBox from "./DishEditIngredientsBox";
 import DishIngredientPicker from "./DishIngredientPicker";
 import FoodEditBasicFields from "./FoodEditBasicFields";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./FoodEditPage.module.css";
 
 export default function FoodEditPage({
@@ -54,32 +55,17 @@ export default function FoodEditPage({
         data-modal-surface="true"
         aria-label={isDish ? "Редактирование блюда" : "Редактирование продукта"}
       >
-        <div className={styles.header} data-food-edit-page-part="header">
-          <span
-            className={styles.headerSpacer}
-            data-food-edit-page-part="header-spacer"
-            aria-hidden="true"
-          />
-
-          <strong
-            className={styles.title}
-            data-food-edit-page-part="title"
-            data-css-module-text="food-edit-page"
-          >
-            {isDish ? "Редактирование блюда" : "Редактирование продукта"}
-          </strong>
-
-          <button
-            type="button"
-            className={styles.closeButton}
-            data-food-edit-page-action="close"
-            data-css-module-control="food-edit-page"
-            onClick={onCancel}
-            aria-label="Закрыть"
-          >
-            ×
-          </button>
-        </div>
+        <ClientPageHeader
+          compact
+          className={styles.header}
+          title={isDish ? "Редактирование блюда" : "Редактирование продукта"}
+          eyebrow="Питание"
+          onBack={onCancel}
+          backAction="close"
+          backAriaLabel="Вернуться назад"
+          testId="food-edit-header"
+          scope="food-edit-header"
+        />
 
         <div className={styles.content} data-food-edit-page-part="content">
           <FoodEditBasicFields
