@@ -1152,6 +1152,10 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(topActions).toHaveCSS("width", "96px");
     await expect(topActions).toHaveCSS("height", "44px");
     await expect(topActionButtons).toHaveCount(2);
+    await expect(topActionButtons.nth(0)).toHaveAttribute("data-food-product-top-action", "edit");
+    await expect(topActionButtons.nth(1)).toHaveAttribute("data-food-product-top-action", "delete");
+    await expect(editAction.locator("svg")).toHaveCount(1);
+    await expect(deleteAction.locator("svg")).toHaveCount(1);
     await expect(deleteAction).toHaveCSS("width", "44px");
     await expect(deleteAction).toHaveCSS("height", "44px");
     await expect(editAction).toHaveCSS("width", "44px");

@@ -60,15 +60,18 @@
   display: grid;
   place-items: center;
   color: inherit;
-  font-size: 19px;
-  font-weight: 900;
-  line-height: 1;
-  filter: grayscale(1) saturate(0.35);
+  fill: none;
   -webkit-text-fill-color: currentColor;
 }
 
-:global(:root[data-app-theme="warm-light"]) .editIcon {
-  font-size: 22px;
+:global(:root[data-app-theme="warm-light"]) .icon.editIcon {
+  width: 20px;
+  height: 20px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .icon.deleteIcon {
+  width: 22px;
+  height: 22px;
 }
 
 :global(:root[data-app-theme="dark-green"]) .action,
@@ -116,5 +119,4 @@
   box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }
 
-:global(:root[data-app-theme="warm-light"]) .action:first-child { color: #b36e72; }
-:global(:root[data-app-theme="warm-light"]) .icon { font-size: 18px; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .action[data-food-product-top-action="delete"] { color: #b36e72; }
