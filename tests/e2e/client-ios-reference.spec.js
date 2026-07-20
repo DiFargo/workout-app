@@ -55,6 +55,15 @@ async function expectHorizontalGap(left, right, minimumGap = 0) {
   expect(rightBox.x - (leftBox.x + leftBox.width)).toBeGreaterThanOrEqual(minimumGap);
 }
 
+async function expectVerticallyCentered(item, container) {
+  const [itemBox, containerBox] = await Promise.all([item.boundingBox(), container.boundingBox()]);
+  expect(itemBox).not.toBeNull();
+  expect(containerBox).not.toBeNull();
+  const itemCenter = itemBox.y + itemBox.height / 2;
+  const containerCenter = containerBox.y + containerBox.height / 2;
+  expect(Math.abs(itemCenter - containerCenter)).toBeLessThanOrEqual(1);
+}
+
 test("calm iOS client screens match the 402 by 874 reference geometry", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "The reference uses one deterministic mobile browser.");
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
@@ -97,6 +106,10 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
     page.getByTestId("profile-main-next-meta-text"),
     page.getByTestId("profile-main-next-open"),
     14
+  );
+  await expectVerticallyCentered(
+    page.getByTestId("profile-main-next-open"),
+    page.getByTestId("profile-main-next-workout")
   );
   await expect(page.getByTestId("profile-progress-more")).toHaveCount(0);
   await expectStickyHeaderWhileScrolling(mainHeader);
