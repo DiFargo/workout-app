@@ -299,6 +299,7 @@ export default function WorkoutListPage({
     >
       <ClientPageHeader
         className={styles.hero}
+        frameClassName={styles.headerFrame}
         title={isIndividualWorkoutMode ? "Мой план" : "Тренировки"}
         titleTestId="workout-list-title"
         testId="workout-list-header"

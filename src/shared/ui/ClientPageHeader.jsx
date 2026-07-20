@@ -23,6 +23,7 @@ export default function ClientPageHeader({
   className = "",
   compact = false,
   embedded = false,
+  frameClassName = "",
   rootProps,
   scope,
   testId
@@ -73,7 +74,7 @@ export default function ClientPageHeader({
   return (
     <div
       ref={frameRef}
-      className={`${styles.frame} ${embedded ? styles.embeddedFrame : ""}`.trim()}
+      className={`${styles.frame} ${embedded ? styles.embeddedFrame : ""} ${frameClassName}`.trim()}
       data-client-page-header-frame="true"
     >
       <header

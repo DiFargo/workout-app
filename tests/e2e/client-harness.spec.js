@@ -140,6 +140,7 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     return {
       viewportWidth: window.innerWidth,
       header: rectOf(document.querySelector('[data-testid="workout-list-header"]')),
+      headerAction: rectOf(document.querySelector('[data-testid="workout-mode-button"]')),
       card: rectOf(document.querySelector('[data-testid="workout-list-card"]')),
       cardTop: rectOf(document.querySelector('[data-testid="workout-card-top"]')),
       cardInfo: rectOf(document.querySelector('[data-testid="workout-card-info"]')),
@@ -152,6 +153,8 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
   });
 
   expect(workoutCardMetric.deckOverflow).toBe("visible");
+  expect(workoutCardMetric.header.right - workoutCardMetric.headerAction.right)
+    .toBe(workoutCardMetric.viewportWidth <= 370 ? 16 : 20);
   expect(workoutCardMetric.header.bottom).toBeLessThanOrEqual(workoutCardMetric.card.y);
   expect(workoutCardMetric.cardTop.y).toBeGreaterThanOrEqual(workoutCardMetric.card.y);
   expect(workoutCardMetric.cardInfo.y).toBeGreaterThan(workoutCardMetric.cardTop.bottom);

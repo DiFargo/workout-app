@@ -206,7 +206,7 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
     });
     expect(geometry.left).toBeGreaterThanOrEqual(0);
     expect(geometry.right).toBeLessThanOrEqual(entry.width);
-    expect(geometry.actionRightInset).toBe(entry.width <= 370 ? 32 : 36);
+    expect(geometry.actionRightInset).toBe(entry.width <= 370 ? 16 : 20);
     expect(geometry.actionsVerticallyCentered).toBe(true);
     expect(geometry.weekBelowHeader).toBe(true);
     expect(geometry.dayInsideWeek).toBe(true);

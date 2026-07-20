@@ -2427,9 +2427,9 @@
   }
 }
 
-/* Keep the four workout zones in document order: header, card, swipe hint and
-   progress. The bottom navigation remains fixed outside these grid tracks. */
-:global(:root[data-app-theme="warm-light"]) .page.page.individualMode {
+/* Keep every deck workout picker in four viewport-filling zones: header, card,
+   swipe hint and progress. The bottom navigation stays fixed outside them. */
+:global(:root[data-app-theme="warm-light"]) .page.page.deckMode {
   width: min(402px, 100vw);
   height: 100dvh;
   min-height: 100dvh;
@@ -2448,13 +2448,18 @@
   overscroll-behavior: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .individualMode .hero.hero {
+:global(:root[data-app-theme="warm-light"]) .headerFrame.headerFrame {
   grid-row: 1;
   width: calc(100% + 32px);
   margin: 0 -16px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .individualMode .workoutDeck.workoutDeck {
+:global(:root[data-app-theme="warm-light"]) .deckMode .hero.hero {
+  width: 100%;
+  margin: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .deckMode .workoutDeck.workoutDeck {
   grid-row: 2;
   width: 100%;
   height: 100%;
@@ -2463,14 +2468,14 @@
   align-self: stretch;
 }
 
-:global(:root[data-app-theme="warm-light"]) .individualMode .featuredCard.featuredCard {
+:global(:root[data-app-theme="warm-light"]) .deckMode .featuredCard.featuredCard {
   width: 100%;
   height: 100%;
   min-height: 0;
   max-height: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .individualMode .workoutNav.workoutNav {
+:global(:root[data-app-theme="warm-light"]) .deckMode .workoutNav.workoutNav {
   grid-row: 3;
   height: 36px;
   min-height: 36px;
@@ -2478,11 +2483,15 @@
   margin: 0;
 }
 
-:global(:root[data-app-theme="warm-light"]) .individualMode .bottomPanel.bottomPanel {
+:global(:root[data-app-theme="warm-light"]) .deckMode .swipeHint.swipeHint {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .deckMode .bottomPanel.bottomPanel {
   display: contents;
 }
 
-:global(:root[data-app-theme="warm-light"]) .individualMode .bottomProgress.bottomProgress {
+:global(:root[data-app-theme="warm-light"]) .deckMode .bottomProgress.bottomProgress {
   grid-row: 4;
   height: 48px;
   min-height: 48px;
