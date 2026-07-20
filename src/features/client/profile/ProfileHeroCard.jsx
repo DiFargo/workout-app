@@ -42,12 +42,12 @@ export default function ProfileHeroCard({
       </div>
 
       <div className={styles.text} data-testid="profile-main-hero-text">
-        <span className={styles.greeting}>{greeting},</span>
+        <span className={styles.greeting} data-testid="profile-main-hero-greeting">{greeting},</span>
         <h2 className={styles.title} data-testid="profile-main-hero-title">{greetingName}</h2>
-        <span className={styles.workouts}><Dumbbell aria-hidden="true" />{totalWorkouts} {totalWorkouts === 1 ? "тренировка" : "тренировки"}</span>
+        <span className={styles.workouts} data-testid="profile-main-hero-workouts"><Dumbbell aria-hidden="true" />{totalWorkouts} {totalWorkouts === 1 ? "тренировка" : "тренировки"}</span>
       </div>
 
-      <span className={styles.goal}>{activeGoalLabel}</span>
+      <span className={styles.goal} data-testid="profile-main-hero-goal">{activeGoalLabel}</span>
     </div>
   );
 }

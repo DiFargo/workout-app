@@ -10,13 +10,13 @@ export function ProfileNextWorkoutCard({
   return (
     <article className={styles.nextCard} data-testid="profile-main-next-workout">
       <span className={styles.rail} aria-hidden="true" />
-      <span className={styles.eyebrow}>СЛЕДУЮЩАЯ ТРЕНИРОВКА</span>
-      <h2>{title}</h2>
-      <div className={styles.nextMeta}>
+      <span className={styles.eyebrow} data-testid="profile-main-next-eyebrow">СЛЕДУЮЩАЯ ТРЕНИРОВКА</span>
+      <h2 data-testid="profile-main-next-title">{title}</h2>
+      <div className={styles.nextMeta} data-testid="profile-main-next-meta">
         <CalendarDays aria-hidden="true" />
         <span>{dateText}{exerciseCount ? `  •  ${exerciseCount} упражнений` : ""}</span>
       </div>
-      <button type="button" onClick={onOpen}>Открыть план</button>
+      <button type="button" data-testid="profile-main-next-open" onClick={onOpen}>Открыть план</button>
     </article>
   );
 }

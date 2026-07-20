@@ -38,6 +38,23 @@ async function expectStickyHeaderWhileScrolling(header) {
   expect(Math.round(metrics.scrolledY)).toBe(Math.round(metrics.initialY));
 }
 
+async function expectAlignedLeft(...locators) {
+  const leftEdges = await Promise.all(locators.map(async (locator) => {
+    const box = await locator.boundingBox();
+    expect(box).not.toBeNull();
+    return Math.round(box.x);
+  }));
+
+  expect(new Set(leftEdges).size).toBe(1);
+}
+
+async function expectHorizontalGap(left, right, minimumGap = 0) {
+  const [leftBox, rightBox] = await Promise.all([left.boundingBox(), right.boundingBox()]);
+  expect(leftBox).not.toBeNull();
+  expect(rightBox).not.toBeNull();
+  expect(rightBox.x - (leftBox.x + leftBox.width)).toBeGreaterThanOrEqual(minimumGap);
+}
+
 test("calm iOS client screens match the 402 by 874 reference geometry", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "The reference uses one deterministic mobile browser.");
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
@@ -61,6 +78,31 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 474, width: 370, height: 174 });
   await expectRect(page.getByTestId("profile-main-last-workout"), { x: 16, y: 662, width: 370, height: 50 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
+  await expectAlignedLeft(
+    page.getByTestId("profile-main-hero-greeting"),
+    page.getByTestId("profile-main-hero-title"),
+    page.getByTestId("profile-main-hero-workouts")
+  );
+  await expectHorizontalGap(
+    page.getByTestId("profile-main-hero-title"),
+    page.getByTestId("profile-main-hero-goal"),
+    8
+  );
+  await expectAlignedLeft(
+    page.getByTestId("profile-main-next-eyebrow"),
+    page.getByTestId("profile-main-next-title"),
+    page.getByTestId("profile-main-next-meta")
+  );
+  await expectHorizontalGap(
+    page.getByTestId("profile-main-next-meta"),
+    page.getByTestId("profile-main-next-open"),
+    14
+  );
+  await expectHorizontalGap(
+    page.getByTestId("profile-progress-copy"),
+    page.getByTestId("profile-progress-more"),
+    8
+  );
   await expectStickyHeaderWhileScrolling(mainHeader);
 
   await page.getByTestId("client-nav-cabinet").click();
