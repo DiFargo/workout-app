@@ -2157,7 +2157,7 @@
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage {
   inset: 0 0 auto;
   width: 100%;
-  height: 58%;
+  height: calc(100% - 160px);
   border-radius: 23px 23px 0 0;
   opacity: 1;
   background: #edf1f3;
@@ -2411,7 +2411,7 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage {
-    height: 49%;
+    height: calc(100% - 154px);
   }
 
   :global(:root[data-app-theme="warm-light"]) .workoutStats.workoutStats > span {
@@ -2439,10 +2439,10 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows:
     auto
-    clamp(372px, calc(100dvh - 338px), 430px)
+    minmax(372px, 1fr)
     36px
     48px;
-  align-content: start;
+  align-content: stretch;
   row-gap: 10px;
   overflow: hidden;
   overscroll-behavior: none;

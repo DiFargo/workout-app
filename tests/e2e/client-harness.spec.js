@@ -163,6 +163,7 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     workoutCardMetric.swipe.x + workoutCardMetric.swipe.width / 2 - workoutCardMetric.viewportWidth / 2
   )).toBeLessThanOrEqual(1);
   expect(workoutCardMetric.progress.bottom).toBeLessThanOrEqual(workoutCardMetric.bottomNav.y);
+  expect(workoutCardMetric.bottomNav.y - workoutCardMetric.progress.bottom).toBeLessThanOrEqual(16);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });
