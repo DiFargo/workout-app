@@ -591,7 +591,7 @@
 :global(:root[data-app-theme="warm-light"]) .mainDock,
 :global(:root[data-app-theme="warm-light"]) .nutritionDock {
   right: 0;
-  bottom: calc(max(0px, 100dvh - 874px) + 14px);
+  bottom: var(--layout-client-dock-bottom);
   left: 0;
   z-index: 90;
 }
@@ -599,11 +599,11 @@
 :global(:root[data-app-theme="warm-light"]) .main.main,
 :global(:root[data-app-theme="warm-light"]) .nutrition.nutrition {
   box-sizing: border-box;
-  width: min(382px, calc(100vw - 20px));
+  width: var(--layout-client-dock-width);
   max-width: 382px;
-  height: 76px;
-  min-height: 76px;
-  max-height: 76px;
+  height: var(--layout-client-dock-height);
+  min-height: var(--layout-client-dock-height);
+  max-height: var(--layout-client-dock-height);
   padding: 6px;
   display: flex;
   align-items: center;
@@ -611,7 +611,7 @@
   gap: 0;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.96);
-  border-radius: 28px;
+  border-radius: var(--layout-client-dock-radius);
   background: rgba(255, 255, 255, 0.96);
   color: #7b7682;
   box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
@@ -627,9 +627,9 @@
   width: calc((100% - 12px) / 4);
   min-width: 0;
   max-width: 78px;
-  height: 58px;
-  min-height: 58px;
-  max-height: 58px;
+  height: var(--layout-client-dock-button-height);
+  min-height: var(--layout-client-dock-button-height);
+  max-height: var(--layout-client-dock-button-height);
   margin: 0;
   padding: 6px 0 4px;
   display: grid;
@@ -638,7 +638,7 @@
   align-content: center;
   gap: 2px;
   border: 0;
-  border-radius: 20px;
+  border-radius: var(--layout-client-dock-button-radius);
   background: transparent;
   color: #7b7682;
   box-shadow: none;

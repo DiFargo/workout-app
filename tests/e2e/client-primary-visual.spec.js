@@ -788,7 +788,7 @@ test("client profile settings title stays scoped and adaptive", async ({ page },
     marginBottom: "32px",
     fontSize: "15px",
     lineHeight: "15.75px",
-    color: "rgb(32, 35, 38)",
+    color: "rgb(40, 38, 46)",
     textAlign: "center",
     textTransform: "uppercase"
   });

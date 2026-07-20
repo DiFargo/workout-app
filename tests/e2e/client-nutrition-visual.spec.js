@@ -399,10 +399,18 @@ test("client nutrition visual audit covers dense actions and modal entry points"
       rightInset: sheet && actionBar ? Math.round(sheet.right - actionBar.right) : null,
       bottomInset: sheet && actionBar ? Math.round(sheet.bottom - actionBar.bottom) : null,
       actionBarWidth: actionBar ? Math.round(actionBar.width) : null,
+      actionBarHeight: actionBar ? Math.round(actionBar.height) : null,
+      bottomOffset: actionBar ? Math.round(window.innerHeight - actionBar.bottom) : null,
       sheetWidth: sheet ? Math.round(sheet.width) : null,
+      buttonRects: [...document.querySelectorAll('[data-food-edit-page-part="actions"] button')]
+        .map((button) => {
+          const rect = button.getBoundingClientRect();
+          return { left: rect.left, right: rect.right, height: Math.round(rect.height) };
+        }),
       buttonOverflow: [...document.querySelectorAll('[data-food-edit-page-part="actions"] button')]
         .map((button) => button.getBoundingClientRect())
-        .some((button) => actionBar && (button.left < actionBar.left - 1 || button.right > actionBar.right + 1))
+        .some((button) => actionBar && (button.left < actionBar.left - 1 || button.right > actionBar.right + 1)),
+      viewportHeight: window.innerHeight
     };
   });
   expect(editActionBarMetrics.position).toBe("fixed");
@@ -411,6 +419,10 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   expect(editActionBarMetrics.rightInset).toBeGreaterThanOrEqual(8);
   expect(editActionBarMetrics.bottomInset).toBeGreaterThanOrEqual(8);
   expect(editActionBarMetrics.actionBarWidth).toBeLessThan(editActionBarMetrics.sheetWidth);
+  expect(editActionBarMetrics.actionBarHeight).toBe(76);
+  expect(editActionBarMetrics.bottomOffset)
+    .toBe(Math.max(0, editActionBarMetrics.viewportHeight - 874) + 14);
+  expect(editActionBarMetrics.buttonRects.every((button) => button.height === 58)).toBe(true);
   expect(editActionBarMetrics.buttonOverflow).toBe(false);
   await expect(page.getByTestId("food-edit-basic-presets").locator("button").first()).toHaveAttribute("aria-pressed", /^(true|false)$/);
   const firstIconPreset = await page.getByTestId("food-edit-basic-presets").locator("button").first().textContent();
@@ -813,7 +825,7 @@ test("CSS V2 food search page keeps stable scoped recent and photo-action layout
     await expect(recentItems).toHaveCount(6);
     await expect(recentItem).toHaveCSS("height", expectedCardHeight);
     await expect(recentItem).toHaveCSS("border-radius", "18px");
-    await expect(recentItem).toHaveCSS("border-color", "rgb(225, 228, 229)");
+    await expect(recentItem).toHaveCSS("border-color", "rgb(235, 230, 239)");
     await expect(recentItem.locator("strong")).toHaveCSS("font-size", "11px");
 
     await expect(photoAction).toBeVisible();
@@ -823,8 +835,8 @@ test("CSS V2 food search page keeps stable scoped recent and photo-action layout
     await expect(photoAction).toHaveCSS("height", "72px");
     await expect(photoAction).toHaveCSS("bottom", "104px");
     await expect(photoAction).toHaveCSS("grid-template-columns", viewport.width <= 360 ? "44px 218px 18px" : viewport.width <= 390 ? "44px 248px 18px" : "44px 260px 18px");
-    await expect(photoAction.locator("strong")).toHaveCSS("color", "rgb(32, 35, 38)");
-    await expect(photoAction.locator("small")).toHaveCSS("color", "rgb(116, 121, 127)");
+    await expect(photoAction.locator("strong")).toHaveCSS("color", "rgb(40, 38, 46)");
+    await expect(photoAction.locator("small")).toHaveCSS("color", "rgb(123, 118, 130)");
     await expect(photoAction.locator("em")).toHaveCSS("color", "rgb(169, 174, 178)");
     await expect(page.getByTestId("food-search-photo-input")).toBeHidden();
     await expect(page.locator(".foodSearchModernLanding, .foodSearchModernSectionHeader, .foodSearchRecentGrid, .foodSearchRecentCard, .foodSearchFixedPhotoAction, .foodSearchModernActionIcon, .fatPhotoAiInput")).toHaveCount(0);
@@ -893,7 +905,7 @@ test("CSS V2 food search results keep stable scoped search and my-products cards
     await expect(item).toHaveCSS("gap", "10px");
     await expect(item).toHaveCSS("padding", "9px 10px");
     await expect(item).toHaveCSS("border-radius", "18px");
-    await expect(item).toHaveCSS("border-color", "rgb(225, 228, 229)");
+    await expect(item).toHaveCSS("border-color", "rgb(235, 230, 239)");
     await expect(item).toHaveCSS("background-color", "rgb(255, 255, 255)");
     await expect(icon).toHaveCSS("width", "44px");
     await expect(icon).toHaveCSS("height", "44px");
@@ -966,7 +978,7 @@ test("CSS V2 food search input keeps stable scoped geometry", async ({ page }, t
     await expect(searchInput).toHaveCSS("min-height", "50px");
     await expect(searchInput).toHaveCSS("border-radius", "16px");
     await expect(input).toHaveCSS("min-height", "48px");
-    await expect(input).toHaveCSS("color", "rgb(32, 35, 38)");
+    await expect(input).toHaveCSS("color", "rgb(40, 38, 46)");
 
     const searchBox = await searchInput.boundingBox();
     expect(searchBox).not.toBeNull();
@@ -989,7 +1001,7 @@ test("CSS V2 food search input keeps stable scoped geometry", async ({ page }, t
     await expect(searchInput).toHaveCSS("min-height", "50px");
     await expect(searchInput).toHaveCSS("border-radius", "16px");
     await expect(input).toHaveCSS("min-height", "48px");
-    await expect(input).toHaveCSS("color", "rgb(32, 35, 38)");
+    await expect(input).toHaveCSS("color", "rgb(40, 38, 46)");
 
     const myProductsBox = await searchInput.boundingBox();
     expect(myProductsBox).not.toBeNull();
@@ -1033,24 +1045,27 @@ test("CSS V2 food search bottom bar keeps stable scoped navigation", async ({ pa
     await expect(bottomBar).toHaveCSS("position", "fixed");
     await expect(bottomBar).toHaveCSS("height", "76px");
     await expect(bottomBar).toHaveCSS("padding", "6px");
-    await expect(bottomBar).toHaveCSS("border-radius", "24px");
+    await expect(bottomBar).toHaveCSS("border-radius", "28px");
     await expect(buttons).toHaveCount(4);
     await expect(bottomBar.locator('button[aria-pressed="true"]')).toHaveCount(1);
     await expect(page.locator('[data-food-search-action="search"]')).toHaveAttribute("aria-pressed", "true");
 
     for (const button of await buttons.all()) {
       await expect(button).toHaveCSS("display", "flex");
-      await expect(button).toHaveCSS("height", "64px");
+      await expect(button).toHaveCSS("height", "58px");
       await expect(button.locator("strong")).toHaveCSS("text-transform", "none");
       const buttonBox = await button.boundingBox();
       expect(buttonBox).not.toBeNull();
-      expect(buttonBox.height).toBeCloseTo(64, 1);
+      expect(buttonBox.height).toBeCloseTo(58, 1);
     }
 
     const bottomBarBox = await bottomBar.boundingBox();
     expect(bottomBarBox).not.toBeNull();
     expect(bottomBarBox.x).toBeGreaterThanOrEqual(0);
     expect(bottomBarBox.x + bottomBarBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    expect(bottomBarBox.width).toBeCloseTo(Math.min(382, viewport.width - 20), 1);
+    expect(viewport.height - bottomBarBox.y - bottomBarBox.height)
+      .toBeCloseTo(Math.max(0, viewport.height - 874) + 14, 1);
     await expectNoHorizontalOverflow(page);
 
     if (viewport.width === 390 || viewport.width === 1440) {
@@ -1187,11 +1202,11 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(actionBar).toHaveCSS("position", "fixed");
     await expect(actionBar).toHaveCSS("height", "76px");
     await expect(actionBar).toHaveCSS("padding", "6px");
-    await expect(actionBar).toHaveCSS("border-radius", "24px");
+    await expect(actionBar).toHaveCSS("border-radius", "28px");
     await expect(buttons).toHaveCount(2);
-    await expect(backButton).toHaveCSS("height", "64px");
-    await expect(backButton).toHaveCSS("color", "rgb(116, 121, 127)");
-    await expect(addButton).toHaveCSS("height", "64px");
+    await expect(backButton).toHaveCSS("height", "58px");
+    await expect(backButton).toHaveCSS("color", "rgb(123, 118, 130)");
+    await expect(addButton).toHaveCSS("height", "58px");
     await expect(addButton).toHaveCSS("background-color", "rgb(143, 122, 200)");
     await expect(addButton).toHaveCSS("color", "rgb(255, 255, 255)");
 
@@ -1204,6 +1219,9 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     expect(addBox.width / backBox.width).toBeCloseTo(2, 1);
     expect(actionBarBox.x).toBeGreaterThanOrEqual(0);
     expect(actionBarBox.x + actionBarBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    expect(actionBarBox.width).toBeCloseTo(Math.min(382, viewport.width - 20), 1);
+    expect(viewport.height - actionBarBox.y - actionBarBox.height)
+      .toBeCloseTo(Math.max(0, viewport.height - 874) + 14, 1);
     await expectNoHorizontalOverflow(page);
 
     await portionMenuButton.click();
@@ -1738,7 +1756,7 @@ test("CSS V2 nutrition orbit keeps scoped reference geometry, motion and add flo
     await expect(progressPaths).toHaveCount(4);
     await expect(page.locator(".nutritionOrbitPreview, .nutritionOrbitPreviewCard, .nutritionOrbitHitButton, .nutritionOrbitSvgTitle")).toHaveCount(0);
     await expect(card).toHaveCSS("border-radius", "24px");
-    await expect(card).toHaveCSS("border-color", "rgb(225, 228, 229)");
+    await expect(card).toHaveCSS("border-color", "rgb(235, 230, 239)");
     await expect(card).toHaveCSS("background-color", "rgb(255, 255, 255)");
     await expect(orbit).toHaveCSS("margin-top", "12px");
 
@@ -1812,7 +1830,7 @@ test("CSS V2 nutrition meal modal keeps scoped reference geometry, themes and ac
     await expect(modal).toHaveCSS("z-index", "9997");
     await expect(sheet).toHaveCSS("border-radius", "26px");
     await expect(sheet).toHaveCSS("background-color", "rgb(247, 246, 248)");
-    await expect(page.locator('[data-nutrition-meal-part="header"] h2')).toHaveCSS("color", "rgb(32, 35, 38)");
+    await expect(page.locator('[data-nutrition-meal-part="header"] h2')).toHaveCSS("color", "rgb(40, 38, 46)");
     await expect(row).toHaveCSS("transition-property", "transform, opacity, background");
 
     const sheetBox = await sheet.boundingBox();
@@ -1980,7 +1998,7 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
     await expect(page.locator(".nutritionAiPlanDashboard, .nutritionAiPlanModal, .nutritionAiPlanToggleBtn")).toHaveCount(0);
     await expect(modal).toHaveCSS("position", "fixed");
     await expect(modal).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(modal).toHaveCSS("border-top-color", "rgb(225, 228, 229)");
+    await expect(modal).toHaveCSS("border-top-color", "rgb(235, 230, 239)");
     await expect(modal).toHaveCSS("border-radius", "26px");
     await expect(close).toHaveCSS("width", "44px");
     await expect(close).toHaveCSS("height", "44px");

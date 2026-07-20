@@ -12,6 +12,12 @@
   --layout-client-shell-tablet-max: 720px;
   --layout-client-shell-desktop-max: 1040px;
   --layout-client-shell-desktop-gutter: 32px;
+  --layout-client-dock-bottom: calc(max(0px, 100dvh - 874px) + 14px);
+  --layout-client-dock-width: min(382px, calc(100vw - 20px));
+  --layout-client-dock-height: 76px;
+  --layout-client-dock-button-height: 58px;
+  --layout-client-dock-radius: 28px;
+  --layout-client-dock-button-radius: 20px;
   --layout-modal-gutter: 16px;
   --layout-modal-max-inline: 640px;
 

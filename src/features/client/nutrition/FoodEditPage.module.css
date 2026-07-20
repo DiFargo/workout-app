@@ -663,30 +663,37 @@
 :global(:root[data-app-theme="warm-light"]) .noteInput::placeholder { color: #a0a5a9; -webkit-text-fill-color: #a0a5a9; }
 :global(:root[data-app-theme="warm-light"]) .actionBar {
   position: fixed;
-  right: auto;
-  bottom: max(14px, env(safe-area-inset-bottom));
-  left: 50%;
-  width: min(382px, calc(100vw - 20px));
-  height: 76px;
-  min-height: 76px;
+  right: 0;
+  bottom: var(--layout-client-dock-bottom);
+  left: 0;
+  box-sizing: border-box;
+  width: var(--layout-client-dock-width);
+  max-width: 382px;
+  height: var(--layout-client-dock-height);
+  min-height: var(--layout-client-dock-height);
+  max-height: var(--layout-client-dock-height);
+  margin-inline: auto;
   padding: 6px;
   gap: 6px;
-  border: 0;
-  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  border-radius: var(--layout-client-dock-radius);
   background: rgba(255, 255, 255, 0.96);
   color: #7b7682;
   box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
-  transform: translateX(-50%);
+  transform: none;
   backdrop-filter: blur(20px) saturate(1.15);
   -webkit-backdrop-filter: blur(20px) saturate(1.15);
 }
 
 :global(:root[data-app-theme="warm-light"]) .actionBar::after { content: none; }
 :global(:root[data-app-theme="warm-light"]) .actionButton {
-  height: 64px;
-  min-height: 64px;
+  height: var(--layout-client-dock-button-height);
+  min-height: var(--layout-client-dock-button-height);
+  max-height: var(--layout-client-dock-button-height);
+  margin: 0;
   border: 0;
-  border-radius: 18px;
+  border-radius: var(--layout-client-dock-button-radius);
   background: transparent;
   color: #7b7682;
   -webkit-text-fill-color: #7b7682;
