@@ -2039,6 +2039,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .cardTop.cardTop {
+  position: absolute;
   z-index: 5;
   top: 14px;
   right: 14px;

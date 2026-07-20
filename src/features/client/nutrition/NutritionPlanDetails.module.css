@@ -479,6 +479,17 @@
   -webkit-text-fill-color: var(--plan-muted);
 }
 
+:global(:root[data-app-theme="dark-green"]) .header {
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+}
+
+:global(:root[data-app-theme="dark-green"]) .close {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+}
+
 :global(:root[data-app-theme="warm-light"]) .backdrop {
   background: rgba(35, 40, 68, 0.22);
 }

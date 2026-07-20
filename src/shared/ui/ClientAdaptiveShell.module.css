@@ -46,11 +46,11 @@
 
 /* The calm client theme keeps the same iPhone canvas on every host viewport. */
 :global(:root[data-app-theme="warm-light"]) .shell.shell {
-  width: min(402px, 100vw);
-  max-width: 402px;
-  height: min(874px, 100dvh);
-  min-height: min(874px, 100dvh);
-  max-height: min(874px, 100dvh);
+  width: min(402px, 100vw) !important;
+  max-width: 402px !important;
+  height: min(874px, 100dvh) !important;
+  min-height: min(874px, 100dvh) !important;
+  max-height: min(874px, 100dvh) !important;
   margin: 0 auto;
   border-radius: 54px;
 }

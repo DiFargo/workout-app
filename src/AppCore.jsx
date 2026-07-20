@@ -7,7 +7,7 @@ import "./AppCoreSurface.module.css";
 import "./AppCoreLayout.module.css";
 import "./AppCoreClientFlow.module.css";
 import "./AppCoreClientVisual.module.css";
-import "./AppCoreClientIosTheme.module.css";
+import clientIosThemeStyles from "./AppCoreClientIosTheme.module.css";
 /* eslint-disable react-hooks/refs -- Event factories capture refs for later handlers; they do not read refs during render. */
 import {
   defaultNutritionState
@@ -296,6 +296,11 @@ const {
 
 export default function App() {
   useModalFocusTrap();
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add(clientIosThemeStyles.contract);
+    return () => root.classList.remove(clientIosThemeStyles.contract);
+  }, []);
   const showClientHarness = isClientE2EHarnessEnabled();
   const showTrainerHarness = isTrainerE2EHarnessEnabled();
   const showAdminHarness = isAdminE2EHarnessEnabled();

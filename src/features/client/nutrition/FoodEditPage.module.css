@@ -378,20 +378,21 @@
 }
 
 :global(:root[data-app-theme="dark-green"]) .sheet {
-  width: min(520px, calc(100vw - 16px));
-  max-width: none;
-  height: 100dvh;
-  min-height: 100dvh;
-  max-height: calc(100dvh - 20px);
+  width: min(520px, calc(100vw - 16px)) !important;
+  max-width: none !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
   padding: 18px 12px 104px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   flex-direction: row;
-  overflow: auto;
+  overflow: auto !important;
   border-color: var(--color-food-edit-page-sheet-border);
-  border-radius: 24px;
+  border-radius: 24px !important;
   background: var(--color-food-edit-page-sheet);
   box-shadow: var(--shadow-food-edit-page-sheet);
+  scrollbar-gutter: auto !important;
 }
 
 :global(:root[data-app-theme="dark-green"]) .header {
@@ -436,10 +437,10 @@
   position: static;
   z-index: auto;
   grid-column: auto;
-  width: 40px;
-  min-width: 40px;
-  height: 40px;
-  min-height: 40px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
   display: grid;
   align-items: center;
   justify-content: normal;

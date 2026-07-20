@@ -590,7 +590,7 @@ test("food edit page keeps its scoped responsive geometry", async ({ page }, tes
       name: "dark-390",
       viewport: { width: 390, height: 844 },
       theme: "dark-green",
-      expected: { sheetWidth: 374, sheetHeight: 844, contentWidth: 348, contentHeight: 662, actionWidth: 368, actionHeight: 80, closeSize: 40 }
+      expected: { sheetWidth: 374, sheetHeight: 844, contentWidth: 348, contentHeight: 662, actionWidth: 368, actionHeight: 80, closeSize: 44 }
     }
   ];
 
@@ -737,7 +737,7 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
     await expect(mealMenu).toHaveCSS("width", `${Math.min(370, viewport.width - 32)}px`);
     await expect(mealOptions).toHaveCount(4);
     await expect(mealOptions.first()).toHaveCSS("height", "52px");
-    await expect(collapseButton).toHaveCSS("height", viewport.width <= 640 ? "42px" : "44px");
+    await expect(collapseButton).toHaveCSS("height", "44px");
     await collapseButton.click();
     await expect(mealMenu).toBeHidden();
 
@@ -884,7 +884,7 @@ test("CSS V2 food search results keep stable scoped search and my-products cards
     await expect(title).toHaveCSS("font-weight", "650");
     await expect(meta).toHaveCSS("gap", "10px");
     await expect(portion).toHaveCSS("font-size", "12px");
-    await expect(details).toHaveCSS("font-size", "11px");
+    await expect(details).toHaveCSS("font-size", viewport.width <= 390 ? "10.5px" : "11px");
     await expect(action).toHaveCSS("width", "32px");
     await expect(action).toHaveCSS("height", "32px");
     await expect(action).toHaveCSS("border-radius", "50%");
@@ -1106,7 +1106,8 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(productHero).toHaveAttribute("data-css-module-scope", "food-product-header");
     await expect(productHero).toHaveCSS("height", "116px");
     await expect(productHero).toHaveCSS("padding", "14px");
-    await expect(productHero.locator("[aria-hidden='true']").first()).toHaveCSS("width", "72px");
+    await expect(productHero.locator('[data-food-product-hero-part="icon-stack"]')).toHaveCSS("width", "72px");
+    await expect(productHero.locator('[data-food-product-hero-part="icon"]')).toHaveCSS("width", "46px");
     await expect(productHero.locator("strong")).toHaveCSS("font-size", "20px");
     await expect(page.locator(".foodProductFlowHeader, .foodProductFlowTitle, .foodEditInlineMealHeader, .foodEditInlineMealButton, .foodEditMealPickerDropdown, .foodEditHeroRender, .foodEditIconSourceStack, .foodEditIconRender")).toHaveCount(0);
     await expect(topActions).toBeVisible();
@@ -1330,11 +1331,11 @@ test("CSS V2 food edit basic fields stay scoped and match the responsive referen
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const cases = [
-    { name: "warm-360", width: 360, height: 800, theme: "warm-light", fieldWidth: 328, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 70.2, macroWidth: 76.75, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
-    { name: "warm-390", width: 390, height: 844, theme: "warm-light", fieldWidth: 358, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 70.2, macroWidth: 84.25, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
-    { name: "warm-430", width: 430, height: 932, theme: "warm-light", fieldWidth: 370, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 70.2, macroWidth: 87.25, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
-    { name: "warm-768", width: 768, height: 1024, theme: "warm-light", fieldWidth: 370, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 147.4, macroWidth: 181.5, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
-    { name: "warm-1440", width: 1440, height: 900, theme: "warm-light", fieldWidth: 370, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 147.4, macroWidth: 181.5, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
+    { name: "warm-360", width: 360, height: 800, theme: "warm-light", fieldWidth: 328, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 92.2, macroWidth: 76.75, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
+    { name: "warm-390", width: 390, height: 844, theme: "warm-light", fieldWidth: 358, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 92.2, macroWidth: 84.25, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
+    { name: "warm-430", width: 430, height: 932, theme: "warm-light", fieldWidth: 370, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 92.2, macroWidth: 87.25, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
+    { name: "warm-768", width: 768, height: 1024, theme: "warm-light", fieldWidth: 370, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 191.4, macroWidth: 181.5, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
+    { name: "warm-1440", width: 1440, height: 900, theme: "warm-light", fieldWidth: 370, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 191.4, macroWidth: 181.5, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
     { name: "dark-390", width: 390, height: 844, theme: "dark-green", fieldWidth: 316, fieldHeight: 70.39, iconHeight: 96.39, gridHeight: 70.39, macroWidth: 71.5, portionHeight: 80.39, presetDisplay: "flex", toggleHeight: 46 }
   ];
 
@@ -1443,7 +1444,7 @@ test("CSS V2 dish ingredient picker stays scoped and matches the responsive refe
     expect(resultBox).not.toBeNull();
     expect(pickerBox.width).toBeCloseTo(testCase.sheetWidth, 1);
     expect(pickerBox.height).toBeCloseTo(testCase.sheetHeight, 1);
-    expect(resultBox.height).toBeCloseTo(testCase.theme === "warm-light" ? (testCase.width <= 390 ? 64 : 68) : 72, 1);
+    expect(resultBox.height).toBeCloseTo(testCase.theme === "warm-light" ? 64 : 72, 1);
     await expectTapTargets(page, ['[data-dish-ingredient-action="close"]', "[data-dish-ingredient-result]"], 40);
     await expectNoHorizontalOverflow(page);
 
@@ -1604,7 +1605,7 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and theme state
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { width: 360, height: 800, sheetWidth: 328, sheetHeight: 471, dayHeight: 44, radius: "26px" },
+    { width: 360, height: 800, sheetWidth: 328, sheetHeight: 503, dayHeight: 44, radius: "26px" },
     { width: 390, height: 844, sheetWidth: 358, sheetHeight: 501, dayHeight: 47, radius: "26px" },
     { width: 430, height: 932, sheetWidth: 370, sheetHeight: 501, dayHeight: 47, radius: "26px" },
     { width: 768, height: 1024, sheetWidth: 370, sheetHeight: 501, dayHeight: 47, radius: "26px" },
@@ -1767,11 +1768,11 @@ test("CSS V2 nutrition meal modal keeps scoped reference geometry, themes and ac
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { name: "360", width: 360, height: 800, sheetWidth: 328, sheetHeight: 266, rowWidth: 298, rowHeight: 68 },
-    { name: "390", width: 390, height: 844, sheetWidth: 358, sheetHeight: 266, rowWidth: 328, rowHeight: 68 },
-    { name: "430", width: 430, height: 932, sheetWidth: 370, sheetHeight: 266, rowWidth: 340, rowHeight: 68 },
-    { name: "768", width: 768, height: 1024, sheetWidth: 370, sheetHeight: 266, rowWidth: 340, rowHeight: 68 },
-    { name: "1440", width: 1440, height: 900, sheetWidth: 370, sheetHeight: 266, rowWidth: 340, rowHeight: 68 }
+    { name: "360", width: 360, height: 800, sheetWidth: 328, sheetHeight: 266, rowWidth: 298, rowHeight: 79 },
+    { name: "390", width: 390, height: 844, sheetWidth: 358, sheetHeight: 266, rowWidth: 328, rowHeight: 79 },
+    { name: "430", width: 430, height: 932, sheetWidth: 370, sheetHeight: 266, rowWidth: 340, rowHeight: 79 },
+    { name: "768", width: 768, height: 1024, sheetWidth: 370, sheetHeight: 266, rowWidth: 340, rowHeight: 79 },
+    { name: "1440", width: 1440, height: 900, sheetWidth: 370, sheetHeight: 266, rowWidth: 340, rowHeight: 79 }
   ];
 
   for (const viewport of viewports) {
@@ -2007,8 +2008,8 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
   await expect(darkModal).toBeVisible({ timeout: 40_000 });
   await expect(darkModal).toHaveCSS("background-color", "rgba(255, 255, 255, 0.027)");
   await expect(darkModal).toHaveCSS("border-top-color", "rgba(255, 255, 255, 0.07)");
-  await expect(darkClose).toHaveCSS("width", "32px");
-  await expect(darkClose).toHaveCSS("height", "32px");
+  await expect(darkClose).toHaveCSS("width", "44px");
+  await expect(darkClose).toHaveCSS("height", "44px");
   const darkBox = await darkModal.boundingBox();
   expect(darkBox).not.toBeNull();
   expect(darkBox.width).toBeCloseTo(358, 0);

@@ -188,7 +188,7 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
   await expect(clientTabs(page).getByRole("button", { name: "Сообщения", exact: true })).toBeVisible();
   await expect(clientTabs(page).getByRole("button", { name: "Заметки", exact: true })).toHaveCount(0);
   await expect(page.locator(".trainerNextClientTabs button[aria-pressed='true']")).toHaveCount(1);
-  await expect(page.locator(".trainerNextChartHead button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.getByTestId("trainer-client-progress-dashboard").locator("button[aria-pressed='true']")).toHaveCount(1);
   const overviewTasks = page.locator("details").filter({ hasText: "Задания клиенту" });
   await expect(overviewTasks).toHaveCount(1);
   await expect(overviewTasks.getByText("Задания клиенту", { exact: true })).toBeVisible();

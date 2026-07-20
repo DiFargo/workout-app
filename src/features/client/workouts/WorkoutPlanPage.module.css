@@ -170,7 +170,7 @@
 
   :global(:root[data-app-theme="warm-light"]) .bottomPanel.bottomPanel {
     right: 0;
-    bottom: 14px;
+    bottom: calc(max(0px, 100dvh - 874px) + 14px);
     left: 0;
     width: min(382px, calc(100vw - 20px));
     max-width: 382px;

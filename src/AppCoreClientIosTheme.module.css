@@ -1,5 +1,4 @@
-:global {
-  html:root[data-app-theme="warm-light"] {
+:global(html:root[data-app-theme="warm-light"]) {
     color-scheme: light;
 
     --font-family-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
@@ -936,13 +935,17 @@
     --color-workout-stage-next-text: #ffffff;
     --shadow-workout-stage-exercise-back: none;
     --shadow-workout-stage-next: none;
-  }
+}
 
-  html:root[data-app-theme="warm-light"] body,
-  html:root[data-app-theme="warm-light"] body #root {
-    min-height: 100%;
-    background: #f3f4f3 !important;
-    color: #202326 !important;
-    font-family: var(--font-family-sans) !important;
-  }
+:global(html:root[data-app-theme="warm-light"]) body,
+:global(html:root[data-app-theme="warm-light"]) body :global(#root) {
+  min-height: 100%;
+  background: #f3f4f3 !important;
+  color: #202326 !important;
+  font-family: var(--font-family-sans) !important;
+}
+
+/* A local owner keeps this global token contract in the production CSS chunk. */
+.contract {
+  --client-ios-theme-contract-loaded: 1;
 }
