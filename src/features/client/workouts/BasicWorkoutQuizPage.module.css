@@ -24,7 +24,7 @@
   margin: 0 auto;
   padding: 0 16px calc(110px + env(safe-area-inset-bottom, 0px));
   overflow: hidden auto;
-  background: #f7f5f8;
+  background: #f7f6f8;
   color: #28262e;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
@@ -61,7 +61,7 @@
   padding: 0;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 16px;
   box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }
@@ -78,7 +78,7 @@
   display: grid;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 22px;
   box-shadow: none;
 }
@@ -129,7 +129,7 @@
   min-height: 48px;
   padding: 0 38px 0 13px;
   color: #28262e;
-  background-color: #f1edf5;
+  background-color: #f0ebfa;
   border: 0;
   border-radius: 15px;
   box-shadow: none;
@@ -174,7 +174,7 @@
   align-items: center;
   gap: 7px;
   color: #7b7682;
-  background: #f1edf5;
+  background: #f0ebfa;
   border-radius: 13px;
   font-size: 9px;
   font-weight: 600;
@@ -183,7 +183,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .previewStats.previewStats b {
   padding: 0;
-  color: #978dae;
+  color: #8f7ac8;
   background: transparent;
   font-size: 18px;
   font-weight: 700;
@@ -201,7 +201,7 @@
   height: 48px;
   margin-top: 12px;
   color: #ffffff;
-  background: #978dae;
+  background: #8f7ac8;
   border: 0;
   border-radius: 17px;
   box-shadow: none;

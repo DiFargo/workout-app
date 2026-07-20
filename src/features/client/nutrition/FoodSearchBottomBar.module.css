@@ -205,6 +205,6 @@
 :global(:root[data-app-theme="warm-light"]) .active:hover,
 :global(:root[data-app-theme="warm-light"]) .active:active {
   border: 0;
-  background: #f1edf5;
-  color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
 }

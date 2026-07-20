@@ -158,4 +158,4 @@
 :global(:root[data-app-theme="warm-light"]) .button > strong { font-size: 11px; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .add,
 :global(:root[data-app-theme="warm-light"]) .add:hover,
-:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: #978dae; color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: #8f7ac8; color: #fff; }

@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  border-top: 1px solid #e7e2ea;
+  border-top: 1px solid #ebe6ef;
 }
 :global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo {
   max-width: 230px;

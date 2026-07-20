@@ -92,7 +92,7 @@
 :global(:root[data-app-theme="warm-light"]) .root {
   margin-bottom: 12px;
   padding: 14px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 20px;
   background: #fff;
   color: #28262e;
@@ -121,7 +121,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .button + .button {
-  border-top: 1px solid #e7e2ea;
+  border-top: 1px solid #ebe6ef;
   border-radius: 0;
 }
 

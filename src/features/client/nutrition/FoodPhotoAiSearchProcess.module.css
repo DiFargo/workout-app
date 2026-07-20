@@ -7,7 +7,7 @@
   grid-template-columns: 48px minmax(0, 1fr);
   align-items: center;
   gap: var(--spacing-md);
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 18px;
   background: var(--color-surface);
   color: var(--color-heading);
@@ -105,7 +105,7 @@
   padding: 12px;
   grid-template-columns: 44px minmax(0, 1fr);
   gap: 12px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
@@ -115,17 +115,17 @@
 :global(:root[data-app-theme="warm-light"]) .orbit {
   width: 44px;
   height: 44px;
-  background: #f1edf5;
-  box-shadow: inset 0 0 0 1px #e7e2ea;
+  background: #f0ebfa;
+  box-shadow: inset 0 0 0 1px #ebe6ef;
 }
 
 :global(:root[data-app-theme="warm-light"]) .orbitRing {
   border-color: #d2dbe0;
-  border-top-color: #978dae;
+  border-top-color: #8f7ac8;
 }
 
 :global(:root[data-app-theme="warm-light"]) .orbitCore {
-  background: #978dae;
+  background: #8f7ac8;
   box-shadow: none;
 }
 

@@ -397,7 +397,7 @@
 .confirmAdd {
   border: 1px solid var(--color-food-dialog-secondary-border);
   background: var(--color-food-dialog-secondary-surface);
-  box-shadow: 0 8px 18px rgba(151, 141, 174, 0.08);
+  box-shadow: 0 8px 18px rgba(143, 122, 200, 0.08);
   -webkit-text-fill-color: var(--color-food-dialog-accent-text);
 }
 
@@ -422,7 +422,7 @@
 }
 
 :global(:root[data-app-theme="dark-green"]) .searchInput:focus-visible {
-  outline: 3px solid #978dae;
+  outline: 3px solid #8f7ac8;
   outline-offset: 2px;
 }
 
@@ -492,7 +492,7 @@
   width: min(370px, calc(100vw - 32px)) !important;
   max-width: 370px !important;
   padding: 16px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 26px !important;
   background: #fff;
   color: #28262e;
@@ -515,7 +515,7 @@
   min-height: 44px;
   border: 0;
   border-radius: 50%;
-  background: #f1edf5;
+  background: #f0ebfa;
   color: #28262e;
   -webkit-text-fill-color: #28262e;
   box-shadow: none;
@@ -528,9 +528,9 @@
 
 :global(:root[data-app-theme="warm-light"]) .searchBox {
   min-height: 50px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 16px;
-  background: #f1edf5;
+  background: #f0ebfa;
   color: #28262e;
   box-shadow: none;
 }
@@ -542,7 +542,7 @@
 :global(:root[data-app-theme="warm-light"]) .results { gap: 6px; }
 :global(:root[data-app-theme="warm-light"]) .resultCard {
   min-height: 64px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 16px;
   background: #fff;
   color: #28262e;
@@ -553,18 +553,18 @@
 :global(:root[data-app-theme="warm-light"]) .confirmIcon {
   border: 0;
   border-radius: 14px;
-  background: #f1edf5;
-  color: #978dae;
-  -webkit-text-fill-color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
+  -webkit-text-fill-color: #8f7ac8;
 }
 
 :global(:root[data-app-theme="warm-light"]) .resultTitle { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
 :global(:root[data-app-theme="warm-light"]) .resultMeta,
 :global(:root[data-app-theme="warm-light"]) .confirmMeta { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .resultAction { color: #978dae; -webkit-text-fill-color: #978dae; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .manualCard { background: #f1edf5; }
+:global(:root[data-app-theme="warm-light"]) .resultAction { color: #8f7ac8; -webkit-text-fill-color: #8f7ac8; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .manualCard { background: #f0ebfa; }
 :global(:root[data-app-theme="warm-light"]) .empty,
-:global(:root[data-app-theme="warm-light"]) .loading { border-color: #e7e2ea; background: #f1edf5; color: #7b7682; -webkit-text-fill-color: #7b7682; }
+:global(:root[data-app-theme="warm-light"]) .loading { border-color: #ebe6ef; background: #f0ebfa; color: #7b7682; -webkit-text-fill-color: #7b7682; }
 
 :global(:root[data-app-theme="warm-light"]) .confirmOverlay {
   align-items: flex-end;
@@ -572,10 +572,10 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .confirmInputTitle { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; text-transform: none; }
-:global(:root[data-app-theme="warm-light"]) .confirmInputWrap { border: 1px solid #e7e2ea; border-radius: 16px; background: #f1edf5; }
+:global(:root[data-app-theme="warm-light"]) .confirmInputWrap { border: 1px solid #ebe6ef; border-radius: 16px; background: #f0ebfa; }
 :global(:root[data-app-theme="warm-light"]) .confirmInput { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .confirmUnit { color: #7b7682; -webkit-text-fill-color: #7b7682; }
 :global(:root[data-app-theme="warm-light"]) .confirmActions { gap: 8px; }
 :global(:root[data-app-theme="warm-light"]) .confirmButton { min-height: 50px; border: 0; border-radius: 16px; font-weight: 600; }
-:global(:root[data-app-theme="warm-light"]) .confirmCancel { background: #f1edf5; color: #28262e; -webkit-text-fill-color: #28262e; }
-:global(:root[data-app-theme="warm-light"]) .confirmAdd { background: #978dae; color: #fff; -webkit-text-fill-color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .confirmCancel { background: #f0ebfa; color: #28262e; -webkit-text-fill-color: #28262e; }
+:global(:root[data-app-theme="warm-light"]) .confirmAdd { background: #8f7ac8; color: #fff; -webkit-text-fill-color: #fff; }

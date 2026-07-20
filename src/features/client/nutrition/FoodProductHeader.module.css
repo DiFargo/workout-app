@@ -353,7 +353,7 @@
   padding: 7px 12px;
   grid-template-rows: 12px 30px;
   gap: 2px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
@@ -374,14 +374,14 @@
   position: absolute;
   inset: -6px 0 -5px;
 }
-:global(:root[data-app-theme="warm-light"]) .mealButton::after { color: #978dae; }
+:global(:root[data-app-theme="warm-light"]) .mealButton::after { color: #8f7ac8; }
 
 :global(:root[data-app-theme="warm-light"]) .mealDropdown {
   top: calc(100% + 8px);
   width: min(370px, calc(100vw - 32px));
   padding: 8px;
   gap: 2px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 18px 50px rgba(40, 38, 46, 0.14);
@@ -390,8 +390,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealOption { height: 52px; min-height: 52px; border-radius: 14px; color: #28262e; }
-:global(:root[data-app-theme="warm-light"]) .mealOption.selected { background: #f1edf5; }
-:global(:root[data-app-theme="warm-light"]) .mealIcon { background: #f1edf5; }
+:global(:root[data-app-theme="warm-light"]) .mealOption.selected { background: #f0ebfa; }
+:global(:root[data-app-theme="warm-light"]) .mealIcon { background: #f0ebfa; }
 :global(:root[data-app-theme="warm-light"]) .mealName { font-weight: 650; }
 
 :global(:root[data-app-theme="warm-light"]) .hero {
@@ -400,7 +400,7 @@
   padding: 14px;
   grid-template-columns: 72px minmax(0, 1fr);
   gap: 14px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 22px;
   background: #fff;
   color: #28262e;
@@ -413,10 +413,10 @@
   min-height: 86px;
   border: 0;
   border-radius: 18px;
-  background: #f1edf5;
+  background: #f0ebfa;
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .icon { color: #978dae; }
+:global(:root[data-app-theme="warm-light"]) .icon { color: #8f7ac8; }
 :global(:root[data-app-theme="warm-light"]) .source { color: #7b7682; font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .productName { color: #28262e; font-size: 20px; font-weight: 700; }

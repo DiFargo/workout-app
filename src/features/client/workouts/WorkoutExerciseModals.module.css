@@ -96,8 +96,8 @@
 }
 
 .textarea:focus {
-  border-color: rgba(170, 160, 192, 0.72);
-  box-shadow: 0 0 0 3px rgba(170, 160, 192, 0.14);
+  border-color: rgba(185, 169, 229, 0.72);
+  box-shadow: 0 0 0 3px rgba(185, 169, 229, 0.14);
 }
 
 .doneButton {
@@ -165,7 +165,7 @@
   gap: 12px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 24px;
   box-shadow: 0 18px 52px rgba(40, 38, 46, 0.18);
 }
@@ -197,7 +197,7 @@
   min-height: 40px;
   max-height: 40px;
   color: #28262e;
-  background: #f1edf5;
+  background: #f0ebfa;
   border: 0;
   border-radius: 14px;
   font-size: 23px;
@@ -207,7 +207,7 @@
   min-height: 128px;
   padding: 12px;
   color: #28262e;
-  background: #f1edf5;
+  background: #f0ebfa;
   border: 0;
   border-radius: 16px;
   box-shadow: none;
@@ -216,13 +216,13 @@
 
 :global(:root[data-app-theme="warm-light"]) .textarea.textarea:focus {
   border: 0;
-  box-shadow: 0 0 0 3px rgba(151, 141, 174, 0.2);
+  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.2);
 }
 
 :global(:root[data-app-theme="warm-light"]) .doneButton.doneButton {
   min-height: 48px;
   color: #ffffff;
-  background: #978dae;
+  background: #8f7ac8;
   border: 0;
   border-radius: 17px;
   box-shadow: none;
@@ -233,13 +233,13 @@
 :global(:root[data-app-theme="warm-light"]) .techniqueContent.techniqueContent {
   padding: 12px;
   color: #28262e;
-  background: #f1edf5;
+  background: #f0ebfa;
   border: 0;
   border-radius: 16px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .techniqueContent.techniqueContent > span {
-  color: #978dae;
+  color: #8f7ac8;
   background: #ffffff;
 }
 

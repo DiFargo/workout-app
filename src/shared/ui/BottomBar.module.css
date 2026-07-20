@@ -338,7 +338,7 @@
   height: 42px;
   content: "";
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f7f5f8 42%, #f7f5f8 100%);
+  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f7f6f8 42%, #f7f6f8 100%);
 }
 
 :global(:root[data-app-theme="warm-light"]) .nutrition > button {
@@ -575,7 +575,7 @@
   height: 42px;
   content: "";
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f7f5f8 42%, #f7f5f8 100%);
+  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f7f6f8 42%, #f7f6f8 100%);
 }
 
 :global(:root[data-app-theme="warm-light"]) .training > button {
@@ -685,8 +685,8 @@
 :global(:root[data-app-theme="warm-light"]) .main.main > .active,
 :global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > .active {
   border: 0;
-  background: #f1edf5;
-  color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
   box-shadow: none;
 }
 
@@ -776,8 +776,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .training.training > .active {
-  color: #978dae;
-  background: #f1edf5;
+  color: #8f7ac8;
+  background: #f0ebfa;
   border: 0;
   box-shadow: none;
 }

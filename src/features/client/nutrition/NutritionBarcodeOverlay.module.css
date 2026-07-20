@@ -156,34 +156,34 @@
 
 :global(:root[data-app-theme="warm-light"]) .overlay {
   padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 16px calc(106px + env(safe-area-inset-bottom, 0px));
-  background: #f7f5f8;
+  background: #f7f6f8;
   color: #28262e;
 }
 
 :global(:root[data-app-theme="warm-light"]) .card {
   width: min(100%, 370px);
   padding: 18px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 24px;
   background: #fff;
   color: #28262e;
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .eyebrow { color: #978dae; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .eyebrow { color: #8f7ac8; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .title,
 :global(:root[data-app-theme="warm-light"]) .placeholderTitle { color: #28262e; font-weight: 700; }
 :global(:root[data-app-theme="warm-light"]) .description,
 :global(:root[data-app-theme="warm-light"]) .placeholderDescription { color: #7b7682; font-weight: 450; }
 
 :global(:root[data-app-theme="warm-light"]) .placeholder {
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 20px;
-  background: #f1edf5;
+  background: #f0ebfa;
 }
 
 :global(:root[data-app-theme="warm-light"]) .placeholderIcon {
   background: #fff;
-  color: #978dae;
+  color: #8f7ac8;
   box-shadow: none;
 }

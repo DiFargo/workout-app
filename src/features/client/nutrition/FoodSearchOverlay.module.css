@@ -76,7 +76,7 @@
 
 .myProductsLayout {
   padding: 58px 26px calc(112px + env(safe-area-inset-bottom, 0px));
-  background: #f7f5f8;
+  background: #f7f6f8;
 }
 
 .productOverlay,
@@ -237,7 +237,7 @@
 :global(:root[data-app-theme="warm-light"]) .searchOverlay,
 :global(:root[data-app-theme="warm-light"]) .productOverlay {
   padding: 0;
-  background: #f7f5f8;
+  background: #f7f6f8;
   color: #28262e;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -255,7 +255,7 @@
   margin: 0 auto;
   border: 0;
   border-radius: 0 !important;
-  background: #f7f5f8;
+  background: #f7f6f8;
   color: #28262e;
   box-shadow: none;
   font-family: var(--font-family-sans);
@@ -288,7 +288,7 @@
   :global(:root[data-app-theme="warm-light"]) .searchScreen,
   :global(:root[data-app-theme="warm-light"]) .productLayout,
   :global(:root[data-app-theme="warm-light"]) .fixtureLayout {
-    border-right: 1px solid #e7e2ea;
-    border-left: 1px solid #e7e2ea;
+    border-right: 1px solid #ebe6ef;
+    border-left: 1px solid #ebe6ef;
   }
 }

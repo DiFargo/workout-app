@@ -13,7 +13,7 @@
   grid-template-columns: 42px 1fr 20px;
   align-items: center;
   gap: 12px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 22px;
   background: #fff;
   color: #28262e;
@@ -21,7 +21,7 @@
   text-align: left;
   cursor: pointer;
 }
-.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #f1edf5; color: #978dae; }
+.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #f0ebfa; color: #8f7ac8; }
 .icon svg { width: 21px; height: 21px; stroke-width: 2; }
 .title { min-width: 0; display: flex; flex-direction: column; }
 .titleStrong { color: #28262e; font-size: 14px; font-weight: 700; line-height: 19px; }

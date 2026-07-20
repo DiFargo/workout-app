@@ -4,7 +4,7 @@
   height: 136px;
   padding: 17px 15px;
   position: relative;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 24px;
   background: #fff;
   color: #28262e;
@@ -33,7 +33,7 @@
   place-items: center;
   position: relative;
   border-radius: 50%;
-  background: conic-gradient(from -90deg, #978dae 0 var(--progress-fill), #dce3e7 var(--progress-fill) 360deg);
+  background: conic-gradient(from -90deg, #8f7ac8 0 var(--progress-fill), #dce3e7 var(--progress-fill) 360deg);
 }
 
 .gauge::after {

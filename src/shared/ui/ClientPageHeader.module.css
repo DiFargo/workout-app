@@ -24,7 +24,7 @@
   margin-right: 0 !important;
   margin-left: 0 !important;
   padding: max(8px, env(safe-area-inset-top, 0px)) 0 0 !important;
-  background: #f7f5f8 !important;
+  background: #f7f6f8 !important;
   color: #28262e;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   backdrop-filter: none !important;
@@ -145,7 +145,7 @@
   border: 0;
   border-radius: 50%;
   background: rgba(123, 118, 130, 0.1);
-  color: #978dae;
+  color: #8f7ac8;
   font: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -174,7 +174,7 @@
 }
 
 .back:focus-visible {
-  outline: 3px solid rgba(151, 141, 174, 0.22);
+  outline: 3px solid rgba(143, 122, 200, 0.22);
   outline-offset: 1px;
 }
 

@@ -133,7 +133,7 @@
   border-color: var(--color-food-nav-active-border);
   border-radius: 15px;
   background: linear-gradient(180deg, rgba(245, 240, 255, 0.98), rgba(249, 247, 255, 0.98));
-  box-shadow: 0 10px 22px rgba(127, 117, 152, 0.055), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 22px rgba(117, 97, 170, 0.055), inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .myProducts .mealButton {
@@ -468,7 +468,7 @@
   border: 0;
   border-radius: 12px;
   background: transparent;
-  color: #978dae;
+  color: #8f7ac8;
   box-shadow: none;
   font-size: 16px;
   font-weight: 560;
@@ -503,7 +503,7 @@
   min-height: 60px;
   padding: 8px 14px;
   gap: 3px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
@@ -524,7 +524,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealName::after {
-  color: #978dae;
+  color: #8f7ac8;
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealDropdown {
@@ -533,7 +533,7 @@
   max-width: min(370px, calc(100vw - 32px));
   padding: 8px;
   gap: 2px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.98);
   color: #28262e;
@@ -550,11 +550,11 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealOption.selected {
-  background: #f1edf5;
+  background: #f0ebfa;
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealIcon {
-  background: #f1edf5;
+  background: #f0ebfa;
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionName {
@@ -562,8 +562,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .collapseButton {
-  border-color: #e7e2ea;
+  border-color: #ebe6ef;
   border-radius: 14px;
-  background: #f1edf5;
-  color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
 }

@@ -277,7 +277,7 @@
   gap: 9px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #9b8fb7 rgba(155, 143, 183, 0.12);
+  scrollbar-color: #9c88d2 rgba(156, 136, 210, 0.12);
 }
 
 .reviewGrid > div {
@@ -398,7 +398,7 @@
 .reviewCard,
 .reviewGrid {
   scrollbar-width: thin;
-  scrollbar-color: #9b8fb7 rgba(155, 143, 183, 0.12);
+  scrollbar-color: #9c88d2 rgba(156, 136, 210, 0.12);
 }
 
 .reviewCard::-webkit-scrollbar,
@@ -409,13 +409,13 @@
 .reviewCard::-webkit-scrollbar-track,
 .reviewGrid::-webkit-scrollbar-track {
   border-radius: 999px;
-  background: rgba(155, 143, 183, 0.12);
+  background: rgba(156, 136, 210, 0.12);
 }
 
 .reviewCard::-webkit-scrollbar-thumb,
 .reviewGrid::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: linear-gradient(180deg, #aaa0bd, #7f7598);
+  background: linear-gradient(180deg, #b9a9e5, #7561aa);
 }
 
 @media (max-width: 390px) {
@@ -577,17 +577,17 @@
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid {
-  scrollbar-color: #978dae rgba(151, 141, 174, 0.12);
+  scrollbar-color: #8f7ac8 rgba(143, 122, 200, 0.12);
 }
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-track,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid::-webkit-scrollbar-track {
-  background: rgba(151, 141, 174, 0.12);
+  background: rgba(143, 122, 200, 0.12);
 }
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-thumb,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid::-webkit-scrollbar-thumb {
-  background: #978dae;
+  background: #8f7ac8;
 }
 
 :global(:root[data-app-theme="warm-light"]) .navigation {

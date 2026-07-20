@@ -500,13 +500,13 @@
   --plan-text: #6f6875;
   --plan-muted: #6f6875;
   --plan-chip-background: #fff;
-  --plan-chip-border: #ebe7ed;
+  --plan-chip-border: #efebf3;
   --plan-chip-text: #6f6875;
-  --plan-close-background: #f1edf5;
-  --plan-close-border: #e4ddea;
+  --plan-close-background: #f0ebfa;
+  --plan-close-border: #e4dcf2;
   --plan-close-text: #6f6875;
 
-  border-color: #ebe7ed;
+  border-color: #efebf3;
   background: #fff;
   color: var(--plan-text);
   -webkit-text-fill-color: var(--plan-text);
@@ -593,14 +593,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
-  --plan-panel-background: #f1edf5;
+  --plan-panel-background: #f0ebfa;
   --plan-panel-border: transparent;
   --plan-text: #28262e;
   --plan-muted: #7b7682;
-  --plan-chip-background: #f1edf5;
+  --plan-chip-background: #f0ebfa;
   --plan-chip-border: transparent;
-  --plan-chip-text: #978dae;
-  --plan-close-background: #f1edf5;
+  --plan-chip-text: #8f7ac8;
+  --plan-close-background: #f0ebfa;
   --plan-close-border: transparent;
   --plan-close-text: #28262e;
   top: auto;
@@ -609,7 +609,7 @@
   max-width: 370px !important;
   max-height: calc(100dvh - max(32px, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px))) !important;
   padding: 16px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 26px !important;
   background: #fff;
   color: #28262e;
@@ -624,8 +624,8 @@
 :global(:root[data-app-theme="warm-light"]) .header { grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; }
 :global(:root[data-app-theme="warm-light"]) .titleEyebrow { color: #28262e; -webkit-text-fill-color: #28262e; font-size: 18px; font-weight: 700; }
 :global(:root[data-app-theme="warm-light"]) .title { color: #7b7682; -webkit-text-fill-color: #7b7682; font-size: 11px; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .close { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f1edf5; color: #28262e; -webkit-text-fill-color: #28262e; font-size: 24px; font-weight: 400; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .dayPill { border: 0; border-radius: 16px; background: #f1edf5; color: #28262e; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .close { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f0ebfa; color: #28262e; -webkit-text-fill-color: #28262e; font-size: 24px; font-weight: 400; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .dayPill { border: 0; border-radius: 16px; background: #f0ebfa; color: #28262e; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .dayPillActive { background: #e8efea; }
 :global(:root[data-app-theme="warm-light"]) .dayTitle { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
 :global(:root[data-app-theme="warm-light"]) .dayDescription { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
@@ -634,7 +634,7 @@
 :global(:root[data-app-theme="warm-light"]) .scoreBlock,
 :global(:root[data-app-theme="warm-light"]) .macro,
 :global(:root[data-app-theme="warm-light"]) .conclusion {
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
@@ -642,7 +642,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .pixel { border-radius: 3px; background: #dce3e7; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .pixelActive { background: #978dae; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .pixelActive { background: #8f7ac8; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .overLimit .pixelActive,
 :global(:root[data-app-theme="warm-light"]) .root[data-state="over-limit"] .pixelActive { background: #b36e72; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .calorieLabel,
@@ -654,10 +654,10 @@
 :global(:root[data-app-theme="warm-light"]) .calorieValue,
 :global(:root[data-app-theme="warm-light"]) .macroValue,
 :global(:root[data-app-theme="warm-light"]) .conclusionText { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
-:global(:root[data-app-theme="warm-light"]) .calorieDivider { background: #e7e2ea; }
+:global(:root[data-app-theme="warm-light"]) .calorieDivider { background: #ebe6ef; }
 :global(:root[data-app-theme="warm-light"]) .macroPercentItem { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .macroDot { background: #978dae; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: #f1edf5; color: #978dae; -webkit-text-fill-color: #978dae; box-shadow: none; font-weight: 550; }
+:global(:root[data-app-theme="warm-light"]) .macroDot { background: #8f7ac8; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: #f0ebfa; color: #8f7ac8; -webkit-text-fill-color: #8f7ac8; box-shadow: none; font-weight: 550; }
 :global(:root[data-app-theme="warm-light"]) .good { background: #e8efea; color: #708d79; -webkit-text-fill-color: #708d79; }
 :global(:root[data-app-theme="warm-light"]) .warning { background: #f2ece7; color: #ae8768; -webkit-text-fill-color: #ae8768; }
-:global(:root[data-app-theme="warm-light"]) .info { background: #f1edf5; color: #6f879c; -webkit-text-fill-color: #6f879c; }
+:global(:root[data-app-theme="warm-light"]) .info { background: #f0ebfa; color: #6f879c; -webkit-text-fill-color: #6f879c; }

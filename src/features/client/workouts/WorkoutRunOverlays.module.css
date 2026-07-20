@@ -368,7 +368,7 @@
   margin: 0 auto;
   padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
   color: #28262e;
-  background: #f7f5f8;
+  background: #f7f6f8;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -384,7 +384,7 @@
   gap: 18px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 24px;
   text-align: center;
 }
@@ -408,7 +408,7 @@
   position: static;
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  background: #978dae;
+  background: #8f7ac8;
   border: 0;
   border-radius: 17px;
   box-shadow: none;

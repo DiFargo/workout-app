@@ -70,7 +70,7 @@
   height: 46px;
   display: grid;
   place-items: center;
-  border: 1px solid #e9e4ec;
+  border: 1px solid #ede8f1;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.96);
   color: #5f6678;
@@ -95,10 +95,10 @@
   margin: 0 auto;
   padding: 34px 22px 24px;
   place-items: center;
-  border: 1px solid #e9e4ec;
+  border: 1px solid #ede8f1;
   border-radius: 30px;
   background:
-    radial-gradient(circle at 50% 0%, rgba(155, 143, 183, 0.08), transparent 46%),
+    radial-gradient(circle at 50% 0%, rgba(156, 136, 210, 0.08), transparent 46%),
     #fff;
   color: #28262e;
   box-shadow: 0 24px 58px rgba(72, 63, 87, 0.1);
@@ -147,7 +147,7 @@
   width: 100%;
   height: 24px;
   margin: 0;
-  accent-color: #978dae;
+  accent-color: #8f7ac8;
 }
 
 .firstSetupMetricSlider input[type="range"] {
@@ -162,10 +162,10 @@
   border-radius: 999px;
   background: linear-gradient(
     90deg,
-    #9b8fb7 0%,
-    #9b8fb7 var(--slider-progress, 0%),
-    #f1edf5 var(--slider-progress, 0%),
-    #f1edf5 100%
+    #9c88d2 0%,
+    #9c88d2 var(--slider-progress, 0%),
+    #f0ebfa var(--slider-progress, 0%),
+    #f0ebfa 100%
   );
 }
 
@@ -177,22 +177,22 @@
   -webkit-appearance: none;
   border: 10px solid #ffffff;
   border-radius: 50%;
-  background: #9b8fb7;
+  background: #9c88d2;
   box-shadow:
-    0 10px 24px rgba(151, 141, 174, 0.26),
-    0 0 0 1px rgba(151, 141, 174, 0.16);
+    0 10px 24px rgba(143, 122, 200, 0.26),
+    0 0 0 1px rgba(143, 122, 200, 0.16);
 }
 
 .firstSetupMetricSlider input[type="range"]::-moz-range-track {
   height: 16px;
   border-radius: 999px;
-  background: #f1edf5;
+  background: #f0ebfa;
 }
 
 .firstSetupMetricSlider input[type="range"]::-moz-range-progress {
   height: 16px;
   border-radius: 999px;
-  background: #9b8fb7;
+  background: #9c88d2;
 }
 
 .firstSetupMetricSlider input[type="range"]::-moz-range-thumb {
@@ -200,10 +200,10 @@
   height: 18px;
   border: 9px solid #ffffff;
   border-radius: 50%;
-  background: #9b8fb7;
+  background: #9c88d2;
   box-shadow:
-    0 10px 24px rgba(151, 141, 174, 0.26),
-    0 0 0 1px rgba(151, 141, 174, 0.16);
+    0 10px 24px rgba(143, 122, 200, 0.26),
+    0 0 0 1px rgba(143, 122, 200, 0.16);
 }
 
 .firstSetupMetricTicks {
@@ -254,7 +254,7 @@
   width: 100%;
   min-height: 48px;
   padding: 0 54px 0 14px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 15px;
   outline: none;
   background: #fff;
@@ -274,8 +274,8 @@
 
 .firstSetupMetricInput input:focus,
 .profileMetricSliderInput input:focus {
-  border-color: #aaa0bd;
-  box-shadow: 0 0 0 3px rgba(155, 143, 183, 0.1);
+  border-color: #b9a9e5;
+  box-shadow: 0 0 0 3px rgba(156, 136, 210, 0.1);
 }
 
 .firstSetupMetricInput em,
@@ -296,7 +296,7 @@
   padding: 8px !important;
   display: flex !important;
   align-items: center !important;
-  border: 1px solid #ece8ef !important;
+  border: 1px solid #f0ecf4 !important;
   border-radius: 26px !important;
   background: rgba(255, 255, 255, 0.98) !important;
   box-shadow: 0 18px 42px rgba(72, 63, 87, 0.1) !important;
@@ -336,7 +336,7 @@
 .firstSetupExitConfirmCard {
   width: min(100%, 330px);
   padding: 22px;
-  border: 1px solid #e9e4ec;
+  border: 1px solid #ede8f1;
   border-radius: 24px;
   background: #ffffff;
   box-shadow: 0 24px 64px rgba(72, 63, 87, 0.18);
@@ -365,7 +365,7 @@
 
 .firstSetupExitConfirmCard button {
   min-height: 50px;
-  border: 1px solid #e9e4ec;
+  border: 1px solid #ede8f1;
   border-radius: 16px;
   background: #ffffff;
   color: #687184;
@@ -375,9 +375,9 @@
 
 .firstSetupExitConfirmCard button.primary {
   border-color: transparent;
-  background: linear-gradient(135deg, #9b8fb7, #877ba3);
+  background: linear-gradient(135deg, #9c88d2, #806bb6);
   color: #ffffff;
-  box-shadow: 0 12px 26px rgba(127, 117, 152, 0.2);
+  box-shadow: 0 12px 26px rgba(117, 97, 170, 0.2);
 }
 
 :root[data-app-theme="dark-green"] .firstSetupMetricSlider,
@@ -434,7 +434,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupOverlay {
   box-sizing: border-box !important;
   padding: 0 !important;
   align-items: stretch !important;
-  background: #f7f5f8 !important;
+  background: #f7f6f8 !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   color: #28262e !important;
@@ -454,7 +454,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupCard {
   gap: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
-  background: #f7f5f8 !important;
+  background: #f7f6f8 !important;
   color: #28262e !important;
   box-shadow: none !important;
 }
@@ -479,7 +479,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupProgress i {
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupProgress i.active {
-  background: #978dae !important;
+  background: #8f7ac8 !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitButton {
@@ -488,10 +488,10 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupExitButton {
   width: 44px !important;
   height: 44px !important;
   min-height: 44px !important;
-  border: 1px solid #e7e2ea !important;
+  border: 1px solid #ebe6ef !important;
   border-radius: 14px !important;
   background: #fff !important;
-  color: #978dae !important;
+  color: #8f7ac8 !important;
   box-shadow: none !important;
   font-size: 25px !important;
   font-weight: 500 !important;
@@ -537,7 +537,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupWelcomeVisual span 
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupClipboard {
-  border: 1px solid #e7e2ea !important;
+  border: 1px solid #ebe6ef !important;
   background: #fff !important;
 }
 
@@ -545,7 +545,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button,
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button,
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button,
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview {
-  border: 1px solid #e7e2ea !important;
+  border: 1px solid #ebe6ef !important;
   background: #fff !important;
   color: #28262e !important;
   box-shadow: none !important;
@@ -578,14 +578,14 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button
 html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button.active,
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button.active,
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button.active {
-  border-color: #aaa0bd !important;
-  background: #f1edf5 !important;
+  border-color: #b9a9e5 !important;
+  background: #f0ebfa !important;
   color: #28262e !important;
-  box-shadow: inset 0 0 0 1px #aaa0bd !important;
+  box-shadow: inset 0 0 0 1px #b9a9e5 !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button.active > i {
-  border: 5px solid #978dae !important;
+  border: 5px solid #8f7ac8 !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button {
@@ -603,7 +603,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupReview > div {
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview > div > span {
-  color: #978dae !important;
+  color: #8f7ac8 !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview strong {
@@ -616,7 +616,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupField {
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupInput,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricInput input {
-  border: 1px solid #e7e2ea !important;
+  border: 1px solid #ebe6ef !important;
   border-radius: 15px !important;
   background: #fff !important;
   color: #28262e !important;
@@ -625,14 +625,14 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupMetricInput input {
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupInput:focus,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricInput input:focus {
-  border-color: #aaa0bd !important;
-  box-shadow: 0 0 0 3px rgba(151, 141, 174, 0.14) !important;
+  border-color: #b9a9e5 !important;
+  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.14) !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider {
   min-height: 318px !important;
   padding: 30px 20px 22px !important;
-  border: 1px solid #e7e2ea !important;
+  border: 1px solid #ebe6ef !important;
   border-radius: 28px !important;
   background: #fff !important;
   color: #28262e !important;
@@ -650,22 +650,22 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupMetricValue small {
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"] {
-  accent-color: #978dae !important;
+  accent-color: #8f7ac8 !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"]::-webkit-slider-runnable-track {
   background: linear-gradient(
     90deg,
-    #978dae 0%,
-    #978dae var(--slider-progress, 0%),
-    #e7e2ea var(--slider-progress, 0%),
-    #e7e2ea 100%
+    #8f7ac8 0%,
+    #8f7ac8 var(--slider-progress, 0%),
+    #ebe6ef var(--slider-progress, 0%),
+    #ebe6ef 100%
   ) !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"]::-webkit-slider-thumb {
   border-color: #fff !important;
-  background: #978dae !important;
+  background: #8f7ac8 !important;
   box-shadow: 0 5px 14px rgba(72, 63, 87, 0.18) !important;
 }
 
@@ -692,14 +692,14 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupSecondary {
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary {
   border: 0 !important;
-  background: #978dae !important;
+  background: #8f7ac8 !important;
   color: #fff !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupSecondary {
-  border: 1px solid #e7e2ea !important;
+  border: 1px solid #ebe6ef !important;
   background: #fff !important;
-  color: #978dae !important;
+  color: #8f7ac8 !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary:disabled {
@@ -717,7 +717,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirm {
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard {
   width: min(100%, 402px) !important;
   padding: 20px 16px max(16px, calc(env(safe-area-inset-bottom) + 10px)) !important;
-  border: 1px solid #e7e2ea !important;
+  border: 1px solid #ebe6ef !important;
   border-bottom: 0 !important;
   border-radius: 28px 28px 0 0 !important;
   background: #fff !important;
@@ -735,16 +735,16 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard p {
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard button {
   min-height: 50px !important;
-  border: 1px solid #e7e2ea !important;
+  border: 1px solid #ebe6ef !important;
   border-radius: 15px !important;
-  background: #f7f5f8 !important;
-  color: #978dae !important;
+  background: #f7f6f8 !important;
+  color: #8f7ac8 !important;
   box-shadow: none !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard button.primary {
   border-color: transparent !important;
-  background: #978dae !important;
+  background: #8f7ac8 !important;
   color: #fff !important;
 }
 
@@ -757,7 +757,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard but
   html:root[data-app-theme="warm-light"] body #root .firstSetupCard {
     height: min(850px, calc(100dvh - 24px)) !important;
     max-height: calc(100dvh - 24px) !important;
-    border: 1px solid #e7e2ea !important;
+    border: 1px solid #ebe6ef !important;
     border-radius: 30px !important;
   }
 }

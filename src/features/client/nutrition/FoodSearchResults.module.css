@@ -57,7 +57,7 @@
   color: var(--color-food-result-secondary-text);
   font: inherit;
   font-weight: 950;
-  box-shadow: 0 8px 18px rgba(151, 141, 174, 0.08);
+  box-shadow: 0 8px 18px rgba(143, 122, 200, 0.08);
   cursor: pointer;
   -webkit-text-fill-color: currentColor;
 }
@@ -228,7 +228,7 @@
   min-width: 24px;
   padding: 2px 6px;
   border-radius: 999px;
-  background: rgba(151, 141, 174, 0.1);
+  background: rgba(143, 122, 200, 0.1);
   color: var(--color-food-result-portion);
   font-size: 12px;
   font-weight: 950;
@@ -328,7 +328,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .status,
 :global(:root[data-app-theme="warm-light"]) .loading {
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 18px;
   background: #fff;
   color: #7b7682;
@@ -353,7 +353,7 @@
   padding: 9px 10px;
   grid-template-columns: 44px minmax(0, 1fr) 32px;
   gap: 10px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
@@ -367,8 +367,8 @@
   min-height: 44px;
   border: 0;
   border-radius: 14px;
-  background: #f1edf5;
-  color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
 }
 
 :global(:root[data-app-theme="warm-light"]) .itemInfo {
@@ -390,7 +390,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .itemPortion {
-  color: #978dae;
+  color: #8f7ac8;
   font-size: 12px;
   font-weight: 600;
 }
@@ -401,13 +401,13 @@
   height: 32px;
   min-height: 32px;
   border: 0;
-  background: #f1edf5;
-  color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .itemAction::before {
-  color: #978dae;
+  color: #8f7ac8;
   font-size: 20px;
   font-weight: 500;
 }
@@ -415,20 +415,20 @@
 :global(:root[data-app-theme="warm-light"]) .suggestionButton,
 :global(:root[data-app-theme="warm-light"]) .showMore {
   min-height: 48px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 16px;
-  background: #f1edf5;
-  color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
   box-shadow: none;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .showMoreCount {
   background: #fff;
-  color: #978dae;
+  color: #8f7ac8;
 }
 
 :global(:root[data-app-theme="warm-light"]) .loadingSpinner {
   border-color: #d7dde1;
-  border-top-color: #978dae;
+  border-top-color: #8f7ac8;
 }

@@ -3,9 +3,9 @@
   --create-text: #28262e;
   --create-muted: #727b91;
   --create-border: #e1e5ee;
-  --create-option-border: #e4ddea;
-  --create-option-accent: #7f7598;
-  --create-option-icon: #f1edf5;
+  --create-option-border: #e4dcf2;
+  --create-option-accent: #7561aa;
+  --create-option-icon: #f0ebfa;
 
   position: fixed;
   inset: 0;
@@ -71,7 +71,7 @@
   padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 18px;
   background: var(--create-surface);
   color: var(--color-heading);
@@ -128,7 +128,7 @@
   border-radius: 16px;
   background: var(--create-surface);
   color: var(--create-option-accent);
-  box-shadow: 0 8px 18px rgba(151, 141, 174, 0.08);
+  box-shadow: 0 8px 18px rgba(143, 122, 200, 0.08);
   font: inherit;
   font-weight: 950;
   text-align: left;
@@ -203,10 +203,10 @@
   --create-surface: #fff;
   --create-text: #28262e;
   --create-muted: #7b7682;
-  --create-border: #e7e2ea;
-  --create-option-border: #e7e2ea;
-  --create-option-accent: #978dae;
-  --create-option-icon: #f1edf5;
+  --create-border: #ebe6ef;
+  --create-option-border: #ebe6ef;
+  --create-option-accent: #8f7ac8;
+  --create-option-icon: #f0ebfa;
   padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
   align-items: flex-end;
   background: rgba(40, 38, 46, 0.35);
@@ -219,7 +219,7 @@
   width: min(100%, 370px);
   max-width: 370px;
   padding: 18px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 26px;
   background: #fff;
   color: #28262e;
@@ -239,7 +239,7 @@
   height: 44px;
   border: 0;
   border-radius: 50%;
-  background: #f1edf5;
+  background: #f0ebfa;
   color: #28262e;
   box-shadow: none;
   font-size: 24px;
@@ -272,10 +272,10 @@
   min-height: 72px;
   padding: 10px 12px;
   grid-template-columns: 44px minmax(0, 1fr);
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 18px;
   background: #fff;
-  color: #978dae;
+  color: #8f7ac8;
   box-shadow: none;
 }
 
@@ -283,8 +283,8 @@
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  background: #f1edf5;
-  color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
   font-size: 20px;
   font-weight: 500;
 }
@@ -343,8 +343,8 @@
   height: 60px;
   border: 0;
   border-radius: var(--radius-training-nav-button);
-  background: #f1edf5;
-  color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
   box-shadow: none;
 }
 
@@ -417,7 +417,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .option:active,
 :global(:root[data-app-theme="warm-light"]) .closeButton:active {
-  background: #f1edf5;
-  color: #978dae;
+  background: #f0ebfa;
+  color: #8f7ac8;
   transform: scale(0.97);
 }

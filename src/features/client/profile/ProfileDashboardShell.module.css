@@ -9,7 +9,7 @@
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   color: #28262e;
-  background: #f7f5f8;
+  background: #f7f6f8;
   font-family: var(--font-family-compact-ui);
   scrollbar-width: none;
 }
@@ -29,7 +29,7 @@
   width: min(402px, 100vw);
   min-height: 100dvh;
   overflow: hidden;
-  background: #f7f5f8;
+  background: #f7f6f8;
 }
 
 .content {

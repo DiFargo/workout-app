@@ -22,7 +22,7 @@
   }
 
   .individualMode {
-    --render-accent: #8f82aa;
+    --render-accent: #8a74c0;
   }
 
   .hero {
@@ -405,7 +405,7 @@
     gap: var(--space-2);
     font-weight: var(--font-weight-semibold);
     background: rgba(255, 255, 255, 0.82);
-    border: 1px solid rgba(151, 141, 174, 0.1);
+    border: 1px solid rgba(143, 122, 200, 0.1);
     border-radius: var(--radius-md);
   }
 
@@ -476,9 +476,9 @@
     min-height: 4rem;
     color: #fff;
     font-size: 1rem;
-    background: linear-gradient(110deg, #9587ad, #877ba3);
+    background: linear-gradient(110deg, #927ac6, #806bb6);
     border-radius: 1.15rem;
-    box-shadow: 0 0.55rem 1.5rem rgba(151, 141, 174, 0.25);
+    box-shadow: 0 0.55rem 1.5rem rgba(143, 122, 200, 0.25);
   }
 
   .coverPreload {
@@ -632,9 +632,9 @@
       color: #28262e;
       overflow: hidden;
       background:
-        radial-gradient(circle at 50% -12%, rgba(155, 143, 183, 0.055), transparent 34%),
-        linear-gradient(180deg, #fcfbfd 0%, #f7f5f8 100%);
-      border: 0.0625rem solid #e7e2ea;
+        radial-gradient(circle at 50% -12%, rgba(156, 136, 210, 0.055), transparent 34%),
+        linear-gradient(180deg, #fcfbfd 0%, #f7f6f8 100%);
+      border: 0.0625rem solid #ebe6ef;
       border-radius: 1.5rem;
       box-shadow:
         0 1.375rem 3.625rem rgba(72, 63, 87, 0.1),
@@ -687,7 +687,7 @@
       min-height: 2.75rem;
       color: #5f5848;
       background: rgba(255, 255, 255, 0.96);
-      border-color: #e7e2ea;
+      border-color: #ebe6ef;
       border-radius: 1rem;
       box-shadow: 0 0.75rem 1.75rem rgba(72, 63, 87, 0.1);
     }
@@ -760,14 +760,14 @@
       padding: 0 0.875rem;
       align-items: center;
       justify-content: center;
-      color: #8f82aa;
+      color: #8a74c0;
       font-size: 0.625rem;
       font-weight: 700;
       line-height: 1;
       white-space: nowrap;
       overflow: visible;
       background: #f2f1fd;
-      border: 0.0625rem solid #e4ddea;
+      border: 0.0625rem solid #e4dcf2;
       border-radius: 1.125rem;
       backdrop-filter: none;
     }
@@ -782,9 +782,9 @@
       grid-row: 2;
       overflow: hidden;
       background:
-        radial-gradient(circle at 47% 51%, rgba(151, 141, 174, 0.12) 0 18%, rgba(151, 141, 174, 0.06) 19% 29%, transparent 30%),
+        radial-gradient(circle at 47% 51%, rgba(143, 122, 200, 0.12) 0 18%, rgba(143, 122, 200, 0.06) 19% 29%, transparent 30%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.94) 58%, rgba(255, 255, 255, 0.98) 100%);
-      border: 0.0625rem solid rgba(231, 226, 234, 0.92);
+      border: 0.0625rem solid rgba(235, 230, 241, 0.92);
       border-radius: 1.9375rem;
       box-shadow:
         0 1.625rem 3.625rem rgba(82, 91, 129, 0.16),
@@ -801,9 +801,9 @@
       content: "";
       pointer-events: none;
       background:
-        radial-gradient(circle at 8% 45%, #fff 0 9px, #aa9fc0 10px 17px, rgba(170, 160, 192, 0.18) 18px 25px, transparent 26px),
-        radial-gradient(circle at 74% 11%, #fff 0 10px, #aa9fc0 11px 19px, rgba(170, 160, 192, 0.16) 20px 29px, transparent 30px),
-        conic-gradient(from 220deg, transparent 0 14%, rgba(170, 160, 192, 0.2) 14% 67%, #9b8fb7 67% 76%, transparent 76%);
+        radial-gradient(circle at 8% 45%, #fff 0 9px, #b9a9e5 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
+        radial-gradient(circle at 74% 11%, #fff 0 10px, #b9a9e5 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
+        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, #9c88d2 67% 76%, transparent 76%);
       border-radius: 50%;
       mask-image: radial-gradient(circle, transparent 0 calc(50% - 2px), #000 calc(50% - 1px) calc(50% + 2px), transparent calc(50% + 3px));
       opacity: 0.82;
@@ -851,9 +851,9 @@
       width: 5.5rem;
       height: 0.4375rem;
       margin: 1.5rem 0 2.375rem;
-      background: linear-gradient(90deg, #8f82aa, #877ba3);
+      background: linear-gradient(90deg, #8a74c0, #806bb6);
       border-radius: var(--radius-pill);
-      box-shadow: 0 0.5rem 1.25rem rgba(151, 141, 174, 0.18);
+      box-shadow: 0 0.5rem 1.25rem rgba(143, 122, 200, 0.18);
     }
 
     .individualMode .workoutStats {
@@ -883,7 +883,7 @@
       border: 0;
       border-radius: var(--radius-pill);
       box-shadow:
-        0 1rem 2.125rem rgba(127, 117, 152, 0.08),
+        0 1rem 2.125rem rgba(117, 97, 170, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.98);
     }
 
@@ -947,9 +947,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: linear-gradient(135deg, #9587ad, #877ba3);
+      background: linear-gradient(135deg, #927ac6, #806bb6);
       border-radius: 1.375rem;
-      box-shadow: 0 1.25rem 2.625rem rgba(135, 123, 163, 0.34);
+      box-shadow: 0 1.25rem 2.625rem rgba(128, 107, 182, 0.34);
     }
 
     .individualMode .startButton::before {
@@ -963,7 +963,7 @@
       border-radius: 50%;
       box-shadow:
         inset 0 0 0 0.75rem rgba(255, 255, 255, 0.12),
-        0 0.75rem 1.625rem rgba(100, 90, 120, 0.14);
+        0 0.75rem 1.625rem rgba(94, 77, 137, 0.14);
       transform: translateY(-50%);
     }
 
@@ -1003,7 +1003,7 @@
       place-items: center;
       color: #28262e;
       background: #fff;
-      border: 0.0625rem solid #e7e2ea;
+      border: 0.0625rem solid #ebe6ef;
       border-radius: 50%;
     }
 
@@ -1089,8 +1089,8 @@
       height: 0.25rem;
       background: linear-gradient(
         90deg,
-        #8f82aa 0 var(--completed-workouts-progress, 0%),
-        #e7e2ea var(--completed-workouts-progress, 0%) 100%
+        #8a74c0 0 var(--completed-workouts-progress, 0%),
+        #ebe6ef var(--completed-workouts-progress, 0%) 100%
       );
       border-radius: var(--radius-pill);
     }
@@ -1113,7 +1113,7 @@
       gap: 0.25rem;
       overflow: hidden;
       background: rgba(248, 251, 255, 0.92);
-      border: 0.0625rem solid #e9e4ec;
+      border: 0.0625rem solid #ede8f1;
       border-radius: 1.25rem;
       box-shadow:
         0 1.125rem 2.625rem rgba(72, 63, 87, 0.17),
@@ -1147,9 +1147,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #7f7598;
+      color: #7561aa;
       background: #f0effd;
-      border-color: #e4ddea;
+      border-color: #e4dcf2;
       box-shadow: none;
     }
 
@@ -1220,7 +1220,7 @@
     .individualMode .menuBar {
       padding: 0.4375rem;
       background: rgba(248, 251, 255, 0.94);
-      border-color: #e4dee8;
+      border-color: #e7e1ee;
       box-shadow:
         0 1.125rem 2.75rem rgba(72, 63, 87, 0.16),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -1237,9 +1237,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #8f82aa;
-      background: #f1edf5;
-      border-color: #e4ddea;
+      color: #8a74c0;
+      background: #f0ebfa;
+      border-color: #e4dcf2;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
   }
@@ -1297,11 +1297,11 @@
       justify-items: stretch;
       row-gap: 0.25rem;
       color: #161924;
-      border: 0.0625rem solid #e7e2ea;
+      border: 0.0625rem solid #ebe6ef;
       border-radius: 1.5rem;
       overflow: hidden;
       background:
-        radial-gradient(circle at 45% -10%, rgba(151, 141, 174, 0.07), transparent 42%),
+        radial-gradient(circle at 45% -10%, rgba(143, 122, 200, 0.07), transparent 42%),
         linear-gradient(180deg, #fcfbfd 0%, #f6f7fc 100%);
     }
 
@@ -1357,7 +1357,7 @@
       max-height: 3rem;
       color: #5f5848;
       background: rgba(255, 255, 255, 0.96);
-      border: 0.0625rem solid #e7e2ea;
+      border: 0.0625rem solid #ebe6ef;
       border-radius: 1rem;
       box-shadow: 0 0.75rem 1.75rem rgba(72, 63, 87, 0.1);
       transform: translate(0.0625rem, -0.1875rem);
@@ -1438,7 +1438,7 @@
       padding: 0 0.75rem;
       align-items: center;
       justify-content: center;
-      color: #978dae;
+      color: #8f7ac8;
       font-size: 0.8125rem;
       font-weight: 900;
       line-height: 1;
@@ -1447,7 +1447,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       background: rgba(244, 241, 255, 0.94);
-      border: 1px solid #e4ddea;
+      border: 1px solid #e4dcf2;
       border-radius: var(--radius-pill);
       backdrop-filter: none;
     }
@@ -1462,9 +1462,9 @@
       grid-row: 2;
       overflow: hidden;
       background:
-        radial-gradient(circle at 47% 51%, rgba(151, 141, 174, 0.12) 0 18%, rgba(151, 141, 174, 0.06) 19% 29%, transparent 30%),
+        radial-gradient(circle at 47% 51%, rgba(143, 122, 200, 0.12) 0 18%, rgba(143, 122, 200, 0.06) 19% 29%, transparent 30%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.94) 58%, rgba(255, 255, 255, 0.98) 100%);
-      border: 1px solid rgba(231, 226, 234, 0.92);
+      border: 1px solid rgba(235, 230, 241, 0.92);
       border-radius: 1.5rem;
       box-shadow:
         0 1.625rem 3.625rem rgba(82, 91, 129, 0.16),
@@ -1481,9 +1481,9 @@
       content: "";
       pointer-events: none;
       background:
-        radial-gradient(circle at 8% 45%, #fff 0 9px, #aa9fc0 10px 17px, rgba(170, 160, 192, 0.18) 18px 25px, transparent 26px),
-        radial-gradient(circle at 74% 11%, #fff 0 10px, #aa9fc0 11px 19px, rgba(170, 160, 192, 0.16) 20px 29px, transparent 30px),
-        conic-gradient(from 220deg, transparent 0 14%, rgba(170, 160, 192, 0.2) 14% 67%, #9b8fb7 67% 76%, transparent 76%);
+        radial-gradient(circle at 8% 45%, #fff 0 9px, #b9a9e5 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
+        radial-gradient(circle at 74% 11%, #fff 0 10px, #b9a9e5 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
+        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, #9c88d2 67% 76%, transparent 76%);
       border-radius: 50%;
       mask-image: radial-gradient(circle, transparent 0 calc(50% - 2px), #000 calc(50% - 1px) calc(50% + 2px), transparent calc(50% + 3px));
       opacity: 0.82;
@@ -1528,9 +1528,9 @@
       width: 5.125rem;
       height: 0.375rem;
       margin: 1.125rem 0 1.75rem;
-      background: linear-gradient(90deg, #8f82aa, #877ba3);
+      background: linear-gradient(90deg, #8a74c0, #806bb6);
       border-radius: var(--radius-pill);
-      box-shadow: 0 0.5rem 1.25rem rgba(151, 141, 174, 0.18);
+      box-shadow: 0 0.5rem 1.25rem rgba(143, 122, 200, 0.18);
     }
 
     .individualMode .workoutStats {
@@ -1560,7 +1560,7 @@
       border: 0;
       border-radius: var(--radius-pill);
       box-shadow:
-        0 1rem 2.125rem rgba(127, 117, 152, 0.08),
+        0 1rem 2.125rem rgba(117, 97, 170, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.98);
     }
 
@@ -1623,9 +1623,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: linear-gradient(135deg, #9587ad, #877ba3);
+      background: linear-gradient(135deg, #927ac6, #806bb6);
       border-radius: 1.125rem;
-      box-shadow: 0 1.25rem 2.625rem rgba(135, 123, 163, 0.34);
+      box-shadow: 0 1.25rem 2.625rem rgba(128, 107, 182, 0.34);
     }
 
     .individualMode .startButton::before {
@@ -1639,7 +1639,7 @@
       border-radius: 50%;
       box-shadow:
         inset 0 0 0 0.75rem rgba(255, 255, 255, 0.12),
-        0 0.75rem 1.625rem rgba(100, 90, 120, 0.14);
+        0 0.75rem 1.625rem rgba(94, 77, 137, 0.14);
       transform: translateY(-50%);
     }
 
@@ -1748,8 +1748,8 @@
       height: 0.25rem;
       background: linear-gradient(
         90deg,
-        #8f82aa 0 var(--completed-workouts-progress, 0%),
-        #e7e2ea var(--completed-workouts-progress, 0%) 100%
+        #8a74c0 0 var(--completed-workouts-progress, 0%),
+        #ebe6ef var(--completed-workouts-progress, 0%) 100%
       );
       border-radius: var(--radius-pill);
     }
@@ -1770,7 +1770,7 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.25rem;
       background: rgba(248, 251, 255, 0.94);
-      border: 1px solid #e4dee8;
+      border: 1px solid #e7e1ee;
       border-radius: 1.25rem;
       box-shadow:
         0 1.125rem 2.75rem rgba(72, 63, 87, 0.16),
@@ -1798,9 +1798,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #8f82aa;
-      background: #f1edf5;
-      border-color: #e4ddea;
+      color: #8a74c0;
+      background: #f0ebfa;
+      border-color: #e4dcf2;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
@@ -1908,7 +1908,7 @@
   overflow: hidden auto;
   border: 0;
   border-radius: 0;
-  background: #f7f5f8;
+  background: #f7f6f8;
   color: #28262e;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   scrollbar-width: none;
@@ -1988,7 +1988,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerButton.headerButton:active {
-  background: #f1edf5;
+  background: #f0ebfa;
   transform: scale(0.97);
 }
 
@@ -2011,7 +2011,7 @@
   gap: 12px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 20px;
   box-shadow: none;
 }
@@ -2025,7 +2025,7 @@
   width: 58px;
   height: 58px;
   border-radius: 16px;
-  background: #f1edf5;
+  background: #f0ebfa;
 }
 
 :global(:root[data-app-theme="warm-light"]) .listDay.listDay {
@@ -2076,7 +2076,7 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 24px;
   background: #ffffff;
   box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
@@ -2128,7 +2128,7 @@
   justify-content: center;
   border: 0;
   border-radius: 13px;
-  color: #978dae;
+  color: #8f7ac8;
   background: rgba(237, 241, 243, 0.94);
   font-size: 10px;
   font-weight: 700;
@@ -2151,7 +2151,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .syncBadge.syncBadge {
   color: #ffffff;
-  background: #aaa0bd;
+  background: #b9a9e5;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage {
@@ -2160,7 +2160,7 @@
   height: calc(100% - 160px);
   border-radius: 23px 23px 0 0;
   opacity: 1;
-  background: #f1edf5;
+  background: #f0ebfa;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage::after {
@@ -2175,7 +2175,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback {
   color: #28262e;
-  background: #f1edf5;
+  background: #f0ebfa;
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback small {
@@ -2232,7 +2232,7 @@
   gap: 4px;
   overflow: hidden;
   color: #7b7682;
-  background: #f1edf5;
+  background: #f0ebfa;
   border: 0;
   border-radius: 12px;
   font-size: 9.5px;
@@ -2247,7 +2247,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #978dae;
+  color: #8f7ac8;
   background: transparent;
   font-size: 12px;
 }
@@ -2265,7 +2265,7 @@
   display: grid;
   place-items: center;
   color: #ffffff;
-  background: #978dae;
+  background: #8f7ac8;
   border: 0;
   border-radius: 17px;
   box-shadow: none;
@@ -2289,7 +2289,7 @@
   gap: 10px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 24px;
   box-shadow: none;
 }
@@ -2297,8 +2297,8 @@
 :global(:root[data-app-theme="warm-light"]) .emptyIcon.emptyIcon {
   width: 54px;
   height: 54px;
-  color: #978dae;
-  background: #f1edf5;
+  color: #8f7ac8;
+  background: #f0ebfa;
   font-size: 22px;
 }
 
@@ -2317,7 +2317,7 @@
   min-height: 48px;
   margin-top: 6px;
   color: #ffffff;
-  background: #978dae;
+  background: #8f7ac8;
   border-radius: 17px;
 }
 
@@ -2366,7 +2366,7 @@
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 14px;
   text-transform: none;
 }
@@ -2384,7 +2384,7 @@
   align-items: flex-start;
   color: #7b7682;
   background: #ffffff;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 16px;
   font-size: 10px;
   font-weight: 600;
@@ -2399,7 +2399,7 @@
   border-radius: 2px;
   background: linear-gradient(
     90deg,
-    #978dae var(--completed-workouts-progress, 0%),
+    #8f7ac8 var(--completed-workouts-progress, 0%),
     #dce3e7 var(--completed-workouts-progress, 0%)
   );
 }

@@ -12,7 +12,7 @@
   height: 270px;
   padding: 13px 15px 14px;
   position: relative;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 24px;
   background: #fff;
   color: #28262e;
@@ -41,8 +41,8 @@
 .stage { width: 160px; height: 181px; margin: 0 auto; position: relative; left: 1px; }
 .scene { width: 160px; height: 160px; display: block; transform: translateY(2px) rotate(-90deg); }
 .track, .progress { fill: none; stroke-width: 14; }
-.track { stroke: #eeeaf1; }
-.progress { stroke: #978dae; stroke-linecap: round; }
+.track { stroke: #f2eef5; }
+.progress { stroke: #8f7ac8; stroke-linecap: round; }
 [data-nutrition-orbit-halo="outer"] { transform-box: fill-box; transform-origin: center; animation: haloBreath 3.2s ease-in-out infinite; }
 .calories {
   width: 120px;
@@ -66,7 +66,7 @@
   top: 126px;
   border: 0;
   border-radius: 19px;
-  background: #978dae;
+  background: #8f7ac8;
   color: #fff;
   font: inherit;
   font-size: 12px;

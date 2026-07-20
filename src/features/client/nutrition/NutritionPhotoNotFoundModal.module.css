@@ -69,7 +69,7 @@
   display: grid;
   place-items: center;
   border-radius: 16px;
-  background: rgba(170, 160, 192, 0.14);
+  background: rgba(185, 169, 229, 0.14);
   color: var(--photo-modal-text);
   font-size: 28px;
 }
@@ -148,10 +148,10 @@
   --photo-modal-surface: #fff;
   --photo-modal-text: #28262e;
   --photo-modal-muted: #7b7682;
-  --photo-modal-border: #e7e2ea;
-  --photo-control-surface: #f1edf5;
+  --photo-modal-border: #ebe6ef;
+  --photo-control-surface: #f0ebfa;
   --photo-control-border: transparent;
-  --photo-control-text: #978dae;
+  --photo-control-text: #8f7ac8;
   padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
   align-items: end;
   background: rgba(40, 38, 46, 0.35);
@@ -162,7 +162,7 @@
 :global(:root[data-app-theme="warm-light"]) .modal {
   width: min(100%, 370px);
   padding: 22px 18px 18px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 26px;
   background: #fff;
   color: #28262e;
@@ -176,27 +176,27 @@
   min-height: 44px;
   border: 0;
   border-radius: 50%;
-  background: #f1edf5;
+  background: #f0ebfa;
   color: #28262e;
   box-shadow: none;
   font-size: 24px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .icon { background: #f1edf5; color: #978dae; }
+:global(:root[data-app-theme="warm-light"]) .icon { background: #f0ebfa; color: #8f7ac8; }
 :global(:root[data-app-theme="warm-light"]) .title { color: #28262e; font-size: 20px; font-weight: 700; }
 :global(:root[data-app-theme="warm-light"]) .description { color: #7b7682; font-weight: 450; }
 
 :global(:root[data-app-theme="warm-light"]) .actionButton {
   min-height: 50px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 16px;
   background: #fff;
-  color: #978dae;
+  color: #8f7ac8;
   font-weight: 600;
 }
 
 :global(:root[data-app-theme="warm-light"]) .primaryAction {
-  border-color: #978dae;
-  background: #978dae;
+  border-color: #8f7ac8;
+  background: #8f7ac8;
   color: #fff;
 }

@@ -266,7 +266,7 @@
   padding: 16px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 24px;
   box-shadow: 0 18px 52px rgba(40, 38, 46, 0.18);
 }
@@ -299,7 +299,7 @@
   min-height: 40px;
   padding: 0;
   color: #28262e;
-  background: #f1edf5;
+  background: #f0ebfa;
   border: 0;
   border-radius: 14px;
   font-size: 23px;
@@ -328,14 +328,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .option.optionActive {
-  background: #f1edf5;
+  background: #f0ebfa;
   border-color: #cfd6da;
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionIcon.optionIcon {
   width: 44px;
   height: 44px;
-  color: #978dae;
+  color: #8f7ac8;
   background: #ffffff;
   border-radius: 14px;
   font-size: 16px;
@@ -374,7 +374,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .rememberInput.rememberInput {
-  accent-color: #978dae;
+  accent-color: #8f7ac8;
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyDialog.historyDialog {
@@ -396,8 +396,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyIcon.historyIcon {
-  color: #978dae;
-  background: #f1edf5;
+  color: #8f7ac8;
+  background: #f0ebfa;
   border-radius: 13px;
 }
 
@@ -418,7 +418,7 @@
   min-height: 48px;
   margin-top: 10px;
   color: #ffffff;
-  background: #978dae;
+  background: #8f7ac8;
   border: 0;
   border-radius: 17px;
   font-size: 13px;

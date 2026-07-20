@@ -1192,7 +1192,7 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(backButton).toHaveCSS("height", "64px");
     await expect(backButton).toHaveCSS("color", "rgb(116, 121, 127)");
     await expect(addButton).toHaveCSS("height", "64px");
-    await expect(addButton).toHaveCSS("background-color", "rgb(151, 141, 174)");
+    await expect(addButton).toHaveCSS("background-color", "rgb(143, 122, 200)");
     await expect(addButton).toHaveCSS("color", "rgb(255, 255, 255)");
 
     const backBox = await backButton.boundingBox();
@@ -1811,7 +1811,7 @@ test("CSS V2 nutrition meal modal keeps scoped reference geometry, themes and ac
     await expect(modal).toHaveCSS("position", "fixed");
     await expect(modal).toHaveCSS("z-index", "9997");
     await expect(sheet).toHaveCSS("border-radius", "26px");
-    await expect(sheet).toHaveCSS("background-color", "rgb(247, 245, 248)");
+    await expect(sheet).toHaveCSS("background-color", "rgb(247, 246, 248)");
     await expect(page.locator('[data-nutrition-meal-part="header"] h2')).toHaveCSS("color", "rgb(32, 35, 38)");
     await expect(row).toHaveCSS("transition-property", "transform, opacity, background");
 
@@ -2006,7 +2006,7 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, themes and 
 
     if (viewport.name === "390") {
       const firstActivePixel = page.locator('[data-nutrition-plan-pixel="active"]').first();
-      await expect(firstActivePixel).toHaveCSS("background-color", "rgb(151, 141, 174)");
+      await expect(firstActivePixel).toHaveCSS("background-color", "rgb(143, 122, 200)");
       await modal.evaluate((node) => {
         node.dataset.state = "over-limit";
       });

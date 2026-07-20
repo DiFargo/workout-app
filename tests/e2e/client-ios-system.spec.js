@@ -52,7 +52,7 @@ test("all client warm-light flows use one calm iOS visual system", async ({ page
       await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
       await expect(page.locator('[data-testid^="client-harness-"]').first()).toBeAttached({ timeout: 40_000 });
       await expect(page.locator("body")).toBeVisible();
-      await expect(page.locator("body")).toHaveCSS("background-color", "rgb(247, 245, 248)");
+      await expect(page.locator("body")).toHaveCSS("background-color", "rgb(247, 246, 248)");
 
       const audit = await page.evaluate((blockedFragments) => {
         const html = document.documentElement;
@@ -97,7 +97,7 @@ test("all client warm-light flows use one calm iOS visual system", async ({ page
         };
       }, legacyAccentFragments);
 
-      expect(audit.background).toBe("rgb(247, 245, 248)");
+      expect(audit.background).toBe("rgb(247, 246, 248)");
       expect(audit.fontFamily.toLowerCase()).toContain("apple-system");
       expect(audit.horizontalOverflow).toBeLessThanOrEqual(1);
       expect(audit.offenders).toEqual([]);

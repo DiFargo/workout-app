@@ -20,7 +20,7 @@
   grid-template-columns: 58px 1fr 20px;
   align-items: center;
   gap: 15px;
-  border: 1px solid #e7e2ea;
+  border: 1px solid #ebe6ef;
   border-radius: 22px;
 }
 
@@ -31,7 +31,7 @@
   place-items: center;
   overflow: hidden;
   border-radius: 50%;
-  background: #978dae;
+  background: #8f7ac8;
   color: #fff;
   font-size: 22px;
   font-weight: 700;
@@ -40,12 +40,12 @@
 .accountText { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
 .accountText strong { max-width: 100%; overflow: hidden; font-size: 19px; line-height: 23px; text-overflow: ellipsis; white-space: nowrap; }
 .accountText small { margin-top: 2px; color: #7b7682; font-size: 12px; font-weight: 600; line-height: 17px; }
-.accountText em { height: 23px; margin-top: 4px; padding: 0 11px; display: grid; place-items: center; border-radius: 12px; background: #f1edf5; color: #978dae; font-size: 9.5px; font-style: normal; font-weight: 700; }
+.accountText em { height: 23px; margin-top: 4px; padding: 0 11px; display: grid; place-items: center; border-radius: 12px; background: #f0ebfa; color: #8f7ac8; font-size: 9.5px; font-style: normal; font-weight: 700; }
 .chevron { width: 20px; height: 20px; color: #a9aeb2; stroke-width: 2; }
 
 .groupSection { margin: 0; }
 .groupSection h2 { height: 24px; margin: 0 0 0 4px; color: #7b7682; font-size: 10px; font-weight: 700; line-height: 12px; letter-spacing: 0.8px; }
-.group { overflow: hidden; border: 1px solid #e7e2ea; border-radius: 22px; background: #fff; }
+.group { overflow: hidden; border: 1px solid #ebe6ef; border-radius: 22px; background: #fff; }
 
 .row {
   height: 70px;
@@ -64,10 +64,10 @@
   right: 15px;
   bottom: 0;
   left: 45px;
-  background: #e7e2ea;
+  background: #ebe6ef;
 }
 
-.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #f1edf5; color: #978dae; }
+.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #f0ebfa; color: #8f7ac8; }
 .icon svg { width: 21px; height: 21px; stroke-width: 2.1; }
 .icon.warm { background: #fff2ec; color: #ae8768; }
 .text { min-width: 0; display: flex; flex-direction: column; }
