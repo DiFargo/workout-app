@@ -565,3 +565,134 @@
   font-weight: 950;
   -webkit-text-fill-color: var(--color-food-edit-page-confirm);
 }
+
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  z-index: 100020;
+  padding: 0;
+  align-items: stretch;
+  background: #f3f4f3;
+  color: #202326;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sheet {
+  width: min(100%, 402px);
+  max-width: 402px;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 16px calc(104px + env(safe-area-inset-bottom, 0px));
+  border: 0;
+  border-radius: 0;
+  background: #f3f4f3;
+  color: #202326;
+  box-shadow: none;
+  font-family: var(--font-family-sans);
+}
+
+:global(:root[data-app-theme="warm-light"]) .header {
+  height: 44px;
+  min-height: 44px;
+  margin-bottom: 12px;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  grid-template-rows: 44px;
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .headerSpacer { width: 44px; height: 44px; }
+:global(:root[data-app-theme="warm-light"]) .title {
+  position: static;
+  height: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #202326;
+  -webkit-text-fill-color: #202326;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #202326;
+  -webkit-text-fill-color: #202326;
+  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  font-size: 24px;
+  font-weight: 400;
+}
+
+:global(:root[data-app-theme="warm-light"]) .content {
+  max-height: none;
+  padding: 2px 0 96px;
+  gap: 12px;
+  color: #202326;
+  scrollbar-color: #cfd6da transparent;
+}
+
+:global(:root[data-app-theme="warm-light"]) .noteField { color: #202326; backdrop-filter: none; -webkit-backdrop-filter: none; }
+:global(:root[data-app-theme="warm-light"]) .noteLabel { color: #74797f; -webkit-text-fill-color: #74797f; font-size: 11px; font-weight: 600; text-transform: none; }
+:global(:root[data-app-theme="warm-light"]) .noteInput {
+  height: 112px;
+  min-height: 112px;
+  padding: 14px;
+  border: 1px solid #e1e4e5;
+  border-radius: 18px;
+  background: #fff;
+  color: #202326;
+  caret-color: #627588;
+  -webkit-text-fill-color: #202326;
+  box-shadow: none;
+  font-size: 15px;
+  font-weight: 450;
+}
+
+:global(:root[data-app-theme="warm-light"]) .noteInput::placeholder { color: #a0a5a9; -webkit-text-fill-color: #a0a5a9; }
+:global(:root[data-app-theme="warm-light"]) .actionBar {
+  position: fixed;
+  right: auto;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  left: 50%;
+  width: min(382px, calc(100vw - 20px));
+  height: 76px;
+  min-height: 76px;
+  padding: 6px;
+  gap: 6px;
+  border: 0;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #74797f;
+  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
+  transform: translateX(-50%);
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+}
+
+:global(:root[data-app-theme="warm-light"]) .actionBar::after { content: none; }
+:global(:root[data-app-theme="warm-light"]) .actionButton {
+  height: 64px;
+  min-height: 64px;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  color: #74797f;
+  -webkit-text-fill-color: #74797f;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .confirmAction:not(:disabled) {
+  border: 0;
+  background: #627588;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  box-shadow: none;
+}

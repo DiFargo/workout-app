@@ -198,3 +198,105 @@
     font-size: 10.5px;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  --create-surface: #fff;
+  --create-text: #202326;
+  --create-muted: #74797f;
+  --create-border: #e1e4e5;
+  --create-option-border: #e1e4e5;
+  --create-option-accent: #627588;
+  --create-option-icon: #edf1f3;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  align-items: flex-end;
+  background: rgba(32, 35, 38, 0.35);
+  color: #202326;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .sheet {
+  width: min(100%, 370px);
+  max-width: 370px;
+  padding: 18px;
+  border: 1px solid #e1e4e5;
+  border-radius: 26px;
+  background: #fff;
+  color: #202326;
+  box-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
+}
+
+:global(:root[data-app-theme="warm-light"]) .header {
+  margin-bottom: 16px;
+  padding: 0 46px;
+  color: #202326;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton {
+  top: -2px;
+  left: -2px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #edf1f3;
+  color: #202326;
+  box-shadow: none;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+:global(:root[data-app-theme="warm-light"]) .eyebrow {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .title {
+  color: #202326;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .description {
+  margin-top: 5px;
+  color: #74797f;
+  font-size: 12px;
+  font-weight: 450;
+}
+
+:global(:root[data-app-theme="warm-light"]) .grid {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .option {
+  min-height: 72px;
+  padding: 10px 12px;
+  grid-template-columns: 44px minmax(0, 1fr);
+  border: 1px solid #e1e4e5;
+  border-radius: 18px;
+  background: #fff;
+  color: #627588;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #edf1f3;
+  color: #627588;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionTitle {
+  color: #202326;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionDescription {
+  color: #74797f;
+  font-size: 11px;
+  font-weight: 450;
+}

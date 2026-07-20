@@ -424,3 +424,69 @@
     font-size: 18px;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  --meal-backdrop: rgba(32, 35, 38, 0.35);
+  --meal-overlay-text: #202326;
+  --meal-sheet-border: #e1e4e5;
+  --meal-sheet-background: #f3f4f3;
+  --meal-sheet-text: #202326;
+  --meal-sheet-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
+  --meal-header-muted: #74797f;
+  --meal-header-total: #74797f;
+  --meal-header-title: #202326;
+  --meal-icon-border: transparent;
+  --meal-icon-background: #edf1f3;
+  --meal-close-border: transparent;
+  --meal-close-background: #edf1f3;
+  --meal-close-color: #202326;
+  --meal-row-background: #fff;
+  --meal-row-active: #f7f8f8;
+  --meal-delete-background: #b36e72;
+  --meal-delete-color: #fff;
+  --meal-food-icon-border: transparent;
+  --meal-food-icon-background: #edf1f3;
+  --meal-food-icon-shadow: none;
+  --meal-calories: #202326;
+  --meal-calories-label: #74797f;
+  --meal-food-name: #202326;
+  --meal-food-amount: #74797f;
+  --meal-food-amount-fill: #74797f;
+  --meal-arrow: #a9aeb2;
+  --meal-arrow-fill: #a9aeb2;
+  --meal-add-border: transparent;
+  --meal-add-background: #627588;
+  --meal-add-color: #fff;
+  align-items: flex-end;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+}
+
+:global(:root[data-app-theme="warm-light"]) .backdrop { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+:global(:root[data-app-theme="warm-light"]) .sheet {
+  width: min(370px, 100%);
+  max-width: 370px;
+  max-height: min(720px, calc(100dvh - 32px));
+  padding: 14px;
+  border: 1px solid #e1e4e5;
+  border-radius: 26px;
+  background: #f3f4f3;
+  color: #202326;
+  box-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
+}
+
+:global(:root[data-app-theme="warm-light"]) .header { padding: 2px 0 14px; }
+:global(:root[data-app-theme="warm-light"]) .icon { border: 0; border-radius: 14px; background: #edf1f3; }
+:global(:root[data-app-theme="warm-light"]) .title { color: #202326; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .headerEyebrow,
+:global(:root[data-app-theme="warm-light"]) .headerTotal { color: #74797f; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #edf1f3; color: #202326; font-size: 24px; font-weight: 400; }
+:global(:root[data-app-theme="warm-light"]) .list { gap: 8px; }
+:global(:root[data-app-theme="warm-light"]) .swipeShell { border-radius: 18px; background: #b36e72; }
+:global(:root[data-app-theme="warm-light"]) .row { min-height: 68px; padding: 9px 12px; border: 1px solid #e1e4e5; border-radius: 18px; background: #fff; color: #202326; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .foodIconWrap { border: 0; border-radius: 14px; background: #edf1f3; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .calories,
+:global(:root[data-app-theme="warm-light"]) .name { color: #202326; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .caloriesLabel,
+:global(:root[data-app-theme="warm-light"]) .amount { color: #74797f; -webkit-text-fill-color: #74797f; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .arrow { color: #a9aeb2; -webkit-text-fill-color: #a9aeb2; }
+:global(:root[data-app-theme="warm-light"]) .addButton { min-height: 54px; border: 0; border-radius: 18px; background: #627588; color: #fff; box-shadow: none; font-weight: 600; }

@@ -1021,7 +1021,7 @@ test("CSS V2 workout run overlays stay scoped, adaptive and functional", async (
   await expect(fullscreen).toHaveCSS("position", "fixed");
   await expect(fullscreen).toHaveCSS("width", "390px");
   await expect(fullscreen).toHaveCSS("height", "844px");
-  await expect(fullscreen.locator("video")).toHaveCSS("border-radius", "12px");
+  await expect(fullscreen.locator("video")).toHaveCSS("border-radius", "18px");
   await page.getByRole("button", { name: "Закрыть видео" }).click();
   await expect(page.getByTestId("client-harness-main")).toBeVisible();
 

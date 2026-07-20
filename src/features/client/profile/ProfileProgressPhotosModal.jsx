@@ -1,3 +1,4 @@
+import { Camera } from "lucide-react";
 import styles from "./ProfileProgressPhotosModal.module.css";
 
 const PROGRESS_PHOTO_STEPS = [
@@ -96,7 +97,7 @@ export default function ProfileProgressPhotosModal({
 
         <div className={styles.body} data-testid="profile-progress-photos-body">
           <div className={styles.intro} data-testid="profile-progress-photos-intro">
-            <i aria-hidden="true">📷</i>
+            <i aria-hidden="true"><Camera size={20} strokeWidth={2} /></i>
             <p>Встань в полный рост, используй одинаковое освещение и держи камеру на одном уровне.</p>
           </div>
 

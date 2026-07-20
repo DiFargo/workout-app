@@ -1858,3 +1858,414 @@
     }
   }
 }
+
+/* Calm iOS presentation for the client workout library. Dark theme keeps the
+   established presentation above. */
+:global(:root[data-app-theme="warm-light"]) .page.page,
+:global(:root[data-app-theme="warm-light"]) .page.page * {
+  box-sizing: border-box;
+}
+
+:global(:root[data-app-theme="warm-light"]) .page.page {
+  width: min(402px, 100vw);
+  max-width: 402px;
+  min-height: 100dvh;
+  height: auto;
+  max-height: none;
+  margin: 0 auto;
+  padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(112px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  overflow: hidden auto;
+  border: 0;
+  border-radius: 0;
+  background: #f3f4f3;
+  color: #202326;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  scrollbar-width: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .page.page::-webkit-scrollbar {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .hero.hero {
+  width: 100%;
+  min-height: 62px;
+  margin: 0 auto 14px;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .pageTitle.pageTitle {
+  max-width: calc(100% - 104px);
+  margin: 0;
+  color: #202326;
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.75px;
+  line-height: 34px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .titleLine.titleLine {
+  display: inline;
+}
+
+:global(:root[data-app-theme="warm-light"]) .titleLine.titleLine + .titleLine.titleLine::before {
+  content: " ";
+}
+
+:global(:root[data-app-theme="warm-light"]) .hero.hero > p {
+  max-width: 260px;
+  margin: 0;
+  color: #74797f;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 17px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .heroLine.heroLine {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .headerActions.headerActions {
+  top: 0;
+  right: 0;
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .headerButton.headerButton {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  color: #202326;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+}
+
+:global(:root[data-app-theme="warm-light"]) .headerButton.headerButton:hover {
+  background: #ffffff;
+  transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .headerButton.headerButton:active {
+  background: #edf1f3;
+  transform: scale(0.97);
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutList.workoutList,
+:global(:root[data-app-theme="warm-light"]) .workoutDeck.workoutDeck {
+  width: 100%;
+  margin: 0 auto;
+  gap: 10px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutDeck.workoutDeck {
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutCard.workoutCard {
+  min-height: 78px;
+  padding: 10px;
+  grid-template-columns: 58px minmax(0, 1fr) 28px;
+  gap: 12px;
+  color: #202326;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 20px;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) button.workoutCard.workoutCard:hover {
+  border-color: #cfd6da;
+  transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .listImageWrap.listImageWrap {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: #edf1f3;
+}
+
+:global(:root[data-app-theme="warm-light"]) .listDay.listDay {
+  color: #74797f;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .listName.listName {
+  color: #202326;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .listArrow.listArrow {
+  color: #a9aeb2;
+  font-size: 24px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .featuredCard.featuredCard {
+  width: 100%;
+  height: clamp(390px, calc(100dvh - 294px), 470px);
+  min-height: clamp(390px, calc(100dvh - 294px), 470px);
+  max-height: 470px;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .cardBody.cardBody {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #e1e4e5;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+}
+
+:global(:root[data-app-theme="warm-light"]) .cardTop.cardTop {
+  z-index: 5;
+  top: 14px;
+  right: 14px;
+  left: 14px;
+  align-items: center;
+}
+
+:global(:root[data-app-theme="warm-light"]) .badge.badge,
+:global(:root[data-app-theme="warm-light"]) .workoutWeek.workoutWeek {
+  min-height: 26px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 13px;
+  color: #627588;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 12px;
+  backdrop-filter: blur(12px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .completedBadge.completedBadge {
+  color: #ffffff;
+  background: #708d79;
+}
+
+:global(:root[data-app-theme="warm-light"]) .syncBadge.syncBadge {
+  color: #ffffff;
+  background: #8296a5;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage {
+  inset: 0 0 auto;
+  width: 100%;
+  height: 54%;
+  border-radius: 23px 23px 0 0;
+  opacity: 1;
+  background: #edf1f3;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 56%, #ffffff 100%);
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage img {
+  object-position: center 28%;
+}
+
+:global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback {
+  color: #202326;
+  background: #edf1f3;
+}
+
+:global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback small {
+  color: #74797f;
+}
+
+:global(:root[data-app-theme="warm-light"]) .cardInfo.cardInfo {
+  top: auto;
+  right: 16px;
+  bottom: 82px;
+  left: 16px;
+  gap: 7px;
+  color: #202326;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutTitle.workoutTitle {
+  max-width: 100%;
+  color: #202326;
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.45px;
+  line-height: 27px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .accentLine.accentLine {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutStats.workoutStats {
+  width: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutStats.workoutStats > span {
+  min-width: 0;
+  min-height: 32px;
+  padding: 0 6px;
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden;
+  color: #74797f;
+  background: #edf1f3;
+  border: 0;
+  border-radius: 12px;
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 12px;
+  white-space: nowrap;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutStats.workoutStats b {
+  width: auto;
+  height: auto;
+  display: inline;
+  color: #627588;
+  background: transparent;
+  font-size: 12px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .startButton.startButton {
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  width: calc(100% - 32px);
+  min-height: 48px;
+  height: 48px;
+  padding: 0 18px;
+  color: #ffffff;
+  background: #627588;
+  border: 0;
+  border-radius: 17px;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .emptyState.emptyState {
+  min-height: 320px;
+  padding: 28px 22px;
+  align-content: center;
+  gap: 10px;
+  color: #202326;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 24px;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .emptyIcon.emptyIcon {
+  width: 54px;
+  height: 54px;
+  color: #627588;
+  background: #edf1f3;
+  font-size: 22px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .emptyState.emptyState h2 {
+  color: #202326;
+  font-size: 19px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .emptyState.emptyState p {
+  color: #74797f;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .emptyState.emptyState > button {
+  min-height: 48px;
+  margin-top: 6px;
+  color: #ffffff;
+  background: #627588;
+  border-radius: 17px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutNav.workoutNav {
+  width: 100%;
+  min-height: 46px;
+  margin: 9px auto 0;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .workoutNav.workoutNav > button {
+  width: 44px;
+  height: 44px;
+  color: #627588;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .swipeHint.swipeHint,
+:global(:root[data-app-theme="warm-light"]) .swipeAffordance.swipeAffordance {
+  color: #74797f;
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .bottomProgress.bottomProgress {
+  right: auto;
+  bottom: calc(98px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  width: min(370px, calc(100vw - 32px));
+  min-height: 28px;
+  margin: 0;
+  padding: 0 4px 8px;
+  align-items: flex-start;
+  color: #74797f;
+  background: #f3f4f3;
+  font-size: 10px;
+  font-weight: 600;
+  transform: translateX(-50%);
+}
+
+:global(:root[data-app-theme="warm-light"]) .bottomProgress.bottomProgress::after {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    #627588 var(--completed-workouts-progress, 0%),
+    #dce3e7 var(--completed-workouts-progress, 0%)
+  );
+}
+
+@media (max-width: 370px), (max-height: 760px) {
+  :global(:root[data-app-theme="warm-light"]) .featuredCard.featuredCard {
+    height: clamp(360px, calc(100dvh - 294px), 420px);
+    min-height: clamp(360px, calc(100dvh - 294px), 420px);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage {
+    height: 49%;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .workoutStats.workoutStats > span {
+    font-size: 8.5px;
+  }
+}

@@ -10,6 +10,7 @@ import {
   isAiNutritionTrainingDay
 } from "../../../utils/aiNutritionSchedule";
 import { buildAiNutritionMonthlyPlan } from "../../../utils/aiNutritionPlanBuilder";
+import { ChevronLeft } from "lucide-react";
 import styles from "./AiCoachPage.module.css";
 
 export default function AiCoachPage({
@@ -45,7 +46,7 @@ export default function AiCoachPage({
   return (
     <div className={styles.root} data-css-module-scope="ai-coach-page" data-testid="ai-coach-page">
       <button className={styles.back} data-testid="ai-coach-back" type="button" onClick={onGoBack} aria-labelledby="ai-coach-back-label">
-        <span className={styles.backIcon} aria-hidden="true">←</span>
+        <span className={styles.backIcon} aria-hidden="true"><ChevronLeft size={24} strokeWidth={2.3} /></span>
         <span className={styles.srOnly} id="ai-coach-back-label">Назад</span>
       </button>
 

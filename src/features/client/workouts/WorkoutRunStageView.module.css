@@ -312,3 +312,46 @@
     transform: translate3d(0, 0, 0);
   }
 }
+
+/* Calm iOS geometry for the auxiliary run stages. Exercise geometry above is
+   intentionally left untouched because it matches the approved reference. */
+:global(:root[data-app-theme="warm-light"]) .warmupDeck.warmupDeck,
+:global(:root[data-app-theme="warm-light"]) .finishDeck.finishDeck {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 402px;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px 87px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0;
+  overflow: hidden;
+}
+
+:global(:root[data-app-theme="warm-light"]) .warmupCard.warmupCard {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  height: calc(100% - 50px);
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: 14px;
+  gap: 10px;
+  overflow: hidden auto;
+  color: #202326;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 24px;
+  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  scrollbar-width: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .warmupCard.warmupCard::-webkit-scrollbar {
+  display: none;
+}

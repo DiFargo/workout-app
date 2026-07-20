@@ -3,6 +3,181 @@
     box-sizing: border-box;
   }
 
+  /* Calm iOS program view; dark theme continues to use the rules below. */
+  :global(:root[data-app-theme="warm-light"]) .page.page {
+    width: min(402px, 100vw);
+    max-width: 402px;
+    min-height: 100dvh;
+    margin: 0 auto;
+    padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(110px + env(safe-area-inset-bottom, 0px));
+    overflow: hidden auto;
+    color: #202326;
+    background: #f3f4f3;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    scrollbar-width: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .page.page::-webkit-scrollbar {
+    display: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .shell.shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .header.header {
+    min-height: 78px;
+    padding: 0 4px 14px;
+    justify-items: start;
+    gap: 2px;
+    text-align: left;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .header.header > span {
+    color: #74797f;
+    font-size: 10px;
+    font-weight: 650;
+    letter-spacing: 0.15px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .header.header h1 {
+    color: #202326;
+    font-size: 28px;
+    font-weight: 750;
+    letter-spacing: -0.75px;
+    line-height: 34px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .header.header p {
+    max-width: 100%;
+    margin: 1px 0 0;
+    color: #74797f;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 17px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .stats.stats {
+    min-height: 78px;
+    padding: 8px;
+    color: #202326;
+    background: #ffffff;
+    border: 1px solid #e1e4e5;
+    border-radius: 22px;
+    box-shadow: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .stats.stats > div + div {
+    border-left-color: #e1e4e5;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .stats.stats strong {
+    color: #202326;
+    font-size: 21px;
+    font-weight: 750;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .stats.stats span {
+    color: #74797f;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .weekList.weekList {
+    margin-top: 12px;
+    gap: 10px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e1e4e5;
+    border-radius: 22px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week h2 {
+    padding: 14px 16px 10px;
+    color: #74797f;
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button {
+    min-height: 70px;
+    padding: 11px 12px 11px 16px;
+    grid-template-columns: minmax(0, 1fr) 34px;
+    gap: 10px;
+    color: #202326;
+    background: transparent;
+    border-top-color: #e1e4e5;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button:active {
+    background: #f7f8f8;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button small,
+  :global(:root[data-app-theme="warm-light"]) .week.week button em {
+    color: #74797f;
+    font-size: 10px;
+    font-weight: 550;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button strong {
+    color: #202326;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button > i {
+    width: 32px;
+    height: 32px;
+    color: #a9aeb2;
+    background: #edf1f3;
+    border: 0;
+    border-radius: 12px;
+    font-size: 19px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button.completed > i {
+    color: #ffffff;
+    background: #708d79;
+    border: 0;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .empty.empty {
+    min-height: 260px;
+    padding: 28px 22px;
+    gap: 7px;
+    color: #202326;
+    background: #ffffff;
+    border: 1px solid #e1e4e5;
+    border-radius: 24px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .empty.empty strong {
+    color: #202326;
+    font-size: 18px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .empty.empty span {
+    color: #74797f;
+    font-size: 12px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .bottomPanel.bottomPanel {
+    right: 0;
+    bottom: 14px;
+    left: 0;
+    width: min(382px, calc(100vw - 20px));
+    max-width: 382px;
+    height: 76px;
+    margin: 0 auto;
+  }
+
   .page {
     min-height: 100dvh;
     padding:

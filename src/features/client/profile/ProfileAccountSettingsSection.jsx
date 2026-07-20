@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AtSign, Camera, LockKeyhole, Pencil } from "lucide-react";
+import { AtSign, Camera, LockKeyhole, Pencil, UserRound } from "lucide-react";
 import styles from "./ProfileAccountSettingsSection.module.css";
 
 export default function ProfileAccountSettingsSection({
@@ -132,7 +132,7 @@ export default function ProfileAccountSettingsSection({
             {avatarPreview || avatarUrl ? (
               <img src={avatarPreview || avatarUrl} alt="" />
             ) : (
-              <span>👤</span>
+              <span aria-hidden="true"><UserRound size={34} strokeWidth={1.8} /></span>
             )}
           </span>
           <span className={styles.camera} aria-hidden="true">

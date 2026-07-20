@@ -1,3 +1,4 @@
+import { AlertCircle, CircleCheck } from "lucide-react";
 import { getTrainerTaskStatus } from "../../../domain/clientInsights";
 import styles from "./ProfileTrainerNotificationsModal.module.css";
 
@@ -70,7 +71,9 @@ export default function ProfileTrainerNotificationsModal({
                     aria-label={`Задача тренера: ${task.title}. ${taskStatus.label}. ${taskDueText}`}
                   >
                     <i className={styles.itemIcon} aria-hidden="true">
-                      {taskStatus.id === "completed" ? "✓" : "!"}
+                      {taskStatus.id === "completed"
+                        ? <CircleCheck size={17} strokeWidth={2.1} />
+                        : <AlertCircle size={17} strokeWidth={2.1} />}
                     </i>
                     <span className={styles.itemText}>
                       <strong className={styles.itemTitle}>{task.title}</strong>
@@ -106,7 +109,7 @@ export default function ProfileTrainerNotificationsModal({
           </>
         ) : (
           <div className={styles.empty} data-testid="profile-trainer-notifications-empty">
-            <i className={styles.emptyIcon} aria-hidden="true">✓</i>
+            <i className={styles.emptyIcon} aria-hidden="true"><CircleCheck size={25} strokeWidth={2} /></i>
             <strong className={styles.emptyTitle}>Новых уведомлений нет</strong>
             <p className={styles.emptyText}>Задачи и рекомендации тренера появятся здесь.</p>
           </div>

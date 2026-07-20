@@ -3,6 +3,269 @@
   box-sizing: border-box;
 }
 
+/* Calm iOS workout journal. */
+:global(:root[data-app-theme="warm-light"]) .page.page {
+  width: min(402px, 100vw);
+  max-width: 402px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(110px + env(safe-area-inset-bottom, 0px));
+  overflow: hidden auto;
+  color: #202326;
+  background: #f3f4f3;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  scrollbar-width: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .page.page::-webkit-scrollbar {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .hero.hero {
+  min-height: 72px;
+  margin: 0 0 12px;
+  padding: 0 4px;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  gap: 12px;
+  color: #202326;
+  background: transparent;
+  background-image: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .hero.hero > div > span {
+  margin: 0 0 2px;
+  color: #74797f;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .hero.hero h1 {
+  color: #202326;
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.75px;
+  line-height: 34px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .hero.hero p {
+  margin-top: 1px;
+  color: #74797f;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .refresh.refresh {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  color: #627588;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  font-size: 17px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats {
+  min-height: 76px;
+  margin-bottom: 10px;
+  padding: 8px;
+  gap: 0;
+  color: #202326;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 22px;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats > div {
+  min-height: 58px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats > div + div {
+  border-left: 1px solid #e1e4e5;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats strong {
+  color: #202326;
+  font-size: 20px;
+  font-weight: 750;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats span {
+  color: #74797f;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .latest.latest {
+  margin: 0 0 10px;
+  padding: 13px 15px;
+  color: #202326;
+  background: #edf1f3;
+  border: 0;
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .latest.latest > span {
+  color: #627588;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .latest.latest strong {
+  color: #202326;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .latest.latest small {
+  color: #74797f;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .list.list {
+  gap: 9px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .card.card {
+  color: #202326;
+  background: transparent;
+  border: 0;
+  border-radius: 22px;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .cardInner.cardInner {
+  color: #202326;
+  background: #ffffff;
+  background-image: none;
+  border: 1px solid #e1e4e5;
+  border-radius: 22px;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .card.open .cardInner.cardInner {
+  border-color: #cfd6da;
+}
+
+:global(:root[data-app-theme="warm-light"]) .cardTop.cardTop {
+  min-height: 76px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .main.main {
+  min-height: 76px;
+  padding: 12px 8px 12px 15px;
+  color: #202326;
+}
+
+:global(:root[data-app-theme="warm-light"]) .main.main > span,
+:global(:root[data-app-theme="warm-light"]) .main.main > small {
+  color: #74797f;
+  font-size: 10px;
+  font-weight: 550;
+}
+
+:global(:root[data-app-theme="warm-light"]) .main.main > strong {
+  color: #202326;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .toggle.toggle {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  margin-right: 10px;
+  color: #627588;
+  background: #edf1f3;
+  border: 0;
+  border-radius: 14px;
+  font-size: 15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .meta.meta {
+  padding: 0 14px 12px;
+  gap: 6px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .meta.meta span {
+  color: #74797f;
+  background: #edf1f3;
+  border: 0;
+  border-radius: 11px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .body.body {
+  padding: 0 12px 12px;
+  gap: 7px;
+  border-top-color: #e1e4e5;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exercise.exercise {
+  padding: 11px 12px;
+  color: #202326;
+  background: #edf1f3;
+  border: 0;
+  border-radius: 15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exerciseHead.exerciseHead strong {
+  color: #202326;
+  font-size: 12px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exerciseHead.exerciseHead span,
+:global(:root[data-app-theme="warm-light"]) .sets.sets span {
+  color: #74797f;
+  font-size: 9px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .deleteAction.deleteAction {
+  width: 92px;
+  color: #ffffff;
+  background: #b36e72;
+  background-image: none;
+  border-radius: 0 22px 22px 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .empty.empty {
+  min-height: 250px;
+  padding: 28px 22px;
+  color: #74797f;
+  background: #ffffff;
+  border: 1px solid #e1e4e5;
+  border-radius: 24px;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .empty.empty h3 {
+  color: #202326;
+  font-size: 18px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .empty.empty p {
+  color: #74797f;
+  font-size: 12px;
+}
+
 .page {
   width: 100%;
   max-width: 560px;

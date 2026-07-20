@@ -358,3 +358,42 @@
     font-size: 18px;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .amountCard {
+  min-height: 76px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e1e4e5;
+  border-radius: 20px;
+  background: #fff;
+  color: #202326;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .amountLabel { color: #74797f; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .inputWrap { border: 1px solid #e1e4e5; border-radius: 13px; background: #edf1f3; }
+:global(:root[data-app-theme="warm-light"]) .input { color: #202326; -webkit-text-fill-color: #202326; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .inputWrap em { color: #74797f; }
+:global(:root[data-app-theme="warm-light"]) .stepButton { border: 0; border-radius: 13px; background: #edf1f3; color: #627588; font-weight: 500; }
+
+:global(:root[data-app-theme="warm-light"]) .macros { margin-bottom: 12px; gap: 6px; }
+:global(:root[data-app-theme="warm-light"]) .macroCard {
+  min-height: 74px;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
+  background: #fff;
+  color: #202326;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .macroCard span,
+:global(:root[data-app-theme="warm-light"]) .macroCard small { color: #74797f; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .macroCard strong { color: #202326; font-weight: 700; }
+
+:global(:root[data-app-theme="warm-light"]) .noteCard { border: 1px solid #e1e4e5; border-radius: 18px; background: #fff; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .noteButton { min-height: 62px; color: #202326; }
+:global(:root[data-app-theme="warm-light"]) .noteIcon { width: 34px; height: 34px; border-radius: 11px; background: #edf1f3; color: #627588; }
+:global(:root[data-app-theme="warm-light"]) .noteLabel { color: #74797f; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .noteValue { color: #202326; font-size: 14px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .chevron { color: #a9aeb2; }
+:global(:root[data-app-theme="warm-light"]) .error { color: #b36e72; }

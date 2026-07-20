@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Paperclip } from "lucide-react";
 import styles from "./ProfileFeedbackModal.module.css";
 
 const FEEDBACK_TYPES = [
@@ -172,7 +173,7 @@ export default function ProfileFeedbackModal({
                 disabled={saving}
                 onChange={handleAttachmentChange}
               />
-              <span className={styles.attachmentTitle}>📎 Прикрепить файл</span>
+              <span className={styles.attachmentTitle}><Paperclip size={17} strokeWidth={2.1} aria-hidden="true" /> Прикрепить файл</span>
               <small className={styles.attachmentHint}>Скрин, фото, видео или лог до 25 МБ</small>
             </label>
             {draft.attachmentFile ? (

@@ -515,3 +515,111 @@
     flex-shrink: 0;
   }
 }
+
+/* Compact iPhone 17 Pro reference surface for the warm theme. */
+:global(:root[data-app-theme="warm-light"]) .page {
+  max-width: 402px;
+  padding: max(20px, calc(env(safe-area-inset-top) + 12px)) 12px calc(104px + env(safe-area-inset-bottom));
+}
+
+:global(:root[data-app-theme="warm-light"]) .header {
+  margin-bottom: 10px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .progress {
+  width: min(calc(100% - 100px), 280px);
+  gap: 7px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .progress span {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .progress i {
+  height: 7px;
+  border-color: transparent;
+}
+
+:global(:root[data-app-theme="warm-light"]) .progress em {
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .close {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .card {
+  padding: 14px;
+  gap: 12px;
+  border-radius: 24px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .introVisual,
+:global(:root[data-app-theme="warm-light"]) .imageFrame {
+  border-radius: 20px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .imageFrame::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 55%, rgba(32, 35, 38, 0.08));
+}
+
+:global(:root[data-app-theme="warm-light"]) .image {
+  filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .text h2,
+:global(:root[data-app-theme="warm-light"]) .card h2 {
+  font-size: clamp(28px, 7vw, 34px);
+  font-weight: 780;
+  letter-spacing: -0.8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .text p,
+:global(:root[data-app-theme="warm-light"]) .card p {
+  font-size: 14px;
+  font-weight: 560;
+}
+
+:global(:root[data-app-theme="warm-light"]) .input > div {
+  min-height: 72px;
+  border-radius: 20px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .input input {
+  height: 54px;
+  font-size: 32px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .reviewCard,
+:global(:root[data-app-theme="warm-light"]) .reviewGrid {
+  scrollbar-color: #627588 rgba(98, 117, 136, 0.12);
+}
+
+:global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-track,
+:global(:root[data-app-theme="warm-light"]) .reviewGrid::-webkit-scrollbar-track {
+  background: rgba(98, 117, 136, 0.12);
+}
+
+:global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-thumb,
+:global(:root[data-app-theme="warm-light"]) .reviewGrid::-webkit-scrollbar-thumb {
+  background: #627588;
+}
+
+:global(:root[data-app-theme="warm-light"]) .navigation {
+  bottom: max(10px, calc(env(safe-area-inset-bottom) + 8px));
+  width: min(calc(100vw - 24px), 378px);
+  padding: 8px;
+  gap: 8px;
+  border-radius: 22px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .navigation button {
+  min-height: 56px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+}

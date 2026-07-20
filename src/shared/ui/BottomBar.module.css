@@ -694,3 +694,98 @@
 :global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > .active > strong {
   font-weight: 700;
 }
+
+/* Training sub-navigation follows the same calm iOS dock geometry. */
+:global(:root[data-app-theme="warm-light"]) .trainingDock.trainingDock {
+  right: 0;
+  bottom: 14px;
+  left: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .training.training {
+  box-sizing: border-box;
+  width: min(382px, calc(100vw - 20px));
+  max-width: 382px;
+  height: 76px;
+  min-height: 76px;
+  max-height: 76px;
+  padding: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+  color: #74797f;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  border-radius: 28px;
+  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+}
+
+:global(:root[data-app-theme="warm-light"]) .training.training::after {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .training.training > button {
+  width: 100%;
+  min-width: 0;
+  max-width: 78px;
+  height: 58px;
+  min-height: 58px;
+  max-height: 58px;
+  margin: 0 auto;
+  padding: 6px 0 4px;
+  display: grid;
+  grid-template-rows: 28px 14px;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  color: #74797f;
+  background: transparent;
+  border: 0;
+  border-radius: 20px;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .training.training > button > span {
+  width: 28px;
+  height: 28px;
+  min-height: 28px;
+  max-height: 28px;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  font-size: 21px;
+  line-height: 28px;
+  filter: grayscale(1) saturate(0) opacity(0.72);
+}
+
+:global(:root[data-app-theme="warm-light"]) .training.training > button > strong {
+  width: auto;
+  max-width: none;
+  height: 14px;
+  min-height: 14px;
+  max-height: 14px;
+  overflow: visible;
+  color: inherit;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 14px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .training.training > .active {
+  color: #627588;
+  background: #edf1f3;
+  border: 0;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .training.training > .active > span {
+  filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .training.training > .active > strong {
+  font-weight: 700;
+}

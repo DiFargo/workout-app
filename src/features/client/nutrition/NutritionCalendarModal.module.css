@@ -404,3 +404,68 @@
     transform: translateY(0) scale(1);
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  --calendar-backdrop: rgba(32, 35, 38, 0.35);
+  --calendar-sheet-background: #fff;
+  --calendar-sheet-border: #e1e4e5;
+  --calendar-sheet-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
+  --calendar-overlay-text: #202326;
+  --calendar-text: #202326;
+  --calendar-close-surface: #edf1f3;
+  --calendar-close-border: transparent;
+  --calendar-close-shadow: none;
+  --calendar-header-label: #74797f;
+  --calendar-header-month: #202326;
+  --calendar-header-action-text: #627588;
+  --calendar-weekday: #74797f;
+  --calendar-day-surface: transparent;
+  --calendar-day-border: transparent;
+  --calendar-day-text: #202326;
+  --calendar-day-muted-surface: transparent;
+  --calendar-food-surface: #edf1f3;
+  --calendar-food-border: transparent;
+  --calendar-calorie: #74797f;
+  --calendar-over-goal: #b36e72;
+  --calendar-selected-surface: #627588;
+  --calendar-selected-border: #627588;
+  --calendar-selected-text: #fff;
+  --calendar-selected-calorie: rgba(255, 255, 255, 0.78);
+  --calendar-footer-surface: #edf1f3;
+  --calendar-footer-border: transparent;
+  --calendar-footer-text: #202326;
+  --calendar-primary-background: #627588;
+  --calendar-primary-border: #627588;
+  --calendar-primary-text: #fff;
+  --calendar-primary-shadow: none;
+  align-items: flex-end;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+}
+
+:global(:root[data-app-theme="warm-light"]) .backdrop { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+:global(:root[data-app-theme="warm-light"]) .sheet {
+  width: min(370px, 100%);
+  max-width: 370px;
+  padding: 14px;
+  border: 1px solid #e1e4e5;
+  border-radius: 26px;
+  background: #fff;
+  color: #202326;
+  box-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
+}
+
+:global(:root[data-app-theme="warm-light"]) .grabber { width: 36px; height: 5px; background: #d3d8db; }
+:global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border-radius: 50%; color: #202326; font-size: 24px; font-weight: 400; }
+:global(:root[data-app-theme="warm-light"]) .header { min-height: 58px; }
+:global(:root[data-app-theme="warm-light"]) .monthAction { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #edf1f3; color: #627588; }
+:global(:root[data-app-theme="warm-light"]) .eyebrow { color: #74797f; font-weight: 500; text-transform: none; }
+:global(:root[data-app-theme="warm-light"]) .month { color: #202326; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .weekday { color: #74797f; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .day { border: 0; border-radius: 13px; background: transparent; color: #202326; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .day.hasFood { background: #edf1f3; }
+:global(:root[data-app-theme="warm-light"]) .day.selected { background: #627588; color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .day.today:not(.selected) { box-shadow: inset 0 0 0 1px #627588; }
+:global(:root[data-app-theme="warm-light"]) .dayNumber { font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .footer { border-color: #e1e4e5; background: transparent; }
+:global(:root[data-app-theme="warm-light"]) .footerAction { min-height: 50px; border: 0; border-radius: 16px; background: #edf1f3; color: #202326; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .primaryAction { background: #627588; color: #fff; }

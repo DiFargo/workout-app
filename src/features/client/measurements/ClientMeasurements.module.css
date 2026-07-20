@@ -19,13 +19,13 @@
 }
 
 /* MAIN DASHBOARD ALIGNED WITH INDIVIDUAL WORKOUT PLAN */
-.mainDashboardPage {
+:root[data-app-theme="dark-green"] .mainDashboardPage {
   background:
     radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.16) 0%, transparent 34%),
     linear-gradient(180deg, #0b120c 0%, #050805 100%) !important;
 }
 
-.mainDashboardPage .profileCabinetSection {
+:root[data-app-theme="dark-green"] .mainDashboardPage .profileCabinetSection {
   box-sizing: border-box !important;
   width: min(560px, calc(100vw - 28px)) !important;
   max-width: 560px !important;
@@ -41,13 +41,13 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
 }
 
-.mainDashboardPage .profileAiDashboardCard::before {
+:root[data-app-theme="dark-green"] .mainDashboardPage .profileAiDashboardCard::before {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 36%) !important;
 }
 
 @media (max-width: 420px) {
 
-  .mainDashboardPage .profileCabinetSection {
+  :root[data-app-theme="dark-green"] .mainDashboardPage .profileCabinetSection {
     width: min(560px, calc(100vw - 28px)) !important;
     max-width: 560px !important;
     padding: 15px !important;

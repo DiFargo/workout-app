@@ -124,3 +124,38 @@
     transition: none;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .root {
+  right: max(10px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  left: max(10px, env(safe-area-inset-left));
+  width: min(382px, calc(100vw - 20px));
+  max-width: 382px;
+  height: 76px;
+  min-height: 76px;
+  padding: 6px;
+  gap: 6px;
+  border: 0;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #74797f;
+  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+}
+
+:global(:root[data-app-theme="warm-light"]) .button {
+  height: 64px;
+  min-height: 64px;
+  padding: 6px 4px;
+  gap: 2px;
+  border: 0;
+  border-radius: 18px;
+  color: #74797f;
+}
+
+:global(:root[data-app-theme="warm-light"]) .button > span { font-size: 21px; font-weight: 400; }
+:global(:root[data-app-theme="warm-light"]) .button > strong { font-size: 11px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .add,
+:global(:root[data-app-theme="warm-light"]) .add:hover,
+:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: #627588; color: #fff; }

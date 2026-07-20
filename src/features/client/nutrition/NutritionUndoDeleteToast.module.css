@@ -61,3 +61,28 @@
   outline: none;
   box-shadow: var(--focus-ring);
 }
+
+:global(:root[data-app-theme="warm-light"]) .toast {
+  bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  width: min(370px, calc(100vw - 32px));
+  min-height: 54px;
+  padding: 7px 8px 7px 14px;
+  border: 1px solid #e1e4e5;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  color: #202326;
+  box-shadow: 0 10px 32px rgba(32, 35, 38, 0.14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .message { color: #74797f; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .restoreButton {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 13px;
+  background: #edf1f3;
+  color: #627588;
+  font-size: 14px;
+  font-weight: 650;
+}

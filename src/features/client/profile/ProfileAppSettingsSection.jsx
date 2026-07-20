@@ -1,4 +1,4 @@
-import { Mail } from "lucide-react";
+import { Mail, Moon, Sun } from "lucide-react";
 import styles from "./ProfileAppSettingsSection.module.css";
 
 export default function ProfileAppSettingsSection({
@@ -79,7 +79,9 @@ export default function ProfileAppSettingsSection({
           aria-pressed={isWarmLightTheme}
           onClick={onToggleTheme}
         >
-          <span className={styles.themeIcon}>{isWarmLightTheme ? "🌙" : "☀️"}</span>
+          <span className={styles.themeIcon} aria-hidden="true">
+            {isWarmLightTheme ? <Moon size={18} strokeWidth={2.2} /> : <Sun size={18} strokeWidth={2.2} />}
+          </span>
           <span className={styles.themeText}>
             <strong>Оформление</strong>
             <small>{isWarmLightTheme ? `Переключить на ${darkThemeLabel}` : "Переключить на светлый стиль"}</small>

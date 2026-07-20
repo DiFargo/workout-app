@@ -92,3 +92,29 @@
     right: 10px;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .root {
+  top: max(54px, calc(env(safe-area-inset-top) + 38px));
+  right: 0;
+  width: 96px;
+  height: 44px;
+  grid-template-columns: repeat(2, 44px);
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .action {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  border: 1px solid #e1e4e5;
+  border-radius: 50%;
+  background: #fff;
+  color: #627588;
+  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+}
+
+:global(:root[data-app-theme="warm-light"]) .action:first-child { color: #b36e72; }
+:global(:root[data-app-theme="warm-light"]) .icon { font-size: 18px; font-weight: 500; }

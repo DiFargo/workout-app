@@ -311,3 +311,123 @@
     transition: none;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .landing {
+  gap: 14px;
+  color: #202326;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader {
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionTitle {
+  color: #202326;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionIcon,
+:global(:root[data-app-theme="warm-light"]) .clearButton {
+  color: #627588;
+}
+
+:global(:root[data-app-theme="warm-light"]) .clearButton {
+  min-height: 44px;
+  padding: 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .recentGrid {
+  grid-auto-rows: 88px;
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .recentItem {
+  height: 88px;
+  min-height: 88px;
+  max-height: 88px;
+  padding: 10px 6px;
+  gap: 8px;
+  border: 1px solid #e1e4e5;
+  border-radius: 18px;
+  background: #fff;
+  color: #202326;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .recentIcon {
+  font-size: 26px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .recentName {
+  color: #202326;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .photoAction {
+  bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  width: min(370px, calc(100vw - 32px));
+  height: 72px;
+  min-height: 72px;
+  max-height: 72px;
+  padding: 10px 12px;
+  grid-template-columns: 44px minmax(0, 1fr) 18px;
+  gap: 11px;
+  border: 1px solid #e1e4e5;
+  border-radius: 20px;
+  outline: 0;
+  background: #fff;
+  color: #202326;
+  box-shadow: 0 8px 28px rgba(57, 67, 75, 0.1);
+}
+
+:global(:root[data-app-theme="warm-light"]) .photoAction::before {
+  bottom: calc(-120px - env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(243, 244, 243, 0), #f3f4f3 22px, #f3f4f3 100%);
+}
+
+:global(:root[data-app-theme="warm-light"]) .photoAction::after {
+  content: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .photoIcon {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border-radius: 14px;
+  background: #edf1f3;
+  color: #627588;
+}
+
+:global(:root[data-app-theme="warm-light"]) .photoTitle {
+  color: #202326;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .photoDescription {
+  color: #74797f;
+  font-weight: 450;
+}
+
+:global(:root[data-app-theme="warm-light"]) .photoChevron {
+  color: #a9aeb2;
+  font-weight: 500;
+}
+
+@media (max-width: 380px) {
+  :global(:root[data-app-theme="warm-light"]) .recentGrid {
+    grid-auto-rows: 82px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .recentItem {
+    height: 82px;
+    min-height: 82px;
+    max-height: 82px;
+  }
+}

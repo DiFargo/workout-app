@@ -319,3 +319,116 @@
     transform: rotate(360deg);
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .list {
+  padding-bottom: calc(188px + env(safe-area-inset-bottom, 0px));
+  gap: 8px;
+  color: #202326;
+}
+
+:global(:root[data-app-theme="warm-light"]) .status,
+:global(:root[data-app-theme="warm-light"]) .loading {
+  border: 1px solid #e1e4e5;
+  border-radius: 18px;
+  background: #fff;
+  color: #74797f;
+  box-shadow: none;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .statusTitle,
+:global(:root[data-app-theme="warm-light"]) .emptyTitle,
+:global(:root[data-app-theme="warm-light"]) .loadingText {
+  color: #202326;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .emptyCopy {
+  color: #74797f;
+  font-weight: 450;
+}
+
+:global(:root[data-app-theme="warm-light"]) .item {
+  min-height: 70px;
+  padding: 9px 10px;
+  grid-template-columns: 44px minmax(0, 1fr) 32px;
+  gap: 10px;
+  border: 1px solid #e1e4e5;
+  border-radius: 18px;
+  background: #fff;
+  color: #202326;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .itemIcon {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 14px;
+  background: #edf1f3;
+  color: #627588;
+}
+
+:global(:root[data-app-theme="warm-light"]) .itemInfo {
+  gap: 3px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .itemTitle {
+  margin: 0;
+  padding: 0;
+  color: #202326;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .itemMeta,
+:global(:root[data-app-theme="warm-light"]) .itemDetails {
+  color: #74797f;
+  font-weight: 450;
+}
+
+:global(:root[data-app-theme="warm-light"]) .itemPortion {
+  color: #627588;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .itemAction {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  border: 0;
+  background: #edf1f3;
+  color: #627588;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .itemAction::before {
+  color: #627588;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .suggestionButton,
+:global(:root[data-app-theme="warm-light"]) .showMore {
+  min-height: 48px;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
+  background: #edf1f3;
+  color: #627588;
+  box-shadow: none;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .showMoreCount {
+  background: #fff;
+  color: #627588;
+}
+
+:global(:root[data-app-theme="warm-light"]) .loadingSpinner {
+  border-color: #d7dde1;
+  border-top-color: #627588;
+}

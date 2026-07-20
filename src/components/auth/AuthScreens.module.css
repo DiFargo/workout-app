@@ -210,3 +210,412 @@
     background: rgba(145, 173, 78, 0.8);
   }
 }
+
+/* Calm iOS client entry. Kept unlayered so the component owns the final
+ * appearance while legacy global login selectors remain available. */
+.loginPage,
+.loginPage * {
+  box-sizing: border-box;
+}
+
+.loginPage {
+  width: min(100%, 402px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    max(54px, calc(env(safe-area-inset-top) + 30px))
+    16px
+    max(24px, calc(env(safe-area-inset-bottom) + 16px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  overflow-x: hidden;
+  background: #f3f4f3;
+  color: #202326;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+.loginHero {
+  width: 100%;
+  text-align: center;
+}
+
+.appLogo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 20px;
+  background: #627588;
+  color: #fff;
+  box-shadow: none;
+}
+
+.loginHero h1 {
+  margin: 0;
+  color: #202326;
+  font-size: 34px;
+  font-weight: 760;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.loginHero p {
+  max-width: 270px;
+  margin: 8px auto 0;
+  color: #74797f;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid #e1e4e5;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07);
+}
+
+.loginCard h2 {
+  margin: 2px 0 0;
+  color: #202326;
+  font-size: 21px;
+  font-weight: 720;
+  line-height: 1.15;
+  text-align: left;
+  letter-spacing: -0.02em;
+}
+
+.loginInviteNote {
+  margin: 0 0 4px;
+  color: #74797f;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.loginField {
+  display: grid;
+  gap: 7px;
+  color: #74797f;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.loginCard input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 1px solid #e1e4e5;
+  border-radius: 14px;
+  outline: 0;
+  appearance: none;
+  background: #f7f8f8;
+  color: #202326;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.loginCard input::placeholder {
+  color: #a2a7aa;
+}
+
+.loginCard input:focus {
+  border-color: #8296a5;
+  box-shadow: 0 0 0 3px rgba(98, 117, 136, 0.14);
+}
+
+.passwordBox {
+  position: relative;
+  width: 100%;
+}
+
+.passwordBox input {
+  padding-right: 52px;
+}
+
+.eyeBtn {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #627588;
+  box-shadow: none;
+}
+
+.loginFieldError {
+  color: #b36e72;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.loginError,
+.loginNotice {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #ead5d6;
+  border-radius: 14px;
+  background: #fbf2f2;
+  color: #9b555a;
+  font-size: 13px;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.loginNotice {
+  border-color: #d7e2da;
+  background: #f1f6f2;
+  color: #587461;
+}
+
+.loginBtn,
+.loginGoogleBtn,
+.loginResetBtn {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 15px;
+  font-family: inherit;
+  font-weight: 680;
+}
+
+.loginBtn {
+  margin-top: 4px;
+  border: 0;
+  background: #627588;
+  color: #fff;
+  box-shadow: none;
+  font-size: 16px;
+}
+
+.loginGoogleBtn {
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid #e1e4e5;
+  background: #fff;
+  color: #202326;
+  font-size: 14px;
+}
+
+.loginGoogleBtn span {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #e1e4e5;
+  border-radius: 50%;
+  background: #fff;
+  color: #202326;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.loginResetBtn {
+  border: 0;
+  background: transparent;
+  color: #627588;
+  font-size: 14px;
+}
+
+.loginBtn:disabled,
+.loginGoogleBtn:disabled,
+.loginResetBtn:disabled {
+  opacity: 0.48;
+}
+
+.loginHint {
+  margin: 0;
+  color: #8b9094;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+:global(html:root[data-app-theme="warm-light"]) .loginPage.loginPage,
+:global(html:root[data-app-theme="warm-light"] body) .loginPage.loginPage {
+  padding:
+    max(54px, calc(env(safe-area-inset-top) + 30px))
+    16px
+    max(24px, calc(env(safe-area-inset-bottom) + 16px)) !important;
+  gap: 28px !important;
+  background: #f3f4f3 !important;
+  color: #202326 !important;
+}
+
+:global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard {
+  max-width: none !important;
+  padding: 18px !important;
+  gap: 12px !important;
+  border-color: #e1e4e5 !important;
+  border-radius: 28px !important;
+  background: #fff !important;
+  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07) !important;
+}
+
+:global(html:root[data-app-theme="warm-light"]) .appLogo.appLogo,
+:global(html:root[data-app-theme="warm-light"]) .loginBtn.loginBtn {
+  background: #627588 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+:global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard input {
+  border-color: #e1e4e5 !important;
+  background: #f7f8f8 !important;
+  color: #202326 !important;
+}
+
+:global(html:root[data-app-theme="warm-light"]) .loginHero h1,
+:global(html:root[data-app-theme="warm-light"]) .loginCard h2 {
+  color: #202326 !important;
+}
+
+:global(html:root[data-app-theme="warm-light"]) .loginHero p,
+:global(html:root[data-app-theme="warm-light"]) .loginInviteNote,
+:global(html:root[data-app-theme="warm-light"]) .loginHint {
+  color: #74797f !important;
+}
+
+:global(:root[data-app-theme="dark-green"]) .loginPage {
+  background: #0d0f0d;
+  color: #f4f6f2;
+}
+
+:global(:root[data-app-theme="dark-green"]) .loginCard {
+  border-color: #2b302b;
+  background: #171a17;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="dark-green"]) .loginHero h1,
+:global(:root[data-app-theme="dark-green"]) .loginCard h2,
+:global(:root[data-app-theme="dark-green"]) .loginGoogleBtn {
+  color: #f4f6f2;
+}
+
+:global(:root[data-app-theme="dark-green"]) .loginCard input,
+:global(:root[data-app-theme="dark-green"]) .loginGoogleBtn {
+  border-color: #2b302b;
+  background: #1d211d;
+}
+
+@media (max-height: 700px) {
+  .loginPage {
+    padding-top: max(24px, calc(env(safe-area-inset-top) + 12px));
+    gap: 18px;
+    justify-content: flex-start;
+  }
+
+  .appLogo {
+    width: 54px;
+    height: 54px;
+    margin-bottom: 10px;
+    border-radius: 17px;
+  }
+
+  .loginHero h1 {
+    font-size: 30px;
+  }
+
+  .loginCard {
+    padding: 15px;
+    gap: 9px;
+  }
+
+  .loginHint {
+    display: none;
+  }
+}
+
+@media (min-width: 700px) {
+  .loginPage {
+    min-height: calc(100dvh - 24px);
+    margin: 12px auto;
+    border: 1px solid #e1e4e5;
+    border-radius: 30px;
+  }
+}
+
+:global(:root[data-app-theme="warm-light"]) .appSplash {
+  width: min(100%, 402px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 16px;
+  background: #f3f4f3 !important;
+  color: #202326;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashInner {
+  width: min(100%, 370px);
+  min-height: 286px;
+  padding: 30px 24px;
+  border: 1px solid #e1e4e5 !important;
+  border-radius: 30px;
+  background: #fff !important;
+  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07) !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashInner::before {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashMark {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  border: 0 !important;
+  border-radius: 20px;
+  background: #627588 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashLogo {
+  color: #202326 !important;
+  font-size: 58px;
+  line-height: 0.95;
+  letter-spacing: 0.08em;
+  text-shadow: none !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashText {
+  color: #74797f !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashProgress {
+  height: 6px;
+  margin-top: 24px;
+  border: 0 !important;
+  background: #edf1f3 !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashProgress > span {
+  background: #627588 !important;
+  box-shadow: none !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashDots > i {
+  background: #8296a5 !important;
+}

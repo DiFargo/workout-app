@@ -28,7 +28,7 @@
 
 .firstSetupOverlay{position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.92);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:center;padding:24px}
 .firstSetupCard{width:min(100%,420px);padding:24px;border-radius:34px;background:radial-gradient(circle at top left,rgba(127,159,58,.18),transparent 38%),linear-gradient(180deg,#101712,#070b08);border:1px solid rgba(255,255,255,.06)}
-.firstSetupStep,p{color:rgba(255,255,255,.55)}
+.firstSetupStep,.firstSetupCard p{color:rgba(255,255,255,.55)}
 .firstSetupCard h2{margin:10px 0 8px;font-size:34px;color:#fff}
 .firstSetupBody{margin-top:20px}
 .firstSetupInput{width:100%;height:64px;border:none;border-radius:22px;background:rgba(255,255,255,.06);padding:0 20px;color:#fff;font-size:24px;font-weight:900}
@@ -425,6 +425,341 @@ html body #root .firstSetupPrimary,
 html body #root .firstSetupSecondary {
   min-height: 44px !important;
   max-height: none !important;
+}
+
+/* Calm iOS onboarding. This block intentionally keeps the established global
+ * class contract because the ten-step flow is also mounted from workout
+ * recovery state. Dark-green declarations above remain unchanged. */
+html:root[data-app-theme="warm-light"] body #root .firstSetupOverlay {
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  align-items: stretch !important;
+  background: #f3f4f3 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: #202326 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupCard {
+  box-sizing: border-box !important;
+  width: min(100%, 402px) !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 auto !important;
+  padding:
+    max(18px, calc(env(safe-area-inset-top) + 10px))
+    16px
+    max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
+  gap: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #f3f4f3 !important;
+  color: #202326 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupProgress {
+  min-height: 44px !important;
+  grid-template-columns: 42px minmax(0, 1fr) !important;
+  gap: 10px !important;
+  color: #74797f !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupProgress > div {
+  margin-right: 52px !important;
+  gap: 4px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupProgress i {
+  height: 4px !important;
+  background: #d9dddf !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupProgress i.active {
+  background: #627588 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupExitButton {
+  top: max(14px, calc(env(safe-area-inset-top) + 6px)) !important;
+  right: 16px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  border: 1px solid #e1e4e5 !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  color: #627588 !important;
+  box-shadow: none !important;
+  font-size: 25px !important;
+  font-weight: 500 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupHeader {
+  margin-top: clamp(22px, 4.2dvh, 38px) !important;
+  text-align: left !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupCard .firstSetupHeader h2 {
+  margin: 0 !important;
+  color: #202326 !important;
+  font-size: clamp(28px, 8vw, 34px) !important;
+  font-weight: 740 !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.035em !important;
+  text-align: left !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupCard .firstSetupHeader p {
+  max-width: 342px !important;
+  margin: 9px 0 0 !important;
+  color: #74797f !important;
+  font-size: 14px !important;
+  font-weight: 450 !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupBody {
+  min-height: 0 !important;
+  margin: 16px 0 12px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupWelcomeVisual {
+  width: min(250px, 70vw) !important;
+  height: 220px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupWelcomeVisual span {
+  filter: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupClipboard {
+  border: 1px solid #e1e4e5 !important;
+  background: #fff !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button,
+html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button,
+html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button,
+html:root[data-app-theme="warm-light"] body #root .firstSetupReview {
+  border: 1px solid #e1e4e5 !important;
+  background: #fff !important;
+  color: #202326 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button {
+  height: min(190px, 28dvh) !important;
+  border-radius: 22px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList {
+  gap: 8px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button {
+  min-height: 66px !important;
+  border-radius: 18px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList small,
+html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button small,
+html:root[data-app-theme="warm-light"] body #root .firstSetupReview small {
+  color: #74797f !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button > i {
+  border-color: #a9b0b4 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button.active,
+html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button.active,
+html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button.active {
+  border-color: #8296a5 !important;
+  background: #edf1f3 !important;
+  color: #202326 !important;
+  box-shadow: inset 0 0 0 1px #8296a5 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button.active > i {
+  border: 5px solid #627588 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button {
+  min-height: 112px !important;
+  border-radius: 20px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupReview {
+  padding: 8px 14px !important;
+  border-radius: 22px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupReview > div {
+  border-bottom-color: #e8eaeb !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupReview > div > span {
+  color: #627588 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupReview strong {
+  color: #202326 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupField {
+  color: #74797f !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupInput,
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricInput input {
+  border: 1px solid #e1e4e5 !important;
+  border-radius: 15px !important;
+  background: #fff !important;
+  color: #202326 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupInput:focus,
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricInput input:focus {
+  border-color: #8296a5 !important;
+  box-shadow: 0 0 0 3px rgba(98, 117, 136, 0.14) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider {
+  min-height: 318px !important;
+  padding: 30px 20px 22px !important;
+  border: 1px solid #e1e4e5 !important;
+  border-radius: 28px !important;
+  background: #fff !important;
+  color: #202326 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricLabel,
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricMarks {
+  color: #74797f !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricValue,
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricValue small {
+  color: #202326 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"] {
+  accent-color: #627588 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"]::-webkit-slider-runnable-track {
+  background: linear-gradient(
+    90deg,
+    #627588 0%,
+    #627588 var(--slider-progress, 0%),
+    #dfe3e5 var(--slider-progress, 0%),
+    #dfe3e5 100%
+  ) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"]::-webkit-slider-thumb {
+  border-color: #fff !important;
+  background: #627588 !important;
+  box-shadow: 0 5px 14px rgba(57, 67, 75, 0.18) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricTicks i,
+html:root[data-app-theme="warm-light"] body #root .firstSetupMetricTicks i:nth-child(5n + 1) {
+  background: #cfd5d8 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupBottom {
+  min-height: 56px !important;
+  margin-top: auto !important;
+  gap: 9px !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary,
+html:root[data-app-theme="warm-light"] body #root .firstSetupSecondary {
+  height: 56px !important;
+  min-height: 56px !important;
+  border-radius: 16px !important;
+  font-size: 16px !important;
+  font-weight: 680 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary {
+  border: 0 !important;
+  background: #627588 !important;
+  color: #fff !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupSecondary {
+  border: 1px solid #e1e4e5 !important;
+  background: #fff !important;
+  color: #627588 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary:disabled {
+  background: #d6dbde !important;
+  color: #8b9296 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirm {
+  padding: 48px 0 0 !important;
+  align-items: end !important;
+  background: rgba(32, 35, 38, 0.22) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard {
+  width: min(100%, 402px) !important;
+  padding: 20px 16px max(16px, calc(env(safe-area-inset-bottom) + 10px)) !important;
+  border: 1px solid #e1e4e5 !important;
+  border-bottom: 0 !important;
+  border-radius: 28px 28px 0 0 !important;
+  background: #fff !important;
+  color: #202326 !important;
+  box-shadow: 0 -10px 32px rgba(57, 67, 75, 0.12) !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard h3 {
+  color: #202326 !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard p {
+  color: #74797f !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard button {
+  min-height: 50px !important;
+  border: 1px solid #e1e4e5 !important;
+  border-radius: 15px !important;
+  background: #f3f4f3 !important;
+  color: #627588 !important;
+  box-shadow: none !important;
+}
+
+html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard button.primary {
+  border-color: transparent !important;
+  background: #627588 !important;
+  color: #fff !important;
+}
+
+@media (min-width: 700px) {
+  html:root[data-app-theme="warm-light"] body #root .firstSetupOverlay {
+    padding: 12px !important;
+    align-items: center !important;
+  }
+
+  html:root[data-app-theme="warm-light"] body #root .firstSetupCard {
+    height: min(850px, calc(100dvh - 24px)) !important;
+    max-height: calc(100dvh - 24px) !important;
+    border: 1px solid #e1e4e5 !important;
+    border-radius: 30px !important;
+  }
 }
 
 }

@@ -1,3 +1,4 @@
+import { Ruler, Scale } from "lucide-react";
 import styles from "./ProfileMeasurementsModal.module.css";
 
 export default function ProfileMeasurementsModal({
@@ -70,7 +71,7 @@ export default function ProfileMeasurementsModal({
         )}
 
         <div className={styles.summary} data-testid="profile-measurements-summary">
-          <span aria-hidden="true">⚖️</span>
+          <span aria-hidden="true"><Scale size={20} strokeWidth={2} /></span>
           <p>Быстрый контроль веса и объёмов тела</p>
         </div>
 
@@ -101,7 +102,8 @@ export default function ProfileMeasurementsModal({
           aria-label="Начать новый замер тела"
           onClick={onStart}
         >
-          📏 Начать замер
+          <Ruler size={18} strokeWidth={2.1} aria-hidden="true" />
+          Начать замер
         </button>
       </section>
     </div>

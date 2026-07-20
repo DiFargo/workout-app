@@ -78,10 +78,10 @@ test("client AI coach visual audit covers insights and nutrition plan states", a
           backHeight: Math.round(backRect?.height || 0)
         };
       });
-      expect(visualContract.width).toBeLessThanOrEqual(560);
-      expect(visualContract.headingColor).toBe("rgb(255, 255, 255)");
-      expect(visualContract.backWidth).toBe(46);
-      expect(visualContract.backHeight).toBe(46);
+      expect(visualContract.width).toBeLessThanOrEqual(theme === "warm-light" ? 402 : 560);
+      expect(visualContract.headingColor).toBe(theme === "warm-light" ? "rgb(32, 35, 38)" : "rgb(255, 255, 255)");
+      expect(visualContract.backWidth).toBe(theme === "warm-light" ? 44 : 46);
+      expect(visualContract.backHeight).toBe(theme === "warm-light" ? 44 : 46);
     }
   }
 

@@ -158,3 +158,50 @@
     transition: none;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .root,
+:global(:root[data-app-theme="warm-light"]) .search,
+:global(:root[data-app-theme="warm-light"]) .myProducts {
+  min-height: 50px;
+  margin: 0 0 16px;
+  padding: 0 13px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  gap: 8px;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
+  background: #fff;
+  color: #202326;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchIcon {
+  color: #74797f;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .input,
+:global(:root[data-app-theme="warm-light"]) .myProducts .input {
+  min-height: 48px;
+  color: #202326;
+  -webkit-text-fill-color: #202326;
+  font-size: 15px;
+  font-weight: 450;
+}
+
+:global(:root[data-app-theme="warm-light"]) .input::placeholder {
+  color: #a0a5a9;
+  -webkit-text-fill-color: #a0a5a9;
+}
+
+:global(:root[data-app-theme="warm-light"]) .clearButton {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  border-radius: 50%;
+  background: #edf1f3;
+  color: #74797f;
+  font-size: 20px;
+}

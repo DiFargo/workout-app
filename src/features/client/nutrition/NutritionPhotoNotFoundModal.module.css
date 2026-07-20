@@ -143,3 +143,60 @@
     padding: 16px;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  --photo-modal-surface: #fff;
+  --photo-modal-text: #202326;
+  --photo-modal-muted: #74797f;
+  --photo-modal-border: #e1e4e5;
+  --photo-control-surface: #edf1f3;
+  --photo-control-border: transparent;
+  --photo-control-text: #627588;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  align-items: end;
+  background: rgba(32, 35, 38, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .modal {
+  width: min(100%, 370px);
+  padding: 22px 18px 18px;
+  border: 1px solid #e1e4e5;
+  border-radius: 26px;
+  background: #fff;
+  color: #202326;
+  box-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #edf1f3;
+  color: #202326;
+  box-shadow: none;
+  font-size: 24px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .icon { background: #edf1f3; color: #627588; }
+:global(:root[data-app-theme="warm-light"]) .title { color: #202326; font-size: 20px; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .description { color: #74797f; font-weight: 450; }
+
+:global(:root[data-app-theme="warm-light"]) .actionButton {
+  min-height: 50px;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
+  background: #fff;
+  color: #627588;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .primaryAction {
+  border-color: #627588;
+  background: #627588;
+  color: #fff;
+}

@@ -208,6 +208,9 @@
 }
 
 .attachmentTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   color: inherit;
   font-size: 13px;
   font-weight: 950;

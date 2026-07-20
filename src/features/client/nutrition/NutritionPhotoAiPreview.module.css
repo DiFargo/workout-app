@@ -358,3 +358,49 @@
     transform: translateY(-2px) scale(1);
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .root {
+  margin: 8px 0;
+  padding: 10px;
+  grid-template-columns: 50px minmax(0, 1fr) 34px;
+  gap: 10px;
+  border: 1px solid #e1e4e5;
+  border-radius: 18px;
+  background: #fff;
+  color: #202326;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .root::before { content: none; }
+:global(:root[data-app-theme="warm-light"]) .root.analyzing { border-color: #cfd7dc; background: #fff; }
+
+:global(:root[data-app-theme="warm-light"]) .image {
+  width: 50px;
+  height: 50px;
+  border: 0;
+  border-radius: 14px;
+  background: #edf1f3;
+}
+
+:global(:root[data-app-theme="warm-light"]) .analyzing .image { border-color: #cfd7dc; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .scanLine { background: linear-gradient(180deg, transparent, rgba(98, 117, 136, 0.58), transparent); }
+
+:global(:root[data-app-theme="warm-light"]) .heading strong { color: #202326; -webkit-text-fill-color: #202326; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .description { color: #74797f; -webkit-text-fill-color: #74797f; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .confidence { background: #edf1f3; color: #627588; }
+
+:global(:root[data-app-theme="warm-light"]) .candidate {
+  border-color: #e1e4e5;
+  border-radius: 14px;
+  background: #fff;
+  color: #202326;
+}
+
+:global(:root[data-app-theme="warm-light"]) .candidateIcon,
+:global(:root[data-app-theme="warm-light"]) .resetButton {
+  border-color: transparent;
+  background: #edf1f3;
+  color: #627588;
+}
+
+:global(:root[data-app-theme="warm-light"]) .dots i { background: #627588; }

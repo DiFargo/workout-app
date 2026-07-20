@@ -431,3 +431,141 @@
     transition: none;
   }
 }
+
+/* Calm iOS chrome for search and My Products. */
+:global(:root[data-app-theme="warm-light"]) .root,
+:global(:root[data-app-theme="warm-light"]) .search,
+:global(:root[data-app-theme="warm-light"]) .myProducts {
+  height: 116px;
+  min-height: 116px;
+  max-height: 116px;
+  margin: 0 0 12px;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  gap: 12px 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .titleGroup,
+:global(:root[data-app-theme="warm-light"]) .search .titleGroup,
+:global(:root[data-app-theme="warm-light"]) .myProducts .titleGroup {
+  height: 44px;
+  min-height: 44px;
+  padding: 0 4px;
+  display: flex;
+  justify-content: center;
+  transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .myProducts .titleGroup {
+  gap: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .eyebrow {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .heading,
+:global(:root[data-app-theme="warm-light"]) .search .heading,
+:global(:root[data-app-theme="warm-light"]) .myProducts .heading {
+  height: 44px;
+  min-height: 44px;
+  color: #202326;
+  font-size: 28px;
+  font-weight: 750;
+  line-height: 44px;
+  letter-spacing: -0.02em;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton,
+:global(:root[data-app-theme="warm-light"]) .search .closeButton,
+:global(:root[data-app-theme="warm-light"]) .myProducts .closeButton {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 1px solid #e1e4e5;
+  border-radius: 50%;
+  background: #fff;
+  color: #202326;
+  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  font-size: 25px;
+  font-weight: 400;
+  transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealWrap,
+:global(:root[data-app-theme="warm-light"]) .search .mealWrap,
+:global(:root[data-app-theme="warm-light"]) .myProducts .mealWrap {
+  width: 100%;
+  height: 60px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealButton,
+:global(:root[data-app-theme="warm-light"]) .search .mealButton,
+:global(:root[data-app-theme="warm-light"]) .myProducts .mealButton {
+  height: 60px;
+  min-height: 60px;
+  padding: 8px 14px;
+  gap: 3px;
+  border: 1px solid #e1e4e5;
+  border-radius: 18px;
+  background: #fff;
+  color: #202326;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealLabel {
+  color: #74797f;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealName {
+  color: #202326;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealName::after {
+  color: #627588;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealDropdown {
+  top: max(126px, calc(env(safe-area-inset-top) + 110px));
+  width: min(370px, calc(100vw - 32px));
+  padding: 8px;
+  gap: 2px;
+  border: 1px solid #e1e4e5;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.98);
+  color: #202326;
+  box-shadow: 0 18px 50px rgba(32, 35, 38, 0.14);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealOption {
+  height: 52px;
+  min-height: 52px;
+  border-radius: 14px;
+  color: #202326;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealOption.selected {
+  background: #edf1f3;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealIcon {
+  background: #edf1f3;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionName {
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .collapseButton {
+  border-color: #e1e4e5;
+  border-radius: 14px;
+  background: #edf1f3;
+  color: #627588;
+}

@@ -286,6 +286,10 @@
   font-weight: 900;
   box-shadow: var(--shadow-profile-measurements-start);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .closeButton:focus-visible,
