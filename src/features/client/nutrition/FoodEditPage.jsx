@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import DishEditIngredientsBox from "./DishEditIngredientsBox";
 import DishIngredientPicker from "./DishIngredientPicker";
 import FoodEditBasicFields from "./FoodEditBasicFields";
@@ -61,9 +62,17 @@ export default function FoodEditPage({
           className={styles.header}
           title={isDish ? "Редактирование блюда" : "Редактирование продукта"}
           eyebrow="Питание"
-          onBack={onCancel}
-          backAction="close"
-          backAriaLabel="Вернуться назад"
+          actions={(
+            <button
+              type="button"
+              data-food-edit-page-action="close"
+              onClick={onCancel}
+              aria-label="Закрыть редактор продукта"
+              title="Закрыть"
+            >
+              <X aria-hidden="true" />
+            </button>
+          )}
           testId="food-edit-header"
           scope="food-edit-header"
         />

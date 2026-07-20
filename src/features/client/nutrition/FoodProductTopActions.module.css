@@ -69,7 +69,7 @@
   height: 20px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .icon.deleteIcon {
+:global(:root[data-app-theme="warm-light"]) .icon.closeIcon {
   width: 22px;
   height: 22px;
 }
@@ -118,5 +118,3 @@
   color: #8f7ac8;
   box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }
-
-:global(:root[data-app-theme="warm-light"]) .action[data-food-product-top-action="delete"] { color: #b36e72; }

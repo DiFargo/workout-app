@@ -19,6 +19,19 @@ export default function NutritionCreateChoice({
       role="presentation"
       onClick={onClose}
     >
+      <button
+        type="button"
+        className={styles.closeButton}
+        data-testid="nutrition-create-choice-close"
+        onClick={(event) => {
+          event.stopPropagation();
+          onClose();
+        }}
+        aria-label="Закрыть"
+      >
+        <X aria-hidden="true" />
+      </button>
+
       <div
         className={styles.sheet}
         role="dialog"
@@ -27,15 +40,6 @@ export default function NutritionCreateChoice({
         onClick={(event) => event.stopPropagation()}
       >
         <div className={styles.header}>
-          <button
-            type="button"
-            className={styles.closeButton}
-            data-testid="nutrition-create-choice-close"
-            onClick={onClose}
-            aria-label="Закрыть"
-          >
-            <X aria-hidden="true" />
-          </button>
           <span className={styles.eyebrow}>Моя база</span>
           <h3 className={styles.title} id="nutritionCreateChoiceTitle">Создать</h3>
           <p className={styles.description}>Выбери продукт или блюдо из нескольких ингредиентов.</p>

@@ -57,22 +57,24 @@
 .header {
   position: relative;
   margin-bottom: 12px;
-  padding-left: 52px;
+  padding-left: 0;
   color: var(--color-heading);
   text-align: left;
 }
 
 .closeButton {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 42px;
-  height: 42px;
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top, 0px));
+  right: max(16px, calc((100vw - 402px) / 2 + 16px));
+  left: auto;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
   padding: 0;
   display: grid;
   place-items: center;
   border: 1px solid #ebe6ef;
-  border-radius: 18px;
+  border-radius: 50%;
   background: var(--create-surface);
   color: var(--color-heading);
   box-shadow: 0 12px 28px rgba(72, 63, 87, 0.08);
@@ -311,16 +313,16 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .sheet {
-  width: min(394px, calc(100vw - 20px));
-  max-width: 394px;
+  width: var(--layout-client-dock-width);
+  max-width: 382px;
   height: 76px;
   min-height: 76px;
   max-height: 76px;
-  margin-bottom: max(8px, env(safe-area-inset-bottom, 0px));
-  padding: 7px;
+  margin-bottom: var(--layout-client-dock-bottom);
+  padding: 6px;
   display: grid;
-  grid-template-columns: 60px minmax(0, 1fr);
-  gap: 4px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   overflow: hidden;
   border-color: var(--color-nutrition-nav-border-compact);
   border-radius: var(--radius-training-nav);
@@ -331,28 +333,32 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .header {
-  width: 60px;
-  height: 60px;
+  position: absolute;
+  width: 0;
+  height: 0;
   margin: 0;
   padding: 0;
 }
 
 :global(:root[data-app-theme="warm-light"]) .closeButton {
-  position: static;
-  width: 60px;
-  height: 60px;
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top, 0px));
+  right: max(16px, calc((100vw - 402px) / 2 + 16px));
+  left: auto;
+  width: 44px;
+  height: 44px;
   border: 0;
-  border-radius: var(--radius-training-nav-button);
-  background: #f0ebfa;
-  color: #8f7ac8;
+  border-radius: 50%;
+  background: rgba(123, 118, 130, 0.1);
+  color: #28262e;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .closeButton svg,
 :global(:root[data-app-theme="warm-light"]) .optionIcon svg {
-  width: 24px;
-  height: 24px;
-  stroke-width: 2.4;
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.1;
 }
 
 :global(:root[data-app-theme="warm-light"]) .eyebrow,
@@ -371,17 +377,18 @@
 
 :global(:root[data-app-theme="warm-light"]) .grid {
   min-width: 0;
-  height: 60px;
+  height: 64px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .option {
   width: 100%;
   min-width: 0;
-  min-height: 60px;
-  height: 60px;
+  min-height: 58px;
+  height: 58px;
   padding: 5px 4px 4px;
   display: grid;
   grid-template-columns: 1fr;

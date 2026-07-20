@@ -4,7 +4,6 @@ import FoodProductActionBar from "./FoodProductActionBar";
 import FoodProductHeader from "./FoodProductHeader";
 import FoodProductNutrition from "./FoodProductNutrition";
 import FoodProductTopActions from "./FoodProductTopActions";
-import NutritionDeleteConfirmModal from "./NutritionDeleteConfirmModal";
 import styles from "./FoodProductPage.module.css";
 
 export default function FoodProductPage({
@@ -29,8 +28,6 @@ export default function FoodProductPage({
   dishIngredientFallbackSuggestions,
   pendingDishIngredient,
   pendingDishIngredientGrams,
-  deleteConfirmOpen,
-  canDelete,
   getFoodIcon,
   getFoodScale,
   getFoodPortionAmount,
@@ -59,9 +56,6 @@ export default function FoodProductPage({
   onCancelEdit,
   onConfirmEdit,
   onBack,
-  onDelete,
-  onCancelDelete,
-  onConfirmDelete,
   onAdd
 }) {
   return (
@@ -77,13 +71,11 @@ export default function FoodProductPage({
         mealId={mealId}
         mealMenuOpen={mealMenuOpen}
         getFoodIcon={getFoodIcon}
-        onBack={onBack}
         onToggleMealMenu={onToggleMealMenu}
         onSelectMeal={onSelectMeal}
         topActions={!editPageOpen ? (
           <FoodProductTopActions
-            canDelete={canDelete}
-            onDelete={onDelete}
+            onClose={onBack}
             onEdit={onOpenEditPage}
           />
         ) : null}
@@ -152,12 +144,6 @@ export default function FoodProductPage({
         onAdd={onAdd}
       />
 
-      <NutritionDeleteConfirmModal
-        open={deleteConfirmOpen}
-        foodName={selectedFood?.name}
-        onCancel={onCancelDelete}
-        onConfirm={onConfirmDelete}
-      />
     </div>
   );
 }

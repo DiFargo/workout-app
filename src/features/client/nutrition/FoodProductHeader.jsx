@@ -8,7 +8,6 @@ export default function FoodProductHeader({
   mealId,
   mealMenuOpen,
   getFoodIcon,
-  onBack,
   onToggleMealMenu,
   onSelectMeal,
   topActions
@@ -27,8 +26,6 @@ export default function FoodProductHeader({
           titleProps={{ "data-food-product-header-title": "" }}
           scope="food-product-header"
           testId="food-product-flow-header"
-          onBack={onBack}
-          backAriaLabel="Вернуться к поиску еды"
           actions={topActions}
         >
           <div className={styles.mealCard} data-testid="food-product-meal-selector">

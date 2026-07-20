@@ -338,6 +338,21 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await expect(page.getByTestId("nutrition-create-choice")).toBeVisible();
   await expect(page.locator('[data-testid="food-search-bottom-bar"] button[aria-pressed="true"]')).toHaveCount(1);
   await expect(page.locator('[data-food-search-action="create"]')).toHaveAttribute("aria-pressed", "true");
+  const createChoiceClosePlacement = await page.evaluate(() => {
+    const close = document.querySelector('[data-testid="nutrition-create-choice-close"]')?.getBoundingClientRect();
+    return close
+      ? {
+          width: close.width,
+          height: close.height,
+          rightInset: window.innerWidth - close.right,
+          expectedRightInset: Math.max(16, (window.innerWidth - 402) / 2 + 16)
+        }
+      : null;
+  });
+  expect(createChoiceClosePlacement).not.toBeNull();
+  expect(createChoiceClosePlacement.width).toBeCloseTo(44, 1);
+  expect(createChoiceClosePlacement.height).toBeCloseTo(44, 1);
+  expect(createChoiceClosePlacement.rightInset).toBeCloseTo(createChoiceClosePlacement.expectedRightInset, 1);
   await expectTapTargets(page, [
     '[data-testid="nutrition-create-choice-close"]',
     '[data-testid="nutrition-create-choice-option"]',
@@ -634,19 +649,22 @@ test("food edit page keeps its scoped responsive geometry", async ({ page }, tes
     await expect(page.getByTestId("food-edit-page")).toBeVisible();
 
     const editHeader = page.getByTestId("food-edit-header");
-    const editBack = page.locator('[data-food-edit-page-action="close"]');
+    const editClose = page.locator('[data-food-edit-page-action="close"]');
     await expect(editHeader).toHaveAttribute("data-client-page-header-controls", "workout");
     if (testCase.theme === "warm-light") {
-      await expect(editBack).toHaveCSS("width", "44px");
-      await expect(editBack).toHaveCSS("height", "44px");
-      await expect(editBack).toHaveCSS("border-radius", "50%");
-      await expect(editBack).toHaveCSS("background-color", "rgba(123, 118, 130, 0.1)");
-      await expect(editBack).toHaveCSS("color", "rgb(40, 38, 46)");
+      await expect(editClose).toHaveCSS("width", "44px");
+      await expect(editClose).toHaveCSS("height", "44px");
+      await expect(editClose).toHaveCSS("border-radius", "50%");
+      await expect(editClose).toHaveCSS("background-color", "rgba(123, 118, 130, 0.1)");
+      await expect(editClose).toHaveCSS("color", "rgb(40, 38, 46)");
       const editHeaderBox = await editHeader.boundingBox();
-      const editBackBox = await editBack.boundingBox();
+      const editCloseBox = await editClose.boundingBox();
       expect(editHeaderBox).not.toBeNull();
-      expect(editBackBox).not.toBeNull();
-      expect(Math.abs(editBackBox.x - editHeaderBox.x - 16), testCase.name).toBeLessThanOrEqual(1);
+      expect(editCloseBox).not.toBeNull();
+      expect(
+        Math.abs(editHeaderBox.x + editHeaderBox.width - editCloseBox.x - editCloseBox.width - 16),
+        testCase.name
+      ).toBeLessThanOrEqual(1);
     }
 
     const metrics = await page.evaluate(() => {
@@ -1129,7 +1147,7 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     const productHero = page.getByTestId("food-product-hero");
     const topActions = page.getByTestId("food-product-top-actions");
     const topActionButtons = page.locator("[data-food-product-top-action]");
-    const deleteAction = page.locator('[data-food-product-top-action="delete"]');
+    const closeAction = page.locator('[data-food-product-top-action="close"]');
     const editAction = page.locator('[data-food-product-top-action="edit"]');
     const portionSelector = page.getByTestId("food-portion-selector");
     const gramsButton = page.locator('[data-food-portion-action="grams"]');
@@ -1170,30 +1188,33 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(topActions).toHaveCSS("height", "44px");
     await expect(topActionButtons).toHaveCount(2);
     await expect(topActionButtons.nth(0)).toHaveAttribute("data-food-product-top-action", "edit");
-    await expect(topActionButtons.nth(1)).toHaveAttribute("data-food-product-top-action", "delete");
+    await expect(topActionButtons.nth(1)).toHaveAttribute("data-food-product-top-action", "close");
     await expect(editAction.locator("svg")).toHaveCount(1);
-    await expect(deleteAction.locator("svg")).toHaveCount(1);
-    await expect(deleteAction).toHaveCSS("width", "44px");
-    await expect(deleteAction).toHaveCSS("height", "44px");
+    await expect(closeAction.locator("svg")).toHaveCount(1);
+    await expect(closeAction).toHaveCSS("width", "44px");
+    await expect(closeAction).toHaveCSS("height", "44px");
     await expect(editAction).toHaveCSS("width", "44px");
     await expect(editAction).toHaveCSS("height", "44px");
     await expect(editAction).toHaveCSS("border-radius", "50%");
     await expect(editAction).toHaveCSS("background-color", "rgba(123, 118, 130, 0.1)");
     await expect(editAction).toHaveCSS("color", "rgb(40, 38, 46)");
-    await expect(deleteAction).toHaveCSS("border-radius", "50%");
-    await expect(deleteAction).toHaveCSS("background-color", "rgba(123, 118, 130, 0.1)");
-    await expect(deleteAction).toHaveCSS("color", "rgb(40, 38, 46)");
-    await expect(deleteAction).toBeDisabled();
+    await expect(closeAction).toHaveCSS("border-radius", "50%");
+    await expect(closeAction).toHaveCSS("background-color", "rgba(123, 118, 130, 0.1)");
+    await expect(closeAction).toHaveCSS("color", "rgb(40, 38, 46)");
+    await expect(closeAction).toBeEnabled();
     await expect(editAction).toBeEnabled();
     await expect(page.locator(".foodProductTopActions, .foodProductTopAction, .foodProductTopDelete, .foodProductTopEdit")).toHaveCount(0);
 
     const headerBox = await productHeader.boundingBox();
     const topActionsBox = await topActions.boundingBox();
+    const closeActionBox = await closeAction.boundingBox();
     const mealSelectorBox = await mealSelector.boundingBox();
     expect(headerBox).not.toBeNull();
     expect(topActionsBox).not.toBeNull();
+    expect(closeActionBox).not.toBeNull();
     expect(mealSelectorBox).not.toBeNull();
     expect(Math.abs(headerBox.x + headerBox.width - topActionsBox.x - topActionsBox.width - 16)).toBeLessThanOrEqual(1);
+    expect(Math.abs(headerBox.x + headerBox.width - closeActionBox.x - closeActionBox.width - 16)).toBeLessThanOrEqual(1);
     expect(mealSelectorBox.width).toBeCloseTo(headerBox.width, 0);
 
     await mealButton.click();
@@ -1274,7 +1295,7 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
       await attachScreenshot(page, testInfo, `client-food-product-action-bar-${viewport.width}.png`);
     }
 
-    await backButton.click();
+    await closeAction.click();
     await expect(page.getByTestId("food-product-page")).toBeHidden();
   }
 
@@ -1289,7 +1310,7 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
   await expect(darkTopActions).toHaveAttribute("data-css-module-scope", "food-product-top-actions");
   await expect(darkTopActions).toHaveCSS("position", "static");
   await expect(darkTopActions).toHaveCSS("height", "30px");
-  await expect(page.locator('[data-food-product-top-action="delete"]')).toHaveCSS("height", "30px");
+  await expect(page.locator('[data-food-product-top-action="close"]')).toHaveCSS("height", "30px");
   await expect(page.locator('[data-food-product-top-action="edit"]')).toHaveCSS("height", "30px");
   await expectNoHorizontalOverflow(page);
 

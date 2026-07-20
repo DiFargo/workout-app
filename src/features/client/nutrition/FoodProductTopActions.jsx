@@ -2,8 +2,7 @@ import { Pencil, X } from "lucide-react";
 import styles from "./FoodProductTopActions.module.css";
 
 export default function FoodProductTopActions({
-  canDelete,
-  onDelete,
+  onClose,
   onEdit
 }) {
   return (
@@ -35,14 +34,13 @@ export default function FoodProductTopActions({
         type="button"
         className={styles.action}
         data-css-module-control="food-product-top-action"
-        data-food-product-top-action="delete"
-        disabled={!canDelete}
-        onClick={onDelete}
-        aria-label="Удалить продукт"
-        title="Удалить"
+        data-food-product-top-action="close"
+        onClick={onClose}
+        aria-label="Закрыть продукт"
+        title="Закрыть"
       >
         <X
-          className={`${styles.icon} ${styles.deleteIcon}`}
+          className={`${styles.icon} ${styles.closeIcon}`}
           size={22}
           strokeWidth={2.2}
           aria-hidden="true"
