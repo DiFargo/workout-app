@@ -17,7 +17,7 @@ async function expectRect(locator, expected) {
 
 async function expectStickyHeaderWhileScrolling(header) {
   const metrics = await header.evaluate(async (node) => {
-    const shell = node.closest('[data-testid="profile-dashboard-route"]');
+    const shell = node.closest('[data-css-module-scope="profile-dashboard-shell"]');
     if (!shell) return null;
 
     const initialY = node.getBoundingClientRect().y;
