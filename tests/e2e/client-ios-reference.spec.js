@@ -82,7 +82,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=exercise&clientHarnessTheme=warm-light");
   await expectRect(page.getByRole("button", { name: "Вернуться к предыдущему экрану" }), { x: 16, y: 8, width: 44, height: 44 });
   await expectRect(page.getByRole("button", { name: "Выйти из тренировки" }), { x: 342, y: 8, width: 44, height: 44 });
-  await expectRect(page.locator('[data-css-module-scope="workout-stage-heading"]'), { x: 16, y: 8, width: 370, height: 44 });
+  await expectRect(page.locator('[data-css-module-scope="workout-stage-heading"]'), { x: 0, y: 8, width: 402, height: 44 });
   await expectRect(page.getByTestId("workout-exercise-progress"), { x: 160, y: 54, width: 82, height: 25 });
   await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 16, y: 78, width: 370, height: 280 });
   await expectRect(page.getByTestId("workout-exercise-video-frame").locator("video"), { x: 28, y: 91, width: 346, height: 250 });
