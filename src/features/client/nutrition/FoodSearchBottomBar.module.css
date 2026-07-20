@@ -167,8 +167,8 @@
   border: 0;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.96);
-  color: #74797f;
-  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
+  color: #7b7682;
+  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
   backdrop-filter: blur(20px) saturate(1.15);
   -webkit-backdrop-filter: blur(20px) saturate(1.15);
 }
@@ -181,7 +181,7 @@
   gap: 2px;
   border: 0;
   border-radius: 18px;
-  color: #74797f;
+  color: #7b7682;
 }
 
 :global(:root[data-app-theme="warm-light"]) .button > span {
@@ -205,6 +205,6 @@
 :global(:root[data-app-theme="warm-light"]) .active:hover,
 :global(:root[data-app-theme="warm-light"]) .active:active {
   border: 0;
-  background: #edf1f3;
-  color: #627588;
+  background: #f1edf5;
+  color: #978dae;
 }

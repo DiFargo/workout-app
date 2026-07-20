@@ -22,7 +22,7 @@
   }
 
   .individualMode {
-    --render-accent: #5d43e8;
+    --render-accent: #8f82aa;
   }
 
   .hero {
@@ -405,7 +405,7 @@
     gap: var(--space-2);
     font-weight: var(--font-weight-semibold);
     background: rgba(255, 255, 255, 0.82);
-    border: 1px solid rgba(104, 82, 190, 0.1);
+    border: 1px solid rgba(151, 141, 174, 0.1);
     border-radius: var(--radius-md);
   }
 
@@ -476,9 +476,9 @@
     min-height: 4rem;
     color: #fff;
     font-size: 1rem;
-    background: linear-gradient(110deg, #8a43ec, #4774f0);
+    background: linear-gradient(110deg, #9587ad, #877ba3);
     border-radius: 1.15rem;
-    box-shadow: 0 0.55rem 1.5rem rgba(91, 70, 220, 0.25);
+    box-shadow: 0 0.55rem 1.5rem rgba(151, 141, 174, 0.25);
   }
 
   .coverPreload {
@@ -629,15 +629,15 @@
       justify-content: stretch;
       justify-items: stretch;
       row-gap: 0.25rem;
-      color: #171923;
+      color: #28262e;
       overflow: hidden;
       background:
-        radial-gradient(circle at 50% -12%, rgba(105, 83, 245, 0.055), transparent 34%),
-        linear-gradient(180deg, #fbfbff 0%, #f5f7fc 100%);
-      border: 0.0625rem solid #dfe3ee;
+        radial-gradient(circle at 50% -12%, rgba(155, 143, 183, 0.055), transparent 34%),
+        linear-gradient(180deg, #fcfbfd 0%, #f7f5f8 100%);
+      border: 0.0625rem solid #e7e2ea;
       border-radius: 1.5rem;
       box-shadow:
-        0 1.375rem 3.625rem rgba(54, 62, 108, 0.1),
+        0 1.375rem 3.625rem rgba(72, 63, 87, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
@@ -659,8 +659,8 @@
       max-width: 100%;
       min-height: 0;
       margin: 0;
-      color: #171923;
-      -webkit-text-fill-color: #5f5744;
+      color: #28262e;
+      -webkit-text-fill-color: #6f6875;
       font-size: 1.5rem;
       font-weight: 850;
       line-height: 1.08;
@@ -687,9 +687,9 @@
       min-height: 2.75rem;
       color: #5f5848;
       background: rgba(255, 255, 255, 0.96);
-      border-color: #e0e4ee;
+      border-color: #e7e2ea;
       border-radius: 1rem;
-      box-shadow: 0 0.75rem 1.75rem rgba(55, 64, 112, 0.1);
+      box-shadow: 0 0.75rem 1.75rem rgba(72, 63, 87, 0.1);
     }
 
     .individualMode .workoutDeck {
@@ -760,14 +760,14 @@
       padding: 0 0.875rem;
       align-items: center;
       justify-content: center;
-      color: #5b4ae0;
+      color: #8f82aa;
       font-size: 0.625rem;
       font-weight: 700;
       line-height: 1;
       white-space: nowrap;
       overflow: visible;
       background: #f2f1fd;
-      border: 0.0625rem solid #ddd9fa;
+      border: 0.0625rem solid #e4ddea;
       border-radius: 1.125rem;
       backdrop-filter: none;
     }
@@ -782,9 +782,9 @@
       grid-row: 2;
       overflow: hidden;
       background:
-        radial-gradient(circle at 47% 51%, rgba(111, 78, 255, 0.12) 0 18%, rgba(111, 78, 255, 0.06) 19% 29%, transparent 30%),
+        radial-gradient(circle at 47% 51%, rgba(151, 141, 174, 0.12) 0 18%, rgba(151, 141, 174, 0.06) 19% 29%, transparent 30%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.94) 58%, rgba(255, 255, 255, 0.98) 100%);
-      border: 0.0625rem solid rgba(224, 226, 238, 0.92);
+      border: 0.0625rem solid rgba(231, 226, 234, 0.92);
       border-radius: 1.9375rem;
       box-shadow:
         0 1.625rem 3.625rem rgba(82, 91, 129, 0.16),
@@ -801,9 +801,9 @@
       content: "";
       pointer-events: none;
       background:
-        radial-gradient(circle at 8% 45%, #fff 0 9px, #8c78ff 10px 17px, rgba(140, 120, 255, 0.18) 18px 25px, transparent 26px),
-        radial-gradient(circle at 74% 11%, #fff 0 10px, #8b76ff 11px 19px, rgba(139, 118, 255, 0.16) 20px 29px, transparent 30px),
-        conic-gradient(from 220deg, transparent 0 14%, rgba(130, 108, 255, 0.2) 14% 67%, #7563f4 67% 76%, transparent 76%);
+        radial-gradient(circle at 8% 45%, #fff 0 9px, #aa9fc0 10px 17px, rgba(170, 160, 192, 0.18) 18px 25px, transparent 26px),
+        radial-gradient(circle at 74% 11%, #fff 0 10px, #aa9fc0 11px 19px, rgba(170, 160, 192, 0.16) 20px 29px, transparent 30px),
+        conic-gradient(from 220deg, transparent 0 14%, rgba(170, 160, 192, 0.2) 14% 67%, #9b8fb7 67% 76%, transparent 76%);
       border-radius: 50%;
       mask-image: radial-gradient(circle, transparent 0 calc(50% - 2px), #000 calc(50% - 1px) calc(50% + 2px), transparent calc(50% + 3px));
       opacity: 0.82;
@@ -839,7 +839,7 @@
       width: 14.6875rem;
       max-width: 14.6875rem;
       margin: 0;
-      color: #141824;
+      color: #28262e;
       font-size: 4rem;
       font-weight: 950;
       line-height: 0.98;
@@ -851,9 +851,9 @@
       width: 5.5rem;
       height: 0.4375rem;
       margin: 1.5rem 0 2.375rem;
-      background: linear-gradient(90deg, #6f4df7, #3b74f2);
+      background: linear-gradient(90deg, #8f82aa, #877ba3);
       border-radius: var(--radius-pill);
-      box-shadow: 0 0.5rem 1.25rem rgba(88, 82, 245, 0.18);
+      box-shadow: 0 0.5rem 1.25rem rgba(151, 141, 174, 0.18);
     }
 
     .individualMode .workoutStats {
@@ -873,7 +873,7 @@
       grid-template-columns: 3rem minmax(0, 1fr);
       align-items: center;
       gap: 0.8125rem;
-      color: #172035;
+      color: #28262e;
       font-size: inherit;
       font-weight: 940;
       line-height: 1.05;
@@ -883,7 +883,7 @@
       border: 0;
       border-radius: var(--radius-pill);
       box-shadow:
-        0 1rem 2.125rem rgba(92, 79, 186, 0.08),
+        0 1rem 2.125rem rgba(127, 117, 152, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.98);
     }
 
@@ -892,7 +892,7 @@
       width: 3rem;
       height: 3rem;
       place-items: center;
-      color: #171d2d;
+      color: #28262e;
       font-size: 1.125rem;
       font-weight: 900;
       line-height: 1;
@@ -947,9 +947,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: linear-gradient(135deg, #8b49f4, #2d74f2);
+      background: linear-gradient(135deg, #9587ad, #877ba3);
       border-radius: 1.375rem;
-      box-shadow: 0 1.25rem 2.625rem rgba(81, 91, 238, 0.34);
+      box-shadow: 0 1.25rem 2.625rem rgba(135, 123, 163, 0.34);
     }
 
     .individualMode .startButton::before {
@@ -963,7 +963,7 @@
       border-radius: 50%;
       box-shadow:
         inset 0 0 0 0.75rem rgba(255, 255, 255, 0.12),
-        0 0.75rem 1.625rem rgba(44, 37, 135, 0.14);
+        0 0.75rem 1.625rem rgba(100, 90, 120, 0.14);
       transform: translateY(-50%);
     }
 
@@ -1001,9 +1001,9 @@
       height: 2.5rem;
       padding: 0;
       place-items: center;
-      color: #171923;
+      color: #28262e;
       background: #fff;
-      border: 0.0625rem solid #e0e4ee;
+      border: 0.0625rem solid #e7e2ea;
       border-radius: 50%;
     }
 
@@ -1089,8 +1089,8 @@
       height: 0.25rem;
       background: linear-gradient(
         90deg,
-        #6b4df7 0 var(--completed-workouts-progress, 0%),
-        #dfe3ee var(--completed-workouts-progress, 0%) 100%
+        #8f82aa 0 var(--completed-workouts-progress, 0%),
+        #e7e2ea var(--completed-workouts-progress, 0%) 100%
       );
       border-radius: var(--radius-pill);
     }
@@ -1113,10 +1113,10 @@
       gap: 0.25rem;
       overflow: hidden;
       background: rgba(248, 251, 255, 0.92);
-      border: 0.0625rem solid #e0e5f0;
+      border: 0.0625rem solid #e9e4ec;
       border-radius: 1.25rem;
       box-shadow:
-        0 1.125rem 2.625rem rgba(55, 64, 112, 0.17),
+        0 1.125rem 2.625rem rgba(72, 63, 87, 0.17),
         inset 0 0 0 1px rgba(255, 255, 255, 0.76);
       transform: none;
       pointer-events: auto;
@@ -1136,7 +1136,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.125rem;
-      color: #737b91;
+      color: #7b7682;
       line-height: 1;
       overflow: hidden;
       background: transparent;
@@ -1147,9 +1147,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #4834dd;
+      color: #7f7598;
       background: #f0effd;
-      border-color: #ddd9fa;
+      border-color: #e4ddea;
       box-shadow: none;
     }
 
@@ -1220,9 +1220,9 @@
     .individualMode .menuBar {
       padding: 0.4375rem;
       background: rgba(248, 251, 255, 0.94);
-      border-color: #dce2ed;
+      border-color: #e4dee8;
       box-shadow:
-        0 1.125rem 2.75rem rgba(55, 64, 112, 0.16),
+        0 1.125rem 2.75rem rgba(72, 63, 87, 0.16),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
@@ -1237,9 +1237,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #5d43e8;
-      background: #f0edff;
-      border-color: #ded7ff;
+      color: #8f82aa;
+      background: #f1edf5;
+      border-color: #e4ddea;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
   }
@@ -1254,7 +1254,7 @@
       padding-left: 24px;
       border: 1px solid var(--color-border);
       border-radius: 28px;
-      box-shadow: 0 1.375rem 3.625rem rgba(54, 62, 108, 0.1);
+      box-shadow: 0 1.375rem 3.625rem rgba(72, 63, 87, 0.1);
     }
 
     .page.basicMode {
@@ -1297,12 +1297,12 @@
       justify-items: stretch;
       row-gap: 0.25rem;
       color: #161924;
-      border: 0.0625rem solid #dfe3ee;
+      border: 0.0625rem solid #e7e2ea;
       border-radius: 1.5rem;
       overflow: hidden;
       background:
-        radial-gradient(circle at 45% -10%, rgba(111, 79, 255, 0.07), transparent 42%),
-        linear-gradient(180deg, #fbfbff 0%, #f6f7fc 100%);
+        radial-gradient(circle at 45% -10%, rgba(151, 141, 174, 0.07), transparent 42%),
+        linear-gradient(180deg, #fcfbfd 0%, #f6f7fc 100%);
     }
 
     .individualMode .hero {
@@ -1357,9 +1357,9 @@
       max-height: 3rem;
       color: #5f5848;
       background: rgba(255, 255, 255, 0.96);
-      border: 0.0625rem solid #e0e4ee;
+      border: 0.0625rem solid #e7e2ea;
       border-radius: 1rem;
-      box-shadow: 0 0.75rem 1.75rem rgba(55, 64, 112, 0.1);
+      box-shadow: 0 0.75rem 1.75rem rgba(72, 63, 87, 0.1);
       transform: translate(0.0625rem, -0.1875rem);
     }
 
@@ -1438,7 +1438,7 @@
       padding: 0 0.75rem;
       align-items: center;
       justify-content: center;
-      color: #654ee8;
+      color: #978dae;
       font-size: 0.8125rem;
       font-weight: 900;
       line-height: 1;
@@ -1447,7 +1447,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       background: rgba(244, 241, 255, 0.94);
-      border: 1px solid #ded7ff;
+      border: 1px solid #e4ddea;
       border-radius: var(--radius-pill);
       backdrop-filter: none;
     }
@@ -1462,9 +1462,9 @@
       grid-row: 2;
       overflow: hidden;
       background:
-        radial-gradient(circle at 47% 51%, rgba(111, 78, 255, 0.12) 0 18%, rgba(111, 78, 255, 0.06) 19% 29%, transparent 30%),
+        radial-gradient(circle at 47% 51%, rgba(151, 141, 174, 0.12) 0 18%, rgba(151, 141, 174, 0.06) 19% 29%, transparent 30%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.94) 58%, rgba(255, 255, 255, 0.98) 100%);
-      border: 1px solid rgba(224, 226, 238, 0.92);
+      border: 1px solid rgba(231, 226, 234, 0.92);
       border-radius: 1.5rem;
       box-shadow:
         0 1.625rem 3.625rem rgba(82, 91, 129, 0.16),
@@ -1481,9 +1481,9 @@
       content: "";
       pointer-events: none;
       background:
-        radial-gradient(circle at 8% 45%, #fff 0 9px, #8c78ff 10px 17px, rgba(140, 120, 255, 0.18) 18px 25px, transparent 26px),
-        radial-gradient(circle at 74% 11%, #fff 0 10px, #8b76ff 11px 19px, rgba(139, 118, 255, 0.16) 20px 29px, transparent 30px),
-        conic-gradient(from 220deg, transparent 0 14%, rgba(130, 108, 255, 0.2) 14% 67%, #7563f4 67% 76%, transparent 76%);
+        radial-gradient(circle at 8% 45%, #fff 0 9px, #aa9fc0 10px 17px, rgba(170, 160, 192, 0.18) 18px 25px, transparent 26px),
+        radial-gradient(circle at 74% 11%, #fff 0 10px, #aa9fc0 11px 19px, rgba(170, 160, 192, 0.16) 20px 29px, transparent 30px),
+        conic-gradient(from 220deg, transparent 0 14%, rgba(170, 160, 192, 0.2) 14% 67%, #9b8fb7 67% 76%, transparent 76%);
       border-radius: 50%;
       mask-image: radial-gradient(circle, transparent 0 calc(50% - 2px), #000 calc(50% - 1px) calc(50% + 2px), transparent calc(50% + 3px));
       opacity: 0.82;
@@ -1510,14 +1510,14 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0;
-      color: #141824;
+      color: #28262e;
     }
 
     .individualMode .workoutTitle {
       display: block;
       max-width: 11.875rem;
       margin: 0;
-      color: #141824;
+      color: #28262e;
       font-size: clamp(2.1875rem, 10.2vw, 2.875rem);
       font-weight: 900;
       line-height: 0.98;
@@ -1528,9 +1528,9 @@
       width: 5.125rem;
       height: 0.375rem;
       margin: 1.125rem 0 1.75rem;
-      background: linear-gradient(90deg, #6f4df7, #3b74f2);
+      background: linear-gradient(90deg, #8f82aa, #877ba3);
       border-radius: var(--radius-pill);
-      box-shadow: 0 0.5rem 1.25rem rgba(88, 82, 245, 0.18);
+      box-shadow: 0 0.5rem 1.25rem rgba(151, 141, 174, 0.18);
     }
 
     .individualMode .workoutStats {
@@ -1550,7 +1550,7 @@
       grid-template-columns: 3rem minmax(0, 1fr);
       align-items: center;
       gap: 0.8125rem;
-      color: #172035;
+      color: #28262e;
       font-size: inherit;
       font-weight: 900;
       line-height: 1.05;
@@ -1560,7 +1560,7 @@
       border: 0;
       border-radius: var(--radius-pill);
       box-shadow:
-        0 1rem 2.125rem rgba(92, 79, 186, 0.08),
+        0 1rem 2.125rem rgba(127, 117, 152, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.98);
     }
 
@@ -1569,7 +1569,7 @@
       width: 2.75rem;
       height: 2.75rem;
       place-items: center;
-      color: #171d2d;
+      color: #28262e;
       font-size: 1.125rem;
       font-weight: 900;
       line-height: 1;
@@ -1623,9 +1623,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: linear-gradient(135deg, #8b49f4, #2d74f2);
+      background: linear-gradient(135deg, #9587ad, #877ba3);
       border-radius: 1.125rem;
-      box-shadow: 0 1.25rem 2.625rem rgba(81, 91, 238, 0.34);
+      box-shadow: 0 1.25rem 2.625rem rgba(135, 123, 163, 0.34);
     }
 
     .individualMode .startButton::before {
@@ -1639,7 +1639,7 @@
       border-radius: 50%;
       box-shadow:
         inset 0 0 0 0.75rem rgba(255, 255, 255, 0.12),
-        0 0.75rem 1.625rem rgba(44, 37, 135, 0.14);
+        0 0.75rem 1.625rem rgba(100, 90, 120, 0.14);
       transform: translateY(-50%);
     }
 
@@ -1748,8 +1748,8 @@
       height: 0.25rem;
       background: linear-gradient(
         90deg,
-        #6b4df7 0 var(--completed-workouts-progress, 0%),
-        #dfe3ee var(--completed-workouts-progress, 0%) 100%
+        #8f82aa 0 var(--completed-workouts-progress, 0%),
+        #e7e2ea var(--completed-workouts-progress, 0%) 100%
       );
       border-radius: var(--radius-pill);
     }
@@ -1770,10 +1770,10 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.25rem;
       background: rgba(248, 251, 255, 0.94);
-      border: 1px solid #dce2ed;
+      border: 1px solid #e4dee8;
       border-radius: 1.25rem;
       box-shadow:
-        0 1.125rem 2.75rem rgba(55, 64, 112, 0.16),
+        0 1.125rem 2.75rem rgba(72, 63, 87, 0.16),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
       transform: none;
       pointer-events: auto;
@@ -1788,7 +1788,7 @@
       padding: 0.3125rem 0.125rem 0.25rem;
       place-items: center;
       gap: 0.125rem;
-      color: #737b91;
+      color: #7b7682;
       line-height: 0.833rem;
       background: transparent;
       border: 1px solid transparent;
@@ -1798,9 +1798,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #5d43e8;
-      background: #f0edff;
-      border-color: #ded7ff;
+      color: #8f82aa;
+      background: #f1edf5;
+      border-color: #e4ddea;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
@@ -1908,8 +1908,8 @@
   overflow: hidden auto;
   border: 0;
   border-radius: 0;
-  background: #f3f4f3;
-  color: #202326;
+  background: #f7f5f8;
+  color: #28262e;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   scrollbar-width: none;
 }
@@ -1927,7 +1927,7 @@
 :global(:root[data-app-theme="warm-light"]) .pageTitle.pageTitle {
   max-width: calc(100% - 104px);
   margin: 0;
-  color: #202326;
+  color: #28262e;
   font-size: 28px;
   font-weight: 750;
   letter-spacing: -0.75px;
@@ -1945,7 +1945,7 @@
 :global(:root[data-app-theme="warm-light"]) .hero.hero > p {
   max-width: 260px;
   margin: 0;
-  color: #74797f;
+  color: #7b7682;
   font-size: 12px;
   font-weight: 500;
   line-height: 17px;
@@ -1963,7 +1963,7 @@
 :global(:root[data-app-theme="warm-light"]) .heroSubtitle.heroSubtitle {
   max-width: 100%;
   margin: 0;
-  color: #74797f;
+  color: #7b7682;
   font-size: 12px;
   font-weight: 500;
   line-height: 17px;
@@ -1975,7 +1975,7 @@
   height: 44px;
   min-height: 44px;
   padding: 0;
-  color: #202326;
+  color: #28262e;
   background: #e9ebea;
   border: 0;
   border-radius: 50%;
@@ -1988,7 +1988,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerButton.headerButton:active {
-  background: #edf1f3;
+  background: #f1edf5;
   transform: scale(0.97);
 }
 
@@ -2009,9 +2009,9 @@
   padding: 10px;
   grid-template-columns: 58px minmax(0, 1fr) 28px;
   gap: 12px;
-  color: #202326;
+  color: #28262e;
   background: #ffffff;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 20px;
   box-shadow: none;
 }
@@ -2025,11 +2025,11 @@
   width: 58px;
   height: 58px;
   border-radius: 16px;
-  background: #edf1f3;
+  background: #f1edf5;
 }
 
 :global(:root[data-app-theme="warm-light"]) .listDay.listDay {
-  color: #74797f;
+  color: #7b7682;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0;
@@ -2037,7 +2037,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .listName.listName {
-  color: #202326;
+  color: #28262e;
   font-size: 15px;
   font-weight: 700;
 }
@@ -2076,10 +2076,10 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 24px;
   background: #ffffff;
-  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }
 
 :global(:root[data-app-theme="warm-light"]) .cardBody.cardBody::before,
@@ -2128,7 +2128,7 @@
   justify-content: center;
   border: 0;
   border-radius: 13px;
-  color: #627588;
+  color: #978dae;
   background: rgba(237, 241, 243, 0.94);
   font-size: 10px;
   font-weight: 700;
@@ -2151,7 +2151,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .syncBadge.syncBadge {
   color: #ffffff;
-  background: #8296a5;
+  background: #aaa0bd;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage {
@@ -2160,7 +2160,7 @@
   height: calc(100% - 160px);
   border-radius: 23px 23px 0 0;
   opacity: 1;
-  background: #edf1f3;
+  background: #f1edf5;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage::after {
@@ -2174,12 +2174,12 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback {
-  color: #202326;
-  background: #edf1f3;
+  color: #28262e;
+  background: #f1edf5;
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback small {
-  color: #74797f;
+  color: #7b7682;
 }
 
 :global(:root[data-app-theme="warm-light"]) .cardInfo.cardInfo {
@@ -2193,14 +2193,14 @@
   height: auto;
   display: grid;
   gap: 7px;
-  color: #202326;
+  color: #28262e;
   overflow: visible;
   transform: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutTitle.workoutTitle {
   max-width: 100%;
-  color: #202326;
+  color: #28262e;
   font-size: 22px;
   font-weight: 750;
   letter-spacing: -0.45px;
@@ -2231,8 +2231,8 @@
   justify-content: center;
   gap: 4px;
   overflow: hidden;
-  color: #74797f;
-  background: #edf1f3;
+  color: #7b7682;
+  background: #f1edf5;
   border: 0;
   border-radius: 12px;
   font-size: 9.5px;
@@ -2247,7 +2247,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #627588;
+  color: #978dae;
   background: transparent;
   font-size: 12px;
 }
@@ -2265,7 +2265,7 @@
   display: grid;
   place-items: center;
   color: #ffffff;
-  background: #627588;
+  background: #978dae;
   border: 0;
   border-radius: 17px;
   box-shadow: none;
@@ -2287,9 +2287,9 @@
   padding: 28px 22px;
   align-content: center;
   gap: 10px;
-  color: #202326;
+  color: #28262e;
   background: #ffffff;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 24px;
   box-shadow: none;
 }
@@ -2297,18 +2297,18 @@
 :global(:root[data-app-theme="warm-light"]) .emptyIcon.emptyIcon {
   width: 54px;
   height: 54px;
-  color: #627588;
-  background: #edf1f3;
+  color: #978dae;
+  background: #f1edf5;
   font-size: 22px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyState.emptyState h2 {
-  color: #202326;
+  color: #28262e;
   font-size: 19px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyState.emptyState p {
-  color: #74797f;
+  color: #7b7682;
   font-size: 13px;
   line-height: 18px;
 }
@@ -2317,7 +2317,7 @@
   min-height: 48px;
   margin-top: 6px;
   color: #ffffff;
-  background: #627588;
+  background: #978dae;
   border-radius: 17px;
 }
 
@@ -2350,7 +2350,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .swipeHint.swipeHint,
 :global(:root[data-app-theme="warm-light"]) .swipeAffordance.swipeAffordance {
-  color: #74797f;
+  color: #7b7682;
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0;
@@ -2366,7 +2366,7 @@
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 14px;
   text-transform: none;
 }
@@ -2382,9 +2382,9 @@
   margin: 0;
   padding: 9px 12px 13px;
   align-items: flex-start;
-  color: #74797f;
+  color: #7b7682;
   background: #ffffff;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 16px;
   font-size: 10px;
   font-weight: 600;
@@ -2399,7 +2399,7 @@
   border-radius: 2px;
   background: linear-gradient(
     90deg,
-    #627588 var(--completed-workouts-progress, 0%),
+    #978dae var(--completed-workouts-progress, 0%),
     #dce3e7 var(--completed-workouts-progress, 0%)
   );
 }

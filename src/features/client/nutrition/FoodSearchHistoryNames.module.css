@@ -92,16 +92,16 @@
 :global(:root[data-app-theme="warm-light"]) .root {
   margin-bottom: 12px;
   padding: 14px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 20px;
   background: #fff;
-  color: #202326;
+  color: #28262e;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .title {
   margin-bottom: 9px;
-  color: #202326;
+  color: #28262e;
   font-size: 15px;
   font-weight: 650;
   text-transform: none;
@@ -117,17 +117,17 @@
   border: 0;
   border-radius: 12px;
   background: transparent;
-  color: #202326;
+  color: #28262e;
 }
 
 :global(:root[data-app-theme="warm-light"]) .button + .button {
-  border-top: 1px solid #e1e4e5;
+  border-top: 1px solid #e7e2ea;
   border-radius: 0;
 }
 
 :global(:root[data-app-theme="warm-light"]) .button > span {
-  color: #202326;
-  -webkit-text-fill-color: #202326;
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
   font-size: 14px;
   font-weight: 500;
 }

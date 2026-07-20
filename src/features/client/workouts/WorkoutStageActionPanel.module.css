@@ -30,7 +30,7 @@
   z-index: 9500;
   overflow: hidden;
   border: 0;
-  border-top: 1px solid #e1e4e5;
+  border-top: 1px solid #e7e2ea;
   border-radius: 0;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: none;
@@ -56,8 +56,8 @@
   font-size: 14px;
   font-weight: 700;
 }
-:global(:root[data-app-theme="warm-light"]) .exercisePrevButton.exercisePrevButton { border-radius: 24px; background: #f2f2f7; color: #202326; -webkit-text-fill-color: #202326; }
-:global(:root[data-app-theme="warm-light"]) .exerciseNextButton.exerciseNextButton { border-radius: 17px; background: #627588; color: #fff; -webkit-text-fill-color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .exercisePrevButton.exercisePrevButton { border-radius: 24px; background: #f2f2f7; color: #28262e; -webkit-text-fill-color: #28262e; }
+:global(:root[data-app-theme="warm-light"]) .exerciseNextButton.exerciseNextButton { border-radius: 17px; background: #978dae; color: #fff; -webkit-text-fill-color: #fff; }
 
 .warmupPanel {
   height: 76px;
@@ -205,10 +205,10 @@
     max-height: 76px;
     margin: 0;
     padding: 7px;
-    border: 1px solid #dfe4ee;
+    border: 1px solid #e7e2ea;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18);
+    box-shadow: 0 18px 48px rgba(72, 63, 87, 0.18);
     backdrop-filter: blur(18px);
   }
 
@@ -248,26 +248,26 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .warmupPreviousButton {
-    border-color: #dbe0eb;
+    border-color: #e4dee8;
     background: #ffffff;
-    box-shadow: 0 12px 24px rgba(34, 43, 79, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 24px rgba(72, 63, 87, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     color: #2d3342;
     -webkit-text-fill-color: #2d3342;
   }
 
   :global(:root[data-app-theme="warm-light"]) .exercisePrevButton {
-    border-color: #dfe4ee;
+    border-color: #e7e2ea;
     background: #f7f9fe;
     box-shadow: none;
-    color: #596176;
-    -webkit-text-fill-color: #596176;
+    color: #736e79;
+    -webkit-text-fill-color: #736e79;
   }
 
   :global(:root[data-app-theme="warm-light"]) .warmupReadyButton,
   :global(:root[data-app-theme="warm-light"]) .exerciseNextButton {
     border-color: transparent;
-    background: linear-gradient(135deg, #6552e6 0%, #2d6ff2 100%);
-    box-shadow: 0 12px 26px rgba(77, 69, 202, 0.23);
+    background: linear-gradient(135deg, #9b8fb7 0%, #877ba3 100%);
+    box-shadow: 0 12px 26px rgba(127, 117, 152, 0.23);
     color: #ffffff;
     -webkit-text-fill-color: #ffffff;
   }
@@ -289,7 +289,7 @@
   z-index: 9500;
   overflow: hidden;
   border: 0;
-  border-top: 1px solid #e1e4e5;
+  border-top: 1px solid #e7e2ea;
   border-radius: 0;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: none;
@@ -320,8 +320,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .warmupPreviousButton.warmupPreviousButton {
-  color: #202326;
-  -webkit-text-fill-color: #202326;
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
   background: #f2f2f7;
   border-radius: 24px;
 }
@@ -329,7 +329,7 @@
 :global(:root[data-app-theme="warm-light"]) .warmupReadyButton.warmupReadyButton {
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  background: #627588;
+  background: #978dae;
   border-radius: 17px;
 }
 

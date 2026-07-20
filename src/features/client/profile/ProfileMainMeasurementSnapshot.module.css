@@ -5,10 +5,10 @@
   padding: 16px 15px 8px;
   position: relative;
   overflow: hidden;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 24px;
   background: #fff;
-  color: #202326;
+  color: #28262e;
 }
 
 .header { position: relative; z-index: 2; }
@@ -26,7 +26,7 @@
 
 .weight strong { font-size: 28px; font-weight: 700; line-height: 32px; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
 .weight em { display: none; }
-.weight small { color: #74797f; font-size: 10px; font-weight: 500; line-height: 18px; }
+.weight small { color: #7b7682; font-size: 10px; font-weight: 500; line-height: 18px; }
 
 .chart {
   width: 254px;
@@ -37,11 +37,11 @@
 }
 
 .trend { width: 100%; height: 100%; overflow: visible; }
-.trendLine { fill: none; stroke: #627588; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; }
-.trendPoint { fill: #fff; stroke: #627588; stroke-width: 3; }
+.trendLine { fill: none; stroke: #978dae; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; }
+.trendPoint { fill: #fff; stroke: #978dae; stroke-width: 3; }
 .currentGuide, .pointLabel { display: none; }
-.dateLabel { fill: #74797f; font-size: 8.5px; font-weight: 600; font-variant-numeric: tabular-nums; text-anchor: middle; }
-.currentBubble rect, .currentBubble path { fill: #627588; }
+.dateLabel { fill: #7b7682; font-size: 8.5px; font-weight: 600; font-variant-numeric: tabular-nums; text-anchor: middle; }
+.currentBubble rect, .currentBubble path { fill: #978dae; }
 .currentBubble text { fill: #fff; font-size: 9px; font-weight: 700; text-anchor: middle; }
 
 .single,
@@ -53,9 +53,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #74797f;
+  color: #7b7682;
   font-size: 11px;
   line-height: 16px;
   text-align: center;
 }
-.single strong { color: #202326; font-size: 13px; }
+.single strong { color: #28262e; font-size: 13px; }

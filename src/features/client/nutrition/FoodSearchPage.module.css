@@ -85,7 +85,7 @@
   background: var(--color-surface);
   color: var(--color-heading);
   font: inherit;
-  box-shadow: 0 10px 22px rgba(55, 64, 112, 0.06);
+  box-shadow: 0 10px 22px rgba(72, 63, 87, 0.06);
   cursor: pointer;
   -webkit-text-fill-color: currentColor;
 }
@@ -136,7 +136,7 @@
   background: linear-gradient(180deg, rgba(250, 248, 255, 0.99), rgba(246, 243, 255, 0.99));
   color: var(--color-heading);
   font: inherit;
-  box-shadow: 0 14px 28px rgba(76, 66, 134, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 28px rgba(100, 90, 120, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.96);
   transform: translateX(-50%);
   cursor: pointer;
   -webkit-text-fill-color: currentColor;
@@ -277,7 +277,7 @@
     content: "";
     position: absolute;
     inset: -1px;
-    border: 1px solid rgba(111, 83, 255, 0.18);
+    border: 1px solid rgba(151, 141, 174, 0.18);
     border-radius: 10px;
     pointer-events: none;
   }
@@ -314,7 +314,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .landing {
   gap: 14px;
-  color: #202326;
+  color: #28262e;
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionHeader {
@@ -323,14 +323,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionTitle {
-  color: #202326;
+  color: #28262e;
   font-size: 16px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionIcon,
 :global(:root[data-app-theme="warm-light"]) .clearButton {
-  color: #627588;
+  color: #978dae;
 }
 
 :global(:root[data-app-theme="warm-light"]) .clearButton {
@@ -351,10 +351,10 @@
   max-height: 88px;
   padding: 10px 6px;
   gap: 8px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 18px;
   background: #fff;
-  color: #202326;
+  color: #28262e;
   box-shadow: none;
 }
 
@@ -363,7 +363,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .recentName {
-  color: #202326;
+  color: #28262e;
   font-size: 11px;
   font-weight: 600;
 }
@@ -377,17 +377,17 @@
   padding: 10px 12px;
   grid-template-columns: 44px minmax(0, 1fr) 18px;
   gap: 11px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 20px;
   outline: 0;
   background: #fff;
-  color: #202326;
-  box-shadow: 0 8px 28px rgba(57, 67, 75, 0.1);
+  color: #28262e;
+  box-shadow: 0 8px 28px rgba(72, 63, 87, 0.1);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoAction::before {
   bottom: calc(-120px - env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(180deg, rgba(243, 244, 243, 0), #f3f4f3 22px, #f3f4f3 100%);
+  background: linear-gradient(180deg, rgba(243, 244, 243, 0), #f7f5f8 22px, #f7f5f8 100%);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoAction::after {
@@ -400,18 +400,18 @@
   height: 44px;
   min-height: 44px;
   border-radius: 14px;
-  background: #edf1f3;
-  color: #627588;
+  background: #f1edf5;
+  color: #978dae;
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoTitle {
-  color: #202326;
+  color: #28262e;
   font-size: 14px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoDescription {
-  color: #74797f;
+  color: #7b7682;
   font-weight: 450;
 }
 

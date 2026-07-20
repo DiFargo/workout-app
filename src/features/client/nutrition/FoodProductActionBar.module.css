@@ -138,8 +138,8 @@
   border: 0;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.96);
-  color: #74797f;
-  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
+  color: #7b7682;
+  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
   backdrop-filter: blur(20px) saturate(1.15);
   -webkit-backdrop-filter: blur(20px) saturate(1.15);
 }
@@ -151,11 +151,11 @@
   gap: 2px;
   border: 0;
   border-radius: 18px;
-  color: #74797f;
+  color: #7b7682;
 }
 
 :global(:root[data-app-theme="warm-light"]) .button > span { font-size: 21px; font-weight: 400; }
 :global(:root[data-app-theme="warm-light"]) .button > strong { font-size: 11px; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .add,
 :global(:root[data-app-theme="warm-light"]) .add:hover,
-:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: #627588; color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: #978dae; color: #fff; }

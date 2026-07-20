@@ -338,7 +338,7 @@
   height: 42px;
   content: "";
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f4f7fd 42%, #f4f7fd 100%);
+  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f7f5f8 42%, #f7f5f8 100%);
 }
 
 :global(:root[data-app-theme="warm-light"]) .nutrition > button {
@@ -575,7 +575,7 @@
   height: 42px;
   content: "";
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f4f7fd 42%, #f4f7fd 100%);
+  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f7f5f8 42%, #f7f5f8 100%);
 }
 
 :global(:root[data-app-theme="warm-light"]) .training > button {
@@ -613,8 +613,8 @@
   border: 1px solid rgba(255, 255, 255, 0.96);
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.96);
-  color: #74797f;
-  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
+  color: #7b7682;
+  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
   backdrop-filter: blur(20px) saturate(1.15);
   -webkit-backdrop-filter: blur(20px) saturate(1.15);
 }
@@ -640,7 +640,7 @@
   border: 0;
   border-radius: 20px;
   background: transparent;
-  color: #74797f;
+  color: #7b7682;
   box-shadow: none;
   line-height: 1;
 }
@@ -685,8 +685,8 @@
 :global(:root[data-app-theme="warm-light"]) .main.main > .active,
 :global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > .active {
   border: 0;
-  background: #edf1f3;
-  color: #627588;
+  background: #f1edf5;
+  color: #978dae;
   box-shadow: none;
 }
 
@@ -715,11 +715,11 @@
   align-items: center;
   gap: 0;
   overflow: hidden;
-  color: #74797f;
+  color: #7b7682;
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(255, 255, 255, 0.96);
   border-radius: 28px;
-  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
+  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
   backdrop-filter: blur(20px) saturate(1.15);
   -webkit-backdrop-filter: blur(20px) saturate(1.15);
 }
@@ -742,7 +742,7 @@
   place-items: center;
   align-content: center;
   gap: 2px;
-  color: #74797f;
+  color: #7b7682;
   background: transparent;
   border: 0;
   border-radius: 20px;
@@ -776,8 +776,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .training.training > .active {
-  color: #627588;
-  background: #edf1f3;
+  color: #978dae;
+  background: #f1edf5;
   border: 0;
   box-shadow: none;
 }

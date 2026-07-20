@@ -12,17 +12,17 @@
   height: 270px;
   padding: 13px 15px 14px;
   position: relative;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 24px;
   background: #fff;
-  color: #202326;
-  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  color: #28262e;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }
 
 .header { height: 31px; display: flex; align-items: flex-start; justify-content: space-between; }
 .header > div { display: flex; flex-direction: column; }
 .header h2 { margin: 0; font-size: 17px; font-weight: 700; line-height: 20px; }
-.header small { color: #74797f; font-size: 9px; font-weight: 500; line-height: 11px; }
+.header small { color: #7b7682; font-size: 9px; font-weight: 500; line-height: 11px; }
 .streak {
   height: 26px;
   padding: 0 10px;
@@ -41,8 +41,8 @@
 .stage { width: 160px; height: 181px; margin: 0 auto; position: relative; left: 1px; }
 .scene { width: 160px; height: 160px; display: block; transform: translateY(2px) rotate(-90deg); }
 .track, .progress { fill: none; stroke-width: 14; }
-.track { stroke: #e8e5f2; }
-.progress { stroke: #627588; stroke-linecap: round; }
+.track { stroke: #eeeaf1; }
+.progress { stroke: #978dae; stroke-linecap: round; }
 [data-nutrition-orbit-halo="outer"] { transform-box: fill-box; transform-origin: center; animation: haloBreath 3.2s ease-in-out infinite; }
 .calories {
   width: 120px;
@@ -53,8 +53,8 @@
   flex-direction: column;
   align-items: center;
 }
-.calories strong { color: #202326; font-size: 32px; font-weight: 700; line-height: 38px; }
-.calories span { color: #74797f; font-size: 11px; font-weight: 600; line-height: 16px; }
+.calories strong { color: #28262e; font-size: 32px; font-weight: 700; line-height: 38px; }
+.calories span { color: #7b7682; font-size: 11px; font-weight: 600; line-height: 16px; }
 .hitButton {
   height: 38px;
   padding: 0 14px;
@@ -66,7 +66,7 @@
   top: 126px;
   border: 0;
   border-radius: 19px;
-  background: #627588;
+  background: #978dae;
   color: #fff;
   font: inherit;
   font-size: 12px;
@@ -86,7 +86,7 @@
 }
 .macros > div { display: flex; flex-direction: column; align-items: flex-start; }
 .macros > div > span { font-size: 10px; font-weight: 700; line-height: 14px; }
-.macros strong { color: #202326; font-size: 12px; font-weight: 700; line-height: 18px; white-space: nowrap; }
+.macros strong { color: #28262e; font-size: 12px; font-weight: 700; line-height: 18px; white-space: nowrap; }
 .macros strong span { color: inherit; font: inherit; }
 .protein > span { color: #b36e72; }
 .fat > span { color: #ae8768; }

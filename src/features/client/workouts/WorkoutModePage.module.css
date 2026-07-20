@@ -29,8 +29,8 @@
   overflow: hidden auto;
   border: 0;
   border-radius: 0;
-  background: #f3f4f3;
-  color: #202326;
+  background: #f7f5f8;
+  color: #28262e;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -48,7 +48,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .hero.hero span {
   margin: 0 0 2px;
-  color: #74797f;
+  color: #7b7682;
   font-size: 10px;
   font-weight: 650;
   letter-spacing: 0.2px;
@@ -56,7 +56,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .hero.hero h1 {
   margin: 0;
-  color: #202326;
+  color: #28262e;
   font-size: 28px;
   font-weight: 750;
   letter-spacing: -0.75px;
@@ -78,11 +78,11 @@
   height: 44px;
   min-height: 44px;
   max-height: 44px;
-  color: #202326;
+  color: #28262e;
   background: #ffffff;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 16px;
-  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }
 
 :global(:root[data-app-theme="warm-light"]) .topButton.topButton svg {
@@ -93,7 +93,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .lead.lead {
   margin: 0 4px 16px;
-  color: #74797f;
+  color: #7b7682;
   font-size: 13px;
   font-weight: 500;
   line-height: 18px;
@@ -114,30 +114,30 @@
   grid-template-columns: 48px minmax(0, 1fr) 20px;
   align-items: center;
   gap: 12px;
-  color: #202326;
+  color: #28262e;
   background: #ffffff;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 22px;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .card.card:active {
-  background: #f7f8f8;
+  background: #fbfafc;
   transform: scale(0.99);
 }
 
 :global(:root[data-app-theme="warm-light"]) .icon.icon {
   width: 48px;
   height: 48px;
-  color: #627588;
-  background: #edf1f3;
+  color: #978dae;
+  background: #f1edf5;
   border-radius: 16px;
   font-size: 17px;
   font-weight: 750;
 }
 
 :global(:root[data-app-theme="warm-light"]) .card.card strong {
-  color: #202326;
+  color: #28262e;
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
@@ -145,7 +145,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .card.card small {
   margin-top: 4px;
-  color: #74797f;
+  color: #7b7682;
   font-size: 11px;
   font-weight: 500;
   line-height: 15px;
@@ -160,9 +160,9 @@
   min-height: 54px;
   margin-top: 12px;
   padding: 0 14px;
-  color: #74797f;
+  color: #7b7682;
   background: #ffffff;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 18px;
   box-shadow: none;
   font-size: 12px;
@@ -172,11 +172,11 @@
 :global(:root[data-app-theme="warm-light"]) .remember.remember input {
   width: 20px;
   height: 20px;
-  accent-color: #627588;
+  accent-color: #978dae;
 }
 
 :global(:root[data-app-theme="warm-light"]) .remember.remember span {
-  color: #74797f;
+  color: #7b7682;
 }
 
 .hero {
@@ -452,7 +452,7 @@
   min-width: 22px;
   height: 22px;
   margin: 0;
-  accent-color: #6b54f5;
+  accent-color: #978dae;
 }
 
 :global(:root[data-app-theme="warm-light"]) .remember span {

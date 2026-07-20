@@ -8,8 +8,8 @@
   overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
-  color: #202326;
-  background: #f3f4f3;
+  color: #28262e;
+  background: #f7f5f8;
   font-family: var(--font-family-compact-ui);
   scrollbar-width: none;
 }
@@ -29,7 +29,7 @@
   width: min(402px, 100vw);
   min-height: 100dvh;
   overflow: hidden;
-  background: #f3f4f3;
+  background: #f7f5f8;
 }
 
 .content {
@@ -82,6 +82,6 @@
     min-height: min(874px, 100dvh);
     max-height: min(874px, 100dvh);
     border-radius: 54px;
-    box-shadow: 0 24px 80px rgba(32, 35, 38, 0.14);
+    box-shadow: 0 24px 80px rgba(40, 38, 46, 0.14);
   }
 }

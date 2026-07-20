@@ -277,7 +277,7 @@
   gap: 9px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #6552e6 rgba(101, 82, 230, 0.12);
+  scrollbar-color: #9b8fb7 rgba(155, 143, 183, 0.12);
 }
 
 .reviewGrid > div {
@@ -398,7 +398,7 @@
 .reviewCard,
 .reviewGrid {
   scrollbar-width: thin;
-  scrollbar-color: #6552e6 rgba(101, 82, 230, 0.12);
+  scrollbar-color: #9b8fb7 rgba(155, 143, 183, 0.12);
 }
 
 .reviewCard::-webkit-scrollbar,
@@ -409,13 +409,13 @@
 .reviewCard::-webkit-scrollbar-track,
 .reviewGrid::-webkit-scrollbar-track {
   border-radius: 999px;
-  background: rgba(101, 82, 230, 0.12);
+  background: rgba(155, 143, 183, 0.12);
 }
 
 .reviewCard::-webkit-scrollbar-thumb,
 .reviewGrid::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: linear-gradient(180deg, #7b68ee, #5542d8);
+  background: linear-gradient(180deg, #aaa0bd, #7f7598);
 }
 
 @media (max-width: 390px) {
@@ -545,7 +545,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFrame::after {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 55%, rgba(32, 35, 38, 0.08));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 55%, rgba(40, 38, 46, 0.08));
 }
 
 :global(:root[data-app-theme="warm-light"]) .image {
@@ -577,17 +577,17 @@
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid {
-  scrollbar-color: #627588 rgba(98, 117, 136, 0.12);
+  scrollbar-color: #978dae rgba(151, 141, 174, 0.12);
 }
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-track,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid::-webkit-scrollbar-track {
-  background: rgba(98, 117, 136, 0.12);
+  background: rgba(151, 141, 174, 0.12);
 }
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-thumb,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid::-webkit-scrollbar-thumb {
-  background: #627588;
+  background: #978dae;
 }
 
 :global(:root[data-app-theme="warm-light"]) .navigation {

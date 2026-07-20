@@ -8,11 +8,11 @@
   align-items: center;
   gap: 16px;
   position: relative;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 22px;
   background: #fff;
-  color: #202326;
-  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  color: #28262e;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }
 
 .avatarWrap,
@@ -26,7 +26,7 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: #627588;
+  background: #978dae;
   color: #fff;
 }
 
@@ -44,7 +44,7 @@
 
 .greeting {
   margin: 0 0 1px;
-  color: #74797f;
+  color: #7b7682;
   font-size: 12px;
   font-weight: 600;
   line-height: 15px;
@@ -55,7 +55,7 @@
   max-width: 100%;
   margin: 0;
   overflow: hidden;
-  color: #202326;
+  color: #28262e;
   font-size: 20px;
   font-weight: 700;
   line-height: 24px;
@@ -71,8 +71,8 @@
   align-items: center;
   gap: 5px;
   border-radius: 12px;
-  background: #edf1f3;
-  color: #627588;
+  background: #f1edf5;
+  color: #978dae;
   font-size: 10px;
   font-weight: 700;
   white-space: nowrap;
@@ -91,7 +91,7 @@
   overflow: hidden;
   border-radius: 15px;
   background: #f3f3f7;
-  color: #202326;
+  color: #28262e;
   font-size: 10px;
   font-weight: 700;
   text-overflow: ellipsis;

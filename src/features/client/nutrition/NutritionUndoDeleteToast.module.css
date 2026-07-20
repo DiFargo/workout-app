@@ -15,7 +15,7 @@
   border: 1px solid var(--color-dialog-border);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.98);
-  color: #171923;
+  color: #28262e;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
 }
 
@@ -42,8 +42,8 @@
   padding: 0 12px;
   border: 0;
   border-radius: 10px;
-  background: rgba(139, 120, 240, 0.16);
-  color: #b8aafb;
+  background: rgba(170, 160, 192, 0.16);
+  color: #c7bdd1;
   font: inherit;
   font-size: var(--font-size-md);
   font-weight: 900;
@@ -67,22 +67,22 @@
   width: min(370px, calc(100vw - 32px));
   min-height: 54px;
   padding: 7px 8px 7px 14px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.98);
-  color: #202326;
-  box-shadow: 0 10px 32px rgba(32, 35, 38, 0.14);
+  color: #28262e;
+  box-shadow: 0 10px 32px rgba(40, 38, 46, 0.14);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
 
-:global(:root[data-app-theme="warm-light"]) .message { color: #74797f; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .message { color: #7b7682; font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .restoreButton {
   min-height: 40px;
   padding: 0 14px;
   border-radius: 13px;
-  background: #edf1f3;
-  color: #627588;
+  background: #f1edf5;
+  color: #978dae;
   font-size: 14px;
   font-weight: 650;
 }

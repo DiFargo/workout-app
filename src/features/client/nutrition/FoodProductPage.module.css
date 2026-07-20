@@ -61,8 +61,8 @@
   padding: 0 0 calc(104px + env(safe-area-inset-bottom, 0px));
   display: block;
   overflow: visible;
-  background: #f3f4f3;
-  color: #202326;
+  background: #f7f5f8;
+  color: #28262e;
   font-family: var(--font-family-sans);
   scrollbar-color: transparent transparent;
   -webkit-text-fill-color: currentColor;

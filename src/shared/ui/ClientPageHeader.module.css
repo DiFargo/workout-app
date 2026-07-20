@@ -24,8 +24,8 @@
   margin-right: 0 !important;
   margin-left: 0 !important;
   padding: max(8px, env(safe-area-inset-top, 0px)) 0 0 !important;
-  background: #f3f4f3 !important;
-  color: #202326;
+  background: #f7f5f8 !important;
+  color: #28262e;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -75,7 +75,7 @@
 .title {
   margin: 0;
   overflow: hidden;
-  color: #202326;
+  color: #28262e;
   font-size: 16px !important;
   font-weight: 650 !important;
   letter-spacing: -0.25px !important;
@@ -117,13 +117,13 @@
   place-items: center !important;
   border: 0 !important;
   border-radius: 50% !important;
-  background: rgba(116, 121, 127, 0.1) !important;
-  color: #202326 !important;
+  background: rgba(123, 118, 130, 0.1) !important;
+  color: #28262e !important;
   box-shadow: none !important;
 }
 
 .actions button:active {
-  background: rgba(116, 121, 127, 0.18) !important;
+  background: rgba(123, 118, 130, 0.18) !important;
   transform: scale(0.94) !important;
 }
 
@@ -144,8 +144,8 @@
   align-items: center;
   border: 0;
   border-radius: 50%;
-  background: rgba(116, 121, 127, 0.1);
-  color: #627588;
+  background: rgba(123, 118, 130, 0.1);
+  color: #978dae;
   font: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -168,13 +168,13 @@
 }
 
 .back:active {
-  background: rgba(116, 121, 127, 0.18);
+  background: rgba(123, 118, 130, 0.18);
   opacity: 0.72;
   transform: translateX(-1px) scale(0.94);
 }
 
 .back:focus-visible {
-  outline: 3px solid rgba(98, 117, 136, 0.22);
+  outline: 3px solid rgba(151, 141, 174, 0.22);
   outline-offset: 1px;
 }
 

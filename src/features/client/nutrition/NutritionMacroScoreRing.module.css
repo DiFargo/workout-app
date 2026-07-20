@@ -62,6 +62,6 @@
   :global(:root[data-app-theme="warm-light"]) .protein { stroke: #708d79; }
   :global(:root[data-app-theme="warm-light"]) .fat { stroke: #ae8768; }
   :global(:root[data-app-theme="warm-light"]) .carbs { stroke: #6f879c; }
-  :global(:root[data-app-theme="warm-light"]) .center { fill: #edf1f3; stroke: #e1e4e5; }
-  :global(:root[data-app-theme="warm-light"]) .value { fill: #202326; font-weight: 700; }
+  :global(:root[data-app-theme="warm-light"]) .center { fill: #f1edf5; stroke: #e7e2ea; }
+  :global(:root[data-app-theme="warm-light"]) .value { fill: #28262e; font-weight: 700; }
 }

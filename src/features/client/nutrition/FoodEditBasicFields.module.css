@@ -58,7 +58,7 @@
   outline: 0;
   background: var(--color-food-dialog-surface);
   color: var(--color-food-dialog-input-text);
-  box-shadow: 0 9px 22px rgba(51, 60, 108, 0.055);
+  box-shadow: 0 9px 22px rgba(72, 63, 87, 0.055);
   font-family: inherit;
   font-size: 15px;
   font-weight: 850;
@@ -160,7 +160,7 @@
   border-radius: 16px;
   background: var(--color-food-dialog-surface);
   color: var(--color-food-edit-preset-text);
-  box-shadow: 0 10px 24px rgba(55, 64, 112, 0.06);
+  box-shadow: 0 10px 24px rgba(72, 63, 87, 0.06);
   font-family: inherit;
   font-size: 16px;
   font-weight: 400;
@@ -215,7 +215,7 @@
   border-radius: 20px;
   background: var(--color-food-dialog-surface);
   color: var(--color-food-dialog-text);
-  box-shadow: 0 12px 30px rgba(55, 64, 112, 0.08);
+  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.08);
   -webkit-text-fill-color: var(--color-food-dialog-text-fill);
 }
 
@@ -371,7 +371,7 @@
   justify-content: normal;
   gap: 10px;
   border-radius: 18px;
-  box-shadow: 0 9px 22px rgba(51, 60, 108, 0.055);
+  box-shadow: 0 9px 22px rgba(72, 63, 87, 0.055);
   -webkit-text-fill-color: var(--color-food-dialog-text-fill);
 }
 
@@ -383,7 +383,7 @@
   display: inline-block;
   border-color: var(--color-food-dialog-border);
   border-radius: 18px;
-  box-shadow: 0 9px 22px rgba(51, 60, 108, 0.055);
+  box-shadow: 0 9px 22px rgba(72, 63, 87, 0.055);
   font-size: 15px;
   font-weight: 850;
   line-height: 1.25;
@@ -456,10 +456,10 @@
   }
 }
 
-:global(:root[data-app-theme="warm-light"]) .field { color: #202326; -webkit-text-fill-color: #202326; }
+:global(:root[data-app-theme="warm-light"]) .field { color: #28262e; -webkit-text-fill-color: #28262e; }
 :global(:root[data-app-theme="warm-light"]) .labelText {
-  color: #74797f;
-  -webkit-text-fill-color: #74797f;
+  color: #7b7682;
+  -webkit-text-fill-color: #7b7682;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0;
@@ -471,11 +471,11 @@
   height: 50px;
   min-height: 50px;
   padding: 12px 14px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 16px;
   background: #fff;
-  color: #202326;
-  -webkit-text-fill-color: #202326;
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
   box-shadow: none;
   font-size: 15px;
   font-weight: 500;
@@ -486,53 +486,53 @@
 
 :global(:root[data-app-theme="warm-light"]) .iconBox {
   padding: 10px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 18px;
   background: #fff;
-  color: #202326;
-  -webkit-text-fill-color: #202326;
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .iconPreview {
   border: 0;
   border-radius: 14px;
-  background: #edf1f3;
-  color: #627588;
+  background: #f1edf5;
+  color: #978dae;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .presetRow { gap: 6px; }
 :global(:root[data-app-theme="warm-light"]) .presetButton {
   min-height: 44px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 13px;
   background: #fff;
-  color: #202326;
-  -webkit-text-fill-color: #202326;
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .presetActive {
   border-color: #cfd7dc;
-  background: #edf1f3;
-  color: #627588;
-  -webkit-text-fill-color: #627588;
+  background: #f1edf5;
+  color: #978dae;
+  -webkit-text-fill-color: #978dae;
 }
 
 :global(:root[data-app-theme="warm-light"]) .macroGrid { gap: 7px; }
-:global(:root[data-app-theme="warm-light"]) .macroField { padding: 10px; border: 1px solid #e1e4e5; border-radius: 16px; background: #fff; }
-:global(:root[data-app-theme="warm-light"]) .macroInput { border: 0; background: #edf1f3; }
-:global(:root[data-app-theme="warm-light"]) .portionRow { border: 1px solid #e1e4e5; border-radius: 16px; background: #fff; }
+:global(:root[data-app-theme="warm-light"]) .macroField { padding: 10px; border: 1px solid #e7e2ea; border-radius: 16px; background: #fff; }
+:global(:root[data-app-theme="warm-light"]) .macroInput { border: 0; background: #f1edf5; }
+:global(:root[data-app-theme="warm-light"]) .portionRow { border: 1px solid #e7e2ea; border-radius: 16px; background: #fff; }
 :global(:root[data-app-theme="warm-light"]) .portionRow .portionInput { border: 0; background: transparent; }
 :global(:root[data-app-theme="warm-light"]) .portionToggle {
   min-width: 56px;
   border: 0;
-  border-left: 1px solid #e1e4e5;
+  border-left: 1px solid #e7e2ea;
   border-radius: 0 16px 16px 0;
-  background: #edf1f3;
-  color: #627588;
-  -webkit-text-fill-color: #627588;
+  background: #f1edf5;
+  color: #978dae;
+  -webkit-text-fill-color: #978dae;
   font-weight: 600;
 }
 

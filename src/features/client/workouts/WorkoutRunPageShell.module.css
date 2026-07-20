@@ -38,8 +38,8 @@
   position: relative;
   overflow: hidden;
   border-radius: 0;
-  background: #f3f4f3;
-  color: #202326;
+  background: #f7f5f8;
+  color: #28262e;
 }
 
 @media (min-width: 403px) {
@@ -48,7 +48,7 @@
     min-height: min(874px, 100dvh);
     max-height: min(874px, 100dvh);
     border-radius: 54px;
-    box-shadow: 0 24px 80px rgba(32, 35, 38, 0.14);
+    box-shadow: 0 24px 80px rgba(40, 38, 46, 0.14);
   }
 }
 

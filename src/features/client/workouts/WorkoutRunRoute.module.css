@@ -67,11 +67,11 @@
   padding: 10px 12px;
   grid-template-columns: 32px minmax(0, 1fr);
   gap: 10px;
-  color: #202326;
+  color: #28262e;
   background: rgba(255, 255, 255, 0.98);
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(57, 67, 75, 0.14);
+  box-shadow: 0 10px 30px rgba(72, 63, 87, 0.14);
   font-size: 12px;
   font-weight: 650;
   backdrop-filter: blur(16px);

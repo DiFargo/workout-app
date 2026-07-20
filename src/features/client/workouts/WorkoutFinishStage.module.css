@@ -499,10 +499,10 @@
     margin: 0;
     padding: 7px;
     overflow: hidden;
-    border: 1px solid #dfe4ee;
+    border: 1px solid #e7e2ea;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18);
+    box-shadow: 0 18px 48px rgba(72, 63, 87, 0.18);
     backdrop-filter: blur(18px);
   }
 
@@ -539,17 +539,17 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .backButton {
-    border-color: #e1e4ef;
-    background: #f4f6fc;
-    box-shadow: 0 12px 24px rgba(34, 43, 79, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: #e7e2ea;
+    background: #f5f2f7;
+    box-shadow: 0 12px 24px rgba(72, 63, 87, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     backdrop-filter: none;
-    color: #596176;
+    color: #736e79;
   }
 
   :global(:root[data-app-theme="warm-light"]) .finishButton {
     border-color: transparent;
-    background: linear-gradient(135deg, #6552e6 0%, #2d6ff2 100%);
-    box-shadow: 0 12px 26px rgba(77, 69, 202, 0.23);
+    background: linear-gradient(135deg, #9b8fb7 0%, #877ba3 100%);
+    box-shadow: 0 12px 26px rgba(127, 117, 152, 0.23);
     color: #ffffff;
     -webkit-text-fill-color: #ffffff;
   }
@@ -631,11 +631,11 @@
   padding: 15px;
   gap: 11px;
   overflow: hidden auto;
-  color: #202326;
+  color: #28262e;
   background: #ffffff;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 24px;
-  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
   scrollbar-width: none;
 }
 
@@ -644,14 +644,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .top.top {
-  color: #74797f;
+  color: #7b7682;
   font-size: 9px;
   font-weight: 650;
   letter-spacing: 0.15px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .top.top span:first-child {
-  color: #627588;
+  color: #978dae;
 }
 
 :global(:root[data-app-theme="warm-light"]) .result.result {
@@ -662,14 +662,14 @@
   width: 46px;
   height: 46px;
   flex-basis: 46px;
-  color: #627588;
-  background: #edf1f3;
+  color: #978dae;
+  background: #f1edf5;
   border-radius: 15px;
   font-size: 23px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .result.result p {
-  color: #202326;
+  color: #28262e;
   font-size: 15px;
   font-weight: 700;
   line-height: 20px;
@@ -677,8 +677,8 @@
 
 :global(:root[data-app-theme="warm-light"]) .stats.stats {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  color: #202326;
-  background: #edf1f3;
+  color: #28262e;
+  background: #f1edf5;
   border: 0;
   border-radius: 18px;
 }
@@ -699,13 +699,13 @@
 
 :global(:root[data-app-theme="warm-light"]) .stats.stats span,
 :global(:root[data-app-theme="warm-light"]) .progress.progress > span {
-  color: #74797f;
+  color: #7b7682;
   font-size: 9px;
   font-weight: 600;
 }
 
 :global(:root[data-app-theme="warm-light"]) .stats.stats strong {
-  color: #202326;
+  color: #28262e;
   font-size: 15px;
   font-weight: 700;
 }
@@ -713,26 +713,26 @@
 :global(:root[data-app-theme="warm-light"]) .progress.progress {
   padding: 12px;
   gap: 4px;
-  color: #202326;
-  background: #f7f8f8;
+  color: #28262e;
+  background: #fbfafc;
   border-radius: 16px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .progress.progress strong {
-  color: #202326;
+  color: #28262e;
   font-size: 14px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .progress.progress p {
-  color: #74797f;
+  color: #7b7682;
   font-size: 10px;
   font-weight: 500;
 }
 
 :global(:root[data-app-theme="warm-light"]) .incomplete.incomplete {
   padding: 9px 11px;
-  color: #202326;
+  color: #28262e;
   background: #f7e9ea;
   border-radius: 15px;
 }
@@ -753,7 +753,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .comment.comment > span {
-  color: #74797f;
+  color: #7b7682;
   font-size: 10px;
   font-weight: 600;
 }
@@ -761,8 +761,8 @@
 :global(:root[data-app-theme="warm-light"]) .commentInput.commentInput {
   min-height: 64px;
   padding: 10px 12px;
-  color: #202326;
-  background: #edf1f3;
+  color: #28262e;
+  background: #f1edf5;
   border: 0;
   border-radius: 15px;
   box-shadow: none;
@@ -776,20 +776,20 @@
 
 :global(:root[data-app-theme="warm-light"]) .tip.tip {
   padding: 10px 11px;
-  color: #202326;
-  background: #edf1f3;
+  color: #28262e;
+  background: #f1edf5;
   border-radius: 15px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .tip.tip p {
-  color: #74797f;
+  color: #7b7682;
   font-size: 10px;
   font-weight: 500;
 }
 
 :global(:root[data-app-theme="warm-light"]) .syncStatus.syncStatus {
-  color: #627588;
-  background: #edf1f3;
+  color: #978dae;
+  background: #f1edf5;
   border-radius: 12px;
   font-size: 10px;
   font-weight: 650;
@@ -804,11 +804,11 @@
   width: min(330px, calc(100vw - 40px));
   padding: 22px 18px;
   gap: 7px;
-  color: #202326;
+  color: #28262e;
   background: rgba(255, 255, 255, 0.97);
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 24px;
-  box-shadow: 0 18px 52px rgba(32, 35, 38, 0.18);
+  box-shadow: 0 18px 52px rgba(40, 38, 46, 0.18);
 }
 
 :global(:root[data-app-theme="warm-light"]) .savedCheck.savedCheck {
@@ -822,13 +822,13 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .savedCard.savedCard strong {
-  color: #202326;
+  color: #28262e;
   font-size: 20px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .savedCard.savedCard > span {
-  color: #74797f;
+  color: #7b7682;
   font-size: 12px;
   font-weight: 500;
 }
@@ -848,10 +848,10 @@
   left: 50%;
   z-index: 9500;
   overflow: hidden;
-  color: #202326;
+  color: #28262e;
   background: rgba(255, 255, 255, 0.98);
   border: 0;
-  border-top: 1px solid #e1e4e5;
+  border-top: 1px solid #e7e2ea;
   border-radius: 0;
   box-shadow: none;
   backdrop-filter: blur(20px);
@@ -884,7 +884,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .backButton.backButton {
-  color: #202326;
+  color: #28262e;
   background: #f2f2f7;
   border-radius: 24px;
 }
@@ -892,6 +892,6 @@
 :global(:root[data-app-theme="warm-light"]) .finishButton.finishButton {
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  background: #627588;
+  background: #978dae;
   border-radius: 17px;
 }

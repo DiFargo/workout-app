@@ -73,7 +73,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
 
   const mainHeader = page.getByTestId("profile-main-header");
   await expect(mainHeader).toHaveCSS("position", "fixed");
-  await expect(mainHeader).toHaveCSS("background-color", "rgb(243, 244, 243)");
+  await expect(mainHeader).toHaveCSS("background-color", "rgb(247, 245, 248)");
   await expect(mainHeader).toHaveCSS("backdrop-filter", "none");
   expect(await mainHeader.evaluate((node) => getComputedStyle(node, "::after").content)).toBe("none");
   await expect(page.locator("html")).toHaveCSS("overscroll-behavior-y", "none");

@@ -1,27 +1,27 @@
 .overlay {
-  --calendar-backdrop: rgba(35, 40, 68, 0.18);
+  --calendar-backdrop: rgba(72, 63, 87, 0.18);
   --calendar-sheet-background: var(--color-surface);
   --calendar-sheet-border: rgba(72, 58, 29, 0.14);
-  --calendar-sheet-shadow: 0 24px 60px rgba(43, 50, 92, 0.18);
+  --calendar-sheet-shadow: 0 24px 60px rgba(72, 63, 87, 0.18);
   --calendar-overlay-text: var(--color-heading);
   --calendar-text: var(--color-heading);
   --calendar-close-surface: var(--color-surface);
-  --calendar-close-border: #e3e6f1;
-  --calendar-close-shadow: 0 5px 14px rgba(55, 64, 112, 0.07);
+  --calendar-close-border: #ebe7ed;
+  --calendar-close-shadow: 0 5px 14px rgba(72, 63, 87, 0.07);
   --calendar-header-label: var(--color-heading);
   --calendar-header-month: var(--color-heading);
   --calendar-header-action-text: var(--color-heading);
   --calendar-weekday: var(--color-heading);
   --calendar-day-surface: #f8f9fd;
-  --calendar-day-border: #e5e8f1;
+  --calendar-day-border: #ece8ef;
   --calendar-day-text: var(--color-heading);
   --calendar-day-muted-surface: #f8f9fd;
   --calendar-food-surface: #f8f9fd;
-  --calendar-food-border: #e5e8f1;
+  --calendar-food-border: #ece8ef;
   --calendar-calorie: var(--color-heading);
   --calendar-over-goal: var(--color-heading);
-  --calendar-selected-surface: #efedff;
-  --calendar-selected-border: #5a49df;
+  --calendar-selected-surface: #f1edf5;
+  --calendar-selected-border: #978dae;
   --calendar-selected-text: var(--color-heading);
   --calendar-selected-calorie: var(--color-heading);
   --calendar-footer-surface: rgba(255, 255, 255, 0.038);
@@ -47,7 +47,7 @@
   --calendar-sheet-background: linear-gradient(180deg, rgba(18, 21, 19, 0.98), rgba(9, 12, 9, 0.98));
   --calendar-sheet-border: rgba(255, 255, 255, 0.09);
   --calendar-sheet-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
-  --calendar-overlay-text: #151824;
+  --calendar-overlay-text: #28262e;
   --calendar-text: var(--color-text);
   --calendar-close-surface: rgba(255, 255, 255, 0.05);
   --calendar-close-border: rgba(255, 255, 255, 0.075);
@@ -411,36 +411,36 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .overlay {
-  --calendar-backdrop: rgba(32, 35, 38, 0.35);
+  --calendar-backdrop: rgba(40, 38, 46, 0.35);
   --calendar-sheet-background: #fff;
-  --calendar-sheet-border: #e1e4e5;
-  --calendar-sheet-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
-  --calendar-overlay-text: #202326;
-  --calendar-text: #202326;
-  --calendar-close-surface: #edf1f3;
+  --calendar-sheet-border: #e7e2ea;
+  --calendar-sheet-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
+  --calendar-overlay-text: #28262e;
+  --calendar-text: #28262e;
+  --calendar-close-surface: #f1edf5;
   --calendar-close-border: transparent;
   --calendar-close-shadow: none;
-  --calendar-header-label: #74797f;
-  --calendar-header-month: #202326;
-  --calendar-header-action-text: #627588;
-  --calendar-weekday: #74797f;
+  --calendar-header-label: #7b7682;
+  --calendar-header-month: #28262e;
+  --calendar-header-action-text: #978dae;
+  --calendar-weekday: #7b7682;
   --calendar-day-surface: transparent;
   --calendar-day-border: transparent;
-  --calendar-day-text: #202326;
+  --calendar-day-text: #28262e;
   --calendar-day-muted-surface: transparent;
-  --calendar-food-surface: #edf1f3;
+  --calendar-food-surface: #f1edf5;
   --calendar-food-border: transparent;
-  --calendar-calorie: #74797f;
+  --calendar-calorie: #7b7682;
   --calendar-over-goal: #b36e72;
-  --calendar-selected-surface: #627588;
-  --calendar-selected-border: #627588;
+  --calendar-selected-surface: #978dae;
+  --calendar-selected-border: #978dae;
   --calendar-selected-text: #fff;
   --calendar-selected-calorie: rgba(255, 255, 255, 0.78);
-  --calendar-footer-surface: #edf1f3;
+  --calendar-footer-surface: #f1edf5;
   --calendar-footer-border: transparent;
-  --calendar-footer-text: #202326;
-  --calendar-primary-background: #627588;
-  --calendar-primary-border: #627588;
+  --calendar-footer-text: #28262e;
+  --calendar-primary-background: #978dae;
+  --calendar-primary-border: #978dae;
   --calendar-primary-text: #fff;
   --calendar-primary-shadow: none;
   align-items: flex-end;
@@ -452,27 +452,27 @@
   width: min(370px, calc(100vw - 32px)) !important;
   max-width: 370px !important;
   padding: 14px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 26px !important;
   background: #fff;
-  color: #202326;
-  box-shadow: 0 20px 60px rgba(32, 35, 38, 0.16);
+  color: #28262e;
+  box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
   overflow: hidden !important;
   scrollbar-gutter: auto !important;
 }
 
 :global(:root[data-app-theme="warm-light"]) .grabber { width: 36px; height: 5px; background: #d3d8db; }
-:global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border-radius: 50%; color: #202326; font-size: 24px; font-weight: 400; }
+:global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border-radius: 50%; color: #28262e; font-size: 24px; font-weight: 400; }
 :global(:root[data-app-theme="warm-light"]) .header { min-height: 58px; }
-:global(:root[data-app-theme="warm-light"]) .monthAction { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #edf1f3; color: #627588; }
-:global(:root[data-app-theme="warm-light"]) .eyebrow { color: #74797f; font-weight: 500; text-transform: none; }
-:global(:root[data-app-theme="warm-light"]) .month { color: #202326; font-weight: 700; }
-:global(:root[data-app-theme="warm-light"]) .weekday { color: #74797f; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .day { border: 0; border-radius: 13px; background: transparent; color: #202326; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .day.hasFood { background: #edf1f3; }
-:global(:root[data-app-theme="warm-light"]) .day.selected { background: #627588; color: #fff; }
-:global(:root[data-app-theme="warm-light"]) .day.today:not(.selected) { box-shadow: inset 0 0 0 1px #627588; }
+:global(:root[data-app-theme="warm-light"]) .monthAction { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f1edf5; color: #978dae; }
+:global(:root[data-app-theme="warm-light"]) .eyebrow { color: #7b7682; font-weight: 500; text-transform: none; }
+:global(:root[data-app-theme="warm-light"]) .month { color: #28262e; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .weekday { color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .day { border: 0; border-radius: 13px; background: transparent; color: #28262e; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .day.hasFood { background: #f1edf5; }
+:global(:root[data-app-theme="warm-light"]) .day.selected { background: #978dae; color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .day.today:not(.selected) { box-shadow: inset 0 0 0 1px #978dae; }
 :global(:root[data-app-theme="warm-light"]) .dayNumber { font-weight: 600; }
-:global(:root[data-app-theme="warm-light"]) .footer { border-color: #e1e4e5; background: transparent; }
-:global(:root[data-app-theme="warm-light"]) .footerAction { min-height: 50px; border: 0; border-radius: 16px; background: #edf1f3; color: #202326; font-weight: 600; }
-:global(:root[data-app-theme="warm-light"]) .primaryAction { background: #627588; color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .footer { border-color: #e7e2ea; background: transparent; }
+:global(:root[data-app-theme="warm-light"]) .footerAction { min-height: 50px; border: 0; border-radius: 16px; background: #f1edf5; color: #28262e; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .primaryAction { background: #978dae; color: #fff; }

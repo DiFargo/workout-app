@@ -7,7 +7,7 @@
   margin: 0;
   border: 0;
   background: #fff;
-  color: #202326;
+  color: #28262e;
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -20,7 +20,7 @@
   grid-template-columns: 58px 1fr 20px;
   align-items: center;
   gap: 15px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 22px;
 }
 
@@ -31,7 +31,7 @@
   place-items: center;
   overflow: hidden;
   border-radius: 50%;
-  background: #627588;
+  background: #978dae;
   color: #fff;
   font-size: 22px;
   font-weight: 700;
@@ -39,13 +39,13 @@
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
 .accountText { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
 .accountText strong { max-width: 100%; overflow: hidden; font-size: 19px; line-height: 23px; text-overflow: ellipsis; white-space: nowrap; }
-.accountText small { margin-top: 2px; color: #74797f; font-size: 12px; font-weight: 600; line-height: 17px; }
-.accountText em { height: 23px; margin-top: 4px; padding: 0 11px; display: grid; place-items: center; border-radius: 12px; background: #edf1f3; color: #627588; font-size: 9.5px; font-style: normal; font-weight: 700; }
+.accountText small { margin-top: 2px; color: #7b7682; font-size: 12px; font-weight: 600; line-height: 17px; }
+.accountText em { height: 23px; margin-top: 4px; padding: 0 11px; display: grid; place-items: center; border-radius: 12px; background: #f1edf5; color: #978dae; font-size: 9.5px; font-style: normal; font-weight: 700; }
 .chevron { width: 20px; height: 20px; color: #a9aeb2; stroke-width: 2; }
 
 .groupSection { margin: 0; }
-.groupSection h2 { height: 24px; margin: 0 0 0 4px; color: #74797f; font-size: 10px; font-weight: 700; line-height: 12px; letter-spacing: 0.8px; }
-.group { overflow: hidden; border: 1px solid #e1e4e5; border-radius: 22px; background: #fff; }
+.groupSection h2 { height: 24px; margin: 0 0 0 4px; color: #7b7682; font-size: 10px; font-weight: 700; line-height: 12px; letter-spacing: 0.8px; }
+.group { overflow: hidden; border: 1px solid #e7e2ea; border-radius: 22px; background: #fff; }
 
 .row {
   height: 70px;
@@ -64,16 +64,16 @@
   right: 15px;
   bottom: 0;
   left: 45px;
-  background: #e1e4e5;
+  background: #e7e2ea;
 }
 
-.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #edf1f3; color: #627588; }
+.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #f1edf5; color: #978dae; }
 .icon svg { width: 21px; height: 21px; stroke-width: 2.1; }
 .icon.warm { background: #fff2ec; color: #ae8768; }
 .text { min-width: 0; display: flex; flex-direction: column; }
-.text strong { overflow: hidden; color: #202326; font-size: 13px; font-weight: 700; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
-.text small { overflow: hidden; color: #74797f; font-size: 10px; font-weight: 500; line-height: 16px; text-overflow: ellipsis; white-space: nowrap; }
-.row:active, .account:active { background: #f7f8f8; }
+.text strong { overflow: hidden; color: #28262e; font-size: 13px; font-weight: 700; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
+.text small { overflow: hidden; color: #7b7682; font-size: 10px; font-weight: 500; line-height: 16px; text-overflow: ellipsis; white-space: nowrap; }
+.row:active, .account:active { background: #fbfafc; }
 
 .trainer { gap: 20px; }
 .trainer .groupSection h2 { display: none; }

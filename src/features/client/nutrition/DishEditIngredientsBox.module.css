@@ -57,7 +57,7 @@
   font-size: 13px;
   font-weight: 950;
   line-height: 1.1;
-  box-shadow: 0 8px 18px rgba(84, 55, 230, 0.08);
+  box-shadow: 0 8px 18px rgba(151, 141, 174, 0.08);
   cursor: pointer;
   -webkit-text-fill-color: currentColor;
 }
@@ -263,29 +263,29 @@
 :global(:root[data-app-theme="warm-light"]) .root {
   margin-bottom: 10px;
   padding: 12px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 20px;
   background: #fff;
-  color: #202326;
+  color: #28262e;
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .heading strong { color: #202326; -webkit-text-fill-color: #202326; font-weight: 650; }
-:global(:root[data-app-theme="warm-light"]) .heading span { color: #74797f; -webkit-text-fill-color: #74797f; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .heading strong { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .heading span { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .addButton {
   min-height: 44px;
   border: 0;
   border-radius: 14px;
-  background: #edf1f3;
-  color: #627588;
+  background: #f1edf5;
+  color: #978dae;
   box-shadow: none;
   font-weight: 600;
 }
 
-:global(:root[data-app-theme="warm-light"]) .empty { background: #edf1f3; color: #74797f; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .row { border-color: #e1e4e5; background: #fff; color: #202326; }
-:global(:root[data-app-theme="warm-light"]) .icon { border: 0; background: #edf1f3; color: #627588; }
+:global(:root[data-app-theme="warm-light"]) .empty { background: #f1edf5; color: #7b7682; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .row { border-color: #e7e2ea; background: #fff; color: #28262e; }
+:global(:root[data-app-theme="warm-light"]) .icon { border: 0; background: #f1edf5; color: #978dae; }
 :global(:root[data-app-theme="warm-light"]) .name,
-:global(:root[data-app-theme="warm-light"]) .nutrition { color: #202326; -webkit-text-fill-color: #202326; font-weight: 600; }
-:global(:root[data-app-theme="warm-light"]) .nutrition small { color: #74797f; -webkit-text-fill-color: #74797f; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .removeButton { border: 0; background: #edf1f3; color: #b36e72; }
+:global(:root[data-app-theme="warm-light"]) .nutrition { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .nutrition small { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .removeButton { border: 0; background: #f1edf5; color: #b36e72; }

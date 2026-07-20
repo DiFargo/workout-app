@@ -37,7 +37,7 @@
   box-shadow: var(--shadow-food-edit-page-sheet);
   font-family: var(--font-family-compact-ui);
   scrollbar-width: thin;
-  scrollbar-color: rgba(96, 71, 242, 0.72) rgba(239, 236, 255, 0.32);
+  scrollbar-color: rgba(151, 141, 174, 0.72) rgba(239, 236, 255, 0.32);
 }
 
 .header {
@@ -137,7 +137,7 @@
   color: var(--color-food-edit-page-chrome-text);
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: rgba(96, 71, 242, 0.72) rgba(239, 236, 255, 0.32);
+  scrollbar-color: rgba(151, 141, 174, 0.72) rgba(239, 236, 255, 0.32);
 }
 
 .noteField {
@@ -191,7 +191,7 @@
   line-height: 1.5;
   resize: none;
   scrollbar-width: thin;
-  scrollbar-color: rgba(96, 71, 242, 0.78) rgba(239, 236, 255, 0.36);
+  scrollbar-color: rgba(151, 141, 174, 0.78) rgba(239, 236, 255, 0.36);
   -webkit-text-fill-color: var(--color-food-edit-page-note-fill);
 }
 
@@ -571,8 +571,8 @@
   z-index: 100020;
   padding: 0;
   align-items: stretch;
-  background: #f3f4f3;
-  color: #202326;
+  background: #f7f5f8;
+  color: #28262e;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -586,8 +586,8 @@
   padding: 0 16px calc(104px + env(safe-area-inset-bottom, 0px));
   border: 0;
   border-radius: 0 !important;
-  background: #f3f4f3;
-  color: #202326;
+  background: #f7f5f8;
+  color: #28262e;
   box-shadow: none;
   font-family: var(--font-family-sans);
   overflow: hidden !important;
@@ -612,8 +612,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #202326;
-  -webkit-text-fill-color: #202326;
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
   font-size: 18px;
   font-weight: 700;
   text-align: center;
@@ -628,9 +628,9 @@
   border: 0;
   border-radius: 50%;
   background: #fff;
-  color: #202326;
-  -webkit-text-fill-color: #202326;
-  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
   font-size: 24px;
   font-weight: 400;
 }
@@ -639,22 +639,22 @@
   max-height: none;
   padding: 2px 0 96px;
   gap: 12px;
-  color: #202326;
+  color: #28262e;
   scrollbar-color: #cfd6da transparent;
 }
 
-:global(:root[data-app-theme="warm-light"]) .noteField { color: #202326; backdrop-filter: none; -webkit-backdrop-filter: none; }
-:global(:root[data-app-theme="warm-light"]) .noteLabel { color: #74797f; -webkit-text-fill-color: #74797f; font-size: 11px; font-weight: 600; text-transform: none; }
+:global(:root[data-app-theme="warm-light"]) .noteField { color: #28262e; backdrop-filter: none; -webkit-backdrop-filter: none; }
+:global(:root[data-app-theme="warm-light"]) .noteLabel { color: #7b7682; -webkit-text-fill-color: #7b7682; font-size: 11px; font-weight: 600; text-transform: none; }
 :global(:root[data-app-theme="warm-light"]) .noteInput {
   height: 112px;
   min-height: 112px;
   padding: 14px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #e7e2ea;
   border-radius: 18px;
   background: #fff;
-  color: #202326;
-  caret-color: #627588;
-  -webkit-text-fill-color: #202326;
+  color: #28262e;
+  caret-color: #978dae;
+  -webkit-text-fill-color: #28262e;
   box-shadow: none;
   font-size: 15px;
   font-weight: 450;
@@ -674,8 +674,8 @@
   border: 0;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.96);
-  color: #74797f;
-  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
+  color: #7b7682;
+  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
   transform: translateX(-50%);
   backdrop-filter: blur(20px) saturate(1.15);
   -webkit-backdrop-filter: blur(20px) saturate(1.15);
@@ -688,14 +688,14 @@
   border: 0;
   border-radius: 18px;
   background: transparent;
-  color: #74797f;
-  -webkit-text-fill-color: #74797f;
+  color: #7b7682;
+  -webkit-text-fill-color: #7b7682;
   font-weight: 600;
 }
 
 :global(:root[data-app-theme="warm-light"]) .confirmAction:not(:disabled) {
   border: 0;
-  background: #627588;
+  background: #978dae;
   color: #fff;
   -webkit-text-fill-color: #fff;
   box-shadow: none;
