@@ -58,7 +58,7 @@
   width: 100%;
   min-height: 100%;
   margin: 0;
-  padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 0 calc(104px + env(safe-area-inset-bottom, 0px));
+  padding: 0 0 calc(104px + env(safe-area-inset-bottom, 0px));
   display: block;
   overflow: visible;
   background: #f3f4f3;

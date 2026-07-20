@@ -597,33 +597,31 @@ html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditSegm
 html:root[data-app-theme="warm-light"] .appSplash,
 html:root[data-app-theme="warm-light"] .loginPage,
 html:root[data-app-theme="warm-light"] .firstSetupOverlay {
-  background:
-    radial-gradient(circle at 50% 0%, rgba(90, 73, 223, 0.07), transparent 34%),
-    linear-gradient(180deg, #ffffff 0%, #f6f7fc 100%) !important;
-  color: #151824 !important;
+  background: #f3f4f3 !important;
+  color: #202326 !important;
 }
 
 html:root[data-app-theme="warm-light"] .splashInner,
 html:root[data-app-theme="warm-light"] .loginCard,
 html:root[data-app-theme="warm-light"] .firstSetupCard {
-  border-color: #dfe3ef !important;
+  border-color: #e1e4e5 !important;
   background: rgba(255, 255, 255, 0.94) !important;
-  color: #151824 !important;
+  color: #202326 !important;
   box-shadow:
-    0 24px 64px rgba(45, 53, 98, 0.14),
+    0 20px 60px rgba(57, 67, 75, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.94) !important;
 }
 
 html:root[data-app-theme="warm-light"] .splashMark,
 html:root[data-app-theme="warm-light"] .appLogo {
-  border-color: #dedafb !important;
-  background: #efedff !important;
-  color: #5542d8 !important;
-  box-shadow: 0 10px 25px rgba(77, 68, 199, 0.14) !important;
+  border-color: #dce2e5 !important;
+  background: #edf1f3 !important;
+  color: #627588 !important;
+  box-shadow: none !important;
 }
 
 html:root[data-app-theme="warm-light"] .splashLogo {
-  color: #5a49df !important;
+  color: #202326 !important;
   text-shadow: none !important;
 }
 
@@ -636,17 +634,17 @@ html:root[data-app-theme="warm-light"] .firstSetupCard p {
 }
 
 html:root[data-app-theme="warm-light"] .splashProgress {
-  border-color: #e2e5ef !important;
-  background: #e9ebf3 !important;
+  border-color: #e1e4e5 !important;
+  background: #edf1f3 !important;
 }
 
 html:root[data-app-theme="warm-light"] .splashProgress span {
-  background: linear-gradient(90deg, #5a49df, #2d6ff2) !important;
-  box-shadow: 0 0 18px rgba(74, 78, 222, 0.2) !important;
+  background: #627588 !important;
+  box-shadow: none !important;
 }
 
 html:root[data-app-theme="warm-light"] .splashDots i {
-  background: #6c5ce5 !important;
+  background: #8296a5 !important;
 }
 
 html:root[data-app-theme="warm-light"] .loginHero h1,

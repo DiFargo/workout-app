@@ -29,9 +29,9 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .header.header {
-    width: 100%;
+    width: calc(100% + 32px);
     min-height: 0;
-    margin: 0 0 10px;
+    margin: 0 -16px 10px;
   }
 
   :global(:root[data-app-theme="warm-light"]) .planName.planName {

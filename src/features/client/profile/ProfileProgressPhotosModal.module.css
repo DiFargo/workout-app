@@ -608,3 +608,12 @@
     gap: 12px;
   }
 }
+.header.header,
+.bodyControlDialog .header.header {
+  width: calc(100% + 30px);
+  min-height: 44px;
+  margin: -3px -15px 0;
+  padding: 0;
+  display: block;
+  grid-template-columns: none;
+}

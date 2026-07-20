@@ -1,4 +1,5 @@
 import { Ruler, Scale } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./ProfileMeasurementsModal.module.css";
 
 export default function ProfileMeasurementsModal({
@@ -32,22 +33,18 @@ export default function ProfileMeasurementsModal({
         aria-labelledby="profileMeasurementsModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className={styles.header} data-testid="profile-measurements-header">
-          <div>
-            <span>КОНТРОЛЬ ТЕЛА</span>
-            <h2 id="profileMeasurementsModalTitle">Последний замер</h2>
-            <small>{latestMeasurement ? formatMeasurementDate(latestMeasurement) : "Замеров пока нет"}</small>
-          </div>
-          <button
-            className={styles.closeButton}
-            data-testid="profile-measurements-close"
-            type="button"
-            aria-label="Закрыть замеры"
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          embedded
+          className={styles.header}
+          title="Замеры тела"
+          titleId="profileMeasurementsModalTitle"
+          testId="profile-measurements-header"
+          scope="profile-measurements-header"
+          onBack={onClose}
+          backTestId="profile-measurements-close"
+          backAriaLabel="Закрыть замеры"
+        />
 
         {onOpenPhotos && (
           <div className={styles.bodyControlTabs} data-testid="profile-measurements-section-tabs" role="tablist" aria-label="Контроль тела">
@@ -72,7 +69,7 @@ export default function ProfileMeasurementsModal({
 
         <div className={styles.summary} data-testid="profile-measurements-summary">
           <span aria-hidden="true"><Scale size={20} strokeWidth={2} /></span>
-          <p>Быстрый контроль веса и объёмов тела</p>
+          <p>{latestMeasurement ? `Последний замер: ${formatMeasurementDate(latestMeasurement)}` : "Быстрый контроль веса и объёмов тела"}</p>
         </div>
 
         {latestMeasurement ? (

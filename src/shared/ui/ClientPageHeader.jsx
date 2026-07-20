@@ -5,6 +5,7 @@ export default function ClientPageHeader({
   title,
   titleId,
   titlePart,
+  titleProps,
   titleTestId,
   eyebrow,
   onBack,
@@ -13,21 +14,26 @@ export default function ClientPageHeader({
   backDisabled = false,
   backTestId,
   backAction,
+  backProps,
   actions,
   children,
   barPart,
   barTestId,
   className = "",
   compact = false,
+  embedded = false,
+  rootProps,
   scope,
   testId
 }) {
   return (
     <header
-      className={`${styles.root} ${compact ? styles.compact : styles.large} ${className}`.trim()}
+      className={`${styles.root} ${compact ? styles.compact : styles.large} ${embedded ? styles.embedded : ""} ${className}`.trim()}
       data-client-page-header="true"
+      data-client-page-header-layout={embedded ? "embedded" : "screen"}
       data-css-module-scope={scope}
       data-testid={testId}
+      {...rootProps}
     >
       <div
         className={styles.bar}
@@ -43,6 +49,7 @@ export default function ClientPageHeader({
             aria-label={backAriaLabel || backLabel}
             disabled={backDisabled}
             onClick={onBack}
+            {...backProps}
           >
             <ChevronLeft aria-hidden="true" />
             <span>{backLabel}</span>
@@ -56,6 +63,7 @@ export default function ClientPageHeader({
             id={titleId}
             data-testid={titleTestId}
             data-nutrition-header-part={titlePart}
+            {...titleProps}
           >
             {title}
           </h1>

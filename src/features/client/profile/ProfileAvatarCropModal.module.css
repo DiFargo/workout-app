@@ -154,3 +154,8 @@
   background: var(--background-profile-avatar-crop-secondary);
   color: var(--color-profile-avatar-crop-secondary);
 }
+.header.header {
+  width: calc(100% + 30px);
+  margin: -3px -15px 0;
+  display: block;
+}

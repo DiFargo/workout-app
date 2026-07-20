@@ -1,4 +1,6 @@
 ﻿import HistoryDeleteConfirmDialog from "./HistoryDeleteConfirmDialog";
+import { RefreshCw } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
   getAiHistoryItems
 } from "../../../domain/workoutPresentation";
@@ -44,17 +46,25 @@ export default function WorkoutHistoryPage({
 
   return (
     <div className={styles.page} data-testid="workout-history-page" data-css-module-scope="workout-history">
-      <section className={styles.hero} data-testid="workout-history-hero">
-        <div>
-          <span>История</span>
-          <h1>Тренировки</h1>
-          <p>{historyItems.length ? `Последняя: ${formatHistoryCardDate(latestHistoryWorkout?.date, true)}` : "Сохраняй тренировки — здесь будет прогресс."}</p>
-        </div>
+      <ClientPageHeader
+        compact
+        className={styles.header}
+        title="История тренировок"
+        titleTestId="workout-history-title"
+        testId="workout-history-hero"
+        scope="workout-history-header"
+        onBack={goBackToMain}
+        backAriaLabel="Вернуться назад"
+        actions={(
+          <button className={styles.refresh} data-testid="workout-history-refresh" type="button" onClick={loadHistory} aria-label="Обновить историю тренировок">
+            <RefreshCw aria-hidden="true" />
+          </button>
+        )}
+      />
 
-        <button className={styles.refresh} data-testid="workout-history-refresh" type="button" onClick={loadHistory} aria-label="Обновить историю тренировок">
-          🔄
-        </button>
-      </section>
+      <p className={styles.lead}>
+        {historyItems.length ? `Последняя: ${formatHistoryCardDate(latestHistoryWorkout?.date, true)}` : "Сохраняй тренировки — здесь будет прогресс."}
+      </p>
 
       <section className={styles.stats} data-testid="workout-history-stats">
         <div>

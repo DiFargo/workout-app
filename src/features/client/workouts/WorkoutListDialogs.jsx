@@ -1,4 +1,5 @@
 import { formatIndividualWorkoutHistoryDate } from "../../../utils/workoutHistoryPresentation";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./WorkoutListDialogs.module.css";
 
 export function WorkoutModePickerDialog({
@@ -30,21 +31,18 @@ export function WorkoutModePickerDialog({
         aria-labelledby="workoutModeModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className={styles.header} data-testid="workout-mode-dialog-header">
-          <div>
-            <small className={styles.eyebrow}>ТРЕНИРОВКИ</small>
-            <h2 className={styles.title} id="workoutModeModalTitle">Режим запуска</h2>
-          </div>
-          <button
-            type="button"
-            className={styles.closeButton}
-            data-testid="workout-mode-dialog-close"
-            aria-label="Закрыть выбор режима"
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          embedded
+          className={styles.header}
+          title="Режим запуска"
+          titleId="workoutModeModalTitle"
+          testId="workout-mode-dialog-header"
+          scope="workout-mode-dialog-header"
+          onBack={onClose}
+          backTestId="workout-mode-dialog-close"
+          backAriaLabel="Закрыть выбор режима"
+        />
 
         <div className={styles.options} data-testid="workout-mode-dialog-options">
           <button
@@ -118,21 +116,18 @@ export function IndividualWorkoutHistoryDialog({
         aria-labelledby="workoutHistoryModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className={styles.header} data-testid="workout-history-dialog-header">
-          <div>
-            <small className={styles.eyebrow}>ИНДИВИДУАЛЬНЫЙ ПЛАН</small>
-            <h2 className={styles.title} id="workoutHistoryModalTitle">История тренировок</h2>
-          </div>
-          <button
-            type="button"
-            className={styles.closeButton}
-            data-testid="workout-history-dialog-close"
-            aria-label="Закрыть историю тренировок"
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          embedded
+          className={styles.header}
+          title="История тренировок"
+          titleId="workoutHistoryModalTitle"
+          testId="workout-history-dialog-header"
+          scope="workout-history-dialog-header"
+          onBack={onClose}
+          backTestId="workout-history-dialog-close"
+          backAriaLabel="Закрыть историю тренировок"
+        />
 
         <div className={styles.historyList} data-testid="workout-history-dialog-list">
           {historyLoading && <p className={styles.historyMessage}>Загрузка истории...</p>}

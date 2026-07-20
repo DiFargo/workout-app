@@ -367,3 +367,19 @@
 .bodyControlDialog .startButton {
   margin-top: 0;
 }
+.header.header {
+  width: calc(100% + 36px);
+  min-height: 44px;
+  margin: -6px -18px 0;
+  padding: 0;
+  display: block;
+}
+
+.bodyControlDialog .header.header {
+  width: calc(100% + 30px);
+  min-height: 44px;
+  margin: -3px -15px 0;
+  padding: 0;
+  display: block;
+  grid-template-columns: none;
+}

@@ -70,14 +70,6 @@ export default function FoodProductPage({
       data-css-module-scope="food-product-page"
       data-testid="food-product-page"
     >
-      {!editPageOpen && (
-        <FoodProductTopActions
-          canDelete={canDelete}
-          onDelete={onDelete}
-          onEdit={onOpenEditPage}
-        />
-      )}
-
       <FoodProductHeader
         showFlowHeader={!editPageOpen}
         selectedFood={selectedFood}
@@ -85,8 +77,16 @@ export default function FoodProductPage({
         mealId={mealId}
         mealMenuOpen={mealMenuOpen}
         getFoodIcon={getFoodIcon}
+        onBack={onBack}
         onToggleMealMenu={onToggleMealMenu}
         onSelectMeal={onSelectMeal}
+        topActions={!editPageOpen ? (
+          <FoodProductTopActions
+            canDelete={canDelete}
+            onDelete={onDelete}
+            onEdit={onOpenEditPage}
+          />
+        ) : null}
       />
 
       <FoodPortionSelector

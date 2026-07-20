@@ -1,3 +1,4 @@
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./NutritionCalendarModal.module.css";
 
 export default function NutritionCalendarModal({
@@ -31,15 +32,18 @@ export default function NutritionCalendarModal({
         aria-label="Календарь"
       >
         <div className={styles.grabber} aria-hidden="true" data-nutrition-calendar-grabber />
-        <button
-          type="button"
-          className={styles.closeButton}
-          onClick={onClose}
-          aria-label="Закрыть календарь"
-          data-testid="nutrition-calendar-close"
-        >
-          ×
-        </button>
+        <ClientPageHeader
+          compact
+          embedded
+          className={styles.pageHeader}
+          title="Календарь питания"
+          testId="nutrition-calendar-page-header"
+          scope="nutrition-calendar-page-header"
+          onBack={onClose}
+          backTestId="nutrition-calendar-close"
+          backAriaLabel="Закрыть календарь"
+          backProps={{ "data-nutrition-calendar-action": "close" }}
+        />
 
         <div className={styles.header} data-testid="nutrition-calendar-header">
           <button

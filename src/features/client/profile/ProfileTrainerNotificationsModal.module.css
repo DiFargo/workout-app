@@ -235,3 +235,8 @@
     grid-column: 2;
   }
 }
+.header.header {
+  width: calc(100% + 36px);
+  margin: -6px -18px 0;
+  display: block;
+}

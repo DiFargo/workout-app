@@ -1,3 +1,4 @@
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./FoodProductHeader.module.css";
 
 export default function FoodProductHeader({
@@ -7,30 +8,28 @@ export default function FoodProductHeader({
   mealId,
   mealMenuOpen,
   getFoodIcon,
+  onBack,
   onToggleMealMenu,
-  onSelectMeal
+  onSelectMeal,
+  topActions
 }) {
   const selectedMealName = meals.find((meal) => meal.id === mealId)?.name;
 
   return (
     <>
       {showFlowHeader && (
-        <div
+        <ClientPageHeader
+          compact
           className={styles.flowHeader}
-          data-css-module-scope="food-product-header"
-          data-testid="food-product-flow-header"
+          title="Продукт"
+          titleTestId="food-product-header-title"
+          titleProps={{ "data-food-product-header-title": "" }}
+          scope="food-product-header"
+          testId="food-product-flow-header"
+          onBack={onBack}
+          backAriaLabel="Вернуться к поиску еды"
+          actions={topActions}
         >
-          <div className={styles.flowTitle}>
-            <span className={styles.eyebrow} data-css-module-text="food-product-header">Питание</span>
-            <h2
-              className={styles.heading}
-              data-css-module-text="food-product-header"
-              data-food-product-header-title
-            >
-              Продукт
-            </h2>
-          </div>
-
           <div className={styles.mealCard} data-testid="food-product-meal-selector">
             <span className={styles.mealLabel} data-css-module-text="food-product-header">Добавить в</span>
 
@@ -68,7 +67,7 @@ export default function FoodProductHeader({
               </div>
             )}
           </div>
-        </div>
+        </ClientPageHeader>
       )}
 
       <div

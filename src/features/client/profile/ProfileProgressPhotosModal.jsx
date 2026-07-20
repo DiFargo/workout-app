@@ -1,4 +1,5 @@
 import { Camera } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./ProfileProgressPhotosModal.module.css";
 
 const PROGRESS_PHOTO_STEPS = [
@@ -56,23 +57,19 @@ export default function ProfileProgressPhotosModal({
         aria-labelledby="profileProgressPhotosTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className={styles.header} data-testid="profile-progress-photos-header">
-          <div>
-            <span>КОНТРОЛЬ ТЕЛА</span>
-            <h2 id="profileProgressPhotosTitle">Фото прогресса</h2>
-            <small>Спереди · сбоку · со спины</small>
-          </div>
-          <button
-            className={styles.closeButton}
-            data-testid="profile-progress-photos-close"
-            type="button"
-            aria-label="Закрыть фото прогресса"
-            disabled={uploading}
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          embedded
+          className={styles.header}
+          title="Фото прогресса"
+          titleId="profileProgressPhotosTitle"
+          testId="profile-progress-photos-header"
+          scope="profile-progress-photos-header"
+          onBack={onClose}
+          backDisabled={uploading}
+          backTestId="profile-progress-photos-close"
+          backAriaLabel="Закрыть фото прогресса"
+        />
 
         {onOpenMeasurements && (
           <div className={styles.bodyControlTabs} data-testid="profile-progress-photos-section-tabs" role="tablist" aria-label="Контроль тела">

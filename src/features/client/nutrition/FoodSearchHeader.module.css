@@ -1,36 +1,18 @@
 .root {
-  position: relative;
   width: 100%;
   min-width: 0;
   margin-right: 0;
   margin-left: 0;
-  padding: 0;
-  display: grid;
-  grid-template-areas:
-    "title close"
-    "meal meal";
-  align-items: start;
+  display: block;
   font-family: var(--font-family-compact-ui);
 }
 
-.search {
-  height: 124px;
-  min-height: 124px;
-  max-height: 124px;
-  margin-top: 46px;
-  margin-bottom: 16px;
-  grid-template-columns: minmax(0, 1fr) 48px;
-  gap: 14px 12px;
-}
-
+.search,
 .myProducts {
-  height: 122px;
-  min-height: 122px;
-  max-height: 122px;
-  margin-top: 0;
-  margin-bottom: 14px;
-  grid-template-columns: minmax(0, 1fr) 42px;
-  gap: 12px 8px;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0 0 12px;
 }
 
 .titleGroup {
@@ -382,11 +364,10 @@
 
 @media (max-width: 640px) {
   .myProducts {
-    height: 136px;
-    min-height: 136px;
-    max-height: 136px;
-    margin-top: 70px;
-    margin-bottom: 16px;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 0 0 12px;
   }
 
   .myProducts .titleGroup {
@@ -436,15 +417,11 @@
 :global(:root[data-app-theme="warm-light"]) .root,
 :global(:root[data-app-theme="warm-light"]) .search,
 :global(:root[data-app-theme="warm-light"]) .myProducts {
-  height: 116px;
-  min-height: 116px;
-  max-height: 116px;
+  height: auto;
+  min-height: 0;
+  max-height: none;
   margin: 0 0 12px;
-  grid-template-areas:
-    "close title"
-    "meal meal";
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 12px 8px;
+  display: block;
 }
 
 :global(:root[data-app-theme="warm-light"]) .titleGroup,
@@ -551,7 +528,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealDropdown {
-  top: max(126px, calc(env(safe-area-inset-top) + 110px));
+  top: max(194px, calc(env(safe-area-inset-top) + 135px));
   width: min(370px, calc(100vw - 32px));
   max-width: min(370px, calc(100vw - 32px));
   padding: 8px;

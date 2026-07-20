@@ -13,10 +13,22 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .topHeader.topHeader {
-  width: 0;
-  height: 0;
-  min-height: 0;
+  width: min(402px, 100vw);
+  max-width: 402px;
+  height: 106px;
+  min-height: 106px;
+  max-height: 106px;
   margin: 0;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 90;
+  border-bottom: 1px solid rgba(32, 35, 38, 0.06);
+  background: rgba(243, 244, 243, 0.88);
+  transform: translateX(-50%);
+  backdrop-filter: saturate(170%) blur(22px);
+  -webkit-backdrop-filter: saturate(170%) blur(22px);
+  pointer-events: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .closeButton.closeButton,
@@ -31,16 +43,17 @@
   padding: 0;
   display: grid;
   place-items: center;
-  position: absolute;
-  top: max(58px, calc(env(safe-area-inset-top, 0px) + 3px));
-  z-index: 100;
-  border: 1px solid #e1e4e5;
-  border-radius: 16px;
-  background: #fff;
+  position: fixed;
+  top: max(62px, calc(env(safe-area-inset-top, 0px) + 3px));
+  z-index: 102;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(116, 121, 127, 0.1);
   color: #202326;
   -webkit-text-fill-color: #202326;
-  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  box-shadow: none;
   font-size: 0;
+  pointer-events: auto;
 }
 :global(:root[data-app-theme="warm-light"]) .closeButton.closeButton { right: 16px; }
 :global(:root[data-app-theme="warm-light"]) .backButton.backButton { right: auto; left: 16px; }
@@ -53,20 +66,26 @@
   width: 100%;
   height: 44px;
   min-height: 44px;
-  margin: 0 0 6px;
+  margin: 0;
   padding: 0 58px;
+  position: fixed;
+  top: max(62px, calc(env(safe-area-inset-top, 0px) + 3px));
+  left: 50%;
+  z-index: 101;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #202326;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 :global(:root[data-app-theme="warm-light"]) .stageTitleText.stageTitleText {
   max-width: 250px;
   display: block;
   overflow: hidden;
   color: #202326;
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 650;
   line-height: 22px;
   text-overflow: ellipsis;
   white-space: nowrap;

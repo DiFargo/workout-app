@@ -6,19 +6,11 @@
 }
 
 .flowHeader {
-  position: relative;
-  height: 124px;
-  min-height: 124px;
-  max-height: 124px;
+  height: auto;
+  min-height: 0;
+  max-height: none;
   margin: 0 0 12px;
-  padding: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 120px;
-  grid-template-areas:
-    "title actions"
-    "meal meal";
-  align-items: start;
-  gap: 14px 12px;
+  display: block;
 }
 
 .flowTitle {
@@ -336,12 +328,11 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .flowHeader {
-  height: 116px;
-  min-height: 116px;
-  max-height: 116px;
+  height: auto;
+  min-height: 0;
+  max-height: none;
   margin-bottom: 12px;
-  grid-template-columns: minmax(0, 1fr) 100px;
-  gap: 12px 8px;
+  display: block;
 }
 
 :global(:root[data-app-theme="warm-light"]) .flowTitle { height: 44px; min-height: 44px; }
@@ -386,7 +377,7 @@
 :global(:root[data-app-theme="warm-light"]) .mealButton::after { color: #627588; }
 
 :global(:root[data-app-theme="warm-light"]) .mealDropdown {
-  top: max(126px, calc(env(safe-area-inset-top) + 110px));
+  top: calc(100% + 8px);
   width: min(370px, calc(100vw - 32px));
   padding: 8px;
   gap: 2px;

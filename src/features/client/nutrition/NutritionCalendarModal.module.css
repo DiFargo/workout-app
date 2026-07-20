@@ -116,6 +116,11 @@
   opacity: 0.78;
 }
 
+.pageHeader {
+  width: calc(100% + 24px);
+  margin: 0 -12px;
+}
+
 .closeButton {
   position: absolute;
   top: 12px;
@@ -142,7 +147,7 @@
 }
 
 .header {
-  margin: 32px 0 12px;
+  margin: 4px 0 12px;
   display: grid;
   grid-template-columns: 40px minmax(0, 1fr) 40px;
   align-items: center;

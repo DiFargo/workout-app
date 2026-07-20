@@ -9,12 +9,25 @@
   max-width: 402px;
   min-height: 100dvh;
   margin: 0 auto;
-  padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(110px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px calc(110px + env(safe-area-inset-bottom, 0px));
   overflow: hidden auto;
   color: #202326;
   background: #f3f4f3;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   scrollbar-width: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .header.header {
+  width: calc(100% + 32px);
+  margin: 0 -16px 12px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .lead.lead {
+  margin: 0 4px 12px;
+  color: #74797f;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 17px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .page.page::-webkit-scrollbar {
@@ -272,11 +285,23 @@
   min-height: 100dvh;
   margin: 0 auto;
   padding:
-    max(76px, calc(env(safe-area-inset-top) + 64px))
+    0
     14px
     calc(136px + env(safe-area-inset-bottom));
   color: var(--color-workout-history-page);
   background: var(--gradient-workout-history-page);
+}
+
+.header {
+  width: calc(100% + 28px);
+  margin: 0 -14px 12px;
+}
+
+.lead {
+  margin: 0 4px 12px;
+  color: var(--color-workout-history-muted);
+  font-size: 12px;
+  line-height: 17px;
 }
 
 .hero,

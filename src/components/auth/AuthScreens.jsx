@@ -7,7 +7,7 @@ export function AppSplash() {
       <div className={styles.splashInner}>
         <div className={styles.splashMark} aria-hidden="true"><Dumbbell size={34} strokeWidth={2.1} /></div>
         <div className={styles.splashLogo}>GYM</div>
-        <div className={styles.splashText}>Загрузка тренировки</div>
+        <div className={styles.splashText}>Загрузка приложения</div>
         <div className={styles.splashProgress}>
           <span />
         </div>

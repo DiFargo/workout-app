@@ -306,6 +306,12 @@
   font-weight: 400;
 }
 
+.header.header {
+  width: calc(100% + 32px);
+  margin: -4px -16px 12px;
+  display: block;
+}
+
 :global(:root[data-app-theme="warm-light"]) .options.options {
   gap: 8px;
 }
