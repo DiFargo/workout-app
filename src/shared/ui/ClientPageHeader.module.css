@@ -127,6 +127,24 @@
   transform: scale(0.94) !important;
 }
 
+.workoutControls .bar {
+  width: calc(100% - 32px);
+  margin-right: 16px;
+  margin-left: 16px;
+}
+
+.workoutControls .back {
+  margin-left: 0;
+  color: #28262e;
+}
+
+.workoutControls .back svg,
+.workoutControls .actions button svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.1;
+}
+
 .back {
   width: 44px;
   min-width: 44px;

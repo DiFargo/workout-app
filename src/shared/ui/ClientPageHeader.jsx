@@ -22,6 +22,7 @@ export default function ClientPageHeader({
   barTestId,
   className = "",
   compact = false,
+  controlsVariant = "default",
   embedded = false,
   frameClassName = "",
   rootProps,
@@ -78,8 +79,9 @@ export default function ClientPageHeader({
       data-client-page-header-frame="true"
     >
       <header
-        className={`${styles.root} ${compact ? styles.compact : styles.large} ${embedded ? styles.embedded : ""} ${className}`.trim()}
+        className={`${styles.root} ${compact ? styles.compact : styles.large} ${controlsVariant === "workout" ? styles.workoutControls : ""} ${embedded ? styles.embedded : ""} ${className}`.trim()}
         data-client-page-header="true"
+        data-client-page-header-controls={controlsVariant}
         data-client-page-header-layout={embedded ? "embedded" : "screen"}
         data-css-module-scope={scope}
         data-testid={testId}
