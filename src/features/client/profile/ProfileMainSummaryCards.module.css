@@ -52,6 +52,8 @@
 
 .nextMeta {
   min-width: 0;
+  grid-column: 1 / -1;
+  padding-right: 126px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -72,7 +74,11 @@
 .nextCard button {
   height: 36px;
   padding: 0 17px;
-  align-self: center;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
   border: 0;
   border-radius: 18px;
   background: #627588;
@@ -80,6 +86,7 @@
   font: inherit;
   font-size: 12px;
   font-weight: 700;
+  line-height: normal;
   white-space: nowrap;
   cursor: pointer;
 }

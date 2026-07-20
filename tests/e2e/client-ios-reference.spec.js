@@ -94,15 +94,11 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
     page.getByTestId("profile-main-next-meta")
   );
   await expectHorizontalGap(
-    page.getByTestId("profile-main-next-meta"),
+    page.getByTestId("profile-main-next-meta-text"),
     page.getByTestId("profile-main-next-open"),
     14
   );
-  await expectHorizontalGap(
-    page.getByTestId("profile-progress-copy"),
-    page.getByTestId("profile-progress-more"),
-    8
-  );
+  await expect(page.getByTestId("profile-progress-more")).toHaveCount(0);
   await expectStickyHeaderWhileScrolling(mainHeader);
 
   await page.getByTestId("client-nav-cabinet").click();

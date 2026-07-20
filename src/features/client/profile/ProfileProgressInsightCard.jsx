@@ -61,7 +61,6 @@ export default function ProfileProgressInsightCard({ progressInsight, statuses }
           <div className={styles.headline} data-testid="profile-progress-headline">
             <h2 className={styles.title} data-testid="profile-progress-title">{progressInsight.scoreLabel}</h2>
             <p className={styles.copy} data-testid="profile-progress-copy">{progressInsight.scoreSummary}</p>
-            <button type="button" className={styles.more} data-testid="profile-progress-more">Подробнее</button>
           </div>
         </div>
       </div>

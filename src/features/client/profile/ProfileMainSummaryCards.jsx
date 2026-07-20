@@ -14,7 +14,7 @@ export function ProfileNextWorkoutCard({
       <h2 data-testid="profile-main-next-title">{title}</h2>
       <div className={styles.nextMeta} data-testid="profile-main-next-meta">
         <CalendarDays aria-hidden="true" />
-        <span>{dateText}{exerciseCount ? `  •  ${exerciseCount} упражнений` : ""}</span>
+        <span data-testid="profile-main-next-meta-text">{dateText}{exerciseCount ? `  •  ${exerciseCount} упражнений` : ""}</span>
       </div>
       <button type="button" data-testid="profile-main-next-open" onClick={onOpen}>Открыть план</button>
     </article>
