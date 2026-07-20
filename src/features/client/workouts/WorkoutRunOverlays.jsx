@@ -1,3 +1,4 @@
+import { ChevronLeft, X } from "lucide-react";
 import styles from "./WorkoutRunOverlays.module.css";
 
 export function WorkoutNotFoundPage({ onBackToMenu }) {
@@ -59,20 +60,19 @@ export function WorkoutRunTopControls({ isSaving, showBackButton, onExit, onBack
         disabled={isSaving}
         aria-label="Выйти из тренировки"
       >
-        ×
+        <X aria-hidden="true" />
       </button>
 
       <div className={styles.topHeader}>
-        {showBackButton && (
-          <button
-            className={styles.backButton}
-            type="button"
-            onClick={onBack}
-            aria-label="Вернуться к предыдущему экрану"
-          >
-            ←
-          </button>
-        )}
+        <button
+          className={styles.backButton}
+          type="button"
+          onClick={showBackButton ? onBack : onExit}
+          disabled={isSaving}
+          aria-label="Вернуться к предыдущему экрану"
+        >
+          <ChevronLeft aria-hidden="true" />
+        </button>
 
         <div aria-hidden="true" />
       </div>
@@ -84,18 +84,15 @@ export function WorkoutStageHeading({
   exercise,
   isFinishSlide,
   isStartSlide,
-  isWorkoutSaved,
-  onOpenTechnique
+  isWorkoutSaved
 }) {
   if (isStartSlide) {
     return null;
   }
 
-  const showTechniqueButton = !isFinishSlide && exercise?.id !== "warmup";
-
   return (
       <div
-        className={`${styles.stageTitle} ${showTechniqueButton ? styles.withTechniqueButton : ""}`}
+        className={styles.stageTitle}
         data-css-module-scope="workout-stage-heading"
       >
         <span className={styles.stageTitleText}>
@@ -105,18 +102,6 @@ export function WorkoutStageHeading({
               : "Итоги тренировки"
             : exercise?.name}
         </span>
-        {showTechniqueButton && (
-          <button
-            type="button"
-            className={styles.techniqueButton}
-            data-css-module-control="workout-run-overlays"
-            onClick={onOpenTechnique}
-            aria-label="Показать пояснение техники"
-            title="Техника выполнения"
-          >
-            i
-          </button>
-        )}
       </div>
   );
 }

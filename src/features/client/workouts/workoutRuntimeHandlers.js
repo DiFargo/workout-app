@@ -118,6 +118,7 @@ export function createWorkoutRuntimeHandlers({
     updateSet(exerciseId, setIndex, "completed", nextCompleted);
     if (nextCompleted) {
       setExerciseValidationMessage("");
+      startRestTimer();
       navigator.vibrate?.(45);
     }
   }

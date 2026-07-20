@@ -10,7 +10,7 @@ export default function ProfileCabinetTitleRow({
       data-css-module-scope="profile-cabinet-title-row"
       data-testid="profile-cabinet-title-row"
     >
-      <h1 className={styles.title} data-testid="profile-cabinet-title">Личный кабинет</h1>
+      <h1 className={styles.title} data-testid="profile-cabinet-title">Кабинет</h1>
       <button
         type="button"
         className={styles.refresh}

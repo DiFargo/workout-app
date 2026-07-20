@@ -207,10 +207,14 @@ const {
       }}
       summaryProps={{
         isCaloriesOverGoal,
+        summaryText: nutritionSummaryCollapsedText,
         onExpand: () => setIsAiNutritionPlanExpanded(true)
       }}
       orbitProps={{
         items: nutritionOrbitItems,
+        dateTitle: nutritionDateTitle,
+        dateKey: nutritionDateKey,
+        streakText: nutritionStreakText,
         onAdd: () => openNutritionPicker()
       }}
       diaryProps={{

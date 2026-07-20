@@ -9,6 +9,98 @@
   color: var(--color-workout-run-stage-card-text);
 }
 
+:global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 402px;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px 87px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  height: 680px;
+  min-height: 680px;
+  max-height: 680px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta {
+  width: 82px;
+  height: 25px;
+  min-height: 25px;
+  margin: 0 auto -1px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #edf1f3;
+  color: #627588;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: none;
+}
+:global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta > span { color: #627588; -webkit-text-fill-color: #627588; }
+:global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta b { display: none; }
+
+.planSection {
+  box-sizing: border-box;
+  width: 100%;
+  height: 295px;
+  margin-top: 13px;
+}
+.planSection > h2 {
+  box-sizing: border-box;
+  height: 37px;
+  margin: 0;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  color: #202326;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 22px;
+}
+.planCard {
+  box-sizing: border-box;
+  width: 100%;
+  height: 258px;
+  overflow: hidden;
+  border: 1px solid #e1e4e5;
+  border-radius: 24px;
+  background: #fff;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard > [data-testid="workout-rest-timer"] {
+  margin-top: 13px;
+  flex: 0 0 54px;
+}
+
+@media (max-height: 860px) {
+  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+}
+
 .missingExercise h3 {
   margin: 0;
 }

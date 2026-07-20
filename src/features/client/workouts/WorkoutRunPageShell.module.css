@@ -24,6 +24,34 @@
   color: var(--color-workout-run-page-text);
 }
 
+:global(:root[data-app-theme="warm-light"]) .root.root {
+  --workout-stage-panel-height: 77px;
+  --workout-stage-panel-bottom: 0px;
+  box-sizing: border-box;
+  width: min(402px, 100vw);
+  max-width: 402px;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+  background: #f3f4f3;
+  color: #202326;
+}
+
+@media (min-width: 403px) {
+  :global(:root[data-app-theme="warm-light"]) .root.root {
+    height: min(874px, 100dvh);
+    min-height: min(874px, 100dvh);
+    max-height: min(874px, 100dvh);
+    border-radius: 54px;
+    box-shadow: 0 24px 80px rgba(32, 35, 38, 0.14);
+  }
+}
+
 .noHeader {
   --workout-stage-card-height: clamp(
     464px,

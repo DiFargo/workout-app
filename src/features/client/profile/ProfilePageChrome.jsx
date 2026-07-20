@@ -36,7 +36,7 @@ export default function ProfilePageChrome({
           data-css-module-scope="profile-page-chrome"
           data-testid="profile-main-title"
         >
-          Главное меню
+          Главная
         </h1>
       )}
     </>

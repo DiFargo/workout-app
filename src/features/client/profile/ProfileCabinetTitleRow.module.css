@@ -1,149 +1,25 @@
 .root {
-  width: 100%;
-  margin: 20px 0 4px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 42px;
-  gap: 8px;
-  align-items: center;
-  position: relative;
-}
-
-.title {
-  height: 32px;
-  min-height: 32px;
-  margin: 0;
-  padding: 0;
+  box-sizing: border-box;
+  width: calc(100% - 40px);
+  height: 44px;
+  margin: max(62px, calc(env(safe-area-inset-top, 0px) + 3px)) 20px 20px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  overflow: hidden;
-  color: var(--color-profile-cabinet-title);
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 1.08;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  justify-content: space-between;
 }
 
+.title { margin: 0; color: #202326; font-size: 34px; font-weight: 700; line-height: 44px; letter-spacing: -1.2px; }
 .refresh {
-  width: 42px;
-  min-width: 42px;
-  max-width: 42px;
-  height: 42px;
-  min-height: 42px;
-  max-height: 42px;
-  margin: 0;
+  width: 44px;
+  height: 44px;
   padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid var(--color-profile-cabinet-refresh-border);
-  border-radius: 14px;
-  background: var(--background-profile-cabinet-refresh);
-  color: var(--color-profile-cabinet-refresh);
-  box-shadow: var(--shadow-profile-cabinet-refresh);
-  cursor: pointer;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
+  background: #fff;
+  color: #202326;
+  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
 }
-
-.refresh svg {
-  width: 24px;
-  height: 24px;
-  display: block;
-  position: static;
-}
-
-.refresh:active {
-  border-color: var(--color-profile-cabinet-refresh-active-border);
-  background: var(--background-profile-cabinet-refresh-active);
-}
-
-.refresh:focus-visible {
-  outline: 2px solid var(--color-profile-cabinet-refresh-focus);
-  outline-offset: 2px;
-}
-
-:global(:root[data-app-theme="warm-light"]) .root {
-  margin: 8px 0 16px;
-  grid-template-columns: minmax(0, 1fr) 50px;
-  column-gap: 10px;
-  row-gap: 12px;
-}
-
-:global(:root[data-app-theme="warm-light"]) .title {
-  height: 50px;
-  min-height: 50px;
-  color: var(--color-profile-cabinet-title);
-  font-size: 31px;
-  font-weight: 900;
-  line-height: 1.04;
-}
-
-:global(html:root[data-app-theme="warm-light"]) :global(body) :global(#root) .title.title {
-  color: var(--color-profile-cabinet-title);
-  -webkit-text-fill-color: var(--color-profile-cabinet-title);
-}
-
-:global(:root[data-app-theme="warm-light"]) .refresh {
-  width: 50px;
-  min-width: 50px;
-  max-width: 50px;
-  height: 50px;
-  min-height: 50px;
-  max-height: 50px;
-  border-radius: 18px;
-}
-
-@media (max-width: 700px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    margin: 34px 0 18px;
-    grid-template-columns: minmax(0, 1fr) 48px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .title {
-    height: 48px;
-    min-height: 48px;
-    color: var(--color-profile-cabinet-title-mobile);
-    font-size: 28px;
-    line-height: 1.06;
-  }
-
-  :global(html:root[data-app-theme="warm-light"]) :global(body) :global(#root) .title.title {
-    color: var(--color-profile-cabinet-title-mobile);
-    -webkit-text-fill-color: var(--color-profile-cabinet-title-mobile);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .refresh {
-    width: 48px;
-    min-width: 48px;
-    max-width: 48px;
-    height: 48px;
-    min-height: 48px;
-    max-height: 48px;
-    border-color: var(--color-profile-cabinet-refresh-border-mobile);
-    border-radius: 16px;
-    background: var(--background-profile-cabinet-refresh-mobile);
-    color: var(--color-profile-cabinet-refresh-mobile);
-    box-shadow: var(--shadow-profile-cabinet-refresh-mobile);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .refresh svg {
-    width: 22px;
-    height: 22px;
-  }
-}
-
-@media (min-width: 701px) {
-  :global(:root[data-app-theme="dark-green"]) .title {
-    font-size: 25px;
-  }
-}
-
-@media (min-width: 1100px) {
-  :global(.trainerRolePage) .title {
-    height: auto;
-    min-height: 52px;
-    margin-bottom: 14px;
-    font-size: 34px;
-    text-align: left;
-  }
-}
+.refresh svg { width: 22px; height: 22px; stroke-width: 2.1; }
+.refresh:active { background: #edf1f3; transform: rotate(20deg) scale(0.96); }

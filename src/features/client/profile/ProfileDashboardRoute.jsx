@@ -12,7 +12,7 @@ import ProfileCabinetTitleRow from "./ProfileCabinetTitleRow";
 import ProfileHeroCard from "./ProfileHeroCard";
 import ProfileMainMeasurementSnapshot from "./ProfileMainMeasurementSnapshot";
 import ProfileMainRoleActions from "./ProfileMainRoleActions";
-import ProfileMainSummaryCards from "./ProfileMainSummaryCards";
+import { ProfileLastWorkoutCard, ProfileNextWorkoutCard } from "./ProfileMainSummaryCards";
 import ProfileMeasurementWizardPanel from "./ProfileMeasurementWizardPanel";
 import ProfileMeasurementsModal from "./ProfileMeasurementsModal";
 import ProfileNutritionModal from "./ProfileNutritionModal";
@@ -243,6 +243,9 @@ export default function ProfileDashboardRoute(ctx) {
     formatClientProgressPhotoDate,
     profileProgressPhotoSetComplete,
     profileWorkoutHistoryItems,
+    nextWorkoutDate,
+    nextWorkoutTitle,
+    nextWorkoutExerciseCount,
     activeGoalLabel,
     profileMacros,
     profileNutritionDraftMacros,
@@ -261,7 +264,6 @@ export default function ProfileDashboardRoute(ctx) {
     profileNutritionSelectedTotals,
     lastWorkoutDate,
     nextTrainingText,
-    currentGoalId,
     greetingName,
     profileAvatarUrl,
     mainMeasurementSeries,
@@ -472,16 +474,8 @@ export default function ProfileDashboardRoute(ctx) {
               telegramProfile={telegramProfile}
               avatarUrl={profileAvatarUrl}
               greetingName={greetingName}
-            />
-            <ProfileMainSummaryCards
               activeGoalLabel={activeGoalLabel}
-              targetWeight={activeProfile?.targetWeight}
-              weight={activeProfile?.weight}
-              currentGoalId={currentGoalId}
               totalWorkouts={totalWorkouts}
-              lastWorkoutDate={lastWorkoutDate}
-              nextTrainingText={nextTrainingText}
-              showSplitCards={false}
             />
           </ProfileMainHeroStatsShell>
         )}
@@ -489,6 +483,8 @@ export default function ProfileDashboardRoute(ctx) {
         {!isMainDashboard && visibleProfileTab === "cabinet" && (
           <ProfileCabinetActionGrid
             showClientOnlyActions={!canUseTrainerFeatures()}
+            accountName={greetingName}
+            accountRole={canUseTrainerFeatures() ? "Тренер" : "Участник"}
             accountAvatarUrl={profileAvatarUrl}
             latestPhotoText={latestClientProgressPhoto
               ? `Последние: ${new Date(`${latestClientProgressPhoto.date || latestClientProgressPhoto.createdAt?.slice(0, 10)}T12:00:00`).toLocaleDateString("ru-RU")}`
@@ -509,20 +505,20 @@ export default function ProfileDashboardRoute(ctx) {
               setProfileSettingsModalSection("profile");
               setProfileSettingsModalOpen(true);
             }}
+            onOpenNotifications={() => {
+              setProfileSettingsModalSection("app");
+              setProfileSettingsModalOpen(true);
+            }}
             onOpenFeedback={() => setProfileFeedbackModalOpen(true)}
           />
         )}
 
         {isMainDashboard && (
-          <ProfileMainSummaryCards
-            activeGoalLabel={activeGoalLabel}
-            targetWeight={activeProfile?.targetWeight}
-            weight={activeProfile?.weight}
-            currentGoalId={currentGoalId}
-            totalWorkouts={totalWorkouts}
-            lastWorkoutDate={lastWorkoutDate}
-            nextTrainingText={nextTrainingText}
-            showStats={false}
+          <ProfileNextWorkoutCard
+            title={nextWorkoutTitle}
+            dateText={nextWorkoutDate || nextTrainingText}
+            exerciseCount={nextWorkoutExerciseCount}
+            onOpen={() => setPage(APP_PAGES.WORKOUTS)}
           />
         )}
 
@@ -539,6 +535,13 @@ export default function ProfileDashboardRoute(ctx) {
             latestMeasurement={latestProfileMeasurement}
             latestWeight={mainLatestWeight}
             weightChange={mainWeightChange}
+          />
+        )}
+
+        {isMainDashboard && (
+          <ProfileLastWorkoutCard
+            dateText={lastWorkoutDate}
+            onOpen={() => setPage(APP_PAGES.HISTORY)}
           />
         )}
 

@@ -35,6 +35,7 @@ export default function ProfileProgressInsightCard({ progressInsight, statuses }
       data-css-module-scope="profile-progress-insight-card"
       data-testid="profile-progress-card"
     >
+      <h2 className={styles.sectionTitle}>Прогресс недели</h2>
       <div className={styles.toggle}>
         <div className={styles.summary}>
           <div
@@ -58,9 +59,9 @@ export default function ProfileProgressInsightCard({ progressInsight, statuses }
           </div>
 
           <div className={styles.headline} data-testid="profile-progress-headline">
-            <span className={styles.eyebrow}>Оценка прогресса</span>
             <h2 className={styles.title}>{progressInsight.scoreLabel}</h2>
             <p className={styles.copy}>{progressInsight.scoreSummary}</p>
+            <button type="button" className={styles.more}>Подробнее</button>
           </div>
         </div>
       </div>

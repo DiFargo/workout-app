@@ -586,3 +586,111 @@
 :global(:root[data-app-theme="warm-light"]) .training > button > span {
   color: var(--color-workout-plan-subtitle);
 }
+
+/* Calm iOS client dock. Training-only navigation above keeps its own module rules. */
+:global(:root[data-app-theme="warm-light"]) .mainDock,
+:global(:root[data-app-theme="warm-light"]) .nutritionDock {
+  right: 0;
+  bottom: 14px;
+  left: 0;
+  z-index: 90;
+}
+
+:global(:root[data-app-theme="warm-light"]) .main.main,
+:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition {
+  box-sizing: border-box;
+  width: min(382px, calc(100vw - 20px));
+  max-width: 382px;
+  height: 76px;
+  min-height: 76px;
+  max-height: 76px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #74797f;
+  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+}
+
+:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition::after { display: none; }
+
+:global(:root[data-app-theme="warm-light"]) .main.main > button,
+:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > button {
+  box-sizing: border-box;
+  width: calc((100% - 12px) / 4);
+  min-width: 0;
+  max-width: 78px;
+  height: 58px;
+  min-height: 58px;
+  max-height: 58px;
+  margin: 0;
+  padding: 6px 0 4px;
+  display: grid;
+  grid-template-rows: 28px 14px;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: #74797f;
+  box-shadow: none;
+  line-height: 1;
+}
+
+:global(:root[data-app-theme="warm-light"]) .main.main > button > span,
+:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > button > span {
+  width: 28px;
+  height: 28px;
+  min-height: 28px;
+  max-height: 28px;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .main.main > button svg,
+:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > button svg {
+  width: 24px;
+  height: 24px;
+  color: inherit;
+  stroke-width: 2;
+}
+
+:global(:root[data-app-theme="warm-light"]) .main.main > button > strong,
+:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > button > strong,
+:global(:root[data-app-theme="warm-light"]) .main.main > button:nth-child(2) > strong,
+:global(:root[data-app-theme="warm-light"]) .main.main > button:nth-child(3) > strong {
+  width: auto;
+  max-width: none;
+  height: 14px;
+  min-height: 14px;
+  max-height: 14px;
+  overflow: visible;
+  color: inherit;
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 14px;
+  transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .main.main > .active,
+:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > .active {
+  border: 0;
+  background: #edf1f3;
+  color: #627588;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .main.main > .active > strong,
+:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > .active > strong {
+  font-weight: 700;
+}

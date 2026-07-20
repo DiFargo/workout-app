@@ -156,7 +156,7 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await page.goto("/?clientHarness=1");
 
   await expect(page.getByTestId("client-harness-main")).toBeVisible();
-  await expect(page.getByText(/^v(?:\.\d+)+$/)).toBeVisible();
+  await expect(page.getByTestId("profile-dashboard-version")).toHaveCount(1);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 

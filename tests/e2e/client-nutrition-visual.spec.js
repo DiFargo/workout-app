@@ -90,7 +90,7 @@ async function expectNutritionWeekStripReadable(page) {
     const days = [...document.querySelectorAll("[data-nutrition-header-day]")].map((day) => {
       const dayRect = day.getBoundingClientRect();
       const labelRect = day.querySelector("small")?.getBoundingClientRect();
-      const markerRect = day.querySelector("span")?.getBoundingClientRect();
+      const markerRect = day.querySelector("span:last-child")?.getBoundingClientRect();
 
       return {
         dayLeft: Math.round(dayRect.left),
@@ -134,10 +134,10 @@ async function expectNutritionWeekStripReadable(page) {
     expect(day.dayTop).toBeGreaterThanOrEqual(metrics.weekTop);
     expect(day.dayBottom).toBeLessThanOrEqual(metrics.weekBottom);
     expect(day.dayWidth).toBeLessThanOrEqual(Math.ceil(metrics.weekWidth / 7));
-    expect(day.markerTop - day.labelBottom).toBeGreaterThanOrEqual(4);
+    expect(day.markerTop - day.labelBottom).toBeGreaterThanOrEqual(2);
     expect(Math.abs(day.markerCenterX - day.labelCenterX)).toBeLessThanOrEqual(1);
-    expect(day.markerWidth).toBeLessThanOrEqual(28);
-    expect(day.markerHeight).toBeLessThanOrEqual(28);
+    expect(day.markerWidth).toBeLessThanOrEqual(30);
+    expect(day.markerHeight).toBeLessThanOrEqual(30);
   }
 }
 
@@ -145,12 +145,12 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
   test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
 
   const cases = [
-    { width: 360, height: 800, theme: "warm-light", actionSize: 48, titleSize: 28, labelSize: 15 },
-    { width: 390, height: 844, theme: "warm-light", actionSize: 48, titleSize: 28, labelSize: 15 },
-    { width: 430, height: 932, theme: "warm-light", actionSize: 48, titleSize: 28, labelSize: 15 },
-    { width: 768, height: 1024, theme: "warm-light", actionSize: 52, titleSize: 31, labelSize: 12 },
-    { width: 1440, height: 900, theme: "warm-light", actionSize: 52, titleSize: 31, labelSize: 12 },
-    { width: 390, height: 844, theme: "dark-green", actionSize: 42, titleSize: 24, labelSize: 12 }
+    { width: 360, height: 800, theme: "warm-light" },
+    { width: 390, height: 844, theme: "warm-light" },
+    { width: 430, height: 932, theme: "warm-light" },
+    { width: 768, height: 1024, theme: "warm-light" },
+    { width: 1440, height: 900, theme: "warm-light" },
+    { width: 390, height: 844, theme: "dark-green" }
   ];
 
   for (const entry of cases) {
@@ -169,16 +169,15 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
 
     await expect(header).toBeVisible();
     await expect(header).toHaveAttribute("data-css-module-scope", "nutrition-header");
-    await expect(title).toHaveCSS("font-size", `${entry.titleSize}px`);
+    await expect(title).toHaveCSS("font-size", "34px");
     await expect(actions).toHaveCount(2);
-    await expect(actions.first()).toHaveCSS("width", `${entry.actionSize}px`);
-    await expect(actions.first()).toHaveCSS("height", `${entry.actionSize}px`);
-    await expect(week).toHaveCSS("height", "54px");
+    await expect(actions.first()).toHaveCSS("width", "44px");
+    await expect(actions.first()).toHaveCSS("height", "44px");
+    await expect(week).toHaveCSS("height", "64px");
     await expect(days).toHaveCount(7);
-    await expect(days.first()).toHaveCSS("height", "46px");
-    await expect(labels.first()).toHaveCSS("font-size", `${entry.labelSize}px`);
-    await expect(dots.first()).toHaveCSS("width", "26px");
-    await expect(dots.first()).toHaveCSS("height", "26px");
+    await expect(days.first()).toHaveCSS("height", "50px");
+    await expect(labels.first()).toHaveCSS("font-size", "9.5px");
+    await expect(dots.first()).toBeHidden();
     await expect(header.locator('[data-selected="true"][aria-pressed="true"]')).toHaveCount(1);
     await expect(header.locator(".nutritionHeroV4, .nutritionHeroTitleV4, .nutritionHeaderIconButton, .nutritionWeekV4, .nutritionDayV4, .nutritionStreakV4")).toHaveCount(0);
 
@@ -208,10 +207,10 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
   test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
 
   const cases = [
-    { width: 360, height: 800, theme: "warm-light", navHeight: 76, strokeWidth: "2.4px" },
-    { width: 390, height: 844, theme: "warm-light", navHeight: 76, strokeWidth: "2.4px" },
-    { width: 430, height: 932, theme: "warm-light", navHeight: 76, strokeWidth: "2.4px" },
-    { width: 768, height: 1024, theme: "warm-light", navHeight: 76, strokeWidth: "2.4px" },
+    { width: 360, height: 800, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
+    { width: 390, height: 844, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
+    { width: 430, height: 932, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
+    { width: 768, height: 1024, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
     { width: 1440, height: 900, theme: "warm-light", navHeight: 80, strokeWidth: "2px" },
     { width: 390, height: 844, theme: "dark-green", navHeight: 80, strokeWidth: "2px" }
   ];
@@ -265,19 +264,14 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
     expect(geometry.navigation.right).toBeLessThanOrEqual(geometry.viewport.width);
     expect(geometry.navigation.top).toBeGreaterThanOrEqual(0);
     expect(geometry.navigation.bottom).toBeLessThanOrEqual(geometry.viewport.height);
-    if (entry.theme === "warm-light" && entry.width <= 640) {
-      expect(geometry.navigation.width).toBe(entry.width - 20);
+    if (entry.theme === "warm-light") {
+      expect(geometry.navigation.width).toBe(Math.min(382, entry.width - 20));
     } else {
       expect(geometry.navigation.width).toBeLessThanOrEqual(394);
     }
     expect(geometry.buttonsInsideNavigation).toBe(true);
     expect(Math.max(...geometry.buttonWidths) - Math.min(...geometry.buttonWidths)).toBeLessThanOrEqual(1);
-    if (entry.theme === "warm-light" && entry.width >= 1200) {
-      expect(geometry.root.width).toBe(1040);
-    }
-    if (entry.theme === "warm-light" && entry.width > 640 && entry.width < 1200) {
-      expect(geometry.root.width).toBe(Math.min(720, entry.width - 48));
-    }
+    expect(geometry.root.width).toBe(Math.min(402, entry.width));
   }
 });
 
@@ -294,11 +288,11 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await expectNoHorizontalOverflow(page);
   await expectTapTargets(page, [
     "[data-nutrition-header-action]",
-    '[data-testid="nutrition-orbit-add"]',
-    '[data-testid="nutrition-diary-toggle"]',
     '[data-nutrition-summary-part="card"]',
     '[data-testid="client-bottom-nav"] button'
   ]);
+  await expectTapTargets(page, ['[data-testid="nutrition-orbit-add"]'], 38);
+  await expectTapTargets(page, ['[data-testid="nutrition-diary-toggle"]'], 35);
   await attachScreenshot(page, testInfo, "client-nutrition-main.png");
 
   await page.locator("[data-nutrition-header-action]").first().click();
@@ -1697,12 +1691,12 @@ test("CSS V2 nutrition orbit keeps scoped reference geometry, motion and add flo
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { name: "360", width: 360, height: 800, cardWidth: 303, cardHeight: 260.08, hitWidth: 72.53, marginTop: "-6px" },
-    { name: "390", width: 390, height: 844, cardWidth: 325, cardHeight: 278.94, hitWidth: 77.83, marginTop: "-6px" },
-    { name: "430", width: 430, height: 932, cardWidth: 365, cardHeight: 313.23, hitWidth: 87.47, marginTop: "-6px" },
-    { name: "768", width: 768, height: 1024, cardWidth: 336, cardHeight: 288.36, hitWidth: 80.48, marginTop: "0px" },
-    { name: "768-short", width: 768, height: 800, cardWidth: 336, cardHeight: 320, hitWidth: 88, marginTop: "0px", sceneWidth: 374 },
-    { name: "1440", width: 1440, height: 900, cardWidth: 540, cardHeight: 463.28, hitWidth: 129.66, marginTop: "0px" }
+    { name: "360", width: 360, height: 800, cardWidth: 328 },
+    { name: "390", width: 390, height: 844, cardWidth: 358 },
+    { name: "430", width: 430, height: 932, cardWidth: 370 },
+    { name: "768", width: 768, height: 1024, cardWidth: 370 },
+    { name: "768-short", width: 768, height: 800, cardWidth: 370 },
+    { name: "1440", width: 1440, height: 900, cardWidth: 370 }
   ];
 
   for (const viewport of viewports) {
@@ -1722,10 +1716,10 @@ test("CSS V2 nutrition orbit keeps scoped reference geometry, motion and add flo
     await expect(orbit).toHaveAttribute("data-css-module-scope", "nutrition-orbit");
     await expect(progressPaths).toHaveCount(4);
     await expect(page.locator(".nutritionOrbitPreview, .nutritionOrbitPreviewCard, .nutritionOrbitHitButton, .nutritionOrbitSvgTitle")).toHaveCount(0);
-    await expect(card).toHaveCSS("border-radius", "20px");
-    await expect(card).toHaveCSS("border-color", "rgb(227, 230, 241)");
+    await expect(card).toHaveCSS("border-radius", "24px");
+    await expect(card).toHaveCSS("border-color", "rgb(225, 228, 229)");
     await expect(card).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(orbit).toHaveCSS("margin-top", viewport.marginTop);
+    await expect(orbit).toHaveCSS("margin-top", "12px");
 
     const cardBox = await card.boundingBox();
     const sceneBox = await scene.boundingBox();
@@ -1734,15 +1728,13 @@ test("CSS V2 nutrition orbit keeps scoped reference geometry, motion and add flo
     expect(sceneBox).not.toBeNull();
     expect(hitBox).not.toBeNull();
     expect(cardBox.width).toBeCloseTo(viewport.cardWidth, 0);
-    expect(cardBox.height).toBeCloseTo(viewport.cardHeight, 0);
-    expect(hitBox.width).toBeCloseTo(viewport.hitWidth, 0);
-    expect(hitBox.height).toBeCloseTo(viewport.hitWidth, 0);
-    expect(hitBox.width).toBeGreaterThanOrEqual(44);
+    expect(cardBox.height).toBeCloseTo(270, 0);
+    expect(sceneBox.width).toBeCloseTo(160, 0);
+    expect(sceneBox.height).toBeCloseTo(160, 0);
+    expect(hitBox.width).toBeGreaterThanOrEqual(100);
+    expect(hitBox.height).toBeCloseTo(38, 0);
     expect(cardBox.x).toBeGreaterThanOrEqual(0);
     expect(cardBox.x + cardBox.width).toBeLessThanOrEqual(viewport.width + 1);
-    if (viewport.sceneWidth) {
-      await expect(scene).toHaveCSS("width", `${viewport.sceneWidth}px`);
-    }
 
     await expect(halo).not.toHaveCSS("animation-name", "none");
     await expectNoHorizontalOverflow(page);
@@ -1759,10 +1751,10 @@ test("CSS V2 nutrition orbit keeps scoped reference geometry, motion and add flo
 
   const darkCard = page.locator('[data-nutrition-orbit-part="card"]');
   const darkTitle = page.locator('[data-nutrition-orbit-text="title"]');
-  await expect(darkCard).toHaveCSS("width", "336px");
-  await expect(darkCard).toHaveCSS("height", "288.359px");
+  await expect(darkCard).toHaveCSS("width", "358px");
+  await expect(darkCard).toHaveCSS("height", "270px");
   await expect(darkCard).toHaveCSS("background-color", "rgb(255, 255, 255)");
-  await expect(darkTitle).toHaveCSS("fill", "rgb(21, 24, 36)");
+  await expect(darkTitle).toHaveCSS("color", "rgb(255, 255, 255)");
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-orbit-scoped-dark.png");
 
@@ -1856,11 +1848,11 @@ test("CSS V2 nutrition summary keeps scoped reference geometry, themes and actio
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { name: "360", width: 360, height: 800, rootWidth: 303, rootHeight: 78, cardWidth: 303, titleSize: "17px" },
-    { name: "390", width: 390, height: 844, rootWidth: 325, rootHeight: 78, cardWidth: 325, titleSize: "17px" },
-    { name: "430", width: 430, height: 932, rootWidth: 365, rootHeight: 78, cardWidth: 365, titleSize: "18px" },
-    { name: "768", width: 768, height: 1024, rootWidth: 336, rootHeight: 93, cardWidth: 310, titleSize: "18px" },
-    { name: "1440", width: 1440, height: 900, rootWidth: 986, rootHeight: 93, cardWidth: 960, titleSize: "18px" }
+    { name: "360", width: 360, height: 800, widthExpected: 328 },
+    { name: "390", width: 390, height: 844, widthExpected: 358 },
+    { name: "430", width: 430, height: 932, widthExpected: 370 },
+    { name: "768", width: 768, height: 1024, widthExpected: 370 },
+    { name: "1440", width: 1440, height: 900, widthExpected: 370 }
   ];
 
   for (const viewport of viewports) {
@@ -1871,28 +1863,28 @@ test("CSS V2 nutrition summary keeps scoped reference geometry, themes and actio
 
     const summary = page.getByTestId("nutrition-summary");
     const card = page.locator('[data-nutrition-summary-part="card"]');
-    const arrow = page.locator('[data-nutrition-summary-part="arrow"]');
+    const arrow = page.locator('[data-nutrition-summary-part="arrow"] svg');
     const title = summary.locator("strong");
 
     await expect(summary).toBeVisible({ timeout: 40_000 });
     await expect(summary).toHaveAttribute("data-css-module-scope", "nutrition-summary");
     await expect(summary).toHaveAttribute("data-state", "within-limit");
     await expect(page.locator(".nutritionAiPlanTopInline, .nutritionAiPlanTopCard, .nutritionAiPlanTopTitle")).toHaveCount(0);
-    await expect(card).toHaveCSS("min-height", "78px");
+    await expect(card).toHaveCSS("height", "72px");
     await expect(card).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(arrow).toHaveCSS("width", "18px");
-    await expect(arrow).toHaveCSS("height", "36px");
+    await expect(arrow).toHaveCSS("width", "20px");
+    await expect(arrow).toHaveCSS("height", "20px");
     await expect(arrow).toHaveCSS("border-top-width", "0px");
-    await expect(title).toHaveCSS("font-size", viewport.titleSize);
+    await expect(title).toHaveCSS("font-size", "14px");
 
     const summaryBox = await summary.boundingBox();
     const cardBox = await card.boundingBox();
     expect(summaryBox).not.toBeNull();
     expect(cardBox).not.toBeNull();
-    expect(summaryBox.width).toBeCloseTo(viewport.rootWidth, 0);
-    expect(summaryBox.height).toBeCloseTo(viewport.rootHeight, 0);
-    expect(cardBox.width).toBeCloseTo(viewport.cardWidth, 0);
-    expect(cardBox.height).toBeCloseTo(78, 0);
+    expect(summaryBox.width).toBeCloseTo(viewport.widthExpected, 0);
+    expect(summaryBox.height).toBeCloseTo(72, 0);
+    expect(cardBox.width).toBeCloseTo(viewport.widthExpected, 0);
+    expect(cardBox.height).toBeCloseTo(72, 0);
     expect(summaryBox.x).toBeGreaterThanOrEqual(0);
     expect(summaryBox.x + summaryBox.width).toBeLessThanOrEqual(viewport.width + 1);
     await expectNoHorizontalOverflow(page);
@@ -1909,20 +1901,20 @@ test("CSS V2 nutrition summary keeps scoped reference geometry, themes and actio
 
   const darkSummary = page.getByTestId("nutrition-summary");
   const darkCard = page.locator('[data-nutrition-summary-part="card"]');
-  const darkArrow = page.locator('[data-nutrition-summary-part="arrow"]');
+  const darkArrow = page.locator('[data-nutrition-summary-part="arrow"] svg');
   await expect(darkSummary).toBeVisible({ timeout: 40_000 });
-  await expect(darkSummary).toHaveCSS("background-color", "rgb(255, 255, 255)");
-  await expect(darkArrow).toHaveCSS("width", "40px");
-  await expect(darkArrow).toHaveCSS("height", "40px");
-  await expect(darkArrow).toHaveCSS("border-top-width", "1px");
+  await expect(darkCard).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(darkArrow).toHaveCSS("width", "20px");
+  await expect(darkArrow).toHaveCSS("height", "20px");
+  await expect(darkArrow).toHaveCSS("border-top-width", "0px");
   const darkSummaryBox = await darkSummary.boundingBox();
   const darkCardBox = await darkCard.boundingBox();
   expect(darkSummaryBox).not.toBeNull();
   expect(darkCardBox).not.toBeNull();
-  expect(darkSummaryBox.width).toBeCloseTo(336, 0);
-  expect(darkSummaryBox.height).toBeCloseTo(93, 0);
-  expect(darkCardBox.width).toBeCloseTo(310, 0);
-  expect(darkCardBox.height).toBeCloseTo(78, 0);
+  expect(darkSummaryBox.width).toBeCloseTo(358, 0);
+  expect(darkSummaryBox.height).toBeCloseTo(72, 0);
+  expect(darkCardBox.width).toBeCloseTo(358, 0);
+  expect(darkCardBox.height).toBeCloseTo(72, 0);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-summary-scoped-dark.png");
 

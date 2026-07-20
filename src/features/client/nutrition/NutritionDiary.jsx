@@ -1,4 +1,7 @@
+import { ChevronRight, Utensils } from "lucide-react";
 import styles from "./NutritionDiary.module.css";
+
+const MEAL_TIMES = ["08:00", "13:00", "19:00"];
 
 export default function NutritionDiary({
   nutritionZoukExpanded,
@@ -6,7 +9,6 @@ export default function NutritionDiary({
   nutritionMeals,
   nutritionToday,
   mealStats,
-  expandedNutritionMeals,
   deletingFoodId,
   swipeOffsets = {},
   swipeMovedRef,
@@ -33,15 +35,8 @@ export default function NutritionDiary({
           aria-expanded={nutritionZoukExpanded}
           aria-haspopup="dialog"
         >
-          <span className={styles.diaryIcon} aria-hidden="true">🍽️</span>
-          <span className={styles.diaryTitle}>
-            <span className={styles.titleText}>Дневник</span>
-            <span className={styles.subtitleText}>Список продуктов за день</span>
-          </span>
-          <span className={styles.diaryMeta}>
-            <small>{nutritionZoukFoodsCount ? `${nutritionZoukFoodsCount} шт` : "пусто"}</small>
-            <i aria-hidden="true">›</i>
-          </span>
+          <span className={styles.titleText}>Дневник</span>
+          <ChevronRight aria-hidden="true" />
         </button>
       </section>
 
@@ -160,8 +155,8 @@ export default function NutritionDiary({
         </div>
       )}
 
-      <section className={styles.mealList}>
-        {nutritionMeals.map((meal) => {
+      <section className={styles.mealList} data-testid="nutrition-diary-list">
+        {nutritionMeals.slice(0, 3).map((meal, mealIndex) => {
           const stats = mealStats[meal.id] || { calories: 0, count: 0 };
           const hasFoods = stats.count > 0;
 
@@ -186,42 +181,14 @@ export default function NutritionDiary({
                     }
                   }}
                 />
-                <div className={styles.mealIcon}>{meal.icon}</div>
+                <div className={styles.mealIcon}><Utensils aria-hidden="true" /></div>
                 <div className={styles.mealTitle}>
                   <strong>{meal.name}</strong>
-                  {hasFoods && <span>{stats.count} шт</span>}
-                  <button
-                    type="button"
-                    className={`${styles.mealToggle} ${!hasFoods ? styles.disabled : ""}`}
-                    aria-label="Открыть список продуктов"
-                    aria-expanded={Boolean(expandedNutritionMeals[meal.id])}
-                    disabled={!hasFoods}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      if (!hasFoods) return;
-                      onOpenMealFoods(meal.id);
-                    }}
-                  >
-                    ›
-                  </button>
+                  <span>{hasFoods ? `${stats.count} шт · ${Math.round(stats.calories)} ккал` : "Не добавлено"}</span>
                 </div>
                 <div className={styles.mealCalories}>
-                  <strong>{Math.round(stats.calories)}</strong>
-                  <span>Калории</span>
-                </div>
-
-                <div className={styles.mealActions}>
-                  <button
-                    type="button"
-                    className={styles.mealAddButton}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onAddMealFood(meal.id);
-                    }}
-                    aria-label={`Добавить еду: ${meal.name}`}
-                  >
-                    +
-                  </button>
+                  <strong>{MEAL_TIMES[mealIndex]}</strong>
+                  <ChevronRight aria-hidden="true" />
                 </div>
               </div>
             </div>

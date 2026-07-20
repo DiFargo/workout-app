@@ -63,11 +63,12 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
     : page.getByTestId("profile-cabinet-title");
   await expect(title).toBeVisible();
   if (mode === "main") {
-    await expect(title).toHaveText("Главное меню");
-    await expect(page.getByTestId("profile-main-summary-grid").locator("article")).toHaveCount(2);
-    await expect(page.getByTestId("profile-dashboard-version")).toBeVisible();
+    await expect(title).toHaveText("Главная");
+    await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
+    await expect(page.getByTestId("profile-main-last-workout")).toBeVisible();
+    await expect(page.getByTestId("profile-dashboard-version")).toBeHidden();
   } else {
-    await expect(title).toHaveText("Личный кабинет");
+    await expect(title).toHaveText("Кабинет");
     await expect(page.getByTestId("profile-cabinet-refresh")).toBeVisible();
     await expect(page.getByTestId("profile-main-summary-grid")).toHaveCount(0);
     await expect(page.getByTestId("profile-dashboard-version")).toHaveCount(0);
@@ -82,7 +83,8 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
 
 async function expectMainDashboardContent(page) {
   await expect(page.getByTestId("profile-main-hero")).toBeVisible();
-  await expect(page.getByTestId("profile-main-summary-grid")).toBeVisible();
+  await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
+  await expect(page.getByTestId("profile-main-last-workout")).toBeVisible();
   await expect(page.getByTestId("profile-progress-card")).toBeVisible();
   await expect(page.getByTestId("profile-progress-gauge")).toHaveAttribute("aria-label", /90.*100/);
   await expect(page.getByTestId("profile-progress-badge")).toHaveCount(3);
@@ -107,7 +109,7 @@ async function expectMainMeasurementSnapshotLayout(page) {
 
     const card = rectOf('[data-testid="profile-measurement-snapshot"]');
     const header = rectOf('[data-testid="profile-measurement-snapshot-header"] span');
-    const weightLabel = rectOf('[data-testid="profile-measurement-snapshot-weight"] span');
+    const weightLabel = rectOf('[data-testid="profile-measurement-snapshot-weight"] strong');
     const chart = rectOf('[data-testid="profile-measurement-snapshot-chart"]');
 
     return {
@@ -209,7 +211,7 @@ async function expectCabinetContent(page) {
   await expect(page.getByTestId("profile-cabinet-action-grid")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-action-account")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-action-account-icon")).toBeVisible();
-  await expect(page.locator('[data-testid^="profile-cabinet-action-"]:not([data-testid$="-icon"]):not([data-testid$="-title"]):not([data-testid="profile-cabinet-action-grid"])')).toHaveCount(6);
+  await expect(page.locator('[data-testid^="profile-cabinet-action-"]:not([data-testid$="-icon"]):not([data-testid$="-title"]):not([data-testid="profile-cabinet-action-grid"])')).toHaveCount(7);
 }
 
 async function expectContentAboveBottomNav(page) {
@@ -294,7 +296,7 @@ test("client main bottom bar stays scoped and adaptive across themes", async ({ 
       expect(mainMetrics.dockPosition).toBe("fixed");
       expect(mainMetrics.width).toBeLessThanOrEqual(394);
       expect(mainMetrics.height).toBe(theme === "warm-light" && width <= 900 ? 76 : 80);
-      expect(mainMetrics.buttonHeight).toBe(theme === "warm-light" && width <= 900 ? 60 : 68);
+      expect(mainMetrics.buttonHeight).toBe(theme === "warm-light" && width <= 900 ? 58 : 68);
       if (theme === "warm-light" && width <= 900) {
         expect(mainMetrics.x).toBe(mainMetrics.pageX + 10);
         expect(mainMetrics.right).toBe(mainMetrics.pageRight - 10);

@@ -12,6 +12,66 @@
   text-align: center;
 }
 
+:global(:root[data-app-theme="warm-light"]) .topHeader.topHeader {
+  width: 0;
+  height: 0;
+  min-height: 0;
+  margin: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton,
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton {
+  box-sizing: border-box;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: max(58px, calc(env(safe-area-inset-top, 0px) + 3px));
+  z-index: 100;
+  border: 1px solid #e1e4e5;
+  border-radius: 16px;
+  background: #fff;
+  color: #202326;
+  -webkit-text-fill-color: #202326;
+  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  font-size: 0;
+}
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton { right: 16px; }
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton { right: auto; left: 16px; }
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton svg,
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton svg { width: 22px; height: 22px; stroke-width: 2.1; }
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton::before { display: none; content: none; }
+
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle {
+  box-sizing: border-box;
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  margin: 0 0 6px;
+  padding: 0 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #202326;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitleText.stageTitleText {
+  max-width: 250px;
+  display: block;
+  overflow: hidden;
+  color: #202326;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 :global([data-workout-run-no-header="true"]) .topHeader {
   height: 0;
   min-height: 0;

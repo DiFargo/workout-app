@@ -1,3 +1,4 @@
+import { Dumbbell } from "lucide-react";
 import styles from "./ProfileHeroCard.module.css";
 
 function getTimeOfDayGreeting() {
@@ -12,9 +13,12 @@ function getTimeOfDayGreeting() {
 export default function ProfileHeroCard({
   telegramProfile,
   avatarUrl,
-  greetingName
+  greetingName,
+  activeGoalLabel,
+  totalWorkouts = 0
 }) {
   const greeting = getTimeOfDayGreeting();
+  const fallbackLetter = String(greetingName || "А").trim().charAt(0).toUpperCase() || "А";
 
   return (
     <div
@@ -31,17 +35,19 @@ export default function ProfileHeroCard({
             <img src={avatarUrl} alt="" />
           ) : (
             <span className={styles.fallback} data-testid="profile-main-hero-avatar-fallback">
-              {telegramProfile.connected ? "✈️" : "👤"}
+              {fallbackLetter}
             </span>
           )}
         </div>
       </div>
 
       <div className={styles.text} data-testid="profile-main-hero-text">
-        <h1 className={styles.title} data-testid="profile-main-hero-title">
-          {greeting}, {greetingName} 👋
-        </h1>
+        <span className={styles.greeting}>{greeting},</span>
+        <h2 className={styles.title} data-testid="profile-main-hero-title">{greetingName}</h2>
+        <span className={styles.workouts}><Dumbbell aria-hidden="true" />{totalWorkouts} {totalWorkouts === 1 ? "тренировка" : "тренировки"}</span>
       </div>
+
+      <span className={styles.goal}>{activeGoalLabel}</span>
     </div>
   );
 }

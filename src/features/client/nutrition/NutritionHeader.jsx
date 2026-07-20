@@ -3,11 +3,9 @@ import { todayNutritionKey } from "../../../domain/nutritionPresentation";
 import styles from "./NutritionHeader.module.css";
 
 export default function NutritionHeader({
-  nutritionDateTitle,
   weekDates,
   nutrition,
   nutritionDateKey,
-  nutritionStreakText,
   onOpenSearch,
   onOpenCalendar,
   onSelectDate
@@ -19,7 +17,7 @@ export default function NutritionHeader({
       data-css-module-scope="nutrition-header"
     >
       <div className={styles.titleRow} data-nutrition-header-part="title-row">
-        <h1 className={styles.title} data-nutrition-header-part="title">{nutritionDateTitle}</h1>
+        <h1 className={styles.title} data-nutrition-header-part="title">Питание</h1>
         <div className={styles.actions} data-nutrition-header-part="actions">
           <button
             className={styles.action}
@@ -79,13 +77,10 @@ export default function NutritionHeader({
               <small className={styles.dayLabel} data-nutrition-header-part="day-label">
                 {day.label}
               </small>
+              <span className={styles.dateNumber}>{day.date.getDate()}</span>
             </button>
           );
         })}
-      </div>
-
-      <div className={styles.streak} data-nutrition-header-part="streak">
-        <span className={styles.streakText} data-nutrition-header-part="streak-text">{nutritionStreakText}</span>
       </div>
     </section>
   );

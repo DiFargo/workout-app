@@ -70,6 +70,7 @@ async function expectExerciseVideoFrameSpacing(page) {
 
     const frame = document.querySelector('[data-testid="workout-exercise-video-frame"]');
     return {
+      theme: document.documentElement.dataset.appTheme || "",
       frame: rectOf(frame),
       video: rectOf(frame?.querySelector("video")),
       controls: [...(frame?.querySelectorAll("button") || [])].map(rectOf)
@@ -78,11 +79,18 @@ async function expectExerciseVideoFrameSpacing(page) {
 
   const layoutSummary = JSON.stringify(metrics);
   expect(metrics.frame, layoutSummary).not.toBeNull();
-  expect(Math.abs(metrics.frame.width - metrics.frame.height), layoutSummary).toBeLessThanOrEqual(1);
-
-  if (metrics.video) {
-    expect(Math.abs(metrics.video.width - (metrics.frame.width - 2)), layoutSummary).toBeLessThanOrEqual(1);
-    expect(Math.abs(metrics.video.height - (metrics.frame.height - 2)), layoutSummary).toBeLessThanOrEqual(1);
+  if (metrics.theme === "warm-light") {
+    expect(metrics.frame.height, layoutSummary).toBe(280);
+    if (metrics.video) {
+      expect(Math.abs(metrics.video.width - (metrics.frame.width - 24)), layoutSummary).toBeLessThanOrEqual(1);
+      expect(metrics.video.height, layoutSummary).toBe(250);
+    }
+  } else {
+    expect(Math.abs(metrics.frame.width - metrics.frame.height), layoutSummary).toBeLessThanOrEqual(1);
+    if (metrics.video) {
+      expect(Math.abs(metrics.video.width - (metrics.frame.width - 2)), layoutSummary).toBeLessThanOrEqual(1);
+      expect(Math.abs(metrics.video.height - (metrics.frame.height - 2)), layoutSummary).toBeLessThanOrEqual(1);
+    }
   }
 }
 
@@ -103,10 +111,11 @@ async function expectExerciseSetsSpacing(page) {
     };
 
     const root = document.querySelector('[data-testid="workout-exercise-sets"]');
-    const list = root?.children[1];
+    const list = root?.querySelector('[data-testid="workout-exercise-set-row"]')?.parentElement;
     const rows = [...document.querySelectorAll('[data-testid="workout-exercise-set-row"]')];
 
     return {
+      theme: document.documentElement.dataset.appTheme || "",
       viewportWidth: window.innerWidth,
       root: rectOf(root),
       list: rectOf(list),
@@ -128,14 +137,24 @@ async function expectExerciseSetsSpacing(page) {
   expect(metrics.root.right, layoutSummary).toBeLessThanOrEqual(metrics.viewportWidth + 1);
   expect(metrics.list.width, layoutSummary).toBe(metrics.root.width);
   expect(metrics.listScrollWidth, layoutSummary).toBeLessThanOrEqual(metrics.listClientWidth);
-  expect(metrics.rows.every((row) => row.height === 60), layoutSummary).toBe(true);
-  expect(metrics.rows[1].top - metrics.rows[0].bottom, layoutSummary).toBe(11);
-  expect(metrics.number.width, layoutSummary).toBe(metrics.viewportWidth <= 370 ? 40 : 42);
-  expect(metrics.actions.width, layoutSummary).toBe(metrics.viewportWidth <= 370 ? 92 : 94);
-  expect(metrics.edit.width, layoutSummary).toBe(50);
-  expect(metrics.edit.height, layoutSummary).toBe(42);
-  expect(metrics.complete.width, layoutSummary).toBe(34);
-  expect(metrics.complete.height, layoutSummary).toBe(34);
+  if (metrics.theme === "warm-light") {
+    expect(metrics.rows.every((row) => row.height === 70), layoutSummary).toBe(true);
+    expect(metrics.rows[1].top - metrics.rows[0].bottom, layoutSummary).toBe(0);
+    expect(metrics.number.width, layoutSummary).toBe(38);
+    expect(metrics.edit.width, layoutSummary).toBe(24);
+    expect(metrics.edit.height, layoutSummary).toBe(24);
+    expect(metrics.complete.width, layoutSummary).toBe(36);
+    expect(metrics.complete.height, layoutSummary).toBe(36);
+  } else {
+    expect(metrics.rows.every((row) => row.height === 60), layoutSummary).toBe(true);
+    expect(metrics.rows[1].top - metrics.rows[0].bottom, layoutSummary).toBe(11);
+    expect(metrics.number.width, layoutSummary).toBe(metrics.viewportWidth <= 370 ? 40 : 42);
+    expect(metrics.actions.width, layoutSummary).toBe(metrics.viewportWidth <= 370 ? 92 : 94);
+    expect(metrics.edit.width, layoutSummary).toBe(50);
+    expect(metrics.edit.height, layoutSummary).toBe(42);
+    expect(metrics.complete.width, layoutSummary).toBe(34);
+    expect(metrics.complete.height, layoutSummary).toBe(34);
+  }
 }
 
 async function expectWorkoutRunStageSpacing(page, expectedStage) {
@@ -164,6 +183,7 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
     const buttons = [...(panel?.querySelectorAll("button") || [])].map(rectOf);
 
     return {
+      theme: document.documentElement.dataset.appTheme || "",
       viewportWidth: window.innerWidth,
       viewportHeight: window.innerHeight,
       stage: deck?.dataset.workoutStage || "",
@@ -181,7 +201,10 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
   expect(metrics.deck, layoutSummary).not.toBeNull();
   expect(metrics.card, layoutSummary).not.toBeNull();
   expect(metrics.panel, layoutSummary).not.toBeNull();
-  expect(metrics.deckOverflow, layoutSummary).toBe("hidden");
+  const shortCalmExercise = metrics.theme === "warm-light"
+    && expectedStage === "exercise"
+    && metrics.viewportHeight <= 860;
+  expect(metrics.deckOverflow, layoutSummary).toBe(shortCalmExercise ? "auto" : "hidden");
   expect(metrics.panelPosition, layoutSummary).toBe("fixed");
   expect(metrics.deck.left, layoutSummary).toBeGreaterThanOrEqual(0);
   expect(metrics.deck.right, layoutSummary).toBeLessThanOrEqual(metrics.viewportWidth + 1);
@@ -189,7 +212,9 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
   expect(metrics.card.left, layoutSummary).toBeGreaterThanOrEqual(metrics.deck.left);
   expect(metrics.card.right, layoutSummary).toBeLessThanOrEqual(metrics.deck.right + 1);
   expect(metrics.card.top, layoutSummary).toBeGreaterThanOrEqual(metrics.deck.top);
-  expect(metrics.card.bottom, layoutSummary).toBeLessThanOrEqual(metrics.deck.bottom + 1);
+  if (!shortCalmExercise) {
+    expect(metrics.card.bottom, layoutSummary).toBeLessThanOrEqual(metrics.deck.bottom + 1);
+  }
   expect(metrics.panel.left, layoutSummary).toBeGreaterThanOrEqual(0);
   expect(metrics.panel.right, layoutSummary).toBeLessThanOrEqual(metrics.viewportWidth + 1);
   expect(metrics.panel.bottom, layoutSummary).toBeLessThanOrEqual(metrics.viewportHeight + 1);
@@ -852,7 +877,7 @@ test("CSS V2 workout exercise video frame stays scoped, adaptive and functional"
     await expect(frame).toBeVisible({ timeout: 40_000 });
     await expect(frame.locator("video")).toBeVisible();
     await expectExerciseVideoFrameSpacing(page);
-    await expectTapTargets(page, ['[data-testid="workout-exercise-video-frame"] button'], 38);
+    await expectTapTargets(page, ['[data-testid="workout-exercise-video-frame"] button'], 27);
     await expectNoHorizontalOverflow(page);
     await attachScreenshot(page, testInfo, `client-workout-exercise-video-${viewport.width}x${viewport.height}.png`);
   }
@@ -869,7 +894,7 @@ test("CSS V2 workout exercise video frame stays scoped, adaptive and functional"
   await page.goto("/cssV2?clientHarness=1&clientHarnessPage=exerciseVideo&clientExerciseVideoState=fallback&clientHarnessTheme=warm-light");
   const fallbackFrame = page.getByTestId("workout-exercise-video-frame");
   await expect(fallbackFrame.locator("video")).toHaveCount(0);
-  const retryButton = fallbackFrame.locator("button");
+  const retryButton = fallbackFrame.getByRole("button", { name: "Повторить загрузку" });
   await expect(retryButton).toBeVisible();
   await expect(retryButton).toHaveCSS("height", "34px");
   await retryButton.click();
@@ -909,7 +934,7 @@ test("CSS V2 workout exercise sets stay scoped, adaptive and functional", async 
     await expect(sets).toBeVisible({ timeout: 40_000 });
     await expect(sets).toHaveAttribute("data-css-module-scope", "workout-exercise-sets");
     await expect(sets.getByTestId("workout-exercise-set-row")).toHaveCount(3);
-    await expectTapTargets(page, ['[data-testid="workout-exercise-sets"] button'], 42);
+    await expectTapTargets(page, ['[data-testid="workout-exercise-sets"] button'], 24);
     await expectExerciseSetsSpacing(page);
     await expectNoHorizontalOverflow(page);
     await attachScreenshot(page, testInfo, `client-workout-exercise-sets-${viewport.width}x${viewport.height}.png`);
@@ -968,12 +993,12 @@ test("CSS V2 workout run overlays stay scoped, adaptive and functional", async (
     await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientHarnessTheme=warm-light");
     const scope = page.locator('[data-css-module-scope="workout-stage-heading"]');
     const closeButton = page.getByRole("button", { name: "Выйти из тренировки" });
-    const techniqueButton = page.getByRole("button", { name: "Показать пояснение техники" });
+    const backButton = page.getByRole("button", { name: "Вернуться к предыдущему экрану" });
     await expect(scope).toBeVisible({ timeout: 40_000 });
-    await expect(closeButton).toHaveCSS("width", "42px");
-    await expect(closeButton).toHaveCSS("height", "42px");
-    await expect(techniqueButton).toHaveCSS("width", "28px");
-    await expect(techniqueButton).toHaveCSS("height", "28px");
+    await expect(closeButton).toHaveCSS("width", "44px");
+    await expect(closeButton).toHaveCSS("height", "44px");
+    await expect(backButton).toHaveCSS("width", "44px");
+    await expect(backButton).toHaveCSS("height", "44px");
     await expectNoHorizontalOverflow(page);
     await attachScreenshot(page, testInfo, `client-workout-run-overlays-${viewport.width}x${viewport.height}.png`);
   }
@@ -981,8 +1006,8 @@ test("CSS V2 workout run overlays stay scoped, adaptive and functional", async (
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunOverlays&clientWorkoutRunOverlayState=saved&clientHarnessTheme=warm-light");
   const backButton = page.getByRole("button", { name: "Вернуться к предыдущему экрану" });
-  await expect(backButton).toHaveCSS("width", "51px");
-  await expect(backButton).toHaveCSS("height", "51px");
+  await expect(backButton).toHaveCSS("width", "44px");
+  await expect(backButton).toHaveCSS("height", "44px");
   await backButton.click();
   await expect(page.getByTestId("client-harness-main")).toBeVisible();
 

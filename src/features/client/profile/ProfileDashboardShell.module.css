@@ -1,265 +1,84 @@
 .root {
   box-sizing: border-box;
-  width: calc(100vw - 12px);
-  max-width: 390px;
-  height: calc(100dvh - 4px);
-  min-height: calc(100dvh - 4px);
-  max-height: calc(100dvh - 4px);
-  margin: 6px auto;
+  width: min(402px, 100vw);
+  min-height: 100dvh;
+  margin: 0 auto;
   position: relative;
   overflow: hidden auto;
   overscroll-behavior-y: contain;
-  scroll-padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
-  border: 1px solid var(--color-profile-shell-border);
-  border-radius: 24px;
-  color: var(--color-profile-shell-text);
+  color: #202326;
+  background: #f3f4f3;
   font-family: var(--font-family-compact-ui);
   scrollbar-width: none;
 }
 
-.root::-webkit-scrollbar {
-  display: none;
-}
+.root::-webkit-scrollbar { display: none; }
 
-.main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px 14px calc(98px + env(safe-area-inset-bottom, 0px));
-  background: var(--gradient-profile-shell-main);
-  border-color: var(--color-profile-shell-main-border);
-  box-shadow: var(--shadow-profile-shell-main);
-}
-
+.main,
 .cabinet {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 14px 14px calc(96px + env(safe-area-inset-bottom, 0px));
-  background: var(--gradient-profile-shell-cabinet);
-  box-shadow: var(--shadow-profile-shell-cabinet);
+  padding: 0 0 calc(108px + env(safe-area-inset-bottom, 0px));
 }
 
 .measurements,
 .settings,
 .nutrition {
-  width: min(390px, calc(100vw - 20px));
-  max-width: 390px;
-  height: calc(100dvh - 12px);
-  min-height: calc(100dvh - 12px);
-  max-height: calc(100dvh - 12px);
-  padding: 0 0 calc(92px + env(safe-area-inset-bottom, 0px));
+  width: min(402px, 100vw);
+  min-height: 100dvh;
   overflow: hidden;
-  background: var(--gradient-profile-shell-cabinet);
-  box-shadow: var(--shadow-profile-shell-cabinet);
-}
-
-.settings,
-.nutrition {
-  color: var(--color-profile-shell-auxiliary-text);
-  background: var(--gradient-profile-shell-auxiliary);
-}
-
-.settings {
-  display: flex;
-  flex-direction: column;
+  background: #f3f4f3;
 }
 
 .content {
   box-sizing: border-box;
   width: 100%;
-  max-width: 394px;
   min-height: 0;
   margin: 0;
-  align-self: center;
-  padding: 0 12px;
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: inherit;
-  box-shadow: none;
 }
 
 .mainContent {
-  height: calc(100% - 44px);
-  gap: 8px;
-  overflow: hidden;
+  padding: 0 16px;
+  gap: 14px;
 }
 
 .cabinetContent {
-  height: auto;
-  gap: 0;
+  padding: 0 16px;
 }
 
-.measurementsContent {
-  width: 100%;
-  max-width: none;
-  height: calc(100dvh - 106px);
-  padding: 36px 14px 10px;
-  display: block;
-  overflow: hidden;
-  background: var(--background-profile-shell-measurements-content);
-}
-
+.measurementsContent,
 .settingsContent,
 .nutritionContent {
-  width: 100%;
-  max-width: none;
-  padding: 36px 14px 10px;
+  height: calc(100dvh - 84px);
+  padding: max(36px, env(safe-area-inset-top, 0px)) 14px 10px;
   display: block;
+  overflow: hidden auto;
 }
 
-.heroStats {
-  width: 100%;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  display: block;
-}
+.heroStats { width: 100%; }
 
 .version {
-  width: 100%;
-  margin: -8px 0 0;
-  color: var(--color-profile-shell-version);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 1;
-  text-align: center;
-  opacity: 0.5;
-  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
 }
 
 .harnessTitle {
-  width: 100%;
   margin: 0 0 16px;
-  color: inherit;
   font-size: 28px;
-  font-weight: 900;
-  line-height: 1.06;
 }
 
-@media (max-width: 360px) {
-  .main {
-    padding-top: 12px;
+@media (min-width: 403px) {
+  .root {
+    min-height: min(874px, 100dvh);
+    max-height: min(874px, 100dvh);
+    border-radius: 54px;
+    box-shadow: 0 24px 80px rgba(32, 35, 38, 0.14);
   }
-
-  .cabinet {
-    padding-top: 10px;
-  }
-
-  .mainContent {
-    height: calc(100% - 40px);
-    gap: 6px;
-  }
-}
-
-/* Tablet keeps the client application as one calm, readable surface instead
- * of stretching phone layouts across the entire viewport. */
-@media (min-width: 700px) and (max-width: 979px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    padding: 24px 28px calc(118px + env(safe-area-inset-bottom, 0px));
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .mainContent,
-  :global(:root[data-app-theme="warm-light"]) .cabinetContent {
-    width: 100%;
-    max-width: 640px;
-    margin-right: auto;
-    margin-left: auto;
-  }
-
-}
-
-@media (min-width: 901px) {
-  .main {
-    padding: 16px 14px calc(156px + env(safe-area-inset-bottom, 0px));
-  }
-
-  .cabinet {
-    padding-bottom: calc(156px + env(safe-area-inset-bottom, 0px));
-  }
-
-  .content {
-    padding-right: 14px;
-    padding-left: 14px;
-  }
-}
-
-@media (max-width: 900px) {
-  :global(:root[data-app-theme="warm-light"]) .main,
-  :global(:root[data-app-theme="warm-light"]) .cabinet {
-    border-color: var(--color-profile-shell-border);
-    background: var(--gradient-profile-shell-mobile);
-    color: var(--color-profile-shell-text);
-    box-shadow: var(--shadow-profile-shell-light);
-    font-family: var(--font-family-sans);
-    isolation: isolate;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .main {
-    padding: 0 16px calc(96px + env(safe-area-inset-bottom, 0px));
-    scroll-padding-bottom: calc(132px + env(safe-area-inset-bottom, 0px));
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .cabinet {
-    padding: 0 25px calc(118px + env(safe-area-inset-bottom, 0px));
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .mainContent {
-    height: auto;
-    max-width: none;
-    padding: 0 0 calc(104px + env(safe-area-inset-bottom, 0px));
-    gap: 16px;
-    overflow: visible;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .cabinetContent {
-    max-width: 100%;
-    padding: 0;
-    gap: 10px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .heroStats {
-    min-height: 160px;
-    display: grid;
-    grid-template-rows: 96px 64px;
-    align-items: stretch;
-    gap: 0;
-    overflow: visible;
-    border-radius: 24px;
-  }
-}
-
-@media (min-width: 901px) {
-  :global(:root[data-app-theme="warm-light"]) .main,
-  :global(:root[data-app-theme="warm-light"]) .cabinet {
-    padding: 30px 26px calc(116px + env(safe-area-inset-bottom, 0px));
-    background: var(--gradient-profile-shell-wide);
-    color: var(--color-profile-shell-text);
-    box-shadow: var(--shadow-profile-shell-light);
-    isolation: isolate;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .mainContent,
-  :global(:root[data-app-theme="warm-light"]) .cabinetContent {
-    padding: 0;
-  }
-}
-
-:global(:root[data-app-theme="warm-light"]) .measurements,
-:global(:root[data-app-theme="warm-light"]) .settings,
-:global(:root[data-app-theme="warm-light"]) .nutrition {
-  border-color: var(--color-profile-shell-auxiliary-border);
-  background: var(--gradient-profile-shell-auxiliary);
-  color: var(--color-profile-shell-auxiliary-text);
-  box-shadow: var(--shadow-profile-shell-cabinet);
-}
-
-:global(:root[data-app-theme="warm-light"]) .measurements {
-  background: var(--gradient-profile-shell-measurements);
 }

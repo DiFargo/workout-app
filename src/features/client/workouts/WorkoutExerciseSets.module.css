@@ -4,6 +4,108 @@
   background: var(--color-workout-set-list-surface);
 }
 
+:global(html[data-app-theme="warm-light"]) .root.root {
+  box-sizing: border-box;
+  width: 100%;
+  height: 210px;
+  margin: 0;
+  padding: 0;
+}
+:global(html[data-app-theme="warm-light"]) .root.root > .title { display: none; }
+:global(html[data-app-theme="warm-light"]) .list.list {
+  width: 100%;
+  height: 210px;
+  max-height: 210px;
+  display: block;
+  overflow: hidden auto;
+  border-radius: 0;
+  background: transparent;
+  scrollbar-width: none;
+}
+:global(html[data-app-theme="warm-light"]) .list.list::-webkit-scrollbar { display: none; }
+:global(html[data-app-theme="warm-light"]) .row.row {
+  box-sizing: border-box;
+  width: 100%;
+  height: 70px;
+  min-height: 70px;
+  margin: 0;
+  padding: 0 58px 0 78px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+:global(html[data-app-theme="warm-light"]) .row.row + .row.row { border-top: 1px solid #e1e4e5; }
+:global(html[data-app-theme="warm-light"]) .number.number {
+  width: 38px;
+  min-width: 38px;
+  max-width: 38px;
+  height: 38px;
+  min-height: 38px;
+  max-height: 38px;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  left: 3px;
+  top: 15px;
+  border-radius: 50%;
+  background: #edf1f3;
+  color: #627588;
+  font-size: 14px;
+  font-weight: 700;
+}
+:global(html[data-app-theme="warm-light"]) .completed .number.number { background: #627588; color: #fff; }
+:global(html[data-app-theme="warm-light"]) .plan.plan {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+:global(html[data-app-theme="warm-light"]) .reps.reps { color: #74797f; font-size: 10px; font-weight: 600; line-height: 17px; }
+:global(html[data-app-theme="warm-light"]) .weight.weight { color: #202326; font-size: 16px; font-weight: 700; line-height: 22px; }
+:global(html[data-app-theme="warm-light"]) .actions.actions { position: static; width: auto; height: auto; display: contents; }
+:global(html[data-app-theme="warm-light"]) .root.root .editButton.editButton {
+  width: 24px;
+  min-width: 24px;
+  max-width: 24px;
+  height: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: 23px;
+  left: 48px;
+  border: 0;
+  background: transparent;
+  color: #627588;
+}
+:global(html[data-app-theme="warm-light"]) .editButton.editButton svg { width: 18px; height: 18px; }
+:global(html[data-app-theme="warm-light"]) .completeButton.completeButton {
+  width: 36px;
+  min-width: 36px;
+  max-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: 17px;
+  right: 12px;
+  border: 1.5px solid #d9d3f4;
+  border-radius: 50%;
+  background: #fff;
+  color: #b9b0e8;
+}
+:global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton { border-color: #627588; background: #627588; color: #fff; }
+
 .row {
   box-sizing: border-box;
   min-height: 52px;

@@ -117,7 +117,8 @@ export default function WorkoutExerciseSets({
   hasExternalWeight,
   onToggleSetCompleted,
   onUpdateSet,
-  sharedExerciseAiWeightAdjustment
+  sharedExerciseAiWeightAdjustment,
+  showTitle = true
 }) {
   const [editingSetDraft, setEditingSetDraft] = useState(null);
   const repsWheelRef = useRef(null);
@@ -282,7 +283,7 @@ export default function WorkoutExerciseSets({
       data-testid="workout-exercise-sets"
       data-css-module-scope="workout-exercise-sets"
     >
-      <div className={styles.title}>План на сегодня</div>
+      {showTitle && <div className={styles.title}>План на сегодня</div>}
       <div className={styles.list}>
         {exercise.sets.map((set, index) => {
           const repsValue = getPlannedValue(set.enteredReps, set.reps);

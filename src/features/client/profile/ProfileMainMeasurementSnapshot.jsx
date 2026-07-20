@@ -51,16 +51,15 @@ export default function ProfileMainMeasurementSnapshot({
       aria-label="Последние замеры веса"
     >
       <div className={styles.header} data-testid="profile-measurement-snapshot-header">
-        <span>Последние замеры</span>
+        <span>Вес</span>
       </div>
       <div className={styles.body} data-testid="profile-measurement-snapshot-body">
         <div className={styles.weight} data-testid="profile-measurement-snapshot-weight">
-          <span>Текущий вес</span>
           <strong>{latestWeightLabel}</strong>
           {weightChange !== 0 && (
             <em>{weightChange > 0 ? "+" : ""}{weightChange.toFixed(1)} кг</em>
           )}
-          <small>{latestMeasurement ? "к прошлому замеру" : "добавь первый замер"}</small>
+          <small>{latestMeasurement ? "последний замер" : "добавь первый замер"}</small>
         </div>
         <div className={styles.chart} data-testid="profile-measurement-snapshot-chart">
           {chartPoints.length >= 2 ? (

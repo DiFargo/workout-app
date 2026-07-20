@@ -7,6 +7,7 @@ import "./AppCoreSurface.module.css";
 import "./AppCoreLayout.module.css";
 import "./AppCoreClientFlow.module.css";
 import "./AppCoreClientVisual.module.css";
+import "./AppCoreClientIosTheme.module.css";
 /* eslint-disable react-hooks/refs -- Event factories capture refs for later handlers; they do not read refs during render. */
 import {
   defaultNutritionState
@@ -2928,6 +2929,7 @@ function AppRuntime() {
     requestDeleteOwnHistoryWorkout,
     requestLeaveWorkout,
     restTimerDuration,
+    restTimerRunning,
     restTimerSeconds,
     safeWriteUserJsonStorage,
     saveAdminClientCalendar,

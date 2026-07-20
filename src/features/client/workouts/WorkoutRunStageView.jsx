@@ -6,6 +6,7 @@ import WorkoutExerciseSupport from "./WorkoutExerciseSupport";
 import WorkoutExerciseVideoFrame from "./WorkoutExerciseVideoFrame";
 import WorkoutFinishStage from "./WorkoutFinishStage";
 import WorkoutStageActionPanel from "./WorkoutStageActionPanel";
+import WorkoutRestTimer from "./WorkoutRestTimer";
 import { WorkoutStageHeading } from "./WorkoutRunOverlays";
 import { WorkoutWarmupBody, WorkoutWarmupHeader } from "./WorkoutWarmupStage";
 import { buildWorkoutRunStageModel } from "./workoutRunStageModel";
@@ -80,6 +81,9 @@ export default function WorkoutRunStageView({
   plan,
   postWorkoutFeedback,
   requestLeaveWorkout,
+  restTimerDuration,
+  restTimerRunning,
+  restTimerSeconds,
   saveWorkoutToFirebase,
   setExerciseHistoryOpenId,
   setExerciseNoteOpenId,
@@ -90,6 +94,8 @@ export default function WorkoutRunStageView({
   setIsWorkoutSaved,
   setOpenVideoId,
   setPostWorkoutFeedbackOpen,
+  setRestTimerRunning,
+  setRestTimerSeconds,
   setShowWorkoutSavedCard,
   setVideoLoadingId,
   setVideoRetryToken,
@@ -100,6 +106,7 @@ export default function WorkoutRunStageView({
   showInlineVideoControlsTemporarily,
   showWorkoutSavedCard,
   startPerformanceCheck,
+  startRestTimer,
   swipeDirection,
   swipeOffset,
   toggleWarmupStep,
@@ -257,9 +264,8 @@ export default function WorkoutRunStageView({
               />
             ) : (
               <>
-                <div className={styles.exerciseMeta}>
-                  <span>{finishPresentation.day} · Упражнение {currentExerciseIndex} из {workout.exercises.length}</span>
-                  <b>{String(currentExerciseIndex).padStart(2, "0")}</b>
+                <div className={styles.exerciseMeta} data-testid="workout-exercise-progress">
+                  <span>{currentExerciseIndex} из {workout.exercises.length}</span>
                 </div>
 
                 <WorkoutExerciseVideoFrame
@@ -272,6 +278,11 @@ export default function WorkoutRunStageView({
                   onInlineVideoPlayFailed={() => {
                     showAppError("load", "Не получилось запустить видео упражнения.");
                   }}
+                  onOpenTechnique={(event) => openWorkoutExerciseModal(
+                    setExerciseTechniqueOpenId,
+                    exercise.id,
+                    event.currentTarget
+                  )}
                   onRetryVideo={() => {
                     setOpenVideoId(null);
                     setVideoRetryToken((current) => current + 1);
@@ -339,40 +350,67 @@ export default function WorkoutRunStageView({
                 warmupSteps={warmupSteps}
               />
             ) : (
-              <WorkoutExerciseSets
-                exercise={exercise}
-                hasExternalWeight={exerciseUsesExternalWeight(exercise)}
-                onToggleSetCompleted={toggleWorkoutSetCompleted}
-                onUpdateSet={updateSet}
-                sharedExerciseAiWeightAdjustment={sharedExerciseAiWeightAdjustment}
-              />
+              <section className={styles.planSection} data-testid="workout-plan-section">
+                <h2>План на сегодня</h2>
+                <div className={styles.planCard} data-testid="workout-plan-card">
+                  <WorkoutExerciseSets
+                    exercise={exercise}
+                    hasExternalWeight={exerciseUsesExternalWeight(exercise)}
+                    onToggleSetCompleted={toggleWorkoutSetCompleted}
+                    onUpdateSet={updateSet}
+                    sharedExerciseAiWeightAdjustment={sharedExerciseAiWeightAdjustment}
+                    showTitle={false}
+                  />
+
+                  <WorkoutExerciseSupport
+                    exercise={exercise}
+                    exerciseAiWeightAdjustments={exerciseAiWeightAdjustments}
+                    exerciseHistoryOpenId={exerciseHistoryOpenId}
+                    lastExerciseText={getLastExerciseText(exercise, lastExerciseResults)}
+                    onOpenNote={(event) => openWorkoutExerciseModal(
+                      setExerciseNoteOpenId,
+                      exercise.id,
+                      event.currentTarget
+                    )}
+                    onToggleHistory={() => setExerciseHistoryOpenId((current) => current === exercise.id ? "" : exercise.id)}
+                    readinessVolumeText={workoutReadiness?.volumeText}
+                  />
+
+                  <WorkoutExerciseModals
+                    exercise={exercise}
+                    noteOpen={exerciseNoteOpenId === exercise.id}
+                    onCloseNote={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
+                    onCloseTechnique={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
+                    onUpdateNote={updateExerciseNote}
+                    techniqueHint={getExerciseTechniqueHint(exercise.name)}
+                    techniqueOpen={exerciseTechniqueOpenId === exercise.id}
+                  />
+                </div>
+              </section>
             )}
 
             {!isWarmup && (
-              <WorkoutExerciseSupport
-                exercise={exercise}
-                exerciseAiWeightAdjustments={exerciseAiWeightAdjustments}
-                exerciseHistoryOpenId={exerciseHistoryOpenId}
-                lastExerciseText={getLastExerciseText(exercise, lastExerciseResults)}
-                onOpenNote={(event) => openWorkoutExerciseModal(
-                  setExerciseNoteOpenId,
-                  exercise.id,
-                  event.currentTarget
-                )}
-                onToggleHistory={() => setExerciseHistoryOpenId((current) => current === exercise.id ? "" : exercise.id)}
-                readinessVolumeText={workoutReadiness?.volumeText}
+              <WorkoutRestTimer
+                duration={restTimerDuration}
+                running={restTimerRunning}
+                seconds={restTimerSeconds}
+                onStart={startRestTimer}
+                onSecondsChange={setRestTimerSeconds}
+                onRunningChange={setRestTimerRunning}
               />
             )}
 
-            <WorkoutExerciseModals
-              exercise={exercise}
-              noteOpen={exerciseNoteOpenId === exercise.id}
-              onCloseNote={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
-              onCloseTechnique={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
-              onUpdateNote={updateExerciseNote}
-              techniqueHint={getExerciseTechniqueHint(exercise.name)}
-              techniqueOpen={exerciseTechniqueOpenId === exercise.id}
-            />
+            {isWarmup && (
+              <WorkoutExerciseModals
+                exercise={exercise}
+                noteOpen={false}
+                onCloseNote={() => {}}
+                onCloseTechnique={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
+                onUpdateNote={updateExerciseNote}
+                techniqueHint={getExerciseTechniqueHint(exercise.name)}
+                techniqueOpen={exerciseTechniqueOpenId === exercise.id}
+              />
+            )}
 
           </div>
 

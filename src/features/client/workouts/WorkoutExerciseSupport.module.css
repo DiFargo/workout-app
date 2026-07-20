@@ -8,6 +8,48 @@
   gap: 3px 8px;
 }
 
+:global(:root[data-app-theme="warm-light"]) .root.root {
+  box-sizing: border-box;
+  width: 100%;
+  height: 48px;
+  min-height: 48px;
+  padding: 6px 18px 7px 11px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid #e1e4e5;
+}
+:global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo {
+  max-width: 230px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: #74797f;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo::before { content: "◷"; margin-right: 7px; color: #74797f; font-size: 16px; }
+:global(:root[data-app-theme="warm-light"]) .noteButton.noteButton {
+  min-width: 66px;
+  max-width: 80px;
+  height: 26px;
+  min-height: 26px;
+  max-height: 26px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 13px;
+  background: #f4f4f8;
+  color: #74797f;
+  font-size: 9.5px;
+  font-weight: 700;
+}
+:global(:root[data-app-theme="warm-light"]) .aiAdjustHint { display: none; }
+
 .previousInfo {
   width: auto;
   height: auto;

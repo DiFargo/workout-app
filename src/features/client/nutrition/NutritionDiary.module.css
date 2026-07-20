@@ -1,432 +1,102 @@
-@layer components {
-  .diaryBlock {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    margin-bottom: 0.875rem;
-    color: var(--color-text-primary);
-    -webkit-text-fill-color: currentColor;
-  }
+.diaryBlock {
+  box-sizing: border-box;
+  width: calc(100% - 32px);
+  height: 35px;
+  margin: 12px 16px 0;
+}
 
-  .diaryHeader {
-    display: grid;
-    grid-template-columns: 3rem minmax(0, 1fr) 1rem;
-    align-items: center;
-    width: 100%;
-    min-height: 4.875rem;
-    padding: 0.75rem 1rem;
-    gap: 0.75rem;
-    color: #171923;
-    text-align: left;
-    background: rgba(255, 255, 255, 0.94);
-    border: 1px solid #e1e4ef;
-    border-radius: 1.25rem;
-    box-shadow: 0 0.75rem 1.75rem rgba(55, 64, 112, 0.08);
-    cursor: pointer;
-  }
+.diaryHeader {
+  width: 100%;
+  height: 35px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  background: transparent;
+  color: #202326;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.titleText { font-size: 17px; font-weight: 700; }
+.diaryHeader > svg { width: 18px; height: 18px; color: #a9aeb2; }
+.diaryTitle, .diaryMeta, .subtitleText { display: none; }
 
-  .diaryHeader:focus-visible,
-  .addButton:focus-visible,
-  .emptyButton:focus-visible,
-  .mealOpenArea:focus-visible,
-  .mealToggle:focus-visible,
-  .mealAddButton:focus-visible,
-  .foodButton:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-  }
+.mealList {
+  box-sizing: border-box;
+  width: calc(100% - 32px);
+  height: 150px;
+  margin: 0 16px;
+  display: block;
+  overflow: hidden;
+  border: 1px solid #e1e4e5;
+  border-radius: 22px;
+  background: #fff;
+}
+.mealCard { height: 50px; position: relative; }
+.mealCard:not(:last-child)::after { content: ""; height: 1px; position: absolute; right: 15px; bottom: 0; left: 45px; background: #e1e4e5; }
+.mealRow {
+  width: 100%;
+  height: 50px;
+  padding: 5px 10px 5px 8px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  position: relative;
+}
+.mealOpenArea { position: absolute; z-index: 3; inset: 0; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.mealIcon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 13px; background: #edf1f3; color: #627588; }
+.mealIcon svg { width: 14px; height: 14px; stroke-width: 2; }
+.mealTitle { min-width: 0; display: flex; flex-direction: column; }
+.mealTitle strong { color: #202326; font-size: 12px; font-weight: 700; line-height: 16px; }
+.mealTitle span { color: #74797f; font-size: 10px; font-weight: 500; line-height: 15px; }
+.mealCalories { display: flex; align-items: center; gap: 3px; color: #74797f; }
+.mealCalories strong { font-size: 10.5px; font-weight: 600; }
+.mealCalories svg { width: 16px; height: 16px; color: #a9aeb2; }
 
-  .diaryIcon,
-  .mealIcon,
-  .foodIcon {
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-  }
+.modalOverlay { position: fixed; z-index: 1200; inset: 0; display: grid; align-items: end; }
+.modalBackdrop { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: rgba(19, 23, 28, 0.42); }
+.modalSheet {
+  width: min(100%, 402px);
+  max-height: 88dvh;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e1e4e5;
+  border-bottom: 0;
+  border-radius: 28px 28px 0 0;
+  background: #f3f4f3;
+  box-shadow: 0 -20px 70px rgba(32, 35, 38, 0.16);
+}
+.modalHeader { padding: 16px 18px; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; border-bottom: 1px solid #e1e4e5; background: #fff; }
+.diaryIcon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: #edf1f3; }
+.modalHeader h2 { margin: 2px 0; color: #202326; font-size: 18px; }
+.modalHeader small, .modalHeader strong { display: block; color: #74797f; font-size: 11px; }
+.modalHeader > button { width: 44px; height: 44px; border: 0; border-radius: 50%; background: #edf1f3; color: #202326; font-size: 24px; }
+.content { padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 12px; overflow-y: auto; }
+.mealGroup { overflow: hidden; border: 1px solid #e1e4e5; border-radius: 18px; background: #fff; }
+.mealHeading { padding: 12px; display: grid; grid-template-columns: 40px 1fr 42px; align-items: center; gap: 10px; }
+.mealHeading > div { min-width: 0; display: flex; flex-direction: column; }
+.mealHeading small { color: #74797f; font-size: 11px; }
+.addButton, .mealAddButton { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: #627588; color: #fff; font-size: 20px; }
+.foods { border-top: 1px solid #e1e4e5; }
+.swipeShell { position: relative; overflow: hidden; background: #b36e72; }
+.swipeShell + .swipeShell { border-top: 1px solid #e1e4e5; }
+.deleteBackground { position: absolute; inset: 0 16px 0 auto; display: grid; place-items: center; color: #fff; }
+.foodButton { width: 100%; min-height: 64px; padding: 8px 12px; display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; position: relative; border: 0; background: #fff; color: #202326; text-align: left; transition: opacity .18s ease, transform .18s ease; }
+.foodIcon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: #edf1f3; }
+.foodText, .foodCalories { min-width: 0; display: flex; flex-direction: column; }
+.foodText strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.foodText small, .foodCalories small { color: #74797f; font-size: 10px; }
+.foodCalories { align-items: flex-end; }
+.emptyButton { width: calc(100% - 24px); margin: 0 12px 12px; padding: 12px; border: 1px dashed #cfd6da; border-radius: 12px; background: #edf1f3; color: #74797f; }
+.deleting { pointer-events: none; }
 
-  .diaryIcon {
-    width: 3rem;
-    height: 3rem;
-    margin-right: 0;
-    color: #6047f2;
-    font-size: 1.375rem;
-    line-height: 1;
-    background: #f0edff;
-    border: 1px solid #e4e0ff;
-    border-radius: 0.8125rem;
-  }
-
-  .diaryTitle,
-  .diaryMeta,
-  .foodText,
-  .foodCalories {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-  }
-
-  .diaryTitle {
-    display: grid;
-    gap: 0.1875rem;
-  }
-
-  .titleText {
-    display: block;
-    color: #151824;
-    font-size: 1.0625rem;
-    font-weight: 900;
-    line-height: 1.08;
-  }
-
-  .subtitleText,
-  .diaryMeta small,
-  .foodText small,
-  .foodCalories small,
-  .mealHeading small {
-    color: var(--color-text-muted);
-    font-size: var(--font-size-xs);
-  }
-
-  .subtitleText {
-    display: block;
-    color: #737b91;
-    font-weight: 800;
-    line-height: 1.16;
-  }
-
-  .diaryMeta {
-    align-items: flex-end;
-    width: 1.125rem;
-    height: 2.25rem;
-    margin-left: 0;
-  }
-
-  .diaryMeta i {
-    display: flex;
-    width: 1.125rem;
-    height: 2.25rem;
-    align-items: center;
-    justify-content: flex-end;
-    color: #6f7482;
-    font-size: 2.125rem;
-    font-style: normal;
-    font-weight: 800;
-    line-height: 2.125rem;
-  }
-
-  .diaryMeta small { display: none; }
-
-  .modalOverlay {
-    position: fixed;
-    z-index: 1200;
-    inset: 0;
-    display: grid;
-    align-items: end;
-  }
-
-  .modalBackdrop {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    background: var(--color-overlay);
-    border: 0;
-  }
-
-  .modalSheet {
-    position: relative;
-    display: flex;
-    width: min(100%, var(--content-max-width));
-    max-height: min(88dvh, 52rem);
-    margin-inline: auto;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--color-background);
-    border: 1px solid var(--color-border);
-    border-bottom: 0;
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    box-shadow: var(--shadow-overlay);
-  }
-
-  .modalHeader {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-4) var(--page-inline-padding);
-    background: var(--color-surface);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .modalHeader h2 {
-    margin: 0.1rem 0;
-    font-size: var(--font-size-lg);
-    line-height: var(--line-height-tight);
-  }
-
-  .modalHeader small,
-  .modalHeader strong {
-    color: var(--color-text-muted);
-    font-size: var(--font-size-xs);
-  }
-
-  .modalHeader > button {
-    display: grid;
-    width: 2.75rem;
-    min-width: 2.75rem;
-    height: 2.75rem;
-    min-height: 2.75rem;
-    padding: 0;
-    place-items: center;
-    color: var(--color-text);
-    font-size: 1.5rem;
-    background: var(--color-surface-muted);
-    border: 0;
-    border-radius: var(--radius-pill);
-    cursor: pointer;
-  }
-
-  .content {
-    display: grid;
-    gap: var(--space-3);
-    padding: var(--space-4) var(--page-inline-padding) calc(var(--space-6) + var(--safe-area-bottom));
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-
-  .mealGroup {
-    overflow: hidden;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-  }
-
-  .mealHeading {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-3);
-  }
-
-  .mealIcon,
-  .foodIcon {
-    width: 2.5rem;
-    height: 2.5rem;
-    background: var(--color-surface-muted);
-    border-radius: var(--radius-sm);
-  }
-
-  .mealHeading > div {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-  }
-
-  .addButton,
-  .mealAddButton {
-    display: grid;
-    padding: 0;
-    place-items: center;
-    color: var(--color-accent-contrast);
-    font-size: 1.25rem;
-    font-weight: var(--font-weight-semibold);
-    background: var(--color-accent);
-    border: 0;
-    border-radius: var(--radius-pill);
-    cursor: pointer;
-  }
-
-  .addButton {
-    width: 2.75rem;
-    min-width: 2.75rem;
-    height: 2.75rem;
-    min-height: 2.75rem;
-  }
-
-  .foods {
-    border-top: 1px solid var(--color-border);
-  }
-
-  .swipeShell {
-    position: relative;
-    overflow: hidden;
-    background: var(--color-danger);
-  }
-
-  .swipeShell + .swipeShell {
-    border-top: 1px solid var(--color-border);
-  }
-
-  .deleteBackground {
-    position: absolute;
-    inset: 0 var(--space-4) 0 auto;
-    display: grid;
-    place-items: center;
-    color: #fff;
-    font-size: 1.5rem;
-  }
-
-  .foodButton {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--space-3);
-    width: 100%;
-    min-height: 4rem;
-    padding: var(--space-2) var(--space-3);
-    color: var(--color-text);
-    text-align: left;
-    background: var(--color-surface-raised);
-    border: 0;
-    transition: opacity var(--transition-fast), transform var(--transition-fast);
-    touch-action: pan-y;
-    cursor: pointer;
-  }
-
-  .foodText strong {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .foodCalories {
-    align-items: flex-end;
-    white-space: nowrap;
-  }
-
-  .foodCalories strong {
-    font-size: var(--font-size-md);
-  }
-
-  .deleting {
-    pointer-events: none;
-  }
-
-  .emptyButton {
-    width: calc(100% - 2 * var(--space-3));
-    margin: 0 var(--space-3) var(--space-3);
-    padding: var(--space-3);
-    color: var(--color-text-muted);
-    background: var(--color-surface-muted);
-    border: 1px dashed var(--color-border);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-  }
-
-  .mealList {
-    position: relative;
-    z-index: 1;
-    display: none;
-    gap: var(--space-3);
-    width: 100%;
-  }
-
-  .mealCard {
-    overflow: hidden;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .mealCard {
-    border-color: rgba(72, 58, 29, 0.14);
-  }
-
-  .mealRow {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: var(--space-3);
-    min-height: 4.75rem;
-    padding: var(--space-3);
-  }
-
-  .mealOpenArea {
-    position: absolute;
-    z-index: 0;
-    inset: 0;
-    padding: 0;
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-  }
-
-  .mealIcon,
-  .mealTitle,
-  .mealCalories,
-  .mealActions {
-    position: relative;
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  .mealTitle {
-    display: grid;
-    min-width: 0;
-    gap: 0.15rem;
-  }
-
-  .mealTitle > strong {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .mealTitle > span,
-  .mealCalories span {
-    color: var(--color-text-muted);
-    font-size: var(--font-size-xs);
-  }
-
-  .mealToggle,
-  .mealAddButton {
-    pointer-events: auto;
-  }
-
-  .mealToggle {
-    width: max-content;
-    padding: 0;
-    color: var(--color-accent-strong);
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-  }
-
-  .disabled {
-    visibility: hidden;
-  }
-
-  .mealCalories {
-    display: flex;
-    min-width: 3.5rem;
-    flex-direction: column;
-    align-items: flex-end;
-    line-height: 1.15;
-  }
-
-  .mealActions {
-    display: flex;
-  }
-
-  .mealAddButton {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
-  @media (min-width: 48rem) {
-    .modalOverlay {
-      align-items: center;
-      padding: var(--space-6);
-    }
-
-    .modalSheet {
-      border-bottom: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-    }
-  }
+@media (min-width: 700px) {
+  .modalOverlay { align-items: center; padding: 24px; }
+  .modalSheet { border-bottom: 1px solid #e1e4e5; border-radius: 28px; }
 }
