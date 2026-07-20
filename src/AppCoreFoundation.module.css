@@ -145,11 +145,6 @@
   --success: #5f8f4e;
 }
 
-html,
-body {
-  overscroll-behavior: none;
-}
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;

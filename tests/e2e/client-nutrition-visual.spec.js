@@ -170,7 +170,7 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
     await expect(header).toBeVisible();
     await expect(header).toHaveAttribute("data-css-module-scope", "nutrition-header");
     await expect(header).toHaveAttribute("data-client-page-header", "true");
-    await expect(header).toHaveCSS("position", "sticky");
+    await expect(header).toHaveCSS("position", "fixed");
     await expect(title).toHaveCSS("font-size", "16px");
     await expect(actions).toHaveCount(2);
     await expect(actions.first()).toHaveCSS("width", "44px");
@@ -727,7 +727,7 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
     await expect(header).toHaveAttribute("data-css-module-scope", "food-search-header");
     await expect(header).toHaveAttribute("data-food-search-header-variant", "search");
     await expect(header).toHaveAttribute("data-client-page-header", "true");
-    await expect(header).toHaveCSS("position", "sticky");
+    await expect(header).toHaveCSS("position", "fixed");
     await expect(header).toHaveCSS("height", "132px");
     await expect(header).toHaveCSS("margin-top", "0px");
     await expect(title).toHaveCSS("font-size", "16px");
@@ -1105,7 +1105,7 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(productHeader).toBeVisible();
     await expect(productHeader).toHaveAttribute("data-css-module-scope", "food-product-header");
     await expect(productHeader).toHaveAttribute("data-client-page-header", "true");
-    await expect(productHeader).toHaveCSS("position", "sticky");
+    await expect(productHeader).toHaveCSS("position", "fixed");
     await expect(productHeader).toHaveCSS("height", "132px");
     await expect(productHeader).toHaveCSS("display", "block");
     await expect(productTitle).toHaveCSS("font-size", "16px");

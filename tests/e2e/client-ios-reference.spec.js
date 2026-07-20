@@ -45,7 +45,14 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
 
-  await expect(page.getByTestId("profile-main-header")).toHaveCSS("position", "sticky");
+  const mainHeader = page.getByTestId("profile-main-header");
+  await expect(mainHeader).toHaveCSS("position", "fixed");
+  await expect(mainHeader).toHaveCSS("background-color", "rgb(243, 244, 243)");
+  await expect(mainHeader).toHaveCSS("backdrop-filter", "none");
+  expect(await mainHeader.evaluate((node) => getComputedStyle(node, "::after").content)).toBe("none");
+  await expect(page.locator("html")).toHaveCSS("overscroll-behavior-y", "none");
+  await expect(page.locator("body")).toHaveCSS("overscroll-behavior-y", "none");
+  await expect(page.getByTestId("client-harness-main")).toHaveCSS("overscroll-behavior-y", "none");
   await expectRect(page.getByTestId("profile-main-title"), { x: 169, y: 19, width: 63, height: 22 });
   await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 8, width: 44, height: 44 });
   await expectRect(page.getByTestId("profile-main-hero"), { x: 16, y: 72, width: 370, height: 96 });
@@ -54,7 +61,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 474, width: 370, height: 174 });
   await expectRect(page.getByTestId("profile-main-last-workout"), { x: 16, y: 662, width: 370, height: 50 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
-  await expectStickyHeaderWhileScrolling(page.getByTestId("profile-main-header"));
+  await expectStickyHeaderWhileScrolling(mainHeader);
 
   await page.getByTestId("client-nav-cabinet").click();
   await expect(page.getByTestId("profile-cabinet-title")).toHaveText("Кабинет");

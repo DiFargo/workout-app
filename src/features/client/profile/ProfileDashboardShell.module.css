@@ -5,7 +5,7 @@
   margin: 0 auto;
   position: relative;
   overflow: hidden auto;
-  overscroll-behavior-y: auto;
+  overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   color: #202326;
