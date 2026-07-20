@@ -33,7 +33,7 @@
   place-items: center;
   position: relative;
   border-radius: 50%;
-  background: conic-gradient(from -90deg, #8f7ac8 0 var(--progress-fill), #dce3e7 var(--progress-fill) 360deg);
+  background: conic-gradient(from 0deg, #8f7ac8 0 var(--progress-fill), #dce3e7 var(--progress-fill) 360deg);
 }
 
 .gauge::after {
