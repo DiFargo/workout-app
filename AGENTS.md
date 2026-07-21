@@ -68,16 +68,12 @@ Before finishing any task:
 
 ### General Style
 
-Application style:
+The light, lavender iOS interface is the primary and current product design.
 
-- Premium Dark
-- Mobile First
-- Fullscreen UX
-- Hevy inspired
-- Strong inspired
-- Alpha Progression inspired
-- FatSecret inspired
-- MyFitnessPal inspired
+- Mobile first, fullscreen iOS-like UX.
+- Main palette: background `#F7F6F8`, cards `#FFFFFF`, secondary surface `#F5F2F7`, borders `#EFEBF3`, text `#28262E`, secondary text `#7B7682`, accent `#8F7AC8`, active accent `#806BB6`.
+- Do not restore the former grey-blue, bright-purple, or Premium Dark colours and components.
+- Every new page must visually match the current light iOS interface.
 
 ### Design Principles
 
@@ -87,7 +83,16 @@ Application style:
 - Consistent border radius
 - Consistent component heights
 - One unified product appearance
-- Modern fitness-app aesthetic
+- Use fixed, opaque iOS-style headers that account for the safe area.
+- Keep bottom bars consistent in height, spacing, and element placement.
+- Treat modals as separate, polished sheets with padding, rounded corners, a shadow, and a close button.
+
+### Style Architecture
+
+- Preserve the existing CSS Modules structure.
+- Keep component styles colocated; do not move them into one global CSS file.
+- Reuse established interface patterns instead of introducing legacy components or a parallel visual system.
+- Do not change business logic, Firebase, authentication, roles, or navigation while making visual changes unless explicitly requested.
 
 ## Workout Module Rules
 
@@ -193,4 +198,4 @@ Only generate images if explicitly requested with:
 
 ## Versioning
 
-Every completed task must increment version.
+Increment the application version for completed runtime releases. Documentation-only changes must not change the runtime version.
