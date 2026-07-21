@@ -39,6 +39,8 @@
 
 .modeButton.active,
 .modeButton.active:hover,
+.dropdownButton.active,
+.dropdownButton.active:hover,
 .dropdownButton:active {
   border-color: var(--color-food-nav-active-border);
   background: var(--color-food-nav-active-surface);
@@ -235,6 +237,8 @@
 
 :global(:root[data-app-theme="warm-light"]) .modeButton.active,
 :global(:root[data-app-theme="warm-light"]) .modeButton.active:hover,
+:global(:root[data-app-theme="warm-light"]) .dropdownButton.active,
+:global(:root[data-app-theme="warm-light"]) .dropdownButton.active:hover,
 :global(:root[data-app-theme="warm-light"]) .dropdownButton:active {
   border: 0;
   background: #fff;

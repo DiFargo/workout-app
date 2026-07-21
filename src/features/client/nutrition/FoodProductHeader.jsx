@@ -20,6 +20,7 @@ export default function FoodProductHeader({
         <ClientPageHeader
           compact
           controlsVariant="workout"
+          frameClassName={styles.flowHeaderFrame}
           className={styles.flowHeader}
           title="Продукт"
           titleTestId="food-product-header-title"

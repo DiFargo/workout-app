@@ -125,8 +125,8 @@ export default function FoodProductNutrition({
           data-food-product-action="edit-note"
           onClick={onOpenEditPage}
         >
-          <span className={styles.noteIcon} aria-hidden="true">▤</span>
-          <span className={styles.noteLabel} data-css-module-text>Описание продукта</span>
+          <span className={styles.noteIcon} aria-hidden="true" data-food-product-note-part="icon">▤</span>
+          <span className={styles.noteLabel} data-css-module-text data-food-product-note-part="label">Описание продукта</span>
           <strong className={styles.noteValue} data-css-module-text>{editNote.trim() || "Не добавлено"}</strong>
           <em className={styles.chevron} aria-hidden="true">›</em>
         </button>

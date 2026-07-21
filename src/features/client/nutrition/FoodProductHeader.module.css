@@ -335,6 +335,13 @@
   display: block;
 }
 
+:global(:root[data-app-theme="warm-light"]) .flowHeaderFrame {
+  width: calc(100% + 32px);
+  max-width: none;
+  margin-right: -16px;
+  margin-left: -16px;
+}
+
 :global(:root[data-app-theme="warm-light"]) .flowTitle { height: 44px; min-height: 44px; }
 :global(:root[data-app-theme="warm-light"]) .eyebrow { display: none; }
 :global(:root[data-app-theme="warm-light"]) .heading {

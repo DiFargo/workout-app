@@ -1213,6 +1213,8 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     const macros = page.getByTestId("food-product-macros");
     const macroCards = macros.locator(":scope > div");
     const noteCard = page.getByTestId("food-product-note-card");
+    const noteIcon = page.locator('[data-food-product-note-part="icon"]');
+    const noteLabel = page.locator('[data-food-product-note-part="label"]');
     const actionBar = page.getByTestId("food-product-action-bar");
     const buttons = actionBar.locator("button");
     const backButton = page.locator('[data-food-product-action="back"]');
@@ -1271,7 +1273,15 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     expect(mealSelectorBox).not.toBeNull();
     expect(Math.abs(headerBox.x + headerBox.width - topActionsBox.x - topActionsBox.width - 16)).toBeLessThanOrEqual(1);
     expect(Math.abs(headerBox.x + headerBox.width - closeActionBox.x - closeActionBox.width - 16)).toBeLessThanOrEqual(1);
-    expect(mealSelectorBox.width).toBeCloseTo(headerBox.width, 0);
+    expect(viewport.width - closeActionBox.x - closeActionBox.width)
+      .toBeCloseTo(Math.max(16, (viewport.width - 402) / 2 + 16), 1);
+    const productTitleBox = await productTitle.boundingBox();
+    expect(productTitleBox).not.toBeNull();
+    expect(Math.abs(
+      closeActionBox.y + closeActionBox.height / 2 -
+      (productTitleBox.y + productTitleBox.height / 2)
+    )).toBeLessThanOrEqual(1);
+    expect(mealSelectorBox.width).toBeCloseTo(headerBox.width - 32, 0);
 
     await mealButton.click();
     const mealMenu = page.getByTestId("food-product-meal-menu");
@@ -1291,6 +1301,9 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(gramsButton).toHaveCSS("height", "44px");
     await expect(portionMenuButton).toHaveCSS("height", "44px");
     await expect(gramsButton).toHaveAttribute("aria-pressed", "true");
+    await expect(portionMenuButton).toHaveAttribute("aria-pressed", "false");
+    await expect(gramsButton).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(portionMenuButton).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
     await expect(amountCard).toBeVisible();
     await expect(amountCard).toHaveAttribute("data-css-module-scope", "food-product-nutrition");
     await expect(amountCard).toHaveAttribute("data-amount-mode", "weight");
@@ -1304,6 +1317,12 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(macroCards.first()).toHaveCSS("min-height", "74px");
     await expect(noteCard).toHaveCSS("height", "70px");
     await expect(noteCard.locator("button")).toHaveCSS("height", "70px");
+    await expect(noteIcon).toHaveCSS("width", "34px");
+    const noteIconBox = await noteIcon.boundingBox();
+    const noteLabelBox = await noteLabel.boundingBox();
+    expect(noteIconBox).not.toBeNull();
+    expect(noteLabelBox).not.toBeNull();
+    expect(noteLabelBox.x - noteIconBox.x - noteIconBox.width).toBeGreaterThanOrEqual(8);
     await expect(actionBar).toBeVisible();
     await expect(actionBar).toHaveAttribute("data-css-module-scope", "food-product-action-bar");
     await expect(actionBar).toHaveCSS("position", "fixed");
@@ -1339,6 +1358,10 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await portionMenu.locator("button").click();
     await expect(portionMenu).toBeHidden();
     await expect(amountCard).toHaveAttribute("data-amount-mode", "portion");
+    await expect(gramsButton).toHaveAttribute("aria-pressed", "false");
+    await expect(portionMenuButton).toHaveAttribute("aria-pressed", "true");
+    await expect(gramsButton).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(portionMenuButton).toHaveCSS("background-color", "rgb(255, 255, 255)");
     const stepButtons = page.locator("[data-food-amount-action]");
     await expect(stepButtons).toHaveCount(2);
     const amountBeforeIncrease = Number(await amountInput.inputValue());
