@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Paperclip } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileFeedbackModal.module.css";
 
 const FEEDBACK_TYPES = [
@@ -108,14 +109,20 @@ export default function ProfileFeedbackModal({
       >
         <ClientPageHeader
           compact
+          controlsVariant="workout"
+          frameClassName={styles.headerFrame}
           className={styles.header}
           title="Обратная связь"
           titleId="profileFeedbackTitle"
           eyebrow="Сообщить нам"
-          onBack={onClose}
-          backDisabled={saving}
-          backTestId="profile-feedback-close"
-          backAriaLabel="Вернуться в кабинет"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-feedback-close"
+              ariaLabel="Закрыть обратную связь"
+              disabled={saving}
+              onClick={onClose}
+            />
+          )}
           scope="profile-feedback-header"
         />
 

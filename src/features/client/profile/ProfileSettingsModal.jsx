@@ -1,4 +1,5 @@
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileSettingsModal.module.css";
 
 function getProfileSettingsModalTitle(section) {
@@ -62,13 +63,18 @@ export default function ProfileSettingsModal({
       >
         <ClientPageHeader
           compact
+          controlsVariant="workout"
           className={styles.header}
           title={getProfileSettingsModalTitle(section)}
           titleId="cabinetSettingsModalTitle"
           eyebrow="Личный кабинет"
-          onBack={onClose}
-          backTestId="profile-settings-close"
-          backAriaLabel={`Вернуться из раздела «${getProfileSettingsCloseLabel(section)}»`}
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-settings-close"
+              ariaLabel={`Закрыть раздел «${getProfileSettingsCloseLabel(section)}»`}
+              onClick={onClose}
+            />
+          )}
           scope="profile-settings-header"
         />
 

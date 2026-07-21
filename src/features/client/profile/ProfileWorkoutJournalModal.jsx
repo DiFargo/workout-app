@@ -1,6 +1,7 @@
 import { ProfileWorkoutCalendarContent } from "./ProfileWorkoutCalendarModal";
 import { ProfileWorkoutHistoryContent } from "./ProfileWorkoutHistoryModal";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileWorkoutJournalModal.module.css";
 
 export default function ProfileWorkoutJournalModal({
@@ -37,13 +38,18 @@ export default function ProfileWorkoutJournalModal({
       >
         <ClientPageHeader
           compact
+          controlsVariant="workout"
           className={styles.header}
           title="Тренировки"
           titleId="cabinetWorkoutJournalTitle"
           eyebrow="Календарь и история"
-          onBack={onClose}
-          backTestId="profile-workout-journal-close"
-          backAriaLabel="Вернуться в кабинет"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-workout-journal-close"
+              ariaLabel="Закрыть тренировки"
+              onClick={onClose}
+            />
+          )}
           scope="profile-workout-journal-header"
         />
 

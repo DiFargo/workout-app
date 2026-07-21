@@ -1,4 +1,5 @@
 import { Send } from "lucide-react";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileTelegramModal.module.css";
 
 export default function ProfileTelegramModal({
@@ -30,13 +31,12 @@ export default function ProfileTelegramModal({
         aria-labelledby="profileTelegramManageTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <button
-          type="button"
+        <ProfileModalCloseButton
           className={styles.closeButton}
-          data-testid="profile-telegram-close"
-          aria-label="Закрыть Telegram"
+          testId="profile-telegram-close"
+          ariaLabel="Закрыть Telegram"
           onClick={onClose}
-        >×</button>
+        />
 
         <div className={styles.head}>
           <div className={styles.avatar}>

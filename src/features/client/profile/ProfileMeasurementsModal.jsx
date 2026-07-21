@@ -1,5 +1,6 @@
 import { Ruler, Scale } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileMeasurementsModal.module.css";
 
 export default function ProfileMeasurementsModal({
@@ -36,14 +37,19 @@ export default function ProfileMeasurementsModal({
         <ClientPageHeader
           compact
           embedded
+          controlsVariant="workout"
           className={styles.header}
           title="Замеры тела"
           titleId="profileMeasurementsModalTitle"
           testId="profile-measurements-header"
           scope="profile-measurements-header"
-          onBack={onClose}
-          backTestId="profile-measurements-close"
-          backAriaLabel="Закрыть замеры"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-measurements-close"
+              ariaLabel="Закрыть замеры"
+              onClick={onClose}
+            />
+          )}
         />
 
         {onOpenPhotos && (

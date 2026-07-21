@@ -1,5 +1,6 @@
 import { Camera } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileProgressPhotosModal.module.css";
 
 const PROGRESS_PHOTO_STEPS = [
@@ -60,15 +61,20 @@ export default function ProfileProgressPhotosModal({
         <ClientPageHeader
           compact
           embedded
+          controlsVariant="workout"
           className={styles.header}
           title="Фото прогресса"
           titleId="profileProgressPhotosTitle"
           testId="profile-progress-photos-header"
           scope="profile-progress-photos-header"
-          onBack={onClose}
-          backDisabled={uploading}
-          backTestId="profile-progress-photos-close"
-          backAriaLabel="Закрыть фото прогресса"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-progress-photos-close"
+              ariaLabel="Закрыть фото прогресса"
+              disabled={uploading}
+              onClick={onClose}
+            />
+          )}
         />
 
         {onOpenMeasurements && (

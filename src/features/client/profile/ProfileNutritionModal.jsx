@@ -5,6 +5,7 @@ import {
   getAiNutritionWeekForDate
 } from "../../../utils/aiNutritionSchedule";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileNutritionModal.module.css";
 
 const PROFILE_NUTRITION_GOALS = [
@@ -94,13 +95,18 @@ export default function ProfileNutritionModal({
       >
         <ClientPageHeader
           compact
+          controlsVariant="workout"
           className={styles.header}
           title="План питания"
           titleId="cabinetNutritionModalTitle"
           eyebrow="КБЖУ и недельный план"
-          onBack={onClose}
-          backTestId="profile-nutrition-close"
-          backAriaLabel="Вернуться в кабинет"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-nutrition-close"
+              ariaLabel="Закрыть план питания"
+              onClick={onClose}
+            />
+          )}
           testId="profile-nutrition-header"
           scope="profile-nutrition-header"
         />

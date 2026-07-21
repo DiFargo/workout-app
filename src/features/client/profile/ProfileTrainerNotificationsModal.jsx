@@ -1,6 +1,7 @@
 import { AlertCircle, CircleCheck } from "lucide-react";
 import { getTrainerTaskStatus } from "../../../domain/clientInsights";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileTrainerNotificationsModal.module.css";
 
 export default function ProfileTrainerNotificationsModal({
@@ -36,13 +37,18 @@ export default function ProfileTrainerNotificationsModal({
         <ClientPageHeader
           compact
           embedded
+          controlsVariant="workout"
           className={styles.header}
           title="Уведомления"
           titleId="profileTrainerNotificationsTitle"
           scope="profile-trainer-notifications-header"
-          onBack={onClose}
-          backTestId="profile-trainer-notifications-close"
-          backAriaLabel="Закрыть уведомления"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-trainer-notifications-close"
+              ariaLabel="Закрыть уведомления"
+              onClick={onClose}
+            />
+          )}
         />
 
         {tasks.length > 0 ? (

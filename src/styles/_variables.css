@@ -1577,8 +1577,8 @@
   --color-app-error-action-text: #ffffff;
   --shadow-app-error: 0 3px 12px rgba(72, 63, 87, 0.07);
 
-  --background-profile-modal-overlay: rgba(40, 38, 46, 0.22);
-  --filter-profile-modal-overlay: blur(10px);
+  --background-profile-modal-overlay: rgba(40, 38, 46, 0.32);
+  --filter-profile-modal-overlay: none;
   --color-profile-modal-border: #ebe6ef;
   --background-profile-modal: #f7f6f8;
   --color-profile-modal: #28262e;
@@ -1695,8 +1695,8 @@
   --background-profile-account-logout: #fbf2f2;
   --color-profile-account-logout: #a75e63;
 
-  --background-profile-credential-overlay: rgba(40, 38, 46, 0.22);
-  --filter-profile-credential-overlay: blur(10px);
+  --background-profile-credential-overlay: rgba(40, 38, 46, 0.32);
+  --filter-profile-credential-overlay: none;
   --color-profile-credential-dialog-border: #ebe6ef;
   --background-profile-credential-dialog: #ffffff;
   --color-profile-credential-dialog: #28262e;
@@ -1771,7 +1771,7 @@
   --color-profile-feedback-submit: #ffffff;
   --shadow-profile-feedback-submit: none;
 
-  --background-profile-trainer-notifications-overlay: rgba(40, 38, 46, 0.22);
+  --background-profile-trainer-notifications-overlay: rgba(40, 38, 46, 0.32);
   --color-profile-trainer-notifications-dialog-border: #ebe6ef;
   --background-profile-trainer-notifications-dialog: #ffffff;
   --shadow-profile-trainer-notifications-dialog: 0 -10px 32px rgba(72, 63, 87, 0.12);
@@ -1802,8 +1802,8 @@
   --color-profile-trainer-notifications-empty-icon: #708d79;
   --color-profile-trainer-notifications-empty-text: #7b7682;
 
-  --background-profile-progress-photos-overlay: rgba(40, 38, 46, 0.22);
-  --filter-profile-progress-photos-overlay: blur(10px);
+  --background-profile-progress-photos-overlay: rgba(40, 38, 46, 0.32);
+  --filter-profile-progress-photos-overlay: none;
   --color-profile-progress-photos-dialog-border: #ebe6ef;
   --background-profile-progress-photos-dialog: #f7f6f8;
   --shadow-profile-progress-photos-dialog: 0 -10px 32px rgba(72, 63, 87, 0.12);
@@ -1876,8 +1876,8 @@
   --color-profile-progress-photos-save: #ffffff;
   --color-profile-progress-photos-focus: #8f7ac8;
 
-  --background-profile-measurements-overlay: rgba(40, 38, 46, 0.22);
-  --filter-profile-measurements-overlay: blur(10px);
+  --background-profile-measurements-overlay: rgba(40, 38, 46, 0.32);
+  --filter-profile-measurements-overlay: none;
   --color-profile-measurements-dialog-border: #ebe6ef;
   --background-profile-measurements-dialog: #f7f6f8;
   --shadow-profile-measurements-dialog: 0 -10px 32px rgba(72, 63, 87, 0.12);
@@ -1988,8 +1988,10 @@
   --shadow-measurement-wizard-next: none;
   --color-measurement-wizard-focus: #8f7ac8;
 
-  --background-profile-avatar-crop-overlay: rgba(40, 38, 46, 0.28);
-  --filter-profile-avatar-crop-overlay: blur(10px);
+  --background-profile-avatar-crop-overlay: rgba(40, 38, 46, 0.32);
+  --filter-profile-avatar-crop-overlay: none;
+  --background-profile-nutrition-modal-overlay: rgba(40, 38, 46, 0.32);
+  --filter-profile-nutrition-modal-overlay: none;
   --color-profile-avatar-crop-dialog-border: #ebe6ef;
   --background-profile-avatar-crop-dialog: #ffffff;
   --color-profile-avatar-crop-dialog: #28262e;

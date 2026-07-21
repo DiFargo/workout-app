@@ -1,4 +1,5 @@
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileAvatarCropModal.module.css";
 
 export default function ProfileAvatarCropModal({
@@ -46,13 +47,18 @@ export default function ProfileAvatarCropModal({
         <ClientPageHeader
           compact
           embedded
+          controlsVariant="workout"
           className={styles.header}
           title="Область фото"
           titleId="profileAvatarCropTitle"
           scope="profile-avatar-crop-header"
-          onBack={onClose}
-          backTestId="profile-avatar-crop-close"
-          backAriaLabel="Закрыть редактор аватара"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-avatar-crop-close"
+              ariaLabel="Закрыть редактор аватара"
+              onClick={onClose}
+            />
+          )}
         />
 
         <div

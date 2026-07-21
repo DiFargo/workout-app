@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Mail } from "lucide-react";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileEmailModal.module.css";
 
 export default function ProfileEmailModal({
@@ -43,13 +44,12 @@ export default function ProfileEmailModal({
         aria-labelledby="profileEmailManageTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <button
-          type="button"
+        <ProfileModalCloseButton
           className={styles.closeButton}
-          data-testid="profile-email-close"
-          aria-label="Закрыть почту"
+          testId="profile-email-close"
+          ariaLabel="Закрыть почту"
           onClick={onClose}
-        >×</button>
+        />
 
         <div className={styles.head}>
           <div className={styles.avatar}>
