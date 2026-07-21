@@ -274,6 +274,11 @@
 
 :global(:root[data-app-theme="warm-light"]) .myProductsLayout {
   padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 16px calc(112px + env(safe-area-inset-bottom, 0px));
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: none;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 :global(:root[data-app-theme="warm-light"]) .productLayout {

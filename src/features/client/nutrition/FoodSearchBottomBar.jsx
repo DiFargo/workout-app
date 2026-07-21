@@ -1,3 +1,4 @@
+import { ChevronLeft, Package, Plus, Search } from "lucide-react";
 import styles from "./FoodSearchBottomBar.module.css";
 
 export default function FoodSearchBottomBar({
@@ -26,7 +27,7 @@ export default function FoodSearchBottomBar({
         onClick={onBack}
         aria-label="Назад к питанию"
       >
-        <span>←</span>
+        <span aria-hidden="true"><ChevronLeft /></span>
         <strong>Назад</strong>
       </button>
 
@@ -38,7 +39,7 @@ export default function FoodSearchBottomBar({
         aria-pressed={searchActive}
         onClick={onSearch}
       >
-        <span>⌕</span>
+        <span aria-hidden="true"><Search /></span>
         <strong>Поиск</strong>
       </button>
 
@@ -50,7 +51,7 @@ export default function FoodSearchBottomBar({
         aria-pressed={createActive}
         onClick={onCreate}
       >
-        <span>＋</span>
+        <span aria-hidden="true"><Plus /></span>
         <strong>Создать</strong>
       </button>
 
@@ -62,7 +63,7 @@ export default function FoodSearchBottomBar({
         aria-pressed={myProductsActive}
         onClick={onMyProducts}
       >
-        <span>▣</span>
+        <span aria-hidden="true"><Package /></span>
         <strong>Мои</strong>
       </button>
     </div>

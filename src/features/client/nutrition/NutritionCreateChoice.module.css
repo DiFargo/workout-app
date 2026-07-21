@@ -324,12 +324,12 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 0;
   overflow: hidden;
-  border-color: var(--color-nutrition-nav-border-compact);
-  border-radius: var(--radius-training-nav);
-  background: var(--color-nutrition-nav-surface-compact);
-  box-shadow: 0 10px 30px rgba(72, 63, 87, 0.16);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  border-radius: var(--layout-client-dock-radius);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
 }
 
 :global(:root[data-app-theme="warm-light"]) .header {
@@ -397,7 +397,7 @@
   align-content: center;
   gap: 2px;
   border: 1px solid transparent;
-  border-radius: var(--radius-training-nav-button);
+  border-radius: var(--layout-client-dock-button-radius);
   background: transparent;
   color: #7b7682;
   box-shadow: none;
@@ -413,12 +413,18 @@
   color: inherit;
 }
 
+:global(:root[data-app-theme="warm-light"]) .optionIcon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+}
+
 :global(:root[data-app-theme="warm-light"]) .optionTitle {
   align-self: center;
   color: #28262e;
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 11px;
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 14px;
   white-space: nowrap;
 }
 
@@ -427,4 +433,9 @@
   background: #f0ebfa;
   color: #8f7ac8;
   transform: scale(0.97);
+}
+
+:global(:root[data-app-theme="warm-light"]) .option:active {
+  border-color: transparent;
+  box-shadow: none;
 }

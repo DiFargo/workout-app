@@ -180,13 +180,19 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .button {
+  box-sizing: border-box;
   width: calc((100% - 12px) / 4);
+  min-width: 0;
   max-width: 78px;
   height: var(--layout-client-dock-button-height);
   min-height: var(--layout-client-dock-button-height);
   max-height: var(--layout-client-dock-button-height);
   margin: 0;
   padding: 6px 0 4px;
+  display: grid;
+  grid-template-rows: 28px 14px;
+  place-items: center;
+  align-content: center;
   gap: 2px;
   border: 0;
   border-radius: var(--layout-client-dock-button-radius);
@@ -194,20 +200,38 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .button > span {
-  height: 30px;
-  min-height: 30px;
-  font-size: 21px;
-  font-weight: 400;
+  width: 28px;
+  height: 28px;
+  min-height: 28px;
+  max-height: 28px;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  font-size: 0;
+  filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .button svg {
+  width: 24px;
+  height: 24px;
+  color: inherit;
+  stroke-width: 2;
 }
 
 :global(:root[data-app-theme="warm-light"]) .button > strong {
-  height: 15px;
-  min-height: 15px;
+  width: auto;
+  max-width: none;
+  height: 14px;
+  min-height: 14px;
+  max-height: 14px;
+  overflow: visible;
   color: inherit;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 600;
+  line-height: 14px;
   letter-spacing: 0;
   text-transform: none;
+  transform: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .active,
@@ -216,4 +240,9 @@
   border: 0;
   background: #f0ebfa;
   color: #8f7ac8;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .active > strong {
+  font-weight: 700;
 }

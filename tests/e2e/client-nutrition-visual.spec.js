@@ -893,6 +893,37 @@ test("CSS V2 food search page keeps stable scoped recent and photo-action layout
   assertNoRuntimeErrors();
 });
 
+test("my-products food list keeps a dedicated vertical scroll surface", async ({ page }) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.setViewportSize({ width: 390, height: 420 });
+  await page.goto("/cssV2?clientHarness=1");
+  await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("client-nav-nutrition").click();
+  await page.locator("[data-nutrition-header-action]").first().click();
+  await page.locator('[data-food-search-action="my-products"]').click();
+
+  const screen = page.getByTestId("food-search-screen");
+  await expect(screen).toHaveAttribute("data-food-search-header-layout", "my-products");
+  await expect(screen).toHaveCSS("overflow-y", "auto");
+  await expect(screen).toHaveCSS("touch-action", "pan-y");
+
+  const scrollMetrics = await screen.evaluate((node) => {
+    const before = node.scrollTop;
+    node.scrollTop = node.scrollHeight;
+    return {
+      before,
+      after: node.scrollTop,
+      clientHeight: node.clientHeight,
+      scrollHeight: node.scrollHeight
+    };
+  });
+
+  expect(scrollMetrics.scrollHeight).toBeGreaterThan(scrollMetrics.clientHeight);
+  expect(scrollMetrics.after).toBeGreaterThan(scrollMetrics.before);
+  assertNoRuntimeErrors();
+});
+
 test("CSS V2 food search results keep stable scoped search and my-products cards", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
 
@@ -1086,8 +1117,13 @@ test("CSS V2 food search bottom bar keeps stable scoped navigation", async ({ pa
     await expect(page.locator('[data-food-search-action="search"]')).toHaveAttribute("aria-pressed", "true");
 
     for (const button of await buttons.all()) {
-      await expect(button).toHaveCSS("display", "flex");
+      await expect(button).toHaveCSS("display", "grid");
       await expect(button).toHaveCSS("height", "58px");
+      await expect(button).toHaveCSS("grid-template-rows", "28px 14px");
+      await expect(button.locator("svg")).toHaveCount(1);
+      await expect(button.locator("svg")).toHaveCSS("width", "24px");
+      await expect(button.locator("svg")).toHaveCSS("height", "24px");
+      await expect(button.locator("svg")).toHaveCSS("stroke-width", "2px");
       await expect(button.locator("strong")).toHaveCSS("text-transform", "none");
       const buttonBox = await button.boundingBox();
       expect(buttonBox).not.toBeNull();
@@ -1115,6 +1151,25 @@ test("CSS V2 food search bottom bar keeps stable scoped navigation", async ({ pa
     await expect(page.locator('[data-food-search-action="create"]')).toHaveAttribute("aria-pressed", "true");
     await expect(bottomBar.locator('button[aria-pressed="true"]')).toHaveCount(1);
     await expect(page.getByTestId("nutrition-create-choice")).toBeVisible();
+
+    const createChoiceBar = page.getByTestId("nutrition-create-choice").locator('[role="dialog"]');
+    await expect(createChoiceBar).toHaveCSS("height", "76px");
+    await expect(createChoiceBar).toHaveCSS("padding", "6px");
+    await expect(createChoiceBar).toHaveCSS("border-radius", "28px");
+    await expect(createChoiceBar).toHaveCSS("background-color", "rgba(255, 255, 255, 0.96)");
+    const createChoiceButtons = createChoiceBar.locator("button");
+    await expect(createChoiceButtons).toHaveCount(2);
+    for (const button of await createChoiceButtons.all()) {
+      await expect(button).toHaveCSS("height", "58px");
+      await expect(button).toHaveCSS("border-radius", "20px");
+    }
+
+    const createChoiceBox = await createChoiceBar.boundingBox();
+    expect(createChoiceBox).not.toBeNull();
+    expect(createChoiceBox.x).toBeCloseTo(bottomBarBox.x, 1);
+    expect(createChoiceBox.y).toBeCloseTo(bottomBarBox.y, 1);
+    expect(createChoiceBox.width).toBeCloseTo(bottomBarBox.width, 1);
+    expect(createChoiceBox.height).toBeCloseTo(bottomBarBox.height, 1);
   }
 
   assertNoRuntimeErrors();
