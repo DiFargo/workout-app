@@ -19,7 +19,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   border: 1px solid var(--color-profile-measurements-dialog-border);
-  border-radius: 24px;
+  border-radius: 30px;
   background: var(--background-profile-measurements-dialog);
   box-shadow: var(--shadow-profile-measurements-dialog);
   color: var(--color-profile-measurements-text);
@@ -41,7 +41,7 @@
   grid-template-rows: auto 48px auto minmax(0, 1fr) auto;
   gap: 12px;
   overflow: hidden;
-  border-radius: 27px;
+  border-radius: 32px;
 }
 
 .header {
@@ -286,6 +286,10 @@
   font-weight: 900;
   box-shadow: var(--shadow-profile-measurements-start);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .closeButton:focus-visible,
@@ -362,4 +366,20 @@
 
 .bodyControlDialog .startButton {
   margin-top: 0;
+}
+.header.header {
+  width: calc(100% + 36px);
+  min-height: 44px;
+  margin: -6px -18px 0;
+  padding: 0;
+  display: block;
+}
+
+.bodyControlDialog .header.header {
+  width: calc(100% + 30px);
+  min-height: 44px;
+  margin: -3px -15px 0;
+  padding: 0;
+  display: block;
+  grid-template-columns: none;
 }

@@ -43,3 +43,20 @@
     border-radius: 30px;
   }
 }
+
+/* The calm client theme keeps the same iPhone canvas on every host viewport. */
+:global(:root[data-app-theme="warm-light"]) .shell.shell {
+  width: min(402px, 100vw) !important;
+  max-width: 402px !important;
+  height: min(874px, 100dvh) !important;
+  min-height: min(874px, 100dvh) !important;
+  max-height: min(874px, 100dvh) !important;
+  margin: 0 auto;
+  border-radius: 54px;
+}
+
+@media (max-width: 402px) {
+  :global(:root[data-app-theme="warm-light"]) .shell.shell {
+    border-radius: 0;
+  }
+}

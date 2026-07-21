@@ -76,7 +76,7 @@
 
 .myProductsLayout {
   padding: 58px 26px calc(112px + env(safe-area-inset-bottom, 0px));
-  background: #f4f7fd;
+  background: #f7f6f8;
 }
 
 .productOverlay,
@@ -230,5 +230,70 @@
   .productLayout {
     padding-right: 10px;
     padding-left: 10px;
+  }
+}
+
+/* Calm iOS surface. Keep the legacy dark theme above intact. */
+:global(:root[data-app-theme="warm-light"]) .searchOverlay,
+:global(:root[data-app-theme="warm-light"]) .productOverlay {
+  padding: 0;
+  background: #f7f6f8;
+  color: #28262e;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchScreen,
+:global(:root[data-app-theme="warm-light"]) .headerLayout,
+:global(:root[data-app-theme="warm-light"]) .productLayout,
+:global(:root[data-app-theme="warm-light"]) .fixtureLayout {
+  width: min(100%, 402px) !important;
+  max-width: 402px !important;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh !important;
+  margin: 0 auto;
+  border: 0;
+  border-radius: 0 !important;
+  background: #f7f6f8;
+  color: #28262e;
+  box-shadow: none;
+  font-family: var(--font-family-sans);
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchScreen,
+:global(:root[data-app-theme="warm-light"]) .headerLayout {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  scrollbar-gutter: auto !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchLayout {
+  padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 16px calc(112px + env(safe-area-inset-bottom, 0px));
+}
+
+:global(:root[data-app-theme="warm-light"]) .myProductsLayout {
+  padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 16px calc(112px + env(safe-area-inset-bottom, 0px));
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: none;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+:global(:root[data-app-theme="warm-light"]) .productLayout {
+  padding: 0 16px calc(106px + env(safe-area-inset-bottom, 0px));
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: auto !important;
+  -webkit-text-fill-color: #28262e;
+}
+
+@media (min-width: 641px) {
+  :global(:root[data-app-theme="warm-light"]) .searchScreen,
+  :global(:root[data-app-theme="warm-light"]) .productLayout,
+  :global(:root[data-app-theme="warm-light"]) .fixtureLayout {
+    border-right: 1px solid #ebe6ef;
+    border-left: 1px solid #ebe6ef;
   }
 }

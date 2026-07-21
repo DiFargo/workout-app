@@ -125,8 +125,11 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
       const rect = node?.getBoundingClientRect();
       return rect
         ? {
+            x: Math.round(rect.x),
             y: Math.round(rect.y),
+            width: Math.round(rect.width),
             height: Math.round(rect.height),
+            right: Math.round(rect.right),
             bottom: Math.round(rect.bottom)
           }
         : null;
@@ -135,8 +138,15 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     const deckStyle = deck ? getComputedStyle(deck) : null;
 
     return {
+      viewportWidth: window.innerWidth,
+      header: rectOf(document.querySelector('[data-testid="workout-list-header"]')),
+      headerAction: rectOf(document.querySelector('[data-testid="workout-mode-button"]')),
       card: rectOf(document.querySelector('[data-testid="workout-list-card"]')),
+      cardTop: rectOf(document.querySelector('[data-testid="workout-card-top"]')),
+      cardBody: rectOf(document.querySelector('[data-testid="workout-card-body"]')),
+      cardInfo: rectOf(document.querySelector('[data-testid="workout-card-info"]')),
       startButton: rectOf(document.querySelector('[data-testid="workout-start-button"]')),
+      swipe: rectOf(document.querySelector('[data-testid="workout-swipe-affordance"]')),
       progress: rectOf(document.querySelector('[data-testid="workout-list-progress"]')),
       bottomNav: rectOf(document.querySelector('[data-testid="client-bottom-nav"]')),
       deckOverflow: deckStyle?.overflow || ""
@@ -144,9 +154,22 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
   });
 
   expect(workoutCardMetric.deckOverflow).toBe("visible");
+  expect(workoutCardMetric.header.right - workoutCardMetric.headerAction.right)
+    .toBe(workoutCardMetric.viewportWidth <= 370 ? 16 : 20);
+  expect(workoutCardMetric.header.bottom).toBeLessThanOrEqual(workoutCardMetric.card.y);
+  expect(workoutCardMetric.card.height).toBeGreaterThanOrEqual(372);
+  expect(Math.abs(workoutCardMetric.cardBody.height - workoutCardMetric.card.height)).toBeLessThanOrEqual(1);
+  expect(workoutCardMetric.cardTop.y).toBeGreaterThanOrEqual(workoutCardMetric.card.y);
+  expect(workoutCardMetric.cardInfo.y).toBeGreaterThan(workoutCardMetric.cardTop.bottom);
+  expect(workoutCardMetric.cardInfo.bottom).toBeLessThan(workoutCardMetric.startButton.y);
   expect(workoutCardMetric.startButton.bottom).toBeLessThanOrEqual(workoutCardMetric.card.bottom);
-  expect(workoutCardMetric.card.bottom).toBeLessThan(workoutCardMetric.progress.y);
+  expect(workoutCardMetric.card.bottom).toBeLessThan(workoutCardMetric.swipe.y);
+  expect(workoutCardMetric.swipe.bottom).toBeLessThanOrEqual(workoutCardMetric.progress.y);
+  expect(Math.abs(
+    workoutCardMetric.swipe.x + workoutCardMetric.swipe.width / 2 - workoutCardMetric.viewportWidth / 2
+  )).toBeLessThanOrEqual(1);
   expect(workoutCardMetric.progress.bottom).toBeLessThanOrEqual(workoutCardMetric.bottomNav.y);
+  expect(workoutCardMetric.bottomNav.y - workoutCardMetric.progress.bottom).toBeLessThanOrEqual(16);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });
@@ -156,7 +179,7 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await page.goto("/?clientHarness=1");
 
   await expect(page.getByTestId("client-harness-main")).toBeVisible();
-  await expect(page.getByText(/^v(?:\.\d+)+$/)).toBeVisible();
+  await expect(page.getByTestId("profile-dashboard-version")).toHaveCount(1);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
@@ -233,8 +256,8 @@ test("primary client tabs keep one adaptive shell geometry", async ({ page }, te
   test.skip(testInfo.project.name !== "desktop-chromium", "One browser covers the responsive viewport matrix.");
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { width: 768, height: 1024, shellWidth: 720 },
-    { width: 1440, height: 900, shellWidth: 1040 }
+    { width: 768, height: 1024, shellWidth: 402, shellHeight: 874 },
+    { width: 1440, height: 900, shellWidth: 402, shellHeight: 874 }
   ];
 
   for (const viewport of viewports) {
@@ -255,7 +278,7 @@ test("primary client tabs keep one adaptive shell geometry", async ({ page }, te
 
       const shell = page.locator('[data-client-adaptive-shell="true"]');
       await expect(shell).toHaveCount(1);
-      shellRects.push(await shell.evaluate((node) => {
+      const shellRect = await shell.evaluate((node) => {
         const rect = node.getBoundingClientRect();
         return {
           x: Math.round(rect.x),
@@ -263,12 +286,23 @@ test("primary client tabs keep one adaptive shell geometry", async ({ page }, te
           width: Math.round(rect.width),
           height: Math.round(rect.height)
         };
-      }));
+      });
+      shellRects.push(shellRect);
+
+      const dockRect = await page.getByTestId("client-bottom-nav").evaluate((node) => {
+        const rect = node.getBoundingClientRect();
+        return {
+          top: Math.round(rect.top),
+          bottom: Math.round(rect.bottom)
+        };
+      });
+      expect(dockRect.top).toBeGreaterThanOrEqual(shellRect.y);
+      expect(dockRect.bottom).toBeLessThanOrEqual(shellRect.y + shellRect.height);
     }
 
     const [baseline, ...otherShells] = shellRects;
     expect(baseline.width).toBe(viewport.shellWidth);
-    expect(baseline.height).toBe(viewport.height - 24);
+    expect(baseline.height).toBe(viewport.shellHeight);
     for (const shellRect of otherShells) {
       expect(shellRect).toEqual(baseline);
     }

@@ -1,210 +1,96 @@
 .root {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto 12px;
-  display: flex;
-  flex: 0 0 auto;
-  justify-content: center;
-  overflow: visible;
+  box-sizing: border-box;
+  width: calc(100% - 32px);
+  height: 270px;
+  margin: 12px 16px 0;
+  flex: 0 0 270px;
 }
 
 .card {
+  box-sizing: border-box;
+  width: 100%;
+  height: 270px;
+  padding: 13px 15px 14px;
   position: relative;
-  width: min(100%, 540px);
-  min-height: 0;
-  padding: 0;
+  border: 1px solid #ebe6ef;
+  border-radius: 24px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+}
+
+.header { height: 31px; display: flex; align-items: flex-start; justify-content: space-between; }
+.header > div { display: flex; flex-direction: column; }
+.header h2 { margin: 0; font-size: 17px; font-weight: 700; line-height: 20px; }
+.header small { color: #7b7682; font-size: 9px; font-weight: 500; line-height: 11px; }
+.streak {
+  height: 26px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 13px;
+  background: #fff4e3;
+  color: #ae8768;
+  font-size: 10px;
+  font-weight: 700;
+}
+.streak svg { width: 15px; height: 15px; stroke-width: 2; }
+.visuallyHidden { width: 1px; height: 1px; position: absolute; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); }
+
+.stage { width: 160px; height: 181px; margin: 0 auto; position: relative; left: 1px; }
+.scene { width: 160px; height: 160px; display: block; transform: translateY(2px) rotate(-90deg); }
+.track, .progress { fill: none; stroke-width: 14; }
+.track { stroke: #f2eef5; }
+.progress { stroke: #8f7ac8; stroke-linecap: round; }
+[data-nutrition-orbit-halo="outer"] { transform-box: fill-box; transform-origin: center; animation: haloBreath 3.2s ease-in-out infinite; }
+.calories {
+  width: 120px;
+  position: absolute;
+  top: 52px;
+  left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 0;
-  overflow: hidden;
-  border: 1px solid var(--color-nutrition-card-border);
-  border-radius: 20px;
-  background: var(--color-nutrition-card-surface);
-  color: var(--color-nutrition-card-text);
-  box-shadow: var(--shadow-nutrition-card);
+  align-items: center;
 }
-
-.stage {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 540 / 463;
-  flex: 0 0 auto;
-  overflow: visible;
-}
-
-.scene {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  transform: scale(1.12);
-  transform-origin: 50% 50%;
-}
-
-.label {
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 950;
-  line-height: 1;
-  letter-spacing: 0;
-}
-
-.amount,
-.title {
-  fill: var(--color-nutrition-card-text);
-  font-family: var(--font-family-compact-ui);
-  font-weight: 800;
-  letter-spacing: 0;
-}
-
-.amount {
-  font-size: 24px;
-  line-height: 1;
-}
-
-.target,
-.subtitle {
-  fill: var(--color-nutrition-card-muted);
-  font-family: var(--font-family-compact-ui);
-  letter-spacing: 0;
-}
-
-.target {
-  font-size: 11.5px;
-  font-weight: 850;
-  line-height: 1;
-}
-
-.title {
-  font-size: 22px;
-  line-height: 1;
-}
-
-.subtitle {
-  font-size: 10.8px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
+.calories strong { color: #28262e; font-size: 32px; font-weight: 700; line-height: 38px; }
+.calories span { color: #7b7682; font-size: 11px; font-weight: 600; line-height: 16px; }
 .hitButton {
+  height: 38px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   position: absolute;
-  top: 36.3%;
   left: 50%;
-  z-index: 3;
-  width: 24.1%;
-  min-width: 0;
-  height: auto;
-  min-height: 0;
-  aspect-ratio: 1;
-  padding: 0;
+  top: 126px;
   border: 0;
-  border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
+  border-radius: 19px;
+  background: #8f7ac8;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
   transform: translateX(-50%);
+  cursor: pointer;
 }
+.hitButton svg { width: 16px; height: 16px; }
 
-.addHalo,
-.addCore,
-.addPlus {
-  transform-box: fill-box;
-  transform-origin: center;
+.macros {
+  height: 38px;
+  margin-top: -6px;
+  display: grid;
+  grid-template-columns: 122px 122px 1fr;
+  align-items: end;
 }
+.macros > div { display: flex; flex-direction: column; align-items: flex-start; }
+.macros > div > span { font-size: 10px; font-weight: 700; line-height: 14px; }
+.macros strong { color: #28262e; font-size: 12px; font-weight: 700; line-height: 18px; white-space: nowrap; }
+.macros strong span { color: inherit; font: inherit; }
+.protein > span { color: #b36e72; }
+.fat > span { color: #ae8768; }
+.carbs > span { color: #6f879c; }
 
-.addHalo {
-  animation: haloBreath 3.2s ease-in-out infinite;
-}
-
-.middle {
-  animation-delay: 0.18s;
-}
-
-.inner {
-  animation-delay: 0.34s;
-}
-
-.addCore,
-.addPlus {
-  animation: addBreath 2.8s ease-in-out infinite;
-}
-
-.addPlus {
-  animation-name: plusBreath;
-}
-
-@media (max-width: 640px) {
-  .root {
-    margin-top: -6px;
-  }
-}
-
-@media (min-width: 700px) and (max-height: 820px) {
-  .root {
-    height: 320px;
-    min-height: 320px;
-  }
-
-  .card {
-    width: 374px;
-    height: 320px;
-    min-height: 320px;
-  }
-
-  .scene {
-    width: 374px;
-    height: 320px;
-  }
-
-  .hitButton {
-    top: 35.5%;
-    left: 38.3%;
-    width: 88px;
-    height: 88px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .addHalo,
-  .addCore,
-  .addPlus {
-    animation: none;
-  }
-}
-
-@keyframes haloBreath {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.055);
-  }
-}
-
-@keyframes addBreath {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.035);
-  }
-}
-
-@keyframes plusBreath {
-  0%,
-  100% {
-    opacity: 0.95;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.055);
-  }
-}
+@keyframes haloBreath { 50% { transform: scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { [data-nutrition-orbit-halo="outer"] { animation: none; } }

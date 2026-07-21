@@ -3,17 +3,20 @@
     min-height: 100dvh;
     display: grid;
     place-items: center;
-    padding: var(--space-5, 1.25rem);
+    padding:
+      max(var(--space-5, 1.25rem), env(safe-area-inset-top))
+      var(--space-4, 1rem)
+      max(var(--space-5, 1.25rem), env(safe-area-inset-bottom));
     background: var(--color-app-error-canvas);
     color: var(--color-app-error-text);
     font-family: var(--font-family-sans);
   }
 
   .card {
-    width: min(26.25rem, 100%);
+    width: min(23.125rem, 100%);
     padding: var(--space-6, 1.5rem);
     border: 1px solid var(--color-app-error-border);
-    border-radius: var(--radius-xl, 1.5rem);
+    border-radius: 1.75rem;
     background: var(--color-app-error-surface);
     box-shadow: var(--shadow-app-error);
   }
@@ -45,9 +48,9 @@
 
   .reload {
     width: 100%;
-    min-height: 3rem;
+    min-height: 3.25rem;
     border: 0;
-    border-radius: var(--radius-lg, 1rem);
+    border-radius: 1rem;
     background: var(--color-app-error-action);
     color: var(--color-app-error-action-text);
     font-size: 0.9375rem;

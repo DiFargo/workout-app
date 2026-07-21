@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./styles/_variables.css";
 import "./shared/ui/ResponsiveModalLayer.module.css";
 import "./AppCoreFoundation.module.css";
@@ -7,6 +7,7 @@ import "./AppCoreSurface.module.css";
 import "./AppCoreLayout.module.css";
 import "./AppCoreClientFlow.module.css";
 import "./AppCoreClientVisual.module.css";
+import clientIosThemeStyles from "./AppCoreClientIosTheme.module.css";
 /* eslint-disable react-hooks/refs -- Event factories capture refs for later handlers; they do not read refs during render. */
 import {
   defaultNutritionState
@@ -295,6 +296,11 @@ const {
 
 export default function App() {
   useModalFocusTrap();
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add(clientIosThemeStyles.contract);
+    return () => root.classList.remove(clientIosThemeStyles.contract);
+  }, []);
   const showClientHarness = isClientE2EHarnessEnabled();
   const showTrainerHarness = isTrainerE2EHarnessEnabled();
   const showAdminHarness = isAdminE2EHarnessEnabled();
@@ -398,7 +404,10 @@ function AppRuntime() {
     days: "4"
   });
 
-  const [page, setPage] = useState(APP_PAGES.MAIN);
+  const [page, setPageState] = useState(APP_PAGES.MAIN);
+  const setPage = useCallback((nextPage) => {
+    startTransition(() => setPageState(nextPage));
+  }, []);
   useNutritionPageScrollEffect({ active: page === APP_PAGES.NUTRITION });
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [individualWorkoutIndex, setIndividualWorkoutIndex] = useState(0);
@@ -2928,6 +2937,7 @@ function AppRuntime() {
     requestDeleteOwnHistoryWorkout,
     requestLeaveWorkout,
     restTimerDuration,
+    restTimerRunning,
     restTimerSeconds,
     safeWriteUserJsonStorage,
     saveAdminClientCalendar,

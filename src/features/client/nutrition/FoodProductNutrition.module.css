@@ -204,7 +204,7 @@
   margin: 0;
   padding: 0 17px;
   display: grid;
-  grid-template-columns: 22px minmax(92px, 1fr) minmax(0, max-content) 14px;
+  grid-template-columns: 34px minmax(100px, 1fr) minmax(0, max-content) 14px;
   align-items: center;
   column-gap: 10px;
   border: 0;
@@ -349,7 +349,7 @@
   .noteButton {
     padding-right: 14px;
     padding-left: 14px;
-    grid-template-columns: 22px minmax(82px, 1fr) minmax(0, max-content) 12px;
+    grid-template-columns: 34px minmax(88px, 1fr) minmax(0, max-content) 12px;
     column-gap: 8px;
   }
 
@@ -358,3 +358,42 @@
     font-size: 18px;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .amountCard {
+  min-height: 76px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid #ebe6ef;
+  border-radius: 20px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .amountLabel { color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .inputWrap { border: 1px solid #ebe6ef; border-radius: 13px; background: #f0ebfa; }
+:global(:root[data-app-theme="warm-light"]) .input { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .inputWrap em { color: #7b7682; }
+:global(:root[data-app-theme="warm-light"]) .stepButton { border: 0; border-radius: 13px; background: #f0ebfa; color: #8f7ac8; font-weight: 500; }
+
+:global(:root[data-app-theme="warm-light"]) .macros { margin-bottom: 12px; gap: 6px; }
+:global(:root[data-app-theme="warm-light"]) .macroCard {
+  min-height: 74px;
+  border: 1px solid #ebe6ef;
+  border-radius: 16px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .macroCard span,
+:global(:root[data-app-theme="warm-light"]) .macroCard small { color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .macroCard strong { color: #28262e; font-weight: 700; }
+
+:global(:root[data-app-theme="warm-light"]) .noteCard { border: 1px solid #ebe6ef; border-radius: 18px; background: #fff; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .noteButton { min-height: 62px; color: #28262e; }
+:global(:root[data-app-theme="warm-light"]) .noteIcon { width: 34px; height: 34px; border-radius: 11px; background: #f0ebfa; color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .noteLabel { color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .noteValue { color: #28262e; font-size: 14px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .chevron { color: #a9aeb2; }
+:global(:root[data-app-theme="warm-light"]) .error { color: #b36e72; }

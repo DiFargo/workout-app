@@ -6,19 +6,11 @@
 }
 
 .flowHeader {
-  position: relative;
-  height: 124px;
-  min-height: 124px;
-  max-height: 124px;
+  height: auto;
+  min-height: 0;
+  max-height: none;
   margin: 0 0 12px;
-  padding: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 120px;
-  grid-template-areas:
-    "title actions"
-    "meal meal";
-  align-items: start;
-  gap: 14px 12px;
+  display: block;
 }
 
 .flowTitle {
@@ -77,7 +69,7 @@
   border-radius: 16px;
   background: var(--color-surface);
   color: var(--color-food-flow-text);
-  box-shadow: 0 12px 30px rgba(55, 64, 112, 0.11);
+  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.11);
 }
 
 .mealLabel {
@@ -334,3 +326,104 @@
     transition: none;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .flowHeader {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin-bottom: 12px;
+  display: block;
+}
+
+:global(:root[data-app-theme="warm-light"]) .flowHeaderFrame {
+  width: calc(100% + 32px);
+  max-width: none;
+  margin-right: -16px;
+  margin-left: -16px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .flowTitle { height: 44px; min-height: 44px; }
+:global(:root[data-app-theme="warm-light"]) .eyebrow { display: none; }
+:global(:root[data-app-theme="warm-light"]) .heading {
+  height: 44px;
+  min-height: 44px;
+  color: #28262e;
+  font-size: 28px;
+  font-weight: 750;
+  line-height: 44px;
+  letter-spacing: -0.02em;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealCard {
+  height: 60px;
+  min-height: 60px;
+  padding: 7px 12px;
+  grid-template-rows: 12px 30px;
+  gap: 2px;
+  border: 1px solid #ebe6ef;
+  border-radius: 18px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealLabel { color: #7b7682; font-size: 10px; font-weight: 500; text-transform: none; }
+:global(:root[data-app-theme="warm-light"]) .mealButton {
+  position: relative;
+  height: 33px;
+  min-height: 33px;
+  color: #28262e;
+  font-size: 15px;
+  font-weight: 650;
+}
+:global(:root[data-app-theme="warm-light"]) .mealButton::before {
+  content: "";
+  position: absolute;
+  inset: -6px 0 -5px;
+}
+:global(:root[data-app-theme="warm-light"]) .mealButton::after { color: #8f7ac8; }
+
+:global(:root[data-app-theme="warm-light"]) .mealDropdown {
+  top: calc(100% + 8px);
+  width: min(370px, calc(100vw - 32px));
+  padding: 8px;
+  gap: 2px;
+  border: 1px solid #ebe6ef;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 50px rgba(40, 38, 46, 0.14);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealOption { height: 52px; min-height: 52px; border-radius: 14px; color: #28262e; }
+:global(:root[data-app-theme="warm-light"]) .mealOption.selected { background: #f0ebfa; }
+:global(:root[data-app-theme="warm-light"]) .mealIcon { background: #f0ebfa; }
+:global(:root[data-app-theme="warm-light"]) .mealName { font-weight: 650; }
+
+:global(:root[data-app-theme="warm-light"]) .hero {
+  min-height: 116px;
+  margin-bottom: 12px;
+  padding: 14px;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 14px;
+  border: 1px solid #ebe6ef;
+  border-radius: 22px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .iconStack {
+  width: 72px;
+  min-width: 72px;
+  min-height: 86px;
+  border: 0;
+  border-radius: 18px;
+  background: #f0ebfa;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .icon { color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .source { color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .productName { color: #28262e; font-size: 20px; font-weight: 700; }

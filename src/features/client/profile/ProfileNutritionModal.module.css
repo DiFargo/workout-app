@@ -5,10 +5,7 @@
   box-sizing: border-box;
   display: grid;
   place-items: center;
-  padding:
-    max(10px, env(safe-area-inset-top))
-    10px
-    max(10px, env(safe-area-inset-bottom));
+  padding: max(12px, env(safe-area-inset-top, 0px)) 12px max(12px, env(safe-area-inset-bottom, 0px));
   background: var(--background-profile-nutrition-modal-overlay);
   backdrop-filter: var(--filter-profile-nutrition-modal-overlay);
   -webkit-backdrop-filter: var(--filter-profile-nutrition-modal-overlay);
@@ -17,61 +14,25 @@
 .dialog {
   position: relative;
   box-sizing: border-box;
-  width: min(100%, 430px);
-  height: auto;
-  max-height: calc(100dvh - 20px);
-  padding: 14px;
+  width: min(390px, 100%);
+  height: min(820px, calc(100dvh - 24px));
+  max-height: min(820px, calc(100dvh - 24px));
+  padding: 0;
   display: grid;
-  grid-template-rows: 48px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0;
   overflow: hidden;
   border: 1px solid var(--color-profile-nutrition-modal-border);
-  border-radius: 26px;
+  border-radius: 32px;
   background: var(--background-profile-nutrition-modal);
   color: var(--color-profile-nutrition-modal-text);
   box-shadow: var(--shadow-profile-nutrition-modal);
+  --gradient-primary: linear-gradient(135deg, #9c88d2, #806bb6);
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 0 2px 0 6px;
-}
-
-.header span,
-.header h2 {
-  display: block;
-}
-
-.header span {
-  color: var(--color-profile-nutrition-modal-eyebrow);
-  font-size: 10px;
-  font-weight: 950;
-  letter-spacing: 0.08em;
-}
-
-.header h2 {
-  margin: 2px 0 0;
-  color: var(--color-profile-nutrition-modal-heading);
-  font-size: 21px;
-  line-height: 1;
-}
-
-.closeButton {
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  min-height: 44px;
-  padding: 0;
-  border: 1px solid var(--color-profile-nutrition-modal-close-border);
-  border-radius: 13px;
-  background: var(--background-profile-nutrition-modal-close);
-  color: var(--color-profile-nutrition-modal-close);
-  font-size: 23px;
-  line-height: 1;
-  cursor: pointer;
+  position: relative;
+  z-index: 4;
 }
 
 .content {
@@ -79,13 +40,13 @@
   width: 100%;
   min-width: 0;
   height: auto;
-  max-height: calc(100dvh - 96px);
+  max-height: none;
   margin: 0;
-  padding: 0;
+  padding: 4px 16px 24px;
   display: flex;
   flex-direction: column;
   gap: 0;
-  overflow: hidden;
+  overflow: hidden auto;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -446,7 +407,6 @@
   cursor: default;
 }
 
-.closeButton:focus-visible,
 .calendarTitle button:focus-visible,
 .goalPicker button:focus-visible,
 .saveButton:focus-visible {
@@ -456,13 +416,9 @@
 
 @media (max-height: 720px) {
   .dialog {
-    padding: 10px;
-    grid-template-rows: 42px minmax(0, 1fr);
-    gap: 5px;
-  }
-
-  .header h2 {
-    font-size: 18px;
+    padding: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 0;
   }
 
   .content {

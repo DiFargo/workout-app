@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Paperclip } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileFeedbackModal.module.css";
 
 const FEEDBACK_TYPES = [
@@ -104,15 +107,25 @@ export default function ProfileFeedbackModal({
         onClick={(event) => event.stopPropagation()}
         onSubmit={handleSubmit}
       >
-        <header className={styles.header}>
-          <div>
-            <span className={styles.eyebrow}>ОБРАТНАЯ СВЯЗЬ</span>
-            <h2 className={styles.title} id="profileFeedbackTitle">Сообщить нам</h2>
-          </div>
-          <button className={styles.closeButton} data-testid="profile-feedback-close" type="button" aria-label="Закрыть обратную связь" disabled={saving} onClick={onClose}>
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          embedded
+          controlsVariant="workout"
+          frameClassName={styles.headerFrame}
+          className={styles.header}
+          title="Обратная связь"
+          titleId="profileFeedbackTitle"
+          eyebrow="Сообщить нам"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-feedback-close"
+              ariaLabel="Закрыть обратную связь"
+              disabled={saving}
+              onClick={onClose}
+            />
+          )}
+          scope="profile-feedback-header"
+        />
 
         <div className={styles.body}>
           <div className={styles.typeGrid} role="group" aria-label="Тип сообщения">
@@ -172,7 +185,7 @@ export default function ProfileFeedbackModal({
                 disabled={saving}
                 onChange={handleAttachmentChange}
               />
-              <span className={styles.attachmentTitle}>📎 Прикрепить файл</span>
+              <span className={styles.attachmentTitle}><Paperclip size={17} strokeWidth={2.1} aria-hidden="true" /> Прикрепить файл</span>
               <small className={styles.attachmentHint}>Скрин, фото, видео или лог до 25 МБ</small>
             </label>
             {draft.attachmentFile ? (

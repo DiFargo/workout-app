@@ -251,3 +251,182 @@
   min-width: 40px;
   min-height: 40px;
 }
+
+/* Calm iOS sheets shared by the workout entry screens. */
+:global(:root[data-app-theme="warm-light"]) .overlay.overlay {
+  padding: max(12px, env(safe-area-inset-top, 0px)) 16px max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
+  place-items: end center;
+  background: rgba(40, 38, 46, 0.24);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .dialog.dialog {
+  width: min(370px, 100%);
+  padding: 16px;
+  color: #28262e;
+  background: #ffffff;
+  border: 1px solid #ebe6ef;
+  border-radius: 24px;
+  box-shadow: 0 18px 52px rgba(40, 38, 46, 0.18);
+}
+
+:global(:root[data-app-theme="warm-light"]) .header.header {
+  min-height: 44px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+:global(:root[data-app-theme="warm-light"]) .eyebrow.eyebrow {
+  margin-bottom: 2px;
+  color: #7b7682;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .title.title {
+  color: #28262e;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 25px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  color: #28262e;
+  background: #f0ebfa;
+  border: 0;
+  border-radius: 14px;
+  font-size: 23px;
+  font-weight: 400;
+}
+
+.header.header {
+  width: calc(100% + 32px);
+  margin: -4px -16px 12px;
+  display: block;
+}
+
+:global(:root[data-app-theme="warm-light"]) .options.options {
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .option.option {
+  min-height: 76px;
+  padding: 11px 12px;
+  grid-template-columns: 44px minmax(0, 1fr) 20px;
+  gap: 11px;
+  color: #28262e;
+  background: #fbfafc;
+  border: 1px solid transparent;
+  border-radius: 18px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .option.optionActive {
+  background: #f0ebfa;
+  border-color: #cfd6da;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionIcon.optionIcon {
+  width: 44px;
+  height: 44px;
+  color: #8f7ac8;
+  background: #ffffff;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionTitle.optionTitle {
+  color: #28262e;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionDescription.optionDescription {
+  margin-top: 3px;
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionIndicator.optionIndicator {
+  color: #a9aeb2;
+  font-size: 20px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .remember.remember {
+  min-height: 48px;
+  margin-top: 10px;
+  padding: 0 12px;
+  color: #7b7682;
+  background: #fbfafc;
+  border: 0;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .rememberInput.rememberInput {
+  accent-color: #8f7ac8;
+}
+
+:global(:root[data-app-theme="warm-light"]) .historyDialog.historyDialog {
+  width: min(370px, 100%);
+  max-height: min(700px, calc(100dvh - 32px));
+}
+
+:global(:root[data-app-theme="warm-light"]) .historyList.historyList {
+  gap: 7px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .historyItem.historyItem {
+  min-height: 62px;
+  padding: 9px 10px;
+  color: #28262e;
+  background: #fbfafc;
+  border: 0;
+  border-radius: 16px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .historyIcon.historyIcon {
+  color: #8f7ac8;
+  background: #f0ebfa;
+  border-radius: 13px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .historyTitle.historyTitle {
+  color: #28262e;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .historyMeta.historyMeta,
+:global(:root[data-app-theme="warm-light"]) .historyMessage.historyMessage {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .historyAllButton.historyAllButton {
+  min-height: 48px;
+  margin-top: 10px;
+  color: #ffffff;
+  background: #8f7ac8;
+  border: 0;
+  border-radius: 17px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (min-width: 641px) {
+  :global(:root[data-app-theme="warm-light"]) .overlay.overlay {
+    place-items: center;
+  }
+}

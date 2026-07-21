@@ -12,6 +12,85 @@
   text-align: center;
 }
 
+:global(:root[data-app-theme="warm-light"]) .topHeader.topHeader {
+  width: min(402px, 100vw);
+  max-width: 402px;
+  height: calc(44px + max(8px, env(safe-area-inset-top, 0px)));
+  min-height: calc(44px + max(8px, env(safe-area-inset-top, 0px)));
+  max-height: calc(44px + max(8px, env(safe-area-inset-top, 0px)));
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 90;
+  border-bottom: 1px solid rgba(40, 38, 46, 0.06);
+  background: rgba(243, 244, 243, 0.88);
+  transform: translateX(-50%);
+  backdrop-filter: saturate(170%) blur(22px);
+  -webkit-backdrop-filter: saturate(170%) blur(22px);
+  pointer-events: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton,
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton {
+  box-sizing: border-box;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top, 0px));
+  z-index: 102;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(123, 118, 130, 0.1);
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
+  box-shadow: none;
+  font-size: 0;
+  pointer-events: auto;
+}
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton { right: 16px; }
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton { right: auto; left: 16px; }
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton svg,
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton svg { width: 22px; height: 22px; stroke-width: 2.1; }
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton::before { display: none; content: none; }
+
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle {
+  box-sizing: border-box;
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 58px;
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top, 0px));
+  left: 50%;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #28262e;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitleText.stageTitleText {
+  max-width: 250px;
+  display: block;
+  overflow: hidden;
+  color: #28262e;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 :global([data-workout-run-no-header="true"]) .topHeader {
   height: 0;
   min-height: 0;
@@ -277,4 +356,99 @@
     min-height: 0;
     max-height: 0;
   }
+}
+
+/* Calm iOS auxiliary overlays. The approved active-stage controls above are
+   intentionally unchanged. */
+:global(:root[data-app-theme="warm-light"]) .notFoundPage.notFoundPage {
+  box-sizing: border-box;
+  width: min(402px, 100vw);
+  max-width: 402px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
+  color: #28262e;
+  background: #f7f6f8;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+:global(:root[data-app-theme="warm-light"]) .notFoundHeader.notFoundHeader {
+  width: 100%;
+  min-height: 250px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: stretch;
+  justify-content: center;
+  gap: 18px;
+  color: #28262e;
+  background: #ffffff;
+  border: 1px solid #ebe6ef;
+  border-radius: 24px;
+  text-align: center;
+}
+
+:global(:root[data-app-theme="warm-light"]) .notFoundTitle.notFoundTitle {
+  padding: 0 18px;
+  color: #28262e;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 25px;
+  white-space: normal;
+}
+
+:global(:root[data-app-theme="warm-light"]) .notFoundHeader.notFoundHeader .backButton.backButton {
+  width: calc(100% - 32px);
+  max-width: none;
+  min-height: 48px;
+  height: 48px;
+  margin: 0 16px;
+  position: static;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  background: #8f7ac8;
+  border: 0;
+  border-radius: 17px;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .notFoundHeader.notFoundHeader .backButton.backButton::before {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .fullscreenOverlay.fullscreenOverlay {
+  width: 100vw;
+  height: 100dvh;
+  padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(16px, env(safe-area-inset-bottom, 0px));
+  background: #111315;
+}
+
+:global(:root[data-app-theme="warm-light"]) .fullscreenClose.fullscreenClose {
+  top: max(16px, env(safe-area-inset-top, 0px));
+  right: 16px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 0;
+  border-radius: 16px;
+  font-size: 21px;
+  backdrop-filter: blur(16px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .fullscreenVideo.fullscreenVideo {
+  width: 100%;
+  max-width: 720px;
+  max-height: calc(100dvh - 64px);
+  object-fit: contain;
+  border-radius: 18px;
+  background: #000000;
 }

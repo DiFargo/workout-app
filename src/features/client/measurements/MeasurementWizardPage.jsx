@@ -1,5 +1,7 @@
 ﻿import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
+import { X } from "lucide-react";
 import { APP_VERSION } from "../../../constants/appConfig";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
   getProfileMeasurementFields,
   getProfileMeasurementValue
@@ -97,20 +99,30 @@ export default function MeasurementWizardPage({
       data-css-module-scope="measurement-wizard-page"
       data-testid="measurement-wizard-page"
     >
-      <div className={styles.header}>
+      <ClientPageHeader
+        compact
+        className={styles.header}
+        title="Замеры тела"
+        testId="measurement-wizard-header"
+        scope="measurement-wizard-header"
+        onBack={handleGoBack}
+        backAriaLabel="Вернуться к предыдущему шагу"
+        actions={(
+          <button
+            type="button"
+            className={styles.close}
+            onClick={closeMeasurementWizard}
+            aria-label="Закрыть без сохранения"
+          >
+            <X aria-hidden="true" />
+          </button>
+        )}
+      >
         <div className={styles.progress}>
           <span>Шаг {profileMeasurementWizardStep + 1} из {totalWizardScreens}</span>
           <i><em style={{ width: `${progressPercent}%` }} /></i>
         </div>
-        <button
-          type="button"
-          className={styles.close}
-          onClick={closeMeasurementWizard}
-          aria-label="Закрыть без сохранения"
-        >
-          ×
-        </button>
-      </div>
+      </ClientPageHeader>
 
       <main className={styles.body}>
         {nextMeasurementField && (

@@ -1,3 +1,5 @@
+import { Send } from "lucide-react";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileTelegramModal.module.css";
 
 export default function ProfileTelegramModal({
@@ -29,17 +31,16 @@ export default function ProfileTelegramModal({
         aria-labelledby="profileTelegramManageTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <button
-          type="button"
+        <ProfileModalCloseButton
           className={styles.closeButton}
-          data-testid="profile-telegram-close"
-          aria-label="Закрыть Telegram"
+          testId="profile-telegram-close"
+          ariaLabel="Закрыть Telegram"
           onClick={onClose}
-        >×</button>
+        />
 
         <div className={styles.head}>
           <div className={styles.avatar}>
-            {telegramProfile.avatarUrl ? <img src={telegramProfile.avatarUrl} alt="" onError={onAvatarError} /> : <span className={styles.avatarFallback}>✈️</span>}
+            {telegramProfile.avatarUrl ? <img src={telegramProfile.avatarUrl} alt="" onError={onAvatarError} /> : <span className={styles.avatarFallback}><Send size={25} strokeWidth={1.9} /></span>}
           </div>
           <div>
             <span className={styles.eyebrow}>TELEGRAM</span>
@@ -55,7 +56,7 @@ export default function ProfileTelegramModal({
         {!telegramProfile.connected && (
           <>
             <div className={styles.preview}>
-              <div className={styles.previewIcon}>✈️</div>
+              <div className={styles.previewIcon}><Send size={22} strokeWidth={2} aria-hidden="true" /></div>
               <div>
                 <strong>Tren AI Coach</strong>
                 <span>Без ручного ввода username. Всё привяжется через Telegram.</span>

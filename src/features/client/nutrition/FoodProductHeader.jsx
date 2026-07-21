@@ -1,3 +1,4 @@
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./FoodProductHeader.module.css";
 
 export default function FoodProductHeader({
@@ -8,29 +9,26 @@ export default function FoodProductHeader({
   mealMenuOpen,
   getFoodIcon,
   onToggleMealMenu,
-  onSelectMeal
+  onSelectMeal,
+  topActions
 }) {
   const selectedMealName = meals.find((meal) => meal.id === mealId)?.name;
 
   return (
     <>
       {showFlowHeader && (
-        <div
+        <ClientPageHeader
+          compact
+          controlsVariant="workout"
+          frameClassName={styles.flowHeaderFrame}
           className={styles.flowHeader}
-          data-css-module-scope="food-product-header"
-          data-testid="food-product-flow-header"
+          title="Продукт"
+          titleTestId="food-product-header-title"
+          titleProps={{ "data-food-product-header-title": "" }}
+          scope="food-product-header"
+          testId="food-product-flow-header"
+          actions={topActions}
         >
-          <div className={styles.flowTitle}>
-            <span className={styles.eyebrow} data-css-module-text="food-product-header">Питание</span>
-            <h2
-              className={styles.heading}
-              data-css-module-text="food-product-header"
-              data-food-product-header-title
-            >
-              Продукт
-            </h2>
-          </div>
-
           <div className={styles.mealCard} data-testid="food-product-meal-selector">
             <span className={styles.mealLabel} data-css-module-text="food-product-header">Добавить в</span>
 
@@ -68,7 +66,7 @@ export default function FoodProductHeader({
               </div>
             )}
           </div>
-        </div>
+        </ClientPageHeader>
       )}
 
       <div
@@ -76,8 +74,13 @@ export default function FoodProductHeader({
         data-css-module-scope="food-product-header"
         data-testid="food-product-hero"
       >
-        <div className={styles.iconStack}>
-          <span className={styles.icon} aria-hidden="true" data-css-module-text="food-product-header">
+        <div className={styles.iconStack} data-food-product-hero-part="icon-stack">
+          <span
+            className={styles.icon}
+            aria-hidden="true"
+            data-css-module-text="food-product-header"
+            data-food-product-hero-part="icon"
+          >
             {selectedFood.icon || getFoodIcon(selectedFood)}
           </span>
           <small className={styles.source} data-css-module-text="food-product-header">

@@ -1,36 +1,18 @@
 .root {
-  position: relative;
   width: 100%;
   min-width: 0;
   margin-right: 0;
   margin-left: 0;
-  padding: 0;
-  display: grid;
-  grid-template-areas:
-    "title close"
-    "meal meal";
-  align-items: start;
+  display: block;
   font-family: var(--font-family-compact-ui);
 }
 
-.search {
-  height: 124px;
-  min-height: 124px;
-  max-height: 124px;
-  margin-top: 46px;
-  margin-bottom: 16px;
-  grid-template-columns: minmax(0, 1fr) 48px;
-  gap: 14px 12px;
-}
-
+.search,
 .myProducts {
-  height: 122px;
-  min-height: 122px;
-  max-height: 122px;
-  margin-top: 0;
-  margin-bottom: 14px;
-  grid-template-columns: minmax(0, 1fr) 42px;
-  gap: 12px 8px;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0 0 12px;
 }
 
 .titleGroup {
@@ -151,7 +133,7 @@
   border-color: var(--color-food-nav-active-border);
   border-radius: 15px;
   background: linear-gradient(180deg, rgba(245, 240, 255, 0.98), rgba(249, 247, 255, 0.98));
-  box-shadow: 0 10px 22px rgba(92, 75, 148, 0.055), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 22px rgba(117, 97, 170, 0.055), inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .myProducts .mealButton {
@@ -161,7 +143,7 @@
   gap: 2px;
   border-radius: 16px;
   background: var(--color-surface);
-  box-shadow: 0 12px 30px rgba(55, 64, 112, 0.11);
+  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.11);
 }
 
 .mealButton:hover,
@@ -226,7 +208,7 @@
   color: var(--color-heading);
   font: inherit;
   font-weight: 800;
-  box-shadow: 0 16px 36px rgba(36, 43, 66, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  box-shadow: 0 16px 36px rgba(72, 63, 87, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95);
   cursor: pointer;
   -webkit-text-fill-color: currentColor;
 }
@@ -382,11 +364,10 @@
 
 @media (max-width: 640px) {
   .myProducts {
-    height: 136px;
-    min-height: 136px;
-    max-height: 136px;
-    margin-top: 70px;
-    margin-bottom: 16px;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 0 0 12px;
   }
 
   .myProducts .titleGroup {
@@ -430,4 +411,159 @@
   .collapseButton {
     transition: none;
   }
+}
+
+/* Calm iOS chrome for search and My Products. */
+:global(:root[data-app-theme="warm-light"]) .root,
+:global(:root[data-app-theme="warm-light"]) .search,
+:global(:root[data-app-theme="warm-light"]) .myProducts {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0 0 12px;
+  display: block;
+}
+
+:global(:root[data-app-theme="warm-light"]) .titleGroup,
+:global(:root[data-app-theme="warm-light"]) .search .titleGroup,
+:global(:root[data-app-theme="warm-light"]) .myProducts .titleGroup {
+  height: 44px;
+  min-height: 44px;
+  padding: 0 4px;
+  display: flex;
+  justify-content: center;
+  transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .myProducts .titleGroup {
+  gap: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .eyebrow {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .heading,
+:global(:root[data-app-theme="warm-light"]) .search .heading,
+:global(:root[data-app-theme="warm-light"]) .myProducts .heading {
+  height: 44px;
+  min-height: 44px;
+  color: #28262e;
+  font-size: 28px;
+  font-weight: 750;
+  line-height: 44px;
+  letter-spacing: -0.02em;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton,
+:global(:root[data-app-theme="warm-light"]) .search .closeButton,
+:global(:root[data-app-theme="warm-light"]) .myProducts .closeButton {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 4px 0 0;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #8f7ac8;
+  box-shadow: none;
+  font-size: 16px;
+  font-weight: 560;
+  transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton svg {
+  width: 27px;
+  height: 27px;
+  stroke-width: 2.25;
+}
+
+.backLabel {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .backLabel {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealWrap,
+:global(:root[data-app-theme="warm-light"]) .search .mealWrap,
+:global(:root[data-app-theme="warm-light"]) .myProducts .mealWrap {
+  width: 100%;
+  height: 60px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealButton,
+:global(:root[data-app-theme="warm-light"]) .search .mealButton,
+:global(:root[data-app-theme="warm-light"]) .myProducts .mealButton {
+  height: 60px;
+  min-height: 60px;
+  padding: 8px 14px;
+  gap: 3px;
+  border: 1px solid #ebe6ef;
+  border-radius: 18px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealLabel {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealName {
+  color: #28262e;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealName::after {
+  color: #8f7ac8;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealDropdown {
+  top: max(194px, calc(env(safe-area-inset-top) + 135px));
+  width: min(370px, calc(100vw - 32px));
+  max-width: min(370px, calc(100vw - 32px));
+  padding: 8px;
+  gap: 2px;
+  border: 1px solid #ebe6ef;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.98);
+  color: #28262e;
+  box-shadow: 0 18px 50px rgba(40, 38, 46, 0.14);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealOption {
+  height: 52px;
+  min-height: 52px;
+  border-radius: 14px;
+  color: #28262e;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealOption.selected {
+  background: #f0ebfa;
+}
+
+:global(:root[data-app-theme="warm-light"]) .mealIcon {
+  background: #f0ebfa;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionName {
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .collapseButton {
+  border-color: #ebe6ef;
+  border-radius: 14px;
+  background: #f0ebfa;
+  color: #8f7ac8;
 }

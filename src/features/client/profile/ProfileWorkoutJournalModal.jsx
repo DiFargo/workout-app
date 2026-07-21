@@ -1,5 +1,7 @@
 import { ProfileWorkoutCalendarContent } from "./ProfileWorkoutCalendarModal";
 import { ProfileWorkoutHistoryContent } from "./ProfileWorkoutHistoryModal";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileWorkoutJournalModal.module.css";
 
 export default function ProfileWorkoutJournalModal({
@@ -34,15 +36,23 @@ export default function ProfileWorkoutJournalModal({
         aria-labelledby="cabinetWorkoutJournalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className={styles.header}>
-          <div>
-            <span className={styles.eyebrow}>ТРЕНИРОВКИ</span>
-            <h2 className={styles.title} id="cabinetWorkoutJournalTitle">Календарь и история</h2>
-          </div>
-          <button className={styles.closeButton} data-testid="profile-workout-journal-close" type="button" aria-label="Закрыть календарь и историю тренировок" onClick={onClose}>
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          embedded
+          controlsVariant="workout"
+          className={styles.header}
+          title="Тренировки"
+          titleId="cabinetWorkoutJournalTitle"
+          eyebrow="Календарь и история"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-workout-journal-close"
+              ariaLabel="Закрыть тренировки"
+              onClick={onClose}
+            />
+          )}
+          scope="profile-workout-journal-header"
+        />
 
         <div className={styles.tabs} role="tablist" aria-label="Раздел тренировок">
           <button

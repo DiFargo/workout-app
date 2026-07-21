@@ -11,6 +11,215 @@
   background: var(--color-basic-quiz-page-background);
 }
 
+/* Calm iOS plan questionnaire. */
+:global(:root[data-app-theme="warm-light"]) .page.page,
+:global(:root[data-app-theme="warm-light"]) .page.page * {
+  box-sizing: border-box;
+}
+
+:global(:root[data-app-theme="warm-light"]) .page.page {
+  width: min(402px, 100vw);
+  max-width: 402px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 0 16px calc(110px + env(safe-area-inset-bottom, 0px));
+  overflow: hidden auto;
+  background: #f7f6f8;
+  color: #28262e;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+:global(:root[data-app-theme="warm-light"]) .topBar.topBar {
+  width: calc(100% + 32px);
+  min-height: 0;
+  margin: 0 -16px 16px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .title.title {
+  margin: 0;
+  color: #28262e;
+  font-size: 27px;
+  font-weight: 750;
+  letter-spacing: -0.7px;
+  line-height: 33px;
+  text-shadow: none;
+  -webkit-text-fill-color: #28262e;
+}
+
+:global(:root[data-app-theme="warm-light"]) .topActions.topActions {
+  height: 44px;
+  padding: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .topButton.topButton {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  padding: 0;
+  color: #28262e;
+  background: #ffffff;
+  border: 1px solid #ebe6ef;
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+}
+
+:global(:root[data-app-theme="warm-light"]) .topButton.topButton svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 2;
+}
+
+:global(:root[data-app-theme="warm-light"]) .card.card,
+:global(:root[data-app-theme="warm-light"]) .preview.preview {
+  width: 100%;
+  display: grid;
+  color: #28262e;
+  background: #ffffff;
+  border: 1px solid #ebe6ef;
+  border-radius: 22px;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .card.card {
+  min-height: 294px;
+  padding: 16px;
+  gap: 12px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader.sectionHeader {
+  display: grid;
+  gap: 3px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader.sectionHeader > span,
+:global(:root[data-app-theme="warm-light"]) .field.field > span,
+:global(:root[data-app-theme="warm-light"]) .preview.preview > span {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.15px;
+  text-transform: uppercase;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader.sectionHeader h2 {
+  margin: 0;
+  color: #28262e;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader.sectionHeader p {
+  margin: 0;
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .field.field {
+  gap: 5px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .field.field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 38px 0 13px;
+  color: #28262e;
+  background-color: #f0ebfa;
+  border: 0;
+  border-radius: 15px;
+  box-shadow: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .preview.preview {
+  min-height: 132px;
+  margin-top: 12px;
+  padding: 15px 16px;
+  gap: 3px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .preview.preview > strong {
+  margin-top: 2px;
+  color: #28262e;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 22px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .preview.preview > p {
+  margin: 3px 0 8px;
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .previewStats.previewStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .previewStats.previewStats > span {
+  min-height: 42px;
+  padding: 6px 10px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 7px;
+  color: #7b7682;
+  background: #f0ebfa;
+  border-radius: 13px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .previewStats.previewStats b {
+  padding: 0;
+  color: #8f7ac8;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .previewStats.previewStats small {
+  color: #7b7682;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .startButton.startButton {
+  width: 100%;
+  min-height: 48px;
+  height: 48px;
+  margin-top: 12px;
+  color: #ffffff;
+  background: #8f7ac8;
+  border: 0;
+  border-radius: 17px;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-height: 760px) {
+  :global(:root[data-app-theme="warm-light"]) .page.page {
+    padding-top: max(42px, calc(env(safe-area-inset-top, 0px) + 3px));
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .card.card {
+    min-height: 276px;
+    gap: 8px;
+  }
+}
+
 .card,
 .preview {
   padding: 16px;

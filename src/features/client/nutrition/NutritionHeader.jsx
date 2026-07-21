@@ -1,54 +1,57 @@
 import { CalendarDays, Search } from "lucide-react";
 import { todayNutritionKey } from "../../../domain/nutritionPresentation";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./NutritionHeader.module.css";
 
 export default function NutritionHeader({
-  nutritionDateTitle,
   weekDates,
   nutrition,
   nutritionDateKey,
-  nutritionStreakText,
   onOpenSearch,
   onOpenCalendar,
   onSelectDate
 }) {
   return (
-    <section
-      className={styles.root}
-      data-testid="nutrition-header"
-      data-css-module-scope="nutrition-header"
-    >
-      <div className={styles.titleRow} data-nutrition-header-part="title-row">
-        <h1 className={styles.title} data-nutrition-header-part="title">{nutritionDateTitle}</h1>
-        <div className={styles.actions} data-nutrition-header-part="actions">
-          <button
-            className={styles.action}
-            type="button"
-            onClick={onOpenSearch}
-            aria-label="Поиск еды"
-            title="Поиск еды"
-            data-testid="nutrition-header-search"
-            data-nutrition-header-action="search"
-          >
-            <Search className={styles.icon} aria-hidden="true" data-nutrition-header-icon />
-          </button>
-          <button
-            className={styles.action}
-            type="button"
-            onClick={onOpenCalendar}
-            aria-label="Календарь"
-            title="Календарь"
-            data-testid="nutrition-header-calendar"
-            data-nutrition-header-action="calendar"
-          >
-            <CalendarDays
-              className={`${styles.icon} ${styles.calendarIcon}`}
-              aria-hidden="true"
-              data-nutrition-header-icon
-            />
-          </button>
-        </div>
-      </div>
+    <>
+      <ClientPageHeader
+        title="Питание"
+        titlePart="title"
+        titleTestId="nutrition-header-title"
+        className={styles.root}
+        testId="nutrition-header"
+        scope="nutrition-header"
+        barPart="title-row"
+        actions={(
+          <div className={styles.actions} data-nutrition-header-part="actions">
+            <button
+              className={styles.action}
+              type="button"
+              onClick={onOpenSearch}
+              aria-label="Поиск еды"
+              title="Поиск еды"
+              data-testid="nutrition-header-search"
+              data-nutrition-header-action="search"
+            >
+              <Search className={styles.icon} aria-hidden="true" data-nutrition-header-icon />
+            </button>
+            <button
+              className={styles.action}
+              type="button"
+              onClick={onOpenCalendar}
+              aria-label="Календарь"
+              title="Календарь"
+              data-testid="nutrition-header-calendar"
+              data-nutrition-header-action="calendar"
+            >
+              <CalendarDays
+                className={`${styles.icon} ${styles.calendarIcon}`}
+                aria-hidden="true"
+                data-nutrition-header-icon
+              />
+            </button>
+          </div>
+        )}
+      />
 
       <div className={styles.week} data-nutrition-header-part="week">
         {weekDates.map((day) => {
@@ -79,14 +82,11 @@ export default function NutritionHeader({
               <small className={styles.dayLabel} data-nutrition-header-part="day-label">
                 {day.label}
               </small>
+              <span className={styles.dateNumber}>{day.date.getDate()}</span>
             </button>
           );
         })}
       </div>
-
-      <div className={styles.streak} data-nutrition-header-part="streak">
-        <span className={styles.streakText} data-nutrition-header-part="streak-text">{nutritionStreakText}</span>
-      </div>
-    </section>
+    </>
   );
 }

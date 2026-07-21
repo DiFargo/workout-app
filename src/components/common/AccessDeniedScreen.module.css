@@ -1,0 +1,79 @@
+.root,
+.root * {
+  box-sizing: border-box;
+}
+
+.root {
+  width: 100%;
+  max-width: 402px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: max(18px, calc(env(safe-area-inset-top) + 10px)) 16px max(20px, calc(env(safe-area-inset-bottom) + 12px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #f3f4f3;
+  color: #202326;
+}
+
+.back {
+  width: fit-content;
+  min-height: 44px;
+  margin: 0 0 14px;
+  padding: 0 14px;
+  align-self: flex-start;
+  border: 1px solid #e1e4e5;
+  border-radius: 14px;
+  background: #fff;
+  color: #627588;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.card {
+  width: 100%;
+  padding: 24px 20px;
+  border: 1px solid #e1e4e5;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(32, 35, 38, 0.06);
+}
+
+.card h3 {
+  margin: 0;
+  color: #202326;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.6px;
+}
+
+.card p {
+  margin: 10px 0 0;
+  color: #74797f;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+:global(:root[data-app-theme="dark-green"]) .root {
+  background: #07110d;
+  color: #f7fbf8;
+}
+
+:global(:root[data-app-theme="dark-green"]) .back,
+:global(:root[data-app-theme="dark-green"]) .card {
+  border-color: rgba(183, 224, 63, 0.18);
+  background: #102019;
+}
+
+:global(:root[data-app-theme="dark-green"]) .back {
+  color: #b7e03f;
+}
+
+:global(:root[data-app-theme="dark-green"]) .card h3 {
+  color: #f7fbf8;
+}
+
+:global(:root[data-app-theme="dark-green"]) .card p {
+  color: #a8b6ae;
+}

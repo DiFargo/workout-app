@@ -1,392 +1,90 @@
-.root,
-.toggle,
-.summary,
-.gauge,
-.dial,
-.headline,
-.badges,
-.badge {
-  box-sizing: border-box;
-}
-
 .root {
+  box-sizing: border-box;
   width: 100%;
-  min-width: 0;
-  max-width: 100%;
+  height: 136px;
+  padding: 17px 15px;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  gap: 8px;
-  padding: 15px 14px 14px;
-  border: 1px solid var(--color-profile-progress-border-neutral);
-  border-radius: 22px;
-  background: var(--background-profile-progress-neutral);
-  color: var(--color-profile-progress-text);
-  -webkit-text-fill-color: var(--color-profile-progress-text);
-  box-shadow: var(--shadow-profile-progress-card);
-  overflow: visible;
+  border: 1px solid #ebe6ef;
+  border-radius: 24px;
+  background: #fff;
+  color: #28262e;
 }
 
-.positive {
-  border-color: var(--color-profile-progress-border-positive);
-  background: var(--background-profile-progress-positive);
+.sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
 }
 
-.supportive {
-  border-color: var(--color-profile-progress-border-supportive);
-  background: var(--background-profile-progress-supportive);
-}
-
-.neutral {
-  border-color: var(--color-profile-progress-border-neutral);
-  background: var(--background-profile-progress-neutral);
-}
-
-.toggle {
-  width: 100%;
-  min-height: 0;
-  padding: 10px 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  align-items: center;
-  gap: 12px;
-  color: var(--color-profile-progress-toggle);
-  -webkit-text-fill-color: var(--color-profile-progress-toggle-fill);
-  text-align: left;
-}
-
+.toggle { margin-top: 15px; }
 .summary {
-  min-width: 0;
-  display: block;
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 17px;
 }
 
 .gauge {
-  min-width: 0;
-  display: block;
-  color: var(--color-profile-progress-gauge-value);
-  -webkit-text-fill-color: var(--color-profile-progress-gauge-value-fill);
+  width: 70px;
+  height: 70px;
+  flex: 0 0 70px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #8f7ac8 0 var(--progress-fill), #dce3e7 var(--progress-fill) 360deg);
 }
 
-.dial {
-  display: block;
+.gauge::after {
+  content: "";
+  width: 52px;
+  height: 52px;
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
 }
 
-.dial strong {
-  color: var(--color-profile-progress-gauge-value);
-  -webkit-text-fill-color: var(--color-profile-progress-gauge-value-fill);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 24px;
-}
-
-.gaugeCaption {
-  color: var(--color-profile-progress-gauge-caption);
-  -webkit-text-fill-color: var(--color-profile-progress-gauge-caption-fill);
-  font-size: 8px;
-  font-weight: 400;
-  line-height: 12px;
-}
+.dial { z-index: 1; transform: translateY(-4px); }
+.dial strong { font-size: 21px; font-weight: 700; }
+.gaugeCaption { z-index: 1; position: absolute; top: 42px; color: #7b7682; font-size: 9px; font-weight: 600; }
 
 .headline {
   min-width: 0;
-  color: var(--color-profile-progress-text);
-  text-align: left;
-}
-
-.eyebrow {
-  color: var(--color-profile-progress-eyebrow);
-  -webkit-text-fill-color: var(--color-profile-progress-eyebrow-fill);
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 15px;
-  text-transform: uppercase;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "title"
+    "copy";
+  align-items: start;
+  transform: translateY(-3px);
 }
 
 .title {
-  margin: 5px 0 4px;
-  color: var(--color-profile-progress-title);
-  -webkit-text-fill-color: var(--color-profile-progress-title);
+  min-width: 0;
+  margin: 0 0 3px;
+  grid-area: title;
+  overflow: hidden;
+  color: #28262e;
   font-size: 17px;
   font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.04em;
-}
-
-.copy {
-  max-width: 275px;
-  margin: 0;
-  color: var(--color-profile-progress-copy);
-  -webkit-text-fill-color: var(--color-profile-progress-copy-fill);
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1.35;
-}
-
-.badges {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  margin: 0;
-  padding: 6px 0 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: stretch;
-  justify-content: stretch;
-  gap: 6px;
-}
-
-.badge {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  height: 34px;
-  min-height: 34px;
-  margin: 0;
-  padding: 4px;
-  display: grid;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-  justify-items: center;
-  gap: 2px;
-  border: 1px solid var(--color-profile-progress-badge-border);
-  border-radius: 999px;
-  background: var(--background-profile-progress-badge);
-  color: var(--color-profile-progress-badge-title);
-  -webkit-text-fill-color: var(--color-profile-progress-badge-title-fill);
-  font-size: 8px;
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: 0.12em;
-  text-align: center;
-  text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.badge b,
-.badge small {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  display: block;
-  font-size: 8px;
-  line-height: 1.05;
-  letter-spacing: 0.12em;
-  text-align: center;
-  text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
+  line-height: 21px;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.copy {
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  grid-area: copy;
+  display: -webkit-box;
+  overflow: hidden;
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 17px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-.badge b {
-  color: var(--color-profile-progress-badge-title);
-  -webkit-text-fill-color: var(--color-profile-progress-badge-title-fill);
-  font-weight: 850;
-}
-
-.badge small {
-  color: var(--color-profile-progress-badge-copy);
-  -webkit-text-fill-color: var(--color-profile-progress-badge-copy-fill);
-  font-weight: 600;
-}
-
-:global(:root[data-app-theme="dark-green"]) .root {
-  border-radius: 15px;
-}
-
-@media (max-width: 640px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    height: 160px;
-    min-height: 160px;
-    max-height: 160px;
-    gap: 7px;
-    padding: 12px 18px 10px;
-    border-color: var(--color-profile-progress-border-mobile);
-    border-radius: 24px;
-    background: var(--background-profile-progress-mobile);
-    color: var(--color-profile-progress-text-mobile);
-    -webkit-text-fill-color: var(--color-profile-progress-text-mobile);
-    box-shadow: var(--shadow-profile-progress-card-mobile);
-    overflow: hidden;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .toggle {
-    flex: 0 0 auto;
-    padding: 0;
-    color: var(--color-profile-progress-text-mobile);
-    -webkit-text-fill-color: var(--color-profile-progress-text-mobile);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .summary {
-    display: grid;
-    grid-template-columns: 114px minmax(0, 1fr);
-    align-items: center;
-    gap: 14px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .gauge {
-    width: 88px;
-    min-width: 88px;
-    max-width: 88px;
-    height: 88px;
-    min-height: 88px;
-    max-height: 88px;
-    position: relative;
-    display: grid;
-    place-items: center;
-    color: var(--progress-color);
-    -webkit-text-fill-color: var(--progress-color);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .dial {
-    width: 78px;
-    min-width: 78px;
-    max-width: 78px;
-    height: 78px;
-    min-height: 78px;
-    max-height: 78px;
-    position: relative;
-    display: grid;
-    place-items: center;
-    isolation: isolate;
-    border-radius: 999px;
-    background: var(--background-profile-progress-gauge);
-    box-shadow: 0 15px 28px var(--progress-glow), var(--shadow-profile-progress-gauge-inset);
-    overflow: hidden;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .dial::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    border-radius: 999px;
-    background: conic-gradient(
-      from 180deg,
-      var(--progress-color) 0deg var(--progress-fill),
-      var(--color-profile-progress-gauge-track) var(--progress-fill) 360deg
-    );
-    box-shadow: 0 14px 26px var(--progress-glow), var(--shadow-profile-progress-gauge-ring);
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
-    mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .dial strong {
-    width: 100%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 3;
-    transform: translate(-50%, -50%);
-    color: var(--progress-color);
-    -webkit-text-fill-color: var(--progress-color);
-    font-size: 29px;
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -0.2px;
-    text-align: center;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .gaugeCaption {
-    position: absolute;
-    top: 59px;
-    right: 0;
-    left: 0;
-    z-index: 4;
-    margin: 0;
-    color: var(--color-profile-progress-gauge-caption-mobile);
-    -webkit-text-fill-color: var(--color-profile-progress-gauge-caption-mobile);
-    font-size: 8px;
-    font-weight: 850;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .headline {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    text-align: left;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .eyebrow {
-    display: block;
-    color: var(--color-profile-progress-eyebrow-mobile);
-    -webkit-text-fill-color: var(--color-profile-progress-eyebrow-mobile);
-    font-size: 16.2px;
-    font-weight: 850;
-    line-height: 1.04;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .title {
-    margin: 2px 0 0;
-    color: var(--color-profile-progress-title-mobile);
-    -webkit-text-fill-color: var(--color-profile-progress-title-mobile);
-    font-size: 10.25px;
-    font-weight: 760;
-    line-height: 1.16;
-    letter-spacing: 0;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .copy {
-    margin: 2px 0 0;
-    color: var(--color-profile-progress-copy-mobile);
-    -webkit-text-fill-color: var(--color-profile-progress-copy-mobile);
-    font-size: 10.25px;
-    font-weight: 650;
-    line-height: 1.24;
-    letter-spacing: 0;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .badges {
-    padding: 0;
-    gap: 7px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .badge {
-    height: 36px;
-    min-height: 36px;
-    padding: 4px 3px;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    border-color: var(--color-profile-progress-badge-border-mobile);
-    border-radius: 17px;
-    background: var(--background-profile-progress-badge-mobile);
-    overflow: visible;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .badge b {
-    color: var(--color-profile-progress-badge-title-mobile);
-    -webkit-text-fill-color: var(--color-profile-progress-badge-title-mobile);
-    font-size: 8.5px;
-    font-weight: 850;
-    line-height: 1;
-    letter-spacing: 0;
-    overflow: visible;
-    text-overflow: clip;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .badge small {
-    color: var(--color-profile-progress-badge-copy-mobile);
-    -webkit-text-fill-color: var(--color-profile-progress-badge-copy-mobile);
-    font-size: 8.1px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: 0;
-    overflow: visible;
-    text-overflow: clip;
-  }
-}
+.badges { display: none; }

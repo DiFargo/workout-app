@@ -298,3 +298,19 @@
     width: 100%;
   }
 }
+
+@media (max-width: 390px) {
+  .assignmentRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .selectField {
+    grid-column: auto;
+  }
+
+  .assignButton,
+  .editButton {
+    width: 100%;
+    min-width: 0;
+  }
+}

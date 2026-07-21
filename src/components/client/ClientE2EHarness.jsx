@@ -38,7 +38,7 @@ import ProfileEmailModal from "../../features/client/profile/ProfileEmailModal";
 import ProfileHeroCard from "../../features/client/profile/ProfileHeroCard";
 import ProfileMainMeasurementSnapshot from "../../features/client/profile/ProfileMainMeasurementSnapshot";
 import ProfileMainRoleActions from "../../features/client/profile/ProfileMainRoleActions";
-import ProfileMainSummaryCards from "../../features/client/profile/ProfileMainSummaryCards";
+import { ProfileLastWorkoutCard, ProfileNextWorkoutCard } from "../../features/client/profile/ProfileMainSummaryCards";
 import ProfileMeasurementWizardPanel from "../../features/client/profile/ProfileMeasurementWizardPanel";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
@@ -422,8 +422,11 @@ function HarnessCabinetActions({
       onOpenCalendar={onOpenJournal}
       onOpenAccount={onOpenSettings}
       onOpenQuestionnaire={() => {}}
+      onOpenNotifications={() => {}}
       onOpenFeedback={() => {}}
       accountAvatarUrl=""
+      accountName="ILYA"
+      accountRole="Участник"
     />
   );
 }
@@ -575,6 +578,8 @@ export default function ClientE2EHarness() {
   const [harnessRunWarmupTimerDuration, setHarnessRunWarmupTimerDuration] = useState(180);
   const [harnessRunWarmupTimerRunning, setHarnessRunWarmupTimerRunning] = useState(false);
   const [harnessRunWarmupTimerSeconds, setHarnessRunWarmupTimerSeconds] = useState(180);
+  const [harnessRunRestTimerRunning, setHarnessRunRestTimerRunning] = useState(true);
+  const [harnessRunRestTimerSeconds, setHarnessRunRestTimerSeconds] = useState(119);
   const [harnessRunClientComment, setHarnessRunClientComment] = useState("");
   const [harnessRunSaved, setHarnessRunSaved] = useState(harnessRunStageParam === "saved");
   const [harnessRunSavedCard, setHarnessRunSavedCard] = useState(harnessRunStageParam === "saved");
@@ -1207,6 +1212,8 @@ export default function ClientE2EHarness() {
             : exercise
         ))
       }));
+      setHarnessRunRestTimerSeconds(119);
+      setHarnessRunRestTimerRunning(true);
     };
     const updateHarnessRunNote = (exerciseId, value) => {
       setHarnessRunWorkout((current) => ({
@@ -1255,6 +1262,9 @@ export default function ClientE2EHarness() {
             plan={{ workouts: [harnessRunWorkout] }}
             postWorkoutFeedback={{ advice: "Отличная работа" }}
             requestLeaveWorkout={() => setPage("main")}
+            restTimerDuration={119}
+            restTimerRunning={harnessRunRestTimerRunning}
+            restTimerSeconds={harnessRunRestTimerSeconds}
             saveWorkoutToFirebase={() => {
               setHarnessRunSaved(true);
               setHarnessRunSavedCard(true);
@@ -1268,6 +1278,8 @@ export default function ClientE2EHarness() {
             setIsWorkoutSaved={setHarnessRunSaved}
             setOpenVideoId={() => {}}
             setPostWorkoutFeedbackOpen={() => {}}
+            setRestTimerRunning={setHarnessRunRestTimerRunning}
+            setRestTimerSeconds={setHarnessRunRestTimerSeconds}
             setShowWorkoutSavedCard={setHarnessRunSavedCard}
             setVideoLoadingId={() => {}}
             setVideoRetryToken={() => {}}
@@ -1283,6 +1295,10 @@ export default function ClientE2EHarness() {
             showInlineVideoControlsTemporarily={() => {}}
             showWorkoutSavedCard={harnessRunSavedCard}
             startPerformanceCheck={() => {}}
+            startRestTimer={(seconds = 119) => {
+              setHarnessRunRestTimerSeconds(seconds);
+              setHarnessRunRestTimerRunning(true);
+            }}
             swipeDirection=""
             swipeOffset={0}
             toggleWarmupStep={(stepIndex) => {
@@ -1923,28 +1939,16 @@ export default function ClientE2EHarness() {
           telegramProfile={{ connected: false }}
           avatarUrl=""
           greetingName="ILYA"
-        />
-        <ProfileMainSummaryCards
           activeGoalLabel="Сушка"
-          targetWeight={89}
-          weight={89}
-          currentGoalId="cut"
           totalWorkouts={12}
-          lastWorkoutDate="27 июня"
-          nextTrainingText="Сегодня"
-          showSplitCards={false}
         />
       </ProfileMainHeroStatsShell>
 
-      <ProfileMainSummaryCards
-        activeGoalLabel="Сушка"
-        targetWeight={89}
-        weight={89}
-        currentGoalId="cut"
-        totalWorkouts={12}
-        lastWorkoutDate="27 июня"
-        nextTrainingText="Сегодня"
-        showStats={false}
+      <ProfileNextWorkoutCard
+        title="Ноги и ягодицы"
+        dateText="22 июля"
+        exerciseCount={7}
+        onOpen={() => setPage("workouts")}
       />
 
       <ProfileProgressInsightCard
@@ -1978,6 +1982,8 @@ export default function ClientE2EHarness() {
         latestWeight={measurementSnapshotState === "empty" ? 0 : 89}
         weightChange={measurementSnapshotState === "trend" ? -0.5 : 0}
       />
+
+      <ProfileLastWorkoutCard dateText="27 июня" onOpen={() => setPage("workoutHistory")} />
     </>
   ));
 }

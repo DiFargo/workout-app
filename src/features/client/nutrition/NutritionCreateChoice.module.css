@@ -1,11 +1,11 @@
 .overlay {
   --create-surface: var(--color-surface);
-  --create-text: #161a24;
+  --create-text: #28262e;
   --create-muted: #727b91;
   --create-border: #e1e5ee;
-  --create-option-border: #ded9ff;
-  --create-option-accent: #5542d8;
-  --create-option-icon: #f0edff;
+  --create-option-border: #e4dcf2;
+  --create-option-accent: #7561aa;
+  --create-option-icon: #f0ebfa;
 
   position: fixed;
   inset: 0;
@@ -46,7 +46,7 @@
   background: var(--create-surface);
   color: var(--create-text);
   box-shadow:
-    0 24px 60px rgba(55, 64, 112, 0.22),
+    0 24px 60px rgba(72, 63, 87, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
@@ -57,25 +57,27 @@
 .header {
   position: relative;
   margin-bottom: 12px;
-  padding-left: 52px;
+  padding-left: 0;
   color: var(--color-heading);
   text-align: left;
 }
 
 .closeButton {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 42px;
-  height: 42px;
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top, 0px));
+  right: max(16px, calc((100vw - 402px) / 2 + 16px));
+  left: auto;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
   padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid #e1e4ef;
-  border-radius: 18px;
+  border: 1px solid #ebe6ef;
+  border-radius: 50%;
   background: var(--create-surface);
   color: var(--color-heading);
-  box-shadow: 0 12px 28px rgba(55, 64, 112, 0.08);
+  box-shadow: 0 12px 28px rgba(72, 63, 87, 0.08);
   font: inherit;
   font-size: 28px;
   font-weight: 900;
@@ -128,7 +130,7 @@
   border-radius: 16px;
   background: var(--create-surface);
   color: var(--create-option-accent);
-  box-shadow: 0 8px 18px rgba(84, 55, 230, 0.08);
+  box-shadow: 0 8px 18px rgba(143, 122, 200, 0.08);
   font: inherit;
   font-weight: 950;
   text-align: left;
@@ -197,4 +199,243 @@
   .optionDescription {
     font-size: 10.5px;
   }
+}
+
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  --create-surface: #fff;
+  --create-text: #28262e;
+  --create-muted: #7b7682;
+  --create-border: #ebe6ef;
+  --create-option-border: #ebe6ef;
+  --create-option-accent: #8f7ac8;
+  --create-option-icon: #f0ebfa;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  align-items: flex-end;
+  background: rgba(40, 38, 46, 0.35);
+  color: #28262e;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .sheet {
+  width: min(100%, 370px);
+  max-width: 370px;
+  padding: 18px;
+  border: 1px solid #ebe6ef;
+  border-radius: 26px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
+}
+
+:global(:root[data-app-theme="warm-light"]) .header {
+  margin-bottom: 16px;
+  padding: 0 46px;
+  color: #28262e;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton {
+  top: -2px;
+  left: -2px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #f0ebfa;
+  color: #28262e;
+  box-shadow: none;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+:global(:root[data-app-theme="warm-light"]) .eyebrow {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .title {
+  color: #28262e;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .description {
+  margin-top: 5px;
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 450;
+}
+
+:global(:root[data-app-theme="warm-light"]) .grid {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .option {
+  min-height: 72px;
+  padding: 10px 12px;
+  grid-template-columns: 44px minmax(0, 1fr);
+  border: 1px solid #ebe6ef;
+  border-radius: 18px;
+  background: #fff;
+  color: #8f7ac8;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #f0ebfa;
+  color: #8f7ac8;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionTitle {
+  color: #28262e;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionDescription {
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 450;
+}
+
+/* The creation chooser follows the exact geometry and interaction rules of
+   the primary iOS dock; only the actions inside it are different. */
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  padding: 0;
+  background: rgba(40, 38, 46, 0.12);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .sheet {
+  width: var(--layout-client-dock-width);
+  max-width: 382px;
+  height: 76px;
+  min-height: 76px;
+  max-height: 76px;
+  margin-bottom: var(--layout-client-dock-bottom);
+  padding: 6px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  border-radius: var(--layout-client-dock-radius);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+}
+
+:global(:root[data-app-theme="warm-light"]) .header {
+  position: absolute;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton {
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top, 0px));
+  right: max(16px, calc((100vw - 402px) / 2 + 16px));
+  left: auto;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(123, 118, 130, 0.1);
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton svg,
+:global(:root[data-app-theme="warm-light"]) .optionIcon svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.1;
+}
+
+:global(:root[data-app-theme="warm-light"]) .eyebrow,
+:global(:root[data-app-theme="warm-light"]) .description,
+:global(:root[data-app-theme="warm-light"]) .optionDescription {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+:global(:root[data-app-theme="warm-light"]) .grid {
+  min-width: 0;
+  height: 64px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 6px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .option {
+  width: 100%;
+  min-width: 0;
+  min-height: 58px;
+  height: 58px;
+  padding: 5px 4px 4px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 30px 16px;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  border: 1px solid transparent;
+  border-radius: var(--layout-client-dock-button-radius);
+  background: transparent;
+  color: #7b7682;
+  box-shadow: none;
+  text-align: center;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionIcon {
+  grid-row: auto;
+  width: 24px;
+  height: 30px;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionIcon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+}
+
+:global(:root[data-app-theme="warm-light"]) .optionTitle {
+  align-self: center;
+  color: #28262e;
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+:global(:root[data-app-theme="warm-light"]) .option:active,
+:global(:root[data-app-theme="warm-light"]) .closeButton:active {
+  background: #f0ebfa;
+  color: #8f7ac8;
+  transform: scale(0.97);
+}
+
+:global(:root[data-app-theme="warm-light"]) .option:active {
+  border-color: transparent;
+  box-shadow: none;
 }

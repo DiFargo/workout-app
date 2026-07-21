@@ -1,23 +1,30 @@
+import {
+  Bell,
+  CalendarDays,
+  Camera,
+  ChevronRight,
+  ClipboardList,
+  MessageCircle,
+  Utensils
+} from "lucide-react";
 import styles from "./ProfileCabinetActionGrid.module.css";
 
-function ProfileCabinetActionCard({ kind, icon, avatarUrl, eyebrow, title, note, onClick }) {
+function ActionRow({ kind, icon: Icon, title, note, onClick, warm = false }) {
   return (
     <button
       type="button"
-      className={styles.card}
+      className={styles.row}
       data-testid={`profile-cabinet-action-${kind}`}
       onClick={onClick}
-      aria-label={`${eyebrow}: ${title}`}
     >
-      <span className={styles.icon} data-testid={`profile-cabinet-action-${kind}-icon`}>
-        {avatarUrl ? <img className={styles.avatar} src={avatarUrl} alt="" /> : icon}
+      <span className={`${styles.icon}${warm ? ` ${styles.warm}` : ""}`} data-testid={`profile-cabinet-action-${kind}-icon`}>
+        <Icon aria-hidden="true" />
       </span>
       <span className={styles.text}>
-        <small className={styles.eyebrow}>{eyebrow}</small>
-        <strong className={styles.title} data-testid={`profile-cabinet-action-${kind}-title`}>{title}</strong>
-        <em className={styles.note}>{note}</em>
+        <strong data-testid={`profile-cabinet-action-${kind}-title`}>{title}</strong>
+        <small>{note}</small>
       </span>
-      <i className={styles.arrow} aria-hidden="true">›</i>
+      <ChevronRight className={styles.chevron} aria-hidden="true" />
     </button>
   );
 }
@@ -33,11 +40,15 @@ export default function ProfileCabinetActionGrid({
   onOpenCalendar,
   onOpenAccount,
   onOpenQuestionnaire,
+  onOpenNotifications,
   onOpenFeedback,
-  accountAvatarUrl
+  accountAvatarUrl,
+  accountName = "Спортсмен",
+  accountRole = "Участник"
 }) {
+  const fallbackLetter = String(accountName).trim().charAt(0).toUpperCase() || "А";
   const bodyControlNote = latestMeasurementText && latestMeasurementText !== "Замеров пока нет"
-    ? `Замеры: ${latestMeasurementText}`
+    ? `Последний замер ${latestMeasurementText}`
     : latestPhotoText;
 
   return (
@@ -46,69 +57,37 @@ export default function ProfileCabinetActionGrid({
       data-css-module-scope="profile-cabinet-action-grid"
       data-testid="profile-cabinet-action-grid"
     >
-      <ProfileCabinetActionCard
-        kind="account"
-        icon="👤"
-        avatarUrl={accountAvatarUrl}
-        eyebrow="АККАУНТ"
-        title="Профиль и настройки"
-        note="Оформление, Telegram и выход"
-        onClick={onOpenAccount}
-      />
+      <button type="button" className={styles.account} data-testid="profile-cabinet-action-account" onClick={onOpenAccount}>
+        <span className={styles.avatar} data-testid="profile-cabinet-action-account-icon">
+          {accountAvatarUrl ? <img src={accountAvatarUrl} alt="" /> : fallbackLetter}
+        </span>
+        <span className={styles.accountText}>
+          <strong data-testid="profile-cabinet-action-account-title">{accountName}</strong>
+          <small>Профиль и настройки</small>
+          <em>{accountRole}</em>
+        </span>
+        <ChevronRight className={styles.chevron} aria-hidden="true" />
+      </button>
 
       {showClientOnlyActions && (
-        <ProfileCabinetActionCard
-          kind="body-control"
-          icon="📷"
-          eyebrow="КОНТРОЛЬ ТЕЛА"
-          title="Фото и замеры"
-          note={bodyControlNote}
-          onClick={onOpenBodyControl}
-        />
+        <section className={styles.groupSection} aria-label="Здоровье и план">
+          <h2>ЗДОРОВЬЕ И ПЛАН</h2>
+          <div className={styles.group}>
+            <ActionRow kind="body-control" icon={Camera} title="Фото и замеры" note={bodyControlNote} onClick={onOpenBodyControl} />
+            <ActionRow kind="nutrition" icon={Utensils} title="КБЖУ" note={nutritionText} onClick={onOpenNutrition} />
+            <ActionRow kind="workout-journal" icon={CalendarDays} title="Календарь и история" note={historyText} onClick={onOpenCalendar} />
+          </div>
+        </section>
       )}
 
-      {showClientOnlyActions && (
-        <ProfileCabinetActionCard
-          kind="nutrition"
-          icon="🍽️"
-          eyebrow="ПЛАН ПИТАНИЯ"
-          title="КБЖУ"
-          note={nutritionText}
-          onClick={onOpenNutrition}
-        />
-      )}
-
-      {showClientOnlyActions && (
-        <ProfileCabinetActionCard
-          kind="workout-journal"
-          icon="🗓️"
-          eyebrow="ТРЕНИРОВКИ"
-          title="Календарь и история"
-          note={historyText}
-          onClick={onOpenCalendar}
-        />
-      )}
-
-      {showClientOnlyActions && (
-        <ProfileCabinetActionCard
-          kind="questionnaire"
-          icon="📋"
-          eyebrow="ПАРАМЕТРЫ"
-          title="Анкета"
-          note="Вес, рост, возраст, цель и активность"
-          onClick={onOpenQuestionnaire}
-        />
-      )}
-
-      <ProfileCabinetActionCard
-        kind="feedback"
-        icon="💬"
-        eyebrow="ОБРАТНАЯ СВЯЗЬ"
-        title="Ошибка или идея"
-        note="Отзыв, рекомендация или предложение"
-        onClick={onOpenFeedback}
-      />
-
+      <section className={styles.groupSection} aria-label="Приложение">
+        <h2>ПРИЛОЖЕНИЕ</h2>
+        <div className={styles.group}>
+          {showClientOnlyActions && <ActionRow kind="questionnaire" icon={ClipboardList} title="Анкета" note="Цель, возраст и активность" onClick={onOpenQuestionnaire} />}
+          {showClientOnlyActions && <ActionRow kind="notifications" icon={Bell} title="Уведомления" note="Тренировки и напоминания" onClick={onOpenNotifications} />}
+          <ActionRow kind="feedback" icon={MessageCircle} title="Ошибка или идея" note="Отзыв и предложение" onClick={onOpenFeedback} warm />
+        </div>
+      </section>
     </div>
   );
 }

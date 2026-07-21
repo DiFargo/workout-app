@@ -1,502 +1,74 @@
-.root,
-.root * {
-  box-sizing: border-box;
-}
+.root, .root * { box-sizing: border-box; }
 
 .root {
-  position: relative;
-  z-index: 1;
-  inset: 2px 0 -2px;
   width: 100%;
-  min-height: 0;
-  padding: 8px 0 0;
-  margin: 0 0 6px;
-  display: flex;
+  height: auto;
   flex: 0 0 auto;
-  flex-direction: column;
-  align-items: center;
-  color: #151824;
-  font-family: Arial, sans-serif;
-  -webkit-text-fill-color: #151824;
-}
-
-.titleRow {
-  position: relative;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  min-height: 46px;
-  max-height: 42px;
-  margin: 0 0 2px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.title {
-  min-width: auto;
-  min-height: 32px;
-  max-height: 42px;
-  margin: 0 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  overflow: visible;
-  color: #151824;
-  font-family: Arial, sans-serif;
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 1.08;
-  text-align: left;
-  white-space: normal;
-  -webkit-text-fill-color: #151824;
+  color: #28262e;
 }
 
 .actions {
-  position: relative;
-  inset: -2px 0 2px;
-  height: 42px;
-  min-height: 42px;
-  max-height: 42px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
-
 .action {
-  width: 42px;
-  min-width: 42px;
-  max-width: 42px;
-  height: 42px;
-  min-height: 42px;
-  max-height: 42px;
+  width: 44px;
+  height: 44px;
   padding: 0;
-  margin: 0;
   display: grid;
   place-items: center;
-  gap: 0;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 14px;
-  background: linear-gradient(rgba(18, 21, 19, 0.98), rgba(9, 12, 9, 0.98));
-  color: #f4f6f2;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 900;
-  line-height: 14px;
-  letter-spacing: -0.42px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+  border: 1px solid #ebe6ef;
+  border-radius: 16px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
   cursor: pointer;
-  touch-action: manipulation;
-  white-space: nowrap;
-  -webkit-text-fill-color: #f4f6f2;
 }
-
-.action:active {
-  transform: scale(0.96);
-}
-
-.icon {
-  width: 24px;
-  height: 24px;
-  display: block;
-  color: inherit;
-  -webkit-text-fill-color: inherit;
-}
-
-.calendarIcon {
-  width: 22px;
-  min-width: 22px;
-  height: 22px;
-  display: flex;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 20px;
-  line-height: 20px;
-}
-
-.calendarIcon > * {
-  display: block;
-}
+.icon { width: 22px; height: 22px; stroke-width: 2.1; }
+.calendarIcon { background: transparent; }
+.action:active { background: #f0ebfa; transform: scale(0.96); }
 
 .week {
-  position: relative;
-  inset: 0;
-  z-index: 2;
-  width: 100%;
-  height: 54px;
-  min-height: 54px;
-  max-height: 34px;
-  padding: 4px 6px;
+  width: calc(100% - 32px);
+  height: 64px;
+  margin: 12px 16px 0;
+  padding: 8px 7px 5px;
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  align-items: center;
-  justify-items: center;
-  column-gap: 2px;
-  row-gap: 10.14px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 9px;
+  border: 1px solid #ebe6ef;
+  border-radius: 20px;
   background: #fff;
-  color: #151824;
-  box-shadow: 0 10px 28px rgba(55, 64, 112, 0.08);
-  -webkit-text-fill-color: #151824;
 }
 
 .day {
-  position: relative;
-  width: 100%;
-  max-width: 44px;
   min-width: 0;
-  height: 46px;
-  min-height: 46px;
-  max-height: 46px;
+  height: 50px;
   padding: 0;
-  margin: 0;
   display: grid;
-  grid-template-columns: 26px;
-  grid-template-rows: 14px 26px;
-  align-items: center;
-  justify-content: center;
-  justify-items: center;
-  gap: 6px;
-  overflow: visible;
-  border: 0;
-  border-radius: 12px;
-  background: transparent;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-  text-align: center;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-text-fill-color: #fff;
-}
-
-.day::after {
-  content: "";
-  position: absolute;
-  inset: -8px -3px;
-}
-
-.dot {
-  position: relative;
-  width: 26px;
-  min-width: 26px;
-  max-width: 26px;
-  height: 26px;
-  min-height: 26px;
-  max-height: 26px;
-  display: block;
-  grid-row: 2;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: #151824;
-  font-family: Arial, sans-serif;
-  font-size: 0;
-  font-weight: 800;
-  line-height: 0;
-  -webkit-text-fill-color: #151824;
-  box-shadow: none;
-}
-
-.dayLabel {
-  width: 2.4ch;
-  min-width: 2.4ch;
-  max-width: 2.4ch;
-  display: block;
-  grid-row: 1;
-  color: rgba(76, 84, 108, 0.88);
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 850;
-  line-height: 14px;
-  text-transform: uppercase;
-  white-space: nowrap;
-  -webkit-text-fill-color: rgba(76, 84, 108, 0.88);
-}
-
-.selected {
-  background: rgba(101, 82, 230, 0.1);
-}
-
-.selected .dayLabel {
-  color: #6d4df8;
-  -webkit-text-fill-color: #6d4df8;
-}
-
-.selected .dot,
-.hasFood .dot {
-  background: #6552e6;
-  box-shadow: 0 2px 5px rgba(90, 73, 223, 0.22);
-}
-
-.streak {
-  width: 100%;
-  min-height: 30px;
-  max-height: 30px;
-  margin: 2px 0 4px;
-  display: grid;
-  grid-template-columns: auto;
+  grid-template-rows: 14px 31px;
   place-items: center;
-  justify-content: center;
-  border-radius: var(--radius-pill);
-  color: #151824;
-  font-family: Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 800;
-  line-height: 13px;
-  text-align: center;
-  white-space: nowrap;
-  -webkit-text-fill-color: #151824;
-}
-
-.streakText {
-  display: block;
-  color: rgba(232, 237, 248, 0.74);
-  font-size: 10px;
-  font-weight: 650;
-  line-height: 12px;
-  letter-spacing: -0.42px;
-  text-align: left;
-  -webkit-text-fill-color: rgba(232, 237, 248, 0.74);
-}
-
-:global(:root[data-app-theme="warm-light"]) .root {
-  padding: 6px 0 0;
-  margin: 0 0 6px;
-  color: #5f5744;
-  -webkit-text-fill-color: #5f5744;
-}
-
-:global(:root[data-app-theme="warm-light"]) .titleRow {
-  min-height: 54px;
-  margin: 58px 0 14px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-}
-
-:global(:root[data-app-theme="warm-light"]) .title {
-  width: 100%;
-  max-width: 100%;
-  min-height: 54px;
-  height: 54px;
-  margin: 0;
-  overflow: visible;
-  color: #5f5744;
-  font-size: 31px;
-  font-weight: 900;
-  line-height: 1.04;
-  white-space: nowrap;
-  -webkit-text-fill-color: #5f5744;
-}
-
-:global(:root[data-app-theme="warm-light"]) .actions {
-  position: static;
-  inset: auto;
-  width: 114px;
-  justify-content: flex-end;
-  justify-self: end;
-  gap: 10px;
-  color: #5f5744;
-  -webkit-text-fill-color: #5f5744;
-}
-
-:global(:root[data-app-theme="warm-light"]) .action {
-  width: 52px;
-  min-width: 52px;
-  max-width: 52px;
-  height: 52px;
-  min-height: 52px;
-  max-height: 52px;
-  display: grid;
-  border-color: #e0e4ef;
-  border-radius: 18px;
-  background: #fff;
-  color: #5f5744;
-  box-shadow: 0 12px 28px rgba(55, 64, 112, 0.12);
-  -webkit-text-fill-color: #5f5744;
-}
-
-:global(:root[data-app-theme="warm-light"]) .calendarIcon {
+  gap: 2px;
+  border: 0;
   background: transparent;
-  color: #5f5744;
-  -webkit-text-fill-color: #5f5744;
+  color: #28262e;
+  font: inherit;
+  cursor: pointer;
 }
-
-:global(:root[data-app-theme="warm-light"]) .week {
-  padding: 4px 6px;
-  row-gap: 0;
-  border-radius: 9px;
-  background: #fff;
-  box-shadow: 0 10px 28px rgba(55, 64, 112, 0.08);
-  -webkit-text-fill-color: #5f5744;
+.dot { display: none; }
+.dayLabel { color: #7b7682; font-size: 9.5px; font-weight: 700; line-height: 12px; text-transform: uppercase; }
+.dateNumber {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ebe6ef;
+  border-radius: 50%;
+  background: #f7f7fa;
+  color: #28262e;
+  font-size: 10.5px;
+  font-weight: 700;
 }
-
-:global(:root[data-app-theme="warm-light"]) .day {
-  color: #5f5744;
-  -webkit-text-fill-color: #5f5744;
-}
-
-:global(:root[data-app-theme="warm-light"]) .day::after {
-  content: none;
-}
-
-:global(:root[data-app-theme="warm-light"]) .dot,
-:global(:root[data-app-theme="warm-light"]) .today .dot {
-  background: #fff;
-  box-shadow: inset 0 0 0 1px rgba(69, 77, 113, 0.04);
-  -webkit-text-fill-color: #5f5744;
-}
-
-:global(:root[data-app-theme="warm-light"]) .selected .dot,
-:global(:root[data-app-theme="warm-light"]) .hasFood .dot {
-  background: linear-gradient(135deg, #6552e6, #3f65ec);
-  box-shadow: 0 8px 18px rgba(90, 73, 223, 0.22);
-}
-
-:global(:root[data-app-theme="warm-light"]) .dayLabel {
-  color: rgba(76, 84, 108, 0.88);
-  -webkit-text-fill-color: #5f5744;
-}
-
-:global(:root[data-app-theme="warm-light"]) .selected .dayLabel {
-  color: #6d4df8;
-  -webkit-text-fill-color: #5f5744;
-}
-
-:global(:root[data-app-theme="warm-light"]) .streak {
-  min-height: 38px;
-  max-height: 18px;
-  margin: 0;
-  color: #625d4e;
-  -webkit-text-fill-color: #5f5744;
-}
-
-:global(:root[data-app-theme="warm-light"]) .streakText {
-  color: #625d4e;
-  -webkit-text-fill-color: #5f5744;
-}
-
-@media (max-width: 900px) and (min-width: 701px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    padding-top: 0;
-    margin-top: 31px;
-  }
-}
-
-@media (max-width: 700px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    min-height: 48px;
-    padding: 0;
-    margin: 31px 0 12px;
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .titleRow {
-    min-height: 48px;
-    margin: 0 0 16px;
-    grid-template-columns: minmax(0, 1fr) 106px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .title {
-    max-width: calc(100vw - 156px);
-    min-width: 0;
-    min-height: 48px;
-    max-height: 48px;
-    height: 48px;
-    overflow: hidden;
-    color: #5f5848;
-    font-size: 28px;
-    line-height: 1.06;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .actions {
-    width: 106px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .action {
-    position: relative;
-    width: 48px;
-    min-width: 48px;
-    max-width: 52px;
-    height: 48px;
-    min-height: 48px;
-    display: flex;
-    color: #5f5848;
-    font-family: inherit;
-    border-color: #e0e4ee;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.96);
-    font-size: 0;
-    line-height: 0;
-    box-shadow: 0 16px 34px rgba(38, 46, 70, 0.08);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 22px;
-    height: 22px;
-    transform: translate(-50%, -50%);
-    color: #5f5744;
-    stroke-width: 2.6px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .calendarIcon {
-    display: block;
-    color: #5f5744;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .week {
-    padding: 4px 8px;
-    border-radius: 11px;
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 12px 26px rgba(40, 47, 72, 0.05);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .dayLabel,
-  :global(:root[data-app-theme="warm-light"]) .selected .dayLabel {
-    color: #5f5848;
-    font-size: 15px;
-    font-weight: 900;
-    -webkit-text-fill-color: #5f5744;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .day {
-    font-family: inherit;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .selected .dot,
-  :global(:root[data-app-theme="warm-light"]) .hasFood .dot {
-    background: transparent;
-    box-shadow: 0 8px 18px rgba(90, 73, 223, 0.22);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .selected.hasFood .dot {
-    background: linear-gradient(135deg, #6552e6, #3f65ec);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .streak {
-    min-height: 30px;
-    max-height: 30px;
-    margin-top: 2px;
-    color: #5f5848;
-    font-size: 14px;
-    font-weight: 900;
-    line-height: 14px;
-  }
-}
-
-@media (max-width: 380px) {
-  :global(:root[data-app-theme="warm-light"]) .week {
-    max-height: 52px;
-  }
-}
+.hasFood:not(.selected) .dateNumber { background: #f0ebfa; color: #8f7ac8; }
+.selected .dateNumber { border-color: #8f7ac8; background: #8f7ac8; color: #fff; }
+.selected .dayLabel { color: #8f7ac8; }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfilePasswordModal.module.css";
 
 export default function ProfilePasswordModal({
@@ -91,13 +92,12 @@ export default function ProfilePasswordModal({
         aria-labelledby="profilePasswordManageTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <button
-          type="button"
+        <ProfileModalCloseButton
           className={styles.closeButton}
-          data-testid="profile-password-close"
-          aria-label="Закрыть пароль"
+          testId="profile-password-close"
+          ariaLabel="Закрыть пароль"
           onClick={onClose}
-        >×</button>
+        />
 
         <div className={styles.head}>
           <div className={styles.avatar}>

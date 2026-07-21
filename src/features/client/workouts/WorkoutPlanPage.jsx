@@ -1,6 +1,7 @@
 import { getWorkoutPresentation } from "../../../domain/workoutPresentation";
 import { sortWorkoutDays } from "../../../utils/workoutPlanNormalization";
 import { ClientTrainingBottomBar } from "../../../shared/ui/BottomBar";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./WorkoutPlanPage.module.css";
 
 export default function WorkoutPlanPage({
@@ -40,12 +41,18 @@ export default function WorkoutPlanPage({
 
   return (
     <div className={styles.page} data-testid="workout-plan-page" data-css-module-scope="workout-plan">
+      <ClientPageHeader
+        compact
+        className={styles.header}
+        title="План тренировок"
+        eyebrow="Программа тренера"
+        onBack={onGoBackToMain}
+        backAriaLabel="Вернуться назад"
+        testId="workout-plan-header"
+        scope="workout-plan-header"
+      />
       <main className={styles.shell}>
-        <header className={styles.header}>
-          <span>ПРОГРАММА ТРЕНЕРА</span>
-          <h1>План тренировок</h1>
-          <p>{plan.assignedProgramName || user?.assignedProgramName || "Индивидуальная программа"}</p>
-        </header>
+        <p className={styles.planName}>{plan.assignedProgramName || user?.assignedProgramName || "Индивидуальная программа"}</p>
 
         <section className={styles.stats} data-testid="workout-plan-stats">
           <div><strong>{workoutPlanWeeks.length}</strong><span>недель</span></div>

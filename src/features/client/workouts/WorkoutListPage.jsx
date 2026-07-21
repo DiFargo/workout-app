@@ -17,6 +17,7 @@ import { safeReadJsonStorage, safeWriteJsonStorage } from "../../../utils/storag
 import { getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
 import { INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY } from "../../../constants/appConfig";
 import { WorkoutDraftRestoreDialog } from "../../../components/workout/WorkoutDialogs";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
   IndividualWorkoutHistoryDialog,
   WorkoutModePickerDialog
@@ -71,9 +72,12 @@ export default function WorkoutListPage({
   const [swipeHintVisible, setSwipeHintVisible] = useState(
     () => safeReadJsonStorage(INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY, true) !== false
   );
+  const [swipeMotion, setSwipeMotion] = useState({ offset: 0, phase: "idle" });
   const basicQuizRedirectedRef = useRef(false);
   const swipeStartRef = useRef(null);
   const swipeSuppressClickRef = useRef(false);
+  const swipeTimerRef = useRef(null);
+  const swipeFrameRef = useRef(null);
 
   const isIndividualWorkoutMode = workoutModePreference.mode === "individual";
   const isBasicWorkoutMode = workoutModePreference.mode === "basic" || plan.source === "basic";
@@ -133,6 +137,11 @@ export default function WorkoutListPage({
     basicQuizRedirectedRef.current = true;
     onOpenBasicMode();
   }, [onOpenBasicMode, shouldOpenBasicQuiz]);
+
+  useEffect(() => () => {
+    window.clearTimeout(swipeTimerRef.current);
+    window.cancelAnimationFrame(swipeFrameRef.current);
+  }, []);
   const hasActiveWorkoutDraft = Boolean(
     activeWorkoutDraft?.workoutId === activeIndividualWorkout?.id &&
     (
@@ -182,6 +191,36 @@ export default function WorkoutListPage({
     setIndividualWorkoutIndexInitialized(true);
   }
 
+  function settleIndividualWorkoutSwipe() {
+    setSwipeMotion((current) => ({ ...current, offset: 0, phase: "settling" }));
+    window.clearTimeout(swipeTimerRef.current);
+    swipeTimerRef.current = window.setTimeout(() => {
+      setSwipeMotion({ offset: 0, phase: "idle" });
+    }, 420);
+  }
+
+  function animateIndividualWorkout(direction) {
+    if (!sortedWorkouts.length || swipeMotion.phase === "exiting") return;
+
+    const exitsLeft = direction === "next";
+    swipeSuppressClickRef.current = true;
+    setSwipeMotion({ offset: exitsLeft ? -430 : 430, phase: "exiting" });
+    window.clearTimeout(swipeTimerRef.current);
+    swipeTimerRef.current = window.setTimeout(() => {
+      moveIndividualWorkout(direction);
+      setSwipeMotion({ offset: exitsLeft ? 82 : -82, phase: "entering" });
+      window.cancelAnimationFrame(swipeFrameRef.current);
+      swipeFrameRef.current = window.requestAnimationFrame(() => {
+        swipeFrameRef.current = window.requestAnimationFrame(() => {
+          settleIndividualWorkoutSwipe();
+        });
+      });
+      window.setTimeout(() => {
+        swipeSuppressClickRef.current = false;
+      }, 260);
+    }, 190);
+  }
+
   function dismissIndividualWorkoutSwipeHint() {
     if (!swipeHintVisible) return;
     setSwipeHintVisible(false);
@@ -189,12 +228,47 @@ export default function WorkoutListPage({
   }
 
   function handleIndividualWorkoutSwipeStart(event) {
-    if (event.pointerType === "mouse" || sortedWorkouts.length < 2) return;
+    if (
+      sortedWorkouts.length < 2 ||
+      swipeMotion.phase === "exiting" ||
+      event.target.closest("button")
+    ) return;
 
     swipeStartRef.current = {
+      pointerId: event.pointerId,
       x: event.clientX,
-      y: event.clientY
+      y: event.clientY,
+      axis: ""
     };
+    try {
+      event.currentTarget.setPointerCapture?.(event.pointerId);
+    } catch {
+      // Synthetic and already-ended pointers can reach this handler in WebKit.
+    }
+    setSwipeMotion({ offset: 0, phase: "dragging" });
+  }
+
+  function handleIndividualWorkoutSwipeMove(event) {
+    const start = swipeStartRef.current;
+    if (!start || start.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+
+    if (!start.axis && Math.max(Math.abs(deltaX), Math.abs(deltaY)) > 7) {
+      start.axis = Math.abs(deltaX) > Math.abs(deltaY) * 1.15 ? "x" : "y";
+    }
+
+    if (start.axis === "y") {
+      swipeStartRef.current = null;
+      settleIndividualWorkoutSwipe();
+      return;
+    }
+
+    if (start.axis !== "x") return;
+    event.preventDefault();
+    const resistedOffset = Math.sign(deltaX) * Math.min(138, Math.abs(deltaX) * 0.82);
+    setSwipeMotion({ offset: resistedOffset, phase: "dragging" });
   }
 
   function handleIndividualWorkoutSwipeEnd(event) {
@@ -204,14 +278,13 @@ export default function WorkoutListPage({
 
     const deltaX = event.clientX - start.x;
     const deltaY = event.clientY - start.y;
-    if (Math.abs(deltaX) < 44 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return;
+    if (Math.abs(deltaX) < 44 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) {
+      settleIndividualWorkoutSwipe();
+      return;
+    }
 
-    swipeSuppressClickRef.current = true;
     dismissIndividualWorkoutSwipeHint();
-    moveIndividualWorkout(deltaX < 0 ? "next" : "previous");
-    window.setTimeout(() => {
-      swipeSuppressClickRef.current = false;
-    }, 180);
+    animateIndividualWorkout(deltaX < 0 ? "next" : "previous");
   }
 
   if (shouldOpenBasicQuiz) {
@@ -224,19 +297,15 @@ export default function WorkoutListPage({
       data-client-adaptive-shell="true"
       data-css-module-scope="workout-list"
     >
-      <div className={styles.hero}>
-        <h1 className={styles.pageTitle} data-testid="workout-list-title">
-          {isIndividualWorkoutMode ? (
-            "Мой план"
-          ) : (
-            <>
-              <span className={styles.titleLine}>Базовые</span>
-              <span className={styles.titleLine}>тренировки</span>
-            </>
-          )}
-        </h1>
-
-        <div className={styles.headerActions}>
+      <ClientPageHeader
+        className={styles.hero}
+        frameClassName={styles.headerFrame}
+        title={isIndividualWorkoutMode ? "Мой план" : "Тренировки"}
+        titleTestId="workout-list-title"
+        testId="workout-list-header"
+        scope="workout-list-header"
+        actions={(
+          <div className={styles.headerActions}>
           {isIndividualWorkoutMode && (
             <button
               type="button"
@@ -270,15 +339,15 @@ export default function WorkoutListPage({
           >
             <Paperclip aria-hidden="true" />
           </button>
-        </div>
-
-        <p>
-          {isIndividualWorkoutMode
-            ? "Листай тренировки и выбирай нужную"
-            : "Выбери тренировку из подобранного плана"}
-        </p>
-        <div className={styles.heroLine} />
-      </div>
+          </div>
+        )}
+      >
+        {!isIndividualWorkoutMode && (
+          <p className={styles.heroSubtitle}>
+            Выбери тренировку из подобранного плана
+          </p>
+        )}
+      </ClientPageHeader>
 
       <div
         className={`${styles.workoutList} ${isDeckWorkoutMode ? styles.workoutDeck : ""}`}
@@ -324,34 +393,41 @@ export default function WorkoutListPage({
                   key={w.id}
                   data-workout-card-id={w.id}
                   data-testid="workout-list-card"
+                  data-swipe-phase={swipeMotion.phase}
+                  style={{
+                    "--workout-swipe-x": `${swipeMotion.offset}px`,
+                    "--workout-swipe-rotation": `${swipeMotion.offset * 0.012}deg`
+                  }}
                   onPointerDown={handleIndividualWorkoutSwipeStart}
+                  onPointerMove={handleIndividualWorkoutSwipeMove}
                   onPointerUp={handleIndividualWorkoutSwipeEnd}
                   onPointerCancel={() => {
                     swipeStartRef.current = null;
+                    settleIndividualWorkoutSwipe();
                   }}
                 >
-                  <span className={styles.cardTop}>
-                    <span className={styles.badges}>
+                  <span className={styles.cardTop} data-testid="workout-card-top">
+                    <span className={styles.badges} data-testid="workout-card-badges">
                       {completed ? (
-                        <span className={`${styles.badge} ${styles.completedBadge}`}>✓ Выполнена</span>
+                        <span className={`${styles.badge} ${styles.completedBadge}`} data-testid="workout-card-status">✓ Выполнена</span>
                       ) : hasActiveWorkoutDraft ? (
-                        <span className={`${styles.badge} ${styles.progressBadge}`}>В процессе</span>
+                        <span className={`${styles.badge} ${styles.progressBadge}`} data-testid="workout-card-status">В процессе</span>
                       ) : activeNext ? (
-                        <span className={`${styles.badge} ${styles.nextBadge}`}>Следующая</span>
+                        <span className={`${styles.badge} ${styles.nextBadge}`} data-testid="workout-card-status">Следующая</span>
                       ) : null}
                       {activeWorkoutPendingSync && (
                         <span className={`${styles.badge} ${styles.syncBadge}`}>Ожидает синхронизации</span>
                       )}
                     </span>
-                    <span className={styles.workoutWeek}>{item.day}</span>
+                    <span className={styles.workoutWeek} data-testid="workout-card-day">{item.day}</span>
                   </span>
 
-                  <span className={styles.cardBody}>
-                    <span className={styles.cardInfo}>
-                      <span className={styles.workoutTitle}>{item.title}</span>
+                  <span className={styles.cardBody} data-testid="workout-card-body">
+                    <span className={styles.cardInfo} data-testid="workout-card-info">
+                      <span className={styles.workoutTitle} data-testid="workout-card-title">{item.title}</span>
                       <span className={styles.accentLine} />
 
-                      <span className={styles.workoutStats}>
+                      <span className={styles.workoutStats} data-testid="workout-card-stats">
                         <span><b>🏋️</b>{item.exerciseCount} упражнений</span>
                         <span><b>▰</b>{item.setCount} подходов</span>
                         <span><b>⏱</b>{item.duration}</span>
@@ -466,7 +542,7 @@ export default function WorkoutListPage({
             aria-label="Предыдущая тренировка"
             onClick={() => {
               dismissIndividualWorkoutSwipeHint();
-              moveIndividualWorkout("previous");
+              animateIndividualWorkout("previous");
             }}
           >
             ←
@@ -478,8 +554,8 @@ export default function WorkoutListPage({
                 Свайпни, чтобы выбрать тренировку
               </small>
             )}
-            <span className={styles.swipeAffordance} aria-hidden="true">
-              ‹ свайп ›
+            <span className={styles.swipeAffordance} data-testid="workout-swipe-affordance" aria-hidden="true">
+              ‹ Свайпни влево или вправо ›
             </span>
           </div>
 
@@ -488,7 +564,7 @@ export default function WorkoutListPage({
             aria-label="Следующая тренировка"
             onClick={() => {
               dismissIndividualWorkoutSwipeHint();
-              moveIndividualWorkout("next");
+              animateIndividualWorkout("next");
             }}
           >
             →

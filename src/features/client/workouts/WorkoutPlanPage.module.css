@@ -3,6 +3,193 @@
     box-sizing: border-box;
   }
 
+  /* Calm iOS program view; dark theme continues to use the rules below. */
+  :global(:root[data-app-theme="warm-light"]) .page.page {
+    width: min(402px, 100vw);
+    max-width: 402px;
+    min-height: 100dvh;
+    margin: 0 auto;
+    padding: 0 0 calc(110px + env(safe-area-inset-bottom, 0px));
+    overflow: hidden auto;
+    color: #28262e;
+    background: #f7f6f8;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    scrollbar-width: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .page.page::-webkit-scrollbar {
+    display: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .shell.shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 16px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .header.header {
+    width: calc(100% + 32px);
+    min-height: 0;
+    margin: 0 -16px 10px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .planName.planName {
+    margin: 0 4px 12px;
+    color: #7b7682;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 17px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .header.header > span {
+    color: #7b7682;
+    font-size: 10px;
+    font-weight: 650;
+    letter-spacing: 0.15px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .header.header h1 {
+    color: #28262e;
+    font-size: 28px;
+    font-weight: 750;
+    letter-spacing: -0.75px;
+    line-height: 34px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .header.header p {
+    max-width: 100%;
+    margin: 1px 0 0;
+    color: #7b7682;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 17px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .stats.stats {
+    min-height: 78px;
+    padding: 8px;
+    color: #28262e;
+    background: #ffffff;
+    border: 1px solid #ebe6ef;
+    border-radius: 22px;
+    box-shadow: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .stats.stats > div + div {
+    border-left-color: #ebe6ef;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .stats.stats strong {
+    color: #28262e;
+    font-size: 21px;
+    font-weight: 750;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .stats.stats span {
+    color: #7b7682;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .weekList.weekList {
+    margin-top: 12px;
+    gap: 10px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #ebe6ef;
+    border-radius: 22px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week h2 {
+    padding: 14px 16px 10px;
+    color: #7b7682;
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button {
+    min-height: 70px;
+    padding: 11px 12px 11px 16px;
+    grid-template-columns: minmax(0, 1fr) 34px;
+    gap: 10px;
+    color: #28262e;
+    background: transparent;
+    border-top-color: #ebe6ef;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button:active {
+    background: #fbfafc;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button small,
+  :global(:root[data-app-theme="warm-light"]) .week.week button em {
+    color: #7b7682;
+    font-size: 10px;
+    font-weight: 550;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button strong {
+    color: #28262e;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button > i {
+    width: 32px;
+    height: 32px;
+    color: #a9aeb2;
+    background: #f0ebfa;
+    border: 0;
+    border-radius: 12px;
+    font-size: 19px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button.completed > i {
+    color: #ffffff;
+    background: #708d79;
+    border: 0;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .empty.empty {
+    min-height: 260px;
+    padding: 28px 22px;
+    gap: 7px;
+    color: #28262e;
+    background: #ffffff;
+    border: 1px solid #ebe6ef;
+    border-radius: 24px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .empty.empty strong {
+    color: #28262e;
+    font-size: 18px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .empty.empty span {
+    color: #7b7682;
+    font-size: 12px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .bottomPanel.bottomPanel {
+    right: 0;
+    bottom: calc(max(0px, 100dvh - 874px) + 14px);
+    left: 0;
+    width: min(382px, calc(100vw - 20px));
+    max-width: 382px;
+    height: 76px;
+    min-height: 76px;
+    max-height: 76px;
+    margin: 0 auto;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
   .page {
     min-height: 100dvh;
     padding:

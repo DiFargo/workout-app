@@ -1,86 +1,35 @@
-.root {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+.root.root {
   box-sizing: border-box;
-  width: min(390px, calc(100vw - 12px));
-  max-width: 390px;
-  height: calc(100dvh - 12px);
-  min-height: calc(100dvh - 12px);
-  max-height: calc(100dvh - 12px);
-  margin: 6px auto;
-  padding: 20px 20px 94px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  color: var(--color-nutrition-page-text);
+  width: min(402px, 100vw);
+  max-width: 402px;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 auto;
+  padding: 0 0 calc(108px + env(safe-area-inset-bottom, 0px));
+  position: relative;
+  overflow: hidden auto;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  color: #28262e;
+  background: #f7f6f8;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   font-family: var(--font-family-compact-ui);
-  font-size: var(--font-size-md);
-  line-height: var(--line-height-body);
-  background: var(--gradient-nutrition-page-mobile);
-  border: 1px solid var(--color-nutrition-page-border);
-  border-radius: 24px;
-  box-shadow: var(--shadow-nutrition-page);
+  scrollbar-width: none;
 }
 
-.root::before {
-  position: fixed;
-  z-index: 0;
-  inset: 0;
-  display: block;
-  content: "";
-  pointer-events: none;
-  background: var(--gradient-nutrition-page-grid);
-  background-size: 18px 18px;
-  opacity: 0.18;
-}
+.root::-webkit-scrollbar { display: none; }
+.root::before, .root::after { display: none; }
 
-:global(:root[data-app-theme="warm-light"]) .root {
-  padding: 30px 26px calc(116px + var(--safe-area-bottom));
-  color: var(--color-nutrition-page-text-wide);
-  background: var(--gradient-nutrition-page-wide);
-  isolation: isolate;
-}
-
-:global(:root[data-app-theme="warm-light"]) .root::after {
-  position: fixed;
-  z-index: 70;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: block;
-  height: 112px;
-  content: "";
-  pointer-events: none;
-  background: var(--gradient-nutrition-page-bottom-fade);
-}
-
-@media (max-width: 640px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    width: 100%;
-    max-width: none;
-    height: 100dvh;
-    min-height: calc(100dvh - 24px);
-    margin: 0;
-    padding: 0 24px 96px;
-    color: var(--color-nutrition-page-text);
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--gradient-nutrition-page-mobile);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .root::before,
-  :global(:root[data-app-theme="warm-light"]) .root::after {
-    display: none;
-  }
-}
-
-@media (max-width: 380px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    padding-inline: 20px;
-  }
-}
-
-@media (min-width: 700px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    padding: 24px 28px calc(118px + var(--safe-area-bottom));
+@media (min-width: 403px) {
+  .root.root {
+    height: min(874px, 100dvh);
+    min-height: min(874px, 100dvh);
+    max-height: min(874px, 100dvh);
+    border-radius: 54px;
+    box-shadow: 0 24px 80px rgba(40, 38, 46, 0.14);
   }
 }

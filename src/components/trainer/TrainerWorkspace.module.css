@@ -4461,7 +4461,20 @@
   }
 
   :global(.trainerNextMetricFoot .trainerNextSparkline) {
-    width: 58px;
+    width: 100%;
+    max-width: 58px;
+  }
+
+  :global(.trainerNextMetricFoot) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 58px);
+    align-items: end;
+    gap: 6px;
+  }
+
+  :global(.trainerNextMetricFoot small) {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   :global(.trainerNextClientTabs) {

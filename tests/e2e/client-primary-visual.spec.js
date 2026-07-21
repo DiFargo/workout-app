@@ -52,6 +52,43 @@ async function expectTapTargets(page, selectors, minSize = 40) {
   expect(failures).toEqual([]);
 }
 
+async function expectCrispProfileModal(page, overlayTestId, dialogTestId, closeTestId) {
+  const overlay = page.getByTestId(overlayTestId);
+  const dialog = page.getByTestId(dialogTestId);
+  const close = page.getByTestId(closeTestId);
+
+  await expect(overlay).toHaveCSS("backdrop-filter", "none");
+  await expect(dialog).toHaveAttribute("data-modal-surface", "true");
+  await expect(dialog).toHaveCSS("filter", "none");
+  await expect(close).toHaveAttribute("data-profile-modal-close", "true");
+  await expect(close).toHaveCSS("width", "44px");
+  await expect(close).toHaveCSS("height", "44px");
+  await expect(close).toHaveCSS("border-radius", "50%");
+  await expect(close.locator("svg")).toHaveCount(1);
+
+  const geometry = await dialog.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return {
+      left: rect.left,
+      right: window.innerWidth - rect.right,
+      top: rect.top,
+      bottom: window.innerHeight - rect.bottom,
+      radius: Number.parseFloat(window.getComputedStyle(element).borderTopLeftRadius)
+    };
+  });
+
+  expect(geometry.left).toBeGreaterThanOrEqual(10);
+  expect(geometry.right).toBeGreaterThanOrEqual(10);
+  expect(geometry.top).toBeGreaterThanOrEqual(10);
+  expect(geometry.bottom).toBeGreaterThanOrEqual(10);
+  expect(geometry.radius).toBeGreaterThanOrEqual(28);
+
+  const modalHeader = dialog.locator('[data-client-page-header="true"]');
+  if (await modalHeader.count()) {
+    await expect(modalHeader).toHaveAttribute("data-client-page-header-layout", "embedded");
+  }
+}
+
 async function expectPrimaryChrome(page, pageTestId, mode) {
   const shell = page.getByTestId(pageTestId);
   await expect(shell).toBeVisible();
@@ -63,11 +100,15 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
     : page.getByTestId("profile-cabinet-title");
   await expect(title).toBeVisible();
   if (mode === "main") {
-    await expect(title).toHaveText("Главное меню");
-    await expect(page.getByTestId("profile-main-summary-grid").locator("article")).toHaveCount(2);
-    await expect(page.getByTestId("profile-dashboard-version")).toBeVisible();
+    await expect(title).toHaveText("Главная");
+    await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
+    await expect(page.getByTestId("profile-main-last-workout")).toBeVisible();
+    const version = page.getByTestId("profile-dashboard-version");
+    await expect(version).toHaveCSS("clip-path", "inset(50%)");
+    await expect(version).toHaveCSS("width", "1px");
+    await expect(version).toHaveCSS("height", "1px");
   } else {
-    await expect(title).toHaveText("Личный кабинет");
+    await expect(title).toHaveText("Кабинет");
     await expect(page.getByTestId("profile-cabinet-refresh")).toBeVisible();
     await expect(page.getByTestId("profile-main-summary-grid")).toHaveCount(0);
     await expect(page.getByTestId("profile-dashboard-version")).toHaveCount(0);
@@ -82,7 +123,8 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
 
 async function expectMainDashboardContent(page) {
   await expect(page.getByTestId("profile-main-hero")).toBeVisible();
-  await expect(page.getByTestId("profile-main-summary-grid")).toBeVisible();
+  await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
+  await expect(page.getByTestId("profile-main-last-workout")).toBeVisible();
   await expect(page.getByTestId("profile-progress-card")).toBeVisible();
   await expect(page.getByTestId("profile-progress-gauge")).toHaveAttribute("aria-label", /90.*100/);
   await expect(page.getByTestId("profile-progress-badge")).toHaveCount(3);
@@ -107,7 +149,7 @@ async function expectMainMeasurementSnapshotLayout(page) {
 
     const card = rectOf('[data-testid="profile-measurement-snapshot"]');
     const header = rectOf('[data-testid="profile-measurement-snapshot-header"] span');
-    const weightLabel = rectOf('[data-testid="profile-measurement-snapshot-weight"] span');
+    const weightLabel = rectOf('[data-testid="profile-measurement-snapshot-weight"] strong');
     const chart = rectOf('[data-testid="profile-measurement-snapshot-chart"]');
 
     return {
@@ -209,7 +251,7 @@ async function expectCabinetContent(page) {
   await expect(page.getByTestId("profile-cabinet-action-grid")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-action-account")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-action-account-icon")).toBeVisible();
-  await expect(page.locator('[data-testid^="profile-cabinet-action-"]:not([data-testid$="-icon"]):not([data-testid$="-title"]):not([data-testid="profile-cabinet-action-grid"])')).toHaveCount(6);
+  await expect(page.locator('[data-testid^="profile-cabinet-action-"]:not([data-testid$="-icon"]):not([data-testid$="-title"]):not([data-testid="profile-cabinet-action-grid"])')).toHaveCount(7);
 }
 
 async function expectContentAboveBottomNav(page) {
@@ -293,8 +335,8 @@ test("client main bottom bar stays scoped and adaptive across themes", async ({ 
       expect(mainMetrics.position).toBe("relative");
       expect(mainMetrics.dockPosition).toBe("fixed");
       expect(mainMetrics.width).toBeLessThanOrEqual(394);
-      expect(mainMetrics.height).toBe(theme === "warm-light" && width <= 900 ? 76 : 80);
-      expect(mainMetrics.buttonHeight).toBe(theme === "warm-light" && width <= 900 ? 60 : 68);
+      expect(mainMetrics.height).toBe(theme === "warm-light" ? 76 : 80);
+      expect(mainMetrics.buttonHeight).toBe(theme === "warm-light" ? 58 : 68);
       if (theme === "warm-light" && width <= 900) {
         expect(mainMetrics.x).toBe(mainMetrics.pageX + 10);
         expect(mainMetrics.right).toBe(mainMetrics.pageRight - 10);
@@ -341,6 +383,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
 
   await page.getByTestId("profile-cabinet-action-workout-journal").click();
   await expect(page.getByTestId("profile-workout-journal-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-workout-journal-overlay", "profile-workout-journal-dialog", "profile-workout-journal-close");
   await page.getByRole("tab", { name: "История" }).click();
   await expect(page.getByTestId("profile-workout-history-toggle").first()).toHaveAttribute("aria-label", /тренировку:/);
   await expect(page.getByTestId("profile-workout-history-delete").first()).toHaveAttribute("aria-label", /Удалить тренировку:/);
@@ -358,6 +401,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=measurements");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-measurements-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-measurements-overlay", "profile-measurements-dialog", "profile-measurements-close");
   await expect(page.getByTestId("profile-measurements-overlay")).toHaveAttribute("role", "presentation");
   await expect(page.getByTestId("profile-measurements-start")).toHaveAttribute("aria-label", "Начать новый замер тела");
   await expect(page.getByTestId("profile-measurements-cell")).toHaveCount(4);
@@ -399,6 +443,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=nutrition");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-nutrition-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-nutrition-overlay", "profile-nutrition-dialog", "profile-nutrition-close");
   await expect(page.getByTestId("profile-nutrition-goal-picker").locator("button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.getByTestId("profile-nutrition-goal-picker").locator("button").first()).toHaveAttribute("aria-label", /Выбрать цель питания:/);
   await expect(page.getByTestId("profile-nutrition-day")).toHaveCount(7);
@@ -481,6 +526,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=photos");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-progress-photos-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-progress-photos-overlay", "profile-progress-photos-dialog", "profile-progress-photos-close");
   await expect(page.getByTestId("profile-progress-photos-overlay")).toHaveAttribute("role", "presentation");
   await expect(page.getByTestId("profile-progress-photos-compare-content")).toBeHidden();
   await expect(page.getByTestId("profile-progress-photo-step").first().locator("input")).toHaveAttribute("aria-label", /Добавить фото:/);
@@ -526,6 +572,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=settings");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-settings-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-settings-overlay", "profile-settings-dialog", "profile-settings-close");
   await expect(page.getByTestId("profile-account-section")).toBeVisible();
   await expect(page.getByTestId("profile-account-identity")).toBeVisible();
   await expect(page.getByTestId("profile-account-quick-panel")).toBeVisible();
@@ -546,6 +593,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
 
   await page.getByTestId("profile-account-password").click();
   await expect(page.getByTestId("profile-password-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-password-overlay", "profile-password-dialog", "profile-password-close");
   await expect(page.getByTestId("profile-password-currentPassword")).toBeVisible();
   await expect(page.getByTestId("profile-password-nextPassword")).toBeVisible();
   await expect(page.getByTestId("profile-password-confirmPassword")).toBeVisible();
@@ -565,6 +613,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
 
   await page.getByTestId("profile-settings-email").click();
   await expect(page.getByTestId("profile-email-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-email-overlay", "profile-email-dialog", "profile-email-close");
   await expect(page.getByTestId("profile-email-address")).toBeVisible();
   await expect(page.getByTestId("profile-email-password")).toBeVisible();
   await expectTapTargets(page, [
@@ -583,6 +632,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=notifications");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-trainer-notifications-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-trainer-notifications-overlay", "profile-trainer-notifications-dialog", "profile-trainer-notifications-close");
   await expect(page.getByTestId("profile-trainer-notifications-overlay")).toHaveAttribute("role", "presentation");
   await expect(page.getByTestId("profile-trainer-notification-item")).toHaveCount(2);
   await expect(page.getByTestId("profile-trainer-notification-item").first()).toHaveAttribute("aria-label", /Задача тренера:/);
@@ -609,6 +659,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.goto("/?clientHarness=1&clientCabinetModal=telegram");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-telegram-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-telegram-overlay", "profile-telegram-dialog", "profile-telegram-close");
   await expect(page.getByTestId("profile-telegram-overlay")).toHaveAttribute("role", "presentation");
   await expect(page.getByTestId("profile-telegram-dialog")).toHaveAttribute("role", "dialog");
   await expect(page.getByTestId("profile-telegram-dialog")).toHaveAttribute("aria-modal", "true");
@@ -783,7 +834,7 @@ test("client profile settings title stays scoped and adaptive", async ({ page },
     marginBottom: "32px",
     fontSize: "15px",
     lineHeight: "15.75px",
-    color: "rgb(33, 27, 18)",
+    color: "rgb(40, 38, 46)",
     textAlign: "center",
     textTransform: "uppercase"
   });
@@ -804,6 +855,7 @@ test("client avatar crop editor stays visually contained", async ({ page }, test
   await page.goto("/?clientHarness=1&clientHarnessPage=avatarCrop");
   await expect(page.getByTestId("client-harness-avatar-crop")).toBeAttached();
   await expect(page.getByTestId("profile-avatar-crop-dialog")).toBeVisible();
+  await expectCrispProfileModal(page, "profile-avatar-crop-overlay", "profile-avatar-crop-dialog", "profile-avatar-crop-close");
   await expect(page.getByTestId("profile-avatar-crop-viewport")).toBeVisible();
   await expect(page.getByTestId("profile-avatar-crop-zoom").locator("input")).toHaveAttribute("aria-label", "Масштаб аватара");
   await expectTapTargets(page, [

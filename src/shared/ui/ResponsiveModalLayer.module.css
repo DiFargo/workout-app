@@ -19,6 +19,24 @@
     width: calc(100vw - (var(--layout-modal-gutter) * 2)) !important;
     border-radius: 20px !important;
   }
+
+  :global(:root[data-app-theme="warm-light"] body #root [data-testid^="profile-"][data-testid$="-overlay"]:not([data-testid="profile-avatar-crop-overlay"])) {
+    padding:
+      max(52px, calc(env(safe-area-inset-top) + 40px))
+      0
+      0 !important;
+    place-items: end center !important;
+  }
+
+  :global(:root[data-app-theme="warm-light"] body #root [data-modal-surface="true"][data-testid^="profile-"]:not([data-testid="profile-avatar-crop-dialog"])) {
+    width: min(100%, 402px) !important;
+    max-width: 402px !important;
+    max-height: calc(100dvh - max(52px, calc(env(safe-area-inset-top) + 40px))) !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    border-left: 0 !important;
+    border-radius: 28px 28px 0 0 !important;
+  }
 }
 
 @media (min-width: 700px) and (max-width: 979px) {

@@ -14,6 +14,7 @@ export default function FoodPortionSelector({
   const unitOptions = getSmartUnits(selectedFood).filter((unit) => unit.id !== "grams");
   const selectedUnitId = getSmartUnitId(selectedFood, amount, amountMode);
   const selectedUnit = unitOptions.find((unit) => unit.id === selectedUnitId) || unitOptions[0];
+  const isPortionMode = amountMode === "portion";
 
   return (
     <div
@@ -36,9 +37,10 @@ export default function FoodPortionSelector({
       <div className={styles.dropdown}>
         <button
           type="button"
-          className={styles.dropdownButton}
+          className={`${styles.dropdownButton} ${isPortionMode ? styles.active : ""}`}
           data-css-module-control
           data-food-portion-action="toggle-menu"
+          aria-pressed={isPortionMode}
           aria-expanded={unitMenuOpen}
           onClick={onToggleUnitMenu}
         >

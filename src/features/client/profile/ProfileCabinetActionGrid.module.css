@@ -1,255 +1,79 @@
-.root {
-  width: 100%;
-  max-width: 100%;
-  margin: 8px 0 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 7px;
-  align-items: stretch;
-  justify-items: stretch;
-}
+.root { width: 100%; display: flex; flex-direction: column; gap: 26px; }
 
-.card {
+.account,
+.row {
+  box-sizing: border-box;
   width: 100%;
-  max-width: 100%;
-  min-height: 0;
   margin: 0;
-  padding: 11px 14px;
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 14px;
-  gap: 12px;
-  align-items: center;
-  justify-self: stretch;
-  border: 1px solid var(--color-profile-cabinet-action-border);
-  border-radius: 17px;
-  background: var(--background-profile-cabinet-action);
-  color: var(--color-profile-cabinet-action-text);
-  box-shadow: var(--shadow-profile-cabinet-action);
+  border: 0;
+  background: #fff;
+  color: #28262e;
+  font: inherit;
   text-align: left;
   cursor: pointer;
 }
 
-.card:active {
-  border-color: var(--color-profile-cabinet-action-active-border);
-  background: var(--background-profile-cabinet-action-active);
-}
-
-.card:focus-visible {
-  outline: 2px solid var(--color-profile-cabinet-action-focus);
-  outline-offset: 2px;
-}
-
-.icon {
-  width: 44px;
-  height: 44px;
+.account {
+  height: 100px;
+  padding: 15px 15px 15px 5px;
   display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 13px;
-  background: var(--background-profile-cabinet-action-icon);
-  color: var(--color-profile-cabinet-action-icon);
-  font-size: 28px;
-  line-height: 42px;
+  grid-template-columns: 58px 1fr 20px;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #ebe6ef;
+  border-radius: 22px;
 }
 
 .avatar {
-  width: 100%;
-  height: 100%;
+  width: 58px;
+  height: 58px;
   display: grid;
   place-items: center;
   overflow: hidden;
   border-radius: 50%;
-  background: var(--background-profile-cabinet-action-avatar);
-  object-fit: cover;
+  background: #8f7ac8;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
 }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.accountText { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+.accountText strong { max-width: 100%; overflow: hidden; font-size: 19px; line-height: 23px; text-overflow: ellipsis; white-space: nowrap; }
+.accountText small { margin-top: 2px; color: #7b7682; font-size: 12px; font-weight: 600; line-height: 17px; }
+.accountText em { height: 23px; margin-top: 4px; padding: 0 11px; display: grid; place-items: center; border-radius: 12px; background: #f0ebfa; color: #8f7ac8; font-size: 9.5px; font-style: normal; font-weight: 700; }
+.chevron { width: 20px; height: 20px; color: #a9aeb2; stroke-width: 2; }
 
-.text {
-  min-width: 0;
+.groupSection { margin: 0; }
+.groupSection h2 { height: 24px; margin: 0 0 0 4px; color: #7b7682; font-size: 10px; font-weight: 700; line-height: 12px; letter-spacing: 0.8px; }
+.group { overflow: hidden; border: 1px solid #ebe6ef; border-radius: 22px; background: #fff; }
+
+.row {
+  height: 70px;
+  padding: 13px 14px 13px 12px;
   display: grid;
-  gap: 5px;
+  grid-template-columns: 42px 1fr 20px;
+  align-items: center;
+  gap: 13px;
+  position: relative;
 }
 
-.eyebrow,
-.title,
-.note {
-  overflow: hidden;
-  text-overflow: ellipsis;
+.row:not(:last-child)::after {
+  content: "";
+  height: 1px;
+  position: absolute;
+  right: 15px;
+  bottom: 0;
+  left: 45px;
+  background: #ebe6ef;
 }
 
-.eyebrow {
-  color: var(--color-profile-cabinet-action-eyebrow);
-  font-size: 9px;
-  font-weight: 500;
-  line-height: 1;
-}
+.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #f0ebfa; color: #8f7ac8; }
+.icon svg { width: 21px; height: 21px; stroke-width: 2.1; }
+.icon.warm { background: #fff2ec; color: #ae8768; }
+.text { min-width: 0; display: flex; flex-direction: column; }
+.text strong { overflow: hidden; color: #28262e; font-size: 13px; font-weight: 700; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
+.text small { overflow: hidden; color: #7b7682; font-size: 10px; font-weight: 500; line-height: 16px; text-overflow: ellipsis; white-space: nowrap; }
+.row:active, .account:active { background: #fbfafc; }
 
-.title {
-  color: var(--color-profile-cabinet-action-title);
-  font-size: 17px;
-  font-weight: 650;
-  line-height: 1.1;
-}
-
-.note {
-  color: var(--color-profile-cabinet-action-note);
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-
-.arrow {
-  height: 42px;
-  display: block;
-  color: var(--color-profile-cabinet-action-arrow);
-  font-size: 28px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 42px;
-}
-
-@media (max-width: 430px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    margin-top: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .card {
-    min-height: 78px;
-    padding: 12px 18px;
-    grid-template-columns: 48px minmax(0, 1fr) 18px;
-    column-gap: 16px;
-    row-gap: 12px;
-    overflow: hidden;
-    border-color: var(--color-profile-cabinet-action-border-mobile);
-    border-radius: 20px;
-    background: var(--background-profile-cabinet-action-mobile);
-    box-shadow: var(--shadow-profile-cabinet-action-mobile);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .icon {
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--background-profile-cabinet-action-icon-mobile);
-    color: var(--color-profile-cabinet-action-icon-mobile);
-    font-size: 22px;
-    line-height: 1;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 1px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .eyebrow {
-    color: var(--color-profile-cabinet-action-eyebrow-mobile);
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.05;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .title {
-    color: var(--color-profile-cabinet-action-title-mobile);
-    font-size: 17px;
-    font-weight: 900;
-    line-height: 1.08;
-    white-space: nowrap;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .note {
-    color: var(--color-profile-cabinet-action-note-mobile);
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.12;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .arrow {
-    height: 30px;
-    display: flex;
-    align-items: center;
-    color: var(--color-profile-cabinet-action-arrow-mobile);
-    font-size: 30px;
-    font-weight: 900;
-    line-height: 1;
-  }
-}
-
-@media (min-width: 361px) and (max-width: 430px) {
-  :global(:root[data-app-theme="dark-green"]) .root {
-    gap: 8px;
-  }
-}
-
-@media (max-width: 360px) {
-  :global(:root[data-app-theme="warm-light"]) .card {
-    padding: 10px 14px;
-    grid-template-columns: 44px minmax(0, 1fr) 14px;
-    gap: 12px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .icon {
-    width: 44px;
-    height: 44px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .text {
-    align-items: stretch;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .title {
-    white-space: normal;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .note,
-  :global(:root[data-app-theme="dark-green"]) .note {
-    display: none;
-  }
-}
-
-@media (min-width: 1100px) {
-  .trainer {
-    margin-top: 16px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .trainer .card {
-    height: 112px;
-    min-height: 112px;
-    padding: 16px 18px;
-    grid-template-columns: 52px minmax(0, 1fr) 18px;
-    gap: 14px;
-    border-radius: 22px;
-  }
-
-  .trainer .card:last-child {
-    grid-column: 1 / -1;
-  }
-
-  .trainer .icon {
-    width: 52px;
-    height: 52px;
-    font-size: 32px;
-  }
-
-  .trainer .eyebrow {
-    font-size: 10px;
-  }
-
-  .trainer .title {
-    font-size: 20px;
-  }
-
-  .trainer .note {
-    font-size: 12px;
-  }
-}
+.trainer { gap: 20px; }
+.trainer .groupSection h2 { display: none; }

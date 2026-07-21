@@ -1,3 +1,6 @@
+import { Camera } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileProgressPhotosModal.module.css";
 
 const PROGRESS_PHOTO_STEPS = [
@@ -55,23 +58,24 @@ export default function ProfileProgressPhotosModal({
         aria-labelledby="profileProgressPhotosTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className={styles.header} data-testid="profile-progress-photos-header">
-          <div>
-            <span>КОНТРОЛЬ ТЕЛА</span>
-            <h2 id="profileProgressPhotosTitle">Фото прогресса</h2>
-            <small>Спереди · сбоку · со спины</small>
-          </div>
-          <button
-            className={styles.closeButton}
-            data-testid="profile-progress-photos-close"
-            type="button"
-            aria-label="Закрыть фото прогресса"
-            disabled={uploading}
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          embedded
+          controlsVariant="workout"
+          className={styles.header}
+          title="Фото прогресса"
+          titleId="profileProgressPhotosTitle"
+          testId="profile-progress-photos-header"
+          scope="profile-progress-photos-header"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-progress-photos-close"
+              ariaLabel="Закрыть фото прогресса"
+              disabled={uploading}
+              onClick={onClose}
+            />
+          )}
+        />
 
         {onOpenMeasurements && (
           <div className={styles.bodyControlTabs} data-testid="profile-progress-photos-section-tabs" role="tablist" aria-label="Контроль тела">
@@ -96,7 +100,7 @@ export default function ProfileProgressPhotosModal({
 
         <div className={styles.body} data-testid="profile-progress-photos-body">
           <div className={styles.intro} data-testid="profile-progress-photos-intro">
-            <i aria-hidden="true">📷</i>
+            <i aria-hidden="true"><Camera size={20} strokeWidth={2} /></i>
             <p>Встань в полный рост, используй одинаковое освещение и держи камеру на одном уровне.</p>
           </div>
 

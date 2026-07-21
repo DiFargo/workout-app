@@ -1,471 +1,118 @@
-.statsRoot,
-.stat,
-.statLabel,
-.statValue,
-.summaryGrid,
-.summaryCard,
-.summaryLabel,
-.summaryValue {
+.summaryGrid { display: contents; }
+
+.nextCard {
   box-sizing: border-box;
-}
-
-.statsRoot {
-  width: calc(100% + 24px);
-  min-width: 0;
-  height: 82px;
-  min-height: 82px;
-  margin: -8px -12px 12px;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  align-items: stretch;
-  border: 1px solid var(--color-profile-summary-stats-border);
-  border-top: 0;
-  border-radius: 0 0 20px 20px;
-  background: var(--background-profile-summary-stats);
-  color: var(--color-profile-summary-value);
-  box-shadow: var(--shadow-profile-summary-stats);
-  overflow: hidden;
-}
-
-.stat {
   width: 100%;
-  min-width: 0;
-  height: 82px;
-  min-height: 82px;
-  padding: 8px 6px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  height: 128px;
+  padding: 18px 20px 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 12px 27px 36px;
+  column-gap: 14px;
+  row-gap: 9px;
   position: relative;
-  border-right: 1px solid var(--color-profile-summary-stats-border);
-  text-align: center;
   overflow: hidden;
+  border: 1px solid #ebe6ef;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #dde5ea, #eff3f5);
+  color: #28262e;
 }
 
-.stat::after {
-  content: "";
-  width: 1px;
+.rail {
+  width: 6px;
   position: absolute;
-  top: 8px;
-  right: 0;
-  bottom: 8px;
-  background: var(--color-profile-summary-stats-divider);
+  inset: 0 auto 0 0;
+  border-radius: 3px;
+  background: #8f7ac8;
 }
 
-.stat:last-child {
-  border-right: 0;
+.eyebrow {
+  grid-column: 1 / -1;
+  display: block;
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 0.7px;
 }
 
-.stat:last-child::after {
-  display: none;
-}
-
-.statLabel {
-  width: 100%;
-  min-width: 0;
-  min-height: 14px;
+.nextCard h2 {
+  grid-column: 1 / -1;
+  max-width: calc(100% - 126px);
   margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  color: var(--color-profile-summary-label);
-  font-size: 11px;
-  font-weight: 650;
-  line-height: 1.1;
-  text-align: center;
-  overflow: visible;
-}
-
-.statIcon {
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
-  color: inherit;
-}
-
-.statValue {
-  width: 100%;
-  min-width: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-profile-summary-value);
-  font-size: 19px;
-  font-weight: 850;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  text-align: center;
+  overflow: hidden;
+  color: #28262e;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 27px;
+  letter-spacing: -0.45px;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.summaryGrid {
+.nextMeta {
+  min-width: 0;
+  grid-column: 1 / -1;
+  padding-right: 126px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #7b7682;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.nextMeta svg { width: 18px; height: 18px; }
+.nextMeta span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nextCard button {
+  height: 36px;
+  padding: 0 17px;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  border: 0;
+  border-radius: 18px;
+  background: #8f7ac8;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.lastCard {
   box-sizing: border-box;
   width: 100%;
-  min-width: 0;
-  height: 84px;
-  min-height: 84px;
-  max-height: 84px;
-  margin: 16px 0 0;
-  padding: 0;
+  height: 50px;
+  padding: 7px 12px 7px 14px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.summaryCard {
-  width: 100%;
-  min-width: 0;
-  height: 84px;
-  min-height: 84px;
-  margin: 0;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: 22px 1fr 22px;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border: 1px solid var(--color-profile-summary-card-border);
-  border-radius: 22px;
-  background: var(--background-profile-summary-card);
-  color: var(--color-profile-summary-card-value);
-  box-shadow: var(--shadow-profile-summary-card);
-  text-align: center;
+  gap: 7px;
+  border: 1px solid #ebe6ef;
+  border-radius: 18px;
+  background: #fff;
+  color: #28262e;
+  text-align: left;
+  cursor: pointer;
 }
 
-.summaryLabel {
-  min-width: 0;
-  margin: 0 0 13px;
-  display: block;
-  color: var(--color-profile-summary-card-label);
-  font-size: 11px;
-  font-weight: 750;
-  line-height: 1.18;
-  letter-spacing: -0.01em;
-  text-align: center;
-  white-space: normal;
-}
-
-.summaryIcon {
-  width: 24px;
-  height: 24px;
-  color: inherit;
-}
-
-.summaryValue {
-  min-width: 0;
-  margin: 0;
-  display: block;
-  color: var(--color-profile-summary-card-value);
-  font-size: 15px;
-  font-weight: 850;
-  line-height: 1.12;
-  letter-spacing: -0.04em;
-  text-align: center;
-  white-space: nowrap;
-}
-
-@media (max-width: 640px) {
-  .statsRoot {
-    width: 100%;
-    height: 64px;
-    min-height: 64px;
-    max-height: 64px;
-    margin: 0;
-    border-color: var(--color-profile-summary-stats-border-mobile);
-    border-top: 1px solid var(--color-profile-summary-stats-top-mobile);
-    border-radius: 0 0 24px 24px;
-    box-shadow: var(--shadow-profile-summary-stats-mobile);
-  }
-
-  .stat {
-    height: 64px;
-    min-height: 64px;
-    max-height: 64px;
-    padding: 7px 6px 6px;
-    gap: 4px;
-    border-right-color: var(--color-profile-summary-stats-divider-mobile);
-  }
-
-  .stat::after {
-    display: none;
-  }
-
-  .statLabel {
-    height: 16px;
-    min-height: 16px;
-    margin: 0 0 5px;
-    gap: 4px;
-    color: var(--color-profile-summary-label-mobile);
-    font-size: 10.5px;
-    font-weight: 850;
-    line-height: 1.05;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .statIcon {
-    width: 16px;
-    min-width: 16px;
-    height: 16px;
-    color: var(--color-profile-summary-icon-mobile);
-  }
-
-  .statValue {
-    display: block;
-    color: var(--color-profile-summary-value-mobile);
-    font-size: 17px;
-    font-weight: 950;
-    line-height: 1;
-    letter-spacing: normal;
-    overflow: hidden;
-  }
-
-  .goalValue {
-    color: var(--color-profile-summary-goal-mobile);
-    font-size: 14px;
-    font-weight: 900;
-    line-height: 1.05;
-  }
-
-  .summaryGrid {
-    height: 76px;
-    min-height: 76px;
-    max-height: 76px;
-    margin: 0;
-    gap: 0;
-    border: 1px solid var(--color-profile-summary-grid-border-mobile);
-    border-radius: 24px;
-    background: var(--background-profile-summary-grid-mobile);
-    box-shadow: var(--shadow-profile-summary-grid-mobile);
-    overflow: hidden;
-  }
-
-  .summaryCard {
-    height: 76px;
-    min-height: 76px;
-    max-height: 76px;
-    padding: 12px;
-    gap: 7px;
-    border: 0;
-    border-right: 1px solid var(--color-profile-summary-grid-border-mobile);
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    overflow: hidden;
-  }
-
-  .summaryCard:last-child {
-    border-right: 0;
-  }
-
-  .summaryLabel {
-    width: 96px;
-    min-height: 24px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 14px 74px;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    color: var(--color-profile-summary-card-label-mobile);
-    font-size: 10.8px;
-    line-height: 1.05;
-    letter-spacing: normal;
-    text-align: left;
-    overflow: visible;
-  }
-
-  .summaryIcon {
-    width: 14px;
-    height: 14px;
-    color: var(--color-profile-summary-card-icon-mobile);
-  }
-
-  .nextIcon {
-    color: var(--color-profile-summary-card-next-icon-mobile);
-  }
-
-  .summaryValue {
-    width: 100%;
-    color: var(--color-profile-summary-card-value-mobile);
-    font-size: 16.2px;
-    line-height: 1.04;
-    letter-spacing: normal;
-    overflow: hidden;
-  }
-}
-
-:global(:root[data-app-theme="dark-green"]) .statsRoot {
-  width: 100%;
-  height: 78px;
-  min-height: 78px;
-  max-height: 78px;
-  margin: -8px 0 0;
-  padding: 3px 4px 6px;
-  border-color: var(--color-profile-summary-stats-border);
-  border-top: 0;
-  border-radius: 0 0 15px 15px;
-  background: var(--background-profile-summary-stats);
-  box-shadow: var(--shadow-profile-summary-stats);
-  overflow: visible;
-}
-
-:global(:root[data-app-theme="dark-green"]) .stat {
-  height: 60px;
-  min-height: 60px;
-  max-height: 60px;
-  padding: 5px 7px;
-  gap: 4px;
-  border-right: 0;
-}
-
-:global(:root[data-app-theme="dark-green"]) .stat::after {
-  display: block;
-  background: var(--color-profile-summary-stats-divider);
-}
-
-:global(:root[data-app-theme="dark-green"]) .stat:last-child::after {
-  display: none;
-}
-
-:global(:root[data-app-theme="dark-green"]) .statLabel {
-  width: 100%;
-  height: auto;
-  min-height: 14px;
-  margin: 0 0 8px;
-  gap: 0;
-  color: var(--color-profile-summary-label);
-  font-size: 9px;
-  font-weight: 500;
-  line-height: 1.2;
-  white-space: normal;
-  overflow: visible;
-}
-
-:global(:root[data-app-theme="dark-green"]) .statIcon {
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
-  color: inherit;
-}
-
-:global(:root[data-app-theme="dark-green"]) .statValue {
-  display: flex;
-  color: var(--color-profile-summary-value);
-  font-size: 16px;
-  font-weight: 750;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  white-space: normal;
-  overflow: visible;
-}
-
-:global(:root[data-app-theme="dark-green"]) .goalValue {
-  font-size: clamp(12px, 3.6vw, 15px);
-  line-height: 1.05;
-  white-space: nowrap;
-}
-
-:global(:root[data-app-theme="dark-green"]) .summaryGrid {
-  height: 96px;
-  min-height: 96px;
-  max-height: 96px;
-  margin: 16px 0 0;
-  gap: 10px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  overflow: visible;
-}
-
-:global(:root[data-app-theme="dark-green"]) .summaryCard {
-  height: 96px;
-  min-height: 96px;
-  max-height: none;
-  padding: 12px;
-  gap: 4px;
-  border: 1px solid var(--color-profile-summary-card-border);
-  border-radius: 16px;
-  background: var(--background-profile-summary-card);
-  box-shadow: var(--shadow-profile-summary-card);
-  overflow: visible;
-}
-
-:global(:root[data-app-theme="dark-green"]) .summaryLabel {
-  width: auto;
-  min-height: auto;
-  max-width: none;
-  margin: 0 0 13px;
-  display: block;
-  color: var(--color-profile-summary-card-label);
-  font-size: 11px;
-  line-height: 1.18;
-  letter-spacing: -0.01em;
-  text-align: center;
-  overflow: visible;
-}
-
-:global(:root[data-app-theme="dark-green"]) .summaryIcon,
-:global(:root[data-app-theme="dark-green"]) .nextIcon {
-  width: 24px;
-  height: 24px;
-  color: inherit;
-}
-
-:global(:root[data-app-theme="dark-green"]) .summaryValue {
-  width: auto;
-  color: var(--color-profile-summary-card-value);
-  font-size: 15px;
-  line-height: 1.12;
-  letter-spacing: -0.04em;
-  overflow: visible;
-}
-
-@media (max-height: 800px) {
-  :global(:root[data-app-theme="dark-green"]) .statsRoot {
-    height: 70px;
-    min-height: 70px;
-    max-height: 70px;
-    margin-top: -6px;
-  }
-
-  :global(:root[data-app-theme="dark-green"]) .stat {
-    height: 54px;
-    min-height: 54px;
-    max-height: 54px;
-  }
-
-  :global(:root[data-app-theme="dark-green"]) .summaryGrid,
-  :global(:root[data-app-theme="dark-green"]) .summaryCard {
-    height: 84px;
-    min-height: 84px;
-    max-height: 84px;
-  }
-}
-
-@media (max-width: 409px) {
-  :global(:root[data-app-theme="dark-green"]) .summaryLabel {
-    max-width: 122px;
-  }
-}
-
-@media (max-width: 360px) {
-  :global(:root[data-app-theme="dark-green"]) .statLabel {
-    margin-bottom: 5px;
-  }
-
-  :global(:root[data-app-theme="dark-green"]) .goalValue {
-    line-height: 1.1;
-  }
-
-  :global(:root[data-app-theme="dark-green"]) .summaryLabel {
-    margin-bottom: 7px;
-  }
-}
+.lastIcon { width: 20px; height: 20px; color: #8f7ac8; }
+.lastCard > span { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+.lastCard small { color: #7b7682; font-size: 12px; font-weight: 600; line-height: 16px; }
+.lastCard strong { color: #28262e; font-size: 14px; font-weight: 700; line-height: 18px; }
+.lastCard > svg:last-child { width: 20px; height: 20px; color: #a9aeb2; }
+.lastCard:active { transform: scale(0.98); }
+.nextCard button:active { transform: translateY(-50%) scale(0.98); }

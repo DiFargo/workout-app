@@ -15,7 +15,7 @@
   border: 1px solid var(--color-dialog-border);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.98);
-  color: #171923;
+  color: #28262e;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
 }
 
@@ -42,8 +42,8 @@
   padding: 0 12px;
   border: 0;
   border-radius: 10px;
-  background: rgba(139, 120, 240, 0.16);
-  color: #b8aafb;
+  background: rgba(185, 169, 229, 0.16);
+  color: #d5c9ec;
   font: inherit;
   font-size: var(--font-size-md);
   font-weight: 900;
@@ -60,4 +60,29 @@
 .restoreButton:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
+}
+
+:global(:root[data-app-theme="warm-light"]) .toast {
+  bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  width: min(370px, calc(100vw - 32px));
+  min-height: 54px;
+  padding: 7px 8px 7px 14px;
+  border: 1px solid #ebe6ef;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  color: #28262e;
+  box-shadow: 0 10px 32px rgba(40, 38, 46, 0.14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .message { color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .restoreButton {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 13px;
+  background: #f0ebfa;
+  color: #8f7ac8;
+  font-size: 14px;
+  font-weight: 650;
 }

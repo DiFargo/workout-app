@@ -499,10 +499,10 @@
     margin: 0;
     padding: 7px;
     overflow: hidden;
-    border: 1px solid #dfe4ee;
+    border: 1px solid #ebe6ef;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18);
+    box-shadow: 0 18px 48px rgba(72, 63, 87, 0.18);
     backdrop-filter: blur(18px);
   }
 
@@ -539,17 +539,17 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .backButton {
-    border-color: #e1e4ef;
-    background: #f4f6fc;
-    box-shadow: 0 12px 24px rgba(34, 43, 79, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: #ebe6ef;
+    background: #f5f2f7;
+    box-shadow: 0 12px 24px rgba(72, 63, 87, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     backdrop-filter: none;
-    color: #596176;
+    color: #736e79;
   }
 
   :global(:root[data-app-theme="warm-light"]) .finishButton {
     border-color: transparent;
-    background: linear-gradient(135deg, #6552e6 0%, #2d6ff2 100%);
-    box-shadow: 0 12px 26px rgba(77, 69, 202, 0.23);
+    background: linear-gradient(135deg, #9c88d2 0%, #806bb6 100%);
+    box-shadow: 0 12px 26px rgba(117, 97, 170, 0.23);
     color: #ffffff;
     -webkit-text-fill-color: #ffffff;
   }
@@ -610,4 +610,288 @@
     opacity: 0;
     transform: translate(-50%, -54%) scale(0.96);
   }
+}
+
+/* Calm iOS finish summary. */
+:global(:root[data-app-theme="warm-light"]) .screen.screen {
+  width: 100%;
+  max-width: none;
+  height: calc(100% - 50px);
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  overflow: hidden;
+}
+
+:global(:root[data-app-theme="warm-light"]) .card.card {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  padding: 15px;
+  gap: 11px;
+  overflow: hidden auto;
+  color: #28262e;
+  background: #ffffff;
+  border: 1px solid #ebe6ef;
+  border-radius: 24px;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+  scrollbar-width: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .card.card::-webkit-scrollbar {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .top.top {
+  color: #7b7682;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .top.top span:first-child {
+  color: #8f7ac8;
+}
+
+:global(:root[data-app-theme="warm-light"]) .result.result {
+  gap: 11px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .trophy.trophy {
+  width: 46px;
+  height: 46px;
+  flex-basis: 46px;
+  color: #8f7ac8;
+  background: #f0ebfa;
+  border-radius: 15px;
+  font-size: 23px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .result.result p {
+  color: #28262e;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  color: #28262e;
+  background: #f0ebfa;
+  border: 0;
+  border-radius: 18px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats > div {
+  min-height: 58px;
+  padding: 9px 7px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats > div + div,
+:global(:root[data-app-theme="warm-light"]) .stats.stats > div:nth-child(even) {
+  border-left: 1px solid #dce3e7;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats > div:nth-child(n + 3) {
+  border-top: 1px solid #dce3e7;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats span,
+:global(:root[data-app-theme="warm-light"]) .progress.progress > span {
+  color: #7b7682;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stats.stats strong {
+  color: #28262e;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .progress.progress {
+  padding: 12px;
+  gap: 4px;
+  color: #28262e;
+  background: #fbfafc;
+  border-radius: 16px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .progress.progress strong {
+  color: #28262e;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .progress.progress p {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .incomplete.incomplete {
+  padding: 9px 11px;
+  color: #28262e;
+  background: #f7e9ea;
+  border-radius: 15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .incomplete.incomplete strong {
+  color: #8f555a;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .incomplete.incomplete span {
+  color: #9b666b;
+  font-size: 10px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .comment.comment {
+  gap: 5px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .comment.comment > span {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .commentInput.commentInput {
+  min-height: 64px;
+  padding: 10px 12px;
+  color: #28262e;
+  background: #f0ebfa;
+  border: 0;
+  border-radius: 15px;
+  box-shadow: none;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .commentInput.commentInput::placeholder {
+  color: #9da2a6;
+}
+
+:global(:root[data-app-theme="warm-light"]) .tip.tip {
+  padding: 10px 11px;
+  color: #28262e;
+  background: #f0ebfa;
+  border-radius: 15px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .tip.tip p {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .syncStatus.syncStatus {
+  color: #8f7ac8;
+  background: #f0ebfa;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .syncStatus.synced {
+  color: #587363;
+  background: #e9f0eb;
+}
+
+:global(:root[data-app-theme="warm-light"]) .savedCard.savedCard {
+  width: min(330px, calc(100vw - 40px));
+  padding: 22px 18px;
+  gap: 7px;
+  color: #28262e;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #ebe6ef;
+  border-radius: 24px;
+  box-shadow: 0 18px 52px rgba(40, 38, 46, 0.18);
+}
+
+:global(:root[data-app-theme="warm-light"]) .savedCheck.savedCheck {
+  width: 58px;
+  height: 58px;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  background: #708d79;
+  border: 0;
+  font-size: 31px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .savedCard.savedCard strong {
+  color: #28262e;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .savedCard.savedCard > span {
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+:global(:root[data-app-theme="warm-light"]) .actionPanel.actionPanel {
+  box-sizing: border-box;
+  width: min(402px, 100vw);
+  max-width: 402px;
+  height: 77px;
+  min-height: 77px;
+  max-height: 77px;
+  margin: 0;
+  padding: 12px 16px 17px;
+  position: fixed;
+  right: auto;
+  bottom: 0;
+  left: 50%;
+  z-index: 9500;
+  overflow: hidden;
+  color: #28262e;
+  background: rgba(255, 255, 255, 0.98);
+  border: 0;
+  border-top: 1px solid #ebe6ef;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: blur(20px);
+  transform: translateX(-50%);
+}
+
+:global(:root[data-app-theme="warm-light"]) .navigationRow.navigationRow {
+  width: 100%;
+  max-width: none;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  margin: 0;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 10px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton,
+:global(:root[data-app-theme="warm-light"]) .finishButton.finishButton {
+  width: 100%;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  margin: 0;
+  padding: 0 10px;
+  border: 0;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton {
+  color: #28262e;
+  background: #f2f2f7;
+  border-radius: 24px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .finishButton.finishButton {
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  background: #8f7ac8;
+  border-radius: 17px;
 }

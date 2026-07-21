@@ -1,0 +1,22 @@
+.root {
+  box-sizing: border-box;
+  width: 100%;
+  height: 54px;
+  padding: 7px 11px 7px 12px;
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #ebe6ef;
+  border-radius: 20px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+}
+.root > svg { width: 18px; height: 18px; color: #8f7ac8; stroke-width: 2.2; }
+.timer { padding: 0; display: flex; flex-direction: column; align-items: flex-start; border: 0; background: transparent; color: #28262e; font: inherit; }
+.timer small { color: #7b7682; font-size: 10px; font-weight: 600; line-height: 14px; }
+.timer strong { font-size: 19px; font-weight: 700; line-height: 22px; }
+.controls { display: flex; gap: 8px; }
+.controls button { width: 42px; height: 30px; padding: 0; border: 0; border-radius: 15px; background: #f4f4f8; color: #28262e; font: inherit; font-size: 10px; font-weight: 700; }
+.controls .add { background: #f0ebfa; color: #8f7ac8; }

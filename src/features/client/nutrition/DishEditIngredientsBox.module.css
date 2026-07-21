@@ -57,7 +57,7 @@
   font-size: 13px;
   font-weight: 950;
   line-height: 1.1;
-  box-shadow: 0 8px 18px rgba(84, 55, 230, 0.08);
+  box-shadow: 0 8px 18px rgba(143, 122, 200, 0.08);
   cursor: pointer;
   -webkit-text-fill-color: currentColor;
 }
@@ -259,3 +259,33 @@
     min-height: 32px;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .root {
+  margin-bottom: 10px;
+  padding: 12px;
+  border: 1px solid #ebe6ef;
+  border-radius: 20px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .heading strong { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .heading span { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .addButton {
+  min-height: 44px;
+  border: 0;
+  border-radius: 14px;
+  background: #f0ebfa;
+  color: #8f7ac8;
+  box-shadow: none;
+  font-weight: 600;
+}
+
+:global(:root[data-app-theme="warm-light"]) .empty { background: #f0ebfa; color: #7b7682; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .row { border-color: #ebe6ef; background: #fff; color: #28262e; }
+:global(:root[data-app-theme="warm-light"]) .icon { border: 0; background: #f0ebfa; color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .name,
+:global(:root[data-app-theme="warm-light"]) .nutrition { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .nutrition small { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .removeButton { border: 0; background: #f0ebfa; color: #b36e72; }

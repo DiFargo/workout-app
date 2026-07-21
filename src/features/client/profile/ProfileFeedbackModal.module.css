@@ -3,7 +3,7 @@
   inset: 0;
   z-index: 12000;
   box-sizing: border-box;
-  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  padding: max(12px, env(safe-area-inset-top, 0px)) 12px max(12px, env(safe-area-inset-bottom, 0px));
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -15,57 +15,34 @@
 .dialog {
   position: relative;
   box-sizing: border-box;
-  width: min(100%, 430px);
-  height: auto;
-  max-height: calc(100dvh - 24px);
-  padding: 14px;
+  width: min(390px, 100%);
+  height: min(820px, calc(100dvh - 24px));
+  max-height: min(820px, calc(100dvh - 24px));
+  padding: 0 16px max(18px, env(safe-area-inset-bottom, 0px));
   display: grid;
-  grid-template-rows: 48px minmax(0, 1fr) 54px;
+  grid-template-rows: auto minmax(0, 1fr) 54px;
   gap: 10px;
   overflow: hidden;
   border: 1px solid var(--color-profile-modal-border);
-  border-radius: 26px;
+  border-radius: 32px;
   background: var(--background-profile-modal);
   box-shadow: var(--shadow-profile-modal);
   color: var(--color-profile-modal);
+  --gradient-primary: linear-gradient(135deg, #9c88d2, #806bb6);
 }
 
 .header {
   position: relative;
-  z-index: 2;
-  padding: 0 2px 0 6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  z-index: 4;
+  width: calc(100% + 32px);
+  margin-left: -16px;
 }
 
-.eyebrow {
-  display: block;
-  color: var(--color-profile-modal-eyebrow);
-  font-size: 10px;
-  font-weight: 950;
-}
-
-.title {
-  margin: 2px 0 0;
-  color: var(--color-profile-modal-heading);
-  font-size: 21px;
-  line-height: 1;
-}
-
-.closeButton {
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  min-height: 44px;
-  padding: 0;
-  border: 1px solid var(--color-profile-modal-close-border);
-  border-radius: 13px;
-  background: var(--background-profile-modal-close);
-  color: var(--color-profile-modal-close);
-  font-size: 23px;
-  line-height: 1;
+.headerFrame {
+  width: calc(100% + 32px);
+  max-width: none;
+  margin-right: -16px;
+  margin-left: -16px;
 }
 
 .body {
@@ -208,6 +185,9 @@
 }
 
 .attachmentTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   color: inherit;
   font-size: 13px;
   font-weight: 950;
@@ -294,12 +274,10 @@
 
 @media (max-height: 720px) {
   .dialog {
-    padding: 10px;
-    grid-template-rows: 42px minmax(0, 1fr);
+    padding: 0 12px max(12px, env(safe-area-inset-bottom, 0px));
+    grid-template-rows: auto minmax(0, 1fr) 50px;
     gap: 6px;
   }
 
-  .title {
-    font-size: 18px;
-  }
+  .header { width: calc(100% + 24px); margin-left: -12px; }
 }

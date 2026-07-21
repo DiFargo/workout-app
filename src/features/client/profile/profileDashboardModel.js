@@ -190,6 +190,18 @@ export function buildProfileDashboardModel(ctx) {
       calendar: profileCalendarSource,
       history
     });
+    const nextWorkoutSlot = profileWorkoutSlots.find((slot) => !slot.isCompleted) || profileWorkoutSlots[0] || null;
+    const nextWorkoutSource = profileCalendarWorkouts.find((workout) => (
+      String(workout?.id || "") === String(nextWorkoutSlot?.workoutId || "")
+    )) || profileCalendarWorkouts[nextWorkoutSlot?.index ?? 0] || null;
+    const nextWorkoutDateKey = nextWorkoutSlot?.shiftedDate || nextWorkoutSlot?.plannedDate || "";
+    const nextWorkoutDate = nextWorkoutDateKey
+      ? new Date(`${nextWorkoutDateKey}T12:00:00`).toLocaleDateString("ru-RU", { day: "numeric", month: "long" })
+      : "Дата уточняется";
+    const nextWorkoutTitle = nextWorkoutSource?.name || nextWorkoutSlot?.workoutName || "Тренировка по плану";
+    const nextWorkoutExerciseCount = Array.isArray(nextWorkoutSource?.exercises)
+      ? nextWorkoutSource.exercises.length
+      : 0;
     const profileWorkoutCalendarEntries = buildWorkoutScheduleCalendarEntries(profileWorkoutSlots);
     const profileWorkoutEntriesByDate = profileWorkoutCalendarEntries.reduce((result, entry) => {
       if (!result[entry.date]) result[entry.date] = [];
@@ -407,6 +419,9 @@ export function buildProfileDashboardModel(ctx) {
     profileCalendarWorkouts,
     profileCalendarSource,
     profileWorkoutSlots,
+    nextWorkoutDate,
+    nextWorkoutTitle,
+    nextWorkoutExerciseCount,
     profileWorkoutCalendarEntries,
     profileWorkoutEntriesByDate,
     profileWorkoutDraftEntriesByDate,

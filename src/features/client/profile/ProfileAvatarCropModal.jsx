@@ -1,3 +1,5 @@
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileAvatarCropModal.module.css";
 
 export default function ProfileAvatarCropModal({
@@ -42,13 +44,22 @@ export default function ProfileAvatarCropModal({
         aria-labelledby="profileAvatarCropTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className={styles.header}>
-          <div>
-            <span className={styles.eyebrow}>АВАТАР</span>
-            <h2 className={styles.heading} id="profileAvatarCropTitle">Выбери область фото</h2>
-          </div>
-          <button type="button" className={styles.closeButton} data-testid="profile-avatar-crop-close" aria-label="Закрыть редактор аватара" onClick={onClose}>×</button>
-        </header>
+        <ClientPageHeader
+          compact
+          embedded
+          controlsVariant="workout"
+          className={styles.header}
+          title="Область фото"
+          titleId="profileAvatarCropTitle"
+          scope="profile-avatar-crop-header"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-avatar-crop-close"
+              ariaLabel="Закрыть редактор аватара"
+              onClick={onClose}
+            />
+          )}
+        />
 
         <div
           className={styles.viewport}

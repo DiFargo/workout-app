@@ -1,69 +1,54 @@
-import { CalendarDays, Dumbbell, Scale, Target, Zap } from "lucide-react";
+import { CalendarDays, ChevronRight } from "lucide-react";
 import styles from "./ProfileMainSummaryCards.module.css";
 
-export default function ProfileMainSummaryCards({
-  activeGoalLabel,
-  targetWeight,
-  weight,
-  currentGoalId,
-  totalWorkouts,
-  lastWorkoutDate,
-  nextTrainingText,
-  showStats = true,
-  showSplitCards = true
+export function ProfileNextWorkoutCard({
+  title = "Следующая тренировка",
+  dateText = "Дата уточняется",
+  exerciseCount = 0,
+  onOpen
 }) {
-  const formatWeightValue = (value) => {
-    const numericValue = Number(String(value || "").replace(",", "."));
-    if (!Number.isFinite(numericValue) || numericValue <= 0) return "";
-    return Number.isInteger(numericValue)
-      ? String(numericValue)
-      : numericValue.toFixed(1).replace(/\.0$/, "").replace(".", ",");
-  };
-  const resolvedTargetWeight = formatWeightValue(targetWeight) ||
-    (currentGoalId === "maintain" || currentGoalId === "recomp" ? formatWeightValue(weight) : "");
-
   return (
-    <>
-      {showStats && (
-      <div
-        className={styles.statsRoot}
-        data-css-module-scope="profile-main-summary-stats"
-        data-testid="profile-main-stats"
-      >
-        <div className={styles.stat}>
-          <span className={styles.statLabel}><Target className={styles.statIcon} aria-hidden="true" />Твоя цель</span>
-          <strong className={`${styles.statValue} ${styles.goalValue}`}>{activeGoalLabel}</strong>
-        </div>
-
-        <div className={styles.stat}>
-          <span className={styles.statLabel}><Scale className={styles.statIcon} aria-hidden="true" />Целевой вес</span>
-          <strong className={styles.statValue}>{resolvedTargetWeight || "—"} кг</strong>
-        </div>
-
-        <div className={styles.stat}>
-          <span className={styles.statLabel}><Dumbbell className={styles.statIcon} aria-hidden="true" />Тренировок</span>
-          <strong className={styles.statValue}>{totalWorkouts}</strong>
-        </div>
+    <article className={styles.nextCard} data-testid="profile-main-next-workout">
+      <span className={styles.rail} aria-hidden="true" />
+      <span className={styles.eyebrow} data-testid="profile-main-next-eyebrow">СЛЕДУЮЩАЯ ТРЕНИРОВКА</span>
+      <h2 data-testid="profile-main-next-title">{title}</h2>
+      <div className={styles.nextMeta} data-testid="profile-main-next-meta">
+        <CalendarDays aria-hidden="true" />
+        <span data-testid="profile-main-next-meta-text">{dateText}{exerciseCount ? `  •  ${exerciseCount} упражнений` : ""}</span>
       </div>
-      )}
+      <button type="button" data-testid="profile-main-next-open" onClick={onOpen}>Открыть план</button>
+    </article>
+  );
+}
 
-      {showSplitCards && (
-      <div
-        className={styles.summaryGrid}
-        data-css-module-scope="profile-main-summary-grid"
-        data-testid="profile-main-summary-grid"
-      >
-        <article className={styles.summaryCard}>
-          <span className={styles.summaryLabel}><CalendarDays className={styles.summaryIcon} aria-hidden="true" />Последняя тренировка</span>
-          <strong className={styles.summaryValue}>{lastWorkoutDate || "Нет данных"}</strong>
-        </article>
+export function ProfileLastWorkoutCard({ dateText, onOpen }) {
+  return (
+    <button
+      type="button"
+      className={styles.lastCard}
+      data-testid="profile-main-last-workout"
+      onClick={onOpen}
+    >
+      <CalendarDays className={styles.lastIcon} aria-hidden="true" />
+      <span>
+        <small>Последняя тренировка</small>
+        <strong>{dateText || "Нет данных"}</strong>
+      </span>
+      <ChevronRight aria-hidden="true" />
+    </button>
+  );
+}
 
-        <article className={styles.summaryCard}>
-          <span className={styles.summaryLabel}><Zap className={`${styles.summaryIcon} ${styles.nextIcon}`} aria-hidden="true" />Следующая тренировка</span>
-          <strong className={styles.summaryValue}>{nextTrainingText}</strong>
-        </article>
-      </div>
-      )}
-    </>
+export default function ProfileMainSummaryCards(props) {
+  return (
+    <div className={styles.summaryGrid} data-testid="profile-main-summary-grid">
+      <ProfileNextWorkoutCard
+        title={props.nextWorkoutTitle || props.nextTrainingText}
+        dateText={props.nextWorkoutDate || props.nextTrainingText}
+        exerciseCount={props.nextWorkoutExerciseCount}
+        onOpen={props.onOpenNextWorkout}
+      />
+      <ProfileLastWorkoutCard dateText={props.lastWorkoutDate} onOpen={props.onOpenLastWorkout} />
+    </div>
   );
 }

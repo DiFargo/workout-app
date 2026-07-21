@@ -1,12 +1,12 @@
 .overlay {
   --delete-card-surface: var(--color-surface);
   --delete-card-border: var(--color-dialog-border);
-  --delete-card-text: #171923;
+  --delete-card-text: #28262e;
   --delete-heading: #211b12;
   --delete-muted: rgba(76, 64, 42, 0.64);
   --delete-control-surface: var(--color-control-surface);
   --delete-control-border: var(--color-control-border);
-  --delete-control-text: #171923;
+  --delete-control-text: #28262e;
   --delete-danger: #ef8585;
 
   position: fixed;
@@ -130,3 +130,35 @@
     padding: 16px;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .overlay {
+  --delete-card-surface: #fff;
+  --delete-card-border: #ebe6ef;
+  --delete-card-text: #28262e;
+  --delete-heading: #28262e;
+  --delete-muted: #7b7682;
+  --delete-control-surface: #f0ebfa;
+  --delete-control-border: transparent;
+  --delete-control-text: #28262e;
+  --delete-danger: #b36e72;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  align-items: end;
+}
+
+:global(:root[data-app-theme="warm-light"]) .backdrop { background: rgba(40, 38, 46, 0.35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+:global(:root[data-app-theme="warm-light"]) .card {
+  width: min(370px, 100%);
+  padding: 22px 18px 18px;
+  border: 1px solid #ebe6ef;
+  border-radius: 26px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
+}
+
+:global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; height: 44px; border-radius: 50%; background: #f0ebfa; color: #28262e; line-height: 44px; }
+:global(:root[data-app-theme="warm-light"]) .icon { color: #b36e72; }
+:global(:root[data-app-theme="warm-light"]) .title { color: #28262e; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .description { color: #7b7682; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .actionButton { min-height: 50px; border: 0; border-radius: 16px; background: #f0ebfa; color: #28262e; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .dangerAction { background: #b36e72; color: #fff; }

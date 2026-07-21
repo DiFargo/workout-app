@@ -53,3 +53,17 @@
   scrollbar-color: var(--scrollbar-food-product-page);
   -webkit-text-fill-color: var(--color-food-product-page-text);
 }
+
+:global(:root[data-app-theme="warm-light"]) .root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0 0 calc(104px + env(safe-area-inset-bottom, 0px));
+  display: block;
+  overflow: visible;
+  background: #f7f6f8;
+  color: #28262e;
+  font-family: var(--font-family-sans);
+  scrollbar-color: transparent transparent;
+  -webkit-text-fill-color: currentColor;
+}

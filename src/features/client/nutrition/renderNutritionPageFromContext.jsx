@@ -11,14 +11,12 @@ const {
   aiNutritionSavedPlan,
   barcodeScannerOpen,
   buildNutritionPageModel,
-  canDeleteSelectedNutritionFood,
   cancelNutritionEditPage,
   closeSelectedNutritionFood,
   confirmNutritionEditPage,
   confirmNutritionFoodFromPicker,
   createCustomNutritionDish,
   createCustomNutritionFood,
-  deleteSelectedNutritionFood,
   deletingNutritionFoodId,
   dishIngredientExternalFoods,
   dishIngredientFallbackSuggestions,
@@ -52,7 +50,6 @@ const {
   nutritionCreateChoiceOpen,
   nutritionCurrentStreak,
   nutritionDateKey,
-  nutritionDeleteConfirmOpen,
   nutritionEditNote,
   nutritionEditPageOpen,
   nutritionFallbackSuggestions,
@@ -112,7 +109,6 @@ const {
   setNutritionAmountMode,
   setNutritionCalendarOpen,
   setNutritionCreateChoiceOpen,
-  setNutritionDeleteConfirmOpen,
   setNutritionEditDetailsOpen,
   setNutritionEditNote,
   setNutritionEditPageOpen,
@@ -207,10 +203,14 @@ const {
       }}
       summaryProps={{
         isCaloriesOverGoal,
+        summaryText: nutritionSummaryCollapsedText,
         onExpand: () => setIsAiNutritionPlanExpanded(true)
       }}
       orbitProps={{
         items: nutritionOrbitItems,
+        dateTitle: nutritionDateTitle,
+        dateKey: nutritionDateKey,
+        streakText: nutritionStreakText,
         onAdd: () => openNutritionPicker()
       }}
       diaryProps={{
@@ -336,8 +336,6 @@ const {
           dishIngredientFallbackSuggestions,
           pendingDishIngredient,
           pendingDishIngredientGrams,
-          deleteConfirmOpen: nutritionDeleteConfirmOpen,
-          canDelete: canDeleteSelectedNutritionFood(),
           getFoodIcon,
           getFoodScale,
           getFoodPortionAmount,
@@ -387,9 +385,6 @@ const {
           onCancelEdit: cancelNutritionEditPage,
           onConfirmEdit: confirmNutritionEditPage,
           onBack: closeSelectedNutritionFood,
-          onDelete: () => deleteSelectedNutritionFood(),
-          onCancelDelete: () => setNutritionDeleteConfirmOpen(false),
-          onConfirmDelete: () => deleteSelectedNutritionFood(true),
           onAdd: confirmNutritionFoodFromPicker
         },
         search: {

@@ -88,3 +88,46 @@
     transition: none;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .root {
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px solid #ebe6ef;
+  border-radius: 20px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .title {
+  margin-bottom: 9px;
+  color: #28262e;
+  font-size: 15px;
+  font-weight: 650;
+  text-transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .list {
+  gap: 1px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .button {
+  min-height: 48px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #28262e;
+}
+
+:global(:root[data-app-theme="warm-light"]) .button + .button {
+  border-top: 1px solid #ebe6ef;
+  border-radius: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .button > span {
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
+  font-size: 14px;
+  font-weight: 500;
+}

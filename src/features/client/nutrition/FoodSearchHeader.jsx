@@ -1,3 +1,4 @@
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./FoodSearchHeader.module.css";
 
 export default function FoodSearchHeader({
@@ -14,7 +15,6 @@ export default function FoodSearchHeader({
 }) {
   const selectedMealName = meals.find((meal) => meal.id === mealId)?.name;
   const isMyProductsPage = !selectedFood && searchTab === "my";
-  const isSearchPage = !selectedFood && searchTab !== "my";
   const showCloseButton = !createChoiceOpen;
 
   if (selectedFood) {
@@ -22,25 +22,23 @@ export default function FoodSearchHeader({
   }
 
   return (
-    <header
+    <ClientPageHeader
+      compact
       className={`${styles.root} ${isMyProductsPage ? styles.myProducts : styles.search}`}
-      data-css-module-scope="food-search-header"
-      data-food-search-header-variant={isMyProductsPage ? "my-products" : "search"}
-      data-testid="food-search-header"
+      title={isMyProductsPage ? "Мои продукты" : "Добавить еду"}
+      titleTestId="food-search-header-title"
+      scope="food-search-header"
+      testId="food-search-header"
+      onBack={showCloseButton ? onClose : undefined}
+      backAriaLabel="Закрыть поиск еды"
+      backProps={{
+        "data-css-module-control": "food-search-header",
+        "data-food-search-header-action": "close"
+      }}
+      rootProps={{
+        "data-food-search-header-variant": isMyProductsPage ? "my-products" : "search"
+      }}
     >
-      {isSearchPage && (
-        <div className={styles.titleGroup}>
-          <h2 className={styles.heading} data-css-module-text="food-search-header">Добавить еду</h2>
-        </div>
-      )}
-
-      {isMyProductsPage && (
-        <div className={styles.titleGroup}>
-          <span className={styles.eyebrow} data-css-module-text="food-search-header">Питание</span>
-          <h2 className={styles.heading} data-css-module-text="food-search-header">Мои продукты</h2>
-        </div>
-      )}
-
       <div className={styles.mealWrap} data-testid="food-search-meal-selector">
         <button
           type="button"
@@ -86,22 +84,6 @@ export default function FoodSearchHeader({
           </div>
         )}
       </div>
-
-      {showCloseButton && (
-        <button
-          type="button"
-          className={styles.closeButton}
-          data-css-module-control="food-search-header"
-          data-food-search-header-action="close"
-          onClick={(event) => {
-            event.stopPropagation();
-            onClose();
-          }}
-          aria-label="Закрыть поиск еды"
-        >
-          ×
-        </button>
-      )}
-    </header>
+    </ClientPageHeader>
   );
 }

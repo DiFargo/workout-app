@@ -3,7 +3,7 @@
   inset: 0;
   z-index: 12000;
   box-sizing: border-box;
-  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  padding: max(12px, env(safe-area-inset-top, 0px)) 12px max(12px, env(safe-area-inset-bottom, 0px));
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -15,19 +15,20 @@
 .dialog {
   position: relative;
   box-sizing: border-box;
-  width: min(100%, 430px);
-  height: min(824px, calc(100dvh - 24px));
-  max-height: calc(100dvh - 24px);
-  padding: 14px;
+  width: min(390px, 100%);
+  height: auto;
+  max-height: min(820px, calc(100dvh - 24px));
+  padding: 0;
   display: grid;
-  grid-template-rows: 48px minmax(0, 1fr);
-  gap: 10px;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0;
   overflow: hidden;
   border: 1px solid var(--color-profile-modal-border);
-  border-radius: 26px;
+  border-radius: 32px;
   background: var(--background-profile-modal);
   box-shadow: var(--shadow-profile-modal);
   color: var(--color-profile-modal);
+  --gradient-primary: linear-gradient(135deg, #9c88d2, #806bb6);
 }
 
 .compact {
@@ -36,77 +37,29 @@
 
 .accountCompact {
   height: auto;
-  max-height: calc(100dvh - 18px);
-  padding: 12px;
-  grid-template-rows: 44px minmax(0, 1fr);
-  gap: 7px;
+  max-height: min(820px, calc(100dvh - 24px));
+  padding: 0;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0;
 }
 
 .profileCompact {
   height: auto;
-  max-height: calc(100dvh - 18px);
-  padding: 10px;
-  grid-template-rows: 42px minmax(0, 1fr);
-  gap: 6px;
-  border-radius: 24px;
+  max-height: min(820px, calc(100dvh - 24px));
+  padding: 0;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0;
+  border-radius: 32px;
 }
 
 .header {
   position: relative;
-  z-index: 2;
-  padding: 0 2px 0 6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.eyebrow {
-  display: block;
-  color: var(--color-profile-modal-eyebrow);
-  font-size: 10px;
-  font-weight: 950;
-}
-
-.title {
-  margin: 2px 0 0;
-  color: var(--color-profile-modal-heading);
-  font-size: 21px;
-  line-height: 1;
-}
-
-.accountCompact .title,
-.profileCompact .title {
-  font-size: 20px;
-}
-
-.profileCompact .header {
-  padding: 0 0 0 4px;
-}
-
-.closeButton {
-  flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
-  min-height: 44px;
-  padding: 0;
-  border: 1px solid var(--color-profile-modal-close-border);
-  border-radius: 13px;
-  background: var(--background-profile-modal-close);
-  color: var(--color-profile-modal-close);
-  font-size: 23px;
-  line-height: 1;
-}
-
-.accountCompact .closeButton,
-.profileCompact .closeButton {
-  width: 42px;
-  height: 42px;
+  z-index: 4;
 }
 
 .body {
   min-height: 0;
-  padding: 2px;
+  padding: 4px 16px 24px;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
@@ -117,11 +70,11 @@
 }
 
 .accountCompact .body {
-  padding: 0 2px 2px;
+  padding: 4px 16px 24px;
 }
 
 .profileCompact .body {
-  padding: 0 1px 2px;
+  padding: 4px 16px 24px;
 }
 
 .logoutButton {
@@ -145,19 +98,13 @@
 
 @media (max-height: 720px) {
   .dialog {
-    padding: 10px;
-    grid-template-rows: 42px minmax(0, 1fr);
-    gap: 6px;
-  }
-
-  .title,
-  .accountCompact .title,
-  .profileCompact .title {
-    font-size: 18px;
+    padding: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 0;
   }
 
   .profileCompact {
-    padding: 9px;
+    padding: 0;
   }
 
 }

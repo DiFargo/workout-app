@@ -4,6 +4,8 @@ import {
   getAiNutritionDayMacros,
   getAiNutritionWeekForDate
 } from "../../../utils/aiNutritionSchedule";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileNutritionModal.module.css";
 
 const PROFILE_NUTRITION_GOALS = [
@@ -91,21 +93,24 @@ export default function ProfileNutritionModal({
         aria-labelledby="cabinetNutritionModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className={styles.header} data-testid="profile-nutrition-header">
-          <div>
-            <span>ПЛАН ПИТАНИЯ</span>
-            <h2 id="cabinetNutritionModalTitle">План КБЖУ</h2>
-          </div>
-          <button
-            className={styles.closeButton}
-            data-testid="profile-nutrition-close"
-            type="button"
-            aria-label="Закрыть план КБЖУ"
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </header>
+        <ClientPageHeader
+          compact
+          embedded
+          controlsVariant="workout"
+          className={styles.header}
+          title="План питания"
+          titleId="cabinetNutritionModalTitle"
+          eyebrow="КБЖУ и недельный план"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-nutrition-close"
+              ariaLabel="Закрыть план питания"
+              onClick={onClose}
+            />
+          )}
+          testId="profile-nutrition-header"
+          scope="profile-nutrition-header"
+        />
 
         <section className={styles.content} data-testid="profile-nutrition-content">
           <div className={`${styles.card} ${styles.goalCard}`} data-testid="profile-nutrition-goal-card">

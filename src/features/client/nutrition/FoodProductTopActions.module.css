@@ -17,16 +17,13 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
-  position: absolute;
-  top: 55px;
-  right: 12px;
-  left: auto;
+  position: static;
   z-index: 20;
-  width: 108px;
-  height: 48px;
+  width: 96px;
+  height: 44px;
   display: grid;
-  grid-template-columns: repeat(2, 50px);
-  gap: 12px;
+  grid-template-columns: repeat(2, 44px);
+  gap: 8px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .action {
@@ -60,15 +57,18 @@
   display: grid;
   place-items: center;
   color: inherit;
-  font-size: 19px;
-  font-weight: 900;
-  line-height: 1;
-  filter: grayscale(1) saturate(0.35);
+  fill: none;
   -webkit-text-fill-color: currentColor;
 }
 
-:global(:root[data-app-theme="warm-light"]) .editIcon {
-  font-size: 22px;
+:global(:root[data-app-theme="warm-light"]) .icon.editIcon {
+  width: 20px;
+  height: 20px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .icon.closeIcon {
+  width: 22px;
+  height: 22px;
 }
 
 :global(:root[data-app-theme="dark-green"]) .action,
@@ -81,14 +81,16 @@
   box-shadow: var(--focus-ring), var(--shadow-food-product-action);
 }
 
-@media (max-width: 640px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    grid-template-columns: repeat(2, 52px);
-  }
-}
-
-@media (max-width: 380px) {
-  :global(:root[data-app-theme="warm-light"]) .root {
-    right: 10px;
-  }
+:global(:root[data-app-theme="warm-light"]) .action {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  border: 1px solid #ebe6ef;
+  border-radius: 50%;
+  background: #fff;
+  color: #8f7ac8;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }

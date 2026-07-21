@@ -479,23 +479,34 @@
   -webkit-text-fill-color: var(--plan-muted);
 }
 
+:global(:root[data-app-theme="dark-green"]) .header {
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+}
+
+:global(:root[data-app-theme="dark-green"]) .close {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+}
+
 :global(:root[data-app-theme="warm-light"]) .backdrop {
-  background: rgba(35, 40, 68, 0.22);
+  background: rgba(72, 63, 87, 0.22);
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
   --plan-panel-background: #f7f8fc;
   --plan-panel-border: #e5e7f0;
-  --plan-text: #5f5744;
-  --plan-muted: #5f5744;
+  --plan-text: #6f6875;
+  --plan-muted: #6f6875;
   --plan-chip-background: #fff;
-  --plan-chip-border: #e3e6f1;
-  --plan-chip-text: #5f5744;
-  --plan-close-background: #efedff;
-  --plan-close-border: #ddd9fa;
-  --plan-close-text: #5f5744;
+  --plan-chip-border: #efebf3;
+  --plan-chip-text: #6f6875;
+  --plan-close-background: #f0ebfa;
+  --plan-close-border: #e4dcf2;
+  --plan-close-text: #6f6875;
 
-  border-color: #e3e6f1;
+  border-color: #efebf3;
   background: #fff;
   color: var(--plan-text);
   -webkit-text-fill-color: var(--plan-text);
@@ -574,3 +585,79 @@
     padding: 7px 6px;
   }
 }
+
+:global(:root[data-app-theme="warm-light"]) .backdrop {
+  background: rgba(40, 38, 46, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .root {
+  --plan-panel-background: #f0ebfa;
+  --plan-panel-border: transparent;
+  --plan-text: #28262e;
+  --plan-muted: #7b7682;
+  --plan-chip-background: #f0ebfa;
+  --plan-chip-border: transparent;
+  --plan-chip-text: #8f7ac8;
+  --plan-close-background: #f0ebfa;
+  --plan-close-border: transparent;
+  --plan-close-text: #28262e;
+  top: auto;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  width: min(370px, calc(100vw - 32px)) !important;
+  max-width: 370px !important;
+  max-height: calc(100dvh - max(32px, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px))) !important;
+  padding: 16px;
+  border: 1px solid #ebe6ef;
+  border-radius: 26px !important;
+  background: #fff;
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
+  box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
+  transform: translateX(-50%);
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: auto !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) .header { grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; }
+:global(:root[data-app-theme="warm-light"]) .titleEyebrow { color: #28262e; -webkit-text-fill-color: #28262e; font-size: 18px; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .title { color: #7b7682; -webkit-text-fill-color: #7b7682; font-size: 11px; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .close { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f0ebfa; color: #28262e; -webkit-text-fill-color: #28262e; font-size: 24px; font-weight: 400; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .dayPill { border: 0; border-radius: 16px; background: #f0ebfa; color: #28262e; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .dayPillActive { background: #e8efea; }
+:global(:root[data-app-theme="warm-light"]) .dayTitle { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .dayDescription { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
+
+:global(:root[data-app-theme="warm-light"]) .calorieProgress,
+:global(:root[data-app-theme="warm-light"]) .scoreBlock,
+:global(:root[data-app-theme="warm-light"]) .macro,
+:global(:root[data-app-theme="warm-light"]) .conclusion {
+  border: 1px solid #ebe6ef;
+  border-radius: 18px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .pixel { border-radius: 3px; background: #dce3e7; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .pixelActive { background: #8f7ac8; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .overLimit .pixelActive,
+:global(:root[data-app-theme="warm-light"]) .root[data-state="over-limit"] .pixelActive { background: #b36e72; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .calorieLabel,
+:global(:root[data-app-theme="warm-light"]) .calorieFoot,
+:global(:root[data-app-theme="warm-light"]) .scoreLabel,
+:global(:root[data-app-theme="warm-light"]) .macroLabel,
+:global(:root[data-app-theme="warm-light"]) .macroGoal,
+:global(:root[data-app-theme="warm-light"]) .conclusionLabel { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .calorieValue,
+:global(:root[data-app-theme="warm-light"]) .macroValue,
+:global(:root[data-app-theme="warm-light"]) .conclusionText { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .calorieDivider { background: #ebe6ef; }
+:global(:root[data-app-theme="warm-light"]) .macroPercentItem { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .macroDot { background: #8f7ac8; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: #f0ebfa; color: #8f7ac8; -webkit-text-fill-color: #8f7ac8; box-shadow: none; font-weight: 550; }
+:global(:root[data-app-theme="warm-light"]) .good { background: #e8efea; color: #708d79; -webkit-text-fill-color: #708d79; }
+:global(:root[data-app-theme="warm-light"]) .warning { background: #f2ece7; color: #ae8768; -webkit-text-fill-color: #ae8768; }
+:global(:root[data-app-theme="warm-light"]) .info { background: #f0ebfa; color: #6f879c; -webkit-text-fill-color: #6f879c; }
