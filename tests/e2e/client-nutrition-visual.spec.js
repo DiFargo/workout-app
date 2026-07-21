@@ -1773,6 +1773,7 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and theme state
     const regularDay = page.locator('[data-nutrition-calendar-day][data-current-month="true"][data-has-food="false"][aria-pressed="false"]').first();
     const previousMonth = page.locator('[data-nutrition-calendar-action="previous-month"]');
     const nextMonth = page.locator('[data-nutrition-calendar-action="next-month"]');
+    const swipeRegion = page.getByTestId("nutrition-calendar-swipe-region");
     const monthLabel = page.getByTestId("nutrition-calendar-header").locator("strong");
 
     await expect(modal).toBeVisible();
@@ -1780,6 +1781,9 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and theme state
     await expect(days).toHaveCount(42);
     await expect(selectedDay).toHaveCount(1);
     await expect(today).toHaveCount(1);
+    await expect(page.locator('[data-nutrition-calendar-action="done"]')).toHaveCount(0);
+    await expect(page.locator('[data-nutrition-calendar-action="today"]')).toHaveCount(1);
+    await expect(swipeRegion).toHaveCSS("touch-action", "pan-y");
     await expect(page.locator(".nutritionCalendarOverlay, .nutritionCalendarSheet, .nutritionCalendarDay, .nutritionCalendarClose")).toHaveCount(0);
     await expect(sheet).toHaveCSS("border-radius", viewport.radius);
     await expect(sheet).toHaveCSS("opacity", "1");
@@ -1805,6 +1809,46 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and theme state
     await nextMonth.click();
     await expect(monthLabel).toHaveText(initialMonth || "");
 
+    await swipeRegion.dispatchEvent("pointerdown", {
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 280,
+      clientY: 300
+    });
+    await swipeRegion.dispatchEvent("pointermove", {
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 190,
+      clientY: 304
+    });
+    await swipeRegion.dispatchEvent("pointerup", {
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 120,
+      clientY: 304
+    });
+    await expect(monthLabel).not.toHaveText(initialMonth || "");
+
+    await swipeRegion.dispatchEvent("pointerdown", {
+      pointerId: 2,
+      pointerType: "touch",
+      clientX: 120,
+      clientY: 300
+    });
+    await swipeRegion.dispatchEvent("pointermove", {
+      pointerId: 2,
+      pointerType: "touch",
+      clientX: 210,
+      clientY: 304
+    });
+    await swipeRegion.dispatchEvent("pointerup", {
+      pointerId: 2,
+      pointerType: "touch",
+      clientX: 280,
+      clientY: 304
+    });
+    await expect(monthLabel).toHaveText(initialMonth || "");
+
     if (viewport.width === 390 || viewport.width === 1440) {
       await attachScreenshot(page, testInfo, `client-nutrition-calendar-scoped-${viewport.width}.png`);
     }
@@ -1821,11 +1865,11 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and theme state
 
   const darkSheet = page.getByTestId("nutrition-calendar-sheet");
   const darkSelectedDay = page.locator('[data-nutrition-calendar-day][aria-pressed="true"]');
-  const darkPrimaryAction = page.locator('[data-nutrition-calendar-action="done"]');
+  const darkTodayAction = page.locator('[data-nutrition-calendar-action="today"]');
   await expect(darkSheet).toHaveCSS("border-color", "rgba(255, 255, 255, 0.09)");
   await expect(darkSheet).toHaveCSS("background-image", /linear-gradient/);
   await expect(darkSelectedDay).toHaveCSS("background-image", /linear-gradient/);
-  await expect(darkPrimaryAction).toHaveCSS("background-image", /linear-gradient/);
+  await expect(darkTodayAction).toHaveCSS("background-color", "rgba(255, 255, 255, 0.04)");
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-calendar-scoped-dark.png");
 

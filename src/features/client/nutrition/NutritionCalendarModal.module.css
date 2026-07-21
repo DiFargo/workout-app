@@ -27,10 +27,6 @@
   --calendar-footer-surface: rgba(255, 255, 255, 0.038);
   --calendar-footer-border: rgba(255, 255, 255, 0.075);
   --calendar-footer-text: var(--color-heading);
-  --calendar-primary-background: var(--gradient-primary);
-  --calendar-primary-border: transparent;
-  --calendar-primary-text: var(--color-heading);
-  --calendar-primary-shadow: 0 8px 18px rgba(127, 159, 58, 0.14);
 
   position: fixed;
   inset: 0;
@@ -73,9 +69,6 @@
   --calendar-footer-surface: rgba(255, 255, 255, 0.038);
   --calendar-footer-border: rgba(255, 255, 255, 0.075);
   --calendar-footer-text: rgba(247, 248, 251, 0.82);
-  --calendar-primary-background: linear-gradient(135deg, rgba(127, 159, 58, 0.86), rgba(145, 173, 78, 0.82));
-  --calendar-primary-border: rgba(127, 159, 58, 0.26);
-  --calendar-primary-text: #10120f;
 }
 
 .backdrop {
@@ -206,6 +199,17 @@
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
+.swipeRegion {
+  touch-action: pan-y;
+  transform: translate3d(var(--nutrition-calendar-swipe-offset, 0), 0, 0);
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.swiping {
+  transition: none;
+}
+
 .weekdays {
   margin-bottom: 7px;
   gap: 5px;
@@ -308,7 +312,7 @@
 .footer {
   margin-top: 12px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 9px;
 }
 
@@ -325,13 +329,6 @@
   line-height: 1.5;
   cursor: pointer;
   -webkit-text-fill-color: currentColor;
-}
-
-.primaryAction {
-  border-color: var(--calendar-primary-border);
-  background: var(--calendar-primary-background);
-  color: var(--calendar-primary-text);
-  box-shadow: var(--calendar-primary-shadow);
 }
 
 .closeButton:focus-visible,
@@ -390,6 +387,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sheet,
+  .swipeRegion,
   .day,
   .monthAction,
   .footerAction {
@@ -439,10 +437,6 @@
   --calendar-footer-surface: #f0ebfa;
   --calendar-footer-border: transparent;
   --calendar-footer-text: #28262e;
-  --calendar-primary-background: #8f7ac8;
-  --calendar-primary-border: #8f7ac8;
-  --calendar-primary-text: #fff;
-  --calendar-primary-shadow: none;
   align-items: flex-end;
   padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
 }
@@ -475,4 +469,3 @@
 :global(:root[data-app-theme="warm-light"]) .dayNumber { font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .footer { border-color: #ebe6ef; background: transparent; }
 :global(:root[data-app-theme="warm-light"]) .footerAction { min-height: 50px; border: 0; border-radius: 16px; background: #f0ebfa; color: #28262e; font-weight: 600; }
-:global(:root[data-app-theme="warm-light"]) .primaryAction { background: #8f7ac8; color: #fff; }
