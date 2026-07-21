@@ -38,6 +38,7 @@ export default function ProfileWorkoutJournalModal({
       >
         <ClientPageHeader
           compact
+          embedded
           controlsVariant="workout"
           className={styles.header}
           title="Тренировки"

@@ -63,6 +63,7 @@ export default function ProfileSettingsModal({
       >
         <ClientPageHeader
           compact
+          embedded
           controlsVariant="workout"
           className={styles.header}
           title={getProfileSettingsModalTitle(section)}

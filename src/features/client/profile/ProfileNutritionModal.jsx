@@ -95,6 +95,7 @@ export default function ProfileNutritionModal({
       >
         <ClientPageHeader
           compact
+          embedded
           controlsVariant="workout"
           className={styles.header}
           title="План питания"

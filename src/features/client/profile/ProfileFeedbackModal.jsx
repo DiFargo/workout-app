@@ -109,6 +109,7 @@ export default function ProfileFeedbackModal({
       >
         <ClientPageHeader
           compact
+          embedded
           controlsVariant="workout"
           frameClassName={styles.headerFrame}
           className={styles.header}

@@ -58,12 +58,35 @@ async function expectCrispProfileModal(page, overlayTestId, dialogTestId, closeT
   const close = page.getByTestId(closeTestId);
 
   await expect(overlay).toHaveCSS("backdrop-filter", "none");
+  await expect(dialog).toHaveAttribute("data-modal-surface", "true");
   await expect(dialog).toHaveCSS("filter", "none");
   await expect(close).toHaveAttribute("data-profile-modal-close", "true");
   await expect(close).toHaveCSS("width", "44px");
   await expect(close).toHaveCSS("height", "44px");
   await expect(close).toHaveCSS("border-radius", "50%");
   await expect(close.locator("svg")).toHaveCount(1);
+
+  const geometry = await dialog.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return {
+      left: rect.left,
+      right: window.innerWidth - rect.right,
+      top: rect.top,
+      bottom: window.innerHeight - rect.bottom,
+      radius: Number.parseFloat(window.getComputedStyle(element).borderTopLeftRadius)
+    };
+  });
+
+  expect(geometry.left).toBeGreaterThanOrEqual(10);
+  expect(geometry.right).toBeGreaterThanOrEqual(10);
+  expect(geometry.top).toBeGreaterThanOrEqual(10);
+  expect(geometry.bottom).toBeGreaterThanOrEqual(10);
+  expect(geometry.radius).toBeGreaterThanOrEqual(28);
+
+  const modalHeader = dialog.locator('[data-client-page-header="true"]');
+  if (await modalHeader.count()) {
+    await expect(modalHeader).toHaveAttribute("data-client-page-header-layout", "embedded");
+  }
 }
 
 async function expectPrimaryChrome(page, pageTestId, mode) {

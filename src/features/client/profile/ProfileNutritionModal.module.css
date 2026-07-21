@@ -5,7 +5,7 @@
   box-sizing: border-box;
   display: grid;
   place-items: center;
-  padding: 0;
+  padding: max(12px, env(safe-area-inset-top, 0px)) 12px max(12px, env(safe-area-inset-bottom, 0px));
   background: var(--background-profile-nutrition-modal-overlay);
   backdrop-filter: var(--filter-profile-nutrition-modal-overlay);
   -webkit-backdrop-filter: var(--filter-profile-nutrition-modal-overlay);
@@ -14,19 +14,20 @@
 .dialog {
   position: relative;
   box-sizing: border-box;
-  width: min(402px, 100vw);
-  height: min(874px, 100dvh);
-  max-height: 100dvh;
+  width: min(390px, 100%);
+  height: min(820px, calc(100dvh - 24px));
+  max-height: min(820px, calc(100dvh - 24px));
   padding: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 0;
   overflow: hidden;
   border: 1px solid var(--color-profile-nutrition-modal-border);
-  border-radius: 0;
+  border-radius: 32px;
   background: var(--background-profile-nutrition-modal);
   color: var(--color-profile-nutrition-modal-text);
   box-shadow: var(--shadow-profile-nutrition-modal);
+  --gradient-primary: linear-gradient(135deg, #9c88d2, #806bb6);
 }
 
 .header {
@@ -428,11 +429,5 @@
   .day {
     height: 47px;
     min-height: 47px;
-  }
-}
-
-@media (min-width: 403px) {
-  .dialog {
-    border-radius: 54px;
   }
 }

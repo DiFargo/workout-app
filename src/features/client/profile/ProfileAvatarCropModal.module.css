@@ -21,7 +21,7 @@
   gap: 13px;
   overflow-y: auto;
   border: 1px solid var(--color-profile-avatar-crop-dialog-border);
-  border-radius: 22px;
+  border-radius: 30px;
   background: var(--background-profile-avatar-crop-dialog);
   box-shadow: var(--shadow-profile-avatar-crop-dialog);
   color: var(--color-profile-avatar-crop-dialog);
